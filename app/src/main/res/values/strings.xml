@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">AndroidBoilerPlate</string>
+
+    <!-- Activity labels -->
+    <string name="label_main">Boilerplate</string>
+
+    <!-- Main Activity -->
+
+    <string name="action_github">View on GitHub</string>
+    <string name="text_view">View</string>
+    <string name="text_collections">Collections</string>
+    <string name="text_no_description">No description available</string>
+    <string name="text_films_description">%d films</string>
+
+    <!-- Character Activity -->
+
+    <string name="text_lorem_ipsum">
+    Don\'t underestimate the Force. The Force is strong with this one. I have you now. He is here. \n \n
+    I suggest you try it again, Luke. This time, let go your conscious self and act on instinct. The more you tighten your grip, Tarkin, the more star systems will slip through your fingers. I\'m trying not to, kid. Red Five standing by.\n \n
+    I care. So, what do you think of her, Han? Obi-Wan is here. The Force is with him. I\'m surprised you had the courage to take the responsibility yourself. Red Five standing by. I need your help, Luke. She needs your help. I\'m getting too old for this sort of thing.\n \n
+    What!? All right. Well, take care of yourself, Han. I guess that\'s what you\'re best at, ain\'t it? I don\'t know what you\'re talking about. I am a member of the Imperial Senate on a diplomatic mission to Alderaan, Red Five standing by.\n \n
+    I suggest you try it again, Luke. This time, let go your conscious self and act on instinct. I want to come with you to Alderaan. There\'s nothing for me here now. I want to learn the ways of the Force and be a Jedi, like my father before me. She must have hidden the plans in the escape pod. Send a detachment down to retrieve them, and see to it personally, Commander. There\'ll be no one to stop us this time! Obi-Wan is here. The Force is with him.\n \n
+    Hey, Luke! May the Force be with you. Alderaan? I\'m not going to Alderaan. I\'ve got to go home. It\'s late, I\'m in for it as it is. Obi-Wan is here. The Force is with him. Don\'t be too proud of this technological terror you\'ve constructed. The ability to destroy a planet is insignificant next to the power of the Force. She must have hidden the plans in the escape pod. Send a detachment down to retrieve them, and see to it personally, Commander. There\'ll be no one to stop us this time!\n \n
+    </string>
+    <!-- Detail Fragment -->
+
+    <string-array name="detail_fragment_titles">
+        <item>Films</item>
+        <item>Vehicles</item>
+        <item>Species</item>
+        <item>Starships</item>
+    </string-array>
+
+    <string name="text_no_data">No data to display</string>
+
+    <!-- Dialogs -->
+
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_action_delete">Delete</string>
+    <string name="dialog_action_cancel">Cancel</string>
+
+    <string name="dialog_error_title">Oops</string>
+    <string name="dialog_general_error_Message">There was an error making the request</string>
+    <string name="dialog_error_no_connection">Sorry, you need a connection to do that!</string>
+
+    <!-- Arrays -->
+
+    <integer-array name="characters">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </integer-array>
+
+</resources>

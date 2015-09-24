@@ -1,0 +1,19 @@
+language: android
+android:
+  components:
+    - platform-tools
+    - tools
+
+    # The BuildTools version used by your project
+    - build-tools-23.0.1
+    - android-23
+    - extra-android-m2repository
+    - extra-google-m2repository
+    - extra-android-support
+    - extra-google-google_play_services
+
+before_script:
+    - chmod +x gradlew
+#Build, and run tests
+script: "./gradlew build testDebug"
+sudo: false
