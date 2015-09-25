@@ -1,42 +1,37 @@
 package eu.kanade.mangafeed.ui.activity;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
+
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
 import javax.inject.Inject;
 
-import eu.kanade.mangafeed.R;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
+import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
-import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 public class MainActivity extends BaseActivity {
 
-    @Bind(R.id.recycler_characters)
-    RecyclerView mCharactersRecycler;
-
     @Bind(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
-    @Bind(R.id.progress_indicator)
-    ProgressBar mProgressBar;
-
-    @Bind(R.id.swipe_container)
-    SwipeRefreshLayout mSwipeRefresh;
+    @Bind(R.id.drawer_container)
+    FrameLayout container;
 
     @Inject DatabaseHelper mDb;
+    private Drawer drawer;
     private CompositeSubscription mSubscriptions;
-    private EasyRecyclerAdapter<Character> mEasyRecycleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +40,49 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mSubscriptions = new CompositeSubscription();
-        //mDataManager = App.get(this).getComponent().dataManager();
+
         setupToolbar();
-        setupRecyclerView();
+
+        drawer = new DrawerBuilder()
+                .withActivity(this)
+                .withRootView(container)
+                .withToolbar(toolbar)
+                .withActionBarDrawerToggleAnimated(true)
+                .addDrawerItems(
+                        new PrimaryDrawerItem()
+                                .withName(R.string.library_title)
+                                .withIdentifier(R.id.nav_drawer_library),
+                        new PrimaryDrawerItem()
+                                .withName(R.string.recent_updates_title)
+                                .withIdentifier(R.id.nav_drawer_recent_updates),
+                        new PrimaryDrawerItem()
+                                .withName(R.string.catalogues_title)
+                                .withIdentifier(R.id.nav_drawer_catalogues),
+                        new PrimaryDrawerItem()
+                                .withName(R.string.settings_title)
+                                .withIdentifier(R.id.nav_drawer_settings)
+                )
+                .withSavedInstance(savedInstanceState)
+                .withOnDrawerItemClickListener(
+                        (view, position, drawerItem) -> {
+                            if (drawerItem != null) {
+                                int identifier = drawerItem.getIdentifier();
+                                switch (identifier) {
+                                    case R.id.nav_drawer_library:
+                                        setFragment(LibraryFragment.newInstance());
+                                        break;
+                                    case R.id.nav_drawer_catalogues:
+                                    case R.id.nav_drawer_recent_updates:
+                                    case R.id.nav_drawer_settings:
+                                        break;
+                                }
+                            }
+                            return false;
+                        }
+                )
+                .build();
+
+        drawer.setSelection(R.id.nav_drawer_library);
     }
 
     @Override
@@ -73,13 +108,21 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupToolbar() {
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
     }
 
-    private void setupRecyclerView() {
-        mCharactersRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mCharactersRecycler.setAdapter(mEasyRecycleAdapter);
+    private void setFragment(Fragment fragment) {
+        try {
+            if (fragment != null && getSupportFragmentManager() != null) {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                if (ft != null) {
+                    ft.replace(R.id.content_layout, fragment);
+                    ft.commit();
+                }
+            }
+        } catch (Exception e) {
 
-        mSwipeRefresh.setColorSchemeResources(R.color.primary);
+        }
     }
+
 }
