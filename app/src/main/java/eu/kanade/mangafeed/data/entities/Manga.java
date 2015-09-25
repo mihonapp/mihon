@@ -16,139 +16,68 @@ public class Manga {
 
     @Nullable
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_ID, key = true)
-    Long id;
+    public Long id;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_SOURCE)
-    int source;
+    public int source;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_URL)
-    String url;
+    public String url;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_ARTIST)
-    String artist;
+    public String artist;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_AUTHOR)
-    String author;
+    public String author;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_DESCRIPTION)
-    String description;
+    public String description;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_GENRE)
-    String genre;
+    public String genre;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_TITLE)
-    String title;
+    public String title;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_STATUS)
-    String status;
+    public String status;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_THUMBNAIL_URL)
-    String thumbnail_url;
+    public String thumbnail_url;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_RANK)
-    int rank;
+    public int rank;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_LAST_UPDATE)
-    long last_update;
+    public long last_update;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_INITIALIZED)
-    boolean initialized;
+    public boolean initialized;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_VIEWER)
-    int viewer;
+    public int viewer;
 
     @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_CHAPTER_ORDER)
-    int chapter_order;
+    public int chapter_order;
 
     Manga() {}
 
-    @Nullable
-    public Long id() {
-        return id;
-    }
-
-    @NonNull
-    public int source() {
-        return source;
-    }
-
-    @NonNull
-    public String url() {
-        return url;
-    }
-
-    @NonNull
-    public String artist() {
-        return artist;
-    }
-
-    @NonNull
-    public String author() {
-        return author;
-    }
-
-    @NonNull
-    public String description() {
-        return description;
-    }
-
-    @NonNull
-    public String genre() {
-        return genre;
-    }
-
-    @NonNull
-    public String title() {
-        return title;
-    }
-
-    @NonNull
-    public String status() {
-        return status;
-    }
-
-    @NonNull
-    public String thumbnail_url() {
-        return thumbnail_url;
-    }
-
-    @NonNull
-    public int rank() {
-        return rank;
-    }
-
-    @NonNull
-    public long last_update() {
-        return last_update;
-    }
-
-    @NonNull
-    public boolean nitialized() {
-        return initialized;
-    }
-
-    @NonNull
-    public int viewer() {
-        return viewer;
-    }
-
-    @NonNull
-    public int chapter_order() {
-        return chapter_order;
+    public Manga(String title) {
+        this.title = title;
     }
 
     @Override
