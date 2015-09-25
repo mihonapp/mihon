@@ -1,20 +1,21 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="eu.kanade.mangafeed.ui.fragment.LibraryFragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp"
+        android:id="@+id/gridView"
+        android:padding="10dp"
         android:clipToPadding="false"
         android:verticalSpacing="4dp"
-        android:horizontalSpacing="4dp"
+        android:horizontalSpacing="8dp"
         android:columnWidth="96dp"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:drawSelectorOnTop="true"
         android:fastScrollEnabled="true"
-        android:id="@+id/gridView" />
+        tools:listitem="@layout/item_library" />
 
 </FrameLayout>

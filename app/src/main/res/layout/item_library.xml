@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
-    <FrameLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="144dp"
-            android:id="@+id/thumbnailImageView"/>
-    </FrameLayout>
+        android:layout_height="144dp"
+        android:id="@+id/thumbnailImageView"
+        tools:src="@mipmap/ic_launcher"
+        tools:background="@color/md_red_100"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:id="@+id/footerLinearLayout">
+        android:layout_height="42dp"
+        android:id="@+id/footerLinearLayout"
+        android:background="@color/md_blue_100">
 
         <TextView
             android:layout_width="match_parent"
@@ -27,9 +27,13 @@
             android:layout_gravity="center_vertical"
             android:ellipsize="middle"
             android:maxLines="2"
-            android:textColor="@color/white"
+            android:textColor="@color/black_87pc"
             android:textStyle="bold"
-            android:id="@+id/nameTextView" />
+            android:textSize="12sp"
+            android:id="@+id/nameTextView"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            tools:text="Sample name"/>
 
     </LinearLayout>
 
