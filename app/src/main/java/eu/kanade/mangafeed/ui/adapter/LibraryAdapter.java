@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -28,9 +29,9 @@ public class LibraryAdapter extends ArrayAdapter<Manga> {
 
     Context context;
     int layoutResourceId;
-    List<Manga> data;
+    ArrayList<Manga> data;
 
-    public LibraryAdapter(Context context, int layoutResourceId, List<Manga> data) {
+    public LibraryAdapter(Context context, int layoutResourceId, ArrayList<Manga> data) {
         super(context, layoutResourceId, data);
         this.context = context;
         this.layoutResourceId = layoutResourceId;
@@ -63,6 +64,12 @@ public class LibraryAdapter extends ArrayAdapter<Manga> {
         return row;
     }
 
+    public void setData(ArrayList<Manga> mangas) {
+        // Avoid calling dataSetChanged twice
+        data.clear();
+        addAll(mangas);
+    }
+
     private String getImageUrl() {
         return "http://img1.wikia.nocookie.net/__cb20090524204255/starwars/images/thumb/1/1a/R2d2.jpg/400px-R2d2.jpg";
     }
@@ -78,4 +85,6 @@ public class LibraryAdapter extends ArrayAdapter<Manga> {
             ButterKnife.bind(this, view);
         }
     }
+
+
 }

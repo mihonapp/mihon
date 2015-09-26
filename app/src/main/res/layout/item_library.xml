@@ -17,7 +17,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="36dp"
         android:id="@+id/footerLinearLayout"
         android:background="@color/md_blue_100">
 
