@@ -7,9 +7,6 @@ import android.support.annotation.NonNull;
 
 import eu.kanade.mangafeed.data.tables.MangasTable;
 
-/**
- * Created by len on 23/09/2015.
- */
 public class DbOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mangafeed.db";

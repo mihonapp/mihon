@@ -2,42 +2,44 @@ package eu.kanade.mangafeed.data.helpers;
 
 import android.content.Context;
 
+import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
-import com.pushtorefresh.storio.sqlite.queries.Query;
 
-import java.util.List;
+import eu.kanade.mangafeed.data.managers.ChapterManager;
+import eu.kanade.mangafeed.data.models.Chapter;
+import eu.kanade.mangafeed.data.models.ChapterStorIOSQLiteDeleteResolver;
+import eu.kanade.mangafeed.data.models.ChapterStorIOSQLiteGetResolver;
+import eu.kanade.mangafeed.data.models.ChapterStorIOSQLitePutResolver;
+import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.models.MangaStorIOSQLiteDeleteResolver;
+import eu.kanade.mangafeed.data.models.MangaStorIOSQLiteGetResolver;
+import eu.kanade.mangafeed.data.models.MangaStorIOSQLitePutResolver;
+import eu.kanade.mangafeed.data.managers.MangaManager;
 
-import eu.kanade.mangafeed.data.entities.Manga;
-import eu.kanade.mangafeed.data.tables.MangasTable;
-import rx.Observable;
-
-/**
- * Created by len on 23/09/2015.
- */
 public class DatabaseHelper {
 
     private StorIOSQLite db;
+    public MangaManager manga;
+    public ChapterManager chapter;
 
     public DatabaseHelper(Context context) {
         db = DefaultStorIOSQLite.builder()
                 .sqliteOpenHelper(new DbOpenHelper(context))
-                .build();
-    }
-
-    public StorIOSQLite getStorIODb() {
-        return db;
-    }
-
-    public Observable<List<Manga>> getMangas() {
-        return db.get()
-                .listOfObjects(Manga.class)
-                .withQuery(Query.builder()
-                        .table(MangasTable.TABLE)
+                .addTypeMapping(Manga.class, SQLiteTypeMapping.<Manga>builder()
+                        .putResolver(new MangaStorIOSQLitePutResolver())
+                        .getResolver(new MangaStorIOSQLiteGetResolver())
+                        .deleteResolver(new MangaStorIOSQLiteDeleteResolver())
                         .build())
-                .prepare()
-                .createObservable();
+                .addTypeMapping(Chapter.class, SQLiteTypeMapping.<Chapter>builder()
+                        .putResolver(new ChapterStorIOSQLitePutResolver())
+                        .getResolver(new ChapterStorIOSQLiteGetResolver())
+                        .deleteResolver(new ChapterStorIOSQLiteDeleteResolver())
+                        .build())
+                .build();
 
+        manga = new MangaManager(db);
+        chapter = new ChapterManager(db);
     }
 
 }

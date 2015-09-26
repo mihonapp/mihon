@@ -1,8 +1,4 @@
-package eu.kanade.mangafeed.data.entities;
-
-/**
- * Created by len on 23/09/2015.
- */
+package eu.kanade.mangafeed.data.models;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -74,7 +70,7 @@ public class Manga {
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_CHAPTER_ORDER)
     public int chapter_order;
 
-    Manga() {}
+    public Manga() {}
 
     public Manga(String title) {
         this.title = title;

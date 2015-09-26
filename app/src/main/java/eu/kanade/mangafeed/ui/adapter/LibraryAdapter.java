@@ -11,12 +11,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.entities.Manga;
+import eu.kanade.mangafeed.data.models.Manga;
 import uk.co.ribot.easyadapter.annotations.LayoutId;
 
 /**
@@ -28,9 +28,9 @@ public class LibraryAdapter extends ArrayAdapter<Manga> {
 
     Context context;
     int layoutResourceId;
-    ArrayList<Manga> data;
+    List<Manga> data;
 
-    public LibraryAdapter(Context context, int layoutResourceId, ArrayList<Manga> data) {
+    public LibraryAdapter(Context context, int layoutResourceId, List<Manga> data) {
         super(context, layoutResourceId, data);
         this.context = context;
         this.layoutResourceId = layoutResourceId;

@@ -12,9 +12,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="eu.kanade.mangafeed.ui.activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/label_main"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,14 +22,14 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name="eu.kanade.mangafeed.data.SyncService$SyncOnConnectionAvailable"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
+        <activity
+            android:name=".ui.activity.MangaDetailActivity"
+            android:label="@string/title_activity_manga_detail"
+            android:parentActivityName=".ui.activity.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="eu.kanade.mangafeed.ui.activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

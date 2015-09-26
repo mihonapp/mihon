@@ -27,6 +27,10 @@ public class App extends Application {
         return mApplicationComponent;
     }
 
+    public static AppComponent getComponent(Context context) {
+        return get(context).getComponent();
+    }
+
     // Needed to replace the component with a test specific one
     public void setComponent(AppComponent applicationComponent) {
         mApplicationComponent = applicationComponent;

@@ -26,5 +26,9 @@
     <string name="recent_updates_title">Recent updates</string>
     <string name="catalogues_title">Catalogues</string>
     <string name="settings_title">Settings</string>
+    <string name="title_activity_manga_detail">MangaDetailActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
