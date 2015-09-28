@@ -15,15 +15,16 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.BaseActivity;
-import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
+import eu.kanade.mangafeed.ui.adapter.MangaLibraryHolder;
 import eu.kanade.mangafeed.view.LibraryView;
+import uk.co.ribot.easyadapter.EasyAdapter;
 
 
 public class LibraryFragment extends Fragment implements LibraryView {
 
     @Bind(R.id.gridView) GridView grid;
     LibraryPresenter mLibraryPresenter;
-    LibraryAdapter mAdapter;
+    EasyAdapter<Manga> mEasyAdapter;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
@@ -54,14 +55,15 @@ public class LibraryFragment extends Fragment implements LibraryView {
     }
 
     public void setMangas(ArrayList<Manga> mangas) {
-        if (mAdapter == null) {
-            mAdapter = new LibraryAdapter(
+        if (mEasyAdapter == null) {
+            mEasyAdapter = new EasyAdapter<Manga>(
                     getActivity(),
-                    R.layout.item_library,
-                    mangas);
-            grid.setAdapter(mAdapter);
+                    MangaLibraryHolder.class,
+                    mangas
+            );
+            grid.setAdapter(mEasyAdapter);
         } else {
-            mAdapter.setData(mangas);
+            mEasyAdapter.setItems(mangas);
         }
 
     }
@@ -69,7 +71,7 @@ public class LibraryFragment extends Fragment implements LibraryView {
     private void setMangaClickListener() {
         grid.setOnItemClickListener(
                 (parent, view, position, id) ->
-                    mLibraryPresenter.onMangaClick(mAdapter, position)
+                    mLibraryPresenter.onMangaClick(mEasyAdapter, position)
         );
     }
 

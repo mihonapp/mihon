@@ -1,7 +1,6 @@
 package eu.kanade.mangafeed.presenter;
 
 import android.content.Intent;
-import android.widget.GridView;
 
 import java.util.ArrayList;
 
@@ -11,8 +10,8 @@ import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
-import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import eu.kanade.mangafeed.view.LibraryView;
+import uk.co.ribot.easyadapter.EasyAdapter;
 
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -28,7 +27,7 @@ public class LibraryPresenter {
         App.getComponent(libraryView.getActivity()).inject(this);
     }
 
-    public void onMangaClick(LibraryAdapter adapter, int position) {
+    public void onMangaClick(EasyAdapter adapter, int position) {
         Intent intent = new Intent(mLibraryView.getActivity(), MangaDetailActivity.class);
         EventBus.getDefault().postSticky(adapter.getItem(position));
         mLibraryView.getActivity().startActivity(intent);

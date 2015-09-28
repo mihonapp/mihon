@@ -10,7 +10,7 @@
         android:id="@+id/gridView"
         android:padding="10dp"
         android:clipToPadding="false"
-        android:verticalSpacing="4dp"
+        android:verticalSpacing="8dp"
         android:horizontalSpacing="8dp"
         android:columnWidth="96dp"
         android:numColumns="auto_fit"
