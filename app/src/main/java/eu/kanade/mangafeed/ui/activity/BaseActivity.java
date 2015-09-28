@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.ui.activity;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -39,4 +40,7 @@ public class BaseActivity extends AppCompatActivity {
         return App.get(this).getComponent();
     }
 
+    public Context getActivity() {
+        return this;
+    }
 }

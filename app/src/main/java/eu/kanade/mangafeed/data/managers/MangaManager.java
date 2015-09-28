@@ -44,7 +44,7 @@ public class MangaManager extends BaseManager {
         m.genre="Action, Drama";
         m.status="Ongoing";
         m.thumbnail_url="http://example.com/pic.png";
-        m.title="Berserk";
+        m.title="One Piece";
         insert(m).subscribe();
     }
 

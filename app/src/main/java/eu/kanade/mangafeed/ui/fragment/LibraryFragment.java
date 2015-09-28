@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -15,7 +14,6 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
-import eu.kanade.mangafeed.ui.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.adapter.MangaLibraryHolder;
 import eu.kanade.mangafeed.view.LibraryView;
@@ -25,8 +23,8 @@ import uk.co.ribot.easyadapter.EasyAdapter;
 public class LibraryFragment extends Fragment implements LibraryView {
 
     @Bind(R.id.gridView) GridView grid;
-    LibraryPresenter mLibraryPresenter;
-    EasyAdapter<Manga> mEasyAdapter;
+    LibraryPresenter presenter;
+    EasyAdapter<Manga> adapter;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
@@ -39,7 +37,7 @@ public class LibraryFragment extends Fragment implements LibraryView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLibraryPresenter = new LibraryPresenter(this);
+        presenter = new LibraryPresenter(this);
     }
 
     @Override
@@ -50,22 +48,22 @@ public class LibraryFragment extends Fragment implements LibraryView {
         ((MainActivity)getActivity()).setToolbarTitle(getString(R.string.library_title));
         ButterKnife.bind(this, view);
 
-        mLibraryPresenter.initializeMangas();
+        presenter.initializeMangas();
         setMangaClickListener();
 
         return view;
     }
 
     public void setMangas(List<Manga> mangas) {
-        if (mEasyAdapter == null) {
-            mEasyAdapter = new EasyAdapter<Manga>(
+        if (adapter == null) {
+            adapter = new EasyAdapter<Manga>(
                     getActivity(),
                     MangaLibraryHolder.class,
                     mangas
             );
-            grid.setAdapter(mEasyAdapter);
+            grid.setAdapter(adapter);
         } else {
-            mEasyAdapter.setItems(mangas);
+            adapter.setItems(mangas);
         }
 
     }
@@ -73,7 +71,7 @@ public class LibraryFragment extends Fragment implements LibraryView {
     private void setMangaClickListener() {
         grid.setOnItemClickListener(
                 (parent, view, position, id) ->
-                    mLibraryPresenter.onMangaClick(mEasyAdapter, position)
+                    presenter.onMangaClick(adapter, position)
         );
     }
 

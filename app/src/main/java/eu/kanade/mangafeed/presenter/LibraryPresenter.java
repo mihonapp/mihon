@@ -4,7 +4,6 @@ import android.content.Intent;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.models.Manga;
@@ -16,28 +15,28 @@ import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 public class LibraryPresenter {
 
-    private LibraryView mLibraryView;
+    private LibraryView view;
 
     @Inject
     public DatabaseHelper db;
 
-    public LibraryPresenter(LibraryView libraryView) {
-        mLibraryView = libraryView;
-        App.getComponent(libraryView.getActivity()).inject(this);
+    public LibraryPresenter(LibraryView view) {
+        this.view = view;
+        App.getComponent(view.getActivity()).inject(this);
     }
 
     public void onMangaClick(EasyAdapter<Manga> adapter, int position) {
         Intent intent = MangaDetailActivity.newIntent(
-                mLibraryView.getActivity(),
+                view.getActivity(),
                 adapter.getItem(position)
         );
-        mLibraryView.getActivity().startActivity(intent);
+        view.getActivity().startActivity(intent);
     }
 
     public void initializeMangas() {
         db.manga.get()
                 .observeOn(mainThread())
-                .subscribe(mLibraryView::setMangas);
+                .subscribe(view::setMangas);
     }
 
 }
