@@ -1,22 +1,33 @@
 package eu.kanade.mangafeed.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 
-public class MangaDetailActivity extends AppCompatActivity {
+public class MangaDetailActivity extends BaseActivity {
 
     Manga manga;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_detail);
+        ButterKnife.bind(this);
+
+        setupToolbar(toolbar);
+
         EventBus.getDefault().registerSticky(this);
     }
 
@@ -49,8 +60,19 @@ public class MangaDetailActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void onEvent(Manga manga) {
+    public static Intent newIntent(Context context, Manga manga) {
+        Intent intent = new Intent(context, MangaDetailActivity.class);
+        EventBus.getDefault().postSticky(manga);
+        return intent;
+    }
+
+    public void onEventMainThread(Manga manga) {
         this.manga = manga;
+        loadManga();
         //loadChapters();
+    }
+
+    private void loadManga() {
+        setToolbarTitle(manga.title);
     }
 }

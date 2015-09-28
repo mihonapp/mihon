@@ -29,19 +29,17 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.drawer_container)
     FrameLayout container;
 
-    @Inject DatabaseHelper mDb;
     private Drawer drawer;
     private CompositeSubscription mSubscriptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        applicationComponent().inject(this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mSubscriptions = new CompositeSubscription();
 
-        setupToolbar();
+        setupToolbar(toolbar);
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -107,10 +105,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-    }
-
     private void setFragment(Fragment fragment) {
         try {
             if (fragment != null && getSupportFragmentManager() != null) {
@@ -123,6 +117,10 @@ public class MainActivity extends BaseActivity {
         } catch (Exception e) {
 
         }
+    }
+
+    public void setToolbarTitle(int titleResource) {
+        getSupportActionBar().setTitle(getString(titleResource));
     }
 
 }

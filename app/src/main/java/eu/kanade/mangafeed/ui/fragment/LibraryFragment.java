@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -15,6 +16,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.BaseActivity;
+import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.adapter.MangaLibraryHolder;
 import eu.kanade.mangafeed.view.LibraryView;
 import uk.co.ribot.easyadapter.EasyAdapter;
@@ -45,7 +47,7 @@ public class LibraryFragment extends Fragment implements LibraryView {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
-        ((BaseActivity) getActivity()).getSupportActionBar().setTitle(R.string.library_title);
+        ((MainActivity)getActivity()).setToolbarTitle(getString(R.string.library_title));
         ButterKnife.bind(this, view);
 
         mLibraryPresenter.initializeMangas();
@@ -54,7 +56,7 @@ public class LibraryFragment extends Fragment implements LibraryView {
         return view;
     }
 
-    public void setMangas(ArrayList<Manga> mangas) {
+    public void setMangas(List<Manga> mangas) {
         if (mEasyAdapter == null) {
             mEasyAdapter = new EasyAdapter<Manga>(
                     getActivity(),

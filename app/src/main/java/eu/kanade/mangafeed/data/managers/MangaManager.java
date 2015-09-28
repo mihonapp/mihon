@@ -28,10 +28,24 @@ public class MangaManager extends BaseManager {
     }
 
     public Observable<PutResult> insert(Manga manga) {
+
         return db.put()
                 .object(manga)
                 .prepare()
                 .createObservable();
+    }
+
+    public void createDummyManga() {
+        Manga m = new Manga();
+        m.url="http://example.com";
+        m.artist="Eiichiro Oda";
+        m.author="Eiichiro Oda";
+        m.description="...";
+        m.genre="Action, Drama";
+        m.status="Ongoing";
+        m.thumbnail_url="http://example.com/pic.png";
+        m.title="Berserk";
+        insert(m).subscribe();
     }
 
 }
