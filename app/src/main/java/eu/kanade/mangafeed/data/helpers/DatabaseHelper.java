@@ -16,7 +16,6 @@ import eu.kanade.mangafeed.data.models.MangaStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.models.MangaStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.models.MangaStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.managers.MangaManager;
-import eu.kanade.mangafeed.data.tables.ChaptersTable;
 
 public class DatabaseHelper {
 

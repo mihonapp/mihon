@@ -11,7 +11,6 @@ import eu.kanade.mangafeed.data.tables.MangasTable;
 import rx.Observable;
 
 public class MangaManager extends BaseManager {
-    List<Manga> mangass;
 
     public MangaManager(StorIOSQLite db) {
         super(db);
@@ -28,7 +27,6 @@ public class MangaManager extends BaseManager {
     }
 
     public Observable<PutResult> insert(Manga manga) {
-
         return db.put()
                 .object(manga)
                 .prepare()
@@ -45,6 +43,8 @@ public class MangaManager extends BaseManager {
         m.status="Ongoing";
         m.thumbnail_url="http://example.com/pic.png";
         m.title="One Piece";
+        insert(m).subscribe();
+        m.title="Berserk";
         insert(m).subscribe();
     }
 
