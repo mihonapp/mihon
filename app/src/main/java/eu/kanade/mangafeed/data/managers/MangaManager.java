@@ -44,8 +44,6 @@ public class MangaManager extends BaseManager {
         m.thumbnail_url="http://example.com/pic.png";
         m.title="One Piece";
         insert(m).subscribe();
-        m.title="Berserk";
-        insert(m).subscribe();
     }
 
 }

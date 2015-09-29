@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
+import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.view.LibraryView;
@@ -18,11 +19,22 @@ public class LibraryPresenter {
     private LibraryView view;
 
     @Inject
-    public DatabaseHelper db;
+    DatabaseHelper db;
+
+    @Inject
+    PreferencesHelper prefs;
 
     public LibraryPresenter(LibraryView view) {
         this.view = view;
         App.getComponent(view.getActivity()).inject(this);
+
+        //TODO remove, only for testing
+        if (prefs.isFirstRun()) {
+            db.manga.createDummyManga();
+            db.chapter.createDummyChapters();
+            prefs.setNotFirstRun();
+        }
+
     }
 
     public void onMangaClick(EasyAdapter<Manga> adapter, int position) {

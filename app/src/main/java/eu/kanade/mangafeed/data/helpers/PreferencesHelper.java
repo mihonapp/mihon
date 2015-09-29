@@ -18,4 +18,12 @@ public class PreferencesHelper {
         mPref.edit().clear().apply();
     }
 
+    public boolean isFirstRun() {
+        return mPref.getBoolean("firstrun", true);
+    }
+
+    public void setNotFirstRun() {
+        mPref.edit().putBoolean("firstrun", false).commit();
+    }
+
 }
