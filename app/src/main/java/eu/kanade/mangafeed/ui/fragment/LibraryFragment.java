@@ -17,6 +17,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
+import eu.kanade.mangafeed.ui.adapter.CatalogueArrayAdapter;
 import eu.kanade.mangafeed.ui.adapter.MangaLibraryHolder;
 import eu.kanade.mangafeed.view.LibraryView;
 import timber.log.Timber;
@@ -27,7 +28,7 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
 
     @Bind(R.id.gridView) GridView grid;
     LibraryPresenter presenter;
-    EasyAdapter<Manga> adapter;
+    CatalogueArrayAdapter<Manga> adapter;
     MainActivity activity;
 
     public static LibraryFragment newInstance() {
@@ -93,7 +94,7 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
 
     public void setMangas(List<Manga> mangas) {
         if (adapter == null) {
-            adapter = new EasyAdapter<>(
+            adapter = new CatalogueArrayAdapter<>(
                     getActivity(),
                     MangaLibraryHolder.class,
                     mangas
@@ -114,6 +115,10 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
 
     private void setupToolbar() {
         //activity.getSupportActionBar().
+    }
+
+    public CatalogueArrayAdapter getAdapter() {
+        return adapter;
     }
 
 }
