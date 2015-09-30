@@ -32,7 +32,7 @@ public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
             FilterResults results = new FilterResults();
             String query = charSequence.toString().toLowerCase();
 
-            if (query == null || query.length() == 0) {
+            if (query.length() == 0) {
                 results.values = mangas;
                 results.count = mangas.size();
             } else {

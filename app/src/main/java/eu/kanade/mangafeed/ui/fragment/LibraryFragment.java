@@ -9,18 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
-import eu.kanade.mangafeed.ui.adapter.CatalogueArrayAdapter;
-import eu.kanade.mangafeed.ui.adapter.MangaLibraryHolder;
 import eu.kanade.mangafeed.view.LibraryView;
-import timber.log.Timber;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 
@@ -28,7 +22,6 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
 
     @Bind(R.id.gridView) GridView grid;
     LibraryPresenter presenter;
-    CatalogueArrayAdapter<Manga> adapter;
     MainActivity activity;
 
     public static LibraryFragment newInstance() {
@@ -62,7 +55,6 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setupToolbar();
         setMangaClickListener();
         presenter.initializeMangas();
     }
@@ -89,35 +81,17 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
         });
     }
 
-    // LibraryView
-
-    public void setMangas(List<Manga> mangas) {
-        if (adapter == null) {
-            adapter = new CatalogueArrayAdapter<>(
-                    getActivity(),
-                    MangaLibraryHolder.class,
-                    mangas
-            );
-            grid.setAdapter(adapter);
-        } else {
-            adapter.setItems(mangas);
-        }
-
-    }
-
     private void setMangaClickListener() {
         grid.setOnItemClickListener(
                 (parent, view, position, id) ->
-                        presenter.onMangaClick(adapter, position)
+                        presenter.onMangaClick(position)
         );
     }
 
-    private void setupToolbar() {
-        //activity.getSupportActionBar().
-    }
+    // LibraryView
 
-    public CatalogueArrayAdapter getAdapter() {
-        return adapter;
+    public void setAdapter(EasyAdapter adapter) {
+        grid.setAdapter(adapter);
     }
 
 }

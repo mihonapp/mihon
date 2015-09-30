@@ -9,14 +9,8 @@ import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
+import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import eu.kanade.mangafeed.view.LibraryView;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
-import timber.log.Timber;
-import uk.co.ribot.easyadapter.EasyAdapter;
 
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -24,11 +18,10 @@ public class LibraryPresenter extends BasePresenter {
 
     private LibraryView view;
 
-    @Inject
-    DatabaseHelper db;
+    @Inject DatabaseHelper db;
+    @Inject PreferencesHelper prefs;
 
-    @Inject
-    PreferencesHelper prefs;
+    LibraryAdapter<Manga> adapter;
 
     public LibraryPresenter(LibraryView view) {
         this.view = view;
@@ -43,7 +36,7 @@ public class LibraryPresenter extends BasePresenter {
 
     }
 
-    public void onMangaClick(EasyAdapter<Manga> adapter, int position) {
+    public void onMangaClick(int position) {
         Intent intent = MangaDetailActivity.newIntent(
                 view.getActivity(),
                 adapter.getItem(position)
@@ -52,13 +45,17 @@ public class LibraryPresenter extends BasePresenter {
     }
 
     public void initializeMangas() {
+
         db.manga.get()
                 .observeOn(mainThread())
-                .subscribe(view::setMangas);
+                .subscribe(mangas -> {
+                    adapter = new LibraryAdapter<>(view.getActivity(), mangas);
+                    view.setAdapter(adapter);
+                });
     }
 
     public void onQueryTextChange(String query) {
-        view.getAdapter().getFilter().filter(query);
+        adapter.getFilter().filter(query);
     }
 
 }
