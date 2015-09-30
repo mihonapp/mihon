@@ -65,7 +65,6 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
         setupToolbar();
         setMangaClickListener();
         presenter.initializeMangas();
-        presenter.initializeSearch();
     }
 
     @Override

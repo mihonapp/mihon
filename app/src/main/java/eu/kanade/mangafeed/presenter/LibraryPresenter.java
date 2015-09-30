@@ -30,9 +30,6 @@ public class LibraryPresenter extends BasePresenter {
     @Inject
     PreferencesHelper prefs;
 
-    private Subscription searchViewSubscription;
-    private PublishSubject<Observable<String>> searchViewPublishSubject;
-
     public LibraryPresenter(LibraryView view) {
         this.view = view;
         App.getComponent(view.getActivity()).inject(this);
@@ -54,14 +51,6 @@ public class LibraryPresenter extends BasePresenter {
         view.getActivity().startActivity(intent);
     }
 
-    public void initializeSearch() {
-        searchViewPublishSubject = PublishSubject.create();
-        searchViewSubscription = Observable.switchOnNext(searchViewPublishSubject)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view.getAdapter().getFilter()::filter);
-    }
-
     public void initializeMangas() {
         db.manga.get()
                 .observeOn(mainThread())
@@ -69,9 +58,7 @@ public class LibraryPresenter extends BasePresenter {
     }
 
     public void onQueryTextChange(String query) {
-        if (searchViewPublishSubject != null) {
-            searchViewPublishSubject.onNext(Observable.just(query));
-        }
+        view.getAdapter().getFilter().filter(query);
     }
 
 }
