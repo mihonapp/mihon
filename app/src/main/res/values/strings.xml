@@ -30,5 +30,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="library_search_hint">Title or author...</string>
 
 </resources>

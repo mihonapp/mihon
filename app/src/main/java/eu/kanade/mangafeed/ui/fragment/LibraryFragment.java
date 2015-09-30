@@ -1,8 +1,10 @@
 package eu.kanade.mangafeed.ui.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -17,14 +19,16 @@ import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.adapter.MangaLibraryHolder;
 import eu.kanade.mangafeed.view.LibraryView;
+import timber.log.Timber;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 
-public class LibraryFragment extends Fragment implements LibraryView {
+public class LibraryFragment extends BaseFragment implements LibraryView {
 
     @Bind(R.id.gridView) GridView grid;
     LibraryPresenter presenter;
     EasyAdapter<Manga> adapter;
+    MainActivity activity;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
@@ -36,8 +40,10 @@ public class LibraryFragment extends Fragment implements LibraryView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         presenter = new LibraryPresenter(this);
+        activity = (MainActivity)getActivity();
     }
 
     @Override
@@ -45,18 +51,49 @@ public class LibraryFragment extends Fragment implements LibraryView {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
-        ((MainActivity)getActivity()).setToolbarTitle(getString(R.string.library_title));
+        activity.setToolbarTitle(getString(R.string.library_title));
         ButterKnife.bind(this, view);
-
-        presenter.initializeMangas();
-        setMangaClickListener();
 
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setupToolbar();
+        setMangaClickListener();
+        presenter.initializeMangas();
+        presenter.initializeSearch();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.library, menu);
+        initializeSearch(menu);
+    }
+
+    private void initializeSearch(Menu menu) {
+        final SearchView sv = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                presenter.onQueryTextChange(newText);
+                return true;
+            }
+        });
+    }
+
+    // LibraryView
+
     public void setMangas(List<Manga> mangas) {
         if (adapter == null) {
-            adapter = new EasyAdapter<Manga>(
+            adapter = new EasyAdapter<>(
                     getActivity(),
                     MangaLibraryHolder.class,
                     mangas
@@ -71,8 +108,12 @@ public class LibraryFragment extends Fragment implements LibraryView {
     private void setMangaClickListener() {
         grid.setOnItemClickListener(
                 (parent, view, position, id) ->
-                    presenter.onMangaClick(adapter, position)
+                        presenter.onMangaClick(adapter, position)
         );
+    }
+
+    private void setupToolbar() {
+        //activity.getSupportActionBar().
     }
 
 }

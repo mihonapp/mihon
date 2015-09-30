@@ -8,7 +8,7 @@ import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.view.MangaDetailView;
 
-public class MangaDetailPresenter {
+public class MangaDetailPresenter extends BasePresenter {
 
     private MangaDetailView view;
 
@@ -18,14 +18,6 @@ public class MangaDetailPresenter {
     public MangaDetailPresenter(MangaDetailView view) {
         this.view = view;
         App.getComponent(view.getActivity()).inject(this);
-    }
-
-    public void onStart() {
-        EventBus.getDefault().registerSticky(this);
-    }
-
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
     }
 
     public void onEventMainThread(Manga manga) {

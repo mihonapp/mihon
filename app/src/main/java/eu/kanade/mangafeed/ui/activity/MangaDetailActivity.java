@@ -32,6 +32,12 @@ public class MangaDetailActivity extends BaseActivity implements MangaDetailView
     @Bind(R.id.manga_chapters_list)
     ListView list_chapters;
 
+    public static Intent newIntent(Context context, Manga manga) {
+        Intent intent = new Intent(context, MangaDetailActivity.class);
+        MangaDetailPresenter.newIntent(manga);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,43 +49,15 @@ public class MangaDetailActivity extends BaseActivity implements MangaDetailView
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_manga_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public static Intent newIntent(Context context, Manga manga) {
-        Intent intent = new Intent(context, MangaDetailActivity.class);
-        MangaDetailPresenter.newIntent(manga);
-        return intent;
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
-        presenter.onStart();
+        presenter.registerForStickyEvents();
     }
 
     @Override
     public void onStop() {
+        presenter.unregisterForEvents();
         super.onStop();
-        presenter.onStop();
     }
 
     public void loadManga(Manga manga) {

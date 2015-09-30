@@ -89,22 +89,6 @@ public class MainActivity extends BaseActivity {
         mSubscriptions.unsubscribe();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_github:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void setFragment(Fragment fragment) {
         try {
             if (fragment != null && getSupportFragmentManager() != null) {

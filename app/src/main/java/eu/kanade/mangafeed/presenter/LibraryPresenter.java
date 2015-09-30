@@ -10,11 +10,17 @@ import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.view.LibraryView;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
+import timber.log.Timber;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
-public class LibraryPresenter {
+public class LibraryPresenter extends BasePresenter {
 
     private LibraryView view;
 
@@ -23,6 +29,9 @@ public class LibraryPresenter {
 
     @Inject
     PreferencesHelper prefs;
+
+    private Subscription searchViewSubscription;
+    private PublishSubject<Observable<String>> searchViewPublishSubject;
 
     public LibraryPresenter(LibraryView view) {
         this.view = view;
@@ -45,10 +54,24 @@ public class LibraryPresenter {
         view.getActivity().startActivity(intent);
     }
 
+    public void initializeSearch() {
+        searchViewPublishSubject = PublishSubject.create();
+        searchViewSubscription = Observable.switchOnNext(searchViewPublishSubject)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(Timber::w);
+    }
+
     public void initializeMangas() {
         db.manga.get()
                 .observeOn(mainThread())
                 .subscribe(view::setMangas);
+    }
+
+    public void onQueryTextChange(String query) {
+        if (searchViewPublishSubject != null) {
+            searchViewPublishSubject.onNext(Observable.just(query));
+        }
     }
 
 }
