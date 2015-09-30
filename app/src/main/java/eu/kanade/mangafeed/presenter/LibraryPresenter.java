@@ -59,9 +59,7 @@ public class LibraryPresenter extends BasePresenter {
         searchViewSubscription = Observable.switchOnNext(searchViewPublishSubject)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        query -> view.getAdapter().getFilter().filter(query)
-                );
+                .subscribe(view.getAdapter().getFilter()::filter);
     }
 
     public void initializeMangas() {

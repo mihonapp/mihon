@@ -19,52 +19,59 @@ import android.content.Context;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Manga;
+import rx.Observable;
 import uk.co.ribot.easyadapter.EasyAdapter;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 
 public class CatalogueArrayAdapter<T> extends EasyAdapter<T> implements Filterable {
 
     List<Manga> mangas;
+    Filter filter;
 
     public CatalogueArrayAdapter(Context context, Class<? extends ItemViewHolder> itemViewHolderClass, List<T> listItems) {
         super(context, itemViewHolderClass, listItems);
         mangas = (List<Manga>)getItems();
+        filter = new CatalogueFilter();
     }
 
     @Override
     public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                FilterResults results = new FilterResults();
-                String query = charSequence.toString().toLowerCase();
-
-                if (query == null || query.length() == 0) {
-                    results.values = mangas;
-                    results.count = mangas.size();
-                } else {
-                    ArrayList<Manga> filterResultsData = new ArrayList<>();
-                    for (Manga manga: mangas) {
-                        if (manga.title.toLowerCase().contains(query) ||
-                                manga.author.toLowerCase().contains(query) ||
-                                manga.artist.toLowerCase().contains(query)) {
-                            filterResultsData.add(manga);
-                        }
-                    }
-                    results.values = filterResultsData;
-                    results.count = filterResultsData.size();
-                }
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                setItems((List<T>) results.values);
-            }
-        };
+        return filter;
     }
+
+    private class CatalogueFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            FilterResults results = new FilterResults();
+            String query = charSequence.toString().toLowerCase();
+
+            if (query == null || query.length() == 0) {
+                results.values = mangas;
+                results.count = mangas.size();
+            } else {
+                List<Manga> filteredMangas = Observable.from(mangas)
+                        .filter(x ->
+                                x.title.toLowerCase().contains(query) ||
+                                x.author.toLowerCase().contains(query) ||
+                                x.artist.toLowerCase().contains(query))
+                        .toList()
+                        .toBlocking()
+                        .single();
+                results.values = filteredMangas;
+                results.count = filteredMangas.size();
+            }
+
+            return results;
+        }
+
+        @Override
+        public void publishResults(CharSequence constraint, FilterResults results) {
+            setItems((List<T>) results.values);
+        }
+    }
+
+
 }
