@@ -60,6 +60,13 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        presenter.destroySubscriptions();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.library, menu);
         initializeSearch(menu);

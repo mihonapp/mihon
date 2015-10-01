@@ -11,6 +11,7 @@ import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import eu.kanade.mangafeed.view.LibraryView;
+import rx.Subscription;
 
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -22,6 +23,7 @@ public class LibraryPresenter extends BasePresenter {
     @Inject PreferencesHelper prefs;
 
     LibraryAdapter<Manga> adapter;
+    private Subscription mangaListSubscription;
 
     public LibraryPresenter(LibraryView view) {
         this.view = view;
@@ -45,7 +47,7 @@ public class LibraryPresenter extends BasePresenter {
     }
 
     public void initializeMangas() {
-        db.manga.getWithUnread()
+        mangaListSubscription = db.manga.getWithUnread()
                 .observeOn(mainThread())
                 .subscribe(mangas -> {
                     adapter = new LibraryAdapter<>(view.getActivity(), mangas);
@@ -55,6 +57,12 @@ public class LibraryPresenter extends BasePresenter {
 
     public void onQueryTextChange(String query) {
         adapter.getFilter().filter(query);
+    }
+
+    public void destroySubscriptions() {
+        if (mangaListSubscription != null) {
+            mangaListSubscription.unsubscribe();
+        }
     }
 
 }
