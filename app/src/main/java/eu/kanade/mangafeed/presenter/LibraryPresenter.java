@@ -45,8 +45,7 @@ public class LibraryPresenter extends BasePresenter {
     }
 
     public void initializeMangas() {
-
-        db.manga.get()
+        db.manga.getWithUnread()
                 .observeOn(mainThread())
                 .subscribe(mangas -> {
                     adapter = new LibraryAdapter<>(view.getActivity(), mangas);

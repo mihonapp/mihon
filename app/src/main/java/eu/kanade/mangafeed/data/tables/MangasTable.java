@@ -55,6 +55,9 @@ public class MangasTable {
     @NonNull
     public static final String COLUMN_CHAPTER_ORDER = "chapter_order";
 
+    @NonNull
+    public static final String COLUMN_UNREAD = "unread";
+
     // This is just class with Meta Data, we don't need instances
     private MangasTable() {
         throw new IllegalStateException("No instances please");
