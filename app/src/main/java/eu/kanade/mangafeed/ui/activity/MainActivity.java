@@ -1,23 +1,18 @@
 package eu.kanade.mangafeed.ui.activity;
 
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 import rx.subscriptions.CompositeSubscription;
 
@@ -92,7 +87,7 @@ public class MainActivity extends BaseActivity {
     private void setFragment(Fragment fragment) {
         try {
             if (fragment != null && getSupportFragmentManager() != null) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 if (ft != null) {
                     ft.replace(R.id.content_layout, fragment);
                     ft.commit();
