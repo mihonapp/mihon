@@ -48,21 +48,14 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
         activity.setToolbarTitle(getString(R.string.library_title));
         ButterKnife.bind(this, view);
 
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setMangaClickListener();
         presenter.initializeMangas();
+
+        return view;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         presenter.destroySubscriptions();
     }
 
@@ -88,17 +81,18 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
         });
     }
 
-    private void setMangaClickListener() {
-        grid.setOnItemClickListener(
-                (parent, view, position, id) ->
-                        presenter.onMangaClick(position)
-        );
-    }
 
     // LibraryView
 
     public void setAdapter(EasyAdapter adapter) {
         grid.setAdapter(adapter);
+    }
+
+    public void setMangaClickListener() {
+        grid.setOnItemClickListener(
+                (parent, view, position, id) ->
+                        presenter.onMangaClick(position)
+        );
     }
 
 }

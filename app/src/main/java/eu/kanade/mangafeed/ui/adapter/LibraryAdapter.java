@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Manga;
@@ -15,10 +16,14 @@ public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
     List<Manga> mangas;
     Filter filter;
 
-    public LibraryAdapter(Context context, List<T> listItems) {
-        super(context, MangaLibraryHolder.class, listItems);
-        mangas = (List<Manga>)getItems();
+    public LibraryAdapter(Context context) {
+        super(context, MangaLibraryHolder.class);
         filter = new CatalogueFilter();
+    }
+
+    public void setNewItems(List<T> list) {
+        super.setItems(list);
+        mangas = (List<Manga>)list;
     }
 
     @Override
