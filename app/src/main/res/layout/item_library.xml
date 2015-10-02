@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/library_item_background"
     >
 
     <FrameLayout
@@ -42,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:id="@+id/footerLinearLayout"
-        android:background="@color/md_grey_300">
+        >
 
         <eu.kanade.mangafeed.widget.PTSansTextView
             android:layout_width="match_parent"

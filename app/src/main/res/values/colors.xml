@@ -14,4 +14,5 @@
     <color name="light_grey">#D4D4D4</color>
     <color name="bg_light_grey">#E9E9E9</color>
     <color name="black_87pc">#DD000000</color>
+    <color name="library_text_background">#E8E8E8</color>
 </resources>

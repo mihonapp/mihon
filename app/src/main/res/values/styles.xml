@@ -9,6 +9,8 @@
         <item name="android:textColorPrimary">@color/black_87pc</item>
         <item name="android:textColor">@color/black_87pc</item>
         <item name="colorControlNormal">@color/white</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/Widget.ActionMode</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -21,7 +23,10 @@
         <item name="drawerArrowStyle">@style/HamburgerIconStyle</item>
         <item name="android:itemTextAppearance">@style/OptionsMenuTextColor</item>
     </style>
-
+    
+    <style name="Widget.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/primary</item>
+    </style>
     <style name="AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowTitleStyle">@style/DialogTitleText</item>
         <item name="colorAccent">@color/primary</item>

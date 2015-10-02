@@ -16,6 +16,7 @@
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
         android:fastScrollEnabled="true"
+        android:choiceMode="multipleChoiceModal"
         tools:listitem="@layout/item_library" />
 
 </FrameLayout>

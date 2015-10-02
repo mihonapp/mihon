@@ -2,9 +2,11 @@ package eu.kanade.mangafeed.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -93,6 +95,37 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
                 (parent, view, position, id) ->
                         presenter.onMangaClick(position)
         );
+        grid.setMultiChoiceModeListener(new GridView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                mode.setTitle(getResources().getString(R.string.library_selection_title)
+                        + ": " + grid.getCheckedItemCount());
+
+
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.library_selection, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
     }
 
 }

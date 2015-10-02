@@ -33,5 +33,7 @@
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
     <string name="library_search_hint">Title or author...</string>
+    <string name="action_delete">Delete</string>
+    <string name="library_selection_title">Selected</string>
 
 </resources>
