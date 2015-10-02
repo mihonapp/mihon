@@ -83,7 +83,6 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
         });
     }
 
-
     // LibraryView
 
     public void setAdapter(EasyAdapter adapter) {
@@ -118,6 +117,12 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_delete:
+                        presenter.onDelete(grid.getCheckedItemPositions());
+                        mode.finish();
+                        return true;
+                }
                 return false;
             }
 

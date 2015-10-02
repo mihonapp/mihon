@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.presenter;
 
 import android.content.Intent;
+import android.util.SparseBooleanArray;
 
 import javax.inject.Inject;
 
@@ -11,6 +12,8 @@ import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import eu.kanade.mangafeed.view.LibraryView;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -57,6 +60,16 @@ public class LibraryPresenter extends BasePresenter {
 
     public void onQueryTextChange(String query) {
         adapter.getFilter().filter(query);
+    }
+
+    public void onDelete(SparseBooleanArray checkedItems) {
+        Observable.range(0, checkedItems.size())
+                .observeOn(Schedulers.io())
+                .map(checkedItems::keyAt)
+                .map(adapter::getItem)
+                .toList()
+                .flatMap(db.manga::delete)
+                .subscribe();
     }
 
 }

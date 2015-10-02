@@ -1,6 +1,8 @@
 package eu.kanade.mangafeed.data.managers;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
+import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.pushtorefresh.storio.sqlite.queries.RawQuery;
@@ -76,6 +78,20 @@ public class MangaManager extends BaseManager {
         m.status="Ongoing";
         m.thumbnail_url="http://example.com/pic.png";
         return m;
+    }
+
+    public Observable<DeleteResult> delete(Manga manga) {
+        return db.delete()
+                .object(manga)
+                .prepare()
+                .createObservable();
+    }
+
+    public Observable<DeleteResults<Manga>> delete(List<Manga> mangas) {
+        return db.delete()
+                .objects(mangas)
+                .prepare()
+                .createObservable();
     }
 
 }
