@@ -37,7 +37,8 @@ public class ChaptersTable {
 				+ COLUMN_NAME + " TEXT NOT NULL, "
 				+ COLUMN_READ + " BOOLEAN NOT NULL, "
 				+ COLUMN_DATE_FETCH + " LONG NOT NULL, "
-				+ "FOREIGN KEY(" + COLUMN_MANGA_ID + ") REFERENCES " + MangasTable.TABLE + "(" + MangasTable.COLUMN_ID + ")"
+				+ "FOREIGN KEY(" + COLUMN_MANGA_ID + ") REFERENCES " + MangasTable.TABLE + "(" + MangasTable.COLUMN_ID + ") "
+				+ "ON DELETE CASCADE"
 				+ ");";
 	}
 }

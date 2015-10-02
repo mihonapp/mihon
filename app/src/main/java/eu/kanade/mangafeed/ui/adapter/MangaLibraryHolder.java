@@ -36,6 +36,9 @@ public class MangaLibraryHolder extends ItemViewHolder<Manga> {
             mUnreadText.setVisibility(View.VISIBLE);
             mUnreadText.setText(Integer.toString(manga.unread));
         }
+        else {
+            mUnreadText.setVisibility(View.GONE);
+        }
         Glide.with(getContext())
                 .load("http://img1.wikia.nocookie.net/__cb20090524204255/starwars/images/thumb/1/1a/R2d2.jpg/400px-R2d2.jpg")
                 .centerCrop()
