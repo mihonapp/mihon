@@ -59,6 +59,9 @@ dependencies {
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'com.jakewharton:disklrucache:2.0.2'
+    compile 'org.jsoup:jsoup:1.8.3'
     compile 'io.reactivex:rxandroid:1.0.1'
     compile "com.pushtorefresh.storio:sqlite:$STORIO_VERSION"
     compile "com.pushtorefresh.storio:sqlite-annotations:$STORIO_VERSION"

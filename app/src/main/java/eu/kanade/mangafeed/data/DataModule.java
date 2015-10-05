@@ -6,7 +6,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
+import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
@@ -33,6 +35,18 @@ public class DataModule {
     @Singleton
     Scheduler provideSubscribeScheduler() {
         return Schedulers.io();
+    }
+
+    @Provides
+    @Singleton
+    CacheManager provideCacheManager(Application app) {
+        return new CacheManager(app);
+    }
+
+    @Provides
+    @Singleton
+    NetworkHelper provideNetworkHelper() {
+        return new NetworkHelper();
     }
 
 }
