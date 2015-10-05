@@ -3,8 +3,19 @@ package eu.kanade.mangafeed;
 import android.app.Application;
 import android.content.Context;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 import timber.log.Timber;
 
+@ReportsCrashes(
+        formUri = "http://couch.kanade.eu/acra-manga/_design/acra-storage/_update/report",
+        reportType = org.acra.sender.HttpSender.Type.JSON,
+        httpMethod = org.acra.sender.HttpSender.Method.PUT,
+        formUriBasicAuthLogin="test",
+        formUriBasicAuthPassword="test"
+)
 public class App extends Application {
 
     AppComponent mApplicationComponent;
@@ -17,6 +28,8 @@ public class App extends Application {
         mApplicationComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
+
+        ACRA.init(this);
     }
 
     public static App get(Context context) {
