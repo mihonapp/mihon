@@ -29,7 +29,7 @@ public class App extends Application {
                 .appModule(new AppModule(this))
                 .build();
 
-        ACRA.init(this);
+        //ACRA.init(this);
     }
 
     public static App get(Context context) {

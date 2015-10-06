@@ -1,19 +1,27 @@
 package eu.kanade.mangafeed.sources;
 
 import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.Response;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
+import eu.kanade.mangafeed.data.models.Chapter;
+import eu.kanade.mangafeed.data.models.Manga;
 import rx.Observable;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -318,52 +326,35 @@ public class Batoto {
 
         return newManga;
     }
+    */
 
-    public Observable<List<Chapter>> pullChaptersFromNetwork(final String mangaUrl, final String mangaName) {
+    public Observable<List<Chapter>> pullChaptersFromNetwork(String mangaUrl) {
         return mNetworkService
-                .getResponse(mangaUrl, NetworkModule.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                .flatMap(new Func1<Response, Observable<String>>() {
-                    @Override
-                    public Observable<String> call(Response response) {
-                        return mNetworkService.mapResponseToString(response);
-                    }
-                })
-                .flatMap(new Func1<String, Observable<List<Chapter>>>() {
-                    @Override
-                    public Observable<List<Chapter>> call(String unparsedHtml) {
-                        return Observable.just(parseHtmlToChapters(mangaUrl, mangaName, unparsedHtml));
-                    }
-                });
+                .getStringResponse(mangaUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
+                .flatMap(unparsedHtml ->
+                        Observable.just(parseHtmlToChapters(unparsedHtml)));
     }
 
-    private List<Chapter> parseHtmlToChapters(String mangaUrl, String mangaName, String unparsedHtml) {
+    private List<Chapter> parseHtmlToChapters(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
-        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument);
-        chapterList = setSourceForChapterList(chapterList);
-        chapterList = setParentInfoForChapterList(chapterList, mangaUrl, mangaName);
-        chapterList = setNumberForChapterList(chapterList);
-
-        saveChaptersToDatabase(chapterList, mangaUrl);
-
-        return chapterList;
-    }
-
-    private List<Chapter> scrapeChaptersFromParsedDocument(Document parsedDocument) {
         List<Chapter> chapterList = new ArrayList<Chapter>();
 
         Elements chapterElements = parsedDocument.select("tr.row.lang_English.chapter_row");
         for (Element chapterElement : chapterElements) {
             Chapter currentChapter = constructChapterFromHtmlBlock(chapterElement);
-
+            System.out.println(currentChapter.name);
             chapterList.add(currentChapter);
         }
 
+        //saveChaptersToDatabase(chapterList, mangaUrl);
+
         return chapterList;
+
     }
 
     private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
-        Chapter newChapter = DefaultFactory.Chapter.constructDefault();
+        Chapter newChapter = Chapter.newChapter();
 
         Element urlElement = chapterElement.select("a[href^=http://bato.to/read/").first();
         Element nameElement = urlElement;
@@ -371,16 +362,17 @@ public class Batoto {
 
         if (urlElement != null) {
             String fieldUrl = urlElement.attr("href");
-            newChapter.setUrl(fieldUrl);
+            newChapter.url = fieldUrl;
         }
         if (nameElement != null) {
             String fieldName = nameElement.text().trim();
-            newChapter.setName(fieldName);
+            newChapter.name = fieldName;
         }
         if (dateElement != null) {
             long fieldDate = parseDateFromElement(dateElement);
-            newChapter.setDate(fieldDate);
+            newChapter.date_upload = fieldDate;
         }
+        newChapter.date_fetch = new Date().getTime();
 
         return newChapter;
     }
@@ -396,62 +388,8 @@ public class Batoto {
             // Do Nothing.
         }
 
-        return DefaultFactory.Chapter.DEFAULT_DATE;
+        return 0;
     }
-
-    private List<Chapter> setSourceForChapterList(List<Chapter> chapterList) {
-        for (Chapter currentChapter : chapterList) {
-            currentChapter.setSource(NAME);
-        }
-
-        return chapterList;
-    }
-
-    private List<Chapter> setParentInfoForChapterList(List<Chapter> chapterList, String parentUrl, String parentName) {
-        for (Chapter currentChapter : chapterList) {
-            currentChapter.setParentUrl(parentUrl);
-            currentChapter.setParentName(parentName);
-        }
-
-        return chapterList;
-    }
-
-    private List<Chapter> setNumberForChapterList(List<Chapter> chapterList) {
-        Collections.reverse(chapterList);
-        for (int index = 0; index < chapterList.size(); index++) {
-            chapterList.get(index).setNumber(index + 1);
-        }
-
-        return chapterList;
-    }
-
-    private void saveChaptersToDatabase(List<Chapter> chapterList, String parentUrl) {
-        StringBuilder selection = new StringBuilder();
-        List<String> selectionArgs = new ArrayList<String>();
-
-        selection.append(ApplicationContract.Chapter.COLUMN_SOURCE + " = ?");
-        selectionArgs.add(NAME);
-        selection.append(" AND ").append(ApplicationContract.Chapter.COLUMN_PARENT_URL + " = ?");
-        selectionArgs.add(parentUrl);
-
-        mQueryManager.beginApplicationTransaction();
-        try {
-            mQueryManager.deleteAllChapter(selection.toString(), selectionArgs.toArray(new String[selectionArgs.size()]))
-                    .toBlocking()
-                    .single();
-
-            for (Chapter currentChapter : chapterList) {
-                mQueryManager.createChapter(currentChapter)
-                        .toBlocking()
-                        .single();
-            }
-
-            mQueryManager.setApplicationTransactionSuccessful();
-        } finally {
-            mQueryManager.endApplicationTransaction();
-        }
-    }
-    */
 
     public Observable<String> pullImageUrlsFromNetwork(final String chapterUrl) {
         final List<String> temporaryCachedImageUrls = new ArrayList<>();
@@ -459,14 +397,15 @@ public class Batoto {
         return mCacheManager.getImageUrlsFromDiskCache(chapterUrl)
                 .onErrorResumeNext(throwable -> {
                     return mNetworkService
-                            .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, null)
+                            .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
+                            .subscribeOn(Schedulers.io())
                             .flatMap(unparsedHtml -> Observable.from(parseHtmlToPageUrls(unparsedHtml)))
                             .buffer(3)
                             .concatMap(batchedPageUrls -> {
                                 List<Observable<String>> imageUrlObservables = new ArrayList<>();
                                 for (String pageUrl : batchedPageUrls) {
                                     Observable<String> temporaryObservable = mNetworkService
-                                            .getStringResponse(pageUrl, mNetworkService.NULL_CACHE_CONTROL, null)
+                                            .getStringResponse(pageUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
                                             .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
                                             .subscribeOn(Schedulers.io());
 

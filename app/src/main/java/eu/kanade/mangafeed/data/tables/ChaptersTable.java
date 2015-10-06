@@ -2,9 +2,6 @@ package eu.kanade.mangafeed.data.tables;
 
 import android.support.annotation.NonNull;
 
-/**
- * Created by len on 23/09/2015.
- */
 public class ChaptersTable {
 
     @NonNull
@@ -29,6 +26,9 @@ public class ChaptersTable {
 	public static final String COLUMN_DATE_FETCH = "date_fetch";
 
 	@NonNull
+	public static final String COLUMN_DATE_UPLOAD = "date_upload";
+
+	@NonNull
 	public static String getCreateTableQuery() {
 		return "CREATE TABLE " + TABLE + "("
 				+ COLUMN_ID + " INTEGER NOT NULL PRIMARY KEY, "
@@ -37,8 +37,10 @@ public class ChaptersTable {
 				+ COLUMN_NAME + " TEXT NOT NULL, "
 				+ COLUMN_READ + " BOOLEAN NOT NULL, "
 				+ COLUMN_DATE_FETCH + " LONG NOT NULL, "
+				+ COLUMN_DATE_UPLOAD + " LONG NOT NULL, "
 				+ "FOREIGN KEY(" + COLUMN_MANGA_ID + ") REFERENCES " + MangasTable.TABLE + "(" + MangasTable.COLUMN_ID + ") "
 				+ "ON DELETE CASCADE"
 				+ ");";
 	}
+	
 }

@@ -17,7 +17,7 @@ public class Chapter {
 
     @NonNull
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_MANGA_ID)
-    public int manga_id;
+    public Long manga_id;
 
     @NonNull
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_URL)
@@ -35,6 +35,10 @@ public class Chapter {
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_DATE_FETCH)
     public long date_fetch;
 
+    @NonNull
+    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_DATE_UPLOAD)
+    public long date_upload;
+
 
     public Chapter() {}
 
@@ -45,23 +49,17 @@ public class Chapter {
 
         Chapter chapter = (Chapter) o;
 
-        if (manga_id != chapter.manga_id) return false;
-        if (read != chapter.read) return false;
-        if (date_fetch != chapter.date_fetch) return false;
-        if (id != null ? !id.equals(chapter.id) : chapter.id != null) return false;
-        if (!url.equals(chapter.url)) return false;
-        return name.equals(chapter.name);
+        return url.equals(chapter.url);
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + manga_id;
-        result = 31 * result + url.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + read;
-        result = 31 * result + (int) (date_fetch ^ (date_fetch >>> 32));
-        return result;
+        return url.hashCode();
+    }
+
+    public static Chapter newChapter() {
+        Chapter c = new Chapter();
+        return c;
     }
 }

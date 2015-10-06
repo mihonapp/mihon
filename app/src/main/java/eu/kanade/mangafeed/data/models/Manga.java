@@ -79,10 +79,9 @@ public class Manga {
         this.title = title;
     }
 
-    public Manga(long id, String title, String author, String artist, String url,
+    public Manga(String title, String author, String artist, String url,
                  String description, String genre, String status, int rank,
                  String thumbnail_url) {
-        this.id = id;
         this.title = title;
         this.author = author;
         this.artist = artist;
@@ -94,10 +93,10 @@ public class Manga {
         this.thumbnail_url = thumbnail_url;
     }
 
-    public static Manga newManga(long id, String title, String author, String artist, String url,
+    public static Manga newManga(String title, String author, String artist, String url,
                                  String description, String genre, String status, int rank,
                                  String thumbnail_url) {
-        return new Manga(id, title, author, artist, url, description, genre, status, rank, thumbnail_url);
+        return new Manga(title, author, artist, url, description, genre, status, rank, thumbnail_url);
     }
 
     @Override
