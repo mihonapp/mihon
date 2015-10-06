@@ -53,28 +53,27 @@ public class ChapterManager extends BaseManager {
     // Add new chapters or delete if the source deletes them
     public Observable insertOrRemove(Manga manga, List<Chapter> chapters) {
         // I don't know a better approach
+        // TODO Fix this method
         return Observable.create(subscriber -> {
-            List<Chapter> dbGet = prepareGet(manga).executeAsBlocking();
+            List<Chapter> dbChapters = prepareGet(manga).executeAsBlocking();
 
-            Observable.just(dbGet)
-                    .doOnNext(dbChapters -> {
-                        Observable.from(chapters)
-                                .filter(c -> !dbChapters.contains(c))
-                                .toList()
-                                .subscribe(newChapters -> {
-                                    if (newChapters.size() > 0)
-                                        insert(newChapters).subscribe();
-                                });
-                    })
-                    .flatMap(Observable::from)
+            Observable<List<Chapter>> newChaptersObs =
+                    Observable.from(chapters)
+                    .filter(c -> !dbChapters.contains(c))
+                    .toList();
+
+            Observable<List<Chapter>> deletedChaptersObs =
+                    Observable.from(dbChapters)
                     .filter(c -> !chapters.contains(c))
-                    .toList()
-                    .subscribe(removedChapters -> {
-                        if (removedChapters.size() > 0)
-                            delete(removedChapters).subscribe();
-                        subscriber.onCompleted();
-                    });
+                    .toList();
 
+            Observable.zip(newChaptersObs, deletedChaptersObs,
+                    (newChapters, deletedChapters) -> {
+                        insert(newChapters).subscribe();
+                        delete(deletedChapters).subscribe();
+                        subscriber.onCompleted();
+                        return null;
+                    }).subscribe();
         });
 
     }
