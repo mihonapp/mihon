@@ -11,6 +11,7 @@ import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
+import eu.kanade.mangafeed.util.DummyDataUtil;
 import eu.kanade.mangafeed.view.LibraryView;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -32,8 +33,8 @@ public class LibraryPresenter extends BasePresenter {
 
         //TODO remove, only for testing
         if (prefs.isFirstRun()) {
-            db.manga.createDummyManga();
-            db.chapter.createDummyChapters();
+            db.insertMangas(DummyDataUtil.createDummyManga()).toBlocking().single();
+            db.insertChapters(DummyDataUtil.createDummyChapters()).subscribe();
             prefs.setNotFirstRun();
         }
 
@@ -52,10 +53,11 @@ public class LibraryPresenter extends BasePresenter {
         view.setAdapter(adapter);
         view.setMangaClickListener();
 
-        subscriptions.add(db.manga.getWithUnread()
+        subscriptions.add(db.getMangasWithUnread()
                         .observeOn(mainThread())
                         .subscribe(adapter::setNewItems)
         );
+
     }
 
     public void onQueryTextChange(String query) {
@@ -68,7 +70,7 @@ public class LibraryPresenter extends BasePresenter {
                 .map(checkedItems::keyAt)
                 .map(adapter::getItem)
                 .toList()
-                .flatMap(db.manga::delete)
+                .flatMap(db::deleteMangas)
                 .subscribe();
     }
 

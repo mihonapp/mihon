@@ -1,7 +1,6 @@
 package eu.kanade.mangafeed.sources;
 
 import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Response;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,18 +17,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
+import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
-public class Batoto {
+public class Batoto extends Source {
 
     public static final String NAME = "Batoto (EN)";
     public static final String BASE_URL = "www.bato.to";
-    public static final String INITIAL_UPDATE_URL = "http://bato.to/search_ajax?order_cond=update&order=desc&p=1";
+    public static final String INITIAL_UPDATE_URL = "http://bato.to/search_ajax?order_cond=views&order=desc&p=1";
 
     private static final Headers REQUEST_HEADERS = constructRequestHeaders();
     private static Headers constructRequestHeaders() {
@@ -105,38 +103,32 @@ public class Batoto {
         return Observable.just(genres);
     }
 
-    /*
-    public Observable<UpdatePageMarker> pullLatestUpdatesFromNetwork(final UpdatePageMarker newUpdate) {
-        return mNetworkService
-                .getResponse(newUpdate.getNextPageUrl(), NetworkModule.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                .flatMap(new Func1<Response, Observable<String>>() {
-                    @Override
-                    public Observable<String> call(Response response) {
-                        return mNetworkService.mapResponseToString(response);
-                    }
-                })
-                .flatMap(new Func1<String, Observable<UpdatePageMarker>>() {
-                    @Override
-                    public Observable<UpdatePageMarker> call(String unparsedHtml) {
-                        return Observable.just(parseHtmlToLatestUpdates(newUpdate.getNextPageUrl(), unparsedHtml));
-                    }
-                });
+    public String getUrlFromPageNumber(int page) {
+        if (page == 1)
+            return INITIAL_UPDATE_URL;
+
+        return INITIAL_UPDATE_URL.substring(0, INITIAL_UPDATE_URL.length() - 1) + page;
     }
 
-    private UpdatePageMarker parseHtmlToLatestUpdates(String requestUrl, String unparsedHtml) {
+    public Observable<List<Manga>> pullPopularMangasFromNetwork(int page) {
+        String url = getUrlFromPageNumber(page);
+        return mNetworkService
+                .getStringResponse(url, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
+                .flatMap(response -> Observable.just(parseHtmlToLatestUpdates(response)));
+    }
+
+    private List<Manga> parseHtmlToLatestUpdates(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         List<Manga> updatedMangaList = scrapeUpdateMangasFromParsedDocument(parsedDocument);
-        updateLibraryInDatabase(updatedMangaList);
+        //updateLibraryInDatabase(updatedMangaList);
 
-        String nextPageUrl = findNextUrlFromParsedDocument(requestUrl, unparsedHtml);
-        int lastMangaPostion = updatedMangaList.size();
-
-        return new UpdatePageMarker(nextPageUrl, lastMangaPostion);
+        return updatedMangaList;
     }
 
+
     private List<Manga> scrapeUpdateMangasFromParsedDocument(Document parsedDocument) {
-        List<Manga> updatedMangaList = new ArrayList<Manga>();
+        List<Manga> updatedMangaList = new ArrayList<>();
 
         Elements updatedHtmlBlocks = parsedDocument.select("tr:not([id]):not([class])");
         for (Element currentHtmlBlock : updatedHtmlBlocks) {
@@ -149,28 +141,26 @@ public class Batoto {
     }
 
     private Manga constructMangaFromHtmlBlock(Element htmlBlock) {
-        Manga mangaFromHtmlBlock = DefaultFactory.Manga.constructDefault();
-        mangaFromHtmlBlock.setSource(NAME);
+        Manga mangaFromHtmlBlock = new Manga();
 
         Element urlElement = htmlBlock.select("a[href^=http://bato.to]").first();
         Element nameElement = urlElement;
         Element updateElement = htmlBlock.select("td").get(5);
 
+        mangaFromHtmlBlock.source = SourceManager.BATOTO;
+
         if (urlElement != null) {
             String fieldUrl = urlElement.attr("href");
-            mangaFromHtmlBlock.setUrl(fieldUrl);
+            mangaFromHtmlBlock.url = fieldUrl;
         }
         if (nameElement != null) {
             String fieldName = nameElement.text().trim();
-            mangaFromHtmlBlock.setName(fieldName);
+            mangaFromHtmlBlock.title = fieldName;
         }
         if (updateElement != null) {
             long fieldUpdate = parseUpdateFromElement(updateElement);
-            mangaFromHtmlBlock.setUpdated(fieldUpdate);
+            mangaFromHtmlBlock.last_update = fieldUpdate;
         }
-
-        int updateCount = 1;
-        mangaFromHtmlBlock.setUpdateCount(updateCount);
 
         return mangaFromHtmlBlock;
     }
@@ -186,8 +176,10 @@ public class Batoto {
             // Do Nothing.
         }
 
-        return DefaultFactory.Manga.DEFAULT_UPDATED;
+        return 0;
     }
+
+    /*
 
     private void updateLibraryInDatabase(List<Manga> mangaList) {
         mQueryManager.beginLibraryTransaction();

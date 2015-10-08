@@ -30,7 +30,7 @@ public class MangaDetailPresenter extends BasePresenter {
     }
 
     public void initializeChapters(Manga manga) {
-        db.chapter.get(manga)
+        db.getChapters(manga)
                 .subscribe(view::setChapters);
     }
 }

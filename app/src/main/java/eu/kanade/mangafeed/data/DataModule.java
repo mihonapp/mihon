@@ -10,6 +10,7 @@ import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
+import eu.kanade.mangafeed.data.helpers.SourceManager;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
@@ -49,4 +50,9 @@ public class DataModule {
         return new NetworkHelper();
     }
 
+    @Provides
+    @Singleton
+    SourceManager provideSourceManager(NetworkHelper networkHelper, CacheManager cacheManager) {
+        return new SourceManager(networkHelper, cacheManager);
+    }
 }
