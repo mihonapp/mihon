@@ -4,11 +4,11 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
+import com.pushtorefresh.storio.sqlite.operations.post.PostResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Chapter;
@@ -22,7 +22,7 @@ public class ChapterManagerImpl extends BaseManager implements ChapterManager {
         super(db);
     }
 
-    private PreparedGetListOfObjects<Chapter> prepareGet(Manga manga) {
+    private PreparedGetListOfObjects<Chapter> prepareGetChapters(Manga manga) {
         return db.get()
                 .listOfObjects(Chapter.class)
                 .withQuery(Query.builder()
@@ -35,7 +35,7 @@ public class ChapterManagerImpl extends BaseManager implements ChapterManager {
 
     @Override
     public Observable<List<Chapter>> getChapters(Manga manga) {
-        return prepareGet(manga).createObservable();
+        return prepareGetChapters(manga).createObservable();
     }
 
     @Override
@@ -56,36 +56,31 @@ public class ChapterManagerImpl extends BaseManager implements ChapterManager {
 
     // Add new chapters or delete if the source deletes them
     @Override
-    public Observable insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {
-        // I don't know a better approach
-        // TODO Fix this method
-        return Observable.create(subscriber -> {
-            List<Chapter> dbChapters = prepareGet(manga).executeAsBlocking();
+    public Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {
+        Observable<List<Chapter>> chapterList = Observable.create(subscriber -> {
+            subscriber.onNext(prepareGetChapters(manga).executeAsBlocking());
+            subscriber.onCompleted();
+        });
 
-            Observable<Integer> newChaptersObs =
-                    Observable.from(chapters)
+        Observable<Integer> newChaptersObs =
+                chapterList
+                    .flatMap(dbChapters -> Observable.from(chapters)
                             .filter(c -> !dbChapters.contains(c))
                             .toList()
                             .flatMap(this::insertChapters)
-                            .map(PutResults::numberOfInserts);
+                            .map(PutResults::numberOfInserts));
 
-            Observable<Integer> deletedChaptersObs =
-                    Observable.from(dbChapters)
+        Observable<Integer> deletedChaptersObs =
+                chapterList
+                    .flatMap(dbChapters -> Observable.from(dbChapters)
                             .filter(c -> !chapters.contains(c))
                             .toList()
                             .flatMap(this::deleteChapters)
-                            .map(result -> result.results().size());
+                            .map( d -> d.results().size() ));
 
-            Observable.zip(newChaptersObs, deletedChaptersObs,
-                    (newChapters, deletedChapters) -> {
-                        ArrayList<Integer> results = new ArrayList<>();
-                        results.add(newChapters);
-                        results.add(deletedChapters);
-                        subscriber.onNext(results);
-                        subscriber.onCompleted();
-                        return results;
-                    }).subscribe();
-        });
+        return Observable.zip(newChaptersObs, deletedChaptersObs,
+                (insertions, deletions) -> new PostResult(0, insertions, deletions)
+        );
     }
 
     @Override
