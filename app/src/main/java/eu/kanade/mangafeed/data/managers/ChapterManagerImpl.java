@@ -62,22 +62,28 @@ public class ChapterManagerImpl extends BaseManager implements ChapterManager {
         return Observable.create(subscriber -> {
             List<Chapter> dbChapters = prepareGet(manga).executeAsBlocking();
 
-            Observable<List<Chapter>> newChaptersObs =
+            Observable<Integer> newChaptersObs =
                     Observable.from(chapters)
                             .filter(c -> !dbChapters.contains(c))
-                            .toList();
+                            .toList()
+                            .flatMap(this::insertChapters)
+                            .map(PutResults::numberOfInserts);
 
-            Observable<List<Chapter>> deletedChaptersObs =
+            Observable<Integer> deletedChaptersObs =
                     Observable.from(dbChapters)
                             .filter(c -> !chapters.contains(c))
-                            .toList();
+                            .toList()
+                            .flatMap(this::deleteChapters)
+                            .map(result -> result.results().size());
 
             Observable.zip(newChaptersObs, deletedChaptersObs,
                     (newChapters, deletedChapters) -> {
-                        insertChapters(newChapters).subscribe();
-                        deleteChapters(deletedChapters).subscribe();
+                        ArrayList<Integer> results = new ArrayList<>();
+                        results.add(newChapters);
+                        results.add(deletedChapters);
+                        subscriber.onNext(results);
                         subscriber.onCompleted();
-                        return null;
+                        return results;
                     }).subscribe();
         });
     }
