@@ -49,19 +49,16 @@ public class CacheManager {
     }
 
     public Observable<File> cacheImagesFromUrls(final List<String> imageUrls) {
-        return Observable.create(new Observable.OnSubscribe<File>() {
-            @Override
-            public void call(Subscriber<? super File> subscriber) {
-                try {
-                    for (String imageUrl : imageUrls) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(cacheImageFromUrl(imageUrl));
-                        }
+        return Observable.create(subscriber -> {
+            try {
+                for (String imageUrl : imageUrls) {
+                    if (!subscriber.isUnsubscribed()) {
+                        subscriber.onNext(cacheImageFromUrl(imageUrl));
                     }
-                    subscriber.onCompleted();
-                } catch (Throwable e) {
-                    subscriber.onError(e);
                 }
+                subscriber.onCompleted();
+            } catch (Throwable e) {
+                subscriber.onError(e);
             }
         });
     }
@@ -75,15 +72,12 @@ public class CacheManager {
     }
 
     public Observable<Boolean> clearImageCache() {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                try {
-                    subscriber.onNext(clearImageCacheImpl());
-                    subscriber.onCompleted();
-                } catch (Throwable e) {
-                    subscriber.onError(e);
-                }
+        return Observable.create(subscriber -> {
+            try {
+                subscriber.onNext(clearImageCacheImpl());
+                subscriber.onCompleted();
+            } catch (Throwable e) {
+                subscriber.onError(e);
             }
         });
     }
@@ -117,21 +111,18 @@ public class CacheManager {
     }
 
     public Observable<String> getImageUrlsFromDiskCache(final String chapterUrl) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                try {
-                    String[] imageUrls = getImageUrlsFromDiskCacheImpl(chapterUrl);
+        return Observable.create(subscriber -> {
+            try {
+                String[] imageUrls = getImageUrlsFromDiskCacheImpl(chapterUrl);
 
-                    for (String imageUrl : imageUrls) {
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(imageUrl);
-                        }
+                for (String imageUrl : imageUrls) {
+                    if (!subscriber.isUnsubscribed()) {
+                        subscriber.onNext(imageUrl);
                     }
-                    subscriber.onCompleted();
-                } catch (Throwable e) {
-                    subscriber.onError(e);
                 }
+                subscriber.onCompleted();
+            } catch (Throwable e) {
+                subscriber.onError(e);
             }
         });
     }
@@ -154,14 +145,11 @@ public class CacheManager {
     }
 
     public Action0 putImageUrlsToDiskCache(final String chapterUrl, final List<String> imageUrls) {
-        return new Action0() {
-            @Override
-            public void call() {
-                try {
-                    putImageUrlsToDiskCacheImpl(chapterUrl, imageUrls);
-                } catch (IOException e) {
-                    // Do Nothing.
-                }
+        return () -> {
+            try {
+                putImageUrlsToDiskCacheImpl(chapterUrl, imageUrls);
+            } catch (IOException e) {
+                // Do Nothing.
             }
         };
     }
