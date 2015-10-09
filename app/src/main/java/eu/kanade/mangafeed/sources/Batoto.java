@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
@@ -21,45 +20,27 @@ import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 public class Batoto extends Source {
 
     public static final String NAME = "Batoto (EN)";
     public static final String BASE_URL = "www.bato.to";
-    public static final String INITIAL_UPDATE_URL = "http://bato.to/search_ajax?order_cond=views&order=desc&p=1";
-
-    private static final Headers REQUEST_HEADERS = constructRequestHeaders();
-    private static Headers constructRequestHeaders() {
-        Headers.Builder headerBuilder = new Headers.Builder();
-        headerBuilder.add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64)");
-        headerBuilder.add("Cookie", "lang_option=English");
-
-        return headerBuilder.build();
-    }
-
-    private NetworkHelper mNetworkService;
-    private CacheManager mCacheManager;
+    public static final String INITIAL_UPDATE_URL =
+            "http://bato.to/search_ajax?order_cond=views&order=desc&p=";
 
     public Batoto(NetworkHelper networkService, CacheManager cacheManager) {
-        mNetworkService = networkService;
-        mCacheManager = cacheManager;
+        super(networkService, cacheManager);
     }
 
-    public Observable<String> getName() {
-        return Observable.just(NAME);
-    }
-
-    public Observable<String> getBaseUrl() {
-        return Observable.just(BASE_URL);
-    }
-
-    public Observable<String> getInitialUpdateUrl() {
-        return Observable.just(INITIAL_UPDATE_URL);
+    @Override
+    protected Headers.Builder headersBuilder() {
+        Headers.Builder builder = super.headersBuilder();
+        builder.add("Cookie", "lang_option=English");
+        return builder;
     }
 
     public Observable<List<String>> getGenres() {
-        List<String> genres = new ArrayList<String>(38);
+        List<String> genres = new ArrayList<>(38);
 
         genres.add("4-Koma");
         genres.add("Action");
@@ -103,21 +84,24 @@ public class Batoto extends Source {
         return Observable.just(genres);
     }
 
-    public String getUrlFromPageNumber(int page) {
-        if (page == 1)
-            return INITIAL_UPDATE_URL;
-
-        return INITIAL_UPDATE_URL.substring(0, INITIAL_UPDATE_URL.length() - 1) + page;
+    @Override
+    protected int getSource() {
+        return SourceManager.BATOTO;
     }
 
-    public Observable<List<Manga>> pullPopularMangasFromNetwork(int page) {
-        String url = getUrlFromPageNumber(page);
-        return mNetworkService
-                .getStringResponse(url, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                .flatMap(response -> Observable.just(parsePopularMangasFromHtml(response)));
+    @Override
+    protected String getUrlFromPageNumber(int page) {
+        return INITIAL_UPDATE_URL + page;
     }
 
-    private List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
+    @Override
+    protected String getMangaUrl(String defaultMangaUrl) {
+        String mangaId = defaultMangaUrl.substring(defaultMangaUrl.lastIndexOf("r") + 1);
+        return "http://bato.to/comic_pop?id=" + mangaId;
+    }
+
+    @Override
+    public List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         List<Manga> updatedMangaList = new ArrayList<>();
@@ -139,7 +123,7 @@ public class Batoto extends Source {
         Element nameElement = urlElement;
         Element updateElement = htmlBlock.select("td").get(5);
 
-        mangaFromHtmlBlock.source = SourceManager.BATOTO;
+        mangaFromHtmlBlock.source = getSource();
 
         if (urlElement != null) {
             String fieldUrl = urlElement.attr("href");
@@ -171,15 +155,8 @@ public class Batoto extends Source {
         return 0;
     }
 
-    public Observable<Manga> pullMangaFromNetwork(final String mangaUrl) {
-        String mangaId = mangaUrl.substring(mangaUrl.lastIndexOf("r") + 1);
-
-        return mNetworkService
-                .getStringResponse("http://bato.to/comic_pop?id=" + mangaId, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                .flatMap(unparsedHtml -> Observable.just(parseHtmlToManga(mangaUrl, unparsedHtml)));
-    }
-
-    private Manga parseHtmlToManga(String mangaUrl, String unparsedHtml) {
+    @Override
+    protected Manga parseHtmlToManga(String mangaUrl, String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         Elements artistElements = parsedDocument.select("a[href^=http://bato.to/search?artist_name]");
@@ -229,14 +206,8 @@ public class Batoto extends Source {
         return newManga;
     }
 
-    public Observable<List<Chapter>> pullChaptersFromNetwork(String mangaUrl) {
-        return mNetworkService
-                .getStringResponse(mangaUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                .flatMap(unparsedHtml ->
-                        Observable.just(parseHtmlToChapters(unparsedHtml)));
-    }
-
-    private List<Chapter> parseHtmlToChapters(String unparsedHtml) {
+    @Override
+    protected List<Chapter> parseHtmlToChapters(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         List<Chapter> chapterList = new ArrayList<>();
@@ -291,42 +262,11 @@ public class Batoto extends Source {
         return 0;
     }
 
-    public Observable<String> pullImageUrlsFromNetwork(final String chapterUrl) {
-        final List<String> temporaryCachedImageUrls = new ArrayList<>();
-
-        return mCacheManager.getImageUrlsFromDiskCache(chapterUrl)
-                .onErrorResumeNext(throwable -> {
-                    return getImageUrlsFromNetwork(chapterUrl)
-                            .doOnNext(imageUrl -> temporaryCachedImageUrls.add(imageUrl))
-                            .doOnCompleted(mCacheManager.putImageUrlsToDiskCache(chapterUrl, temporaryCachedImageUrls));
-                })
-                .onBackpressureBuffer();
-    }
-
-    public Observable<String> getImageUrlsFromNetwork(final String chapterUrl) {
-        return mNetworkService
-                .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                .flatMap(unparsedHtml -> Observable.from(parseHtmlToPageUrls(unparsedHtml)))
-                .buffer(3)
-                .concatMap(batchedPageUrls -> {
-                    List<Observable<String>> imageUrlObservables = new ArrayList<>();
-                    for (String pageUrl : batchedPageUrls) {
-                        Observable<String> temporaryObservable = mNetworkService
-                                .getStringResponse(pageUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                                .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
-                                .subscribeOn(Schedulers.io());
-
-                        imageUrlObservables.add(temporaryObservable);
-                    }
-
-                    return Observable.merge(imageUrlObservables);
-                });
-    }
-
-    private List<String> parseHtmlToPageUrls(String unparsedHtml) {
+    @Override
+    protected List<String> parseHtmlToPageUrls(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
-        List<String> pageUrlList = new ArrayList<String>();
+        List<String> pageUrlList = new ArrayList<>();
 
         Elements pageUrlElements = parsedDocument.getElementById("page_select").getElementsByTag("option");
         for (Element pageUrlElement : pageUrlElements) {
@@ -336,7 +276,8 @@ public class Batoto extends Source {
         return pageUrlList;
     }
 
-    private String parseHtmlToImageUrl(String unparsedHtml) {
+    @Override
+    protected String parseHtmlToImageUrl(String unparsedHtml) {
         int beginIndex = unparsedHtml.indexOf("<img id=\"comic_page\"");
         int endIndex = unparsedHtml.indexOf("</a>", beginIndex);
         String trimmedHtml = unparsedHtml.substring(beginIndex, endIndex);
@@ -348,162 +289,5 @@ public class Batoto extends Source {
         return imageElement.attr("src");
     }
 
-    private static String INITIAL_DATABASE_URL_1 = "http://bato.to/comic_pop?id=1";
-    private static String INITIAL_DATABASE_URL_2 = "http://bato.to/search_ajax?order_cond=views&order=desc&p=1";
-
-    private static AtomicInteger mCounter = new AtomicInteger(1);
-
-    /*
-    public Observable<String> recursivelyConstructDatabase(final String url) {
-        return mNetworkService
-                .getResponse(url, NetworkUtil.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                .flatMap(new Func1<Response, Observable<String>>() {
-                    @Override
-                    public Observable<String> call(Response response) {
-                        return mNetworkService.mapResponseToString(response);
-                    }
-                })
-                .flatMap(new Func1<String, Observable<String>>() {
-                    @Override
-                    public Observable<String> call(String unparsedHtml) {
-                        return Observable.just(parseEnglish_Batoto(unparsedHtml));
-                    }
-                });
-    }
-
-
-    private String parseEnglish_Batoto(String unparsedHtml) {
-        if (!unparsedHtml.equals("wtf?")) {
-            Document parsedDocument = Jsoup.parse(unparsedHtml);
-
-            Manga newManga = new Manga();
-
-            Element temporaryElementOne = parsedDocument.getElementsByTag("a").first();
-            Element temporaryElementTwo = parsedDocument.select("a[href^=http://bato.to/forums/forum/]").first();
-            Element temporaryElementThree = parsedDocument.select("img[src^=http://img.batoto.net/forums/uploads/]").first();
-            Elements temporaryElementsFour = parsedDocument.select("img[src=http://bato.to/forums/public/style_images/master/bullet_black.png]");
-
-            String fieldSource = English_Batoto.NAME;
-            newManga.setSource(fieldSource);
-
-            String fieldUrl = "http://bato.to" + temporaryElementOne.attr("href");
-            newManga.setUrl(fieldUrl);
-
-            String fieldName = temporaryElementTwo.text();
-            int startIndex = "Go to ".length();
-            int endIndex = fieldName.lastIndexOf(" Forums!");
-            newManga.setName(fieldName.substring(startIndex, endIndex));
-
-            String fieldThumbnailUrl = temporaryElementThree.attr("src");
-            newManga.setThumbnailUrl(fieldThumbnailUrl);
-
-            String fieldGenres = "";
-            for (int index = 0; index < temporaryElementsFour.size(); index++) {
-                String currentGenre = temporaryElementsFour.get(index).attr("alt");
-
-                if (index < temporaryElementsFour.size() - 1) {
-                    fieldGenres += currentGenre + ", ";
-                } else {
-                    fieldGenres += currentGenre;
-                }
-            }
-            newManga.setGenre(fieldGenres);
-
-            boolean fieldIsCompleted = unparsedHtml.contains("<td>Complete</td>");
-            newManga.setCompleted(fieldIsCompleted);
-
-            mQueryManager.createManga(newManga)
-                    .toBlocking()
-                    .single();
-        }
-
-        return "http://bato.to/comic_pop?id=" + mCounter.incrementAndGet();
-    }
-
-    private String parseEnglish_Batoto_Views(String unparsedHtml) {
-        if (!unparsedHtml.contains("No (more) comics found!")) {
-            Document parsedDocument = Jsoup.parse(unparsedHtml);
-
-            List<Pair<String, ContentValues>> updateList = new ArrayList<Pair<String, ContentValues>>();
-            Elements mangaElements = parsedDocument.select("tr:not([id]):not([class])");
-            for (Element mangaElement : mangaElements) {
-                Element temporaryElementOne = mangaElement.select("a[href^=http://bato.to]").first();
-                Element temporaryElementTwo = mangaElement.select("td").get(3);
-                String temporaryString = temporaryElementTwo.text();
-
-                String fieldUrl = temporaryElementOne.attr("href");
-
-                String fieldView = null;
-                if (temporaryString.contains("m")) {
-                    temporaryString = temporaryString.replace("m", "");
-
-                    int viewsAsNumber = (int)(Double.valueOf(temporaryString) * 1000000);
-                    fieldView = String.valueOf(viewsAsNumber);
-                } else if (temporaryString.contains("k")) {
-                    temporaryString = temporaryString.replace("k", "");
-
-                    int viewsAsNumber = (int)(Double.valueOf(temporaryString) * 1000);
-                    fieldView = String.valueOf(viewsAsNumber);
-                } else {
-                    int viewsAsNumber = (int)(Double.valueOf(temporaryString) * 1);
-                    fieldView = String.valueOf(viewsAsNumber);
-                }
-
-                ContentValues fieldRanking = new ContentValues(1);
-                fieldRanking.put(LibraryContract.Manga.COLUMN_RANK, fieldView);
-
-                updateList.add(Pair.create(fieldUrl, fieldRanking));
-            }
-
-            mQueryManager.beginLibraryTransaction();
-            try {
-                for (Pair<String, ContentValues> currentUpdate : updateList) {
-                    mQueryManager.updateManga(currentUpdate.second, LibraryContract.Manga.COLUMN_URL + " = ?", new String[]{currentUpdate.first})
-                            .toBlocking()
-                            .single();
-                }
-
-                mQueryManager.setLibraryTransactionSuccessful();
-            } finally {
-                mQueryManager.endLibraryTransaction();
-            }
-
-            return "http://bato.to/search_ajax?order_cond=views&order=desc&p=" + mCounter.incrementAndGet();
-        }
-
-        return null;
-    }
-
-    public void reorderEnglish_Batoto_Rankings() {
-        List<Manga> mangaList = mQueryManager.retrieveAllMangaAsStream(
-                null,
-                LibraryContract.Manga.COLUMN_SOURCE + " = ?",
-                new String[]{NAME},
-                null,
-                null,
-                LibraryContract.Manga.COLUMN_RANK + " DESC",
-                null
-        )
-                .toList()
-                .toBlocking()
-                .single();
-
-        for (int index = 0; index < mangaList.size(); index++) {
-            mangaList.get(index).setRank(index + 1);
-        }
-
-        mQueryManager.beginLibraryTransaction();
-        try {
-            for (Manga currentManga : mangaList) {
-                mQueryManager.createManga(currentManga)
-                        .toBlocking()
-                        .single();
-            }
-            mQueryManager.setLibraryTransactionSuccessful();
-        } finally {
-            mQueryManager.endLibraryTransaction();
-        }
-    }
-    */
 }
 
