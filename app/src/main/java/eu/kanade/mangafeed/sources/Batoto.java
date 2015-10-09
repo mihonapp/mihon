@@ -114,20 +114,12 @@ public class Batoto extends Source {
         String url = getUrlFromPageNumber(page);
         return mNetworkService
                 .getStringResponse(url, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                .flatMap(response -> Observable.just(parseHtmlToLatestUpdates(response)));
+                .flatMap(response -> Observable.just(parsePopularMangasFromHtml(response)));
     }
 
-    private List<Manga> parseHtmlToLatestUpdates(String unparsedHtml) {
+    private List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
-        List<Manga> updatedMangaList = scrapeUpdateMangasFromParsedDocument(parsedDocument);
-        //updateLibraryInDatabase(updatedMangaList);
-
-        return updatedMangaList;
-    }
-
-
-    private List<Manga> scrapeUpdateMangasFromParsedDocument(Document parsedDocument) {
         List<Manga> updatedMangaList = new ArrayList<>();
 
         Elements updatedHtmlBlocks = parsedDocument.select("tr:not([id]):not([class])");
@@ -388,28 +380,31 @@ public class Batoto extends Source {
 
         return mCacheManager.getImageUrlsFromDiskCache(chapterUrl)
                 .onErrorResumeNext(throwable -> {
-                    return mNetworkService
-                            .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                            .subscribeOn(Schedulers.io())
-                            .flatMap(unparsedHtml -> Observable.from(parseHtmlToPageUrls(unparsedHtml)))
-                            .buffer(3)
-                            .concatMap(batchedPageUrls -> {
-                                List<Observable<String>> imageUrlObservables = new ArrayList<>();
-                                for (String pageUrl : batchedPageUrls) {
-                                    Observable<String> temporaryObservable = mNetworkService
-                                            .getStringResponse(pageUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
-                                            .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
-                                            .subscribeOn(Schedulers.io());
-
-                                    imageUrlObservables.add(temporaryObservable);
-                                }
-
-                                return Observable.merge(imageUrlObservables);
-                            })
+                    return getImageUrlsFromNetwork(chapterUrl)
                             .doOnNext(imageUrl -> temporaryCachedImageUrls.add(imageUrl))
                             .doOnCompleted(mCacheManager.putImageUrlsToDiskCache(chapterUrl, temporaryCachedImageUrls));
                 })
                 .onBackpressureBuffer();
+    }
+
+    public Observable<String> getImageUrlsFromNetwork(final String chapterUrl) {
+        return mNetworkService
+                .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
+                .flatMap(unparsedHtml -> Observable.from(parseHtmlToPageUrls(unparsedHtml)))
+                .buffer(3)
+                .concatMap(batchedPageUrls -> {
+                    List<Observable<String>> imageUrlObservables = new ArrayList<>();
+                    for (String pageUrl : batchedPageUrls) {
+                        Observable<String> temporaryObservable = mNetworkService
+                                .getStringResponse(pageUrl, mNetworkService.NULL_CACHE_CONTROL, REQUEST_HEADERS)
+                                .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
+                                .subscribeOn(Schedulers.io());
+
+                        imageUrlObservables.add(temporaryObservable);
+                    }
+
+                    return Observable.merge(imageUrlObservables);
+                });
     }
 
     private List<String> parseHtmlToPageUrls(String unparsedHtml) {
