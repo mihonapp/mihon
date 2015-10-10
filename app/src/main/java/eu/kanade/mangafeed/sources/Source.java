@@ -94,12 +94,15 @@ public abstract class Source {
         return defaultMangaUrl;
     }
 
-    abstract protected int getSource();
-    abstract protected String getUrlFromPageNumber(int page);
-    abstract protected List<Manga> parsePopularMangasFromHtml(String unparsedHtml);
-    abstract protected Manga parseHtmlToManga(String mangaUrl, String unparsedHtml);
-    abstract protected List<Chapter> parseHtmlToChapters(String unparsedHtml);
-    abstract protected List<String> parseHtmlToPageUrls(String unparsedHtml);
-    abstract protected String parseHtmlToImageUrl(String unparsedHtml);
+    public abstract String getName();
+    public abstract int getSource();
+
+    protected abstract String getUrlFromPageNumber(int page);
+    protected abstract List<Manga> parsePopularMangasFromHtml(String unparsedHtml);
+    protected abstract Manga parseHtmlToManga(String mangaUrl, String unparsedHtml);
+    protected abstract List<Chapter> parseHtmlToChapters(String unparsedHtml);
+    protected abstract List<String> parseHtmlToPageUrls(String unparsedHtml);
+    protected abstract String parseHtmlToImageUrl(String unparsedHtml);
+
 
 }

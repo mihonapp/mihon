@@ -23,8 +23,8 @@ import uk.co.ribot.easyadapter.EasyAdapter;
 public class LibraryFragment extends BaseFragment implements LibraryView {
 
     @Bind(R.id.gridView) GridView grid;
-    LibraryPresenter presenter;
-    MainActivity activity;
+    private LibraryPresenter presenter;
+    private MainActivity activity;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
@@ -99,8 +99,6 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 mode.setTitle(getResources().getString(R.string.library_selection_title)
                         + ": " + grid.getCheckedItemCount());
-
-
             }
 
             @Override

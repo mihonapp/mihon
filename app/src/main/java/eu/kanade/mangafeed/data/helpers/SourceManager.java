@@ -1,6 +1,8 @@
 package eu.kanade.mangafeed.data.helpers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.sources.Batoto;
@@ -18,6 +20,8 @@ public class SourceManager {
         mSourcesMap = new HashMap<>();
         mNetworkHelper = networkHelper;
         mCacheManager = cacheManager;
+
+        initializeSources();
     }
 
     public Source get(int sourceKey) {
@@ -34,5 +38,13 @@ public class SourceManager {
         }
 
         return null;
+    }
+
+    private void initializeSources() {
+        mSourcesMap.put(BATOTO, createSource(BATOTO));
+    }
+
+    public List<Source> getSources() {
+        return new ArrayList<Source>(mSourcesMap.values());
     }
 }

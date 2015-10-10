@@ -33,6 +33,11 @@ public class Batoto extends Source {
     }
 
     @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
     protected Headers.Builder headersBuilder() {
         Headers.Builder builder = super.headersBuilder();
         builder.add("Cookie", "lang_option=English");
@@ -85,7 +90,7 @@ public class Batoto extends Source {
     }
 
     @Override
-    protected int getSource() {
+    public int getSource() {
         return SourceManager.BATOTO;
     }
 

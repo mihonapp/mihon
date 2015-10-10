@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import eu.kanade.mangafeed.data.DataModule;
+import eu.kanade.mangafeed.presenter.CataloguePresenter;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.presenter.MangaDetailPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
@@ -23,6 +24,7 @@ public interface AppComponent {
 
     void inject(LibraryPresenter libraryPresenter);
     void inject(MangaDetailPresenter mangaDetailPresenter);
+    void inject(CataloguePresenter cataloguePresenter);
 
     Application application();
 }
