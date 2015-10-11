@@ -26,14 +26,12 @@ public class MainActivity extends BaseActivity {
     FrameLayout container;
 
     private Drawer drawer;
-    private CompositeSubscription mSubscriptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mSubscriptions = new CompositeSubscription();
 
         setupToolbar(toolbar);
 
@@ -80,12 +78,6 @@ public class MainActivity extends BaseActivity {
                 .build();
 
         drawer.setSelection(R.id.nav_drawer_library);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mSubscriptions.unsubscribe();
     }
 
     private void setFragment(Fragment fragment) {

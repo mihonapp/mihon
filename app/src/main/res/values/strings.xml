@@ -35,5 +35,6 @@
     <string name="library_search_hint">Title or author...</string>
     <string name="action_delete">Delete</string>
     <string name="library_selection_title">Selected</string>
+    <string name="title_activity_catalogue_list">CatalogueList</string>
 
 </resources>
