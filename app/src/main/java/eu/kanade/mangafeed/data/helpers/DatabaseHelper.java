@@ -93,6 +93,16 @@ public class DatabaseHelper implements MangaManager, ChapterManager {
     }
 
     @Override
+    public Observable<List<Manga>> getManga(String url) {
+        return mMangaManager.getManga(url);
+    }
+
+    @Override
+    public Observable<List<Manga>> getManga(int id) {
+        return mMangaManager.getManga(id);
+    }
+
+    @Override
     public Observable<PutResult> insertManga(Manga manga) {
         return mMangaManager.insertManga(manga);
     }

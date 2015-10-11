@@ -8,7 +8,6 @@ import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Manga;
@@ -53,6 +52,22 @@ public class MangaManagerImpl extends BaseManager implements MangaManager {
                         .build())
                 .prepare()
                 .createObservable();
+    }
+
+    public Observable<List<Manga>> getManga(String url) {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(Query.builder()
+                        .table(MangasTable.TABLE)
+                        .where(MangasTable.COLUMN_URL + "=?")
+                        .whereArgs(url)
+                        .build())
+                .prepare()
+                .createObservable();
+    }
+
+    public Observable<List<Manga>> getManga(int id) {
+        return null;
     }
 
     public Observable<PutResult> insertManga(Manga manga) {

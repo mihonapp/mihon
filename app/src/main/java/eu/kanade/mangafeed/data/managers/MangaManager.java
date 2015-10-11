@@ -16,6 +16,10 @@ public interface MangaManager {
 
     Observable<List<Manga>> getMangasWithUnread();
 
+    Observable<List<Manga>> getManga(String url);
+
+    Observable<List<Manga>> getManga(int id);
+
     Observable<PutResult> insertManga(Manga manga);
 
     Observable<PutResults<Manga>> insertMangas(List<Manga> mangas);

@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent" android:fitsSystemWindows="true"
     tools:context="eu.kanade.mangafeed.ui.activity.CatalogueListActivity">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/catalogue_manga_list"
+        tools:listitem="@layout/item_catalogue"
+        />
 
 </LinearLayout>

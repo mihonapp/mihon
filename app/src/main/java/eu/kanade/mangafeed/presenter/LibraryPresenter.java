@@ -16,8 +16,6 @@ import eu.kanade.mangafeed.view.LibraryView;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-import static rx.android.schedulers.AndroidSchedulers.mainThread;
-
 public class LibraryPresenter extends BasePresenter {
 
     private LibraryView view;
@@ -54,7 +52,6 @@ public class LibraryPresenter extends BasePresenter {
         view.setMangaClickListener();
 
         subscriptions.add(db.getMangasWithUnread()
-                        .observeOn(mainThread())
                         .subscribe(adapter::setNewItems)
         );
 
