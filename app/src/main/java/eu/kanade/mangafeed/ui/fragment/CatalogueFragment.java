@@ -47,7 +47,6 @@ public class CatalogueFragment extends BaseFragment implements CatalogueView {
         ButterKnife.bind(this, view);
 
         presenter.initializeSources();
-
         return view;
     }
 
