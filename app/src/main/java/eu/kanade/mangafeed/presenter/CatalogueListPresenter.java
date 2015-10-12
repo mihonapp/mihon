@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.presenter;
 
 import android.content.Intent;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -31,6 +32,7 @@ public class CatalogueListPresenter extends BasePresenter {
     @Inject DatabaseHelper db;
 
     private String mSearchName;
+    private boolean mSearchMode;
     private final int SEARCH_TIMEOUT = 1000;
 
     private Subscription mMangaFetchSubscription;
@@ -81,7 +83,7 @@ public class CatalogueListPresenter extends BasePresenter {
                 .flatMap(Observable::from)
                 .map(this::networkToLocalManga)
                 .toList()
-                .subscribe(adapter::setItems);
+                .subscribe(adapter::addItems);
 
         subscriptions.add(mMangaSearchSubscription);
     }
@@ -101,6 +103,8 @@ public class CatalogueListPresenter extends BasePresenter {
     }
 
     private void initializeSearch() {
+        mSearchName = "";
+        mSearchMode = false;
         mSearchViewPublishSubject = PublishSubject.create();
         mSearchViewSubscription = Observable.switchOnNext(mSearchViewPublishSubject)
                 .debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -114,24 +118,39 @@ public class CatalogueListPresenter extends BasePresenter {
     }
 
     private void queryFromSearch(String query) {
-        mSearchName = query;
-        if (!isSearchMode()) {
+        // If search button clicked
+        if (mSearchName.equals("") && query.equals("")) {
+            return;
+        }
+        // If going to search mode
+        else if (mSearchName.equals("") && !query.equals("")) {
+            mSearchMode = true;
+            mSearchName = query;
+            adapter.setItems(new ArrayList<>());
+            getMangasFromSearch(1);
+        }
+        // If going to normal mode
+        else if (!mSearchName.equals("") && query.equals("")) {
+            mSearchMode = false;
+            mSearchName = query;
+            adapter.setItems(new ArrayList<>());
             getMangasFromSource(1);
-        } else {
+        }
+        // If query changes
+        else {
+            mSearchName = query;
+            adapter.setItems(new ArrayList<>());
             getMangasFromSearch(1);
         }
         view.setScrollListener();
     }
 
     public void loadMoreMangas(int page) {
-        if (!isSearchMode()) {
+        if (!mSearchMode) {
             getMangasFromSource(page);
         } else {
             getMangasFromSearch(page);
         }
     }
 
-    private boolean isSearchMode() {
-        return !mSearchName.equals("");
-    }
 }

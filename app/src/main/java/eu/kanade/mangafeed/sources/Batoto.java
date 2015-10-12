@@ -113,6 +113,10 @@ public class Batoto extends Source {
     }
 
     private List<Manga> parseMangasFromHtml(String unparsedHtml) {
+        if (unparsedHtml.contains("No (more) comics found!")) {
+            return new ArrayList<>();
+        }
+
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         List<Manga> updatedMangaList = new ArrayList<>();
