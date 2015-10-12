@@ -39,6 +39,6 @@ public class CataloguePresenter {
     public void onSourceClick(int position) {
         Intent intent = new Intent(view.getActivity(), CatalogueListActivity.class);
         intent.putExtra(Intent.EXTRA_UID, adapter.getItem(position).getSource());
-        view.startActivity(intent);
+        view.getActivity().startActivity(intent);
     }
 }

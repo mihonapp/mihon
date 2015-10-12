@@ -7,7 +7,7 @@ import uk.co.ribot.easyadapter.EasyAdapter;
 
 public interface CatalogueListView extends BaseView {
     Intent getIntent();
-    void setSource(Source source);
+    void setSourceTitle(String title);
     void setAdapter(EasyAdapter adapter);
     void setScrollListener();
 }
