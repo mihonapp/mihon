@@ -40,6 +40,7 @@ public abstract class Source {
                 .flatMap(response -> Observable.just(parsePopularMangasFromHtml(response)));
     }
 
+    // Get mangas from the source with a query
     public Observable<List<Manga>> searchMangasFromNetwork(String query, int page) {
         return mNetworkService
                 .getStringResponse(getSearchUrl(query, page), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)

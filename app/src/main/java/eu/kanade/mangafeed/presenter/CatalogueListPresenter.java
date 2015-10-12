@@ -125,31 +125,23 @@ public class CatalogueListPresenter extends BasePresenter {
         // If going to search mode
         else if (mSearchName.equals("") && !query.equals("")) {
             mSearchMode = true;
-            mSearchName = query;
-            adapter.setItems(new ArrayList<>());
-            getMangasFromSearch(1);
         }
         // If going to normal mode
         else if (!mSearchName.equals("") && query.equals("")) {
             mSearchMode = false;
-            mSearchName = query;
-            adapter.setItems(new ArrayList<>());
-            getMangasFromSource(1);
         }
-        // If query changes
-        else {
-            mSearchName = query;
-            adapter.setItems(new ArrayList<>());
-            getMangasFromSearch(1);
-        }
+
+        mSearchName = query;
+        adapter.getItems().clear();
+        loadMoreMangas(1);
         view.setScrollListener();
     }
 
     public void loadMoreMangas(int page) {
-        if (!mSearchMode) {
-            getMangasFromSource(page);
-        } else {
+        if (mSearchMode) {
             getMangasFromSearch(page);
+        } else {
+            getMangasFromSource(page);
         }
     }
 
