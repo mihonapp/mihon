@@ -40,6 +40,12 @@ public abstract class Source {
                 .flatMap(response -> Observable.just(parsePopularMangasFromHtml(response)));
     }
 
+    public Observable<List<Manga>> searchMangasFromNetwork(String query, int page) {
+        return mNetworkService
+                .getStringResponse(getSearchUrl(query, page), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                .flatMap(response -> Observable.just(parseSearchFromHtml(response)));
+    }
+
     // Get manga details from the source
     public Observable<Manga> pullMangaFromNetwork(final String mangaUrl) {
         return mNetworkService
@@ -98,7 +104,9 @@ public abstract class Source {
     public abstract int getSource();
 
     protected abstract String getUrlFromPageNumber(int page);
+    protected abstract String getSearchUrl(String query, int page);
     protected abstract List<Manga> parsePopularMangasFromHtml(String unparsedHtml);
+    protected abstract List<Manga> parseSearchFromHtml(String unparsedHtml);
     protected abstract Manga parseHtmlToManga(String mangaUrl, String unparsedHtml);
     protected abstract List<Chapter> parseHtmlToChapters(String unparsedHtml);
     protected abstract List<String> parseHtmlToPageUrls(String unparsedHtml);

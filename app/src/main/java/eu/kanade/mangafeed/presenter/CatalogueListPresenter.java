@@ -75,7 +75,13 @@ public class CatalogueListPresenter extends BasePresenter {
     public void getMangasFromSearch(int page) {
         subscriptions.remove(mMangaSearchSubscription);
 
-        // TODO fetch mangas from source
+        mMangaSearchSubscription = selectedSource.searchMangasFromNetwork(mSearchName, page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(Observable::from)
+                .map(this::networkToLocalManga)
+                .toList()
+                .subscribe(adapter::setItems);
 
         subscriptions.add(mMangaSearchSubscription);
     }

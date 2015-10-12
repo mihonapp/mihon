@@ -27,6 +27,8 @@ public class Batoto extends Source {
     public static final String BASE_URL = "www.bato.to";
     public static final String INITIAL_UPDATE_URL =
             "http://bato.to/search_ajax?order_cond=views&order=desc&p=";
+    public static final String INITIAL_SEARCH_URL = "http://bato.to/search_ajax?";
+
 
     public Batoto(NetworkHelper networkService, CacheManager cacheManager) {
         super(networkService, cacheManager);
@@ -100,13 +102,17 @@ public class Batoto extends Source {
     }
 
     @Override
+    protected String getSearchUrl(String query, int page) {
+        return INITIAL_SEARCH_URL + "name=" + query + "&p=" + page;
+    }
+
+    @Override
     protected String getMangaUrl(String defaultMangaUrl) {
         String mangaId = defaultMangaUrl.substring(defaultMangaUrl.lastIndexOf("r") + 1);
         return "http://bato.to/comic_pop?id=" + mangaId;
     }
 
-    @Override
-    public List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
+    private List<Manga> parseMangasFromHtml(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         List<Manga> updatedMangaList = new ArrayList<>();
@@ -119,6 +125,16 @@ public class Batoto extends Source {
         }
 
         return updatedMangaList;
+    }
+
+    @Override
+    public List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
+        return parseMangasFromHtml(unparsedHtml);
+    }
+
+    @Override
+    protected List<Manga> parseSearchFromHtml(String unparsedHtml) {
+        return parseMangasFromHtml(unparsedHtml);
     }
 
     private Manga constructMangaFromHtmlBlock(Element htmlBlock) {
