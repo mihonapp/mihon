@@ -18,7 +18,6 @@ import java.util.concurrent.TimeoutException;
 
 import eu.kanade.mangafeed.util.DiskUtils;
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action0;
 
 public class CacheManager {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Manga;

@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.data.models;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
@@ -106,41 +107,12 @@ public class Manga {
 
         Manga manga = (Manga) o;
 
-        if (source != manga.source) return false;
-        if (rank != manga.rank) return false;
-        if (last_update != manga.last_update) return false;
-        if (initialized != manga.initialized) return false;
-        if (viewer != manga.viewer) return false;
-        if (chapter_order != manga.chapter_order) return false;
-        if (id != null ? !id.equals(manga.id) : manga.id != null) return false;
-        if (!url.equals(manga.url)) return false;
-        if (!artist.equals(manga.artist)) return false;
-        if (!author.equals(manga.author)) return false;
-        if (!description.equals(manga.description)) return false;
-        if (!genre.equals(manga.genre)) return false;
-        if (!title.equals(manga.title)) return false;
-        if (!status.equals(manga.status)) return false;
-        return thumbnail_url.equals(manga.thumbnail_url);
+        return url.equals(manga.url);
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + source;
-        result = 31 * result + url.hashCode();
-        result = 31 * result + artist.hashCode();
-        result = 31 * result + author.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + genre.hashCode();
-        result = 31 * result + title.hashCode();
-        result = 31 * result + status.hashCode();
-        result = 31 * result + thumbnail_url.hashCode();
-        result = 31 * result + rank;
-        result = 31 * result + (int) (last_update ^ (last_update >>> 32));
-        result = 31 * result + (initialized ? 1 : 0);
-        result = 31 * result + viewer;
-        result = 31 * result + chapter_order;
-        return result;
+        return url.hashCode();
     }
 }

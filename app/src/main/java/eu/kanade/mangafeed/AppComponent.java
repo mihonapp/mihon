@@ -10,9 +10,6 @@ import eu.kanade.mangafeed.presenter.CatalogueListPresenter;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.presenter.MangaDetailPresenter;
-import eu.kanade.mangafeed.ui.activity.MainActivity;
-import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
-import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 
 @Singleton
 @Component(

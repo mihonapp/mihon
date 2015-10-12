@@ -14,6 +14,8 @@ import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import eu.kanade.mangafeed.util.DummyDataUtil;
 import eu.kanade.mangafeed.view.LibraryView;
 import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class LibraryPresenter extends BasePresenter {
@@ -24,6 +26,9 @@ public class LibraryPresenter extends BasePresenter {
     @Inject PreferencesHelper prefs;
 
     LibraryAdapter<Manga> adapter;
+
+    private Subscription mFavoriteMangasSubscription;
+    private Subscription mDeleteMangaSubscription;
 
     public LibraryPresenter(LibraryView view) {
         this.view = view;
@@ -46,15 +51,23 @@ public class LibraryPresenter extends BasePresenter {
         view.getActivity().startActivity(intent);
     }
 
-    public void initializeMangas() {
+    public void initialize() {
         adapter = new LibraryAdapter<>(view.getActivity());
         view.setAdapter(adapter);
         view.setMangaClickListener();
 
-        subscriptions.add(db.getMangasWithUnread()
-                        .subscribe(adapter::setNewItems)
-        );
+        getFavoriteMangas();
+    }
 
+    public void getFavoriteMangas() {
+        subscriptions.remove(mFavoriteMangasSubscription);
+
+        mFavoriteMangasSubscription = db.getMangasWithUnread()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(adapter::setNewItems);
+
+        subscriptions.add(mFavoriteMangasSubscription);
     }
 
     public void onQueryTextChange(String query) {
@@ -62,13 +75,17 @@ public class LibraryPresenter extends BasePresenter {
     }
 
     public void onDelete(SparseBooleanArray checkedItems) {
-        Observable.range(0, checkedItems.size())
+        subscriptions.remove(mDeleteMangaSubscription);
+
+        mDeleteMangaSubscription = Observable.range(0, checkedItems.size())
                 .observeOn(Schedulers.io())
                 .map(checkedItems::keyAt)
                 .map(adapter::getItem)
                 .toList()
                 .flatMap(db::deleteMangas)
                 .subscribe();
+
+        subscriptions.add(mDeleteMangaSubscription);
     }
 
 }

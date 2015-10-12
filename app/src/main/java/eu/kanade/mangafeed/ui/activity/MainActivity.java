@@ -15,7 +15,6 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.ui.fragment.CatalogueFragment;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
-import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends BaseActivity {
 

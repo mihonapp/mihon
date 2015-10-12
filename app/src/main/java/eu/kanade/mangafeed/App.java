@@ -3,8 +3,6 @@ package eu.kanade.mangafeed;
 import android.app.Application;
 import android.content.Context;
 
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import timber.log.Timber;

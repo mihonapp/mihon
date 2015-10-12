@@ -7,11 +7,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import java.io.IOException;
-
 import rx.Observable;
-import rx.Subscriber;
-import timber.log.Timber;
 
 public final class NetworkHelper {
 

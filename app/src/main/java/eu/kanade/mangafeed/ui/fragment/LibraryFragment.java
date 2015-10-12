@@ -50,7 +50,7 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
         activity.setToolbarTitle(getString(R.string.library_title));
         ButterKnife.bind(this, view);
 
-        presenter.initializeMangas();
+        presenter.initialize();
 
         return view;
     }

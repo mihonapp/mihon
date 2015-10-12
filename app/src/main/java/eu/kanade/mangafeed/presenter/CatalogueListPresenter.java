@@ -34,7 +34,7 @@ public class CatalogueListPresenter extends BasePresenter {
         App.getComponent(view.getActivity()).inject(this);
     }
 
-    public void initializeSource() {
+    public void initialize() {
         int sourceId = view.getIntent().getIntExtra(Intent.EXTRA_UID, -1);
         selectedSource = sourceManager.get(sourceId);
         view.setSource(selectedSource);

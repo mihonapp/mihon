@@ -33,7 +33,7 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
         setupToolbar(toolbar);
 
         presenter = new CatalogueListPresenter(this);
-        presenter.initializeSource();
+        presenter.initialize();
     }
 
     @Override
