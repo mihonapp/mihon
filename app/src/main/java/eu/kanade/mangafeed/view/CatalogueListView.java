@@ -9,4 +9,5 @@ public interface CatalogueListView extends BaseView {
     Intent getIntent();
     void setSource(Source source);
     void setAdapter(EasyAdapter adapter);
+    void setScrollListener();
 }

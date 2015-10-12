@@ -103,6 +103,11 @@ public class DatabaseHelper implements MangaManager, ChapterManager {
     }
 
     @Override
+    public Manga getMangaBlock(String url) {
+        return mMangaManager.getMangaBlock(url);
+    }
+
+    @Override
     public Observable<PutResult> insertManga(Manga manga) {
         return mMangaManager.insertManga(manga);
     }
@@ -110,6 +115,11 @@ public class DatabaseHelper implements MangaManager, ChapterManager {
     @Override
     public Observable<PutResults<Manga>> insertMangas(List<Manga> mangas) {
         return mMangaManager.insertMangas(mangas);
+    }
+
+    @Override
+    public PutResult insertMangaBlock(Manga manga) {
+        return mMangaManager.insertMangaBlock(manga);
     }
 
     @Override

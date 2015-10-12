@@ -70,6 +70,24 @@ public class MangaManagerImpl extends BaseManager implements MangaManager {
         return null;
     }
 
+    @Override
+    public Manga getMangaBlock(String url) {
+        List<Manga> result = db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(Query.builder()
+                        .table(MangasTable.TABLE)
+                        .where(MangasTable.COLUMN_URL + "=?")
+                        .whereArgs(url)
+                        .build())
+                .prepare()
+                .executeAsBlocking();
+
+        if (result.isEmpty())
+            return null;
+
+        return result.get(0);
+    }
+
     public Observable<PutResult> insertManga(Manga manga) {
         return db.put()
                 .object(manga)
@@ -82,6 +100,13 @@ public class MangaManagerImpl extends BaseManager implements MangaManager {
                 .objects(mangas)
                 .prepare()
                 .createObservable();
+    }
+
+    public PutResult insertMangaBlock(Manga manga) {
+        return db.put()
+                .object(manga)
+                .prepare()
+                .executeAsBlocking();
     }
 
     public Observable<DeleteResult> deleteManga(Manga manga) {

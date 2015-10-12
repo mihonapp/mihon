@@ -83,6 +83,8 @@ public class MangasTable {
                 + COLUMN_INITIALIZED + " BOOLEAN NOT NULL, "
                 + COLUMN_VIEWER + " INTEGER NOT NULL, "
                 + COLUMN_CHAPTER_ORDER + " INTEGER NOT NULL"
-                + ");";
+                + ");"
+                + "CREATE INDEX " + TABLE + "_" + COLUMN_URL + "_index ON " + TABLE + "(" + COLUMN_URL + ");";
+
     }
 }

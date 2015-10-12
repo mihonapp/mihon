@@ -12,11 +12,12 @@ import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.adapter.CatalogueListHolder;
 import eu.kanade.mangafeed.view.CatalogueListView;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
-public class CatalogueListPresenter {
+public class CatalogueListPresenter extends BasePresenter {
 
     CatalogueListView view;
     EasyAdapter<Manga> adapter;
@@ -24,6 +25,8 @@ public class CatalogueListPresenter {
 
     @Inject SourceManager sourceManager;
     @Inject DatabaseHelper db;
+
+    private Subscription mMangaFetchSubscription;
 
 
     public CatalogueListPresenter(CatalogueListView view) {
@@ -38,24 +41,32 @@ public class CatalogueListPresenter {
 
         adapter = new EasyAdapter<>(view.getActivity(), CatalogueListHolder.class);
         view.setAdapter(adapter);
+        view.setScrollListener();
 
-        getMangasFromSource();
+        getMangasFromSource(1);
     }
 
-    private void getMangasFromSource() {
-        selectedSource.pullPopularMangasFromNetwork(1)
+    public void getMangasFromSource(int page) {
+        subscriptions.remove(mMangaFetchSubscription);
+
+        mMangaFetchSubscription = selectedSource.pullPopularMangasFromNetwork(page)
                 .subscribeOn(Schedulers.io())
-                .flatMap(Observable::from)
-                .flatMap(networkManga -> db.getManga(networkManga.url)
-                        .flatMap(result -> {
-                            if (result.size() == 0) {
-                                return db.insertManga(networkManga)
-                                        .flatMap(i -> Observable.just(networkManga));
-                            }
-                            return Observable.just(networkManga);
-                        }))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(adapter::addItem);
+                .flatMap(Observable::from)
+                .map(this::networkToLocalManga)
+                .toList()
+                .subscribe(adapter::addItems);
+
+        subscriptions.add(mMangaFetchSubscription);
+    }
+
+    private Manga networkToLocalManga(Manga networkManga) {
+        Manga localManga = db.getMangaBlock(networkManga.url);
+        if (localManga == null) {
+            db.insertMangaBlock(networkManga);
+            localManga = db.getMangaBlock(networkManga.url);
+        }
+        return localManga;
     }
 
 }
