@@ -11,11 +11,18 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
-    <ListView
+    <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/catalogue_manga_list"
-        tools:listitem="@layout/item_catalogue"
-        />
+        android:id="@+id/gridView"
+        android:padding="10dp"
+        android:clipToPadding="false"
+        android:verticalSpacing="8dp"
+        android:horizontalSpacing="8dp"
+        android:columnWidth="96dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:fastScrollEnabled="true"
+        tools:listitem="@layout/item_catalogue" />
 
 </LinearLayout>

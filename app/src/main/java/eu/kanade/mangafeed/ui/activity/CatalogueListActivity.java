@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.ListView;
+import android.view.View;
+import android.widget.GridView;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,10 +23,12 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.catalogue_manga_list)
-    ListView manga_list;
+    @Bind(R.id.gridView)
+    GridView manga_list;
 
     private CatalogueListPresenter presenter;
+
+    private EndlessScrollListener scrollListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,13 +81,34 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
     }
 
     public void setScrollListener() {
-        manga_list.setOnScrollListener(new EndlessScrollListener() {
+        scrollListener = new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
                 presenter.loadMoreMangas(page);
                 return true;
             }
-        });
+        };
+
+        manga_list.setOnScrollListener(scrollListener);
     }
 
+    public void resetScrollListener() {
+        scrollListener.resetScroll();
+    }
+
+    @Override
+    public void updateImage(int position, String thumbnail) {
+        View v = manga_list.getChildAt(position -
+                manga_list.getFirstVisiblePosition());
+
+        if(v == null)
+            return;
+
+        ImageView imageView = (ImageView) v.findViewById(R.id.catalogue_thumbnail);
+
+        Glide.with(getActivity())
+                .load(thumbnail)
+                .centerCrop()
+                .into(imageView);
+    }
 }

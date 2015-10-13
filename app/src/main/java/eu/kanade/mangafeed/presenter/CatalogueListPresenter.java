@@ -3,6 +3,7 @@ package eu.kanade.mangafeed.presenter;
 import android.content.Intent;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -38,6 +39,7 @@ public class CatalogueListPresenter extends BasePresenter {
     private Subscription mMangaFetchSubscription;
     private Subscription mMangaSearchSubscription;
     private Subscription mSearchViewSubscription;
+    private Subscription mMangaDetailFetchSubscription;
     private PublishSubject<Observable<String>> mSearchViewPublishSubject;
 
 
@@ -69,7 +71,10 @@ public class CatalogueListPresenter extends BasePresenter {
                 .flatMap(Observable::from)
                 .map(this::networkToLocalManga)
                 .toList()
-                .subscribe(adapter::addItems);
+                .subscribe(newMangas -> {
+                    adapter.addItems(newMangas);
+                    getMangaDetails(newMangas);
+                });
 
         subscriptions.add(mMangaFetchSubscription);
     }
@@ -83,7 +88,10 @@ public class CatalogueListPresenter extends BasePresenter {
                 .flatMap(Observable::from)
                 .map(this::networkToLocalManga)
                 .toList()
-                .subscribe(adapter::addItems);
+                .subscribe(newMangas -> {
+                    adapter.addItems(newMangas);
+                    getMangaDetails(newMangas);
+                });
 
         subscriptions.add(mMangaSearchSubscription);
     }
@@ -97,23 +105,40 @@ public class CatalogueListPresenter extends BasePresenter {
         return localManga;
     }
 
-    private Observable<Manga> getMangaDetails(Manga manga) {
-        Observable<Manga> mangaObs = Observable.just(manga);
-        if (!manga.initialized) {
-            return mangaObs
-                    .subscribeOn(Schedulers.io())
-                    .flatMap(localManga -> {
-                        Timber.e("Request " + localManga.url);
-                        return selectedSource.pullMangaFromNetwork(localManga.url);
-                    })
-                    .flatMap(networkManga -> {
-                        Manga.copyFromNetwork(manga, networkManga);
-                        Timber.w("Net manga " + manga.thumbnail_url);
-                        db.insertMangaBlock(manga);
-                        return Observable.just(manga);
-                    });
-        }
-        return mangaObs;
+    private void getMangaDetails(List<Manga> mangas) {
+        subscriptions.remove(mMangaDetailFetchSubscription);
+
+        mMangaDetailFetchSubscription = Observable.from(mangas)
+                .subscribeOn(Schedulers.io())
+                .filter(manga -> !manga.initialized)
+                .buffer(3)
+                .concatMap(localMangas -> {
+                    List<Observable<Manga>> mangaObservables = new ArrayList<>();
+                    for (Manga manga : localMangas) {
+                        Observable<Manga> tempObs = selectedSource.pullMangaFromNetwork(manga.url)
+                                .flatMap(networkManga -> {
+                                    Manga.copyFromNetwork(manga, networkManga);
+                                    db.insertMangaBlock(manga);
+                                    return Observable.just(manga);
+                                })
+                                .subscribeOn(Schedulers.io());
+                        mangaObservables.add(tempObs);
+                    }
+                    return Observable.merge(mangaObservables);
+                })
+                .filter(manga -> manga.initialized)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(manga -> {
+                    int i;
+                    for (i = 0; i < adapter.getCount(); i++) {
+                        if (manga.id == adapter.getItem(i).id) {
+                            break;
+                        }
+                    }
+                    view.updateImage(i, manga.thumbnail_url);
+                });
+
+        subscriptions.add(mMangaDetailFetchSubscription);
     }
 
     public void onQueryTextChange(String query) {
@@ -152,8 +177,8 @@ public class CatalogueListPresenter extends BasePresenter {
 
         mSearchName = query;
         adapter.getItems().clear();
+        view.resetScrollListener();
         loadMoreMangas(1);
-        view.setScrollListener();
     }
 
     public void loadMoreMangas(int page) {

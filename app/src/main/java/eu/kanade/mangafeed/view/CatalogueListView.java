@@ -10,4 +10,6 @@ public interface CatalogueListView extends BaseView {
     void setSourceTitle(String title);
     void setAdapter(EasyAdapter adapter);
     void setScrollListener();
+    void resetScrollListener();
+    void updateImage(int position, String thumbnail);
 }
