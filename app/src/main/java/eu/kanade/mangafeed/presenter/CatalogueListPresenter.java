@@ -97,6 +97,25 @@ public class CatalogueListPresenter extends BasePresenter {
         return localManga;
     }
 
+    private Observable<Manga> getMangaDetails(Manga manga) {
+        Observable<Manga> mangaObs = Observable.just(manga);
+        if (!manga.initialized) {
+            return mangaObs
+                    .subscribeOn(Schedulers.io())
+                    .flatMap(localManga -> {
+                        Timber.e("Request " + localManga.url);
+                        return selectedSource.pullMangaFromNetwork(localManga.url);
+                    })
+                    .flatMap(networkManga -> {
+                        Manga.copyFromNetwork(manga, networkManga);
+                        Timber.w("Net manga " + manga.thumbnail_url);
+                        db.insertMangaBlock(manga);
+                        return Observable.just(manga);
+                    });
+        }
+        return mangaObs;
+    }
+
     public void onQueryTextChange(String query) {
         if (mSearchViewPublishSubject != null)
             mSearchViewPublishSubject.onNext(Observable.just(query));

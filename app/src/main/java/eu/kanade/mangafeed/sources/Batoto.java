@@ -187,7 +187,7 @@ public class Batoto extends Source {
         Elements artistElements = parsedDocument.select("a[href^=http://bato.to/search?artist_name]");
         Element descriptionElement = parsedDocument.select("tr").get(5);
         Elements genreElements = parsedDocument.select("img[src=http://bato.to/forums/public/style_images/master/bullet_black.png]");
-        Element thumbnailUrlElement = parsedDocument.select("img[src^=http://img.batoto.net/forums/uploads/]").first();
+        Element thumbnailUrlElement = parsedDocument.select("img[src^=http://img.bato.to/forums/uploads/]").first();
 
         Manga newManga = new Manga();
         newManga.url = mangaUrl;

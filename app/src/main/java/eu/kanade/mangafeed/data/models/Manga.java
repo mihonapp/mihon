@@ -15,64 +15,49 @@ public class Manga {
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_ID, key = true)
     public Long id;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_SOURCE)
     public int source;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_URL)
     public String url;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_ARTIST)
     public String artist;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_AUTHOR)
     public String author;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_DESCRIPTION)
     public String description;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_GENRE)
     public String genre;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_TITLE)
     public String title;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_STATUS)
     public String status;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_THUMBNAIL_URL)
     public String thumbnail_url;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_RANK)
     public int rank;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_LAST_UPDATE)
     public long last_update;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_INITIALIZED)
     public boolean initialized;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_VIEWER)
     public int viewer;
 
-    @NonNull
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_CHAPTER_ORDER)
     public int chapter_order;
 
-    @NonNull
-    public int unread = 0;
+    public int unread;
 
     public Manga() {}
 
@@ -98,6 +83,34 @@ public class Manga {
                                  String description, String genre, String status, int rank,
                                  String thumbnail_url) {
         return new Manga(title, author, artist, url, description, genre, status, rank, thumbnail_url);
+    }
+
+    public static void copyFromNetwork(Manga local, Manga network) {
+        if (network.title != null)
+            local.title = network.title;
+
+        if (network.author != null)
+            local.author = network.author;
+
+        if (network.artist != null)
+            local.artist = network.artist;
+
+        if (network.url != null)
+            local.url = network.url;
+
+        if (network.description != null)
+            local.description = network.description;
+
+        if (network.genre != null)
+            local.genre = network.genre;
+
+        if (network.status != null)
+            local.status = network.status;
+
+        if (network.thumbnail_url != null)
+            local.thumbnail_url = network.thumbnail_url;
+
+        local.initialized = true;
     }
 
     @Override
