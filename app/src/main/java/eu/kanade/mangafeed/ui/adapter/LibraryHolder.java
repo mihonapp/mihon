@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
@@ -15,7 +16,7 @@ import uk.co.ribot.easyadapter.annotations.ViewId;
 
 
 @LayoutId(R.layout.item_library)
-public class MangaLibraryHolder extends ItemViewHolder<Manga> {
+public class LibraryHolder extends ItemViewHolder<Manga> {
 
     @ViewId(R.id.thumbnailImage)
     ImageView mThumbImage;
@@ -26,7 +27,7 @@ public class MangaLibraryHolder extends ItemViewHolder<Manga> {
     @ViewId(R.id.unreadText)
     TextView mUnreadText;
 
-    public MangaLibraryHolder(View view) {
+    public LibraryHolder(View view) {
         super(view);
     }
 
@@ -39,8 +40,16 @@ public class MangaLibraryHolder extends ItemViewHolder<Manga> {
         else {
             mUnreadText.setVisibility(View.GONE);
         }
+
+        String thumbnail;
+        if (manga.thumbnail_url != null)
+            thumbnail = manga.thumbnail_url;
+        else
+            thumbnail = "http://img1.wikia.nocookie.net/__cb20090524204255/starwars/images/thumb/1/1a/R2d2.jpg/400px-R2d2.jpg";
+
         Glide.with(getContext())
-                .load("http://img1.wikia.nocookie.net/__cb20090524204255/starwars/images/thumb/1/1a/R2d2.jpg/400px-R2d2.jpg")
+                .load(thumbnail)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(mThumbImage);
     }

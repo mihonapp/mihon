@@ -16,7 +16,7 @@ public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
     Filter filter;
 
     public LibraryAdapter(Context context) {
-        super(context, MangaLibraryHolder.class);
+        super(context, LibraryHolder.class);
         filter = new CatalogueFilter();
     }
 
