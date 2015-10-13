@@ -1,6 +1,9 @@
 package eu.kanade.mangafeed.presenter;
 
 import android.content.Intent;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,7 @@ public class CatalogueListPresenter extends BasePresenter {
     private Subscription mSearchViewSubscription;
     private Subscription mMangaDetailFetchSubscription;
     private PublishSubject<Observable<String>> mSearchViewPublishSubject;
+    private PublishSubject<Observable<List<Manga>>> mMangaDetailPublishSubject;
 
 
     public CatalogueListPresenter(CatalogueListView view) {
@@ -49,17 +53,79 @@ public class CatalogueListPresenter extends BasePresenter {
     }
 
     public void initialize() {
+        initializeSource();
+        initializeAdapter();
+        initializeSearch();
+        initializeMangaDetailsLoader();
+
+        getMangasFromSource(1);
+    }
+
+    private void initializeSource() {
         int sourceId = view.getIntent().getIntExtra(Intent.EXTRA_UID, -1);
         selectedSource = sourceManager.get(sourceId);
         view.setSourceTitle(selectedSource.getName());
+    }
 
+    private void initializeAdapter() {
         adapter = new EasyAdapter<>(view.getActivity(), CatalogueListHolder.class);
         view.setAdapter(adapter);
         view.setScrollListener();
+    }
 
-        initializeSearch();
+    private void initializeSearch() {
+        mSearchName = "";
+        mSearchMode = false;
+        mSearchViewPublishSubject = PublishSubject.create();
 
-        getMangasFromSource(1);
+        mSearchViewSubscription = Observable.switchOnNext(mSearchViewPublishSubject)
+                .debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        this::queryFromSearch,
+                        error -> Timber.e(error.getCause(), error.getMessage()));
+
+        subscriptions.add(mSearchViewSubscription);
+    }
+
+    private void initializeMangaDetailsLoader() {
+        mMangaDetailPublishSubject = PublishSubject.create();
+
+        mMangaDetailFetchSubscription = Observable.switchOnNext(mMangaDetailPublishSubject)
+                .subscribeOn(Schedulers.io())
+                .flatMap(Observable::from)
+                .filter(manga -> !manga.initialized)
+                .buffer(5)
+                .concatMap(localMangas -> {
+                    List<Observable<Manga>> mangaObservables = new ArrayList<>();
+                    for (Manga manga : localMangas) {
+                        Observable<Manga> tempObs = selectedSource.pullMangaFromNetwork(manga.url)
+                                .subscribeOn(Schedulers.io())
+                                .flatMap(networkManga -> {
+                                    Manga.copyFromNetwork(manga, networkManga);
+                                    db.insertMangaBlock(manga);
+                                    return Observable.just(manga);
+                                });
+                        mangaObservables.add(tempObs);
+                    }
+                    return Observable.merge(mangaObservables);
+                })
+                .filter(manga -> manga.initialized)
+                .onBackpressureBuffer()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(manga -> {
+                    // Get manga index in the adapter
+                    int index = getMangaIndex(manga);
+                    // Get the image view associated with the manga.
+                    // If it's null (not visible in the screen) there's no need to update the image.
+                    ImageView imageView = view.getImageView(index);
+                    if (imageView != null) {
+                        updateImage(imageView, manga.thumbnail_url);
+                    }
+                });
+
+        subscriptions.add(mMangaDetailFetchSubscription);
     }
 
     public void getMangasFromSource(int page) {
@@ -73,7 +139,7 @@ public class CatalogueListPresenter extends BasePresenter {
                 .toList()
                 .subscribe(newMangas -> {
                     adapter.addItems(newMangas);
-                    getMangaDetails(newMangas);
+                    mMangaDetailPublishSubject.onNext(Observable.just(newMangas));
                 });
 
         subscriptions.add(mMangaFetchSubscription);
@@ -90,7 +156,7 @@ public class CatalogueListPresenter extends BasePresenter {
                 .toList()
                 .subscribe(newMangas -> {
                     adapter.addItems(newMangas);
-                    getMangaDetails(newMangas);
+                    mMangaDetailPublishSubject.onNext(Observable.just(newMangas));
                 });
 
         subscriptions.add(mMangaSearchSubscription);
@@ -105,61 +171,11 @@ public class CatalogueListPresenter extends BasePresenter {
         return localManga;
     }
 
-    private void getMangaDetails(List<Manga> mangas) {
-        subscriptions.remove(mMangaDetailFetchSubscription);
-
-        mMangaDetailFetchSubscription = Observable.from(mangas)
-                .subscribeOn(Schedulers.io())
-                .filter(manga -> !manga.initialized)
-                .buffer(3)
-                .concatMap(localMangas -> {
-                    List<Observable<Manga>> mangaObservables = new ArrayList<>();
-                    for (Manga manga : localMangas) {
-                        Observable<Manga> tempObs = selectedSource.pullMangaFromNetwork(manga.url)
-                                .flatMap(networkManga -> {
-                                    Manga.copyFromNetwork(manga, networkManga);
-                                    db.insertMangaBlock(manga);
-                                    return Observable.just(manga);
-                                })
-                                .subscribeOn(Schedulers.io());
-                        mangaObservables.add(tempObs);
-                    }
-                    return Observable.merge(mangaObservables);
-                })
-                .filter(manga -> manga.initialized)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(manga -> {
-                    int i;
-                    for (i = 0; i < adapter.getCount(); i++) {
-                        if (manga.id == adapter.getItem(i).id) {
-                            break;
-                        }
-                    }
-                    view.updateImage(i, manga.thumbnail_url);
-                });
-
-        subscriptions.add(mMangaDetailFetchSubscription);
-    }
-
     public void onQueryTextChange(String query) {
         if (mSearchViewPublishSubject != null)
             mSearchViewPublishSubject.onNext(Observable.just(query));
     }
 
-    private void initializeSearch() {
-        mSearchName = "";
-        mSearchMode = false;
-        mSearchViewPublishSubject = PublishSubject.create();
-        mSearchViewSubscription = Observable.switchOnNext(mSearchViewPublishSubject)
-                .debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        this::queryFromSearch,
-                        error -> Timber.e(error.getCause(), error.getMessage()));
-
-        subscriptions.add(mSearchViewSubscription);
-    }
 
     private void queryFromSearch(String query) {
         // If search button clicked
@@ -187,6 +203,23 @@ public class CatalogueListPresenter extends BasePresenter {
         } else {
             getMangasFromSource(page);
         }
+    }
+
+    private int getMangaIndex(Manga manga) {
+        int i;
+        for (i = 0; i < adapter.getCount(); i++) {
+            if (manga.id == adapter.getItem(i).id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void updateImage(ImageView imageView, String thumbnail) {
+        Glide.with(view.getActivity())
+                .load(thumbnail)
+                .centerCrop()
+                .into(imageView);
     }
 
 }

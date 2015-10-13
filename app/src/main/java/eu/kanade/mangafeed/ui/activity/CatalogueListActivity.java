@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
@@ -72,14 +70,19 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
         });
     }
 
+    // CatalogueListView
+
+    @Override
     public void setSourceTitle(String title) {
         setToolbarTitle(title);
     }
 
+    @Override
     public void setAdapter(EasyAdapter adapter) {
         manga_list.setAdapter(adapter);
     }
 
+    @Override
     public void setScrollListener() {
         scrollListener = new EndlessScrollListener() {
             @Override
@@ -92,23 +95,19 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
         manga_list.setOnScrollListener(scrollListener);
     }
 
+    @Override
     public void resetScrollListener() {
         scrollListener.resetScroll();
     }
 
     @Override
-    public void updateImage(int position, String thumbnail) {
+    public ImageView getImageView(int position) {
         View v = manga_list.getChildAt(position -
                 manga_list.getFirstVisiblePosition());
 
         if(v == null)
-            return;
+            return null;
 
-        ImageView imageView = (ImageView) v.findViewById(R.id.catalogue_thumbnail);
-
-        Glide.with(getActivity())
-                .load(thumbnail)
-                .centerCrop()
-                .into(imageView);
+        return (ImageView) v.findViewById(R.id.catalogue_thumbnail);
     }
 }

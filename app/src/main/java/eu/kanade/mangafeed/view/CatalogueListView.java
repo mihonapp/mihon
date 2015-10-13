@@ -1,8 +1,8 @@
 package eu.kanade.mangafeed.view;
 
 import android.content.Intent;
+import android.widget.ImageView;
 
-import eu.kanade.mangafeed.sources.Source;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 public interface CatalogueListView extends BaseView {
@@ -11,5 +11,5 @@ public interface CatalogueListView extends BaseView {
     void setAdapter(EasyAdapter adapter);
     void setScrollListener();
     void resetScrollListener();
-    void updateImage(int position, String thumbnail);
+    ImageView getImageView(int position);
 }
