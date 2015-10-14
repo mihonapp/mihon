@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,6 +24,12 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
 
     @Bind(R.id.gridView)
     GridView manga_list;
+
+    @Bind(R.id.progress)
+    ProgressBar progress;
+
+    @Bind(R.id.progress_grid)
+    ProgressBar progress_grid;
 
     private CatalogueListPresenter presenter;
 
@@ -98,6 +105,22 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
     @Override
     public void resetScrollListener() {
         scrollListener.resetScroll();
+    }
+
+    @Override
+    public void showProgressBar() {
+        progress.setVisibility(ProgressBar.VISIBLE);
+    }
+
+    @Override
+    public void showGridProgressBar() {
+        progress_grid.setVisibility(ProgressBar.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progress.setVisibility(ProgressBar.GONE);
+        progress_grid.setVisibility(ProgressBar.GONE);
     }
 
     @Override

@@ -58,6 +58,7 @@ public class CatalogueListPresenter extends BasePresenter {
         initializeSearch();
         initializeMangaDetailsLoader();
 
+        view.showProgressBar();
         getMangasFromSource(1);
     }
 
@@ -154,6 +155,7 @@ public class CatalogueListPresenter extends BasePresenter {
                 .map(this::networkToLocalManga)
                 .toList()
                 .subscribe(newMangas -> {
+                    view.hideProgressBar();
                     adapter.addItems(newMangas);
                     if (mMangaDetailPublishSubject != null)
                         mMangaDetailPublishSubject.onNext(Observable.just(newMangas));
@@ -174,7 +176,6 @@ public class CatalogueListPresenter extends BasePresenter {
             mSearchViewPublishSubject.onNext(Observable.just(query));
     }
 
-
     private void queryFromSearch(String query) {
         // If search button clicked
         if (mSearchName.equals("") && query.equals("")) {
@@ -191,11 +192,15 @@ public class CatalogueListPresenter extends BasePresenter {
 
         mSearchName = query;
         adapter.getItems().clear();
+        view.showProgressBar();
         view.resetScrollListener();
         loadMoreMangas(1);
     }
 
     public void loadMoreMangas(int page) {
+        if (page > 1) {
+            view.showGridProgressBar();
+        }
         if (mSearchMode) {
             getMangasFromSearch(page);
         } else {

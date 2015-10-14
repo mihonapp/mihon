@@ -11,5 +11,8 @@ public interface CatalogueListView extends BaseView {
     void setAdapter(EasyAdapter adapter);
     void setScrollListener();
     void resetScrollListener();
+    void showProgressBar();
+    void showGridProgressBar();
+    void hideProgressBar();
     ImageView getImageView(int position);
 }
