@@ -96,7 +96,7 @@ public class CatalogueListPresenter extends BasePresenter {
                 .subscribeOn(Schedulers.io())
                 .flatMap(Observable::from)
                 .filter(manga -> !manga.initialized)
-                .buffer(5)
+                .buffer(3)
                 .concatMap(localMangas -> {
                     List<Observable<Manga>> mangaObservables = new ArrayList<>();
                     for (Manga manga : localMangas) {
@@ -131,16 +131,8 @@ public class CatalogueListPresenter extends BasePresenter {
     public void getMangasFromSource(int page) {
         subscriptions.remove(mMangaFetchSubscription);
 
-        mMangaFetchSubscription = selectedSource.pullPopularMangasFromNetwork(page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(Observable::from)
-                .map(this::networkToLocalManga)
-                .toList()
-                .subscribe(newMangas -> {
-                    adapter.addItems(newMangas);
-                    mMangaDetailPublishSubject.onNext(Observable.just(newMangas));
-                });
+        mMangaFetchSubscription = getMangasSubscriber(
+                selectedSource.pullPopularMangasFromNetwork(page));
 
         subscriptions.add(mMangaFetchSubscription);
     }
@@ -148,7 +140,14 @@ public class CatalogueListPresenter extends BasePresenter {
     public void getMangasFromSearch(int page) {
         subscriptions.remove(mMangaSearchSubscription);
 
-        mMangaSearchSubscription = selectedSource.searchMangasFromNetwork(mSearchName, page)
+        mMangaSearchSubscription = getMangasSubscriber(
+                selectedSource.searchMangasFromNetwork(mSearchName, page));
+
+        subscriptions.add(mMangaSearchSubscription);
+    }
+
+    private Subscription getMangasSubscriber(Observable<List<Manga>> mangas) {
+        return mangas
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(Observable::from)
@@ -156,10 +155,9 @@ public class CatalogueListPresenter extends BasePresenter {
                 .toList()
                 .subscribe(newMangas -> {
                     adapter.addItems(newMangas);
-                    mMangaDetailPublishSubject.onNext(Observable.just(newMangas));
+                    if (mMangaDetailPublishSubject != null)
+                        mMangaDetailPublishSubject.onNext(Observable.just(newMangas));
                 });
-
-        subscriptions.add(mMangaSearchSubscription);
     }
 
     private Manga networkToLocalManga(Manga networkManga) {
@@ -206,8 +204,7 @@ public class CatalogueListPresenter extends BasePresenter {
     }
 
     private int getMangaIndex(Manga manga) {
-        int i;
-        for (i = 0; i < adapter.getCount(); i++) {
+        for (int i = 0; i < adapter.getCount(); i++) {
             if (manga.id == adapter.getItem(i).id) {
                 return i;
             }
