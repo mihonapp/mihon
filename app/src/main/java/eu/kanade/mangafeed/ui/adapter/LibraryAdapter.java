@@ -42,9 +42,9 @@ public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
             } else {
                 List<Manga> filteredMangas = Observable.from(mangas)
                         .filter(x ->
-                                x.title.toLowerCase().contains(query) ||
-                                x.author.toLowerCase().contains(query) ||
-                                x.artist.toLowerCase().contains(query))
+                                (x.title != null && x.title.toLowerCase().contains(query)) ||
+                                (x.author != null && x.author.toLowerCase().contains(query)) ||
+                                (x.artist != null && x.artist.toLowerCase().contains(query)))
                         .toList()
                         .toBlocking()
                         .single();
