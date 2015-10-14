@@ -9,22 +9,22 @@ import android.widget.ListView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.presenter.CataloguePresenter;
+import eu.kanade.mangafeed.presenter.SourcePresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
-import eu.kanade.mangafeed.view.CatalogueView;
+import eu.kanade.mangafeed.view.SourceView;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 
-public class CatalogueFragment extends BaseFragment implements CatalogueView {
+public class SourceFragment extends BaseFragment implements SourceView {
 
-    private CataloguePresenter presenter;
+    private SourcePresenter presenter;
     private MainActivity activity;
 
     @Bind(R.id.catalogue_list)
     ListView source_list;
 
-    public static CatalogueFragment newInstance() {
-        CatalogueFragment fragment = new CatalogueFragment();
+    public static SourceFragment newInstance() {
+        SourceFragment fragment = new SourceFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -34,7 +34,7 @@ public class CatalogueFragment extends BaseFragment implements CatalogueView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new CataloguePresenter(this);
+        presenter = new SourcePresenter(this);
         activity = (MainActivity)getActivity();
     }
 
@@ -50,7 +50,7 @@ public class CatalogueFragment extends BaseFragment implements CatalogueView {
         return view;
     }
 
-    // CatalogueView
+    // SourceView
 
     @Override
     public void setAdapter(EasyAdapter adapter) {

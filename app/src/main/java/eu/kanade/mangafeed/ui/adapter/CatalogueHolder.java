@@ -15,7 +15,7 @@ import uk.co.ribot.easyadapter.annotations.LayoutId;
 import uk.co.ribot.easyadapter.annotations.ViewId;
 
 @LayoutId(R.layout.item_catalogue)
-public class CatalogueListHolder extends ItemViewHolder<Manga> {
+public class CatalogueHolder extends ItemViewHolder<Manga> {
 
     @ViewId(R.id.catalogue_title)
     TextView title;
@@ -23,7 +23,7 @@ public class CatalogueListHolder extends ItemViewHolder<Manga> {
     @ViewId(R.id.catalogue_thumbnail)
     ImageView image;
 
-    public CatalogueListHolder(View view) {
+    public CatalogueHolder(View view) {
         super(view);
     }
 

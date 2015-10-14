@@ -17,7 +17,7 @@ public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
 
     public LibraryAdapter(Context context) {
         super(context, LibraryHolder.class);
-        filter = new CatalogueFilter();
+        filter = new LibraryFilter();
     }
 
     public void setNewItems(List<T> list) {
@@ -30,7 +30,7 @@ public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
         return filter;
     }
 
-    private class CatalogueFilter extends Filter {
+    private class LibraryFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             FilterResults results = new FilterResults();

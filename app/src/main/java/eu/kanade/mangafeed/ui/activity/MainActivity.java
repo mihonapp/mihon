@@ -13,7 +13,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.ui.fragment.CatalogueFragment;
+import eu.kanade.mangafeed.ui.fragment.SourceFragment;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 
 public class MainActivity extends BaseActivity {
@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity {
                                     case R.id.nav_drawer_recent_updates:
                                         break;
                                     case R.id.nav_drawer_catalogues:
-                                        setFragment(CatalogueFragment.newInstance());
+                                        setFragment(SourceFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_settings:
                                         break;

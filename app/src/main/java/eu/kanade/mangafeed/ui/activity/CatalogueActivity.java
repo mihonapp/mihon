@@ -12,12 +12,12 @@ import android.widget.ProgressBar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.presenter.CatalogueListPresenter;
-import eu.kanade.mangafeed.view.CatalogueListView;
+import eu.kanade.mangafeed.presenter.CataloguePresenter;
+import eu.kanade.mangafeed.view.CatalogueView;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
-public class CatalogueListActivity extends BaseActivity implements CatalogueListView {
+public class CatalogueActivity extends BaseActivity implements CatalogueView {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -31,7 +31,7 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
     @Bind(R.id.progress_grid)
     ProgressBar progress_grid;
 
-    private CatalogueListPresenter presenter;
+    private CataloguePresenter presenter;
 
     private EndlessScrollListener scrollListener;
 
@@ -43,7 +43,7 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
 
         setupToolbar(toolbar);
 
-        presenter = new CatalogueListPresenter(this);
+        presenter = new CataloguePresenter(this);
         presenter.initialize();
     }
 
@@ -77,7 +77,7 @@ public class CatalogueListActivity extends BaseActivity implements CatalogueList
         });
     }
 
-    // CatalogueListView
+    // CatalogueView
 
     @Override
     public void setSourceTitle(String title) {
