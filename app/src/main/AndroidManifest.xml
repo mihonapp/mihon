@@ -39,6 +39,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.kanade.mangafeed.ui.activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".ui.activity.MangaCatalogueActivity"
+            android:label="@string/title_activity_manga_catalogue"
+            android:parentActivityName=".ui.activity.CatalogueActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="eu.kanade.mangafeed.ui.activity.CatalogueActivity" />
+        </activity>
     </application>
 
 </manifest>

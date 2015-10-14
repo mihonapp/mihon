@@ -11,11 +11,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.ui.activity.MangaCatalogueActivity;
 import eu.kanade.mangafeed.ui.adapter.CatalogueHolder;
 import eu.kanade.mangafeed.view.CatalogueView;
 import rx.Observable;
@@ -65,13 +67,14 @@ public class CataloguePresenter extends BasePresenter {
     private void initializeSource() {
         int sourceId = view.getIntent().getIntExtra(Intent.EXTRA_UID, -1);
         selectedSource = sourceManager.get(sourceId);
-        view.setSourceTitle(selectedSource.getName());
+        view.setTitle(selectedSource.getName());
     }
 
     private void initializeAdapter() {
         adapter = new EasyAdapter<>(view.getActivity(), CatalogueHolder.class);
         view.setAdapter(adapter);
         view.setScrollListener();
+        view.setMangaClickListener();
     }
 
     private void initializeSearch() {
@@ -169,6 +172,13 @@ public class CataloguePresenter extends BasePresenter {
             localManga = db.getMangaBlock(networkManga.url);
         }
         return localManga;
+    }
+
+    public void onMangaClick(int position) {
+        Intent intent = new Intent(view.getActivity(), MangaCatalogueActivity.class);
+        Manga selectedManga = adapter.getItem(position);
+        EventBus.getDefault().postSticky(selectedManga);
+        view.getActivity().startActivity(intent);
     }
 
     public void onQueryTextChange(String query) {

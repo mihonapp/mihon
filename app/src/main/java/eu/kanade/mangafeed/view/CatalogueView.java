@@ -7,8 +7,9 @@ import uk.co.ribot.easyadapter.EasyAdapter;
 
 public interface CatalogueView extends BaseView {
     Intent getIntent();
-    void setSourceTitle(String title);
+    void setTitle(String title);
     void setAdapter(EasyAdapter adapter);
+    void setMangaClickListener();
     void setScrollListener();
     void resetScrollListener();
     void showProgressBar();

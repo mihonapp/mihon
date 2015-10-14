@@ -33,12 +33,12 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
 
     private CataloguePresenter presenter;
 
-    private EndlessScrollListener scrollListener;
+    private EndlessScrollListener scroll_listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_catalogue_list);
+        setContentView(R.layout.activity_catalogue);
         ButterKnife.bind(this);
 
         setupToolbar(toolbar);
@@ -80,7 +80,7 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
     // CatalogueView
 
     @Override
-    public void setSourceTitle(String title) {
+    public void setTitle(String title) {
         setToolbarTitle(title);
     }
 
@@ -90,8 +90,16 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
     }
 
     @Override
+    public void setMangaClickListener() {
+        manga_list.setOnItemClickListener(
+                (parent, view, position, id) ->
+                        presenter.onMangaClick(position)
+        );
+    }
+
+    @Override
     public void setScrollListener() {
-        scrollListener = new EndlessScrollListener() {
+        scroll_listener = new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
                 presenter.loadMoreMangas(page);
@@ -99,12 +107,12 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
             }
         };
 
-        manga_list.setOnScrollListener(scrollListener);
+        manga_list.setOnScrollListener(scroll_listener);
     }
 
     @Override
     public void resetScrollListener() {
-        scrollListener.resetScroll();
+        scroll_listener.resetScroll();
     }
 
     @Override
