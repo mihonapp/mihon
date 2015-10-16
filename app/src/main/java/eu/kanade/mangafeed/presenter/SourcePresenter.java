@@ -37,6 +37,7 @@ public class SourcePresenter {
     }
 
     public void onSourceClick(int position) {
+        sourceManager.setSelectedSource(adapter.getItem(position).getSource());
         Intent intent = new Intent(view.getActivity(), CatalogueActivity.class);
         intent.putExtra(Intent.EXTRA_UID, adapter.getItem(position).getSource());
         view.getActivity().startActivity(intent);

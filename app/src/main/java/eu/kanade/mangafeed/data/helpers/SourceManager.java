@@ -6,15 +6,18 @@ import java.util.List;
 
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.sources.Batoto;
+import eu.kanade.mangafeed.sources.MangaHere;
 import eu.kanade.mangafeed.sources.Source;
 
 public class SourceManager {
 
     public static final int BATOTO = 1;
+    public static final int MANGAHERE = 2;
 
     private HashMap<Integer, Source> mSourcesMap;
     private NetworkHelper mNetworkHelper;
     private CacheManager mCacheManager;
+    private Source selected;
 
     public SourceManager(NetworkHelper networkHelper, CacheManager cacheManager) {
         mSourcesMap = new HashMap<>();
@@ -35,6 +38,8 @@ public class SourceManager {
         switch (sourceKey) {
             case BATOTO:
                 return new Batoto(mNetworkHelper, mCacheManager);
+            case MANGAHERE:
+                return new MangaHere(mNetworkHelper, mCacheManager);
         }
 
         return null;
@@ -42,9 +47,18 @@ public class SourceManager {
 
     private void initializeSources() {
         mSourcesMap.put(BATOTO, createSource(BATOTO));
+        mSourcesMap.put(MANGAHERE, createSource(MANGAHERE));
     }
 
     public List<Source> getSources() {
         return new ArrayList<Source>(mSourcesMap.values());
+    }
+
+    public void setSelectedSource(int sourceId) {
+        selected = get(sourceId);
+    }
+
+    public Source getSelectedSource() {
+        return selected;
     }
 }
