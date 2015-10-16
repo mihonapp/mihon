@@ -9,15 +9,20 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
-import eu.kanade.mangafeed.view.CatalogueView;
+import eu.kanade.mangafeed.ui.adapter.CatalogueHolder;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
+import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
-public class CatalogueActivity extends BaseActivity implements CatalogueView {
+@RequiresPresenter(CataloguePresenter.class)
+public class CatalogueActivity extends BaseActivity2<CataloguePresenter> {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -31,8 +36,7 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
     @Bind(R.id.progress_grid)
     ProgressBar progress_grid;
 
-    private CataloguePresenter presenter;
-
+    private EasyAdapter<Manga> adapter;
     private EndlessScrollListener scroll_listener;
 
     @Override
@@ -43,14 +47,9 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
 
         setupToolbar(toolbar);
 
-        presenter = new CataloguePresenter(this);
-        presenter.initialize();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.destroySubscriptions();
+        initializeAdapter();
+        initializeClickListener();
+        initializeScrollListener();
     }
 
     @Override
@@ -65,44 +64,39 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                presenter.onQueryTextChange(query);
+                getPresenter().onQueryTextChange(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                presenter.onQueryTextChange(newText);
+                getPresenter().onQueryTextChange(newText);
                 return true;
             }
         });
     }
 
-    // CatalogueView
-
-    @Override
-    public void setTitle(String title) {
-        setToolbarTitle(title);
+    public EasyAdapter<Manga> getAdapter() {
+        return adapter;
     }
 
-    @Override
-    public void setAdapter(EasyAdapter adapter) {
+    public void initializeAdapter() {
+        adapter = new EasyAdapter<>(this, CatalogueHolder.class);
         manga_list.setAdapter(adapter);
     }
 
-    @Override
-    public void setMangaClickListener() {
+    public void initializeClickListener() {
         manga_list.setOnItemClickListener(
                 (parent, view, position, id) ->
-                        presenter.onMangaClick(position)
+                        getPresenter().onMangaClick(position)
         );
     }
 
-    @Override
-    public void setScrollListener() {
+    public void initializeScrollListener() {
         scroll_listener = new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                presenter.loadMoreMangas(page);
+                getPresenter().loadMoreMangas(page);
                 return true;
             }
         };
@@ -110,28 +104,31 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
         manga_list.setOnScrollListener(scroll_listener);
     }
 
-    @Override
     public void resetScrollListener() {
         scroll_listener.resetScroll();
     }
 
-    @Override
+    public int getScrollPage() {
+        return scroll_listener.getCurrentPage();
+    }
+
+    public void setScrollPage(int page) {
+        scroll_listener.setCurrentPage(page);
+    }
+
     public void showProgressBar() {
         progress.setVisibility(ProgressBar.VISIBLE);
     }
 
-    @Override
     public void showGridProgressBar() {
         progress_grid.setVisibility(ProgressBar.VISIBLE);
     }
 
-    @Override
     public void hideProgressBar() {
         progress.setVisibility(ProgressBar.GONE);
         progress_grid.setVisibility(ProgressBar.GONE);
     }
 
-    @Override
     public ImageView getImageView(int position) {
         View v = manga_list.getChildAt(position -
                 manga_list.getFirstVisiblePosition());
@@ -140,5 +137,9 @@ public class CatalogueActivity extends BaseActivity implements CatalogueView {
             return null;
 
         return (ImageView) v.findViewById(R.id.catalogue_thumbnail);
+    }
+
+    public void onMangasNext(List<Manga> newMangas) {
+        adapter.addItems(newMangas);
     }
 }

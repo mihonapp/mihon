@@ -1,6 +1,8 @@
 package eu.kanade.mangafeed.presenter;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -12,34 +14,31 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.ui.activity.CatalogueActivity;
 import eu.kanade.mangafeed.ui.activity.MangaCatalogueActivity;
-import eu.kanade.mangafeed.ui.adapter.CatalogueHolder;
-import eu.kanade.mangafeed.view.CatalogueView;
+import nucleus.presenter.RxPresenter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import timber.log.Timber;
-import uk.co.ribot.easyadapter.EasyAdapter;
 
-public class CataloguePresenter extends BasePresenter {
-
-    CatalogueView view;
-    EasyAdapter<Manga> adapter;
-    Source selectedSource;
+public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
 
     @Inject SourceManager sourceManager;
     @Inject DatabaseHelper db;
 
+    private Source selectedSource;
+
     private String mSearchName;
     private boolean mSearchMode;
     private final int SEARCH_TIMEOUT = 1000;
+    private int mCurrentPage = 1;
 
     private Subscription mMangaFetchSubscription;
     private Subscription mMangaSearchSubscription;
@@ -48,36 +47,43 @@ public class CataloguePresenter extends BasePresenter {
     private PublishSubject<Observable<String>> mSearchViewPublishSubject;
     private PublishSubject<Observable<List<Manga>>> mMangaDetailPublishSubject;
 
+    private final String CURRENT_PAGE = "CATALOGUE_CURRENT_PAGE";
 
-    public CataloguePresenter(CatalogueView view) {
-        this.view = view;
-        App.getComponent(view.getActivity()).inject(this);
-    }
+    @Override
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
 
-    public void initialize() {
-        initializeSource();
-        initializeAdapter();
+        if (savedState != null) {
+            mCurrentPage = savedState.getInt(CURRENT_PAGE);
+        }
+
+        selectedSource = sourceManager.getSelectedSource();
+        getMangasFromSource(mCurrentPage);
         initializeSearch();
         initializeMangaDetailsLoader();
-
-        view.showProgressBar();
-        getMangasFromSource(1);
     }
 
-    private void initializeSource() {
-        int sourceId = view.getIntent().getIntExtra(Intent.EXTRA_UID, -1);
-        selectedSource = sourceManager.get(sourceId);
-        view.setTitle(selectedSource.getName());
+    @Override
+    protected void onTakeView(CatalogueActivity view) {
+        super.onTakeView(view);
+
+        view.setScrollPage(mCurrentPage - 1);
+
+        view.setToolbarTitle(selectedSource.getName());
+
+        if (view.getAdapter().getCount() == 0)
+            view.showProgressBar();
     }
 
-    private void initializeAdapter() {
-        adapter = new EasyAdapter<>(view.getActivity(), CatalogueHolder.class);
-        view.setAdapter(adapter);
-        view.setScrollListener();
-        view.setMangaClickListener();
+    @Override
+    protected void onSave(@NonNull Bundle state) {
+        super.onSave(state);
+        state.putInt(CURRENT_PAGE, mCurrentPage);
     }
 
     private void initializeSearch() {
+        remove(mSearchViewSubscription);
+
         mSearchName = "";
         mSearchMode = false;
         mSearchViewPublishSubject = PublishSubject.create();
@@ -90,10 +96,12 @@ public class CataloguePresenter extends BasePresenter {
                         this::queryFromSearch,
                         error -> Timber.e(error.getCause(), error.getMessage()));
 
-        subscriptions.add(mSearchViewSubscription);
+        add(mSearchViewSubscription);
     }
 
     private void initializeMangaDetailsLoader() {
+        remove(mMangaDetailFetchSubscription);
+
         mMangaDetailPublishSubject = PublishSubject.create();
 
         mMangaDetailFetchSubscription = Observable.switchOnNext(mMangaDetailPublishSubject)
@@ -123,46 +131,39 @@ public class CataloguePresenter extends BasePresenter {
                     int index = getMangaIndex(manga);
                     // Get the image view associated with the manga.
                     // If it's null (not visible in the screen) there's no need to update the image.
-                    ImageView imageView = view.getImageView(index);
+                    ImageView imageView = getView().getImageView(index);
                     if (imageView != null) {
                         updateImage(imageView, manga.thumbnail_url);
                     }
                 });
 
-        subscriptions.add(mMangaDetailFetchSubscription);
+        add(mMangaDetailFetchSubscription);
     }
 
     public void getMangasFromSource(int page) {
-        subscriptions.remove(mMangaFetchSubscription);
-
         mMangaFetchSubscription = getMangasSubscriber(
                 selectedSource.pullPopularMangasFromNetwork(page));
-
-        subscriptions.add(mMangaFetchSubscription);
     }
 
     public void getMangasFromSearch(int page) {
-        subscriptions.remove(mMangaSearchSubscription);
-
         mMangaSearchSubscription = getMangasSubscriber(
                 selectedSource.searchMangasFromNetwork(mSearchName, page));
-
-        subscriptions.add(mMangaSearchSubscription);
     }
 
     private Subscription getMangasSubscriber(Observable<List<Manga>> mangas) {
         return mangas
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(Observable::from)
                 .map(this::networkToLocalManga)
                 .toList()
-                .subscribe(newMangas -> {
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(deliverReplay())
+                .subscribe(this.split((view, newMangas) -> {
                     view.hideProgressBar();
-                    adapter.addItems(newMangas);
+                    view.onMangasNext(newMangas);
                     if (mMangaDetailPublishSubject != null)
                         mMangaDetailPublishSubject.onNext(Observable.just(newMangas));
-                });
+                }));
     }
 
     private Manga networkToLocalManga(Manga networkManga) {
@@ -175,10 +176,10 @@ public class CataloguePresenter extends BasePresenter {
     }
 
     public void onMangaClick(int position) {
-        Intent intent = new Intent(view.getActivity(), MangaCatalogueActivity.class);
-        Manga selectedManga = adapter.getItem(position);
+        Intent intent = new Intent(getView().getActivity(), MangaCatalogueActivity.class);
+        Manga selectedManga = getView().getAdapter().getItem(position);
         EventBus.getDefault().postSticky(selectedManga);
-        view.getActivity().startActivity(intent);
+        getView().getActivity().startActivity(intent);
     }
 
     public void onQueryTextChange(String query) {
@@ -201,26 +202,27 @@ public class CataloguePresenter extends BasePresenter {
         }
 
         mSearchName = query;
-        adapter.getItems().clear();
-        view.showProgressBar();
-        view.resetScrollListener();
+        getView().getAdapter().getItems().clear();
+        getView().showProgressBar();
+        getView().resetScrollListener();
         loadMoreMangas(1);
     }
 
     public void loadMoreMangas(int page) {
         if (page > 1) {
-            view.showGridProgressBar();
+            getView().showGridProgressBar();
         }
         if (mSearchMode) {
             getMangasFromSearch(page);
         } else {
             getMangasFromSource(page);
         }
+        mCurrentPage = page;
     }
 
     private int getMangaIndex(Manga manga) {
-        for (int i = 0; i < adapter.getCount(); i++) {
-            if (manga.id == adapter.getItem(i).id) {
+        for (int i = 0; i < getView().getAdapter().getCount(); i++) {
+            if (manga.id == getView().getAdapter().getItem(i).id) {
                 return i;
             }
         }
@@ -228,7 +230,7 @@ public class CataloguePresenter extends BasePresenter {
     }
 
     private void updateImage(ImageView imageView, String thumbnail) {
-        Glide.with(view.getActivity())
+        Glide.with(getView().getActivity())
                 .load(thumbnail)
                 .centerCrop()
                 .into(imageView);
