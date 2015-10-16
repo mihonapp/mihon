@@ -17,6 +17,7 @@ import timber.log.Timber;
 public class App extends Application {
 
     AppComponent mApplicationComponent;
+    ComponentReflectionInjector<AppComponent> mComponentInjector;
 
     @Override
     public void onCreate() {
@@ -27,6 +28,9 @@ public class App extends Application {
                 .appModule(new AppModule(this))
                 .build();
 
+        mComponentInjector =
+                new ComponentReflectionInjector<>(AppComponent.class, mApplicationComponent);
+
         //ACRA.init(this);
     }
 
@@ -36,6 +40,14 @@ public class App extends Application {
 
     public AppComponent getComponent() {
         return mApplicationComponent;
+    }
+
+    public ComponentReflectionInjector<AppComponent> getComponentReflection() {
+        return mComponentInjector;
+    }
+
+    public static ComponentReflectionInjector<AppComponent> getComponentReflection(Context context) {
+        return get(context).getComponentReflection();
     }
 
     public static AppComponent getComponent(Context context) {
