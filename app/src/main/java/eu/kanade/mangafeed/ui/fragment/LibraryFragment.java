@@ -14,6 +14,7 @@ import android.widget.GridView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
@@ -53,7 +54,7 @@ public class LibraryFragment extends BaseFragment<LibraryPresenter> {
         ButterKnife.bind(this, view);
 
         createAdapter();
-        setMangaClickListener();
+        setMangaLongClickListener();
 
         return view;
     }
@@ -80,7 +81,7 @@ public class LibraryFragment extends BaseFragment<LibraryPresenter> {
         });
     }
 
-    public void createAdapter() {
+    private void createAdapter() {
         adapter = new LibraryAdapter<>(getActivity());
         grid.setAdapter(adapter);
     }
@@ -89,11 +90,16 @@ public class LibraryFragment extends BaseFragment<LibraryPresenter> {
         return adapter;
     }
 
-    public void setMangaClickListener() {
-        grid.setOnItemClickListener(
-                (parent, view, position, id) ->
-                        onMangaClick(position)
+    @OnItemClick(R.id.gridView)
+    protected void onMangaClick(int position) {
+        Intent intent = MangaDetailActivity.newIntent(
+                getActivity(),
+                adapter.getItem(position)
         );
+        getActivity().startActivity(intent);
+    }
+
+    private void setMangaLongClickListener() {
         grid.setMultiChoiceModeListener(new GridView.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
@@ -129,14 +135,6 @@ public class LibraryFragment extends BaseFragment<LibraryPresenter> {
 
             }
         });
-    }
-
-    private void onMangaClick(int position) {
-        Intent intent = MangaDetailActivity.newIntent(
-                getActivity(),
-                adapter.getItem(position)
-        );
-        getActivity().startActivity(intent);
     }
 
 }

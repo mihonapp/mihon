@@ -15,6 +15,8 @@ public interface ChapterManager {
 
     Observable<List<Chapter>> getChapters(Manga manga);
 
+    Observable<List<Chapter>> getChapters(long manga_id);
+
     Observable<PutResult> insertChapter(Chapter chapter);
 
     Observable<PutResults<Chapter>> insertChapters(List<Chapter> chapters);

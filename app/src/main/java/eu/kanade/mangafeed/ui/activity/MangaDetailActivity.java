@@ -32,6 +32,7 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
     @Bind(R.id.viewpager)
     ViewPager view_pager;
 
+    private MangaDetailAdapter adapter;
     private long manga_id;
     private boolean is_online = false;
 
@@ -73,59 +74,70 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
     }
 
     private void setupViewPager() {
-        view_pager.setAdapter(new MangaDetailAdapter(
+        adapter = new MangaDetailAdapter(
                 getSupportFragmentManager(),
                 getActivity(),
-                manga_id));
+                manga_id);
 
+        view_pager.setAdapter(adapter);
         tabs.setupWithViewPager(view_pager);
 
         if (!is_online)
             view_pager.setCurrentItem(MangaDetailAdapter.CHAPTERS_FRAGMENT);
     }
 
-}
-
-class MangaDetailAdapter extends FragmentPagerAdapter {
-
-    final int PAGE_COUNT = 2;
-    private String tab_titles[];
-    private Context context;
-    private long manga_id;
-
-    final static int INFO_FRAGMENT = 0;
-    final static int CHAPTERS_FRAGMENT = 1;
-
-    public MangaDetailAdapter(FragmentManager fm, Context context, long manga_id) {
-        super(fm);
-        this.context = context;
-        tab_titles = new String[]{
-                context.getString(R.string.manga_detail_tab),
-                context.getString(R.string.manga_chapters_tab)
-        };
-        this.manga_id = manga_id;
+    public long getMangaId() {
+        return manga_id;
     }
 
-    @Override
-    public int getCount() {
-        return PAGE_COUNT;
+    public void onMangaNext(Manga manga) {
+        ((MangaChaptersFragment) adapter.getItem(MangaDetailAdapter.CHAPTERS_FRAGMENT))
+                .onMangaNext(manga);
     }
 
-    @Override
-    public Fragment getItem(int position) {
-        switch (position) {
-            case INFO_FRAGMENT:
-                return MangaInfoFragment.newInstance(manga_id);
-            case CHAPTERS_FRAGMENT:
-                return MangaChaptersFragment.newInstance(manga_id);
+    class MangaDetailAdapter extends FragmentPagerAdapter {
 
-            default: return null;
+        final int PAGE_COUNT = 2;
+        private String tab_titles[];
+        private Context context;
+        private long manga_id;
+
+        final static int INFO_FRAGMENT = 0;
+        final static int CHAPTERS_FRAGMENT = 1;
+
+        public MangaDetailAdapter(FragmentManager fm, Context context, long manga_id) {
+            super(fm);
+            this.context = context;
+            tab_titles = new String[]{
+                    context.getString(R.string.manga_detail_tab),
+                    context.getString(R.string.manga_chapters_tab)
+            };
+            this.manga_id = manga_id;
+        }
+
+        @Override
+        public int getCount() {
+            return PAGE_COUNT;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case INFO_FRAGMENT:
+                    return MangaInfoFragment.newInstance(manga_id);
+                case CHAPTERS_FRAGMENT:
+                    return MangaChaptersFragment.newInstance(manga_id);
+
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            // Generate title based on item position
+            return tab_titles[position];
         }
     }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-        // Generate title based on item position
-        return tab_titles[position];
-    }
 }

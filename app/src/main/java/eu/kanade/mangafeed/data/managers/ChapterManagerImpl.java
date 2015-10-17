@@ -39,6 +39,19 @@ public class ChapterManagerImpl extends BaseManager implements ChapterManager {
     }
 
     @Override
+    public Observable<List<Chapter>> getChapters(long manga_id) {
+        return db.get()
+                .listOfObjects(Chapter.class)
+                .withQuery(Query.builder()
+                        .table(ChaptersTable.TABLE)
+                        .where(ChaptersTable.COLUMN_MANGA_ID + "=?")
+                        .whereArgs(manga_id)
+                        .build())
+                .prepare()
+                .createObservable();
+    }
+
+    @Override
     public Observable<PutResult> insertChapter(Chapter chapter) {
         return db.put()
                 .object(chapter)
