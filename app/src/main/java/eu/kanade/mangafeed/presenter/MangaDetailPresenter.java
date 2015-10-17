@@ -7,7 +7,7 @@ import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.view.MangaDetailView;
 
-public class MangaDetailPresenter extends BasePresenter2<MangaDetailActivity> {
+public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
 
     private MangaDetailView view;
 

@@ -1,9 +1,10 @@
 package eu.kanade.mangafeed.presenter;
 
 import de.greenrobot.event.EventBus;
-import rx.subscriptions.CompositeSubscription;
+import nucleus.presenter.RxPresenter;
+import nucleus.view.ViewWithPresenter;
 
-public class BasePresenter {
+public class BasePresenter<V extends ViewWithPresenter> extends RxPresenter<V> {
 
     public void registerForStickyEvents() {
         EventBus.getDefault().registerSticky(this);
@@ -16,11 +17,4 @@ public class BasePresenter {
     public void unregisterForEvents() {
         EventBus.getDefault().unregister(this);
     }
-
-    protected CompositeSubscription subscriptions = new CompositeSubscription();
-
-    public void destroySubscriptions() {
-        subscriptions.unsubscribe();
-    }
-
 }

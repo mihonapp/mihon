@@ -15,7 +15,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
-public class LibraryPresenter extends BasePresenter2<LibraryFragment>  {
+public class LibraryPresenter extends BasePresenter<LibraryFragment> {
 
     @Inject DatabaseHelper db;
     @Inject PreferencesHelper prefs;

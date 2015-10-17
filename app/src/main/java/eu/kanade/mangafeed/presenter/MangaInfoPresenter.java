@@ -8,7 +8,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class MangaInfoPresenter extends BasePresenter2<MangaInfoFragment> {
+public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
     @Inject DatabaseHelper db;
 
