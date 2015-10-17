@@ -23,27 +23,20 @@ import nucleus.factory.RequiresPresenter;
 @RequiresPresenter(MangaDetailPresenter.class)
 public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-
-    @Bind(R.id.tabs)
-    TabLayout tabs;
-
-    @Bind(R.id.viewpager)
-    ViewPager view_pager;
+    @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.tabs) TabLayout tabs;
+    @Bind(R.id.viewpager) ViewPager view_pager;
 
     private MangaDetailAdapter adapter;
     private long manga_id;
-    private boolean is_online = false;
+    private boolean is_online;
 
     public final static String MANGA_ID = "manga_id";
-    public final static String MANGA_TITLE = "manga_title";
     public final static String MANGA_ONLINE = "manga_online";
 
     public static Intent newIntent(Context context, Manga manga) {
         Intent intent = new Intent(context, MangaDetailActivity.class);
         intent.putExtra(MANGA_ID, manga.id);
-        intent.putExtra(MANGA_TITLE, manga.title);
         return intent;
     }
 
@@ -57,9 +50,6 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
         disableToolbarElevation();
 
         Intent intent = getIntent();
-
-        String manga_title = intent.getStringExtra(MANGA_TITLE);
-        setToolbarTitle(manga_title);
 
         manga_id = intent.getLongExtra(MANGA_ID, -1);
         is_online = intent.getBooleanExtra(MANGA_ONLINE, false);
@@ -90,9 +80,8 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
         return manga_id;
     }
 
-    public void onMangaNext(Manga manga) {
-        ((MangaChaptersFragment) adapter.getItem(MangaDetailAdapter.CHAPTERS_FRAGMENT))
-                .onMangaNext(manga);
+    public void setManga(Manga manga) {
+        setToolbarTitle(manga.title);
     }
 
     class MangaDetailAdapter extends FragmentPagerAdapter {
@@ -124,9 +113,9 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
         public Fragment getItem(int position) {
             switch (position) {
                 case INFO_FRAGMENT:
-                    return MangaInfoFragment.newInstance(manga_id);
+                    return MangaInfoFragment.newInstance();
                 case CHAPTERS_FRAGMENT:
-                    return MangaChaptersFragment.newInstance(manga_id);
+                    return MangaChaptersFragment.newInstance();
 
                 default:
                     return null;

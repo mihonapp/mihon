@@ -16,6 +16,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     @Inject DatabaseHelper db;
     @Inject SourceManager sourceManager;
 
+    private Manga manga;
     private Subscription chaptersSubscription;
     private Subscription onlineChaptersSubscription;
     private boolean doingRequest = false;
@@ -23,26 +24,34 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     @Override
     protected void onTakeView(MangaChaptersFragment view) {
         super.onTakeView(view);
-
-        getChapters(view.getMangaId());
+        registerForStickyEvents();
     }
 
-    public void refreshChapters(Manga manga) {
+    @Override
+    protected void onDropView() {
+        unregisterForEvents();
+        super.onDropView();
+    }
+
+    public void onEventMainThread(Manga manga) {
+        this.manga = manga;
+        getChapters();
+    }
+
+    public void refreshChapters() {
         if (manga != null && !doingRequest)
             getChaptersFromSource(manga);
     }
 
-    private void getChapters(long manga_id) {
+    public void getChapters() {
         if (chaptersSubscription != null)
-            remove(chaptersSubscription);
+            return;
 
-        chaptersSubscription = db.getChapters(manga_id)
+        add(chaptersSubscription = db.getChapters(manga.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(deliverLatestCache())
-                .subscribe(this.split(MangaChaptersFragment::onNextChapters));
-
-        add(chaptersSubscription);
+                .subscribe(this.split(MangaChaptersFragment::onNextChapters)));
     }
 
     public void getChaptersFromSource(Manga manga) {

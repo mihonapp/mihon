@@ -15,7 +15,6 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.MangaInfoPresenter;
-import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(MangaInfoPresenter.class)
@@ -29,20 +28,13 @@ public class MangaInfoFragment extends BaseFragment<MangaInfoPresenter> {
     @Bind(R.id.manga_summary) TextView mDescription;
     @Bind(R.id.manga_cover) ImageView mCover;
 
-    private long manga_id;
-
-    public static MangaInfoFragment newInstance(long manga_id) {
-        MangaInfoFragment fragment = new MangaInfoFragment();
-        Bundle args = new Bundle();
-        args.putLong(MangaDetailActivity.MANGA_ID, manga_id);
-        fragment.setArguments(args);
-        return fragment;
+    public static MangaInfoFragment newInstance() {
+        return new MangaInfoFragment();
     }
 
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        manga_id = getArguments().getLong(MangaDetailActivity.MANGA_ID);
     }
 
     @Override
@@ -53,10 +45,6 @@ public class MangaInfoFragment extends BaseFragment<MangaInfoPresenter> {
         ButterKnife.bind(this, view);
 
         return view;
-    }
-
-    public long getMangaId() {
-        return manga_id;
     }
 
     public void setMangaInfo(Manga manga) {
