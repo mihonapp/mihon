@@ -1,9 +1,5 @@
 package eu.kanade.mangafeed.sources;
 
-import android.database.sqlite.SQLiteDatabase;
-
-import com.squareup.okhttp.Response;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,11 +9,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
@@ -25,11 +19,6 @@ import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import rx.Observable;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.functions.FuncN;
-import rx.schedulers.Schedulers;
 
 public class MangaHere extends Source {
 

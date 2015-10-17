@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import eu.kanade.mangafeed.App;
-import eu.kanade.mangafeed.AppComponent;
 import nucleus.factory.PresenterFactory;
 import nucleus.presenter.Presenter;
 import nucleus.view.NucleusAppCompatActivity;

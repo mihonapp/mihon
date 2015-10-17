@@ -13,8 +13,8 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.ui.fragment.SourceFragment;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
+import eu.kanade.mangafeed.ui.fragment.SourceFragment;
 
 public class MainActivity extends BaseActivity {
 

@@ -6,19 +6,14 @@ import android.util.SparseBooleanArray;
 
 import javax.inject.Inject;
 
-import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
-import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
-import eu.kanade.mangafeed.util.DummyDataUtil;
-import eu.kanade.mangafeed.view.LibraryView;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.internal.util.SubscriptionList;
 import rx.schedulers.Schedulers;
 import uk.co.ribot.easyadapter.EasyAdapter;
 

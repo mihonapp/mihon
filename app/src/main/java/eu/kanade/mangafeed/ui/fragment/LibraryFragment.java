@@ -18,9 +18,7 @@ import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
-import eu.kanade.mangafeed.view.LibraryView;
 import nucleus.factory.RequiresPresenter;
-import uk.co.ribot.easyadapter.EasyAdapter;
 
 @RequiresPresenter(LibraryPresenter.class)
 public class LibraryFragment extends BaseFragment2<LibraryPresenter> {
