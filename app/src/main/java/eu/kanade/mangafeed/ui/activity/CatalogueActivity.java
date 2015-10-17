@@ -1,5 +1,7 @@
 package eu.kanade.mangafeed.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +40,14 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
 
     private EasyAdapter<Manga> adapter;
     private EndlessScrollListener scroll_listener;
+
+    public final static String SOURCE_ID = "source_id";
+
+    public static Intent newIntent(Context context, int source_id) {
+        Intent intent = new Intent(context, CatalogueActivity.class);
+        intent.putExtra(SOURCE_ID, source_id);
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

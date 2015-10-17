@@ -37,7 +37,7 @@ public class MangaHere extends Source {
         return NAME;
     }
 
-    public int getSource() {
+    public int getSourceId() {
         return SourceManager.MANGAHERE;
     }
 
@@ -112,7 +112,7 @@ public class MangaHere extends Source {
 
     private Manga constructMangaFromHtmlBlock(Element htmlBlock) {
         Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getSource();
+        mangaFromHtmlBlock.source = getSourceId();
 
         Element urlElement = htmlBlock.select("a.manga_info").first();
         Element nameElement = htmlBlock.select("a.manga_info").first();

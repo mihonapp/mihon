@@ -19,7 +19,7 @@ import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(MangaInfoPresenter.class)
-public class MangaInfoFragment extends BaseFragment2<MangaInfoPresenter> {
+public class MangaInfoFragment extends BaseFragment<MangaInfoPresenter> {
 
     @Bind(R.id.manga_artist) TextView mArtist;
     @Bind(R.id.manga_author) TextView mAuthor;

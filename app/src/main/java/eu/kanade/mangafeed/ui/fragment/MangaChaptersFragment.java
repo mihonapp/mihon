@@ -13,7 +13,7 @@ import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(MangaChaptersPresenter.class)
-public class MangaChaptersFragment extends BaseFragment2<MangaChaptersPresenter> {
+public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> {
 
     private long manga_id;
 

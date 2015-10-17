@@ -1,40 +1,41 @@
 package eu.kanade.mangafeed.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.presenter.SourcePresenter;
+import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.ui.activity.CatalogueActivity;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
-import eu.kanade.mangafeed.view.SourceView;
+import eu.kanade.mangafeed.ui.adapter.SourceHolder;
+import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
+@RequiresPresenter(SourcePresenter.class)
+public class SourceFragment extends BaseFragment<SourcePresenter> {
 
-public class SourceFragment extends BaseFragment implements SourceView {
+    @Bind(R.id.catalogue_list) ListView source_list;
 
-    private SourcePresenter presenter;
     private MainActivity activity;
-
-    @Bind(R.id.catalogue_list)
-    ListView source_list;
+    private EasyAdapter<Source> adapter;
 
     public static SourceFragment newInstance() {
-        SourceFragment fragment = new SourceFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new SourceFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        presenter = new SourcePresenter(this);
         activity = (MainActivity)getActivity();
     }
 
@@ -46,22 +47,27 @@ public class SourceFragment extends BaseFragment implements SourceView {
         activity.setToolbarTitle(R.string.catalogues_title);
         ButterKnife.bind(this, view);
 
-        presenter.initializeSources();
+        createAdapter();
+
         return view;
     }
 
-    // SourceView
+    @OnItemClick(R.id.catalogue_list)
+    public void onSourceClick(int position) {
+        Source source = adapter.getItem(position);
+        getPresenter().setSelectedSource(source);
 
-    @Override
-    public void setAdapter(EasyAdapter adapter) {
+        Intent intent = CatalogueActivity.newIntent(activity, source.getSourceId());
+        startActivity(intent);
+    }
+
+    private void createAdapter() {
+        adapter = new EasyAdapter<>(activity, SourceHolder.class);
         source_list.setAdapter(adapter);
     }
 
-    @Override
-    public void setSourceClickListener() {
-        source_list.setOnItemClickListener(
-                (parent, view, position, id) ->
-                    presenter.onSourceClick(position)
-        );
+    public void setItems(List<Source> items) {
+        adapter.setItems(items);
     }
+
 }

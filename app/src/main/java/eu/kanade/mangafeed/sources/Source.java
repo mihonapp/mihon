@@ -102,7 +102,7 @@ public abstract class Source {
     }
 
     public abstract String getName();
-    public abstract int getSource();
+    public abstract int getSourceId();
 
     protected abstract String getUrlFromPageNumber(int page);
     protected abstract String getSearchUrl(String query, int page);
