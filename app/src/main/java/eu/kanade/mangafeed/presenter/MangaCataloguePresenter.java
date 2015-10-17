@@ -1,30 +1,7 @@
 package eu.kanade.mangafeed.presenter;
 
-import eu.kanade.mangafeed.App;
-import eu.kanade.mangafeed.data.models.Manga;
-import eu.kanade.mangafeed.view.MangaCatalogueView;
+import eu.kanade.mangafeed.ui.activity.MangaCatalogueActivity;
 
-public class MangaCataloguePresenter extends BasePresenter {
+public class MangaCataloguePresenter extends BasePresenter2<MangaCatalogueActivity> {
 
-    private MangaCatalogueView view;
-    private Manga manga;
-
-    public MangaCataloguePresenter(MangaCatalogueView view) {
-        this.view = view;
-        App.getComponent(view.getActivity()).inject(this);
-    }
-
-    public void initialize() {
-
-    }
-
-    public void onEventMainThread(Manga manga) {
-        this.manga = manga;
-        initializeManga();
-    }
-
-    private void initializeManga() {
-        view.setTitle(manga.title);
-        view.setMangaInformation(manga);
-    }
 }

@@ -22,7 +22,7 @@ import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 @RequiresPresenter(CataloguePresenter.class)
-public class CatalogueActivity extends BaseActivity2<CataloguePresenter> {
+public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;

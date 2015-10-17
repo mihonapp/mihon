@@ -21,7 +21,7 @@ import eu.kanade.mangafeed.ui.fragment.MangaInfoFragment;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(MangaDetailPresenter.class)
-public class MangaDetailActivity extends BaseActivity2<MangaDetailPresenter> {
+public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
