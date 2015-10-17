@@ -98,7 +98,7 @@ public class DatabaseHelper implements MangaManager, ChapterManager {
     }
 
     @Override
-    public Observable<List<Manga>> getManga(int id) {
+    public Observable<List<Manga>> getManga(long id) {
         return mMangaManager.getManga(id);
     }
 

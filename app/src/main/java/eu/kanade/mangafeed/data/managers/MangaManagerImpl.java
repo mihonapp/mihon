@@ -66,8 +66,16 @@ public class MangaManagerImpl extends BaseManager implements MangaManager {
                 .createObservable();
     }
 
-    public Observable<List<Manga>> getManga(int id) {
-        return null;
+    public Observable<List<Manga>> getManga(long id) {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(Query.builder()
+                        .table(MangasTable.TABLE)
+                        .where(MangasTable.COLUMN_ID + "=?")
+                        .whereArgs(id)
+                        .build())
+                .prepare()
+                .createObservable();
     }
 
     @Override

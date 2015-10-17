@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:fitsSystemWindows="true"
+    tools:context="eu.kanade.mangafeed.ui.activity.CatalogueActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bkg_shadow_img"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center"
+            android:padding="4dp">
+
+            <ImageView
+                android:id="@+id/manga_cover"
+                android:layout_width="138dp"
+                android:layout_height="190dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:scaleType="fitXY"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/grid_item_description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:paddingLeft="15.0dip">
+
+            <TextView
+                android:id="@+id/manga_author_label"
+                style="@style/manga_detail_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@+id/manga_genres_label"
+                android:layout_marginTop="5dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@string/author" />
+
+            <TextView
+                android:id="@+id/manga_author"
+                style="@style/manga_detail_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/manga_author_label"
+                android:layout_toRightOf="@id/manga_author_label"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/manga_artist_label"
+                style="@style/manga_detail_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/manga_genres_label"
+                android:layout_below="@id/manga_author_label"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@string/artist" />
+
+            <TextView
+                android:id="@+id/manga_artist"
+                style="@style/manga_detail_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/manga_artist_label"
+                android:layout_toRightOf="@id/manga_artist_label"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/manga_chapters_label"
+                style="@style/manga_detail_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/manga_genres_label"
+                android:layout_below="@id/manga_artist_label"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@string/chapters" />
+
+            <TextView
+                android:id="@+id/manga_chapters"
+                style="@style/manga_detail_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/manga_chapters_label"
+                android:layout_toRightOf="@id/manga_chapters_label"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/manga_status_label"
+                style="@style/manga_detail_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/manga_genres_label"
+                android:layout_below="@id/manga_chapters_label"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@string/status" />
+
+            <TextView
+                android:id="@+id/manga_status"
+                style="@style/manga_detail_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/manga_status_label"
+                android:layout_toRightOf="@id/manga_chapters_label"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/manga_genres_label"
+                style="@style/manga_detail_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/manga_status_label"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@string/genres" />
+
+            <TextView
+                android:id="@+id/manga_genres"
+                style="@style/manga_detail_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/manga_genres_label"
+                android:singleLine="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/manga_summary_label"
+            style="@style/manga_detail_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:singleLine="false"
+            android:text="@string/description" />
+
+        <TextView
+            android:id="@+id/manga_summary"
+            style="@style/manga_detail_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:singleLine="false" />
+
+    </LinearLayout>
+
+</LinearLayout>

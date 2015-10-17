@@ -1,5 +1,6 @@
 package eu.kanade.mangafeed.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.view.ActionMode;
@@ -17,6 +18,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
+import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import nucleus.factory.RequiresPresenter;
 
@@ -90,7 +92,7 @@ public class LibraryFragment extends BaseFragment2<LibraryPresenter> {
     public void setMangaClickListener() {
         grid.setOnItemClickListener(
                 (parent, view, position, id) ->
-                        getPresenter().onMangaClick(this, position)
+                        onMangaClick(position)
         );
         grid.setMultiChoiceModeListener(new GridView.MultiChoiceModeListener() {
             @Override
@@ -127,6 +129,14 @@ public class LibraryFragment extends BaseFragment2<LibraryPresenter> {
 
             }
         });
+    }
+
+    private void onMangaClick(int position) {
+        Intent intent = MangaDetailActivity.newIntent(
+                getActivity(),
+                adapter.getItem(position)
+        );
+        getActivity().startActivity(intent);
     }
 
 }

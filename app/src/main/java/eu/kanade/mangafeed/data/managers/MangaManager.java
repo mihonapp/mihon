@@ -18,7 +18,7 @@ public interface MangaManager {
 
     Observable<List<Manga>> getManga(String url);
 
-    Observable<List<Manga>> getManga(int id);
+    Observable<List<Manga>> getManga(long id);
 
     Manga getMangaBlock(String url);
 

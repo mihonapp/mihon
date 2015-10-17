@@ -1,19 +1,37 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="eu.kanade.mangafeed.ui.activity.MangaDetailActivity"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
-
-    <ListView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/manga_chapters_list"
-        tools:listitem="@layout/item_chapter"
-        android:height="?android:listPreferredItemHeight"/>
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabGravity="fill" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:background="@android:color/white" />
 
 </LinearLayout>

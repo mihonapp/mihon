@@ -43,5 +43,7 @@
     <string name="artist">Artist</string>
     <string name="status">Status</string>
     <string name="description">Description</string>
+    <string name="manga_detail_tab">Info</string>
+    <string name="manga_chapters_tab">Chapters</string>
 
 </resources>

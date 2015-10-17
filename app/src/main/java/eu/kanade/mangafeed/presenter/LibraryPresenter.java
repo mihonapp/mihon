@@ -1,6 +1,5 @@
 package eu.kanade.mangafeed.presenter;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 
@@ -9,7 +8,6 @@ import javax.inject.Inject;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Manga;
-import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 import rx.Observable;
 import rx.Subscription;
@@ -34,14 +32,6 @@ public class LibraryPresenter extends BasePresenter2<LibraryFragment>  {
     protected void onTakeView(LibraryFragment view) {
         super.onTakeView(view);
         getFavoriteMangas();
-    }
-
-    public void onMangaClick(LibraryFragment view, int position) {
-        Intent intent = MangaDetailActivity.newIntent(
-                view.getActivity(),
-                view.getAdapter().getItem(position)
-        );
-        view.getActivity().startActivity(intent);
     }
 
     public void getFavoriteMangas() {
