@@ -17,29 +17,24 @@ import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
-import eu.kanade.mangafeed.sources.Batoto;
+import eu.kanade.mangafeed.sources.MangaHere;
 import eu.kanade.mangafeed.sources.Source;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
 
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
 @RunWith(RobolectricGradleTestRunner.class)
-public class BatotoTest {
+public class MangahereTest {
 
     NetworkHelper net;
     CacheManager cache;
     Source b;
-    final String chapterUrl ="http://bato.to/read/_/345144/minamoto-kun-monogatari_ch178_by_vortex-scans";
-    final String mangaUrl = "http://bato.to/comic/_/comics/natsuzora-and-run-r9597";
-    final String mangaUrl2 = "http://bato.to/comic/_/comics/bungaku-shoujo-to-shinitagari-no-pierrot-r534";
-    final String nisekoiUrl = "http://bato.to/comic/_/comics/nisekoi-r951";
+    final String chapterUrl ="http://www.mangahere.co/manga/kimi_ni_todoke/v15/c099/";
+    final String mangaUrl = "http://www.mangahere.co/manga/kimi_ni_todoke/";
 
     @Before
     public void setUp() {
         net = new NetworkHelper();
         cache = new CacheManager(RuntimeEnvironment.application.getApplicationContext());
-        b = new Batoto(net, cache);
+        b = new MangaHere(net, cache);
     }
 
     @Test
@@ -57,8 +52,6 @@ public class BatotoTest {
 
         Manga m = mangaList.get(0);
         Assert.assertNotNull(m.title);
-        Assert.assertNotNull(m.artist);
-        Assert.assertNotNull(m.author);
         Assert.assertNotNull(m.url);
 
         Assert.assertTrue(mangaList.size() > 25);
@@ -74,15 +67,14 @@ public class BatotoTest {
 
     @Test
     public void testMangaDetails() {
-        Manga nisekoi = b.pullMangaFromNetwork(nisekoiUrl)
+        Manga manga = b.pullMangaFromNetwork(mangaUrl)
                 .toBlocking().single();
 
-        Assert.assertEquals("Nisekoi", nisekoi.title);
-        Assert.assertEquals("Komi Naoshi", nisekoi.author);
-        Assert.assertEquals("Komi Naoshi", nisekoi.artist);
-        Assert.assertEquals("http://bato.to/comic/_/nisekoi-r951", nisekoi.url);
-        Assert.assertEquals("http://img.bato.to/forums/uploads/a2a850c644a50bccc462f36922c1cbf2.jpg", nisekoi.thumbnail_url);
-        Assert.assertTrue(nisekoi.description.length() > 20);
-        Assert.assertTrue(nisekoi.genre.length() > 20);
+        Assert.assertEquals("Shiina Karuho", manga.author);
+        Assert.assertEquals("Shiina Karuho", manga.artist);
+        Assert.assertEquals("http://www.mangahere.co/manga/kimi_ni_todoke/", manga.url);
+        Assert.assertEquals("http://a.mhcdn.net/store/manga/4999/cover.jpg?v=1433950383", manga.thumbnail_url);
+        Assert.assertTrue(manga.description.length() > 20);
+        Assert.assertTrue(manga.genre.length() > 20);
     }
 }

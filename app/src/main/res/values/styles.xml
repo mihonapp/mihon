@@ -81,4 +81,21 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <style name="manga_detail_label">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ff58595b</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textIsSelectable">false</item>
+    </style>
+    <style name="manga_detail_text">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#ff808285</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textIsSelectable">false</item>
+    </style>
 </resources>

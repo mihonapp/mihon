@@ -25,5 +25,6 @@ public class MangaCataloguePresenter extends BasePresenter {
 
     private void initializeManga() {
         view.setTitle(manga.title);
+        view.setMangaInformation(manga);
     }
 }

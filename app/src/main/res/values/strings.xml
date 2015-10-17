@@ -36,5 +36,12 @@
     <string name="action_delete">Delete</string>
     <string name="library_selection_title">Selected</string>
     <string name="title_activity_catalogue_list">CatalogueList</string>
+    <string name="title_activity_manga_catalogue">MangaCatalogue</string>
+    <string name="author">Author</string>
+    <string name="chapters">Chapters</string>
+    <string name="genres">Genres</string>
+    <string name="artist">Artist</string>
+    <string name="status">Status</string>
+    <string name="description">Description</string>
 
 </resources>

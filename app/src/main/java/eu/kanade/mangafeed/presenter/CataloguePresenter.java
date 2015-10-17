@@ -24,6 +24,7 @@ import nucleus.presenter.RxPresenter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.internal.util.SubscriptionList;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import timber.log.Timber;
@@ -46,6 +47,7 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
     private Subscription mMangaDetailFetchSubscription;
     private PublishSubject<Observable<String>> mSearchViewPublishSubject;
     private PublishSubject<Observable<List<Manga>>> mMangaDetailPublishSubject;
+    private SubscriptionList mResultSubscriptions = new SubscriptionList();
 
     private final String CURRENT_PAGE = "CATALOGUE_CURRENT_PAGE";
 
@@ -79,6 +81,12 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
     protected void onSave(@NonNull Bundle state) {
         super.onSave(state);
         state.putInt(CURRENT_PAGE, mCurrentPage);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mResultSubscriptions.unsubscribe();
     }
 
     private void initializeSearch() {
@@ -126,16 +134,17 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
                 .filter(manga -> manga.initialized)
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(manga -> {
+                .compose(deliverReplay())
+                .subscribe(this.split((view, manga) -> {
                     // Get manga index in the adapter
                     int index = getMangaIndex(manga);
                     // Get the image view associated with the manga.
                     // If it's null (not visible in the screen) there's no need to update the image.
-                    ImageView imageView = getView().getImageView(index);
+                    ImageView imageView = view.getImageView(index);
                     if (imageView != null) {
                         updateImage(imageView, manga.thumbnail_url);
                     }
-                });
+                }));
 
         add(mMangaDetailFetchSubscription);
     }
@@ -143,11 +152,15 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
     public void getMangasFromSource(int page) {
         mMangaFetchSubscription = getMangasSubscriber(
                 selectedSource.pullPopularMangasFromNetwork(page));
+
+        mResultSubscriptions.add(mMangaFetchSubscription);
     }
 
     public void getMangasFromSearch(int page) {
         mMangaSearchSubscription = getMangasSubscriber(
                 selectedSource.searchMangasFromNetwork(mSearchName, page));
+
+        mResultSubscriptions.add(mMangaSearchSubscription);
     }
 
     private Subscription getMangasSubscriber(Observable<List<Manga>> mangas) {
@@ -195,10 +208,12 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
         // If going to search mode
         else if (mSearchName.equals("") && !query.equals("")) {
             mSearchMode = true;
+            mResultSubscriptions.clear();
         }
         // If going to normal mode
         else if (!mSearchName.equals("") && query.equals("")) {
             mSearchMode = false;
+            mResultSubscriptions.clear();
         }
 
         mSearchName = query;

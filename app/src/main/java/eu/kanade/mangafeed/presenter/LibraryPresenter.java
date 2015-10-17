@@ -33,14 +33,6 @@ public class LibraryPresenter extends BasePresenter {
     public LibraryPresenter(LibraryView view) {
         this.view = view;
         App.getComponent(view.getActivity()).inject(this);
-
-        //TODO remove, only for testing
-        if (prefs.isFirstRun()) {
-            db.insertMangas(DummyDataUtil.createDummyManga()).toBlocking().single();
-            db.insertChapters(DummyDataUtil.createDummyChapters()).subscribe();
-            prefs.setNotFirstRun();
-        }
-
     }
 
     public void onMangaClick(int position) {

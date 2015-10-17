@@ -15,6 +15,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/label_main"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,6 +35,7 @@
             android:name=".ui.activity.CatalogueActivity"
             android:label="@string/title_activity_catalogue_list"
             android:parentActivityName=".ui.activity.MainActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
