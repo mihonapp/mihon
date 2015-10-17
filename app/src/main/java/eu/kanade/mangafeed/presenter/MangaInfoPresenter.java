@@ -36,12 +36,9 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
     private void getMangaInfo() {
         if (mangaInfoSubscription != null)
-            return;
+            remove(mangaInfoSubscription);
 
-        add(mangaInfoSubscription = db.getManga(manga.id)
-                .subscribeOn(Schedulers.io())
-                .take(1)
-                .flatMap(Observable::from)
+        add(mangaInfoSubscription = Observable.just(manga)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(deliverLatestCache())
                 .subscribe(split(MangaInfoFragment::setMangaInfo)));

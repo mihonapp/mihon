@@ -10,7 +10,6 @@ import eu.kanade.mangafeed.data.tables.MangasTable;
 @StorIOSQLiteType(table = MangasTable.TABLE)
 public class Manga {
 
-    @Nullable
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_ID, key = true)
     public Long id;
 
