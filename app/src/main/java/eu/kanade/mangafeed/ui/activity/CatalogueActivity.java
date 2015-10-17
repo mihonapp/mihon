@@ -102,6 +102,7 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         Manga selectedManga = adapter.getItem(position);
 
         Intent intent = MangaDetailActivity.newIntent(this, selectedManga);
+        intent.putExtra(MangaDetailActivity.MANGA_ONLINE, true);
         startActivity(intent);
     }
 

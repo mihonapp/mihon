@@ -32,10 +32,12 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
     @Bind(R.id.viewpager)
     ViewPager view_pager;
 
-    long manga_id;
+    private long manga_id;
+    private boolean is_online = false;
 
     public final static String MANGA_ID = "manga_id";
     public final static String MANGA_TITLE = "manga_title";
+    public final static String MANGA_ONLINE = "manga_online";
 
     public static Intent newIntent(Context context, Manga manga) {
         Intent intent = new Intent(context, MangaDetailActivity.class);
@@ -53,10 +55,14 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
         setupToolbar(toolbar);
         disableToolbarElevation();
 
-        String manga_title = getIntent().getStringExtra(MANGA_TITLE);
+        Intent intent = getIntent();
+
+        String manga_title = intent.getStringExtra(MANGA_TITLE);
         setToolbarTitle(manga_title);
 
-        manga_id = getIntent().getLongExtra(MANGA_ID, -1);
+        manga_id = intent.getLongExtra(MANGA_ID, -1);
+        is_online = intent.getBooleanExtra(MANGA_ONLINE, false);
+
         setupViewPager();
     }
 
@@ -73,6 +79,9 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
                 manga_id));
 
         tabs.setupWithViewPager(view_pager);
+
+        if (!is_online)
+            view_pager.setCurrentItem(MangaDetailAdapter.CHAPTERS_FRAGMENT);
     }
 
 }
@@ -83,6 +92,9 @@ class MangaDetailAdapter extends FragmentPagerAdapter {
     private String tab_titles[];
     private Context context;
     private long manga_id;
+
+    final static int INFO_FRAGMENT = 0;
+    final static int CHAPTERS_FRAGMENT = 1;
 
     public MangaDetailAdapter(FragmentManager fm, Context context, long manga_id) {
         super(fm);
@@ -102,9 +114,9 @@ class MangaDetailAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0:
+            case INFO_FRAGMENT:
                 return MangaInfoFragment.newInstance(manga_id);
-            case 1:
+            case CHAPTERS_FRAGMENT:
                 return MangaChaptersFragment.newInstance(manga_id);
 
             default: return null;
