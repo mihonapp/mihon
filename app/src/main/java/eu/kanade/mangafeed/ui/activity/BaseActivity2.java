@@ -32,10 +32,6 @@ public class BaseActivity2<P extends Presenter> extends NucleusAppCompatActivity
         getSupportActionBar().setTitle(title);
     }
 
-    protected AppComponent applicationComponent() {
-        return App.get(this).getComponent();
-    }
-
     public Context getActivity() {
         return this;
     }

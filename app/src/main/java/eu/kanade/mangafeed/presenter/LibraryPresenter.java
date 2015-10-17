@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.presenter;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.SparseBooleanArray;
 
 import javax.inject.Inject;
@@ -11,63 +12,60 @@ import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
+import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 import eu.kanade.mangafeed.util.DummyDataUtil;
 import eu.kanade.mangafeed.view.LibraryView;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.internal.util.SubscriptionList;
 import rx.schedulers.Schedulers;
+import uk.co.ribot.easyadapter.EasyAdapter;
 
-public class LibraryPresenter extends BasePresenter {
-
-    private LibraryView view;
+public class LibraryPresenter extends BasePresenter2<LibraryFragment>  {
 
     @Inject DatabaseHelper db;
     @Inject PreferencesHelper prefs;
 
-    LibraryAdapter<Manga> adapter;
-
     private Subscription mFavoriteMangasSubscription;
     private Subscription mDeleteMangaSubscription;
 
-    public LibraryPresenter(LibraryView view) {
-        this.view = view;
-        App.getComponent(view.getActivity()).inject(this);
+    @Override
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
     }
 
-    public void onMangaClick(int position) {
+    @Override
+    protected void onTakeView(LibraryFragment view) {
+        super.onTakeView(view);
+        getFavoriteMangas();
+    }
+
+    public void onMangaClick(LibraryFragment view, int position) {
         Intent intent = MangaDetailActivity.newIntent(
                 view.getActivity(),
-                adapter.getItem(position)
+                view.getAdapter().getItem(position)
         );
         view.getActivity().startActivity(intent);
     }
 
-    public void initialize() {
-        adapter = new LibraryAdapter<>(view.getActivity());
-        view.setAdapter(adapter);
-        view.setMangaClickListener();
-
-        getFavoriteMangas();
-    }
-
     public void getFavoriteMangas() {
-        subscriptions.remove(mFavoriteMangasSubscription);
+        if (mFavoriteMangasSubscription != null)
+            remove(mFavoriteMangasSubscription);
 
         mFavoriteMangasSubscription = db.getMangasWithUnread()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(adapter::setNewItems);
+                .compose(deliverLatestCache())
+                .subscribe(this.split((view, mangas) -> {
+                    view.getAdapter().setNewItems(mangas);
+                }));
 
-        subscriptions.add(mFavoriteMangasSubscription);
+        add(mFavoriteMangasSubscription);
     }
 
-    public void onQueryTextChange(String query) {
-        adapter.getFilter().filter(query);
-    }
-
-    public void onDelete(SparseBooleanArray checkedItems) {
-        subscriptions.remove(mDeleteMangaSubscription);
+    public void onDelete(SparseBooleanArray checkedItems, EasyAdapter<Manga> adapter) {
+        remove(mDeleteMangaSubscription);
 
         mDeleteMangaSubscription = Observable.range(0, checkedItems.size())
                 .observeOn(Schedulers.io())
@@ -77,7 +75,7 @@ public class LibraryPresenter extends BasePresenter {
                 .flatMap(db::deleteMangas)
                 .subscribe();
 
-        subscriptions.add(mDeleteMangaSubscription);
+        add(mDeleteMangaSubscription);
     }
 
 }

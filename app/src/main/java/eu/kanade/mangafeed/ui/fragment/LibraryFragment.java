@@ -14,17 +14,20 @@ import android.widget.GridView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
+import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import eu.kanade.mangafeed.view.LibraryView;
+import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
-
-public class LibraryFragment extends BaseFragment implements LibraryView {
+@RequiresPresenter(LibraryPresenter.class)
+public class LibraryFragment extends BaseFragment2<LibraryPresenter> {
 
     @Bind(R.id.gridView) GridView grid;
-    private LibraryPresenter presenter;
     private MainActivity activity;
+    private LibraryAdapter<Manga> adapter;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
@@ -38,7 +41,6 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        presenter = new LibraryPresenter(this);
         activity = (MainActivity)getActivity();
     }
 
@@ -50,15 +52,10 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
         activity.setToolbarTitle(getString(R.string.library_title));
         ButterKnife.bind(this, view);
 
-        presenter.initialize();
+        createAdapter();
+        setMangaClickListener();
 
         return view;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.destroySubscriptions();
     }
 
     @Override
@@ -77,22 +74,25 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                presenter.onQueryTextChange(newText);
+                adapter.getFilter().filter(newText);
                 return true;
             }
         });
     }
 
-    // LibraryView
-
-    public void setAdapter(EasyAdapter adapter) {
+    public void createAdapter() {
+        adapter = new LibraryAdapter<>(getActivity());
         grid.setAdapter(adapter);
+    }
+
+    public LibraryAdapter<Manga> getAdapter() {
+        return adapter;
     }
 
     public void setMangaClickListener() {
         grid.setOnItemClickListener(
                 (parent, view, position, id) ->
-                        presenter.onMangaClick(position)
+                        getPresenter().onMangaClick(this, position)
         );
         grid.setMultiChoiceModeListener(new GridView.MultiChoiceModeListener() {
             @Override
@@ -117,7 +117,7 @@ public class LibraryFragment extends BaseFragment implements LibraryView {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_delete:
-                        presenter.onDelete(grid.getCheckedItemPositions());
+                        getPresenter().onDelete(grid.getCheckedItemPositions(), adapter);
                         mode.finish();
                         return true;
                 }
