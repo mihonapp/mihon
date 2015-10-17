@@ -1,11 +1,7 @@
 package eu.kanade.mangafeed.presenter;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.activity.CatalogueActivity;
-import eu.kanade.mangafeed.ui.activity.MangaCatalogueActivity;
 import nucleus.presenter.RxPresenter;
 import rx.Observable;
 import rx.Subscription;
@@ -135,16 +129,7 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(deliverReplay())
-                .subscribe(this.split((view, manga) -> {
-                    // Get manga index in the adapter
-                    int index = getMangaIndex(manga);
-                    // Get the image view associated with the manga.
-                    // If it's null (not visible in the screen) there's no need to update the image.
-                    ImageView imageView = view.getImageView(index);
-                    if (imageView != null) {
-                        updateImage(imageView, manga.thumbnail_url);
-                    }
-                }));
+                .subscribe(this.split(CatalogueActivity::updateImage));
 
         add(mMangaDetailFetchSubscription);
     }
@@ -188,13 +173,6 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
         return localManga;
     }
 
-    public void onMangaClick(int position) {
-        Intent intent = new Intent(getView().getActivity(), MangaCatalogueActivity.class);
-        Manga selectedManga = getView().getAdapter().getItem(position);
-        EventBus.getDefault().postSticky(selectedManga);
-        getView().getActivity().startActivity(intent);
-    }
-
     public void onQueryTextChange(String query) {
         if (mSearchViewPublishSubject != null)
             mSearchViewPublishSubject.onNext(Observable.just(query));
@@ -233,22 +211,6 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
             getMangasFromSource(page);
         }
         mCurrentPage = page;
-    }
-
-    private int getMangaIndex(Manga manga) {
-        for (int i = 0; i < getView().getAdapter().getCount(); i++) {
-            if (manga.id == getView().getAdapter().getItem(i).id) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private void updateImage(ImageView imageView, String thumbnail) {
-        Glide.with(getView().getActivity())
-                .load(thumbnail)
-                .centerCrop()
-                .into(imageView);
     }
 
 }

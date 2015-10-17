@@ -11,10 +11,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
@@ -58,7 +61,6 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         setupToolbar(toolbar);
 
         initializeAdapter();
-        initializeClickListener();
         initializeScrollListener();
     }
 
@@ -95,11 +97,12 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         manga_list.setAdapter(adapter);
     }
 
-    public void initializeClickListener() {
-        manga_list.setOnItemClickListener(
-                (parent, view, position, id) ->
-                        getPresenter().onMangaClick(position)
-        );
+    @OnItemClick(R.id.gridView)
+    public void onMangaClick(int position) {
+        Manga selectedManga = adapter.getItem(position);
+
+        Intent intent = MangaDetailActivity.newIntent(this, selectedManga);
+        startActivity(intent);
     }
 
     public void initializeScrollListener() {
@@ -139,7 +142,20 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         progress_grid.setVisibility(ProgressBar.GONE);
     }
 
-    public ImageView getImageView(int position) {
+    public void onMangasNext(List<Manga> newMangas) {
+        adapter.addItems(newMangas);
+    }
+
+    private int getMangaIndex(Manga manga) {
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (manga.id == adapter.getItem(i).id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private ImageView getImageView(int position) {
         View v = manga_list.getChildAt(position -
                 manga_list.getFirstVisiblePosition());
 
@@ -149,7 +165,13 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         return (ImageView) v.findViewById(R.id.catalogue_thumbnail);
     }
 
-    public void onMangasNext(List<Manga> newMangas) {
-        adapter.addItems(newMangas);
+    public void updateImage(Manga manga) {
+        ImageView imageView = getImageView(getMangaIndex(manga));
+        if (imageView != null) {
+            Glide.with(this)
+                    .load(manga.thumbnail_url)
+                    .centerCrop()
+                    .into(imageView);
+        }
     }
 }
