@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> {
 
     @Bind(R.id.chapter_list) RecyclerView chapters;
+    @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipe_refresh;
 
     private EasyRecyclerAdapter<Chapter> adapter;
 
@@ -48,6 +50,7 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
 
         chapters.setLayoutManager(new LinearLayoutManager(getActivity()));
         createAdapter();
+        setSwipeRefreshListener();
 
         return view;
     }
@@ -62,7 +65,7 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getPresenter().refreshChapters();
+                getPresenter().refreshChapters(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -73,8 +76,19 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
         chapters.setAdapter(adapter);
     }
 
+    private void setSwipeRefreshListener() {
+        swipe_refresh.setOnRefreshListener(() -> getPresenter().refreshChapters(this));
+    }
+
     public void onNextChapters(List<Chapter> chapters) {
         adapter.setItems(chapters);
     }
 
+    public void onNextOnlineChapters() {
+        swipe_refresh.setRefreshing(false);
+    }
+
+    public void setSwipeRefreshing() {
+        swipe_refresh.setRefreshing(true);
+    }
 }

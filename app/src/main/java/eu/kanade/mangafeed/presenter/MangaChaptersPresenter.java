@@ -1,15 +1,22 @@
 package eu.kanade.mangafeed.presenter;
 
+import android.os.Bundle;
+
+import com.pushtorefresh.storio.sqlite.operations.post.PostResult;
+
+import java.util.List;
+
 import javax.inject.Inject;
 
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
+import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
-import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
-import rx.Subscription;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment> {
 
@@ -17,9 +24,24 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     @Inject SourceManager sourceManager;
 
     private Manga manga;
-    private Subscription chaptersSubscription;
-    private Subscription onlineChaptersSubscription;
-    private boolean doingRequest = false;
+
+    private static final int DB_CHAPTERS = 1;
+    private static final int ONLINE_CHAPTERS = 2;
+
+    @Override
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
+
+        restartableLatestCache(DB_CHAPTERS,
+                this::getDbChaptersObs,
+                MangaChaptersFragment::onNextChapters
+        );
+
+        restartableLatestCache(ONLINE_CHAPTERS,
+                this::getOnlineChaptersObs,
+                (view, result) -> view.onNextOnlineChapters()
+        );
+    }
 
     @Override
     protected void onTakeView(MangaChaptersFragment view) {
@@ -34,43 +56,30 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     }
 
     public void onEventMainThread(Manga manga) {
-        this.manga = manga;
-        getChapters();
+        if (this.manga == null) {
+            this.manga = manga;
+            start(DB_CHAPTERS);
+        }
     }
 
-    public void refreshChapters() {
-        if (manga != null && !doingRequest)
-            getChaptersFromSource(manga);
+    public void refreshChapters(MangaChaptersFragment view) {
+        if (manga != null) {
+            view.setSwipeRefreshing();
+            start(ONLINE_CHAPTERS);
+        }
     }
 
-    public void getChapters() {
-        if (chaptersSubscription != null)
-            return;
-
-        add(chaptersSubscription = db.getChapters(manga.id)
+    private Observable<List<Chapter>> getDbChaptersObs() {
+        return db.getChapters(manga.id)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(deliverLatestCache())
-                .subscribe(this.split(MangaChaptersFragment::onNextChapters)));
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getChaptersFromSource(Manga manga) {
-        if (onlineChaptersSubscription != null)
-            remove(onlineChaptersSubscription);
-
-        Source source = sourceManager.get(manga.source);
-        doingRequest = true;
-
-        onlineChaptersSubscription = source.pullChaptersFromNetwork(manga.url)
+    private Observable<PostResult> getOnlineChaptersObs() {
+        return sourceManager.get(manga.source)
+                .pullChaptersFromNetwork(manga.url)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(deliverLatestCache())
-                .subscribe(this.split((view, chapters) -> {
-                    doingRequest = false;
-                }), throwable -> {
-                    doingRequest = false;
-                });
-
-        add(onlineChaptersSubscription);
+                .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

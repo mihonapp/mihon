@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.data.managers;
 
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
+import com.pushtorefresh.storio.sqlite.operations.post.PostResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 
@@ -21,7 +22,7 @@ public interface ChapterManager {
 
     Observable<PutResults<Chapter>> insertChapters(List<Chapter> chapters);
 
-    Observable insertOrRemoveChapters(Manga manga, List<Chapter> chapters);
+    Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters);
 
     Observable<DeleteResult> deleteChapter(Chapter chapter);
 

@@ -7,6 +7,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
+import com.pushtorefresh.storio.sqlite.operations.post.PostResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 
@@ -73,7 +74,7 @@ public class DatabaseHelper implements MangaManager, ChapterManager {
     }
 
     @Override
-    public Observable insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {
+    public Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {
         return mChapterManager.insertOrRemoveChapters(manga, chapters);
     }
 

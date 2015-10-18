@@ -70,6 +70,10 @@ public class ChapterManagerImpl extends BaseManager implements ChapterManager {
     // Add new chapters or delete if the source deletes them
     @Override
     public Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {
+        for (Chapter chapter : chapters) {
+            chapter.manga_id = manga.id;
+        }
+
         Observable<List<Chapter>> chapterList = Observable.create(subscriber -> {
             subscriber.onNext(prepareGetChapters(manga).executeAsBlocking());
             subscriber.onCompleted();

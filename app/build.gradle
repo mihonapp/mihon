@@ -49,6 +49,7 @@ dependencies {
     final MOCKITO_VERSION = '1.10.19'
     final STORIO_VERSION = '1.4.0'
     final NUCLEUS_VERSION = '2.0.1'
+    final ICEPICK_VERSION = '3.1.0'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -75,6 +76,8 @@ dependencies {
     compile 'com.jakewharton.timber:timber:3.1.0'
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile 'ch.acra:acra:4.6.2'
+    compile "frankiesardo:icepick:$ICEPICK_VERSION"
+    provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
