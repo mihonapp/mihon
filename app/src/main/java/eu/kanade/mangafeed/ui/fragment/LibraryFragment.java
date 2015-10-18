@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
@@ -28,7 +30,7 @@ public class LibraryFragment extends BaseFragment<LibraryPresenter> {
 
     @Bind(R.id.gridView) GridView grid;
     private MainActivity activity;
-    private LibraryAdapter<Manga> adapter;
+    private LibraryAdapter adapter;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
@@ -82,12 +84,12 @@ public class LibraryFragment extends BaseFragment<LibraryPresenter> {
     }
 
     private void createAdapter() {
-        adapter = new LibraryAdapter<>(getActivity());
+        adapter = new LibraryAdapter(getActivity());
         grid.setAdapter(adapter);
     }
 
-    public LibraryAdapter<Manga> getAdapter() {
-        return adapter;
+    public void onNextMangas(List<Manga> mangas) {
+        adapter.setNewItems(mangas);
     }
 
     @OnItemClick(R.id.gridView)

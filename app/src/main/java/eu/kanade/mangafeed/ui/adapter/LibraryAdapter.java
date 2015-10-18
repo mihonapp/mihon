@@ -10,7 +10,7 @@ import eu.kanade.mangafeed.data.models.Manga;
 import rx.Observable;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
-public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
+public class LibraryAdapter extends EasyAdapter<Manga> implements Filterable {
 
     List<Manga> mangas;
     Filter filter;
@@ -20,9 +20,9 @@ public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
         filter = new LibraryFilter();
     }
 
-    public void setNewItems(List<T> list) {
+    public void setNewItems(List<Manga> list) {
         super.setItems(list);
-        mangas = (List<Manga>)list;
+        mangas = list;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class LibraryAdapter<T> extends EasyAdapter<T> implements Filterable {
 
         @Override
         public void publishResults(CharSequence constraint, FilterResults results) {
-            setItems((List<T>) results.values);
+            setItems((List<Manga >) results.values);
         }
     }
 

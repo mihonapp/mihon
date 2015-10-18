@@ -8,7 +8,6 @@ import eu.kanade.mangafeed.ui.fragment.MangaInfoFragment;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
