@@ -86,7 +86,7 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                getPresenter().onQueryTextChange(query);
+                getPresenter().queryFromSearch(query);
                 return true;
             }
 

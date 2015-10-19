@@ -122,9 +122,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
                 .debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        this::queryFromSearch,
-                        error -> Timber.e(error.getCause(), error.getMessage()));
+                .subscribe(this::queryFromSearch);
 
         add(mSearchViewSubscription);
     }
@@ -176,11 +174,15 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
     }
 
     public void onQueryTextChange(String query) {
+        if (query.equals("")) {
+            queryFromSearch(query);
+            return;
+        }
         if (mSearchViewPublishSubject != null)
             mSearchViewPublishSubject.onNext(Observable.just(query));
     }
 
-    private void queryFromSearch(String query) {
+    public void queryFromSearch(String query) {
         // If text didn't change
         if (mSearchName.equals(query)) {
             return;
