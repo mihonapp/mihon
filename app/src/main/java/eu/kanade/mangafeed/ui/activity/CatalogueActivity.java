@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -86,13 +85,13 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                getPresenter().queryFromSearch(query);
+                getPresenter().onSearchEvent(query, true);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                getPresenter().onQueryTextChange(newText);
+                getPresenter().onSearchEvent(newText, false);
                 return true;
             }
         });
@@ -126,10 +125,6 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         manga_list.setOnScrollListener(scroll_listener);
     }
 
-    public void resetScrollListener() {
-        scroll_listener.resetScroll();
-    }
-
     public void showProgressBar() {
         progress.setVisibility(ProgressBar.VISIBLE);
     }
@@ -145,8 +140,8 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
 
     public void onAddPage(PageBundle<List<Manga>> page) {
         if (page.page == 0) {
-            adapter.setItems(new ArrayList<>());
-            resetScrollListener();
+            adapter.getItems().clear();
+            scroll_listener.resetScroll();
         }
         adapter.addItems(page.data);
     }

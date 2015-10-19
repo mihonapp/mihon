@@ -44,8 +44,9 @@ public class SourceFragment extends BaseFragment<SourcePresenter> {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_catalogue, container, false);
-        activity.setToolbarTitle(R.string.catalogues_title);
         ButterKnife.bind(this, view);
+
+        activity.setToolbarTitle(R.string.catalogues_title);
 
         createAdapter();
 
@@ -55,7 +56,6 @@ public class SourceFragment extends BaseFragment<SourcePresenter> {
     @OnItemClick(R.id.catalogue_list)
     public void onSourceClick(int position) {
         Source source = adapter.getItem(position);
-        getPresenter().setSelectedSource(source);
 
         Intent intent = CatalogueActivity.newIntent(activity, source.getSourceId());
         startActivity(intent);

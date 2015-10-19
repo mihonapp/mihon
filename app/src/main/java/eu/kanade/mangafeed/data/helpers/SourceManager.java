@@ -17,7 +17,6 @@ public class SourceManager {
     private HashMap<Integer, Source> mSourcesMap;
     private NetworkHelper mNetworkHelper;
     private CacheManager mCacheManager;
-    private Source selected;
 
     public SourceManager(NetworkHelper networkHelper, CacheManager cacheManager) {
         mSourcesMap = new HashMap<>();
@@ -51,14 +50,7 @@ public class SourceManager {
     }
 
     public List<Source> getSources() {
-        return new ArrayList<Source>(mSourcesMap.values());
+        return new ArrayList<>(mSourcesMap.values());
     }
 
-    public void setSelectedSource(int sourceId) {
-        selected = get(sourceId);
-    }
-
-    public Source getSelectedSource() {
-        return selected;
-    }
 }

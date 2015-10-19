@@ -23,7 +23,6 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
-import timber.log.Timber;
 
 public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
 
@@ -36,12 +35,12 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
     @State protected boolean mSearchMode;
     private final int SEARCH_TIMEOUT = 1000;
 
-    @State protected int mCurrentPage;
+    private int mCurrentPage;
     private RxPager pager;
 
-    private Subscription mSearchViewSubscription;
+    private Subscription mQueryDebouncerSubscription;
     private Subscription mMangaDetailFetchSubscription;
-    private PublishSubject<Observable<String>> mSearchViewPublishSubject;
+    private PublishSubject<Observable<String>> mQueryDebouncerSubject;
     private PublishSubject<Observable<List<Manga>>> mMangaDetailPublishSubject;
 
     private static final int GET_MANGA_LIST = 1;
@@ -77,14 +76,8 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
             view.restoreSearch(mSearchName);
     }
 
-    public void requestNext() {
-        pager.requestNext(++mCurrentPage);
-        if (getView() != null)
-            getView().showGridProgressBar();
-    }
-
-    public void startRequesting(int source_id) {
-        this.selectedSource = sourceManager.get(source_id);
+    public void startRequesting(int sourceId) {
+        selectedSource = sourceManager.get(sourceId);
         restartRequest();
     }
 
@@ -92,9 +85,17 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
         stop(GET_MANGA_LIST);
         mCurrentPage = 1;
         pager = new RxPager();
-        start(GET_MANGA_LIST);
         if (getView() != null)
             getView().showProgressBar();
+
+        start(GET_MANGA_LIST);
+    }
+
+    public void requestNext() {
+        if (getView() != null)
+            getView().showGridProgressBar();
+
+        pager.requestNext(++mCurrentPage);
     }
 
     private Observable<List<Manga>> getMangaObs(int page) {
@@ -110,21 +111,29 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
                 .toList();
     }
 
+    private Manga networkToLocalManga(Manga networkManga) {
+        Manga localManga = db.getMangaBlock(networkManga.url);
+        if (localManga == null) {
+            PutResult result = db.insertMangaBlock(networkManga);
+            networkManga.id = result.insertedId();
+            localManga = networkManga;
+        }
+        return localManga;
+    }
+
     private void initializeSearch() {
-        if (mSearchViewSubscription != null)
+        if (mQueryDebouncerSubscription != null)
             return;
 
         mSearchName = "";
         mSearchMode = false;
-        mSearchViewPublishSubject = PublishSubject.create();
+        mQueryDebouncerSubject = PublishSubject.create();
 
-        mSearchViewSubscription = Observable.switchOnNext(mSearchViewPublishSubject)
+        add(mQueryDebouncerSubscription = Observable.switchOnNext(mQueryDebouncerSubject)
                 .debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::queryFromSearch);
-
-        add(mSearchViewSubscription);
+                .subscribe(this::queryFromSearch));
     }
 
     private void initializeMangaDetailsLoader() {
@@ -133,7 +142,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
 
         mMangaDetailPublishSubject = PublishSubject.create();
 
-        mMangaDetailFetchSubscription = Observable.switchOnNext(mMangaDetailPublishSubject)
+        add(mMangaDetailFetchSubscription = Observable.switchOnNext(mMangaDetailPublishSubject)
                 .subscribeOn(Schedulers.io())
                 .flatMap(Observable::from)
                 .filter(manga -> !manga.initialized)
@@ -158,32 +167,19 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
                 .subscribe(manga -> {
                     if (getView() != null)
                         getView().updateImage(manga);
-                });
-
-        add(mMangaDetailFetchSubscription);
+                }));
     }
 
-    private Manga networkToLocalManga(Manga networkManga) {
-        Manga localManga = db.getMangaBlock(networkManga.url);
-        if (localManga == null) {
-            PutResult result = db.insertMangaBlock(networkManga);
-            networkManga.id = result.insertedId();
-            localManga = networkManga;
-        }
-        return localManga;
-    }
-
-    public void onQueryTextChange(String query) {
-        if (query.equals("")) {
+    public void onSearchEvent(String query, boolean now) {
+        // If the query is empty or not debounced, resolve it instantly
+        if (now || query.equals(""))
             queryFromSearch(query);
-            return;
-        }
-        if (mSearchViewPublishSubject != null)
-            mSearchViewPublishSubject.onNext(Observable.just(query));
+        else if (mQueryDebouncerSubject != null)
+            mQueryDebouncerSubject.onNext(Observable.just(query));
     }
 
-    public void queryFromSearch(String query) {
-        // If text didn't change
+    private void queryFromSearch(String query) {
+        // If text didn't change, do nothing
         if (mSearchName.equals(query)) {
             return;
         }

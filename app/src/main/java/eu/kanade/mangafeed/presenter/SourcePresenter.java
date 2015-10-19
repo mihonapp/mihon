@@ -18,7 +18,4 @@ public class SourcePresenter extends BasePresenter<SourceFragment> {
         view.setItems(sourceManager.getSources());
     }
 
-    public void setSelectedSource(Source source) {
-        sourceManager.setSelectedSource(source.getSourceId());
-    }
 }
