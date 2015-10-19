@@ -2,6 +2,8 @@ package eu.kanade.mangafeed.presenter;
 
 import android.os.Bundle;
 
+import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +18,6 @@ import eu.kanade.mangafeed.ui.activity.CatalogueActivity;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.util.RxPager;
 import icepick.State;
-import nucleus.presenter.RxPresenter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,15 +25,15 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import timber.log.Timber;
 
-public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
+public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
 
     @Inject SourceManager sourceManager;
     @Inject DatabaseHelper db;
 
     private Source selectedSource;
 
-    private String mSearchName;
-    private boolean mSearchMode;
+    @State protected String mSearchName;
+    @State protected boolean mSearchMode;
     private final int SEARCH_TIMEOUT = 1000;
 
     @State protected int mCurrentPage;
@@ -72,15 +73,17 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
 
         view.setToolbarTitle(selectedSource.getName());
 
-        if (view.getAdapter().getCount() == 0)
-            view.showProgressBar();
+        if (mSearchMode)
+            view.restoreSearch(mSearchName);
     }
 
     public void requestNext() {
         pager.requestNext(++mCurrentPage);
+        if (getView() != null)
+            getView().showGridProgressBar();
     }
 
-    public void initializeRequest(int source_id) {
+    public void startRequesting(int source_id) {
         this.selectedSource = sourceManager.get(source_id);
         restartRequest();
     }
@@ -90,6 +93,8 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
         mCurrentPage = 1;
         pager = new RxPager();
         start(GET_MANGA_LIST);
+        if (getView() != null)
+            getView().showProgressBar();
     }
 
     private Observable<List<Manga>> getMangaObs(int page) {
@@ -102,12 +107,12 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
         return obs.subscribeOn(Schedulers.io())
                 .flatMap(Observable::from)
                 .map(this::networkToLocalManga)
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread());
+                .toList();
     }
 
     private void initializeSearch() {
-        remove(mSearchViewSubscription);
+        if (mSearchViewSubscription != null)
+            return;
 
         mSearchName = "";
         mSearchMode = false;
@@ -125,7 +130,8 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
     }
 
     private void initializeMangaDetailsLoader() {
-        remove(mMangaDetailFetchSubscription);
+        if (mMangaDetailFetchSubscription != null)
+            return;
 
         mMangaDetailPublishSubject = PublishSubject.create();
 
@@ -151,8 +157,10 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
                 .filter(manga -> manga.initialized)
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(deliverReplay())
-                .subscribe(this.split(CatalogueActivity::updateImage));
+                .subscribe(manga -> {
+                    if (getView() != null)
+                        getView().updateImage(manga);
+                });
 
         add(mMangaDetailFetchSubscription);
     }
@@ -160,8 +168,9 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
     private Manga networkToLocalManga(Manga networkManga) {
         Manga localManga = db.getMangaBlock(networkManga.url);
         if (localManga == null) {
-            db.insertMangaBlock(networkManga);
-            localManga = db.getMangaBlock(networkManga.url);
+            PutResult result = db.insertMangaBlock(networkManga);
+            networkManga.id = result.insertedId();
+            localManga = networkManga;
         }
         return localManga;
     }
@@ -172,8 +181,8 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
     }
 
     private void queryFromSearch(String query) {
-        // If search button clicked
-        if (mSearchName.equals("") && query.equals("")) {
+        // If text didn't change
+        if (mSearchName.equals(query)) {
             return;
         }
         // If going to search mode
@@ -186,12 +195,6 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
         }
 
         mSearchName = query;
-        if (getView() != null) {
-            if (mCurrentPage == 1)
-                getView().showProgressBar();
-            else
-                getView().showGridProgressBar();
-        }
         restartRequest();
     }
 

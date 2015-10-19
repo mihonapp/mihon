@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -45,6 +46,7 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
 
     private EasyAdapter<Manga> adapter;
     private EndlessScrollListener scroll_listener;
+    private String search;
 
     public final static String SOURCE_ID = "source_id";
 
@@ -68,7 +70,7 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         int source_id = getIntent().getIntExtra(SOURCE_ID, -1);
 
         if (savedInstanceState == null)
-            getPresenter().initializeRequest(source_id);
+            getPresenter().startRequesting(source_id);
     }
 
     @Override
@@ -79,7 +81,8 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
     }
 
     private void initializeSearch(Menu menu) {
-        final SearchView sv = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView sv = (SearchView) searchItem.getActionView();
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -93,6 +96,11 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
                 return true;
             }
         });
+        if (search != null && !search.equals("")) {
+            searchItem.expandActionView();
+            sv.setQuery(search, true);
+            sv.clearFocus();
+        }
     }
 
     public EasyAdapter<Manga> getAdapter() {
@@ -172,4 +180,7 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         }
     }
 
+    public void restoreSearch(String mSearchName) {
+        search = mSearchName;
+    }
 }
