@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -22,6 +23,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
 import eu.kanade.mangafeed.ui.adapter.CatalogueHolder;
+import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
 import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyAdapter;
@@ -62,6 +64,11 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
 
         initializeAdapter();
         initializeScrollListener();
+
+        int source_id = getIntent().getIntExtra(SOURCE_ID, -1);
+
+        if (savedInstanceState == null)
+            getPresenter().initializeRequest(source_id);
     }
 
     @Override
@@ -107,27 +114,12 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
     }
 
     public void initializeScrollListener() {
-        scroll_listener = new EndlessScrollListener() {
-            @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
-                getPresenter().loadMoreMangas(page);
-                return true;
-            }
-        };
-
+        scroll_listener = new EndlessScrollListener(getPresenter()::requestNext);
         manga_list.setOnScrollListener(scroll_listener);
     }
 
     public void resetScrollListener() {
         scroll_listener.resetScroll();
-    }
-
-    public int getScrollPage() {
-        return scroll_listener.getCurrentPage();
-    }
-
-    public void setScrollPage(int page) {
-        scroll_listener.setCurrentPage(page);
     }
 
     public void showProgressBar() {
@@ -143,8 +135,12 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
         progress_grid.setVisibility(ProgressBar.GONE);
     }
 
-    public void onMangasNext(List<Manga> newMangas) {
-        adapter.addItems(newMangas);
+    public void onAddPage(PageBundle<List<Manga>> page) {
+        if (page.page == 0) {
+            adapter.setItems(new ArrayList<>());
+            resetScrollListener();
+        }
+        adapter.addItems(page.data);
     }
 
     private int getMangaIndex(Manga manga) {
@@ -175,4 +171,5 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
                     .into(imageView);
         }
     }
+
 }

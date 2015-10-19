@@ -27,15 +27,11 @@
             android:name=".ui.activity.MangaDetailActivity"
             android:label="@string/title_activity_manga_detail"
             android:parentActivityName=".ui.activity.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.kanade.mangafeed.ui.activity.MainActivity" />
         </activity>
         <activity
             android:name=".ui.activity.CatalogueActivity"
             android:label="@string/title_activity_catalogue_list"
             android:parentActivityName=".ui.activity.MainActivity"
-            android:launchMode="singleTop"
             android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -1,7 +1,6 @@
 package eu.kanade.mangafeed.presenter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +13,13 @@ import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.activity.CatalogueActivity;
+import eu.kanade.mangafeed.util.PageBundle;
+import eu.kanade.mangafeed.util.RxPager;
+import icepick.State;
 import nucleus.presenter.RxPresenter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.internal.util.SubscriptionList;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import timber.log.Timber;
@@ -33,28 +34,34 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
     private String mSearchName;
     private boolean mSearchMode;
     private final int SEARCH_TIMEOUT = 1000;
-    private int mCurrentPage = 1;
 
-    private Subscription mMangaFetchSubscription;
-    private Subscription mMangaSearchSubscription;
+    @State protected int mCurrentPage;
+    private RxPager pager;
+
     private Subscription mSearchViewSubscription;
     private Subscription mMangaDetailFetchSubscription;
     private PublishSubject<Observable<String>> mSearchViewPublishSubject;
     private PublishSubject<Observable<List<Manga>>> mMangaDetailPublishSubject;
-    private SubscriptionList mResultSubscriptions = new SubscriptionList();
 
-    private final String CURRENT_PAGE = "CATALOGUE_CURRENT_PAGE";
+    private static final int GET_MANGA_LIST = 1;
 
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        if (savedState != null) {
-            mCurrentPage = savedState.getInt(CURRENT_PAGE);
-        }
+        restartableReplay(GET_MANGA_LIST,
+                () -> pager.pages().<PageBundle<List<Manga>>>concatMap(
+                        page -> getMangaObs(page + 1)
+                                .map(mangas -> new PageBundle<>(page, mangas))
+                                .observeOn(AndroidSchedulers.mainThread())
+                ),
+                (view, page) -> {
+                    view.hideProgressBar();
+                    view.onAddPage(page);
+                    if (mMangaDetailPublishSubject != null)
+                        mMangaDetailPublishSubject.onNext(Observable.just(page.data));
+                });
 
-        selectedSource = sourceManager.getSelectedSource();
-        getMangasFromSource(mCurrentPage);
         initializeSearch();
         initializeMangaDetailsLoader();
     }
@@ -63,24 +70,40 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
     protected void onTakeView(CatalogueActivity view) {
         super.onTakeView(view);
 
-        view.setScrollPage(mCurrentPage - 1);
-
         view.setToolbarTitle(selectedSource.getName());
 
         if (view.getAdapter().getCount() == 0)
             view.showProgressBar();
     }
 
-    @Override
-    protected void onSave(@NonNull Bundle state) {
-        super.onSave(state);
-        state.putInt(CURRENT_PAGE, mCurrentPage);
+    public void requestNext() {
+        pager.requestNext(++mCurrentPage);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mResultSubscriptions.unsubscribe();
+    public void initializeRequest(int source_id) {
+        this.selectedSource = sourceManager.get(source_id);
+        restartRequest();
+    }
+
+    private void restartRequest() {
+        stop(GET_MANGA_LIST);
+        mCurrentPage = 1;
+        pager = new RxPager();
+        start(GET_MANGA_LIST);
+    }
+
+    private Observable<List<Manga>> getMangaObs(int page) {
+        Observable<List<Manga>> obs;
+        if (mSearchMode)
+            obs = selectedSource.searchMangasFromNetwork(mSearchName, page);
+        else
+            obs = selectedSource.pullPopularMangasFromNetwork(page);
+
+        return obs.subscribeOn(Schedulers.io())
+                .flatMap(Observable::from)
+                .map(this::networkToLocalManga)
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private void initializeSearch() {
@@ -134,36 +157,6 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
         add(mMangaDetailFetchSubscription);
     }
 
-    public void getMangasFromSource(int page) {
-        mMangaFetchSubscription = getMangasSubscriber(
-                selectedSource.pullPopularMangasFromNetwork(page));
-
-        mResultSubscriptions.add(mMangaFetchSubscription);
-    }
-
-    public void getMangasFromSearch(int page) {
-        mMangaSearchSubscription = getMangasSubscriber(
-                selectedSource.searchMangasFromNetwork(mSearchName, page));
-
-        mResultSubscriptions.add(mMangaSearchSubscription);
-    }
-
-    private Subscription getMangasSubscriber(Observable<List<Manga>> mangas) {
-        return mangas
-                .subscribeOn(Schedulers.io())
-                .flatMap(Observable::from)
-                .map(this::networkToLocalManga)
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(deliverReplay())
-                .subscribe(this.split((view, newMangas) -> {
-                    view.hideProgressBar();
-                    view.onMangasNext(newMangas);
-                    if (mMangaDetailPublishSubject != null)
-                        mMangaDetailPublishSubject.onNext(Observable.just(newMangas));
-                }));
-    }
-
     private Manga networkToLocalManga(Manga networkManga) {
         Manga localManga = db.getMangaBlock(networkManga.url);
         if (localManga == null) {
@@ -186,31 +179,20 @@ public class CataloguePresenter extends RxPresenter<CatalogueActivity> {
         // If going to search mode
         else if (mSearchName.equals("") && !query.equals("")) {
             mSearchMode = true;
-            mResultSubscriptions.clear();
         }
         // If going to normal mode
         else if (!mSearchName.equals("") && query.equals("")) {
             mSearchMode = false;
-            mResultSubscriptions.clear();
         }
 
         mSearchName = query;
-        getView().getAdapter().getItems().clear();
-        getView().showProgressBar();
-        getView().resetScrollListener();
-        loadMoreMangas(1);
-    }
-
-    public void loadMoreMangas(int page) {
-        if (page > 1) {
-            getView().showGridProgressBar();
+        if (getView() != null) {
+            if (mCurrentPage == 1)
+                getView().showProgressBar();
+            else
+                getView().showGridProgressBar();
         }
-        if (mSearchMode) {
-            getMangasFromSearch(page);
-        } else {
-            getMangasFromSource(page);
-        }
-        mCurrentPage = page;
+        restartRequest();
     }
 
 }
