@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
+import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.ChapterListHolder;
 import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
@@ -65,7 +66,7 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getPresenter().refreshChapters(this);
+                getPresenter().refreshChapters();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -77,7 +78,7 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
     }
 
     private void setSwipeRefreshListener() {
-        swipeRefresh.setOnRefreshListener(() -> getPresenter().refreshChapters(this));
+        swipeRefresh.setOnRefreshListener(() -> getPresenter().refreshChapters());
     }
 
     public void onNextChapters(List<Chapter> chapters) {
@@ -90,5 +91,9 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
 
     public void setSwipeRefreshing() {
         swipeRefresh.setRefreshing(true);
+    }
+
+    public boolean isOnlineManga() {
+        return ((MangaDetailActivity)getActivity()).isOnlineManga();
     }
 }

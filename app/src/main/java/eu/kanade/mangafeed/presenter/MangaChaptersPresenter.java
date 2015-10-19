@@ -39,7 +39,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
                 this::getDbChaptersObs,
                 (view, chapters) -> {
                     view.onNextChapters(chapters);
-                    EventBus.getDefault().postSticky(new ChapterCountEvent(chapters.size()));
+                    EventBus.getDefault().postSticky( new ChapterCountEvent(chapters.size()) );
                 }
         );
 
@@ -61,19 +61,30 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
         super.onDropView();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().removeStickyEvent(ChapterCountEvent.class);
+    }
+
     @EventBusHook
     public void onEventMainThread(Manga manga) {
         if (this.manga == null) {
             this.manga = manga;
             start(DB_CHAPTERS);
+
+            // Get chapters if it's an online source
+            if (getView() != null && getView().isOnlineManga()) {
+                refreshChapters();
+            }
         }
     }
 
-    public void refreshChapters(MangaChaptersFragment view) {
-        if (manga != null) {
-            view.setSwipeRefreshing();
-            start(ONLINE_CHAPTERS);
-        }
+    public void refreshChapters() {
+        if (getView() != null)
+            getView().setSwipeRefreshing();
+
+        start(ONLINE_CHAPTERS);
     }
 
     private Observable<List<Chapter>> getDbChaptersObs() {
@@ -89,4 +100,5 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
                 .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
 }

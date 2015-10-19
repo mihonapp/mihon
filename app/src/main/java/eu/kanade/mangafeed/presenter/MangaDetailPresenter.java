@@ -1,5 +1,7 @@
 package eu.kanade.mangafeed.presenter;
 
+import android.os.Bundle;
+
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
@@ -7,7 +9,6 @@ import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -15,32 +16,39 @@ public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
 
     @Inject DatabaseHelper db;
 
-    private Manga manga;
-    private Subscription mangaSubscription;
+    private long mangaId;
+    private static final int DB_MANGA = 1;
 
     @Override
-    protected void onTakeView(MangaDetailActivity view) {
-        super.onTakeView(view);
-        if (manga != null)
-            view.setManga(manga);
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
 
-        getManga(view);
+        restartableLatestCache(DB_MANGA,
+                this::getDbMangaObservable,
+                (view, manga) -> {
+                    view.setManga(manga);
+                    EventBus.getDefault().postSticky(manga);
+                });
     }
 
-    private void getManga(MangaDetailActivity view) {
-        if (mangaSubscription != null)
-            return;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Avoid fragments receiving wrong manga
+        EventBus.getDefault().removeStickyEvent(Manga.class);
+    }
 
-        add(mangaSubscription = db.getManga(view.getMangaId())
+    private Observable<Manga> getDbMangaObservable() {
+        return db.getManga(mangaId)
                 .subscribeOn(Schedulers.io())
                 .take(1)
                 .flatMap(Observable::from)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(manga -> {
-                    this.manga = manga;
-                    view.setManga(manga);
-                    EventBus.getDefault().postSticky(manga);
-                }));
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public void queryManga(long mangaId) {
+        this.mangaId = mangaId;
+        start(DB_MANGA);
     }
 
 }

@@ -10,9 +10,6 @@ import eu.kanade.mangafeed.ui.fragment.MangaInfoFragment;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.events.ChapterCountEvent;
 import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
@@ -52,10 +49,8 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
     @EventBusHook
     public void onEventMainThread(Manga manga) {
-        if (!manga.equals(this.manga)) {
-            this.manga = manga;
-            start(GET_MANGA);
-        }
+        this.manga = manga;
+        start(GET_MANGA);
     }
 
     @EventBusHook

@@ -56,6 +56,9 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
         is_online = intent.getBooleanExtra(MANGA_ONLINE, false);
 
         setupViewPager();
+
+        if (savedInstanceState == null)
+            getPresenter().queryManga(manga_id);
     }
 
     @Override
@@ -93,6 +96,10 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
 
     public void setManga(Manga manga) {
         setToolbarTitle(manga.title);
+    }
+
+    public boolean isOnlineManga() {
+        return is_online;
     }
 
     class MangaDetailAdapter extends FragmentPagerAdapter {
