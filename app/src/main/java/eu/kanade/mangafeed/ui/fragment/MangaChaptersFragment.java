@@ -27,7 +27,7 @@ import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> {
 
     @Bind(R.id.chapter_list) RecyclerView chapters;
-    @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipe_refresh;
+    @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
 
     private EasyRecyclerAdapter<Chapter> adapter;
 
@@ -77,7 +77,7 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
     }
 
     private void setSwipeRefreshListener() {
-        swipe_refresh.setOnRefreshListener(() -> getPresenter().refreshChapters(this));
+        swipeRefresh.setOnRefreshListener(() -> getPresenter().refreshChapters(this));
     }
 
     public void onNextChapters(List<Chapter> chapters) {
@@ -85,10 +85,10 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
     }
 
     public void onNextOnlineChapters() {
-        swipe_refresh.setRefreshing(false);
+        swipeRefresh.setRefreshing(false);
     }
 
     public void setSwipeRefreshing() {
-        swipe_refresh.setRefreshing(true);
+        swipeRefresh.setRefreshing(true);
     }
 }

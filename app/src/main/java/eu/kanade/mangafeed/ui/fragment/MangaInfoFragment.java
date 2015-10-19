@@ -50,7 +50,6 @@ public class MangaInfoFragment extends BaseFragment<MangaInfoPresenter> {
     public void setMangaInfo(Manga manga) {
         mArtist.setText(manga.artist);
         mAuthor.setText(manga.author);
-        mChapters.setText("0"); // TODO
         mGenres.setText(manga.genre);
         mStatus.setText("Ongoing"); //TODO
         mDescription.setText(manga.description);
@@ -60,5 +59,9 @@ public class MangaInfoFragment extends BaseFragment<MangaInfoPresenter> {
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(mCover);
+    }
+
+    public void setChapterCount(int count) {
+        mChapters.setText(String.valueOf(count));
     }
 }

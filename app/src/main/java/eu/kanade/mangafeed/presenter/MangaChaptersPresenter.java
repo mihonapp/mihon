@@ -8,11 +8,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
+import eu.kanade.mangafeed.util.EventBusHook;
+import eu.kanade.mangafeed.util.events.ChapterCountEvent;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -34,7 +37,10 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
 
         restartableLatestCache(DB_CHAPTERS,
                 this::getDbChaptersObs,
-                MangaChaptersFragment::onNextChapters
+                (view, chapters) -> {
+                    view.onNextChapters(chapters);
+                    EventBus.getDefault().postSticky(new ChapterCountEvent(chapters.size()));
+                }
         );
 
         restartableLatestCache(ONLINE_CHAPTERS,
@@ -55,6 +61,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
         super.onDropView();
     }
 
+    @EventBusHook
     public void onEventMainThread(Manga manga) {
         if (this.manga == null) {
             this.manga = manga;
