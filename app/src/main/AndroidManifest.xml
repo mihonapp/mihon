@@ -38,7 +38,7 @@
                 android:value="eu.kanade.mangafeed.ui.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activity.ViewerActivity"
+            android:name=".ui.activity.ReaderActivity"
             android:label="@string/title_activity_viewer"
             android:parentActivityName=".ui.activity.MangaDetailActivity"
             android:theme="@style/AppTheme" >

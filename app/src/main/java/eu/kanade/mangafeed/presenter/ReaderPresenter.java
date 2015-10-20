@@ -11,14 +11,14 @@ import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.sources.Source;
-import eu.kanade.mangafeed.ui.activity.ViewerActivity;
+import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.events.SourceChapterEvent;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ViewerPresenter extends BasePresenter<ViewerActivity> {
+public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     private static final int GET_PAGE_LIST = 1;
     private Source source;
@@ -38,7 +38,7 @@ public class ViewerPresenter extends BasePresenter<ViewerActivity> {
     }
 
     @Override
-    protected void onTakeView(ViewerActivity view) {
+    protected void onTakeView(ReaderActivity view) {
         super.onTakeView(view);
         registerForStickyEvents();
     }

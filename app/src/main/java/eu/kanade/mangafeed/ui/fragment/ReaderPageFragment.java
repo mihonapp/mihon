@@ -13,15 +13,15 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.util.PageFileTarget;
 
-public class ViewerPageFragment extends Fragment {
+public class ReaderPageFragment extends Fragment {
     public static final String URL_ARGUMENT_KEY = "UrlArgumentKey";
 
     private SubsamplingScaleImageView mPageImageView;
 
     private String mUrl;
 
-    public static ViewerPageFragment newInstance(String url, int position) {
-        ViewerPageFragment newInstance = new ViewerPageFragment();
+    public static ReaderPageFragment newInstance(String url, int position) {
+        ReaderPageFragment newInstance = new ReaderPageFragment();
         Bundle arguments = new Bundle();
         arguments.putString(URL_ARGUMENT_KEY, url);
         newInstance.setArguments(arguments);

@@ -21,7 +21,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
-import eu.kanade.mangafeed.ui.activity.ViewerActivity;
+import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.ui.adapter.ChapterListHolder;
 import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
@@ -77,7 +77,7 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
     private void createAdapter() {
         ChapterListHolder.ChapterListener listener = chapter -> {
             getPresenter().onChapterClicked(chapter);
-            Intent intent = ViewerActivity.newInstance(getActivity());
+            Intent intent = ReaderActivity.newInstance(getActivity());
             startActivity(intent);
         };
 

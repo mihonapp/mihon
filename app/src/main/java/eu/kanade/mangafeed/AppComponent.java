@@ -13,7 +13,7 @@ import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.presenter.MangaDetailPresenter;
 import eu.kanade.mangafeed.presenter.MangaInfoPresenter;
 import eu.kanade.mangafeed.presenter.SourcePresenter;
-import eu.kanade.mangafeed.presenter.ViewerPresenter;
+import eu.kanade.mangafeed.presenter.ReaderPresenter;
 
 @Singleton
 @Component(
@@ -31,7 +31,7 @@ public interface AppComponent {
     void inject(CataloguePresenter cataloguePresenter);
     void inject(MangaInfoPresenter mangaInfoPresenter);
     void inject(MangaChaptersPresenter mangaChaptersPresenter);
-    void inject(ViewerPresenter viewerPresenter);
+    void inject(ReaderPresenter readerPresenter);
 
     Application application();
 

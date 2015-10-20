@@ -5,13 +5,13 @@ import android.support.v4.app.FragmentManager;
 
 import java.util.List;
 
-import eu.kanade.mangafeed.ui.fragment.ViewerPageFragment;
+import eu.kanade.mangafeed.ui.fragment.ReaderPageFragment;
 
-public class ViewerPageAdapter extends SmartFragmentStatePagerAdapter {
+public class ReaderPageAdapter extends SmartFragmentStatePagerAdapter {
 
     private List<String> imageUrls;
 
-    public ViewerPageAdapter(FragmentManager fragmentManager) {
+    public ReaderPageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
@@ -25,7 +25,7 @@ public class ViewerPageAdapter extends SmartFragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return ViewerPageFragment.newInstance(imageUrls.get(position), position);
+        return ReaderPageFragment.newInstance(imageUrls.get(position), position);
     }
 
     public List<String> getImageUrls() {

@@ -8,19 +8,19 @@ import android.support.v4.view.ViewPager;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.presenter.ViewerPresenter;
-import eu.kanade.mangafeed.ui.adapter.ViewerPageAdapter;
+import eu.kanade.mangafeed.presenter.ReaderPresenter;
+import eu.kanade.mangafeed.ui.adapter.ReaderPageAdapter;
 import nucleus.factory.RequiresPresenter;
 
-@RequiresPresenter(ViewerPresenter.class)
-public class ViewerActivity extends BaseActivity<ViewerPresenter> {
+@RequiresPresenter(ReaderPresenter.class)
+public class ReaderActivity extends BaseActivity<ReaderPresenter> {
 
     @Bind(R.id.view_pager) ViewPager viewPager;
 
-    private ViewerPageAdapter adapter;
+    private ReaderPageAdapter adapter;
 
     public static Intent newInstance(Context context) {
-        return new Intent(context, ViewerActivity.class);
+        return new Intent(context, ReaderActivity.class);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ViewerActivity extends BaseActivity<ViewerPresenter> {
     }
 
     private void createAdapter() {
-        adapter = new ViewerPageAdapter(getSupportFragmentManager());
+        adapter = new ReaderPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
     }
 
