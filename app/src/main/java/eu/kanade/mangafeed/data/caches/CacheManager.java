@@ -5,20 +5,23 @@ import android.content.Context;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.util.DiskUtils;
 import rx.Observable;
-import rx.functions.Action0;
 
 public class CacheManager {
 
@@ -29,11 +32,13 @@ public class CacheManager {
     private static final int READ_TIMEOUT = 60;
 
     private Context mContext;
+    private Gson mGson;
 
     private DiskLruCache mDiskCache;
 
     public CacheManager(Context context) {
         mContext = context;
+        mGson = new Gson();
 
         try {
             mDiskCache = DiskLruCache.open(
@@ -109,16 +114,11 @@ public class CacheManager {
         return isSuccessful;
     }
 
-    public Observable<String> getImageUrlsFromDiskCache(final String chapterUrl) {
+    public Observable<List<Page>> getPageUrlsFromDiskCache(final String chapterUrl) {
         return Observable.create(subscriber -> {
             try {
-                String[] imageUrls = getImageUrlsFromDiskCacheImpl(chapterUrl);
-
-                for (String imageUrl : imageUrls) {
-                    if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(imageUrl);
-                    }
-                }
+                List<Page> pages = getPageUrlsFromDiskCacheImpl(chapterUrl);
+                subscriber.onNext(pages);
                 subscriber.onCompleted();
             } catch (Throwable e) {
                 subscriber.onError(e);
@@ -126,35 +126,28 @@ public class CacheManager {
         });
     }
 
-    private String[] getImageUrlsFromDiskCacheImpl(String chapterUrl) throws IOException {
+    private List<Page> getPageUrlsFromDiskCacheImpl(String chapterUrl) throws IOException {
         DiskLruCache.Snapshot snapshot = null;
+        List<Page> pages = null;
 
         try {
             String key = DiskUtils.hashKeyForDisk(chapterUrl);
-
             snapshot = mDiskCache.get(key);
 
-            String joinedImageUrls = snapshot.getString(0);
-            return joinedImageUrls.split(",");
+            Type collectionType = new TypeToken<List<Page>>() {}.getType();
+            pages = mGson.fromJson(snapshot.getString(0), collectionType);
+        } catch (IOException e) {
+            // Do Nothing.
         } finally {
             if (snapshot != null) {
                 snapshot.close();
             }
         }
+        return pages;
     }
 
-    public Action0 putImageUrlsToDiskCache(final String chapterUrl, final List<String> imageUrls) {
-        return () -> {
-            try {
-                putImageUrlsToDiskCacheImpl(chapterUrl, imageUrls);
-            } catch (IOException e) {
-                // Do Nothing.
-            }
-        };
-    }
-
-    private void putImageUrlsToDiskCacheImpl(String chapterUrl, List<String> imageUrls) throws IOException {
-        String cachedValue = joinImageUrlsToCacheValue(imageUrls);
+    public void putPageUrlsToDiskCache(final String chapterUrl, final List<Page> pages) {
+        String cachedValue = mGson.toJson(pages);
 
         DiskLruCache.Editor editor = null;
         OutputStream outputStream = null;
@@ -171,13 +164,11 @@ public class CacheManager {
 
             mDiskCache.flush();
             editor.commit();
+        } catch (Exception e) {
+            // Do Nothing.
         } finally {
             if (editor != null) {
-                try {
-                    editor.abort();
-                } catch (IOException ignore) {
-                    // Do Nothing.
-                }
+                editor.abortUnlessCommitted();
             }
             if (outputStream != null) {
                 try {
@@ -189,22 +180,9 @@ public class CacheManager {
         }
     }
 
-    private String joinImageUrlsToCacheValue(List<String> imageUrls) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int index = 0; index < imageUrls.size(); index++) {
-            if (index == 0) {
-                stringBuilder.append(imageUrls.get(index));
-            } else {
-                stringBuilder.append(",");
-                stringBuilder.append(imageUrls.get(index));
-            }
-        }
-
-        return stringBuilder.toString();
-    }
-
     public File getCacheDir() {
         return mDiskCache.getDirectory();
     }
+
 }
 

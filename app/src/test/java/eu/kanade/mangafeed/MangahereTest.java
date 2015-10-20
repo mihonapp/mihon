@@ -39,7 +39,7 @@ public class MangahereTest {
 
     @Test
     public void testImageList() {
-        List<String> imageUrls = b.getImageUrlsFromNetwork(chapterUrl)
+        List<String> imageUrls = b.getRemainingImageUrlsFromPageList(chapterUrl)
                 .toList().toBlocking().single();
 
         Assert.assertTrue(imageUrls.size() > 5);

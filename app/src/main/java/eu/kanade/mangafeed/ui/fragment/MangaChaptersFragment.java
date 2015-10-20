@@ -1,5 +1,6 @@
 package eu.kanade.mangafeed.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,6 +21,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
+import eu.kanade.mangafeed.ui.activity.ViewerActivity;
 import eu.kanade.mangafeed.ui.adapter.ChapterListHolder;
 import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
@@ -73,7 +75,13 @@ public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> 
     }
 
     private void createAdapter() {
-        adapter = new EasyRecyclerAdapter<>(getActivity(), ChapterListHolder.class);
+        ChapterListHolder.ChapterListener listener = chapter -> {
+            getPresenter().onChapterClicked(chapter);
+            Intent intent = ViewerActivity.newInstance(getActivity());
+            startActivity(intent);
+        };
+
+        adapter = new EasyRecyclerAdapter<>(getActivity(), ChapterListHolder.class, listener);
         chapters.setAdapter(adapter);
     }
 

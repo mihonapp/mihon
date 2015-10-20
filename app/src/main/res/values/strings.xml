@@ -45,5 +45,6 @@
     <string name="description">Description</string>
     <string name="manga_detail_tab">Info</string>
     <string name="manga_chapters_tab">Chapters</string>
+    <string name="title_activity_viewer">ViewerActivity</string>
 
 </resources>

@@ -19,9 +19,6 @@ import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.sources.Batoto;
 import eu.kanade.mangafeed.sources.Source;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
 
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
 @RunWith(RobolectricGradleTestRunner.class)
@@ -44,7 +41,7 @@ public class BatotoTest {
 
     @Test
     public void testImageList() {
-        List<String> imageUrls = b.getImageUrlsFromNetwork(chapterUrl)
+        List<String> imageUrls = b.getRemainingImageUrlsFromPageList(chapterUrl)
                 .toList().toBlocking().single();
 
         Assert.assertTrue(imageUrls.size() > 5);

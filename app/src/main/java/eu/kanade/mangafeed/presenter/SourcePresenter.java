@@ -3,7 +3,6 @@ package eu.kanade.mangafeed.presenter;
 import javax.inject.Inject;
 
 import eu.kanade.mangafeed.data.helpers.SourceManager;
-import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.fragment.SourceFragment;
 
 

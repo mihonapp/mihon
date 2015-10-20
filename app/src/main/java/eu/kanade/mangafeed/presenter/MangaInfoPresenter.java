@@ -10,7 +10,6 @@ import eu.kanade.mangafeed.ui.fragment.MangaInfoFragment;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.events.ChapterCountEvent;
 import rx.Observable;
-import timber.log.Timber;
 
 public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 

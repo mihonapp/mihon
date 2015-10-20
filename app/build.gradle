@@ -62,6 +62,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.6.0'
+    compile 'com.google.code.gson:gson:2.4'
     compile 'com.jakewharton:disklrucache:2.0.2'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'io.reactivex:rxandroid:1.0.1'
@@ -76,6 +77,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:3.1.0'
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile 'ch.acra:acra:4.6.2'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile "frankiesardo:icepick:$ICEPICK_VERSION"
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
 

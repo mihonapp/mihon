@@ -13,13 +13,13 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.presenter.BasePresenter;
+import eu.kanade.mangafeed.presenter.MainPresenter;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 import eu.kanade.mangafeed.ui.fragment.SourceFragment;
 import nucleus.factory.RequiresPresenter;
 
-@RequiresPresenter(BasePresenter.class)
-public class MainActivity extends BaseActivity<BasePresenter> {
+@RequiresPresenter(MainPresenter.class)
+public class MainActivity extends BaseActivity<MainPresenter> {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;

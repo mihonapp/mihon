@@ -13,13 +13,14 @@ import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.events.ChapterCountEvent;
+import eu.kanade.mangafeed.util.events.SourceChapterEvent;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
 public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment> {
 
@@ -27,6 +28,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     @Inject SourceManager sourceManager;
 
     private Manga manga;
+    private Source source;
 
     private static final int DB_CHAPTERS = 1;
     private static final int ONLINE_CHAPTERS = 2;
@@ -71,6 +73,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     public void onEventMainThread(Manga manga) {
         if (this.manga == null) {
             this.manga = manga;
+            source = sourceManager.get(manga.source);
             start(DB_CHAPTERS);
 
             // Get chapters if it's an online source
@@ -94,11 +97,14 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     }
 
     private Observable<PostResult> getOnlineChaptersObs() {
-        return sourceManager.get(manga.source)
+        return source
                 .pullChaptersFromNetwork(manga.url)
                 .subscribeOn(Schedulers.io())
                 .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public void onChapterClicked(Chapter chapter) {
+        EventBus.getDefault().postSticky(new SourceChapterEvent(source, chapter));
+    }
 }

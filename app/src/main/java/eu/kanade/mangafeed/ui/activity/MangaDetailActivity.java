@@ -26,7 +26,7 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.tabs) TabLayout tabs;
-    @Bind(R.id.viewpager) ViewPager view_pager;
+    @Bind(R.id.view_pager) ViewPager view_pager;
 
     private MangaDetailAdapter adapter;
     private long manga_id;
@@ -80,8 +80,7 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
     private void setupViewPager() {
         adapter = new MangaDetailAdapter(
                 getSupportFragmentManager(),
-                getActivity(),
-                manga_id);
+                getActivity());
 
         view_pager.setAdapter(adapter);
         tabs.setupWithViewPager(view_pager);
@@ -107,19 +106,17 @@ public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
         final int PAGE_COUNT = 2;
         private String tab_titles[];
         private Context context;
-        private long manga_id;
 
         final static int INFO_FRAGMENT = 0;
         final static int CHAPTERS_FRAGMENT = 1;
 
-        public MangaDetailAdapter(FragmentManager fm, Context context, long manga_id) {
+        public MangaDetailAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
             tab_titles = new String[]{
                     context.getString(R.string.manga_detail_tab),
                     context.getString(R.string.manga_chapters_tab)
             };
-            this.manga_id = manga_id;
         }
 
         @Override

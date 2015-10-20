@@ -10,10 +10,48 @@ import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.models.Page;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public abstract class Source {
+
+    // Methods to implement or optionally override
+
+    // Name of the source to display
+    public abstract String getName();
+
+    // Id of the source (must be declared and obtained from SourceManager to avoid conflicts)
+    public abstract int getSourceId();
+
+    protected abstract String getUrlFromPageNumber(int page);
+    protected abstract String getSearchUrl(String query, int page);
+    protected abstract List<Manga> parsePopularMangasFromHtml(String unparsedHtml);
+    protected abstract List<Manga> parseSearchFromHtml(String unparsedHtml);
+    protected abstract Manga parseHtmlToManga(String mangaUrl, String unparsedHtml);
+    protected abstract List<Chapter> parseHtmlToChapters(String unparsedHtml);
+    protected abstract List<String> parseHtmlToPageUrls(String unparsedHtml);
+    protected abstract String parseHtmlToImageUrl(String unparsedHtml);
+
+    // Get the URL to the details of a manga, useful if the source provides some kind of API or fast calls
+    protected String getMangaUrl(String defaultMangaUrl) {
+        return defaultMangaUrl;
+    }
+
+    // Default headers, it can be overriden by children or just add new keys
+    protected Headers.Builder headersBuilder() {
+        Headers.Builder builder = new Headers.Builder();
+        builder.add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64)");
+        return builder;
+    }
+
+    // Number of images to download at the same time
+    protected int getNumberOfConcurrentImageDownloads() {
+        return 3;
+    }
+
+
+    // ***** Source class implementation *****
 
     protected NetworkHelper mNetworkService;
     protected CacheManager mCacheManager;
@@ -23,13 +61,6 @@ public abstract class Source {
         mNetworkService = networkService;
         mCacheManager = cacheManager;
         mRequestHeaders = headersBuilder().build();
-    }
-
-    // Default headers, it can be overriden by children or add new keys
-    protected Headers.Builder headersBuilder() {
-        Headers.Builder builder = new Headers.Builder();
-        builder.add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64)");
-        return builder;
     }
 
     // Get the most popular mangas from the source
@@ -62,56 +93,54 @@ public abstract class Source {
                         Observable.just(parseHtmlToChapters(unparsedHtml)));
     }
 
-    // Get the URLs of the images of a chapter
-    public Observable<String> getImageUrlsFromNetwork(final String chapterUrl) {
-        return mNetworkService
-                .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
-                .flatMap(unparsedHtml -> Observable.from(parseHtmlToPageUrls(unparsedHtml)))
-                .buffer(3)
-                .concatMap(batchedPageUrls -> {
-                    List<Observable<String>> imageUrlObservables = new ArrayList<>();
-                    for (String pageUrl : batchedPageUrls) {
-                        Observable<String> temporaryObservable = mNetworkService
-                                .getStringResponse(pageUrl, mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
-                                .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
-                                .subscribeOn(Schedulers.io());
-
-                        imageUrlObservables.add(temporaryObservable);
-                    }
-
-                    return Observable.merge(imageUrlObservables);
-                });
-    }
-
-    // Store the URLs of a chapter in the cache
-    public Observable<String> pullImageUrlsFromNetwork(final String chapterUrl) {
-        final List<String> temporaryCachedImageUrls = new ArrayList<>();
-
-        return mCacheManager.getImageUrlsFromDiskCache(chapterUrl)
+    public Observable<List<Page>> pullPageListFromNetwork(final String chapterUrl) {
+        return mCacheManager.getPageUrlsFromDiskCache(chapterUrl)
                 .onErrorResumeNext(throwable -> {
-                    return getImageUrlsFromNetwork(chapterUrl)
-                            .doOnNext(imageUrl -> temporaryCachedImageUrls.add(imageUrl))
-                            .doOnCompleted(mCacheManager.putImageUrlsToDiskCache(chapterUrl, temporaryCachedImageUrls));
+                    return mNetworkService
+                            .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                            .flatMap(unparsedHtml -> Observable.just(parseHtmlToPageUrls(unparsedHtml)))
+                            .flatMap(this::convertToPages)
+                            .doOnNext(pages -> savePageList(chapterUrl, pages));
                 })
                 .onBackpressureBuffer();
     }
 
-    // Get the URL to the details of a manga, useful if the source provides some kind of API or fast calls
-    protected String getMangaUrl(String defaultMangaUrl) {
-        return defaultMangaUrl;
+    // Get the URLs of the images of a chapter
+    public Observable<Page> getRemainingImageUrlsFromPageList(final List<Page> pages) {
+        return Observable.from(pages)
+                .filter(page -> page.getImageUrl() == null)
+                .buffer(getNumberOfConcurrentImageDownloads())
+                .concatMap(batchedPages -> {
+                    List<Observable<Page>> pageObservable = new ArrayList<>();
+                    for (Page page : batchedPages) {
+                        pageObservable.add(getImageUrlFromPage(page));
+                    }
+                    return Observable.merge(pageObservable);
+                });
     }
 
-    public abstract String getName();
-    public abstract int getSourceId();
+    private Observable<Page> getImageUrlFromPage(final Page page) {
+        return mNetworkService
+                .getStringResponse(page.getUrl(), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
+                .flatMap(imageUrl -> {
+                    page.setImageUrl(imageUrl);
+                    return Observable.just(page);
+                })
+                .subscribeOn(Schedulers.io());
+    }
 
-    protected abstract String getUrlFromPageNumber(int page);
-    protected abstract String getSearchUrl(String query, int page);
-    protected abstract List<Manga> parsePopularMangasFromHtml(String unparsedHtml);
-    protected abstract List<Manga> parseSearchFromHtml(String unparsedHtml);
-    protected abstract Manga parseHtmlToManga(String mangaUrl, String unparsedHtml);
-    protected abstract List<Chapter> parseHtmlToChapters(String unparsedHtml);
-    protected abstract List<String> parseHtmlToPageUrls(String unparsedHtml);
-    protected abstract String parseHtmlToImageUrl(String unparsedHtml);
+    public void savePageList(String chapterUrl, List<Page> pages) {
+        mCacheManager.putPageUrlsToDiskCache(chapterUrl, pages);
+    }
+
+    private Observable<List<Page>> convertToPages(List<String> pageUrls) {
+        List<Page> pages = new ArrayList<>();
+        for (int i = 0; i < pageUrls.size(); i++) {
+            pages.add(new Page(i, pageUrls.get(i)));
+        }
+        return Observable.just(pages);
+    }
 
 
 }
