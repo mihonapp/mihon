@@ -1,7 +1,6 @@
 package eu.kanade.mangafeed.ui.fragment.base;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import eu.kanade.mangafeed.App;
 import nucleus.factory.PresenterFactory;

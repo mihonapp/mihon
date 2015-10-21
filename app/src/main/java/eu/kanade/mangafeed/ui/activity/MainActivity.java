@@ -1,5 +1,6 @@
 package eu.kanade.mangafeed.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,7 +17,6 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.ui.activity.base.BaseActivity;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 import eu.kanade.mangafeed.ui.fragment.SourceFragment;
-import nucleus.factory.RequiresPresenter;
 
 public class MainActivity extends BaseActivity {
 
@@ -54,6 +54,7 @@ public class MainActivity extends BaseActivity {
                         new PrimaryDrawerItem()
                                 .withName(R.string.settings_title)
                                 .withIdentifier(R.id.nav_drawer_settings)
+                                .withSelectable(false)
                 )
                 .withSavedInstance(savedInstanceState)
                 .withOnDrawerItemClickListener(
@@ -70,6 +71,7 @@ public class MainActivity extends BaseActivity {
                                         setFragment(SourceFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_settings:
+                                        startActivity(new Intent(this, SettingsActivity.class));
                                         break;
                                 }
                             }

@@ -4,7 +4,10 @@ import android.os.Bundle;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
+import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.sources.Source;
@@ -17,6 +20,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
+
+    @Inject PreferencesHelper prefs;
 
     private Source source;
     private Chapter chapter;
@@ -52,6 +57,10 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     protected void onTakeView(ReaderActivity view) {
         super.onTakeView(view);
         registerForStickyEvents();
+
+        if (prefs.hideStatusBarSet()) {
+            view.hideStatusBar();
+        }
     }
 
     @Override

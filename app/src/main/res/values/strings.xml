@@ -46,5 +46,8 @@
     <string name="manga_detail_tab">Info</string>
     <string name="manga_chapters_tab">Chapters</string>
     <string name="title_activity_viewer">ViewerActivity</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_hide_status_bar">Hide status bar</string>
+    <string name="pref_hide_status_bar_summary">This option will hide the status bar while reading</string>
 
 </resources>

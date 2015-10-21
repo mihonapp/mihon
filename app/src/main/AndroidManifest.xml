@@ -37,6 +37,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.kanade.mangafeed.ui.activity.MangaDetailActivity" />
         </activity>
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.activity.MainActivity" >
+        </activity>
     </application>
 
 </manifest>
