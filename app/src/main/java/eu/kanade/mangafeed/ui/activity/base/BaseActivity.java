@@ -1,7 +1,8 @@
-package eu.kanade.mangafeed.ui.activity;
+package eu.kanade.mangafeed.ui.activity.base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import eu.kanade.mangafeed.App;
@@ -9,18 +10,7 @@ import nucleus.factory.PresenterFactory;
 import nucleus.presenter.Presenter;
 import nucleus.view.NucleusAppCompatActivity;
 
-public class BaseActivity<P extends Presenter> extends NucleusAppCompatActivity<P> {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        final PresenterFactory<P> superFactory = super.getPresenterFactory();
-        setPresenterFactory(() -> {
-            P presenter = superFactory.createPresenter();
-            App.getComponentReflection(getActivity()).inject(presenter);
-            return presenter;
-        });
-        super.onCreate(savedInstanceState);
-    }
+public class BaseActivity extends AppCompatActivity {
 
     protected void setupToolbar(Toolbar toolbar) {
         setSupportActionBar(toolbar);

@@ -8,7 +8,6 @@ import dagger.Component;
 import eu.kanade.mangafeed.data.DataModule;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
-import eu.kanade.mangafeed.presenter.MainPresenter;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.presenter.MangaDetailPresenter;
 import eu.kanade.mangafeed.presenter.MangaInfoPresenter;
@@ -24,7 +23,6 @@ import eu.kanade.mangafeed.presenter.SourcePresenter;
 )
 public interface AppComponent {
 
-    void inject(MainPresenter mainPresenter);
     void inject(LibraryPresenter libraryPresenter);
     void inject(MangaDetailPresenter mangaDetailPresenter);
     void inject(SourcePresenter sourcePresenter);

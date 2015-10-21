@@ -16,11 +16,12 @@ import eu.kanade.mangafeed.presenter.SourcePresenter;
 import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.adapter.SourceHolder;
+import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 @RequiresPresenter(SourcePresenter.class)
-public class SourceFragment extends BaseFragment<SourcePresenter> {
+public class SourceFragment extends BaseRxFragment<SourcePresenter> {
 
     @Bind(R.id.catalogue_list) ListView source_list;
 

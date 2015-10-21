@@ -23,10 +23,11 @@ import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
+import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(LibraryPresenter.class)
-public class LibraryFragment extends BaseFragment<LibraryPresenter> {
+public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
 
     @Bind(R.id.gridView) GridView grid;
     private MainActivity activity;

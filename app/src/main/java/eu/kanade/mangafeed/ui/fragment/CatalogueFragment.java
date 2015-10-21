@@ -25,13 +25,14 @@ import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.CatalogueHolder;
+import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
 import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 @RequiresPresenter(CataloguePresenter.class)
-public class CatalogueFragment extends BaseFragment<CataloguePresenter> {
+public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
     @Bind(R.id.gridView)
     GridView manga_list;

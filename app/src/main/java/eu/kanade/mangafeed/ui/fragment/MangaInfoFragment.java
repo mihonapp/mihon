@@ -15,10 +15,11 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.MangaInfoPresenter;
+import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(MangaInfoPresenter.class)
-public class MangaInfoFragment extends BaseFragment<MangaInfoPresenter> {
+public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
 
     @Bind(R.id.manga_artist) TextView mArtist;
     @Bind(R.id.manga_author) TextView mAuthor;

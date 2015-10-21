@@ -17,12 +17,13 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.MangaDetailPresenter;
+import eu.kanade.mangafeed.ui.activity.base.BaseRxActivity;
 import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
 import eu.kanade.mangafeed.ui.fragment.MangaInfoFragment;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(MangaDetailPresenter.class)
-public class MangaDetailActivity extends BaseActivity<MangaDetailPresenter> {
+public class MangaDetailActivity extends BaseRxActivity<MangaDetailPresenter> {
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.tabs) TabLayout tabs;

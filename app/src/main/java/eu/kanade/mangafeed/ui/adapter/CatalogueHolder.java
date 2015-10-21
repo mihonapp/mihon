@@ -31,16 +31,12 @@ public class CatalogueHolder extends ItemViewHolder<Manga> {
     public void onSetValues(Manga manga, PositionInfo positionInfo) {
         title.setText(manga.title);
 
-        String thumbnail;
-        if (manga.thumbnail_url != null)
-            thumbnail = manga.thumbnail_url;
-        else
-            thumbnail = "http://img1.wikia.nocookie.net/__cb20090524204255/starwars/images/thumb/1/1a/R2d2.jpg/400px-R2d2.jpg";
-
-        Glide.with(getContext())
-                .load(thumbnail)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .centerCrop()
-                .into(image);
+        if (manga.thumbnail_url != null) {
+            Glide.with(getContext())
+                    .load(manga.thumbnail_url)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .centerCrop()
+                    .into(image);
+        }
     }
 }

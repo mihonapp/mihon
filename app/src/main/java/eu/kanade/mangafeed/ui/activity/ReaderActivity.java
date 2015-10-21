@@ -13,11 +13,12 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.presenter.ReaderPresenter;
+import eu.kanade.mangafeed.ui.activity.base.BaseRxActivity;
 import eu.kanade.mangafeed.ui.adapter.ReaderPageAdapter;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(ReaderPresenter.class)
-public class ReaderActivity extends BaseActivity<ReaderPresenter> {
+public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     @Bind(R.id.view_pager) ViewPager viewPager;
     @Bind(R.id.page_number) TextView pageNumber;

@@ -23,11 +23,12 @@ import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.ui.adapter.ChapterListHolder;
+import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 @RequiresPresenter(MangaChaptersPresenter.class)
-public class MangaChaptersFragment extends BaseFragment<MangaChaptersPresenter> {
+public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter> {
 
     @Bind(R.id.chapter_list) RecyclerView chapters;
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
