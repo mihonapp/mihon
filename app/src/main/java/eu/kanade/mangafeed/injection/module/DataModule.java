@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.data;
+package eu.kanade.mangafeed.injection.module;
 
 import android.app.Application;
 

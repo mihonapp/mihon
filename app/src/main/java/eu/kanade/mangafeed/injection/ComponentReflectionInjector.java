@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed;
+package eu.kanade.mangafeed.injection;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

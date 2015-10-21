@@ -1,11 +1,12 @@
-package eu.kanade.mangafeed;
+package eu.kanade.mangafeed.injection.component;
 
 import android.app.Application;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
-import eu.kanade.mangafeed.data.DataModule;
+import eu.kanade.mangafeed.injection.module.AppModule;
+import eu.kanade.mangafeed.injection.module.DataModule;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;

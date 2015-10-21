@@ -5,6 +5,10 @@ import android.content.Context;
 
 import org.acra.annotation.ReportsCrashes;
 
+import eu.kanade.mangafeed.injection.component.AppComponent;
+import eu.kanade.mangafeed.injection.module.AppModule;
+import eu.kanade.mangafeed.injection.ComponentReflectionInjector;
+import eu.kanade.mangafeed.injection.component.DaggerAppComponent;
 import timber.log.Timber;
 
 @ReportsCrashes(
@@ -44,14 +48,6 @@ public class App extends Application {
 
     public ComponentReflectionInjector<AppComponent> getComponentReflection() {
         return mComponentInjector;
-    }
-
-    public static ComponentReflectionInjector<AppComponent> getComponentReflection(Context context) {
-        return get(context).getComponentReflection();
-    }
-
-    public static AppComponent getComponent(Context context) {
-        return get(context).getComponent();
     }
 
     // Needed to replace the component with a test specific one
