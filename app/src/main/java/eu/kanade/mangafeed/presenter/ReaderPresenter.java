@@ -13,7 +13,7 @@ import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.util.EventBusHook;
-import eu.kanade.mangafeed.util.events.SourceChapterEvent;
+import eu.kanade.mangafeed.events.SourceChapterEvent;
 import icepick.State;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

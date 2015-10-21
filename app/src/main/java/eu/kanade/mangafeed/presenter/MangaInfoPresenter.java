@@ -8,7 +8,7 @@ import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.ui.fragment.MangaInfoFragment;
 import eu.kanade.mangafeed.util.EventBusHook;
-import eu.kanade.mangafeed.util.events.ChapterCountEvent;
+import eu.kanade.mangafeed.events.ChapterCountEvent;
 import rx.Observable;
 
 public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {

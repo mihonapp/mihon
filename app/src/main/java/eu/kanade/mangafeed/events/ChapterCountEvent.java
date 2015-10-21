@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.util.events;
+package eu.kanade.mangafeed.events;
 
 public class ChapterCountEvent {
     private int count;

@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.util.events;
+package eu.kanade.mangafeed.events;
 
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.sources.Source;
