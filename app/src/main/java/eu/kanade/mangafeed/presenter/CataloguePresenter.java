@@ -14,7 +14,7 @@ import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.sources.Source;
-import eu.kanade.mangafeed.ui.activity.CatalogueActivity;
+import eu.kanade.mangafeed.ui.fragment.CatalogueFragment;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.util.RxPager;
 import icepick.State;
@@ -24,7 +24,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
-public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
+public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
     @Inject SourceManager sourceManager;
     @Inject DatabaseHelper db;
@@ -67,7 +67,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueActivity> {
     }
 
     @Override
-    protected void onTakeView(CatalogueActivity view) {
+    protected void onTakeView(CatalogueFragment view) {
         super.onTakeView(view);
 
         view.setToolbarTitle(selectedSource.getName());

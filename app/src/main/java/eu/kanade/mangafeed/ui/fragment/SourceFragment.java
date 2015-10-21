@@ -1,6 +1,5 @@
 package eu.kanade.mangafeed.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.presenter.SourcePresenter;
 import eu.kanade.mangafeed.sources.Source;
-import eu.kanade.mangafeed.ui.activity.CatalogueActivity;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.adapter.SourceHolder;
 import nucleus.factory.RequiresPresenter;
@@ -43,10 +41,10 @@ public class SourceFragment extends BaseFragment<SourcePresenter> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_catalogue, container, false);
+        View view = inflater.inflate(R.layout.fragment_source, container, false);
         ButterKnife.bind(this, view);
 
-        activity.setToolbarTitle(R.string.catalogues_title);
+        setToolbarTitle(R.string.catalogues_title);
 
         createAdapter();
 
@@ -57,8 +55,8 @@ public class SourceFragment extends BaseFragment<SourcePresenter> {
     public void onSourceClick(int position) {
         Source source = adapter.getItem(position);
 
-        Intent intent = CatalogueActivity.newIntent(activity, source.getSourceId());
-        startActivity(intent);
+        CatalogueFragment fragment = CatalogueFragment.newInstance(source.getSourceId());
+        activity.setFragment(fragment);
     }
 
     private void createAdapter() {

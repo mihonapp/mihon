@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         drawer.setSelection(R.id.nav_drawer_library);
     }
 
-    private void setFragment(Fragment fragment) {
+    public void setFragment(Fragment fragment) {
         try {
             if (fragment != null && getSupportFragmentManager() != null) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -94,10 +94,6 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         } catch (Exception e) {
 
         }
-    }
-
-    public void setToolbarTitle(int titleResource) {
-        getSupportActionBar().setTitle(getString(titleResource));
     }
 
 }

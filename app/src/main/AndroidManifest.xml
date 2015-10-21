@@ -29,15 +29,6 @@
             android:parentActivityName=".ui.activity.MainActivity" >
         </activity>
         <activity
-            android:name=".ui.activity.CatalogueActivity"
-            android:label="@string/title_activity_catalogue_list"
-            android:parentActivityName=".ui.activity.MainActivity"
-            android:theme="@style/AppTheme" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.kanade.mangafeed.ui.activity.MainActivity" />
-        </activity>
-        <activity
             android:name=".ui.activity.ReaderActivity"
             android:label="@string/title_activity_viewer"
             android:parentActivityName=".ui.activity.MangaDetailActivity"

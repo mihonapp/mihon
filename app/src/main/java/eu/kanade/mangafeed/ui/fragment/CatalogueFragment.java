@@ -1,13 +1,14 @@
-package eu.kanade.mangafeed.ui.activity;
+package eu.kanade.mangafeed.ui.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -22,6 +23,7 @@ import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
+import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.CatalogueHolder;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
@@ -29,10 +31,7 @@ import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 @RequiresPresenter(CataloguePresenter.class)
-public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
-
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+public class CatalogueFragment extends BaseFragment<CataloguePresenter> {
 
     @Bind(R.id.gridView)
     GridView manga_list;
@@ -49,34 +48,44 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
 
     public final static String SOURCE_ID = "source_id";
 
-    public static Intent newIntent(Context context, int source_id) {
-        Intent intent = new Intent(context, CatalogueActivity.class);
-        intent.putExtra(SOURCE_ID, source_id);
-        return intent;
+    public static CatalogueFragment newInstance(int source_id) {
+        CatalogueFragment fragment = new CatalogueFragment();
+        Bundle args = new Bundle();
+        args.putInt(SOURCE_ID, source_id);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_catalogue);
-        ButterKnife.bind(this);
+        setHasOptionsMenu(true);
+    }
 
-        setupToolbar(toolbar);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_catalogue, container, false);
+        ButterKnife.bind(this, view);
 
         initializeAdapter();
         initializeScrollListener();
 
-        int source_id = getIntent().getIntExtra(SOURCE_ID, -1);
+        int source_id = getArguments().getInt(SOURCE_ID, -1);
+
+        showProgressBar();
 
         if (savedInstanceState == null)
             getPresenter().startRequesting(source_id);
+
+        return view;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.catalogue_list, menu);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.catalogue_list, menu);
         initializeSearch(menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
     private void initializeSearch(Menu menu) {
@@ -107,7 +116,7 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
     }
 
     public void initializeAdapter() {
-        adapter = new EasyAdapter<>(this, CatalogueHolder.class);
+        adapter = new EasyAdapter<>(getActivity(), CatalogueHolder.class);
         manga_list.setAdapter(adapter);
     }
 
@@ -115,7 +124,7 @@ public class CatalogueActivity extends BaseActivity<CataloguePresenter> {
     public void onMangaClick(int position) {
         Manga selectedManga = adapter.getItem(position);
 
-        Intent intent = MangaDetailActivity.newIntent(this, selectedManga);
+        Intent intent = MangaDetailActivity.newIntent(getActivity(), selectedManga);
         intent.putExtra(MangaDetailActivity.MANGA_ONLINE, true);
         startActivity(intent);
     }

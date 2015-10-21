@@ -12,8 +12,8 @@ import eu.kanade.mangafeed.presenter.MainPresenter;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.presenter.MangaDetailPresenter;
 import eu.kanade.mangafeed.presenter.MangaInfoPresenter;
-import eu.kanade.mangafeed.presenter.SourcePresenter;
 import eu.kanade.mangafeed.presenter.ReaderPresenter;
+import eu.kanade.mangafeed.presenter.SourcePresenter;
 
 @Singleton
 @Component(

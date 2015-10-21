@@ -24,11 +24,18 @@ public class BaseActivity<P extends Presenter> extends NucleusAppCompatActivity<
 
     protected void setupToolbar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void setToolbarTitle(String title) {
-        getSupportActionBar().setTitle(title);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
+    }
+
+    public void setToolbarTitle(int titleResource) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(getString(titleResource));
     }
 
     public Context getActivity() {
