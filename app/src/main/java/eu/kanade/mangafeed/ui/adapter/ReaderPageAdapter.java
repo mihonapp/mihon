@@ -5,11 +5,12 @@ import android.support.v4.app.FragmentManager;
 
 import java.util.List;
 
+import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.fragment.ReaderPageFragment;
 
 public class ReaderPageAdapter extends SmartFragmentStatePagerAdapter {
 
-    private List<String> imageUrls;
+    private List<Page> pages;
 
     public ReaderPageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
@@ -17,23 +18,30 @@ public class ReaderPageAdapter extends SmartFragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        if (imageUrls != null)
-            return imageUrls.size();
+        if (pages != null)
+            return pages.size();
 
         return 0;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return ReaderPageFragment.newInstance(imageUrls.get(position), position);
+        return ReaderPageFragment.newInstance(pages.get(position));
     }
 
-    public List<String> getImageUrls() {
-        return imageUrls;
+    public void setPages(List<Page> pages) {
+        this.pages = pages;
+        notifyDataSetChanged();
     }
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void replacePage(int position, Page page) {
+        pages.set(position, page);
+        notifyDataSetChanged();
+
+        ReaderPageFragment fragment = (ReaderPageFragment)getRegisteredFragment(position);
+        if (fragment != null) {
+            fragment.setPage(page);
+        }
     }
 
 }

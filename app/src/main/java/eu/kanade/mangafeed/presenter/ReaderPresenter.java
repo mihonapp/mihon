@@ -4,10 +4,7 @@ import android.os.Bundle;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import de.greenrobot.event.EventBus;
-import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.sources.Source;
@@ -20,20 +17,34 @@ import rx.schedulers.Schedulers;
 
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
-    private static final int GET_PAGE_LIST = 1;
     private Source source;
     private Chapter chapter;
     private List<Page> pageList;
+    private boolean pageListStarted;
 
-    @Inject CacheManager cacheManager;
+    private static final int GET_PAGE_LIST = 1;
+    private static final int GET_PAGE_IMAGES = 2;
 
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        restartableReplay(GET_PAGE_LIST,
+        restartableLatestCache(GET_PAGE_LIST,
                 this::getPageListObservable,
+                (view, pages) -> {
+                    pageList = pages;
+                    view.onPageList(pages);
+                    if (!pageListStarted) {
+                        pageListStarted = true;
+                        start(GET_PAGE_IMAGES);
+                    }
+
+                });
+
+        restartableReplay(GET_PAGE_IMAGES,
+                this::getPageImagesObservable,
                 (view, page) -> {
+                    view.onPageDownloaded(page);
                 });
     }
 
@@ -66,20 +77,19 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         }
     }
 
-    private Observable<Page> getPageListObservable() {
+    private Observable<List<Page>> getPageListObservable() {
         return source.pullPageListFromNetwork(chapter.url)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(pageList -> {
-                    this.pageList = pageList;
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
-                    return Observable.merge(
-                        Observable.from(pageList)
-                                .filter(page -> page.getImageUrl() != null),
-
-                        source.getRemainingImageUrlsFromPageList(pageList)
-                                .doOnNext(this::replacePageUrl));
-                });
+    private Observable<Page> getPageImagesObservable() {
+        return Observable.merge(
+                    Observable.from(pageList).filter(page -> page.getImageUrl() != null),
+                    source.getRemainingImageUrlsFromPageList(pageList)
+                            .doOnNext(this::replacePageUrl))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private void replacePageUrl(Page page) {

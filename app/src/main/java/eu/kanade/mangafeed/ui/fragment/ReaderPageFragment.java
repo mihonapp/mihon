@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.util.PageFileTarget;
 
 public class ReaderPageFragment extends Fragment {
@@ -20,10 +21,10 @@ public class ReaderPageFragment extends Fragment {
 
     private String mUrl;
 
-    public static ReaderPageFragment newInstance(String url, int position) {
+    public static ReaderPageFragment newInstance(Page page) {
         ReaderPageFragment newInstance = new ReaderPageFragment();
         Bundle arguments = new Bundle();
-        arguments.putString(URL_ARGUMENT_KEY, url);
+        arguments.putString(URL_ARGUMENT_KEY, page.getImageUrl());
         newInstance.setArguments(arguments);
         return newInstance;
     }
@@ -40,10 +41,20 @@ public class ReaderPageFragment extends Fragment {
         }
     }
 
+    public void setPage(Page page) {
+        mUrl = page.getImageUrl();
+        loadImage();
+    }
+
+    private void loadImage() {
+        Glide.with(getActivity())
+                .load(mUrl)
+                .downloadOnly(new PageFileTarget(mPageImageView));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mPageImageView = (SubsamplingScaleImageView)inflater.inflate(R.layout.fragment_page, container, false);
-        mPageImageView.setVisibility(View.INVISIBLE);
         mPageImageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         mPageImageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         mPageImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
@@ -76,9 +87,6 @@ public class ReaderPageFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Glide.with(getActivity())
-                .load(mUrl)
-                .downloadOnly(new PageFileTarget(mPageImageView));
+        loadImage();
     }
 }

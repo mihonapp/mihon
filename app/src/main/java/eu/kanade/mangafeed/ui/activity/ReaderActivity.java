@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.presenter.ReaderPresenter;
 import eu.kanade.mangafeed.ui.adapter.ReaderPageAdapter;
 import nucleus.factory.RequiresPresenter;
@@ -26,10 +29,11 @@ public class ReaderActivity extends BaseActivity<ReaderPresenter> {
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        setContentView(R.layout.activity_viewer);
+        setContentView(R.layout.activity_reader);
         ButterKnife.bind(this);
 
         createAdapter();
+        viewPager.setOffscreenPageLimit(3);
     }
 
     private void createAdapter() {
@@ -37,4 +41,11 @@ public class ReaderActivity extends BaseActivity<ReaderPresenter> {
         viewPager.setAdapter(adapter);
     }
 
+    public void onPageList(List<Page> pages) {
+        adapter.setPages(pages);
+    }
+
+    public void onPageDownloaded(Page page) {
+        adapter.replacePage(page.getPageNumber(), page);
+    }
 }
