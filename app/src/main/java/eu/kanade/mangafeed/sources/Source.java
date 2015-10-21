@@ -98,8 +98,10 @@ public abstract class Source {
                 .onErrorResumeNext(throwable -> {
                     return mNetworkService
                             .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
-                            .flatMap(unparsedHtml -> Observable.just(parseHtmlToPageUrls(unparsedHtml)))
-                            .flatMap(this::convertToPages)
+                            .flatMap(unparsedHtml -> {
+                                List<String> pageUrls = parseHtmlToPageUrls(unparsedHtml);
+                                return Observable.just(getFirstImageFromPageUrls(pageUrls, unparsedHtml));
+                            })
                             .doOnNext(pages -> savePageList(chapterUrl, pages));
                 })
                 .onBackpressureBuffer();
@@ -134,13 +136,19 @@ public abstract class Source {
         mCacheManager.putPageUrlsToDiskCache(chapterUrl, pages);
     }
 
-    private Observable<List<Page>> convertToPages(List<String> pageUrls) {
+    private List<Page> convertToPages(List<String> pageUrls) {
         List<Page> pages = new ArrayList<>();
         for (int i = 0; i < pageUrls.size(); i++) {
             pages.add(new Page(i, pageUrls.get(i)));
         }
-        return Observable.just(pages);
+        return pages;
     }
 
+    private List<Page> getFirstImageFromPageUrls(List<String> pageUrls, String unparsedHtml) {
+        List<Page> pages = convertToPages(pageUrls);
+        String firstImage = parseHtmlToImageUrl(unparsedHtml);
+        pages.get(0).setImageUrl(firstImage);
+        return pages;
+    }
 
 }

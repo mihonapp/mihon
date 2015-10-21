@@ -29,6 +29,10 @@ public class ReaderPageAdapter extends SmartFragmentStatePagerAdapter {
         return ReaderPageFragment.newInstance(pages.get(position));
     }
 
+    public List<Page> getPages() {
+        return pages;
+    }
+
     public void setPages(List<Page> pages) {
         this.pages = pages;
         notifyDataSetChanged();
@@ -36,7 +40,6 @@ public class ReaderPageAdapter extends SmartFragmentStatePagerAdapter {
 
     public void replacePage(int position, Page page) {
         pages.set(position, page);
-        notifyDataSetChanged();
 
         ReaderPageFragment fragment = (ReaderPageFragment)getRegisteredFragment(position);
         if (fragment != null) {

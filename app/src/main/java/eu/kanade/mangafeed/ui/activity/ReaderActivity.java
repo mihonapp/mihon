@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -19,8 +20,10 @@ import nucleus.factory.RequiresPresenter;
 public class ReaderActivity extends BaseActivity<ReaderPresenter> {
 
     @Bind(R.id.view_pager) ViewPager viewPager;
+    @Bind(R.id.page_number) TextView pageNumber;
 
     private ReaderPageAdapter adapter;
+    private int currentPage;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, ReaderActivity.class);
@@ -33,7 +36,7 @@ public class ReaderActivity extends BaseActivity<ReaderPresenter> {
         ButterKnife.bind(this);
 
         createAdapter();
-        viewPager.setOffscreenPageLimit(3);
+        setupViewPager();
     }
 
     private void createAdapter() {
@@ -41,11 +44,48 @@ public class ReaderActivity extends BaseActivity<ReaderPresenter> {
         viewPager.setAdapter(adapter);
     }
 
+    private void setupViewPager() {
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentPage = position;
+                updatePageNumber();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        getPresenter().setCurrentPage(currentPage);
+        super.onDestroy();
+    }
+
     public void onPageList(List<Page> pages) {
         adapter.setPages(pages);
+        updatePageNumber();
     }
 
     public void onPageDownloaded(Page page) {
         adapter.replacePage(page.getPageNumber(), page);
+    }
+
+    public void setCurrentPage(int position) {
+        viewPager.setCurrentItem(position);
+    }
+
+    private void updatePageNumber() {
+        String page = (currentPage+1) + "/" + adapter.getCount();
+        pageNumber.setText(page);
     }
 }

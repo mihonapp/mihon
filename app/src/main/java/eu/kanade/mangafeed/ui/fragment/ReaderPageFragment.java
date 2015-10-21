@@ -33,6 +33,8 @@ public class ReaderPageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
+
         Bundle arguments = getArguments();
         if (arguments != null) {
             if (arguments.containsKey(URL_ARGUMENT_KEY)) {
@@ -42,8 +44,10 @@ public class ReaderPageFragment extends Fragment {
     }
 
     public void setPage(Page page) {
-        mUrl = page.getImageUrl();
-        loadImage();
+        if (!page.getImageUrl().equals(mUrl)) {
+            mUrl = page.getImageUrl();
+            loadImage();
+        }
     }
 
     private void loadImage() {

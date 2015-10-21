@@ -11,6 +11,7 @@ import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.events.SourceChapterEvent;
+import icepick.State;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -20,7 +21,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private Source source;
     private Chapter chapter;
     private List<Page> pageList;
-    private boolean pageListStarted;
+    @State int savedSelectedPage = -1;
 
     private static final int GET_PAGE_LIST = 1;
     private static final int GET_PAGE_IMAGES = 2;
@@ -30,21 +31,20 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         super.onCreate(savedState);
 
         restartableLatestCache(GET_PAGE_LIST,
-                this::getPageListObservable,
+                () -> getPageListObservable()
+                        .doOnNext(pages -> pageList = pages)
+                        .doOnCompleted(() -> start(GET_PAGE_IMAGES)),
                 (view, pages) -> {
-                    pageList = pages;
                     view.onPageList(pages);
-                    if (!pageListStarted) {
-                        pageListStarted = true;
-                        start(GET_PAGE_IMAGES);
-                    }
-
                 });
 
         restartableReplay(GET_PAGE_IMAGES,
                 this::getPageImagesObservable,
                 (view, page) -> {
                     view.onPageDownloaded(page);
+                    if (page.getPageNumber() == savedSelectedPage) {
+                        view.setCurrentPage(savedSelectedPage);
+                    }
                 });
     }
 
@@ -85,9 +85,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     private Observable<Page> getPageImagesObservable() {
         return Observable.merge(
-                    Observable.from(pageList).filter(page -> page.getImageUrl() != null),
-                    source.getRemainingImageUrlsFromPageList(pageList)
-                            .doOnNext(this::replacePageUrl))
+                Observable.from(pageList).filter(page -> page.getImageUrl() != null),
+                source.getRemainingImageUrlsFromPageList(pageList)
+                        .doOnNext(this::replacePageUrl))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -99,5 +99,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 return;
             }
         }
+    }
+
+    public void setCurrentPage(int savedPage) {
+        this.savedSelectedPage = savedPage;
     }
 }
