@@ -6,27 +6,29 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
-import com.bumptech.glide.Glide;
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
-import eu.kanade.mangafeed.util.MangaImageRegionDecoder;
-import eu.kanade.mangafeed.util.PageFileTarget;
 
 public class ReaderPageFragment extends Fragment {
     public static final String URL_ARGUMENT_KEY = "UrlArgumentKey";
 
-    private SubsamplingScaleImageView imageView;
+    @Bind(R.id.page_image_view) SubsamplingScaleImageView imageView;
+    @Bind(R.id.progress) ProgressBar progressBar;
 
-    private String mUrl;
+    private String imagePath;
 
     public static ReaderPageFragment newInstance(Page page) {
         ReaderPageFragment newInstance = new ReaderPageFragment();
         Bundle arguments = new Bundle();
-        arguments.putString(URL_ARGUMENT_KEY, page.getImageUrl());
+        arguments.putString(URL_ARGUMENT_KEY, page.getImagePath());
         newInstance.setArguments(arguments);
         return newInstance;
     }
@@ -40,39 +42,42 @@ public class ReaderPageFragment extends Fragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             if (arguments.containsKey(URL_ARGUMENT_KEY)) {
-                mUrl = arguments.getString(URL_ARGUMENT_KEY);
+                imagePath = arguments.getString(URL_ARGUMENT_KEY);
             }
         }
     }
 
     public void setPage(Page page) {
-        if (!page.getImageUrl().equals(mUrl)) {
-            mUrl = page.getImageUrl();
+        if (!page.getImageUrl().equals(imagePath)) {
+            imagePath = page.getImagePath();
             loadImage();
         }
     }
 
     private void loadImage() {
-        if (mUrl != null) {
-            Glide.with(getActivity())
-                    .load(mUrl)
-                    .downloadOnly(new PageFileTarget(imageView));
+        if (imagePath != null) {
+            progressBar.setVisibility(View.GONE);
+            imageView.setImage(ImageSource.uri(imagePath).tilingDisabled());
         }
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        imageView = (SubsamplingScaleImageView)inflater.inflate(R.layout.fragment_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_page, container, false);
+        ButterKnife.bind(this, view);
+
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
-        imageView.setOnTouchListener((view, motionEvent) ->
+        imageView.setOnTouchListener((v, motionEvent) ->
                 ((ReaderActivity) getActivity()).getViewPager().onImageTouch(motionEvent));
+
+        progressBar.setVisibility(View.VISIBLE);
 
         loadImage();
 
-        return imageView;
+        return view;
     }
 
 }

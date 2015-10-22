@@ -5,10 +5,10 @@ import android.content.Context;
 
 import org.acra.annotation.ReportsCrashes;
 
-import eu.kanade.mangafeed.injection.component.AppComponent;
-import eu.kanade.mangafeed.injection.module.AppModule;
 import eu.kanade.mangafeed.injection.ComponentReflectionInjector;
+import eu.kanade.mangafeed.injection.component.AppComponent;
 import eu.kanade.mangafeed.injection.component.DaggerAppComponent;
+import eu.kanade.mangafeed.injection.module.AppModule;
 import timber.log.Timber;
 
 @ReportsCrashes(

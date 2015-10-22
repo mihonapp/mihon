@@ -2,6 +2,11 @@ package eu.kanade.mangafeed.presenter;
 
 import android.os.Bundle;
 
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.target.Target;
+
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,10 +15,10 @@ import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Page;
+import eu.kanade.mangafeed.events.SourceChapterEvent;
 import eu.kanade.mangafeed.sources.Source;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.util.EventBusHook;
-import eu.kanade.mangafeed.events.SourceChapterEvent;
 import icepick.State;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -22,6 +27,7 @@ import rx.schedulers.Schedulers;
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     @Inject PreferencesHelper prefs;
+    @Inject RequestManager glideDownloader;
 
     private Source source;
     private Chapter chapter;
@@ -97,8 +103,24 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 Observable.from(pageList).filter(page -> page.getImageUrl() != null),
                 source.getRemainingImageUrlsFromPageList(pageList)
                         .doOnNext(this::replacePageUrl))
+                .flatMap(this::downloadImage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private Observable<Page> downloadImage(Page page) {
+        FutureTarget<File> future = glideDownloader.load(page.getImageUrl())
+                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+
+        try {
+            File cacheFile = future.get();
+            page.setImagePath(cacheFile.getCanonicalPath());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Observable.just(page);
     }
 
     private void replacePageUrl(Page page) {

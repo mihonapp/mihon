@@ -46,7 +46,7 @@ public abstract class Source {
     }
 
     // Number of images to download at the same time
-    protected int getNumberOfConcurrentImageDownloads() {
+    protected int getNumberOfConcurrentPageDownloads() {
         return 3;
     }
 
@@ -111,14 +111,10 @@ public abstract class Source {
     public Observable<Page> getRemainingImageUrlsFromPageList(final List<Page> pages) {
         return Observable.from(pages)
                 .filter(page -> page.getImageUrl() == null)
-                .buffer(getNumberOfConcurrentImageDownloads())
-                .concatMap(batchedPages -> {
-                    List<Observable<Page>> pageObservable = new ArrayList<>();
-                    for (Page page : batchedPages) {
-                        pageObservable.add(getImageUrlFromPage(page));
-                    }
-                    return Observable.merge(pageObservable);
-                });
+                .window(getNumberOfConcurrentPageDownloads())
+                .concatMap(batchedPages ->
+                        batchedPages.concatMap(this::getImageUrlFromPage)
+                );
     }
 
     private Observable<Page> getImageUrlFromPage(final Page page) {
