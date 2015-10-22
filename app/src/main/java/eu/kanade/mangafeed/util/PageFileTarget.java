@@ -13,7 +13,6 @@ import java.io.File;
 import eu.kanade.mangafeed.R;
 
 public class PageFileTarget extends ViewTarget<SubsamplingScaleImageView, File> {
-    public static final String TAG = PageFileTarget.class.getSimpleName();
 
     public PageFileTarget(SubsamplingScaleImageView view) {
         super(view);
@@ -31,6 +30,7 @@ public class PageFileTarget extends ViewTarget<SubsamplingScaleImageView, File> 
 
     @Override
     public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
-        view.setImage(ImageSource.uri(Uri.fromFile(resource)));
+        view.setImage(ImageSource.uri(Uri.fromFile(resource))
+                .tilingDisabled());
     }
 }

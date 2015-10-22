@@ -13,6 +13,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
+import eu.kanade.mangafeed.util.MangaImageRegionDecoder;
 import eu.kanade.mangafeed.util.PageFileTarget;
 
 public class ReaderPageFragment extends Fragment {
@@ -52,9 +53,12 @@ public class ReaderPageFragment extends Fragment {
     }
 
     private void loadImage() {
-        Glide.with(getActivity())
-                .load(mUrl)
-                .downloadOnly(new PageFileTarget(imageView));
+        if (mUrl != null) {
+            Glide.with(getActivity())
+                    .load(mUrl)
+                    .downloadOnly(new PageFileTarget(imageView));
+        }
+
     }
 
     @Override
@@ -65,36 +69,10 @@ public class ReaderPageFragment extends Fragment {
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
         imageView.setOnTouchListener((view, motionEvent) ->
                 ((ReaderActivity) getActivity()).getViewPager().onImageTouch(motionEvent));
-        imageView.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
-            @Override
-            public void onReady() {
-                imageView.setVisibility(View.VISIBLE);
-            }
 
-            @Override
-            public void onImageLoaded() {
-            }
-
-            @Override
-            public void onPreviewLoadError(Exception e) {
-            }
-
-            @Override
-            public void onImageLoadError(Exception e) {
-            }
-
-            @Override
-            public void onTileLoadError(Exception e) {
-            }
-        });
+        loadImage();
 
         return imageView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        loadImage();
     }
 
 }

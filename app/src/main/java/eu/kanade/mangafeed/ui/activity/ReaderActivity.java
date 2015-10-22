@@ -42,6 +42,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
         createAdapter();
         setupViewPager();
+        enableHardwareAcceleration();
     }
 
     @Override
@@ -120,6 +121,12 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             decorView.setSystemUiVisibility(uiOptions);
         }
 
+    }
+
+    public void enableHardwareAcceleration() {
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
     }
 
 }
