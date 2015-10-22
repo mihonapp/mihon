@@ -12,12 +12,13 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
+import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.util.PageFileTarget;
 
 public class ReaderPageFragment extends Fragment {
     public static final String URL_ARGUMENT_KEY = "UrlArgumentKey";
 
-    private SubsamplingScaleImageView mPageImageView;
+    private SubsamplingScaleImageView imageView;
 
     private String mUrl;
 
@@ -53,19 +54,21 @@ public class ReaderPageFragment extends Fragment {
     private void loadImage() {
         Glide.with(getActivity())
                 .load(mUrl)
-                .downloadOnly(new PageFileTarget(mPageImageView));
+                .downloadOnly(new PageFileTarget(imageView));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mPageImageView = (SubsamplingScaleImageView)inflater.inflate(R.layout.fragment_page, container, false);
-        mPageImageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
-        mPageImageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
-        mPageImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
-        mPageImageView.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
+        imageView = (SubsamplingScaleImageView)inflater.inflate(R.layout.fragment_page, container, false);
+        imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
+        imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
+        imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
+        imageView.setOnTouchListener((view, motionEvent) ->
+                ((ReaderActivity) getActivity()).getViewPager().onImageTouch(motionEvent));
+        imageView.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
             @Override
             public void onReady() {
-                mPageImageView.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -85,7 +88,7 @@ public class ReaderPageFragment extends Fragment {
             }
         });
 
-        return mPageImageView;
+        return imageView;
     }
 
     @Override
@@ -93,4 +96,5 @@ public class ReaderPageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         loadImage();
     }
+
 }

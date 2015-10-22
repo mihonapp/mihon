@@ -18,12 +18,13 @@ import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.presenter.ReaderPresenter;
 import eu.kanade.mangafeed.ui.activity.base.BaseRxActivity;
 import eu.kanade.mangafeed.ui.adapter.ReaderPageAdapter;
+import eu.kanade.mangafeed.widget.ReaderViewPager;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(ReaderPresenter.class)
 public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
-    @Bind(R.id.view_pager) ViewPager viewPager;
+    @Bind(R.id.view_pager) ReaderViewPager viewPager;
     @Bind(R.id.page_number) TextView pageNumber;
 
     private ReaderPageAdapter adapter;
@@ -41,6 +42,12 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
         createAdapter();
         setupViewPager();
+    }
+
+    @Override
+    public void onDestroy() {
+        getPresenter().setCurrentPage(currentPage);
+        super.onDestroy();
     }
 
     private void createAdapter() {
@@ -67,13 +74,23 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
             }
         });
+        viewPager.setOnChapterBoundariesOutListener(new ReaderViewPager.OnChapterBoundariesOutListener() {
+            @Override
+            public void onFirstPageOut() {
+                // TODO load previous chapter
+            }
+
+            @Override
+            public void onLastPageOut() {
+                // TODO load next chapter
+            }
+        });
     }
 
-    @Override
-    public void onDestroy() {
-        getPresenter().setCurrentPage(currentPage);
-        super.onDestroy();
+    public ReaderViewPager getViewPager() {
+        return viewPager;
     }
+
 
     public void onPageList(List<Page> pages) {
         adapter.setPages(pages);
@@ -104,4 +121,5 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         }
 
     }
+
 }
