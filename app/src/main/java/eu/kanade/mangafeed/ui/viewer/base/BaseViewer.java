@@ -32,7 +32,7 @@ public abstract class BaseViewer {
     }
 
     public abstract int getTotalPages();
-    public abstract void onImageReady(Page page);
     public abstract void onPageListReady(List<Page> pages);
+    public abstract void onImageReady(Page page);
     public abstract boolean onImageTouch(MotionEvent motionEvent);
 }
