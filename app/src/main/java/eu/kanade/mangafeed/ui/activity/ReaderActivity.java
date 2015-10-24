@@ -11,13 +11,20 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.presenter.ReaderPresenter;
 import eu.kanade.mangafeed.ui.activity.base.BaseRxActivity;
 import eu.kanade.mangafeed.ui.viewer.LeftToRightViewer;
+import eu.kanade.mangafeed.ui.viewer.RightToLeftViewer;
+import eu.kanade.mangafeed.ui.viewer.VerticalViewer;
+import eu.kanade.mangafeed.ui.viewer.WebtoonViewer;
 import eu.kanade.mangafeed.ui.viewer.base.BaseViewer;
 import nucleus.factory.RequiresPresenter;
 
@@ -27,8 +34,16 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Bind(R.id.page_number) TextView pageNumber;
     @Bind(R.id.viewer) FrameLayout container;
 
+    @Inject PreferencesHelper prefs;
+
     private int currentPage;
     private BaseViewer viewer;
+
+    private static final int LEFT_TO_RIGHT = 1;
+    private static final int RIGHT_TO_LEFT = 2;
+    private static final int VERTICAL = 3;
+    private static final int WEBTOON = 4;
+
 
     public static Intent newInstance(Context context) {
         return new Intent(context, ReaderActivity.class);
@@ -37,10 +52,11 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
+        App.get(this).getComponent().inject(this);
         setContentView(R.layout.activity_reader);
         ButterKnife.bind(this);
 
-        viewer = new LeftToRightViewer(this, container);
+        viewer = getViewer();
 
         enableHardwareAcceleration();
     }
@@ -83,4 +99,20 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     public boolean onImageTouch(MotionEvent motionEvent) {
         return viewer.onImageTouch(motionEvent);
     }
+
+    private BaseViewer getViewer() {
+        int prefsViewer = prefs.getDefaultViewer();
+        switch (prefsViewer) {
+            case LEFT_TO_RIGHT:
+                return new LeftToRightViewer(this, container);
+            case RIGHT_TO_LEFT:
+                return new RightToLeftViewer(this, container);
+            case VERTICAL:
+                return new VerticalViewer(this, container);
+            case WEBTOON:
+                return new WebtoonViewer(this, container);
+        }
+        return null;
+    }
+
 }

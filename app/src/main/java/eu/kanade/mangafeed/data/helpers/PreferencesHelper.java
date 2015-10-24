@@ -11,6 +11,7 @@ public class PreferencesHelper {
     private static SharedPreferences mPref;
 
     private static final String PREF_HIDE_STATUS_BAR = "hide_status_bar";
+    private static final String PREF_DEFAULT_VIEWER = "default_viewer";
 
     public PreferencesHelper(Context context) {
         PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
@@ -24,6 +25,10 @@ public class PreferencesHelper {
 
     public boolean hideStatusBarSet() {
         return mPref.getBoolean(PREF_HIDE_STATUS_BAR, false);
+    }
+
+    public int getDefaultViewer() {
+        return Integer.parseInt(mPref.getString(PREF_DEFAULT_VIEWER, "1"));
     }
 
 }

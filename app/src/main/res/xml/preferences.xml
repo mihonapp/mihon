@@ -6,4 +6,10 @@
         android:summary="@string/pref_hide_status_bar_summary"
         android:key="hide_status_bar" />
 
+    <ListPreference android:title="@string/pref_viewer_type"
+        android:key="default_viewer"
+        android:entries="@array/viewers"
+        android:entryValues="@array/viewers_values"
+        android:defaultValue="1"/>
+
 </PreferenceScreen>

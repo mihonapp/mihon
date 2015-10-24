@@ -252,7 +252,7 @@ public class Batoto extends Source {
     private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
         Chapter newChapter = Chapter.newChapter();
 
-        Element urlElement = chapterElement.select("a[href^=http://bato.to/read/").first();
+        Element urlElement = chapterElement.select("a[href^=http://bato.to/reader").first();
         Element nameElement = urlElement;
         Element dateElement = chapterElement.select("td").get(4);
 
