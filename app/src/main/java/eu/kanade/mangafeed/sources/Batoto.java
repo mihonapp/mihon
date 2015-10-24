@@ -28,6 +28,7 @@ public class Batoto extends Source {
     public static final String INITIAL_UPDATE_URL =
             "http://bato.to/search_ajax?order_cond=views&order=desc&p=";
     public static final String INITIAL_SEARCH_URL = "http://bato.to/search_ajax?";
+    public static final String INITIAL_PAGE_URL = "http://bato.to/areader?";
 
 
     public Batoto(NetworkHelper networkService, CacheManager cacheManager) {
@@ -43,6 +44,7 @@ public class Batoto extends Source {
     protected Headers.Builder headersBuilder() {
         Headers.Builder builder = super.headersBuilder();
         builder.add("Cookie", "lang_option=English");
+        builder.add("Referer", "http://bato.to/reader");
         return builder;
     }
 
@@ -110,6 +112,20 @@ public class Batoto extends Source {
     protected String getMangaUrl(String defaultMangaUrl) {
         String mangaId = defaultMangaUrl.substring(defaultMangaUrl.lastIndexOf("r") + 1);
         return "http://bato.to/comic_pop?id=" + mangaId;
+    }
+
+    @Override
+    protected String getChapterPageUrl(String defaultPageUrl) {
+        String id = defaultPageUrl.substring(defaultPageUrl.indexOf("#") + 1);
+        return INITIAL_PAGE_URL + "id=" + id + "&p=1";
+    }
+
+    @Override
+    protected String getRemainingPagesUrl(String defaultPageUrl) {
+        int start = defaultPageUrl.indexOf("#") + 1;
+        int end = defaultPageUrl.indexOf("_", start);
+        String id = defaultPageUrl.substring(start, end);
+        return INITIAL_PAGE_URL + "id=" + id + "&p=" + defaultPageUrl.substring(end+1);
     }
 
     private List<Manga> parseMangasFromHtml(String unparsedHtml) {

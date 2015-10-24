@@ -38,6 +38,16 @@ public abstract class Source {
         return defaultMangaUrl;
     }
 
+    // Get the URL of the first page that contains a source image and the page list
+    protected String getChapterPageUrl(String defaultPageUrl) {
+        return defaultPageUrl;
+    }
+
+    // Get the URL of the remaining pages that contains source images
+    protected String getRemainingPagesUrl(String defaultPageUrl) {
+        return defaultPageUrl;
+    }
+
     // Default headers, it can be overriden by children or just add new keys
     protected Headers.Builder headersBuilder() {
         Headers.Builder builder = new Headers.Builder();
@@ -97,7 +107,7 @@ public abstract class Source {
         return mCacheManager.getPageUrlsFromDiskCache(chapterUrl)
                 .onErrorResumeNext(throwable -> {
                     return mNetworkService
-                            .getStringResponse(chapterUrl, mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                            .getStringResponse(getChapterPageUrl(chapterUrl), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
                             .flatMap(unparsedHtml -> {
                                 List<String> pageUrls = parseHtmlToPageUrls(unparsedHtml);
                                 return Observable.just(getFirstImageFromPageUrls(pageUrls, unparsedHtml));
@@ -119,7 +129,7 @@ public abstract class Source {
 
     private Observable<Page> getImageUrlFromPage(final Page page) {
         return mNetworkService
-                .getStringResponse(page.getUrl(), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                .getStringResponse(getRemainingPagesUrl(page.getUrl()), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
                 .flatMap(imageUrl -> {
                     page.setImageUrl(imageUrl);
