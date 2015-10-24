@@ -2,11 +2,11 @@ package eu.kanade.mangafeed.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,18 +17,18 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.presenter.ReaderPresenter;
 import eu.kanade.mangafeed.ui.activity.base.BaseRxActivity;
-import eu.kanade.mangafeed.ui.adapter.ReaderPageAdapter;
-import eu.kanade.mangafeed.widget.ReaderViewPager;
+import eu.kanade.mangafeed.ui.viewer.LeftToRightViewer;
+import eu.kanade.mangafeed.ui.viewer.base.BaseViewer;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(ReaderPresenter.class)
 public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
-    @Bind(R.id.view_pager) ReaderViewPager viewPager;
     @Bind(R.id.page_number) TextView pageNumber;
+    @Bind(R.id.viewer) FrameLayout container;
 
-    private ReaderPageAdapter adapter;
     private int currentPage;
+    private BaseViewer viewer;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, ReaderActivity.class);
@@ -40,8 +40,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         setContentView(R.layout.activity_reader);
         ButterKnife.bind(this);
 
-        createAdapter();
-        setupViewPager();
+        viewer = new LeftToRightViewer(this, container);
+
         enableHardwareAcceleration();
     }
 
@@ -51,76 +51,27 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         super.onDestroy();
     }
 
-    private void createAdapter() {
-        adapter = new ReaderPageAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
+    public void onPageListReady(List<Page> pages) {
+        viewer.onPageListReady(pages);
     }
 
-    private void setupViewPager() {
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                currentPage = position;
-                updatePageNumber();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        viewPager.setOnChapterBoundariesOutListener(new ReaderViewPager.OnChapterBoundariesOutListener() {
-            @Override
-            public void onFirstPageOut() {
-                // TODO load previous chapter
-            }
-
-            @Override
-            public void onLastPageOut() {
-                // TODO load next chapter
-            }
-        });
+    public void onImageReady(Page page) {
+        viewer.onImageReady(page);
     }
 
-    public ReaderViewPager getViewPager() {
-        return viewPager;
-    }
-
-
-    public void onPageList(List<Page> pages) {
-        adapter.setPages(pages);
-        updatePageNumber();
-    }
-
-    public void onPageDownloaded(Page page) {
-        adapter.replacePage(page.getPageNumber(), page);
-    }
-
-    public void setCurrentPage(int position) {
-        viewPager.setCurrentItem(position);
-    }
-
-    private void updatePageNumber() {
-        String page = (currentPage+1) + "/" + adapter.getCount();
+    public void onPageChanged(int currentPage, int totalPages) {
+        String page = currentPage + "/" + totalPages;
         pageNumber.setText(page);
     }
 
-    public void hideStatusBar() {
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } else {
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
+    public void setCurrentPage(int page) {
+        currentPage = page;
+    }
 
+    public void hideStatusBar() {
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
     }
 
     public void enableHardwareAcceleration() {
@@ -129,4 +80,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
     }
 
+    public boolean onImageTouch(MotionEvent motionEvent) {
+        return viewer.onImageTouch(motionEvent);
+    }
 }

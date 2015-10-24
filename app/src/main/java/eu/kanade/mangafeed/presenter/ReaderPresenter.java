@@ -46,13 +46,13 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                         .doOnNext(pages -> pageList = pages)
                         .doOnCompleted(() -> start(GET_PAGE_IMAGES)),
                 (view, pages) -> {
-                    view.onPageList(pages);
+                    view.onPageListReady(pages);
                 });
 
         restartableReplay(GET_PAGE_IMAGES,
                 this::getPageImagesObservable,
                 (view, page) -> {
-                    view.onPageDownloaded(page);
+                    view.onImageReady(page);
                     if (page.getPageNumber() == savedSelectedPage) {
                         view.setCurrentPage(savedSelectedPage);
                     }

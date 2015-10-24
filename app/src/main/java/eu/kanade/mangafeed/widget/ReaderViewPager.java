@@ -51,7 +51,7 @@ public class ReaderViewPager extends ViewPager {
                         float displacement = ev.getX() - startDragX;
 
                         if (ev.getX() > startDragX && displacement > getWidth() * SWIPE_TOLERANCE) {
-                            mOnChapterBoundariesOutListener.onFirstPageOut();
+                            mOnChapterBoundariesOutListener.onFirstPageOutEvent();
                             return true;
                         }
 
@@ -62,7 +62,7 @@ public class ReaderViewPager extends ViewPager {
                         float displacement = startDragX - ev.getX();
 
                         if (ev.getX() < startDragX && displacement > getWidth() * SWIPE_TOLERANCE) {
-                            mOnChapterBoundariesOutListener.onLastPageOut();
+                            mOnChapterBoundariesOutListener.onLastPageOutEvent();
                             return true;
                         }
 
@@ -84,9 +84,9 @@ public class ReaderViewPager extends ViewPager {
     }
 
     public interface OnChapterBoundariesOutListener {
-        public void onFirstPageOut();
+        public void onFirstPageOutEvent();
 
-        public void onLastPageOut();
+        public void onLastPageOutEvent();
     }
 
     public interface OnChapterSingleTapListener {
@@ -114,7 +114,7 @@ public class ReaderViewPager extends ViewPager {
                     setCurrentItem(position - 1, true);
                 } else {
                     if (mOnChapterBoundariesOutListener != null) {
-                        mOnChapterBoundariesOutListener.onFirstPageOut();
+                        mOnChapterBoundariesOutListener.onFirstPageOutEvent();
                     }
                 }
             } else if (positionX > getWidth() * RIGHT_REGION) {
@@ -122,7 +122,7 @@ public class ReaderViewPager extends ViewPager {
                     setCurrentItem(position + 1, true);
                 } else {
                     if (mOnChapterBoundariesOutListener != null) {
-                        mOnChapterBoundariesOutListener.onLastPageOut();
+                        mOnChapterBoundariesOutListener.onLastPageOutEvent();
                     }
                 }
             }

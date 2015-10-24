@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <eu.kanade.mangafeed.widget.ReaderViewPager
-        android:id="@+id/view_pager"
+    <FrameLayout
+        android:id="@+id/viewer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </eu.kanade.mangafeed.widget.ReaderViewPager>
+    </FrameLayout>
 
     <TextView
         android:layout_width="wrap_content"

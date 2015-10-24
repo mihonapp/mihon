@@ -71,7 +71,7 @@ public class ReaderPageFragment extends Fragment {
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
         imageView.setOnTouchListener((v, motionEvent) ->
-                ((ReaderActivity) getActivity()).getViewPager().onImageTouch(motionEvent));
+                ((ReaderActivity) getActivity()).onImageTouch(motionEvent));
 
         progressBar.setVisibility(View.VISIBLE);
 
