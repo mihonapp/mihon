@@ -87,6 +87,7 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile "frankiesardo:icepick:$ICEPICK_VERSION"
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
+    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"

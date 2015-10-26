@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp">
 
@@ -50,12 +52,15 @@
         android:id="@+id/show_password"
         android:layout_marginTop="10dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
+    <com.dd.processbutton.iml.ActionProcessButton
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/check_credentials"
-        android:id="@+id/check_credentials" />
-
-
+        android:textColor="@android:color/white"
+        android:text="@string/login"
+        android:id="@+id/login"
+        app:pb_textComplete="@string/success"
+        app:pb_textProgress="@string/loading"
+        app:pb_textError="@string/invalid_login"
+        android:layout_marginTop="20dp"/>
 
 </LinearLayout>

@@ -67,5 +67,9 @@
     <string name="password">Password</string>
     <string name="show_password">Show password</string>
     <string name="check_credentials">Check credentials</string>
+    <string name="login">Login</string>
+    <string name="success">Success</string>
+    <string name="invalid_login">Login error</string>
+    <string name="loading">Loading…</string>
 
 </resources>

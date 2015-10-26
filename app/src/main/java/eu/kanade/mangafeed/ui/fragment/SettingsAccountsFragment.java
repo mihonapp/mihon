@@ -1,33 +1,21 @@
 package eu.kanade.mangafeed.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.preference.DialogPreference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.text.method.PasswordTransformationMethod;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.activity.base.BaseActivity;
+import eu.kanade.mangafeed.ui.dialog.LoginDialogPreference;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
 public class SettingsAccountsFragment extends PreferenceFragment {
 
@@ -50,7 +38,7 @@ public class SettingsAccountsFragment extends PreferenceFragment {
 
         for (Source source : sourceAccounts) {
             LoginDialogPreference dialog = new LoginDialogPreference(
-                    screen.getContext(), null, source);
+                    screen.getContext(), preferences, source);
             dialog.setTitle(source.getName());
 
             screen.addPreference(dialog);
@@ -70,62 +58,6 @@ public class SettingsAccountsFragment extends PreferenceFragment {
                 .toList()
                 .toBlocking()
                 .single();
-    }
-
-    public class LoginDialogPreference extends DialogPreference {
-
-        @Bind(R.id.accounts_login) TextView title;
-        @Bind(R.id.username) EditText username;
-        @Bind(R.id.password) EditText password;
-        @Bind(R.id.show_password) CheckBox showPassword;
-
-        private Source source;
-
-        public LoginDialogPreference(Context context, AttributeSet attrs, Source source) {
-            super(context, attrs);
-            this.source = source;
-
-            setDialogLayoutResource(R.layout.pref_account_login);
-        }
-
-        @Override
-        protected void onBindDialogView(View view) {
-            ButterKnife.bind(this, view);
-
-            title.setText(getString(R.string.accounts_login_title, source.getName()));
-
-            username.setText(preferences.getSourceUsername(source));
-            password.setText(preferences.getSourcePassword(source));
-            showPassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked)
-                    password.setTransformationMethod(null);
-                else
-                    password.setTransformationMethod(new PasswordTransformationMethod());
-            });
-
-            super.onBindDialogView(view);
-        }
-
-        @Override
-        protected void onDialogClosed(boolean positiveResult) {
-            if(!positiveResult)
-                return;
-
-            preferences.setSourceCredentials(source,
-                    username.getText().toString(),
-                    password.getText().toString());
-
-            source.login(username.getText().toString(), password.getText().toString())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(result -> {
-                        Timber.e("Result is " + result);
-                    });
-
-
-            super.onDialogClosed(true);
-        }
-
     }
 
 }
