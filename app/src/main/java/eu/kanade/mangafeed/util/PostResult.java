@@ -1,10 +1,7 @@
-package com.pushtorefresh.storio.sqlite.operations.post;
+package eu.kanade.mangafeed.util;
 
 import android.support.annotation.Nullable;
 
-/**
- * Created by len on 08/10/2015.
- */
 public class PostResult {
 
     @Nullable

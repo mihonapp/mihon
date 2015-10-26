@@ -2,7 +2,7 @@ package eu.kanade.mangafeed.presenter;
 
 import android.os.Bundle;
 
-import com.pushtorefresh.storio.sqlite.operations.post.PostResult;
+import eu.kanade.mangafeed.util.PostResult;
 
 import java.util.List;
 
