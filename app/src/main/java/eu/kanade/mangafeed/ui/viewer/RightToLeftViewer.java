@@ -21,7 +21,7 @@ public class RightToLeftViewer extends ViewPagerViewer {
         ArrayList<Page> inversedPages = new ArrayList<>(pages);
         Collections.reverse(inversedPages);
         adapter.setPages(inversedPages);
-        viewPager.setCurrentItem(adapter.getCount()-1);
+        getViewPager().setCurrentItem(adapter.getCount()-1);
     }
 
     @Override

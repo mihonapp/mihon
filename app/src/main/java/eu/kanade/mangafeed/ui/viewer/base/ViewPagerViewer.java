@@ -5,6 +5,8 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
@@ -13,15 +15,15 @@ import eu.kanade.mangafeed.widget.ReaderViewPager;
 
 public abstract class ViewPagerViewer extends BaseViewer {
 
-    protected ReaderViewPager viewPager;
+    @Bind(R.id.view_pager) ReaderViewPager viewPager;
     protected ReaderPageAdapter adapter;
 
     public ViewPagerViewer(ReaderActivity activity, FrameLayout container) {
         super(activity, container);
         activity.getLayoutInflater().inflate(R.layout.viewer_viewpager, container);
+        ButterKnife.bind(this, container);
 
         adapter = new ReaderPageAdapter(activity.getSupportFragmentManager());
-        viewPager = (ReaderViewPager) activity.findViewById(R.id.view_pager);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new ReaderViewPager.OnPageChangeListener() {
@@ -52,6 +54,10 @@ public abstract class ViewPagerViewer extends BaseViewer {
                 onLastPageOut();
             }
         });
+    }
+
+    public ReaderViewPager getViewPager() {
+        return viewPager;
     }
 
     @Override

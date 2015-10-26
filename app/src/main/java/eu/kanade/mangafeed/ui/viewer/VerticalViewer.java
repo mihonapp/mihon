@@ -5,6 +5,8 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
@@ -15,15 +17,15 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 public class VerticalViewer extends BaseViewer {
 
-    private VerticalViewPager viewPager;
+    @Bind(R.id.view_pager) VerticalViewPager viewPager;
     private ReaderPageAdapter adapter;
 
     public VerticalViewer(ReaderActivity activity, FrameLayout container) {
         super(activity, container);
         activity.getLayoutInflater().inflate(R.layout.viewer_verticalviewpager, container);
+        ButterKnife.bind(this, container);
 
         adapter = new ReaderPageAdapter(activity.getSupportFragmentManager());
-        viewPager = (VerticalViewPager) activity.findViewById(R.id.view_pager);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setOnPageChangeListener(new ReaderViewPager.OnPageChangeListener() {
