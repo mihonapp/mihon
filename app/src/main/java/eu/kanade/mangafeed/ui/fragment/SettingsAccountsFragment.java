@@ -25,6 +25,9 @@ import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.activity.base.BaseActivity;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class SettingsAccountsFragment extends PreferenceFragment {
 
@@ -111,6 +114,14 @@ public class SettingsAccountsFragment extends PreferenceFragment {
             preferences.setSourceCredentials(source,
                     username.getText().toString(),
                     password.getText().toString());
+
+            source.login(username.getText().toString(), password.getText().toString())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(result -> {
+                        Timber.e("Result is " + result);
+                    });
+
 
             super.onDialogClosed(true);
         }

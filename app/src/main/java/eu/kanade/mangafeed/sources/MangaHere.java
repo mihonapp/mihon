@@ -1,5 +1,7 @@
 package eu.kanade.mangafeed.sources;
 
+import android.content.Context;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,8 +15,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import eu.kanade.mangafeed.data.caches.CacheManager;
-import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
@@ -29,8 +29,8 @@ public class MangaHere extends Source {
     private static final String INITIAL_UPDATE_URL = "http://www.mangahere.co/latest/";
     private static final String INITIAL_SEARCH_URL = "http://www.mangahere.co/search.php?";
 
-    public MangaHere(NetworkHelper networkService, CacheManager cacheManager) {
-        super(networkService, cacheManager);
+    public MangaHere(Context context) {
+        super(context);
     }
 
     @Override

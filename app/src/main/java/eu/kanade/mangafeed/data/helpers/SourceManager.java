@@ -1,5 +1,7 @@
 package eu.kanade.mangafeed.data.helpers;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,11 +19,11 @@ public class SourceManager {
     private HashMap<Integer, Source> mSourcesMap;
     private NetworkHelper mNetworkHelper;
     private CacheManager mCacheManager;
+    private Context context;
 
-    public SourceManager(NetworkHelper networkHelper, CacheManager cacheManager) {
+    public SourceManager(Context context) {
         mSourcesMap = new HashMap<>();
-        mNetworkHelper = networkHelper;
-        mCacheManager = cacheManager;
+        this.context = context;
 
         initializeSources();
     }
@@ -36,9 +38,9 @@ public class SourceManager {
     private Source createSource(int sourceKey) {
         switch (sourceKey) {
             case BATOTO:
-                return new Batoto(mNetworkHelper, mCacheManager);
+                return new Batoto(context);
             case MANGAHERE:
-                return new MangaHere(mNetworkHelper, mCacheManager);
+                return new MangaHere(context);
         }
 
         return null;

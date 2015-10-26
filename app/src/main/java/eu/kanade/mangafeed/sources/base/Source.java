@@ -1,13 +1,19 @@
 package eu.kanade.mangafeed.sources.base;
 
 
+import android.content.Context;
+
 import com.squareup.okhttp.Headers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
+import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.data.models.Page;
@@ -16,13 +22,13 @@ import rx.schedulers.Schedulers;
 
 public abstract class Source extends BaseSource {
 
-    protected NetworkHelper mNetworkService;
-    protected CacheManager mCacheManager;
+    @Inject protected NetworkHelper mNetworkService;
+    @Inject protected CacheManager mCacheManager;
+    @Inject protected PreferencesHelper prefs;
     protected Headers mRequestHeaders;
 
-    public Source(NetworkHelper networkService, CacheManager cacheManager) {
-        mNetworkService = networkService;
-        mCacheManager = cacheManager;
+    public Source(Context context) {
+        App.get(context).getComponent().inject(this);
         mRequestHeaders = headersBuilder().build();
     }
 
@@ -30,28 +36,28 @@ public abstract class Source extends BaseSource {
     public Observable<List<Manga>> pullPopularMangasFromNetwork(int page) {
         String url = getUrlFromPageNumber(page);
         return mNetworkService
-                .getStringResponse(url, mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                .getStringResponse(url, mRequestHeaders, null)
                 .flatMap(response -> Observable.just(parsePopularMangasFromHtml(response)));
     }
 
     // Get mangas from the source with a query
     public Observable<List<Manga>> searchMangasFromNetwork(String query, int page) {
         return mNetworkService
-                .getStringResponse(getSearchUrl(query, page), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                .getStringResponse(getSearchUrl(query, page), mRequestHeaders, null)
                 .flatMap(response -> Observable.just(parseSearchFromHtml(response)));
     }
 
     // Get manga details from the source
     public Observable<Manga> pullMangaFromNetwork(final String mangaUrl) {
         return mNetworkService
-                .getStringResponse(overrideMangaUrl(mangaUrl), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                .getStringResponse(overrideMangaUrl(mangaUrl), mRequestHeaders, null)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToManga(mangaUrl, unparsedHtml)));
     }
 
     // Get chapter list of a manga from the source
     public Observable<List<Chapter>> pullChaptersFromNetwork(String mangaUrl) {
         return mNetworkService
-                .getStringResponse(mangaUrl, mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                .getStringResponse(mangaUrl, mRequestHeaders, null)
                 .flatMap(unparsedHtml ->
                         Observable.just(parseHtmlToChapters(unparsedHtml)));
     }
@@ -60,7 +66,7 @@ public abstract class Source extends BaseSource {
         return mCacheManager.getPageUrlsFromDiskCache(chapterUrl)
                 .onErrorResumeNext(throwable -> {
                     return mNetworkService
-                            .getStringResponse(overrideChapterPageUrl(chapterUrl), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                            .getStringResponse(overrideChapterPageUrl(chapterUrl), mRequestHeaders, null)
                             .flatMap(unparsedHtml -> {
                                 List<String> pageUrls = parseHtmlToPageUrls(unparsedHtml);
                                 return Observable.just(getFirstImageFromPageUrls(pageUrls, unparsedHtml));
@@ -82,7 +88,7 @@ public abstract class Source extends BaseSource {
 
     private Observable<Page> getImageUrlFromPage(final Page page) {
         return mNetworkService
-                .getStringResponse(overrideRemainingPagesUrl(page.getUrl()), mNetworkService.NULL_CACHE_CONTROL, mRequestHeaders)
+                .getStringResponse(overrideRemainingPagesUrl(page.getUrl()), mRequestHeaders, null)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
                 .flatMap(imageUrl -> {
                     page.setImageUrl(imageUrl);

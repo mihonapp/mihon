@@ -14,6 +14,7 @@ import eu.kanade.mangafeed.presenter.MangaDetailPresenter;
 import eu.kanade.mangafeed.presenter.MangaInfoPresenter;
 import eu.kanade.mangafeed.presenter.ReaderPresenter;
 import eu.kanade.mangafeed.presenter.SourcePresenter;
+import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.ui.fragment.SettingsAccountsFragment;
 
@@ -36,6 +37,8 @@ public interface AppComponent {
 
     void inject(ReaderActivity readerActivity);
     void inject(SettingsAccountsFragment settingsAccountsFragment);
+
+    void inject(Source source);
 
     Application application();
 

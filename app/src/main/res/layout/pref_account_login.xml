@@ -50,4 +50,12 @@
         android:id="@+id/show_password"
         android:layout_marginTop="10dp"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/check_credentials"
+        android:id="@+id/check_credentials" />
+
+
+
 </LinearLayout>

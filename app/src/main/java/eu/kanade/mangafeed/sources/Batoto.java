@@ -1,12 +1,19 @@
 package eu.kanade.mangafeed.sources;
 
+import android.content.Context;
+
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.Response;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.HttpCookie;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,8 +21,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import eu.kanade.mangafeed.data.caches.CacheManager;
-import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
@@ -25,15 +30,17 @@ import rx.Observable;
 public class Batoto extends Source {
 
     public static final String NAME = "Batoto (EN)";
-    public static final String BASE_URL = "www.bato.to";
+    public static final String BASE_URL = "http://bato.to";
     public static final String INITIAL_UPDATE_URL =
             "http://bato.to/search_ajax?order_cond=views&order=desc&p=";
     public static final String INITIAL_SEARCH_URL = "http://bato.to/search_ajax?";
     public static final String INITIAL_PAGE_URL = "http://bato.to/areader?";
+    public static final String LOGIN_URL =
+            "https://bato.to/forums/index.php?app=core&module=global&section=login";
 
 
-    public Batoto(NetworkHelper networkService, CacheManager cacheManager) {
-        super(networkService, cacheManager);
+    public Batoto(Context context) {
+        super(context);
     }
 
     @Override
@@ -334,6 +341,62 @@ public class Batoto extends Source {
         Element imageElement = parsedDocument.getElementById("comic_page");
 
         return imageElement.attr("src");
+    }
+
+    @Override
+    public Observable<Boolean> login(String username, String password) {
+        return mNetworkService.getStringResponse(LOGIN_URL, mRequestHeaders, null)
+                .flatMap(response -> doLogin(response, username, password))
+                .map(this::isAuthenticationSuccessful);
+    }
+
+    private Observable<Response> doLogin(String response, String username, String password) {
+        Document doc = Jsoup.parse(response);
+        Element form = doc.select("#login").first();
+        String postUrl = form.attr("action");
+
+        FormEncodingBuilder formBody = new FormEncodingBuilder();
+        Element authKey = form.select("input[name=auth_key").first();
+
+        formBody.add(authKey.attr("name"), authKey.attr("value"));
+        formBody.add("ips_username", username);
+        formBody.add("ips_password", password);
+        formBody.add("invisible", "1");
+        formBody.add("rememberMe", "1");
+
+        return mNetworkService.postData(postUrl, formBody.build(), mRequestHeaders);
+    }
+
+    @Override
+    protected boolean isAuthenticationSuccessful(Response response) {
+        return response.priorResponse() != null && response.priorResponse().code() == 302;
+    }
+
+    @Override
+    public boolean isLogged() {
+        try {
+            for ( HttpCookie cookie : mNetworkService.getCookies().get(new URI(BASE_URL)) ) {
+                if (cookie.getName().equals("pass_hash"))
+                    return true;
+            }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public Observable<List<Chapter>> pullChaptersFromNetwork(String mangaUrl) {
+        Observable<List<Chapter>> observable;
+        if (!isLogged()) {
+            observable = login(prefs.getSourceUsername(this), prefs.getSourcePassword(this))
+                    .flatMap(result -> super.pullChaptersFromNetwork(mangaUrl));
+        }
+        else {
+            observable = super.pullChaptersFromNetwork(mangaUrl);
+        }
+        return observable;
     }
 
 }

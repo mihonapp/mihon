@@ -1,11 +1,13 @@
 package eu.kanade.mangafeed.sources.base;
 
 import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.Response;
 
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
+import rx.Observable;
 
 public abstract class BaseSource {
 
@@ -43,6 +45,19 @@ public abstract class BaseSource {
     protected abstract String parseHtmlToImageUrl(String unparsedHtml);
 
 
+    // Login related methods, shouldn't be overriden if the source doesn't require it
+    public Observable<Boolean> login(String username, String password) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean isLogged() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    protected boolean isAuthenticationSuccessful(Response response) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
 
     // Default fields, they can be overriden by sources' implementation
 

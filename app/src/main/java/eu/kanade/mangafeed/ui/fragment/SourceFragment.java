@@ -56,8 +56,12 @@ public class SourceFragment extends BaseRxFragment<SourcePresenter> {
     public void onSourceClick(int position) {
         Source source = adapter.getItem(position);
 
-        CatalogueFragment fragment = CatalogueFragment.newInstance(source.getSourceId());
-        activity.setFragment(fragment);
+        if (getPresenter().isValidSource(source)) {
+            CatalogueFragment fragment = CatalogueFragment.newInstance(source.getSourceId());
+            activity.setFragment(fragment);
+        } else {
+            // TODO ask for password
+        }
     }
 
     private void createAdapter() {

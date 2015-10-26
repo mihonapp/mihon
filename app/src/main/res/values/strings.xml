@@ -66,5 +66,6 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="show_password">Show password</string>
+    <string name="check_credentials">Check credentials</string>
 
 </resources>

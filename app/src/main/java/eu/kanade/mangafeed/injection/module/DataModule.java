@@ -55,8 +55,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    SourceManager provideSourceManager(NetworkHelper networkHelper, CacheManager cacheManager) {
-        return new SourceManager(networkHelper, cacheManager);
+    SourceManager provideSourceManager(Application app) {
+        return new SourceManager(app);
     }
 
     @Provides
