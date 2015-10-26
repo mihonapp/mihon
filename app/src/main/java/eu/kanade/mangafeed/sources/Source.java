@@ -33,6 +33,11 @@ public abstract class Source {
     protected abstract List<String> parseHtmlToPageUrls(String unparsedHtml);
     protected abstract String parseHtmlToImageUrl(String unparsedHtml);
 
+    // True if the source requires a login
+    public boolean isLoginRequired() {
+        return false;
+    }
+
     // Get the URL to the details of a manga, useful if the source provides some kind of API or fast calls
     protected String getMangaUrl(String defaultMangaUrl) {
         return defaultMangaUrl;

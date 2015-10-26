@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_category_reader_key">pref_category_reader_key</string>
+    <string name="pref_category_accounts_key">pref_category_accounts_key</string>
+    <string name="pref_hide_status_bar_key">pref_hide_status_bar_key</string>
+    <string name="pref_default_viewer_key">pref_default_viewer_key</string>
+</resources>

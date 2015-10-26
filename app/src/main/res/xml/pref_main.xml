@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <Preference
+        android:key="@string/pref_category_reader_key"
+        android:persistent="false"
+        android:title="@string/pref_category_reader" />
+
+    <Preference
+        android:key="@string/pref_category_accounts_key"
+        android:persistent="false"
+        android:title="@string/pref_category_accounts" />
+
+</PreferenceScreen>

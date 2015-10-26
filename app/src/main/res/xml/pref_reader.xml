@@ -2,12 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference android:title="@string/pref_hide_status_bar"
+        android:key="pref_hide_status_bar_key"
         android:defaultValue="false"
-        android:summary="@string/pref_hide_status_bar_summary"
-        android:key="hide_status_bar" />
+        android:summary="@string/pref_hide_status_bar_summary" />
 
     <ListPreference android:title="@string/pref_viewer_type"
-        android:key="default_viewer"
+        android:key="pref_default_viewer_key"
         android:entries="@array/viewers"
         android:entryValues="@array/viewers_values"
         android:defaultValue="1"/>

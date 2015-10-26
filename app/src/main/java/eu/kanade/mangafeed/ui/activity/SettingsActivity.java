@@ -1,13 +1,14 @@
 package eu.kanade.mangafeed.ui.activity;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.ui.activity.base.BaseActivity;
+import eu.kanade.mangafeed.ui.fragment.SettingsMainFragment;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -21,16 +22,25 @@ public class SettingsActivity extends BaseActivity {
 
         setupToolbar(toolbar);
 
-        getFragmentManager().beginTransaction().replace(R.id.settings_content,
-                new MyPreferenceFragment()).commit();
+        if (savedInstanceState == null)
+            getFragmentManager().beginTransaction().replace(R.id.settings_content,
+                    new SettingsMainFragment())
+                    .commit();
     }
 
-    public static class MyPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(final Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
+    @Override
+    public void onBackPressed() {
+        if( !getFragmentManager().popBackStackImmediate() ) super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }

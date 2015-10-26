@@ -15,6 +15,7 @@ import eu.kanade.mangafeed.presenter.MangaInfoPresenter;
 import eu.kanade.mangafeed.presenter.ReaderPresenter;
 import eu.kanade.mangafeed.presenter.SourcePresenter;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
+import eu.kanade.mangafeed.ui.fragment.SettingsAccountsFragment;
 
 @Singleton
 @Component(
@@ -34,6 +35,7 @@ public interface AppComponent {
     void inject(ReaderPresenter readerPresenter);
 
     void inject(ReaderActivity readerActivity);
+    void inject(SettingsAccountsFragment settingsAccountsFragment);
 
     Application application();
 

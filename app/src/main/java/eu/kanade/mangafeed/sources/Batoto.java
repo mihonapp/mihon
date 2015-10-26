@@ -99,6 +99,11 @@ public class Batoto extends Source {
     }
 
     @Override
+    public boolean isLoginRequired() {
+        return true;
+    }
+
+    @Override
     protected String getUrlFromPageNumber(int page) {
         return INITIAL_UPDATE_URL + page;
     }
