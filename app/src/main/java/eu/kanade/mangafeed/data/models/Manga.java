@@ -38,8 +38,8 @@ public class Manga {
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_THUMBNAIL_URL)
     public String thumbnail_url;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_RANK)
-    public int rank;
+    @StorIOSQLiteColumn(name = MangasTable.COLUMN_FAVORITE)
+    public boolean favorite;
 
     @StorIOSQLiteColumn(name = MangasTable.COLUMN_LAST_UPDATE)
     public long last_update;
@@ -56,30 +56,6 @@ public class Manga {
     public int unread;
 
     public Manga() {}
-
-    public Manga(String title) {
-        this.title = title;
-    }
-
-    public Manga(String title, String author, String artist, String url,
-                 String description, String genre, String status, int rank,
-                 String thumbnail_url) {
-        this.title = title;
-        this.author = author;
-        this.artist = artist;
-        this.url = url;
-        this.description = description;
-        this.genre = genre;
-        this.status = status;
-        this.rank = rank;
-        this.thumbnail_url = thumbnail_url;
-    }
-
-    public static Manga newManga(String title, String author, String artist, String url,
-                                 String description, String genre, String status, int rank,
-                                 String thumbnail_url) {
-        return new Manga(title, author, artist, url, description, genre, status, rank, thumbnail_url);
-    }
 
     public static void copyFromNetwork(Manga local, Manga network) {
         if (network.title != null)
@@ -107,6 +83,7 @@ public class Manga {
             local.thumbnail_url = network.thumbnail_url;
 
         local.initialized = true;
+
     }
 
     @Override

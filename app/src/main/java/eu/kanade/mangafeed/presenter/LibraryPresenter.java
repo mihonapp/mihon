@@ -52,8 +52,12 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                 .observeOn(Schedulers.io())
                 .map(checkedItems::keyAt)
                 .map(adapter::getItem)
+                .map(manga -> {
+                    manga.favorite = false;
+                    return manga;
+                })
                 .toList()
-                .flatMap(db::deleteMangas)
+                .flatMap(db::insertMangas)
                 .subscribe());
     }
 

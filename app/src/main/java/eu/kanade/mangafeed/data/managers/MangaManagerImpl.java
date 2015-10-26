@@ -21,16 +21,17 @@ public class MangaManagerImpl extends BaseManager implements MangaManager {
         super(db);
     }
 
-    private final String mangasWithUnreadQuery = String.format(
+    private final String favoriteMangasWithUnreadQuery = String.format(
             "SELECT %1$s.*, COUNT(C.%4$s) AS %5$s FROM %1$s LEFT JOIN " +
             "(SELECT %4$s FROM %2$s WHERE %6$s = 0) AS C ON %3$s = C.%4$s " +
-            "GROUP BY %3$s",
+            "WHERE %7$s = 1 GROUP BY %3$s",
             MangasTable.TABLE,
             ChaptersTable.TABLE,
             MangasTable.TABLE + "." + MangasTable.COLUMN_ID,
             ChaptersTable.COLUMN_MANGA_ID,
             MangasTable.COLUMN_UNREAD,
-            ChaptersTable.COLUMN_READ
+            ChaptersTable.COLUMN_READ,
+            MangasTable.COLUMN_FAVORITE
     );
 
     public Observable<List<Manga>> getMangas() {
@@ -47,7 +48,7 @@ public class MangaManagerImpl extends BaseManager implements MangaManager {
         return db.get()
                 .listOfObjects(Manga.class)
                 .withQuery(RawQuery.builder()
-                        .query(mangasWithUnreadQuery)
+                        .query(favoriteMangasWithUnreadQuery)
                         .observesTables(MangasTable.TABLE, ChaptersTable.TABLE)
                         .build())
                 .prepare()

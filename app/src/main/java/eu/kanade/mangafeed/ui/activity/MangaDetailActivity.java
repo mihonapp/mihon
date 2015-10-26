@@ -10,7 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +34,7 @@ public class MangaDetailActivity extends BaseRxActivity<MangaDetailPresenter> {
     private MangaDetailAdapter adapter;
     private long manga_id;
     private boolean is_online;
+    private MenuItem favoriteBtn;
 
     public final static String MANGA_ID = "manga_id";
     public final static String MANGA_ONLINE = "manga_online";
@@ -63,10 +66,21 @@ public class MangaDetailActivity extends BaseRxActivity<MangaDetailPresenter> {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.manga, menu);
+        favoriteBtn = menu.findItem(R.id.action_favorite);
+        getPresenter().setFavoriteVisibility();
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.action_favorite:
+                onFavoriteClick();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -98,8 +112,20 @@ public class MangaDetailActivity extends BaseRxActivity<MangaDetailPresenter> {
         setToolbarTitle(manga.title);
     }
 
+    public void setFavoriteBtnVisible(boolean visible) {
+        if (favoriteBtn != null)
+            favoriteBtn.setVisible(visible);
+    }
+
     public boolean isOnlineManga() {
         return is_online;
+    }
+
+    private void onFavoriteClick() {
+        if (getPresenter().addToFavorites()) {
+            Toast.makeText(this, getString(R.string.toast_added_favorites), Toast.LENGTH_SHORT)
+                .show();
+        }
     }
 
     class MangaDetailAdapter extends FragmentPagerAdapter {

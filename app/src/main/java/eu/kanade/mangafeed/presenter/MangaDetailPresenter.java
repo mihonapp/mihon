@@ -17,6 +17,8 @@ public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
     @Inject DatabaseHelper db;
 
     private long mangaId;
+    private Manga manga;
+
     private static final int DB_MANGA = 1;
 
     @Override
@@ -24,9 +26,11 @@ public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
         super.onCreate(savedState);
 
         restartableLatestCache(DB_MANGA,
-                this::getDbMangaObservable,
+                () -> getDbMangaObservable()
+                        .doOnNext(manga -> this.manga = manga),
                 (view, manga) -> {
                     view.setManga(manga);
+                    view.setFavoriteBtnVisible(!manga.favorite);
                     EventBus.getDefault().postSticky(manga);
                 });
     }
@@ -41,7 +45,6 @@ public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
     private Observable<Manga> getDbMangaObservable() {
         return db.getManga(mangaId)
                 .subscribeOn(Schedulers.io())
-                .take(1)
                 .flatMap(Observable::from)
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -51,4 +54,14 @@ public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
         start(DB_MANGA);
     }
 
+    public void setFavoriteVisibility() {
+        if (getView() != null) {
+            getView().setFavoriteBtnVisible(!manga.favorite);
+        }
+    }
+
+    public boolean addToFavorites() {
+        manga.favorite = true;
+        return db.insertMangaBlock(manga).numberOfRowsUpdated() == 1;
+    }
 }

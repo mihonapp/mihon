@@ -2,9 +2,6 @@ package eu.kanade.mangafeed.data.tables;
 
 import android.support.annotation.NonNull;
 
-/**
- * Created by len on 23/09/2015.
- */
 public class MangasTable {
 
     @NonNull
@@ -41,7 +38,7 @@ public class MangasTable {
     public static final String COLUMN_THUMBNAIL_URL = "thumbnail_url";
 
     @NonNull
-    public static final String COLUMN_RANK = "rank";
+    public static final String COLUMN_FAVORITE = "favorite";
 
     @NonNull
     public static final String COLUMN_LAST_UPDATE = "last_update";
@@ -78,7 +75,7 @@ public class MangasTable {
                 + COLUMN_TITLE + " TEXT NOT NULL, "
                 + COLUMN_STATUS + " TEXT, "
                 + COLUMN_THUMBNAIL_URL + " TEXT, "
-                + COLUMN_RANK + " INTEGER, "
+                + COLUMN_FAVORITE + " INTEGER NOT NULL, "
                 + COLUMN_LAST_UPDATE + " LONG, "
                 + COLUMN_INITIALIZED + " BOOLEAN NOT NULL, "
                 + COLUMN_VIEWER + " INTEGER NOT NULL, "

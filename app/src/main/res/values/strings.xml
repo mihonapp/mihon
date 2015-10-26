@@ -71,5 +71,7 @@
     <string name="success">Success</string>
     <string name="invalid_login">Login error</string>
     <string name="loading">Loading…</string>
+    <string name="toast_added_favorites">Added to favorites</string>
+    <string name="action_favorite">Favorite</string>
 
 </resources>

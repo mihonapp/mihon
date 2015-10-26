@@ -101,6 +101,9 @@ public class LoginDialogPreference extends DialogPreference {
         if (requestSubscription != null)
             requestSubscription.unsubscribe();
 
+        if (username.getText().length() == 0 || password.getText().length() == 0)
+            return;
+
         loginBtn.setProgress(1);
 
         requestSubscription = source.login(username.getText().toString(),
