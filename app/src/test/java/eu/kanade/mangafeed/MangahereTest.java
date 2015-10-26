@@ -18,7 +18,7 @@ import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.sources.MangaHere;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
 @RunWith(RobolectricGradleTestRunner.class)

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 
 public class PreferencesHelper {
 

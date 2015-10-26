@@ -1,7 +1,7 @@
 package eu.kanade.mangafeed.events;
 
 import eu.kanade.mangafeed.data.models.Chapter;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 
 public class SourceChapterEvent {
 

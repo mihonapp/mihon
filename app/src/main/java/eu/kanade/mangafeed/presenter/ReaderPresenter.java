@@ -16,7 +16,7 @@ import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.events.SourceChapterEvent;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.util.EventBusHook;
 import icepick.State;

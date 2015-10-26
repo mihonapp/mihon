@@ -2,8 +2,6 @@ package eu.kanade.mangafeed.presenter;
 
 import android.os.Bundle;
 
-import eu.kanade.mangafeed.util.PostResult;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,9 +13,10 @@ import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.events.ChapterCountEvent;
 import eu.kanade.mangafeed.events.SourceChapterEvent;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
 import eu.kanade.mangafeed.util.EventBusHook;
+import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;

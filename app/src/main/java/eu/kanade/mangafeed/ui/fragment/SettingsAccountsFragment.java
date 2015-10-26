@@ -22,7 +22,7 @@ import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.activity.base.BaseActivity;
 import rx.Observable;
 

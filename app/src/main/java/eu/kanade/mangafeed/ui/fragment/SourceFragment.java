@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.presenter.SourcePresenter;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.adapter.SourceHolder;
 import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;

@@ -18,6 +18,7 @@ import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.sources.base.Source;
 import rx.Observable;
 
 public class MangaHere extends Source {
@@ -37,6 +38,7 @@ public class MangaHere extends Source {
         return NAME;
     }
 
+    @Override
     public int getSourceId() {
         return SourceManager.MANGAHERE;
     }
@@ -49,6 +51,12 @@ public class MangaHere extends Source {
     @Override
     protected String getSearchUrl(String query, int page) {
         return INITIAL_SEARCH_URL + "name=" + query + "&page=" + page;
+    }
+
+
+    @Override
+    public boolean isLoginRequired() {
+        return false;
     }
 
     public Observable<List<String>> getGenres() {

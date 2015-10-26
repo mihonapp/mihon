@@ -4,7 +4,6 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
-import eu.kanade.mangafeed.util.PostResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.Query;
@@ -14,6 +13,7 @@ import java.util.List;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.data.tables.ChaptersTable;
+import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 
 public class ChapterManagerImpl extends BaseManager implements ChapterManager {

@@ -19,6 +19,7 @@ import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.sources.base.Source;
 import rx.Observable;
 
 public class Batoto extends Source {
@@ -114,19 +115,19 @@ public class Batoto extends Source {
     }
 
     @Override
-    protected String getMangaUrl(String defaultMangaUrl) {
+    protected String overrideMangaUrl(String defaultMangaUrl) {
         String mangaId = defaultMangaUrl.substring(defaultMangaUrl.lastIndexOf("r") + 1);
         return "http://bato.to/comic_pop?id=" + mangaId;
     }
 
     @Override
-    protected String getChapterPageUrl(String defaultPageUrl) {
+    protected String overrideChapterPageUrl(String defaultPageUrl) {
         String id = defaultPageUrl.substring(defaultPageUrl.indexOf("#") + 1);
         return INITIAL_PAGE_URL + "id=" + id + "&p=1";
     }
 
     @Override
-    protected String getRemainingPagesUrl(String defaultPageUrl) {
+    protected String overrideRemainingPagesUrl(String defaultPageUrl) {
         int start = defaultPageUrl.indexOf("#") + 1;
         int end = defaultPageUrl.indexOf("_", start);
         String id = defaultPageUrl.substring(start, end);

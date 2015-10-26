@@ -7,7 +7,7 @@ import java.util.List;
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.sources.Batoto;
 import eu.kanade.mangafeed.sources.MangaHere;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 
 public class SourceManager {
 

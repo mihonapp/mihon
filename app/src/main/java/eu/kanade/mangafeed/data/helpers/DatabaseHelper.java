@@ -7,7 +7,6 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
-import eu.kanade.mangafeed.util.PostResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 
@@ -25,6 +24,7 @@ import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.data.models.MangaStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.models.MangaStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.resolvers.MangaWithUnreadGetResolver;
+import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 
 public class DatabaseHelper implements MangaManager, ChapterManager {

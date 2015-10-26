@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.data.managers;
 
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
-import eu.kanade.mangafeed.util.PostResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 
@@ -10,6 +9,7 @@ import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 
 public interface ChapterManager {

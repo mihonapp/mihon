@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Manga;
-import eu.kanade.mangafeed.sources.Source;
+import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.fragment.CatalogueFragment;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.util.RxPager;
