@@ -80,9 +80,10 @@ public abstract class Source extends BaseSource {
     public Observable<Page> getRemainingImageUrlsFromPageList(final List<Page> pages) {
         return Observable.from(pages)
                 .filter(page -> page.getImageUrl() == null)
+                .doOnNext(page -> page.setStatus(Page.DOWNLOAD))
                 .window(overrideNumberOfConcurrentPageDownloads())
                 .concatMap(batchedPages ->
-                        batchedPages.concatMap(this::getImageUrlFromPage)
+                                batchedPages.concatMap(this::getImageUrlFromPage)
                 );
     }
 
@@ -90,6 +91,10 @@ public abstract class Source extends BaseSource {
         return mNetworkService
                 .getStringResponse(overrideRemainingPagesUrl(page.getUrl()), mRequestHeaders, null)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
+                .onErrorResumeNext(e -> {
+                    page.setStatus(Page.ERROR);
+                    return Observable.just(null);
+                })
                 .flatMap(imageUrl -> {
                     page.setImageUrl(imageUrl);
                     return Observable.just(page);

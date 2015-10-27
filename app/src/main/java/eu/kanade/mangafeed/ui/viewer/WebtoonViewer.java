@@ -34,7 +34,7 @@ public class WebtoonViewer extends BaseViewer {
     }
 
     @Override
-    public void onImageReady(Page page) {
+    public void onNextPage(Page page) {
         adapter.setPage(getPosFromPage(page), page);
     }
 

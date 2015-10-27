@@ -52,7 +52,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         restartableReplay(GET_PAGE_IMAGES,
                 this::getPageImagesObservable,
                 (view, page) -> {
-                    view.onImageReady(page);
+                    view.onNextPage(page);
                     if (page.getPageNumber() == savedSelectedPage) {
                         view.setCurrentPage(savedSelectedPage);
                     }
@@ -100,9 +100,10 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     private Observable<Page> getPageImagesObservable() {
         return Observable.merge(
-                Observable.from(pageList).filter(page -> page.getImageUrl() != null),
-                source.getRemainingImageUrlsFromPageList(pageList)
-                        .doOnNext(this::replacePageUrl))
+                    Observable.from(pageList).filter(page -> page.getImageUrl() != null),
+                    source.getRemainingImageUrlsFromPageList(pageList)
+                         .doOnNext(this::replacePageUrl)
+                )
                 .flatMap(this::downloadImage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -115,9 +116,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         try {
             File cacheFile = future.get();
             page.setImagePath(cacheFile.getCanonicalPath());
-
+            page.setStatus(Page.READY);
         } catch (Exception e) {
-            e.printStackTrace();
+            page.setStatus(Page.ERROR);
         }
 
         return Observable.just(page);

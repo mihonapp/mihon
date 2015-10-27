@@ -72,7 +72,7 @@ public abstract class ViewPagerViewer extends BaseViewer {
     }
 
     @Override
-    public void onImageReady(Page page) {
+    public void onNextPage(Page page) {
         adapter.replacePage(getPosFromPage(page), page);
     }
 

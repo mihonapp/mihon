@@ -71,8 +71,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         viewer.onPageListReady(pages);
     }
 
-    public void onImageReady(Page page) {
-        viewer.onImageReady(page);
+    public void onNextPage(Page page) {
+        viewer.onNextPage(page);
     }
 
     public void onPageChanged(int currentPage, int totalPages) {
@@ -101,8 +101,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     private BaseViewer getViewer() {
-        int prefsViewer = prefs.getDefaultViewer();
-        switch (prefsViewer) {
+        switch (prefs.getDefaultViewer()) {
             case LEFT_TO_RIGHT:
                 return new LeftToRightViewer(this, container);
             case RIGHT_TO_LEFT:

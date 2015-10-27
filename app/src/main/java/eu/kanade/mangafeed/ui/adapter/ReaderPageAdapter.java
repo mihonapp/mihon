@@ -43,7 +43,7 @@ public class ReaderPageAdapter extends SmartFragmentStatePagerAdapter {
 
         ReaderPageFragment fragment = (ReaderPageFragment)getRegisteredFragment(position);
         if (fragment != null) {
-            fragment.setPage(page);
+            fragment.replacePage(page);
         }
     }
 

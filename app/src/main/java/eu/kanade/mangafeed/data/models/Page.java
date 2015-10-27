@@ -6,6 +6,11 @@ public class Page {
     private String url;
     private String imageUrl;
     private String imagePath;
+    private int status;
+
+    public static final int DOWNLOAD = 0;
+    public static final int READY = 1;
+    public static final int ERROR = 2;
 
     public Page(int pageNumber, String url, String imageUrl, String imagePath) {
         this.pageNumber = pageNumber;
@@ -40,6 +45,14 @@ public class Page {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override
