@@ -23,6 +23,7 @@ import icepick.State;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
@@ -45,9 +46,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 () -> getPageListObservable()
                         .doOnNext(pages -> pageList = pages)
                         .doOnCompleted(() -> start(GET_PAGE_IMAGES)),
-                (view, pages) -> {
-                    view.onPageListReady(pages);
-                });
+                (view, pages) -> view.onPageListReady(pages),
+                (view, error) -> Timber.e("An error occurred while downloading page list")
+        );
 
         restartableReplay(GET_PAGE_IMAGES,
                 this::getPageImagesObservable,
@@ -56,7 +57,8 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                     if (page.getPageNumber() == savedSelectedPage) {
                         view.setCurrentPage(savedSelectedPage);
                     }
-                });
+                },
+                (view, error) -> Timber.e("An error occurred while downloading an image"));
     }
 
     @Override
@@ -110,15 +112,17 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     private Observable<Page> downloadImage(Page page) {
-        FutureTarget<File> future = glideDownloader.load(page.getImageUrl())
-                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+        if (page.getImageUrl() != null) {
+            FutureTarget<File> future = glideDownloader.load(page.getImageUrl())
+                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
-        try {
-            File cacheFile = future.get();
-            page.setImagePath(cacheFile.getCanonicalPath());
-            page.setStatus(Page.READY);
-        } catch (Exception e) {
-            page.setStatus(Page.ERROR);
+            try {
+                File cacheFile = future.get();
+                page.setImagePath(cacheFile.getCanonicalPath());
+                page.setStatus(Page.READY);
+            } catch (Exception e) {
+                page.setStatus(Page.ERROR);
+            }
         }
 
         return Observable.just(page);

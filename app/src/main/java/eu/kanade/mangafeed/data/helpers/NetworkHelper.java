@@ -30,7 +30,7 @@ public final class NetworkHelper {
     }
 
     public Observable<Response> getResponse(final String url, final Headers headers, final CacheControl cacheControl) {
-        return Observable.create(subscriber -> {
+        return Observable.<Response>create(subscriber -> {
             try {
                 if (!subscriber.isUnsubscribed()) {
                     Request request = new Request.Builder()
@@ -44,7 +44,7 @@ public final class NetworkHelper {
             } catch (Throwable e) {
                 subscriber.onError(e);
             }
-        });
+        }).retry(3);
     }
 
     public Observable<String> mapResponseToString(final Response response) {

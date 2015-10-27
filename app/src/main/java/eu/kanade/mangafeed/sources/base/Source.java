@@ -103,7 +103,8 @@ public abstract class Source extends BaseSource {
     }
 
     public void savePageList(String chapterUrl, List<Page> pages) {
-        mCacheManager.putPageUrlsToDiskCache(chapterUrl, pages);
+        if (pages != null)
+            mCacheManager.putPageUrlsToDiskCache(chapterUrl, pages);
     }
 
     private List<Page> convertToPages(List<String> pageUrls) {
