@@ -24,7 +24,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
+import rx.subjects.BehaviorSubject;
 
 public class ReaderPageFragment extends Fragment {
 
@@ -104,16 +104,17 @@ public class ReaderPageFragment extends Fragment {
 
     private void processStatus(int status) {
         switch (status) {
-            case Page.READY:
-                showImage();
-                unsubscribeProgress();
-                unsubscribeStatus();
-                break;
             case Page.LOAD_PAGE:
                 showLoading();
                 break;
             case Page.DOWNLOAD_IMAGE:
+                observeProgress();
                 showDownloading();
+                break;
+            case Page.READY:
+                showImage();
+                unsubscribeProgress();
+                unsubscribeStatus();
                 break;
             case Page.ERROR:
                 showError();
@@ -129,12 +130,8 @@ public class ReaderPageFragment extends Fragment {
         if (page.getStatus() == Page.READY) {
             showImage();
         } else {
-            processStatus(page.getStatus());
-
-            PublishSubject<Integer> statusSubject = PublishSubject.create();
+            BehaviorSubject<Integer> statusSubject = BehaviorSubject.create();
             page.setStatusSubject(statusSubject);
-
-            observeProgress();
 
             statusSubscription = statusSubject
                     .observeOn(AndroidSchedulers.mainThread())
