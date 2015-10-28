@@ -73,5 +73,7 @@
     <string name="loading">Loading…</string>
     <string name="toast_added_favorites">Added to favorites</string>
     <string name="action_favorite">Favorite</string>
+    <string name="downloading">Downloading…</string>
+    <string name="download_progress">Downloaded %1$d%%</string>
 
 </resources>

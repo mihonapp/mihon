@@ -8,6 +8,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.disklrucache.DiskLruCache;
+import com.squareup.okhttp.Response;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -21,6 +22,8 @@ import java.util.concurrent.TimeoutException;
 
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.util.DiskUtils;
+import okio.BufferedSink;
+import okio.Okio;
 import rx.Observable;
 
 public class CacheManager {
@@ -182,6 +185,63 @@ public class CacheManager {
 
     public File getCacheDir() {
         return mDiskCache.getDirectory();
+    }
+
+    public boolean isImageInCache(final String imageUrl) {
+        try {
+            return mDiskCache.get(DiskUtils.hashKeyForDisk(imageUrl)) != null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String getImagePath(final String imageUrl) {
+        try {
+            String imageName = DiskUtils.hashKeyForDisk(imageUrl) + ".0";
+            File file = new File(mDiskCache.getDirectory(), imageName);
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean putImageToDiskCache(final String imageUrl, final Response response) {
+        DiskLruCache.Editor editor = null;
+        BufferedSink sink = null;
+
+        try {
+            String key = DiskUtils.hashKeyForDisk(imageUrl);
+            editor = mDiskCache.edit(key);
+            if (editor == null) {
+                return false;
+            }
+
+            OutputStream outputStream = new BufferedOutputStream(editor.newOutputStream(0));
+            sink = Okio.buffer(Okio.sink(outputStream));
+            sink.writeAll(response.body().source());
+            sink.flush();
+
+            mDiskCache.flush();
+            editor.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (editor != null) {
+                editor.abortUnlessCommitted();
+            }
+            if (sink != null) {
+                try {
+                    sink.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return true;
     }
 
 }

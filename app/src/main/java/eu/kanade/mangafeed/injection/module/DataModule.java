@@ -2,9 +2,6 @@ package eu.kanade.mangafeed.injection.module;
 
 import android.app.Application;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -59,9 +56,4 @@ public class DataModule {
         return new SourceManager(app);
     }
 
-    @Provides
-    @Singleton
-    RequestManager provideGlideDownloader(Application app) {
-        return Glide.with(app);
-    }
 }

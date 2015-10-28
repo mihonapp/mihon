@@ -102,6 +102,31 @@ public abstract class Source extends BaseSource {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<Page> getCachedImage(final Page page) {
+        Observable<Page> obs = Observable.just(page);
+        if (page.getImageUrl() == null)
+            return obs;
+
+        if (!mCacheManager.isImageInCache(page.getImageUrl())) {
+            obs = mNetworkService.getProgressResponse(page.getImageUrl(), mRequestHeaders, page)
+                    .flatMap(resp -> {
+                        if (!mCacheManager.putImageToDiskCache(page.getImageUrl(), resp)) {
+                            throw new IllegalStateException("Unable to save image");
+                        }
+                        return Observable.just(page);
+                    });
+        }
+
+        return obs.flatMap(p -> {
+            page.setImagePath(mCacheManager.getImagePath(page.getImageUrl()));
+            page.setStatus(Page.READY);
+            return Observable.just(page);
+        }).onErrorResumeNext(e -> {
+            page.setStatus(Page.ERROR);
+            return Observable.just(page);
+        });
+    }
+
     public void savePageList(String chapterUrl, List<Page> pages) {
         if (pages != null)
             mCacheManager.putPageUrlsToDiskCache(chapterUrl, pages);

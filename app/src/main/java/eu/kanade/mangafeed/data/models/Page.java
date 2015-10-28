@@ -1,12 +1,15 @@
 package eu.kanade.mangafeed.data.models;
 
-public class Page {
+import eu.kanade.mangafeed.data.helpers.NetworkHelper;
+
+public class Page implements NetworkHelper.ProgressListener {
 
     private int pageNumber;
     private String url;
     private String imageUrl;
     private String imagePath;
     private int status;
+    private int progress;
 
     public static final int DOWNLOAD = 0;
     public static final int READY = 1;
@@ -55,6 +58,10 @@ public class Page {
         this.status = status;
     }
 
+    public int getProgress() {
+        return progress;
+    }
+
     @Override
     public String toString() {
         return "Page{" +
@@ -62,6 +69,11 @@ public class Page {
                 ", url='" + url + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
+    }
+
+    @Override
+    public void update(long bytesRead, long contentLength, boolean done) {
+        progress = (int) ((100 * bytesRead) / contentLength);
     }
 
 }

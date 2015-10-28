@@ -2,11 +2,6 @@ package eu.kanade.mangafeed.presenter;
 
 import android.os.Bundle;
 
-import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.target.Target;
-
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,7 +23,6 @@ import timber.log.Timber;
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     @Inject PreferencesHelper prefs;
-    @Inject RequestManager glideDownloader;
 
     private Source source;
     private Chapter chapter;
@@ -106,26 +100,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                     source.getRemainingImageUrlsFromPageList(pageList)
                          .doOnNext(this::replacePageUrl)
                 )
-                .flatMap(this::downloadImage)
+                .flatMap(source::getCachedImage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    private Observable<Page> downloadImage(Page page) {
-        if (page.getImageUrl() != null) {
-            FutureTarget<File> future = glideDownloader.load(page.getImageUrl())
-                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
-
-            try {
-                File cacheFile = future.get();
-                page.setImagePath(cacheFile.getCanonicalPath());
-                page.setStatus(Page.READY);
-            } catch (Exception e) {
-                page.setStatus(Page.ERROR);
-            }
-        }
-
-        return Observable.just(page);
     }
 
     private void replacePageUrl(Page page) {
