@@ -15,7 +15,6 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.CookieStore;
 
-import eu.kanade.mangafeed.data.models.Page;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
@@ -91,7 +90,7 @@ public final class NetworkHelper {
         });
     }
 
-    public Observable<Response> getProgressResponse(final String url, final Headers headers, final Page page) {
+    public Observable<Response> getProgressResponse(final String url, final Headers headers, final ProgressListener listener) {
         return Observable.<Response>create(subscriber -> {
             try {
                 if (!subscriber.isUnsubscribed()) {
@@ -106,7 +105,7 @@ public final class NetworkHelper {
                     progressClient.networkInterceptors().add(chain -> {
                         Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
-                                .body(new ProgressResponseBody(originalResponse.body(), page))
+                                .body(new ProgressResponseBody(originalResponse.body(), listener))
                                 .build();
                     });
                     subscriber.onNext(progressClient.newCall(request).execute());

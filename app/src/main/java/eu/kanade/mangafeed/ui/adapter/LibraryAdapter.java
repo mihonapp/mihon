@@ -7,6 +7,7 @@ import android.widget.Filterable;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.ui.holder.LibraryHolder;
 import rx.Observable;
 import uk.co.ribot.easyadapter.EasyAdapter;
 

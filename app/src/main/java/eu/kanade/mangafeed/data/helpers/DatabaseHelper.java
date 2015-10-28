@@ -74,6 +74,11 @@ public class DatabaseHelper implements MangaManager, ChapterManager {
     }
 
     @Override
+    public PutResult insertChapterBlock(Chapter chapter) {
+        return mChapterManager.insertChapterBlock(chapter);
+    }
+
+    @Override
     public Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {
         return mChapterManager.insertOrRemoveChapters(manga, chapters);
     }

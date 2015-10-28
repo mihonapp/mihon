@@ -36,7 +36,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     @Inject PreferencesHelper prefs;
 
-    private int currentPage;
     private BaseViewer viewer;
 
     private static final int LEFT_TO_RIGHT = 1;
@@ -60,19 +59,14 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
         enableHardwareAcceleration();
     }
-
-    @Override
-    public void onDestroy() {
-        getPresenter().setCurrentPage(currentPage);
-        super.onDestroy();
-    }
-
+    
     public void onPageListReady(List<Page> pages) {
         viewer.onPageListReady(pages);
     }
 
     public void onPageChanged(int currentPageIndex, int totalPages) {
-        currentPage = currentPageIndex;
+        if (currentPageIndex != 0)
+            getPresenter().setCurrentPage(currentPageIndex);
         String page = (currentPageIndex + 1) + "/" + totalPages;
         pageNumber.setText(page);
     }

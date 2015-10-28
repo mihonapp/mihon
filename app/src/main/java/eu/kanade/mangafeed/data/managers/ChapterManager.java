@@ -22,6 +22,8 @@ public interface ChapterManager {
 
     Observable<PutResults<Chapter>> insertChapters(List<Chapter> chapters);
 
+    PutResult insertChapterBlock(Chapter chapter);
+
     Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters);
 
     Observable<DeleteResult> deleteChapter(Chapter chapter);

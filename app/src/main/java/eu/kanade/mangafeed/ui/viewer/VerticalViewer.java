@@ -54,8 +54,7 @@ public class VerticalViewer extends BaseViewer {
 
     @Override
     public void setSelectedPage(int pageNumber) {
-        // TODO
-        return;
+        viewPager.setCurrentItem(getCurrentPageIndex(pageNumber));
     }
 
     @Override
@@ -66,6 +65,6 @@ public class VerticalViewer extends BaseViewer {
 
     @Override
     public boolean onImageTouch(MotionEvent motionEvent) {
-        return false;
+        return true;
     }
 }

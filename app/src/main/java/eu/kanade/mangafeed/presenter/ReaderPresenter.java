@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Page;
@@ -23,11 +24,13 @@ import timber.log.Timber;
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     @Inject PreferencesHelper prefs;
+    @Inject DatabaseHelper db;
 
     private Source source;
     private Chapter chapter;
     private List<Page> pageList;
-    @State int savedSelectedPage = 0;
+    private boolean initialStart = true;
+    @State int currentPage = 0;
 
     private static final int GET_PAGE_LIST = 1;
     private static final int GET_PAGE_IMAGES = 2;
@@ -42,9 +45,10 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                         .doOnCompleted(() -> start(GET_PAGE_IMAGES)),
                 (view, pages) -> {
                     view.onPageListReady(pages);
-                    if (savedSelectedPage != 0) {
-                        view.setSelectedPage(savedSelectedPage);
-                    }
+                    if (initialStart && !chapter.read)
+                        view.setSelectedPage(chapter.last_page_read - 1);
+                    else if (currentPage != 0)
+                        view.setSelectedPage(currentPage);
                 },
                 (view, error) -> Timber.e("An error occurred while downloading page list")
         );
@@ -69,14 +73,16 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     @Override
     protected void onDropView() {
         unregisterForEvents();
+        initialStart = false;
         super.onDropView();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         EventBus.getDefault().removeStickyEvent(SourceChapterEvent.class);
         source.savePageList(chapter.url, pageList);
+        saveChapter();
+        super.onDestroy();
     }
 
     @EventBusHook
@@ -99,23 +105,22 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         return Observable.merge(
                     Observable.from(pageList).filter(page -> page.getImageUrl() != null),
                     source.getRemainingImageUrlsFromPageList(pageList)
-                         .doOnNext(this::replacePageUrl)
                 )
                 .flatMap(source::getCachedImage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private void replacePageUrl(Page page) {
-        for (int i = 0; i < pageList.size(); i++) {
-            if (pageList.get(i).getPageNumber() == page.getPageNumber()) {
-                pageList.set(i, page);
-                return;
-            }
-        }
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 
-    public void setCurrentPage(int savedPage) {
-        this.savedSelectedPage = savedPage;
+    private void saveChapter() {
+        chapter.last_page_read = currentPage + 1;
+        if (currentPage == pageList.size() - 1) {
+            chapter.read = true;
+
+        }
+        db.insertChapterBlock(chapter);
     }
 }

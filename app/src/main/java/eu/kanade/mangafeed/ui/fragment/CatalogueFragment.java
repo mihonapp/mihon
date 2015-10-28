@@ -24,7 +24,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
-import eu.kanade.mangafeed.ui.adapter.CatalogueHolder;
+import eu.kanade.mangafeed.ui.holder.CatalogueHolder;
 import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;

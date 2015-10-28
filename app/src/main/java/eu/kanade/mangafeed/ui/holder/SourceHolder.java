@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.ui.adapter;
+package eu.kanade.mangafeed.ui.holder;
 
 import android.view.View;
 import android.widget.TextView;

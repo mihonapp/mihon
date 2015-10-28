@@ -1,5 +1,7 @@
-package eu.kanade.mangafeed.ui.adapter;
+package eu.kanade.mangafeed.ui.holder;
 
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,11 +16,9 @@ import uk.co.ribot.easyadapter.annotations.ViewId;
 @LayoutId(R.layout.item_chapter)
 public class ChapterListHolder extends ItemViewHolder<Chapter> {
 
-    @ViewId(R.id.chapter_title)
-    TextView title;
-
-    @ViewId(R.id.chapter_download_image)
-    ImageView download_icon;
+    @ViewId(R.id.chapter_title) TextView title;
+    @ViewId(R.id.chapter_download_image) ImageView download_icon;
+    @ViewId(R.id.chapter_pages) TextView pages;
 
     View view;
 
@@ -30,6 +30,18 @@ public class ChapterListHolder extends ItemViewHolder<Chapter> {
     public void onSetValues(Chapter chapter, PositionInfo positionInfo) {
         title.setText(chapter.name);
         download_icon.setImageResource(R.drawable.ic_file_download_black_48dp);
+
+        if (chapter.read) {
+            title.setTextColor(ContextCompat.getColor(getContext(), R.color.chapter_read_text));
+        } else {
+            title.setTextColor(Color.BLACK);
+        }
+
+        if (chapter.last_page_read > 0 && !chapter.read) {
+            pages.setText(getContext().getString(R.string.chapter_progress, chapter.last_page_read));
+        } else {
+            pages.setText("");
+        }
     }
 
     @Override

@@ -67,6 +67,14 @@ public class ChapterManagerImpl extends BaseManager implements ChapterManager {
                 .createObservable();
     }
 
+    @Override
+    public PutResult insertChapterBlock(Chapter chapter) {
+        return db.put()
+                .object(chapter)
+                .prepare()
+                .executeAsBlocking();
+    }
+
     // Add new chapters or delete if the source deletes them
     @Override
     public Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {

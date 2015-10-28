@@ -22,7 +22,7 @@ import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
-import eu.kanade.mangafeed.ui.adapter.ChapterListHolder;
+import eu.kanade.mangafeed.ui.holder.ChapterListHolder;
 import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;

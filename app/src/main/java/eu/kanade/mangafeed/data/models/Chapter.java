@@ -1,8 +1,5 @@
 package eu.kanade.mangafeed.data.models;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
@@ -11,31 +8,27 @@ import eu.kanade.mangafeed.data.tables.ChaptersTable;
 @StorIOSQLiteType(table = ChaptersTable.TABLE)
 public class Chapter {
 
-    @Nullable
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_ID, key = true)
     public Long id;
 
-    @NonNull
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_MANGA_ID)
     public Long manga_id;
 
-    @NonNull
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_URL)
     public String url;
 
-    @NonNull
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_NAME)
     public String name;
 
-    @NonNull
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_READ)
-    public int read;
+    public boolean read;
 
-    @NonNull
+    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_LAST_PAGE_READ)
+    public int last_page_read;
+
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_DATE_FETCH)
     public long date_fetch;
 
-    @NonNull
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_DATE_UPLOAD)
     public long date_upload;
 
