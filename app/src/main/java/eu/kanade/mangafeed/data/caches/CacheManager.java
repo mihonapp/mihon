@@ -3,8 +3,6 @@ package eu.kanade.mangafeed.data.caches;
 import android.content.Context;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.disklrucache.DiskLruCache;
@@ -16,9 +14,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.util.DiskUtils;
@@ -31,7 +26,7 @@ public class CacheManager {
     private static final String PARAMETER_CACHE_DIRECTORY = "chapter_disk_cache";
     private static final int PARAMETER_APP_VERSION = 1;
     private static final int PARAMETER_VALUE_COUNT = 1;
-    private static final long PARAMETER_CACHE_SIZE = 10 * 1024 * 1024;
+    private static final long PARAMETER_CACHE_SIZE = 100 * 1024 * 1024;
     private static final int READ_TIMEOUT = 60;
 
     private Context mContext;
@@ -53,29 +48,6 @@ public class CacheManager {
         } catch (IOException e) {
             // Do Nothing.
         }
-    }
-
-    public Observable<File> cacheImagesFromUrls(final List<String> imageUrls) {
-        return Observable.create(subscriber -> {
-            try {
-                for (String imageUrl : imageUrls) {
-                    if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(cacheImageFromUrl(imageUrl));
-                    }
-                }
-                subscriber.onCompleted();
-            } catch (Throwable e) {
-                subscriber.onError(e);
-            }
-        });
-    }
-
-    private File cacheImageFromUrl(String imageUrl) throws InterruptedException, ExecutionException, TimeoutException {
-        FutureTarget<File> cacheFutureTarget = Glide.with(mContext)
-                .load(imageUrl)
-                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
-
-        return cacheFutureTarget.get(READ_TIMEOUT, TimeUnit.SECONDS);
     }
 
     public Observable<Boolean> clearImageCache() {

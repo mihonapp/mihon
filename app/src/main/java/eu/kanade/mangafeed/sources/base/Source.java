@@ -108,13 +108,8 @@ public abstract class Source extends BaseSource {
             return obs;
 
         if (!mCacheManager.isImageInCache(page.getImageUrl())) {
-            obs = mNetworkService.getProgressResponse(page.getImageUrl(), mRequestHeaders, page)
-                    .flatMap(resp -> {
-                        if (!mCacheManager.putImageToDiskCache(page.getImageUrl(), resp)) {
-                            throw new IllegalStateException("Unable to save image");
-                        }
-                        return Observable.just(page);
-                    });
+            page.setStatus(Page.DOWNLOAD);
+            obs = cacheImage(page);
         }
 
         return obs.flatMap(p -> {
@@ -125,6 +120,16 @@ public abstract class Source extends BaseSource {
             page.setStatus(Page.ERROR);
             return Observable.just(page);
         });
+    }
+
+    private Observable<Page> cacheImage(final Page page) {
+        return mNetworkService.getProgressResponse(page.getImageUrl(), mRequestHeaders, page)
+                .flatMap(resp -> {
+                    if (!mCacheManager.putImageToDiskCache(page.getImageUrl(), resp)) {
+                        throw new IllegalStateException("Unable to save image");
+                    }
+                    return Observable.just(page);
+                });
     }
 
     public void savePageList(String chapterUrl, List<Page> pages) {
