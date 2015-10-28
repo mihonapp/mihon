@@ -53,6 +53,12 @@ public class VerticalViewer extends BaseViewer {
     }
 
     @Override
+    public void setSelectedPage(int pageNumber) {
+        // TODO
+        return;
+    }
+
+    @Override
     public void onPageListReady(List<Page> pages) {
         adapter.setPages(pages);
         updatePageNumber();

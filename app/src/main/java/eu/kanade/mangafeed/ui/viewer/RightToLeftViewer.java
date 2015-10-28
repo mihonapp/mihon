@@ -25,13 +25,8 @@ public class RightToLeftViewer extends ViewPagerViewer {
     }
 
     @Override
-    public int getCurrentPageFromPos(int position) {
-        return getTotalPages() - position;
-    }
-
-    @Override
-    public int getPosFromPage(Page page) {
-        return getTotalPages() - (page.getPageNumber() + 1);
+    public int getCurrentPageIndex(int viewerPosition) {
+        return getTotalPages() - viewerPosition - 1;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private Source source;
     private Chapter chapter;
     private List<Page> pageList;
-    @State int savedSelectedPage = -1;
+    @State int savedSelectedPage = 0;
 
     private static final int GET_PAGE_LIST = 1;
     private static final int GET_PAGE_IMAGES = 2;
@@ -40,7 +40,12 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 () -> getPageListObservable()
                         .doOnNext(pages -> pageList = pages)
                         .doOnCompleted(() -> start(GET_PAGE_IMAGES)),
-                (view, pages) -> view.onPageListReady(pages),
+                (view, pages) -> {
+                    view.onPageListReady(pages);
+                    if (savedSelectedPage != 0) {
+                        view.setSelectedPage(savedSelectedPage);
+                    }
+                },
                 (view, error) -> Timber.e("An error occurred while downloading page list")
         );
 

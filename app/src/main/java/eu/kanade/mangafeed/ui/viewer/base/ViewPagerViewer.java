@@ -66,6 +66,11 @@ public abstract class ViewPagerViewer extends BaseViewer {
     }
 
     @Override
+    public void setSelectedPage(int pageNumber) {
+        viewPager.setCurrentItem(getCurrentPageIndex(pageNumber));
+    }
+
+    @Override
     public void onPageListReady(List<Page> pages) {
         adapter.setPages(pages);
         updatePageNumber();

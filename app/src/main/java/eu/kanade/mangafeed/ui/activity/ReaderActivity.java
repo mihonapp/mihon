@@ -71,13 +71,14 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         viewer.onPageListReady(pages);
     }
 
-    public void onPageChanged(int currentPage, int totalPages) {
-        String page = currentPage + "/" + totalPages;
+    public void onPageChanged(int currentPageIndex, int totalPages) {
+        currentPage = currentPageIndex;
+        String page = (currentPageIndex + 1) + "/" + totalPages;
         pageNumber.setText(page);
     }
 
-    public void setCurrentPage(int page) {
-        currentPage = page;
+    public void setSelectedPage(int pageIndex) {
+        viewer.setSelectedPage(pageIndex);
     }
 
     public void hideStatusBar() {
@@ -98,7 +99,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     private BaseViewer getViewer() {
         switch (prefs.getDefaultViewer()) {
-            case LEFT_TO_RIGHT:
+            case LEFT_TO_RIGHT: default:
                 return new LeftToRightViewer(this, container);
             case RIGHT_TO_LEFT:
                 return new RightToLeftViewer(this, container);
@@ -107,7 +108,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             case WEBTOON:
                 return new WebtoonViewer(this, container);
         }
-        return null;
     }
 
 }

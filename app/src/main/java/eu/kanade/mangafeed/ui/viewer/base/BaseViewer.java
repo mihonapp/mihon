@@ -20,18 +20,17 @@ public abstract class BaseViewer {
     }
 
     public void updatePageNumber() {
-        activity.onPageChanged(getCurrentPageFromPos(currentPosition), getTotalPages());
+        activity.onPageChanged(getCurrentPageIndex(currentPosition), getTotalPages());
     }
 
-    public int getCurrentPageFromPos(int position) {
-        return position + 1;
-    }
-
-    public int getPosFromPage(Page page) {
-        return page.getPageNumber();
+    // Returns the page index given a position in the viewer. Useful por a right to left viewer,
+    // where the current page is the inverse of the position
+    public int getCurrentPageIndex(int viewerPosition) {
+        return viewerPosition;
     }
 
     public abstract int getTotalPages();
+    public abstract void setSelectedPage(int pageNumber);
     public abstract void onPageListReady(List<Page> pages);
     public abstract boolean onImageTouch(MotionEvent motionEvent);
 }
