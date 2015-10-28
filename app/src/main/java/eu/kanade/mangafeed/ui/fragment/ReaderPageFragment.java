@@ -24,6 +24,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 public class ReaderPageFragment extends Fragment {
 
@@ -35,6 +36,7 @@ public class ReaderPageFragment extends Fragment {
 
     private Page page;
     private Subscription progressSubscription;
+    private Subscription statusSubscription;
 
     public static ReaderPageFragment newInstance(Page page) {
         ReaderPageFragment fragment = new ReaderPageFragment();
@@ -48,35 +50,6 @@ public class ReaderPageFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public void replacePage(Page page) {
-        unsubscribeProgress();
-        this.page = page;
-        loadImage();
-    }
-
-    public void setPage(Page page) {
-        this.page = page;
-    }
-
-    private void loadImage() {
-        if (page == null)
-            return;
-
-        switch (page.getStatus()) {
-            case (Page.READY):
-                imageView.setImage(ImageSource.uri(page.getImagePath()).tilingDisabled());
-                progressContainer.setVisibility(View.GONE);
-                break;
-            case (Page.DOWNLOAD):
-                progressContainer.setVisibility(View.VISIBLE);
-                break;
-            case (Page.ERROR):
-                progressContainer.setVisibility(View.GONE);
-                errorText.setVisibility(View.VISIBLE);
-        }
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
@@ -88,42 +61,111 @@ public class ReaderPageFragment extends Fragment {
         imageView.setOnTouchListener((v, motionEvent) ->
                 ((ReaderActivity) getActivity()).onImageTouch(motionEvent));
 
-        observeProgress();
-        loadImage();
-
         return view;
+    }
+
+    public void onStart() {
+        super.onStart();
+        observeStatus();
     }
 
     @Override
     public void onStop() {
-        super.onStop();
         unsubscribeProgress();
+        unsubscribeStatus();
+        super.onStop();
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
+    }
+
+    private void showImage() {
+        if (page == null || page.getImagePath() == null)
+            return;
+
+        imageView.setImage(ImageSource.uri(page.getImagePath()));
+        progressContainer.setVisibility(View.GONE);
+    }
+
+    private void showDownloading() {
+        progressText.setVisibility(View.VISIBLE);
+    }
+
+    private void showLoading() {
+        progressText.setVisibility(View.VISIBLE);
+        progressText.setText(R.string.downloading);
+    }
+
+    private void showError() {
+        progressContainer.setVisibility(View.GONE);
+        errorText.setVisibility(View.VISIBLE);
+    }
+
+    private void processStatus(int status) {
+        switch (status) {
+            case Page.READY:
+                showImage();
+                unsubscribeProgress();
+                unsubscribeStatus();
+                break;
+            case Page.LOAD_PAGE:
+                showLoading();
+                break;
+            case Page.DOWNLOAD_IMAGE:
+                showDownloading();
+                break;
+            case Page.ERROR:
+                showError();
+                unsubscribeProgress();
+                break;
+        }
+    }
+
+    private void observeStatus() {
+        if (page == null)
+            return;
+
+        if (page.getStatus() == Page.READY) {
+            showImage();
+        } else {
+            processStatus(page.getStatus());
+
+            PublishSubject<Integer> statusSubject = PublishSubject.create();
+            page.setStatusSubject(statusSubject);
+
+            observeProgress();
+
+            statusSubscription = statusSubject
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::processStatus);
+        }
     }
 
     private void observeProgress() {
-        if (page == null || page.getStatus() != Page.DOWNLOAD)
-            return;
-
         progressSubscription = Observable.interval(75, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tick -> {
-                    if (page.getProgress() == 0) {
-                        progressText.setText(R.string.downloading);
-                    }
-                    else if (page.getProgress() == 100) {
-                        progressContainer.setVisibility(View.GONE);
-                        unsubscribeProgress();
-                    }
-                    else {
-                        progressText.setText(getString(R.string.download_progress, page.getProgress()));
-                    }
+                    if (page.getProgress() != 0)
+                        progressText.setText(
+                                getString(R.string.download_progress, page.getProgress()));
                 });
     }
 
+    private void unsubscribeStatus() {
+        if (statusSubscription != null) {
+            page.setStatusSubject(null);
+            statusSubscription.unsubscribe();
+            statusSubscription = null;
+        }
+    }
+
     private void unsubscribeProgress() {
-        if (progressSubscription != null)
+        if (progressSubscription != null) {
             progressSubscription.unsubscribe();
+            progressSubscription = null;
+        }
     }
 
 }

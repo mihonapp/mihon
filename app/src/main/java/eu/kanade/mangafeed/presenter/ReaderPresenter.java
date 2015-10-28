@@ -47,10 +47,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         restartableReplay(GET_PAGE_IMAGES,
                 this::getPageImagesObservable,
                 (view, page) -> {
-                    view.onNextPage(page);
-                    if (page.getPageNumber() == savedSelectedPage) {
-                        view.setCurrentPage(savedSelectedPage);
-                    }
                 },
                 (view, error) -> Timber.e("An error occurred while downloading an image"));
     }

@@ -25,6 +25,7 @@
             android:layout_marginTop="16dp"
             android:id="@+id/progress_text"
             android:layout_gravity="center"
+            android:visibility="invisible"
             android:textSize="16sp" />
 
     </LinearLayout>

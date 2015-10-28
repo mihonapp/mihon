@@ -59,11 +59,6 @@ public class VerticalViewer extends BaseViewer {
     }
 
     @Override
-    public void onNextPage(Page page) {
-        adapter.replacePage(getPosFromPage(page), page);
-    }
-
-    @Override
     public boolean onImageTouch(MotionEvent motionEvent) {
         return false;
     }

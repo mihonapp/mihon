@@ -71,10 +71,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         viewer.onPageListReady(pages);
     }
 
-    public void onNextPage(Page page) {
-        viewer.onNextPage(page);
-    }
-
     public void onPageChanged(int currentPage, int totalPages) {
         String page = currentPage + "/" + totalPages;
         pageNumber.setText(page);

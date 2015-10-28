@@ -80,7 +80,6 @@ public abstract class Source extends BaseSource {
     public Observable<Page> getRemainingImageUrlsFromPageList(final List<Page> pages) {
         return Observable.from(pages)
                 .filter(page -> page.getImageUrl() == null)
-                .doOnNext(page -> page.setStatus(Page.DOWNLOAD))
                 .window(overrideNumberOfConcurrentPageDownloads())
                 .concatMap(batchedPages ->
                                 batchedPages.concatMap(this::getImageUrlFromPage)
@@ -88,6 +87,7 @@ public abstract class Source extends BaseSource {
     }
 
     private Observable<Page> getImageUrlFromPage(final Page page) {
+        page.setStatus(Page.LOAD_PAGE);
         return mNetworkService
                 .getStringResponse(overrideRemainingPagesUrl(page.getUrl()), mRequestHeaders, null)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
@@ -108,7 +108,7 @@ public abstract class Source extends BaseSource {
             return obs;
 
         if (!mCacheManager.isImageInCache(page.getImageUrl())) {
-            page.setStatus(Page.DOWNLOAD);
+            page.setStatus(Page.DOWNLOAD_IMAGE);
             obs = cacheImage(page);
         }
 

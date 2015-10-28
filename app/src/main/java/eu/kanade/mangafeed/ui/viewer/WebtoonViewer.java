@@ -34,11 +34,6 @@ public class WebtoonViewer extends BaseViewer {
     }
 
     @Override
-    public void onNextPage(Page page) {
-        adapter.setPage(getPosFromPage(page), page);
-    }
-
-    @Override
     public void onPageListReady(List<Page> pages) {
         adapter.setPages(pages);
     }
