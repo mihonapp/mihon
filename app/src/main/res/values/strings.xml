@@ -53,8 +53,7 @@
     <string name="pref_category_reader">Reader</string>
     <string name="pref_category_accounts">Accounts</string>
 
-    <string name="pref_hide_status_bar">Hide status bar</string>
-    <string name="pref_hide_status_bar_summary">This option will hide the status bar while reading</string>
+    <string name="pref_fullscreen_mode">Read in fullscreen</string>
 
     <string name="pref_viewer_type">Default viewer</string>
     <string name="left_to_right_viewer">Left to right</string>

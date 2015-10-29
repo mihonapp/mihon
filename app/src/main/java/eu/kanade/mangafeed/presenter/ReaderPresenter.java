@@ -29,8 +29,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private Source source;
     private Chapter chapter;
     private List<Page> pageList;
-    private boolean initialStart = true;
-    @State int currentPage = 0;
+    @State int currentPage;
 
     private static final int GET_PAGE_LIST = 1;
     private static final int GET_PAGE_IMAGES = 2;
@@ -45,9 +44,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                         .doOnCompleted(() -> start(GET_PAGE_IMAGES)),
                 (view, pages) -> {
                     view.onPageListReady(pages);
-                    if (initialStart && !chapter.read)
-                        view.setSelectedPage(chapter.last_page_read - 1);
-                    else if (currentPage != 0)
+                    if (currentPage != 0)
                         view.setSelectedPage(currentPage);
                 },
                 (view, error) -> Timber.e("An error occurred while downloading page list")
@@ -64,16 +61,11 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     protected void onTakeView(ReaderActivity view) {
         super.onTakeView(view);
         registerForStickyEvents();
-
-        if (prefs.hideStatusBarSet()) {
-            view.hideStatusBar();
-        }
     }
 
     @Override
     protected void onDropView() {
         unregisterForEvents();
-        initialStart = false;
         super.onDropView();
     }
 
@@ -90,6 +82,8 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         if (source == null || chapter == null) {
             source = event.getSource();
             chapter = event.getChapter();
+            if (chapter.last_page_read != 0)
+                currentPage = chapter.last_page_read - 1;
 
             start(1);
         }
