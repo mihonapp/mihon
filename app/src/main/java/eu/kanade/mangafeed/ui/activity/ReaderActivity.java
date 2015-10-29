@@ -38,6 +38,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Inject PreferencesHelper prefs;
 
     private BaseViewer viewer;
+    private boolean isFullscreen;
 
     private static final int LEFT_TO_RIGHT = 1;
     private static final int RIGHT_TO_LEFT = 2;
@@ -66,13 +67,23 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     
     public void onPageListReady(List<Page> pages) {
         viewer.onPageListReady(pages);
+        viewer.updatePageNumber();
     }
 
     public void onPageChanged(int currentPageIndex, int totalPages) {
-        if (currentPageIndex != 0)
-            getPresenter().setCurrentPage(currentPageIndex);
         String page = (currentPageIndex + 1) + "/" + totalPages;
         pageNumber.setText(page);
+    }
+
+    @Override
+    protected void onPause() {
+        getPresenter().setCurrentPage(viewer.getCurrentPosition());
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public void setSelectedPage(int pageIndex) {
@@ -95,6 +106,22 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
                     View.SYSTEM_UI_FLAG_LOW_PROFILE
             );
         }
+        isFullscreen = true;
+    }
+
+    public void disableFullscreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            );
+        } else {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.VISIBLE
+            );
+        }
+        isFullscreen = false;
     }
 
     public void enableHardwareAcceleration() {
@@ -103,8 +130,19 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
     }
 
-    public boolean onImageTouch(MotionEvent motionEvent) {
+    public boolean onImageSingleTap(MotionEvent motionEvent) {
         return viewer.onImageTouch(motionEvent);
+    }
+
+    public void onCenterSingleTap() {
+        toggleFullscreen();
+    }
+
+    private void toggleFullscreen() {
+        if (isFullscreen)
+            disableFullscreen();
+        else
+            enableFullScreen();
     }
 
     private BaseViewer getViewer() {

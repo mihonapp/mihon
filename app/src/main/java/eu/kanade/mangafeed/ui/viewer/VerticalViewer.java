@@ -60,7 +60,6 @@ public class VerticalViewer extends BaseViewer {
     @Override
     public void onPageListReady(List<Page> pages) {
         adapter.setPages(pages);
-        updatePageNumber();
     }
 
     @Override

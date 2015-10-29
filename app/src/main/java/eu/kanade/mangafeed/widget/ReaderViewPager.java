@@ -125,6 +125,10 @@ public class ReaderViewPager extends ViewPager {
                         mOnChapterBoundariesOutListener.onLastPageOutEvent();
                     }
                 }
+            } else {
+                if (mOnChapterSingleTapListener != null) {
+                    mOnChapterSingleTapListener.onSingleTap();
+                }
             }
 
             return true;

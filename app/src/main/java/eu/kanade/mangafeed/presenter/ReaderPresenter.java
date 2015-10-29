@@ -83,7 +83,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
             source = event.getSource();
             chapter = event.getChapter();
             if (chapter.last_page_read != 0)
-                currentPage = chapter.last_page_read - 1;
+                currentPage = chapter.last_page_read;
 
             start(1);
         }
@@ -110,10 +110,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     private void saveChapter() {
-        chapter.last_page_read = currentPage + 1;
+        chapter.last_page_read = currentPage;
         if (currentPage == pageList.size() - 1) {
             chapter.read = true;
-
         }
         db.insertChapterBlock(chapter);
     }

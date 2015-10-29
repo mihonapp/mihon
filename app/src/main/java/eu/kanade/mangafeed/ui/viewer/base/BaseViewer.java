@@ -29,6 +29,10 @@ public abstract class BaseViewer {
         return viewerPosition;
     }
 
+    public int getCurrentPosition() {
+        return getCurrentPageIndex(currentPosition);
+    }
+
     public abstract int getTotalPages();
     public abstract void setSelectedPage(int pageNumber);
     public abstract void onPageListReady(List<Page> pages);

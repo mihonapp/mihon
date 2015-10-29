@@ -38,7 +38,7 @@ public class ChapterListHolder extends ItemViewHolder<Chapter> {
         }
 
         if (chapter.last_page_read > 0 && !chapter.read) {
-            pages.setText(getContext().getString(R.string.chapter_progress, chapter.last_page_read));
+            pages.setText(getContext().getString(R.string.chapter_progress, chapter.last_page_read+1));
         } else {
             pages.setText("");
         }

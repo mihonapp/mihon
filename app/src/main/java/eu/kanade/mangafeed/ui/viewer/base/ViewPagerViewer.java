@@ -54,6 +54,7 @@ public abstract class ViewPagerViewer extends BaseViewer {
                 onLastPageOut();
             }
         });
+        viewPager.setOnChapterSingleTapListener(activity::onCenterSingleTap);
     }
 
     public ReaderViewPager getViewPager() {
@@ -73,7 +74,6 @@ public abstract class ViewPagerViewer extends BaseViewer {
     @Override
     public void onPageListReady(List<Page> pages) {
         adapter.setPages(pages);
-        updatePageNumber();
     }
 
     @Override
