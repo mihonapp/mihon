@@ -10,23 +10,24 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
-import eu.kanade.mangafeed.ui.adapter.ReaderPageAdapter;
-import eu.kanade.mangafeed.widget.ReaderViewPager;
+import eu.kanade.mangafeed.ui.adapter.ViewerPagerAdapter;
+import eu.kanade.mangafeed.widget.HorizontalViewPager;
 
 public abstract class ViewPagerViewer extends BaseViewer {
 
-    @Bind(R.id.view_pager) ReaderViewPager viewPager;
-    protected ReaderPageAdapter adapter;
+    @Bind(R.id.view_pager)
+    HorizontalViewPager viewPager;
+    protected ViewerPagerAdapter adapter;
 
     public ViewPagerViewer(ReaderActivity activity, FrameLayout container) {
         super(activity, container);
         activity.getLayoutInflater().inflate(R.layout.viewer_viewpager, container);
         ButterKnife.bind(this, container);
 
-        adapter = new ReaderPageAdapter(activity.getSupportFragmentManager());
+        adapter = new ViewerPagerAdapter(activity.getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
-        viewPager.addOnPageChangeListener(new ReaderViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new HorizontalViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -43,7 +44,7 @@ public abstract class ViewPagerViewer extends BaseViewer {
 
             }
         });
-        viewPager.setOnChapterBoundariesOutListener(new ReaderViewPager.OnChapterBoundariesOutListener() {
+        viewPager.setOnChapterBoundariesOutListener(new HorizontalViewPager.OnChapterBoundariesOutListener() {
             @Override
             public void onFirstPageOutEvent() {
                 onFirstPageOut();
@@ -57,7 +58,7 @@ public abstract class ViewPagerViewer extends BaseViewer {
         viewPager.setOnChapterSingleTapListener(activity::onCenterSingleTap);
     }
 
-    public ReaderViewPager getViewPager() {
+    public HorizontalViewPager getViewPager() {
         return viewPager;
     }
 

@@ -8,11 +8,11 @@ import java.util.List;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.fragment.ReaderPageFragment;
 
-public class ReaderPageAdapter extends SmartFragmentStatePagerAdapter {
+public class ViewerPagerAdapter extends SmartFragmentStatePagerAdapter {
 
     private List<Page> pages;
 
-    public ReaderPageAdapter(FragmentManager fragmentManager) {
+    public ViewerPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 

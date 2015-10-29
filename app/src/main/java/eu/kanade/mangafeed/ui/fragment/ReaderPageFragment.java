@@ -84,7 +84,7 @@ public class ReaderPageFragment extends Fragment {
         if (page == null || page.getImagePath() == null)
             return;
 
-        imageView.setImage(ImageSource.uri(page.getImagePath()));
+        imageView.setImage(ImageSource.uri(page.getImagePath()).tilingDisabled());
         progressContainer.setVisibility(View.GONE);
     }
 

@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-public class ReaderViewPager extends ViewPager {
+public class HorizontalViewPager extends ViewPager {
 
     private GestureDetector gestureDetector;
 
@@ -18,7 +18,7 @@ public class ReaderViewPager extends ViewPager {
     private static final float SWIPE_TOLERANCE = 0.25f;
     private float startDragX;
 
-    public ReaderViewPager(Context context, AttributeSet attrs) {
+    public HorizontalViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         gestureDetector = new GestureDetector(getContext(), new ReaderViewGestureListener());
     }
