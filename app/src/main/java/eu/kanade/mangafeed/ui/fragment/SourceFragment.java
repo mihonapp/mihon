@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class SourceFragment extends BaseRxFragment<SourcePresenter> {
             CatalogueFragment fragment = CatalogueFragment.newInstance(source.getSourceId());
             activity.setFragment(fragment);
         } else {
-            // TODO ask for password
+            Toast.makeText(getActivity(), R.string.source_requires_login, Toast.LENGTH_SHORT).show();
         }
     }
 

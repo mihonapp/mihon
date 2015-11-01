@@ -10,6 +10,7 @@
         android:layout_height="40dp"
         tools:text="New Text"
         android:id="@+id/source_name"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"/>
 
 </LinearLayout>
