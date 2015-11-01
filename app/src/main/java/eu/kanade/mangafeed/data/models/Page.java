@@ -61,21 +61,11 @@ public class Page implements NetworkHelper.ProgressListener {
 
     public void setStatus(int status) {
         this.status = status;
-        if (statusSubject != null)
-            statusSubject.onNext(status);
+        notifyStatus();
     }
 
     public int getProgress() {
         return progress;
-    }
-
-    @Override
-    public String toString() {
-        return "Page{" +
-                "pageNumber=" + pageNumber +
-                ", url='" + url + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
     }
 
     @Override
@@ -85,6 +75,12 @@ public class Page implements NetworkHelper.ProgressListener {
 
     public void setStatusSubject(BehaviorSubject<Integer> subject) {
         this.statusSubject = subject;
+        notifyStatus();
+    }
+
+    private void notifyStatus() {
+        if (statusSubject != null)
+            statusSubject.onNext(status);
     }
 
 }

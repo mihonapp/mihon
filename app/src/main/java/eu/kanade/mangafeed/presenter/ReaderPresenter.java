@@ -71,7 +71,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().removeStickyEvent(SourceChapterEvent.class);
         source.savePageList(chapter.url, pageList);
         saveChapter();
         super.onDestroy();
@@ -79,14 +78,13 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     @EventBusHook
     public void onEventMainThread(SourceChapterEvent event) {
-        if (source == null || chapter == null) {
-            source = event.getSource();
-            chapter = event.getChapter();
-            if (chapter.last_page_read != 0)
-                currentPage = chapter.last_page_read;
+        source = event.getSource();
+        chapter = event.getChapter();
+        if (chapter.last_page_read != 0 && !chapter.read)
+            currentPage = chapter.last_page_read;
 
-            start(1);
-        }
+        start(1);
+        EventBus.getDefault().removeStickyEvent(SourceChapterEvent.class);
     }
 
     private Observable<List<Page>> getPageListObservable() {

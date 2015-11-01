@@ -14,6 +14,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -124,29 +125,32 @@ public class ReaderPageFragment extends Fragment {
     }
 
     private void observeStatus() {
-        if (page == null)
+        if (page == null || statusSubscription != null)
             return;
 
-        if (page.getStatus() == Page.READY) {
-            showImage();
-        } else {
-            BehaviorSubject<Integer> statusSubject = BehaviorSubject.create();
-            page.setStatusSubject(statusSubject);
+        BehaviorSubject<Integer> statusSubject = BehaviorSubject.create();
+        page.setStatusSubject(statusSubject);
 
-            statusSubscription = statusSubject
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::processStatus);
-        }
+        statusSubscription = statusSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::processStatus);
     }
 
     private void observeProgress() {
+        if (progressSubscription != null)
+            return;
+
+        final AtomicInteger currentValue = new AtomicInteger(-1);
+
         progressSubscription = Observable.interval(75, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tick -> {
-                    if (page.getProgress() != 0)
-                        progressText.setText(
-                                getString(R.string.download_progress, page.getProgress()));
+                    // Refresh UI only if progress change
+                    if (page.getProgress() != currentValue.get()) {
+                        currentValue.set(page.getProgress());
+                        progressText.setText(getString(R.string.download_progress, page.getProgress()));
+                    }
                 });
     }
 
