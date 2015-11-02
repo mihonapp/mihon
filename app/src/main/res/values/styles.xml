@@ -11,6 +11,7 @@
         <item name="colorControlNormal">@color/white</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
+        <item name="selectableItemBackground">@drawable/selector_chapter_light</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

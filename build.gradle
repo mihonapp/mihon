@@ -23,6 +23,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven {url "https://clojars.org/repo/"}
+        maven { url "https://clojars.org/repo/" }
+        maven { url "http://dl.bintray.com/davideas/maven" }
     }
 }

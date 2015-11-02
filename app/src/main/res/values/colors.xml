@@ -16,4 +16,5 @@
     <color name="black_87pc">#DD000000</color>
     <color name="library_text_background">#E8E8E8</color>
     <color name="chapter_read_text">#909090</color>
+    <color name="list_choice_pressed_bg_light">#607D8B</color>
 </resources>

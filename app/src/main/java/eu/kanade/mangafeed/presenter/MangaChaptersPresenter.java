@@ -18,6 +18,7 @@ import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -31,6 +32,8 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
 
     private static final int DB_CHAPTERS = 1;
     private static final int ONLINE_CHAPTERS = 2;
+
+    private Subscription menuOperationSubscription;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -105,5 +108,23 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
 
     public void onChapterClicked(Chapter chapter) {
         EventBus.getDefault().postSticky(new SourceChapterEvent(source, chapter));
+    }
+
+    public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {
+        if (menuOperationSubscription != null)
+            remove(menuOperationSubscription);
+
+        add(menuOperationSubscription = selectedChapters
+                .subscribeOn(Schedulers.io())
+                .map(chapter -> {
+                    chapter.read = read;
+                    return chapter;
+                })
+                .toList()
+                .flatMap(db::insertChapters)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+
+                }));
     }
 }

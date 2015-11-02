@@ -32,7 +32,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
-    <string name="library_search_hint">Title or author...</string>
+    <string name="library_search_hint">Title or author…</string>
     <string name="action_delete">Delete</string>
     <string name="library_selection_title">Selected</string>
     <string name="title_activity_catalogue_list">CatalogueList</string>
@@ -76,5 +76,10 @@
     <string name="download_progress">Downloaded %1$d%%</string>
     <string name="chapter_progress">Page: %1$d</string>
     <string name="source_requires_login">This source requires login</string>
+
+    <string name="action_select_all">Select all</string>
+    <string name="action_mark_as_read">Mark as read</string>
+    <string name="action_mark_as_unread">Mark as unread</string>
+    <string name="selected_chapters_title">Selected chapters: %1$d</string>
 
 </resources>
