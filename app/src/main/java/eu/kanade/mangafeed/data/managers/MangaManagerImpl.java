@@ -55,6 +55,19 @@ public class MangaManagerImpl extends BaseManager implements MangaManager {
                 .createObservable();
     }
 
+    @Override
+    public Observable<List<Manga>> getFavoriteMangas() {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(Query.builder()
+                        .table(MangasTable.TABLE)
+                        .where(MangasTable.COLUMN_FAVORITE + "=?")
+                        .whereArgs(1)
+                        .build())
+                .prepare()
+                .createObservable();
+    }
+
     public Observable<List<Manga>> getManga(String url) {
         return db.get()
                 .listOfObjects(Manga.class)

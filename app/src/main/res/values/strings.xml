@@ -82,4 +82,10 @@
     <string name="action_mark_as_unread">Mark as unread</string>
     <string name="selected_chapters_title">Selected chapters: %1$d</string>
 
+    <string name="notification_progress">Update progress: %1$d/%2$d</string>
+    <string name="notification_completed">Update completed</string>
+    <string name="notification_no_new_chapters">No new chapters found</string>
+    <string name="notification_new_chapters">Found new chapters for:</string>
+
+
 </resources>

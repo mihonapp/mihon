@@ -16,6 +16,8 @@ public interface MangaManager {
 
     Observable<List<Manga>> getMangasWithUnread();
 
+    Observable<List<Manga>> getFavoriteMangas();
+
     Observable<List<Manga>> getManga(String url);
 
     Observable<List<Manga>> getManga(long id);

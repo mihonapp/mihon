@@ -5,6 +5,7 @@ import android.app.Application;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import eu.kanade.mangafeed.data.services.LibraryUpdateService;
 import eu.kanade.mangafeed.injection.module.AppModule;
 import eu.kanade.mangafeed.injection.module.DataModule;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
@@ -39,6 +40,8 @@ public interface AppComponent {
     void inject(SettingsAccountsFragment settingsAccountsFragment);
 
     void inject(Source source);
+
+    void inject(LibraryUpdateService libraryUpdateService);
 
     Application application();
 

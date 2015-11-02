@@ -42,6 +42,17 @@
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activity.MainActivity" >
         </activity>
+
+        <service android:name=".data.services.LibraryUpdateService"
+            android:exported="false"/>
+
+        <receiver
+            android:name=".data.services.LibraryUpdateService$SyncOnConnectionAvailable"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

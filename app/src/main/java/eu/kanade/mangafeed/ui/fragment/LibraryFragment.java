@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.services.LibraryUpdateService;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
@@ -66,6 +67,21 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.library, menu);
         initializeSearch(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                if (!LibraryUpdateService.isRunning(activity)) {
+                    Intent intent = LibraryUpdateService.getStartIntent(activity);
+                    activity.startService(intent);
+                }
+
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeSearch(Menu menu) {
