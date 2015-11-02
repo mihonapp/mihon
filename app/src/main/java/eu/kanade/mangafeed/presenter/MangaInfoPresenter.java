@@ -60,4 +60,14 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
         }
     }
 
+    public void initFavoriteIcon() {
+        if (getView() != null)
+            getView().setFavoriteIcon(manga.favorite);
+    }
+
+    public void toggleFavorite() {
+        manga.favorite = !manga.favorite;
+        db.insertMangaBlock(manga);
+    }
+
 }

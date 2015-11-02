@@ -2,6 +2,9 @@ package eu.kanade.mangafeed.ui.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,6 +32,9 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
     @Bind(R.id.manga_summary) TextView mDescription;
     @Bind(R.id.manga_cover) ImageView mCover;
 
+    private MenuItem favoriteBtn;
+    private MenuItem removeFavoriteBtn;
+
     public static MangaInfoFragment newInstance() {
         return new MangaInfoFragment();
     }
@@ -36,6 +42,7 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -48,12 +55,34 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.manga_info, menu);
+        favoriteBtn = menu.findItem(R.id.action_favorite);
+        removeFavoriteBtn = menu.findItem(R.id.action_remove_favorite);
+        getPresenter().initFavoriteIcon();
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+            case R.id.action_remove_favorite:
+                getPresenter().toggleFavorite();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void setMangaInfo(Manga manga) {
         mArtist.setText(manga.artist);
         mAuthor.setText(manga.author);
         mGenres.setText(manga.genre);
         mStatus.setText("Ongoing"); //TODO
         mDescription.setText(manga.description);
+
+        setFavoriteIcon(manga.favorite);
 
         Glide.with(getActivity())
                 .load(manga.thumbnail_url)
@@ -65,4 +94,10 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
     public void setChapterCount(int count) {
         mChapters.setText(String.valueOf(count));
     }
+
+    public void setFavoriteIcon(boolean isFavorite) {
+        if (favoriteBtn != null) favoriteBtn.setVisible(!isFavorite);
+        if (removeFavoriteBtn != null) removeFavoriteBtn.setVisible(isFavorite);
+    }
+
 }

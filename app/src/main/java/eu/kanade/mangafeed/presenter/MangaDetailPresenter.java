@@ -30,7 +30,6 @@ public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
                         .doOnNext(manga -> this.manga = manga),
                 (view, manga) -> {
                     view.setManga(manga);
-                    view.setFavoriteBtnVisible(!manga.favorite);
                     EventBus.getDefault().postSticky(manga);
                 });
     }
@@ -54,14 +53,4 @@ public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
         start(DB_MANGA);
     }
 
-    public void setFavoriteVisibility() {
-        if (getView() != null) {
-            getView().setFavoriteBtnVisible(!manga.favorite);
-        }
-    }
-
-    public boolean addToFavorites() {
-        manga.favorite = true;
-        return db.insertMangaBlock(manga).numberOfRowsUpdated() == 1;
-    }
 }

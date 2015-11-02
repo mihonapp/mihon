@@ -5,7 +5,14 @@
         android:id="@+id/action_favorite"
         android:title="@string/action_favorite"
         android:icon="@drawable/ic_action_favorite"
-        app:showAsAction="always"
-        android:visible="false"/>
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_remove_favorite"
+        android:title="@string/action_remove_favorite"
+        android:icon="@drawable/ic_action_favorite_border"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -70,8 +70,8 @@
     <string name="success">Success</string>
     <string name="invalid_login">Login error</string>
     <string name="loading">Loading…</string>
-    <string name="toast_added_favorites">Added to favorites</string>
-    <string name="action_favorite">Favorite</string>
+    <string name="action_favorite">Add to favorites</string>
+    <string name="action_remove_favorite">Remove from favorites</string>
     <string name="downloading">Downloading…</string>
     <string name="download_progress">Downloaded %1$d%%</string>
     <string name="chapter_progress">Page: %1$d</string>
