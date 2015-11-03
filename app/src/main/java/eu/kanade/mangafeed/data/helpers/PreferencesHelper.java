@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.sources.base.Source;
+import eu.kanade.mangafeed.util.DiskUtils;
 
 public class PreferencesHelper {
 
@@ -51,6 +52,11 @@ public class PreferencesHelper {
                 .putString(SOURCE_ACCOUNT_USERNAME + source.getSourceId(), username)
                 .putString(SOURCE_ACCOUNT_PASSWORD + source.getSourceId(), password)
                 .apply();
+    }
+
+    public String getDownloadsDirectory() {
+        return mPref.getString(getKey(R.string.pref_download_directory_key),
+                DiskUtils.getStorageDirectories(context)[0]);
     }
 
 }

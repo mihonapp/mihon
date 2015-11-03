@@ -4,6 +4,7 @@ package eu.kanade.mangafeed.sources.base;
 import android.content.Context;
 
 import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,13 +124,17 @@ public abstract class Source extends BaseSource {
     }
 
     private Observable<Page> cacheImage(final Page page) {
-        return mNetworkService.getProgressResponse(page.getImageUrl(), mRequestHeaders, page)
+        return getImageProgressResponse(page)
                 .flatMap(resp -> {
                     if (!mCacheManager.putImageToDiskCache(page.getImageUrl(), resp)) {
                         throw new IllegalStateException("Unable to save image");
                     }
                     return Observable.just(page);
                 });
+    }
+
+    public Observable<Response> getImageProgressResponse(final Page page) {
+        return mNetworkService.getProgressResponse(page.getImageUrl(), mRequestHeaders, page);
     }
 
     public void savePageList(String chapterUrl, List<Page> pages) {

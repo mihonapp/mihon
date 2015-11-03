@@ -46,6 +46,9 @@
         <service android:name=".data.services.LibraryUpdateService"
             android:exported="false"/>
 
+        <service android:name=".data.services.DownloadService"
+            android:exported="false"/>
+
         <receiver
             android:name=".data.services.LibraryUpdateService$SyncOnConnectionAvailable"
             android:enabled="false">

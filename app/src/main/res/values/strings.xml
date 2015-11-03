@@ -86,6 +86,7 @@
     <string name="notification_completed">Update completed</string>
     <string name="notification_no_new_chapters">No new chapters found</string>
     <string name="notification_new_chapters">Found new chapters for:</string>
+    <string name="action_download">Download</string>
 
 
 </resources>

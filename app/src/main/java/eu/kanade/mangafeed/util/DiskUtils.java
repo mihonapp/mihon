@@ -18,7 +18,7 @@ import okio.BufferedSource;
 import okio.Okio;
 
 public final class DiskUtils {
-    private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
+    private static final Pattern DIR_SEPARATOR = Pattern.compile("/");
 
     private DiskUtils() {
         throw new AssertionError();
@@ -58,7 +58,7 @@ public final class DiskUtils {
                     rawUserId = "";
                 } else {
                     final String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-                    final String[] folders = DIR_SEPORATOR.split(path);
+                    final String[] folders = DIR_SEPARATOR.split(path);
                     final String lastFolder = folders[folders.length - 1];
                     boolean isDigit = false;
 
@@ -114,18 +114,17 @@ public final class DiskUtils {
         return sb.toString();
     }
 
-    public static File saveBufferedSourceToDirectory(BufferedSource bufferedSource, String directory, String name) throws IOException {
-        File fileDirectory = new File(directory);
-        if (!fileDirectory.exists()) {
-            if (!fileDirectory.mkdirs()) {
+    public static File saveBufferedSourceToDirectory(BufferedSource bufferedSource, File directory, String name) throws IOException {
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
                 throw new IOException("Failed Creating  Directory");
             }
         }
 
-        File writeFile = new File(fileDirectory, name);
+        File writeFile = new File(directory, name);
         if (writeFile.exists()) {
             if (writeFile.delete()) {
-                writeFile = new File(fileDirectory, name);
+                writeFile = new File(directory, name);
             } else {
                 throw new IOException("Failed Deleting Existing File for Overwrite");
             }

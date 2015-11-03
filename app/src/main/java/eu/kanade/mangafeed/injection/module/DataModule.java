@@ -8,11 +8,10 @@ import dagger.Module;
 import dagger.Provides;
 import eu.kanade.mangafeed.data.caches.CacheManager;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
+import eu.kanade.mangafeed.data.helpers.DownloadManager;
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
 
 /**
  * Provide dependencies to the DataManager, mainly Helper classes and Retrofit services.
@@ -34,12 +33,6 @@ public class DataModule {
 
     @Provides
     @Singleton
-    Scheduler provideSubscribeScheduler() {
-        return Schedulers.io();
-    }
-
-    @Provides
-    @Singleton
     CacheManager provideCacheManager(Application app) {
         return new CacheManager(app);
     }
@@ -54,6 +47,12 @@ public class DataModule {
     @Singleton
     SourceManager provideSourceManager(Application app) {
         return new SourceManager(app);
+    }
+
+    @Provides
+    @Singleton
+    DownloadManager provideDownloadManager(Application app, SourceManager sourceManager) {
+        return new DownloadManager(app, sourceManager);
     }
 
 }

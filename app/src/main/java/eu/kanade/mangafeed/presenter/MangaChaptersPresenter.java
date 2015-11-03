@@ -85,6 +85,10 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
         }
     }
 
+    public Manga getManga() {
+        return manga;
+    }
+
     public void refreshChapters() {
         if (getView() != null)
             getView().setSwipeRefreshing();
