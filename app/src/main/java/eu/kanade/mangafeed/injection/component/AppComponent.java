@@ -19,6 +19,7 @@ import eu.kanade.mangafeed.presenter.SourcePresenter;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.ui.fragment.SettingsAccountsFragment;
+import eu.kanade.mangafeed.ui.fragment.SettingsDownloadsFragment;
 
 @Singleton
 @Component(
@@ -39,6 +40,7 @@ public interface AppComponent {
 
     void inject(ReaderActivity readerActivity);
     void inject(SettingsAccountsFragment settingsAccountsFragment);
+    void inject(SettingsDownloadsFragment settingsDownloadsFragment);
 
     void inject(Source source);
 

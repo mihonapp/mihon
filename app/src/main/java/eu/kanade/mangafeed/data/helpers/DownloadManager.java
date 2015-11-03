@@ -24,10 +24,12 @@ public class DownloadManager {
 
     private Context context;
     private SourceManager sourceManager;
+    private PreferencesHelper preferences;
 
-    public DownloadManager(Context context, SourceManager sourceManager) {
+    public DownloadManager(Context context, SourceManager sourceManager, PreferencesHelper preferences) {
         this.context = context;
         this.sourceManager = sourceManager;
+        this.preferences = preferences;
 
         initializeDownloadSubscription();
     }
@@ -48,7 +50,8 @@ public class DownloadManager {
 
     private Observable<Page> downloadChapter(Manga manga, Chapter chapter) {
         final Source source = sourceManager.get(manga.source);
-        final File chapterDirectory = new File(getDownloadsDirectory(), getChapterDirectory(chapter));
+        final File chapterDirectory = new File(
+                preferences.getDownloadsDirectory(), getChapterDirectory(source, manga, chapter));
 
         return source
                 .pullPageListFromNetwork(chapter.url)
@@ -62,13 +65,12 @@ public class DownloadManager {
                 .flatMap(page -> getDownloadedImage(page, source, chapterDirectory));
     }
 
-    private File getDownloadsDirectory() {
-        // TODO
-        return new File(DiskUtils.getStorageDirectories(context)[0]);
-    }
-
-    private String getChapterDirectory(Chapter chapter) {
-        return chapter.name.replaceAll("[^a-zA-Z0-9.-]", "_");
+    private String getChapterDirectory(Source source, Manga manga, Chapter chapter) {
+        return source.getName() +
+                File.separator +
+                manga.title.replaceAll("[^a-zA-Z0-9.-]", "_") +
+                File.separator +
+                chapter.name.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
     private String getImageFilename(Page page) {

@@ -51,8 +51,9 @@ public class DataModule {
 
     @Provides
     @Singleton
-    DownloadManager provideDownloadManager(Application app, SourceManager sourceManager) {
-        return new DownloadManager(app, sourceManager);
+    DownloadManager provideDownloadManager(
+            Application app, SourceManager sourceManager, PreferencesHelper preferences) {
+        return new DownloadManager(app, sourceManager, preferences);
     }
 
 }

@@ -17,6 +17,9 @@ public class SettingsMainFragment extends PreferenceFragment {
                 SettingsNestedFragment.newInstance(
                         R.xml.pref_reader, R.string.pref_category_reader));
 
+        registerSubpreference(R.string.pref_category_downloads_key,
+                SettingsDownloadsFragment.newInstance());
+
         registerSubpreference(R.string.pref_category_accounts_key,
                 SettingsAccountsFragment.newInstance());
     }

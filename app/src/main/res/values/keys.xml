@@ -2,6 +2,7 @@
 <resources>
     <string name="pref_category_reader_key">pref_category_reader_key</string>
     <string name="pref_category_accounts_key">pref_category_accounts_key</string>
+    <string name="pref_category_downloads_key">pref_category_downloads_key</string>
     <string name="pref_fullscreen_key">pref_fullscreen_key</string>
     <string name="pref_default_viewer_key">pref_default_viewer_key</string>
     <string name="pref_download_directory_key">pref_download_directory_key</string>

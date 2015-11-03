@@ -7,6 +7,11 @@
         android:title="@string/pref_category_reader" />
 
     <Preference
+        android:key="@string/pref_category_downloads_key"
+        android:persistent="false"
+        android:title="@string/pref_category_downloads" />
+    
+    <Preference
         android:key="@string/pref_category_accounts_key"
         android:persistent="false"
         android:title="@string/pref_category_accounts" />
