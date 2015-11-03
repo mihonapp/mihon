@@ -2,17 +2,20 @@ package eu.kanade.mangafeed.presenter;
 
 import android.os.Bundle;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
+import eu.kanade.mangafeed.data.helpers.DownloadManager;
+import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.events.ChapterCountEvent;
-import eu.kanade.mangafeed.events.SourceChapterEvent;
+import eu.kanade.mangafeed.events.SourceMangaChapterEvent;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
 import eu.kanade.mangafeed.util.EventBusHook;
@@ -26,6 +29,8 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
 
     @Inject DatabaseHelper db;
     @Inject SourceManager sourceManager;
+    @Inject PreferencesHelper preferences;
+    @Inject DownloadManager downloadManager;
 
     private Manga manga;
     private Source source;
@@ -111,7 +116,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     }
 
     public void onChapterClicked(Chapter chapter) {
-        EventBus.getDefault().postSticky(new SourceChapterEvent(source, chapter));
+        EventBus.getDefault().postSticky(new SourceMangaChapterEvent(source, manga, chapter));
     }
 
     public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {
@@ -130,5 +135,15 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
                 .subscribe(result -> {
 
                 }));
+    }
+
+    public void checkIsChapterDownloaded(Chapter chapter) {
+        File dir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
+
+        if (dir.exists() && dir.listFiles().length > 0) {
+            chapter.downloaded = Chapter.DOWNLOADED;
+        } else {
+            chapter.downloaded = Chapter.NOT_DOWNLOADED;
+        }
     }
 }

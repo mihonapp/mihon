@@ -48,10 +48,9 @@ public class DownloadManager {
                 .subscribe();
     }
 
-    private Observable<Page> downloadChapter(Manga manga, Chapter chapter) {
+    public Observable<Page> downloadChapter(Manga manga, Chapter chapter) {
         final Source source = sourceManager.get(manga.source);
-        final File chapterDirectory = new File(
-                preferences.getDownloadsDirectory(), getChapterDirectory(source, manga, chapter));
+        final File chapterDirectory = getAbsoluteChapterDirectory(source, manga, chapter);
 
         return source
                 .pullPageListFromNetwork(chapter.url)
@@ -64,8 +63,13 @@ public class DownloadManager {
                 // Start downloading images
                 .flatMap(page -> getDownloadedImage(page, source, chapterDirectory));
     }
+    
+    public File getAbsoluteChapterDirectory(Source source, Manga manga, Chapter chapter) {
+        return new File(preferences.getDownloadsDirectory(),
+                getChapterDirectory(source, manga, chapter));
+    }
 
-    private String getChapterDirectory(Source source, Manga manga, Chapter chapter) {
+    public String getChapterDirectory(Source source, Manga manga, Chapter chapter) {
         return source.getName() +
                 File.separator +
                 manga.title.replaceAll("[^a-zA-Z0-9.-]", "_") +

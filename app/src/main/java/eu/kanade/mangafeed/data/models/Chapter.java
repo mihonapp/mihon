@@ -32,6 +32,12 @@ public class Chapter {
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_DATE_UPLOAD)
     public long date_upload;
 
+    public int downloaded;
+
+    public static final int UNKNOWN = 0;
+    public static final int NOT_DOWNLOADED = 1;
+    public static final int DOWNLOADED = 2;
+
 
     public Chapter() {}
 

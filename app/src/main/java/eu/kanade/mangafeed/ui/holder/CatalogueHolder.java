@@ -37,6 +37,8 @@ public class CatalogueHolder extends ItemViewHolder<Manga> {
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
                     .into(image);
+        } else {
+            image.setImageResource(android.R.color.transparent);
         }
     }
 }

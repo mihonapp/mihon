@@ -38,7 +38,7 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
 
     public void onSetValues(Context context, Chapter chapter) {
         title.setText(chapter.name);
-        download_icon.setImageResource(R.drawable.ic_file_download_black_48dp);
+
 
         if (chapter.read) {
             title.setTextColor(ContextCompat.getColor(context, R.color.chapter_read_text));
@@ -51,6 +51,14 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
         } else {
             pages.setText("");
         }
+
+        if (chapter.downloaded == Chapter.UNKNOWN) {
+            adapter.getMangaChaptersFragment().getPresenter().checkIsChapterDownloaded(chapter);
+        }
+        if (chapter.downloaded == Chapter.DOWNLOADED)
+            download_icon.setImageResource(R.drawable.ic_action_delete_36dp);
+        else if (chapter.downloaded == Chapter.NOT_DOWNLOADED)
+            download_icon.setImageResource(R.drawable.ic_file_download_black_36dp);
 
         toggleActivation();
     }
