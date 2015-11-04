@@ -16,6 +16,7 @@ public class DownloadHolder extends ItemViewHolder<Download> {
 
     @ViewId(R.id.download_title) TextView downloadTitle;
     @ViewId(R.id.download_progress) ProgressBar downloadProgress;
+    @ViewId(R.id.download_progress_text) TextView downloadProgressText;
 
     public DownloadHolder(View view) {
         super(view);
