@@ -2,4 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:orderingFromXml="true">
 
+    <ListPreference android:title="@string/pref_download_threads"
+        android:key="@string/pref_download_threads_key"
+        android:entries="@array/download_threads"
+        android:entryValues="@array/download_threads"
+        android:defaultValue="1"
+        android:summary="%s"/>
+
 </PreferenceScreen>

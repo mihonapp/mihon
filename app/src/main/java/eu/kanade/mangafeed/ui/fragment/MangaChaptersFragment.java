@@ -18,11 +18,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.services.DownloadService;
-import eu.kanade.mangafeed.events.DownloadChapterEvent;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
@@ -31,8 +29,6 @@ import eu.kanade.mangafeed.ui.adapter.ChaptersAdapter;
 import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
-import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 @RequiresPresenter(MangaChaptersPresenter.class)
 public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter> implements
@@ -44,7 +40,6 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
     private ChaptersAdapter adapter;
 
     private ActionMode actionMode;
-    private Subscription downloadSubscription;
 
     public static Fragment newInstance() {
         return new MangaChaptersFragment();
@@ -146,7 +141,7 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
                 getPresenter().markChaptersRead(getSelectedChapters(), false);
                 return true;
             case R.id.action_download:
-                onDownloadChapters();
+                getPresenter().downloadChapters(getSelectedChapters());
                 return true;
         }
         return false;
@@ -205,21 +200,6 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
 
     private void setContextTitle(int count) {
         actionMode.setTitle(getString(R.string.selected_chapters_title, count));
-    }
-
-    private void onDownloadChapters() {
-        if (downloadSubscription != null && !downloadSubscription.isUnsubscribed()) {
-            downloadSubscription.unsubscribe();
-            downloadSubscription = null;
-        }
-
-        downloadSubscription = getSelectedChapters()
-                .subscribeOn(Schedulers.io())
-                .subscribe(chapter -> {
-                    EventBus.getDefault().post(
-                            new DownloadChapterEvent(getPresenter().getManga(), chapter));
-                    downloadSubscription.unsubscribe();
-                });
     }
 
 }

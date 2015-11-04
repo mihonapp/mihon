@@ -59,4 +59,8 @@ public class PreferencesHelper {
                 DiskUtils.getStorageDirectories(context)[0]);
     }
 
+    public int getDownloadThreads() {
+        return Integer.parseInt(mPref.getString(getKey(R.string.pref_download_threads_key), "1"));
+    }
+
 }

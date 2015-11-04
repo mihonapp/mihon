@@ -15,6 +15,7 @@ import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.events.ChapterCountEvent;
+import eu.kanade.mangafeed.events.DownloadChapterEvent;
 import eu.kanade.mangafeed.events.SourceMangaChapterEvent;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
@@ -38,7 +39,8 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     private static final int DB_CHAPTERS = 1;
     private static final int ONLINE_CHAPTERS = 2;
 
-    private Subscription menuOperationSubscription;
+    private Subscription markReadSubscription;
+    private Subscription downloadSubscription;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -90,10 +92,6 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
         }
     }
 
-    public Manga getManga() {
-        return manga;
-    }
-
     public void refreshChapters() {
         if (getView() != null)
             getView().setSwipeRefreshing();
@@ -120,10 +118,10 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     }
 
     public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {
-        if (menuOperationSubscription != null)
-            remove(menuOperationSubscription);
+        if (markReadSubscription != null)
+            remove(markReadSubscription);
 
-        add(menuOperationSubscription = selectedChapters
+        add(markReadSubscription = selectedChapters
                 .subscribeOn(Schedulers.io())
                 .map(chapter -> {
                     chapter.read = read;
@@ -134,6 +132,18 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
 
+                }));
+    }
+
+    public void downloadChapters(Observable<Chapter> selectedChapters) {
+        if (downloadSubscription != null)
+            remove(downloadSubscription);
+
+        add(downloadSubscription = selectedChapters
+                .subscribeOn(Schedulers.io())
+                .subscribe(chapter -> {
+                    EventBus.getDefault().post(
+                            new DownloadChapterEvent(manga, chapter));
                 }));
     }
 
