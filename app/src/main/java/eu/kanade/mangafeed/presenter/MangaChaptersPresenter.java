@@ -128,7 +128,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
                 .toList()
                 .flatMap(db::insertChapters)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted( () -> remove(markReadSubscription) )
+                .doOnCompleted(() -> remove(markReadSubscription))
                 .subscribe(result -> {
                 }));
     }
@@ -137,19 +137,8 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
         add(downloadSubscription = selectedChapters
                 .doOnCompleted(() -> remove(downloadSubscription))
                 .subscribe(chapter -> {
-                    EventBus.getDefault().post(
-                            new DownloadChapterEvent(manga, chapter));
+                    EventBus.getDefault().post(new DownloadChapterEvent(manga, chapter));
                 }));
-    }
-
-    public void checkIsChapterDownloaded(Chapter chapter) {
-        File dir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
-
-        if (dir.exists() && dir.listFiles().length > 0) {
-            chapter.downloaded = Chapter.DOWNLOADED;
-        } else {
-            chapter.downloaded = Chapter.NOT_DOWNLOADED;
-        }
     }
 
     public void deleteChapters(Observable<Chapter> selectedChapters) {
@@ -160,4 +149,16 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
                     chapter.downloaded = Chapter.NOT_DOWNLOADED;
                 });
     }
+
+    public void checkIsChapterDownloaded(Chapter chapter) {
+        File dir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
+        File pageList = new File(dir, DownloadManager.PAGE_LIST_FILE);
+
+        if (dir.exists() && dir.listFiles().length > 0 && pageList.exists()) {
+            chapter.downloaded = Chapter.DOWNLOADED;
+        } else {
+            chapter.downloaded = Chapter.NOT_DOWNLOADED;
+        }
+    }
+
 }

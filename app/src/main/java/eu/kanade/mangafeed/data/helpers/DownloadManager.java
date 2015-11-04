@@ -12,11 +12,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Download;
+import eu.kanade.mangafeed.data.models.DownloadQueue;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.events.DownloadChapterEvent;
@@ -37,7 +37,9 @@ public class DownloadManager {
     private PreferencesHelper preferences;
     private Gson gson;
 
-    private List<Download> queue;
+    private DownloadQueue queue;
+
+    public static final String PAGE_LIST_FILE = "index.json";
 
     public DownloadManager(Context context, SourceManager sourceManager, PreferencesHelper preferences) {
         this.context = context;
@@ -45,7 +47,7 @@ public class DownloadManager {
         this.preferences = preferences;
         this.gson = new Gson();
 
-        queue = new ArrayList<>();
+        queue = new DownloadQueue();
 
         initializeDownloadSubscription();
     }
@@ -78,7 +80,7 @@ public class DownloadManager {
         final Source source = sourceManager.get(event.getManga().source);
 
         // If the chapter is already queued, don't add it again
-        for (Download download : queue) {
+        for (Download download : queue.get()) {
             if (download.chapter.id == event.getChapter().id)
                 return true;
         }
@@ -119,7 +121,10 @@ public class DownloadManager {
                 .pullPageListFromNetwork(download.chapter.url)
                 .subscribeOn(Schedulers.io())
                 // Add resulting pages to download object
-                .doOnNext(pages -> download.pages = pages)
+                .doOnNext(pages -> {
+                    download.pages = pages;
+                    download.setStatus(Download.DOWNLOADING);
+                })
                 // Get all the URLs to the source images, fetch pages if necessary
                 .flatMap(pageList -> Observable.merge(
                         Observable.from(pageList).filter(page -> page.getImageUrl() != null),
@@ -127,7 +132,7 @@ public class DownloadManager {
                 // Start downloading images, consider we can have downloaded images already
                 .concatMap(page -> getDownloadedImage(page, download.source, download.directory))
                 // Remove from the queue
-                .doOnCompleted(() -> removeFromQueue(download));
+                .doOnCompleted(() -> onChapterDownloaded(download));
     }
 
     // Get downloaded image if exists, otherwise download it with the method below
@@ -179,15 +184,15 @@ public class DownloadManager {
         return imagePath.exists() && !imagePath.isDirectory();
     }
 
-    private void removeFromQueue(final Download download) {
+    private void onChapterDownloaded(final Download download) {
+        download.setStatus(Download.DOWNLOADED);
         savePageList(download.source, download.manga, download.chapter, download.pages);
-        queue.remove(download);
     }
 
     // Return the page list from the chapter's directory if it exists, null otherwise
     public List<Page> getSavedPageList(Source source, Manga manga, Chapter chapter) {
         File chapterDir = getAbsoluteChapterDirectory(source, manga, chapter);
-        File pagesFile = new File(chapterDir, "index.json");
+        File pagesFile = new File(chapterDir, PAGE_LIST_FILE);
 
         try {
             JsonReader reader = new JsonReader(new FileReader(pagesFile.getAbsolutePath()));
@@ -202,7 +207,7 @@ public class DownloadManager {
     // Save the page list to the chapter's directory
     public void savePageList(Source source, Manga manga, Chapter chapter, List<Page> pages) {
         File chapterDir = getAbsoluteChapterDirectory(source, manga, chapter);
-        File pagesFile = new File(chapterDir, "index.json");
+        File pagesFile = new File(chapterDir, PAGE_LIST_FILE);
 
         FileOutputStream out;
         try {
@@ -229,5 +234,9 @@ public class DownloadManager {
     public void deleteChapter(Source source, Manga manga, Chapter chapter) {
         File path = getAbsoluteChapterDirectory(source, manga, chapter);
         DiskUtils.deleteFiles(path);
+    }
+
+    public DownloadQueue getQueue() {
+        return queue;
     }
 }

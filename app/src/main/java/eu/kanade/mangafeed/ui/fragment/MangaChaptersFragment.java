@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,7 +40,7 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
 
     private ActionMode actionMode;
 
-    public static Fragment newInstance() {
+    public static MangaChaptersFragment newInstance() {
         return new MangaChaptersFragment();
     }
 

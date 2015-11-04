@@ -9,8 +9,8 @@ public class Page implements NetworkHelper.ProgressListener {
     private String url;
     private String imageUrl;
     private String imagePath;
-    private transient int status;
-    private transient int progress;
+    private transient volatile int status;
+    private transient volatile int progress;
 
     private transient BehaviorSubject<Integer> statusSubject;
 

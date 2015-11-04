@@ -10,6 +10,7 @@ import eu.kanade.mangafeed.data.services.LibraryUpdateService;
 import eu.kanade.mangafeed.injection.module.AppModule;
 import eu.kanade.mangafeed.injection.module.DataModule;
 import eu.kanade.mangafeed.presenter.CataloguePresenter;
+import eu.kanade.mangafeed.presenter.DownloadQueuePresenter;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
 import eu.kanade.mangafeed.presenter.MangaChaptersPresenter;
 import eu.kanade.mangafeed.presenter.MangaDetailPresenter;
@@ -37,6 +38,7 @@ public interface AppComponent {
     void inject(MangaInfoPresenter mangaInfoPresenter);
     void inject(MangaChaptersPresenter mangaChaptersPresenter);
     void inject(ReaderPresenter readerPresenter);
+    void inject(DownloadQueuePresenter downloadQueuePresenter);
 
     void inject(ReaderActivity readerActivity);
     void inject(SettingsAccountsFragment settingsAccountsFragment);

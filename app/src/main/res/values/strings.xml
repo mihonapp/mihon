@@ -93,5 +93,6 @@
     <string name="notification_no_new_chapters">No new chapters found</string>
     <string name="notification_new_chapters">Found new chapters for:</string>
     <string name="pref_download_threads">Download threads</string>
+    <string name="download_title">Download queue</string>
 
 </resources>

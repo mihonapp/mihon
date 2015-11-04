@@ -15,6 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.ui.activity.base.BaseActivity;
+import eu.kanade.mangafeed.ui.fragment.DownloadQueueFragment;
 import eu.kanade.mangafeed.ui.fragment.LibraryFragment;
 import eu.kanade.mangafeed.ui.fragment.SourceFragment;
 
@@ -52,6 +53,9 @@ public class MainActivity extends BaseActivity {
                                 .withName(R.string.catalogues_title)
                                 .withIdentifier(R.id.nav_drawer_catalogues),
                         new PrimaryDrawerItem()
+                                .withName(R.string.download_title)
+                                .withIdentifier(R.id.nav_drawer_downloads),
+                        new PrimaryDrawerItem()
                                 .withName(R.string.settings_title)
                                 .withIdentifier(R.id.nav_drawer_settings)
                                 .withSelectable(false)
@@ -69,6 +73,9 @@ public class MainActivity extends BaseActivity {
                                         break;
                                     case R.id.nav_drawer_catalogues:
                                         setFragment(SourceFragment.newInstance());
+                                        break;
+                                    case R.id.nav_drawer_downloads:
+                                        setFragment(DownloadQueueFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_settings:
                                         startActivity(new Intent(this, SettingsActivity.class));
