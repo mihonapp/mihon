@@ -7,6 +7,7 @@
         android:entries="@array/download_threads"
         android:entryValues="@array/download_threads"
         android:defaultValue="1"
+        android:order="1"
         android:summary="%s"/>
 
 </PreferenceScreen>

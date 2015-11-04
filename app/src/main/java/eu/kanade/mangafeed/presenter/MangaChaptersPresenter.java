@@ -140,7 +140,6 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
             remove(downloadSubscription);
 
         add(downloadSubscription = selectedChapters
-                .subscribeOn(Schedulers.io())
                 .subscribe(chapter -> {
                     EventBus.getDefault().post(
                             new DownloadChapterEvent(manga, chapter));

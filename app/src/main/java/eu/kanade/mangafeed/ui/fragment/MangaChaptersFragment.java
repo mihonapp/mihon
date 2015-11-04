@@ -142,6 +142,7 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
                 return true;
             case R.id.action_download:
                 getPresenter().downloadChapters(getSelectedChapters());
+                closeActionMode();
                 return true;
         }
         return false;

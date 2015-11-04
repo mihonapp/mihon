@@ -38,7 +38,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     private static final int GET_PAGE_LIST = 1;
     private static final int GET_PAGE_IMAGES = 2;
-    private static final int GET_LOCAL_IMAGES = 3;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -47,7 +46,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         restartableLatestCache(GET_PAGE_LIST,
                 () -> getPageListObservable()
                         .doOnNext(pages -> pageList = pages)
-                        .doOnCompleted(this::prepareChapter),
+                        .doOnCompleted( () -> start(GET_PAGE_IMAGES) ),
                 (view, pages) -> {
                     view.onPageListReady(pages);
                     if (currentPage != 0)
@@ -62,9 +61,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 },
                 (view, error) -> Timber.e("An error occurred while downloading an image"));
 
-        restartableReplay(GET_LOCAL_IMAGES,
-                this::getLocalImagesObservable,
-                (view, page) -> {});
     }
 
     @Override
@@ -100,39 +96,37 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     private Observable<List<Page>> getPageListObservable() {
-        return source.pullPageListFromNetwork(chapter.url)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        if (chapter.downloaded != Chapter.DOWNLOADED)
+            return source.pullPageListFromNetwork(chapter.url)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
+        else
+            return Observable.just(downloadManager.getSavedPageList(source, manga, chapter));
     }
 
     private Observable<Page> getPageImagesObservable() {
-        return Observable.merge(
-                    Observable.from(pageList).filter(page -> page.getImageUrl() != null),
-                    source.getRemainingImageUrlsFromPageList(pageList)
-                )
-                .flatMap(source::getCachedImage)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
+        Observable<Page> pages;
 
-    private Observable<Page> getLocalImagesObservable() {
-        File chapterDir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
+        if (chapter.downloaded != Chapter.DOWNLOADED) {
+            pages = Observable
+                    .merge(Observable.from(pageList).filter(page -> page.getImageUrl() != null),
+                            source.getRemainingImageUrlsFromPageList(pageList))
+                    .flatMap(source::getCachedImage);
+        } else {
+            File chapterDir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
 
-        return Observable.from(pageList)
-                .flatMap(page -> downloadManager.getDownloadedImage(page, source, chapterDir))
+            pages = Observable.from(pageList)
+                    .flatMap(page -> downloadManager.getDownloadedImage(page, source, chapterDir))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
+        }
+        return pages
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
-    }
-
-    private void prepareChapter() {
-        if (chapter.downloaded != Chapter.DOWNLOADED)
-            start(GET_PAGE_IMAGES);
-        else
-            start(GET_LOCAL_IMAGES);
     }
 
     private void saveChapter() {
