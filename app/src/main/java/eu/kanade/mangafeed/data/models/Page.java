@@ -1,7 +1,7 @@
 package eu.kanade.mangafeed.data.models;
 
 import eu.kanade.mangafeed.data.helpers.NetworkHelper;
-import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 
 public class Page implements NetworkHelper.ProgressListener {
 
@@ -12,7 +12,7 @@ public class Page implements NetworkHelper.ProgressListener {
     private transient volatile int status;
     private transient volatile int progress;
 
-    private transient BehaviorSubject<Integer> statusSubject;
+    private transient PublishSubject<Integer> statusSubject;
 
     public static final int QUEUE = 0;
     public static final int LOAD_PAGE = 1;
@@ -61,7 +61,8 @@ public class Page implements NetworkHelper.ProgressListener {
 
     public void setStatus(int status) {
         this.status = status;
-        notifyStatus();
+        if (statusSubject != null)
+            statusSubject.onNext(status);
     }
 
     public int getProgress() {
@@ -73,14 +74,8 @@ public class Page implements NetworkHelper.ProgressListener {
         progress = (int) ((100 * bytesRead) / contentLength);
     }
 
-    public void setStatusSubject(BehaviorSubject<Integer> subject) {
+    public void setStatusSubject(PublishSubject<Integer> subject) {
         this.statusSubject = subject;
-        notifyStatus();
-    }
-
-    private void notifyStatus() {
-        if (statusSubject != null)
-            statusSubject.onNext(status);
     }
 
 }

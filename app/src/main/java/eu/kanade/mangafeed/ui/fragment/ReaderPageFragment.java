@@ -25,7 +25,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 
 public class ReaderPageFragment extends Fragment {
 
@@ -128,10 +128,11 @@ public class ReaderPageFragment extends Fragment {
         if (page == null || statusSubscription != null)
             return;
 
-        BehaviorSubject<Integer> statusSubject = BehaviorSubject.create();
+        PublishSubject<Integer> statusSubject = PublishSubject.create();
         page.setStatusSubject(statusSubject);
 
         statusSubscription = statusSubject
+                .startWith(page.getStatus())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::processStatus);
     }

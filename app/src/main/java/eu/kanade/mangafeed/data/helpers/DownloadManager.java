@@ -67,7 +67,7 @@ public class DownloadManager {
         downloadSubscription = downloadsSubject
                 .subscribeOn(Schedulers.io())
                 .filter(event -> !isChapterDownloaded(event))
-                .flatMap(this::createDownload)
+                .flatMap(this::prepareDownload)
                 .flatMap(this::downloadChapter, preferences.getDownloadThreads())
                 .onBackpressureBuffer()
                 .subscribe();
@@ -100,7 +100,7 @@ public class DownloadManager {
     }
 
     // Create a download object and add it to the downloads queue
-    private Observable<Download> createDownload(DownloadChapterEvent event) {
+    private Observable<Download> prepareDownload(DownloadChapterEvent event) {
         Download download = new Download(
                 sourceManager.get(event.getManga().source),
                 event.getManga(),
