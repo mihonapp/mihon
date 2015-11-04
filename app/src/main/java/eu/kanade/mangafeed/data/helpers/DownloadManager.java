@@ -68,9 +68,7 @@ public class DownloadManager {
                 .subscribeOn(Schedulers.io())
                 .filter(event -> !isChapterDownloaded(event))
                 .flatMap(this::createDownload)
-                .window(preferences.getDownloadThreads())
-                .concatMap(concurrentDownloads -> concurrentDownloads
-                        .concatMap(this::downloadChapter))
+                .flatMap(this::downloadChapter, preferences.getDownloadThreads())
                 .onBackpressureBuffer()
                 .subscribe();
     }
@@ -131,7 +129,7 @@ public class DownloadManager {
                         download.source.getRemainingImageUrlsFromPageList(pageList)))
                 // Start downloading images, consider we can have downloaded images already
                 .concatMap(page -> getDownloadedImage(page, download.source, download.directory))
-                // Remove from the queue
+                // Do after download completes
                 .doOnCompleted(() -> onChapterDownloaded(download));
     }
 
