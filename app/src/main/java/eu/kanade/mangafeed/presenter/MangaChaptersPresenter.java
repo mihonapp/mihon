@@ -41,6 +41,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
 
     private Subscription markReadSubscription;
     private Subscription downloadSubscription;
+    private Subscription deleteSubscription;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -118,9 +119,6 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     }
 
     public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {
-        if (markReadSubscription != null)
-            remove(markReadSubscription);
-
         add(markReadSubscription = selectedChapters
                 .subscribeOn(Schedulers.io())
                 .map(chapter -> {
@@ -130,16 +128,14 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
                 .toList()
                 .flatMap(db::insertChapters)
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted( () -> remove(markReadSubscription) )
                 .subscribe(result -> {
-
                 }));
     }
 
     public void downloadChapters(Observable<Chapter> selectedChapters) {
-        if (downloadSubscription != null)
-            remove(downloadSubscription);
-
         add(downloadSubscription = selectedChapters
+                .doOnCompleted(() -> remove(downloadSubscription))
                 .subscribe(chapter -> {
                     EventBus.getDefault().post(
                             new DownloadChapterEvent(manga, chapter));
@@ -154,5 +150,14 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
         } else {
             chapter.downloaded = Chapter.NOT_DOWNLOADED;
         }
+    }
+
+    public void deleteChapters(Observable<Chapter> selectedChapters) {
+        deleteSubscription = selectedChapters
+                .doOnCompleted( () -> remove(deleteSubscription) )
+                .subscribe(chapter -> {
+                    downloadManager.deleteChapter(source, manga, chapter);
+                    chapter.downloaded = Chapter.NOT_DOWNLOADED;
+                });
     }
 }

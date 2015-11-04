@@ -144,6 +144,10 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
                 getPresenter().downloadChapters(getSelectedChapters());
                 closeActionMode();
                 return true;
+            case R.id.action_delete:
+                getPresenter().deleteChapters(getSelectedChapters());
+                closeActionMode();
+                return true;
         }
         return false;
     }

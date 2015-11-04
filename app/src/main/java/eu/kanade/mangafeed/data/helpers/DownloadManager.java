@@ -226,4 +226,8 @@ public class DownloadManager {
         return new File(preferences.getDownloadsDirectory(), chapterRelativePath);
     }
 
+    public void deleteChapter(Source source, Manga manga, Chapter chapter) {
+        File path = getAbsoluteChapterDirectory(source, manga, chapter);
+        DiskUtils.deleteFiles(path);
+    }
 }

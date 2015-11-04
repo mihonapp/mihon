@@ -34,6 +34,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private Manga manga;
     private Chapter chapter;
     private List<Page> pageList;
+    private boolean isDownloaded;
     @State int currentPage;
 
     private static final int GET_PAGE_LIST = 1;
@@ -52,13 +53,11 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                     if (currentPage != 0)
                         view.setSelectedPage(currentPage);
                 },
-                (view, error) -> Timber.e("An error occurred while downloading page list")
-        );
+                (view, error) -> Timber.e("An error occurred while downloading page list"));
 
         restartableReplay(GET_PAGE_IMAGES,
                 this::getPageImagesObservable,
-                (view, page) -> {
-                },
+                (view, page) -> {},
                 (view, error) -> Timber.e("An error occurred while downloading an image"));
 
     }
@@ -77,8 +76,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     @Override
     protected void onDestroy() {
-        source.savePageList(chapter.url, pageList);
-        saveChapter();
+        if (!isDownloaded)
+            source.savePageList(chapter.url, pageList);
+        saveChapterProgress();
         super.onDestroy();
     }
 
@@ -87,6 +87,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         source = event.getSource();
         manga = event.getManga();
         chapter = event.getChapter();
+        isDownloaded = chapter.downloaded == Chapter.DOWNLOADED;
         if (chapter.last_page_read != 0 && !chapter.read)
             currentPage = chapter.last_page_read;
 
@@ -96,7 +97,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     private Observable<List<Page>> getPageListObservable() {
-        if (chapter.downloaded != Chapter.DOWNLOADED)
+        if (!isDownloaded)
             return source.pullPageListFromNetwork(chapter.url)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
@@ -107,7 +108,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private Observable<Page> getPageImagesObservable() {
         Observable<Page> pages;
 
-        if (chapter.downloaded != Chapter.DOWNLOADED) {
+        if (!isDownloaded) {
             pages = Observable
                     .merge(Observable.from(pageList).filter(page -> page.getImageUrl() != null),
                             source.getRemainingImageUrlsFromPageList(pageList))
@@ -129,7 +130,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         this.currentPage = currentPage;
     }
 
-    private void saveChapter() {
+    private void saveChapterProgress() {
         chapter.last_page_read = currentPage;
         if (currentPage == pageList.size() - 1) {
             chapter.read = true;
