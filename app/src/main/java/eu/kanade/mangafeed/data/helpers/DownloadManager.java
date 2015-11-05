@@ -22,15 +22,18 @@ import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.events.DownloadChapterEvent;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.util.DiskUtils;
+import eu.kanade.mangafeed.util.DynamicConcurrentMergeOperator;
 import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 
 public class DownloadManager {
 
     private PublishSubject<DownloadChapterEvent> downloadsSubject;
     private Subscription downloadSubscription;
+    private Subscription threadNumberSubscription;
 
     private Context context;
     private SourceManager sourceManager;
@@ -61,14 +64,21 @@ public class DownloadManager {
             downloadSubscription.unsubscribe();
         }
 
+        if (threadNumberSubscription != null && !threadNumberSubscription.isUnsubscribed())
+            threadNumberSubscription.unsubscribe();
+
         downloadsSubject = PublishSubject.create();
+        BehaviorSubject<Integer> threads = BehaviorSubject.create();
+
+        threadNumberSubscription = preferences.getDownloadTheadsObs()
+                .subscribe(threads::onNext);
 
         // Listen for download events, add them to queue and download
         downloadSubscription = downloadsSubject
                 .subscribeOn(Schedulers.io())
                 .filter(event -> !isChapterDownloaded(event))
                 .flatMap(this::prepareDownload)
-                .flatMap(this::downloadChapter, preferences.getDownloadThreads())
+                .lift(new DynamicConcurrentMergeOperator<>(this::downloadChapter, threads))
                 .onBackpressureBuffer()
                 .subscribe();
     }
@@ -117,7 +127,6 @@ public class DownloadManager {
     private Observable<Page> downloadChapter(Download download) {
         return download.source
                 .pullPageListFromNetwork(download.chapter.url)
-                .subscribeOn(Schedulers.io())
                 // Add resulting pages to download object
                 .doOnNext(pages -> {
                     download.pages = pages;

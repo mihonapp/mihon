@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.f2prateek.rx.preferences.RxSharedPreferences;
+
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.util.DiskUtils;
+import rx.Observable;
 
 public class PreferencesHelper {
 
-    private static SharedPreferences mPref;
     private Context context;
+    private SharedPreferences prefs;
+    private RxSharedPreferences rxPrefs;
 
     private static final String SOURCE_ACCOUNT_USERNAME = "pref_source_username_";
     private static final String SOURCE_ACCOUNT_PASSWORD = "pref_source_password_";
@@ -20,7 +24,8 @@ public class PreferencesHelper {
         this.context = context;
         PreferenceManager.setDefaultValues(context, R.xml.pref_reader, false);
 
-        mPref = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        rxPrefs = RxSharedPreferences.create(prefs);
     }
 
     private String getKey(int keyResource) {
@@ -28,39 +33,44 @@ public class PreferencesHelper {
     }
 
     public void clear() {
-        mPref.edit().clear().apply();
+        prefs.edit().clear().apply();
     }
 
     public boolean useFullscreenSet() {
-        return mPref.getBoolean(getKey(R.string.pref_fullscreen_key), false);
+        return prefs.getBoolean(getKey(R.string.pref_fullscreen_key), false);
     }
 
     public int getDefaultViewer() {
-        return Integer.parseInt(mPref.getString(getKey(R.string.pref_default_viewer_key), "1"));
+        return Integer.parseInt(prefs.getString(getKey(R.string.pref_default_viewer_key), "1"));
     }
 
     public String getSourceUsername(Source source) {
-        return mPref.getString(SOURCE_ACCOUNT_USERNAME + source.getSourceId(), "");
+        return prefs.getString(SOURCE_ACCOUNT_USERNAME + source.getSourceId(), "");
     }
 
     public String getSourcePassword(Source source) {
-        return mPref.getString(SOURCE_ACCOUNT_PASSWORD + source.getSourceId(), "");
+        return prefs.getString(SOURCE_ACCOUNT_PASSWORD + source.getSourceId(), "");
     }
 
     public void setSourceCredentials(Source source, String username, String password) {
-        mPref.edit()
+        prefs.edit()
                 .putString(SOURCE_ACCOUNT_USERNAME + source.getSourceId(), username)
                 .putString(SOURCE_ACCOUNT_PASSWORD + source.getSourceId(), password)
                 .apply();
     }
 
     public String getDownloadsDirectory() {
-        return mPref.getString(getKey(R.string.pref_download_directory_key),
+        return prefs.getString(getKey(R.string.pref_download_directory_key),
                 DiskUtils.getStorageDirectories(context)[0]);
     }
 
     public int getDownloadThreads() {
-        return Integer.parseInt(mPref.getString(getKey(R.string.pref_download_threads_key), "1"));
+        return Integer.parseInt(prefs.getString(getKey(R.string.pref_download_threads_key), "1"));
+    }
+
+    public Observable<Integer> getDownloadTheadsObs() {
+        return rxPrefs.getString(getKey(R.string.pref_download_threads_key), "1")
+                .asObservable().map(Integer::parseInt);
     }
 
 }
