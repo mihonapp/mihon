@@ -115,10 +115,8 @@ public final class DiskUtils {
     }
 
     public static File saveBufferedSourceToDirectory(BufferedSource bufferedSource, File directory, String name) throws IOException {
-        if (!directory.exists()) {
-            if (!directory.mkdirs()) {
-                throw new IOException("Failed Creating  Directory");
-            }
+        if (!directory.exists() && !directory.mkdirs()) {
+            throw new IOException("Failed Creating Directory");
         }
 
         File writeFile = new File(directory, name);
@@ -154,6 +152,13 @@ public final class DiskUtils {
         }
 
         inputFile.delete();
+    }
+
+    public static synchronized void createDirectory(File directory) throws IOException {
+        if (!directory.exists() && !directory.mkdirs()) {
+            throw new IOException("Failed creating directory");
+        }
+
     }
 }
 

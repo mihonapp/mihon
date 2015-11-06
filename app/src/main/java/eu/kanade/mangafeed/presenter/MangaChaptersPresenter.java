@@ -15,7 +15,7 @@ import eu.kanade.mangafeed.data.helpers.SourceManager;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.events.ChapterCountEvent;
-import eu.kanade.mangafeed.events.DownloadChapterEvent;
+import eu.kanade.mangafeed.events.DownloadChaptersEvent;
 import eu.kanade.mangafeed.events.SourceMangaChapterEvent;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.ui.fragment.MangaChaptersFragment;
@@ -135,9 +135,10 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
 
     public void downloadChapters(Observable<Chapter> selectedChapters) {
         add(downloadSubscription = selectedChapters
-                .doOnCompleted(() -> remove(downloadSubscription))
-                .subscribe(chapter -> {
-                    EventBus.getDefault().post(new DownloadChapterEvent(manga, chapter));
+                .toList()
+                .subscribe(chapters -> {
+                    EventBus.getDefault().postSticky(new DownloadChaptersEvent(manga, chapters));
+                    remove(downloadSubscription);
                 }));
     }
 
@@ -154,7 +155,8 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
         File dir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
         File pageList = new File(dir, DownloadManager.PAGE_LIST_FILE);
 
-        if (dir.exists() && dir.listFiles().length > 0 && pageList.exists()) {
+        if (dir.exists() && pageList.exists() && downloadManager
+                .getSavedPageList(source, manga, chapter).size() + 1 == dir.listFiles().length) {
             chapter.downloaded = Chapter.DOWNLOADED;
         } else {
             chapter.downloaded = Chapter.NOT_DOWNLOADED;

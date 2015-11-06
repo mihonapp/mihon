@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.helpers.DownloadManager;
-import eu.kanade.mangafeed.events.DownloadChapterEvent;
+import eu.kanade.mangafeed.events.DownloadChaptersEvent;
 import eu.kanade.mangafeed.util.AndroidComponentUtil;
 import eu.kanade.mangafeed.util.EventBusHook;
 
@@ -31,7 +31,7 @@ public class DownloadService extends Service {
         super.onCreate();
         App.get(this).getComponent().inject(this);
 
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().registerSticky(this);
     }
 
     @Override
@@ -45,8 +45,9 @@ public class DownloadService extends Service {
     }
 
     @EventBusHook
-    public void onEvent(DownloadChapterEvent event) {
+    public void onEvent(DownloadChaptersEvent event) {
         downloadManager.getDownloadsSubject().onNext(event);
+        EventBus.getDefault().removeStickyEvent(event);
     }
 
     @Override

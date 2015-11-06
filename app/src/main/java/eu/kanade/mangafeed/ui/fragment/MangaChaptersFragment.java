@@ -65,15 +65,6 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (!DownloadService.isRunning(getActivity())) {
-            Intent intent = DownloadService.getStartIntent(getActivity());
-            getActivity().startService(intent);
-        }
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.chapters, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -140,6 +131,8 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
                 getPresenter().markChaptersRead(getSelectedChapters(), false);
                 return true;
             case R.id.action_download:
+                Intent intent = DownloadService.getStartIntent(getActivity());
+                getActivity().startService(intent);
                 getPresenter().downloadChapters(getSelectedChapters());
                 closeActionMode();
                 return true;

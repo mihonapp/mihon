@@ -63,18 +63,21 @@ public abstract class Source extends BaseSource {
                         Observable.just(parseHtmlToChapters(unparsedHtml)));
     }
 
-    public Observable<List<Page>> pullPageListFromNetwork(final String chapterUrl) {
+    public Observable<List<Page>> getCachedPageListOrPullFromNetwork(final String chapterUrl) {
         return mCacheManager.getPageUrlsFromDiskCache(chapterUrl)
                 .onErrorResumeNext(throwable -> {
-                    return mNetworkService
-                            .getStringResponse(overrideChapterPageUrl(chapterUrl), mRequestHeaders, null)
-                            .flatMap(unparsedHtml -> {
-                                List<String> pageUrls = parseHtmlToPageUrls(unparsedHtml);
-                                return Observable.just(getFirstImageFromPageUrls(pageUrls, unparsedHtml));
-                            })
-                            .doOnNext(pages -> savePageList(chapterUrl, pages));
+                    return pullPageListFromNetwork(chapterUrl);
                 })
                 .onBackpressureBuffer();
+    }
+
+    public Observable<List<Page>> pullPageListFromNetwork(final String chapterUrl) {
+        return mNetworkService
+                .getStringResponse(overrideChapterPageUrl(chapterUrl), mRequestHeaders, null)
+                .flatMap(unparsedHtml -> {
+                    List<String> pageUrls = parseHtmlToPageUrls(unparsedHtml);
+                    return Observable.just(getFirstImageFromPageUrls(pageUrls, unparsedHtml));
+                });
     }
 
     // Get the URLs of the images of a chapter

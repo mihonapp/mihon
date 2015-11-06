@@ -75,21 +75,22 @@ public class DownloadQueuePresenter extends BasePresenter<DownloadQueueFragment>
             case Download.DOWNLOADED:
                 unsubscribeProgress(download);
                 unsubscribePagesStatus(download);
-                download.totalProgress = download.pages.size() * 100;
                 view.updateProgress(download);
                 break;
         }
     }
 
     private void observeProgress(Download download, DownloadQueueFragment view) {
-        Subscription subscription = Observable.interval(50, TimeUnit.MILLISECONDS, Schedulers.newThread())
+        Subscription subscription = Observable.interval(75, TimeUnit.MILLISECONDS, Schedulers.newThread())
                 .flatMap(tick -> Observable.from(download.pages)
                         .map(Page::getProgress)
                         .reduce((x, y) -> x + y))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(progress -> {
-                    download.totalProgress = progress;
-                    view.updateProgress(download);
+                    if (download.totalProgress != progress) {
+                        download.totalProgress = progress;
+                        view.updateProgress(download);
+                    }
                 });
 
         progressSubscriptions.put(download, subscription);

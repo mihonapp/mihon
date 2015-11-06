@@ -98,7 +98,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     private Observable<List<Page>> getPageListObservable() {
         if (!isDownloaded)
-            return source.pullPageListFromNetwork(chapter.url)
+            return source.getCachedPageListOrPullFromNetwork(chapter.url)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
         else
