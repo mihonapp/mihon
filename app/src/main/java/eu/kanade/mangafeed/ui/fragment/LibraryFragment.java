@@ -21,7 +21,6 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.data.services.LibraryUpdateService;
 import eu.kanade.mangafeed.presenter.LibraryPresenter;
-import eu.kanade.mangafeed.ui.activity.MainActivity;
 import eu.kanade.mangafeed.ui.activity.MangaDetailActivity;
 import eu.kanade.mangafeed.ui.adapter.LibraryAdapter;
 import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
@@ -31,7 +30,6 @@ import nucleus.factory.RequiresPresenter;
 public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
 
     @Bind(R.id.gridView) GridView grid;
-    private MainActivity activity;
     private LibraryAdapter adapter;
 
     public static LibraryFragment newInstance() {
@@ -45,8 +43,6 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        activity = (MainActivity)getActivity();
     }
 
     @Override
@@ -54,7 +50,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
-        activity.setToolbarTitle(getString(R.string.library_title));
+        setToolbarTitle(getString(R.string.library_title));
         ButterKnife.bind(this, view);
 
         createAdapter();
@@ -73,9 +69,9 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                if (!LibraryUpdateService.isRunning(activity)) {
-                    Intent intent = LibraryUpdateService.getStartIntent(activity);
-                    activity.startService(intent);
+                if (!LibraryUpdateService.isRunning(getActivity())) {
+                    Intent intent = LibraryUpdateService.getStartIntent(getActivity());
+                    getActivity().startService(intent);
                 }
 
                 return true;

@@ -115,9 +115,7 @@ public final class DiskUtils {
     }
 
     public static File saveBufferedSourceToDirectory(BufferedSource bufferedSource, File directory, String name) throws IOException {
-        if (!directory.exists() && !directory.mkdirs()) {
-            throw new IOException("Failed Creating Directory");
-        }
+        createDirectory(directory);
 
         File writeFile = new File(directory, name);
         if (writeFile.exists()) {

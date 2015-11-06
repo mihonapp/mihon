@@ -7,11 +7,15 @@ import eu.kanade.mangafeed.ui.activity.base.BaseActivity;
 public class BaseFragment extends Fragment {
 
     public void setToolbarTitle(String title) {
-        ((BaseActivity)getActivity()).setToolbarTitle(title);
+        getBaseActivity().setToolbarTitle(title);
     }
 
     public void setToolbarTitle(int resourceId) {
-        ((BaseActivity)getActivity()).setToolbarTitle(getString(resourceId));
+        getBaseActivity().setToolbarTitle(getString(resourceId));
+    }
+
+    public BaseActivity getBaseActivity() {
+        return (BaseActivity) getActivity();
     }
 
 }

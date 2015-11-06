@@ -68,7 +68,7 @@ public class PreferencesHelper {
         return Integer.parseInt(prefs.getString(getKey(R.string.pref_download_threads_key), "1"));
     }
 
-    public Observable<Integer> getDownloadTheadsObs() {
+    public Observable<Integer> getDownloadTheadsObservable() {
         return rxPrefs.getString(getKey(R.string.pref_download_threads_key), "1")
                 .asObservable().map(Integer::parseInt);
     }

@@ -131,8 +131,7 @@ public class MangaChaptersFragment extends BaseRxFragment<MangaChaptersPresenter
                 getPresenter().markChaptersRead(getSelectedChapters(), false);
                 return true;
             case R.id.action_download:
-                Intent intent = DownloadService.getStartIntent(getActivity());
-                getActivity().startService(intent);
+                DownloadService.start(getActivity());
                 getPresenter().downloadChapters(getSelectedChapters());
                 closeActionMode();
                 return true;
