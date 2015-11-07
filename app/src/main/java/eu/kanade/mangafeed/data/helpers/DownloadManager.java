@@ -7,10 +7,13 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.models.Chapter;
@@ -18,6 +21,7 @@ import eu.kanade.mangafeed.data.models.Download;
 import eu.kanade.mangafeed.data.models.DownloadQueue;
 import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.data.models.Page;
+import eu.kanade.mangafeed.data.services.DownloadService;
 import eu.kanade.mangafeed.events.DownloadChaptersEvent;
 import eu.kanade.mangafeed.sources.base.Source;
 import eu.kanade.mangafeed.util.DiskUtils;
@@ -39,7 +43,7 @@ public class DownloadManager {
     private PublishSubject<Download> downloadsQueueSubject;
     private BehaviorSubject<Integer> threadsNumber;
     private Subscription downloadsSubscription;
-    private Subscription threadNumberSubscription;
+    private Subscription threadsNumberSubscription;
 
     private DownloadQueue queue;
     private transient boolean isQueuePaused;
@@ -53,21 +57,19 @@ public class DownloadManager {
         this.gson = new Gson();
 
         queue = new DownloadQueue();
-
-        initializeDownloadsSubscription();
     }
 
-    private void initializeDownloadsSubscription() {
+    public void initializeSubscriptions() {
         if (downloadsSubscription != null && !downloadsSubscription.isUnsubscribed())
             downloadsSubscription.unsubscribe();
 
-        if (threadNumberSubscription != null && !threadNumberSubscription.isUnsubscribed())
-            threadNumberSubscription.unsubscribe();
+        if (threadsNumberSubscription != null && !threadsNumberSubscription.isUnsubscribed())
+            threadsNumberSubscription.unsubscribe();
 
         downloadsQueueSubject = PublishSubject.create();
         threadsNumber = BehaviorSubject.create();
 
-        threadNumberSubscription = preferences.getDownloadTheadsObservable()
+        threadsNumberSubscription = preferences.getDownloadTheadsObservable()
                 .filter(n -> !isQueuePaused)
                 .doOnNext(n -> isQueuePaused = (n == 0))
                 .subscribe(threadsNumber::onNext);
@@ -80,6 +82,18 @@ public class DownloadManager {
                         e -> Timber.e(e.fillInStackTrace(), e.getMessage()));
     }
 
+    public void destroySubscriptions() {
+        if (downloadsSubscription != null && !downloadsSubscription.isUnsubscribed()) {
+            downloadsSubscription.unsubscribe();
+            downloadsSubscription = null;
+        }
+
+        if (threadsNumberSubscription != null && !threadsNumberSubscription.isUnsubscribed()) {
+            threadsNumberSubscription.unsubscribe();
+            threadsNumberSubscription = null;
+        }
+    }
+
     // Create a download object for every chapter in the event and add them to the downloads queue
     public void onDownloadChaptersEvent(DownloadChaptersEvent event) {
         final Manga manga = event.getManga();
@@ -90,7 +104,6 @@ public class DownloadManager {
 
             if (!isChapterDownloaded(download)) {
                 queue.add(download);
-                downloadsQueueSubject.onNext(download);
             }
         }
     }
@@ -139,7 +152,7 @@ public class DownloadManager {
                         .pullPageListFromNetwork(download.chapter.url)
                         .doOnNext(pages -> download.pages = pages)
                         .doOnNext(pages -> savePageList(download)) :
-                // Or if the file exists, start from here
+                // Or if the page list already exists, start from the file
                 Observable.just(download.pages);
 
         return pageListObservable
@@ -169,14 +182,19 @@ public class DownloadManager {
         }
 
         return pageObservable
-                .doOnNext(p -> p.setImagePath(imagePath.getAbsolutePath()))
-                .doOnNext(p -> p.setStatus(Page.READY))
+                // When the image is ready, set image path, progress (just in case) and status
+                .doOnNext(p -> {
+                    p.setImagePath(imagePath.getAbsolutePath());
+                    p.setProgress(100);
+                    p.setStatus(Page.READY);
+                })
+                // If the download fails, mark this page as error
                 .doOnError(e -> page.setStatus(Page.ERROR))
                 // Allow to download the remaining images
                 .onErrorResumeNext(e -> Observable.just(page));
     }
 
-    // Download the image
+    // Download the image and save it to the filesystem
     private Observable<Page> downloadImage(final Page page, Source source, File chapterDir, String imageFilename) {
         return source.getImageProgressResponse(page)
                 .flatMap(resp -> {
@@ -192,9 +210,15 @@ public class DownloadManager {
 
     // Get the filename for an image given the page
     private String getImageFilename(Page page) {
-        return page.getImageUrl().substring(
-                page.getImageUrl().lastIndexOf("/") + 1,
-                page.getImageUrl().length());
+        String url;
+        try {
+            url = new URL(page.getImageUrl()).getPath();
+        } catch (MalformedURLException e) {
+            url = page.getImageUrl();
+        }
+        return url.substring(
+                url.lastIndexOf("/") + 1,
+                url.length());
     }
 
     private boolean isImageDownloaded(File imagePath) {
@@ -205,10 +229,12 @@ public class DownloadManager {
     private void onDownloadCompleted(final Download download) {
         checkDownloadIsSuccessful(download);
         savePageList(download);
+        if (areAllDownloadsFinished()) {
+            DownloadService.stop(context);
+        }
     }
 
     private void checkDownloadIsSuccessful(final Download download) {
-        int expectedProgress = download.pages.size() * 100;
         int actualProgress = 0;
         int status = Download.DOWNLOADED;
         // If any page has an error, the download result will be error
@@ -216,8 +242,7 @@ public class DownloadManager {
             actualProgress += page.getProgress();
             if (page.getStatus() == Page.ERROR) status = Download.ERROR;
         }
-        // If the download is successful, it's safer to use the expected progress
-        download.totalProgress = (status == Download.DOWNLOADED) ? expectedProgress : actualProgress;
+        download.totalProgress = actualProgress;
         download.setStatus(status);
     }
 
@@ -227,15 +252,17 @@ public class DownloadManager {
         File chapterDir = getAbsoluteChapterDirectory(source, manga, chapter);
         File pagesFile = new File(chapterDir, PAGE_LIST_FILE);
 
+        JsonReader reader = null;
         try {
             if (pagesFile.exists()) {
-                JsonReader reader = new JsonReader(new FileReader(pagesFile.getAbsolutePath()));
+                reader = new JsonReader(new FileReader(pagesFile.getAbsolutePath()));
                 Type collectionType = new TypeToken<List<Page>>() {}.getType();
                 pages = gson.fromJson(reader, collectionType);
-                reader.close();
             }
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             Timber.e(e.fillInStackTrace(), e.getMessage());
+        } finally {
+            if (reader != null) try { reader.close(); } catch (IOException e) { /* Do nothing */ }
         }
         return pages;
     }
@@ -250,14 +277,15 @@ public class DownloadManager {
         File chapterDir = getAbsoluteChapterDirectory(source, manga, chapter);
         File pagesFile = new File(chapterDir, PAGE_LIST_FILE);
 
-        FileOutputStream out;
+        FileOutputStream out = null;
         try {
             out = new FileOutputStream(pagesFile);
             out.write(gson.toJson(pages).getBytes());
             out.flush();
-            out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             Timber.e(e.fillInStackTrace(), e.getMessage());
+        } finally {
+            if (out != null) try { out.close(); } catch (IOException e) { /* Do nothing */ }
         }
     }
 
@@ -291,12 +319,37 @@ public class DownloadManager {
         return queue;
     }
 
-    public void pauseDownloads() {
-        threadsNumber.onNext(0);
+    public boolean areAllDownloadsFinished() {
+        for (Download download : queue.get()) {
+            if (download.getStatus() <= Download.DOWNLOADING)
+                return false;
+        }
+        return true;
     }
 
     public void resumeDownloads() {
         isQueuePaused = false;
         threadsNumber.onNext(preferences.getDownloadThreads());
     }
+
+    public void pauseDownloads() {
+        threadsNumber.onNext(0);
+    }
+
+    public void startDownloads() {
+        if (downloadsSubscription == null || threadsNumberSubscription == null)
+            initializeSubscriptions();
+
+        for (Download download : queue.get()) {
+            if (download.getStatus() != Download.DOWNLOADED) {
+                download.setStatus(Download.QUEUE);
+                downloadsQueueSubject.onNext(download);
+            }
+        }
+    }
+
+    public void stopDownloads() {
+        destroySubscriptions();
+    }
+
 }

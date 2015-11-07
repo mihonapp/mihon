@@ -13,9 +13,9 @@ import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.helpers.DownloadManager;
 import eu.kanade.mangafeed.events.DownloadChaptersEvent;
-import eu.kanade.mangafeed.util.AndroidComponentUtil;
 import eu.kanade.mangafeed.util.ContentObservable;
 import eu.kanade.mangafeed.util.EventBusHook;
+import eu.kanade.mangafeed.util.NetworkUtil;
 import rx.Subscription;
 
 public class DownloadService extends Service {
@@ -28,14 +28,17 @@ public class DownloadService extends Service {
         context.startService(new Intent(context, DownloadService.class));
     }
 
-    public static boolean isRunning(Context context) {
-        return AndroidComponentUtil.isServiceRunning(context, DownloadService.class);
+    public static void stop(Context context) {
+        context.stopService(new Intent(context, DownloadService.class));
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         App.get(this).getComponent().inject(this);
+
+        // An initial event will be fired when subscribed.
+        // This will cause the following download events to start or wait for a connection
         listenNetworkChanges();
 
         EventBus.getDefault().registerSticky(this);
@@ -50,6 +53,7 @@ public class DownloadService extends Service {
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
         networkChangeSubscription.unsubscribe();
+        downloadManager.destroySubscriptions();
         super.onDestroy();
     }
 
@@ -68,7 +72,11 @@ public class DownloadService extends Service {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         networkChangeSubscription = ContentObservable.fromBroadcast(this, intentFilter)
                 .subscribe(state -> {
-                    // TODO
+                    if (NetworkUtil.isNetworkConnected(this)) {
+                        downloadManager.startDownloads();
+                    } else {
+                        downloadManager.stopDownloads();
+                    }
                 });
     }
 

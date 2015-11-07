@@ -30,6 +30,14 @@ public class DownloadQueue {
         return queue;
     }
 
+    public void clearSuccessfulDownloads() {
+        for (Download download : queue) {
+            if (download.getStatus() == Download.DOWNLOADED) {
+                remove(download);
+            }
+        }
+    }
+
     public Observable<Download> getActiveDownloads() {
         return Observable.from(queue)
                 .filter(download -> download.getStatus() == Download.DOWNLOADING);

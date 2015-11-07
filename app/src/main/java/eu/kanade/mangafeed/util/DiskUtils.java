@@ -130,12 +130,11 @@ public final class DiskUtils {
         try {
             bufferedSink = Okio.buffer(Okio.sink(writeFile));
             bufferedSink.writeAll(bufferedSource);
-        } finally {
-            if (bufferedSource != null) {
-                bufferedSource.close();
-            }
+            bufferedSink.close();
+        } catch (Exception e) {
             if (bufferedSink != null) {
                 bufferedSink.close();
+                writeFile.delete();
             }
         }
 

@@ -69,6 +69,10 @@ public class Page implements NetworkHelper.ProgressListener {
         return progress;
     }
 
+    public void setProgress(int value) {
+        progress = value;
+    }
+
     @Override
     public void update(long bytesRead, long contentLength, boolean done) {
         progress = (int) ((100 * bytesRead) / contentLength);
