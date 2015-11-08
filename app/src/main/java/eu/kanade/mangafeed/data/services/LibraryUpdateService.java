@@ -71,7 +71,7 @@ public class LibraryUpdateService extends Service {
         if (favoriteMangasSubscription != null && !favoriteMangasSubscription.isUnsubscribed())
             favoriteMangasSubscription.unsubscribe();
 
-        favoriteMangasSubscription = db.getFavoriteMangas()
+        favoriteMangasSubscription = db.getFavoriteMangas().createObservable()
                 .subscribe(mangas -> {
                     // Don't receive further db updates
                     favoriteMangasSubscription.unsubscribe();

@@ -42,7 +42,7 @@ public class MangaDetailPresenter extends BasePresenter<MangaDetailActivity> {
     }
 
     private Observable<Manga> getDbMangaObservable() {
-        return db.getManga(mangaId)
+        return db.getManga(mangaId).createObservable()
                 .subscribeOn(Schedulers.io())
                 .flatMap(Observable::from)
                 .observeOn(AndroidSchedulers.mainThread());

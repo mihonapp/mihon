@@ -5,17 +5,17 @@ import android.content.Context;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
-import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
-import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
+import com.pushtorefresh.storio.sqlite.operations.delete.PreparedDeleteCollectionOfObjects;
+import com.pushtorefresh.storio.sqlite.operations.delete.PreparedDeleteObject;
+import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
+import com.pushtorefresh.storio.sqlite.operations.put.PreparedPutCollectionOfObjects;
+import com.pushtorefresh.storio.sqlite.operations.put.PreparedPutObject;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+import com.pushtorefresh.storio.sqlite.queries.Query;
+import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 
 import java.util.List;
 
-import eu.kanade.mangafeed.data.managers.ChapterManager;
-import eu.kanade.mangafeed.data.managers.ChapterManagerImpl;
-import eu.kanade.mangafeed.data.managers.MangaManager;
-import eu.kanade.mangafeed.data.managers.MangaManagerImpl;
 import eu.kanade.mangafeed.data.models.Chapter;
 import eu.kanade.mangafeed.data.models.ChapterStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.models.ChapterStorIOSQLiteGetResolver;
@@ -24,18 +24,18 @@ import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.data.models.MangaStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.models.MangaStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.resolvers.MangaWithUnreadGetResolver;
+import eu.kanade.mangafeed.data.tables.ChaptersTable;
+import eu.kanade.mangafeed.data.tables.MangasTable;
 import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 
-public class DatabaseHelper implements MangaManager, ChapterManager {
+public class DatabaseHelper {
 
-    private StorIOSQLite mDb;
-    private MangaManagerImpl mMangaManager;
-    private ChapterManagerImpl mChapterManager;
+    private StorIOSQLite db;
 
     public DatabaseHelper(Context context) {
 
-        mDb = DefaultStorIOSQLite.builder()
+        db = DefaultStorIOSQLite.builder()
                 .sqliteOpenHelper(new DbOpenHelper(context))
                 .addTypeMapping(Manga.class, SQLiteTypeMapping.<Manga>builder()
                         .putResolver(new MangaStorIOSQLitePutResolver())
@@ -48,103 +48,175 @@ public class DatabaseHelper implements MangaManager, ChapterManager {
                         .deleteResolver(new ChapterStorIOSQLiteDeleteResolver())
                         .build())
                 .build();
-
-        mMangaManager = new MangaManagerImpl(mDb);
-        mChapterManager = new ChapterManagerImpl(mDb);
     }
 
-    @Override
-    public Observable<List<Chapter>> getChapters(Manga manga) {
-        return mChapterManager.getChapters(manga);
+    // Mangas related queries
+
+    private final String favoriteMangasWithUnreadQuery = String.format(
+            "SELECT %1$s.*, COUNT(C.%4$s) AS %5$s FROM %1$s LEFT JOIN " +
+                    "(SELECT %4$s FROM %2$s WHERE %6$s = 0) AS C ON %3$s = C.%4$s " +
+                    "WHERE %7$s = 1 GROUP BY %3$s",
+            MangasTable.TABLE,
+            ChaptersTable.TABLE,
+            MangasTable.TABLE + "." + MangasTable.COLUMN_ID,
+            ChaptersTable.COLUMN_MANGA_ID,
+            MangasTable.COLUMN_UNREAD,
+            ChaptersTable.COLUMN_READ,
+            MangasTable.COLUMN_FAVORITE
+    );
+
+    public PreparedGetListOfObjects<Manga> getMangas() {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(Query.builder()
+                        .table(MangasTable.TABLE)
+                        .build())
+                .prepare();
     }
 
-    @Override
-    public Observable<List<Chapter>> getChapters(long manga_id) {
-        return mChapterManager.getChapters(manga_id);
+    public PreparedGetListOfObjects<Manga> getMangasWithUnread() {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(RawQuery.builder()
+                        .query(favoriteMangasWithUnreadQuery)
+                        .observesTables(MangasTable.TABLE, ChaptersTable.TABLE)
+                        .build())
+                .prepare();
     }
 
-    @Override
-    public Observable<PutResult> insertChapter(Chapter chapter) {
-        return mChapterManager.insertChapter(chapter);
+    public PreparedGetListOfObjects<Manga> getFavoriteMangas() {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(Query.builder()
+                        .table(MangasTable.TABLE)
+                        .where(MangasTable.COLUMN_FAVORITE + "=?")
+                        .whereArgs(1)
+                        .build())
+                .prepare();
     }
 
-    @Override
-    public Observable<PutResults<Chapter>> insertChapters(List<Chapter> chapters) {
-        return mChapterManager.insertChapters(chapters);
+    public PreparedGetListOfObjects<Manga> getManga(String url) {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(Query.builder()
+                        .table(MangasTable.TABLE)
+                        .where(MangasTable.COLUMN_URL + "=?")
+                        .whereArgs(url)
+                        .build())
+                .prepare();
     }
 
-    @Override
-    public PutResult insertChapterBlock(Chapter chapter) {
-        return mChapterManager.insertChapterBlock(chapter);
+    public PreparedGetListOfObjects<Manga> getManga(long id) {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(Query.builder()
+                        .table(MangasTable.TABLE)
+                        .where(MangasTable.COLUMN_ID + "=?")
+                        .whereArgs(id)
+                        .build())
+                .prepare();
     }
 
-    @Override
+    public PreparedPutObject<Manga> insertManga(Manga manga) {
+        return db.put()
+                .object(manga)
+                .prepare();
+    }
+
+    public PreparedPutCollectionOfObjects<Manga> insertMangas(List<Manga> mangas) {
+        return db.put()
+                .objects(mangas)
+                .prepare();
+    }
+
+    public PreparedDeleteObject<Manga> deleteManga(Manga manga) {
+        return db.delete()
+                .object(manga)
+                .prepare();
+    }
+
+    public PreparedDeleteCollectionOfObjects<Manga> deleteMangas(List<Manga> mangas) {
+        return db.delete()
+                .objects(mangas)
+                .prepare();
+    }
+
+
+    // Chapters related queries
+
+    public PreparedGetListOfObjects<Chapter> getChapters(Manga manga) {
+        return db.get()
+                .listOfObjects(Chapter.class)
+                .withQuery(Query.builder()
+                        .table(ChaptersTable.TABLE)
+                        .where(ChaptersTable.COLUMN_MANGA_ID + "=?")
+                        .whereArgs(manga.id)
+                        .build())
+                .prepare();
+    }
+
+    public PreparedGetListOfObjects<Chapter> getChapters(long manga_id) {
+        return db.get()
+                .listOfObjects(Chapter.class)
+                .withQuery(Query.builder()
+                        .table(ChaptersTable.TABLE)
+                        .where(ChaptersTable.COLUMN_MANGA_ID + "=?")
+                        .whereArgs(manga_id)
+                        .build())
+                .prepare();
+    }
+
+    public PreparedPutObject<Chapter> insertChapter(Chapter chapter) {
+        return db.put()
+                .object(chapter)
+                .prepare();
+    }
+
+    public PreparedPutCollectionOfObjects<Chapter> insertChapters(List<Chapter> chapters) {
+        return db.put()
+                .objects(chapters)
+                .prepare();
+    }
+
+    // Add new chapters or delete if the source deletes them
     public Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {
-        return mChapterManager.insertOrRemoveChapters(manga, chapters);
+        for (Chapter chapter : chapters) {
+            chapter.manga_id = manga.id;
+        }
+
+        Observable<List<Chapter>> chapterList = Observable.create(subscriber -> {
+            subscriber.onNext(getChapters(manga).executeAsBlocking());
+            subscriber.onCompleted();
+        });
+
+        Observable<Integer> newChaptersObs = chapterList
+                .flatMap(dbChapters -> Observable.from(chapters)
+                        .filter(c -> !dbChapters.contains(c))
+                        .toList()
+                        .flatMap(newChapters -> insertChapters(newChapters).createObservable())
+                        .map(PutResults::numberOfInserts));
+
+        Observable<Integer> deletedChaptersObs = chapterList
+                .flatMap(dbChapters -> Observable.from(dbChapters)
+                        .filter(c -> !chapters.contains(c))
+                        .toList()
+                        .flatMap(deletedChapters -> deleteChapters(deletedChapters).createObservable())
+                        .map( d -> d.results().size() ));
+
+        return Observable.zip(newChaptersObs, deletedChaptersObs,
+                (insertions, deletions) -> new PostResult(0, insertions, deletions)
+        );
     }
 
-    @Override
-    public Observable<DeleteResult> deleteChapter(Chapter chapter) {
-        return mChapterManager.deleteChapter(chapter);
+    public PreparedDeleteObject<Chapter> deleteChapter(Chapter chapter) {
+        return db.delete()
+                .object(chapter)
+                .prepare();
     }
 
-    @Override
-    public Observable<DeleteResults<Chapter>> deleteChapters(List<Chapter> chapters) {
-        return mChapterManager.deleteChapters(chapters);
-    }
-
-    @Override
-    public Observable<List<Manga>> getMangas() {
-        return mMangaManager.getMangas();
-    }
-
-    @Override
-    public Observable<List<Manga>> getMangasWithUnread() {
-        return mMangaManager.getMangasWithUnread();
-    }
-
-    @Override
-    public Observable<List<Manga>> getFavoriteMangas() {
-        return mMangaManager.getFavoriteMangas();
-    }
-
-    @Override
-    public Observable<List<Manga>> getManga(String url) {
-        return mMangaManager.getManga(url);
-    }
-
-    @Override
-    public Observable<List<Manga>> getManga(long id) {
-        return mMangaManager.getManga(id);
-    }
-
-    @Override
-    public Manga getMangaBlock(String url) {
-        return mMangaManager.getMangaBlock(url);
-    }
-
-    @Override
-    public Observable<PutResult> insertManga(Manga manga) {
-        return mMangaManager.insertManga(manga);
-    }
-
-    @Override
-    public Observable<PutResults<Manga>> insertMangas(List<Manga> mangas) {
-        return mMangaManager.insertMangas(mangas);
-    }
-
-    @Override
-    public PutResult insertMangaBlock(Manga manga) {
-        return mMangaManager.insertMangaBlock(manga);
-    }
-
-    @Override
-    public Observable<DeleteResult> deleteManga(Manga manga) {
-        return mMangaManager.deleteManga(manga);
-    }
-
-    @Override
-    public Observable<DeleteResults<Manga>> deleteMangas(List<Manga> mangas) {
-        return mMangaManager.deleteMangas(mangas);
+    public PreparedDeleteCollectionOfObjects<Chapter> deleteChapters(List<Chapter> chapters) {
+        return db.delete()
+                .objects(chapters)
+                .prepare();
     }
 }

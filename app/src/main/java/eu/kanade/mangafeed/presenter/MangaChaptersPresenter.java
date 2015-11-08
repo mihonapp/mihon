@@ -101,7 +101,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
     }
 
     private Observable<List<Chapter>> getDbChaptersObs() {
-        return db.getChapters(manga.id)
+        return db.getChapters(manga.id).createObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -126,7 +126,7 @@ public class MangaChaptersPresenter extends BasePresenter<MangaChaptersFragment>
                     return chapter;
                 })
                 .toList()
-                .flatMap(db::insertChapters)
+                .flatMap(chapters -> db.insertChapters(chapters).createObservable())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> remove(markReadSubscription))
                 .subscribe(result -> {

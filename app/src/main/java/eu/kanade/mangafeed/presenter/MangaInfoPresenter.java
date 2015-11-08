@@ -67,7 +67,7 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
     public void toggleFavorite() {
         manga.favorite = !manga.favorite;
-        db.insertMangaBlock(manga);
+        db.insertManga(manga).executeAsBlocking();
     }
 
 }

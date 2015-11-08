@@ -37,7 +37,7 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
         if (mFavoriteMangasSubscription != null)
             return;
 
-        add(mFavoriteMangasSubscription = db.getMangasWithUnread()
+        add(mFavoriteMangasSubscription = db.getMangasWithUnread().createObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(deliverLatestCache())
@@ -57,7 +57,7 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                     return manga;
                 })
                 .toList()
-                .flatMap(db::insertMangas)
+                .flatMap(mangas -> db.insertMangas(mangas).createObservable())
                 .subscribe());
     }
 

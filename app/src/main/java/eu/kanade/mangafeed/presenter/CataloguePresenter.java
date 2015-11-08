@@ -112,9 +112,10 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     }
 
     private Manga networkToLocalManga(Manga networkManga) {
-        Manga localManga = db.getMangaBlock(networkManga.url);
+        List<Manga> dbResult = db.getManga(networkManga.url).executeAsBlocking();
+        Manga localManga = !dbResult.isEmpty() ? dbResult.get(0) : null;
         if (localManga == null) {
-            PutResult result = db.insertMangaBlock(networkManga);
+            PutResult result = db.insertManga(networkManga).executeAsBlocking();
             networkManga.id = result.insertedId();
             localManga = networkManga;
         }
@@ -154,7 +155,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                                 .subscribeOn(Schedulers.io())
                                 .flatMap(networkManga -> {
                                     Manga.copyFromNetwork(manga, networkManga);
-                                    db.insertMangaBlock(manga);
+                                    db.insertManga(manga).executeAsBlocking();
                                     return Observable.just(manga);
                                 });
                         mangaObservables.add(tempObs);

@@ -135,6 +135,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         if (currentPage == pageList.size() - 1) {
             chapter.read = true;
         }
-        db.insertChapterBlock(chapter);
+        db.insertChapter(chapter).executeAsBlocking();
     }
 }
