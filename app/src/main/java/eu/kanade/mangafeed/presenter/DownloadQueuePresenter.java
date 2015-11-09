@@ -119,7 +119,7 @@ public class DownloadQueuePresenter extends BasePresenter<DownloadQueueFragment>
                 });
 
         // Avoid leaking subscriptions
-        Subscription oldSubscription = progressSubscriptions.remove(download);
+        Subscription oldSubscription = pageStatusSubscriptions.remove(download);
         if (oldSubscription != null) oldSubscription.unsubscribe();
 
         pageStatusSubscriptions.put(download, subscription);
