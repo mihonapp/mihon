@@ -28,9 +28,13 @@ public class DownloadHolder extends ItemViewHolder<Download> {
 
         if (download.pages == null) {
             downloadProgress.setProgress(0);
+            downloadProgress.setMax(1);
+            downloadProgressText.setText("");
         } else {
             downloadProgress.setMax(download.pages.size() * 100);
             downloadProgress.setProgress(download.totalProgress);
+            String progressText = download.downloadedImages + "/" + download.pages.size();
+            downloadProgressText.setText(progressText);
         }
     }
 

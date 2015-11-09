@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -14,16 +16,16 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Download;
 import eu.kanade.mangafeed.presenter.DownloadQueuePresenter;
+import eu.kanade.mangafeed.ui.adapter.DownloadAdapter;
 import eu.kanade.mangafeed.ui.fragment.base.BaseRxFragment;
-import eu.kanade.mangafeed.ui.holder.DownloadHolder;
 import nucleus.factory.RequiresPresenter;
-import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 @RequiresPresenter(DownloadQueuePresenter.class)
 public class DownloadQueueFragment extends BaseRxFragment<DownloadQueuePresenter> {
 
     @Bind(R.id.download_list) RecyclerView downloadList;
-    private EasyRecyclerAdapter<Download> adapter;
+    private LinearLayoutManager downloadListLayout;
+    private DownloadAdapter adapter;
 
     public static DownloadQueueFragment newInstance() {
         return new DownloadQueueFragment();
@@ -38,14 +40,15 @@ public class DownloadQueueFragment extends BaseRxFragment<DownloadQueuePresenter
 
         setToolbarTitle(R.string.download_title);
 
-        downloadList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        downloadListLayout = new LinearLayoutManager(getActivity());
+        downloadList.setLayoutManager(downloadListLayout);
         createAdapter();
 
         return view;
     }
 
     private void createAdapter() {
-        adapter = new EasyRecyclerAdapter<>(getActivity(), DownloadHolder.class);
+        adapter = new DownloadAdapter(getActivity());
         downloadList.setAdapter(adapter);
     }
 
@@ -53,14 +56,32 @@ public class DownloadQueueFragment extends BaseRxFragment<DownloadQueuePresenter
         adapter.setItems(downloads);
     }
 
-    // TODO use a better approach
+    private View getDownloadRow(Download download) {
+        int first = downloadListLayout.findFirstVisibleItemPosition();
+        int last = downloadListLayout.findLastVisibleItemPosition();
+        int pos = adapter.getPositionForItem(download);
+
+        if (pos != -1 && pos >= first && pos <= last) {
+            return downloadListLayout.getChildAt(pos - first);
+        }
+        return null;
+    }
+
     public void updateProgress(Download download) {
-        for (int i = 0; i < adapter.getItems().size(); i++) {
-            if (adapter.getItem(i) == download) {
-                adapter.notifyItemChanged(i);
-                break;
-            }
+        View row = getDownloadRow(download);
+        if (row != null) {
+            ProgressBar progress = (ProgressBar) row.findViewById(R.id.download_progress);
+            if (progress.getMax() == 1) progress.setMax(download.pages.size() * 100);
+            progress.setProgress(download.totalProgress);
         }
     }
 
+    public void updateDownloadedPages(Download download) {
+        View row = getDownloadRow(download);
+        if (row != null) {
+            TextView progress = (TextView) row.findViewById(R.id.download_progress_text);
+            String progressText = download.downloadedImages + "/" + download.pages.size();
+            progress.setText(progressText);
+        }
+    }
 }

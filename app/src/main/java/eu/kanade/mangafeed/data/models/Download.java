@@ -14,6 +14,7 @@ public class Download {
     public File directory;
 
     public transient volatile int totalProgress;
+    public transient volatile int downloadedImages;
     private transient volatile int status;
 
     private transient PublishSubject<Download> statusSubject;

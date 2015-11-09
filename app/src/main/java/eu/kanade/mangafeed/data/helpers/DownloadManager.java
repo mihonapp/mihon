@@ -77,7 +77,6 @@ public class DownloadManager {
                 .subscribe(threadsNumber::onNext);
 
         downloadsSubscription = downloadsQueueSubject
-                .observeOn(Schedulers.newThread())
                 .lift(new DynamicConcurrentMergeOperator<>(this::downloadChapter, threadsNumber))
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -167,6 +166,8 @@ public class DownloadManager {
                 Observable.just(download.pages);
 
         return pageListObservable
+                .subscribeOn(Schedulers.io())
+                .doOnNext(pages -> download.downloadedImages = 0)
                 .doOnNext(pages -> download.setStatus(Download.DOWNLOADING))
                 // Get all the URLs to the source images, fetch pages if necessary
                 .flatMap(pageList -> Observable.merge(
@@ -174,6 +175,7 @@ public class DownloadManager {
                         download.source.getRemainingImageUrlsFromPageList(pageList)))
                 // Start downloading images, consider we can have downloaded images already
                 .concatMap(page -> getDownloadedImage(page, download.source, download.directory))
+                .doOnNext(p -> download.downloadedImages++)
                 // Do after download completes
                 .doOnCompleted(() -> onDownloadCompleted(download))
                 .toList()
@@ -363,6 +365,11 @@ public class DownloadManager {
 
     public void stopDownloads() {
         destroySubscriptions();
+        for (Download download : queue.get()) {
+            if (download.getStatus() == Download.DOWNLOADING) {
+                download.setStatus(Download.ERROR);
+            }
+        }
     }
 
     public boolean isRunning() {
