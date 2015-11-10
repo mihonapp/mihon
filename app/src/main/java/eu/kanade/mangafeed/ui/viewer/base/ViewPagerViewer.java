@@ -15,8 +15,7 @@ import eu.kanade.mangafeed.widget.HorizontalViewPager;
 
 public abstract class ViewPagerViewer extends BaseViewer {
 
-    @Bind(R.id.view_pager)
-    HorizontalViewPager viewPager;
+    @Bind(R.id.view_pager) HorizontalViewPager viewPager;
     protected ViewerPagerAdapter adapter;
 
     public ViewPagerViewer(ReaderActivity activity, FrameLayout container) {
@@ -69,7 +68,7 @@ public abstract class ViewPagerViewer extends BaseViewer {
 
     @Override
     public void setSelectedPage(int pageNumber) {
-        viewPager.setCurrentItem(getCurrentPageIndex(pageNumber));
+        viewPager.setCurrentItem(getCurrentPageIndex(pageNumber), false);
     }
 
     @Override

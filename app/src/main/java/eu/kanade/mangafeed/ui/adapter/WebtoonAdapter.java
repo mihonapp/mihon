@@ -15,6 +15,7 @@ import uk.co.ribot.easyadapter.BaseEasyRecyclerAdapter;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
 import uk.co.ribot.easyadapter.annotations.LayoutId;
+import uk.co.ribot.easyadapter.annotations.ViewId;
 
 public class WebtoonAdapter extends BaseEasyRecyclerAdapter<Page> {
 
@@ -40,20 +41,13 @@ public class WebtoonAdapter extends BaseEasyRecyclerAdapter<Page> {
         notifyDataSetChanged();
     }
 
-    public void setPage(int position, Page page) {
-        pages.set(position, page);
-        notifyItemChanged(position);
-    }
-
-
     @LayoutId(R.layout.chapter_image)
     static class ImageViewHolder extends ItemViewHolder<Page> {
 
-        SubsamplingScaleImageView imageView;
+        @ViewId(R.id.page_image_view) SubsamplingScaleImageView imageView;
 
         public ImageViewHolder(View view) {
             super(view);
-            imageView = (SubsamplingScaleImageView) getView();
             imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
             imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
             imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
@@ -63,8 +57,13 @@ public class WebtoonAdapter extends BaseEasyRecyclerAdapter<Page> {
 
         @Override
         public void onSetValues(Page page, PositionInfo positionInfo) {
-            if (page.getImagePath() != null)
+            if (page.getImagePath() != null) {
+                imageView.setVisibility(View.VISIBLE);
                 imageView.setImage(ImageSource.uri(page.getImagePath()).tilingDisabled());
+            } else {
+                imageView.setVisibility(View.GONE);
+            }
+
         }
     }
 }

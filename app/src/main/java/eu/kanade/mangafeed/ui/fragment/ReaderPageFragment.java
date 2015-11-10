@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +20,14 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
+import eu.kanade.mangafeed.ui.fragment.base.BaseFragment;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
-public class ReaderPageFragment extends Fragment {
+public class ReaderPageFragment extends BaseFragment {
 
     @Bind(R.id.page_image_view) SubsamplingScaleImageView imageView;
     @Bind(R.id.progress_container) LinearLayout progressContainer;

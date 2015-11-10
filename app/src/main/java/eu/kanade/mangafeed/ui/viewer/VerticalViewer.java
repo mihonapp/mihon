@@ -1,5 +1,6 @@
 package eu.kanade.mangafeed.ui.viewer;
 
+import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
@@ -12,7 +13,6 @@ import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.ui.adapter.ViewerPagerAdapter;
 import eu.kanade.mangafeed.ui.viewer.base.BaseViewer;
-import eu.kanade.mangafeed.widget.HorizontalViewPager;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 public class VerticalViewer extends BaseViewer {
@@ -28,7 +28,7 @@ public class VerticalViewer extends BaseViewer {
         adapter = new ViewerPagerAdapter(activity.getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
-        viewPager.setOnPageChangeListener(new HorizontalViewPager.OnPageChangeListener() {
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

@@ -21,7 +21,8 @@ public class WebtoonViewer extends BaseViewer {
         super(activity, container);
 
         recycler = new RecyclerView(activity);
-        recycler.setLayoutManager(new LinearLayoutManager(activity));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+        recycler.setLayoutManager(layoutManager);
         adapter = new WebtoonAdapter(activity);
         recycler.setAdapter(adapter);
 
