@@ -32,6 +32,9 @@ public class Chapter {
     @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_DATE_UPLOAD)
     public long date_upload;
 
+    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_CHAPTER_NUMBER)
+    public float chapter_number;
+
     public int downloaded;
 
     public static final int UNKNOWN = 0;
@@ -58,7 +61,7 @@ public class Chapter {
     }
 
     public static Chapter newChapter() {
-        Chapter c = new Chapter();
-        return c;
+        return new Chapter();
     }
+
 }
