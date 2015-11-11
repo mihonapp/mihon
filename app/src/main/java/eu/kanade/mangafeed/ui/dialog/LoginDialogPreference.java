@@ -18,33 +18,38 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
 import eu.kanade.mangafeed.sources.base.Source;
+import eu.kanade.mangafeed.util.ToastUtil;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class LoginDialogPreference extends DialogPreference {
 
-    @Bind(R.id.accounts_login)
-    TextView title;
-    @Bind(R.id.username)
-    EditText username;
+    @Bind(R.id.accounts_login) TextView title;
+    @Bind(R.id.username) EditText username;
     @Bind(R.id.password) EditText password;
-    @Bind(R.id.show_password)
-    CheckBox showPassword;
-    @Bind(R.id.login)
-    ActionProcessButton loginBtn;
+    @Bind(R.id.show_password) CheckBox showPassword;
+    @Bind(R.id.login) ActionProcessButton loginBtn;
 
     private PreferencesHelper preferences;
     private Source source;
     private AlertDialog dialog;
     private Subscription requestSubscription;
+    private Context context;
 
     public LoginDialogPreference(Context context, PreferencesHelper preferences, Source source) {
         super(context, null);
+        this.context = context;
         this.preferences = preferences;
         this.source = source;
 
         setDialogLayoutResource(R.layout.pref_account_login);
+    }
+
+    @Override
+    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
+        // Hide positive button
+        builder.setPositiveButton("", this);
     }
 
     @Override
@@ -63,7 +68,7 @@ public class LoginDialogPreference extends DialogPreference {
         });
 
         loginBtn.setMode(ActionProcessButton.Mode.ENDLESS);
-        loginBtn.setOnClickListener(v -> checkLogin());
+        loginBtn.setOnClickListener(click -> checkLogin());
 
         super.onBindDialogView(view);
     }
@@ -72,7 +77,6 @@ public class LoginDialogPreference extends DialogPreference {
     public void showDialog(Bundle state) {
         super.showDialog(state);
         dialog = ((AlertDialog) getDialog());
-        setSubmitButtonEnabled(false);
     }
 
     @Override
@@ -86,15 +90,6 @@ public class LoginDialogPreference extends DialogPreference {
         preferences.setSourceCredentials(source,
                 username.getText().toString(),
                 password.getText().toString());
-
-        super.onDialogClosed(true);
-    }
-
-    private void setSubmitButtonEnabled(boolean enabled) {
-        if (dialog != null) {
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                    .setEnabled(enabled);
-        }
     }
 
     private void checkLogin() {
@@ -106,23 +101,22 @@ public class LoginDialogPreference extends DialogPreference {
 
         loginBtn.setProgress(1);
 
-        requestSubscription = source.login(username.getText().toString(),
-                password.getText().toString())
+        requestSubscription = source
+                .login(username.getText().toString(), password.getText().toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(logged -> {
                     if (logged) {
-                        loginBtn.setProgress(100);
-                        loginBtn.setEnabled(false);
-                        username.setEnabled(false);
-                        password.setEnabled(false);
-                        setSubmitButtonEnabled(true);
+                        // Simulate a positive button click and dismiss the dialog
+                        onClick(dialog, DialogInterface.BUTTON_POSITIVE);
+                        dialog.dismiss();
+                        ToastUtil.showShort(context, R.string.login_success);
                     } else {
                         loginBtn.setProgress(-1);
                     }
                 }, throwable -> {
                     loginBtn.setProgress(-1);
-                    loginBtn.setText("Unknown error");
+                    loginBtn.setText(R.string.unknown_error);
                 });
 
     }

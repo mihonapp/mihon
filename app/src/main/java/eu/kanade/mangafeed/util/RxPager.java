@@ -24,7 +24,7 @@ public class RxPager {
     public Observable<Integer> pages() {
         return requests
             .concatMap(targetPage -> targetPage <= requestedCount ?
-                    Observable.<Integer>never() :
+                    Observable.<Integer>empty() :
                     Observable.range(requestedCount, targetPage - requestedCount))
             .startWith(Observable.range(0, initialPageCount))
             .doOnNext(it -> requestedCount = it + 1);

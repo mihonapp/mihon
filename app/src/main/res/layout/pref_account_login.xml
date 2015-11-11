@@ -58,7 +58,7 @@
         android:textColor="@android:color/white"
         android:text="@string/login"
         android:id="@+id/login"
-        app:pb_textComplete="@string/success"
+        app:pb_textComplete="@string/login_success"
         app:pb_textProgress="@string/loading"
         app:pb_textError="@string/invalid_login"
         android:layout_marginTop="20dp"/>

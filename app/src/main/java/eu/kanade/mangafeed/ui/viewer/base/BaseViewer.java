@@ -20,7 +20,7 @@ public abstract class BaseViewer {
     }
 
     public void updatePageNumber() {
-        activity.onPageChanged(getCurrentPageIndex(currentPosition), getTotalPages());
+        activity.onPageChanged(getCurrentPosition(), getTotalPages());
     }
 
     // Returns the page index given a position in the viewer. Useful por a right to left viewer,
