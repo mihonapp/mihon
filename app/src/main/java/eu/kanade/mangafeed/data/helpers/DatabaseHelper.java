@@ -26,6 +26,7 @@ import eu.kanade.mangafeed.data.models.MangaStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.resolvers.MangaWithUnreadGetResolver;
 import eu.kanade.mangafeed.data.tables.ChaptersTable;
 import eu.kanade.mangafeed.data.tables.MangasTable;
+import eu.kanade.mangafeed.util.ChapterRecognition;
 import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 
@@ -192,6 +193,10 @@ public class DatabaseHelper {
         Observable<Integer> newChaptersObs = chapterList
                 .flatMap(dbChapters -> Observable.from(chapters)
                         .filter(c -> !dbChapters.contains(c))
+                        .map(c -> {
+                            ChapterRecognition.parseChapterNumber(c, manga);
+                            return c;
+                        })
                         .toList()
                         .flatMap(newChapters -> insertChapters(newChapters).createObservable())
                         .map(PutResults::numberOfInserts));

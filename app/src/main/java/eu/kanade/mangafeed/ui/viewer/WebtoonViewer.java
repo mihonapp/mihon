@@ -11,27 +11,43 @@ import eu.kanade.mangafeed.data.models.Page;
 import eu.kanade.mangafeed.ui.activity.ReaderActivity;
 import eu.kanade.mangafeed.ui.adapter.WebtoonAdapter;
 import eu.kanade.mangafeed.ui.viewer.base.BaseViewer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subjects.PublishSubject;
 
 public class WebtoonViewer extends BaseViewer {
 
     private RecyclerView recycler;
+    private LinearLayoutManager layoutManager;
     private WebtoonAdapter adapter;
+    private List<Page> pages;
+    private Subscription subscription;
 
     public WebtoonViewer(ReaderActivity activity, FrameLayout container) {
         super(activity, container);
 
         recycler = new RecyclerView(activity);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+        layoutManager = new LinearLayoutManager(activity);
         recycler.setLayoutManager(layoutManager);
         adapter = new WebtoonAdapter(activity);
         recycler.setAdapter(adapter);
+
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                currentPosition = layoutManager.findFirstVisibleItemPosition();
+                updatePageNumber();
+            }
+        });
 
         container.addView(recycler);
     }
 
     @Override
     public int getTotalPages() {
-        return adapter.getItemCount();
+        return pages.size();
     }
 
     @Override
@@ -42,11 +58,52 @@ public class WebtoonViewer extends BaseViewer {
 
     @Override
     public void onPageListReady(List<Page> pages) {
-        adapter.setPages(pages);
+        this.pages = pages;
+        observeStatus(0);
     }
 
     @Override
     public boolean onImageTouch(MotionEvent motionEvent) {
         return true;
+    }
+
+    private void observeStatus(int position) {
+        if (position == pages.size())
+            return;
+
+        final Page page = pages.get(position);
+        adapter.addPage(page);
+
+        PublishSubject<Integer> statusSubject = PublishSubject.create();
+        page.setStatusSubject(statusSubject);
+
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
+
+        subscription = statusSubject
+                .startWith(page.getStatus())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(status -> processStatus(position, status));
+    }
+
+    private void processStatus(int position, int status) {
+        switch (status) {
+            case Page.LOAD_PAGE:
+                break;
+            case Page.DOWNLOAD_IMAGE:
+                break;
+            case Page.READY:
+                adapter.notifyItemChanged(position);
+                observeStatus(position + 1);
+                break;
+            case Page.ERROR:
+                break;
+        }
+    }
+
+    @Override
+    public void destroySubscriptions() {
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
     }
 }

@@ -33,6 +33,8 @@ public abstract class BaseViewer {
         return getCurrentPageIndex(currentPosition);
     }
 
+    public void destroySubscriptions() {}
+
     public abstract int getTotalPages();
     public abstract void setSelectedPage(int pageNumber);
     public abstract void onPageListReady(List<Page> pages);

@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.adapter;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -41,10 +42,16 @@ public class WebtoonAdapter extends BaseEasyRecyclerAdapter<Page> {
         notifyDataSetChanged();
     }
 
-    @LayoutId(R.layout.chapter_image)
+    public void addPage(Page page) {
+        pages.add(page);
+        notifyItemChanged(page.getPageNumber());
+    }
+
+    @LayoutId(R.layout.item_webtoon_viewer)
     static class ImageViewHolder extends ItemViewHolder<Page> {
 
         @ViewId(R.id.page_image_view) SubsamplingScaleImageView imageView;
+        @ViewId(R.id.progress) ProgressBar progressBar;
 
         public ImageViewHolder(View view) {
             super(view);
@@ -60,8 +67,10 @@ public class WebtoonAdapter extends BaseEasyRecyclerAdapter<Page> {
             if (page.getImagePath() != null) {
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setImage(ImageSource.uri(page.getImagePath()).tilingDisabled());
+                progressBar.setVisibility(View.GONE);
             } else {
                 imageView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
             }
 
         }

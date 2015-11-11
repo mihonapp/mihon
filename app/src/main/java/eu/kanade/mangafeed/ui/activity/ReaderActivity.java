@@ -78,6 +78,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     protected void onPause() {
         getPresenter().setCurrentPage(viewer.getCurrentPosition());
+        viewer.destroySubscriptions();
         super.onPause();
     }
 
