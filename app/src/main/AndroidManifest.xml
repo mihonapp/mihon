@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/label_main"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -25,23 +25,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.MangaDetailActivity"
+            android:name=".ui.manga.MangaActivity"
             android:label="@string/title_activity_manga_detail"
-            android:parentActivityName=".ui.activity.MainActivity" >
+            android:parentActivityName=".ui.main.MainActivity" >
         </activity>
         <activity
-            android:name=".ui.activity.ReaderActivity"
+            android:name=".ui.reader.ReaderActivity"
             android:label="@string/title_activity_viewer"
-            android:parentActivityName=".ui.activity.MangaDetailActivity"
+            android:parentActivityName=".ui.manga.MangaActivity"
             android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.kanade.mangafeed.ui.activity.MangaDetailActivity" />
+                android:value=".ui.manga.MangaActivity" />
         </activity>
         <activity
-            android:name=".ui.activity.SettingsActivity"
+            android:name=".ui.preference.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ui.activity.MainActivity" >
+            android:parentActivityName=".ui.main.MainActivity" >
         </activity>
 
         <service android:name=".data.services.LibraryUpdateService"

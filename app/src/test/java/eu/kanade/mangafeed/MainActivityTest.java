@@ -13,7 +13,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import eu.kanade.mangafeed.ui.activity.MainActivity;
+import eu.kanade.mangafeed.ui.main.MainActivity;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
