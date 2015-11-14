@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import eu.kanade.mangafeed.data.models.Page;
+import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 
 public class RightToLeftReader extends HorizontalReader {
@@ -20,7 +20,7 @@ public class RightToLeftReader extends HorizontalReader {
         ArrayList<Page> inversedPages = new ArrayList<>(pages);
         Collections.reverse(inversedPages);
         adapter.setPages(inversedPages);
-        viewPager.setCurrentItem(adapter.getCount()-1, false);
+        viewPager.setCurrentItem(adapter.getCount() - 1, false);
     }
 
     @Override

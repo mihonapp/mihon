@@ -5,7 +5,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Download;
+import eu.kanade.mangafeed.data.download.model.Download;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
 import uk.co.ribot.easyadapter.annotations.LayoutId;

@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import eu.kanade.mangafeed.data.models.Chapter;
-import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.database.models.Chapter;
+import eu.kanade.mangafeed.data.database.models.Manga;
 
 public class ChapterRecognition {
 

@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.ui.base.activity.BaseRxActivity;
 import eu.kanade.mangafeed.ui.manga.chapter.ChaptersFragment;
 import eu.kanade.mangafeed.ui.manga.info.MangaInfoFragment;

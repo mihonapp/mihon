@@ -9,7 +9,7 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Chapter;
+import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 
 public class ChaptersAdapter extends FlexibleAdapter<ChaptersHolder, Chapter> {

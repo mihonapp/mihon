@@ -5,8 +5,8 @@ import android.os.Bundle;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
-import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.database.DatabaseHelper;
+import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

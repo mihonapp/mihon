@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Page;
+import eu.kanade.mangafeed.data.source.model.Page;
 import uk.co.ribot.easyadapter.BaseEasyRecyclerAdapter;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;

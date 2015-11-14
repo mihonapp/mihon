@@ -21,7 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.util.PageBundle;

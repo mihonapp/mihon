@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.sources.base.Source;
+import eu.kanade.mangafeed.data.source.base.Source;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
 import uk.co.ribot.easyadapter.annotations.LayoutId;

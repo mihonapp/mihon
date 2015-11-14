@@ -6,12 +6,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import eu.kanade.mangafeed.data.caches.CacheManager;
-import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
-import eu.kanade.mangafeed.data.helpers.DownloadManager;
-import eu.kanade.mangafeed.data.helpers.NetworkHelper;
-import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
-import eu.kanade.mangafeed.data.helpers.SourceManager;
+import eu.kanade.mangafeed.data.cache.CacheManager;
+import eu.kanade.mangafeed.data.database.DatabaseHelper;
+import eu.kanade.mangafeed.data.download.DownloadManager;
+import eu.kanade.mangafeed.data.network.NetworkHelper;
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
+import eu.kanade.mangafeed.data.source.SourceManager;
 
 /**
  * Provide dependencies to the DataManager, mainly Helper classes and Retrofit services.

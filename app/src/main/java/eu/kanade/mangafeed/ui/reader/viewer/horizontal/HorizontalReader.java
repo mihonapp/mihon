@@ -8,7 +8,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Page;
+import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
 import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerReaderAdapter;

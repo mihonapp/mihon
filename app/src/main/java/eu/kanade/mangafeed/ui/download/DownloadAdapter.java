@@ -2,7 +2,7 @@ package eu.kanade.mangafeed.ui.download;
 
 import android.content.Context;
 
-import eu.kanade.mangafeed.data.models.Download;
+import eu.kanade.mangafeed.data.download.model.Download;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 public class DownloadAdapter extends EasyRecyclerAdapter<Download> {

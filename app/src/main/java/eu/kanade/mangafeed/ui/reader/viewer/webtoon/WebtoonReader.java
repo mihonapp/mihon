@@ -7,7 +7,7 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
-import eu.kanade.mangafeed.data.models.Page;
+import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
 import rx.Subscription;

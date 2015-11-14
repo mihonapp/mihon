@@ -7,10 +7,10 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import eu.kanade.mangafeed.data.helpers.DownloadManager;
-import eu.kanade.mangafeed.data.models.Download;
-import eu.kanade.mangafeed.data.models.DownloadQueue;
-import eu.kanade.mangafeed.data.models.Page;
+import eu.kanade.mangafeed.data.download.DownloadManager;
+import eu.kanade.mangafeed.data.download.model.Download;
+import eu.kanade.mangafeed.data.download.model.DownloadQueue;
+import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import rx.Observable;
 import rx.Subscription;

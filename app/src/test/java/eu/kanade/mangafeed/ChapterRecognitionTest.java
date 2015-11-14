@@ -3,8 +3,8 @@ package eu.kanade.mangafeed;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.kanade.mangafeed.data.models.Chapter;
-import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.database.models.Chapter;
+import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.util.ChapterRecognition;
 
 import static org.hamcrest.Matchers.is;

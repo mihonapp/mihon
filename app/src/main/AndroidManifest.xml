@@ -39,19 +39,19 @@
                 android:value=".ui.manga.MangaActivity" />
         </activity>
         <activity
-            android:name=".ui.preference.SettingsActivity"
+            android:name=".ui.setting.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.main.MainActivity" >
         </activity>
 
-        <service android:name=".data.services.LibraryUpdateService"
+        <service android:name=".data.sync.LibraryUpdateService"
             android:exported="false"/>
 
-        <service android:name=".data.services.DownloadService"
+        <service android:name=".data.download.DownloadService"
             android:exported="false"/>
 
         <receiver
-            android:name=".data.services.LibraryUpdateService$SyncOnConnectionAvailable"
+            android:name=".data.sync.LibraryUpdateService$SyncOnConnectionAvailable"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

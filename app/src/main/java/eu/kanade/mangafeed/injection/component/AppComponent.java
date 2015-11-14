@@ -5,8 +5,8 @@ import android.app.Application;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import eu.kanade.mangafeed.data.services.DownloadService;
-import eu.kanade.mangafeed.data.services.LibraryUpdateService;
+import eu.kanade.mangafeed.data.download.DownloadService;
+import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
 import eu.kanade.mangafeed.injection.module.AppModule;
 import eu.kanade.mangafeed.injection.module.DataModule;
 import eu.kanade.mangafeed.ui.catalogue.CataloguePresenter;
@@ -17,10 +17,10 @@ import eu.kanade.mangafeed.ui.manga.chapter.ChaptersPresenter;
 import eu.kanade.mangafeed.ui.manga.info.MangaInfoPresenter;
 import eu.kanade.mangafeed.ui.reader.ReaderPresenter;
 import eu.kanade.mangafeed.ui.catalogue.SourcePresenter;
-import eu.kanade.mangafeed.sources.base.Source;
+import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
-import eu.kanade.mangafeed.ui.preference.SettingsAccountsFragment;
-import eu.kanade.mangafeed.ui.preference.SettingsDownloadsFragment;
+import eu.kanade.mangafeed.ui.setting.SettingsAccountsFragment;
+import eu.kanade.mangafeed.ui.setting.SettingsDownloadsFragment;
 
 @Singleton
 @Component(

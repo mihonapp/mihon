@@ -16,7 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Manga;
+import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 

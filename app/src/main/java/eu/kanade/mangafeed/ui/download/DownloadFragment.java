@@ -14,7 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Download;
+import eu.kanade.mangafeed.data.download.model.Download;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 

@@ -14,7 +14,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.ui.preference.SettingsActivity;
+import eu.kanade.mangafeed.ui.setting.SettingsActivity;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.download.DownloadFragment;
 import eu.kanade.mangafeed.ui.library.LibraryFragment;

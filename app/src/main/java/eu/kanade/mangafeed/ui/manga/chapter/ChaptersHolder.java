@@ -11,8 +11,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.models.Chapter;
-import eu.kanade.mangafeed.ui.manga.chapter.ChaptersAdapter;
+import eu.kanade.mangafeed.data.database.models.Chapter;
 
 public class ChaptersHolder extends RecyclerView.ViewHolder implements
         View.OnClickListener, View.OnLongClickListener {

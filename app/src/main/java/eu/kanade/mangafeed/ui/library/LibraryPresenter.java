@@ -5,8 +5,8 @@ import android.util.SparseBooleanArray;
 
 import javax.inject.Inject;
 
-import eu.kanade.mangafeed.data.helpers.DatabaseHelper;
-import eu.kanade.mangafeed.data.helpers.PreferencesHelper;
+import eu.kanade.mangafeed.data.database.DatabaseHelper;
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import rx.Observable;
 import rx.Subscription;
