@@ -46,9 +46,9 @@ public class MainActivity extends BaseActivity {
                         new PrimaryDrawerItem()
                                 .withName(R.string.library_title)
                                 .withIdentifier(R.id.nav_drawer_library),
-                        new PrimaryDrawerItem()
-                                .withName(R.string.recent_updates_title)
-                                .withIdentifier(R.id.nav_drawer_recent_updates),
+//                        new PrimaryDrawerItem()
+//                                .withName(R.string.recent_updates_title)
+//                                .withIdentifier(R.id.nav_drawer_recent_updates),
                         new PrimaryDrawerItem()
                                 .withName(R.string.catalogues_title)
                                 .withIdentifier(R.id.nav_drawer_catalogues),

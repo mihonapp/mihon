@@ -21,15 +21,15 @@ import eu.kanade.mangafeed.data.models.Manga;
 import eu.kanade.mangafeed.sources.base.Source;
 import rx.Observable;
 
-public class MangaHere extends Source {
+public class Mangahere extends Source {
 
-    public static final String NAME = "MangaHere (EN)";
+    public static final String NAME = "Mangahere (EN)";
     public static final String BASE_URL = "www.mangahere.co";
 
-    private static final String INITIAL_UPDATE_URL = "http://www.mangahere.co/latest/";
+    private static final String INITIAL_UPDATE_URL = "http://www.mangahere.co/directory/";
     private static final String INITIAL_SEARCH_URL = "http://www.mangahere.co/search.php?";
 
-    public MangaHere(Context context) {
+    public Mangahere(Context context) {
         super(context);
     }
 
@@ -45,7 +45,7 @@ public class MangaHere extends Source {
 
     @Override
     protected String getUrlFromPageNumber(int page) {
-        return INITIAL_UPDATE_URL + page + "/";
+        return INITIAL_UPDATE_URL + page + ".htm?views.za";
     }
 
     @Override
@@ -101,42 +101,55 @@ public class MangaHere extends Source {
     public List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
-        List<Manga> updatedMangaList = new ArrayList<>();
+        List<Manga> mangaList = new ArrayList<>();
 
-        Elements updatedHtmlBlocks = parsedDocument.select("div.manga_updates dl");
-        for (Element currentHtmlBlock : updatedHtmlBlocks) {
-            Manga currentlyUpdatedManga = constructMangaFromHtmlBlock(currentHtmlBlock);
-
-            updatedMangaList.add(currentlyUpdatedManga);
+        Elements mangaHtmlBlocks = parsedDocument.select("div.directory_list > ul > li");
+        for (Element currentHtmlBlock : mangaHtmlBlocks) {
+            Manga currentManga = constructPopularMangaFromHtmlBlock(currentHtmlBlock);
+            mangaList.add(currentManga);
         }
 
-        return updatedMangaList;
+        return mangaList;
+    }
+
+    private Manga constructPopularMangaFromHtmlBlock(Element htmlBlock) {
+        Manga mangaFromHtmlBlock = new Manga();
+        mangaFromHtmlBlock.source = getSourceId();
+
+        Element urlElement = htmlBlock.select("div.title > a").first();
+
+        if (urlElement != null) {
+            mangaFromHtmlBlock.url = urlElement.attr("href");
+            mangaFromHtmlBlock.title = urlElement.attr("title");
+        }
+
+        return mangaFromHtmlBlock;
     }
 
     @Override
     protected List<Manga> parseSearchFromHtml(String unparsedHtml) {
-        return null;
+        Document parsedDocument = Jsoup.parse(unparsedHtml);
+
+        List<Manga> mangaList = new ArrayList<>();
+
+        Elements mangaHtmlBlocks = parsedDocument.select("div.result_search > dl");
+        for (Element currentHtmlBlock : mangaHtmlBlocks) {
+            Manga currentManga = constructSearchMangaFromHtmlBlock(currentHtmlBlock);
+            mangaList.add(currentManga);
+        }
+
+        return mangaList;
     }
 
-    private Manga constructMangaFromHtmlBlock(Element htmlBlock) {
+    private Manga constructSearchMangaFromHtmlBlock(Element htmlBlock) {
         Manga mangaFromHtmlBlock = new Manga();
         mangaFromHtmlBlock.source = getSourceId();
 
         Element urlElement = htmlBlock.select("a.manga_info").first();
-        Element nameElement = htmlBlock.select("a.manga_info").first();
-        Element updateElement = htmlBlock.select("span.time").first();
 
         if (urlElement != null) {
-            String fieldUrl = urlElement.attr("href");
-            mangaFromHtmlBlock.url = fieldUrl;
-        }
-        if (nameElement != null) {
-            String fieldName = nameElement.text();
-            mangaFromHtmlBlock.title = fieldName;
-        }
-        if (updateElement != null) {
-            long fieldUpdate = parseUpdateFromElement(updateElement);
-            mangaFromHtmlBlock.last_update = fieldUpdate;
+            mangaFromHtmlBlock.url = urlElement.attr("href");
+            mangaFromHtmlBlock.title = urlElement.text();
         }
 
         return mangaFromHtmlBlock;

@@ -7,13 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 
 import eu.kanade.mangafeed.sources.Batoto;
-import eu.kanade.mangafeed.sources.MangaHere;
+import eu.kanade.mangafeed.sources.Mangahere;
+import eu.kanade.mangafeed.sources.Mangafox;
 import eu.kanade.mangafeed.sources.base.Source;
 
 public class SourceManager {
 
     public static final int BATOTO = 1;
     public static final int MANGAHERE = 2;
+    public static final int MANGAFOX = 3;
 
     private HashMap<Integer, Source> mSourcesMap;
     private Context context;
@@ -37,7 +39,9 @@ public class SourceManager {
             case BATOTO:
                 return new Batoto(context);
             case MANGAHERE:
-                return new MangaHere(context);
+                return new Mangahere(context);
+            case MANGAFOX:
+                return new Mangafox(context);
         }
 
         return null;
@@ -46,6 +50,7 @@ public class SourceManager {
     private void initializeSources() {
         mSourcesMap.put(BATOTO, createSource(BATOTO));
         mSourcesMap.put(MANGAHERE, createSource(MANGAHERE));
+        mSourcesMap.put(MANGAFOX, createSource(MANGAFOX));
     }
 
     public List<Source> getSources() {

@@ -85,9 +85,7 @@ public abstract class Source extends BaseSource {
         return Observable.from(pages)
                 .filter(page -> page.getImageUrl() == null)
                 .window(overrideNumberOfConcurrentPageDownloads())
-                .concatMap(batchedPages ->
-                                batchedPages.concatMap(this::getImageUrlFromPage)
-                );
+                .concatMap(batchedPages -> batchedPages.concatMap(this::getImageUrlFromPage));
     }
 
     private Observable<Page> getImageUrlFromPage(final Page page) {

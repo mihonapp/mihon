@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -40,8 +39,8 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
     private Subscription mQueryDebouncerSubscription;
     private Subscription mMangaDetailFetchSubscription;
-    private PublishSubject<Observable<String>> mQueryDebouncerSubject;
-    private PublishSubject<Observable<List<Manga>>> mMangaDetailPublishSubject;
+    private PublishSubject<String> mQueryDebouncerSubject;
+    private PublishSubject<List<Manga>> mMangaDetailPublishSubject;
 
     private static final int GET_MANGA_LIST = 1;
 
@@ -59,7 +58,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                     view.hideProgressBar();
                     view.onAddPage(page);
                     if (mMangaDetailPublishSubject != null)
-                        mMangaDetailPublishSubject.onNext(Observable.just(page.data));
+                        mMangaDetailPublishSubject.onNext(page.data);
                 });
 
         initializeSearch();
@@ -130,7 +129,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         mSearchMode = false;
         mQueryDebouncerSubject = PublishSubject.create();
 
-        add(mQueryDebouncerSubscription = Observable.switchOnNext(mQueryDebouncerSubject)
+        add(mQueryDebouncerSubscription = mQueryDebouncerSubject
                 .debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -143,25 +142,12 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
         mMangaDetailPublishSubject = PublishSubject.create();
 
-        add(mMangaDetailFetchSubscription = Observable.switchOnNext(mMangaDetailPublishSubject)
+        add(mMangaDetailFetchSubscription = mMangaDetailPublishSubject
                 .subscribeOn(Schedulers.io())
                 .flatMap(Observable::from)
                 .filter(manga -> !manga.initialized)
-                .buffer(3)
-                .concatMap(localMangas -> {
-                    List<Observable<Manga>> mangaObservables = new ArrayList<>();
-                    for (Manga manga : localMangas) {
-                        Observable<Manga> tempObs = selectedSource.pullMangaFromNetwork(manga.url)
-                                .subscribeOn(Schedulers.io())
-                                .flatMap(networkManga -> {
-                                    Manga.copyFromNetwork(manga, networkManga);
-                                    db.insertManga(manga).executeAsBlocking();
-                                    return Observable.just(manga);
-                                });
-                        mangaObservables.add(tempObs);
-                    }
-                    return Observable.merge(mangaObservables);
-                })
+                .window(3)
+                .concatMap(pack -> pack.concatMap(this::getMangaDetails))
                 .filter(manga -> manga.initialized)
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -171,12 +157,22 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                 }));
     }
 
+    private Observable<Manga> getMangaDetails(final Manga manga) {
+        return selectedSource.pullMangaFromNetwork(manga.url)
+                .subscribeOn(Schedulers.io())
+                .flatMap(networkManga -> {
+                    Manga.copyFromNetwork(manga, networkManga);
+                    db.insertManga(manga).executeAsBlocking();
+                    return Observable.just(manga);
+                });
+    }
+
     public void onSearchEvent(String query, boolean now) {
         // If the query is empty or not debounced, resolve it instantly
         if (now || query.equals(""))
             queryFromSearch(query);
         else if (mQueryDebouncerSubject != null)
-            mQueryDebouncerSubject.onNext(Observable.just(query));
+            mQueryDebouncerSubject.onNext(query);
     }
 
     private void queryFromSearch(String query) {
