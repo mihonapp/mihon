@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import eu.kanade.mangafeed.data.source.online.english.Batoto;
-import eu.kanade.mangafeed.data.source.online.english.Mangahere;
-import eu.kanade.mangafeed.data.source.online.english.Mangafox;
 import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.online.english.Batoto;
+import eu.kanade.mangafeed.data.source.online.english.Mangafox;
+import eu.kanade.mangafeed.data.source.online.english.Mangahere;
 
 public class SourceManager {
 

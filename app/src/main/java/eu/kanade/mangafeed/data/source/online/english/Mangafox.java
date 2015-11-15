@@ -14,13 +14,14 @@ import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.model.MangasPage;
 
 public class Mangafox extends Source {
 
     public static final String NAME = "Mangafox (EN)";
-
-    private static final String INITIAL_UPDATE_URL = "http://mangafox.me/directory/";
-    private static final String INITIAL_SEARCH_URL =
+    public static final String BASE_URL = "http://mangafox.me";
+    public static final String INITIAL_POPULAR_MANGAS_URL = "http://mangafox.me/directory/";
+    public static final String INITIAL_SEARCH_URL =
             "http://mangafox.me/search.php?name_method=cw&advopts=1&order=az&sort=name";
 
     public Mangafox(Context context) {
@@ -43,17 +44,20 @@ public class Mangafox extends Source {
     }
 
     @Override
-    protected String getUrlFromPageNumber(int page) {
-        return INITIAL_UPDATE_URL + page + ".htm";
+    protected String getInitialPopularMangasUrl() {
+        return INITIAL_POPULAR_MANGAS_URL;
     }
 
     @Override
-    public List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
-        Document parsedDocument = Jsoup.parse(unparsedHtml);
+    protected String getInitialSearchUrl(String query) {
+        return INITIAL_SEARCH_URL + "&name=" + query + "&page=1";
+    }
 
+    @Override
+    protected List<Manga> parsePopularMangasFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements mangaHtmlBlocks = parsedDocument.select("div#mangalist > ul.list > li");
+        Elements mangaHtmlBlocks = parsedHtml.select("div#mangalist > ul.list > li");
         for (Element currentHtmlBlock : mangaHtmlBlocks) {
             Manga currentManga = constructPopularMangaFromHtmlBlock(currentHtmlBlock);
             mangaList.add(currentManga);
@@ -77,17 +81,19 @@ public class Mangafox extends Source {
     }
 
     @Override
-    protected String getSearchUrl(String query, int page) {
-        return INITIAL_SEARCH_URL + "&name=" + query + "&page=" + page;
+    protected String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page) {
+        Element next = parsedHtml.select("a:has(span.next)").first();
+        if (next == null)
+            return null;
+
+        return INITIAL_POPULAR_MANGAS_URL + next.attr("href");
     }
 
     @Override
-    protected List<Manga> parseSearchFromHtml(String unparsedHtml) {
-        Document parsedDocument = Jsoup.parse(unparsedHtml);
-
+    protected List<Manga> parseSearchFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements mangaHtmlBlocks = parsedDocument.select("table#listing > tbody > tr:gt(0)");
+        Elements mangaHtmlBlocks = parsedHtml.select("table#listing > tbody > tr:gt(0)");
         for (Element currentHtmlBlock : mangaHtmlBlocks) {
             Manga currentManga = constructSearchMangaFromHtmlBlock(currentHtmlBlock);
             mangaList.add(currentManga);
@@ -108,6 +114,15 @@ public class Mangafox extends Source {
         }
 
         return mangaFromHtmlBlock;
+    }
+
+    @Override
+    protected String parseNextSearchUrl(Document parsedHtml, MangasPage page, String query) {
+        Element next = parsedHtml.select("a:has(span.next)").first();
+        if (next == null)
+            return null;
+
+        return BASE_URL + next.attr("href");
     }
 
     @Override

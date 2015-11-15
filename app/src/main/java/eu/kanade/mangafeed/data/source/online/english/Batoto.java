@@ -25,13 +25,14 @@ import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.model.MangasPage;
 import rx.Observable;
 
 public class Batoto extends Source {
 
     public static final String NAME = "Batoto (EN)";
     public static final String BASE_URL = "http://bato.to";
-    public static final String INITIAL_UPDATE_URL =
+    public static final String INITIAL_POPULAR_MANGAS_URL =
             "http://bato.to/search_ajax?order_cond=views&order=desc&p=";
     public static final String INITIAL_SEARCH_URL = "http://bato.to/search_ajax?";
     public static final String INITIAL_PAGE_URL = "http://bato.to/areader?";
@@ -112,13 +113,13 @@ public class Batoto extends Source {
     }
 
     @Override
-    protected String getUrlFromPageNumber(int page) {
-        return INITIAL_UPDATE_URL + page;
+    public String getInitialPopularMangasUrl() {
+        return INITIAL_POPULAR_MANGAS_URL + "1";
     }
 
     @Override
-    protected String getSearchUrl(String query, int page) {
-        return INITIAL_SEARCH_URL + "name=" + query + "&p=" + page;
+    public String getInitialSearchUrl(String query) {
+        return INITIAL_SEARCH_URL + "name=" + query + "&p=1";
     }
 
     @Override
@@ -141,33 +142,49 @@ public class Batoto extends Source {
         return INITIAL_PAGE_URL + "id=" + id + "&p=" + defaultPageUrl.substring(end+1);
     }
 
-    private List<Manga> parseMangasFromHtml(String unparsedHtml) {
-        if (unparsedHtml.contains("No (more) comics found!")) {
+    @Override
+    protected List<Manga> parsePopularMangasFromHtml(Document parsedHtml) {
+        if (parsedHtml.text().contains("No (more) comics found!")) {
             return new ArrayList<>();
         }
 
-        Document parsedDocument = Jsoup.parse(unparsedHtml);
+        List<Manga> mangaList = new ArrayList<>();
 
-        List<Manga> updatedMangaList = new ArrayList<>();
-
-        Elements updatedHtmlBlocks = parsedDocument.select("tr:not([id]):not([class])");
+        Elements updatedHtmlBlocks = parsedHtml.select("tr:not([id]):not([class])");
         for (Element currentHtmlBlock : updatedHtmlBlocks) {
             Manga currentlyUpdatedManga = constructMangaFromHtmlBlock(currentHtmlBlock);
 
-            updatedMangaList.add(currentlyUpdatedManga);
+            mangaList.add(currentlyUpdatedManga);
         }
 
-        return updatedMangaList;
+        return mangaList;
     }
 
     @Override
-    public List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
-        return parseMangasFromHtml(unparsedHtml);
+    protected String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page) {
+        Element next = parsedHtml.select("#show_more_row").first();
+        if (next == null)
+            return null;
+
+        return INITIAL_POPULAR_MANGAS_URL + (page.page + 1);
     }
 
     @Override
-    protected List<Manga> parseSearchFromHtml(String unparsedHtml) {
-        return parseMangasFromHtml(unparsedHtml);
+    protected List<Manga> parseSearchFromHtml(Document parsedHtml) {
+        if (parsedHtml.text().contains("No (more) comics found!")) {
+            return new ArrayList<>();
+        }
+
+        List<Manga> mangaList = new ArrayList<>();
+
+        Elements updatedHtmlBlocks = parsedHtml.select("tr:not([id]):not([class])");
+        for (Element currentHtmlBlock : updatedHtmlBlocks) {
+            Manga currentlyUpdatedManga = constructMangaFromHtmlBlock(currentHtmlBlock);
+
+            mangaList.add(currentlyUpdatedManga);
+        }
+
+        return mangaList;
     }
 
     private Manga constructMangaFromHtmlBlock(Element htmlBlock) {
@@ -193,6 +210,15 @@ public class Batoto extends Source {
         }
 
         return mangaFromHtmlBlock;
+    }
+
+    @Override
+    protected String parseNextSearchUrl(Document parsedHtml, MangasPage page, String query) {
+        Element next = parsedHtml.select("#show_more_row").first();
+        if (next == null)
+            return null;
+
+        return INITIAL_SEARCH_URL + "name=" + query + "&p=" + (page.page + 1);
     }
 
     private long parseUpdateFromElement(Element updateElement) {

@@ -15,18 +15,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.model.MangasPage;
 import rx.Observable;
 
 public class Mangahere extends Source {
 
     public static final String NAME = "Mangahere (EN)";
-    public static final String BASE_URL = "www.mangahere.co";
+    public static final String BASE_URL = "http://www.mangahere.co";
 
-    private static final String INITIAL_UPDATE_URL = "http://www.mangahere.co/directory/";
+    private static final String INITIAL_POPULAR_MANGAS_URL = "http://www.mangahere.co/directory/";
     private static final String INITIAL_SEARCH_URL = "http://www.mangahere.co/search.php?";
 
     public Mangahere(Context context) {
@@ -44,19 +45,18 @@ public class Mangahere extends Source {
     }
 
     @Override
-    protected String getUrlFromPageNumber(int page) {
-        return INITIAL_UPDATE_URL + page + ".htm?views.za";
-    }
-
-    @Override
-    protected String getSearchUrl(String query, int page) {
-        return INITIAL_SEARCH_URL + "name=" + query + "&page=" + page;
-    }
-
-
-    @Override
     public boolean isLoginRequired() {
         return false;
+    }
+
+    @Override
+    protected String getInitialPopularMangasUrl() {
+        return INITIAL_POPULAR_MANGAS_URL;
+    }
+
+    @Override
+    protected String getInitialSearchUrl(String query) {
+        return INITIAL_SEARCH_URL + "name=" + query + "&page=1";
     }
 
     public Observable<List<String>> getGenres() {
@@ -98,12 +98,10 @@ public class Mangahere extends Source {
     }
 
     @Override
-    public List<Manga> parsePopularMangasFromHtml(String unparsedHtml) {
-        Document parsedDocument = Jsoup.parse(unparsedHtml);
-
+    public List<Manga> parsePopularMangasFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements mangaHtmlBlocks = parsedDocument.select("div.directory_list > ul > li");
+        Elements mangaHtmlBlocks = parsedHtml.select("div.directory_list > ul > li");
         for (Element currentHtmlBlock : mangaHtmlBlocks) {
             Manga currentManga = constructPopularMangaFromHtmlBlock(currentHtmlBlock);
             mangaList.add(currentManga);
@@ -127,12 +125,19 @@ public class Mangahere extends Source {
     }
 
     @Override
-    protected List<Manga> parseSearchFromHtml(String unparsedHtml) {
-        Document parsedDocument = Jsoup.parse(unparsedHtml);
+    protected String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page) {
+        Element next = parsedHtml.select("div.next-page > a.next").first();
+        if (next == null)
+            return null;
 
+        return INITIAL_POPULAR_MANGAS_URL + next.attr("href");
+    }
+
+    @Override
+    protected List<Manga> parseSearchFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements mangaHtmlBlocks = parsedDocument.select("div.result_search > dl");
+        Elements mangaHtmlBlocks = parsedHtml.select("div.result_search > dl");
         for (Element currentHtmlBlock : mangaHtmlBlocks) {
             Manga currentManga = constructSearchMangaFromHtmlBlock(currentHtmlBlock);
             mangaList.add(currentManga);
@@ -153,6 +158,15 @@ public class Mangahere extends Source {
         }
 
         return mangaFromHtmlBlock;
+    }
+
+    @Override
+    protected String parseNextSearchUrl(Document parsedHtml, MangasPage page, String query) {
+        Element next = parsedHtml.select("div.next-page > a.next").first();
+        if (next == null)
+            return null;
+
+        return BASE_URL + next.attr("href");
     }
 
     private long parseUpdateFromElement(Element updateElement) {

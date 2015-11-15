@@ -1,10 +1,11 @@
 package eu.kanade.mangafeed.data.source.base;
 
-
 import android.content.Context;
 
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Response;
+
+import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,11 @@ import javax.inject.Inject;
 
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.cache.CacheManager;
-import eu.kanade.mangafeed.data.network.NetworkHelper;
-import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.network.NetworkHelper;
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
+import eu.kanade.mangafeed.data.source.model.MangasPage;
 import eu.kanade.mangafeed.data.source.model.Page;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -34,18 +36,29 @@ public abstract class Source extends BaseSource {
     }
 
     // Get the most popular mangas from the source
-    public Observable<List<Manga>> pullPopularMangasFromNetwork(int page) {
-        String url = getUrlFromPageNumber(page);
+    public Observable<MangasPage> pullPopularMangasFromNetwork(MangasPage page) {
+        if (page.page == 1)
+            page.url = getInitialPopularMangasUrl();
+
         return mNetworkService
-                .getStringResponse(url, mRequestHeaders, null)
-                .flatMap(response -> Observable.just(parsePopularMangasFromHtml(response)));
+                .getStringResponse(page.url, mRequestHeaders, null)
+                .map(Jsoup::parse)
+                .doOnNext(doc -> page.mangas = parsePopularMangasFromHtml(doc))
+                .doOnNext(doc -> page.nextPageUrl = parseNextPopularMangasUrl(doc, page))
+                .map(response -> page);
     }
 
     // Get mangas from the source with a query
-    public Observable<List<Manga>> searchMangasFromNetwork(String query, int page) {
+    public Observable<MangasPage> searchMangasFromNetwork(MangasPage page, String query) {
+        if (page.page == 1)
+            page.url = getInitialSearchUrl(query);
+
         return mNetworkService
-                .getStringResponse(getSearchUrl(query, page), mRequestHeaders, null)
-                .flatMap(response -> Observable.just(parseSearchFromHtml(response)));
+                .getStringResponse(page.url, mRequestHeaders, null)
+                .map(Jsoup::parse)
+                .doOnNext(doc -> page.mangas = parseSearchFromHtml(doc))
+                .doOnNext(doc -> page.nextPageUrl = parseNextSearchUrl(doc, page, query))
+                .map(response -> page);
     }
 
     // Get manga details from the source

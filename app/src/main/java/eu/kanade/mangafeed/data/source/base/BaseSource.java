@@ -3,10 +3,13 @@ package eu.kanade.mangafeed.data.source.base;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Response;
 
+import org.jsoup.nodes.Document;
+
 import java.util.List;
 
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.source.model.MangasPage;
 import rx.Observable;
 
 public abstract class BaseSource {
@@ -20,17 +23,23 @@ public abstract class BaseSource {
     // True if the source requires a login
     public abstract boolean isLoginRequired();
 
-    // Given a page number, it should return the URL of the page where the manga list is found
-    protected abstract String getUrlFromPageNumber(int page);
+    // Return the initial popular mangas URL
+    protected abstract String getInitialPopularMangasUrl();
 
-    // From the URL obtained before, this method must return a list of mangas
-    protected abstract List<Manga> parsePopularMangasFromHtml(String unparsedHtml);
+    // Return the initial search url given a query
+    protected abstract String getInitialSearchUrl(String query);
 
-    // Given a query and a page number, return the URL of the results
-    protected abstract String getSearchUrl(String query, int page);
+    // Get the popular list of mangas from the source's parsed document
+    protected abstract List<Manga> parsePopularMangasFromHtml(Document parsedHtml);
 
-    // From the URL obtained before, this method must return a list of mangas
-    protected abstract List<Manga> parseSearchFromHtml(String unparsedHtml);
+    // Get the next popular page URL or null if it's the last
+    protected abstract String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page);
+
+    // Get the searched list of mangas from the source's parsed document
+    protected abstract List<Manga> parseSearchFromHtml(Document parsedHtml);
+
+    // Get the next search page URL or null if it's the last
+    protected abstract String parseNextSearchUrl(Document parsedHtml, MangasPage page, String query);
 
     // Given the URL of a manga and the result of the request, return the details of the manga
     protected abstract Manga parseHtmlToManga(String mangaUrl, String unparsedHtml);

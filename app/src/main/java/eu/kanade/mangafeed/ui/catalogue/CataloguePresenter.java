@@ -10,9 +10,10 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
-import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.model.MangasPage;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.util.RxPager;
@@ -36,6 +37,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
     private int mCurrentPage;
     private RxPager pager;
+    private MangasPage lastMangasPage;
 
     private Subscription mQueryDebouncerSubscription;
     private Subscription mMangaDetailFetchSubscription;
@@ -91,21 +93,28 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     }
 
     public void requestNext() {
-        if (getView() != null)
-            getView().showGridProgressBar();
-
         pager.requestNext(++mCurrentPage);
     }
 
     private Observable<List<Manga>> getMangaObs(int page) {
-        Observable<List<Manga>> obs;
+        MangasPage nextMangasPage = new MangasPage(page);
+        if (page != 1) {
+            if (lastMangasPage.nextPageUrl == null)
+                return Observable.empty();
+            nextMangasPage.url = lastMangasPage.nextPageUrl;
+        }
+        if (getView() != null)
+            getView().showGridProgressBar();
+
+        Observable<MangasPage> obs;
         if (mSearchMode)
-            obs = selectedSource.searchMangasFromNetwork(mSearchName, page);
+            obs = selectedSource.searchMangasFromNetwork(nextMangasPage, mSearchName);
         else
-            obs = selectedSource.pullPopularMangasFromNetwork(page);
+            obs = selectedSource.pullPopularMangasFromNetwork(nextMangasPage);
 
         return obs.subscribeOn(Schedulers.io())
-                .flatMap(Observable::from)
+                .doOnNext(mangasPage -> lastMangasPage = mangasPage)
+                .flatMap(mangasPage -> Observable.from(mangasPage.mangas))
                 .map(this::networkToLocalManga)
                 .toList();
     }
