@@ -32,7 +32,7 @@ import nucleus.factory.RequiresPresenter;
 public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     @Bind(R.id.page_number) TextView pageNumber;
-    @Bind(R.id.viewer) FrameLayout container;
+    @Bind(R.id.reader) FrameLayout container;
 
     @Inject PreferencesHelper prefs;
 
@@ -59,12 +59,15 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         if (prefs.useFullscreenSet())
             enableFullScreen();
 
-        viewer = getViewer();
-
         enableHardwareAcceleration();
+
+        viewer = getViewer();
     }
     
     public void onPageListReady(List<Page> pages) {
+        if (viewer != null)
+            viewer.destroySubscriptions();
+        viewer = getViewer();
         viewer.onPageListReady(pages);
         viewer.updatePageNumber();
     }
@@ -79,11 +82,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         getPresenter().setCurrentPage(viewer.getCurrentPosition());
         viewer.destroySubscriptions();
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     public void setSelectedPage(int pageIndex) {

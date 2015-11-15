@@ -9,15 +9,16 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
+import eu.kanade.mangafeed.data.database.models.Chapter;
+import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.download.DownloadManager;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
-import eu.kanade.mangafeed.data.database.models.Chapter;
-import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.event.ChapterCountEvent;
 import eu.kanade.mangafeed.event.DownloadChaptersEvent;
 import eu.kanade.mangafeed.event.SourceMangaChapterEvent;
-import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.PostResult;
@@ -123,6 +124,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 .subscribeOn(Schedulers.io())
                 .map(chapter -> {
                     chapter.read = read;
+                    if (!read) chapter.last_page_read = 0;
                     return chapter;
                 })
                 .toList()
@@ -153,10 +155,9 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     public void checkIsChapterDownloaded(Chapter chapter) {
         File dir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
-        File pageList = new File(dir, DownloadManager.PAGE_LIST_FILE);
+        List<Page> pageList = downloadManager.getSavedPageList(source, manga, chapter);
 
-        if (dir.exists() && pageList.exists() && downloadManager
-                .getSavedPageList(source, manga, chapter).size() + 1 == dir.listFiles().length) {
+        if (pageList != null && pageList.size() + 1 == dir.listFiles().length) {
             chapter.downloaded = Chapter.DOWNLOADED;
         } else {
             chapter.downloaded = Chapter.NOT_DOWNLOADED;

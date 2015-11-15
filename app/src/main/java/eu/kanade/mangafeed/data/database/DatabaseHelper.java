@@ -167,6 +167,34 @@ public class DatabaseHelper {
                 .prepare();
     }
 
+    public PreparedGetListOfObjects<Chapter> getNextChapter(Chapter chapter) {
+        return db.get()
+                .listOfObjects(Chapter.class)
+                .withQuery(Query.builder()
+                        .table(ChaptersTable.TABLE)
+                        .where(ChaptersTable.COLUMN_MANGA_ID + "=? AND " +
+                                ChaptersTable.COLUMN_CHAPTER_NUMBER + ">?")
+                        .whereArgs(chapter.manga_id, chapter.chapter_number)
+                        .orderBy(ChaptersTable.COLUMN_CHAPTER_NUMBER)
+                        .limit(1)
+                        .build())
+                .prepare();
+    }
+
+    public PreparedGetListOfObjects<Chapter> getPreviousChapter(Chapter chapter) {
+        return db.get()
+                .listOfObjects(Chapter.class)
+                .withQuery(Query.builder()
+                        .table(ChaptersTable.TABLE)
+                        .where(ChaptersTable.COLUMN_MANGA_ID + "=? AND " +
+                                ChaptersTable.COLUMN_CHAPTER_NUMBER + "<?")
+                        .whereArgs(chapter.manga_id, chapter.chapter_number)
+                        .orderBy(ChaptersTable.COLUMN_CHAPTER_NUMBER + " DESC")
+                        .limit(1)
+                        .build())
+                .prepare();
+    }
+
     public PreparedPutObject<Chapter> insertChapter(Chapter chapter) {
         return db.put()
                 .object(chapter)

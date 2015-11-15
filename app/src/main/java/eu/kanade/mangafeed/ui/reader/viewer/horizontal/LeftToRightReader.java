@@ -12,12 +12,12 @@ public class LeftToRightReader extends HorizontalReader {
 
     @Override
     public void onFirstPageOut() {
-        // TODO
+        requestPreviousChapter();
     }
 
     @Override
     public void onLastPageOut() {
-        // TODO
+        requestNextChapter();
     }
 
 }
