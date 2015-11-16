@@ -66,9 +66,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
     
     public void onPageListReady(List<Page> pages) {
-        if (viewer != null)
-            viewer.destroySubscriptions();
-        viewer = getViewer();
         viewer.onPageListReady(pages);
         viewer.updatePageNumber();
     }

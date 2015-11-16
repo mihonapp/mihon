@@ -11,16 +11,14 @@ public class ViewPagerReaderAdapter extends SmartFragmentStatePagerAdapter {
 
     private List<Page> pages;
 
-    public ViewPagerReaderAdapter(FragmentManager fragmentManager) {
+    public ViewPagerReaderAdapter(FragmentManager fragmentManager, List<Page> pages) {
         super(fragmentManager);
+        this.pages = pages;
     }
 
     @Override
     public int getCount() {
-        if (pages != null)
-            return pages.size();
-
-        return 0;
+        return pages.size();
     }
 
     @Override

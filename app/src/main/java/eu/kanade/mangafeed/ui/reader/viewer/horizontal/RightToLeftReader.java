@@ -19,7 +19,7 @@ public class RightToLeftReader extends HorizontalReader {
     public void onPageListReady(List<Page> pages) {
         ArrayList<Page> inversedPages = new ArrayList<>(pages);
         Collections.reverse(inversedPages);
-        adapter.setPages(inversedPages);
+        super.onPageListReady(inversedPages);
         viewPager.setCurrentItem(adapter.getCount() - 1, false);
     }
 

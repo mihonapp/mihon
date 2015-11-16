@@ -24,8 +24,6 @@ public abstract class HorizontalReader extends BaseReader {
         activity.getLayoutInflater().inflate(R.layout.reader_horizontal, container);
         ButterKnife.bind(this, container);
 
-        adapter = new ViewPagerReaderAdapter(activity.getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new HorizontalViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -60,7 +58,9 @@ public abstract class HorizontalReader extends BaseReader {
 
     @Override
     public void onPageListReady(List<Page> pages) {
-        adapter.setPages(pages);
+        currentPosition = 0;
+        adapter = new ViewPagerReaderAdapter(activity.getSupportFragmentManager(), pages);
+        viewPager.setAdapter(adapter);
     }
 
     @Override
