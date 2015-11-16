@@ -129,8 +129,13 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     }
 
     public void initializeScrollListener() {
-        scroll_listener = new EndlessScrollListener(getPresenter()::requestNext);
+        scroll_listener = new EndlessScrollListener(this::requestNext);
         manga_list.setOnScrollListener(scroll_listener);
+    }
+
+    public void requestNext() {
+        if (getPresenter().requestNext())
+            showGridProgressBar();
     }
 
     public void showProgressBar() {
@@ -147,6 +152,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     }
 
     public void onAddPage(PageBundle<List<Manga>> page) {
+        hideProgressBar();
         if (page.page == 0) {
             adapter.getItems().clear();
             scroll_listener.resetScroll();
@@ -155,7 +161,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     }
 
     private int getMangaIndex(Manga manga) {
-        for (int i = 0; i < adapter.getCount(); i++) {
+        for (int i = adapter.getCount() - 1; i >= 0; i--) {
             if (manga.id == adapter.getItem(i).id) {
                 return i;
             }
@@ -164,6 +170,9 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     }
 
     private ImageView getImageView(int position) {
+        if (position == -1)
+            return null;
+
         View v = manga_list.getChildAt(position -
                 manga_list.getFirstVisiblePosition());
 

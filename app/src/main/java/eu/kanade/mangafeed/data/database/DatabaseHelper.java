@@ -173,8 +173,9 @@ public class DatabaseHelper {
                 .withQuery(Query.builder()
                         .table(ChaptersTable.TABLE)
                         .where(ChaptersTable.COLUMN_MANGA_ID + "=? AND " +
-                                ChaptersTable.COLUMN_CHAPTER_NUMBER + ">?")
-                        .whereArgs(chapter.manga_id, chapter.chapter_number)
+                                ChaptersTable.COLUMN_CHAPTER_NUMBER + ">? AND " +
+                                ChaptersTable.COLUMN_CHAPTER_NUMBER + "<=?")
+                        .whereArgs(chapter.manga_id, chapter.chapter_number, chapter.chapter_number + 1)
                         .orderBy(ChaptersTable.COLUMN_CHAPTER_NUMBER)
                         .limit(1)
                         .build())
@@ -187,8 +188,9 @@ public class DatabaseHelper {
                 .withQuery(Query.builder()
                         .table(ChaptersTable.TABLE)
                         .where(ChaptersTable.COLUMN_MANGA_ID + "=? AND " +
-                                ChaptersTable.COLUMN_CHAPTER_NUMBER + "<?")
-                        .whereArgs(chapter.manga_id, chapter.chapter_number)
+                                ChaptersTable.COLUMN_CHAPTER_NUMBER + "<? AND " +
+                                ChaptersTable.COLUMN_CHAPTER_NUMBER + ">=?")
+                        .whereArgs(chapter.manga_id, chapter.chapter_number, chapter.chapter_number - 1)
                         .orderBy(ChaptersTable.COLUMN_CHAPTER_NUMBER + " DESC")
                         .limit(1)
                         .build())

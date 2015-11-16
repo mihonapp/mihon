@@ -14,11 +14,11 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.ui.setting.SettingsActivity;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
+import eu.kanade.mangafeed.ui.catalogue.SourceFragment;
 import eu.kanade.mangafeed.ui.download.DownloadFragment;
 import eu.kanade.mangafeed.ui.library.LibraryFragment;
-import eu.kanade.mangafeed.ui.catalogue.SourceFragment;
+import eu.kanade.mangafeed.ui.setting.SettingsActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -88,7 +88,8 @@ public class MainActivity extends BaseActivity {
                 )
                 .build();
 
-        drawer.setSelection(R.id.nav_drawer_library);
+        if (savedInstanceState == null)
+            drawer.setSelection(R.id.nav_drawer_library);
     }
 
     public void setFragment(Fragment fragment) {
