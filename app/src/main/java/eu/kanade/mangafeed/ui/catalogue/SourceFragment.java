@@ -37,7 +37,7 @@ public class SourceFragment extends BaseRxFragment<SourcePresenter> {
         View view = inflater.inflate(R.layout.fragment_source, container, false);
         ButterKnife.bind(this, view);
 
-        setToolbarTitle(R.string.catalogues_title);
+        setToolbarTitle(R.string.label_catalogues);
 
         createAdapter();
 

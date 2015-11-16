@@ -70,7 +70,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                     if (currentPage != 0)
                         view.setSelectedPage(currentPage);
                 },
-                (view, error) -> Timber.e("An error occurred while downloading page list"));
+                (view, error) -> {
+                    view.onPageListError();
+                });
 
         restartableReplay(GET_PAGE_IMAGES,
                 this::getPageImagesObservable,
@@ -133,9 +135,11 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     private void onChapterChange() {
-        if (!isDownloaded)
-            source.savePageList(chapter.url, pageList);
-        saveChapterProgress();
+        if (pageList != null) {
+            if (!isDownloaded)
+                source.savePageList(chapter.url, pageList);
+            saveChapterProgress();
+        }
     }
 
     private Observable<List<Page>> getPageListObservable() {

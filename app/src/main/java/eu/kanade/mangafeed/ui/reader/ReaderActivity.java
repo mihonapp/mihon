@@ -26,6 +26,7 @@ import eu.kanade.mangafeed.ui.reader.viewer.horizontal.LeftToRightReader;
 import eu.kanade.mangafeed.ui.reader.viewer.horizontal.RightToLeftReader;
 import eu.kanade.mangafeed.ui.reader.viewer.vertical.VerticalReader;
 import eu.kanade.mangafeed.ui.reader.viewer.webtoon.WebtoonReader;
+import eu.kanade.mangafeed.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(ReaderPresenter.class)
@@ -70,6 +71,11 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         viewer = getViewer();
         viewer.onPageListReady(pages);
         viewer.updatePageNumber();
+    }
+
+    public void onPageListError() {
+        finish();
+        ToastUtil.showShort(this, R.string.page_list_error);
     }
 
     public void onPageChanged(int currentPageIndex, int totalPages) {

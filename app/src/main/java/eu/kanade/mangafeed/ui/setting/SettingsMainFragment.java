@@ -28,7 +28,7 @@ public class SettingsMainFragment extends PreferenceFragment {
     public void onResume() {
         super.onResume();
         ((BaseActivity)getActivity())
-                .setToolbarTitle(getString(R.string.settings_title));
+                .setToolbarTitle(getString(R.string.label_settings));
     }
 
     private void registerSubpreference(int preferenceResource, PreferenceFragment fragment) {

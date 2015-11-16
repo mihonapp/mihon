@@ -30,6 +30,8 @@ public class MainActivity extends BaseActivity {
 
     private Drawer drawer;
 
+    private final static String SELECTED_ITEM = "selected_item";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,19 +47,19 @@ public class MainActivity extends BaseActivity {
                 .withActionBarDrawerToggleAnimated(true)
                 .addDrawerItems(
                         new PrimaryDrawerItem()
-                                .withName(R.string.library_title)
+                                .withName(R.string.label_library)
                                 .withIdentifier(R.id.nav_drawer_library),
 //                        new PrimaryDrawerItem()
 //                                .withName(R.string.recent_updates_title)
 //                                .withIdentifier(R.id.nav_drawer_recent_updates),
                         new PrimaryDrawerItem()
-                                .withName(R.string.catalogues_title)
+                                .withName(R.string.label_catalogues)
                                 .withIdentifier(R.id.nav_drawer_catalogues),
                         new PrimaryDrawerItem()
-                                .withName(R.string.download_title)
+                                .withName(R.string.label_download_queue)
                                 .withIdentifier(R.id.nav_drawer_downloads),
                         new PrimaryDrawerItem()
-                                .withName(R.string.settings_title)
+                                .withName(R.string.label_settings)
                                 .withIdentifier(R.id.nav_drawer_settings)
                                 .withSelectable(false)
                 )
@@ -90,6 +92,14 @@ public class MainActivity extends BaseActivity {
 
         if (savedInstanceState == null)
             drawer.setSelection(R.id.nav_drawer_library);
+        else
+            drawer.setSelection(savedInstanceState.getInt(SELECTED_ITEM), false);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SELECTED_ITEM, drawer.getCurrentSelection());
+        super.onSaveInstanceState(outState);
     }
 
     public void setFragment(Fragment fragment) {

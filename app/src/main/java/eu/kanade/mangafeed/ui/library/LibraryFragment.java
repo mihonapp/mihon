@@ -48,7 +48,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
-        setToolbarTitle(getString(R.string.library_title));
+        setToolbarTitle(getString(R.string.label_library));
         ButterKnife.bind(this, view);
 
         createAdapter();

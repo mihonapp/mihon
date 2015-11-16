@@ -1,69 +1,44 @@
 <resources>
     <string name="app_name">Mangafeed</string>
 
-    <!-- Activity labels -->
-    <string name="label_main">Mangafeed</string>
+    <!-- Activities and fragments labels (toolbar title) -->
+    <string name="label_settings">Settings</string>
+    <string name="label_download_queue">Download queue</string>
+    <string name="label_library">My library</string>
+    <string name="label_recent_updates">Recent updates</string>
+    <string name="label_catalogues">Catalogues</string>
 
-    <!-- Main Activity -->
-
-    <string name="action_github">View on GitHub</string>
-
-    <string name="text_no_data">No data to display</string>
-
-    <!-- Dialogs -->
-
-    <string name="dialog_action_ok">OK</string>
-    <string name="dialog_action_delete">Delete</string>
-    <string name="dialog_action_cancel">Cancel</string>
-
-    <string name="dialog_error_title">Oops</string>
-    <string name="dialog_general_error_Message">There was an error making the request</string>
-    <string name="dialog_error_no_connection">Sorry, you need a connection to do that!</string>
-
-    <!-- Arrays -->
-
-    <string name="library_title">My library</string>
-    <string name="recent_updates_title">Recent updates</string>
-    <string name="catalogues_title">Catalogues</string>
-    <string name="settings_title">Settings</string>
-    <string name="title_activity_manga_detail">MangaDetailActivity</string>
-
-    <string name="hello_world">Hello world!</string>
+    <!-- Actions -->
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
-    <string name="library_search_hint">Title or author…</string>
+    <string name="action_select_all">Select all</string>
+    <string name="action_mark_as_read">Mark as read</string>
+    <string name="action_mark_as_unread">Mark as unread</string>
+    <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
-    <string name="library_selection_title">Selected</string>
-    <string name="title_activity_catalogue_list">CatalogueList</string>
-    <string name="title_activity_manga_catalogue">MangaCatalogue</string>
-    <string name="author">Author</string>
-    <string name="chapters">Chapters</string>
-    <string name="genres">Genres</string>
-    <string name="artist">Artist</string>
-    <string name="status">Status</string>
-    <string name="description">Description</string>
-    <string name="manga_detail_tab">Info</string>
-    <string name="manga_chapters_tab">Chapters</string>
-    <string name="title_activity_viewer">ViewerActivity</string>
+    <string name="action_favorite">Add to favorites</string>
+    <string name="action_remove_favorite">Remove from favorites</string>
 
     <!-- Preferences -->
-
-    <string name="title_activity_settings">Settings</string>
+      <!-- Subsections -->
     <string name="pref_category_reader">Reader</string>
     <string name="pref_category_accounts">Accounts</string>
     <string name="pref_category_downloads">Downloads</string>
 
+      <!-- Reader section -->
     <string name="pref_fullscreen_mode">Read in fullscreen</string>
-
     <string name="pref_viewer_type">Default viewer</string>
     <string name="left_to_right_viewer">Left to right</string>
     <string name="right_to_left_viewer">Right to left</string>
     <string name="vertical_viewer">Vertical</string>
     <string name="webtoon_viewer">Webtoon (experimental)</string>
 
+      <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
+    <string name="pref_download_threads">Download threads</string>
 
+    <!-- Login dialog -->
     <string name="accounts_login_title">Login for %1$s</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -75,25 +50,36 @@
     <string name="loading">Loading…</string>
     <string name="unknown_error">Unknown error</string>
 
+    <!-- Library fragment -->
+    <string name="library_search_hint">Title or author…</string>
+    <string name="library_selection_title">Selected</string>
 
-    <string name="action_favorite">Add to favorites</string>
-    <string name="action_remove_favorite">Remove from favorites</string>
+    <!-- Catalogue fragment -->
+    <string name="source_requires_login">This source requires login</string>
+
+    <!-- Manga info fragment -->
+    <string name="manga_detail_tab">Info</string>
+    <string name="author">Author</string>
+    <string name="chapters">Chapters</string>
+    <string name="genres">Genres</string>
+    <string name="artist">Artist</string>
+    <string name="status">Status</string>
+    <string name="description">Description</string>
+
+    <!-- Manga chapters fragment -->
+    <string name="manga_chapters_tab">Chapters</string>
+    <string name="selected_chapters_title">Selected chapters: %1$d</string>
+
+    <!-- Reader activity -->
     <string name="downloading">Downloading…</string>
     <string name="download_progress">Downloaded %1$d%%</string>
     <string name="chapter_progress">Page: %1$d</string>
-    <string name="source_requires_login">This source requires login</string>
+    <string name="page_list_error">Error fetching page list. Is network available?</string>
 
-    <string name="action_select_all">Select all</string>
-    <string name="action_mark_as_read">Mark as read</string>
-    <string name="action_mark_as_unread">Mark as unread</string>
-    <string name="action_download">Download</string>
-    <string name="selected_chapters_title">Selected chapters: %1$d</string>
-
+    <!-- Library update service notifications -->
     <string name="notification_progress">Update progress: %1$d/%2$d</string>
     <string name="notification_completed">Update completed</string>
     <string name="notification_no_new_chapters">No new chapters found</string>
     <string name="notification_new_chapters">Found new chapters for:</string>
-    <string name="pref_download_threads">Download threads</string>
-    <string name="download_title">Download queue</string>
 
 </resources>

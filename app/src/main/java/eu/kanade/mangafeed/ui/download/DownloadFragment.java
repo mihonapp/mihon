@@ -36,7 +36,7 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
         View view = inflater.inflate(R.layout.fragment_download_queue, container, false);
         ButterKnife.bind(this, view);
 
-        setToolbarTitle(R.string.download_title);
+        setToolbarTitle(R.string.label_download_queue);
 
         downloadListLayout = new LinearLayoutManager(getActivity());
         downloadList.setLayoutManager(downloadListLayout);
