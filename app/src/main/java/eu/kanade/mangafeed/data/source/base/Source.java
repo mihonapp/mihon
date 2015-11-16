@@ -101,7 +101,7 @@ public abstract class Source extends BaseSource {
                 .concatMap(batchedPages -> batchedPages.concatMap(this::getImageUrlFromPage));
     }
 
-    private Observable<Page> getImageUrlFromPage(final Page page) {
+    public Observable<Page> getImageUrlFromPage(final Page page) {
         page.setStatus(Page.LOAD_PAGE);
         return mNetworkService
                 .getStringResponse(overrideRemainingPagesUrl(page.getUrl()), mRequestHeaders, null)
@@ -118,26 +118,30 @@ public abstract class Source extends BaseSource {
     }
 
     public Observable<Page> getCachedImage(final Page page) {
-        Observable<Page> obs = Observable.just(page);
+        Observable<Page> pageObservable = Observable.just(page);
         if (page.getImageUrl() == null)
-            return obs;
+            return pageObservable;
 
-        if (!mCacheManager.isImageInCache(page.getImageUrl())) {
-            page.setStatus(Page.DOWNLOAD_IMAGE);
-            obs = cacheImage(page);
-        }
-
-        return obs.flatMap(p -> {
-            page.setImagePath(mCacheManager.getImagePath(page.getImageUrl()));
-            page.setStatus(Page.READY);
-            return Observable.just(page);
-        }).onErrorResumeNext(e -> {
-            page.setStatus(Page.ERROR);
-            return Observable.just(page);
-        });
+        return pageObservable
+                .flatMap(p -> {
+                    if (!mCacheManager.isImageInCache(page.getImageUrl())) {
+                        return cacheImage(page);
+                    }
+                    return Observable.just(page);
+                })
+                .flatMap(p -> {
+                    page.setImagePath(mCacheManager.getImagePath(page.getImageUrl()));
+                    page.setStatus(Page.READY);
+                    return Observable.just(page);
+                })
+                .onErrorResumeNext(e -> {
+                    page.setStatus(Page.ERROR);
+                    return Observable.just(page);
+                });
     }
 
     private Observable<Page> cacheImage(final Page page) {
+        page.setStatus(Page.DOWNLOAD_IMAGE);
         return getImageProgressResponse(page)
                 .flatMap(resp -> {
                     if (!mCacheManager.putImageToDiskCache(page.getImageUrl(), resp)) {

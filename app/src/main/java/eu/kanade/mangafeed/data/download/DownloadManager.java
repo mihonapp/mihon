@@ -171,9 +171,9 @@ public class DownloadManager {
                 .doOnNext(pages -> download.downloadedImages = 0)
                 .doOnNext(pages -> download.setStatus(Download.DOWNLOADING))
                 // Get all the URLs to the source images, fetch pages if necessary
-                .flatMap(pageList -> Observable.merge(
-                        Observable.from(pageList).filter(page -> page.getImageUrl() != null),
-                        download.source.getRemainingImageUrlsFromPageList(pageList)))
+                .flatMap(pageList -> Observable.from(pageList)
+                        .filter(page -> page.getImageUrl() != null)
+                        .mergeWith(download.source.getRemainingImageUrlsFromPageList(pageList)))
                 // Start downloading images, consider we can have downloaded images already
                 .concatMap(page -> getDownloadedImage(page, download.source, download.directory))
                 .doOnNext(p -> download.downloadedImages++)

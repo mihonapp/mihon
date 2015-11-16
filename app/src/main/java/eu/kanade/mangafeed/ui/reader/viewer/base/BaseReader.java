@@ -33,10 +33,6 @@ public abstract class BaseReader {
         return getCurrentPageIndex(currentPosition);
     }
 
-    public void retryPage(Page page) {
-        activity.getPresenter().retryPage(page);
-    }
-
     public void requestNextChapter() {
         activity.getPresenter().setCurrentPage(getCurrentPosition());
         activity.getPresenter().loadNextChapter();

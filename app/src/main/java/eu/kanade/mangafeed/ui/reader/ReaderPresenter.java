@@ -15,6 +15,7 @@ import eu.kanade.mangafeed.data.download.DownloadManager;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.event.RetryPageEvent;
 import eu.kanade.mangafeed.event.SourceMangaChapterEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
@@ -23,6 +24,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 import timber.log.Timber;
 
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
@@ -40,21 +42,29 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private boolean isDownloaded;
     @State int currentPage;
 
+    private PublishSubject<Page> retryPageSubject;
+
     private Subscription nextChapterSubscription;
     private Subscription previousChapterSubscription;
 
     private static final int GET_PAGE_LIST = 1;
     private static final int GET_PAGE_IMAGES = 2;
+    private static final int RETRY_IMAGES = 3;
 
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
+        retryPageSubject = PublishSubject.create();
+
         restartableLatestCache(GET_PAGE_LIST,
                 () -> getPageListObservable()
                         .doOnNext(pages -> pageList = pages)
-                        .doOnCompleted(this::getAdjacentChapters)
-                        .doOnCompleted(() -> start(GET_PAGE_IMAGES)),
+                        .doOnCompleted(() -> {
+                            getAdjacentChapters();
+                            start(GET_PAGE_IMAGES);
+                            start(RETRY_IMAGES);
+                        }),
                 (view, pages) -> {
                     view.onPageListReady(pages);
                     if (currentPage != 0)
@@ -67,6 +77,10 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 (view, page) -> {},
                 (view, error) -> Timber.e("An error occurred while downloading an image"));
 
+        restartableLatestCache(RETRY_IMAGES,
+                this::getRetryPageObservable,
+                (view, page) -> {},
+                (view, error) -> Timber.e("An error occurred while downloading an image"));
     }
 
     @Override
@@ -93,6 +107,14 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         source = event.getSource();
         manga = event.getManga();
         loadChapter(event.getChapter());
+    }
+
+    @EventBusHook
+    public void onEventMainThread(RetryPageEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
+        Page page = event.getPage();
+        page.setStatus(Page.QUEUE);
+        retryPageSubject.onNext(page);
     }
 
     private void loadChapter(Chapter chapter) {
@@ -129,9 +151,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         Observable<Page> pages;
 
         if (!isDownloaded) {
-            pages = Observable
-                    .merge(Observable.from(pageList).filter(page -> page.getImageUrl() != null),
-                            source.getRemainingImageUrlsFromPageList(pageList))
+            pages = Observable.from(pageList)
+                    .filter(page -> page.getImageUrl() != null)
+                    .mergeWith(source.getRemainingImageUrlsFromPageList(pageList))
                     .flatMap(source::getCachedImage);
         } else {
             File chapterDir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
@@ -144,8 +166,15 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void retryPage(Page page) {
-
+    private Observable<Page> getRetryPageObservable() {
+        return retryPageSubject
+                .flatMap(page -> {
+                    if (page.getImageUrl() == null)
+                        return source.getImageUrlFromPage(page);
+                    return Observable.just(page);
+                })
+                .flatMap(source::getCachedImage)
+                .subscribeOn(Schedulers.io());
     }
 
     public void setCurrentPage(int currentPage) {

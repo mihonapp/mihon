@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,8 +18,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.event.RetryPageEvent;
 import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import rx.Observable;
@@ -34,6 +38,7 @@ public class ViewPagerReaderFragment extends BaseFragment {
     @Bind(R.id.progress) ProgressBar progressBar;
     @Bind(R.id.progress_text) TextView progressText;
     @Bind(R.id.image_error) TextView errorText;
+    @Bind(R.id.retry_button) Button retryButton;
 
     private Page page;
     private Subscription progressSubscription;
@@ -81,6 +86,11 @@ public class ViewPagerReaderFragment extends BaseFragment {
         this.page = page;
     }
 
+    @OnClick(R.id.retry_button)
+    void retry() {
+        EventBus.getDefault().postSticky(new RetryPageEvent(page));
+    }
+
     private void showImage() {
         if (page == null || page.getImagePath() == null)
             return;
@@ -90,10 +100,12 @@ public class ViewPagerReaderFragment extends BaseFragment {
     }
 
     private void showDownloading() {
+        progressContainer.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
     }
 
     private void showLoading() {
+        progressContainer.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
         progressText.setText(R.string.downloading);
     }
@@ -101,10 +113,19 @@ public class ViewPagerReaderFragment extends BaseFragment {
     private void showError() {
         progressContainer.setVisibility(View.GONE);
         errorText.setVisibility(View.VISIBLE);
+        retryButton.setVisibility(View.VISIBLE);
+    }
+
+    private void hideError() {
+        errorText.setVisibility(View.GONE);
+        retryButton.setVisibility(View.GONE);
     }
 
     private void processStatus(int status) {
         switch (status) {
+            case Page.QUEUE:
+                hideError();
+                break;
             case Page.LOAD_PAGE:
                 showLoading();
                 break;
