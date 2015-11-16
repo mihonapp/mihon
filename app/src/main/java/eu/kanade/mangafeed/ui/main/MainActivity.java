@@ -3,7 +3,6 @@ package eu.kanade.mangafeed.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
@@ -19,6 +18,7 @@ import eu.kanade.mangafeed.ui.catalogue.SourceFragment;
 import eu.kanade.mangafeed.ui.download.DownloadFragment;
 import eu.kanade.mangafeed.ui.library.LibraryFragment;
 import eu.kanade.mangafeed.ui.setting.SettingsActivity;
+import nucleus.view.ViewWithPresenter;
 
 public class MainActivity extends BaseActivity {
 
@@ -29,6 +29,7 @@ public class MainActivity extends BaseActivity {
     FrameLayout container;
 
     private Drawer drawer;
+    private FragmentStack fragmentStack;
 
     private final static String SELECTED_ITEM = "selected_item";
 
@@ -39,6 +40,12 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setupToolbar(toolbar);
+
+        fragmentStack = new FragmentStack(this, getSupportFragmentManager(), R.id.content_layout,
+                fragment -> {
+                    if (fragment instanceof ViewWithPresenter)
+                        ((ViewWithPresenter)fragment).getPresenter().destroy();
+                });
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -103,17 +110,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void setFragment(Fragment fragment) {
-        try {
-            if (fragment != null && getSupportFragmentManager() != null) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                if (ft != null) {
-                    ft.replace(R.id.content_layout, fragment);
-                    ft.commit();
-                }
-            }
-        } catch (Exception e) {
-
-        }
+        fragmentStack.replace(fragment);
     }
 
 }
