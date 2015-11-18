@@ -3,6 +3,7 @@ package eu.kanade.mangafeed.ui.base.activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -22,7 +23,28 @@ public class BaseActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(getString(titleResource));
     }
 
+    public void setToolbarSubtitle(String title) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setSubtitle(title);
+    }
+
+    public void setToolbarSubtitle(int titleResource) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setSubtitle(getString(titleResource));
+    }
+
     public Context getActivity() {
         return this;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

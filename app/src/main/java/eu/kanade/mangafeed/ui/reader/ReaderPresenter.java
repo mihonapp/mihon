@@ -66,12 +66,12 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                             start(RETRY_IMAGES);
                         }),
                 (view, pages) -> {
-                    view.onPageListReady(pages);
+                    view.onChapterReady(pages, manga, chapter);
                     if (currentPage != 0)
                         view.setSelectedPage(currentPage);
                 },
                 (view, error) -> {
-                    view.onPageListError();
+                    view.onChapterError();
                 });
 
         restartableReplay(GET_PAGE_IMAGES,
@@ -158,7 +158,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
             pages = Observable.from(pageList)
                     .filter(page -> page.getImageUrl() != null)
                     .mergeWith(source.getRemainingImageUrlsFromPageList(pageList))
-                    .flatMap(source::getCachedImage);
+                    .flatMap(source::getCachedImage, 3);
         } else {
             File chapterDir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
 
@@ -178,7 +178,8 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                     return Observable.just(page);
                 })
                 .flatMap(source::getCachedImage)
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public void setCurrentPage(int currentPage) {

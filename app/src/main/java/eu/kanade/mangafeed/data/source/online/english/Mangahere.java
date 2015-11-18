@@ -288,7 +288,7 @@ public class Mangahere extends Source {
     }
 
     private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
-        Chapter newChapter = Chapter.newChapter();
+        Chapter newChapter = Chapter.create();
 
         Element urlElement = chapterElement.select("a").first();
         Element nameElement = chapterElement.select("a").first();

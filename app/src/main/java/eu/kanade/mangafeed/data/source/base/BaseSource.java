@@ -92,9 +92,4 @@ public abstract class BaseSource {
         return builder;
     }
 
-    // Number of images to download at the same time. 3 by default
-    protected int overrideNumberOfConcurrentPageDownloads() {
-        return 3;
-    }
-
 }

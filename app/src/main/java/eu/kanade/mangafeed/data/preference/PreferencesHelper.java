@@ -36,8 +36,8 @@ public class PreferencesHelper {
         prefs.edit().clear().apply();
     }
 
-    public boolean useFullscreenSet() {
-        return prefs.getBoolean(getKey(R.string.pref_fullscreen_key), false);
+    public boolean isHideStatusBarSet() {
+        return prefs.getBoolean(getKey(R.string.pref_hide_status_bar_key), true);
     }
 
     public int getDefaultViewer() {

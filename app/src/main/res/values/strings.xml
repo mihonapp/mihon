@@ -27,7 +27,7 @@
     <string name="pref_category_downloads">Downloads</string>
 
       <!-- Reader section -->
-    <string name="pref_fullscreen_mode">Read in fullscreen</string>
+    <string name="pref_hide_status_bar">Hide status bar</string>
     <string name="pref_viewer_type">Default viewer</string>
     <string name="left_to_right_viewer">Left to right</string>
     <string name="right_to_left_viewer">Right to left</string>
@@ -75,6 +75,7 @@
     <string name="download_progress">Downloaded %1$d%%</string>
     <string name="chapter_progress">Page: %1$d</string>
     <string name="page_list_error">Error fetching page list. Is network available?</string>
+    <string name="chapter_subtitle">Chapter %1$s</string>
 
     <!-- Library update service notifications -->
     <string name="notification_progress">Update progress: %1$d/%2$d</string>

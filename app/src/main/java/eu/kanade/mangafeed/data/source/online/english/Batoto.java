@@ -305,7 +305,7 @@ public class Batoto extends Source {
     }
 
     private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
-        Chapter newChapter = Chapter.newChapter();
+        Chapter newChapter = Chapter.create();
 
         Element urlElement = chapterElement.select("a[href^=http://bato.to/reader").first();
         Element nameElement = urlElement;

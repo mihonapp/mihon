@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference android:title="@string/pref_fullscreen_mode"
-        android:key="@string/pref_fullscreen_key"
+    <CheckBoxPreference android:title="@string/pref_hide_status_bar"
+        android:key="@string/pref_hide_status_bar_key"
         android:defaultValue="true" />
 
     <ListPreference android:title="@string/pref_viewer_type"

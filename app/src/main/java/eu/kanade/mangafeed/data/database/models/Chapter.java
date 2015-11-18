@@ -60,8 +60,10 @@ public class Chapter {
         return url.hashCode();
     }
 
-    public static Chapter newChapter() {
-        return new Chapter();
+    public static Chapter create() {
+        Chapter chapter = new Chapter();
+        chapter.chapter_number = -1;
+        return chapter;
     }
 
 }

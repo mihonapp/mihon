@@ -14,7 +14,7 @@ public class ChapterRecognition {
     private static Pattern p2 = Pattern.compile("(\\d+[\\.,]?\\d*)");
 
     public static void parseChapterNumber(Chapter chapter, Manga manga) {
-        if (chapter.chapter_number != 0)
+        if (chapter.chapter_number != -1)
             return;
 
         // Remove spaces and convert to lower case
