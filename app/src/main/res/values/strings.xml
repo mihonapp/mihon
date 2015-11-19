@@ -29,6 +29,7 @@
       <!-- Reader section -->
     <string name="pref_hide_status_bar">Hide status bar</string>
     <string name="pref_viewer_type">Default viewer</string>
+    <string name="default_viewer">Default</string>
     <string name="left_to_right_viewer">Left to right</string>
     <string name="right_to_left_viewer">Right to left</string>
     <string name="vertical_viewer">Vertical</string>
@@ -82,5 +83,6 @@
     <string name="notification_completed">Update completed</string>
     <string name="notification_no_new_chapters">No new chapters found</string>
     <string name="notification_new_chapters">Found new chapters for:</string>
+    <string name="pref_lock_orientation">Lock orientation</string>
 
 </resources>

@@ -3,7 +3,6 @@ package eu.kanade.mangafeed.ui.reader.viewer.webtoon;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
-import android.widget.FrameLayout;
 
 import java.util.List;
 
@@ -22,8 +21,8 @@ public class WebtoonReader extends BaseReader {
     private List<Page> pages;
     private Subscription subscription;
 
-    public WebtoonReader(ReaderActivity activity, FrameLayout container) {
-        super(activity, container);
+    public WebtoonReader(ReaderActivity activity) {
+        super(activity);
 
         recycler = new RecyclerView(activity);
         layoutManager = new LinearLayoutManager(activity);

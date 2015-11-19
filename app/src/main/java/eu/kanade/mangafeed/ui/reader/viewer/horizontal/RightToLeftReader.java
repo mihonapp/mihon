@@ -1,7 +1,5 @@
 package eu.kanade.mangafeed.ui.reader.viewer.horizontal;
 
-import android.widget.FrameLayout;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,8 +9,8 @@ import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 
 public class RightToLeftReader extends HorizontalReader {
 
-    public RightToLeftReader(ReaderActivity activity, FrameLayout container) {
-        super(activity, container);
+    public RightToLeftReader(ReaderActivity activity) {
+        super(activity);
     }
 
     @Override

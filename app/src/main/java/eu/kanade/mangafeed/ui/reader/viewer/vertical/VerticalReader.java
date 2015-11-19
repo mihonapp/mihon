@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.reader.viewer.vertical;
 
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
-import android.widget.FrameLayout;
 
 import java.util.List;
 
@@ -20,8 +19,8 @@ public class VerticalReader extends BaseReader {
 
     private ViewPagerReaderAdapter adapter;
 
-    public VerticalReader(ReaderActivity activity, FrameLayout container) {
-        super(activity, container);
+    public VerticalReader(ReaderActivity activity) {
+        super(activity);
         activity.getLayoutInflater().inflate(R.layout.reader_vertical, container);
         ButterKnife.bind(this, container);
 

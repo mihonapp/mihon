@@ -14,10 +14,17 @@
         <item>4</item>
     </string-array>
 
+    <string-array name="viewers_selector">
+        <item>@string/default_viewer</item>
+        <item>@string/left_to_right_viewer</item>
+        <item>@string/right_to_left_viewer</item>
+        <item>@string/vertical_viewer</item>
+        <item>@string/webtoon_viewer</item>
+    </string-array>
+
     <string-array name="download_threads">
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
-
 </resources>

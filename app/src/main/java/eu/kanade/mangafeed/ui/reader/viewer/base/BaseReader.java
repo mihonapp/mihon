@@ -1,7 +1,7 @@
 package eu.kanade.mangafeed.ui.reader.viewer.base;
 
 import android.view.MotionEvent;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -11,12 +11,12 @@ import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 public abstract class BaseReader {
 
     protected ReaderActivity activity;
-    protected FrameLayout container;
+    protected ViewGroup container;
     protected int currentPosition;
 
-    public BaseReader(ReaderActivity activity, FrameLayout container) {
+    public BaseReader(ReaderActivity activity) {
         this.activity = activity;
-        this.container = container;
+        this.container = activity.getContainer();
     }
 
     public void updatePageNumber() {

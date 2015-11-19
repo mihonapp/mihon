@@ -232,4 +232,13 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
             loadChapter(previousChapter);
         }
     }
+
+    public Manga getManga() {
+        return manga;
+    }
+
+    public void updateMangaViewer(int viewer) {
+        manga.viewer = viewer;
+        db.insertManga(manga).executeAsBlocking();
+    }
 }

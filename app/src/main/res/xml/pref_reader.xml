@@ -5,6 +5,10 @@
         android:key="@string/pref_hide_status_bar_key"
         android:defaultValue="true" />
 
+    <CheckBoxPreference android:title="@string/pref_lock_orientation"
+        android:key="@string/pref_lock_orientation_key"
+        android:defaultValue="true" />
+
     <ListPreference android:title="@string/pref_viewer_type"
         android:key="@string/pref_default_viewer_key"
         android:entries="@array/viewers"

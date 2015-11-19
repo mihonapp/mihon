@@ -40,6 +40,19 @@ public class PreferencesHelper {
         return prefs.getBoolean(getKey(R.string.pref_hide_status_bar_key), true);
     }
 
+    public boolean isOrientationLocked() {
+        return prefs.getBoolean(getKey(R.string.pref_lock_orientation_key), true);
+    }
+
+    public void setOrientationLocked(boolean lock) {
+        prefs.edit().putBoolean(getKey(R.string.pref_lock_orientation_key), lock).apply();
+    }
+
+    public Observable<Boolean> isOrientationLockedObservable() {
+        return rxPrefs.getBoolean(getKey(R.string.pref_lock_orientation_key), true)
+                .asObservable();
+    }
+
     public int getDefaultViewer() {
         return Integer.parseInt(prefs.getString(getKey(R.string.pref_default_viewer_key), "1"));
     }

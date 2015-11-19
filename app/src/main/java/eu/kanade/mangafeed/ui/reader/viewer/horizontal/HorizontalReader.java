@@ -1,7 +1,6 @@
 package eu.kanade.mangafeed.ui.reader.viewer.horizontal;
 
 import android.view.MotionEvent;
-import android.widget.FrameLayout;
 
 import java.util.List;
 
@@ -19,8 +18,8 @@ public abstract class HorizontalReader extends BaseReader {
 
     protected ViewPagerReaderAdapter adapter;
 
-    public HorizontalReader(ReaderActivity activity, FrameLayout container) {
-        super(activity, container);
+    public HorizontalReader(ReaderActivity activity) {
+        super(activity);
         activity.getLayoutInflater().inflate(R.layout.reader_horizontal, container);
         ButterKnife.bind(this, container);
 
