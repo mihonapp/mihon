@@ -68,8 +68,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         readerMenu = new ReaderMenu(this, prefs);
         createUiHideFlags();
         enableHardwareAcceleration();
-
-        viewer = getViewer();
     }
 
     @Override
@@ -94,6 +92,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     public void onChapterReady(List<Page> pages, Manga manga, Chapter chapter) {
+        viewer = getViewer(manga);
         viewer.onPageListReady(pages);
         viewer.updatePageNumber();
         readerMenu.onChapterReady(pages.size(), manga, chapter);
@@ -132,8 +131,10 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         readerMenu.toggle();
     }
 
-    private BaseReader getViewer() {
-        switch (prefs.getDefaultViewer()) {
+    private BaseReader getViewer(Manga manga) {
+        int mangaViewer = manga.viewer == 0 ? prefs.getDefaultViewer() : manga.viewer;
+
+        switch (mangaViewer) {
             case LEFT_TO_RIGHT: default:
                 return new LeftToRightReader(this, container);
             case RIGHT_TO_LEFT:

@@ -1,6 +1,10 @@
 package eu.kanade.mangafeed.ui.reader;
 
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -17,10 +21,11 @@ import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 public class ReaderMenu {
 
     @Bind(R.id.reader_menu) RelativeLayout menu;
+    @Bind(R.id.reader_menu_bottom) LinearLayout bottomMenu;
+    @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.current_page) TextView currentPage;
     @Bind(R.id.page_seeker) SeekBar seekBar;
     @Bind(R.id.total_pages) TextView totalPages;
-
 
     private ReaderActivity activity;
     private PreferencesHelper preferences;
@@ -37,12 +42,33 @@ public class ReaderMenu {
     }
 
     public void toggle() {
-        toggle(!showing);
+        if (showing)
+            hide();
+        else
+            show();
     }
 
-    private void toggle(boolean show) {
-        menu.setVisibility(show ? View.VISIBLE : View.GONE);
-        showing = show;
+    private void show() {
+        menu.setVisibility(View.VISIBLE);
+
+        Animation toolbarAnimation = AnimationUtils.loadAnimation(activity, R.anim.enter_from_top);
+        toolbar.startAnimation(toolbarAnimation);
+
+        Animation bottomMenuAnimation = AnimationUtils.loadAnimation(activity, R.anim.enter_from_bottom);
+        bottomMenu.startAnimation(bottomMenuAnimation);
+
+        showing = true;
+    }
+
+    private void hide() {
+        Animation toolbarAnimation = AnimationUtils.loadAnimation(activity, R.anim.exit_to_top);
+        toolbarAnimation.setAnimationListener(new HideMenuAnimationListener());
+        toolbar.startAnimation(toolbarAnimation);
+
+        Animation bottomMenuAnimation = AnimationUtils.loadAnimation(activity, R.anim.exit_to_bottom);
+        bottomMenu.startAnimation(bottomMenuAnimation);
+
+        showing = false;
     }
 
     public void onChapterReady(int numPages, Manga manga, Chapter chapter) {
@@ -76,5 +102,23 @@ public class ReaderMenu {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {}
+    }
+
+    class HideMenuAnimationListener implements Animation.AnimationListener {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            menu.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
     }
 }

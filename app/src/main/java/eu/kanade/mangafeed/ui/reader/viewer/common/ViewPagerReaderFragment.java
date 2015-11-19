@@ -51,12 +51,6 @@ public class ViewPagerReaderFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         ButterKnife.bind(this, view);
@@ -68,6 +62,12 @@ public class ViewPagerReaderFragment extends BaseFragment {
                 ((ReaderActivity) getActivity()).onImageSingleTap(motionEvent));
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        ButterKnife.unbind(this);
+        super.onDestroyView();
     }
 
     public void onStart() {

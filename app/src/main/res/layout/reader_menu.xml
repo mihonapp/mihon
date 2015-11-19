@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/reader_menu_bottom"
         android:background="@color/reader_menu_background"
         android:layout_alignParentBottom="true">
 
