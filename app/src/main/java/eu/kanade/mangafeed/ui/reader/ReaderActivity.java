@@ -192,9 +192,9 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
                 .asObservable()
                 .subscribe(this::setStatusBarVisibility));
 
-        preferences.keepScreenOn()
+        subscriptions.add(preferences.keepScreenOn()
                 .asObservable()
-                .subscribe(this::setKeepScreenOn);
+                .subscribe(this::setKeepScreenOn));
     }
 
     private void setOrientation(boolean locked) {
