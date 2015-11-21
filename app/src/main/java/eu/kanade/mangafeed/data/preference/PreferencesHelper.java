@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
 
 import eu.kanade.mangafeed.R;
@@ -36,21 +37,24 @@ public class PreferencesHelper {
         prefs.edit().clear().apply();
     }
 
-    public boolean isHideStatusBarSet() {
-        return prefs.getBoolean(getKey(R.string.pref_hide_status_bar_key), true);
+    public Preference<Boolean> lockOrientation() {
+        return rxPrefs.getBoolean(getKey(R.string.pref_lock_orientation_key), true);
     }
 
-    public boolean isOrientationLocked() {
-        return prefs.getBoolean(getKey(R.string.pref_lock_orientation_key), true);
+    public Preference<Boolean> enableTransitions() {
+        return rxPrefs.getBoolean(getKey(R.string.pref_enable_transitions_key), true);
     }
 
-    public void setOrientationLocked(boolean lock) {
-        prefs.edit().putBoolean(getKey(R.string.pref_lock_orientation_key), lock).apply();
+    public Preference<Boolean> showPageNumber() {
+        return rxPrefs.getBoolean(getKey(R.string.pref_show_page_number_key), true);
     }
 
-    public Observable<Boolean> isOrientationLockedObservable() {
-        return rxPrefs.getBoolean(getKey(R.string.pref_lock_orientation_key), true)
-                .asObservable();
+    public Preference<Boolean> hideStatusBar() {
+        return rxPrefs.getBoolean(getKey(R.string.pref_hide_status_bar_key), true);
+    }
+
+    public Preference<Boolean> keepScreenOn() {
+        return rxPrefs.getBoolean(getKey(R.string.pref_keep_screen_on_key), true);
     }
 
     public int getDefaultViewer() {

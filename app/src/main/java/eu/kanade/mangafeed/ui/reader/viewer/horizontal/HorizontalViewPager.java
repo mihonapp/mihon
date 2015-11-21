@@ -90,7 +90,9 @@ public class HorizontalViewPager extends ViewPager {
     }
 
     public interface OnChapterSingleTapListener {
-        void onSingleTap();
+        void onCenterTap();
+        void onLeftSideTap();
+        void onRightSideTap();
     }
 
     public void setOnChapterBoundariesOutListener(OnChapterBoundariesOutListener onChapterBoundariesOutListener) {
@@ -111,7 +113,9 @@ public class HorizontalViewPager extends ViewPager {
 
             if (positionX < getWidth() * LEFT_REGION) {
                 if (position != 0) {
-                    setCurrentItem(position - 1, true);
+                    if (mOnChapterSingleTapListener != null) {
+                        mOnChapterSingleTapListener.onLeftSideTap();
+                    }
                 } else {
                     if (mOnChapterBoundariesOutListener != null) {
                         mOnChapterBoundariesOutListener.onFirstPageOutEvent();
@@ -119,7 +123,9 @@ public class HorizontalViewPager extends ViewPager {
                 }
             } else if (positionX > getWidth() * RIGHT_REGION) {
                 if (position != getAdapter().getCount() - 1) {
-                    setCurrentItem(position + 1, true);
+                    if (mOnChapterSingleTapListener != null) {
+                        mOnChapterSingleTapListener.onRightSideTap();
+                    }
                 } else {
                     if (mOnChapterBoundariesOutListener != null) {
                         mOnChapterBoundariesOutListener.onLastPageOutEvent();
@@ -127,7 +133,7 @@ public class HorizontalViewPager extends ViewPager {
                 }
             } else {
                 if (mOnChapterSingleTapListener != null) {
-                    mOnChapterSingleTapListener.onSingleTap();
+                    mOnChapterSingleTapListener.onCenterTap();
                 }
             }
 

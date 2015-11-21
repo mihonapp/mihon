@@ -165,7 +165,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
             return true;
         } else {
             getPresenter().onChapterClicked(adapter.getItem(position));
-            Intent intent = ReaderActivity.newInstance(getActivity());
+            Intent intent = ReaderActivity.newIntent(getActivity());
             startActivity(intent);
             return false;
         }

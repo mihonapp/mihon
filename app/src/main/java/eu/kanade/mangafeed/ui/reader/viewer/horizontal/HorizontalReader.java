@@ -11,6 +11,7 @@ import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
 import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerReaderAdapter;
+import rx.Subscription;
 
 public abstract class HorizontalReader extends BaseReader {
 
@@ -18,10 +19,16 @@ public abstract class HorizontalReader extends BaseReader {
 
     protected ViewPagerReaderAdapter adapter;
 
+    private boolean transitions;
+    private Subscription transitionsSubscription;
+
     public HorizontalReader(ReaderActivity activity) {
         super(activity);
         activity.getLayoutInflater().inflate(R.layout.reader_horizontal, container);
         ButterKnife.bind(this, container);
+
+        transitionsSubscription = activity.getPreferences().enableTransitions().asObservable()
+                .subscribe(value -> transitions = value);
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new HorizontalViewPager.SimpleOnPageChangeListener() {
@@ -42,7 +49,22 @@ public abstract class HorizontalReader extends BaseReader {
                 onLastPageOut();
             }
         });
-        viewPager.setOnChapterSingleTapListener(activity::onCenterSingleTap);
+        viewPager.setOnChapterSingleTapListener(new HorizontalViewPager.OnChapterSingleTapListener() {
+            @Override
+            public void onCenterTap() {
+                activity.onCenterSingleTap();
+            }
+
+            @Override
+            public void onLeftSideTap() {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, transitions);
+            }
+
+            @Override
+            public void onRightSideTap() {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, transitions);
+            }
+        });
     }
     
     @Override
@@ -65,6 +87,11 @@ public abstract class HorizontalReader extends BaseReader {
     @Override
     public boolean onImageTouch(MotionEvent motionEvent) {
         return viewPager.onImageTouch(motionEvent);
+    }
+
+    @Override
+    public void destroySubscriptions() {
+        transitionsSubscription.unsubscribe();
     }
 
     public abstract void onFirstPageOut();

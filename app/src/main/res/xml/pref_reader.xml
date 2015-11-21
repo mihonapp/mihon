@@ -9,6 +9,14 @@
         android:key="@string/pref_lock_orientation_key"
         android:defaultValue="true" />
 
+    <CheckBoxPreference android:title="@string/pref_enable_transitions"
+        android:key="@string/pref_enable_transitions_key"
+        android:defaultValue="true" />
+
+    <CheckBoxPreference android:title="@string/pref_show_page_number"
+        android:key="@string/pref_show_page_number_key"
+        android:defaultValue="true" />
+
     <ListPreference android:title="@string/pref_viewer_type"
         android:key="@string/pref_default_viewer_key"
         android:entries="@array/viewers"

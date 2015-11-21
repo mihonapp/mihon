@@ -2,16 +2,18 @@ package eu.kanade.mangafeed.ui.reader;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.Surface;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -37,18 +39,21 @@ public class ReaderMenu {
     @Bind(R.id.total_pages) TextView totalPages;
     @Bind(R.id.lock_orientation) ImageButton lockOrientation;
     @Bind(R.id.reader_selector) ImageButton readerSelector;
-
+    @Bind(R.id.reader_extra_settings) ImageButton extraSettings;
 
     private ReaderActivity activity;
     private PreferencesHelper preferences;
+
     @State boolean showing;
+    private PopupWindow popupWindow;
+
     private DecimalFormat decimalFormat;
 
     private CompositeSubscription subscriptions;
 
-    public ReaderMenu(ReaderActivity activity, PreferencesHelper preferences) {
+    public ReaderMenu(ReaderActivity activity) {
         this.activity = activity;
-        this.preferences = preferences;
+        this.preferences = activity.getPreferences();
         ButterKnife.bind(this, activity);
 
         // Intercept all image events in this layout
@@ -94,6 +99,8 @@ public class ReaderMenu {
         Animation bottomMenuAnimation = AnimationUtils.loadAnimation(activity, R.anim.exit_to_bottom);
         bottomMenu.startAnimation(bottomMenuAnimation);
 
+        popupWindow.dismiss();
+
         showing = false;
     }
 
@@ -116,11 +123,18 @@ public class ReaderMenu {
 
     private void initializeOptions() {
         // Orientation changes
-        lockOrientation.setOnClickListener(v ->
-                preferences.setOrientationLocked(!preferences.isOrientationLocked()));
+        subscriptions.add(preferences.lockOrientation().asObservable()
+                .subscribe(locked -> {
+                    int resourceId = !locked ? R.drawable.ic_screen_rotation :
+                            activity.getResources().getConfiguration().orientation == 1 ?
+                                    R.drawable.ic_screen_lock_portrait :
+                                    R.drawable.ic_screen_lock_landscape;
 
-        subscriptions.add(preferences.isOrientationLockedObservable()
-                .subscribe(this::onOrientationOptionChanged));
+                    lockOrientation.setImageResource(resourceId);
+                }));
+
+        lockOrientation.setOnClickListener(v ->
+                preferences.lockOrientation().set(!preferences.lockOrientation().get()));
 
         // Reader selector
         readerSelector.setOnClickListener(v -> {
@@ -128,57 +142,84 @@ public class ReaderMenu {
             final Dialog dialog = new AlertDialog.Builder(activity)
                     .setSingleChoiceItems(R.array.viewers_selector, manga.viewer, (d, which) -> {
                         if (manga.viewer != which) {
-                            activity.getPresenter().updateMangaViewer(which);
-                            activity.recreate();
+                            activity.setMangaDefaultViewer(which);
                         }
                         d.dismiss();
                     })
                     .create();
+            showImmersiveDialog(dialog);
+        });
 
-            // Hack to not leave immersive mode
-            dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-            dialog.getWindow().getDecorView().setSystemUiVisibility(
-                    activity.getWindow().getDecorView().getSystemUiVisibility());
-            dialog.show();
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-            WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
-            wm.updateViewLayout(activity.getWindow().getDecorView(), activity.getWindow().getAttributes());
+        // Extra settings menu
+        final View popupView = activity.getLayoutInflater().inflate(R.layout.reader_popup, null);
+        popupWindow = new SettingsPopupWindow(popupView);
+
+        extraSettings.setOnClickListener(v -> {
+            if (!popupWindow.isShowing())
+                popupWindow.showAtLocation(extraSettings,
+                        Gravity.BOTTOM | Gravity.RIGHT, 0, bottomMenu.getHeight());
+            else
+                popupWindow.dismiss();
         });
     }
 
-    private void onOrientationOptionChanged(boolean locked) {
-        if (locked)
-            lockOrientation();
-        else
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        int resourceId = !locked ? R.drawable.ic_screen_rotation :
-                activity.getResources().getConfiguration().orientation == 1 ?
-                        R.drawable.ic_screen_lock_portrait :
-                        R.drawable.ic_screen_lock_landscape;
-
-        lockOrientation.setImageResource(resourceId);
+    private void showImmersiveDialog(Dialog dialog) {
+        // Hack to not leave immersive mode
+        dialog.getWindow().setFlags(LayoutParams.FLAG_NOT_FOCUSABLE,
+                LayoutParams.FLAG_NOT_FOCUSABLE);
+        dialog.getWindow().getDecorView().setSystemUiVisibility(
+                activity.getWindow().getDecorView().getSystemUiVisibility());
+        dialog.show();
+        dialog.getWindow().clearFlags(LayoutParams.FLAG_NOT_FOCUSABLE);
+        WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+        wm.updateViewLayout(activity.getWindow().getDecorView(), activity.getWindow().getAttributes());
     }
 
-    private void lockOrientation() {
-        int orientation;
-        int rotation = ((WindowManager) activity.getSystemService(
-                Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-        switch (rotation) {
-            case Surface.ROTATION_0:
-                orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                break;
-            case Surface.ROTATION_90:
-                orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                break;
-            case Surface.ROTATION_180:
-                orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-                break;
-            default:
-                orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-                break;
+    class SettingsPopupWindow extends PopupWindow {
+
+        @Bind(R.id.enable_transitions) CheckBox enableTransitions;
+        @Bind(R.id.show_page_number) CheckBox showPageNumber;
+        @Bind(R.id.hide_status_bar) CheckBox hideStatusBar;
+        @Bind(R.id.keep_screen_on) CheckBox keepScreenOn;
+
+        public SettingsPopupWindow(View view) {
+            super(view, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            setAnimationStyle(R.style.reader_settings_popup_animation);
+            ButterKnife.bind(this, view);
+            initializePopupMenu();
         }
-        activity.setRequestedOrientation(orientation);
+
+        private void initializePopupMenu() {
+            subscriptions.add(preferences.enableTransitions()
+                    .asObservable()
+                    .subscribe(enableTransitions::setChecked));
+
+            subscriptions.add(preferences.showPageNumber()
+                    .asObservable()
+                    .subscribe(showPageNumber::setChecked));
+
+            subscriptions.add(preferences.hideStatusBar()
+                    .asObservable()
+                    .subscribe(hideStatusBar::setChecked));
+
+            subscriptions.add(preferences.keepScreenOn()
+                    .asObservable()
+                    .subscribe(keepScreenOn::setChecked));
+
+            enableTransitions.setOnCheckedChangeListener((view, isChecked) ->
+                    preferences.enableTransitions().set(isChecked));
+
+            showPageNumber.setOnCheckedChangeListener((view, isChecked) ->
+                    preferences.showPageNumber().set(isChecked));
+
+            hideStatusBar.setOnCheckedChangeListener((view, isChecked) ->
+                    preferences.hideStatusBar().set(isChecked));
+
+            keepScreenOn.setOnCheckedChangeListener((view, isChecked) ->
+                    preferences.keepScreenOn().set(isChecked));
+
+        }
+
     }
 
     class PageSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
@@ -214,4 +255,5 @@ public class ReaderMenu {
 
         }
     }
+
 }

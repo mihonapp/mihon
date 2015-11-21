@@ -99,4 +99,11 @@
         <item name="android:singleLine">true</item>
         <item name="android:textIsSelectable">false</item>
     </style>
+    <style name="reader_settings_popup_animation">
+        <item name="android:windowEnterAnimation">@anim/enter_from_right</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_right</item>
+    </style>
+    <style name="grey_text">
+        <item name="android:textColor">#e0e0e0</item>
+    </style>
 </resources>

@@ -2,11 +2,13 @@ package eu.kanade.mangafeed.ui.reader;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -34,6 +36,7 @@ import eu.kanade.mangafeed.ui.reader.viewer.webtoon.WebtoonReader;
 import eu.kanade.mangafeed.util.ToastUtil;
 import icepick.Icepick;
 import nucleus.factory.RequiresPresenter;
+import rx.subscriptions.CompositeSubscription;
 
 @RequiresPresenter(ReaderPresenter.class)
 public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
@@ -42,20 +45,20 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Bind(R.id.reader) FrameLayout container;
     @Bind(R.id.toolbar) Toolbar toolbar;
 
-    @Inject PreferencesHelper prefs;
+    @Inject PreferencesHelper preferences;
 
     private BaseReader viewer;
     private ReaderMenu readerMenu;
 
     private int uiFlags;
+    private CompositeSubscription subscriptions;
 
     private static final int LEFT_TO_RIGHT = 1;
     private static final int RIGHT_TO_LEFT = 2;
     private static final int VERTICAL = 3;
     private static final int WEBTOON = 4;
 
-
-    public static Intent newInstance(Context context) {
+    public static Intent newIntent(Context context) {
         return new Intent(context, ReaderActivity.class);
     }
 
@@ -67,14 +70,16 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         ButterKnife.bind(this);
 
         setupToolbar(toolbar);
+        subscriptions = new CompositeSubscription();
 
-        readerMenu = new ReaderMenu(this, prefs);
+        readerMenu = new ReaderMenu(this);
         Icepick.restoreInstanceState(readerMenu, savedState);
         if (savedState != null && readerMenu.showing)
             readerMenu.show(false);
 
-        createUiHideFlags();
         enableHardwareAcceleration();
+
+        initializeSettings();
     }
 
     @Override
@@ -86,7 +91,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     protected void onResume() {
         super.onResume();
-        hideSystemUI();
+        setSystemUiVisibility();
     }
 
     @Override
@@ -102,16 +107,17 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         super.onSaveInstanceState(outState);
     }
 
-    private void createUiHideFlags() {
+    private void createUiHideFlags(boolean statusBarHidden) {
+        uiFlags = 0;
         uiFlags |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        if (prefs.isHideStatusBarSet())
+        if (statusBarHidden)
             uiFlags |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             uiFlags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
     }
 
     public void onChapterReady(List<Page> pages, Manga manga, Chapter chapter) {
-        viewer = getViewer(manga);
+        viewer = createViewer(manga);
         viewer.onPageListReady(pages);
         viewer.updatePageNumber();
         readerMenu.onChapterReady(pages.size(), manga, chapter);
@@ -132,7 +138,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         viewer.setSelectedPage(pageIndex);
     }
 
-    public void hideSystemUI() {
+    public void setSystemUiVisibility() {
         getWindow().getDecorView().setSystemUiVisibility(uiFlags);
     }
 
@@ -154,8 +160,12 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         return container;
     }
 
-    private BaseReader getViewer(Manga manga) {
-        int mangaViewer = manga.viewer == 0 ? prefs.getDefaultViewer() : manga.viewer;
+    public PreferencesHelper getPreferences() {
+        return preferences;
+    }
+
+    private BaseReader createViewer(Manga manga) {
+        int mangaViewer = manga.viewer == 0 ? preferences.getDefaultViewer() : manga.viewer;
 
         switch (mangaViewer) {
             case LEFT_TO_RIGHT: default:
@@ -167,6 +177,71 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             case WEBTOON:
                 return new WebtoonReader(this);
         }
+    }
+
+    private void initializeSettings() {
+        subscriptions.add(preferences.showPageNumber()
+                .asObservable()
+                .subscribe(this::setPageNumberVisibility));
+
+        subscriptions.add(preferences.lockOrientation()
+                .asObservable()
+                .subscribe(this::setOrientation));
+
+        subscriptions.add(preferences.hideStatusBar()
+                .asObservable()
+                .subscribe(this::setStatusBarVisibility));
+
+        preferences.keepScreenOn()
+                .asObservable()
+                .subscribe(this::setKeepScreenOn);
+    }
+
+    private void setOrientation(boolean locked) {
+        if (locked) {
+            int orientation;
+            int rotation = ((WindowManager) getSystemService(
+                    Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+            switch (rotation) {
+                case Surface.ROTATION_0:
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    break;
+                case Surface.ROTATION_90:
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                    break;
+                case Surface.ROTATION_180:
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                    break;
+                default:
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    break;
+            }
+            setRequestedOrientation(orientation);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
+    }
+
+    private void setPageNumberVisibility(boolean visible) {
+        pageNumber.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void setStatusBarVisibility(boolean hidden) {
+        createUiHideFlags(hidden);
+        setSystemUiVisibility();
+    }
+
+    private void setKeepScreenOn(boolean enabled) {
+        if (enabled) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+    }
+    
+    protected void setMangaDefaultViewer(int viewer) {
+        getPresenter().updateMangaViewer(viewer);
+        recreate();
     }
 
 }
