@@ -43,7 +43,7 @@ public abstract class BaseReader {
         activity.getPresenter().loadPreviousChapter();
     }
 
-    public void destroySubscriptions() {}
+    public void destroy() {}
 
     public abstract int getTotalPages();
     public abstract void setSelectedPage(int pageNumber);

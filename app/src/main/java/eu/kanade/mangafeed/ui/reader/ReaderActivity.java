@@ -77,14 +77,13 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         if (savedState != null && readerMenu.showing)
             readerMenu.show(false);
 
-        enableHardwareAcceleration();
-
         initializeSettings();
     }
 
     @Override
     protected void onDestroy() {
         readerMenu.destroy();
+        viewer.destroy();
         super.onDestroy();
     }
 
@@ -97,7 +96,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     protected void onPause() {
         getPresenter().setCurrentPage(viewer.getCurrentPosition());
-        viewer.destroySubscriptions();
         super.onPause();
     }
 
@@ -107,13 +105,9 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         super.onSaveInstanceState(outState);
     }
 
-    private void createUiHideFlags(boolean statusBarHidden) {
-        uiFlags = 0;
-        uiFlags |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        if (statusBarHidden)
-            uiFlags |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            uiFlags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+    public void onChapterError() {
+        finish();
+        ToastUtil.showShort(this, R.string.page_list_error);
     }
 
     public void onChapterReady(List<Page> pages, Manga manga, Chapter chapter) {
@@ -121,47 +115,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         viewer.onPageListReady(pages);
         viewer.updatePageNumber();
         readerMenu.onChapterReady(pages.size(), manga, chapter);
-    }
-
-    public void onChapterError() {
-        finish();
-        ToastUtil.showShort(this, R.string.page_list_error);
-    }
-
-    public void onPageChanged(int currentPageIndex, int totalPages) {
-        String page = (currentPageIndex + 1) + "/" + totalPages;
-        pageNumber.setText(page);
-        readerMenu.onPageChanged(currentPageIndex);
-    }
-
-    public void setSelectedPage(int pageIndex) {
-        viewer.setSelectedPage(pageIndex);
-    }
-
-    public void setSystemUiVisibility() {
-        getWindow().getDecorView().setSystemUiVisibility(uiFlags);
-    }
-
-    public void enableHardwareAcceleration() {
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-    }
-
-    public boolean onImageSingleTap(MotionEvent motionEvent) {
-        return viewer.onImageTouch(motionEvent);
-    }
-
-    public void onCenterSingleTap() {
-        readerMenu.toggle();
-    }
-
-    public ViewGroup getContainer() {
-        return container;
-    }
-
-    public PreferencesHelper getPreferences() {
-        return preferences;
     }
 
     private BaseReader createViewer(Manga manga) {
@@ -177,6 +130,24 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             case WEBTOON:
                 return new WebtoonReader(this);
         }
+    }
+
+    public void onPageChanged(int currentPageIndex, int totalPages) {
+        String page = (currentPageIndex + 1) + "/" + totalPages;
+        pageNumber.setText(page);
+        readerMenu.onPageChanged(currentPageIndex);
+    }
+
+    public void setSelectedPage(int pageIndex) {
+        viewer.setSelectedPage(pageIndex);
+    }
+
+    public boolean onImageSingleTap(MotionEvent motionEvent) {
+        return viewer.onImageTouch(motionEvent);
+    }
+
+    public void onCenterSingleTap() {
+        readerMenu.toggle();
     }
 
     private void initializeSettings() {
@@ -226,11 +197,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         pageNumber.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void setStatusBarVisibility(boolean hidden) {
-        createUiHideFlags(hidden);
-        setSystemUiVisibility();
-    }
-
     private void setKeepScreenOn(boolean enabled) {
         if (enabled) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -238,10 +204,36 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
-    
+
+    private void setStatusBarVisibility(boolean hidden) {
+        createUiHideFlags(hidden);
+        setSystemUiVisibility();
+    }
+
+    private void createUiHideFlags(boolean statusBarHidden) {
+        uiFlags = 0;
+        uiFlags |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        if (statusBarHidden)
+            uiFlags |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            uiFlags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+    }
+
+    public void setSystemUiVisibility() {
+        getWindow().getDecorView().setSystemUiVisibility(uiFlags);
+    }
+
     protected void setMangaDefaultViewer(int viewer) {
         getPresenter().updateMangaViewer(viewer);
         recreate();
+    }
+
+    public ViewGroup getContainer() {
+        return container;
+    }
+
+    public PreferencesHelper getPreferences() {
+        return preferences;
     }
 
 }

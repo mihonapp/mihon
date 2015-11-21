@@ -90,7 +90,7 @@ public abstract class HorizontalReader extends BaseReader {
     }
 
     @Override
-    public void destroySubscriptions() {
+    public void destroy() {
         transitionsSubscription.unsubscribe();
     }
 

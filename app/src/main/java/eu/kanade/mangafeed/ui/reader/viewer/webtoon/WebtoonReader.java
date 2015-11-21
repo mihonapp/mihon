@@ -100,7 +100,7 @@ public class WebtoonReader extends BaseReader {
     }
 
     @Override
-    public void destroySubscriptions() {
+    public void destroy() {
         if (subscription != null && !subscription.isUnsubscribed())
             subscription.unsubscribe();
     }
