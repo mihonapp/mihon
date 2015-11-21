@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/reader_menu"
     android:visibility="gone"
     tools:visibility="visible">
 
-    <include layout="@layout/toolbar"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/reader_menu_background"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:elevation="4dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +27,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="48dp">
 
             <TextView
                 android:id="@+id/current_page"
@@ -28,6 +36,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/light_grey"
+                android:textSize="15sp"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp" />
@@ -46,6 +55,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/light_grey"
+                android:textSize="15sp"
                 android:gravity="center_horizontal" />
 
         </LinearLayout>
@@ -56,10 +66,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_height="48dp">
 
             <ImageButton
                 android:layout_width="0dp"
@@ -67,11 +74,13 @@
                 android:layout_weight="1"
                 android:id="@+id/lock_orientation"
                 android:src="@drawable/ic_screen_rotation"
+                android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
             <ImageButton
                 android:layout_width="0dp"
@@ -79,6 +88,7 @@
                 android:layout_weight="1"
                 android:id="@+id/reader_selector"
                 android:src="@drawable/ic_view_carousel"
+                android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
             <ImageButton
                 android:layout_width="0dp"
@@ -86,6 +96,7 @@
                 android:layout_weight="1"
                 android:id="@+id/reader_extra_settings"
                 android:src="@drawable/ic_more_vert"
+                android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
 
         </LinearLayout>
