@@ -3,17 +3,140 @@ package eu.kanade.mangafeed.ui.reader.viewer.vertical;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.MotionEvent;
 
 public class VerticalViewPager extends fr.castorflex.android.verticalviewpager.VerticalViewPager {
 
     private GestureDetector gestureDetector;
+
+    private OnChapterBoundariesOutListener mOnChapterBoundariesOutListener;
+    private OnChapterSingleTapListener mOnChapterSingleTapListener;
+
+    private static final float LEFT_REGION = 0.33f;
+    private static final float RIGHT_REGION = 0.66f;
+    private static final float SWIPE_TOLERANCE = 0.25f;
+    private float startDragY;
 
     public VerticalViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         gestureDetector = new GestureDetector(getContext(), new ReaderViewGestureListener());
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        try {
+            gestureDetector.onTouchEvent(ev);
+
+            if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
+                if (this.getCurrentItem() == 0 || this.getCurrentItem() == this.getAdapter().getCount() - 1) {
+                    startDragY = ev.getY();
+                }
+            }
+
+            return super.onInterceptTouchEvent(ev);
+        } catch (IllegalArgumentException e) {
+            // Do Nothing.
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        try {
+            if (mOnChapterBoundariesOutListener != null) {
+                if (this.getCurrentItem() == 0) {
+                    if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                        float displacement = ev.getY() - startDragY;
+
+                        if (ev.getY() > startDragY && displacement > getHeight() * SWIPE_TOLERANCE) {
+                            mOnChapterBoundariesOutListener.onFirstPageOutEvent();
+                            return true;
+                        }
+
+                        startDragY = 0;
+                    }
+                } else if (this.getCurrentItem() == this.getAdapter().getCount() - 1) {
+                    if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                        float displacement = startDragY - ev.getY();
+
+                        if (ev.getY() < startDragY && displacement > getHeight() * SWIPE_TOLERANCE) {
+                            mOnChapterBoundariesOutListener.onLastPageOutEvent();
+                            return true;
+                        }
+
+                        startDragY = 0;
+                    }
+                }
+            }
+
+            return super.onTouchEvent(ev);
+        } catch (IllegalArgumentException e) {
+            // Do Nothing.
+        }
+
+        return false;
+    }
+
+    public boolean onImageTouch(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    public interface OnChapterBoundariesOutListener {
+        void onFirstPageOutEvent();
+
+        void onLastPageOutEvent();
+    }
+
+    public interface OnChapterSingleTapListener {
+        void onCenterTap();
+        void onLeftSideTap();
+        void onRightSideTap();
+    }
+
+    public void setOnChapterBoundariesOutListener(OnChapterBoundariesOutListener onChapterBoundariesOutListener) {
+        mOnChapterBoundariesOutListener = onChapterBoundariesOutListener;
+    }
+
+    public void setOnChapterSingleTapListener(OnChapterSingleTapListener onChapterSingleTapListener) {
+        mOnChapterSingleTapListener = onChapterSingleTapListener;
+    }
+
     private class ReaderViewGestureListener extends GestureDetector.SimpleOnGestureListener {
-        // TODO
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            final int position = getCurrentItem();
+            final float positionX = e.getX();
+
+            if (positionX < getWidth() * LEFT_REGION) {
+                if (position != 0) {
+                    if (mOnChapterSingleTapListener != null) {
+                        mOnChapterSingleTapListener.onLeftSideTap();
+                    }
+                } else {
+                    if (mOnChapterBoundariesOutListener != null) {
+                        mOnChapterBoundariesOutListener.onFirstPageOutEvent();
+                    }
+                }
+            } else if (positionX > getWidth() * RIGHT_REGION) {
+                if (position != getAdapter().getCount() - 1) {
+                    if (mOnChapterSingleTapListener != null) {
+                        mOnChapterSingleTapListener.onRightSideTap();
+                    }
+                } else {
+                    if (mOnChapterBoundariesOutListener != null) {
+                        mOnChapterBoundariesOutListener.onLastPageOutEvent();
+                    }
+                }
+            } else {
+                if (mOnChapterSingleTapListener != null) {
+                    mOnChapterSingleTapListener.onCenterTap();
+                }
+            }
+
+            return true;
+        }
+
     }
 }

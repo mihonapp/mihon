@@ -57,6 +57,14 @@ public class PreferencesHelper {
         return rxPrefs.getBoolean(getKey(R.string.pref_keep_screen_on_key), true);
     }
 
+    public Preference<Boolean> customBrightness() {
+        return rxPrefs.getBoolean(getKey(R.string.pref_custom_brightness_key), false);
+    }
+
+    public Preference<Float> customBrightnessValue() {
+        return rxPrefs.getFloat(getKey(R.string.pref_custom_brightness_value_key), 0F);
+    }
+
     public int getDefaultViewer() {
         return Integer.parseInt(prefs.getString(getKey(R.string.pref_default_viewer_key), "1"));
     }

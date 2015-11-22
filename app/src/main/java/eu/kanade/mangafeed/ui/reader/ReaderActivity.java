@@ -36,6 +36,7 @@ import eu.kanade.mangafeed.ui.reader.viewer.webtoon.WebtoonReader;
 import eu.kanade.mangafeed.util.ToastUtil;
 import icepick.Icepick;
 import nucleus.factory.RequiresPresenter;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 @RequiresPresenter(ReaderPresenter.class)
@@ -52,6 +53,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     private int uiFlags;
     private CompositeSubscription subscriptions;
+    private Subscription customBrightnessSubscription;
 
     private static final int LEFT_TO_RIGHT = 1;
     private static final int RIGHT_TO_LEFT = 2;
@@ -166,6 +168,10 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         subscriptions.add(preferences.keepScreenOn()
                 .asObservable()
                 .subscribe(this::setKeepScreenOn));
+
+        subscriptions.add(preferences.customBrightness()
+                .asObservable()
+                .subscribe(this::setCustomBrightness));
     }
 
     private void setOrientation(boolean locked) {
@@ -203,6 +209,24 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
+    }
+
+    private void setCustomBrightness(boolean enabled) {
+        if (enabled) {
+            subscriptions.add(customBrightnessSubscription = preferences.customBrightnessValue()
+                    .asObservable()
+                    .subscribe(this::setCustomBrightnessValue));
+        } else {
+            if (customBrightnessSubscription != null)
+                subscriptions.remove(customBrightnessSubscription);
+            setCustomBrightnessValue(-1);
+        }
+    }
+
+    private void setCustomBrightnessValue(float value) {
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = value;
+        getWindow().setAttributes(layout);
     }
 
     private void setStatusBarVisibility(boolean hidden) {

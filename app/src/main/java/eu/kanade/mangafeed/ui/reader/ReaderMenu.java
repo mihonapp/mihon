@@ -40,12 +40,14 @@ public class ReaderMenu {
     @Bind(R.id.lock_orientation) ImageButton lockOrientation;
     @Bind(R.id.reader_selector) ImageButton readerSelector;
     @Bind(R.id.reader_extra_settings) ImageButton extraSettings;
+    @Bind(R.id.reader_brightness) ImageButton brightnessSettings;
 
     private ReaderActivity activity;
     private PreferencesHelper preferences;
 
     @State boolean showing;
-    private PopupWindow popupWindow;
+    private PopupWindow settingsPopup;
+    private PopupWindow brightnessPopup;
 
     private DecimalFormat decimalFormat;
 
@@ -99,7 +101,8 @@ public class ReaderMenu {
         Animation bottomMenuAnimation = AnimationUtils.loadAnimation(activity, R.anim.exit_to_bottom);
         bottomMenu.startAnimation(bottomMenuAnimation);
 
-        popupWindow.dismiss();
+        settingsPopup.dismiss();
+        brightnessPopup.dismiss();
 
         showing = false;
     }
@@ -152,14 +155,26 @@ public class ReaderMenu {
 
         // Extra settings menu
         final View popupView = activity.getLayoutInflater().inflate(R.layout.reader_popup, null);
-        popupWindow = new SettingsPopupWindow(popupView);
+        settingsPopup = new SettingsPopupWindow(popupView);
 
         extraSettings.setOnClickListener(v -> {
-            if (!popupWindow.isShowing())
-                popupWindow.showAtLocation(extraSettings,
+            if (!settingsPopup.isShowing())
+                settingsPopup.showAtLocation(extraSettings,
                         Gravity.BOTTOM | Gravity.RIGHT, 0, bottomMenu.getHeight());
             else
-                popupWindow.dismiss();
+                settingsPopup.dismiss();
+        });
+
+        // Brightness popup
+        final View brightnessView = activity.getLayoutInflater().inflate(R.layout.reader_brightness, null);
+        brightnessPopup = new BrightnessPopupWindow(brightnessView);
+
+        brightnessSettings.setOnClickListener(v -> {
+            if (!brightnessPopup.isShowing())
+                brightnessPopup.showAtLocation(brightnessSettings,
+                        Gravity.BOTTOM | Gravity.LEFT, 0, bottomMenu.getHeight());
+            else
+                brightnessPopup.dismiss();
         });
     }
 
@@ -208,7 +223,37 @@ public class ReaderMenu {
 
             keepScreenOn.setOnCheckedChangeListener((view, isChecked) ->
                     preferences.keepScreenOn().set(isChecked));
+        }
 
+    }
+
+    class BrightnessPopupWindow extends PopupWindow {
+
+        @Bind(R.id.custom_brightness) CheckBox customBrightness;
+        @Bind(R.id.brightness_seekbar) SeekBar brightnessSeekbar;
+
+        public BrightnessPopupWindow(View view) {
+            super(view, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            setAnimationStyle(R.style.reader_brightness_popup_animation);
+            ButterKnife.bind(this, view);
+            initializePopupMenu();
+        }
+
+        private void initializePopupMenu() {
+            subscriptions.add(preferences.customBrightness()
+                    .asObservable()
+                    .subscribe(isEnabled -> {
+                        customBrightness.setChecked(isEnabled);
+                        brightnessSeekbar.setEnabled(isEnabled);
+                    }));
+
+            customBrightness.setOnCheckedChangeListener((view, isChecked) ->
+                    preferences.customBrightness().set(isChecked));
+
+            brightnessSeekbar.setMax(100);
+            brightnessSeekbar.setProgress(Math.round(
+                    preferences.customBrightnessValue().get() * brightnessSeekbar.getMax()));
+            brightnessSeekbar.setOnSeekBarChangeListener(new BrightnessSeekBarChangeListener());
         }
 
     }
@@ -227,6 +272,26 @@ public class ReaderMenu {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {}
+    }
+
+    class BrightnessSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser) {
+                preferences.customBrightnessValue().set((float) progress / seekBar.getMax());
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
     }
 
     class HideMenuAnimationListener implements Animation.AnimationListener {

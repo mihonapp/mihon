@@ -12,6 +12,7 @@ import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
 import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerReaderAdapter;
+import rx.Subscription;
 
 public class VerticalReader extends BaseReader {
 
@@ -19,10 +20,16 @@ public class VerticalReader extends BaseReader {
 
     private ViewPagerReaderAdapter adapter;
 
+    private boolean transitions;
+    private Subscription transitionsSubscription;
+
     public VerticalReader(ReaderActivity activity) {
         super(activity);
         activity.getLayoutInflater().inflate(R.layout.reader_vertical, container);
         ButterKnife.bind(this, container);
+
+        transitionsSubscription = activity.getPreferences().enableTransitions().asObservable()
+                .subscribe(value -> transitions = value);
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -30,6 +37,33 @@ public class VerticalReader extends BaseReader {
             public void onPageSelected(int position) {
                 currentPosition = position;
                 updatePageNumber();
+            }
+        });
+        viewPager.setOnChapterBoundariesOutListener(new VerticalViewPager.OnChapterBoundariesOutListener() {
+            @Override
+            public void onFirstPageOutEvent() {
+                requestPreviousChapter();
+            }
+
+            @Override
+            public void onLastPageOutEvent() {
+                requestNextChapter();
+            }
+        });
+        viewPager.setOnChapterSingleTapListener(new VerticalViewPager.OnChapterSingleTapListener() {
+            @Override
+            public void onCenterTap() {
+                activity.onCenterSingleTap();
+            }
+
+            @Override
+            public void onLeftSideTap() {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, transitions);
+            }
+
+            @Override
+            public void onRightSideTap() {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, transitions);
             }
         });
     }
@@ -41,7 +75,7 @@ public class VerticalReader extends BaseReader {
 
     @Override
     public void setSelectedPage(int pageNumber) {
-        viewPager.setCurrentItem(getCurrentPageIndex(pageNumber));
+        viewPager.setCurrentItem(getCurrentPageIndex(pageNumber), false);
     }
 
     @Override
@@ -53,6 +87,11 @@ public class VerticalReader extends BaseReader {
 
     @Override
     public boolean onImageTouch(MotionEvent motionEvent) {
-        return true;
+        return viewPager.onImageTouch(motionEvent);
+    }
+
+    @Override
+    public void destroy() {
+        transitionsSubscription.unsubscribe();
     }
 }

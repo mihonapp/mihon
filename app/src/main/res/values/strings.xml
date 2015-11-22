@@ -28,15 +28,16 @@
 
       <!-- Reader section -->
     <string name="pref_hide_status_bar">Hide status bar</string>
+    <string name="pref_lock_orientation">Lock orientation</string>
+    <string name="pref_enable_transitions">Enable transitions</string>
+    <string name="pref_show_page_number">Show page number</string>
+    <string name="pref_custom_brightness">Use custom brightness</string>
     <string name="pref_viewer_type">Default viewer</string>
     <string name="default_viewer">Default</string>
     <string name="left_to_right_viewer">Left to right</string>
     <string name="right_to_left_viewer">Right to left</string>
     <string name="vertical_viewer">Vertical</string>
     <string name="webtoon_viewer">Webtoon (experimental)</string>
-    <string name="pref_lock_orientation">Lock orientation</string>
-    <string name="pref_enable_transitions">Enable transitions</string>
-    <string name="pref_show_page_number">Show page number</string>
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
