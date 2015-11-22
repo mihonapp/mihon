@@ -190,22 +190,13 @@ public class ReaderMenu {
         }
 
         private void initializePopupMenu() {
-            subscriptions.add(preferences.enableTransitions()
-                    .asObservable()
-                    .subscribe(enableTransitions::setChecked));
+            // Load values from preferences
+            enableTransitions.setChecked(preferences.enableTransitions().get());
+            showPageNumber.setChecked(preferences.showPageNumber().get());
+            hideStatusBar.setChecked(preferences.hideStatusBar().get());
+            keepScreenOn.setChecked(preferences.keepScreenOn().get());
 
-            subscriptions.add(preferences.showPageNumber()
-                    .asObservable()
-                    .subscribe(showPageNumber::setChecked));
-
-            subscriptions.add(preferences.hideStatusBar()
-                    .asObservable()
-                    .subscribe(hideStatusBar::setChecked));
-
-            subscriptions.add(preferences.keepScreenOn()
-                    .asObservable()
-                    .subscribe(keepScreenOn::setChecked));
-
+            // Add a listener to change the corresponding setting
             enableTransitions.setOnCheckedChangeListener((view, isChecked) ->
                     preferences.enableTransitions().set(isChecked));
 

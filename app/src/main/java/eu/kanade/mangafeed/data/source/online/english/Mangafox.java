@@ -7,12 +7,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
 
@@ -179,16 +184,109 @@ public class Mangafox extends Source {
 
     @Override
     protected List<Chapter> parseHtmlToChapters(String unparsedHtml) {
-        return null;
+        Document parsedDocument = Jsoup.parse(unparsedHtml);
+
+        List<Chapter> chapterList = new ArrayList<Chapter>();
+
+        Elements chapterElements = parsedDocument.select("div#chapters li div");
+        for (Element chapterElement : chapterElements) {
+            Chapter currentChapter = constructChapterFromHtmlBlock(chapterElement);
+
+            chapterList.add(currentChapter);
+        }
+
+        return chapterList;
+    }
+
+    private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
+        Chapter newChapter = Chapter.create();
+
+        Element urlElement = chapterElement.select("a.tips").first();
+        Element nameElement = chapterElement.select("a.tips").first();
+        Element dateElement = chapterElement.select("span.date").first();
+
+        if (urlElement != null) {
+            newChapter.url = urlElement.attr("href");
+        }
+        if (nameElement != null) {
+            newChapter.name = nameElement.text();
+        }
+        if (dateElement != null) {
+            newChapter.date_upload = parseUpdateFromElement(dateElement);
+        }
+
+        newChapter.date_fetch = new Date().getTime();
+
+        return newChapter;
+    }
+
+    private long parseUpdateFromElement(Element updateElement) {
+        String updatedDateAsString = updateElement.text();
+
+        if (updatedDateAsString.contains("Today")) {
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+
+            try {
+                Date withoutDay = new SimpleDateFormat("h:mm a", Locale.ENGLISH).parse(updatedDateAsString.replace("Today", ""));
+                return today.getTimeInMillis() + withoutDay.getTime();
+            } catch (ParseException e) {
+                return today.getTimeInMillis();
+            }
+        } else if (updatedDateAsString.contains("Yesterday")) {
+            Calendar yesterday = Calendar.getInstance();
+            yesterday.add(Calendar.DATE, -1);
+            yesterday.set(Calendar.HOUR_OF_DAY, 0);
+            yesterday.set(Calendar.MINUTE, 0);
+            yesterday.set(Calendar.SECOND, 0);
+            yesterday.set(Calendar.MILLISECOND, 0);
+
+            try {
+                Date withoutDay = new SimpleDateFormat("h:mm a", Locale.ENGLISH).parse(updatedDateAsString.replace("Yesterday", ""));
+                return yesterday.getTimeInMillis() + withoutDay.getTime();
+            } catch (ParseException e) {
+                return yesterday.getTimeInMillis();
+            }
+        } else {
+            try {
+                Date specificDate = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH).parse(updatedDateAsString);
+
+                return specificDate.getTime();
+            } catch (ParseException e) {
+                // Do Nothing.
+            }
+        }
+
+        return 0;
     }
 
     @Override
     protected List<String> parseHtmlToPageUrls(String unparsedHtml) {
-        return null;
+        Document parsedDocument = Jsoup.parse(unparsedHtml);
+
+        List<String> pageUrlList = new ArrayList<>();
+
+        Elements pageUrlElements = parsedDocument.select("select.m").first().select("option:not([value=0])");
+        String baseUrl = parsedDocument.select("div#series a").first().attr("href").replace("1.html", "");
+        int counter = 1;
+        for (Element pageUrlElement : pageUrlElements) {
+            if(counter < pageUrlElements.size()) {
+                pageUrlList.add(baseUrl + pageUrlElement.attr("value") + ".html");
+            }
+            counter++;
+        }
+
+        return pageUrlList;
     }
 
     @Override
     protected String parseHtmlToImageUrl(String unparsedHtml) {
-        return null;
+        Document parsedDocument = Jsoup.parse(unparsedHtml);
+
+        Element imageElement = parsedDocument.getElementById("image");
+        return imageElement.attr("src");
     }
 }

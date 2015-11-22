@@ -27,7 +27,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="?attr/actionBarSize">
 
             <TextView
                 android:id="@+id/current_page"
@@ -66,11 +66,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="?attr/actionBarSize">
 
             <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/lock_orientation"
                 android:src="@drawable/ic_screen_rotation"
@@ -78,13 +78,13 @@
                 android:background="?android:selectableItemBackground" />
             <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
             <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/reader_selector"
                 android:src="@drawable/ic_view_carousel"
@@ -92,7 +92,7 @@
                 android:background="?android:selectableItemBackground" />
             <ImageButton
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/reader_extra_settings"
                 android:src="@drawable/ic_more_vert"
