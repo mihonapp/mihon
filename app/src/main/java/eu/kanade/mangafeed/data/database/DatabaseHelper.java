@@ -24,8 +24,8 @@ import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.resolvers.MangaWithUnreadGetResolver;
-import eu.kanade.mangafeed.data.database.tables.ChaptersTable;
-import eu.kanade.mangafeed.data.database.tables.MangasTable;
+import eu.kanade.mangafeed.data.database.tables.ChapterTable;
+import eu.kanade.mangafeed.data.database.tables.MangaTable;
 import eu.kanade.mangafeed.util.ChapterRecognition;
 import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
@@ -57,20 +57,20 @@ public class DatabaseHelper {
             "SELECT %1$s.*, COUNT(C.%4$s) AS %5$s FROM %1$s LEFT JOIN " +
                     "(SELECT %4$s FROM %2$s WHERE %6$s = 0) AS C ON %3$s = C.%4$s " +
                     "WHERE %7$s = 1 GROUP BY %3$s",
-            MangasTable.TABLE,
-            ChaptersTable.TABLE,
-            MangasTable.TABLE + "." + MangasTable.COLUMN_ID,
-            ChaptersTable.COLUMN_MANGA_ID,
-            MangasTable.COLUMN_UNREAD,
-            ChaptersTable.COLUMN_READ,
-            MangasTable.COLUMN_FAVORITE
+            MangaTable.TABLE,
+            ChapterTable.TABLE,
+            MangaTable.TABLE + "." + MangaTable.COLUMN_ID,
+            ChapterTable.COLUMN_MANGA_ID,
+            MangaTable.COLUMN_UNREAD,
+            ChapterTable.COLUMN_READ,
+            MangaTable.COLUMN_FAVORITE
     );
 
     public PreparedGetListOfObjects<Manga> getMangas() {
         return db.get()
                 .listOfObjects(Manga.class)
                 .withQuery(Query.builder()
-                        .table(MangasTable.TABLE)
+                        .table(MangaTable.TABLE)
                         .build())
                 .prepare();
     }
@@ -80,7 +80,7 @@ public class DatabaseHelper {
                 .listOfObjects(Manga.class)
                 .withQuery(RawQuery.builder()
                         .query(favoriteMangasWithUnreadQuery)
-                        .observesTables(MangasTable.TABLE, ChaptersTable.TABLE)
+                        .observesTables(MangaTable.TABLE, ChapterTable.TABLE)
                         .build())
                 .prepare();
     }
@@ -89,8 +89,8 @@ public class DatabaseHelper {
         return db.get()
                 .listOfObjects(Manga.class)
                 .withQuery(Query.builder()
-                        .table(MangasTable.TABLE)
-                        .where(MangasTable.COLUMN_FAVORITE + "=?")
+                        .table(MangaTable.TABLE)
+                        .where(MangaTable.COLUMN_FAVORITE + "=?")
                         .whereArgs(1)
                         .build())
                 .prepare();
@@ -100,8 +100,8 @@ public class DatabaseHelper {
         return db.get()
                 .listOfObjects(Manga.class)
                 .withQuery(Query.builder()
-                        .table(MangasTable.TABLE)
-                        .where(MangasTable.COLUMN_URL + "=?")
+                        .table(MangaTable.TABLE)
+                        .where(MangaTable.COLUMN_URL + "=?")
                         .whereArgs(url)
                         .build())
                 .prepare();
@@ -111,8 +111,8 @@ public class DatabaseHelper {
         return db.get()
                 .listOfObjects(Manga.class)
                 .withQuery(Query.builder()
-                        .table(MangasTable.TABLE)
-                        .where(MangasTable.COLUMN_ID + "=?")
+                        .table(MangaTable.TABLE)
+                        .where(MangaTable.COLUMN_ID + "=?")
                         .whereArgs(id)
                         .build())
                 .prepare();
@@ -149,8 +149,8 @@ public class DatabaseHelper {
         return db.get()
                 .listOfObjects(Chapter.class)
                 .withQuery(Query.builder()
-                        .table(ChaptersTable.TABLE)
-                        .where(ChaptersTable.COLUMN_MANGA_ID + "=?")
+                        .table(ChapterTable.TABLE)
+                        .where(ChapterTable.COLUMN_MANGA_ID + "=?")
                         .whereArgs(manga.id)
                         .build())
                 .prepare();
@@ -158,15 +158,15 @@ public class DatabaseHelper {
 
     public PreparedGetListOfObjects<Chapter> getChapters(long manga_id, boolean sortAToZ, boolean onlyUnread) {
         Query.CompleteBuilder query = Query.builder()
-                .table(ChaptersTable.TABLE)
+                .table(ChapterTable.TABLE)
 
-                .orderBy(ChaptersTable.COLUMN_CHAPTER_NUMBER + (sortAToZ ? " ASC" : " DESC"));
+                .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER + (sortAToZ ? " ASC" : " DESC"));
 
         if (onlyUnread) {
-            query = query.where(ChaptersTable.COLUMN_MANGA_ID + "=? AND " + ChaptersTable.COLUMN_READ + "=?")
+            query = query.where(ChapterTable.COLUMN_MANGA_ID + "=? AND " + ChapterTable.COLUMN_READ + "=?")
                     .whereArgs(manga_id, 0);
         } else {
-            query = query.where(ChaptersTable.COLUMN_MANGA_ID + "=?")
+            query = query.where(ChapterTable.COLUMN_MANGA_ID + "=?")
                     .whereArgs(manga_id);
         }
 
@@ -180,12 +180,12 @@ public class DatabaseHelper {
         return db.get()
                 .listOfObjects(Chapter.class)
                 .withQuery(Query.builder()
-                        .table(ChaptersTable.TABLE)
-                        .where(ChaptersTable.COLUMN_MANGA_ID + "=? AND " +
-                                ChaptersTable.COLUMN_CHAPTER_NUMBER + ">? AND " +
-                                ChaptersTable.COLUMN_CHAPTER_NUMBER + "<=?")
+                        .table(ChapterTable.TABLE)
+                        .where(ChapterTable.COLUMN_MANGA_ID + "=? AND " +
+                                ChapterTable.COLUMN_CHAPTER_NUMBER + ">? AND " +
+                                ChapterTable.COLUMN_CHAPTER_NUMBER + "<=?")
                         .whereArgs(chapter.manga_id, chapter.chapter_number, chapter.chapter_number + 1)
-                        .orderBy(ChaptersTable.COLUMN_CHAPTER_NUMBER)
+                        .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER)
                         .limit(1)
                         .build())
                 .prepare();
@@ -195,12 +195,12 @@ public class DatabaseHelper {
         return db.get()
                 .listOfObjects(Chapter.class)
                 .withQuery(Query.builder()
-                        .table(ChaptersTable.TABLE)
-                        .where(ChaptersTable.COLUMN_MANGA_ID + "=? AND " +
-                                ChaptersTable.COLUMN_CHAPTER_NUMBER + "<? AND " +
-                                ChaptersTable.COLUMN_CHAPTER_NUMBER + ">=?")
+                        .table(ChapterTable.TABLE)
+                        .where(ChapterTable.COLUMN_MANGA_ID + "=? AND " +
+                                ChapterTable.COLUMN_CHAPTER_NUMBER + "<? AND " +
+                                ChapterTable.COLUMN_CHAPTER_NUMBER + ">=?")
                         .whereArgs(chapter.manga_id, chapter.chapter_number, chapter.chapter_number - 1)
-                        .orderBy(ChaptersTable.COLUMN_CHAPTER_NUMBER + " DESC")
+                        .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER + " DESC")
                         .limit(1)
                         .build())
                 .prepare();

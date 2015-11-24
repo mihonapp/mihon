@@ -2,10 +2,7 @@ package eu.kanade.mangafeed.data.database.tables;
 
 import android.support.annotation.NonNull;
 
-/**
- * Created by len on 23/09/2015.
- */
-public class MangasCategoriesTable {
+public class MangaCategoryTable {
 
     @NonNull
     public static final String TABLE = "mangas_categories";

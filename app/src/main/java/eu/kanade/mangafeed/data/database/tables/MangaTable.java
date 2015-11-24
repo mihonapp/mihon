@@ -2,7 +2,7 @@ package eu.kanade.mangafeed.data.database.tables;
 
 import android.support.annotation.NonNull;
 
-public class MangasTable {
+public class MangaTable {
 
     @NonNull
     public static final String TABLE = "mangas";
@@ -56,7 +56,7 @@ public class MangasTable {
     public static final String COLUMN_UNREAD = "unread";
 
     // This is just class with Meta Data, we don't need instances
-    private MangasTable() {
+    private MangaTable() {
         throw new IllegalStateException("No instances please");
     }
 

@@ -3,36 +3,36 @@ package eu.kanade.mangafeed.data.database.models;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-import eu.kanade.mangafeed.data.database.tables.ChaptersTable;
+import eu.kanade.mangafeed.data.database.tables.ChapterTable;
 
-@StorIOSQLiteType(table = ChaptersTable.TABLE)
+@StorIOSQLiteType(table = ChapterTable.TABLE)
 public class Chapter {
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_ID, key = true)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_ID, key = true)
     public Long id;
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_MANGA_ID)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_MANGA_ID)
     public Long manga_id;
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_URL)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_URL)
     public String url;
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_NAME)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_NAME)
     public String name;
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_READ)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_READ)
     public boolean read;
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_LAST_PAGE_READ)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_LAST_PAGE_READ)
     public int last_page_read;
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_DATE_FETCH)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_DATE_FETCH)
     public long date_fetch;
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_DATE_UPLOAD)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_DATE_UPLOAD)
     public long date_upload;
 
-    @StorIOSQLiteColumn(name = ChaptersTable.COLUMN_CHAPTER_NUMBER)
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_CHAPTER_NUMBER)
     public float chapter_number;
 
     public int downloaded;
