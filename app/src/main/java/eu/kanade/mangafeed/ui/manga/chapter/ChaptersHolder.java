@@ -7,10 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -67,7 +63,7 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
         else if (chapter.downloaded == Chapter.NOT_DOWNLOADED)
             download_icon.setImageResource(R.drawable.ic_file_download_black_36dp);
 
-        date.setText(sdf.format(new Date(chapter.date_fetch)));
+        date.setText(sdf.format(new Date(chapter.date_upload)));
         toggleActivation();
     }
 
