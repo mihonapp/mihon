@@ -35,12 +35,10 @@ import rx.Observable;
 public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implements
         ActionMode.Callback, ChaptersAdapter.OnItemClickListener {
 
-    @Bind(R.id.chapter_list)
-    RecyclerView chapters;
-    @Bind(R.id.swipe_refresh)
-    SwipeRefreshLayout swipeRefresh;
+    @Bind(R.id.chapter_list) RecyclerView chapters;
+    @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
+    @Bind(R.id.toolbar_bottom) Toolbar toolbarBottom;
 
-    Toolbar toolbarBottom;
     private MenuItem sortUpBtn;
     private MenuItem sortDownBtn;
     private CheckBox readCb;
@@ -71,7 +69,6 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         createAdapter();
         setSwipeRefreshListener();
 
-        toolbarBottom = (Toolbar) view.findViewById(R.id.toolbar_bottom);
         toolbarBottom.inflateMenu(R.menu.chapter_filter);
 
         sortUpBtn = toolbarBottom.getMenu().findItem(R.id.action_sort_up);

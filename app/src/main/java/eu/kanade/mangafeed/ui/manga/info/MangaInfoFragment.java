@@ -26,23 +26,15 @@ import nucleus.factory.RequiresPresenter;
 @RequiresPresenter(MangaInfoPresenter.class)
 public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
 
-    @Bind(R.id.manga_artist)
-    TextView mArtist;
-    @Bind(R.id.manga_author)
-    TextView mAuthor;
-    @Bind(R.id.manga_chapters)
-    TextView mChapters;
-    @Bind(R.id.manga_genres)
-    TextView mGenres;
-    @Bind(R.id.manga_status)
-    TextView mStatus;
-    @Bind(R.id.manga_summary)
-    TextView mDescription;
-    @Bind(R.id.manga_cover)
-    ImageView mCover;
+    @Bind(R.id.manga_artist) TextView mArtist;
+    @Bind(R.id.manga_author) TextView mAuthor;
+    @Bind(R.id.manga_chapters) TextView mChapters;
+    @Bind(R.id.manga_genres) TextView mGenres;
+    @Bind(R.id.manga_status) TextView mStatus;
+    @Bind(R.id.manga_summary) TextView mDescription;
+    @Bind(R.id.manga_cover) ImageView mCover;
 
-    @Bind(R.id.action_favorite)
-    Button favoriteBtn;
+    @Bind(R.id.action_favorite) Button favoriteBtn;
 
 
     public static MangaInfoFragment newInstance() {

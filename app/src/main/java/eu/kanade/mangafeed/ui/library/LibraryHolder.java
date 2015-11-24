@@ -20,17 +20,13 @@ import uk.co.ribot.easyadapter.annotations.ViewId;
 @LayoutId(R.layout.item_catalogue)
 public class LibraryHolder extends ItemViewHolder<Manga> {
 
-    @ViewId(R.id.thumbnail)
-    ImageView thumbnail;
+    @ViewId(R.id.thumbnail) ImageView thumbnail;
 
-    @ViewId(R.id.title)
-    TextView title;
+    @ViewId(R.id.title) TextView title;
 
-    @ViewId(R.id.author)
-    TextView author;
+    @ViewId(R.id.author) TextView author;
 
-    @ViewId(R.id.unreadText)
-    TextView unreadText;
+    @ViewId(R.id.unreadText) TextView unreadText;
 
     public LibraryHolder(View view) {
         super(view);
@@ -43,8 +39,7 @@ public class LibraryHolder extends ItemViewHolder<Manga> {
         if (manga.unread > 0) {
             unreadText.setVisibility(View.VISIBLE);
             unreadText.setText(Integer.toString(manga.unread));
-        }
-        else {
+        } else {
             unreadText.setVisibility(View.GONE);
         }
 

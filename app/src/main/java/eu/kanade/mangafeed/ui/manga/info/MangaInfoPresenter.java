@@ -13,8 +13,7 @@ import rx.Observable;
 
 public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
-    @Inject
-    DatabaseHelper db;
+    @Inject DatabaseHelper db;
 
     private Manga manga;
     private int count = -1;

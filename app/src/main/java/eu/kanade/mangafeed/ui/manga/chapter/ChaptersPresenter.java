@@ -30,14 +30,10 @@ import rx.schedulers.Schedulers;
 
 public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
-    @Inject
-    DatabaseHelper db;
-    @Inject
-    SourceManager sourceManager;
-    @Inject
-    PreferencesHelper preferences;
-    @Inject
-    DownloadManager downloadManager;
+    @Inject DatabaseHelper db;
+    @Inject SourceManager sourceManager;
+    @Inject PreferencesHelper preferences;
+    @Inject DownloadManager downloadManager;
 
     private Manga manga;
     private Source source;
@@ -177,7 +173,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         }
     }
 
-    public void initReadCb(){
+    public void initReadCb() {
         if (getView() != null) {
             getView().setReadFilter(onlyUnread);//TODO do we need save filter for manga?
         }
