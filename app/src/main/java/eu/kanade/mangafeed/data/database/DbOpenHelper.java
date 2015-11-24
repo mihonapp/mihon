@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
-import eu.kanade.mangafeed.data.database.tables.ChaptersTable;
-import eu.kanade.mangafeed.data.database.tables.MangasTable;
+import eu.kanade.mangafeed.data.database.tables.ChapterTable;
+import eu.kanade.mangafeed.data.database.tables.MangaTable;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
 
@@ -19,8 +19,8 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(@NonNull SQLiteDatabase db) {
-        db.execSQL(MangasTable.getCreateTableQuery());
-        db.execSQL(ChaptersTable.getCreateTableQuery());
+        db.execSQL(MangaTable.getCreateTableQuery());
+        db.execSQL(ChapterTable.getCreateTableQuery());
     }
 
     @Override

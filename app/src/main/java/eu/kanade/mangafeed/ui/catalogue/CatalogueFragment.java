@@ -176,7 +176,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         if(v == null)
             return null;
 
-        return (ImageView) v.findViewById(R.id.catalogue_thumbnail);
+        return (ImageView) v.findViewById(R.id.thumbnail);
     }
 
     public void updateImage(Manga manga) {

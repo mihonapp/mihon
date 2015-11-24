@@ -3,54 +3,54 @@ package eu.kanade.mangafeed.data.database.models;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-import eu.kanade.mangafeed.data.database.tables.MangasTable;
+import eu.kanade.mangafeed.data.database.tables.MangaTable;
 
-@StorIOSQLiteType(table = MangasTable.TABLE)
+@StorIOSQLiteType(table = MangaTable.TABLE)
 public class Manga {
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_ID, key = true)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_ID, key = true)
     public Long id;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_SOURCE)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_SOURCE)
     public int source;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_URL)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_URL)
     public String url;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_ARTIST)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_ARTIST)
     public String artist;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_AUTHOR)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_AUTHOR)
     public String author;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_DESCRIPTION)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_DESCRIPTION)
     public String description;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_GENRE)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_GENRE)
     public String genre;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_TITLE)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_TITLE)
     public String title;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_STATUS)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_STATUS)
     public String status;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_THUMBNAIL_URL)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_THUMBNAIL_URL)
     public String thumbnail_url;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_FAVORITE)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_FAVORITE)
     public boolean favorite;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_LAST_UPDATE)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_LAST_UPDATE)
     public long last_update;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_INITIALIZED)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_INITIALIZED)
     public boolean initialized;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_VIEWER)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_VIEWER)
     public int viewer;
 
-    @StorIOSQLiteColumn(name = MangasTable.COLUMN_CHAPTER_ORDER)
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_CHAPTER_ORDER)
     public int chapter_order;
 
     public int unread;
