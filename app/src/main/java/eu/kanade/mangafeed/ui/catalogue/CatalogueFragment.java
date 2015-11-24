@@ -32,14 +32,11 @@ import uk.co.ribot.easyadapter.EasyAdapter;
 @RequiresPresenter(CataloguePresenter.class)
 public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
-    @Bind(R.id.gridView)
-    GridView manga_list;
+    @Bind(R.id.gridView) GridView manga_list;
 
-    @Bind(R.id.progress)
-    ProgressBar progress;
+    @Bind(R.id.progress) ProgressBar progress;
 
-    @Bind(R.id.progress_grid)
-    ProgressBar progress_grid;
+    @Bind(R.id.progress_grid) ProgressBar progress_grid;
 
     private EasyAdapter<Manga> adapter;
     private EndlessScrollListener scroll_listener;

@@ -22,11 +22,9 @@ import nucleus.view.ViewWithPresenter;
 
 public class MainActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    @Bind(R.id.toolbar) Toolbar toolbar;
 
-    @Bind(R.id.drawer_container)
-    FrameLayout container;
+    @Bind(R.id.drawer_container) FrameLayout container;
 
     private Drawer drawer;
     private FragmentStack fragmentStack;
