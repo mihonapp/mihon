@@ -22,6 +22,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public void onCreate(@NonNull SQLiteDatabase db) {
         db.execSQL(MangaTable.getCreateTableQuery());
         db.execSQL(ChapterTable.getCreateTableQuery());
+        db.execSQL(ChapterSyncTable.getCreateTableQuery());
     }
 
     @Override
