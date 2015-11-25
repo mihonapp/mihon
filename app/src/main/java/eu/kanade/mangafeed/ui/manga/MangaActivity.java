@@ -11,13 +11,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.ui.base.activity.BaseRxActivity;
 import eu.kanade.mangafeed.ui.manga.chapter.ChaptersFragment;
 import eu.kanade.mangafeed.ui.manga.info.MangaInfoFragment;
+import eu.kanade.mangafeed.ui.manga.myanimelist.MyAnimeListFragment;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(MangaPresenter.class)
@@ -26,6 +32,9 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.tabs) TabLayout tabs;
     @Bind(R.id.view_pager) ViewPager view_pager;
+
+    @Inject PreferencesHelper preferences;
+    @Inject ChapterSyncManager chapterSyncManager;
 
     private MangaDetailAdapter adapter;
     private long manga_id;
@@ -43,6 +52,7 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.get(this).getComponent().inject(this);
         setContentView(R.layout.activity_manga_detail);
         ButterKnife.bind(this);
 
@@ -88,25 +98,31 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
 
     class MangaDetailAdapter extends FragmentPagerAdapter {
 
-        final int PAGE_COUNT = 2;
-        private String tab_titles[];
+        private int pageCount;
+        private String tabTitles[];
         private Context context;
 
         final static int INFO_FRAGMENT = 0;
         final static int CHAPTERS_FRAGMENT = 1;
+        final static int MYANIMELIST_FRAGMENT = 2;
 
         public MangaDetailAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
-            tab_titles = new String[]{
+            tabTitles = new String[]{
                     context.getString(R.string.manga_detail_tab),
-                    context.getString(R.string.manga_chapters_tab)
+                    context.getString(R.string.manga_chapters_tab),
+                    "MAL"
             };
+
+            pageCount = 2;
+            if (chapterSyncManager.getMyAnimeList().isLogged())
+                pageCount++;
         }
 
         @Override
         public int getCount() {
-            return PAGE_COUNT;
+            return pageCount;
         }
 
         @Override
@@ -116,7 +132,8 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
                     return MangaInfoFragment.newInstance();
                 case CHAPTERS_FRAGMENT:
                     return ChaptersFragment.newInstance();
-
+                case MYANIMELIST_FRAGMENT:
+                    return MyAnimeListFragment.newInstance();
                 default:
                     return null;
             }
@@ -125,7 +142,7 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
         @Override
         public CharSequence getPageTitle(int position) {
             // Generate title based on item position
-            return tab_titles[position];
+            return tabTitles[position];
         }
     }
 

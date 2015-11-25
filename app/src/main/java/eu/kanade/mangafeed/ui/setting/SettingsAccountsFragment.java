@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.ui.setting;
 
 import android.os.Bundle;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
@@ -10,16 +11,21 @@ import javax.inject.Inject;
 
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
+import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
+import eu.kanade.mangafeed.ui.setting.dialog.ChapterSyncLoginDialog;
+import eu.kanade.mangafeed.ui.setting.dialog.SourceLoginDialog;
 import rx.Observable;
 
 public class SettingsAccountsFragment extends PreferenceFragment {
 
-    @Inject SourceManager sourceManager;
     @Inject PreferencesHelper preferences;
+    @Inject SourceManager sourceManager;
+    @Inject ChapterSyncManager syncManager;
 
     public static SettingsAccountsFragment newInstance() {
         return new SettingsAccountsFragment();
@@ -35,13 +41,30 @@ public class SettingsAccountsFragment extends PreferenceFragment {
 
         List<Source> sourceAccounts = getSourcesWithLogin();
 
+        PreferenceCategory sourceCategory = new PreferenceCategory(screen.getContext());
+        sourceCategory.setTitle("Sources");
+        screen.addPreference(sourceCategory);
+
         for (Source source : sourceAccounts) {
-            LoginDialogPreference dialog = new LoginDialogPreference(
+            SourceLoginDialog dialog = new SourceLoginDialog(
                     screen.getContext(), preferences, source);
             dialog.setTitle(source.getName());
 
-            screen.addPreference(dialog);
+            sourceCategory.addPreference(dialog);
         }
+
+        PreferenceCategory chapterSyncCategory = new PreferenceCategory(screen.getContext());
+        chapterSyncCategory.setTitle("Sync");
+        screen.addPreference(chapterSyncCategory);
+
+        for (BaseChapterSync sync : syncManager.getChapterSyncServices()) {
+            ChapterSyncLoginDialog dialog = new ChapterSyncLoginDialog(
+                    screen.getContext(), preferences, sync);
+            dialog.setTitle(sync.getName());
+
+            chapterSyncCategory.addPreference(dialog);
+        }
+
     }
 
     @Override

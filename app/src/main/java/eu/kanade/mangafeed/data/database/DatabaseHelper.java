@@ -16,14 +16,20 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 
 import java.util.List;
 
+import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLitePutResolver;
+import eu.kanade.mangafeed.data.database.models.ChapterSync;
+import eu.kanade.mangafeed.data.database.models.ChapterSyncStorIOSQLiteDeleteResolver;
+import eu.kanade.mangafeed.data.database.models.ChapterSyncStorIOSQLiteGetResolver;
+import eu.kanade.mangafeed.data.database.models.ChapterSyncStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.resolvers.MangaWithUnreadGetResolver;
+import eu.kanade.mangafeed.data.database.tables.ChapterSyncTable;
 import eu.kanade.mangafeed.data.database.tables.ChapterTable;
 import eu.kanade.mangafeed.data.database.tables.MangaTable;
 import eu.kanade.mangafeed.util.ChapterRecognition;
@@ -47,6 +53,11 @@ public class DatabaseHelper {
                         .putResolver(new ChapterStorIOSQLitePutResolver())
                         .getResolver(new ChapterStorIOSQLiteGetResolver())
                         .deleteResolver(new ChapterStorIOSQLiteDeleteResolver())
+                        .build())
+                .addTypeMapping(ChapterSync.class, SQLiteTypeMapping.<ChapterSync>builder()
+                        .putResolver(new ChapterSyncStorIOSQLitePutResolver())
+                        .getResolver(new ChapterSyncStorIOSQLiteGetResolver())
+                        .deleteResolver(new ChapterSyncStorIOSQLiteDeleteResolver())
                         .build())
                 .build();
     }
@@ -261,6 +272,33 @@ public class DatabaseHelper {
     public PreparedDeleteCollectionOfObjects<Chapter> deleteChapters(List<Chapter> chapters) {
         return db.delete()
                 .objects(chapters)
+                .prepare();
+    }
+
+    // Chapter sync related queries
+
+    public PreparedGetListOfObjects<ChapterSync> getChapterSync(Manga manga, BaseChapterSync sync) {
+
+        return db.get()
+                .listOfObjects(ChapterSync.class)
+                .withQuery(Query.builder()
+                        .table(ChapterSyncTable.TABLE)
+                        .where(ChapterSyncTable.COLUMN_MANGA_ID + "=? AND " +
+                                ChapterSyncTable.COLUMN_SYNC_ID + "=?")
+                        .whereArgs(manga.id, sync.getId())
+                        .build())
+                .prepare();
+    }
+
+    public PreparedPutObject<ChapterSync> insertChapterSync(ChapterSync chapter) {
+        return db.put()
+                .object(chapter)
+                .prepare();
+    }
+
+    public PreparedDeleteObject<ChapterSync> deleteChapterSync(ChapterSync chapter) {
+        return db.delete()
+                .object(chapter)
                 .prepare();
     }
 }

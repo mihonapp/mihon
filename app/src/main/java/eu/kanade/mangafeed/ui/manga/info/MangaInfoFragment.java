@@ -2,10 +2,6 @@ package eu.kanade.mangafeed.ui.manga.info;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -52,28 +48,12 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_manga_info, container, false);
         ButterKnife.bind(this, view);
-        favoriteBtn.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                getPresenter().toggleFavorite();
-                return true;
-            }
 
-            return false;
+        favoriteBtn.setOnClickListener(v -> {
+            getPresenter().toggleFavorite();
         });
-        getPresenter().initFavoriteText();
+
         return view;
-
-
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     public void setMangaInfo(Manga manga) {
