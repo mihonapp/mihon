@@ -16,10 +16,10 @@ public class ChapterSync {
     public long manga_id;
 
     @StorIOSQLiteColumn(name = ChapterSyncTable.COLUMN_SYNC_ID)
-    public long sync_id;
+    public int sync_id;
 
     @StorIOSQLiteColumn(name = ChapterSyncTable.COLUMN_REMOTE_ID)
-    public long remote_id;
+    public int remote_id;
 
     @StorIOSQLiteColumn(name = ChapterSyncTable.COLUMN_TITLE)
     public String title;

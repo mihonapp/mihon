@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import eu.kanade.mangafeed.data.chaptersync.MyAnimeList;
+import eu.kanade.mangafeed.data.chaptersync.UpdateChapterSyncService;
 import eu.kanade.mangafeed.data.download.DownloadService;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
 import eu.kanade.mangafeed.injection.module.AppModule;
@@ -55,6 +56,7 @@ public interface AppComponent {
 
     void inject(LibraryUpdateService libraryUpdateService);
     void inject(DownloadService downloadService);
+    void inject(UpdateChapterSyncService updateChapterSyncService);
 
     Application application();
 

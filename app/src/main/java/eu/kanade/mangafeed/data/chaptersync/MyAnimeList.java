@@ -89,7 +89,7 @@ public class MyAnimeList extends BaseChapterSync {
                 .map(entry -> {
                     ChapterSync chapter = ChapterSync.create(this);
                     chapter.title = entry.select("title").first().text();
-                    chapter.remote_id = Long.parseLong(entry.select("id").first().text());
+                    chapter.remote_id = Integer.parseInt(entry.select("id").first().text());
                     return chapter;
                 })
                 .toList();
@@ -111,7 +111,7 @@ public class MyAnimeList extends BaseChapterSync {
                 .map(entry -> {
                     ChapterSync chapter = ChapterSync.create(this);
                     chapter.title = entry.select("series_title").first().text();
-                    chapter.remote_id = Long.parseLong(
+                    chapter.remote_id = Integer.parseInt(
                             entry.select("series_mangadb_id").first().text());
                     chapter.last_chapter_read = Integer.parseInt(
                             entry.select("my_read_chapters").first().text());

@@ -3,7 +3,7 @@ package eu.kanade.mangafeed.ui.base.fragment;
 import android.os.Bundle;
 
 import eu.kanade.mangafeed.App;
-import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
+import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import nucleus.factory.PresenterFactory;
 import nucleus.factory.ReflectionPresenterFactory;
 import nucleus.presenter.Presenter;
@@ -57,7 +57,9 @@ public abstract class BaseRxFragment<P extends Presenter> extends BaseFragment i
         final PresenterFactory<P> superFactory = getPresenterFactory();
         setPresenterFactory(() -> {
             P presenter = superFactory.createPresenter();
-            ((App)getActivity().getApplication()).getComponentReflection().inject(presenter);
+            App app = (App) getActivity().getApplication();
+            app.getComponentReflection().inject(presenter);
+            ((BasePresenter)presenter).setContext(app.getApplicationContext());
             return presenter;
         });
 

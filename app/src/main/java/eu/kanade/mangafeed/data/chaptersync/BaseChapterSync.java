@@ -1,5 +1,8 @@
 package eu.kanade.mangafeed.data.chaptersync;
 
+import com.squareup.okhttp.Response;
+
+import eu.kanade.mangafeed.data.database.models.ChapterSync;
 import rx.Observable;
 
 public abstract class BaseChapterSync {
@@ -13,4 +16,6 @@ public abstract class BaseChapterSync {
     public abstract Observable<Boolean> login(String username, String password);
 
     public abstract boolean isLogged();
+
+    public abstract Observable<Response> update(ChapterSync chapter);
 }

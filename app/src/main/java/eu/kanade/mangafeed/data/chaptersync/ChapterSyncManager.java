@@ -26,4 +26,12 @@ public class ChapterSyncManager {
         return services;
     }
 
+    public BaseChapterSync getSyncService(int id) {
+        switch (id) {
+            case MYANIMELIST:
+                return myAnimeList;
+        }
+        return null;
+    }
+
 }

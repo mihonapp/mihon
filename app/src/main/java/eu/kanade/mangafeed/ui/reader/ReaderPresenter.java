@@ -8,8 +8,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
+import eu.kanade.mangafeed.data.chaptersync.MyAnimeList;
+import eu.kanade.mangafeed.data.chaptersync.UpdateChapterSyncService;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Chapter;
+import eu.kanade.mangafeed.data.database.models.ChapterSync;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.download.DownloadManager;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
@@ -17,6 +21,7 @@ import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.event.RetryPageEvent;
 import eu.kanade.mangafeed.event.SourceMangaChapterEvent;
+import eu.kanade.mangafeed.event.UpdateChapterSyncEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
 import icepick.State;
@@ -32,6 +37,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     @Inject PreferencesHelper prefs;
     @Inject DatabaseHelper db;
     @Inject DownloadManager downloadManager;
+    @Inject ChapterSyncManager syncManager;
 
     private Source source;
     private Manga manga;
@@ -135,10 +141,47 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     private void onChapterChange() {
-        if (pageList != null) {
-            if (!isDownloaded)
-                source.savePageList(chapter.url, pageList);
-            saveChapterProgress();
+        if (pageList == null)
+            return;
+
+        // Cache page list for online chapters to allow a faster reopen
+        if (!isDownloaded)
+            source.savePageList(chapter.url, pageList);
+
+        // Save current progress of the chapter. Mark as read if the chapter is finished
+        // and update progress in remote services (like MyAnimeList)
+        chapter.last_page_read = currentPage;
+        if (isChapterFinished()) {
+            chapter.read = true;
+            updateChapterSyncLastChapterRead();
+        }
+        db.insertChapter(chapter).executeAsBlocking();
+    }
+
+    private boolean isChapterFinished() {
+        return !chapter.read && currentPage == pageList.size() - 1;
+    }
+
+    private void updateChapterSyncLastChapterRead() {
+        // TODO don't use MAL methods for possible alternatives to MAL
+        MyAnimeList mal = syncManager.getMyAnimeList();
+
+        if (!mal.isLogged())
+            return;
+
+        List<ChapterSync> result = db.getChapterSync(manga, mal).executeAsBlocking();
+        if (result.isEmpty())
+            return;
+
+        ChapterSync chapterSync = result.get(0);
+
+        int lastChapterReadLocal = (int) Math.floor(chapter.chapter_number);
+        int lastChapterReadRemote = chapterSync.last_chapter_read;
+
+        if (lastChapterReadLocal > lastChapterReadRemote) {
+            chapterSync.last_chapter_read = lastChapterReadLocal;
+            EventBus.getDefault().postSticky(new UpdateChapterSyncEvent(chapterSync));
+            UpdateChapterSyncService.start(getContext());
         }
     }
 
@@ -184,14 +227,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
-    }
-
-    private void saveChapterProgress() {
-        chapter.last_page_read = currentPage;
-        if (currentPage == pageList.size() - 1) {
-            chapter.read = true;
-        }
-        db.insertChapter(chapter).executeAsBlocking();
     }
 
     private void getAdjacentChapters() {

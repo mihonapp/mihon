@@ -1,5 +1,6 @@
 package eu.kanade.mangafeed.ui.base.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -9,6 +10,8 @@ import nucleus.presenter.RxPresenter;
 import nucleus.view.ViewWithPresenter;
 
 public class BasePresenter<V extends ViewWithPresenter> extends RxPresenter<V> {
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -33,4 +36,13 @@ public class BasePresenter<V extends ViewWithPresenter> extends RxPresenter<V> {
     public void unregisterForEvents() {
         EventBus.getDefault().unregister(this);
     }
+
+    public void setContext(Context applicationContext) {
+        context = applicationContext;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
 }
