@@ -17,9 +17,16 @@
     <string name="action_mark_as_unread">Mark as unread</string>
     <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
+    <string name="action_update">Update</string>
+    <string name="action_edit">Edit</string>
     <string name="action_sort_up">Sort up</string>
     <string name="action_sort_down">Sort down</string>
     <string name="action_show_unread">Show unread</string>
+
+    <!-- Buttons -->
+    <string name="button_ok">Ok</string>
+    <string name="button_cancel">Cancel</string>
+
 
     <!-- Preferences -->
       <!-- Subsections -->

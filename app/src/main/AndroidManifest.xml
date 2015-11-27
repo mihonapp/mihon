@@ -46,6 +46,9 @@
         <service android:name=".data.download.DownloadService"
             android:exported="false"/>
 
+        <service android:name=".data.chaptersync.UpdateChapterSyncService"
+            android:exported="false"/>
+
         <receiver
             android:name=".data.sync.LibraryUpdateService$SyncOnConnectionAvailable"
             android:enabled="false">

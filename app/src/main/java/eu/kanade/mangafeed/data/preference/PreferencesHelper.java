@@ -8,6 +8,7 @@ import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
 
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.util.DiskUtils;
 import rx.Observable;
@@ -20,6 +21,8 @@ public class PreferencesHelper {
 
     private static final String SOURCE_ACCOUNT_USERNAME = "pref_source_username_";
     private static final String SOURCE_ACCOUNT_PASSWORD = "pref_source_password_";
+    private static final String CHAPTERSYNC_ACCOUNT_USERNAME = "pref_chaptersync_username_";
+    private static final String CHAPTERSYNC_ACCOUNT_PASSWORD = "pref_chaptersync_password_";
 
     public PreferencesHelper(Context context) {
         this.context = context;
@@ -81,6 +84,21 @@ public class PreferencesHelper {
         prefs.edit()
                 .putString(SOURCE_ACCOUNT_USERNAME + source.getSourceId(), username)
                 .putString(SOURCE_ACCOUNT_PASSWORD + source.getSourceId(), password)
+                .apply();
+    }
+
+    public String getChapterSyncUsername(BaseChapterSync sync) {
+        return prefs.getString(CHAPTERSYNC_ACCOUNT_USERNAME + sync.getId(), "");
+    }
+
+    public String getChapterSyncPassword(BaseChapterSync sync) {
+        return prefs.getString(CHAPTERSYNC_ACCOUNT_PASSWORD + sync.getId(), "");
+    }
+
+    public void setChapterSyncCredentials(BaseChapterSync sync, String username, String password) {
+        prefs.edit()
+                .putString(CHAPTERSYNC_ACCOUNT_USERNAME + sync.getId(), username)
+                .putString(CHAPTERSYNC_ACCOUNT_PASSWORD + sync.getId(), password)
                 .apply();
     }
 

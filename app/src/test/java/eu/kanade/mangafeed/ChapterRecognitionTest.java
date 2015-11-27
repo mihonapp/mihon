@@ -15,7 +15,7 @@ public class ChapterRecognitionTest {
     Manga randomManga;
 
     private Chapter createChapter(String title) {
-        Chapter chapter = new Chapter();
+        Chapter chapter = Chapter.create();
         chapter.name = title;
         return chapter;
     }

@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-// This does not break the build when Android Studio is missing the JRebel for Android plugin.
-apply plugin: 'com.zeroturnaround.jrebel.android'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
@@ -65,8 +63,8 @@ dependencies {
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.6.0'
+    compile 'com.squareup.okhttp:okhttp:2.6.0'
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.jakewharton:disklrucache:2.0.2'
