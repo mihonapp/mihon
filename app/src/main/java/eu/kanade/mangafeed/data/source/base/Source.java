@@ -159,7 +159,7 @@ public abstract class Source extends BaseSource {
             mCacheManager.putPageUrlsToDiskCache(chapterUrl, pages);
     }
 
-    private List<Page> convertToPages(List<String> pageUrls) {
+    protected List<Page> convertToPages(List<String> pageUrls) {
         List<Page> pages = new ArrayList<>();
         for (int i = 0; i < pageUrls.size(); i++) {
             pages.add(new Page(i, pageUrls.get(i)));
@@ -167,7 +167,7 @@ public abstract class Source extends BaseSource {
         return pages;
     }
 
-    private List<Page> getFirstImageFromPageUrls(List<String> pageUrls, String unparsedHtml) {
+    protected List<Page> getFirstImageFromPageUrls(List<String> pageUrls, String unparsedHtml) {
         List<Page> pages = convertToPages(pageUrls);
         String firstImage = parseHtmlToImageUrl(unparsedHtml);
         pages.get(0).setImageUrl(firstImage);
