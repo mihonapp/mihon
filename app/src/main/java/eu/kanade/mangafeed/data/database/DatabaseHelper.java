@@ -188,6 +188,10 @@ public class DatabaseHelper {
     }
 
     public PreparedGetListOfObjects<Chapter> getNextChapter(Chapter chapter) {
+        // Add a delta to the chapter number, because binary decimal representation
+        // can retrieve the same chapter again
+        double chapterNumber = chapter.chapter_number + 0.00001;
+
         return db.get()
                 .listOfObjects(Chapter.class)
                 .withQuery(Query.builder()
@@ -195,7 +199,7 @@ public class DatabaseHelper {
                         .where(ChapterTable.COLUMN_MANGA_ID + "=? AND " +
                                 ChapterTable.COLUMN_CHAPTER_NUMBER + ">? AND " +
                                 ChapterTable.COLUMN_CHAPTER_NUMBER + "<=?")
-                        .whereArgs(chapter.manga_id, chapter.chapter_number, chapter.chapter_number + 1)
+                        .whereArgs(chapter.manga_id, chapterNumber, chapterNumber + 1)
                         .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER)
                         .limit(1)
                         .build())
@@ -203,6 +207,10 @@ public class DatabaseHelper {
     }
 
     public PreparedGetListOfObjects<Chapter> getPreviousChapter(Chapter chapter) {
+        // Add a delta to the chapter number, because binary decimal representation
+        // can retrieve the same chapter again
+        double chapterNumber = chapter.chapter_number - 0.00001;
+
         return db.get()
                 .listOfObjects(Chapter.class)
                 .withQuery(Query.builder()
@@ -210,7 +218,7 @@ public class DatabaseHelper {
                         .where(ChapterTable.COLUMN_MANGA_ID + "=? AND " +
                                 ChapterTable.COLUMN_CHAPTER_NUMBER + "<? AND " +
                                 ChapterTable.COLUMN_CHAPTER_NUMBER + ">=?")
-                        .whereArgs(chapter.manga_id, chapter.chapter_number, chapter.chapter_number - 1)
+                        .whereArgs(chapter.manga_id, chapterNumber, chapterNumber - 1)
                         .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER + " DESC")
                         .limit(1)
                         .build())

@@ -85,7 +85,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     protected void onDestroy() {
         readerMenu.destroy();
-        viewer.destroy();
+        if (viewer != null)
+            viewer.destroy();
         super.onDestroy();
     }
 
@@ -97,7 +98,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     @Override
     protected void onPause() {
-        getPresenter().setCurrentPage(viewer.getCurrentPosition());
+        if (viewer != null)
+            getPresenter().setCurrentPage(viewer.getCurrentPosition());
         super.onPause();
     }
 
