@@ -21,11 +21,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
+import eu.kanade.mangafeed.data.source.model.Page;
 import rx.Observable;
 
 public class Batoto extends Source {
@@ -348,12 +349,41 @@ public class Batoto extends Source {
 
         List<String> pageUrlList = new ArrayList<>();
 
-        Elements pageUrlElements = parsedDocument.getElementById("page_select").getElementsByTag("option");
-        for (Element pageUrlElement : pageUrlElements) {
-            pageUrlList.add(pageUrlElement.attr("value"));
+        Element selectElement = parsedDocument.select("#page_select").first();
+
+        if (selectElement != null) {
+            for (Element pageUrlElement : selectElement.select("option")) {
+                pageUrlList.add(pageUrlElement.attr("value"));
+            }
+        } else {
+            // For webtoons in one page
+            Element page = parsedDocument.select("div > a").first();
+            String url = page.attr("href");
+            url = BASE_URL + "/reader" + url.substring(0, url.length() - 1) + "f";
+
+            for (int i = 0; i < parsedDocument.select("div > img").size(); i++) {
+                pageUrlList.add(url);
+            }
         }
 
         return pageUrlList;
+    }
+
+    @Override
+    protected List<Page> getFirstImageFromPageUrls(List<String> pageUrls, String unparsedHtml) {
+        List<Page> pages = convertToPages(pageUrls);
+        if (!unparsedHtml.contains("Want to see this chapter per page instead?")) {
+            String firstImage = parseHtmlToImageUrl(unparsedHtml);
+            pages.get(0).setImageUrl(firstImage);
+        } else {
+            // For webtoons in one page
+            Document parsedDocument = Jsoup.parse(unparsedHtml);
+            Elements imageUrls = parsedDocument.select("div > img");
+            for (int i = 0; i < pages.size(); i++) {
+                pages.get(i).setImageUrl(imageUrls.get(i).attr("src"));
+            }
+        }
+        return pages;
     }
 
     @Override

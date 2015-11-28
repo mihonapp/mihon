@@ -183,7 +183,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                     int pagesToPreload = Math.min(pages.size(), 5);
                     return Observable.from(pages)
                             .take(pagesToPreload)
-                            .concatMap(source::getImageUrlFromPage)
+                            .concatMap(page -> page.getImageUrl() == null ?
+                                    source.getImageUrlFromPage(page) :
+                                    Observable.just(page))
                             .doOnCompleted(this::stopPreloadingNextChapter);
                 })
                 .subscribeOn(Schedulers.io())
