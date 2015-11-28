@@ -5,18 +5,23 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
+import eu.kanade.mangafeed.ui.reader.ReaderPresenter;
+import eu.kanade.mangafeed.util.ToastUtil;
 
 public abstract class BaseReader {
 
     protected ReaderActivity activity;
+    protected ReaderPresenter presenter;
     protected ViewGroup container;
     protected int currentPosition;
 
     public BaseReader(ReaderActivity activity) {
         this.activity = activity;
         this.container = activity.getContainer();
+        this.presenter = activity.getPresenter();
     }
 
     public void updatePageNumber() {
@@ -34,13 +39,22 @@ public abstract class BaseReader {
     }
 
     public void requestNextChapter() {
-        activity.getPresenter().setCurrentPage(getCurrentPosition());
-        activity.getPresenter().loadNextChapter();
+        if (presenter.hasNextChapter()) {
+            presenter.setCurrentPage(getCurrentPosition());
+            presenter.loadNextChapter();
+        } else {
+            ToastUtil.showShort(activity, R.string.no_next_chapter);
+        }
+
     }
 
     public void requestPreviousChapter() {
-        activity.getPresenter().setCurrentPage(getCurrentPosition());
-        activity.getPresenter().loadPreviousChapter();
+        if (presenter.hasPreviousChapter()) {
+            presenter.setCurrentPage(getCurrentPosition());
+            presenter.loadPreviousChapter();
+        } else {
+            ToastUtil.showShort(activity, R.string.no_previous_chapter);
+        }
     }
 
     public void destroy() {}

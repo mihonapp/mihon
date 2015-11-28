@@ -31,7 +31,7 @@ public class VerticalReader extends BaseReader {
         transitionsSubscription = activity.getPreferences().enableTransitions().asObservable()
                 .subscribe(value -> transitions = value);
 
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {

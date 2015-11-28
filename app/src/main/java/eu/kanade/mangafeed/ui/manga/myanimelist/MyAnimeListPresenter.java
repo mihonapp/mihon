@@ -84,6 +84,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
         chapterSync.last_chapter_read = chapterNumber;
 
         add(updateSubscription = myAnimeList.update(chapterSync)
+                .flatMap(response -> db.insertChapterSync(chapterSync).createObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {},
