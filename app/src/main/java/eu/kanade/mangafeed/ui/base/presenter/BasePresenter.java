@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 
 import de.greenrobot.event.EventBus;
 import icepick.Icepick;
-import nucleus.presenter.RxPresenter;
 import nucleus.view.ViewWithPresenter;
 
 public class BasePresenter<V extends ViewWithPresenter> extends RxPresenter<V> {

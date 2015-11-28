@@ -135,7 +135,7 @@ public class Batoto extends Source {
     }
 
     @Override
-    protected String overrideRemainingPagesUrl(String defaultPageUrl) {
+    protected String overridePageUrl(String defaultPageUrl) {
         int start = defaultPageUrl.indexOf("#") + 1;
         int end = defaultPageUrl.indexOf("_", start);
         String id = defaultPageUrl.substring(start, end);

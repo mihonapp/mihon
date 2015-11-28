@@ -103,7 +103,7 @@ public abstract class Source extends BaseSource {
     public Observable<Page> getImageUrlFromPage(final Page page) {
         page.setStatus(Page.LOAD_PAGE);
         return mNetworkService
-                .getStringResponse(overrideRemainingPagesUrl(page.getUrl()), mRequestHeaders, null)
+                .getStringResponse(overridePageUrl(page.getUrl()), mRequestHeaders, null)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
                 .onErrorResumeNext(e -> {
                     page.setStatus(Page.ERROR);

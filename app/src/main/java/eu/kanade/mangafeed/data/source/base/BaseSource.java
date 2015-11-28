@@ -80,8 +80,8 @@ public abstract class BaseSource {
         return defaultPageUrl;
     }
 
-    // Get the URL of the remaining pages that contains source images
-    protected String overrideRemainingPagesUrl(String defaultPageUrl) {
+    // Get the URL of the pages that contains source images
+    protected String overridePageUrl(String defaultPageUrl) {
         return defaultPageUrl;
     }
 
