@@ -3,6 +3,7 @@ package eu.kanade.mangafeed.ui.reader.viewer.common;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,7 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.source.model.Page;
@@ -37,7 +37,6 @@ public class ViewPagerReaderFragment extends BaseFragment {
     @Bind(R.id.progress_container) LinearLayout progressContainer;
     @Bind(R.id.progress) ProgressBar progressBar;
     @Bind(R.id.progress_text) TextView progressText;
-    @Bind(R.id.image_error) TextView errorText;
     @Bind(R.id.retry_button) Button retryButton;
 
     private Page page;
@@ -59,7 +58,16 @@ public class ViewPagerReaderFragment extends BaseFragment {
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
         imageView.setOnTouchListener((v, motionEvent) ->
-                ((ReaderActivity) getActivity()).onImageSingleTap(motionEvent));
+                ((ReaderActivity) getActivity()).getViewer().onImageTouch(motionEvent));
+
+        retryButton.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (page != null)
+                    EventBus.getDefault().postSticky(new RetryPageEvent(page));
+                return true;
+            }
+            return true;
+        });
 
         return view;
     }
@@ -86,11 +94,6 @@ public class ViewPagerReaderFragment extends BaseFragment {
         this.page = page;
     }
 
-    @OnClick(R.id.retry_button)
-    void retry() {
-        EventBus.getDefault().postSticky(new RetryPageEvent(page));
-    }
-
     private void showImage() {
         if (page == null || page.getImagePath() == null)
             return;
@@ -112,12 +115,10 @@ public class ViewPagerReaderFragment extends BaseFragment {
 
     private void showError() {
         progressContainer.setVisibility(View.GONE);
-        errorText.setVisibility(View.VISIBLE);
         retryButton.setVisibility(View.VISIBLE);
     }
 
     private void hideError() {
-        errorText.setVisibility(View.GONE);
         retryButton.setVisibility(View.GONE);
     }
 

@@ -181,15 +181,14 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                     nextChapterPageList = pages;
                     // Preload at most 5 pages
                     int pagesToPreload = Math.min(pages.size(), 5);
-                    return Observable.from(pages)
-                            .take(pagesToPreload)
-                            .concatMap(page -> page.getImageUrl() == null ?
-                                    source.getImageUrlFromPage(page) :
-                                    Observable.just(page))
-                            .doOnCompleted(this::stopPreloadingNextChapter);
+                    return Observable.from(pages).take(pagesToPreload);
                 })
+                .concatMap(page -> page.getImageUrl() == null ?
+                        source.getImageUrlFromPage(page) :
+                        Observable.just(page))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(this::stopPreloadingNextChapter);
     }
 
     // Loads the given chapter
