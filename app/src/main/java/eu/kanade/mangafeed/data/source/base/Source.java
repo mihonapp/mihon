@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.data.source.base;
 
 import android.content.Context;
 
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Response;
 
@@ -9,6 +10,7 @@ import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -29,10 +31,12 @@ public abstract class Source extends BaseSource {
     @Inject protected CacheManager cacheManager;
     @Inject protected PreferencesHelper prefs;
     protected Headers requestHeaders;
+    protected LazyHeaders glideHeaders;
 
     public Source(Context context) {
         App.get(context).getComponent().inject(this);
         requestHeaders = headersBuilder().build();
+        glideHeaders = glideHeadersBuilder().build();
     }
 
     // Get the most popular mangas from the source
@@ -174,8 +178,21 @@ public abstract class Source extends BaseSource {
         return pages;
     }
 
-    protected String getChapterCacheKey(String chapteUrl) {
-        return getSourceId() + chapteUrl;
+    protected String getChapterCacheKey(String chapterUrl) {
+        return getSourceId() + chapterUrl;
+    }
+
+    protected LazyHeaders.Builder glideHeadersBuilder() {
+        LazyHeaders.Builder builder = new LazyHeaders.Builder();
+        for (Map.Entry<String, List<String>> entry : requestHeaders.toMultimap().entrySet()) {
+            builder.addHeader(entry.getKey(), entry.getValue().get(0));
+        }
+
+        return builder;
+    }
+
+    public LazyHeaders getGlideHeaders() {
+        return glideHeaders;
     }
 
 }

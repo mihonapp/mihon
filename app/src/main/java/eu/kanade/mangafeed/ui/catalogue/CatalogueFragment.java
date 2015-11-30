@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
 
 import java.util.List;
 
@@ -27,19 +28,16 @@ import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
 import nucleus.factory.RequiresPresenter;
-import uk.co.ribot.easyadapter.EasyAdapter;
 
 @RequiresPresenter(CataloguePresenter.class)
 public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
-    @Bind(R.id.gridView) GridView manga_list;
-
+    @Bind(R.id.gridView) GridView gridView;
     @Bind(R.id.progress) ProgressBar progress;
+    @Bind(R.id.progress_grid) ProgressBar progressGrid;
 
-    @Bind(R.id.progress_grid) ProgressBar progress_grid;
-
-    private EasyAdapter<Manga> adapter;
-    private EndlessScrollListener scroll_listener;
+    private CatalogueAdapter adapter;
+    private EndlessScrollListener scrollListener;
     private String search;
 
     public final static String SOURCE_ID = "source_id";
@@ -107,13 +105,9 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         }
     }
 
-    public EasyAdapter<Manga> getAdapter() {
-        return adapter;
-    }
-
     public void initializeAdapter() {
-        adapter = new EasyAdapter<>(getActivity(), CatalogueHolder.class);
-        manga_list.setAdapter(adapter);
+        adapter = new CatalogueAdapter(this);
+        gridView.setAdapter(adapter);
     }
 
     @OnItemClick(R.id.gridView)
@@ -126,8 +120,8 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     }
 
     public void initializeScrollListener() {
-        scroll_listener = new EndlessScrollListener(this::requestNext);
-        manga_list.setOnScrollListener(scroll_listener);
+        scrollListener = new EndlessScrollListener(this::requestNext);
+        gridView.setOnScrollListener(scrollListener);
     }
 
     public void requestNext() {
@@ -140,21 +134,22 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     }
 
     public void showGridProgressBar() {
-        progress_grid.setVisibility(ProgressBar.VISIBLE);
+        progressGrid.setVisibility(ProgressBar.VISIBLE);
     }
 
     public void hideProgressBar() {
         progress.setVisibility(ProgressBar.GONE);
-        progress_grid.setVisibility(ProgressBar.GONE);
+        progressGrid.setVisibility(ProgressBar.GONE);
     }
 
     public void onAddPage(PageBundle<List<Manga>> page) {
         hideProgressBar();
         if (page.page == 0) {
-            adapter.getItems().clear();
-            scroll_listener.resetScroll();
+            gridView.setSelection(0);
+            adapter.clear();
+            scrollListener.resetScroll();
         }
-        adapter.addItems(page.data);
+        adapter.addAll(page.data);
     }
 
     private int getMangaIndex(Manga manga) {
@@ -170,8 +165,8 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         if (position == -1)
             return null;
 
-        View v = manga_list.getChildAt(position -
-                manga_list.getFirstVisiblePosition());
+        View v = gridView.getChildAt(position -
+                gridView.getFirstVisiblePosition());
 
         if(v == null)
             return null;
@@ -182,8 +177,11 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     public void updateImage(Manga manga) {
         ImageView imageView = getImageView(getMangaIndex(manga));
         if (imageView != null) {
+            GlideUrl url = new GlideUrl(manga.thumbnail_url,
+                    getPresenter().getSource().getGlideHeaders());
+
             Glide.with(this)
-                    .load(manga.thumbnail_url)
+                    .load(url)
                     .centerCrop()
                     .into(imageView);
         }

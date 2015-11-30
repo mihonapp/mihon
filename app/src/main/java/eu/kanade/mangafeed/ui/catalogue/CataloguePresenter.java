@@ -201,4 +201,8 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         restartRequest();
     }
 
+    public Source getSource() {
+        return selectedSource;
+    }
+
 }

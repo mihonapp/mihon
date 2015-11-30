@@ -350,12 +350,8 @@ public class Batoto extends Source {
             }
         } else {
             // For webtoons in one page
-            Element page = parsedDocument.select("div > a").first();
-            String url = page.attr("href");
-            url = BASE_URL + "/reader" + url.substring(0, url.length() - 1) + "f";
-
             for (int i = 0; i < parsedDocument.select("div > img").size(); i++) {
-                pageUrlList.add(url);
+                pageUrlList.add("");
             }
         }
 
