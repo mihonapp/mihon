@@ -26,8 +26,6 @@ public class HorizontalViewPager extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         try {
-            gestureDetector.onTouchEvent(ev);
-
             if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
                 if (this.getCurrentItem() == 0 || this.getCurrentItem() == this.getAdapter().getCount() - 1) {
                     startDragX = ev.getX();
@@ -85,7 +83,6 @@ public class HorizontalViewPager extends ViewPager {
 
     public interface OnChapterBoundariesOutListener {
         void onFirstPageOutEvent();
-
         void onLastPageOutEvent();
     }
 

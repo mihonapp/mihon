@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,14 +82,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     @Override
-    protected void onDestroy() {
-        readerMenu.destroy();
-        if (viewer != null)
-            viewer.destroy();
-        super.onDestroy();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         setSystemUiVisibility();
@@ -101,6 +92,14 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         if (viewer != null)
             getPresenter().setCurrentPage(viewer.getCurrentPosition());
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        readerMenu.destroy();
+        if (viewer != null)
+            viewer.destroy();
+        super.onDestroy();
     }
 
     @Override
@@ -144,10 +143,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     public void setSelectedPage(int pageIndex) {
         viewer.setSelectedPage(pageIndex);
-    }
-
-    public boolean onImageSingleTap(MotionEvent motionEvent) {
-        return viewer.onImageTouch(motionEvent);
     }
 
     public void onCenterSingleTap() {
@@ -260,6 +255,10 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     public PreferencesHelper getPreferences() {
         return preferences;
+    }
+
+    public BaseReader getViewer() {
+        return viewer;
     }
 
 }
