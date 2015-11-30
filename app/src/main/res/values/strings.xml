@@ -85,6 +85,7 @@
     <string name="manga_chapters_tab">Chapters</string>
     <string name="selected_chapters_title">Selected: %1$d</string>
     <string name="manga_chapter_no_title">No title</string>
+    <string name="chapter_downloaded">DOWNLOADED</string>
 
     <!-- Reader activity -->
     <string name="downloading">Downloading…</string>

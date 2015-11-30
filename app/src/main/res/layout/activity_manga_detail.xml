@@ -10,7 +10,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.ActionBar">
+        android:theme="@style/ThemeOverlay.AppTheme.Dark">
 
         <include
             android:id="@+id/toolbar"
@@ -20,9 +20,10 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.TabLayout"
+            android:theme="@style/ThemeOverlay.AppTheme.Dark"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/accent" />
+            android:background="@color/colorPrimary"
+            app:tabIndicatorColor="@color/white" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -31,6 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
-        android:background="@android:color/white" />
+        android:background="@color/white" />
 
 </LinearLayout>

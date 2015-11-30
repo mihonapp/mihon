@@ -2,7 +2,9 @@ package eu.kanade.mangafeed.ui.manga.chapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,14 +16,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
+import eu.kanade.mangafeed.data.download.DownloadService;
+import rx.Observable;
 
 public class ChaptersHolder extends RecyclerView.ViewHolder implements
         View.OnClickListener, View.OnLongClickListener {
 
     private ChaptersAdapter adapter;
+    private Chapter item;
 
     @Bind(R.id.chapter_title) TextView title;
-    @Bind(R.id.chapter_download_image) ImageView download_icon;
+    @Bind(R.id.download_text) TextView downloadText;
+    @Bind(R.id.chapter_menu) ImageView chapterMenu;
     @Bind(R.id.chapter_pages) TextView pages;
     @Bind(R.id.chapter_date) TextView date;
 
@@ -38,9 +44,11 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
         this.adapter = adapter;
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
+        chapterMenu.setOnClickListener(v -> v.post(() -> showPopupMenu(v)));
     }
 
     public void onSetValues(Context context, Chapter chapter) {
+        this.item = chapter;
         title.setText(chapter.name);
 
         if (chapter.read) {
@@ -58,10 +66,11 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
         if (chapter.downloaded == Chapter.UNKNOWN) {
             adapter.getMangaChaptersFragment().getPresenter().checkIsChapterDownloaded(chapter);
         }
-        if (chapter.downloaded == Chapter.DOWNLOADED)
-            download_icon.setImageResource(R.drawable.ic_action_delete_36dp);
-        else if (chapter.downloaded == Chapter.NOT_DOWNLOADED)
-            download_icon.setImageResource(R.drawable.ic_file_download_black_36dp);
+        if (chapter.downloaded == Chapter.DOWNLOADED) {
+            downloadText.setVisibility(View.VISIBLE);
+        } else if (chapter.downloaded == Chapter.NOT_DOWNLOADED) {
+            downloadText.setVisibility(View.INVISIBLE);
+        }
 
         date.setText(sdf.format(new Date(chapter.date_upload)));
         toggleActivation();
@@ -83,4 +92,37 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
         toggleActivation();
         return true;
     }
+
+
+    private void showPopupMenu(View view) {
+        // Create a PopupMenu, giving it the clicked view for an anchor
+        PopupMenu popup = new PopupMenu(adapter.getMangaChaptersFragment().getActivity(), view);
+
+        // Inflate our menu resource into the PopupMenu's Menu
+        popup.getMenuInflater().inflate(R.menu.chapter_single, popup.getMenu());
+
+        // Set a listener so we are notified if a menu item is clicked
+        popup.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.action_mark_as_read:
+                    adapter.getMangaChaptersFragment().getPresenter().markChaptersRead(Observable.just(item), true);
+                    return true;
+                case R.id.action_mark_as_unread:
+                    adapter.getMangaChaptersFragment().getPresenter().markChaptersRead(Observable.just(item), false);
+                    return true;
+                case R.id.action_download:
+                    DownloadService.start(adapter.getMangaChaptersFragment().getActivity());
+                    adapter.getMangaChaptersFragment().getPresenter().downloadChapters(Observable.just(item));
+                    return true;
+                case R.id.action_delete:
+                    adapter.getMangaChaptersFragment().getPresenter().deleteChapters(Observable.just(item));
+                    return true;
+            }
+            return false;
+        });
+
+        // Finally show the PopupMenu
+        popup.show();
+    }
+
 }

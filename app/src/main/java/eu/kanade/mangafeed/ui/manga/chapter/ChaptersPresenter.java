@@ -169,7 +169,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     public void initSortIcon() {
         if (getView() != null) {
-            getView().setSortIcon(sortOrderAToZ);//TODO do we need save order for manga?
+            getView().setSortIcon(sortOrderAToZ);//TODO manga.chapter_order
         }
     }
 

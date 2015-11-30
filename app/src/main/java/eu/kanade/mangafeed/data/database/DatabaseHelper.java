@@ -67,14 +67,15 @@ public class DatabaseHelper {
     private final String favoriteMangasWithUnreadQuery = String.format(
             "SELECT %1$s.*, COUNT(C.%4$s) AS %5$s FROM %1$s LEFT JOIN " +
                     "(SELECT %4$s FROM %2$s WHERE %6$s = 0) AS C ON %3$s = C.%4$s " +
-                    "WHERE %7$s = 1 GROUP BY %3$s",
+                    "WHERE %7$s = 1 GROUP BY %3$s ORDER BY %1$s.%8$s",
             MangaTable.TABLE,
             ChapterTable.TABLE,
             MangaTable.TABLE + "." + MangaTable.COLUMN_ID,
             ChapterTable.COLUMN_MANGA_ID,
             MangaTable.COLUMN_UNREAD,
             ChapterTable.COLUMN_READ,
-            MangaTable.COLUMN_FAVORITE
+            MangaTable.COLUMN_FAVORITE,
+            MangaTable.COLUMN_TITLE
     );
 
     public PreparedGetListOfObjects<Manga> getMangas() {
