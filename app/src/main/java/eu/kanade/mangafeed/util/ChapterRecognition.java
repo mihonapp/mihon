@@ -12,6 +12,7 @@ public class ChapterRecognition {
 
     private static Pattern p1 = Pattern.compile("ch.?(\\d+[\\.,]?\\d*)");
     private static Pattern p2 = Pattern.compile("(\\d+[\\.,]?\\d*)");
+    private static Pattern p3 = Pattern.compile("(\\d+[\\.,]?\\d*:)");
 
     public static void parseChapterNumber(Chapter chapter, Manga manga) {
         if (chapter.chapter_number != -1)
@@ -28,9 +29,19 @@ public class ChapterRecognition {
             return;
         }
 
+        List<Float> occurences;
+
         // If there's only one number, use it
         matcher = p2.matcher(name);
-        List<Float> occurences = getAllOccurrences(matcher);
+        occurences = getAllOccurrences(matcher);
+        if (occurences.size() == 1) {
+            chapter.chapter_number =  occurences.get(0);
+            return;
+        }
+
+        // If it has a colon, the chapter number should be that one
+        matcher = p3.matcher(name);
+        occurences = getAllOccurrences(matcher);
         if (occurences.size() == 1) {
             chapter.chapter_number =  occurences.get(0);
             return;
@@ -55,11 +66,17 @@ public class ChapterRecognition {
     public static List<Float> getAllOccurrences(Matcher matcher) {
         List<Float> occurences = new ArrayList<>();
         while (matcher.find()) {
-            try {
-                float value = Float.parseFloat(matcher.group());
-                if (!occurences.contains(value))
-                    occurences.add(value);
-            } catch (NumberFormatException e) { /* Do nothing */ }
+            // Match again to get only numbers from the captured text
+            String text = matcher.group();
+            Matcher m = p2.matcher(text);
+            if (m.find()) {
+                try {
+                    Float value = Float.parseFloat(m.group());
+                    if (!occurences.contains(value)) {
+                        occurences.add(value);
+                    }
+                } catch (NumberFormatException e) { /* Do nothing */ }
+            }
         }
         return occurences;
     }
