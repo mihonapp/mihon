@@ -84,4 +84,25 @@ public class ChapterRecognitionTest {
         assertThat(c.chapter_number, is(96f));
     }
 
+    @Test
+    public void testWithColonAtTheEnd() {
+        Chapter c = createChapter("Chapter 5: 365 days");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number, is(5f));
+    }
+
+    @Test
+    public void testWithZeros() {
+        Chapter c = createChapter("Vol.001 Ch.003: Kaguya Doesn't Know Much");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number, is(3f));
+    }
+
+    @Test
+    public void testRange() {
+        Chapter c = createChapter("Ch.191-200 Read Online");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number, is(191f));
+    }
+
 }
