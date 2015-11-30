@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.data.source.online.english;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Headers;
@@ -33,13 +34,12 @@ public class Batoto extends Source {
 
     public static final String NAME = "Batoto (EN)";
     public static final String BASE_URL = "http://bato.to";
-    public static final String INITIAL_POPULAR_MANGAS_URL =
-            "http://bato.to/search_ajax?order_cond=views&order=desc&p=";
-    public static final String INITIAL_SEARCH_URL = "http://bato.to/search_ajax?";
-    public static final String INITIAL_PAGE_URL = "http://bato.to/areader?";
-    public static final String LOGIN_URL =
-            "https://bato.to/forums/index.php?app=core&module=global&section=login";
-
+    public static final String POPULAR_MANGAS_URL = BASE_URL + "/search_ajax?order_cond=views&order=desc&p=%d";
+    public static final String SEARCH_URL = BASE_URL + "/search_ajax?name=%s&p=%s";
+    public static final String CHAPTER_URL = "/areader?id=%s&p=1";
+    public static final String PAGE_URL = BASE_URL + "/areader?id=%s&p=%s";
+    public static final String MANGA_URL = "/comic_pop?id=%s";
+    public static final String LOGIN_URL = BASE_URL + "/forums/index.php?app=core&module=global&section=login";
 
     public Batoto(Context context) {
         super(context);
@@ -48,6 +48,16 @@ public class Batoto extends Source {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public int getSourceId() {
+        return SourceManager.BATOTO;
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return BASE_URL;
     }
 
     @Override
@@ -104,35 +114,30 @@ public class Batoto extends Source {
     }
 
     @Override
-    public int getSourceId() {
-        return SourceManager.BATOTO;
-    }
-
-    @Override
     public boolean isLoginRequired() {
         return true;
     }
 
     @Override
     public String getInitialPopularMangasUrl() {
-        return INITIAL_POPULAR_MANGAS_URL + "1";
+        return String.format(POPULAR_MANGAS_URL, 1);
     }
 
     @Override
     public String getInitialSearchUrl(String query) {
-        return INITIAL_SEARCH_URL + "name=" + query + "&p=1";
+        return String.format(SEARCH_URL, Uri.encode(query), 1);
     }
 
     @Override
     protected String overrideMangaUrl(String defaultMangaUrl) {
         String mangaId = defaultMangaUrl.substring(defaultMangaUrl.lastIndexOf("r") + 1);
-        return "http://bato.to/comic_pop?id=" + mangaId;
+        return String.format(MANGA_URL, mangaId);
     }
 
     @Override
-    protected String overrideChapterPageUrl(String defaultPageUrl) {
+    protected String overrideChapterUrl(String defaultPageUrl) {
         String id = defaultPageUrl.substring(defaultPageUrl.indexOf("#") + 1);
-        return INITIAL_PAGE_URL + "id=" + id + "&p=1";
+        return String.format(CHAPTER_URL, id);
     }
 
     @Override
@@ -140,7 +145,7 @@ public class Batoto extends Source {
         int start = defaultPageUrl.indexOf("#") + 1;
         int end = defaultPageUrl.indexOf("_", start);
         String id = defaultPageUrl.substring(start, end);
-        return INITIAL_PAGE_URL + "id=" + id + "&p=" + defaultPageUrl.substring(end+1);
+        return String.format(PAGE_URL, id, defaultPageUrl.substring(end+1));
     }
 
     @Override
@@ -167,7 +172,7 @@ public class Batoto extends Source {
         if (next == null)
             return null;
 
-        return INITIAL_POPULAR_MANGAS_URL + (page.page + 1);
+        return String.format(POPULAR_MANGAS_URL, page.page + 1);
     }
 
     @Override
@@ -192,22 +197,16 @@ public class Batoto extends Source {
         Manga mangaFromHtmlBlock = new Manga();
 
         Element urlElement = htmlBlock.select("a[href^=http://bato.to]").first();
-        Element nameElement = urlElement;
         Element updateElement = htmlBlock.select("td").get(5);
 
         mangaFromHtmlBlock.source = getSourceId();
 
         if (urlElement != null) {
-            String fieldUrl = urlElement.attr("href");
-            mangaFromHtmlBlock.url = fieldUrl;
-        }
-        if (nameElement != null) {
-            String fieldName = nameElement.text().trim();
-            mangaFromHtmlBlock.title = fieldName;
+            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
+            mangaFromHtmlBlock.title = urlElement.text().trim();
         }
         if (updateElement != null) {
-            long fieldUpdate = parseUpdateFromElement(updateElement);
-            mangaFromHtmlBlock.last_update = fieldUpdate;
+            mangaFromHtmlBlock.last_update = parseUpdateFromElement(updateElement);
         }
 
         return mangaFromHtmlBlock;
@@ -219,7 +218,7 @@ public class Batoto extends Source {
         if (next == null)
             return null;
 
-        return INITIAL_SEARCH_URL + "name=" + query + "&p=" + (page.page + 1);
+        return String.format(SEARCH_URL, query, page.page + 1);
     }
 
     private long parseUpdateFromElement(Element updateElement) {
@@ -257,8 +256,7 @@ public class Batoto extends Source {
             }
         }
         if (descriptionElement != null) {
-            String fieldDescription = descriptionElement.text().substring("Description:".length()).trim();
-            newManga.description = fieldDescription;
+            newManga.description = descriptionElement.text().substring("Description:".length()).trim();
         }
         if (genreElements != null) {
             String fieldGenres = "";
@@ -274,8 +272,7 @@ public class Batoto extends Source {
             newManga.genre = fieldGenres;
         }
         if (thumbnailUrlElement != null) {
-            String fieldThumbnailUrl = thumbnailUrlElement.attr("src");
-            newManga.thumbnail_url = fieldThumbnailUrl;
+            newManga.thumbnail_url = thumbnailUrlElement.attr("src");
         }
 
         boolean fieldCompleted = unparsedHtml.contains("<td>Complete</td>");
@@ -309,20 +306,16 @@ public class Batoto extends Source {
         Chapter newChapter = Chapter.create();
 
         Element urlElement = chapterElement.select("a[href^=http://bato.to/reader").first();
-        Element nameElement = urlElement;
         Element dateElement = chapterElement.select("td").get(4);
 
         if (urlElement != null) {
             String fieldUrl = urlElement.attr("href");
-            newChapter.url = fieldUrl;
-        }
-        if (nameElement != null) {
-            String fieldName = nameElement.text().trim();
-            newChapter.name = fieldName;
+            newChapter.setUrl(fieldUrl);
+            newChapter.name = urlElement.text().trim();
+
         }
         if (dateElement != null) {
-            long fieldDate = parseDateFromElement(dateElement);
-            newChapter.date_upload = fieldDate;
+            newChapter.date_upload = parseDateFromElement(dateElement);
         }
         newChapter.date_fetch = new Date().getTime();
 
@@ -357,12 +350,8 @@ public class Batoto extends Source {
             }
         } else {
             // For webtoons in one page
-            Element page = parsedDocument.select("div > a").first();
-            String url = page.attr("href");
-            url = BASE_URL + "/reader" + url.substring(0, url.length() - 1) + "f";
-
             for (int i = 0; i < parsedDocument.select("div > img").size(); i++) {
-                pageUrlList.add(url);
+                pageUrlList.add("");
             }
         }
 
@@ -401,7 +390,7 @@ public class Batoto extends Source {
 
     @Override
     public Observable<Boolean> login(String username, String password) {
-        return mNetworkService.getStringResponse(LOGIN_URL, mRequestHeaders, null)
+        return networkService.getStringResponse(LOGIN_URL, requestHeaders, null)
                 .flatMap(response -> doLogin(response, username, password))
                 .map(this::isAuthenticationSuccessful);
     }
@@ -420,7 +409,7 @@ public class Batoto extends Source {
         formBody.add("invisible", "1");
         formBody.add("rememberMe", "1");
 
-        return mNetworkService.postData(postUrl, formBody.build(), mRequestHeaders);
+        return networkService.postData(postUrl, formBody.build(), requestHeaders);
     }
 
     @Override
@@ -431,7 +420,7 @@ public class Batoto extends Source {
     @Override
     public boolean isLogged() {
         try {
-            for ( HttpCookie cookie : mNetworkService.getCookies().get(new URI(BASE_URL)) ) {
+            for ( HttpCookie cookie : networkService.getCookies().get(new URI(BASE_URL)) ) {
                 if (cookie.getName().equals("pass_hash"))
                     return true;
             }

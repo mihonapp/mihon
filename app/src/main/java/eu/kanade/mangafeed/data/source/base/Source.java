@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.data.source.base;
 
 import android.content.Context;
 
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Response;
 
@@ -9,6 +10,7 @@ import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -25,14 +27,16 @@ import rx.schedulers.Schedulers;
 
 public abstract class Source extends BaseSource {
 
-    @Inject protected NetworkHelper mNetworkService;
-    @Inject protected CacheManager mCacheManager;
+    @Inject protected NetworkHelper networkService;
+    @Inject protected CacheManager cacheManager;
     @Inject protected PreferencesHelper prefs;
-    protected Headers mRequestHeaders;
+    protected Headers requestHeaders;
+    protected LazyHeaders glideHeaders;
 
     public Source(Context context) {
         App.get(context).getComponent().inject(this);
-        mRequestHeaders = headersBuilder().build();
+        requestHeaders = headersBuilder().build();
+        glideHeaders = glideHeadersBuilder().build();
     }
 
     // Get the most popular mangas from the source
@@ -40,8 +44,8 @@ public abstract class Source extends BaseSource {
         if (page.page == 1)
             page.url = getInitialPopularMangasUrl();
 
-        return mNetworkService
-                .getStringResponse(page.url, mRequestHeaders, null)
+        return networkService
+                .getStringResponse(page.url, requestHeaders, null)
                 .map(Jsoup::parse)
                 .doOnNext(doc -> page.mangas = parsePopularMangasFromHtml(doc))
                 .doOnNext(doc -> page.nextPageUrl = parseNextPopularMangasUrl(doc, page))
@@ -53,8 +57,8 @@ public abstract class Source extends BaseSource {
         if (page.page == 1)
             page.url = getInitialSearchUrl(query);
 
-        return mNetworkService
-                .getStringResponse(page.url, mRequestHeaders, null)
+        return networkService
+                .getStringResponse(page.url, requestHeaders, null)
                 .map(Jsoup::parse)
                 .doOnNext(doc -> page.mangas = parseSearchFromHtml(doc))
                 .doOnNext(doc -> page.nextPageUrl = parseNextSearchUrl(doc, page, query))
@@ -63,21 +67,21 @@ public abstract class Source extends BaseSource {
 
     // Get manga details from the source
     public Observable<Manga> pullMangaFromNetwork(final String mangaUrl) {
-        return mNetworkService
-                .getStringResponse(overrideMangaUrl(mangaUrl), mRequestHeaders, null)
+        return networkService
+                .getStringResponse(getBaseUrl() + overrideMangaUrl(mangaUrl), requestHeaders, null)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToManga(mangaUrl, unparsedHtml)));
     }
 
     // Get chapter list of a manga from the source
-    public Observable<List<Chapter>> pullChaptersFromNetwork(String mangaUrl) {
-        return mNetworkService
-                .getStringResponse(mangaUrl, mRequestHeaders, null)
+    public Observable<List<Chapter>> pullChaptersFromNetwork(final String mangaUrl) {
+        return networkService
+                .getStringResponse(getBaseUrl() + mangaUrl, requestHeaders, null)
                 .flatMap(unparsedHtml ->
                         Observable.just(parseHtmlToChapters(unparsedHtml)));
     }
 
     public Observable<List<Page>> getCachedPageListOrPullFromNetwork(final String chapterUrl) {
-        return mCacheManager.getPageUrlsFromDiskCache(chapterUrl)
+        return cacheManager.getPageUrlsFromDiskCache(getChapterCacheKey(chapterUrl))
                 .onErrorResumeNext(throwable -> {
                     return pullPageListFromNetwork(chapterUrl);
                 })
@@ -85,8 +89,8 @@ public abstract class Source extends BaseSource {
     }
 
     public Observable<List<Page>> pullPageListFromNetwork(final String chapterUrl) {
-        return mNetworkService
-                .getStringResponse(overrideChapterPageUrl(chapterUrl), mRequestHeaders, null)
+        return networkService
+                .getStringResponse(getBaseUrl() + overrideChapterUrl(chapterUrl), requestHeaders, null)
                 .flatMap(unparsedHtml -> {
                     List<String> pageUrls = parseHtmlToPageUrls(unparsedHtml);
                     return Observable.just(getFirstImageFromPageUrls(pageUrls, unparsedHtml));
@@ -102,8 +106,8 @@ public abstract class Source extends BaseSource {
 
     public Observable<Page> getImageUrlFromPage(final Page page) {
         page.setStatus(Page.LOAD_PAGE);
-        return mNetworkService
-                .getStringResponse(overridePageUrl(page.getUrl()), mRequestHeaders, null)
+        return networkService
+                .getStringResponse(overridePageUrl(page.getUrl()), requestHeaders, null)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
                 .onErrorResumeNext(e -> {
                     page.setStatus(Page.ERROR);
@@ -123,13 +127,13 @@ public abstract class Source extends BaseSource {
 
         return pageObservable
                 .flatMap(p -> {
-                    if (!mCacheManager.isImageInCache(page.getImageUrl())) {
+                    if (!cacheManager.isImageInCache(page.getImageUrl())) {
                         return cacheImage(page);
                     }
                     return Observable.just(page);
                 })
                 .flatMap(p -> {
-                    page.setImagePath(mCacheManager.getImagePath(page.getImageUrl()));
+                    page.setImagePath(cacheManager.getImagePath(page.getImageUrl()));
                     page.setStatus(Page.READY);
                     return Observable.just(page);
                 })
@@ -143,7 +147,7 @@ public abstract class Source extends BaseSource {
         page.setStatus(Page.DOWNLOAD_IMAGE);
         return getImageProgressResponse(page)
                 .flatMap(resp -> {
-                    if (!mCacheManager.putImageToDiskCache(page.getImageUrl(), resp)) {
+                    if (!cacheManager.putImageToDiskCache(page.getImageUrl(), resp)) {
                         throw new IllegalStateException("Unable to save image");
                     }
                     return Observable.just(page);
@@ -151,12 +155,12 @@ public abstract class Source extends BaseSource {
     }
 
     public Observable<Response> getImageProgressResponse(final Page page) {
-        return mNetworkService.getProgressResponse(page.getImageUrl(), mRequestHeaders, page);
+        return networkService.getProgressResponse(page.getImageUrl(), requestHeaders, page);
     }
 
     public void savePageList(String chapterUrl, List<Page> pages) {
         if (pages != null)
-            mCacheManager.putPageUrlsToDiskCache(chapterUrl, pages);
+            cacheManager.putPageUrlsToDiskCache(getChapterCacheKey(chapterUrl), pages);
     }
 
     protected List<Page> convertToPages(List<String> pageUrls) {
@@ -172,6 +176,23 @@ public abstract class Source extends BaseSource {
         String firstImage = parseHtmlToImageUrl(unparsedHtml);
         pages.get(0).setImageUrl(firstImage);
         return pages;
+    }
+
+    protected String getChapterCacheKey(String chapterUrl) {
+        return getSourceId() + chapterUrl;
+    }
+
+    protected LazyHeaders.Builder glideHeadersBuilder() {
+        LazyHeaders.Builder builder = new LazyHeaders.Builder();
+        for (Map.Entry<String, List<String>> entry : requestHeaders.toMultimap().entrySet()) {
+            builder.addHeader(entry.getKey(), entry.getValue().get(0));
+        }
+
+        return builder;
+    }
+
+    public LazyHeaders getGlideHeaders() {
+        return glideHeaders;
     }
 
 }

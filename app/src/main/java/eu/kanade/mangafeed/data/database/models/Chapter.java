@@ -4,6 +4,7 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import eu.kanade.mangafeed.data.database.tables.ChapterTable;
+import eu.kanade.mangafeed.util.UrlUtil;
 
 @StorIOSQLiteType(table = ChapterTable.TABLE)
 public class Chapter {
@@ -43,6 +44,10 @@ public class Chapter {
 
 
     public Chapter() {}
+
+    public void setUrl(String url) {
+        this.url = UrlUtil.getPath(url);
+    }
 
     @Override
     public boolean equals(Object o) {

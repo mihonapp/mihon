@@ -20,6 +20,9 @@ public abstract class BaseSource {
     // Id of the source (must be declared and obtained from SourceManager to avoid conflicts)
     public abstract int getSourceId();
 
+    // Base url of the source, like: http://example.com
+    public abstract String getBaseUrl();
+
     // True if the source requires a login
     public abstract boolean isLoginRequired();
 
@@ -76,7 +79,7 @@ public abstract class BaseSource {
     }
 
     // Get the URL of the first page that contains a source image and the page list
-    protected String overrideChapterPageUrl(String defaultPageUrl) {
+    protected String overrideChapterUrl(String defaultPageUrl) {
         return defaultPageUrl;
     }
 
