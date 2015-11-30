@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/appbar_bottom"
+        android:layout_above="@+id/toolbar_bottom"
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
@@ -25,23 +25,23 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar_bottom"
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
-        android:theme="@style/AppTheme.ActionBar">
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:gravity="top|start"
+        android:theme="@style/ThemeOverlay.AppTheme.Dark"
+        app:popupTheme="@style/AppTheme.Popup">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:elevation="4dp"
-            android:gravity="top|start"
-            android:theme="@style/ThemeOverlay.AppTheme.Dark"
-            app:popupTheme="@style/AppTheme.Popup" />
+        <android.support.v7.widget.ActionMenuView
+            android:id="@+id/bottom_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"/>
+    </android.support.v7.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
 
 </RelativeLayout>

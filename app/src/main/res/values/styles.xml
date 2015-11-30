@@ -17,21 +17,17 @@
 
     </style>
 
-    <style name="ThemeOverlay.AppTheme.Dark" parent="ThemeOverlay.AppCompat.Dark">
+    <style name="ThemeOverlay.AppTheme.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorAccent">@color/white</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
-    </style>
 
-    <style name="AppTheme.Popup" parent="@style/ThemeOverlay.AppTheme.Dark">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="AppTheme.ActionBar" parent="@style/ThemeOverlay.AppTheme.Dark">
         <item name="android:actionModeBackground">@color/colorPrimarySuperDark</item>
         <item name="actionModeBackground">@color/colorPrimarySuperDark</item>
     </style>
-    <style name="AppTheme.TabLayout" parent="@style/ThemeOverlay.AppTheme.Dark">
+
+    <style name="AppTheme.Popup" parent="@style/ThemeOverlay.AppTheme.Dark">
+        <item name="colorAccent">@color/white</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -84,6 +80,6 @@
     </style>
 
     <style name="grey_text">
-        <item name="android:textColor">#e0e0e0</item>
+        <item name="android:textColor">@color/md_grey_300</item>
     </style>
 </resources>

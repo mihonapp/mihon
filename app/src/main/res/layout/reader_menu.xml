@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/reader_menu_background"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:theme="@style/ThemeOverlay.AppTheme.Dark"
+        app:popupTheme="@style/AppTheme.Popup"
         android:elevation="4dp" />
 
     <LinearLayout
@@ -46,7 +46,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:theme="@style/ThemeOverlay.AppTheme.Dark"
+                />
 
             <TextView
                 android:id="@+id/total_pages"

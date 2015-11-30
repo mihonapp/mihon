@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent">#FFEA00</color>
-    <color name="colorPrimary">#607D8B</color>
-    <color name="colorPrimaryDark">#455A64</color>
-    <color name="colorPrimarySuperDark">#263238</color>
-    <color name="colorPrimaryLight">#CFD8DC</color>
+    <color name="colorAccent">@color/md_blue_A400</color>
+    <color name="colorPrimary">@color/md_blue_grey_500</color>
+    <color name="colorPrimaryDark">@color/md_blue_grey_700</color>
+    <color name="colorPrimarySuperDark">@color/md_blue_grey_900</color>
+    <color name="colorPrimaryLight">@color/md_blue_grey_100</color>
 
-    <color name="colorBackgroundLight">#ECEFF1</color>
+    <color name="colorBackgroundLight">@color/md_blue_grey_50</color>
 
     <color name="primary">@color/colorPrimary</color>
     <color name="primary_dark">@color/colorPrimaryDark</color>
     <color name="primary_light">@color/colorPrimaryLight</color>
 
-    <color name="divider">#CFD8DC</color>
+    <color name="divider">@color/md_light_dividers</color>
 
-    <color name="white">#FFFFFF</color>
-    <color name="primary_text">#DD000000</color>
-    <color name="secondary_text">#8B000000</color>
-    <color name="hint_text">#64000000</color>
-
-    <color name="icons">#FFFFFF</color>
-
+    <color name="white">@color/md_white_1000</color>
+    <color name="primary_text">@color/md_light_primary_text</color>
+    <color name="secondary_text">@color/md_light_secondary</color>
+    <color name="hint_text">@color/md_light_disabled</color>
+    <color name="accent_text">@color/md_green_900</color>
 
     <color name="list_choice_pressed_bg_light">@color/colorPrimaryLight</color>
 
-    <color name="super_light_grey">#FAFAFA</color>
-    <color name="line_grey">#D7D7D7</color>
-    <color name="light_grey">#D4D4D4</color>
-    <color name="bg_light_grey">#E9E9E9</color>
-    <color name="library_text_background">#E8E8E8</color>
+    <color name="manga_unread_bg">@color/colorAccent</color>
+
+    <color name="super_light_grey">@color/md_grey_50</color>
+    <color name="line_grey">@color/md_light_dividers</color>
+    <color name="light_grey">@color/md_grey_300</color>
     <color name="page_number_background">#AAE9E9E9</color>
-    <color name="reader_menu_background">#333333</color>
+    <color name="reader_menu_background">@color/colorPrimarySuperDark</color>
 </resources>

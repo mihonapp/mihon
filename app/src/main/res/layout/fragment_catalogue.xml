@@ -13,14 +13,14 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <GridView
         android:id="@+id/gridView"
         style="@style/AppTheme.GridView"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:numColumns="2"
+        android:columnWidth="140dp"
         tools:listitem="@layout/item_catalogue" />
 
     <ProgressBar
@@ -29,6 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </LinearLayout>

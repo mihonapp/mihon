@@ -7,7 +7,7 @@
         android:id="@+id/gridView"
         style="@style/AppTheme.GridView"
         android:choiceMode="multipleChoiceModal"
-        android:numColumns="2"
+        android:columnWidth="140dp"
         tools:listitem="@layout/item_catalogue" />
 
 </FrameLayout>
