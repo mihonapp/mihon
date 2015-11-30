@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.data.source.online.english;
 
 import android.content.Context;
+import android.net.Uri;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,9 +27,8 @@ public class Mangahere extends Source {
 
     public static final String NAME = "Mangahere (EN)";
     public static final String BASE_URL = "http://www.mangahere.co";
-
-    private static final String INITIAL_POPULAR_MANGAS_URL = "http://www.mangahere.co/directory/";
-    private static final String INITIAL_SEARCH_URL = "http://www.mangahere.co/search.php?";
+    public static final String POPULAR_MANGAS_URL = BASE_URL + "/directory/%s";
+    public static final String SEARCH_URL = BASE_URL + "/search.php?name=%s&page=%s";
 
     public Mangahere(Context context) {
         super(context);
@@ -45,18 +45,23 @@ public class Mangahere extends Source {
     }
 
     @Override
+    public String getBaseUrl() {
+        return BASE_URL;
+    }
+
+    @Override
     public boolean isLoginRequired() {
         return false;
     }
 
     @Override
     protected String getInitialPopularMangasUrl() {
-        return INITIAL_POPULAR_MANGAS_URL;
+        return String.format(POPULAR_MANGAS_URL, "");
     }
 
     @Override
     protected String getInitialSearchUrl(String query) {
-        return INITIAL_SEARCH_URL + "name=" + query + "&page=1";
+        return String.format(SEARCH_URL, Uri.encode(query), 1);
     }
 
     public Observable<List<String>> getGenres() {
@@ -117,7 +122,7 @@ public class Mangahere extends Source {
         Element urlElement = htmlBlock.select("div.title > a").first();
 
         if (urlElement != null) {
-            mangaFromHtmlBlock.url = urlElement.attr("href");
+            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
             mangaFromHtmlBlock.title = urlElement.attr("title");
         }
 
@@ -130,7 +135,7 @@ public class Mangahere extends Source {
         if (next == null)
             return null;
 
-        return INITIAL_POPULAR_MANGAS_URL + next.attr("href");
+        return String.format(POPULAR_MANGAS_URL, next.attr("href"));
     }
 
     @Override
@@ -153,7 +158,7 @@ public class Mangahere extends Source {
         Element urlElement = htmlBlock.select("a.manga_info").first();
 
         if (urlElement != null) {
-            mangaFromHtmlBlock.url = urlElement.attr("href");
+            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
             mangaFromHtmlBlock.title = urlElement.text();
         }
 
@@ -231,20 +236,16 @@ public class Mangahere extends Source {
         newManga.url = mangaUrl;
 
         if (artistElement != null) {
-            String fieldArtist = artistElement.text();
-            newManga.artist = fieldArtist;
+            newManga.artist = artistElement.text();
         }
         if (authorElement != null) {
-            String fieldAuthor = authorElement.text();
-            newManga.author = fieldAuthor;
+            newManga.author = authorElement.text();
         }
         if (descriptionElement != null) {
-            String fieldDescription = descriptionElement.text().substring(0, descriptionElement.text().length() - "Show less".length());
-            newManga.description = fieldDescription;
+            newManga.description = descriptionElement.text().substring(0, descriptionElement.text().length() - "Show less".length());
         }
         if (genreElement != null) {
-            String fieldGenre = genreElement.text().substring("Genre(s):".length());
-            newManga.genre = fieldGenre;
+            newManga.genre = genreElement.text().substring("Genre(s):".length());
         }
         if (statusElement != null) {
             boolean fieldCompleted = statusElement.text().contains("Completed");
@@ -258,8 +259,7 @@ public class Mangahere extends Source {
         Element thumbnailUrlElement = parsedDocument.select("img").first();
 
         if (thumbnailUrlElement != null) {
-            String fieldThumbnailUrl = thumbnailUrlElement.attr("src");
-            newManga.thumbnail_url = fieldThumbnailUrl;
+            newManga.thumbnail_url = thumbnailUrlElement.attr("src");
         }
 
         newManga.initialized = true;
@@ -295,16 +295,13 @@ public class Mangahere extends Source {
         Element dateElement = chapterElement.select("span.right").first();
 
         if (urlElement != null) {
-            String fieldUrl = urlElement.attr("href");
-            newChapter.url = fieldUrl;
+            newChapter.setUrl(urlElement.attr("href"));
         }
         if (nameElement != null) {
-            String fieldName = nameElement.text();
-            newChapter.name = fieldName;
+            newChapter.name = nameElement.text();
         }
         if (dateElement != null) {
-            long fieldDate = parseDateFromElement(dateElement);
-            newChapter.date_upload = fieldDate;
+            newChapter.date_upload = parseDateFromElement(dateElement);
         }
         newChapter.date_fetch = new Date().getTime();
 

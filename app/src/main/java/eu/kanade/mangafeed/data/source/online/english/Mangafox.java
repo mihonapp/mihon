@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.data.source.online.english;
 
 import android.content.Context;
+import android.net.Uri;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,9 +26,9 @@ public class Mangafox extends Source {
 
     public static final String NAME = "Mangafox (EN)";
     public static final String BASE_URL = "http://mangafox.me";
-    public static final String INITIAL_POPULAR_MANGAS_URL = "http://mangafox.me/directory/";
-    public static final String INITIAL_SEARCH_URL =
-            "http://mangafox.me/search.php?name_method=cw&advopts=1&order=az&sort=name";
+    public static final String POPULAR_MANGAS_URL = BASE_URL + "/directory/%s";
+    public static final String SEARCH_URL =
+            BASE_URL + "/search.php?name_method=cw&advopts=1&order=az&sort=name&name=%s&page=%s";
 
     public Mangafox(Context context) {
         super(context);
@@ -44,18 +45,23 @@ public class Mangafox extends Source {
     }
 
     @Override
+    public String getBaseUrl() {
+        return BASE_URL;
+    }
+
+    @Override
     public boolean isLoginRequired() {
         return false;
     }
 
     @Override
     protected String getInitialPopularMangasUrl() {
-        return INITIAL_POPULAR_MANGAS_URL;
+        return String.format(POPULAR_MANGAS_URL, "");
     }
 
     @Override
     protected String getInitialSearchUrl(String query) {
-        return INITIAL_SEARCH_URL + "&name=" + query + "&page=1";
+        return String.format(SEARCH_URL, Uri.encode(query), 1);
     }
 
     @Override
@@ -78,7 +84,7 @@ public class Mangafox extends Source {
         Element urlElement = htmlBlock.select("a.title").first();
 
         if (urlElement != null) {
-            mangaFromHtmlBlock.url = urlElement.attr("href");
+            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
             mangaFromHtmlBlock.title = urlElement.text();
         }
 
@@ -91,7 +97,7 @@ public class Mangafox extends Source {
         if (next == null)
             return null;
 
-        return INITIAL_POPULAR_MANGAS_URL + next.attr("href");
+        return String.format(POPULAR_MANGAS_URL, next.attr("href"));
     }
 
     @Override
@@ -114,7 +120,7 @@ public class Mangafox extends Source {
         Element urlElement = htmlBlock.select("a.series_preview").first();
 
         if (urlElement != null) {
-            mangaFromHtmlBlock.url = urlElement.attr("href");
+            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
             mangaFromHtmlBlock.title = urlElement.text();
         }
 
@@ -153,24 +159,19 @@ public class Mangafox extends Source {
             newManga.title = title;
         }
         if (artistElement != null) {
-            String fieldArtist = artistElement.text();
-            newManga.artist = fieldArtist;
+            newManga.artist = artistElement.text();
         }
         if (authorElement != null) {
-            String fieldAuthor = authorElement.text();
-            newManga.author = fieldAuthor;
+            newManga.author = authorElement.text();
         }
         if (descriptionElement != null) {
-            String fieldDescription = descriptionElement.text();
-            newManga.description = fieldDescription;
+            newManga.description = descriptionElement.text();
         }
         if (genreElement != null) {
-            String fieldGenre = genreElement.text();
-            newManga.genre = fieldGenre;
+            newManga.genre = genreElement.text();
         }
         if (thumbnailUrlElement != null) {
-            String fieldThumbnailUrl = thumbnailUrlElement.attr("src");
-            newManga.thumbnail_url = fieldThumbnailUrl;
+            newManga.thumbnail_url = thumbnailUrlElement.attr("src");
         }
 //        if (statusElement != null) {
 //            boolean fieldCompleted = statusElement.text().contains("Completed");
@@ -206,7 +207,7 @@ public class Mangafox extends Source {
         Element dateElement = chapterElement.select("span.date").first();
 
         if (urlElement != null) {
-            newChapter.url = urlElement.attr("href");
+            newChapter.setUrl(urlElement.attr("href"));
         }
         if (nameElement != null) {
             newChapter.name = nameElement.text();

@@ -4,6 +4,7 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import eu.kanade.mangafeed.data.database.tables.MangaTable;
+import eu.kanade.mangafeed.util.UrlUtil;
 
 @StorIOSQLiteType(table = MangaTable.TABLE)
 public class Manga {
@@ -56,6 +57,10 @@ public class Manga {
     public int unread;
 
     public Manga() {}
+
+    public void setUrl(String url) {
+        this.url = UrlUtil.getPath(url);
+    }
 
     public static void copyFromNetwork(Manga local, Manga network) {
         if (network.title != null)

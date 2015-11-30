@@ -7,7 +7,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         tools:text="New Text"
         android:id="@+id/source_name"
         android:gravity="center_vertical"
