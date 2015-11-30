@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:padding="6dip"
-    android:background="@drawable/selector_chapter_light">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="fill_parent"
+                android:layout_height="?android:attr/listPreferredItemHeight"
+                android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+                android:background="@drawable/selector_chapter_light"
+                android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+                android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+                android:paddingRight="?android:attr/listPreferredItemPaddingRight">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -52,33 +55,36 @@
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:gravity="center_vertical"
-        android:textSize="20sp"
+        android:textSize="18dp"
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="Title"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/relativeLayout2"
-        android:layout_toLeftOf="@+id/relativeLayout2"/>
-
-    <RelativeLayout
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/relativeLayout"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:id="@+id/relativeLayout2"
-        android:layout_above="@+id/relativeLayout">
+        android:layout_alignParentTop="true"
+        android:paddingRight="30dp"/>
+
+    <RelativeLayout
+        android:id="@+id/chapter_menu"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center|end"
+        android:layout_alignRight="@+id/chapter_title"
+        android:layout_alignEnd="@+id/chapter_title"
+        android:layout_alignBottom="@+id/relativeLayout"
+        android:paddingBottom="18dp">
         <ImageView
-            android:id="@+id/chapter_menu"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_more_horiz_black_36dp"
-            android:background="?android:selectableItemBackground"/>
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_more_horiz_black_24dp"
+            android:background="?android:selectableItemBackground"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="false"/>
     </RelativeLayout>
 
 
