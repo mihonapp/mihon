@@ -36,6 +36,7 @@ public class Batoto extends Source {
     public static final String BASE_URL = "http://bato.to";
     public static final String POPULAR_MANGAS_URL = BASE_URL + "/search_ajax?order_cond=views&order=desc&p=%d";
     public static final String SEARCH_URL = BASE_URL + "/search_ajax?name=%s&p=%s";
+    public static final String CHAPTER_URL = "/areader?id=%s&p=1";
     public static final String PAGE_URL = BASE_URL + "/areader?id=%s&p=%s";
     public static final String MANGA_URL = "/comic_pop?id=%s";
     public static final String LOGIN_URL = BASE_URL + "/forums/index.php?app=core&module=global&section=login";
@@ -136,7 +137,7 @@ public class Batoto extends Source {
     @Override
     protected String overrideChapterUrl(String defaultPageUrl) {
         String id = defaultPageUrl.substring(defaultPageUrl.indexOf("#") + 1);
-        return String.format(PAGE_URL, id, 1);
+        return String.format(CHAPTER_URL, id);
     }
 
     @Override
