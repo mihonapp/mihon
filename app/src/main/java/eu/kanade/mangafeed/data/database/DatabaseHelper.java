@@ -226,6 +226,21 @@ public class DatabaseHelper {
                 .prepare();
     }
 
+    public PreparedGetListOfObjects<Chapter> getNextUnreadChapter(Manga manga) {
+        return db.get()
+                .listOfObjects(Chapter.class)
+                .withQuery(Query.builder()
+                        .table(ChapterTable.TABLE)
+                        .where(ChapterTable.COLUMN_MANGA_ID + "=? AND " +
+                                ChapterTable.COLUMN_READ + "=? AND " +
+                                ChapterTable.COLUMN_CHAPTER_NUMBER + ">=?")
+                        .whereArgs(manga.id, 0, 0)
+                        .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER)
+                        .limit(1)
+                        .build())
+                .prepare();
+    }
+
     public PreparedPutObject<Chapter> insertChapter(Chapter chapter) {
         return db.put()
                 .object(chapter)
