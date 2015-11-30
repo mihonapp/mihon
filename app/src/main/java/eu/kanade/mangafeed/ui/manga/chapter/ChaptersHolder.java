@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -27,7 +28,7 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
 
     @Bind(R.id.chapter_title) TextView title;
     @Bind(R.id.download_text) TextView downloadText;
-    @Bind(R.id.chapter_menu) ImageView chapterMenu;
+    @Bind(R.id.chapter_menu) RelativeLayout chapterMenu;
     @Bind(R.id.chapter_pages) TextView pages;
     @Bind(R.id.chapter_date) TextView date;
 
