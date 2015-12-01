@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -72,10 +73,15 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         setSwipeRefreshListener();
 
         readCb.setOnCheckedChangeListener((arg, isCheked) -> getPresenter().setReadFilter(isCheked));
-        sortBtn.setOnClickListener(v->getPresenter().revertSortOrder());
-        nextUnreadBtn.setOnClickListener(v->{
-            getPresenter().onChapterClicked(getPresenter().getNextUnreadChapter());
-            startActivity(ReaderActivity.newIntent(getActivity()));
+        sortBtn.setOnClickListener(v -> getPresenter().revertSortOrder());
+        nextUnreadBtn.setOnClickListener(v -> {
+            Chapter chapter = getPresenter().getNextUnreadChapter();
+            if (chapter != null) {
+                getPresenter().onChapterClicked(getPresenter().getNextUnreadChapter());
+                startActivity(ReaderActivity.newIntent(getActivity()));
+            } else {
+                Toast.makeText(getContext(), R.string.no_next_chapter, Toast.LENGTH_SHORT).show();
+            }
         });
         return view;
     }
