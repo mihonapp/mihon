@@ -151,7 +151,7 @@ public class Kissmanga extends Source {
         Element infoElement = parsedDocument.select("div.barContent").first();
         Element titleElement = infoElement.select("a.bigChar").first();
         Element authorElement = infoElement.select("p:has(span:contains(Author:)) > a").first();
-        Element genreElement = infoElement.select("p:has(span:contains(Genres:)) > *:gt(0)").first();
+        Elements genreElement = infoElement.select("p:has(span:contains(Genres:)) > *:gt(0)");
         Elements descriptionElement = infoElement.select("p:has(span:contains(Summary:)) ~ p");
         Element thumbnailUrlElement = parsedDocument.select(".rightBox:eq(0) img").first();
 

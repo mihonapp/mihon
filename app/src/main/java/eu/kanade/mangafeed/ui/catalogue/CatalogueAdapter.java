@@ -68,7 +68,7 @@ public class CatalogueAdapter extends ArrayAdapter<Manga> {
 
                 Glide.with(fragment)
                         .load(url)
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .centerCrop()
                         .into(thumbnail);
             } else {

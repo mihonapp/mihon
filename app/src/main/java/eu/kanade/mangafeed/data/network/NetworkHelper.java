@@ -16,95 +16,85 @@ import rx.Observable;
 
 public final class NetworkHelper {
 
-    private OkHttpClient mClient;
+    private OkHttpClient client;
     private CookieManager cookieManager;
 
     public final CacheControl NULL_CACHE_CONTROL = new CacheControl.Builder().noCache().build();
     public final Headers NULL_HEADERS = new Headers.Builder().build();
 
     public NetworkHelper() {
-        mClient = new OkHttpClient();
+        client = new OkHttpClient();
         cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-        mClient.setCookieHandler(cookieManager);
+        client.setCookieHandler(cookieManager);
     }
 
     public Observable<Response> getResponse(final String url, final Headers headers, final CacheControl cacheControl) {
-        return Observable.<Response>create(subscriber -> {
+        return Observable.defer(() -> {
             try {
-                if (!subscriber.isUnsubscribed()) {
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .cacheControl(cacheControl != null ? cacheControl : NULL_CACHE_CONTROL)
-                            .headers(headers != null ? headers : NULL_HEADERS)
-                            .build();
-                    subscriber.onNext(mClient.newCall(request).execute());
-                }
-                subscriber.onCompleted();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .cacheControl(cacheControl != null ? cacheControl : NULL_CACHE_CONTROL)
+                        .headers(headers != null ? headers : NULL_HEADERS)
+                        .build();
+
+                return Observable.just(client.newCall(request).execute());
             } catch (Throwable e) {
-                subscriber.onError(e);
+                return Observable.error(e);
             }
         }).retry(3);
     }
 
     public Observable<String> mapResponseToString(final Response response) {
-        return Observable.create(subscriber -> {
+        return Observable.defer(() -> {
             try {
-                subscriber.onNext(response.body().string());
-                subscriber.onCompleted();
+                return Observable.just(response.body().string());
             } catch (Throwable e) {
-                subscriber.onError(e);
+                return Observable.error(e);
             }
         });
     }
 
     public Observable<String> getStringResponse(final String url, final Headers headers, final CacheControl cacheControl) {
-
         return getResponse(url, headers, cacheControl)
                 .flatMap(this::mapResponseToString);
     }
 
     public Observable<Response> postData(final String url, final RequestBody formBody, final Headers headers) {
-        return Observable.create(subscriber -> {
+        return Observable.defer(() -> {
             try {
-                if (!subscriber.isUnsubscribed()) {
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .post(formBody)
-                            .headers(headers != null ? headers : NULL_HEADERS)
-                            .build();
-                    subscriber.onNext(mClient.newCall(request).execute());
-                }
-                subscriber.onCompleted();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(formBody)
+                        .headers(headers != null ? headers : NULL_HEADERS)
+                        .build();
+                return Observable.just(client.newCall(request).execute());
             } catch (Throwable e) {
-                subscriber.onError(e);
+                return Observable.error(e);
             }
-        });
+        }).retry(3);
     }
 
     public Observable<Response> getProgressResponse(final String url, final Headers headers, final ProgressListener listener) {
-        return Observable.<Response>create(subscriber -> {
+        return Observable.defer(() -> {
             try {
-                if (!subscriber.isUnsubscribed()) {
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .cacheControl(NULL_CACHE_CONTROL)
-                            .headers(headers != null ? headers : NULL_HEADERS)
+                Request request = new Request.Builder()
+                        .url(url)
+                        .cacheControl(NULL_CACHE_CONTROL)
+                        .headers(headers != null ? headers : NULL_HEADERS)
+                        .build();
+
+                OkHttpClient progressClient = client.clone();
+
+                progressClient.networkInterceptors().add(chain -> {
+                    Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), listener))
                             .build();
-
-                    OkHttpClient progressClient = mClient.clone();
-
-                    progressClient.networkInterceptors().add(chain -> {
-                        Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                                .body(new ProgressResponseBody(originalResponse.body(), listener))
-                                .build();
-                    });
-                    subscriber.onNext(progressClient.newCall(request).execute());
-                }
-                subscriber.onCompleted();
+                });
+                return Observable.just(progressClient.newCall(request).execute());
             } catch (Throwable e) {
-                subscriber.onError(e);
+                return Observable.error(e);
             }
         }).retry(3);
     }

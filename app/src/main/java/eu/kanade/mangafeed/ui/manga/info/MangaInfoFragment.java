@@ -8,9 +8,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
@@ -65,11 +62,9 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
 
         setFavoriteText(manga.favorite);
 
-        Glide.with(getActivity())
-                .load(manga.thumbnail_url)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .centerCrop()
-                .into(mCover);
+        getPresenter().coverCache.loadOrFetchInto(mCover,
+                manga.thumbnail_url, getPresenter().source.getGlideHeaders());
+
     }
 
     public void setChapterCount(int count) {
