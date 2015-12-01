@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:gravity="center_vertical"
-        android:textSize="18dp"
+        android:textSize="17sp"
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="Title"
@@ -64,8 +64,7 @@
         android:layout_above="@+id/relativeLayout"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:paddingRight="30dp"/>
+        android:layout_alignParentTop="true"/>
 
     <RelativeLayout
         android:id="@+id/chapter_menu"

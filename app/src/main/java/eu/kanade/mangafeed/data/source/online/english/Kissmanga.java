@@ -36,6 +36,7 @@ public class Kissmanga extends Source {
     public static final String IP = "93.174.95.110";
     public static final String BASE_URL = "http://" + IP;
     public static final String POPULAR_MANGAS_URL = BASE_URL + "/MangaList/MostPopular?page=%s";
+    public static final String SEARCH_URL = BASE_URL + "/AdvanceSearch";
 
     public Kissmanga(Context context) {
         super(context);
@@ -75,7 +76,7 @@ public class Kissmanga extends Source {
 
     @Override
     protected String getInitialSearchUrl(String query) {
-        return null;
+        return SEARCH_URL;
     }
 
     @Override
@@ -111,12 +112,31 @@ public class Kissmanga extends Source {
         if (next == null)
             return null;
 
-        return String.format(POPULAR_MANGAS_URL, next.attr("href"));
+        return BASE_URL + next.attr("href");
+    }
+
+    public Observable<MangasPage> searchMangasFromNetwork(MangasPage page, String query) {
+        if (page.page == 1)
+            page.url = getInitialSearchUrl(query);
+
+        FormEncodingBuilder form = new FormEncodingBuilder();
+        form.add("authorArtist", "");
+        form.add("mangaName", query);
+        form.add("status", "");
+        form.add("genres", "");
+
+        return networkService
+                .postData(page.url, form.build(), requestHeaders)
+                .flatMap(networkService::mapResponseToString)
+                .map(Jsoup::parse)
+                .doOnNext(doc -> page.mangas = parseSearchFromHtml(doc))
+                .doOnNext(doc -> page.nextPageUrl = parseNextSearchUrl(doc, page, query))
+                .map(response -> page);
     }
 
     @Override
     protected List<Manga> parseSearchFromHtml(Document parsedHtml) {
-        return null;
+        return parsePopularMangasFromHtml(parsedHtml);
     }
 
     @Override
