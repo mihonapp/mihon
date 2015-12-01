@@ -49,6 +49,7 @@ public class CatalogueAdapter extends ArrayAdapter<Manga> {
         @Bind(R.id.title) TextView title;
         @Bind(R.id.author) TextView author;
         @Bind(R.id.thumbnail) ImageView thumbnail;
+        @Bind(R.id.favorite_sticker) ImageView favorite_sticker;
 
         CatalogueFragment fragment;
 
@@ -72,6 +73,12 @@ public class CatalogueAdapter extends ArrayAdapter<Manga> {
                         .into(thumbnail);
             } else {
                 thumbnail.setImageResource(android.R.color.transparent);
+            }
+
+            if(manga.favorite){
+                favorite_sticker.setVisibility(View.VISIBLE);
+            }else{
+                favorite_sticker.setVisibility(View.INVISIBLE);
             }
         }
     }

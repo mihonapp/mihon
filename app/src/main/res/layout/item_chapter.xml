@@ -64,7 +64,8 @@
         android:layout_above="@+id/relativeLayout"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="30dp"/>
 
     <RelativeLayout
         android:id="@+id/chapter_menu"
@@ -72,10 +73,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center|end"
-        android:layout_alignRight="@+id/chapter_title"
-        android:layout_alignEnd="@+id/chapter_title"
         android:layout_alignBottom="@+id/relativeLayout"
-        android:paddingBottom="18dp">
+        android:paddingBottom="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"

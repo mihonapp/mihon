@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/card_background"
-    android:orientation="vertical">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_background"
+                android:orientation="vertical">
 
     <ImageView
         android:id="@+id/thumbnail"
@@ -27,17 +27,29 @@
         android:paddingTop="1dp"
         android:textColor="@color/white"
         android:textSize="12sp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/favorite_sticker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/thumbnail"
+        android:layout_alignRight="@+id/thumbnail"
+        android:layout_alignTop="@+id/thumbnail"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_action_favorite_blue"
+        android:visibility="invisible"/>
 
     <LinearLayout
         android:id="@+id/footerLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:background="@color/white"
-        android:orientation="vertical"
         android:layout_alignBottom="@+id/thumbnail"
         android:layout_alignLeft="@+id/unreadText"
-        android:layout_alignStart="@+id/unreadText">
+        android:layout_alignStart="@+id/unreadText"
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
@@ -50,11 +62,10 @@
             android:paddingRight="8dp"
             android:textColor="@color/primary_text"
             android:textSize="13sp"
-            tools:text="Sample name"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Sample name"/>
 
         <TextView
-            tools:text="Sample name"
             android:id="@+id/author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +75,8 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:textColor="@color/hint_text"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Sample name"/>
 
     </LinearLayout>
 
