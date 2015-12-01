@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 
 import java.util.List;
@@ -182,6 +183,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
             Glide.with(this)
                     .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .centerCrop()
                     .into(imageView);
         }
