@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -24,11 +23,11 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.download.DownloadService;
+import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
+import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.decoration.DividerItemDecoration;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
-import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
-import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
 
@@ -149,23 +148,15 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_select_all:
-                adapter.selectAll();
-                return true;
+                return onSelectAll();
             case R.id.action_mark_as_read:
-                getPresenter().markChaptersRead(getSelectedChapters(), true);
-                return true;
+                return onMarkAsRead(getSelectedChapters());
             case R.id.action_mark_as_unread:
-                getPresenter().markChaptersRead(getSelectedChapters(), false);
-                return true;
+                return onMarkAsUnread(getSelectedChapters());
             case R.id.action_download:
-                DownloadService.start(getActivity());
-                getPresenter().downloadChapters(getSelectedChapters());
-                closeActionMode();
-                return true;
+                return onDownload(getSelectedChapters());
             case R.id.action_delete:
-                getPresenter().deleteChapters(getSelectedChapters());
-                closeActionMode();
-                return true;
+                return onDelete(getSelectedChapters());
         }
         return false;
     }
@@ -185,6 +176,36 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     public void closeActionMode() {
         if (actionMode != null)
             actionMode.finish();
+    }
+
+    protected boolean onSelectAll() {
+        adapter.selectAll();
+        setContextTitle(adapter.getSelectedItemCount());
+        actionMode.invalidate();
+        return true;
+    }
+
+    protected boolean onMarkAsRead(Observable<Chapter> chapters) {
+        getPresenter().markChaptersRead(chapters, true);
+        return true;
+    }
+
+    protected boolean onMarkAsUnread(Observable<Chapter> chapters) {
+        getPresenter().markChaptersRead(chapters, false);
+        return true;
+    }
+
+    protected boolean onDownload(Observable<Chapter> chapters) {
+        DownloadService.start(getActivity());
+        getPresenter().downloadChapters(chapters);
+        closeActionMode();
+        return true;
+    }
+
+    protected boolean onDelete(Observable<Chapter> chapters) {
+        getPresenter().deleteChapters(chapters);
+        closeActionMode();
+        return true;
     }
 
     @Override

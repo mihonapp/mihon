@@ -48,7 +48,7 @@ public class ChaptersAdapter extends FlexibleAdapter<ChaptersHolder, Chapter> {
         void onListItemLongClick(int position);
     }
 
-    public ChaptersFragment getMangaChaptersFragment() {
+    public ChaptersFragment getChaptersFragment() {
         return (ChaptersFragment) fragment;
     }
 }

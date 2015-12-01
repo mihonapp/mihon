@@ -2,11 +2,9 @@ package eu.kanade.mangafeed.ui.manga.chapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,7 +15,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
-import eu.kanade.mangafeed.data.download.DownloadService;
 import rx.Observable;
 
 public class ChaptersHolder extends RecyclerView.ViewHolder implements
@@ -58,14 +55,14 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
             title.setTextColor(ContextCompat.getColor(context, R.color.primary_text));
         }
 
-        if (chapter.last_page_read > 0 && !chapter.read) {
+        if (!chapter.read && chapter.last_page_read > 0) {
             pages.setText(context.getString(R.string.chapter_progress, chapter.last_page_read + 1));
         } else {
             pages.setText("");
         }
 
         if (chapter.downloaded == Chapter.UNKNOWN) {
-            adapter.getMangaChaptersFragment().getPresenter().checkIsChapterDownloaded(chapter);
+            adapter.getChaptersFragment().getPresenter().checkIsChapterDownloaded(chapter);
         }
         if (chapter.downloaded == Chapter.DOWNLOADED) {
             downloadText.setVisibility(View.VISIBLE);
@@ -97,27 +94,24 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
 
     private void showPopupMenu(View view) {
         // Create a PopupMenu, giving it the clicked view for an anchor
-        PopupMenu popup = new PopupMenu(adapter.getMangaChaptersFragment().getActivity(), view);
+        PopupMenu popup = new PopupMenu(adapter.getChaptersFragment().getActivity(), view);
 
         // Inflate our menu resource into the PopupMenu's Menu
         popup.getMenuInflater().inflate(R.menu.chapter_single, popup.getMenu());
 
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener(menuItem -> {
+            Observable<Chapter> chapter = Observable.just(item);
+
             switch (menuItem.getItemId()) {
                 case R.id.action_mark_as_read:
-                    adapter.getMangaChaptersFragment().getPresenter().markChaptersRead(Observable.just(item), true);
-                    return true;
+                    return adapter.getChaptersFragment().onMarkAsRead(chapter);
                 case R.id.action_mark_as_unread:
-                    adapter.getMangaChaptersFragment().getPresenter().markChaptersRead(Observable.just(item), false);
-                    return true;
+                    return adapter.getChaptersFragment().onMarkAsUnread(chapter);
                 case R.id.action_download:
-                    DownloadService.start(adapter.getMangaChaptersFragment().getActivity());
-                    adapter.getMangaChaptersFragment().getPresenter().downloadChapters(Observable.just(item));
-                    return true;
+                    return adapter.getChaptersFragment().onDownload(chapter);
                 case R.id.action_delete:
-                    adapter.getMangaChaptersFragment().getPresenter().deleteChapters(Observable.just(item));
-                    return true;
+                    return adapter.getChaptersFragment().onDelete(chapter);
             }
             return false;
         });
