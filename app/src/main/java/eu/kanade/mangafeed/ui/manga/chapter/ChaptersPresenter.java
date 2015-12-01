@@ -1,7 +1,6 @@
 package eu.kanade.mangafeed.ui.manga.chapter;
 
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 
 import java.io.File;
 import java.util.List;
@@ -120,6 +119,14 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     public void onChapterClicked(Chapter chapter) {
         EventBus.getDefault().postSticky(new SourceMangaChapterEvent(source, manga, chapter));
+    }
+
+    public Chapter getNextUnreadChapter() {
+        List<Chapter> chapters = db.getNextUnreadChapter(manga).executeAsBlocking();
+        if(chapters.size() < 1){
+            return null;
+        }
+        return chapters.get(0);
     }
 
     public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -39,9 +40,10 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
     @Bind(R.id.toolbar_bottom) Toolbar toolbarBottom;
 
-    private MenuItem sortUpBtn;
-    private MenuItem sortDownBtn;
-    private CheckBox readCb;
+    @Bind(R.id.action_sort) ImageView sortBtn;
+    @Bind(R.id.action_next_unread) ImageView nextUnreadBtn;
+    @Bind(R.id.action_show_unread) CheckBox readCb;
+    @Bind(R.id.action_show_downloaded) CheckBox downloadedCb;
 
     private ChaptersAdapter adapter;
 
@@ -69,20 +71,11 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         createAdapter();
         setSwipeRefreshListener();
 
-        toolbarBottom.inflateMenu(R.menu.chapter_filter);
-
-        sortUpBtn = toolbarBottom.getMenu().findItem(R.id.action_sort_up);
-        sortDownBtn = toolbarBottom.getMenu().findItem(R.id.action_sort_down);
-        readCb = (CheckBox) toolbarBottom.findViewById(R.id.action_show_unread);
         readCb.setOnCheckedChangeListener((arg, isCheked) -> getPresenter().setReadFilter(isCheked));
-        toolbarBottom.setOnMenuItemClickListener(arg0 -> {
-            switch (arg0.getItemId()) {
-                case R.id.action_sort_up:
-                case R.id.action_sort_down:
-                    getPresenter().revertSortOrder();
-                    return true;
-            }
-            return false;
+        sortBtn.setOnClickListener(v->getPresenter().revertSortOrder());
+        nextUnreadBtn.setOnClickListener(v->{
+            getPresenter().onChapterClicked(getPresenter().getNextUnreadChapter());
+            startActivity(ReaderActivity.newIntent(getActivity()));
         });
         return view;
     }
@@ -247,8 +240,9 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     }
 
     public void setSortIcon(boolean aToZ) {
-        if (sortUpBtn != null) sortUpBtn.setVisible(aToZ);
-        if (sortDownBtn != null) sortDownBtn.setVisible(!aToZ);
+        if (sortBtn != null) {
+            sortBtn.setImageResource(!aToZ ? R.drawable.ic_expand_less_white_36dp : R.drawable.ic_expand_more_white_36dp);
+        }
     }
 
     public void setReadFilter(boolean onlyUnread) {

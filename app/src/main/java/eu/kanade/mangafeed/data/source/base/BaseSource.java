@@ -5,7 +5,6 @@ import com.squareup.okhttp.Response;
 
 import org.jsoup.nodes.Document;
 
-import java.net.URI;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.database.models.Chapter;
@@ -81,14 +80,6 @@ public abstract class BaseSource {
 
     // Get the URL of the first page that contains a source image and the page list
     protected String overrideChapterUrl(String defaultPageUrl) {
-        if(defaultPageUrl.startsWith("http")){
-            try {
-                URI uri = new URI(defaultPageUrl);
-                defaultPageUrl = uri.getPath() + "?" + uri.getQuery();
-            }catch (Exception ignored){
-                return defaultPageUrl;
-            }
-        }
         return defaultPageUrl;
     }
 

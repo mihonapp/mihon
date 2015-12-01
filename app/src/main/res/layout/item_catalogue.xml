@@ -38,7 +38,7 @@
         android:layout_alignTop="@+id/thumbnail"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/ic_action_favorite"
+        android:src="@drawable/ic_action_favorite_blue"
         android:visibility="invisible"/>
 
     <LinearLayout
