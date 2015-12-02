@@ -51,8 +51,8 @@ public class Manga {
     @StorIOSQLiteColumn(name = MangaTable.COLUMN_VIEWER)
     public int viewer;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_CHAPTER_ORDER)
-    public int chapter_order;
+    @StorIOSQLiteColumn(name = MangaTable.COLUMN_CHAPTER_FLAGS)
+    public int chapter_flags;
 
     public int unread;
 

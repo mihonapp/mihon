@@ -50,7 +50,7 @@ public class MangaTable {
     public static final String COLUMN_VIEWER = "viewer";
 
     @NonNull
-    public static final String COLUMN_CHAPTER_ORDER = "chapter_order";
+    public static final String COLUMN_CHAPTER_FLAGS = "chapter_order";
 
     @NonNull
     public static final String COLUMN_UNREAD = "unread";
@@ -79,7 +79,7 @@ public class MangaTable {
                 + COLUMN_LAST_UPDATE + " LONG, "
                 + COLUMN_INITIALIZED + " BOOLEAN NOT NULL, "
                 + COLUMN_VIEWER + " INTEGER NOT NULL, "
-                + COLUMN_CHAPTER_ORDER + " INTEGER NOT NULL"
+                + COLUMN_CHAPTER_FLAGS + " INTEGER NOT NULL"
                 + ");"
                 + "CREATE INDEX " + TABLE + "_" + COLUMN_URL + "_index ON " + TABLE + "(" + COLUMN_URL + ");";
 
