@@ -37,6 +37,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     private boolean isCatalogueManga;
     private boolean sortOrderAToZ = true;
     private boolean onlyUnread = true;
+    private boolean onlyDownloaded;
 
     private static final int DB_CHAPTERS = 1;
     private static final int FETCH_CHAPTERS = 2;
@@ -98,6 +99,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     private Observable<List<Chapter>> getDbChaptersObs() {
         return db.getChapters(manga.id, sortOrderAToZ, onlyUnread).createObservable()
                 .doOnNext(this::checkChaptersStatus)
+                .flatMap(this::applyDownloadedFilter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -152,7 +154,6 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 }));
     }
 
-
     private void checkChaptersStatus(List<Chapter> chapters) {
         for (Chapter chapter : chapters) {
             checkIsChapterDownloaded(chapter);
@@ -174,6 +175,15 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         }
     }
 
+    private Observable<List<Chapter>> applyDownloadedFilter(List<Chapter> chapters) {
+        if (onlyDownloaded)
+            return Observable.from(chapters)
+                    .filter(chapter -> chapter.status == Download.DOWNLOADED)
+                    .toList();
+
+        return Observable.just(chapters);
+    }
+
     public void revertSortOrder() {
         //TODO manga.chapter_order
         sortOrderAToZ = !sortOrderAToZ;
@@ -183,6 +193,11 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     public void setReadFilter(boolean onlyUnread) {
         //TODO do we need save filter for manga?
         this.onlyUnread = onlyUnread;
+        start(DB_CHAPTERS);
+    }
+
+    public void setDownloadedFilter(boolean onlyDownloaded) {
+        this.onlyDownloaded = onlyDownloaded;
         start(DB_CHAPTERS);
     }
 
@@ -198,7 +213,12 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         return onlyUnread;
     }
 
+    public boolean getDownloadedFilter() {
+        return onlyDownloaded;
+    }
+
     public Manga getManga() {
         return manga;
     }
+
 }

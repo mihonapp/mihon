@@ -85,7 +85,7 @@ dependencies {
     compile "frankiesardo:icepick:$ICEPICK_VERSION"
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
-    compile 'eu.davidea:flexible-adapter:4.0.1@aar'
+    compile 'eu.davidea:flexible-adapter:4.1.0@aar'
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"

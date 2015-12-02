@@ -108,13 +108,13 @@ public class DatabaseHelper {
                 .prepare();
     }
 
-    public PreparedGetListOfObjects<Manga> getManga(String url) {
+    public PreparedGetListOfObjects<Manga> getManga(String url, int sourceId) {
         return db.get()
                 .listOfObjects(Manga.class)
                 .withQuery(Query.builder()
                         .table(MangaTable.TABLE)
-                        .where(MangaTable.COLUMN_URL + "=?")
-                        .whereArgs(url)
+                        .where(MangaTable.COLUMN_URL + "=? AND " + MangaTable.COLUMN_SOURCE + "=?")
+                        .whereArgs(url, sourceId)
                         .build())
                 .prepare();
     }

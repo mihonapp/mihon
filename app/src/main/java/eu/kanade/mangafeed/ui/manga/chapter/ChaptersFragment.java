@@ -79,11 +79,15 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
 
         // Set initial values
         setReadFilter();
+        setDownloadedFilter();
         setSortIcon();
 
         // Init listeners
         swipeRefresh.setOnRefreshListener(this::onFetchChapters);
-        readCb.setOnCheckedChangeListener((arg, isChecked) -> getPresenter().setReadFilter(isChecked));
+        readCb.setOnCheckedChangeListener((arg, isChecked) ->
+                getPresenter().setReadFilter(isChecked));
+        downloadedCb.setOnCheckedChangeListener((v, isChecked) ->
+                getPresenter().setDownloadedFilter(isChecked));
         sortBtn.setOnClickListener(v -> {
             getPresenter().revertSortOrder();
             setSortIcon();
@@ -294,4 +298,11 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
             readCb.setChecked(getPresenter().getReadFilter());
         }
     }
+
+    public void setDownloadedFilter() {
+        if (downloadedCb != null) {
+            downloadedCb.setChecked(getPresenter().getDownloadedFilter());
+        }
+    }
+
 }
