@@ -77,8 +77,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         nextUnreadBtn.setOnClickListener(v -> {
             Chapter chapter = getPresenter().getNextUnreadChapter();
             if (chapter != null) {
-                getPresenter().onChapterClicked(getPresenter().getNextUnreadChapter());
-                startActivity(ReaderActivity.newIntent(getActivity()));
+                openChapter(chapter);
             } else {
                 Toast.makeText(getContext(), R.string.no_next_chapter, Toast.LENGTH_SHORT).show();
             }
@@ -129,6 +128,12 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
 
     public boolean isOnlineManga() {
         return ((MangaActivity) getActivity()).isOnlineManga();
+    }
+
+    protected void openChapter(Chapter chapter) {
+        getPresenter().onChapterClicked(chapter);
+        Intent intent = ReaderActivity.newIntent(getActivity());
+        startActivity(intent);
     }
 
     @Override
@@ -213,9 +218,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
             toggleSelection(position);
             return true;
         } else {
-            getPresenter().onChapterClicked(adapter.getItem(position));
-            Intent intent = ReaderActivity.newIntent(getActivity());
-            startActivity(intent);
+            openChapter(adapter.getItem(position));
             return false;
         }
     }
