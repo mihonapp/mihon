@@ -133,7 +133,7 @@ public class DownloadManager {
     private boolean prepareDownload(Download download) {
         // If the chapter is already queued, don't add it again
         for (Download queuedDownload : queue.get()) {
-            if (download.chapter.id == queuedDownload.chapter.id)
+            if (download.chapter.id.equals(queuedDownload.chapter.id))
                 return true;
         }
 

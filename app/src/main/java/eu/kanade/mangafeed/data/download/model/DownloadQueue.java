@@ -31,7 +31,7 @@ public class DownloadQueue {
 
     public void remove(Chapter chapter) {
         for (Download download : queue) {
-            if (download.chapter.id == chapter.id) {
+            if (download.chapter.id.equals(chapter.id)) {
                 remove(download);
                 break;
             }

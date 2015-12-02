@@ -215,10 +215,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     // Check whether the given chapter is downloaded
     public boolean isChapterDownloaded(Chapter chapter) {
-        File dir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
-        List<Page> pageList = downloadManager.getSavedPageList(source, manga, chapter);
-
-        return pageList != null && pageList.size() + 1 == dir.listFiles().length;
+        return downloadManager.isChapterDownloaded(source, manga, chapter);
     }
 
     // Called before loading another chapter or leaving the reader. It allows to do operations

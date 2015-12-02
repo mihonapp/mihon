@@ -160,13 +160,13 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     public void onEventMainThread(DownloadStatusEvent event) {
         Manga manga = getPresenter().getManga();
         // If the download status is from another manga, don't bother
-        if (manga != null && event.getChapter().manga_id != manga.id)
+        if (manga != null && !event.getChapter().manga_id.equals(manga.id))
             return;
 
         Chapter chapter;
         for (int i = 0; i < adapter.getItemCount(); i++) {
             chapter = adapter.getItem(i);
-            if (event.getChapter().id == chapter.id) {
+            if (event.getChapter().id.equals(chapter.id)) {
                 chapter.status = event.getStatus();
                 adapter.notifyItemChanged(i);
                 break;

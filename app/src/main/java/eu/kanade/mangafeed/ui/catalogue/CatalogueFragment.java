@@ -155,7 +155,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
     private int getMangaIndex(Manga manga) {
         for (int i = adapter.getCount() - 1; i >= 0; i--) {
-            if (manga.id == adapter.getItem(i).id) {
+            if (manga.id.equals(adapter.getItem(i).id)) {
                 return i;
             }
         }
