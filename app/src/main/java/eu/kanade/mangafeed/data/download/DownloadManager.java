@@ -340,6 +340,7 @@ public class DownloadManager {
     public void deleteChapter(Source source, Manga manga, Chapter chapter) {
         File path = getAbsoluteChapterDirectory(source, manga, chapter);
         DiskUtils.deleteFiles(path);
+        queue.remove(chapter);
     }
 
     public DownloadQueue getQueue() {

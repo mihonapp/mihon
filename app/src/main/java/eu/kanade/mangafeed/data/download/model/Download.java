@@ -35,7 +35,6 @@ public class Download {
         this.source = source;
         this.manga = manga;
         this.chapter = chapter;
-        this.status = QUEUE;
     }
 
     public int getStatus() {

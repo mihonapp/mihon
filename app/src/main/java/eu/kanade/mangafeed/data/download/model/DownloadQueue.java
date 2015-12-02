@@ -3,7 +3,7 @@ package eu.kanade.mangafeed.data.download.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.kanade.mangafeed.data.download.model.Download;
+import eu.kanade.mangafeed.data.database.models.Chapter;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -19,12 +19,23 @@ public class DownloadQueue {
 
     public void add(Download download) {
         download.setStatusSubject(statusSubject);
+        download.setStatus(Download.QUEUE);
         queue.add(download);
     }
 
     public void remove(Download download) {
         queue.remove(download);
+        download.setStatus(Download.NOT_DOWNLOADED);
         download.setStatusSubject(null);
+    }
+
+    public void remove(Chapter chapter) {
+        for (Download download : queue) {
+            if (download.chapter.id == chapter.id) {
+                remove(download);
+                break;
+            }
+        }
     }
 
     public List<Download> get() {

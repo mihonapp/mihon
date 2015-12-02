@@ -22,7 +22,6 @@ import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -41,10 +40,6 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     private static final int DB_CHAPTERS = 1;
     private static final int FETCH_CHAPTERS = 2;
-
-    private Subscription markReadSubscription;
-    private Subscription downloadSubscription;
-    private Subscription deleteSubscription;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -128,7 +123,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     }
 
     public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {
-        add(markReadSubscription = selectedChapters
+        add(selectedChapters
                 .subscribeOn(Schedulers.io())
                 .map(chapter -> {
                     chapter.read = read;
@@ -138,27 +133,23 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 .toList()
                 .flatMap(chapters -> db.insertChapters(chapters).createObservable())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> remove(markReadSubscription))
-                .subscribe(result -> {
-                }));
+                .subscribe());
     }
 
     public void downloadChapters(Observable<Chapter> selectedChapters) {
-        add(downloadSubscription = selectedChapters
+        add(selectedChapters
                 .toList()
                 .subscribe(chapters -> {
                     EventBus.getDefault().postSticky(new DownloadChaptersEvent(manga, chapters));
-                    remove(downloadSubscription);
                 }));
     }
 
     public void deleteChapters(Observable<Chapter> selectedChapters) {
-        deleteSubscription = selectedChapters
-                .doOnCompleted(() -> remove(deleteSubscription))
+        add(selectedChapters
                 .subscribe(chapter -> {
                     downloadManager.deleteChapter(source, manga, chapter);
                     chapter.status = Download.NOT_DOWNLOADED;
-                });
+                }));
     }
 
 
