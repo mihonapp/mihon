@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -30,6 +29,7 @@ import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.decoration.DividerItemDecoration;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
+import eu.kanade.mangafeed.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
 
@@ -58,6 +58,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
         setHasOptionsMenu(true);
+        getPresenter().setIsCatalogueManga(isCatalogueManga());
     }
 
     @Override
@@ -67,21 +68,29 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         View view = inflater.inflate(R.layout.fragment_manga_chapters, container, false);
         ButterKnife.bind(this, view);
 
+        // Init RecyclerView and adapter
         chapters.setLayoutManager(new LinearLayoutManager(getActivity()));
         chapters.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(this.getContext(), R.drawable.line_divider)));
-        createAdapter();
-        setSwipeRefreshListener();
+        adapter = new ChaptersAdapter(this);
+        chapters.setAdapter(adapter);
 
-        readCb.setOnCheckedChangeListener((arg, isCheked) -> getPresenter().setReadFilter(isCheked));
+        // Set initial values
+        setReadFilter(getPresenter().getReadFilter());
+        setSortIcon(getPresenter().getSortOrder());
+
+        // Init listeners
+        swipeRefresh.setOnRefreshListener(this::onFetchChapters);
+        readCb.setOnCheckedChangeListener((arg, isChecked) -> getPresenter().setReadFilter(isChecked));
         sortBtn.setOnClickListener(v -> getPresenter().revertSortOrder());
         nextUnreadBtn.setOnClickListener(v -> {
             Chapter chapter = getPresenter().getNextUnreadChapter();
             if (chapter != null) {
                 openChapter(chapter);
             } else {
-                Toast.makeText(getContext(), R.string.no_next_chapter, Toast.LENGTH_SHORT).show();
+                ToastUtil.showShort(getContext(), R.string.no_next_chapter);
             }
         });
+
         return view;
     }
 
@@ -89,49 +98,38 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.chapters, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
-        getPresenter().initSortIcon();
-        getPresenter().initReadCb();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getPresenter().refreshChapters();
+                onFetchChapters();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void createAdapter() {
-        adapter = new ChaptersAdapter(this);
-        chapters.setAdapter(adapter);
-    }
-
-    private void setSwipeRefreshListener() {
-        swipeRefresh.setOnRefreshListener(() -> getPresenter().refreshChapters());
-    }
-
     public void onNextChapters(List<Chapter> chapters) {
-        adapter.setItems(chapters);
         closeActionMode();
+        adapter.setItems(chapters);
     }
 
-    public void onNextOnlineChapters() {
+    public void onFetchChapters() {
+        swipeRefresh.setRefreshing(true);
+        getPresenter().fetchChapters();
+    }
+
+    public void onFetchChaptersFinish() {
         swipeRefresh.setRefreshing(false);
     }
 
-    public void setSwipeRefreshing() {
-        swipeRefresh.setRefreshing(true);
-    }
-
-    public boolean isOnlineManga() {
-        return ((MangaActivity) getActivity()).isOnlineManga();
+    public boolean isCatalogueManga() {
+        return ((MangaActivity) getActivity()).isCatalogueManga();
     }
 
     protected void openChapter(Chapter chapter) {
-        getPresenter().onChapterClicked(chapter);
+        getPresenter().onOpenChapter(chapter);
         Intent intent = ReaderActivity.newIntent(getActivity());
         startActivity(intent);
     }

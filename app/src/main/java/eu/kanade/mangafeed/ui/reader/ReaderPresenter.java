@@ -20,7 +20,7 @@ import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.event.RetryPageEvent;
-import eu.kanade.mangafeed.event.SourceMangaChapterEvent;
+import eu.kanade.mangafeed.event.ReaderEvent;
 import eu.kanade.mangafeed.event.UpdateChapterSyncEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
@@ -118,7 +118,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     @EventBusHook
-    public void onEventMainThread(SourceMangaChapterEvent event) {
+    public void onEventMainThread(ReaderEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         source = event.getSource();
         manga = event.getManga();

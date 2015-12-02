@@ -36,11 +36,7 @@ public class Chapter {
     @StorIOSQLiteColumn(name = ChapterTable.COLUMN_CHAPTER_NUMBER)
     public float chapter_number;
 
-    public int downloaded;
-
-    public static final int UNKNOWN = 0;
-    public static final int NOT_DOWNLOADED = 1;
-    public static final int DOWNLOADED = 2;
+    public int status;
 
 
     public Chapter() {}

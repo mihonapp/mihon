@@ -22,16 +22,18 @@ public class Download {
 
     private transient PublishSubject<Download> statusSubject;
 
-    public static final int QUEUE = 0;
-    public static final int DOWNLOADING = 1;
-    public static final int DOWNLOADED = 2;
-    public static final int ERROR = 3;
+    public static final int NOT_DOWNLOADED = 0;
+    public static final int QUEUE = 1;
+    public static final int DOWNLOADING = 2;
+    public static final int DOWNLOADED = 3;
+    public static final int ERROR = 4;
 
 
     public Download(Source source, Manga manga, Chapter chapter) {
         this.source = source;
         this.manga = manga;
         this.chapter = chapter;
+        this.status = QUEUE;
     }
 
     public int getStatus() {

@@ -92,7 +92,7 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
         setToolbarTitle(manga.title);
     }
 
-    public boolean isOnlineManga() {
+    public boolean isCatalogueManga() {
         return is_online;
     }
 

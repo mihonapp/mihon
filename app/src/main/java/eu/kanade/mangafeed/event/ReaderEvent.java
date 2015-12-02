@@ -4,13 +4,13 @@ import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.base.Source;
 
-public class SourceMangaChapterEvent {
+public class ReaderEvent {
 
     private Source source;
     private Manga manga;
     private Chapter chapter;
 
-    public SourceMangaChapterEvent(Source source, Manga manga, Chapter chapter) {
+    public ReaderEvent(Source source, Manga manga, Chapter chapter) {
         this.source = source;
         this.manga = manga;
         this.chapter = chapter;

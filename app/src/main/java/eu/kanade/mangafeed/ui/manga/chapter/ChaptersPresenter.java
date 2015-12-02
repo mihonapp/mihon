@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.manga.chapter;
 
 import android.os.Bundle;
 
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,13 +11,13 @@ import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.download.DownloadManager;
+import eu.kanade.mangafeed.data.download.model.Download;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
-import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.event.ChapterCountEvent;
 import eu.kanade.mangafeed.event.DownloadChaptersEvent;
-import eu.kanade.mangafeed.event.SourceMangaChapterEvent;
+import eu.kanade.mangafeed.event.ReaderEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.PostResult;
@@ -36,11 +35,12 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     private Manga manga;
     private Source source;
+    private boolean isCatalogueManga;
     private boolean sortOrderAToZ = true;
     private boolean onlyUnread = true;
 
     private static final int DB_CHAPTERS = 1;
-    private static final int ONLINE_CHAPTERS = 2;
+    private static final int FETCH_CHAPTERS = 2;
 
     private Subscription markReadSubscription;
     private Subscription downloadSubscription;
@@ -58,9 +58,9 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 }
         );
 
-        restartableLatestCache(ONLINE_CHAPTERS,
+        restartableLatestCache(FETCH_CHAPTERS,
                 this::getOnlineChaptersObs,
-                (view, result) -> view.onNextOnlineChapters()
+                (view, result) -> view.onFetchChaptersFinish()
         );
     }
 
@@ -90,21 +90,19 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
             start(DB_CHAPTERS);
 
             // Get chapters if it's an online source
-            if (getView() != null && getView().isOnlineManga()) {
-                refreshChapters();
+            if (isCatalogueManga) {
+                fetchChapters();
             }
         }
     }
 
-    public void refreshChapters() {
-        if (getView() != null)
-            getView().setSwipeRefreshing();
-
-        start(ONLINE_CHAPTERS);
+    public void fetchChapters() {
+        start(FETCH_CHAPTERS);
     }
 
     private Observable<List<Chapter>> getDbChaptersObs() {
         return db.getChapters(manga.id, sortOrderAToZ, onlyUnread).createObservable()
+                .doOnNext(this::checkChaptersStatus)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -117,13 +115,13 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void onChapterClicked(Chapter chapter) {
-        EventBus.getDefault().postSticky(new SourceMangaChapterEvent(source, manga, chapter));
+    public void onOpenChapter(Chapter chapter) {
+        EventBus.getDefault().postSticky(new ReaderEvent(source, manga, chapter));
     }
 
     public Chapter getNextUnreadChapter() {
         List<Chapter> chapters = db.getNextUnreadChapter(manga).executeAsBlocking();
-        if(chapters.size() < 1){
+        if (chapters.isEmpty()) {
             return null;
         }
         return chapters.get(0);
@@ -159,42 +157,54 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 .doOnCompleted(() -> remove(deleteSubscription))
                 .subscribe(chapter -> {
                     downloadManager.deleteChapter(source, manga, chapter);
-                    chapter.downloaded = Chapter.NOT_DOWNLOADED;
+                    chapter.status = Download.NOT_DOWNLOADED;
                 });
     }
 
+
+    private void checkChaptersStatus(List<Chapter> chapters) {
+        for (Chapter chapter : chapters) {
+            checkIsChapterDownloaded(chapter);
+        }
+    }
+
+
     public void checkIsChapterDownloaded(Chapter chapter) {
-        File dir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
-        List<Page> pageList = downloadManager.getSavedPageList(source, manga, chapter);
+        for (Download download : downloadManager.getQueue().get()) {
+            if (chapter.id.equals(download.chapter.id)) {
+                chapter.status = download.getStatus();
+                return;
+            }
+        }
 
-        if (pageList != null && pageList.size() + 1 == dir.listFiles().length) {
-            chapter.downloaded = Chapter.DOWNLOADED;
+        if (downloadManager.isChapterDownloaded(source, manga, chapter)) {
+            chapter.status = Download.DOWNLOADED;
         } else {
-            chapter.downloaded = Chapter.NOT_DOWNLOADED;
-        }
-    }
-
-    public void initSortIcon() {
-        if (getView() != null) {
-            getView().setSortIcon(sortOrderAToZ);//TODO manga.chapter_order
-        }
-    }
-
-    public void initReadCb() {
-        if (getView() != null) {
-            getView().setReadFilter(onlyUnread);//TODO do we need save filter for manga?
+            chapter.status = Download.NOT_DOWNLOADED;
         }
     }
 
     public void revertSortOrder() {
+        //TODO manga.chapter_order
         sortOrderAToZ = !sortOrderAToZ;
-        initSortIcon();
         start(DB_CHAPTERS);
     }
 
     public void setReadFilter(boolean onlyUnread) {
+        //TODO do we need save filter for manga?
         this.onlyUnread = onlyUnread;
-        initReadCb();
         start(DB_CHAPTERS);
+    }
+
+    public void setIsCatalogueManga(boolean value) {
+        isCatalogueManga = value;
+    }
+
+    public boolean getSortOrder() {
+        return sortOrderAToZ;
+    }
+
+    public boolean getReadFilter() {
+        return onlyUnread;
     }
 }

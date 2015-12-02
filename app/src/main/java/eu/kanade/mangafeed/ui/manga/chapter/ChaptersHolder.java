@@ -15,6 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
+import eu.kanade.mangafeed.data.download.model.Download;
 import rx.Observable;
 
 public class ChaptersHolder extends RecyclerView.ViewHolder implements
@@ -61,12 +62,9 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
             pages.setText("");
         }
 
-        if (chapter.downloaded == Chapter.UNKNOWN) {
-            adapter.getChaptersFragment().getPresenter().checkIsChapterDownloaded(chapter);
-        }
-        if (chapter.downloaded == Chapter.DOWNLOADED) {
+        if (chapter.status == Download.DOWNLOADED) {
             downloadText.setVisibility(View.VISIBLE);
-        } else if (chapter.downloaded == Chapter.NOT_DOWNLOADED) {
+        } else if (chapter.status == Download.NOT_DOWNLOADED) {
             downloadText.setVisibility(View.INVISIBLE);
         }
 

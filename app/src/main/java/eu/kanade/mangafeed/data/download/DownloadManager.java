@@ -20,11 +20,11 @@ import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.download.model.Download;
 import eu.kanade.mangafeed.data.download.model.DownloadQueue;
-import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
-import eu.kanade.mangafeed.event.DownloadChaptersEvent;
 import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.event.DownloadChaptersEvent;
 import eu.kanade.mangafeed.util.DiskUtils;
 import eu.kanade.mangafeed.util.DynamicConcurrentMergeOperator;
 import rx.Observable;
@@ -112,15 +112,25 @@ public class DownloadManager {
         for (Chapter chapter : event.getChapters()) {
             Download download = new Download(source, manga, chapter);
 
-            if (!isChapterDownloaded(download)) {
+            if (!prepareDownload(download)) {
                 queue.add(download);
                 if (isRunning) downloadsQueueSubject.onNext(download);
             }
         }
     }
 
-    // Check if a chapter is already downloaded
-    private boolean isChapterDownloaded(Download download) {
+    // Public method to checks if a chapter is downloaded
+    public boolean isChapterDownloaded(Source source, Manga manga, Chapter chapter) {
+        File directory = getAbsoluteChapterDirectory(source, manga, chapter);
+        if (!directory.exists())
+            return false;
+
+        List<Page> pages = getSavedPageList(source, manga, chapter);
+        return isChapterDownloaded(directory, pages);
+    }
+
+    // Prepare the download. Returns true if the chapter is already downloaded
+    private boolean prepareDownload(Download download) {
         // If the chapter is already queued, don't add it again
         for (Download queuedDownload : queue.get()) {
             if (download.chapter.id.equals(queuedDownload.chapter.id))
@@ -135,8 +145,7 @@ public class DownloadManager {
             return false;
         }
 
-        // If the page list doesn't exist, the chapter isn't download (or maybe it's,
-        // but we consider it's not)
+        // If the page list doesn't exist, the chapter isn't downloaded
         List<Page> savedPages = getSavedPageList(download);
         if (savedPages == null)
             return false;
@@ -146,7 +155,12 @@ public class DownloadManager {
 
         // If the number of files matches the number of pages, the chapter is downloaded.
         // We have the index file, so we check one file more
-        return savedPages.size() + 1 == download.directory.listFiles().length;
+        return isChapterDownloaded(download.directory, download.pages);
+    }
+
+    // Check that all the images are downloaded
+    private boolean isChapterDownloaded(File directory, List<Page> pages) {
+        return pages != null && pages.size() + 1 == directory.listFiles().length;
     }
 
     // Download the entire chapter
