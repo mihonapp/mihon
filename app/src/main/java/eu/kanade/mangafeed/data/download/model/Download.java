@@ -54,6 +54,6 @@ public class Download {
     private void notifyStatus() {
         if (statusSubject != null)
             statusSubject.onNext(this);
-        EventBus.getDefault().post(new DownloadStatusEvent(chapter.id, status));
+        EventBus.getDefault().post(new DownloadStatusEvent(chapter, status));
     }
 }

@@ -1,17 +1,19 @@
 package eu.kanade.mangafeed.event;
 
+import eu.kanade.mangafeed.data.database.models.Chapter;
+
 public class DownloadStatusEvent {
 
-    private long chapterId;
+    private Chapter chapter;
     private int status;
 
-    public DownloadStatusEvent(long chapterId, int status) {
-        this.chapterId = chapterId;
+    public DownloadStatusEvent(Chapter chapter, int status) {
+        this.chapter = chapter;
         this.status = status;
     }
 
-    public long getChapterId() {
-        return chapterId;
+    public Chapter getChapter() {
+        return chapter;
     }
 
     public int getStatus() {

@@ -10,10 +10,10 @@ import eu.kanade.mangafeed.util.UrlUtil;
 public class Chapter {
 
     @StorIOSQLiteColumn(name = ChapterTable.COLUMN_ID, key = true)
-    public Long id;
+    public long id;
 
     @StorIOSQLiteColumn(name = ChapterTable.COLUMN_MANGA_ID)
-    public Long manga_id;
+    public long manga_id;
 
     @StorIOSQLiteColumn(name = ChapterTable.COLUMN_URL)
     public String url;

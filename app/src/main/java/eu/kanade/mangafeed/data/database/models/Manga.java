@@ -10,7 +10,7 @@ import eu.kanade.mangafeed.util.UrlUtil;
 public class Manga {
 
     @StorIOSQLiteColumn(name = MangaTable.COLUMN_ID, key = true)
-    public Long id;
+    public long id;
 
     @StorIOSQLiteColumn(name = MangaTable.COLUMN_SOURCE)
     public int source;

@@ -171,7 +171,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     public void checkIsChapterDownloaded(Chapter chapter) {
         for (Download download : downloadManager.getQueue().get()) {
-            if (chapter.id.equals(download.chapter.id)) {
+            if (chapter.id == download.chapter.id) {
                 chapter.status = download.getStatus();
                 return;
             }
@@ -206,5 +206,9 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     public boolean getReadFilter() {
         return onlyUnread;
+    }
+
+    public Manga getManga() {
+        return manga;
     }
 }
