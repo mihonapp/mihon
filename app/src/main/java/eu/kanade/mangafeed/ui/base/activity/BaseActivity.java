@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import de.greenrobot.event.EventBus;
+
 public class BaseActivity extends AppCompatActivity {
 
     protected void setupToolbar(Toolbar toolbar) {
@@ -45,6 +47,18 @@ public class BaseActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void registerForStickyEvents() {
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void registerForEvents() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void unregisterForEvents() {
+        EventBus.getDefault().unregister(this);
     }
 
 }

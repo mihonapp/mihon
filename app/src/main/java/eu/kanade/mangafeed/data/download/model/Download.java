@@ -3,10 +3,12 @@ package eu.kanade.mangafeed.data.download.model;
 import java.io.File;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
-import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.event.DownloadStatusEvent;
 import rx.subjects.PublishSubject;
 
 public class Download {
@@ -52,5 +54,6 @@ public class Download {
     private void notifyStatus() {
         if (statusSubject != null)
             statusSubject.onNext(this);
+        EventBus.getDefault().post(new DownloadStatusEvent(chapter.id, status));
     }
 }

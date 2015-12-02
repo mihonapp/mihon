@@ -62,10 +62,17 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
             pages.setText("");
         }
 
-        if (chapter.status == Download.DOWNLOADED) {
-            downloadText.setVisibility(View.VISIBLE);
-        } else if (chapter.status == Download.NOT_DOWNLOADED) {
-            downloadText.setVisibility(View.INVISIBLE);
+        switch (chapter.status) {
+            case Download.QUEUE:
+                downloadText.setText(R.string.chapter_queued); break;
+            case Download.DOWNLOADING:
+                downloadText.setText(R.string.chapter_downloading); break;
+            case Download.DOWNLOADED:
+                downloadText.setText(R.string.chapter_downloaded); break;
+            case Download.ERROR:
+                downloadText.setText(R.string.chapter_error); break;
+            default:
+                downloadText.setText(""); break;
         }
 
         date.setText(sdf.format(new Date(chapter.date_upload)));

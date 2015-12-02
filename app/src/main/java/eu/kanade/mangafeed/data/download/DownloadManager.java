@@ -119,7 +119,7 @@ public class DownloadManager {
         }
     }
 
-    // Public method to checks if a chapter is downloaded
+    // Public method to check if a chapter is downloaded
     public boolean isChapterDownloaded(Source source, Manga manga, Chapter chapter) {
         File directory = getAbsoluteChapterDirectory(source, manga, chapter);
         if (!directory.exists())

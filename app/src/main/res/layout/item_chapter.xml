@@ -49,7 +49,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="@string/chapter_downloaded"
+                android:textAllCaps="true"
                 android:textColor="@color/accent_text"
                 android:textSize="12sp"/>
         </RelativeLayout>
