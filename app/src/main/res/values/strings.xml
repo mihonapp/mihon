@@ -91,6 +91,7 @@
     <string name="chapter_queued">Queued</string>
     <string name="chapter_downloading">Downloading</string>
     <string name="chapter_error">Error</string>
+    <string name="fetch_chapters_error">Error while fetching chapters</string>
 
     <!-- Reader activity -->
     <string name="downloading">Downloading…</string>

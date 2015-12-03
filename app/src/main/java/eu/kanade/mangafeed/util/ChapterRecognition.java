@@ -10,7 +10,7 @@ import eu.kanade.mangafeed.data.database.models.Manga;
 
 public class ChapterRecognition {
 
-    private static Pattern p1 = Pattern.compile("ch.?(\\d+[\\.,]?\\d*)");
+    private static Pattern p1 = Pattern.compile("Ch[^0-9]?\\s*(\\d+[\\.,]?\\d*)");
     private static Pattern p2 = Pattern.compile("(\\d+[\\.,]?\\d*)");
     private static Pattern p3 = Pattern.compile("(\\d+[\\.,]?\\d*:)");
 
@@ -19,7 +19,7 @@ public class ChapterRecognition {
             return;
 
         // Remove spaces and convert to lower case
-        String name = replaceIrrelevantCharacters(chapter.name);
+        String name = chapter.name;
         Matcher matcher;
 
         // Safest option, the chapter has a token prepended
@@ -28,6 +28,8 @@ public class ChapterRecognition {
             chapter.chapter_number = Float.parseFloat(matcher.group(1));
             return;
         }
+
+        name = replaceIrrelevantCharacters(name);
 
         List<Float> occurences;
 
@@ -71,7 +73,7 @@ public class ChapterRecognition {
             Matcher m = p2.matcher(text);
             if (m.find()) {
                 try {
-                    Float value = Float.parseFloat(m.group());
+                    Float value = Float.parseFloat(m.group(1));
                     if (!occurences.contains(value)) {
                         occurences.add(value);
                     }

@@ -41,6 +41,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     private boolean sortOrderAToZ = true;
     private boolean onlyUnread = true;
     private boolean onlyDownloaded;
+    private boolean hasRequested;
 
     private PublishSubject<List<Chapter>> chaptersSubject;
 
@@ -60,7 +61,8 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
         restartableLatestCache(FETCH_CHAPTERS,
                 this::getOnlineChaptersObs,
-                (view, result) -> view.onFetchChaptersFinish()
+                (view, result) -> view.onFetchChaptersDone(),
+                (view, error) -> view.onFetchChaptersError()
         );
     }
 
@@ -78,8 +80,8 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         EventBus.getDefault().removeStickyEvent(ChapterCountEvent.class);
+        super.onDestroy();
     }
 
     @EventBusHook
@@ -116,7 +118,8 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 .pullChaptersFromNetwork(manga.url)
                 .subscribeOn(Schedulers.io())
                 .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(r -> hasRequested = true);
     }
 
     private Observable<List<Chapter>> getDbChaptersObs() {
@@ -246,6 +249,14 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     public Manga getManga() {
         return manga;
+    }
+
+    public List<Chapter> getChapters() {
+        return chapters;
+    }
+
+    public boolean hasRequested() {
+        return hasRequested;
     }
 
 }

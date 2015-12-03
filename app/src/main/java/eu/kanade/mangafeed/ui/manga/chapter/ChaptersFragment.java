@@ -35,7 +35,6 @@ import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
-import timber.log.Timber;
 
 @RequiresPresenter(ChaptersPresenter.class)
 public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implements
@@ -84,7 +83,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         setSortIcon();
 
         // Init listeners
-        swipeRefresh.setOnRefreshListener(this::onFetchChapters);
+        swipeRefresh.setOnRefreshListener(this::fetchChapters);
         readCb.setOnCheckedChangeListener((arg, isChecked) ->
                 getPresenter().setReadFilter(isChecked));
         downloadedCb.setOnCheckedChangeListener((v, isChecked) ->
@@ -127,29 +126,41 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                onFetchChapters();
+                fetchChapters();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void onNextChapters(List<Chapter> chapters) {
-        if (chapters.isEmpty() && isCatalogueManga()) {
-            swipeRefresh.setRefreshing(true);
-            getPresenter().fetchChaptersFromSource();
-        }
+        // If the list is empty, fetch chapters from source if the conditions are met
+        // We use presenter chapters instead because they are always unfiltered
+        if (getPresenter().getChapters().isEmpty())
+            initialFetchChapters();
 
         closeActionMode();
         adapter.setItems(chapters);
     }
 
-    public void onFetchChapters() {
+    private void initialFetchChapters() {
+        // Only fetch if this view is from the catalog and it hasn't requested previously
+        if (isCatalogueManga() && !getPresenter().hasRequested()) {
+            fetchChapters();
+        }
+    }
+
+    public void fetchChapters() {
         swipeRefresh.setRefreshing(true);
         getPresenter().fetchChaptersFromSource();
     }
 
-    public void onFetchChaptersFinish() {
+    public void onFetchChaptersDone() {
         swipeRefresh.setRefreshing(false);
+    }
+
+    public void onFetchChaptersError() {
+        swipeRefresh.setRefreshing(false);
+        ToastUtil.showShort(getContext(), R.string.fetch_chapters_error);
     }
 
     public boolean isCatalogueManga() {

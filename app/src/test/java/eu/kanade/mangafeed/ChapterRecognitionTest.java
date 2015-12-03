@@ -105,4 +105,12 @@ public class ChapterRecognitionTest {
         assertThat(c.chapter_number, is(191f));
     }
 
+    @Test
+    public void testWithKeywordChAtTheEndOfTheManga() {
+        // It should be 567, not 67 (ch is a keyword to get the chapter number)
+        Chapter c = createChapter("Bleach 567: Down With Snowwhite");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number, is(567f));
+    }
+
 }
