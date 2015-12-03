@@ -35,12 +35,13 @@ import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
+import timber.log.Timber;
 
 @RequiresPresenter(ChaptersPresenter.class)
 public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implements
         ActionMode.Callback, ChaptersAdapter.OnItemClickListener {
 
-    @Bind(R.id.chapter_list) RecyclerView chapters;
+    @Bind(R.id.chapter_list) RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
     @Bind(R.id.toolbar_bottom) Toolbar toolbarBottom;
 
@@ -50,7 +51,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     @Bind(R.id.action_show_downloaded) CheckBox downloadedCb;
 
     private ChaptersAdapter adapter;
-
+    private LinearLayoutManager linearLayout;
     private ActionMode actionMode;
 
     public static ChaptersFragment newInstance() {
@@ -61,7 +62,6 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
         setHasOptionsMenu(true);
-        getPresenter().setIsCatalogueManga(isCatalogueManga());
     }
 
     @Override
@@ -72,10 +72,11 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         ButterKnife.bind(this, view);
 
         // Init RecyclerView and adapter
-        chapters.setLayoutManager(new LinearLayoutManager(getActivity()));
-        chapters.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(this.getContext(), R.drawable.line_divider)));
+        linearLayout = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayout);
+        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.line_divider)));
         adapter = new ChaptersAdapter(this);
-        chapters.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
         // Set initial values
         setReadFilter();
@@ -133,13 +134,18 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     }
 
     public void onNextChapters(List<Chapter> chapters) {
+        if (chapters.isEmpty() && isCatalogueManga()) {
+            swipeRefresh.setRefreshing(true);
+            getPresenter().fetchChaptersFromSource();
+        }
+
         closeActionMode();
         adapter.setItems(chapters);
     }
 
     public void onFetchChapters() {
         swipeRefresh.setRefreshing(true);
-        getPresenter().fetchChapters();
+        getPresenter().fetchChaptersFromSource();
     }
 
     public void onFetchChaptersFinish() {
@@ -163,11 +169,13 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         if (manga != null && !event.getChapter().manga_id.equals(manga.id))
             return;
 
+        getPresenter().updateChapterStatus(event);
+
         Chapter chapter;
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            chapter = adapter.getItem(i);
+        for (int i = linearLayout.findFirstVisibleItemPosition(); i < linearLayout.findLastVisibleItemPosition(); i++) {
+            int pos = recyclerView.getChildAdapterPosition(linearLayout.findViewByPosition(i));
+            chapter = adapter.getItem(pos);
             if (event.getChapter().id.equals(chapter.id)) {
-                chapter.status = event.getStatus();
                 adapter.notifyItemChanged(i);
                 break;
             }
