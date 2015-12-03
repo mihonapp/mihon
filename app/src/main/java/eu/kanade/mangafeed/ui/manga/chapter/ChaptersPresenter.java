@@ -17,7 +17,6 @@ import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.event.ChapterCountEvent;
 import eu.kanade.mangafeed.event.DownloadChaptersEvent;
-import eu.kanade.mangafeed.event.DownloadStatusEvent;
 import eu.kanade.mangafeed.event.ReaderEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
@@ -47,6 +46,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
     private static final int DB_CHAPTERS = 1;
     private static final int FETCH_CHAPTERS = 2;
+    private static final int CHAPTER_STATUS_CHANGES = 3;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -63,6 +63,12 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 this::getOnlineChaptersObs,
                 (view, result) -> view.onFetchChaptersDone(),
                 (view, error) -> view.onFetchChaptersError()
+        );
+
+        restartableLatestCache(CHAPTER_STATUS_CHANGES,
+                this::getChapterStatusObs,
+                (view, download) -> view.onChapterStatusChange(download),
+                (view, error) -> Timber.e(error.getCause(), error.getMessage())
         );
     }
 
@@ -96,16 +102,19 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         add(db.getChapters(manga).createObservable()
                 .subscribeOn(Schedulers.io())
                 .doOnNext(chapters -> {
+                    stop(CHAPTER_STATUS_CHANGES);
                     this.chapters = chapters;
                     EventBus.getDefault().postSticky(new ChapterCountEvent(chapters.size()));
                     for (Chapter chapter : chapters) {
                         setChapterStatus(chapter);
                     }
+                    start(CHAPTER_STATUS_CHANGES);
                 })
                 .subscribe(chaptersSubject::onNext));
     }
 
     public void fetchChaptersFromSource() {
+        hasRequested = true;
         start(FETCH_CHAPTERS);
     }
 
@@ -118,8 +127,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 .pullChaptersFromNetwork(manga.url)
                 .subscribeOn(Schedulers.io())
                 .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(r -> hasRequested = true);
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private Observable<List<Chapter>> getDbChaptersObs() {
@@ -137,13 +145,9 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         if (onlyDownloaded) {
             observable = observable.filter(chapter -> chapter.status == Download.DOWNLOADED);
         }
-        return observable.toSortedList((chapter, chapter2) -> {
-            if (sortOrderAToZ) {
-                return Float.compare(chapter.chapter_number, chapter2.chapter_number);
-            } else {
-                return Float.compare(chapter2.chapter_number, chapter.chapter_number);
-            }
-        });
+        return observable.toSortedList((chapter, chapter2) -> sortOrderAToZ ?
+                Float.compare(chapter.chapter_number, chapter2.chapter_number) :
+                Float.compare(chapter2.chapter_number, chapter.chapter_number));
     }
 
     private void setChapterStatus(Chapter chapter) {
@@ -161,14 +165,21 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         }
     }
 
-    public void updateChapterStatus(DownloadStatusEvent event) {
+    private Observable<Download> getChapterStatusObs() {
+        return downloadManager.getQueue().getStatusObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(download -> download.manga.id.equals(manga.id))
+                .doOnNext(this::updateChapterStatus);
+    }
+
+    public void updateChapterStatus(Download download) {
         for (Chapter chapter : chapters) {
-            if (event.getChapter().id.equals(chapter.id)) {
-                chapter.status = event.getStatus();
+            if (download.chapter.id.equals(chapter.id)) {
+                chapter.status = download.getStatus();
                 break;
             }
         }
-        if (onlyDownloaded && event.getStatus() == Download.DOWNLOADED)
+        if (onlyDownloaded && download.getStatus() == Download.DOWNLOADED)
             refreshChapters();
     }
 

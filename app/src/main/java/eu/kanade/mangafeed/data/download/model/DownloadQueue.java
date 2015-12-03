@@ -56,8 +56,7 @@ public class DownloadQueue {
     }
 
     public Observable<Download> getStatusObservable() {
-        return statusSubject
-                .startWith(getActiveDownloads());
+        return statusSubject;
     }
 
 }

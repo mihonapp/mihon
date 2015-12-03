@@ -52,7 +52,7 @@ public class DownloadPresenter extends BasePresenter<DownloadFragment> {
         super.onTakeView(view);
 
         add(statusSubscription = downloadQueue.getStatusObservable()
-                .subscribeOn(Schedulers.io())
+                .startWith(downloadQueue.getActiveDownloads())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(download -> {
                     processStatus(download, view);

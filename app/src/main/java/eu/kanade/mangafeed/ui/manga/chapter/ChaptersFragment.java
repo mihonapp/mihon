@@ -23,15 +23,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
-import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.download.DownloadService;
-import eu.kanade.mangafeed.event.DownloadStatusEvent;
+import eu.kanade.mangafeed.data.download.model.Download;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.decoration.DividerItemDecoration;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
-import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
@@ -107,12 +105,10 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     @Override
     public void onResume() {
         super.onResume();
-        registerForEvents();
     }
 
     @Override
     public void onPause() {
-        unregisterForEvents();
         super.onPause();
     }
 
@@ -173,20 +169,12 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         startActivity(intent);
     }
 
-    @EventBusHook
-    public void onEventMainThread(DownloadStatusEvent event) {
-        Manga manga = getPresenter().getManga();
-        // If the download status is from another manga, don't bother
-        if (manga != null && !event.getChapter().manga_id.equals(manga.id))
-            return;
-
-        getPresenter().updateChapterStatus(event);
-
+    public void onChapterStatusChange(Download download) {
         Chapter chapter;
         for (int i = linearLayout.findFirstVisibleItemPosition(); i < linearLayout.findLastVisibleItemPosition(); i++) {
             int pos = recyclerView.getChildAdapterPosition(linearLayout.findViewByPosition(i));
             chapter = adapter.getItem(pos);
-            if (event.getChapter().id.equals(chapter.id)) {
+            if (chapter != null && download.chapter.id.equals(chapter.id)) {
                 adapter.notifyItemChanged(i);
                 break;
             }
