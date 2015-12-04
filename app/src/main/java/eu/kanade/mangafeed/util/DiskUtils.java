@@ -130,13 +130,13 @@ public final class DiskUtils {
         try {
             bufferedSink = Okio.buffer(Okio.sink(writeFile));
             bufferedSink.writeAll(bufferedSource);
-            bufferedSink.close();
         } catch (Exception e) {
+            writeFile.delete();
+            throw new IOException("Unable to save image");
+        } finally {
             if (bufferedSink != null) {
                 bufferedSink.close();
             }
-            writeFile.delete();
-            throw new IOException("Failed saving image");
         }
 
         return writeFile;

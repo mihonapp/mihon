@@ -8,7 +8,7 @@ public class Page implements ProgressListener {
     private int pageNumber;
     private String url;
     private String imageUrl;
-    private String imagePath;
+    private transient String imagePath;
     private transient volatile int status;
     private transient volatile int progress;
 

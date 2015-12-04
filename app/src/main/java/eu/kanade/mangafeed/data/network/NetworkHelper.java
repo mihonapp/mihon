@@ -42,7 +42,7 @@ public final class NetworkHelper {
             } catch (Throwable e) {
                 return Observable.error(e);
             }
-        }).retry(3);
+        }).retry(2);
     }
 
     public Observable<String> mapResponseToString(final Response response) {
@@ -72,7 +72,7 @@ public final class NetworkHelper {
             } catch (Throwable e) {
                 return Observable.error(e);
             }
-        }).retry(3);
+        }).retry(2);
     }
 
     public Observable<Response> getProgressResponse(final String url, final Headers headers, final ProgressListener listener) {
@@ -96,7 +96,7 @@ public final class NetworkHelper {
             } catch (Throwable e) {
                 return Observable.error(e);
             }
-        }).retry(3);
+        }).retry(2);
     }
 
     public CookieStore getCookies() {

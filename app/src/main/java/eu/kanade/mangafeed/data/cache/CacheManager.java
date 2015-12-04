@@ -179,7 +179,7 @@ public class CacheManager {
         return null;
     }
 
-    public boolean putImageToDiskCache(final String imageUrl, final Response response) {
+    public void putImageToDiskCache(final String imageUrl, final Response response) throws IOException {
         DiskLruCache.Editor editor = null;
         BufferedSink sink = null;
 
@@ -187,33 +187,26 @@ public class CacheManager {
             String key = DiskUtils.hashKeyForDisk(imageUrl);
             editor = mDiskCache.edit(key);
             if (editor == null) {
-                return false;
+                throw new IOException("Unable to edit key");
             }
 
             OutputStream outputStream = new BufferedOutputStream(editor.newOutputStream(0));
             sink = Okio.buffer(Okio.sink(outputStream));
             sink.writeAll(response.body().source());
-            sink.flush();
 
             mDiskCache.flush();
             editor.commit();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+        } catch (Exception e) {
+            throw new IOException("Unable to save image");
         } finally {
             if (editor != null) {
                 editor.abortUnlessCommitted();
             }
             if (sink != null) {
-                try {
-                    sink.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                sink.close();
             }
         }
 
-        return true;
     }
 
 }

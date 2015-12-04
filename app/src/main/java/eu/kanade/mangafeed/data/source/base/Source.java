@@ -8,6 +8,7 @@ import com.squareup.okhttp.Response;
 
 import org.jsoup.Jsoup;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -153,8 +154,10 @@ public abstract class Source extends BaseSource {
         page.setStatus(Page.DOWNLOAD_IMAGE);
         return getImageProgressResponse(page)
                 .flatMap(resp -> {
-                    if (!cacheManager.putImageToDiskCache(page.getImageUrl(), resp)) {
-                        throw new IllegalStateException("Unable to save image");
+                    try {
+                        cacheManager.putImageToDiskCache(page.getImageUrl(), resp);
+                    } catch (IOException e) {
+                        return Observable.error(e);
                     }
                     return Observable.just(page);
                 });

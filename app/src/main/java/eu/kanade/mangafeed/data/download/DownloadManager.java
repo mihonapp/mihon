@@ -12,8 +12,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.database.models.Chapter;
@@ -27,6 +25,7 @@ import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.event.DownloadChaptersEvent;
 import eu.kanade.mangafeed.util.DiskUtils;
 import eu.kanade.mangafeed.util.DynamicConcurrentMergeOperator;
+import eu.kanade.mangafeed.util.UrlUtil;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -81,6 +80,7 @@ public class DownloadManager {
                 .lift(new DynamicConcurrentMergeOperator<>(this::downloadChapter, threadsNumber))
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
+                .map(download -> areAllDownloadsFinished())
                 .subscribe(finished -> {
                     if (finished) {
                         DownloadService.stop(context);
@@ -164,7 +164,7 @@ public class DownloadManager {
     }
 
     // Download the entire chapter
-    private Observable<Boolean> downloadChapter(Download download) {
+    private Observable<Download> downloadChapter(Download download) {
         try {
             DiskUtils.createDirectory(download.directory);
         } catch (IOException e) {
@@ -182,7 +182,6 @@ public class DownloadManager {
 
         return pageListObservable
                 .subscribeOn(Schedulers.io())
-                .doOnError(error -> download.setStatus(Download.ERROR))
                 .doOnNext(pages -> download.setStatus(Download.DOWNLOADING))
                 .doOnNext(pages -> download.downloadedImages = 0)
                 // Get all the URLs to the source images, fetch pages if necessary
@@ -194,8 +193,10 @@ public class DownloadManager {
                 .toList()
                 .flatMap(pages -> Observable.just(download))
                 // If the page list threw, it will resume here
-                .onErrorResumeNext(error -> Observable.just(download))
-                .map(d -> areAllDownloadsFinished());
+                .onErrorResumeNext(error -> {
+                    download.setStatus(Download.ERROR);
+                    return Observable.just(download);
+                });
     }
 
     // Get the image from the filesystem if it exists or download from network
@@ -215,9 +216,9 @@ public class DownloadManager {
         return pageObservable
                 // When the image is ready, set image path, progress (just in case) and status
                 .doOnNext(p -> {
-                    p.setImagePath(imagePath.getAbsolutePath());
-                    p.setProgress(100);
-                    p.setStatus(Page.READY);
+                    page.setImagePath(imagePath.getAbsolutePath());
+                    page.setProgress(100);
+                    page.setStatus(Page.READY);
                     download.downloadedImages++;
                 })
                 // If the download fails, mark this page as error
@@ -226,6 +227,7 @@ public class DownloadManager {
                 .onErrorResumeNext(e -> Observable.just(page));
     }
 
+    // Save image on disk
     private Observable<Page> downloadImage(Page page, Source source, File directory, String filename) {
         page.setStatus(Page.DOWNLOAD_IMAGE);
         return source.getImageProgressResponse(page)
@@ -261,12 +263,7 @@ public class DownloadManager {
 
     // Get the filename for an image given the page
     private String getImageFilename(Page page) {
-        String url;
-        try {
-            url = new URL(page.getImageUrl()).getPath();
-        } catch (MalformedURLException e) {
-            url = page.getImageUrl();
-        }
+        String url = UrlUtil.getPath(page.getImageUrl());
         return url.substring(
                 url.lastIndexOf("/") + 1,
                 url.length());
@@ -288,7 +285,11 @@ public class DownloadManager {
         // If any page has an error, the download result will be error
         for (Page page : download.pages) {
             actualProgress += page.getProgress();
-            if (page.getStatus() == Page.ERROR) status = Download.ERROR;
+            if (page.getStatus() != Page.READY) status = Download.ERROR;
+        }
+        // Ensure that the chapter folder has all the images
+        if (!isChapterDownloaded(download.directory, download.pages)) {
+            status = Download.ERROR;
         }
         download.totalProgress = actualProgress;
         download.setStatus(status);
