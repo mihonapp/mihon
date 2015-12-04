@@ -3,6 +3,7 @@ package eu.kanade.mangafeed.ui.library;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,9 +21,10 @@ import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
-import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
+import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import nucleus.factory.RequiresPresenter;
+import rx.Observable;
 
 @RequiresPresenter(LibraryPresenter.class)
 public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
@@ -31,10 +33,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
     private LibraryAdapter adapter;
 
     public static LibraryFragment newInstance() {
-        LibraryFragment fragment = new LibraryFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new LibraryFragment();
     }
 
     @Override
@@ -95,7 +94,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
     }
 
     private void createAdapter() {
-        adapter = new LibraryAdapter(getActivity());
+        adapter = new LibraryAdapter(this);
         grid.setAdapter(adapter);
     }
 
@@ -136,7 +135,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_delete:
-                        getPresenter().onDelete(grid.getCheckedItemPositions(), adapter);
+                        getPresenter().deleteMangas(getSelectedMangas());
                         mode.finish();
                         return true;
                 }
@@ -148,6 +147,13 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
 
             }
         });
+    }
+
+    private Observable<Manga> getSelectedMangas() {
+        SparseBooleanArray checkedItems = grid.getCheckedItemPositions();
+        return Observable.range(0, checkedItems.size())
+                .map(checkedItems::keyAt)
+                .map(adapter::getItem);
     }
 
 }

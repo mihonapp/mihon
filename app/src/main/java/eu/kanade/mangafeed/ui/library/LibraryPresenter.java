@@ -1,15 +1,16 @@
 package eu.kanade.mangafeed.ui.library;
 
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 
 import javax.inject.Inject;
 
+import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
+import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
+import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -17,44 +18,28 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
 
     @Inject DatabaseHelper db;
     @Inject PreferencesHelper prefs;
+    @Inject CoverCache coverCache;
+    @Inject SourceManager sourceManager;
 
-    private Subscription mFavoriteMangasSubscription;
-    private Subscription mDeleteMangaSubscription;
+    private static final int GET_MANGAS = 1;
 
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
+
+        restartableLatestCache(GET_MANGAS,
+                () -> db.getMangasWithUnread().createObservable()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()),
+                LibraryFragment::onNextMangas);
+
+        start(GET_MANGAS);
     }
 
-    @Override
-    protected void onTakeView(LibraryFragment view) {
-        super.onTakeView(view);
-        getFavoriteMangas();
-    }
-
-    public void getFavoriteMangas() {
-        if (mFavoriteMangasSubscription != null)
-            return;
-
-        add(mFavoriteMangasSubscription = db.getMangasWithUnread().createObservable()
+    public void deleteMangas(Observable<Manga> selectedMangas) {
+        add(selectedMangas
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(deliverLatestCache())
-                .subscribe(this.split(LibraryFragment::onNextMangas)));
-    }
-
-    public void onDelete(SparseBooleanArray checkedItems, LibraryAdapter adapter) {
-        if (mDeleteMangaSubscription != null)
-            remove(mDeleteMangaSubscription);
-
-        add(mDeleteMangaSubscription = Observable.range(0, checkedItems.size())
-                .observeOn(Schedulers.io())
-                .map(checkedItems::keyAt)
-                .map(adapter::getItem)
-                .map(manga -> {
-                    manga.favorite = false;
-                    return manga;
-                })
+                .doOnNext(manga -> manga.favorite = false)
                 .toList()
                 .flatMap(mangas -> db.insertMangas(mangas).createObservable())
                 .subscribe());

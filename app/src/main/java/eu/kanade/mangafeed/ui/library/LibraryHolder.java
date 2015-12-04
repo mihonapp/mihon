@@ -7,6 +7,7 @@ import android.widget.TextView;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.source.base.Source;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
 import uk.co.ribot.easyadapter.annotations.LayoutId;
@@ -17,11 +18,8 @@ import uk.co.ribot.easyadapter.annotations.ViewId;
 public class LibraryHolder extends ItemViewHolder<Manga> {
 
     @ViewId(R.id.thumbnail) ImageView thumbnail;
-
     @ViewId(R.id.title) TextView title;
-
     @ViewId(R.id.author) TextView author;
-
     @ViewId(R.id.unreadText) TextView unreadText;
 
     public LibraryHolder(View view) {
@@ -38,12 +36,11 @@ public class LibraryHolder extends ItemViewHolder<Manga> {
         } else {
             unreadText.setVisibility(View.GONE);
         }
+    }
 
-        if (manga.thumbnail_url != null) {
-            CoverCache.loadLocalInto(getContext(), thumbnail, manga.thumbnail_url);
-        } else {
-            thumbnail.setImageResource(android.R.color.transparent);
-        }
+    public void loadCover(Manga manga, Source source, CoverCache coverCache) {
+        if (manga.thumbnail_url != null)
+            coverCache.saveAndLoadFromCache(thumbnail, manga.thumbnail_url, source.getGlideHeaders());
     }
 
 }

@@ -8,9 +8,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.model.LazyHeaders;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
@@ -62,8 +65,15 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
 
         setFavoriteText(manga.favorite);
 
-        getPresenter().coverCache.loadOrFetchInto(mCover,
-                manga.thumbnail_url, getPresenter().source.getGlideHeaders());
+        if (mCover.getDrawable() == null) {
+            CoverCache coverCache = getPresenter().coverCache;
+            LazyHeaders headers = getPresenter().source.getGlideHeaders();
+            if (manga.favorite) {
+                coverCache.saveAndLoadFromCache(mCover, manga.thumbnail_url, headers);
+            } else {
+                coverCache.loadFromNetwork(mCover, manga.thumbnail_url, headers);
+            }
+        }
 
     }
 

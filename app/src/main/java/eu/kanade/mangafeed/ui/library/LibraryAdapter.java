@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.ui.library;
 
-import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
@@ -14,10 +15,12 @@ public class LibraryAdapter extends EasyAdapter<Manga> implements Filterable {
 
     List<Manga> mangas;
     Filter filter;
+    private LibraryPresenter presenter;
 
-    public LibraryAdapter(Context context) {
-        super(context, LibraryHolder.class);
+    public LibraryAdapter(LibraryFragment fragment) {
+        super(fragment.getActivity(), LibraryHolder.class);
         filter = new LibraryFilter();
+        presenter = fragment.getPresenter();
     }
 
     public void setNewItems(List<Manga> list) {
@@ -57,9 +60,16 @@ public class LibraryAdapter extends EasyAdapter<Manga> implements Filterable {
 
         @Override
         public void publishResults(CharSequence constraint, FilterResults results) {
-            setItems((List<Manga >) results.values);
+            setItems((List<Manga>) results.values);
         }
     }
 
-
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = super.getView(position, convertView, parent);
+        LibraryHolder holder = (LibraryHolder) view.getTag();
+        Manga manga = getItem(position);
+        holder.loadCover(manga, presenter.sourceManager.get(manga.source), presenter.coverCache);
+        return view;
+    }
 }

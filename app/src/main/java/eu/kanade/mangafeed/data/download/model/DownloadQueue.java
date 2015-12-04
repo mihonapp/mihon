@@ -25,7 +25,6 @@ public class DownloadQueue {
 
     public void remove(Download download) {
         queue.remove(download);
-        download.setStatus(Download.NOT_DOWNLOADED);
         download.setStatusSubject(null);
     }
 

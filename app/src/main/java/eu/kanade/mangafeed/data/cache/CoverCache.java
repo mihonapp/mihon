@@ -36,16 +36,24 @@ public class CoverCache {
         return !cacheDir.exists() && cacheDir.mkdirs();
     }
 
+    public void save(String thumbnailUrl, LazyHeaders headers) {
+        save(thumbnailUrl, headers, null);
+    }
+
     // Download the cover with Glide (it can avoid repeating requests) and save the file on this cache
-    public void save(String cover, LazyHeaders headers) {
-        GlideUrl url = new GlideUrl(cover, headers);
+    // Optionally, load the image in the given image view when the resource is ready, if not null
+    public void save(String thumbnailUrl, LazyHeaders headers, ImageView imageView) {
+        GlideUrl url = new GlideUrl(thumbnailUrl, headers);
         Glide.with(context)
                 .load(url)
                 .downloadOnly(new SimpleTarget<File>() {
                     @Override
                     public void onResourceReady(File resource, GlideAnimation<? super File> anim) {
                         try {
-                            add(cover, resource);
+                            add(thumbnailUrl, resource);
+                            if (imageView != null) {
+                                loadFromCache(imageView, resource);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -54,8 +62,9 @@ public class CoverCache {
     }
 
     // Copy the cover from Glide's cache to this cache
-    public void add(String key, File source) throws IOException {
-        File dest = new File(cacheDir, DiskUtils.hashKeyForDisk(key));
+    public void add(String thumbnailUrl, File source) throws IOException {
+        createCacheDir();
+        File dest = new File(cacheDir, DiskUtils.hashKeyForDisk(thumbnailUrl));
         if (dest.exists())
             dest.delete();
 
@@ -78,37 +87,29 @@ public class CoverCache {
     }
 
     // Get the cover from cache
-    public File get(String key) {
-        return new File(cacheDir, DiskUtils.hashKeyForDisk(key));
+    public File get(String thumbnailUrl) {
+        return new File(cacheDir, DiskUtils.hashKeyForDisk(thumbnailUrl));
     }
 
     // Delete the cover from cache
-    public boolean delete(String key) {
-        File file = new File(cacheDir, DiskUtils.hashKeyForDisk(key));
+    public boolean delete(String thumbnailUrl) {
+        File file = new File(cacheDir, DiskUtils.hashKeyForDisk(thumbnailUrl));
         return file.exists() && file.delete();
     }
 
-    // Load the cover from cache or network if it doesn't exist
-    public void loadOrFetchInto(ImageView imageView, String cover, LazyHeaders headers) {
-        File localCover = get(cover);
+    // Save and load the image from cache
+    public void saveAndLoadFromCache(ImageView imageView, String thumbnailUrl, LazyHeaders headers) {
+        File localCover = get(thumbnailUrl);
         if (localCover.exists()) {
-            loadLocalInto(context, imageView, localCover);
+            loadFromCache(imageView, localCover);
         } else {
-            loadRemoteInto(context, imageView, cover, headers);
+            save(thumbnailUrl, headers, imageView);
         }
     }
 
-    // Load the cover from cache
-    public static void loadLocalInto(Context context, ImageView imageView, String cover) {
-        File cacheDir = new File(context.getCacheDir(), PARAMETER_CACHE_DIRECTORY);
-        File localCover = new File(cacheDir, DiskUtils.hashKeyForDisk(cover));
-        if (localCover.exists()) {
-            loadLocalInto(context, imageView, localCover);
-        }
-    }
-
-    // Load the cover from the cache directory into the specified image view
-    private static void loadLocalInto(Context context, ImageView imageView, File file) {
+    // Helper method to load the cover from the cache directory into the specified image view
+    // The file must exist
+    private void loadFromCache(ImageView imageView, File file) {
         Glide.with(context)
                 .load(file)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -116,9 +117,10 @@ public class CoverCache {
                 .into(imageView);
     }
 
-    // Load the cover from network into the specified image view. It does NOT save the image in cache
-    private static void loadRemoteInto(Context context, ImageView imageView, String cover, LazyHeaders headers) {
-        GlideUrl url = new GlideUrl(cover, headers);
+    // Helper method to load the cover from network into the specified image view.
+    // It does NOT save the image in cache
+    public void loadFromNetwork(ImageView imageView, String thumbnailUrl, LazyHeaders headers) {
+        GlideUrl url = new GlideUrl(thumbnailUrl, headers);
         Glide.with(context)
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
