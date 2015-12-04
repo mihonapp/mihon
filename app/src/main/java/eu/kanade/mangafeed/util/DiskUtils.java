@@ -134,8 +134,9 @@ public final class DiskUtils {
         } catch (Exception e) {
             if (bufferedSink != null) {
                 bufferedSink.close();
-                writeFile.delete();
             }
+            writeFile.delete();
+            throw new IOException("Failed saving image");
         }
 
         return writeFile;

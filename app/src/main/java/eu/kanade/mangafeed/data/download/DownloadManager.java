@@ -168,7 +168,7 @@ public class DownloadManager {
         try {
             DiskUtils.createDirectory(download.directory);
         } catch (IOException e) {
-            Timber.e(e.getMessage());
+            return Observable.error(e);
         }
 
         Observable<List<Page>> pageListObservable = download.pages == null ?
@@ -182,34 +182,35 @@ public class DownloadManager {
 
         return pageListObservable
                 .subscribeOn(Schedulers.io())
-                .doOnNext(pages -> download.downloadedImages = 0)
+                .doOnError(error -> download.setStatus(Download.ERROR))
                 .doOnNext(pages -> download.setStatus(Download.DOWNLOADING))
+                .doOnNext(pages -> download.downloadedImages = 0)
                 // Get all the URLs to the source images, fetch pages if necessary
-                .flatMap(pageList -> Observable.from(pageList)
-                        .filter(page -> page.getImageUrl() != null)
-                        .mergeWith(download.source.getRemainingImageUrlsFromPageList(pageList)))
+                .flatMap(download.source::getAllImageUrlsFromPageList)
                 // Start downloading images, consider we can have downloaded images already
-                .concatMap(page -> getDownloadedImage(page, download.source, download.directory))
-                .doOnNext(p -> download.downloadedImages++)
+                .concatMap(page -> getOrDownloadImage(page, download))
                 // Do after download completes
                 .doOnCompleted(() -> onDownloadCompleted(download))
                 .toList()
-                .flatMap(pages -> Observable.just(areAllDownloadsFinished()));
+                .flatMap(pages -> Observable.just(download))
+                // If the page list threw, it will resume here
+                .onErrorResumeNext(error -> Observable.just(download))
+                .map(d -> areAllDownloadsFinished());
     }
 
-    // Get downloaded image if exists, otherwise download it with the method below
-    public Observable<Page> getDownloadedImage(final Page page, Source source, File chapterDir) {
-        Observable<Page> pageObservable = Observable.just(page);
+    // Get the image from the filesystem if it exists or download from network
+    private Observable<Page> getOrDownloadImage(final Page page, Download download) {
+        // If the image URL is empty, do nothing
         if (page.getImageUrl() == null)
-            return pageObservable;
+            return Observable.just(page);
 
-        String imageFilename = getImageFilename(page);
-        File imagePath = new File(chapterDir, imageFilename);
+        String filename = getImageFilename(page);
+        File imagePath = new File(download.directory, filename);
 
-        if (!isImageDownloaded(imagePath)) {
-            page.setStatus(Page.DOWNLOAD_IMAGE);
-            pageObservable = downloadImage(page, source, chapterDir, imageFilename);
-        }
+        // If the image is already downloaded, do nothing. Otherwise download from network
+        Observable<Page> pageObservable = isImageDownloaded(imagePath) ?
+                Observable.just(page) :
+                downloadImage(page, download.source, download.directory, filename);
 
         return pageObservable
                 // When the image is ready, set image path, progress (just in case) and status
@@ -217,6 +218,7 @@ public class DownloadManager {
                     p.setImagePath(imagePath.getAbsolutePath());
                     p.setProgress(100);
                     p.setStatus(Page.READY);
+                    download.downloadedImages++;
                 })
                 // If the download fails, mark this page as error
                 .doOnError(e -> page.setStatus(Page.ERROR))
@@ -224,18 +226,37 @@ public class DownloadManager {
                 .onErrorResumeNext(e -> Observable.just(page));
     }
 
-    // Download the image and save it to the filesystem
-    private Observable<Page> downloadImage(final Page page, Source source, File chapterDir, String imageFilename) {
+    private Observable<Page> downloadImage(Page page, Source source, File directory, String filename) {
+        page.setStatus(Page.DOWNLOAD_IMAGE);
         return source.getImageProgressResponse(page)
                 .flatMap(resp -> {
                     try {
-                        DiskUtils.saveBufferedSourceToDirectory(resp.body().source(), chapterDir, imageFilename);
-                    } catch (IOException e) {
-                        Timber.e(e.fillInStackTrace(), e.getMessage());
-                        throw new IllegalStateException("Unable to save image");
+                        DiskUtils.saveBufferedSourceToDirectory(resp.body().source(), directory, filename);
+                    } catch (Exception e) {
+                        return Observable.error(e);
                     }
                     return Observable.just(page);
                 });
+    }
+
+    // Public method to get the image from the filesystem. It does NOT provide any way to download the iamge
+    public Observable<Page> getDownloadedImage(final Page page, File chapterDir) {
+        if (page.getImageUrl() == null) {
+            page.setStatus(Page.ERROR);
+            return Observable.just(page);
+        }
+
+        File imagePath = new File(chapterDir, getImageFilename(page));
+
+        // When the image is ready, set image path, progress (just in case) and status
+        if (isImageDownloaded(imagePath)) {
+            page.setImagePath(imagePath.getAbsolutePath());
+            page.setProgress(100);
+            page.setStatus(Page.READY);
+        } else {
+            page.setStatus(Page.ERROR);
+        }
+        return Observable.just(page);
     }
 
     // Get the filename for an image given the page

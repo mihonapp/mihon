@@ -97,6 +97,12 @@ public abstract class Source extends BaseSource {
                 });
     }
 
+    public Observable<Page> getAllImageUrlsFromPageList(final List<Page> pages) {
+        return Observable.from(pages)
+                .filter(page -> page.getImageUrl() != null)
+                .mergeWith(getRemainingImageUrlsFromPageList(pages));
+    }
+
     // Get the URLs of the images of a chapter
     public Observable<Page> getRemainingImageUrlsFromPageList(final List<Page> pages) {
         return Observable.from(pages)

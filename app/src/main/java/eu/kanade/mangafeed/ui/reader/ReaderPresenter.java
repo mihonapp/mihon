@@ -149,14 +149,12 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         Observable<Page> pageObservable;
 
         if (!isDownloaded) {
-            pageObservable = Observable.from(pageList)
-                    .filter(page -> page.getImageUrl() != null)
-                    .mergeWith(source.getRemainingImageUrlsFromPageList(pageList))
+            pageObservable = source.getAllImageUrlsFromPageList(pageList)
                     .flatMap(source::getCachedImage, 3);
         } else {
             File chapterDir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
             pageObservable = Observable.from(pageList)
-                    .flatMap(page -> downloadManager.getDownloadedImage(page, source, chapterDir));
+                    .flatMap(page -> downloadManager.getDownloadedImage(page, chapterDir));
         }
         return pageObservable
                 .subscribeOn(Schedulers.io())
