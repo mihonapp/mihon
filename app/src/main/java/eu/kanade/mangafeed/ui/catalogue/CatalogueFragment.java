@@ -13,10 +13,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.GlideUrl;
-
 import java.util.List;
 
 import butterknife.Bind;
@@ -177,15 +173,9 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
     public void updateImage(Manga manga) {
         ImageView imageView = getImageView(getMangaIndex(manga));
-        if (imageView != null) {
-            GlideUrl url = new GlideUrl(manga.thumbnail_url,
+        if (imageView != null && manga.thumbnail_url != null) {
+            getPresenter().coverCache.loadFromNetwork(imageView, manga.thumbnail_url,
                     getPresenter().getSource().getGlideHeaders());
-
-            Glide.with(this)
-                    .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .centerCrop()
-                    .into(imageView);
         }
     }
 

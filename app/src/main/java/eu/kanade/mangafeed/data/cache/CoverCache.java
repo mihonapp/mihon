@@ -107,6 +107,16 @@ public class CoverCache {
         }
     }
 
+    // If the image is already in our cache, use it. If not, load it with glide
+    public void loadFromCacheOrNetwork(ImageView imageView, String thumbnailUrl, LazyHeaders headers) {
+        File localCover = get(thumbnailUrl);
+        if (localCover.exists()) {
+            loadFromCache(imageView, localCover);
+        } else {
+            loadFromNetwork(imageView, thumbnailUrl, headers);
+        }
+    }
+
     // Helper method to load the cover from the cache directory into the specified image view
     // The file must exist
     private void loadFromCache(ImageView imageView, File file) {

@@ -7,10 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.GlideUrl;
-
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -51,11 +47,11 @@ public class CatalogueAdapter extends ArrayAdapter<Manga> {
         @Bind(R.id.thumbnail) ImageView thumbnail;
         @Bind(R.id.favorite_sticker) ImageView favorite_sticker;
 
-        CatalogueFragment fragment;
+        CataloguePresenter presenter;
 
         public ViewHolder(View view, CatalogueFragment fragment) {
-            this.fragment = fragment;
             ButterKnife.bind(this, view);
+            presenter = fragment.getPresenter();
         }
 
         public void onSetValues(Manga manga) {
@@ -63,21 +59,15 @@ public class CatalogueAdapter extends ArrayAdapter<Manga> {
             author.setText(manga.author);
 
             if (manga.thumbnail_url != null) {
-                GlideUrl url = new GlideUrl(manga.thumbnail_url,
-                        fragment.getPresenter().getSource().getGlideHeaders());
-
-                Glide.with(fragment)
-                        .load(url)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .centerCrop()
-                        .into(thumbnail);
+                presenter.coverCache.loadFromCacheOrNetwork(thumbnail, manga.thumbnail_url,
+                        presenter.getSource().getGlideHeaders());
             } else {
                 thumbnail.setImageResource(android.R.color.transparent);
             }
 
-            if(manga.favorite){
+            if (manga.favorite) {
                 favorite_sticker.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 favorite_sticker.setVisibility(View.INVISIBLE);
             }
         }

@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.SourceManager;
@@ -29,6 +30,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
     @Inject SourceManager sourceManager;
     @Inject DatabaseHelper db;
+    @Inject CoverCache coverCache;
 
     private Source selectedSource;
 

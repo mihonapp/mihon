@@ -39,8 +39,11 @@ public class LibraryHolder extends ItemViewHolder<Manga> {
     }
 
     public void loadCover(Manga manga, Source source, CoverCache coverCache) {
-        if (manga.thumbnail_url != null)
+        if (manga.thumbnail_url != null) {
             coverCache.saveAndLoadFromCache(thumbnail, manga.thumbnail_url, source.getGlideHeaders());
+        } else {
+            thumbnail.setImageResource(android.R.color.transparent);
+        }
     }
 
 }
