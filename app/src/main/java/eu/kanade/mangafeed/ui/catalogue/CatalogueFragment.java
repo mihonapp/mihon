@@ -31,7 +31,6 @@ import icepick.State;
 import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 @RequiresPresenter(CataloguePresenter.class)
@@ -139,7 +138,6 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         queryDebouncerSubject = PublishSubject.create();
         queryDebouncerSubscription = queryDebouncerSubject
                 .debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::restartRequest);
     }

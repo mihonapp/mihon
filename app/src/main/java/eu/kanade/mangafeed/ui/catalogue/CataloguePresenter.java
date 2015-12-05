@@ -66,7 +66,6 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
         restartableLatestCache(GET_MANGA_DETAIL,
                 () -> mangaDetailSubject
-                        .subscribeOn(Schedulers.io())
                         .flatMap(Observable::from)
                         .filter(manga -> !manga.initialized)
                         .window(3)

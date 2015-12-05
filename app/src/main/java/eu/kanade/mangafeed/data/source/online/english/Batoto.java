@@ -18,9 +18,14 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
@@ -41,8 +46,22 @@ public class Batoto extends Source {
     public static final String MANGA_URL = "/comic_pop?id=%s";
     public static final String LOGIN_URL = BASE_URL + "/forums/index.php?app=core&module=global&section=login";
 
+    private Pattern datePattern;
+    private Map<String, Integer> dateFields;
+
     public Batoto(Context context) {
         super(context);
+
+        datePattern = Pattern.compile("(\\d+|A)\\s+(.*?)s? ago.*");
+        dateFields = new HashMap<String, Integer>() {{
+            put("second", Calendar.SECOND);
+            put("minute", Calendar.MINUTE);
+            put("hour",   Calendar.HOUR);
+            put("day",    Calendar.DATE);
+            put("week",   Calendar.WEEK_OF_YEAR);
+            put("month",  Calendar.MONTH);
+            put("year",   Calendar.YEAR);
+        }};
     }
 
     @Override
@@ -325,15 +344,26 @@ public class Batoto extends Source {
     private long parseDateFromElement(Element dateElement) {
         String dateAsString = dateElement.text();
 
+        Date date;
         try {
-            Date specificDate = new SimpleDateFormat("dd MMMMM yyyy - hh:mm a", Locale.ENGLISH).parse(dateAsString);
-
-            return specificDate.getTime();
+            date = new SimpleDateFormat("dd MMMMM yyyy - hh:mm a", Locale.ENGLISH).parse(dateAsString);
         } catch (ParseException e) {
-            // Do Nothing.
-        }
+            Matcher m = datePattern.matcher(dateAsString);
 
-        return 0;
+            if (m.matches()) {
+                String number = m.group(1);
+                int amount = number.equals("A") ? 1 : Integer.parseInt(m.group(1));
+                String unit = m.group(2);
+
+                Calendar cal = Calendar.getInstance();
+                // Not an error
+                cal.add(dateFields.get(unit), -amount);
+                date = cal.getTime();
+            } else {
+                return 0;
+            }
+        }
+        return date.getTime();
     }
 
     @Override
