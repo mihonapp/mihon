@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.manga.chapter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
@@ -33,6 +34,7 @@ import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import eu.kanade.mangafeed.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
+import rx.Subscription;
 
 @RequiresPresenter(ChaptersPresenter.class)
 public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implements
@@ -50,6 +52,8 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     private ChaptersAdapter adapter;
     private LinearLayoutManager linearLayout;
     private ActionMode actionMode;
+
+    private Subscription downloadProgressSubscription;
 
     public static ChaptersFragment newInstance() {
         return new ChaptersFragment();
@@ -105,10 +109,12 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     @Override
     public void onResume() {
         super.onResume();
+        observeChapterDownloadProgress();
     }
 
     @Override
     public void onPause() {
+        unsubscribeChapterDownloadProgress();
         super.onPause();
     }
 
@@ -169,16 +175,31 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         startActivity(intent);
     }
 
+    private void observeChapterDownloadProgress() {
+        downloadProgressSubscription = getPresenter().getDownloadProgressObs()
+                .subscribe(this::onDownloadProgressChange);
+    }
+
+    private void unsubscribeChapterDownloadProgress() {
+        if (downloadProgressSubscription != null)
+            downloadProgressSubscription.unsubscribe();
+    }
+
+    private void onDownloadProgressChange(Download download) {
+        ChaptersHolder holder = getHolder(download.chapter);
+        if (holder != null)
+            holder.onProgressChange(getContext(), download.downloadedImages, download.pages.size());
+    }
+
     public void onChapterStatusChange(Download download) {
-        Chapter chapter;
-        for (int i = linearLayout.findFirstVisibleItemPosition(); i < linearLayout.findLastVisibleItemPosition(); i++) {
-            int pos = recyclerView.getChildAdapterPosition(linearLayout.findViewByPosition(i));
-            chapter = adapter.getItem(pos);
-            if (chapter != null && download.chapter.id.equals(chapter.id)) {
-                adapter.notifyItemChanged(i);
-                break;
-            }
-        }
+        ChaptersHolder holder = getHolder(download.chapter);
+        if (holder != null)
+            holder.onStatusChange(download.getStatus());
+    }
+
+    @Nullable
+    private ChaptersHolder getHolder(Chapter chapter) {
+        return (ChaptersHolder) recyclerView.findViewHolderForItemId(chapter.id);
     }
 
     @Override
@@ -280,7 +301,6 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         adapter.toggleSelection(position, false);
 
         int count = adapter.getSelectedItemCount();
-
         if (count == 0) {
             actionMode.finish();
         } else {

@@ -62,7 +62,18 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
             pages.setText("");
         }
 
-        switch (chapter.status) {
+        onStatusChange(chapter.status);
+        date.setText(sdf.format(new Date(chapter.date_upload)));
+
+        toggleActivation();
+    }
+
+    private void toggleActivation() {
+        itemView.setActivated(adapter.isSelected(getAdapterPosition()));
+    }
+
+    public void onStatusChange(int status) {
+        switch (status) {
             case Download.QUEUE:
                 downloadText.setText(R.string.chapter_queued); break;
             case Download.DOWNLOADING:
@@ -74,13 +85,11 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
             default:
                 downloadText.setText(""); break;
         }
-
-        date.setText(sdf.format(new Date(chapter.date_upload)));
-        toggleActivation();
     }
 
-    private void toggleActivation() {
-        itemView.setActivated(adapter.isSelected(getAdapterPosition()));
+    public void onProgressChange(Context context, int downloaded, int total) {
+        downloadText.setText(context.getString(
+                R.string.chapter_downloading_progress, downloaded, total));
     }
 
     @Override

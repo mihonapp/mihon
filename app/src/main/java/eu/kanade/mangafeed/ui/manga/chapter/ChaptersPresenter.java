@@ -170,6 +170,12 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
             refreshChapters();
     }
 
+    public Observable<Download> getDownloadProgressObs() {
+        return downloadManager.getQueue().getProgressObservable()
+                .filter(download -> download.manga.id.equals(manga.id))
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public void onOpenChapter(Chapter chapter) {
         EventBus.getDefault().postSticky(new ReaderEvent(source, manga, chapter));
     }

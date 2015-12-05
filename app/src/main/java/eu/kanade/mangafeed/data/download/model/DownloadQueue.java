@@ -68,7 +68,7 @@ public class DownloadQueue {
                         setPagesSubject(download.pages, pageStatusSubject);
                         return pageStatusSubject
                                 .filter(status -> status == Page.READY)
-                                .flatMap(status -> Observable.just(download));
+                                .map(status -> download);
 
                     } else if (download.getStatus() == Download.DOWNLOADED ||
                             download.getStatus() == Download.ERROR) {

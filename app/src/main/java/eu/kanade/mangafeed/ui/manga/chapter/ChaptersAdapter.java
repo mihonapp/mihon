@@ -21,6 +21,7 @@ public class ChaptersAdapter extends FlexibleAdapter<ChaptersHolder, Chapter> {
         this.fragment = fragment;
         mItems = new ArrayList<>();
         clickListener = (OnItemClickListener) fragment;
+        setHasStableIds(true);
     }
 
     @Override
@@ -36,6 +37,11 @@ public class ChaptersAdapter extends FlexibleAdapter<ChaptersHolder, Chapter> {
     public void onBindViewHolder(ChaptersHolder holder, int position) {
         final Chapter chapter = getItem(position);
         holder.onSetValues(fragment.getActivity(), chapter);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mItems.get(position).id;
     }
 
     public void setItems(List<Chapter> chapters) {

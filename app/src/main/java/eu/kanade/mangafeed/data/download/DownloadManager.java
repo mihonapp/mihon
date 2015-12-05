@@ -192,7 +192,7 @@ public class DownloadManager {
                 // Do after download completes
                 .doOnCompleted(() -> onDownloadCompleted(download))
                 .toList()
-                .flatMap(pages -> Observable.just(download))
+                .map(pages -> download)
                 // If the page list threw, it will resume here
                 .onErrorResumeNext(error -> {
                     download.setStatus(Download.ERROR);
@@ -222,10 +222,12 @@ public class DownloadManager {
                     download.downloadedImages++;
                     page.setStatus(Page.READY);
                 })
-                // If the download fails, mark this page as error
-                .doOnError(e -> page.setStatus(Page.ERROR))
-                // Allow to download the remaining images
-                .onErrorResumeNext(e -> Observable.just(page));
+                // Mark this page as error and allow to download the remaining
+                .onErrorResumeNext(e -> {
+                    page.setProgress(0);
+                    page.setStatus(Page.ERROR);
+                    return Observable.just(page);
+                });
     }
 
     // Save image on disk
@@ -242,7 +244,7 @@ public class DownloadManager {
                 });
     }
 
-    // Public method to get the image from the filesystem. It does NOT provide any way to download the iamge
+    // Public method to get the image from the filesystem. It does NOT provide any way to download the image
     public Observable<Page> getDownloadedImage(final Page page, File chapterDir) {
         if (page.getImageUrl() == null) {
             page.setStatus(Page.ERROR);
