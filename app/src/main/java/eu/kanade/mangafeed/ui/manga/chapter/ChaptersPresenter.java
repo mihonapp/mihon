@@ -133,8 +133,8 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
             observable = observable.filter(chapter -> chapter.status == Download.DOWNLOADED);
         }
         return observable.toSortedList((chapter, chapter2) -> sortOrderAToZ ?
-                Float.compare(chapter.chapter_number, chapter2.chapter_number) :
-                Float.compare(chapter2.chapter_number, chapter.chapter_number));
+                Float.compare(chapter2.chapter_number, chapter.chapter_number) :
+                Float.compare(chapter.chapter_number, chapter2.chapter_number));
     }
 
     private void setChapterStatus(Chapter chapter) {

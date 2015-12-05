@@ -3,6 +3,7 @@ package eu.kanade.mangafeed.ui.catalogue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,7 +26,13 @@ import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
+import icepick.Icepick;
+import icepick.State;
 import nucleus.factory.RequiresPresenter;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 @RequiresPresenter(CataloguePresenter.class)
 public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
@@ -35,7 +43,12 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
     private CatalogueAdapter adapter;
     private EndlessScrollListener scrollListener;
-    private String search;
+
+    @State String query = "";
+    private final int SEARCH_TIMEOUT = 1000;
+
+    private PublishSubject<String> queryDebouncerSubject;
+    private Subscription queryDebouncerSubscription;
 
     public final static String SOURCE_ID = "source_id";
 
@@ -48,63 +61,132 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
+        Icepick.restoreInstanceState(this, savedState);
         setHasOptionsMenu(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_catalogue, container, false);
         ButterKnife.bind(this, view);
 
-        initializeAdapter();
-        initializeScrollListener();
+        // Initialize adapter and scroll listener
+        adapter = new CatalogueAdapter(this);
+        scrollListener = new EndlessScrollListener(this::requestNextPage);
+        gridView.setAdapter(adapter);
+        gridView.setOnScrollListener(scrollListener);
 
-        int source_id = getArguments().getInt(SOURCE_ID, -1);
+        int sourceId = getArguments().getInt(SOURCE_ID, -1);
 
         showProgressBar();
+        if (savedState == null)
+            getPresenter().startRequesting(sourceId);
 
-        if (savedInstanceState == null)
-            getPresenter().startRequesting(source_id);
-
+        setToolbarTitle(getPresenter().getSource().getName());
         return view;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.catalogue_list, menu);
-        initializeSearch(menu);
-    }
 
-    private void initializeSearch(Menu menu) {
+        // Initialize search menu
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView sv = (SearchView) searchItem.getActionView();
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        if (!TextUtils.isEmpty(query)) {
+            searchItem.expandActionView();
+            searchView.setQuery(query, true);
+            searchView.clearFocus();
+        }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                getPresenter().onSearchEvent(query, true);
+                onSearchEvent(query, true);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                getPresenter().onSearchEvent(newText, false);
+                onSearchEvent(newText, false);
                 return true;
             }
         });
-        if (search != null && !search.equals("")) {
-            searchItem.expandActionView();
-            sv.setQuery(search, true);
-            sv.clearFocus();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initializeSearchSubscription();
+    }
+
+    @Override
+    public void onStop() {
+        destroySearchSubscription();
+        super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Icepick.saveInstanceState(this, outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void initializeSearchSubscription() {
+        queryDebouncerSubject = PublishSubject.create();
+        queryDebouncerSubscription = queryDebouncerSubject
+                .debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::restartRequest);
+    }
+
+    private void destroySearchSubscription() {
+        queryDebouncerSubscription.unsubscribe();
+    }
+
+    private void onSearchEvent(String query, boolean now) {
+        // If the query is not debounced, resolve it instantly
+        if (now)
+            restartRequest(query);
+        else if (queryDebouncerSubject != null)
+            queryDebouncerSubject.onNext(query);
+    }
+
+    private void restartRequest(String newQuery) {
+        // If text didn't change, do nothing
+        if (query.equals(newQuery)) return;
+
+        query = newQuery;
+        showProgressBar();
+        // Set adapter again for scrolling to top: http://stackoverflow.com/a/17577981/3263582
+        gridView.setAdapter(adapter);
+        gridView.setSelection(0);
+
+        getPresenter().restartRequest(query);
+    }
+
+    private void requestNextPage() {
+        if (getPresenter().hasNextPage()) {
+            showGridProgressBar();
+            getPresenter().requestNext();
         }
     }
 
-    public void initializeAdapter() {
-        adapter = new CatalogueAdapter(this);
-        gridView.setAdapter(adapter);
+    public void onAddPage(PageBundle<List<Manga>> page) {
+        hideProgressBar();
+        if (page.page == 0) {
+            adapter.clear();
+            scrollListener.resetScroll();
+        }
+        adapter.addAll(page.data);
+    }
+
+    public void onAddPageError() {
+        hideProgressBar();
     }
 
     @OnItemClick(R.id.gridView)
@@ -116,37 +198,23 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         startActivity(intent);
     }
 
-    public void initializeScrollListener() {
-        scrollListener = new EndlessScrollListener(this::requestNext);
-        gridView.setOnScrollListener(scrollListener);
-    }
-
-    public void requestNext() {
-        if (getPresenter().requestNext())
-            showGridProgressBar();
-    }
-
-    public void showProgressBar() {
-        progress.setVisibility(ProgressBar.VISIBLE);
-    }
-
-    public void showGridProgressBar() {
-        progressGrid.setVisibility(ProgressBar.VISIBLE);
-    }
-
-    public void hideProgressBar() {
-        progress.setVisibility(ProgressBar.GONE);
-        progressGrid.setVisibility(ProgressBar.GONE);
-    }
-
-    public void onAddPage(PageBundle<List<Manga>> page) {
-        hideProgressBar();
-        if (page.page == 0) {
-            gridView.setSelection(0);
-            adapter.clear();
-            scrollListener.resetScroll();
+    public void updateImage(Manga manga) {
+        ImageView imageView = getImageView(getMangaIndex(manga));
+        if (imageView != null && manga.thumbnail_url != null) {
+            getPresenter().coverCache.loadFromNetwork(imageView, manga.thumbnail_url,
+                    getPresenter().getSource().getGlideHeaders());
         }
-        adapter.addAll(page.data);
+    }
+
+    private ImageView getImageView(int position) {
+        if (position == -1) return null;
+
+        View v = gridView.getChildAt(position -
+                gridView.getFirstVisiblePosition());
+
+        if (v == null) return null;
+
+        return (ImageView) v.findViewById(R.id.thumbnail);
     }
 
     private int getMangaIndex(Manga manga) {
@@ -158,28 +226,17 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         return -1;
     }
 
-    private ImageView getImageView(int position) {
-        if (position == -1)
-            return null;
-
-        View v = gridView.getChildAt(position -
-                gridView.getFirstVisiblePosition());
-
-        if(v == null)
-            return null;
-
-        return (ImageView) v.findViewById(R.id.thumbnail);
+    private void showProgressBar() {
+        progress.setVisibility(ProgressBar.VISIBLE);
     }
 
-    public void updateImage(Manga manga) {
-        ImageView imageView = getImageView(getMangaIndex(manga));
-        if (imageView != null && manga.thumbnail_url != null) {
-            getPresenter().coverCache.loadFromNetwork(imageView, manga.thumbnail_url,
-                    getPresenter().getSource().getGlideHeaders());
-        }
+    private void showGridProgressBar() {
+        progressGrid.setVisibility(ProgressBar.VISIBLE);
     }
 
-    public void restoreSearch(String mSearchName) {
-        search = mSearchName;
+    private void hideProgressBar() {
+        progress.setVisibility(ProgressBar.GONE);
+        progressGrid.setVisibility(ProgressBar.GONE);
     }
+
 }
