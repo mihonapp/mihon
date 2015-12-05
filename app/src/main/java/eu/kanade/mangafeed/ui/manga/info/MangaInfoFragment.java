@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.ui.manga.info;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,15 @@ import nucleus.factory.RequiresPresenter;
 @RequiresPresenter(MangaInfoPresenter.class)
 public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
 
-    @Bind(R.id.manga_artist) TextView mArtist;
-    @Bind(R.id.manga_author) TextView mAuthor;
-    @Bind(R.id.manga_chapters) TextView mChapters;
-    @Bind(R.id.manga_genres) TextView mGenres;
-    @Bind(R.id.manga_status) TextView mStatus;
-    @Bind(R.id.manga_summary) TextView mDescription;
-    @Bind(R.id.manga_cover) ImageView mCover;
+    @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
+
+    @Bind(R.id.manga_artist) TextView artist;
+    @Bind(R.id.manga_author) TextView author;
+    @Bind(R.id.manga_chapters) TextView chapterCount;
+    @Bind(R.id.manga_genres) TextView genres;
+    @Bind(R.id.manga_status) TextView status;
+    @Bind(R.id.manga_summary) TextView description;
+    @Bind(R.id.manga_cover) ImageView cover;
 
     @Bind(R.id.action_favorite) Button favoriteBtn;
 
@@ -52,37 +55,63 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
         favoriteBtn.setOnClickListener(v -> {
             getPresenter().toggleFavorite();
         });
+        swipeRefresh.setOnRefreshListener(this::fetchMangaFromSource);
 
         return view;
     }
 
-    public void setMangaInfo(Manga manga) {
-        mArtist.setText(manga.artist);
-        mAuthor.setText(manga.author);
-        mGenres.setText(manga.genre);
-        mStatus.setText("Ongoing"); //TODO
-        mDescription.setText(manga.description);
+    public void onNextManga(Manga manga) {
+        if (manga.initialized) {
+            setMangaInfo(manga);
+        } else {
+            // Initialize manga
+            fetchMangaFromSource();
+        }
+    }
+
+    private void setMangaInfo(Manga manga) {
+        artist.setText(manga.artist);
+        author.setText(manga.author);
+        genres.setText(manga.genre);
+        status.setText("Ongoing"); //TODO
+        description.setText(manga.description);
 
         setFavoriteText(manga.favorite);
 
-        if (mCover.getDrawable() == null) {
-            CoverCache coverCache = getPresenter().coverCache;
-            LazyHeaders headers = getPresenter().source.getGlideHeaders();
+        CoverCache coverCache = getPresenter().coverCache;
+        LazyHeaders headers = getPresenter().source.getGlideHeaders();
+        if (manga.thumbnail_url != null && cover.getDrawable() == null) {
             if (manga.favorite) {
-                coverCache.saveAndLoadFromCache(mCover, manga.thumbnail_url, headers);
+                coverCache.saveAndLoadFromCache(cover, manga.thumbnail_url, headers);
             } else {
-                coverCache.loadFromNetwork(mCover, manga.thumbnail_url, headers);
+                coverCache.loadFromNetwork(cover, manga.thumbnail_url, headers);
             }
+            cover.setTag(manga.thumbnail_url);
         }
-
     }
 
     public void setChapterCount(int count) {
-        mChapters.setText(String.valueOf(count));
+        chapterCount.setText(String.valueOf(count));
     }
 
     public void setFavoriteText(boolean isFavorite) {
         favoriteBtn.setText(!isFavorite ? R.string.add_to_library : R.string.remove_from_library);
     }
 
+    private void fetchMangaFromSource() {
+        setRefreshing(true);
+        getPresenter().fetchMangaFromSource();
+    }
+
+    public void onFetchMangaDone() {
+        setRefreshing(false);
+    }
+
+    public void onFetchMangaError() {
+        setRefreshing(false);
+    }
+
+    private void setRefreshing(boolean value) {
+        swipeRefresh.setRefreshing(value);
+    }
 }

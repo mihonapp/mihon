@@ -39,10 +39,10 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
     public final static String SOURCE_ID = "source_id";
 
-    public static CatalogueFragment newInstance(int source_id) {
+    public static CatalogueFragment newInstance(int sourceId) {
         CatalogueFragment fragment = new CatalogueFragment();
         Bundle args = new Bundle();
-        args.putInt(SOURCE_ID, source_id);
+        args.putInt(SOURCE_ID, sourceId);
         fragment.setArguments(args);
         return fragment;
     }

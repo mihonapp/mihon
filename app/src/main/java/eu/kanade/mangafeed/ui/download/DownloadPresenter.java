@@ -105,6 +105,9 @@ public class DownloadPresenter extends BasePresenter<DownloadFragment> {
     }
 
     private void observePagesStatus(Download download, DownloadFragment view) {
+        // Initial update of the downloaded pages
+        view.updateDownloadedPages(download);
+
         PublishSubject<Integer> pageStatusSubject = PublishSubject.create();
         for (Page page : download.pages) {
             if (page.getStatus() != Page.READY)

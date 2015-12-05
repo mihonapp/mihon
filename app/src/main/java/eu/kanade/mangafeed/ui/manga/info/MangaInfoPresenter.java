@@ -13,6 +13,8 @@ import eu.kanade.mangafeed.event.ChapterCountEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
@@ -24,8 +26,11 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
     protected Source source;
     private int count = -1;
 
+    private boolean isFetching;
+
     private static final int GET_MANGA = 1;
     private static final int GET_CHAPTER_COUNT = 2;
+    private static final int FETCH_MANGA_INFO = 3;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -33,23 +38,24 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
         restartableLatestCache(GET_MANGA,
                 () -> Observable.just(manga),
-                MangaInfoFragment::setMangaInfo);
+                MangaInfoFragment::onNextManga);
 
         restartableLatestCache(GET_CHAPTER_COUNT,
                 () -> Observable.just(count),
                 MangaInfoFragment::setChapterCount);
-    }
 
-    @Override
-    protected void onTakeView(MangaInfoFragment view) {
-        super.onTakeView(view);
+        restartableFirst(FETCH_MANGA_INFO,
+                this::fetchMangaObs,
+                (view, manga) -> view.onFetchMangaDone(),
+                (view, error) -> view.onFetchMangaError());
+
         registerForStickyEvents();
     }
 
     @Override
-    protected void onDropView() {
+    protected void onDestroy() {
         unregisterForEvents();
-        super.onDropView();
+        super.onDestroy();
     }
 
     @EventBusHook
@@ -67,9 +73,23 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
         }
     }
 
-    public void initFavoriteText() {
-        if (getView() != null)
-            getView().setFavoriteText(manga.favorite);
+    public void fetchMangaFromSource() {
+        if (!isFetching) {
+            isFetching = true;
+            start(FETCH_MANGA_INFO);
+        }
+    }
+
+    private Observable<Manga> fetchMangaObs() {
+        return source.pullMangaFromNetwork(manga.url)
+                .flatMap(networkManga -> {
+                    Manga.copyFromNetwork(manga, networkManga);
+                    db.insertManga(manga).executeAsBlocking();
+                    return Observable.just(manga);
+                })
+                .finallyDo(() -> isFetching = false)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public void toggleFavorite() {

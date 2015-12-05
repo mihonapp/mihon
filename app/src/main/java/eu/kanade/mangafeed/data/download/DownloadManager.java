@@ -25,7 +25,6 @@ import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.event.DownloadChaptersEvent;
 import eu.kanade.mangafeed.util.DiskUtils;
 import eu.kanade.mangafeed.util.DynamicConcurrentMergeOperator;
-import eu.kanade.mangafeed.util.UrlUtil;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -182,8 +181,10 @@ public class DownloadManager {
 
         return pageListObservable
                 .subscribeOn(Schedulers.io())
-                .doOnNext(pages -> download.setStatus(Download.DOWNLOADING))
-                .doOnNext(pages -> download.downloadedImages = 0)
+                .doOnNext(pages -> {
+                    download.downloadedImages = 0;
+                    download.setStatus(Download.DOWNLOADING);
+                })
                 // Get all the URLs to the source images, fetch pages if necessary
                 .flatMap(download.source::getAllImageUrlsFromPageList)
                 // Start downloading images, consider we can have downloaded images already
@@ -263,10 +264,8 @@ public class DownloadManager {
 
     // Get the filename for an image given the page
     private String getImageFilename(Page page) {
-        String url = UrlUtil.getPath(page.getImageUrl());
-        return url.substring(
-                url.lastIndexOf("/") + 1,
-                url.length());
+        String url = page.getImageUrl();
+        return url.substring(url.lastIndexOf("/") + 1, url.length());
     }
 
     private boolean isImageDownloaded(File imagePath) {

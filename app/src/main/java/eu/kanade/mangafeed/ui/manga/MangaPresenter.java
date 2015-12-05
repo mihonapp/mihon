@@ -17,7 +17,6 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
     @Inject DatabaseHelper db;
 
     private long mangaId;
-    private Manga manga;
 
     private static final int DB_MANGA = 1;
 
@@ -25,19 +24,13 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        restartableLatestCache(DB_MANGA,
-                () -> getDbMangaObservable()
-                        .doOnNext(manga -> this.manga = manga),
-                (view, manga) -> {
-                    view.setManga(manga);
-                    EventBus.getDefault().postSticky(manga);
-                });
+        restartableLatestCache(DB_MANGA, this::getDbMangaObservable, MangaActivity::setManga);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Avoid fragments receiving wrong manga
+        // Avoid new instances receiving wrong manga
         EventBus.getDefault().removeStickyEvent(Manga.class);
     }
 
@@ -45,7 +38,8 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
         return db.getManga(mangaId).createObservable()
                 .subscribeOn(Schedulers.io())
                 .flatMap(Observable::from)
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(manga -> EventBus.getDefault().postSticky(manga));
     }
 
     public void queryManga(long mangaId) {

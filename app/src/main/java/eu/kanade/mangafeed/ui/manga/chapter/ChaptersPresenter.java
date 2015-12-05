@@ -56,61 +56,48 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
         restartableLatestCache(DB_CHAPTERS,
                 this::getDbChaptersObs,
-                ChaptersFragment::onNextChapters
-        );
+                ChaptersFragment::onNextChapters);
 
-        restartableLatestCache(FETCH_CHAPTERS,
+        restartableFirst(FETCH_CHAPTERS,
                 this::getOnlineChaptersObs,
                 (view, result) -> view.onFetchChaptersDone(),
-                (view, error) -> view.onFetchChaptersError()
-        );
+                (view, error) -> view.onFetchChaptersError());
 
         restartableLatestCache(CHAPTER_STATUS_CHANGES,
                 this::getChapterStatusObs,
                 (view, download) -> view.onChapterStatusChange(download),
-                (view, error) -> Timber.e(error.getCause(), error.getMessage())
-        );
-    }
+                (view, error) -> Timber.e(error.getCause(), error.getMessage()));
 
-    @Override
-    protected void onTakeView(ChaptersFragment view) {
-        super.onTakeView(view);
         registerForStickyEvents();
     }
 
     @Override
-    protected void onDropView() {
-        unregisterForEvents();
-        super.onDropView();
-    }
-
-    @Override
     protected void onDestroy() {
+        unregisterForEvents();
         EventBus.getDefault().removeStickyEvent(ChapterCountEvent.class);
         super.onDestroy();
     }
 
     @EventBusHook
     public void onEventMainThread(Manga manga) {
-        if (this.manga != null)
-            return;
-
         this.manga = manga;
-        source = sourceManager.get(manga.source);
-        start(DB_CHAPTERS);
 
-        add(db.getChapters(manga).createObservable()
-                .subscribeOn(Schedulers.io())
-                .doOnNext(chapters -> {
-                    stop(CHAPTER_STATUS_CHANGES);
-                    this.chapters = chapters;
-                    EventBus.getDefault().postSticky(new ChapterCountEvent(chapters.size()));
-                    for (Chapter chapter : chapters) {
-                        setChapterStatus(chapter);
-                    }
-                    start(CHAPTER_STATUS_CHANGES);
-                })
-                .subscribe(chaptersSubject::onNext));
+        if (!isStarted(DB_CHAPTERS)) {
+            source = sourceManager.get(manga.source);
+            start(DB_CHAPTERS);
+
+            add(db.getChapters(manga).createObservable()
+                    .subscribeOn(Schedulers.io())
+                    .doOnNext(chapters -> {
+                        this.chapters = chapters;
+                        EventBus.getDefault().postSticky(new ChapterCountEvent(chapters.size()));
+                        for (Chapter chapter : chapters) {
+                            setChapterStatus(chapter);
+                        }
+                        start(CHAPTER_STATUS_CHANGES);
+                    })
+                    .subscribe(chaptersSubject::onNext));
+        }
     }
 
     public void fetchChaptersFromSource() {
