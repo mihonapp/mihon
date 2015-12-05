@@ -86,7 +86,6 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
             } else {
                 coverCache.loadFromNetwork(cover, manga.thumbnail_url, headers);
             }
-            cover.setTag(manga.thumbnail_url);
         }
     }
 

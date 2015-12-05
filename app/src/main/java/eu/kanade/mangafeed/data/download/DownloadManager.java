@@ -219,8 +219,8 @@ public class DownloadManager {
                 .doOnNext(p -> {
                     page.setImagePath(imagePath.getAbsolutePath());
                     page.setProgress(100);
-                    page.setStatus(Page.READY);
                     download.downloadedImages++;
+                    page.setStatus(Page.READY);
                 })
                 // If the download fails, mark this page as error
                 .doOnError(e -> page.setStatus(Page.ERROR))
