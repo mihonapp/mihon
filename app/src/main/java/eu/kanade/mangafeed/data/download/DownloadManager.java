@@ -84,7 +84,7 @@ public class DownloadManager {
                     if (finished) {
                         DownloadService.stop(context);
                     }
-                }, e -> Timber.e(e.fillInStackTrace(), e.getMessage()));
+                }, e -> Timber.e(e.getCause(), e.getMessage()));
 
         isRunning = true;
     }
@@ -238,10 +238,12 @@ public class DownloadManager {
                     try {
                         DiskUtils.saveBufferedSourceToDirectory(resp.body().source(), directory, filename);
                     } catch (Exception e) {
+                        Timber.e(e.getCause(), e.getMessage());
                         return Observable.error(e);
                     }
                     return Observable.just(page);
-                });
+                })
+                .retry(2);
     }
 
     // Public method to get the image from the filesystem. It does NOT provide any way to download the image
@@ -310,7 +312,7 @@ public class DownloadManager {
                 pages = gson.fromJson(reader, collectionType);
             }
         } catch (FileNotFoundException e) {
-            Timber.e(e.fillInStackTrace(), e.getMessage());
+            Timber.e(e.getCause(), e.getMessage());
         } finally {
             if (reader != null) try { reader.close(); } catch (IOException e) { /* Do nothing */ }
         }
@@ -333,7 +335,7 @@ public class DownloadManager {
             out.write(gson.toJson(pages).getBytes());
             out.flush();
         } catch (IOException e) {
-            Timber.e(e.fillInStackTrace(), e.getMessage());
+            Timber.e(e.getCause(), e.getMessage());
         } finally {
             if (out != null) try { out.close(); } catch (IOException e) { /* Do nothing */ }
         }

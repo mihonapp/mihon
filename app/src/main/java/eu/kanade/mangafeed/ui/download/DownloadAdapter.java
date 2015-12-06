@@ -1,17 +1,50 @@
 package eu.kanade.mangafeed.ui.download;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.download.model.Download;
-import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
-public class DownloadAdapter extends EasyRecyclerAdapter<Download> {
+public class DownloadAdapter extends FlexibleAdapter<DownloadHolder, Download> {
+
+    private Context context;
 
     public DownloadAdapter(Context context) {
-        super(context, DownloadHolder.class);
+        this.context = context;
+        mItems = new ArrayList<>();
+        setHasStableIds(true);
     }
 
-    public int getPositionForItem(Download item) {
-        return getItems() != null && getItems().size() > 0 ? getItems().indexOf(item) : -1;
+    @Override
+    public DownloadHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.item_download, parent, false);
+        return new DownloadHolder(v);
     }
+
+    @Override
+    public void onBindViewHolder(DownloadHolder holder, int position) {
+        final Download download = getItem(position);
+        holder.onSetValues(download);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return getItem(position).chapter.id;
+    }
+
+    public void setItems(List<Download> downloads) {
+        mItems = downloads;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateDataSet(String param) {}
+
 }
