@@ -3,6 +3,7 @@ package eu.kanade.mangafeed.ui.catalogue;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.bumptech.glide.Glide;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 
 import java.util.List;
@@ -75,6 +76,13 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                         .observeOn(AndroidSchedulers.mainThread()),
                 (view, manga) -> view.updateImage(manga),
                 (view, error) -> Timber.e(error.getMessage()));
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Catalogue covers are probably not going to be needed for a long time
+        Glide.get(getContext()).clearMemory();
+        super.onDestroy();
     }
 
     public void startRequesting(int sourceId) {

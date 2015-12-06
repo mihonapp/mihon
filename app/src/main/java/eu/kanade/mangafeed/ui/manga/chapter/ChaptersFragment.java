@@ -76,6 +76,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         linearLayout = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayout);
         recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.line_divider)));
+        recyclerView.setHasFixedSize(true);
         adapter = new ChaptersAdapter(this);
         recyclerView.setAdapter(adapter);
 
