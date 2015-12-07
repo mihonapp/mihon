@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.util.List;
 
 import butterknife.Bind;
@@ -35,6 +37,8 @@ import eu.kanade.mangafeed.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @RequiresPresenter(ChaptersPresenter.class)
 public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implements
@@ -192,10 +196,10 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
             holder.onProgressChange(getContext(), download.downloadedImages, download.pages.size());
     }
 
-    public void onChapterStatusChange(Download download) {
-        ChaptersHolder holder = getHolder(download.chapter);
+    public void onChapterStatusChange(Chapter chapter) {
+        ChaptersHolder holder = getHolder(chapter);
         if (holder != null)
-            holder.onStatusChange(download.getStatus());
+            holder.onStatusChange(chapter.status);
     }
 
     @Nullable
@@ -240,8 +244,13 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     }
 
     private Observable<Chapter> getSelectedChapters() {
-        return Observable.from(adapter.getSelectedItems())
-                .map(adapter::getItem);
+        // Create a blocking copy of the selected chapters.
+        // When the action mode is closed the list is cleared. If we use background
+        // threads with this observable, some emissions could be lost.
+        List<Chapter> chapters = Observable.from(adapter.getSelectedItems())
+                .map(adapter::getItem).toList().toBlocking().single();
+
+        return Observable.from(chapters);
     }
 
     public void closeActionMode() {
@@ -268,13 +277,45 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
 
     protected boolean onDownload(Observable<Chapter> chapters) {
         DownloadService.start(getActivity());
-        getPresenter().downloadChapters(chapters);
+
+        Observable<Chapter> observable = chapters
+                .doOnNext(chapter -> {
+                    // Force update of the UI. We already receive updates when it's added to the queue,
+                    // but sometimes it does nothing.
+                    // TODO remove this when status updates works properly
+                    chapter.status = Download.QUEUE;
+                    onChapterStatusChange(chapter);
+                });
+
+        getPresenter().downloadChapters(observable);
         closeActionMode();
         return true;
     }
 
     protected boolean onDelete(Observable<Chapter> chapters) {
-        getPresenter().deleteChapters(chapters);
+        int size = adapter.getSelectedItemCount();
+
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.deleting)
+                .progress(false, size, true)
+                .cancelable(false)
+                .show();
+
+        Observable<Chapter> observable = chapters
+                .concatMap(chapter -> {
+                    getPresenter().deleteChapter(chapter);
+                    return Observable.just(chapter);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(chapter -> {
+                    dialog.incrementProgress(1);
+                    chapter.status = Download.NOT_DOWNLOADED;
+                    onChapterStatusChange(chapter);
+                })
+                .finallyDo(dialog::dismiss);
+
+        getPresenter().deleteChapters(observable);
         closeActionMode();
         return true;
     }

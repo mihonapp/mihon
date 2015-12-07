@@ -30,7 +30,7 @@
     <string name="button_cancel">Cancel</string>
 
     <!-- Operations -->
-    <string name="deleting_files">Deleting files…</string>
+    <string name="deleting">Deleting…</string>
     <string name="loading">Loading…</string>
 
     <!-- Preferences -->

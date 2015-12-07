@@ -65,7 +65,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
         restartableLatestCache(CHAPTER_STATUS_CHANGES,
                 this::getChapterStatusObs,
-                (view, download) -> view.onChapterStatusChange(download),
+                (view, download) -> view.onChapterStatusChange(download.chapter),
                 (view, error) -> Timber.e(error.getCause(), error.getMessage()));
 
         registerForStickyEvents();
@@ -210,16 +210,17 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     public void deleteChapters(Observable<Chapter> selectedChapters) {
         add(selectedChapters
                 .subscribe(chapter -> {
-                    // Somehow I can't delete files on Schedulers.io()
-                    downloadManager.deleteChapter(source, manga, chapter);
                     downloadManager.getQueue().remove(chapter);
-                    chapter.status = Download.NOT_DOWNLOADED;
                 }, error -> {
                     Timber.e(error.getMessage());
                 }, () -> {
                     if (onlyDownloaded)
                         refreshChapters();
                 }));
+    }
+
+    public void deleteChapter(Chapter chapter) {
+        downloadManager.deleteChapter(source, manga, chapter);
     }
 
     public void revertSortOrder() {

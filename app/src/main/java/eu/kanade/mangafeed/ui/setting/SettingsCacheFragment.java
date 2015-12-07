@@ -60,7 +60,7 @@ public class SettingsCacheFragment extends SettingsNestedFragment implements Pre
         File[] files = cacheManager.getCacheDir().listFiles();
 
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.deleting_files)
+                .title(R.string.deleting)
                 .progress(false, files.length, true)
                 .cancelable(false)
                 .dismissListener(d -> {

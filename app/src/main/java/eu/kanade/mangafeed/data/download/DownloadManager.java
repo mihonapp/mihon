@@ -395,7 +395,7 @@ public class DownloadManager {
 
         for (Download download : queue.get()) {
             if (download.getStatus() != Download.DOWNLOADED) {
-                download.setStatus(Download.QUEUE);
+                if (download.getStatus() != Download.QUEUE) download.setStatus(Download.QUEUE);
                 if (!hasPendingDownloads) hasPendingDownloads = true;
                 downloadsQueueSubject.onNext(download);
             }
