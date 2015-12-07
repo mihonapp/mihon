@@ -279,13 +279,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         DownloadService.start(getActivity());
 
         Observable<Chapter> observable = chapters
-                .doOnNext(chapter -> {
-                    // Force update of the UI. We already receive updates when it's added to the queue,
-                    // but sometimes it does nothing.
-                    // TODO remove this when status updates works properly
-                    chapter.status = Download.QUEUE;
-                    onChapterStatusChange(chapter);
-                });
+                .doOnCompleted(adapter::notifyDataSetChanged);
 
         getPresenter().downloadChapters(observable);
         closeActionMode();
@@ -311,8 +305,8 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
                 .doOnNext(chapter -> {
                     dialog.incrementProgress(1);
                     chapter.status = Download.NOT_DOWNLOADED;
-                    onChapterStatusChange(chapter);
                 })
+                .doOnCompleted(adapter::notifyDataSetChanged)
                 .finallyDo(dialog::dismiss);
 
         getPresenter().deleteChapters(observable);
