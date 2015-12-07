@@ -2,30 +2,21 @@ package eu.kanade.mangafeed.ui.setting;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
-import javax.inject.Inject;
-
-import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.preference.PreferencesHelper;
-import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.util.DiskUtils;
 
-public class SettingsDownloadsFragment extends PreferenceFragment {
+public class SettingsDownloadsFragment extends SettingsNestedFragment {
 
-    @Inject PreferencesHelper preferences;
-
-    public static SettingsDownloadsFragment newInstance() {
-        return new SettingsDownloadsFragment();
+    public static SettingsNestedFragment newInstance(int resourcePreference, int resourceTitle) {
+        SettingsNestedFragment fragment = new SettingsDownloadsFragment();
+        fragment.setBundle(resourcePreference, resourceTitle);
+        return fragment;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.get(getActivity()).getComponent().inject(this);
-
-        addPreferencesFromResource(R.xml.pref_downloads);
 
         PreferenceScreen screen = getPreferenceScreen();
 
@@ -44,13 +35,6 @@ public class SettingsDownloadsFragment extends PreferenceFragment {
         });
 
         screen.addPreference(directoriesPref);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((BaseActivity)getActivity())
-                .setToolbarTitle(getString(R.string.pref_category_downloads));
     }
 
 }

@@ -29,12 +29,16 @@
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
 
+    <!-- Operations -->
+    <string name="deleting_files">Deleting files…</string>
+    <string name="loading">Loading…</string>
 
     <!-- Preferences -->
       <!-- Subsections -->
     <string name="pref_category_reader">Reader</string>
     <string name="pref_category_accounts">Accounts</string>
     <string name="pref_category_downloads">Downloads</string>
+    <string name="pref_category_cache">Cache</string>
 
       <!-- Reader section -->
     <string name="pref_hide_status_bar">Hide status bar</string>
@@ -53,16 +57,22 @@
     <string name="pref_download_directory">Downloads directory</string>
     <string name="pref_download_threads">Download threads</string>
 
+      <!-- Cache section -->
+    <string name="pref_chapter_cache_size">Chapters cache size</string>
+    <string name="pref_clear_chapter_cache">Clear chapter cache</string>
+    <string name="used_cache">Used: %1$s</string>
+    <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
+    <string name="cache_delete_error">An error occurred clearing cache</string>
+
+
     <!-- Login dialog -->
     <string name="accounts_login_title">Login for %1$s</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="show_password">Show password</string>
-    <string name="check_credentials">Check credentials</string>
     <string name="login">Login</string>
     <string name="login_success">Login successful</string>
     <string name="invalid_login">Login error</string>
-    <string name="loading">Loading…</string>
     <string name="unknown_error">Unknown error</string>
 
     <!-- Library fragment -->

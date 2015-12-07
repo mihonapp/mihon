@@ -16,4 +16,9 @@
         android:persistent="false"
         android:title="@string/pref_category_accounts" />
 
+    <Preference
+        android:key="@string/pref_category_cache_key"
+        android:persistent="false"
+        android:title="@string/pref_category_cache" />
+
 </PreferenceScreen>

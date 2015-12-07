@@ -27,4 +27,16 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+
+    <string-array name="cache_size">
+        <item>50 MB</item>
+        <item>75 MB</item>
+        <item>100 MB</item>
+    </string-array>
+
+    <string-array name="cache_values">
+        <item>50</item>
+        <item>75</item>
+        <item>100</item>
+    </string-array>
 </resources>

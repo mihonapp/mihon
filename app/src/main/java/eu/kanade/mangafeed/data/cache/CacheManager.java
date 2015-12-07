@@ -1,8 +1,8 @@
 package eu.kanade.mangafeed.data.cache;
 
 import android.content.Context;
+import android.text.format.Formatter;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.disklrucache.DiskLruCache;
@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.util.DiskUtils;
 import okio.BufferedSink;
@@ -26,67 +27,54 @@ public class CacheManager {
     private static final String PARAMETER_CACHE_DIRECTORY = "chapter_disk_cache";
     private static final int PARAMETER_APP_VERSION = 1;
     private static final int PARAMETER_VALUE_COUNT = 1;
-    private static final long PARAMETER_CACHE_SIZE = 100 * 1024 * 1024;
-    private static final int READ_TIMEOUT = 60;
 
-    private Context mContext;
-    private Gson mGson;
+    private Context context;
+    private Gson gson;
 
-    private DiskLruCache mDiskCache;
+    private DiskLruCache diskCache;
 
-    public CacheManager(Context context) {
-        mContext = context;
-        mGson = new Gson();
+    public CacheManager(Context context, PreferencesHelper preferences) {
+        this.context = context;
+        gson = new Gson();
 
         try {
-            mDiskCache = DiskLruCache.open(
+            diskCache = DiskLruCache.open(
                     new File(context.getCacheDir(), PARAMETER_CACHE_DIRECTORY),
                     PARAMETER_APP_VERSION,
                     PARAMETER_VALUE_COUNT,
-                    PARAMETER_CACHE_SIZE
+                    preferences.cacheSize() * 1024 * 1024
             );
         } catch (IOException e) {
             // Do Nothing.
         }
     }
 
-    public Observable<Boolean> clearImageCache() {
-        return Observable.create(subscriber -> {
-            try {
-                subscriber.onNext(clearImageCacheImpl());
-                subscriber.onCompleted();
-            } catch (Throwable e) {
-                subscriber.onError(e);
-            }
-        });
+    public boolean remove(String file) {
+        if (file.equals("journal") || file.startsWith("journal."))
+            return false;
+
+        try {
+            String key = file.substring(0, file.lastIndexOf("."));
+            return diskCache.remove(key);
+        } catch (IOException e) {
+            return false;
+        }
     }
 
-    private boolean clearImageCacheImpl() {
-        boolean isSuccessful = true;
+    public File getCacheDir() {
+        return diskCache.getDirectory();
+    }
 
-        File imageCacheDirectory = Glide.getPhotoCacheDir(mContext);
-        if (imageCacheDirectory.isDirectory()) {
-            for (File cachedFile : imageCacheDirectory.listFiles()) {
-                if (!cachedFile.delete()) {
-                    isSuccessful = false;
-                }
-            }
-        } else {
-            isSuccessful = false;
-        }
+    public long getRealSize() {
+        return DiskUtils.getDirectorySize(getCacheDir());
+    }
 
-        File urlCacheDirectory = getCacheDir();
-        if (urlCacheDirectory.isDirectory()) {
-            for (File cachedFile : urlCacheDirectory.listFiles()) {
-                if (!cachedFile.delete()) {
-                    isSuccessful = false;
-                }
-            }
-        } else {
-            isSuccessful = false;
-        }
+    public String getReadableSize() {
+        return Formatter.formatFileSize(context, getRealSize());
+    }
 
-        return isSuccessful;
+    public void setSize(int value) {
+        diskCache.setMaxSize(value * 1024 * 1024);
     }
 
     public Observable<List<Page>> getPageUrlsFromDiskCache(final String chapterUrl) {
@@ -107,10 +95,10 @@ public class CacheManager {
 
         try {
             String key = DiskUtils.hashKeyForDisk(chapterUrl);
-            snapshot = mDiskCache.get(key);
+            snapshot = diskCache.get(key);
 
             Type collectionType = new TypeToken<List<Page>>() {}.getType();
-            pages = mGson.fromJson(snapshot.getString(0), collectionType);
+            pages = gson.fromJson(snapshot.getString(0), collectionType);
         } catch (IOException e) {
             // Do Nothing.
         } finally {
@@ -122,13 +110,13 @@ public class CacheManager {
     }
 
     public void putPageUrlsToDiskCache(final String chapterUrl, final List<Page> pages) {
-        String cachedValue = mGson.toJson(pages);
+        String cachedValue = gson.toJson(pages);
 
         DiskLruCache.Editor editor = null;
         OutputStream outputStream = null;
         try {
             String key = DiskUtils.hashKeyForDisk(chapterUrl);
-            editor = mDiskCache.edit(key);
+            editor = diskCache.edit(key);
             if (editor == null) {
                 return;
             }
@@ -137,7 +125,7 @@ public class CacheManager {
             outputStream.write(cachedValue.getBytes());
             outputStream.flush();
 
-            mDiskCache.flush();
+            diskCache.flush();
             editor.commit();
         } catch (Exception e) {
             // Do Nothing.
@@ -155,13 +143,9 @@ public class CacheManager {
         }
     }
 
-    public File getCacheDir() {
-        return mDiskCache.getDirectory();
-    }
-
     public boolean isImageInCache(final String imageUrl) {
         try {
-            return mDiskCache.get(DiskUtils.hashKeyForDisk(imageUrl)) != null;
+            return diskCache.get(DiskUtils.hashKeyForDisk(imageUrl)) != null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -171,7 +155,7 @@ public class CacheManager {
     public String getImagePath(final String imageUrl) {
         try {
             String imageName = DiskUtils.hashKeyForDisk(imageUrl) + ".0";
-            File file = new File(mDiskCache.getDirectory(), imageName);
+            File file = new File(diskCache.getDirectory(), imageName);
             return file.getCanonicalPath();
         } catch (IOException e) {
             e.printStackTrace();
@@ -185,7 +169,7 @@ public class CacheManager {
 
         try {
             String key = DiskUtils.hashKeyForDisk(imageUrl);
-            editor = mDiskCache.edit(key);
+            editor = diskCache.edit(key);
             if (editor == null) {
                 throw new IOException("Unable to edit key");
             }
@@ -194,7 +178,7 @@ public class CacheManager {
             sink = Okio.buffer(Okio.sink(outputStream));
             sink.writeAll(response.body().source());
 
-            mDiskCache.flush();
+            diskCache.flush();
             editor.commit();
         } catch (Exception e) {
             throw new IOException("Unable to save image");

@@ -8,10 +8,12 @@ import dagger.Component;
 import eu.kanade.mangafeed.data.chaptersync.MyAnimeList;
 import eu.kanade.mangafeed.data.chaptersync.UpdateChapterSyncService;
 import eu.kanade.mangafeed.data.download.DownloadService;
+import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
 import eu.kanade.mangafeed.injection.module.AppModule;
 import eu.kanade.mangafeed.injection.module.DataModule;
 import eu.kanade.mangafeed.ui.catalogue.CataloguePresenter;
+import eu.kanade.mangafeed.ui.catalogue.SourcePresenter;
 import eu.kanade.mangafeed.ui.download.DownloadPresenter;
 import eu.kanade.mangafeed.ui.library.LibraryPresenter;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
@@ -19,12 +21,10 @@ import eu.kanade.mangafeed.ui.manga.MangaPresenter;
 import eu.kanade.mangafeed.ui.manga.chapter.ChaptersPresenter;
 import eu.kanade.mangafeed.ui.manga.info.MangaInfoPresenter;
 import eu.kanade.mangafeed.ui.manga.myanimelist.MyAnimeListPresenter;
-import eu.kanade.mangafeed.ui.reader.ReaderPresenter;
-import eu.kanade.mangafeed.ui.catalogue.SourcePresenter;
-import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
+import eu.kanade.mangafeed.ui.reader.ReaderPresenter;
 import eu.kanade.mangafeed.ui.setting.SettingsAccountsFragment;
-import eu.kanade.mangafeed.ui.setting.SettingsDownloadsFragment;
+import eu.kanade.mangafeed.ui.setting.SettingsActivity;
 
 @Singleton
 @Component(
@@ -48,7 +48,7 @@ public interface AppComponent {
     void inject(ReaderActivity readerActivity);
     void inject(MangaActivity mangaActivity);
     void inject(SettingsAccountsFragment settingsAccountsFragment);
-    void inject(SettingsDownloadsFragment settingsDownloadsFragment);
+    void inject(SettingsActivity settingsActivity);
 
     void inject(Source source);
 

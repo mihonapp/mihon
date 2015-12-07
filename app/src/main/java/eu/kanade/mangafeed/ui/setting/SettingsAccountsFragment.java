@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.setting;
 
 import android.os.Bundle;
 import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
 import java.util.List;
@@ -10,32 +9,28 @@ import java.util.List;
 import javax.inject.Inject;
 
 import eu.kanade.mangafeed.App;
-import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
 import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
-import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
-import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
-import eu.kanade.mangafeed.ui.setting.dialog.ChapterSyncLoginDialog;
-import eu.kanade.mangafeed.ui.setting.dialog.SourceLoginDialog;
+import eu.kanade.mangafeed.ui.setting.preference.ChapterSyncLoginDialog;
+import eu.kanade.mangafeed.ui.setting.preference.SourceLoginDialog;
 import rx.Observable;
 
-public class SettingsAccountsFragment extends PreferenceFragment {
+public class SettingsAccountsFragment extends SettingsNestedFragment {
 
-    @Inject PreferencesHelper preferences;
     @Inject SourceManager sourceManager;
     @Inject ChapterSyncManager syncManager;
 
-    public static SettingsAccountsFragment newInstance() {
-        return new SettingsAccountsFragment();
+    public static SettingsNestedFragment newInstance(int resourcePreference, int resourceTitle) {
+        SettingsNestedFragment fragment = new SettingsAccountsFragment();
+        fragment.setBundle(resourcePreference, resourceTitle);
+        return fragment;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.get(getActivity()).getComponent().inject(this);
-
-        addPreferencesFromResource(R.xml.pref_accounts);
 
         PreferenceScreen screen = getPreferenceScreen();
 
@@ -65,13 +60,6 @@ public class SettingsAccountsFragment extends PreferenceFragment {
             chapterSyncCategory.addPreference(dialog);
         }
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((BaseActivity)getActivity())
-                .setToolbarTitle(getString(R.string.pref_category_accounts));
     }
 
     private List<Source> getSourcesWithLogin() {

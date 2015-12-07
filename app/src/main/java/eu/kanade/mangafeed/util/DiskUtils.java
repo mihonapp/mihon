@@ -158,5 +158,18 @@ public final class DiskUtils {
         }
 
     }
+
+    public static long getDirectorySize(File f) {
+        long size = 0;
+        if (f.isDirectory()) {
+            for (File file : f.listFiles()) {
+                size += getDirectorySize(file);
+            }
+        } else {
+            size=f.length();
+        }
+        return size;
+    }
+
 }
 

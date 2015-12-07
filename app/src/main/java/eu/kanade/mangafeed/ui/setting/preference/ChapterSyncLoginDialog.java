@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.ui.setting.dialog;
+package eu.kanade.mangafeed.ui.setting.preference;
 
 import android.content.Context;
 import android.content.DialogInterface;

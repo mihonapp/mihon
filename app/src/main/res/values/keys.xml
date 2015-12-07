@@ -3,6 +3,7 @@
     <string name="pref_category_reader_key">pref_category_reader_key</string>
     <string name="pref_category_accounts_key">pref_category_accounts_key</string>
     <string name="pref_category_downloads_key">pref_category_downloads_key</string>
+    <string name="pref_category_cache_key">pref_category_cache_key</string>
 
     <string name="pref_default_viewer_key">pref_default_viewer_key</string>
     <string name="pref_hide_status_bar_key">pref_hide_status_bar_key</string>
@@ -15,4 +16,7 @@
 
     <string name="pref_download_directory_key">pref_download_directory_key</string>
     <string name="pref_download_threads_key">pref_download_threads_key</string>
+
+    <string name="pref_chapter_cache_size_key">pref_chapter_cache_size_key</string>
+    <string name="pref_clear_chapter_cache_key">pref_clear_chapter_cache_key</string>
 </resources>

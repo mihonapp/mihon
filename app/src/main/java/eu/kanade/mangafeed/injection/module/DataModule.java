@@ -35,8 +35,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    CacheManager provideCacheManager(Application app) {
-        return new CacheManager(app);
+    CacheManager provideCacheManager(Application app, PreferencesHelper preferences) {
+        return new CacheManager(app, preferences);
     }
 
     @Provides
