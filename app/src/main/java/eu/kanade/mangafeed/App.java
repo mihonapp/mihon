@@ -3,6 +3,7 @@ package eu.kanade.mangafeed;
 import android.app.Application;
 import android.content.Context;
 
+import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
 import eu.kanade.mangafeed.injection.ComponentReflectionInjector;
@@ -12,30 +13,29 @@ import eu.kanade.mangafeed.injection.module.AppModule;
 import timber.log.Timber;
 
 @ReportsCrashes(
-        formUri = "http://couch.kanade.eu/acra-manga/_design/acra-storage/_update/report",
+        formUri = "http://mangafeed.kanade.eu/crash_report",
         reportType = org.acra.sender.HttpSender.Type.JSON,
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
-        formUriBasicAuthLogin="test",
-        formUriBasicAuthPassword="test"
+        excludeMatchingSharedPreferencesKeys={".*username.*",".*password.*"}
 )
 public class App extends Application {
 
-    AppComponent mApplicationComponent;
-    ComponentReflectionInjector<AppComponent> mComponentInjector;
+    AppComponent applicationComponent;
+    ComponentReflectionInjector<AppComponent> componentInjector;
 
     @Override
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.DEBUG) Timber.plant(new Timber.DebugTree());
 
-        mApplicationComponent = DaggerAppComponent.builder()
+        applicationComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
 
-        mComponentInjector =
-                new ComponentReflectionInjector<>(AppComponent.class, mApplicationComponent);
+        componentInjector =
+                new ComponentReflectionInjector<>(AppComponent.class, applicationComponent);
 
-        //ACRA.init(this);
+        ACRA.init(this);
     }
 
     public static App get(Context context) {
@@ -43,15 +43,15 @@ public class App extends Application {
     }
 
     public AppComponent getComponent() {
-        return mApplicationComponent;
+        return applicationComponent;
     }
 
     public ComponentReflectionInjector<AppComponent> getComponentReflection() {
-        return mComponentInjector;
+        return componentInjector;
     }
 
     // Needed to replace the component with a test specific one
     public void setComponent(AppComponent applicationComponent) {
-        mApplicationComponent = applicationComponent;
+        this.applicationComponent = applicationComponent;
     }
 }

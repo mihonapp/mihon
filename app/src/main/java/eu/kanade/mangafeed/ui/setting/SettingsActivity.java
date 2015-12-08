@@ -24,7 +24,7 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.get(getActivity()).getComponent().inject(this);
+        App.get(this).getComponent().inject(this);
         setContentView(R.layout.activity_preferences);
         ButterKnife.bind(this);
 

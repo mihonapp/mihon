@@ -2,6 +2,9 @@ package eu.kanade.mangafeed.ui.setting;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
@@ -15,15 +18,20 @@ public class SettingsNestedFragment extends PreferenceFragment {
 
     public static SettingsNestedFragment newInstance(int resourcePreference, int resourceTitle) {
         SettingsNestedFragment fragment = new SettingsNestedFragment();
-        fragment.setBundle(resourcePreference, resourceTitle);
+        fragment.setArgs(resourcePreference, resourceTitle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = getSettingsActivity().preferences;
         addPreferencesFromResource(getArguments().getInt(RESOURCE_FILE));
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        preferences = getSettingsActivity().preferences;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -33,7 +41,7 @@ public class SettingsNestedFragment extends PreferenceFragment {
                 .setToolbarTitle(getString(getArguments().getInt(TOOLBAR_TITLE)));
     }
 
-    public void setBundle(int resourcePreference, int resourceTitle) {
+    public void setArgs(int resourcePreference, int resourceTitle) {
         Bundle args = new Bundle();
         args.putInt(RESOURCE_FILE, resourcePreference);
         args.putInt(TOOLBAR_TITLE, resourceTitle);

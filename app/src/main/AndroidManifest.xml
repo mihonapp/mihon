@@ -40,6 +40,12 @@
             android:parentActivityName=".ui.main.MainActivity" >
         </activity>
 
+        <activity
+            android:name=".ui.setting.SettingsDownloadsFragment$CustomLayoutPickerActivity"
+            android:label="@string/app_name"
+            android:theme="@style/FilePickerTheme">
+        </activity>
+
         <service android:name=".data.sync.LibraryUpdateService"
             android:exported="false"/>
 

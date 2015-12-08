@@ -9,12 +9,14 @@ import eu.kanade.mangafeed.data.database.tables.MangaTable;
 
 public class MangaWithUnreadGetResolver extends MangaStorIOSQLiteGetResolver {
 
+    public static final MangaWithUnreadGetResolver instance = new MangaWithUnreadGetResolver();
+
     @Override
+    @NonNull
     public Manga mapFromCursor(@NonNull Cursor cursor) {
         Manga manga = super.mapFromCursor(cursor);
         int unreadColumn = cursor.getColumnIndex(MangaTable.COLUMN_UNREAD);
-        if (unreadColumn != -1)
-            manga.unread = cursor.getInt(unreadColumn);
+        manga.unread = cursor.getInt(unreadColumn);
         return manga;
     }
 

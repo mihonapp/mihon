@@ -70,6 +70,7 @@ dependencies {
     compile 'com.jakewharton:disklrucache:2.0.2'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.1'
     compile "com.pushtorefresh.storio:sqlite:$STORIO_VERSION"
     compile "com.pushtorefresh.storio:sqlite-annotations:$STORIO_VERSION"
@@ -86,6 +87,7 @@ dependencies {
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'eu.davidea:flexible-adapter:4.1.0@aar'
+    compile 'com.nononsenseapps:filepicker:2.5.0'
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
@@ -96,9 +98,6 @@ dependencies {
         transitive = true
     }
     compile('com.github.afollestad.material-dialogs:core:0.8.5.2@aar') {
-        transitive = true
-    }
-    compile('com.github.afollestad.material-dialogs:commons:0.8.5.2@aar') {
         transitive = true
     }
 

@@ -2,6 +2,9 @@ package eu.kanade.mangafeed.ui.setting;
 
 import android.os.Bundle;
 import android.preference.Preference;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -25,13 +28,14 @@ public class SettingsCacheFragment extends SettingsNestedFragment implements Pre
 
     public static SettingsNestedFragment newInstance(int resourcePreference, int resourceTitle) {
         SettingsNestedFragment fragment = new SettingsCacheFragment();
-        fragment.setBundle(resourcePreference, resourceTitle);
+        fragment.setArgs(resourcePreference, resourceTitle);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
+        View view = super.onCreateView(inflater, container, savedState);
+
         cacheManager = getSettingsActivity().cacheManager;
 
         IntListPreference cacheSize = (IntListPreference)findPreference(getString(R.string.pref_chapter_cache_size_key));
@@ -44,6 +48,8 @@ public class SettingsCacheFragment extends SettingsNestedFragment implements Pre
         clearCache = findPreference(getString(R.string.pref_clear_chapter_cache_key));
         clearCache.setOnPreferenceClickListener(this);
         clearCache.setSummary(getString(R.string.used_cache, cacheManager.getReadableSize()));
+
+        return view;
     }
 
     @Override

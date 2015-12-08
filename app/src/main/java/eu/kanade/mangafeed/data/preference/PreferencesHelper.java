@@ -2,15 +2,17 @@ package eu.kanade.mangafeed.data.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
 
+import java.io.File;
+
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
 import eu.kanade.mangafeed.data.source.base.Source;
-import eu.kanade.mangafeed.util.DiskUtils;
 import rx.Observable;
 
 public class PreferencesHelper {
@@ -24,12 +26,21 @@ public class PreferencesHelper {
     private static final String CHAPTERSYNC_ACCOUNT_USERNAME = "pref_chaptersync_username_";
     private static final String CHAPTERSYNC_ACCOUNT_PASSWORD = "pref_chaptersync_password_";
 
+    private File defaultDownloadsDir;
+
     public PreferencesHelper(Context context) {
         this.context = context;
         PreferenceManager.setDefaultValues(context, R.xml.pref_reader, false);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         rxPrefs = RxSharedPreferences.create(prefs);
+
+        defaultDownloadsDir = new File(Environment.getExternalStorageDirectory() +
+                File.separator + context.getString(R.string.app_name), "downloads");
+
+        // Create default directory
+        if (getDownloadsDirectory().equals(defaultDownloadsDir.getAbsolutePath()))
+            defaultDownloadsDir.mkdirs();
     }
 
     private String getKey(int keyResource) {
@@ -108,7 +119,11 @@ public class PreferencesHelper {
 
     public String getDownloadsDirectory() {
         return prefs.getString(getKey(R.string.pref_download_directory_key),
-                DiskUtils.getStorageDirectories(context)[0]);
+                defaultDownloadsDir.getAbsolutePath());
+    }
+
+    public void setDownloadsDirectory(String path) {
+        prefs.edit().putString(getKey(R.string.pref_download_directory_key), path).apply();
     }
 
     public int getDownloadThreads() {

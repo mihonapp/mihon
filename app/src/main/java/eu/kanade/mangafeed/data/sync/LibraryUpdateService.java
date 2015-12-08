@@ -32,7 +32,6 @@ public class LibraryUpdateService extends Service {
     @Inject SourceManager sourceManager;
 
     private Subscription updateSubscription;
-    private Subscription favoriteMangasSubscription;
 
     public static final int UPDATE_NOTIFICATION_ID = 1;
 
@@ -68,14 +67,9 @@ public class LibraryUpdateService extends Service {
             return START_NOT_STICKY;
         }
 
-        if (favoriteMangasSubscription != null && !favoriteMangasSubscription.isUnsubscribed())
-            favoriteMangasSubscription.unsubscribe();
-
-        favoriteMangasSubscription = db.getFavoriteMangas().createObservable()
+        Observable.fromCallable(() -> db.getFavoriteMangas().executeAsBlocking())
                 .subscribe(mangas -> {
-                    // Don't receive further db updates
-                    favoriteMangasSubscription.unsubscribe();
-                    this.startUpdating(mangas, startId);
+                    startUpdating(mangas, startId);
                 });
 
         return START_STICKY;

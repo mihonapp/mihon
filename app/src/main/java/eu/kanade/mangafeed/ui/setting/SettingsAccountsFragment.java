@@ -3,6 +3,9 @@ package eu.kanade.mangafeed.ui.setting;
 import android.os.Bundle;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -24,13 +27,18 @@ public class SettingsAccountsFragment extends SettingsNestedFragment {
 
     public static SettingsNestedFragment newInstance(int resourcePreference, int resourceTitle) {
         SettingsNestedFragment fragment = new SettingsAccountsFragment();
-        fragment.setBundle(resourcePreference, resourceTitle);
+        fragment.setArgs(resourcePreference, resourceTitle);
         return fragment;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.get(getActivity()).getComponent().inject(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedSate) {
+        View view = super.onCreateView(inflater, container, savedSate);
 
         PreferenceScreen screen = getPreferenceScreen();
 
@@ -60,6 +68,7 @@ public class SettingsAccountsFragment extends SettingsNestedFragment {
             chapterSyncCategory.addPreference(dialog);
         }
 
+        return view;
     }
 
     private List<Source> getSourcesWithLogin() {

@@ -64,6 +64,10 @@
     <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
     <string name="cache_delete_error">An error occurred clearing cache</string>
 
+    <!-- ACRA -->
+    <string name="pref_enable_acra">Send crash reports</string>
+    <string name="pref_acra_summary">Help fixing bugs. Sensitive data is not sent</string>
+
 
     <!-- Login dialog -->
     <string name="accounts_login_title">Login for %1$s</string>

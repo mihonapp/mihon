@@ -27,6 +27,7 @@ import eu.kanade.mangafeed.data.database.models.ChapterSyncStorIOSQLiteGetResolv
 import eu.kanade.mangafeed.data.database.models.ChapterSyncStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLiteDeleteResolver;
+import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.resolvers.MangaWithUnreadGetResolver;
 import eu.kanade.mangafeed.data.database.tables.ChapterSyncTable;
@@ -46,7 +47,7 @@ public class DatabaseHelper {
                 .sqliteOpenHelper(new DbOpenHelper(context))
                 .addTypeMapping(Manga.class, SQLiteTypeMapping.<Manga>builder()
                         .putResolver(new MangaStorIOSQLitePutResolver())
-                        .getResolver(new MangaWithUnreadGetResolver())
+                        .getResolver(new MangaStorIOSQLiteGetResolver())
                         .deleteResolver(new MangaStorIOSQLiteDeleteResolver())
                         .build())
                 .addTypeMapping(Chapter.class, SQLiteTypeMapping.<Chapter>builder()
@@ -94,6 +95,7 @@ public class DatabaseHelper {
                         .query(favoriteMangasWithUnreadQuery)
                         .observesTables(MangaTable.TABLE, ChapterTable.TABLE)
                         .build())
+                .withGetResolver(MangaWithUnreadGetResolver.instance)
                 .prepare();
     }
 
