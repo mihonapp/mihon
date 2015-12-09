@@ -3,11 +3,13 @@ package eu.kanade.mangafeed.data.database.models;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
+import java.io.Serializable;
+
 import eu.kanade.mangafeed.data.database.tables.ChapterTable;
 import eu.kanade.mangafeed.util.UrlUtil;
 
 @StorIOSQLiteType(table = ChapterTable.TABLE)
-public class Chapter {
+public class Chapter implements Serializable {
 
     @StorIOSQLiteColumn(name = ChapterTable.COLUMN_ID, key = true)
     public Long id;

@@ -19,10 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.source.model.Page;
-import eu.kanade.mangafeed.event.RetryPageEvent;
 import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import rx.Observable;
@@ -63,7 +61,7 @@ public class ViewPagerReaderFragment extends BaseFragment {
         retryButton.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (page != null)
-                    EventBus.getDefault().postSticky(new RetryPageEvent(page));
+                    ((ReaderActivity) getActivity()).getPresenter().retryPage(page);
                 return true;
             }
             return true;
