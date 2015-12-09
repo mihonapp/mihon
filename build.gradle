@@ -7,6 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.7'
         classpath 'me.tatarka:gradle-retrolambda:3.2.4'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
