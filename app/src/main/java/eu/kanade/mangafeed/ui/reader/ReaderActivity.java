@@ -51,7 +51,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     private ReaderMenu readerMenu;
 
     private int uiFlags;
-    private CompositeSubscription subscriptions;
+    protected CompositeSubscription subscriptions;
     private Subscription customBrightnessSubscription;
 
     private static final int LEFT_TO_RIGHT = 1;
@@ -96,7 +96,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     @Override
     protected void onDestroy() {
-        readerMenu.destroy();
+        subscriptions.unsubscribe();
         if (viewer != null)
             viewer.destroy();
         super.onDestroy();
@@ -114,6 +114,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     public void onChapterReady(List<Page> pages, Manga manga, Chapter chapter) {
+        if (viewer != null)
+            viewer.destroy();
         viewer = createViewer(manga);
         viewer.onPageListReady(pages);
         viewer.updatePageNumber();

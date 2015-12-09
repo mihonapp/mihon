@@ -27,7 +27,7 @@ import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import icepick.State;
-import rx.subscriptions.CompositeSubscription;
+import rx.Subscription;
 
 public class ReaderMenu {
 
@@ -51,8 +51,6 @@ public class ReaderMenu {
 
     private DecimalFormat decimalFormat;
 
-    private CompositeSubscription subscriptions;
-
     public ReaderMenu(ReaderActivity activity) {
         this.activity = activity;
         this.preferences = activity.getPreferences();
@@ -64,12 +62,11 @@ public class ReaderMenu {
         seekBar.setOnSeekBarChangeListener(new PageSeekBarChangeListener());
         decimalFormat = new DecimalFormat("#.##");
 
-        subscriptions = new CompositeSubscription();
         initializeOptions();
     }
 
-    public void destroy() {
-        subscriptions.unsubscribe();
+    public void add(Subscription subscription) {
+        activity.subscriptions.add(subscription);
     }
 
     public void toggle() {
@@ -126,7 +123,7 @@ public class ReaderMenu {
 
     private void initializeOptions() {
         // Orientation changes
-        subscriptions.add(preferences.lockOrientation().asObservable()
+        add(preferences.lockOrientation().asObservable()
                 .subscribe(locked -> {
                     int resourceId = !locked ? R.drawable.ic_screen_rotation :
                             activity.getResources().getConfiguration().orientation == 1 ?
@@ -240,7 +237,7 @@ public class ReaderMenu {
         }
 
         private void initializePopupMenu() {
-            subscriptions.add(preferences.customBrightness()
+            add(preferences.customBrightness()
                     .asObservable()
                     .subscribe(isEnabled -> {
                         customBrightness.setChecked(isEnabled);
