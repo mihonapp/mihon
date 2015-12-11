@@ -24,6 +24,7 @@ import eu.kanade.mangafeed.util.NotificationUtil;
 import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class LibraryUpdateService extends Service {
@@ -68,6 +69,7 @@ public class LibraryUpdateService extends Service {
         }
 
         Observable.fromCallable(() -> db.getFavoriteMangas().executeAsBlocking())
+                .subscribeOn(Schedulers.io())
                 .subscribe(mangas -> {
                     startUpdating(mangas, startId);
                 });
@@ -76,9 +78,6 @@ public class LibraryUpdateService extends Service {
     }
 
     private void startUpdating(final List<Manga> mangas, final int startId) {
-        if (updateSubscription != null && !updateSubscription.isUnsubscribed())
-            updateSubscription.unsubscribe();
-
         final AtomicInteger count = new AtomicInteger(0);
 
         List<MangaUpdate> updates = new ArrayList<>();
@@ -86,15 +85,14 @@ public class LibraryUpdateService extends Service {
         updateSubscription = Observable.from(mangas)
                 .doOnNext(manga -> {
                     NotificationUtil.create(this, UPDATE_NOTIFICATION_ID,
-                            getString(R.string.notification_progress, count.incrementAndGet(), mangas.size()),
-                            manga.title);
+                            getString(R.string.notification_progress,
+                                    count.incrementAndGet(), mangas.size()), manga.title);
                 })
                 .concatMap(manga -> sourceManager.get(manga.source)
                                 .pullChaptersFromNetwork(manga.url)
                                 .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
                                 .filter(result -> result.getNumberOfRowsInserted() > 0)
-                                .flatMap(result -> Observable.just(new MangaUpdate(manga, result)))
-                )
+                                .flatMap(result -> Observable.just(new MangaUpdate(manga, result))))
                 .subscribe(update -> {
                     updates.add(update);
                 }, error -> {
