@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +45,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
 
     @Bind(R.id.chapter_list) RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
-    @Bind(R.id.toolbar_bottom) Toolbar toolbarBottom;
+    @Bind(R.id.toolbar_bottom) ViewGroup toolbarBottom;
 
     @Bind(R.id.action_sort) ImageView sortBtn;
     @Bind(R.id.action_next_unread) ImageView nextUnreadBtn;

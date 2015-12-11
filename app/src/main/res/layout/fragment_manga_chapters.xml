@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -15,8 +14,8 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chapter_list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:descendantFocusability="blocksDescendants"
@@ -27,84 +26,76 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
-    <android.support.v7.widget.Toolbar
+    <RelativeLayout
         android:id="@+id/toolbar_bottom"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:gravity="top|start"
-        android:theme="@style/ThemeOverlay.AppTheme.Dark"
-        app:popupTheme="@style/AppTheme.Popup">
+        android:theme="@style/ThemeOverlay.AppTheme.Dark">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/action_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?android:selectableItemBackground"
+            android:title="@string/action_sort_up"
+            tools:src="@drawable/ic_expand_less_white_36dp"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="4dp">
+            android:layout_toEndOf="@+id/action_sort"
+            android:layout_toLeftOf="@+id/action_next_unread"
+            android:layout_toRightOf="@+id/action_sort"
+            android:gravity="center_vertical">
 
-            <ImageView
-                android:id="@+id/action_sort"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center"
-                android:background="?android:selectableItemBackground"
-                android:title="@string/action_sort_up"
-                tools:src="@drawable/ic_expand_less_white_36dp"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <View
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:layout_toEndOf="@+id/action_sort"
-                android:layout_toLeftOf="@+id/action_next_unread"
-                android:layout_toRightOf="@+id/action_sort"
-                android:gravity="center_vertical">
+                android:layout_margin="10dp"
+                android:background="@color/white"/>
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@color/white"/>
-
-                <CheckBox
-                    android:id="@+id/action_show_unread"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:checkable="true"
-                    android:text="@string/action_show_unread"
-                    android:title="@string/action_show_unread"/>
-
-                <CheckBox
-                    android:id="@+id/action_show_downloaded"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:checkable="true"
-                    android:text="@string/action_show_downloaded"
-                    android:title="@string/action_show_downloaded"/>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@color/white"/>
-
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/action_next_unread"
+            <CheckBox
+                android:id="@+id/action_show_unread"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_alignParentRight="true"
-                android:background="?android:selectableItemBackground"
-                android:src="@drawable/ic_play_arrow_white_36dp"
-                android:title="@string/action_next_unread"
-                />
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checkable="true"
+                android:text="@string/action_show_unread"
+                android:title="@string/action_show_unread"/>
 
+            <CheckBox
+                android:id="@+id/action_show_downloaded"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checkable="true"
+                android:text="@string/action_show_downloaded"
+                android:title="@string/action_show_downloaded"/>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@color/white"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/action_next_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_play_arrow_white_36dp"
+            android:title="@string/action_next_unread"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
