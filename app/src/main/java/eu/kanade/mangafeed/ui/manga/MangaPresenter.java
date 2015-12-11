@@ -8,6 +8,7 @@ import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
+import icepick.State;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -16,7 +17,7 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
 
     @Inject DatabaseHelper db;
 
-    private long mangaId;
+    @State long mangaId;
 
     private static final int DB_MANGA = 1;
 

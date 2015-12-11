@@ -52,6 +52,10 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
+        if (savedState != null) {
+            onProcessRestart();
+        }
+
         chaptersSubject = PublishSubject.create();
 
         restartableLatestCache(DB_CHAPTERS,
@@ -69,6 +73,12 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 (view, error) -> Timber.e(error.getCause(), error.getMessage()));
 
         registerForStickyEvents();
+    }
+
+    private void onProcessRestart() {
+        stop(DB_CHAPTERS);
+        stop(FETCH_CHAPTERS);
+        stop(CHAPTER_STATUS_CHANGES);
     }
 
     @Override

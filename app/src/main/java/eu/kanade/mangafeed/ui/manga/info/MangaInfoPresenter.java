@@ -36,6 +36,10 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
+        if (savedState != null) {
+            onProcessRestart();
+        }
+
         restartableLatestCache(GET_MANGA,
                 () -> Observable.just(manga),
                 MangaInfoFragment::onNextManga);
@@ -50,6 +54,12 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
                 (view, error) -> view.onFetchMangaError());
 
         registerForStickyEvents();
+    }
+
+    private void onProcessRestart() {
+        stop(GET_MANGA);
+        stop(GET_CHAPTER_COUNT);
+        stop(FETCH_MANGA_INFO);
     }
 
     @Override
