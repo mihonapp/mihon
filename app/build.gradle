@@ -13,7 +13,7 @@ ext {
     // Git is needed in your system PATH for these commands to work.
     // If it's not installed, you can return a random value as a workaround
     getCommitCount = {
-        return "git rev-list --count master".execute().text.trim()
+        return 'git rev-list --count origin/master'.execute().text.trim()
         // return "1"
     }
 
