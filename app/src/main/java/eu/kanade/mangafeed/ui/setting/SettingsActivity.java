@@ -50,19 +50,23 @@ public class SettingsActivity extends BaseActivity {
 
             registerSubpreference(R.string.pref_category_reader_key,
                     SettingsNestedFragment.newInstance(
-                        R.xml.pref_reader, R.string.pref_category_reader));
+                            R.xml.pref_reader, R.string.pref_category_reader));
 
             registerSubpreference(R.string.pref_category_downloads_key,
                     SettingsDownloadsFragment.newInstance(
-                        R.xml.pref_downloads, R.string.pref_category_downloads));
+                            R.xml.pref_downloads, R.string.pref_category_downloads));
 
             registerSubpreference(R.string.pref_category_accounts_key,
                     SettingsAccountsFragment.newInstance(
-                        R.xml.pref_accounts, R.string.pref_category_accounts));
+                            R.xml.pref_accounts, R.string.pref_category_accounts));
 
             registerSubpreference(R.string.pref_category_cache_key,
                     SettingsCacheFragment.newInstance(
                             R.xml.pref_cache, R.string.pref_category_cache));
+
+            registerSubpreference(R.string.pref_category_about_key,
+                    SettingsAboutFragment.newInstance(
+                            R.xml.pref_about, R.string.pref_category_about));
         }
 
         @Override

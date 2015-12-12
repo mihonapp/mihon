@@ -21,10 +21,9 @@
         android:persistent="false"
         android:title="@string/pref_category_cache" />
 
-    <CheckBoxPreference
-        android:key="acra.enable"
-        android:title="@string/pref_enable_acra"
-        android:summary="@string/pref_acra_summary"
-        android:defaultValue="false"/>
+    <Preference
+        android:key="@string/pref_category_about_key"
+        android:persistent="false"
+        android:title="@string/pref_category_about" />
 
 </PreferenceScreen>

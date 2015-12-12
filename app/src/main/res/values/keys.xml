@@ -4,6 +4,7 @@
     <string name="pref_category_accounts_key">pref_category_accounts_key</string>
     <string name="pref_category_downloads_key">pref_category_downloads_key</string>
     <string name="pref_category_cache_key">pref_category_cache_key</string>
+    <string name="pref_category_about_key">pref_category_about_key</string>
 
     <string name="pref_default_viewer_key">pref_default_viewer_key</string>
     <string name="pref_hide_status_bar_key">pref_hide_status_bar_key</string>
@@ -19,4 +20,7 @@
 
     <string name="pref_chapter_cache_size_key">pref_chapter_cache_size_key</string>
     <string name="pref_clear_chapter_cache_key">pref_clear_chapter_cache_key</string>
+
+    <string name="pref_version">pref_version</string>
+    <string name="pref_build_time">pref_build_time</string>
 </resources>

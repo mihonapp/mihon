@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
@@ -5,6 +7,26 @@ apply plugin: 'me.tatarka.retrolambda'
 
 retrolambda {
     jvmArgs '-noverify'
+}
+
+ext {
+    // Git is needed in your system PATH for these commands to work.
+    // If it's not installed, you can return a random value as a workaround
+    getCommitCount = {
+        return "git rev-list --count master".execute().text.trim()
+        // return "1"
+    }
+
+    getGitSha = {
+        return 'git rev-parse --short HEAD'.execute().text.trim()
+        // return "1"
+    }
+
+    getBuildTime = {
+        def df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+        df.setTimeZone(TimeZone.getTimeZone("UTC"))
+        return df.format(new Date())
+    }
 }
 
 android {
@@ -19,6 +41,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
+        buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
+        buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
     }
 
     compileOptions {
