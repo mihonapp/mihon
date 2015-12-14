@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
@@ -30,6 +31,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     @Inject SourceManager sourceManager;
     @Inject DatabaseHelper db;
     @Inject CoverCache coverCache;
+    @Inject PreferencesHelper prefs;
 
     private Source source;
 
@@ -85,8 +87,8 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         super.onDestroy();
     }
 
-    public void startRequesting(int sourceId) {
-        source = sourceManager.get(sourceId);
+    public void startRequesting(Source source) {
+        this.source = source;
         restartRequest(null);
     }
 
@@ -123,7 +125,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     }
 
     private Manga networkToLocalManga(Manga networkManga) {
-        List<Manga> dbResult = db.getManga(networkManga.url, source.getSourceId()).executeAsBlocking();
+        List<Manga> dbResult = db.getManga(networkManga.url, source.getId()).executeAsBlocking();
         Manga localManga = !dbResult.isEmpty() ? dbResult.get(0) : null;
         if (localManga == null) {
             PutResult result = db.insertManga(networkManga).executeAsBlocking();
@@ -150,6 +152,19 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
     public boolean hasNextPage() {
         return lastMangasPage != null && lastMangasPage.nextPageUrl != null;
+    }
+
+    public boolean isValidSource(Source source) {
+        if (!source.isLoginRequired() || source.isLogged())
+            return true;
+
+        return !(prefs.getSourceUsername(source).equals("")
+                || prefs.getSourcePassword(source).equals(""));
+    }
+
+    public List<Source> getEnabledSources() {
+        // TODO filter by enabled source
+        return sourceManager.getSources();
     }
 
 }

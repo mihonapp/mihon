@@ -1,8 +1,10 @@
 package eu.kanade.mangafeed.ui.catalogue;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,9 +12,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,9 +26,12 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
+import eu.kanade.mangafeed.ui.main.MainActivity;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.util.PageBundle;
+import eu.kanade.mangafeed.util.ToastUtil;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
 import icepick.Icepick;
 import icepick.State;
@@ -40,23 +47,20 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     @Bind(R.id.progress) ProgressBar progress;
     @Bind(R.id.progress_grid) ProgressBar progressGrid;
 
+    private Toolbar toolbar;
+    private Spinner spinner;
     private CatalogueAdapter adapter;
     private EndlessScrollListener scrollListener;
 
     @State String query = "";
+    @State int selectedIndex = -1;
     private final int SEARCH_TIMEOUT = 1000;
 
     private PublishSubject<String> queryDebouncerSubject;
     private Subscription queryDebouncerSubscription;
 
-    public final static String SOURCE_ID = "source_id";
-
-    public static CatalogueFragment newInstance(int sourceId) {
-        CatalogueFragment fragment = new CatalogueFragment();
-        Bundle args = new Bundle();
-        args.putInt(SOURCE_ID, sourceId);
-        fragment.setArguments(args);
-        return fragment;
+    public static CatalogueFragment newInstance() {
+        return new CatalogueFragment();
     }
 
     @Override
@@ -78,13 +82,43 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         gridView.setAdapter(adapter);
         gridView.setOnScrollListener(scrollListener);
 
-        int sourceId = getArguments().getInt(SOURCE_ID, -1);
+        // Create toolbar spinner
+        Context themedContext = getBaseActivity().getSupportActionBar() != null ?
+                getBaseActivity().getSupportActionBar().getThemedContext() : getActivity();
+        spinner = new Spinner(themedContext);
+        CatalogueSpinnerAdapter spinnerAdapter = new CatalogueSpinnerAdapter(themedContext,
+                android.R.layout.simple_spinner_item, getPresenter().getEnabledSources());
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(savedState == null ? spinnerAdapter.getEmptyIndex() : selectedIndex);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Source source = spinnerAdapter.getItem(position);
+                // We add an empty source with id -1 that acts as a placeholder to show a hint
+                // that asks to select a source
+                if (source.getId() != -1 && selectedIndex != position) {
+                    // Set previous selection if it's not a valid source and notify the user
+                    if (!getPresenter().isValidSource(source)) {
+                        spinner.setSelection(selectedIndex != -1 ? selectedIndex :
+                                spinnerAdapter.getEmptyIndex());
+                        ToastUtil.showShort(getActivity(), R.string.source_requires_login);
+                    } else {
+                        selectedIndex = position;
+                        showProgressBar();
+                        getPresenter().startRequesting(source);
+                    }
+                }
+            }
 
-        showProgressBar();
-        if (savedState == null)
-            getPresenter().startRequesting(sourceId);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
-        setToolbarTitle(getPresenter().getSource().getName());
+        setToolbarTitle("");
+        toolbar = ((MainActivity)getActivity()).getToolbar();
+        toolbar.addView(spinner);
+
         return view;
     }
 
@@ -126,6 +160,12 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     public void onStop() {
         destroySearchSubscription();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        toolbar.removeView(spinner);
+        super.onDestroyView();
     }
 
     @Override

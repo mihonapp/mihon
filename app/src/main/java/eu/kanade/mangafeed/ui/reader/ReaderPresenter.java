@@ -128,7 +128,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         EventBus.getDefault().removeStickyEvent(event);
         manga = event.getManga();
         source = event.getSource();
-        sourceId = source.getSourceId();
+        sourceId = source.getId();
         loadChapter(event.getChapter());
     }
 

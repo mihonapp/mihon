@@ -34,6 +34,8 @@ public abstract class Source extends BaseSource {
     protected Headers requestHeaders;
     protected LazyHeaders glideHeaders;
 
+    public Source() {}
+
     public Source(Context context) {
         App.get(context).getComponent().inject(this);
         requestHeaders = headersBuilder().build();
@@ -188,7 +190,7 @@ public abstract class Source extends BaseSource {
     }
 
     protected String getChapterCacheKey(String chapterUrl) {
-        return getSourceId() + chapterUrl;
+        return getId() + chapterUrl;
     }
 
     protected LazyHeaders.Builder glideHeadersBuilder() {

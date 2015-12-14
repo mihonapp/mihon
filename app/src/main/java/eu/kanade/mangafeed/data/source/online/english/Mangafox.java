@@ -40,7 +40,7 @@ public class Mangafox extends Source {
     }
 
     @Override
-    public int getSourceId() {
+    public int getId() {
         return SourceManager.MANGAFOX;
     }
 
@@ -79,7 +79,7 @@ public class Mangafox extends Source {
 
     private Manga constructPopularMangaFromHtmlBlock(Element htmlBlock) {
         Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getSourceId();
+        mangaFromHtmlBlock.source = getId();
 
         Element urlElement = htmlBlock.select("a.title").first();
 
@@ -115,7 +115,7 @@ public class Mangafox extends Source {
 
     private Manga constructSearchMangaFromHtmlBlock(Element htmlBlock) {
         Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getSourceId();
+        mangaFromHtmlBlock.source = getId();
 
         Element urlElement = htmlBlock.select("a.series_preview").first();
 

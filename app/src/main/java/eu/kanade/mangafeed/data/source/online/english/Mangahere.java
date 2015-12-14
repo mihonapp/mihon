@@ -40,7 +40,7 @@ public class Mangahere extends Source {
     }
 
     @Override
-    public int getSourceId() {
+    public int getId() {
         return SourceManager.MANGAHERE;
     }
 
@@ -117,7 +117,7 @@ public class Mangahere extends Source {
 
     private Manga constructPopularMangaFromHtmlBlock(Element htmlBlock) {
         Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getSourceId();
+        mangaFromHtmlBlock.source = getId();
 
         Element urlElement = htmlBlock.select("div.title > a").first();
 
@@ -153,7 +153,7 @@ public class Mangahere extends Source {
 
     private Manga constructSearchMangaFromHtmlBlock(Element htmlBlock) {
         Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getSourceId();
+        mangaFromHtmlBlock.source = getId();
 
         Element urlElement = htmlBlock.select("a.manga_info").first();
 

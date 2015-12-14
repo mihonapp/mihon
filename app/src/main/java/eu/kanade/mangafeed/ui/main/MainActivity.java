@@ -14,7 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
-import eu.kanade.mangafeed.ui.catalogue.SourceFragment;
+import eu.kanade.mangafeed.ui.catalogue.CatalogueFragment;
 import eu.kanade.mangafeed.ui.download.DownloadFragment;
 import eu.kanade.mangafeed.ui.library.LibraryFragment;
 import eu.kanade.mangafeed.ui.setting.SettingsActivity;
@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity {
                                     case R.id.nav_drawer_recent_updates:
                                         break;
                                     case R.id.nav_drawer_catalogues:
-                                        setFragment(SourceFragment.newInstance());
+                                        setFragment(CatalogueFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_downloads:
                                         setFragment(DownloadFragment.newInstance());
@@ -109,6 +109,10 @@ public class MainActivity extends BaseActivity {
 
     public void setFragment(Fragment fragment) {
         fragmentStack.replace(fragment);
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
     }
 
 }

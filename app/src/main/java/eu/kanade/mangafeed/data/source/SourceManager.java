@@ -19,21 +19,21 @@ public class SourceManager {
     public static final int MANGAFOX = 3;
     public static final int KISSMANGA = 4;
 
-    private HashMap<Integer, Source> mSourcesMap;
+    private HashMap<Integer, Source> sourcesMap;
     private Context context;
 
     public SourceManager(Context context) {
-        mSourcesMap = new HashMap<>();
+        sourcesMap = new HashMap<>();
         this.context = context;
 
         initializeSources();
     }
 
     public Source get(int sourceKey) {
-        if (!mSourcesMap.containsKey(sourceKey)) {
-            mSourcesMap.put(sourceKey, createSource(sourceKey));
+        if (!sourcesMap.containsKey(sourceKey)) {
+            sourcesMap.put(sourceKey, createSource(sourceKey));
         }
-        return mSourcesMap.get(sourceKey);
+        return sourcesMap.get(sourceKey);
     }
 
     private Source createSource(int sourceKey) {
@@ -52,14 +52,14 @@ public class SourceManager {
     }
 
     private void initializeSources() {
-        mSourcesMap.put(BATOTO, createSource(BATOTO));
-        mSourcesMap.put(MANGAHERE, createSource(MANGAHERE));
-        mSourcesMap.put(MANGAFOX, createSource(MANGAFOX));
-        mSourcesMap.put(KISSMANGA, createSource(KISSMANGA));
+        sourcesMap.put(BATOTO, createSource(BATOTO));
+        sourcesMap.put(MANGAHERE, createSource(MANGAHERE));
+        sourcesMap.put(MANGAFOX, createSource(MANGAFOX));
+        sourcesMap.put(KISSMANGA, createSource(KISSMANGA));
     }
 
     public List<Source> getSources() {
-        return new ArrayList<>(mSourcesMap.values());
+        return new ArrayList<>(sourcesMap.values());
     }
 
 }

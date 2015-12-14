@@ -5,15 +5,14 @@ import android.app.Application;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import eu.kanade.mangafeed.data.mangasync.services.MyAnimeList;
-import eu.kanade.mangafeed.data.sync.UpdateMangaSyncService;
 import eu.kanade.mangafeed.data.download.DownloadService;
+import eu.kanade.mangafeed.data.mangasync.services.MyAnimeList;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
+import eu.kanade.mangafeed.data.sync.UpdateMangaSyncService;
 import eu.kanade.mangafeed.injection.module.AppModule;
 import eu.kanade.mangafeed.injection.module.DataModule;
 import eu.kanade.mangafeed.ui.catalogue.CataloguePresenter;
-import eu.kanade.mangafeed.ui.catalogue.SourcePresenter;
 import eu.kanade.mangafeed.ui.download.DownloadPresenter;
 import eu.kanade.mangafeed.ui.library.LibraryPresenter;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
@@ -37,7 +36,6 @@ public interface AppComponent {
 
     void inject(LibraryPresenter libraryPresenter);
     void inject(MangaPresenter mangaPresenter);
-    void inject(SourcePresenter sourcePresenter);
     void inject(CataloguePresenter cataloguePresenter);
     void inject(MangaInfoPresenter mangaInfoPresenter);
     void inject(ChaptersPresenter chaptersPresenter);

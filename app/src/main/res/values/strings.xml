@@ -90,6 +90,7 @@
 
     <!-- Catalogue fragment -->
     <string name="source_requires_login">This source requires login</string>
+    <string name="select_source">Select a source</string>
 
     <!-- Manga info fragment -->
     <string name="manga_detail_tab">Info</string>

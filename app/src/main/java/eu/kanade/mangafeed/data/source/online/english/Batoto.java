@@ -70,7 +70,7 @@ public class Batoto extends Source {
     }
 
     @Override
-    public int getSourceId() {
+    public int getId() {
         return SourceManager.BATOTO;
     }
 
@@ -218,7 +218,7 @@ public class Batoto extends Source {
         Element urlElement = htmlBlock.select("a[href^=http://bato.to]").first();
         Element updateElement = htmlBlock.select("td").get(5);
 
-        mangaFromHtmlBlock.source = getSourceId();
+        mangaFromHtmlBlock.source = getId();
 
         if (urlElement != null) {
             mangaFromHtmlBlock.setUrl(urlElement.attr("href"));

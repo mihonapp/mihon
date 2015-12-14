@@ -88,17 +88,17 @@ public class PreferencesHelper {
     }
 
     public String getSourceUsername(Source source) {
-        return prefs.getString(SOURCE_ACCOUNT_USERNAME + source.getSourceId(), "");
+        return prefs.getString(SOURCE_ACCOUNT_USERNAME + source.getId(), "");
     }
 
     public String getSourcePassword(Source source) {
-        return prefs.getString(SOURCE_ACCOUNT_PASSWORD + source.getSourceId(), "");
+        return prefs.getString(SOURCE_ACCOUNT_PASSWORD + source.getId(), "");
     }
 
     public void setSourceCredentials(Source source, String username, String password) {
         prefs.edit()
-                .putString(SOURCE_ACCOUNT_USERNAME + source.getSourceId(), username)
-                .putString(SOURCE_ACCOUNT_PASSWORD + source.getSourceId(), password)
+                .putString(SOURCE_ACCOUNT_USERNAME + source.getId(), username)
+                .putString(SOURCE_ACCOUNT_PASSWORD + source.getId(), password)
                 .apply();
     }
 

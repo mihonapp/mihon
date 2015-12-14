@@ -18,7 +18,7 @@ public abstract class BaseSource {
     public abstract String getName();
 
     // Id of the source (must be declared and obtained from SourceManager to avoid conflicts)
-    public abstract int getSourceId();
+    public abstract int getId();
 
     // Base url of the source, like: http://example.com
     public abstract String getBaseUrl();
@@ -95,4 +95,8 @@ public abstract class BaseSource {
         return builder;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

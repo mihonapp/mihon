@@ -55,7 +55,7 @@ public class Kissmanga extends Source {
     }
 
     @Override
-    public int getSourceId() {
+    public int getId() {
         return SourceManager.KISSMANGA;
     }
 
@@ -94,7 +94,7 @@ public class Kissmanga extends Source {
 
     private Manga constructPopularMangaFromHtmlBlock(Element htmlBlock) {
         Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getSourceId();
+        mangaFromHtmlBlock.source = getId();
 
         Element urlElement = htmlBlock.select("td a:eq(0)").first();
 
