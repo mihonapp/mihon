@@ -2,9 +2,9 @@ package eu.kanade.mangafeed.data.database.tables;
 
 import android.support.annotation.NonNull;
 
-public class ChapterSyncTable {
+public class MangaSyncTable {
 
-    public static final String TABLE = "chapter_sync";
+    public static final String TABLE = "manga_sync";
 
     public static final String COLUMN_ID = "_id";
 
@@ -18,6 +18,10 @@ public class ChapterSyncTable {
 
     public static final String COLUMN_LAST_CHAPTER_READ = "last_chapter_read";
 
+    public static final String COLUMN_STATUS = "status";
+
+    public static final String COLUMN_SCORE = "score";
+
     @NonNull
     public static String getCreateTableQuery() {
         return "CREATE TABLE " + TABLE + "("
@@ -27,6 +31,8 @@ public class ChapterSyncTable {
                 + COLUMN_REMOTE_ID + " INTEGER NOT NULL, "
                 + COLUMN_TITLE + " TEXT NOT NULL, "
                 + COLUMN_LAST_CHAPTER_READ + " INTEGER NOT NULL, "
+                + COLUMN_STATUS + " INTEGER NOT NULL, "
+                + COLUMN_SCORE + " FLOAT NOT NULL, "
                 + "FOREIGN KEY(" + COLUMN_MANGA_ID + ") REFERENCES " + MangaTable.TABLE + "(" + MangaTable.COLUMN_ID + ") "
                 + "ON DELETE CASCADE"
                 + ");";

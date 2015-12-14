@@ -11,7 +11,7 @@ import com.f2prateek.rx.preferences.RxSharedPreferences;
 import java.io.File;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
+import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
 import eu.kanade.mangafeed.data.source.base.Source;
 import rx.Observable;
 
@@ -23,8 +23,8 @@ public class PreferencesHelper {
 
     private static final String SOURCE_ACCOUNT_USERNAME = "pref_source_username_";
     private static final String SOURCE_ACCOUNT_PASSWORD = "pref_source_password_";
-    private static final String CHAPTERSYNC_ACCOUNT_USERNAME = "pref_chaptersync_username_";
-    private static final String CHAPTERSYNC_ACCOUNT_PASSWORD = "pref_chaptersync_password_";
+    private static final String MANGASYNC_ACCOUNT_USERNAME = "pref_mangasync_username_";
+    private static final String MANGASYNC_ACCOUNT_PASSWORD = "pref_mangasync_password_";
 
     private File defaultDownloadsDir;
 
@@ -102,18 +102,18 @@ public class PreferencesHelper {
                 .apply();
     }
 
-    public String getChapterSyncUsername(BaseChapterSync sync) {
-        return prefs.getString(CHAPTERSYNC_ACCOUNT_USERNAME + sync.getId(), "");
+    public String getMangaSyncUsername(BaseMangaSync sync) {
+        return prefs.getString(MANGASYNC_ACCOUNT_USERNAME + sync.getId(), "");
     }
 
-    public String getChapterSyncPassword(BaseChapterSync sync) {
-        return prefs.getString(CHAPTERSYNC_ACCOUNT_PASSWORD + sync.getId(), "");
+    public String getMangaSyncPassword(BaseMangaSync sync) {
+        return prefs.getString(MANGASYNC_ACCOUNT_PASSWORD + sync.getId(), "");
     }
 
-    public void setChapterSyncCredentials(BaseChapterSync sync, String username, String password) {
+    public void setMangaSyncCredentials(BaseMangaSync sync, String username, String password) {
         prefs.edit()
-                .putString(CHAPTERSYNC_ACCOUNT_USERNAME + sync.getId(), username)
-                .putString(CHAPTERSYNC_ACCOUNT_PASSWORD + sync.getId(), password)
+                .putString(MANGASYNC_ACCOUNT_USERNAME + sync.getId(), username)
+                .putString(MANGASYNC_ACCOUNT_PASSWORD + sync.getId(), password)
                 .apply();
     }
 
@@ -127,12 +127,11 @@ public class PreferencesHelper {
     }
 
     public int getDownloadThreads() {
-        return Integer.parseInt(prefs.getString(getKey(R.string.pref_download_threads_key), "1"));
+        return prefs.getInt(getKey(R.string.pref_download_slots_key), 1);
     }
 
     public Observable<Integer> getDownloadTheadsObservable() {
-        return rxPrefs.getString(getKey(R.string.pref_download_threads_key), "1")
-                .asObservable().map(Integer::parseInt);
+        return rxPrefs.getInteger(getKey(R.string.pref_download_slots_key), 1).asObservable();
     }
 
 }

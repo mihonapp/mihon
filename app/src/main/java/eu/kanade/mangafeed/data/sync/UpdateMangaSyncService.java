@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.data.chaptersync;
+package eu.kanade.mangafeed.data.sync;
 
 import android.app.Service;
 import android.content.Context;
@@ -10,24 +10,24 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
-import eu.kanade.mangafeed.data.database.models.ChapterSync;
-import eu.kanade.mangafeed.data.network.NetworkHelper;
-import eu.kanade.mangafeed.event.UpdateChapterSyncEvent;
+import eu.kanade.mangafeed.data.database.models.MangaSync;
+import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
+import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import eu.kanade.mangafeed.event.UpdateMangaSyncEvent;
 import eu.kanade.mangafeed.util.EventBusHook;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class UpdateChapterSyncService extends Service {
+public class UpdateMangaSyncService extends Service {
 
-    @Inject ChapterSyncManager syncManager;
-    @Inject NetworkHelper networkManager;
+    @Inject MangaSyncManager syncManager;
     @Inject DatabaseHelper db;
 
     private CompositeSubscription subscriptions;
 
     public static void start(Context context) {
-        context.startService(new Intent(context, UpdateChapterSyncService.class));
+        context.startService(new Intent(context, UpdateMangaSyncService.class));
     }
 
     @Override
@@ -56,15 +56,15 @@ public class UpdateChapterSyncService extends Service {
     }
 
     @EventBusHook
-    public void onEventMainThread(UpdateChapterSyncEvent event) {
-        updateLastChapteRead(event.getChapterSync());
+    public void onEventMainThread(UpdateMangaSyncEvent event) {
+        updateLastChapteRead(event.getMangaSync());
     }
 
-    private void updateLastChapteRead(ChapterSync chapterSync) {
-        BaseChapterSync sync = syncManager.getSyncService(chapterSync.sync_id);
+    private void updateLastChapteRead(MangaSync mangaSync) {
+        BaseMangaSync sync = syncManager.getSyncService(mangaSync.sync_id);
 
-        subscriptions.add(sync.update(chapterSync)
-                .flatMap(response -> db.insertChapterSync(chapterSync).createObservable())
+        subscriptions.add(sync.update(mangaSync)
+                .flatMap(response -> db.insertMangaSync(mangaSync).createObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {

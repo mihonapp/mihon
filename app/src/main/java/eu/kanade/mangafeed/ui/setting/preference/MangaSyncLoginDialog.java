@@ -5,17 +5,17 @@ import android.content.DialogInterface;
 import android.view.View;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
+import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.util.ToastUtil;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ChapterSyncLoginDialog extends LoginDialogPreference {
+public class MangaSyncLoginDialog extends LoginDialogPreference {
 
-    private BaseChapterSync sync;
+    private BaseMangaSync sync;
 
-    public ChapterSyncLoginDialog(Context context, PreferencesHelper preferences, BaseChapterSync sync) {
+    public MangaSyncLoginDialog(Context context, PreferencesHelper preferences, BaseMangaSync sync) {
         super(context, preferences);
         this.sync = sync;
     }
@@ -26,8 +26,8 @@ public class ChapterSyncLoginDialog extends LoginDialogPreference {
 
         title.setText(getContext().getString(R.string.accounts_login_title, sync.getName()));
 
-        username.setText(preferences.getChapterSyncUsername(sync));
-        password.setText(preferences.getChapterSyncPassword(sync));
+        username.setText(preferences.getMangaSyncUsername(sync));
+        password.setText(preferences.getMangaSyncPassword(sync));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ChapterSyncLoginDialog extends LoginDialogPreference {
         super.onDialogClosed(positiveResult);
 
         if (positiveResult) {
-            preferences.setChapterSyncCredentials(sync,
+            preferences.setMangaSyncCredentials(sync,
                     username.getText().toString(),
                     password.getText().toString());
         }
@@ -61,7 +61,7 @@ public class ChapterSyncLoginDialog extends LoginDialogPreference {
                         dialog.dismiss();
                         ToastUtil.showShort(context, R.string.login_success);
                     } else {
-                        preferences.setChapterSyncCredentials(sync, "", "");
+                        preferences.setMangaSyncCredentials(sync, "", "");
                         loginBtn.setProgress(-1);
                     }
                 }, error -> {

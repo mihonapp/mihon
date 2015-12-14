@@ -5,11 +5,11 @@
         android:title="@string/pref_download_directory"
         android:key="@string/pref_download_directory_key"/>
 
-    <ListPreference
-        android:title="@string/pref_download_threads"
-        android:key="@string/pref_download_threads_key"
-        android:entries="@array/download_threads"
-        android:entryValues="@array/download_threads"
+    <eu.kanade.mangafeed.ui.setting.preference.IntListPreference
+        android:title="@string/pref_download_slots"
+        android:key="@string/pref_download_slots_key"
+        android:entries="@array/download_slots"
+        android:entryValues="@array/download_slots"
         android:defaultValue="1"
         android:summary="%s"/>
 

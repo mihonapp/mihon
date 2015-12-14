@@ -16,21 +16,21 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 
 import java.util.List;
 
-import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
+import eu.kanade.mangafeed.data.database.models.MangaSync;
+import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLitePutResolver;
-import eu.kanade.mangafeed.data.database.models.ChapterSync;
-import eu.kanade.mangafeed.data.database.models.ChapterSyncStorIOSQLiteDeleteResolver;
-import eu.kanade.mangafeed.data.database.models.ChapterSyncStorIOSQLiteGetResolver;
-import eu.kanade.mangafeed.data.database.models.ChapterSyncStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLitePutResolver;
+import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLiteDeleteResolver;
+import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLiteGetResolver;
+import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.resolvers.MangaWithUnreadGetResolver;
-import eu.kanade.mangafeed.data.database.tables.ChapterSyncTable;
+import eu.kanade.mangafeed.data.database.tables.MangaSyncTable;
 import eu.kanade.mangafeed.data.database.tables.ChapterTable;
 import eu.kanade.mangafeed.data.database.tables.MangaTable;
 import eu.kanade.mangafeed.util.ChapterRecognition;
@@ -55,10 +55,10 @@ public class DatabaseHelper {
                         .getResolver(new ChapterStorIOSQLiteGetResolver())
                         .deleteResolver(new ChapterStorIOSQLiteDeleteResolver())
                         .build())
-                .addTypeMapping(ChapterSync.class, SQLiteTypeMapping.<ChapterSync>builder()
-                        .putResolver(new ChapterSyncStorIOSQLitePutResolver())
-                        .getResolver(new ChapterSyncStorIOSQLiteGetResolver())
-                        .deleteResolver(new ChapterSyncStorIOSQLiteDeleteResolver())
+                .addTypeMapping(MangaSync.class, SQLiteTypeMapping.<MangaSync>builder()
+                        .putResolver(new MangaSyncStorIOSQLitePutResolver())
+                        .getResolver(new MangaSyncStorIOSQLiteGetResolver())
+                        .deleteResolver(new MangaSyncStorIOSQLiteDeleteResolver())
                         .build())
                 .build();
     }
@@ -88,7 +88,7 @@ public class DatabaseHelper {
                 .prepare();
     }
 
-    public PreparedGetListOfObjects<Manga> getMangasWithUnread() {
+    public PreparedGetListOfObjects<Manga> getFavoriteMangasWithUnread() {
         return db.get()
                 .listOfObjects(Manga.class)
                 .withQuery(RawQuery.builder()
@@ -301,30 +301,30 @@ public class DatabaseHelper {
                 .prepare();
     }
 
-    // Chapter sync related queries
+    // Manga sync related queries
 
-    public PreparedGetListOfObjects<ChapterSync> getChapterSync(Manga manga, BaseChapterSync sync) {
+    public PreparedGetListOfObjects<MangaSync> getMangaSync(Manga manga, BaseMangaSync sync) {
 
         return db.get()
-                .listOfObjects(ChapterSync.class)
+                .listOfObjects(MangaSync.class)
                 .withQuery(Query.builder()
-                        .table(ChapterSyncTable.TABLE)
-                        .where(ChapterSyncTable.COLUMN_MANGA_ID + "=? AND " +
-                                ChapterSyncTable.COLUMN_SYNC_ID + "=?")
+                        .table(MangaSyncTable.TABLE)
+                        .where(MangaSyncTable.COLUMN_MANGA_ID + "=? AND " +
+                                MangaSyncTable.COLUMN_SYNC_ID + "=?")
                         .whereArgs(manga.id, sync.getId())
                         .build())
                 .prepare();
     }
 
-    public PreparedPutObject<ChapterSync> insertChapterSync(ChapterSync chapter) {
+    public PreparedPutObject<MangaSync> insertMangaSync(MangaSync manga) {
         return db.put()
-                .object(chapter)
+                .object(manga)
                 .prepare();
     }
 
-    public PreparedDeleteObject<ChapterSync> deleteChapterSync(ChapterSync chapter) {
+    public PreparedDeleteObject<MangaSync> deleteMangaSync(MangaSync manga) {
         return db.delete()
-                .object(chapter)
+                .object(manga)
                 .prepare();
     }
 }

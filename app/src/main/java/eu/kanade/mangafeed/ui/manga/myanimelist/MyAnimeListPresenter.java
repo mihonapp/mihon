@@ -4,13 +4,14 @@ import android.os.Bundle;
 
 import javax.inject.Inject;
 
-import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
-import eu.kanade.mangafeed.data.chaptersync.MyAnimeList;
+import eu.kanade.mangafeed.data.database.models.MangaSync;
+import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
+import eu.kanade.mangafeed.data.mangasync.services.MyAnimeList;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
-import eu.kanade.mangafeed.data.database.models.ChapterSync;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
+import eu.kanade.mangafeed.util.ToastUtil;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -20,11 +21,11 @@ import timber.log.Timber;
 public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
 
     @Inject DatabaseHelper db;
-    @Inject ChapterSyncManager syncManager;
+    @Inject MangaSyncManager syncManager;
 
-    private MyAnimeList myAnimeList;
-    private Manga manga;
-    private ChapterSync chapterSync;
+    protected MyAnimeList myAnimeList;
+    protected Manga manga;
+    private MangaSync mangaSync;
 
     private String query;
 
@@ -37,15 +38,19 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
+        if (savedState != null) {
+            onProcessRestart();
+        }
+
         myAnimeList = syncManager.getMyAnimeList();
 
         restartableLatestCache(GET_CHAPTER_SYNC,
-                () -> db.getChapterSync(manga, myAnimeList).createObservable()
+                () -> db.getMangaSync(manga, myAnimeList).createObservable()
                         .flatMap(Observable::from)
-                        .doOnNext(chapterSync -> this.chapterSync = chapterSync)
+                        .doOnNext(mangaSync -> this.mangaSync = mangaSync)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),
-                MyAnimeListFragment::setChapterSync);
+                MyAnimeListFragment::setMangaSync);
 
         restartableLatestCache(GET_SEARCH_RESULTS,
                 () -> myAnimeList.search(query)
@@ -57,6 +62,11 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
                     Timber.e(error.getMessage());
                 });
 
+    }
+
+    private void onProcessRestart() {
+        stop(GET_CHAPTER_SYNC);
+        stop(GET_SEARCH_RESULTS);
     }
 
     @Override
@@ -81,10 +91,10 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
         if (updateSubscription != null)
             remove(updateSubscription);
 
-        chapterSync.last_chapter_read = chapterNumber;
+        mangaSync.last_chapter_read = chapterNumber;
 
-        add(updateSubscription = myAnimeList.update(chapterSync)
-                .flatMap(response -> db.insertChapterSync(chapterSync).createObservable())
+        add(updateSubscription = myAnimeList.update(mangaSync)
+                .flatMap(response -> db.insertMangaSync(mangaSync).createObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {},
@@ -99,8 +109,19 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
         start(GET_SEARCH_RESULTS);
     }
 
-    public void registerManga(ChapterSync selectedManga) {
-        selectedManga.manga_id = manga.id;
-        db.insertChapterSync(selectedManga).executeAsBlocking();
+    public void registerManga(MangaSync manga) {
+        manga.manga_id = this.manga.id;
+        add(myAnimeList.bind(manga)
+                .flatMap(response -> {
+                    if (response.code() == 200 || response.code() == 201)
+                        return Observable.just(manga);
+                    return Observable.error(new Exception("Could not add manga"));
+                })
+                .flatMap(manga2 -> db.insertMangaSync(manga2).createObservable())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(manga2 -> {},
+                        error -> ToastUtil.showShort(getContext(), error.getMessage())));
     }
+
 }

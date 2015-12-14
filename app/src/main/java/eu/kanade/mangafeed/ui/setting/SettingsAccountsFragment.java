@@ -12,18 +12,18 @@ import java.util.List;
 import javax.inject.Inject;
 
 import eu.kanade.mangafeed.App;
-import eu.kanade.mangafeed.data.chaptersync.BaseChapterSync;
-import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
+import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
-import eu.kanade.mangafeed.ui.setting.preference.ChapterSyncLoginDialog;
+import eu.kanade.mangafeed.ui.setting.preference.MangaSyncLoginDialog;
 import eu.kanade.mangafeed.ui.setting.preference.SourceLoginDialog;
 import rx.Observable;
 
 public class SettingsAccountsFragment extends SettingsNestedFragment {
 
     @Inject SourceManager sourceManager;
-    @Inject ChapterSyncManager syncManager;
+    @Inject MangaSyncManager syncManager;
 
     public static SettingsNestedFragment newInstance(int resourcePreference, int resourceTitle) {
         SettingsNestedFragment fragment = new SettingsAccountsFragment();
@@ -56,16 +56,16 @@ public class SettingsAccountsFragment extends SettingsNestedFragment {
             sourceCategory.addPreference(dialog);
         }
 
-        PreferenceCategory chapterSyncCategory = new PreferenceCategory(screen.getContext());
-        chapterSyncCategory.setTitle("Sync");
-        screen.addPreference(chapterSyncCategory);
+        PreferenceCategory mangaSyncCategory = new PreferenceCategory(screen.getContext());
+        mangaSyncCategory.setTitle("Sync");
+        screen.addPreference(mangaSyncCategory);
 
-        for (BaseChapterSync sync : syncManager.getChapterSyncServices()) {
-            ChapterSyncLoginDialog dialog = new ChapterSyncLoginDialog(
+        for (BaseMangaSync sync : syncManager.getSyncServices()) {
+            MangaSyncLoginDialog dialog = new MangaSyncLoginDialog(
                     screen.getContext(), preferences, sync);
             dialog.setTitle(sync.getName());
 
-            chapterSyncCategory.addPreference(dialog);
+            mangaSyncCategory.addPreference(dialog);
         }
 
         return view;

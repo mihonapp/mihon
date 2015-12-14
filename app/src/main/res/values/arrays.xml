@@ -22,7 +22,7 @@
         <item>@string/webtoon_viewer</item>
     </string-array>
 
-    <string-array name="download_threads">
+    <string-array name="download_slots">
         <item>1</item>
         <item>2</item>
         <item>3</item>

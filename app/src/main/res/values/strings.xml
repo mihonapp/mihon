@@ -56,7 +56,7 @@
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
-    <string name="pref_download_threads">Download threads</string>
+    <string name="pref_download_slots">Simultaneous downloads</string>
 
       <!-- Cache section -->
     <string name="pref_chapter_cache_size">Chapters cache size</string>

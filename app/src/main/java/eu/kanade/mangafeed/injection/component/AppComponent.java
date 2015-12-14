@@ -5,8 +5,8 @@ import android.app.Application;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import eu.kanade.mangafeed.data.chaptersync.MyAnimeList;
-import eu.kanade.mangafeed.data.chaptersync.UpdateChapterSyncService;
+import eu.kanade.mangafeed.data.mangasync.services.MyAnimeList;
+import eu.kanade.mangafeed.data.sync.UpdateMangaSyncService;
 import eu.kanade.mangafeed.data.download.DownloadService;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
@@ -56,7 +56,7 @@ public interface AppComponent {
 
     void inject(LibraryUpdateService libraryUpdateService);
     void inject(DownloadService downloadService);
-    void inject(UpdateChapterSyncService updateChapterSyncService);
+    void inject(UpdateMangaSyncService updateMangaSyncService);
 
     Application application();
 

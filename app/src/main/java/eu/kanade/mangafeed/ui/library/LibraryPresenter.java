@@ -28,7 +28,7 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
         super.onCreate(savedState);
 
         restartableLatestCache(GET_MANGAS,
-                () -> db.getMangasWithUnread().createObservable()
+                () -> db.getFavoriteMangasWithUnread().createObservable()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),
                 LibraryFragment::onNextMangas);

@@ -8,12 +8,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
-import eu.kanade.mangafeed.data.chaptersync.MyAnimeList;
-import eu.kanade.mangafeed.data.chaptersync.UpdateChapterSyncService;
+import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
+import eu.kanade.mangafeed.data.mangasync.services.MyAnimeList;
+import eu.kanade.mangafeed.data.sync.UpdateMangaSyncService;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Chapter;
-import eu.kanade.mangafeed.data.database.models.ChapterSync;
+import eu.kanade.mangafeed.data.database.models.MangaSync;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.download.DownloadManager;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
@@ -21,7 +21,7 @@ import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.event.ReaderEvent;
-import eu.kanade.mangafeed.event.UpdateChapterSyncEvent;
+import eu.kanade.mangafeed.event.UpdateMangaSyncEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
 import icepick.State;
@@ -37,7 +37,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     @Inject PreferencesHelper prefs;
     @Inject DatabaseHelper db;
     @Inject DownloadManager downloadManager;
-    @Inject ChapterSyncManager syncManager;
+    @Inject MangaSyncManager syncManager;
     @Inject SourceManager sourceManager;
 
     @State Manga manga;
@@ -235,7 +235,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         chapter.last_page_read = currentPage;
         if (isChapterFinished()) {
             chapter.read = true;
-            updateChapterSyncLastChapterRead();
+            updateMangaSyncLastChapterRead();
         }
         db.insertChapter(chapter).executeAsBlocking();
     }
@@ -245,26 +245,26 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         return !chapter.read && currentPage == pageList.size() - 1;
     }
 
-    private void updateChapterSyncLastChapterRead() {
+    private void updateMangaSyncLastChapterRead() {
         // TODO don't use MAL methods for possible alternatives to MAL
         MyAnimeList mal = syncManager.getMyAnimeList();
 
         if (!mal.isLogged())
             return;
 
-        List<ChapterSync> result = db.getChapterSync(manga, mal).executeAsBlocking();
+        List<MangaSync> result = db.getMangaSync(manga, mal).executeAsBlocking();
         if (result.isEmpty())
             return;
 
-        ChapterSync chapterSync = result.get(0);
+        MangaSync mangaSync = result.get(0);
 
         int lastChapterReadLocal = (int) Math.floor(chapter.chapter_number);
-        int lastChapterReadRemote = chapterSync.last_chapter_read;
+        int lastChapterReadRemote = mangaSync.last_chapter_read;
 
         if (lastChapterReadLocal > lastChapterReadRemote) {
-            chapterSync.last_chapter_read = lastChapterReadLocal;
-            EventBus.getDefault().postSticky(new UpdateChapterSyncEvent(chapterSync));
-            UpdateChapterSyncService.start(getContext());
+            mangaSync.last_chapter_read = lastChapterReadLocal;
+            EventBus.getDefault().postSticky(new UpdateMangaSyncEvent(mangaSync));
+            UpdateMangaSyncService.start(getContext());
         }
     }
 

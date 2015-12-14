@@ -17,7 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
+import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.ui.base.activity.BaseRxActivity;
@@ -34,7 +34,7 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
     @Bind(R.id.view_pager) ViewPager view_pager;
 
     @Inject PreferencesHelper preferences;
-    @Inject ChapterSyncManager chapterSyncManager;
+    @Inject MangaSyncManager mangaSyncManager;
 
     private MangaDetailAdapter adapter;
     private long manga_id;
@@ -116,7 +116,7 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
             };
 
             pageCount = 2;
-            if (chapterSyncManager.getMyAnimeList().isLogged())
+            if (!is_online && mangaSyncManager.getMyAnimeList().isLogged())
                 pageCount++;
         }
 

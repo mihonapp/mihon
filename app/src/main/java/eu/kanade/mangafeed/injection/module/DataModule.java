@@ -8,7 +8,7 @@ import dagger.Module;
 import dagger.Provides;
 import eu.kanade.mangafeed.data.cache.CacheManager;
 import eu.kanade.mangafeed.data.cache.CoverCache;
-import eu.kanade.mangafeed.data.chaptersync.ChapterSyncManager;
+import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.download.DownloadManager;
 import eu.kanade.mangafeed.data.network.NetworkHelper;
@@ -66,8 +66,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    ChapterSyncManager provideChapterSyncManager(Application app) {
-        return new ChapterSyncManager(app);
+    MangaSyncManager provideMangaSyncManager(Application app) {
+        return new MangaSyncManager(app);
     }
 
 }
