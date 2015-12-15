@@ -25,6 +25,15 @@
         android:key="@string/pref_default_viewer_key"
         android:entries="@array/viewers"
         android:entryValues="@array/viewers_values"
-        android:defaultValue="1"/>
+        android:defaultValue="1"
+        android:summary="%s"/>
+
+    <eu.kanade.mangafeed.ui.setting.preference.IntListPreference
+        android:title="@string/pref_reader_theme"
+        android:key="@string/pref_reader_theme_key"
+        android:entries="@array/reader_themes"
+        android:entryValues="@array/reader_themes_values"
+        android:defaultValue="0"
+        android:summary="%s"/>
 
 </PreferenceScreen>

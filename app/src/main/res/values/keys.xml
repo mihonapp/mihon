@@ -14,6 +14,7 @@
     <string name="pref_keep_screen_on_key">pref_keep_screen_on_key</string>
     <string name="pref_custom_brightness_key">pref_custom_brightness_key</string>
     <string name="pref_custom_brightness_value_key">pref_custom_brightness_value_key</string>
+    <string name="pref_reader_theme_key">pref_reader_theme_key</string>
 
     <string name="pref_download_directory_key">pref_download_directory_key</string>
     <string name="pref_download_slots_key">pref_download_slots_key</string>

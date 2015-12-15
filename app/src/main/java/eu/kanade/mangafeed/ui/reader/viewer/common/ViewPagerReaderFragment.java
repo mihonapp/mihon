@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.reader.viewer.common;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,6 +38,7 @@ public class ViewPagerReaderFragment extends BaseFragment {
     @Bind(R.id.progress_text) TextView progressText;
     @Bind(R.id.retry_button) Button retryButton;
 
+    private ReaderActivity activity;
     private Page page;
     private Subscription progressSubscription;
     private Subscription statusSubscription;
@@ -51,17 +53,22 @@ public class ViewPagerReaderFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         ButterKnife.bind(this, view);
+        activity = (ReaderActivity) getActivity();
+
+        if (activity.getReaderTheme() == ReaderActivity.BLACK_THEME) {
+             progressText.setTextColor(ContextCompat.getColor(getContext(), R.color.light_grey));
+        }
 
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
         imageView.setOnTouchListener((v, motionEvent) ->
-                ((ReaderActivity) getActivity()).getViewer().onImageTouch(motionEvent));
+                activity.getViewer().onImageTouch(motionEvent));
 
         retryButton.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (page != null)
-                    ((ReaderActivity) getActivity()).getPresenter().retryPage(page);
+                    activity.getPresenter().retryPage(page);
                 return true;
             }
             return true;

@@ -3,9 +3,11 @@ package eu.kanade.mangafeed.ui.reader;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Surface;
 import android.view.View;
@@ -51,6 +53,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     private ReaderMenu readerMenu;
 
     private int uiFlags;
+    private int readerTheme;
     protected CompositeSubscription subscriptions;
     private Subscription customBrightnessSubscription;
 
@@ -58,6 +61,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     private static final int RIGHT_TO_LEFT = 2;
     private static final int VERTICAL = 3;
     private static final int WEBTOON = 4;
+
+    public static final int BLACK_THEME = 1;
 
     public static Intent newIntent(Context context) {
         return new Intent(context, ReaderActivity.class);
@@ -77,6 +82,10 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         Icepick.restoreInstanceState(readerMenu, savedState);
         if (savedState != null && readerMenu.showing)
             readerMenu.show(false);
+
+        readerTheme = preferences.getReaderTheme();
+        if (readerTheme == BLACK_THEME)
+            setBlackTheme();
 
         initializeSettings();
     }
@@ -249,6 +258,16 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     protected void setMangaDefaultViewer(int viewer) {
         getPresenter().updateMangaViewer(viewer);
         recreate();
+    }
+
+    private void setBlackTheme() {
+        getWindow().getDecorView().getRootView().setBackgroundColor(Color.BLACK);
+        pageNumber.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+        pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.page_number_background_black));
+    }
+
+    public int getReaderTheme() {
+        return readerTheme;
     }
 
     public ViewGroup getContainer() {

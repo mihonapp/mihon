@@ -47,6 +47,9 @@
     <string name="pref_enable_transitions">Enable transitions</string>
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_custom_brightness">Use custom brightness</string>
+    <string name="pref_reader_theme">Reader theme</string>
+    <string name="white_theme">White</string>
+    <string name="black_theme">Black</string>
     <string name="pref_viewer_type">Default viewer</string>
     <string name="default_viewer">Default</string>
     <string name="left_to_right_viewer">Left to right</string>
