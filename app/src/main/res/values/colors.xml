@@ -28,6 +28,6 @@
     <color name="line_grey">@color/md_light_dividers</color>
     <color name="light_grey">@color/md_grey_300</color>
     <color name="page_number_background">#AAE9E9E9</color>
-    <color name="page_number_background_black">#AA252525</color>
+    <color name="page_number_background_black">#99252525</color>
     <color name="reader_menu_background">@color/colorPrimarySuperDark</color>
 </resources>

@@ -6,137 +6,100 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-public class HorizontalViewPager extends ViewPager {
+import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterBoundariesOutListener;
+import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterSingleTapListener;
+import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerGestureListener;
+import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerInterface;
+
+public class HorizontalViewPager extends ViewPager implements ViewPagerInterface {
 
     private GestureDetector gestureDetector;
 
-    private OnChapterBoundariesOutListener mOnChapterBoundariesOutListener;
-    private OnChapterSingleTapListener mOnChapterSingleTapListener;
+    private OnChapterBoundariesOutListener onChapterBoundariesOutListener;
+    private OnChapterSingleTapListener onChapterSingleTapListener;
 
-    private static final float LEFT_REGION = 0.33f;
-    private static final float RIGHT_REGION = 0.66f;
     private static final float SWIPE_TOLERANCE = 0.25f;
     private float startDragX;
 
+    public HorizontalViewPager(Context context) {
+        super(context);
+        init(context);
+    }
+
     public HorizontalViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-        gestureDetector = new GestureDetector(getContext(), new ReaderViewGestureListener());
+        init(context);
+    }
+
+    private void init(Context context) {
+        gestureDetector = new GestureDetector(context, new ViewPagerGestureListener(this));
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        try {
-            if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
-                if (this.getCurrentItem() == 0 || this.getCurrentItem() == this.getAdapter().getCount() - 1) {
-                    startDragX = ev.getX();
-                }
+        if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
+            if (getCurrentItem() == 0 || getCurrentItem() == getAdapter().getCount() - 1) {
+                startDragX = ev.getX();
             }
-
-            return super.onInterceptTouchEvent(ev);
-        } catch (IllegalArgumentException e) {
-            // Do Nothing.
         }
 
-        return false;
+        return super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        try {
-            if (mOnChapterBoundariesOutListener != null) {
-                if (this.getCurrentItem() == 0) {
-                    if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-                        float displacement = ev.getX() - startDragX;
+        if (onChapterBoundariesOutListener != null) {
+            if (getCurrentItem() == 0) {
+                if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                    float displacement = ev.getX() - startDragX;
 
-                        if (ev.getX() > startDragX && displacement > getWidth() * SWIPE_TOLERANCE) {
-                            mOnChapterBoundariesOutListener.onFirstPageOutEvent();
-                            return true;
-                        }
-
-                        startDragX = 0;
+                    if (ev.getX() > startDragX && displacement > getWidth() * SWIPE_TOLERANCE) {
+                        onChapterBoundariesOutListener.onFirstPageOutEvent();
+                        return true;
                     }
-                } else if (this.getCurrentItem() == this.getAdapter().getCount() - 1) {
-                    if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-                        float displacement = startDragX - ev.getX();
 
-                        if (ev.getX() < startDragX && displacement > getWidth() * SWIPE_TOLERANCE) {
-                            mOnChapterBoundariesOutListener.onLastPageOutEvent();
-                            return true;
-                        }
+                    startDragX = 0;
+                }
+            } else if (getCurrentItem() == getAdapter().getCount() - 1) {
+                if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                    float displacement = startDragX - ev.getX();
 
-                        startDragX = 0;
+                    if (ev.getX() < startDragX && displacement > getWidth() * SWIPE_TOLERANCE) {
+                        onChapterBoundariesOutListener.onLastPageOutEvent();
+                        return true;
                     }
+
+                    startDragX = 0;
                 }
             }
-
-            return super.onTouchEvent(ev);
-        } catch (IllegalArgumentException e) {
-            // Do Nothing.
         }
 
-        return false;
+        return super.onTouchEvent(ev);
     }
 
+    @Override
     public boolean onImageTouch(MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
     }
 
-    public interface OnChapterBoundariesOutListener {
-        void onFirstPageOutEvent();
-        void onLastPageOutEvent();
+    @Override
+    public void setOnChapterBoundariesOutListener(OnChapterBoundariesOutListener listener) {
+        onChapterBoundariesOutListener = listener;
     }
 
-    public interface OnChapterSingleTapListener {
-        void onCenterTap();
-        void onLeftSideTap();
-        void onRightSideTap();
+    @Override
+    public void setOnChapterSingleTapListener(OnChapterSingleTapListener listener) {
+        onChapterSingleTapListener = listener;
     }
 
-    public void setOnChapterBoundariesOutListener(OnChapterBoundariesOutListener onChapterBoundariesOutListener) {
-        mOnChapterBoundariesOutListener = onChapterBoundariesOutListener;
+    @Override
+    public OnChapterBoundariesOutListener getChapterBoundariesListener() {
+        return onChapterBoundariesOutListener;
     }
 
-    public void setOnChapterSingleTapListener(OnChapterSingleTapListener onChapterSingleTapListener) {
-        mOnChapterSingleTapListener = onChapterSingleTapListener;
-    }
-
-
-    private class ReaderViewGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            final int position = getCurrentItem();
-            final float positionX = e.getX();
-
-            if (positionX < getWidth() * LEFT_REGION) {
-                if (position != 0) {
-                    if (mOnChapterSingleTapListener != null) {
-                        mOnChapterSingleTapListener.onLeftSideTap();
-                    }
-                } else {
-                    if (mOnChapterBoundariesOutListener != null) {
-                        mOnChapterBoundariesOutListener.onFirstPageOutEvent();
-                    }
-                }
-            } else if (positionX > getWidth() * RIGHT_REGION) {
-                if (position != getAdapter().getCount() - 1) {
-                    if (mOnChapterSingleTapListener != null) {
-                        mOnChapterSingleTapListener.onRightSideTap();
-                    }
-                } else {
-                    if (mOnChapterBoundariesOutListener != null) {
-                        mOnChapterBoundariesOutListener.onLastPageOutEvent();
-                    }
-                }
-            } else {
-                if (mOnChapterSingleTapListener != null) {
-                    mOnChapterSingleTapListener.onCenterTap();
-                }
-            }
-
-            return true;
-        }
-
+    @Override
+    public OnChapterSingleTapListener getChapterSingleTapListener() {
+        return onChapterSingleTapListener;
     }
 
 }

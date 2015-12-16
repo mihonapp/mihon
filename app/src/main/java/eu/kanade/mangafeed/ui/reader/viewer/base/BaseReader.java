@@ -57,6 +57,11 @@ public abstract class BaseReader {
         }
     }
 
+    public void onPageChanged(int position) {
+        currentPosition = position;
+        updatePageNumber();
+    }
+
     public void destroy() {}
 
     public abstract int getTotalPages();
