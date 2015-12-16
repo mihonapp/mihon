@@ -12,7 +12,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import eu.kanade.mangafeed.App;
-import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
@@ -60,7 +60,7 @@ public class SettingsAccountsFragment extends SettingsNestedFragment {
         mangaSyncCategory.setTitle("Sync");
         screen.addPreference(mangaSyncCategory);
 
-        for (BaseMangaSync sync : syncManager.getSyncServices()) {
+        for (MangaSyncService sync : syncManager.getSyncServices()) {
             MangaSyncLoginDialog dialog = new MangaSyncLoginDialog(
                     screen.getContext(), preferences, sync);
             dialog.setTitle(sync.getName());

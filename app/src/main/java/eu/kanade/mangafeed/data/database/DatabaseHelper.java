@@ -17,7 +17,7 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.database.models.MangaSync;
-import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLiteGetResolver;
@@ -303,8 +303,7 @@ public class DatabaseHelper {
 
     // Manga sync related queries
 
-    public PreparedGetListOfObjects<MangaSync> getMangaSync(Manga manga, BaseMangaSync sync) {
-
+    public PreparedGetListOfObjects<MangaSync> getMangaSync(Manga manga, MangaSyncService sync) {
         return db.get()
                 .listOfObjects(MangaSync.class)
                 .withQuery(Query.builder()
@@ -312,6 +311,17 @@ public class DatabaseHelper {
                         .where(MangaSyncTable.COLUMN_MANGA_ID + "=? AND " +
                                 MangaSyncTable.COLUMN_SYNC_ID + "=?")
                         .whereArgs(manga.id, sync.getId())
+                        .build())
+                .prepare();
+    }
+
+    public PreparedGetListOfObjects<MangaSync> getMangaSync(Manga manga) {
+        return db.get()
+                .listOfObjects(MangaSync.class)
+                .withQuery(Query.builder()
+                        .table(MangaSyncTable.TABLE)
+                        .where(MangaSyncTable.COLUMN_MANGA_ID + "=?")
+                        .whereArgs(manga.id)
                         .build())
                 .prepare();
     }

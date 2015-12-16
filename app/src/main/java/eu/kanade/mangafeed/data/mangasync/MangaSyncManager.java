@@ -5,12 +5,12 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.mangasync.services.MyAnimeList;
 
 public class MangaSyncManager {
 
-    private List<BaseMangaSync> services;
+    private List<MangaSyncService> services;
     private MyAnimeList myAnimeList;
 
     public static final int MYANIMELIST = 1;
@@ -25,11 +25,11 @@ public class MangaSyncManager {
         return myAnimeList;
     }
 
-    public List<BaseMangaSync> getSyncServices() {
+    public List<MangaSyncService> getSyncServices() {
         return services;
     }
 
-    public BaseMangaSync getSyncService(int id) {
+    public MangaSyncService getSyncService(int id) {
         switch (id) {
             case MYANIMELIST:
                 return myAnimeList;

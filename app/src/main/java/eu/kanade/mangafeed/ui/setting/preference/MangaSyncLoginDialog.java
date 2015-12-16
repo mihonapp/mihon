@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.view.View;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.util.ToastUtil;
 import rx.android.schedulers.AndroidSchedulers;
@@ -13,9 +13,9 @@ import rx.schedulers.Schedulers;
 
 public class MangaSyncLoginDialog extends LoginDialogPreference {
 
-    private BaseMangaSync sync;
+    private MangaSyncService sync;
 
-    public MangaSyncLoginDialog(Context context, PreferencesHelper preferences, BaseMangaSync sync) {
+    public MangaSyncLoginDialog(Context context, PreferencesHelper preferences, MangaSyncService sync) {
         super(context, preferences);
         this.sync = sync;
     }

@@ -3,11 +3,13 @@ package eu.kanade.mangafeed.data.database.models;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import java.io.Serializable;
+
+import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.database.tables.MangaSyncTable;
 
 @StorIOSQLiteType(table = MangaSyncTable.TABLE)
-public class MangaSync {
+public class MangaSync implements Serializable {
 
     @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_ID, key = true)
     public Long id;
@@ -33,7 +35,7 @@ public class MangaSync {
     @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_STATUS)
     public int status;
 
-    public static MangaSync create(BaseMangaSync service) {
+    public static MangaSync create(MangaSyncService service) {
         MangaSync mangasync = new MangaSync();
         mangasync.sync_id = service.getId();
         return mangasync;

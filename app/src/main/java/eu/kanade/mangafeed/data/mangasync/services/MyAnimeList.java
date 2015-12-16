@@ -22,12 +22,12 @@ import javax.inject.Inject;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.data.database.models.MangaSync;
 import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
-import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.network.NetworkHelper;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import rx.Observable;
 
-public class MyAnimeList extends BaseMangaSync {
+public class MyAnimeList extends MangaSyncService {
 
     @Inject PreferencesHelper preferences;
     @Inject NetworkHelper networkService;

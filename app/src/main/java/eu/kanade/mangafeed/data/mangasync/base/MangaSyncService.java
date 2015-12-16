@@ -5,7 +5,7 @@ import com.squareup.okhttp.Response;
 import eu.kanade.mangafeed.data.database.models.MangaSync;
 import rx.Observable;
 
-public abstract class BaseMangaSync {
+public abstract class MangaSyncService {
 
     // Name of the manga sync service to display
     public abstract String getName();

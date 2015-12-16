@@ -11,7 +11,7 @@ import com.f2prateek.rx.preferences.RxSharedPreferences;
 import java.io.File;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.mangasync.base.BaseMangaSync;
+import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.source.base.Source;
 import rx.Observable;
 
@@ -106,15 +106,15 @@ public class PreferencesHelper {
                 .apply();
     }
 
-    public String getMangaSyncUsername(BaseMangaSync sync) {
+    public String getMangaSyncUsername(MangaSyncService sync) {
         return prefs.getString(MANGASYNC_ACCOUNT_USERNAME + sync.getId(), "");
     }
 
-    public String getMangaSyncPassword(BaseMangaSync sync) {
+    public String getMangaSyncPassword(MangaSyncService sync) {
         return prefs.getString(MANGASYNC_ACCOUNT_PASSWORD + sync.getId(), "");
     }
 
-    public void setMangaSyncCredentials(BaseMangaSync sync, String username, String password) {
+    public void setMangaSyncCredentials(MangaSyncService sync, String username, String password) {
         prefs.edit()
                 .putString(MANGASYNC_ACCOUNT_USERNAME + sync.getId(), username)
                 .putString(MANGASYNC_ACCOUNT_PASSWORD + sync.getId(), password)
