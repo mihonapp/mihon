@@ -57,10 +57,10 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     protected CompositeSubscription subscriptions;
     private Subscription customBrightnessSubscription;
 
-    private static final int LEFT_TO_RIGHT = 1;
-    private static final int RIGHT_TO_LEFT = 2;
-    private static final int VERTICAL = 3;
-    private static final int WEBTOON = 4;
+    public static final int LEFT_TO_RIGHT = 1;
+    public static final int RIGHT_TO_LEFT = 2;
+    public static final int VERTICAL = 3;
+    public static final int WEBTOON = 4;
 
     public static final int BLACK_THEME = 1;
 

@@ -48,6 +48,7 @@ public class ReaderMenu {
     @State boolean showing;
     private PopupWindow settingsPopup;
     private PopupWindow brightnessPopup;
+    private boolean inverted;
 
     private DecimalFormat decimalFormat;
 
@@ -61,6 +62,7 @@ public class ReaderMenu {
 
         seekBar.setOnSeekBarChangeListener(new PageSeekBarChangeListener());
         decimalFormat = new DecimalFormat("#.##");
+        inverted = false;
 
         initializeOptions();
     }
@@ -105,7 +107,19 @@ public class ReaderMenu {
     }
 
     public void onChapterReady(int numPages, Manga manga, Chapter chapter) {
+        if (manga.viewer == ReaderActivity.RIGHT_TO_LEFT && !inverted) {
+            // Invert the seekbar and textview fields for the right to left reader
+            seekBar.setRotation(180);
+            TextView aux = currentPage;
+            currentPage = totalPages;
+            totalPages = aux;
+            // Don't invert again on chapter change
+            inverted = true;
+        }
+
+        // Set initial values
         totalPages.setText("" + numPages);
+        currentPage.setText("" + (chapter.last_page_read + 1));
         seekBar.setMax(numPages - 1);
 
         activity.setToolbarTitle(manga.title);
