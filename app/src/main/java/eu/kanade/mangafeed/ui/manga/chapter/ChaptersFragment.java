@@ -181,7 +181,8 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
 
     private void observeChapterDownloadProgress() {
         downloadProgressSubscription = getPresenter().getDownloadProgressObs()
-                .subscribe(this::onDownloadProgressChange);
+                .subscribe(this::onDownloadProgressChange,
+                        error -> { /* TODO getting a NPE sometimes on 'manga' from presenter */ });
     }
 
     private void unsubscribeChapterDownloadProgress() {

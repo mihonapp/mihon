@@ -89,19 +89,19 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         CatalogueSpinnerAdapter spinnerAdapter = new CatalogueSpinnerAdapter(themedContext,
                 android.R.layout.simple_spinner_item, getPresenter().getEnabledSources());
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if (savedState == null) selectedIndex = spinnerAdapter.getEmptyIndex();
         spinner.setAdapter(spinnerAdapter);
-        spinner.setSelection(savedState == null ? spinnerAdapter.getEmptyIndex() : selectedIndex);
+        spinner.setSelection(selectedIndex);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Source source = spinnerAdapter.getItem(position);
                 // We add an empty source with id -1 that acts as a placeholder to show a hint
                 // that asks to select a source
-                if (source.getId() != -1 && selectedIndex != position) {
+                if (source.getId() != -1 && (selectedIndex != position || adapter.isEmpty())) {
                     // Set previous selection if it's not a valid source and notify the user
                     if (!getPresenter().isValidSource(source)) {
-                        spinner.setSelection(selectedIndex != -1 ? selectedIndex :
-                                spinnerAdapter.getEmptyIndex());
+                        spinner.setSelection(spinnerAdapter.getEmptyIndex());
                         ToastUtil.showShort(getActivity(), R.string.source_requires_login);
                     } else {
                         selectedIndex = position;

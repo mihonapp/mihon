@@ -50,6 +50,10 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
+        if (savedState != null) {
+            onProcessRestart();
+        }
+
         mangaDetailSubject = PublishSubject.create();
 
         restartableReplay(GET_MANGA_LIST,
@@ -78,6 +82,11 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                         .observeOn(AndroidSchedulers.mainThread()),
                 (view, manga) -> view.updateImage(manga),
                 (view, error) -> Timber.e(error.getMessage()));
+    }
+
+    private void onProcessRestart() {
+        stop(GET_MANGA_LIST);
+        stop(GET_MANGA_DETAIL);
     }
 
     @Override
