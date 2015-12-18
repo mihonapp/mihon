@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.manga;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,8 +16,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.ui.base.activity.BaseRxActivity;
 import eu.kanade.mangafeed.ui.manga.chapter.ChaptersFragment;
@@ -57,7 +56,7 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
         ButterKnife.bind(this);
 
         setupToolbar(toolbar);
-        disableToolbarElevation();
+        setToolbarElevation(0);
 
         Intent intent = getIntent();
 
@@ -68,12 +67,6 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
 
         if (savedInstanceState == null)
             getPresenter().queryManga(manga_id);
-    }
-
-    private void disableToolbarElevation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            toolbar.setElevation(0);
-        }
     }
 
     private void setupViewPager() {
@@ -100,7 +93,6 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
 
         private int pageCount;
         private String tabTitles[];
-        private Context context;
 
         final static int INFO_FRAGMENT = 0;
         final static int CHAPTERS_FRAGMENT = 1;
@@ -108,7 +100,6 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
 
         public MangaDetailAdapter(FragmentManager fm, Context context) {
             super(fm);
-            this.context = context;
             tabTitles = new String[]{
                     context.getString(R.string.manga_detail_tab),
                     context.getString(R.string.manga_chapters_tab),

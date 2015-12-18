@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.ui.base.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -33,6 +34,11 @@ public class BaseActivity extends AppCompatActivity {
     public void setToolbarSubtitle(int titleResource) {
         if (getSupportActionBar() != null)
             getSupportActionBar().setSubtitle(getString(titleResource));
+    }
+
+    public void setToolbarElevation(int elevation) {
+        if (getSupportActionBar() != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getSupportActionBar().setElevation(elevation);
     }
 
     public Context getActivity() {

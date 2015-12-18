@@ -296,6 +296,10 @@ public class DownloadManager {
         }
         download.totalProgress = actualProgress;
         download.setStatus(status);
+        // Delete successful downloads from queue after notifying
+        if (status == Download.DOWNLOADED) {
+            queue.remove(download);
+        }
     }
 
     // Return the page list from the chapter's directory if it exists, null otherwise
