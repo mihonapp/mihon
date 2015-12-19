@@ -115,7 +115,7 @@ public class ChapterRecognitionTest {
 
     @Test
     public void testWithVersionBefore() {
-        // It should be 84, not 2084)
+        // It should be 84, not 2084
         Chapter c = createChapter("Onepunch-Man Punch Ver002 084 : Creeping Darkness");
         ChapterRecognition.parseChapterNumber(c, randomManga);
         assertThat(c.chapter_number, is(84f));
