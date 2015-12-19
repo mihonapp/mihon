@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.ui.reader;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.util.List;
@@ -65,6 +66,22 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
         retryPageSubject = PublishSubject.create();
 
+        restartableLatestCache(PRELOAD_NEXT_CHAPTER,
+                this::getPreloadNextChapterObservable,
+                (view, pages) -> {},
+                (view, error) -> Timber.e("An error occurred while preloading a chapter"));
+
+        restartableReplay(GET_PAGE_IMAGES,
+                () -> getPageImagesObservable()
+                        .doOnCompleted(this::preloadNextChapter),
+                (view, page) -> {},
+                (view, error) -> Timber.e("An error occurred while downloading an image"));
+
+        restartableLatestCache(RETRY_IMAGES,
+                this::getRetryPageObservable,
+                (view, page) -> {},
+                (view, error) -> Timber.e("An error occurred while downloading an image"));
+
         restartableLatestCache(GET_PAGE_LIST,
                 () -> getPageListObservable()
                         .doOnNext(pages -> pageList = pages)
@@ -80,22 +97,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 },
                 (view, error) -> view.onChapterError());
 
-        restartableReplay(GET_PAGE_IMAGES,
-                () -> getPageImagesObservable()
-                        .doOnCompleted(this::preloadNextChapter),
-                (view, page) -> {},
-                (view, error) -> Timber.e("An error occurred while downloading an image"));
-
-        restartableLatestCache(RETRY_IMAGES,
-                this::getRetryPageObservable,
-                (view, page) -> {},
-                (view, error) -> Timber.e("An error occurred while downloading an image"));
-
-        restartableLatestCache(PRELOAD_NEXT_CHAPTER,
-                this::getPreloadNextChapterObservable,
-                (view, pages) -> {},
-                (view, error) -> Timber.e("An error occurred while preloading a chapter"));
-
         registerForStickyEvents();
     }
 
@@ -105,6 +106,14 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         onChapterLeft();
         updateMangaSyncLastChapterRead();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onSave(@NonNull Bundle state) {
+        if (pageList != null && !isDownloaded)
+            source.savePageList(chapter.url, pageList);
+
+        super.onSave(state);
     }
 
     private void onProcessRestart() {
