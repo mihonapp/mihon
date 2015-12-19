@@ -12,7 +12,7 @@ public class ChapterRecognition {
 
     private static Pattern p1 = Pattern.compile("Ch[^0-9]?\\s*(\\d+[\\.,]?\\d*)");
     private static Pattern p2 = Pattern.compile("(\\d+[\\.,]?\\d*)");
-    private static Pattern p3 = Pattern.compile("(\\d+[\\.,]?\\d*:)");
+    private static Pattern p3 = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)");
 
     public static void parseChapterNumber(Chapter chapter, Manga manga) {
         if (chapter.chapter_number != -1)
@@ -28,8 +28,6 @@ public class ChapterRecognition {
             chapter.chapter_number = Float.parseFloat(matcher.group(1));
             return;
         }
-
-        name = replaceIrrelevantCharacters(name);
 
         List<Float> occurences;
 
@@ -48,6 +46,8 @@ public class ChapterRecognition {
             chapter.chapter_number =  occurences.get(0);
             return;
         }
+
+        name = replaceIrrelevantCharacters(name);
 
         // Try to remove the manga name from the chapter, and try again
         String mangaName = replaceIrrelevantCharacters(manga.title);
