@@ -24,6 +24,7 @@ public class DownloadService extends Service {
 
     private PowerManager.WakeLock wakeLock;
     private Subscription networkChangeSubscription;
+    private Subscription queueRunningSubscription;
 
     public static void start(Context context) {
         context.startService(new Intent(context, DownloadService.class));
@@ -40,6 +41,7 @@ public class DownloadService extends Service {
 
         createWakeLock();
 
+        listenQueueRunningChanges();
         EventBus.getDefault().registerSticky(this);
         listenNetworkChanges();
     }
@@ -52,6 +54,7 @@ public class DownloadService extends Service {
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        queueRunningSubscription.unsubscribe();
         networkChangeSubscription.unsubscribe();
         downloadManager.destroySubscriptions();
         destroyWakeLock();
@@ -67,8 +70,6 @@ public class DownloadService extends Service {
     public void onEvent(DownloadChaptersEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         downloadManager.onDownloadChaptersEvent(event);
-        if (downloadManager.isRunning())
-            acquireWakeLock();
     }
 
     private void listenNetworkChanges() {
@@ -79,12 +80,19 @@ public class DownloadService extends Service {
                         // If there are no remaining downloads, destroy the service
                         if (!downloadManager.startDownloads())
                             stopSelf();
-                        else
-                            acquireWakeLock();
                     } else {
                         downloadManager.stopDownloads();
-                        releaseWakeLock();
                     }
+                });
+    }
+
+    private void listenQueueRunningChanges() {
+        queueRunningSubscription = downloadManager.getRunningSubject()
+                .subscribe(running -> {
+                    if (running)
+                        acquireWakeLock();
+                    else
+                        releaseWakeLock();
                 });
     }
 

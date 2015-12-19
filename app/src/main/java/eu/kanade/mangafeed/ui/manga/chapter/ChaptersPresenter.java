@@ -148,7 +148,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     }
 
     private void setChapterStatus(Chapter chapter) {
-        for (Download download : downloadManager.getQueue().get()) {
+        for (Download download : downloadManager.getQueue()) {
             if (chapter.id.equals(download.chapter.id)) {
                 chapter.status = download.getStatus();
                 return;

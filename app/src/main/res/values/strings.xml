@@ -24,6 +24,8 @@
     <string name="action_show_unread">Unread</string>
     <string name="action_show_downloaded">Downloaded</string>
     <string name="action_next_unread">Next unread</string>
+    <string name="action_start">Start</string>
+    <string name="action_stop">Stop</string>
 
     <!-- Buttons -->
     <string name="button_ok">OK</string>

@@ -8,29 +8,28 @@ import eu.kanade.mangafeed.data.source.model.Page;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class DownloadQueue {
+public class DownloadQueue extends ArrayList<Download> {
 
-    private List<Download> queue;
     private PublishSubject<Download> statusSubject;
 
     public DownloadQueue() {
-        queue = new ArrayList<>();
+        super();
         statusSubject = PublishSubject.create();
     }
 
-    public void add(Download download) {
+    public boolean add(Download download) {
         download.setStatusSubject(statusSubject);
         download.setStatus(Download.QUEUE);
-        queue.add(download);
+        return super.add(download);
     }
 
     public void remove(Download download) {
-        queue.remove(download);
+        super.remove(download);
         download.setStatusSubject(null);
     }
 
     public void remove(Chapter chapter) {
-        for (Download download : queue) {
+        for (Download download : this) {
             if (download.chapter.id.equals(chapter.id)) {
                 remove(download);
                 break;
@@ -38,12 +37,8 @@ public class DownloadQueue {
         }
     }
 
-    public List<Download> get() {
-        return queue;
-    }
-
     public Observable<Download> getActiveDownloads() {
-        return Observable.from(queue)
+        return Observable.from(this)
                 .filter(download -> download.getStatus() == Download.DOWNLOADING);
     }
 

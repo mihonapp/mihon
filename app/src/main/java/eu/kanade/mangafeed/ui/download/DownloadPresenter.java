@@ -37,7 +37,7 @@ public class DownloadPresenter extends BasePresenter<DownloadFragment> {
         progressSubscriptions = new HashMap<>();
 
         restartableLatestCache(GET_DOWNLOAD_QUEUE,
-                () -> Observable.just(downloadQueue.get()),
+                () -> Observable.just(downloadQueue),
                 DownloadFragment::onNextDownloads,
                 (view, error) -> Timber.e(error.getMessage()));
 

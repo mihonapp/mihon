@@ -42,11 +42,11 @@ public class DownloadManager {
 
     private PublishSubject<Download> downloadsQueueSubject;
     private BehaviorSubject<Integer> threadsNumber;
+    private BehaviorSubject<Boolean> runningSubject;
     private Subscription downloadsSubscription;
     private Subscription threadsNumberSubscription;
 
     private DownloadQueue queue;
-    private volatile boolean isQueuePaused;
     private volatile boolean isRunning;
 
     public static final String PAGE_LIST_FILE = "index.json";
@@ -61,9 +61,10 @@ public class DownloadManager {
 
         downloadsQueueSubject = PublishSubject.create();
         threadsNumber = BehaviorSubject.create();
+        runningSubject = BehaviorSubject.create();
     }
 
-    public void initializeSubscriptions() {
+    private void initializeSubscriptions() {
         if (downloadsSubscription != null && !downloadsSubscription.isUnsubscribed())
             downloadsSubscription.unsubscribe();
 
@@ -71,8 +72,6 @@ public class DownloadManager {
             threadsNumberSubscription.unsubscribe();
 
         threadsNumberSubscription = preferences.getDownloadTheadsObservable()
-                .filter(n -> !isQueuePaused)
-                .doOnNext(n -> isQueuePaused = (n == 0))
                 .subscribe(threadsNumber::onNext);
 
         downloadsSubscription = downloadsQueueSubject
@@ -86,11 +85,17 @@ public class DownloadManager {
                     }
                 }, e -> Timber.e(e.getCause(), e.getMessage()));
 
-        isRunning = true;
+        if (!isRunning) {
+            isRunning = true;
+            runningSubject.onNext(true);
+        }
     }
 
     public void destroySubscriptions() {
-        isRunning = false;
+        if (isRunning) {
+            isRunning = false;
+            runningSubject.onNext(false);
+        }
 
         if (downloadsSubscription != null && !downloadsSubscription.isUnsubscribed()) {
             downloadsSubscription.unsubscribe();
@@ -131,7 +136,7 @@ public class DownloadManager {
     // Prepare the download. Returns true if the chapter is already downloaded
     private boolean prepareDownload(Download download) {
         // If the chapter is already queued, don't add it again
-        for (Download queuedDownload : queue.get()) {
+        for (Download queuedDownload : queue) {
             if (download.chapter.id.equals(queuedDownload.chapter.id))
                 return true;
         }
@@ -376,28 +381,22 @@ public class DownloadManager {
     }
 
     public boolean areAllDownloadsFinished() {
-        for (Download download : queue.get()) {
+        for (Download download : queue) {
             if (download.getStatus() <= Download.DOWNLOADING)
                 return false;
         }
         return true;
     }
 
-    public void resumeDownloads() {
-        isQueuePaused = false;
-        threadsNumber.onNext(preferences.getDownloadThreads());
-    }
-
-    public void pauseDownloads() {
-        threadsNumber.onNext(0);
-    }
-
     public boolean startDownloads() {
+        if (queue.isEmpty())
+            return false;
+
         boolean hasPendingDownloads = false;
         if (downloadsSubscription == null || threadsNumberSubscription == null)
             initializeSubscriptions();
 
-        for (Download download : queue.get()) {
+        for (Download download : queue) {
             if (download.getStatus() != Download.DOWNLOADED) {
                 if (download.getStatus() != Download.QUEUE) download.setStatus(Download.QUEUE);
                 if (!hasPendingDownloads) hasPendingDownloads = true;
@@ -409,15 +408,15 @@ public class DownloadManager {
 
     public void stopDownloads() {
         destroySubscriptions();
-        for (Download download : queue.get()) {
+        for (Download download : queue) {
             if (download.getStatus() == Download.DOWNLOADING) {
                 download.setStatus(Download.ERROR);
             }
         }
     }
 
-    public boolean isRunning() {
-        return isRunning;
+    public BehaviorSubject<Boolean> getRunningSubject() {
+        return runningSubject;
     }
 
 }
