@@ -61,7 +61,12 @@ public class UpdateMangaSyncService extends Service {
         MangaSyncService sync = syncManager.getSyncService(mangaSync.sync_id);
 
         subscriptions.add(Observable.defer(() -> sync.update(mangaSync))
-                .flatMap(response -> db.insertMangaSync(mangaSync).createObservable())
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return db.insertMangaSync(mangaSync).createObservable();
+                    }
+                    return Observable.error(new Exception("Could not update MAL"));
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {

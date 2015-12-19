@@ -113,8 +113,9 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
         manga.manga_id = this.manga.id;
         add(myAnimeList.bind(manga)
                 .flatMap(response -> {
-                    if (response.code() == 200 || response.code() == 201)
+                    if (response.isSuccessful()) {
                         return Observable.just(manga);
+                    }
                     return Observable.error(new Exception("Could not add manga"));
                 })
                 .flatMap(manga2 -> db.insertMangaSync(manga2).createObservable())
