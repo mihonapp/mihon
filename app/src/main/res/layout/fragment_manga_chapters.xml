@@ -19,6 +19,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:descendantFocusability="blocksDescendants"
+            android:background="@color/white"
             tools:listitem="@layout/item_chapter">
 
         </android.support.v7.widget.RecyclerView>

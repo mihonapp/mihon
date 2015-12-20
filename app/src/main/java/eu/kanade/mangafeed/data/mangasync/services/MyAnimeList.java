@@ -20,6 +20,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import eu.kanade.mangafeed.App;
+import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.MangaSync;
 import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
@@ -52,7 +53,10 @@ public class MyAnimeList extends MangaSyncService {
     public static final int DEFAULT_STATUS = READING;
     public static final int DEFAULT_SCORE = 0;
 
+    private Context context;
+
     public MyAnimeList(Context context) {
+        this.context = context;
         App.get(context).getComponent().inject(this);
 
         String username = preferences.getMangaSyncUsername(this);
@@ -228,15 +232,15 @@ public class MyAnimeList extends MangaSyncService {
     public String getStatus(int status) {
         switch (status) {
             case READING:
-                return "Reading";
+                return context.getString(R.string.reading);
             case COMPLETED:
-                return "Completed";
+                return context.getString(R.string.completed);
             case ON_HOLD:
-                return "On hold";
+                return context.getString(R.string.on_hold);
             case DROPPED:
-                return "Dropped";
+                return context.getString(R.string.dropped);
             case PLAN_TO_READ:
-                return "Plan to read";
+                return context.getString(R.string.plan_to_read);
         }
         return "";
     }

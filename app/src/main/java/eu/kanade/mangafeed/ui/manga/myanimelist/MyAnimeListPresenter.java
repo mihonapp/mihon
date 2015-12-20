@@ -1,19 +1,20 @@
 package eu.kanade.mangafeed.ui.manga.myanimelist;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import javax.inject.Inject;
 
+import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.database.DatabaseHelper;
+import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.database.models.MangaSync;
 import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.mangasync.services.MyAnimeList;
-import eu.kanade.mangafeed.data.database.DatabaseHelper;
-import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.util.ToastUtil;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -25,13 +26,11 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
 
     protected MyAnimeList myAnimeList;
     protected Manga manga;
-    private MangaSync mangaSync;
+    protected MangaSync mangaSync;
 
     private String query;
 
-    private Subscription updateSubscription;
-
-    private static final int GET_CHAPTER_SYNC = 1;
+    private static final int GET_MANGA_SYNC = 1;
     private static final int GET_SEARCH_RESULTS = 2;
 
     @Override
@@ -44,7 +43,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
 
         myAnimeList = syncManager.getMyAnimeList();
 
-        restartableLatestCache(GET_CHAPTER_SYNC,
+        restartableLatestCache(GET_MANGA_SYNC,
                 () -> db.getMangaSync(manga, myAnimeList).createObservable()
                         .flatMap(Observable::from)
                         .doOnNext(mangaSync -> this.mangaSync = mangaSync)
@@ -65,7 +64,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     }
 
     private void onProcessRestart() {
-        stop(GET_CHAPTER_SYNC);
+        stop(GET_MANGA_SYNC);
         stop(GET_SEARCH_RESULTS);
     }
 
@@ -84,22 +83,19 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     @EventBusHook
     public void onEventMainThread(Manga manga) {
         this.manga = manga;
-        start(GET_CHAPTER_SYNC);
+        start(GET_MANGA_SYNC);
     }
 
-    public void updateLastChapter(int chapterNumber) {
-        if (updateSubscription != null)
-            remove(updateSubscription);
-
-        mangaSync.last_chapter_read = chapterNumber;
-
-        add(updateSubscription = myAnimeList.update(mangaSync)
+    private void updateRemote() {
+        add(myAnimeList.update(mangaSync)
                 .flatMap(response -> db.insertMangaSync(mangaSync).createObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {},
+                .subscribe(next -> {},
                         error -> {
                             Timber.e(error.getMessage());
+                            // Restart on error to set old values
+                            start(GET_MANGA_SYNC);
                         }
                 ));
     }
@@ -114,15 +110,42 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
         add(myAnimeList.bind(manga)
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
-                        return Observable.just(manga);
+                        return db.insertMangaSync(manga).createObservable();
                     }
-                    return Observable.error(new Exception("Could not add manga"));
+                    return Observable.error(new Exception("Could not bind manga"));
                 })
-                .flatMap(manga2 -> db.insertMangaSync(manga2).createObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(manga2 -> {},
                         error -> ToastUtil.showShort(getContext(), error.getMessage())));
     }
 
+    public String[] getAllStatus(Context context) {
+        return new String[] {
+                context.getString(R.string.reading),
+                context.getString(R.string.completed),
+                context.getString(R.string.on_hold),
+                context.getString(R.string.dropped),
+                context.getString(R.string.plan_to_read)
+        };
+    }
+
+    public int getIndexFromStatus() {
+        return mangaSync.status == 6 ? 4 : mangaSync.status - 1;
+    }
+
+    public void setStatus(int index) {
+        mangaSync.status = index == 4 ? 6 : index + 1;
+        updateRemote();
+    }
+
+    public void setScore(int score) {
+        mangaSync.score = score;
+        updateRemote();
+    }
+
+    public void setLastChapterRead(int chapterNumber) {
+        mangaSync.last_chapter_read = chapterNumber;
+        updateRemote();
+    }
 }
