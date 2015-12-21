@@ -92,7 +92,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     public void onEventMainThread(Manga manga) {
         this.manga = manga;
 
-        if (!isStarted(DB_CHAPTERS)) {
+        if (!isSubscribed(DB_CHAPTERS)) {
             source = sourceManager.get(manga.source);
             start(DB_CHAPTERS);
 

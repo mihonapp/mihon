@@ -100,20 +100,21 @@ public class RxPresenter<View> extends Presenter<View> {
      * @param restartableId id of a restartable.
      */
     public void stop(int restartableId) {
-        requested.remove((Integer)restartableId);
+        requested.remove((Integer) restartableId);
         Subscription subscription = restartableSubscriptions.get(restartableId);
         if (subscription != null)
             subscription.unsubscribe();
     }
 
     /**
-     * Checks if a restartable is started.
+     * Checks if a restartable is subscribed.
      *
      * @param restartableId id of a restartable.
-     * @return True if the restartable is started, false otherwise.
+     * @return True if the restartable is subscribed, false otherwise.
      */
-    public boolean isStarted(int restartableId) {
-        return requested.contains(restartableId);
+    public boolean isSubscribed(int restartableId) {
+        Subscription s = restartableSubscriptions.get(restartableId);
+        return s != null && !s.isUnsubscribed();
     }
 
     /**
@@ -129,14 +130,14 @@ public class RxPresenter<View> extends Presenter<View> {
      * @param <T>               the type of the observable.
      */
     public <T> void restartableFirst(int restartableId, final Func0<Observable<T>> observableFactory,
-                                     final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
+        final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
 
         restartable(restartableId, new Func0<Subscription>() {
             @Override
             public Subscription call() {
                 return observableFactory.call()
-                        .compose(RxPresenter.this.<T>deliverFirst())
-                        .subscribe(split(onNext, onError));
+                    .compose(RxPresenter.this.<T>deliverFirst())
+                    .subscribe(split(onNext, onError));
             }
         });
     }
@@ -161,14 +162,14 @@ public class RxPresenter<View> extends Presenter<View> {
      * @param <T>               the type of the observable.
      */
     public <T> void restartableLatestCache(int restartableId, final Func0<Observable<T>> observableFactory,
-                                           final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
+        final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
 
         restartable(restartableId, new Func0<Subscription>() {
             @Override
             public Subscription call() {
                 return observableFactory.call()
-                        .compose(RxPresenter.this.<T>deliverLatestCache())
-                        .subscribe(split(onNext, onError));
+                    .compose(RxPresenter.this.<T>deliverLatestCache())
+                    .subscribe(split(onNext, onError));
             }
         });
     }
@@ -193,14 +194,14 @@ public class RxPresenter<View> extends Presenter<View> {
      * @param <T>               the type of the observable.
      */
     public <T> void restartableReplay(int restartableId, final Func0<Observable<T>> observableFactory,
-                                      final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
+        final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
 
         restartable(restartableId, new Func0<Subscription>() {
             @Override
             public Subscription call() {
                 return observableFactory.call()
-                        .compose(RxPresenter.this.<T>deliverReplay())
-                        .subscribe(split(onNext, onError));
+                    .compose(RxPresenter.this.<T>deliverReplay())
+                    .subscribe(split(onNext, onError));
             }
         });
     }
@@ -328,5 +329,15 @@ public class RxPresenter<View> extends Presenter<View> {
     @Override
     protected void onDropView() {
         views.onNext(null);
+    }
+
+    /**
+     * Please, use restartableXX and deliverXX methods for pushing data from RxPresenter into View.
+     */
+    @Deprecated
+    @Nullable
+    @Override
+    public View getView() {
+        return super.getView();
     }
 }
