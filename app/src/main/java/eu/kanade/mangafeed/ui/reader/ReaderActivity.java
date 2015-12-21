@@ -34,6 +34,7 @@ import eu.kanade.mangafeed.ui.reader.viewer.horizontal.LeftToRightReader;
 import eu.kanade.mangafeed.ui.reader.viewer.horizontal.RightToLeftReader;
 import eu.kanade.mangafeed.ui.reader.viewer.vertical.VerticalReader;
 import eu.kanade.mangafeed.ui.reader.viewer.webtoon.WebtoonReader;
+import eu.kanade.mangafeed.util.GLUtil;
 import eu.kanade.mangafeed.util.ToastUtil;
 import icepick.Icepick;
 import nucleus.factory.RequiresPresenter;
@@ -56,6 +57,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     private int readerTheme;
     protected CompositeSubscription subscriptions;
     private Subscription customBrightnessSubscription;
+
+    private int maxBitmapSize;
 
     public static final int LEFT_TO_RIGHT = 1;
     public static final int RIGHT_TO_LEFT = 2;
@@ -88,6 +91,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             setBlackTheme();
 
         initializeSettings();
+
+        maxBitmapSize = GLUtil.getMaxTextureSize();
     }
 
     @Override
@@ -280,6 +285,10 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     public BaseReader getViewer() {
         return viewer;
+    }
+
+    public int getMaxBitmapSize() {
+        return maxBitmapSize;
     }
 
 }

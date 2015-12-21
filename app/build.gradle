@@ -82,6 +82,7 @@ dependencies {
     final ICEPICK_VERSION = '3.1.0'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(":SubsamplingScaleImageView")
 
     compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
@@ -107,7 +108,6 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.1.0'
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile 'ch.acra:acra:4.7.0'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile "frankiesardo:icepick:$ICEPICK_VERSION"
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'

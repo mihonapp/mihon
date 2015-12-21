@@ -59,6 +59,8 @@ public class ViewPagerReaderFragment extends BaseFragment {
              progressText.setTextColor(ContextCompat.getColor(getContext(), R.color.light_grey));
         }
 
+        imageView.setParallelLoadingEnabled(true);
+        imageView.setMaxDimensions(activity.getMaxBitmapSize(), activity.getMaxBitmapSize());
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
@@ -103,7 +105,7 @@ public class ViewPagerReaderFragment extends BaseFragment {
         if (page == null || page.getImagePath() == null)
             return;
 
-        imageView.setImage(ImageSource.uri(page.getImagePath()).tilingDisabled());
+        imageView.setImage(ImageSource.uri(page.getImagePath()));
         progressContainer.setVisibility(View.GONE);
     }
 
