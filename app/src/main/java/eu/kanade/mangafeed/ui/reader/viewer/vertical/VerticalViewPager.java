@@ -36,44 +36,52 @@ public class VerticalViewPager extends VerticalViewPagerImpl implements ViewPage
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
-            if (getCurrentItem() == 0 || getCurrentItem() == getAdapter().getCount() - 1) {
-                startDragY = ev.getY();
+        try {
+            if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
+                if (getCurrentItem() == 0 || getCurrentItem() == getAdapter().getCount() - 1) {
+                    startDragY = ev.getY();
+                }
             }
-        }
 
-        return super.onInterceptTouchEvent(ev);
+            return super.onInterceptTouchEvent(ev);
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (onChapterBoundariesOutListener != null) {
-            if (getCurrentItem() == 0) {
-                if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-                    float displacement = ev.getY() - startDragY;
+        try {
+            if (onChapterBoundariesOutListener != null) {
+                if (getCurrentItem() == 0) {
+                    if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                        float displacement = ev.getY() - startDragY;
 
-                    if (ev.getY() > startDragY && displacement > getHeight() * SWIPE_TOLERANCE) {
-                        onChapterBoundariesOutListener.onFirstPageOutEvent();
-                        return true;
+                        if (ev.getY() > startDragY && displacement > getHeight() * SWIPE_TOLERANCE) {
+                            onChapterBoundariesOutListener.onFirstPageOutEvent();
+                            return true;
+                        }
+
+                        startDragY = 0;
                     }
+                } else if (getCurrentItem() == getAdapter().getCount() - 1) {
+                    if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                        float displacement = startDragY - ev.getY();
 
-                    startDragY = 0;
-                }
-            } else if (getCurrentItem() == getAdapter().getCount() - 1) {
-                if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-                    float displacement = startDragY - ev.getY();
+                        if (ev.getY() < startDragY && displacement > getHeight() * SWIPE_TOLERANCE) {
+                            onChapterBoundariesOutListener.onLastPageOutEvent();
+                            return true;
+                        }
 
-                    if (ev.getY() < startDragY && displacement > getHeight() * SWIPE_TOLERANCE) {
-                        onChapterBoundariesOutListener.onLastPageOutEvent();
-                        return true;
+                        startDragY = 0;
                     }
-
-                    startDragY = 0;
                 }
             }
-        }
 
-        return super.onTouchEvent(ev);
+            return super.onTouchEvent(ev);
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
     }
 
     @Override
