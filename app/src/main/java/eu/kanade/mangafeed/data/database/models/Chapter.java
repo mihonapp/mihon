@@ -40,7 +40,6 @@ public class Chapter implements Serializable {
 
     public int status;
 
-
     public Chapter() {}
 
     public void setUrl(String url) {

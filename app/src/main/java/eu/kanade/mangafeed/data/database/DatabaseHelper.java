@@ -16,23 +16,34 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 
 import java.util.List;
 
-import eu.kanade.mangafeed.data.database.models.MangaSync;
-import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
+import eu.kanade.mangafeed.data.database.models.Category;
+import eu.kanade.mangafeed.data.database.models.CategoryStorIOSQLiteDeleteResolver;
+import eu.kanade.mangafeed.data.database.models.CategoryStorIOSQLiteGetResolver;
+import eu.kanade.mangafeed.data.database.models.CategoryStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.database.models.ChapterStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.database.models.MangaCategory;
+import eu.kanade.mangafeed.data.database.models.MangaCategoryStorIOSQLiteDeleteResolver;
+import eu.kanade.mangafeed.data.database.models.MangaCategoryStorIOSQLiteGetResolver;
+import eu.kanade.mangafeed.data.database.models.MangaCategoryStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.database.models.MangaStorIOSQLitePutResolver;
+import eu.kanade.mangafeed.data.database.models.MangaSync;
 import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLiteDeleteResolver;
 import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLitePutResolver;
+import eu.kanade.mangafeed.data.database.resolvers.LibraryMangaGetResolver;
 import eu.kanade.mangafeed.data.database.resolvers.MangaWithUnreadGetResolver;
-import eu.kanade.mangafeed.data.database.tables.MangaSyncTable;
+import eu.kanade.mangafeed.data.database.tables.CategoryTable;
 import eu.kanade.mangafeed.data.database.tables.ChapterTable;
+import eu.kanade.mangafeed.data.database.tables.MangaCategoryTable;
+import eu.kanade.mangafeed.data.database.tables.MangaSyncTable;
 import eu.kanade.mangafeed.data.database.tables.MangaTable;
+import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.util.ChapterRecognition;
 import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
@@ -60,6 +71,16 @@ public class DatabaseHelper {
                         .getResolver(new MangaSyncStorIOSQLiteGetResolver())
                         .deleteResolver(new MangaSyncStorIOSQLiteDeleteResolver())
                         .build())
+                .addTypeMapping(Category.class, SQLiteTypeMapping.<Category>builder()
+                        .putResolver(new CategoryStorIOSQLitePutResolver())
+                        .getResolver(new CategoryStorIOSQLiteGetResolver())
+                        .deleteResolver(new CategoryStorIOSQLiteDeleteResolver())
+                        .build())
+                .addTypeMapping(MangaCategory.class, SQLiteTypeMapping.<MangaCategory>builder()
+                        .putResolver(new MangaCategoryStorIOSQLitePutResolver())
+                        .getResolver(new MangaCategoryStorIOSQLiteGetResolver())
+                        .deleteResolver(new MangaCategoryStorIOSQLiteDeleteResolver())
+                        .build())
                 .build();
     }
 
@@ -79,6 +100,37 @@ public class DatabaseHelper {
             MangaTable.COLUMN_TITLE
     );
 
+    private final String libraryMangaQuery = String.format(
+            "SELECT M.*, COALESCE(MC.%10$s, 0) AS %12$s " +
+            "FROM (" +
+                "SELECT %1$s.*, COALESCE(C.unread, 0) AS %6$s " +
+                "FROM %1$s " +
+                "LEFT JOIN (" +
+                    "SELECT %5$s, COUNT(*) AS unread " +
+                    "FROM %2$s " +
+                    "WHERE %7$s = 0 " +
+                    "GROUP BY %5$s" +
+                ") AS C " +
+                "ON %4$s = C.%5$s " +
+                "WHERE %8$s = 1 " +
+                "GROUP BY %4$s " +
+                "ORDER BY %9$s" +
+            ") AS M " +
+            "LEFT JOIN (SELECT * FROM %3$s) AS MC ON MC.%11$s = M.%4$s",
+            MangaTable.TABLE,
+            ChapterTable.TABLE,
+            MangaCategoryTable.TABLE,
+            MangaTable.COLUMN_ID,
+            ChapterTable.COLUMN_MANGA_ID,
+            MangaTable.COLUMN_UNREAD,
+            ChapterTable.COLUMN_READ,
+            MangaTable.COLUMN_FAVORITE,
+            MangaTable.COLUMN_TITLE,
+            MangaCategoryTable.COLUMN_CATEGORY_ID,
+            MangaCategoryTable.COLUMN_MANGA_ID,
+            MangaTable.COLUMN_CATEGORY
+    );
+
     public PreparedGetListOfObjects<Manga> getMangas() {
         return db.get()
                 .listOfObjects(Manga.class)
@@ -95,7 +147,18 @@ public class DatabaseHelper {
                         .query(favoriteMangasWithUnreadQuery)
                         .observesTables(MangaTable.TABLE, ChapterTable.TABLE)
                         .build())
-                .withGetResolver(MangaWithUnreadGetResolver.instance)
+                .withGetResolver(MangaWithUnreadGetResolver.INSTANCE)
+                .prepare();
+    }
+
+    public PreparedGetListOfObjects<Manga> getLibraryMangas() {
+        return db.get()
+                .listOfObjects(Manga.class)
+                .withQuery(RawQuery.builder()
+                        .query(libraryMangaQuery)
+                        .observesTables(MangaTable.TABLE, ChapterTable.TABLE, CategoryTable.TABLE)
+                        .build())
+                .withGetResolver(LibraryMangaGetResolver.INSTANCE)
                 .prepare();
     }
 
@@ -335,6 +398,41 @@ public class DatabaseHelper {
     public PreparedDeleteObject<MangaSync> deleteMangaSync(MangaSync manga) {
         return db.delete()
                 .object(manga)
+                .prepare();
+    }
+
+    // Categories related queries
+
+    public PreparedGetListOfObjects<Category> getCategories() {
+        return db.get()
+                .listOfObjects(Category.class)
+                .withQuery(Query.builder()
+                        .table(CategoryTable.TABLE)
+                        .build())
+                .prepare();
+    }
+
+    public PreparedPutObject<Category> insertCategory(Category category) {
+        return db.put()
+                .object(category)
+                .prepare();
+    }
+
+    public PreparedDeleteObject<Category> deleteCategory(Category category) {
+        return db.delete()
+                .object(category)
+                .prepare();
+    }
+
+    public PreparedPutObject<MangaCategory> insertMangaCategory(MangaCategory mangaCategory) {
+        return db.put()
+                .object(mangaCategory)
+                .prepare();
+    }
+
+    public PreparedPutCollectionOfObjects<MangaCategory> insertMangasCategory(List<MangaCategory> mangasCategory) {
+        return db.put()
+                .objects(mangasCategory)
                 .prepare();
     }
 }

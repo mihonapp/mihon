@@ -1,6 +1,10 @@
 package eu.kanade.mangafeed.ui.library;
 
 import android.os.Bundle;
+import android.util.Pair;
+
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -42,6 +46,14 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                 .toList()
                 .flatMap(mangas -> db.insertMangas(mangas).createObservable())
                 .subscribe());
+    }
+
+    public Observable<Map<Long, List<Manga>>> getLibraryMangasObservable() {
+        return db.getLibraryMangas().createObservable()
+                .flatMap(mangas -> Observable.from(mangas)
+                        .groupBy(manga -> manga.category)
+                        .flatMap(group -> group.toList().map(list -> new Pair<>(group.getKey(), list)))
+                        .toMap(pair -> pair.first, pair -> pair.second));
     }
 
 }

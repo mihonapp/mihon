@@ -36,7 +36,7 @@ public class Manga implements Serializable {
     public String title;
 
     @StorIOSQLiteColumn(name = MangaTable.COLUMN_STATUS)
-    public String status;
+    public int status;
 
     @StorIOSQLiteColumn(name = MangaTable.COLUMN_THUMBNAIL_URL)
     public String thumbnail_url;
@@ -57,6 +57,8 @@ public class Manga implements Serializable {
     public int chapter_flags;
 
     public int unread;
+
+    public long category;
 
     public Manga() {}
 
@@ -83,11 +85,10 @@ public class Manga implements Serializable {
         if (network.genre != null)
             local.genre = network.genre;
 
-        if (network.status != null)
-            local.status = network.status;
-
         if (network.thumbnail_url != null)
             local.thumbnail_url = network.thumbnail_url;
+
+        local.status = network.status;
 
         local.initialized = true;
 

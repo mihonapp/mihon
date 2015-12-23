@@ -249,7 +249,8 @@ public class Mangahere extends Source {
         }
         if (statusElement != null) {
             boolean fieldCompleted = statusElement.text().contains("Completed");
-            newManga.status = fieldCompleted + "";
+            // TODO fix status
+//            newManga.status = fieldCompleted + "";
         }
 
         beginIndex = unparsedHtml.indexOf("<img");

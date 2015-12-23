@@ -50,10 +50,13 @@ public class MangaTable {
     public static final String COLUMN_VIEWER = "viewer";
 
     @NonNull
-    public static final String COLUMN_CHAPTER_FLAGS = "chapter_order";
+    public static final String COLUMN_CHAPTER_FLAGS = "chapter_flags";
 
     @NonNull
     public static final String COLUMN_UNREAD = "unread";
+
+    @NonNull
+    public static final String COLUMN_CATEGORY = "category";
 
     // This is just class with Meta Data, we don't need instances
     private MangaTable() {
@@ -73,15 +76,23 @@ public class MangaTable {
                 + COLUMN_DESCRIPTION + " TEXT, "
                 + COLUMN_GENRE + " TEXT, "
                 + COLUMN_TITLE + " TEXT NOT NULL, "
-                + COLUMN_STATUS + " TEXT, "
+                + COLUMN_STATUS + " INTEGER NOT NULL, "
                 + COLUMN_THUMBNAIL_URL + " TEXT, "
                 + COLUMN_FAVORITE + " INTEGER NOT NULL, "
                 + COLUMN_LAST_UPDATE + " LONG, "
                 + COLUMN_INITIALIZED + " BOOLEAN NOT NULL, "
                 + COLUMN_VIEWER + " INTEGER NOT NULL, "
                 + COLUMN_CHAPTER_FLAGS + " INTEGER NOT NULL"
-                + ");"
-                + "CREATE INDEX " + TABLE + "_" + COLUMN_URL + "_index ON " + TABLE + "(" + COLUMN_URL + ");";
+                + ");";
+
+    }
+
+    public static String getCreateUrlIndexQuery() {
+        return "CREATE INDEX " + TABLE + "_" + COLUMN_URL + "_index ON " + TABLE + "(" + COLUMN_URL + ");";
+    }
+
+    public static String getCreateFavoriteIndexQuery() {
+        return "CREATE INDEX " + TABLE + "_" + COLUMN_FAVORITE + "_index ON " + TABLE + "(" + COLUMN_FAVORITE + ");";
 
     }
 }

@@ -296,7 +296,7 @@ public class Batoto extends Source {
 
         boolean fieldCompleted = unparsedHtml.contains("<td>Complete</td>");
         //TODO fix
-        newManga.status = fieldCompleted + "";
+        newManga.status = 0;
 
         newManga.initialized = true;
 
