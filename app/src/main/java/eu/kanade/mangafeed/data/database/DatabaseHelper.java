@@ -37,10 +37,8 @@ import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLiteDeleteResol
 import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLiteGetResolver;
 import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLitePutResolver;
 import eu.kanade.mangafeed.data.database.resolvers.LibraryMangaGetResolver;
-import eu.kanade.mangafeed.data.database.resolvers.MangaWithUnreadGetResolver;
 import eu.kanade.mangafeed.data.database.tables.CategoryTable;
 import eu.kanade.mangafeed.data.database.tables.ChapterTable;
-import eu.kanade.mangafeed.data.database.tables.MangaCategoryTable;
 import eu.kanade.mangafeed.data.database.tables.MangaSyncTable;
 import eu.kanade.mangafeed.data.database.tables.MangaTable;
 import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
@@ -86,51 +84,6 @@ public class DatabaseHelper {
 
     // Mangas related queries
 
-    private final String favoriteMangasWithUnreadQuery = String.format(
-            "SELECT %1$s.*, COUNT(C.%4$s) AS %5$s FROM %1$s LEFT JOIN " +
-                    "(SELECT %4$s FROM %2$s WHERE %6$s = 0) AS C ON %3$s = C.%4$s " +
-                    "WHERE %7$s = 1 GROUP BY %3$s ORDER BY %1$s.%8$s",
-            MangaTable.TABLE,
-            ChapterTable.TABLE,
-            MangaTable.TABLE + "." + MangaTable.COLUMN_ID,
-            ChapterTable.COLUMN_MANGA_ID,
-            MangaTable.COLUMN_UNREAD,
-            ChapterTable.COLUMN_READ,
-            MangaTable.COLUMN_FAVORITE,
-            MangaTable.COLUMN_TITLE
-    );
-
-    private final String libraryMangaQuery = String.format(
-            "SELECT M.*, COALESCE(MC.%10$s, 0) AS %12$s " +
-            "FROM (" +
-                "SELECT %1$s.*, COALESCE(C.unread, 0) AS %6$s " +
-                "FROM %1$s " +
-                "LEFT JOIN (" +
-                    "SELECT %5$s, COUNT(*) AS unread " +
-                    "FROM %2$s " +
-                    "WHERE %7$s = 0 " +
-                    "GROUP BY %5$s" +
-                ") AS C " +
-                "ON %4$s = C.%5$s " +
-                "WHERE %8$s = 1 " +
-                "GROUP BY %4$s " +
-                "ORDER BY %9$s" +
-            ") AS M " +
-            "LEFT JOIN (SELECT * FROM %3$s) AS MC ON MC.%11$s = M.%4$s",
-            MangaTable.TABLE,
-            ChapterTable.TABLE,
-            MangaCategoryTable.TABLE,
-            MangaTable.COLUMN_ID,
-            ChapterTable.COLUMN_MANGA_ID,
-            MangaTable.COLUMN_UNREAD,
-            ChapterTable.COLUMN_READ,
-            MangaTable.COLUMN_FAVORITE,
-            MangaTable.COLUMN_TITLE,
-            MangaCategoryTable.COLUMN_CATEGORY_ID,
-            MangaCategoryTable.COLUMN_MANGA_ID,
-            MangaTable.COLUMN_CATEGORY
-    );
-
     public PreparedGetListOfObjects<Manga> getMangas() {
         return db.get()
                 .listOfObjects(Manga.class)
@@ -140,22 +93,11 @@ public class DatabaseHelper {
                 .prepare();
     }
 
-    public PreparedGetListOfObjects<Manga> getFavoriteMangasWithUnread() {
-        return db.get()
-                .listOfObjects(Manga.class)
-                .withQuery(RawQuery.builder()
-                        .query(favoriteMangasWithUnreadQuery)
-                        .observesTables(MangaTable.TABLE, ChapterTable.TABLE)
-                        .build())
-                .withGetResolver(MangaWithUnreadGetResolver.INSTANCE)
-                .prepare();
-    }
-
     public PreparedGetListOfObjects<Manga> getLibraryMangas() {
         return db.get()
                 .listOfObjects(Manga.class)
                 .withQuery(RawQuery.builder()
-                        .query(libraryMangaQuery)
+                        .query(LibraryMangaGetResolver.QUERY)
                         .observesTables(MangaTable.TABLE, ChapterTable.TABLE, CategoryTable.TABLE)
                         .build())
                 .withGetResolver(LibraryMangaGetResolver.INSTANCE)
