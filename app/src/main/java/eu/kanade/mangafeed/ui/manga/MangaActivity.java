@@ -52,11 +52,10 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.get(this).getComponent().inject(this);
-        setContentView(R.layout.activity_manga_detail);
+        setContentView(R.layout.activity_manga);
         ButterKnife.bind(this);
 
         setupToolbar(toolbar);
-        setToolbarElevation(0);
 
         Intent intent = getIntent();
 

@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
@@ -22,6 +23,7 @@ import nucleus.view.ViewWithPresenter;
 
 public class MainActivity extends BaseActivity {
 
+    @Bind(R.id.appbar) AppBarLayout appBar;
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     @Bind(R.id.drawer_container) FrameLayout container;
@@ -111,8 +113,16 @@ public class MainActivity extends BaseActivity {
         fragmentStack.replace(fragment);
     }
 
+    public Fragment getActiveFragment() {
+        return fragmentStack.peek();
+    }
+
     public Toolbar getToolbar() {
         return toolbar;
+    }
+
+    public AppBarLayout getAppBar() {
+        return appBar;
     }
 
 }

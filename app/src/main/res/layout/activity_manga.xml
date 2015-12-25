@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,14 +13,7 @@
 
         <include layout="@layout/toolbar" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppTheme.Dark"
-            app:tabGravity="fill"
-            android:background="@color/colorPrimary"
-            app:tabIndicatorColor="@color/white" />
+        <include layout="@layout/tab_layout" />
 
     </android.support.design.widget.AppBarLayout>
 
