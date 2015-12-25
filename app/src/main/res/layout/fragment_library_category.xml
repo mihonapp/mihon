@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <GridView
+        android:id="@+id/gridView"
+        style="@style/AppTheme.GridView"
+        android:choiceMode="multipleChoiceModal"
+        android:columnWidth="140dp"
+        tools:listitem="@layout/item_catalogue" />
+
+</FrameLayout>

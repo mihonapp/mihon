@@ -58,7 +58,7 @@ public class Manga implements Serializable {
 
     public int unread;
 
-    public long category;
+    public int category;
 
     public Manga() {}
 

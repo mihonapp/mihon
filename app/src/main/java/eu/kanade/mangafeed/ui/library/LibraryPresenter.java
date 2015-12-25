@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
+import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
@@ -25,18 +26,31 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
     @Inject CoverCache coverCache;
     @Inject SourceManager sourceManager;
 
-    private static final int GET_MANGAS = 1;
+    private static final int GET_CATEGORIES = 1;
+    private static final int GET_MANGAS = 2;
 
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
+        restartableLatestCache(GET_CATEGORIES,
+                () -> db.getCategories().createObservable(),
+                LibraryFragment::onNextCategories);
+
         restartableLatestCache(GET_MANGAS,
-                () -> db.getLibraryMangas().createObservable()
-                        .observeOn(AndroidSchedulers.mainThread()),
+                this::getLibraryMangasObservable,
                 LibraryFragment::onNextMangas);
 
-        start(GET_MANGAS);
+        start(GET_CATEGORIES);
+    }
+
+    @Override
+    protected void onTakeView(LibraryFragment view) {
+        super.onTakeView(view);
+
+        if (!isSubscribed(GET_MANGAS)) {
+            start(GET_MANGAS);
+        }
     }
 
     public void deleteMangas(Observable<Manga> selectedMangas) {
@@ -48,12 +62,17 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                 .subscribe());
     }
 
-    public Observable<Map<Long, List<Manga>>> getLibraryMangasObservable() {
+    public Observable<Map<Integer, List<Manga>>> getLibraryMangasObservable() {
         return db.getLibraryMangas().createObservable()
                 .flatMap(mangas -> Observable.from(mangas)
                         .groupBy(manga -> manga.category)
-                        .flatMap(group -> group.toList().map(list -> new Pair<>(group.getKey(), list)))
-                        .toMap(pair -> pair.first, pair -> pair.second));
+                        .flatMap(group -> group.toList()
+                                .map(list -> Pair.create(group.getKey(), list)))
+                        .toMap(pair -> pair.first, pair -> pair.second))
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public void onOpenManga() {
+        stop(GET_MANGAS);
+    }
 }

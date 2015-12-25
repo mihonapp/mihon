@@ -1,13 +1,32 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
 
-    <GridView
-        android:id="@+id/gridView"
-        style="@style/AppTheme.GridView"
-        android:choiceMode="multipleChoiceModal"
-        android:columnWidth="140dp"
-        tools:listitem="@layout/item_catalogue" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppTheme.Dark">
 
-</FrameLayout>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppTheme.Dark"
+            app:tabGravity="fill"
+            android:background="@color/colorPrimary"
+            app:tabIndicatorColor="@color/white" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/view_pager">
+
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>

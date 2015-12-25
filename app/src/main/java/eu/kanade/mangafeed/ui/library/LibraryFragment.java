@@ -2,35 +2,34 @@ package eu.kanade.mangafeed.ui.library;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
-import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import nucleus.factory.RequiresPresenter;
-import rx.Observable;
 
 @RequiresPresenter(LibraryPresenter.class)
 public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
 
-    @Bind(R.id.gridView) GridView grid;
-    private LibraryAdapter adapter;
+    @Bind(R.id.tabs) TabLayout tabs;
+    @Bind(R.id.view_pager) ViewPager categoriesPager;
+    private LibraryCategoryAdapter adapter;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -50,8 +49,8 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
         setToolbarTitle(getString(R.string.label_library));
         ButterKnife.bind(this, view);
 
-        createAdapter();
-        setMangaLongClickListener();
+        adapter = new LibraryCategoryAdapter(this, getChildFragmentManager());
+        categoriesPager.setAdapter(adapter);
 
         return view;
     }
@@ -59,7 +58,6 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.library, menu);
-        initializeSearch(menu);
     }
 
     @Override
@@ -77,83 +75,21 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initializeSearch(Menu menu) {
-        final SearchView sv = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
-                return true;
-            }
-        });
+    public void onNextMangas(Map<Integer, List<Manga>> mangas) {
+        adapter.setMangasOnCategories(mangas);
     }
 
-    private void createAdapter() {
-        adapter = new LibraryAdapter(this);
-        grid.setAdapter(adapter);
-    }
+    public void onNextCategories(List<Category> categories) {
+        List<Category> actualCategories = new ArrayList<>();
 
-    public void onNextMangas(List<Manga> mangas) {
-        adapter.setNewItems(mangas);
-    }
+        // TODO should we always add this?
+        Category defaultCat = Category.create("Default");
+        defaultCat.id = 0;
+        actualCategories.add(defaultCat);
 
-    @OnItemClick(R.id.gridView)
-    protected void onMangaClick(int position) {
-        Intent intent = MangaActivity.newIntent(
-                getActivity(),
-                adapter.getItem(position)
-        );
-        getActivity().startActivity(intent);
-    }
-
-    private void setMangaLongClickListener() {
-        grid.setMultiChoiceModeListener(new GridView.MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                mode.setTitle(getResources().getString(R.string.library_selection_title)
-                        + ": " + grid.getCheckedItemCount());
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.library_selection, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_delete:
-                        getPresenter().deleteMangas(getSelectedMangas());
-                        mode.finish();
-                        return true;
-                }
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-        });
-    }
-
-    private Observable<Manga> getSelectedMangas() {
-        SparseBooleanArray checkedItems = grid.getCheckedItemPositions();
-        return Observable.range(0, checkedItems.size())
-                .map(checkedItems::keyAt)
-                .map(adapter::getItem);
+        actualCategories.addAll(categories);
+        adapter.setCategories(actualCategories);
+        tabs.setupWithViewPager(categoriesPager);
     }
 
 }

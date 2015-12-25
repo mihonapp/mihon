@@ -39,6 +39,7 @@ import eu.kanade.mangafeed.data.database.models.MangaSyncStorIOSQLitePutResolver
 import eu.kanade.mangafeed.data.database.resolvers.LibraryMangaGetResolver;
 import eu.kanade.mangafeed.data.database.tables.CategoryTable;
 import eu.kanade.mangafeed.data.database.tables.ChapterTable;
+import eu.kanade.mangafeed.data.database.tables.MangaCategoryTable;
 import eu.kanade.mangafeed.data.database.tables.MangaSyncTable;
 import eu.kanade.mangafeed.data.database.tables.MangaTable;
 import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
@@ -98,7 +99,7 @@ public class DatabaseHelper {
                 .listOfObjects(Manga.class)
                 .withQuery(RawQuery.builder()
                         .query(LibraryMangaGetResolver.QUERY)
-                        .observesTables(MangaTable.TABLE, ChapterTable.TABLE, CategoryTable.TABLE)
+                        .observesTables(MangaTable.TABLE, ChapterTable.TABLE, MangaCategoryTable.TABLE)
                         .build())
                 .withGetResolver(LibraryMangaGetResolver.INSTANCE)
                 .prepare();

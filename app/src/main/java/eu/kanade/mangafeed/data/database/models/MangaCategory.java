@@ -15,7 +15,7 @@ public class MangaCategory {
     public long manga_id;
 
     @StorIOSQLiteColumn(name = MangaCategoryTable.COLUMN_CATEGORY_ID)
-    public long category_id;
+    public int category_id;
 
     public MangaCategory() {}
 

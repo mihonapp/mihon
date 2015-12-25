@@ -53,7 +53,7 @@ public class LibraryMangaGetResolver extends MangaStorIOSQLiteGetResolver {
         manga.unread = cursor.getInt(unreadColumn);
 
         int categoryColumn = cursor.getColumnIndex(MangaTable.COLUMN_CATEGORY);
-        manga.category = cursor.getLong(categoryColumn);
+        manga.category = cursor.getInt(categoryColumn);
 
         return manga;
     }

@@ -11,7 +11,7 @@ import eu.kanade.mangafeed.data.database.tables.CategoryTable;
 public class Category implements Serializable {
 
     @StorIOSQLiteColumn(name = CategoryTable.COLUMN_ID, key = true)
-    public Long id;
+    public Integer id;
 
     @StorIOSQLiteColumn(name = CategoryTable.COLUMN_NAME)
     public String name;
