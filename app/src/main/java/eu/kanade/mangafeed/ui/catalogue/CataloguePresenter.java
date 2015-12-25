@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.catalogue;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import com.bumptech.glide.Glide;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
@@ -18,7 +19,6 @@ import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
-import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.util.RxPager;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -57,14 +57,14 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         mangaDetailSubject = PublishSubject.create();
 
         restartableReplay(GET_MANGA_LIST,
-                () -> pager.pages().<PageBundle<List<Manga>>>concatMap(
+                () -> pager.pages().concatMap(
                         page -> getMangaObs(page + 1)
-                                .map(mangas -> new PageBundle<>(page, mangas))
+                                .map(mangas -> Pair.create(page, mangas))
                                 .observeOn(AndroidSchedulers.mainThread())),
                 (view, page) -> {
                     view.onAddPage(page);
                     if (mangaDetailSubject != null)
-                        mangaDetailSubject.onNext(page.data);
+                        mangaDetailSubject.onNext(page.second);
                 },
                 (view, error) -> {
                     view.onAddPageError();

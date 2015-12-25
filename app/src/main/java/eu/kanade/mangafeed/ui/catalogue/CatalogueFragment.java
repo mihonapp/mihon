@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +31,6 @@ import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.main.MainActivity;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
-import eu.kanade.mangafeed.util.PageBundle;
 import eu.kanade.mangafeed.util.ToastUtil;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
 import icepick.Icepick;
@@ -214,13 +214,13 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         }
     }
 
-    public void onAddPage(PageBundle<List<Manga>> page) {
+    public void onAddPage(Pair<Integer, List<Manga>> pair) {
         hideProgressBar();
-        if (page.page == 0) {
+        if (pair.first == 0) {
             adapter.clear();
             scrollListener.resetScroll();
         }
-        adapter.addAll(page.data);
+        adapter.addAll(pair.second);
     }
 
     public void onAddPageError() {
