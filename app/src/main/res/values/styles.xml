@@ -47,7 +47,6 @@
         <item name="android:numColumns">auto_fit</item>
         <item name="android:stretchMode">columnWidth</item>
         <item name="android:scrollbarStyle">outsideOverlay</item>
-        <item name="android:background">#e5e5e5</item>
     </style>
 
     <style name="FilePickerTheme" parent="NNF_BaseTheme.Light">

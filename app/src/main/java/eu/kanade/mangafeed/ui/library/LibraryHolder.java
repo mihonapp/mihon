@@ -4,31 +4,28 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.base.Source;
-import uk.co.ribot.easyadapter.ItemViewHolder;
-import uk.co.ribot.easyadapter.PositionInfo;
-import uk.co.ribot.easyadapter.annotations.LayoutId;
-import uk.co.ribot.easyadapter.annotations.ViewId;
+import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
 
+public class LibraryHolder extends FlexibleViewHolder {
 
-@LayoutId(R.layout.item_catalogue)
-public class LibraryHolder extends ItemViewHolder<Manga> {
+    @Bind(R.id.thumbnail) ImageView thumbnail;
+    @Bind(R.id.title) TextView title;
+    @Bind(R.id.unreadText) TextView unreadText;
 
-    @ViewId(R.id.thumbnail) ImageView thumbnail;
-    @ViewId(R.id.title) TextView title;
-    @ViewId(R.id.author) TextView author;
-    @ViewId(R.id.unreadText) TextView unreadText;
-
-    public LibraryHolder(View view) {
-        super(view);
+    public LibraryHolder(View view, FlexibleAdapter adapter, OnListItemClickListener listener) {
+        super(view, adapter, listener);
+        ButterKnife.bind(this, view);
     }
 
-    public void onSetValues(Manga manga, PositionInfo positionInfo) {
+    public void onSetValues(Manga manga, LibraryPresenter presenter) {
         title.setText(manga.title);
-        author.setText(manga.author);
 
         if (manga.unread > 0) {
             unreadText.setVisibility(View.VISIBLE);
@@ -36,9 +33,11 @@ public class LibraryHolder extends ItemViewHolder<Manga> {
         } else {
             unreadText.setVisibility(View.GONE);
         }
+
+        loadCover(manga, presenter.sourceManager.get(manga.source), presenter.coverCache);
     }
 
-    public void loadCover(Manga manga, Source source, CoverCache coverCache) {
+    private void loadCover(Manga manga, Source source, CoverCache coverCache) {
         if (manga.thumbnail_url != null) {
             coverCache.saveAndLoadFromCache(thumbnail, manga.thumbnail_url, source.getGlideHeaders());
         } else {

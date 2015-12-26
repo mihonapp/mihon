@@ -1,83 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/selector_chapter_light">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_background">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="@color/white"
+            tools:background="@color/md_red_100"
+            tools:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/unreadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@color/manga_unread_bg"
+            android:paddingBottom="1dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingTop="1dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/favorite_sticker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/thumbnail"
+            android:layout_alignRight="@+id/thumbnail"
+            android:layout_alignTop="@+id/thumbnail"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_action_favorite_blue"
+            android:visibility="invisible"/>
+
+        <LinearLayout
+            android:id="@+id/footerLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@+id/thumbnail"
+            android:layout_alignLeft="@+id/unreadText"
+            android:layout_alignStart="@+id/unreadText"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <eu.kanade.mangafeed.widget.PTSansTextView
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_background"
-                android:orientation="vertical">
+                android:layout_gravity="center_vertical"
+                app:typeface="ptsansNarrowBold"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="14sp"
+                tools:text="Sample name"/>
 
-    <ImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/white"
-        tools:background="@color/md_red_100"
-        tools:src="@mipmap/ic_launcher"
-        />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/unreadText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:background="@color/manga_unread_bg"
-        android:paddingBottom="1dp"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:paddingTop="1dp"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:visibility="gone"/>
+    </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/favorite_sticker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/thumbnail"
-        android:layout_alignRight="@+id/thumbnail"
-        android:layout_alignTop="@+id/thumbnail"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/ic_action_favorite_blue"
-        android:visibility="invisible"/>
-
-    <LinearLayout
-        android:id="@+id/footerLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignLeft="@+id/unreadText"
-        android:layout_alignStart="@+id/unreadText"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@color/primary_text"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            tools:text="Sample name"/>
-
-        <TextView
-            android:id="@+id/author"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@color/hint_text"
-            android:textSize="13sp"
-            tools:text="Sample name"/>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</FrameLayout>

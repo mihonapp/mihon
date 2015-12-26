@@ -43,7 +43,6 @@ public class CatalogueAdapter extends ArrayAdapter<Manga> {
 
     static class ViewHolder {
         @Bind(R.id.title) TextView title;
-        @Bind(R.id.author) TextView author;
         @Bind(R.id.thumbnail) ImageView thumbnail;
         @Bind(R.id.favorite_sticker) ImageView favorite_sticker;
 
@@ -56,7 +55,6 @@ public class CatalogueAdapter extends ArrayAdapter<Manga> {
 
         public void onSetValues(Manga manga) {
             title.setText(manga.title);
-            author.setText(manga.author);
 
             if (manga.thumbnail_url != null) {
                 presenter.coverCache.loadFromCacheOrNetwork(thumbnail, manga.thumbnail_url,

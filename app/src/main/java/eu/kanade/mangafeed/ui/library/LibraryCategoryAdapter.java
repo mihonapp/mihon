@@ -1,32 +1,69 @@
 package eu.kanade.mangafeed.ui.library;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Manga;
-import eu.kanade.mangafeed.ui.main.MainActivity;
 import rx.Observable;
-import uk.co.ribot.easyadapter.EasyAdapter;
 
-public class LibraryCategoryAdapter extends EasyAdapter<Manga> implements Filterable {
+public class LibraryCategoryAdapter extends FlexibleAdapter<LibraryHolder, Manga>
+        implements Filterable {
 
     List<Manga> mangas;
     Filter filter;
-    private LibraryPresenter presenter;
+    private LibraryCategoryFragment fragment;
 
-    public LibraryCategoryAdapter(MainActivity activity) {
-        super(activity, LibraryHolder.class);
+    public LibraryCategoryAdapter(LibraryCategoryFragment fragment) {
+        this.fragment = fragment;
+        mItems = new ArrayList<>();
         filter = new LibraryFilter();
-        presenter = ((LibraryFragment) activity.getActiveFragment()).getPresenter();
+        setHasStableIds(true);
     }
 
-    public void setNewItems(List<Manga> list) {
-        super.setItems(list);
+    public void setItems(List<Manga> list) {
+        mItems = list;
+        notifyDataSetChanged();
+
+        // TODO needed for filtering?
         mangas = list;
+    }
+
+    public void clear() {
+        mItems.clear();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mItems.get(position).id;
+    }
+
+    @Override
+    public void updateDataSet(String param) {
+
+    }
+
+    @Override
+    public LibraryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(fragment.getActivity()).inflate(R.layout.item_catalogue, parent, false);
+        return new LibraryHolder(v, this, fragment);
+    }
+
+    @Override
+    public void onBindViewHolder(LibraryHolder holder, int position) {
+        final LibraryPresenter presenter = ((LibraryFragment) fragment.getParentFragment()).getPresenter();
+        final Manga manga = getItem(position);
+        holder.onSetValues(manga, presenter);
+
+        //When user scrolls this bind the correct selection status
+        holder.itemView.setActivated(isSelected(position));
     }
 
     @Override
@@ -65,12 +102,4 @@ public class LibraryCategoryAdapter extends EasyAdapter<Manga> implements Filter
         }
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = super.getView(position, convertView, parent);
-        LibraryHolder holder = (LibraryHolder) view.getTag();
-        Manga manga = getItem(position);
-        holder.loadCover(manga, presenter.sourceManager.get(manga.source), presenter.coverCache);
-        return view;
-    }
 }

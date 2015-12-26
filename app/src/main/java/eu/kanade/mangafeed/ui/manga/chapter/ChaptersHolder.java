@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.manga.chapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -16,12 +15,12 @@ import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.download.model.Download;
+import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
 import rx.Observable;
 
-public class ChaptersHolder extends RecyclerView.ViewHolder implements
-        View.OnClickListener, View.OnLongClickListener {
+public class ChaptersHolder extends FlexibleViewHolder {
 
-    private ChaptersAdapter adapter;
+    private final ChaptersAdapter adapter;
     private Chapter item;
 
     @Bind(R.id.chapter_title) TextView title;
@@ -32,17 +31,11 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-    public ChaptersHolder(View view) {
-        super(view);
-        ButterKnife.bind(this, view);
-    }
-
-    public ChaptersHolder(View view, final ChaptersAdapter adapter) {
-        this(view);
-
+    public ChaptersHolder(View view, ChaptersAdapter adapter, OnListItemClickListener listener) {
+        super(view, adapter, listener);
         this.adapter = adapter;
-        itemView.setOnClickListener(this);
-        itemView.setOnLongClickListener(this);
+        ButterKnife.bind(this, view);
+
         chapterMenu.setOnClickListener(v -> v.post(() -> showPopupMenu(v)));
     }
 
@@ -64,12 +57,6 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
 
         onStatusChange(chapter.status);
         date.setText(sdf.format(new Date(chapter.date_upload)));
-
-        toggleActivation();
-    }
-
-    private void toggleActivation() {
-        itemView.setActivated(adapter.isSelected(getAdapterPosition()));
     }
 
     public void onStatusChange(int status) {
@@ -91,20 +78,6 @@ public class ChaptersHolder extends RecyclerView.ViewHolder implements
         downloadText.setText(context.getString(
                 R.string.chapter_downloading_progress, downloaded, total));
     }
-
-    @Override
-    public void onClick(View v) {
-        if (adapter.clickListener.onListItemClick(getAdapterPosition()))
-            toggleActivation();
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        adapter.clickListener.onListItemLongClick(getAdapterPosition());
-        toggleActivation();
-        return true;
-    }
-
 
     private void showPopupMenu(View view) {
         // Create a PopupMenu, giving it the clicked view for an anchor
