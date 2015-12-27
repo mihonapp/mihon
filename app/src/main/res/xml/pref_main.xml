@@ -2,6 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <Preference
+        android:key="@string/pref_category_general_key"
+        android:persistent="false"
+        android:title="@string/pref_category_general" />
+
+    <Preference
         android:key="@string/pref_category_reader_key"
         android:persistent="false"
         android:title="@string/pref_category_reader" />

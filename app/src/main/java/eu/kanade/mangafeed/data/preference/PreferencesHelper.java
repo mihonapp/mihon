@@ -91,6 +91,14 @@ public class PreferencesHelper {
         return Integer.parseInt(prefs.getString(getKey(R.string.pref_default_viewer_key), "1"));
     }
 
+    public Preference<Integer> portraitColumns() {
+        return rxPrefs.getInteger(getKey(R.string.pref_library_columns_portrait_key), 0);
+    }
+
+    public Preference<Integer> landscapeColumns() {
+        return rxPrefs.getInteger(getKey(R.string.pref_library_columns_landscape_key), 0);
+    }
+
     public String getSourceUsername(Source source) {
         return prefs.getString(SOURCE_ACCOUNT_USERNAME + source.getId(), "");
     }

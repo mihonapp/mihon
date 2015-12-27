@@ -63,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 app:typeface="ptsansNarrowBold"
+                android:lineSpacingExtra="-4dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:paddingLeft="8dp"

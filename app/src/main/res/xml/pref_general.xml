@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <eu.kanade.mangafeed.ui.setting.preference.LibraryColumnsDialog
+        android:key="@string/pref_library_columns_dialog_key"
+        android:persistent="false"
+        android:title="@string/pref_library_columns"/>
+
+</PreferenceScreen>

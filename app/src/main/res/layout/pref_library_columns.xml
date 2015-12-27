@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingTop="15dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/portrait"/>
+
+        <eu.kanade.mangafeed.widget.MinMaxNumberPicker
+            android:id="@+id/portrait_columns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:min="0"
+            app:max="10"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/landscape"/>
+
+        <eu.kanade.mangafeed.widget.MinMaxNumberPicker
+            android:id="@+id/landscape_columns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:min="0"
+            app:max="10"/>
+
+    </LinearLayout>
+
+</LinearLayout>

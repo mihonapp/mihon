@@ -48,6 +48,10 @@ public class SettingsActivity extends BaseActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
 
+            registerSubpreference(R.string.pref_category_general_key,
+                    SettingsGeneralFragment.newInstance(
+                            R.xml.pref_general, R.string.pref_category_general));
+
             registerSubpreference(R.string.pref_category_reader_key,
                     SettingsNestedFragment.newInstance(
                             R.xml.pref_reader, R.string.pref_category_reader));

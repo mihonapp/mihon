@@ -37,11 +37,19 @@
 
     <!-- Preferences -->
       <!-- Subsections -->
+    <string name="pref_category_general">General</string>
     <string name="pref_category_reader">Reader</string>
     <string name="pref_category_accounts">Accounts</string>
     <string name="pref_category_downloads">Downloads</string>
     <string name="pref_category_cache">Cache</string>
     <string name="pref_category_about">About</string>
+
+      <!-- General section -->
+    <string name="pref_library_columns">Number of columns</string>
+    <string name="portrait">Portrait</string>
+    <string name="landscape">Landscape</string>
+    <string name="default_columns">Default</string>
+
 
       <!-- Reader section -->
     <string name="pref_hide_status_bar">Hide status bar</string>

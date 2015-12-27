@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_category_general_key">pref_category_general_key</string>
     <string name="pref_category_reader_key">pref_category_reader_key</string>
     <string name="pref_category_accounts_key">pref_category_accounts_key</string>
     <string name="pref_category_downloads_key">pref_category_downloads_key</string>
     <string name="pref_category_cache_key">pref_category_cache_key</string>
     <string name="pref_category_about_key">pref_category_about_key</string>
+
+    <string name="pref_library_columns_dialog_key">pref_library_columns_dialog_key</string>
+    <string name="pref_library_columns_portrait_key">pref_library_columns_portrait_key</string>
+    <string name="pref_library_columns_landscape_key">pref_library_columns_landscape_key</string>
 
     <string name="pref_default_viewer_key">pref_default_viewer_key</string>
     <string name="pref_hide_status_bar_key">pref_hide_status_bar_key</string>

@@ -1,40 +1,51 @@
 package eu.kanade.mangafeed.ui.library;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.f2prateek.rx.preferences.Preference;
+
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.event.LibraryMangasEvent;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
 import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.util.EventBusHook;
+import eu.kanade.mangafeed.widget.AutofitRecyclerView;
 import icepick.Icepick;
 import icepick.State;
+import rx.Subscription;
 
 public class LibraryCategoryFragment extends BaseFragment implements
         ActionMode.Callback, FlexibleViewHolder.OnListItemClickListener {
 
-    @Bind(R.id.library_mangas) RecyclerView recycler;
+    @Inject PreferencesHelper preferences;
+
+    @Bind(R.id.library_mangas) AutofitRecyclerView recycler;
 
     @State Category category;
     private LibraryCategoryAdapter adapter;
     private ActionMode actionMode;
+
+    private Subscription numColumnsSubscription;
 
     private static final int INVALID_POSITION = -1;
 
@@ -45,6 +56,12 @@ public class LibraryCategoryFragment extends BaseFragment implements
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        App.get(getActivity()).getComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library_category, container, false);
@@ -52,12 +69,25 @@ public class LibraryCategoryFragment extends BaseFragment implements
         Icepick.restoreInstanceState(this, savedState);
 
         recycler.setHasFixedSize(true);
-        recycler.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
         adapter = new LibraryCategoryAdapter(this);
         recycler.setAdapter(adapter);
 
+        Preference<Integer> columnsPref = getResources().getConfiguration()
+                .orientation == Configuration.ORIENTATION_PORTRAIT ?
+                preferences.portraitColumns() :
+                preferences.landscapeColumns();
+
+        numColumnsSubscription = columnsPref.asObservable()
+                .subscribe(recycler::setSpanCount);
+
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        numColumnsSubscription.unsubscribe();
+        super.onDestroyView();
     }
 
     @Override
