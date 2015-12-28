@@ -3,10 +3,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_edit"
+          android:title="@string/action_edit"
+          android:icon="@drawable/ic_create"
+          app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/action_delete"
           android:title="@string/action_delete"
           android:icon="@drawable/ic_action_delete"
-          android:orderInCategory="1"
-          app:showAsAction="always"/>
+          app:showAsAction="ifRoom"/>
 
 </menu>

@@ -16,6 +16,12 @@ public class Category implements Serializable {
     @StorIOSQLiteColumn(name = CategoryTable.COLUMN_NAME)
     public String name;
 
+    @StorIOSQLiteColumn(name = CategoryTable.COLUMN_ORDER)
+    public int order;
+
+    @StorIOSQLiteColumn(name = CategoryTable.COLUMN_FLAGS)
+    public int flags;
+
     public Category() {}
 
     public static Category create(String name) {

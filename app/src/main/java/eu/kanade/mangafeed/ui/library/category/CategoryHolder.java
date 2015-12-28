@@ -1,5 +1,7 @@
 package eu.kanade.mangafeed.ui.library.category;
 
+import android.support.v4.view.MotionEventCompat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ import butterknife.OnClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
+import eu.kanade.mangafeed.ui.base.adapter.OnStartDragListener;
 
 public class CategoryHolder extends FlexibleViewHolder {
 
@@ -20,11 +23,21 @@ public class CategoryHolder extends FlexibleViewHolder {
 
     @Bind(R.id.image) ImageView image;
     @Bind(R.id.title) TextView title;
+    @Bind(R.id.reorder) ImageView reorder;
 
-    public CategoryHolder(View view, CategoryAdapter adapter, OnListItemClickListener listener) {
+    public CategoryHolder(View view, CategoryAdapter adapter,
+                          OnListItemClickListener listener, OnStartDragListener dragListener) {
         super(view, adapter, listener);
         ButterKnife.bind(this, view);
         this.view = view;
+
+        reorder.setOnTouchListener((v, event) -> {
+            if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                dragListener.onStartDrag(this);
+                return true;
+            }
+            return false;
+        });
     }
 
     public void onSetValues(Category category, ColorGenerator generator) {

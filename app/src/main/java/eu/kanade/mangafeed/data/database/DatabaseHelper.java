@@ -351,6 +351,7 @@ public class DatabaseHelper {
                 .listOfObjects(Category.class)
                 .withQuery(Query.builder()
                         .table(CategoryTable.TABLE)
+                        .orderBy(CategoryTable.COLUMN_ORDER)
                         .build())
                 .prepare();
     }
@@ -358,6 +359,12 @@ public class DatabaseHelper {
     public PreparedPutObject<Category> insertCategory(Category category) {
         return db.put()
                 .object(category)
+                .prepare();
+    }
+
+    public PreparedPutCollectionOfObjects<Category> insertCategories(List<Category> categories) {
+        return db.put()
+                .objects(categories)
                 .prepare();
     }
 

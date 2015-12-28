@@ -6,25 +6,29 @@ import android.view.ViewGroup;
 
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
+import eu.kanade.mangafeed.ui.base.adapter.ItemTouchHelperAdapter;
 
-public class CategoryAdapter extends FlexibleAdapter<CategoryHolder, Category> {
-    
-    private CategoryFragment fragment;
-    private ColorGenerator generator;
+public class CategoryAdapter extends FlexibleAdapter<CategoryHolder, Category> implements
+        ItemTouchHelperAdapter {
+
+    private final CategoryFragment fragment;
+    private final ColorGenerator generator;
 
     public CategoryAdapter(CategoryFragment fragment) {
         this.fragment = fragment;
-        setHasStableIds(true);
         generator = ColorGenerator.DEFAULT;
+        setHasStableIds(true);
     }
 
     public void setItems(List<Category> items) {
-        mItems = items;
+        mItems = new ArrayList<>(items);
         notifyDataSetChanged();
     }
 
@@ -42,7 +46,7 @@ public class CategoryAdapter extends FlexibleAdapter<CategoryHolder, Category> {
     public CategoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(fragment.getActivity());
         View v = inflater.inflate(R.layout.item_edit_categories, parent, false);
-        return new CategoryHolder(v, this, fragment);
+        return new CategoryHolder(v, this, fragment, fragment);
     }
 
     @Override
@@ -54,7 +58,23 @@ public class CategoryAdapter extends FlexibleAdapter<CategoryHolder, Category> {
         holder.itemView.setActivated(isSelected(position));
     }
 
-    public ColorGenerator getColorGenerator() {
-        return generator;
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mItems, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mItems, i, i - 1);
+            }
+        }
+
+        fragment.getPresenter().reorderCategories(mItems);
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+
     }
 }

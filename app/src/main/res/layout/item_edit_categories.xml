@@ -21,14 +21,26 @@
         android:layout_marginRight="@dimen/margin_right"
         android:layout_marginEnd="@dimen/margin_right"/>
 
+    <ImageView
+        android:id="@+id/reorder"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:layout_marginStart="@dimen/margin_left"
+        android:layout_marginRight="@dimen/margin_right"
+        android:layout_marginEnd="@dimen/margin_right"
+        android:scaleType="center"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_reorder_grey_600_24dp"/>
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/margin_right"
-        android:layout_marginEnd="@dimen/margin_right"
         android:layout_toRightOf="@id/image"
         android:layout_toEndOf="@id/image"
+        android:layout_toLeftOf="@id/reorder"
+        android:layout_toStartOf="@id/reorder"
         android:layout_centerInParent="true"
         android:ellipsize="end"
         android:maxLines="1"
