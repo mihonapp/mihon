@@ -367,6 +367,12 @@ public class DatabaseHelper {
                 .prepare();
     }
 
+    public PreparedDeleteCollectionOfObjects<Category> deleteCategories(List<Category> categories) {
+        return db.delete()
+                .objects(categories)
+                .prepare();
+    }
+
     public PreparedPutObject<MangaCategory> insertMangaCategory(MangaCategory mangaCategory) {
         return db.put()
                 .object(mangaCategory)

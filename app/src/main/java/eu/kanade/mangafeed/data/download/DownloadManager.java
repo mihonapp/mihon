@@ -71,7 +71,7 @@ public class DownloadManager {
         if (threadsNumberSubscription != null && !threadsNumberSubscription.isUnsubscribed())
             threadsNumberSubscription.unsubscribe();
 
-        threadsNumberSubscription = preferences.getDownloadTheadsObservable()
+        threadsNumberSubscription = preferences.downloadThreads().asObservable()
                 .subscribe(threadsNumber::onNext);
 
         downloadsSubscription = downloadsQueueSubject

@@ -11,20 +11,24 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
+import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.event.LibraryMangasEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class LibraryPresenter extends BasePresenter<LibraryFragment> {
 
     @Inject DatabaseHelper db;
-    @Inject PreferencesHelper prefs;
+    @Inject PreferencesHelper preferences;
     @Inject CoverCache coverCache;
     @Inject SourceManager sourceManager;
+
+    protected List<Category> categories;
 
     private static final int GET_CATEGORIES = 1;
 
@@ -33,7 +37,7 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
         super.onCreate(savedState);
 
         restartableLatestCache(GET_CATEGORIES,
-                () -> db.getCategories().createObservable(),
+                this::getCategoriesObservable,
                 LibraryFragment::onNextCategories);
 
         start(GET_CATEGORIES);
@@ -41,9 +45,16 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
         add(getLibraryMangasObservable()
                 .subscribe(mangas ->
                         EventBus.getDefault().postSticky(new LibraryMangasEvent(mangas))));
+
     }
 
-    public Observable<Map<Integer, List<Manga>>> getLibraryMangasObservable() {
+    public Observable<List<Category>> getCategoriesObservable() {
+        return db.getCategories().createObservable()
+                .doOnNext(categories -> this.categories = categories)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private Observable<Map<Integer, List<Manga>>> getLibraryMangasObservable() {
         return db.getLibraryMangas().createObservable()
                 .flatMap(mangas -> Observable.from(mangas)
                         .groupBy(manga -> manga.category)

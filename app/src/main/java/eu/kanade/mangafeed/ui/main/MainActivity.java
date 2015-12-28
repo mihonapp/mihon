@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
@@ -19,23 +20,23 @@ import eu.kanade.mangafeed.ui.catalogue.CatalogueFragment;
 import eu.kanade.mangafeed.ui.download.DownloadFragment;
 import eu.kanade.mangafeed.ui.library.LibraryFragment;
 import eu.kanade.mangafeed.ui.setting.SettingsActivity;
+import icepick.State;
 import nucleus.view.ViewWithPresenter;
 
 public class MainActivity extends BaseActivity {
 
     @Bind(R.id.appbar) AppBarLayout appBar;
     @Bind(R.id.toolbar) Toolbar toolbar;
-
     @Bind(R.id.drawer_container) FrameLayout container;
 
     private Drawer drawer;
     private FragmentStack fragmentStack;
 
-    private final static String SELECTED_ITEM = "selected_item";
+    @State int selectedItem;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -52,6 +53,13 @@ public class MainActivity extends BaseActivity {
                 .withRootView(container)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggleAnimated(true)
+                .withOnDrawerNavigationListener(view -> {
+                    if (fragmentStack.size() > 1) {
+                        onBackPressed();
+                        return true;
+                    }
+                    return false;
+                })
                 .addDrawerItems(
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_library)
@@ -70,7 +78,7 @@ public class MainActivity extends BaseActivity {
                                 .withIdentifier(R.id.nav_drawer_settings)
                                 .withSelectable(false)
                 )
-                .withSavedInstance(savedInstanceState)
+                .withSavedInstance(savedState)
                 .withOnDrawerItemClickListener(
                         (view, position, drawerItem) -> {
                             if (drawerItem != null) {
@@ -97,15 +105,23 @@ public class MainActivity extends BaseActivity {
                 )
                 .build();
 
-        if (savedInstanceState == null)
+        if (savedState != null) {
+            // Recover icon state after rotation
+            if (fragmentStack.size() > 1) {
+                showBackArrow();
+            }
+
+            // Set saved selection
+            drawer.setSelection(selectedItem, false);
+        } else {
+            // Set default selection
             drawer.setSelection(R.id.nav_drawer_library);
-        else
-            drawer.setSelection(savedInstanceState.getInt(SELECTED_ITEM), false);
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(SELECTED_ITEM, drawer.getCurrentSelection());
+        selectedItem = drawer.getCurrentSelection();
         super.onSaveInstanceState(outState);
     }
 
@@ -113,8 +129,37 @@ public class MainActivity extends BaseActivity {
         fragmentStack.replace(fragment);
     }
 
-    public Fragment getActiveFragment() {
-        return fragmentStack.peek();
+    public void pushFragment(Fragment fragment) {
+        fragmentStack.push(fragment);
+        if (fragmentStack.size() > 1) {
+            showBackArrow();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!fragmentStack.pop()) {
+            super.onBackPressed();
+        } else if (fragmentStack.size() == 1) {
+            showHamburgerIcon();
+            drawer.getActionBarDrawerToggle().syncState();
+        }
+    }
+
+    private void showHamburgerIcon() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+            drawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
+    }
+
+    private void showBackArrow() {
+        if (getSupportActionBar() != null) {
+            drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            drawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
     }
 
     public Toolbar getToolbar() {

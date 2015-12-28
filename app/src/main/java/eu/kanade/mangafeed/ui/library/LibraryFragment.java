@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
+import eu.kanade.mangafeed.ui.library.category.CategoryFragment;
 import eu.kanade.mangafeed.ui.main.MainActivity;
 import nucleus.factory.RequiresPresenter;
 
@@ -83,9 +85,17 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter> {
                 }
 
                 return true;
+            case R.id.action_edit_categories:
+                onEditCategories();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onEditCategories() {
+        Fragment fragment = CategoryFragment.newInstance();
+        ((MainActivity) getActivity()).pushFragment(fragment);
     }
 
     public void onNextCategories(List<Category> categories) {

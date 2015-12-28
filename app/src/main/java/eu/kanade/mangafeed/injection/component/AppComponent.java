@@ -14,7 +14,7 @@ import eu.kanade.mangafeed.injection.module.AppModule;
 import eu.kanade.mangafeed.injection.module.DataModule;
 import eu.kanade.mangafeed.ui.catalogue.CataloguePresenter;
 import eu.kanade.mangafeed.ui.download.DownloadPresenter;
-import eu.kanade.mangafeed.ui.library.LibraryCategoryFragment;
+import eu.kanade.mangafeed.ui.library.category.CategoryPresenter;
 import eu.kanade.mangafeed.ui.library.LibraryPresenter;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.ui.manga.MangaPresenter;
@@ -43,13 +43,12 @@ public interface AppComponent {
     void inject(ReaderPresenter readerPresenter);
     void inject(DownloadPresenter downloadPresenter);
     void inject(MyAnimeListPresenter myAnimeListPresenter);
+    void inject(CategoryPresenter categoryPresenter);
 
     void inject(ReaderActivity readerActivity);
     void inject(MangaActivity mangaActivity);
     void inject(SettingsAccountsFragment settingsAccountsFragment);
     void inject(SettingsActivity settingsActivity);
-
-    void inject(LibraryCategoryFragment libraryCategoryFragment);
 
     void inject(Source source);
 

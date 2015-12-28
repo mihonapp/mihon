@@ -14,15 +14,11 @@ import com.f2prateek.rx.preferences.Preference;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
-import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.event.LibraryMangasEvent;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
@@ -37,8 +33,6 @@ import rx.Subscription;
 public class LibraryCategoryFragment extends BaseFragment implements
         ActionMode.Callback, FlexibleViewHolder.OnListItemClickListener {
 
-    @Inject PreferencesHelper preferences;
-
     @Bind(R.id.library_mangas) AutofitRecyclerView recycler;
 
     @State Category category;
@@ -47,18 +41,10 @@ public class LibraryCategoryFragment extends BaseFragment implements
 
     private Subscription numColumnsSubscription;
 
-    private static final int INVALID_POSITION = -1;
-
     public static LibraryCategoryFragment newInstance(Category category) {
         LibraryCategoryFragment fragment = new LibraryCategoryFragment();
         fragment.category = category;
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        App.get(getActivity()).getComponent().inject(this);
     }
 
     @Override
@@ -75,8 +61,8 @@ public class LibraryCategoryFragment extends BaseFragment implements
 
         Preference<Integer> columnsPref = getResources().getConfiguration()
                 .orientation == Configuration.ORIENTATION_PORTRAIT ?
-                preferences.portraitColumns() :
-                preferences.landscapeColumns();
+                getLibraryPresenter().preferences.portraitColumns() :
+                getLibraryPresenter().preferences.landscapeColumns();
 
         numColumnsSubscription = columnsPref.asObservable()
                 .subscribe(recycler::setSpanCount);
@@ -110,6 +96,7 @@ public class LibraryCategoryFragment extends BaseFragment implements
 
     @EventBusHook
     public void onEventMainThread(LibraryMangasEvent event) {
+        destroyActionModeIfNeeded();
         setMangas(event.getMangas().get(category.id));
     }
 
@@ -128,7 +115,7 @@ public class LibraryCategoryFragment extends BaseFragment implements
 
     @Override
     public boolean onListItemClick(int position) {
-        if (actionMode != null && position != INVALID_POSITION) {
+        if (actionMode != null && position != -1) {
             toggleSelection(position);
             return true;
         } else {
@@ -143,6 +130,22 @@ public class LibraryCategoryFragment extends BaseFragment implements
             actionMode = ((BaseActivity) getActivity()).startSupportActionMode(this);
 
         toggleSelection(position);
+    }
+
+    private void toggleSelection(int position) {
+        adapter.toggleSelection(position, false);
+
+        int count = adapter.getSelectedItemCount();
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            setContextTitle(count);
+            actionMode.invalidate();
+        }
+    }
+
+    private void setContextTitle(int count) {
+        actionMode.setTitle(getString(R.string.label_selected, count));
     }
 
     @Override
@@ -169,19 +172,17 @@ public class LibraryCategoryFragment extends BaseFragment implements
         actionMode = null;
     }
 
-    private void toggleSelection(int position) {
-        adapter.toggleSelection(position, false);
-
-        int count = adapter.getSelectedItemCount();
-        if (count == 0) {
+    public void destroyActionModeIfNeeded() {
+        if (actionMode != null) {
             actionMode.finish();
-        } else {
-            setContextTitle(count);
-            actionMode.invalidate();
         }
     }
 
-    private void setContextTitle(int count) {
-        actionMode.setTitle(getString(R.string.selected_chapters_title, count));
+    private LibraryFragment getLibraryFragment() {
+        return (LibraryFragment) getParentFragment();
+    }
+
+    private LibraryPresenter getLibraryPresenter() {
+        return getLibraryFragment().getPresenter();
     }
 }

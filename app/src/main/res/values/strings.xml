@@ -1,12 +1,15 @@
 <resources>
     <string name="app_name">Mangafeed</string>
 
+    <string name="name">Name</string>
+
     <!-- Activities and fragments labels (toolbar title) -->
     <string name="label_settings">Settings</string>
     <string name="label_download_queue">Download queue</string>
     <string name="label_library">My library</string>
     <string name="label_recent_updates">Recent updates</string>
     <string name="label_catalogues">Catalogues</string>
+    <string name="label_selected">Selected: %1$d</string>
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
@@ -19,6 +22,8 @@
     <string name="action_delete">Delete</string>
     <string name="action_update">Update</string>
     <string name="action_edit">Edit</string>
+    <string name="action_add_category">Add category</string>
+    <string name="action_edit_categories">Edit categories</string>
     <string name="action_sort_up">Sort up</string>
     <string name="action_sort_down">Sort down</string>
     <string name="action_show_unread">Unread</string>
@@ -118,7 +123,6 @@
 
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Chapters</string>
-    <string name="selected_chapters_title">Selected: %1$d</string>
     <string name="manga_chapter_no_title">No title</string>
     <string name="chapter_downloaded">Downloaded</string>
     <string name="chapter_queued">Queued</string>

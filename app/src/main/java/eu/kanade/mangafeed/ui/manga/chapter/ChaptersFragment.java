@@ -145,7 +145,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         if (getPresenter().getChapters().isEmpty())
             initialFetchChapters();
 
-        closeActionMode();
+        destroyActionModeIfNeeded();
         adapter.setItems(chapters);
     }
 
@@ -254,7 +254,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         return Observable.from(chapters);
     }
 
-    public void closeActionMode() {
+    public void destroyActionModeIfNeeded() {
         if (actionMode != null) {
             actionMode.finish();
         }
@@ -283,7 +283,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
                 .doOnCompleted(adapter::notifyDataSetChanged);
 
         getPresenter().downloadChapters(observable);
-        closeActionMode();
+        destroyActionModeIfNeeded();
         return true;
     }
 
@@ -311,7 +311,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
                 .finallyDo(dialog::dismiss);
 
         getPresenter().deleteChapters(observable);
-        closeActionMode();
+        destroyActionModeIfNeeded();
         return true;
     }
 
@@ -347,7 +347,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     }
 
     private void setContextTitle(int count) {
-        actionMode.setTitle(getString(R.string.selected_chapters_title, count));
+        actionMode.setTitle(getString(R.string.label_selected, count));
     }
 
     public void setSortIcon() {

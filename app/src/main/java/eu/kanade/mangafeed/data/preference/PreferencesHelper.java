@@ -13,7 +13,6 @@ import java.io.File;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.source.base.Source;
-import rx.Observable;
 
 public class PreferencesHelper {
 
@@ -138,12 +137,8 @@ public class PreferencesHelper {
         prefs.edit().putString(getKey(R.string.pref_download_directory_key), path).apply();
     }
 
-    public int getDownloadThreads() {
-        return prefs.getInt(getKey(R.string.pref_download_slots_key), 1);
-    }
-
-    public Observable<Integer> getDownloadTheadsObservable() {
-        return rxPrefs.getInteger(getKey(R.string.pref_download_slots_key), 1).asObservable();
+    public Preference<Integer> downloadThreads() {
+        return rxPrefs.getInteger(getKey(R.string.pref_download_slots_key), 1);
     }
 
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/listPreferredItemHeightLarge"
+                android:paddingTop="@dimen/margin_top"
+                android:paddingBottom="@dimen/margin_bottom"
+                android:background="@drawable/selector_chapter_light">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:elevation="4dp"
+        android:clickable="true"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:layout_marginStart="@dimen/margin_left"
+        android:layout_marginRight="@dimen/margin_right"
+        android:layout_marginEnd="@dimen/margin_right"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_right"
+        android:layout_marginEnd="@dimen/margin_right"
+        android:layout_toRightOf="@id/image"
+        android:layout_toEndOf="@id/image"
+        android:layout_centerInParent="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/primary_text"
+        tools:text="Title"/>
+
+</RelativeLayout>

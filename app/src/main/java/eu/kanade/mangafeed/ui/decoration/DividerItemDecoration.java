@@ -33,8 +33,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDrawOver(Canvas c, RecyclerView parent) {
-        if (mDivider == null) { super.onDrawOver(c, parent); return; }
+    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        if (mDivider == null) { super.onDrawOver(c, parent, state); return; }
 
         if (getOrientation(parent) == LinearLayoutManager.VERTICAL) {
             final int left = parent.getPaddingLeft();

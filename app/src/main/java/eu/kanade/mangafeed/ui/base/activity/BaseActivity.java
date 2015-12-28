@@ -1,13 +1,26 @@
 package eu.kanade.mangafeed.ui.base.activity;
 
-import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import de.greenrobot.event.EventBus;
+import icepick.Icepick;
 
 public class BaseActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
+        Icepick.restoreInstanceState(this, savedState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
 
     protected void setupToolbar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
@@ -33,10 +46,6 @@ public class BaseActivity extends AppCompatActivity {
     public void setToolbarSubtitle(int titleResource) {
         if (getSupportActionBar() != null)
             getSupportActionBar().setSubtitle(getString(titleResource));
-    }
-
-    public Context getActivity() {
-        return this;
     }
 
     @Override
