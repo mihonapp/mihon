@@ -20,11 +20,19 @@ public class BaseFragment extends Fragment {
     }
 
     public void registerForStickyEvents() {
-        EventBus.getDefault().registerSticky(this);
+        registerForStickyEvents(0);
+    }
+
+    public void registerForStickyEvents(int priority) {
+        EventBus.getDefault().registerSticky(this, priority);
     }
 
     public void registerForEvents() {
-        EventBus.getDefault().register(this);
+        registerForEvents(0);
+    }
+
+    public void registerForEvents(int priority) {
+        EventBus.getDefault().register(this, priority);
     }
 
     public void unregisterForEvents() {

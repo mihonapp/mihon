@@ -27,10 +27,12 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
+import eu.kanade.mangafeed.event.LibraryMangasEvent;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.library.category.CategoryFragment;
 import eu.kanade.mangafeed.ui.main.MainActivity;
+import eu.kanade.mangafeed.util.EventBusHook;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(LibraryPresenter.class)
@@ -40,7 +42,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     TabLayout tabs;
     AppBarLayout appBar;
 
-    @Bind(R.id.view_pager) ViewPager categoriesPager;
+    @Bind(R.id.view_pager) ViewPager viewPager;
     protected LibraryAdapter adapter;
 
     private ActionMode actionMode;
@@ -69,7 +71,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
 
 
         adapter = new LibraryAdapter(getChildFragmentManager());
-        categoriesPager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);
 
         return view;
     }
@@ -78,6 +80,18 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     public void onDestroyView() {
         appBar.removeView(tabs);
         super.onDestroyView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerForStickyEvents(1);
+    }
+
+    @Override
+    public void onPause() {
+        unregisterForEvents();
+        super.onPause();
     }
 
     @Override
@@ -107,7 +121,23 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         ((MainActivity) getActivity()).pushFragment(fragment);
     }
 
-    public void onNextCategories(List<Category> categories) {
+    @EventBusHook
+    public void onEventMainThread(LibraryMangasEvent event) {
+        List<Manga> mangasInDefaultCategory = event.getMangas().get(0);
+        boolean hasDefaultCategory = adapter.hasDefaultCategory();
+        // If there are mangas in the default category and the adapter doesn't have it,
+        // create the default category
+        if (mangasInDefaultCategory != null && !hasDefaultCategory) {
+            setCategoriesWithDefault(getPresenter().categories);
+        }
+        // If there aren't mangas in the default category and the adapter have it,
+        // remove the default category
+        else if (mangasInDefaultCategory == null && hasDefaultCategory) {
+            setCategories(getPresenter().categories);
+        }
+    }
+
+    public void setCategoriesWithDefault(List<Category> categories) {
         List<Category> actualCategories = new ArrayList<>();
 
         Category defaultCat = Category.create("Default");
@@ -115,10 +145,13 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         actualCategories.add(defaultCat);
 
         actualCategories.addAll(categories);
-        adapter.setCategories(actualCategories);
-        tabs.setupWithViewPager(categoriesPager);
+        setCategories(actualCategories);
+    }
 
-        tabs.setVisibility(actualCategories.size() == 1 ? View.GONE : View.VISIBLE);
+    private void setCategories(List<Category> categories) {
+        adapter.setCategories(categories);
+        tabs.setupWithViewPager(viewPager);
+        tabs.setVisibility(categories.size() == 1 ? View.GONE : View.VISIBLE);
     }
 
     public void setContextTitle(int count) {
@@ -142,6 +175,10 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         switch (item.getItemId()) {
             case R.id.action_move_to_category:
                 moveMangasToCategories(getPresenter().selectedMangas);
+                return true;
+            case R.id.action_delete:
+                getPresenter().deleteMangas();
+                destroyActionModeIfNeeded();
                 return true;
         }
         return false;
@@ -172,7 +209,6 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
                 .positiveText(R.string.button_ok)
                 .negativeText(R.string.button_cancel)
                 .show();
-
     }
 
     @Nullable
