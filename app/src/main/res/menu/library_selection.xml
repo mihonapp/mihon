@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_move_to_category"
+          android:title="@string/action_move_category"
+          android:icon="@drawable/ic_label"
+          app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/action_delete"
-        android:title="@string/action_delete"
-        android:icon="@drawable/ic_action_delete"
-        android:orderInCategory="1"
-        app:showAsAction="always"/>
+          android:title="@string/action_delete"
+          android:icon="@drawable/ic_action_delete"
+          app:showAsAction="ifRoom"/>
 
 </menu>

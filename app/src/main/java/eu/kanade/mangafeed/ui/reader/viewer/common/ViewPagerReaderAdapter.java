@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.ui.base.adapter.SmartFragmentStatePagerAdapter;
 
 public class ViewPagerReaderAdapter extends SmartFragmentStatePagerAdapter {
 

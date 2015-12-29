@@ -1,10 +1,13 @@
-package eu.kanade.mangafeed.ui.reader.viewer.common;
+package eu.kanade.mangafeed.ui.base.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SmartFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
     // Sparse array to keep track of registered fragments in memory
@@ -33,4 +36,13 @@ public abstract class SmartFragmentStatePagerAdapter extends FragmentStatePagerA
     public Fragment getRegisteredFragment(int position) {
         return registeredFragments.get(position);
     }
+
+    public List<Fragment> getRegisteredFragments() {
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        for (int i = 0; i < registeredFragments.size(); i++) {
+            fragments.add(registeredFragments.valueAt(i));
+        }
+        return fragments;
+    }
+
 }

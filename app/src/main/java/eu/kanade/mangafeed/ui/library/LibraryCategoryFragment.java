@@ -3,24 +3,22 @@ package eu.kanade.mangafeed.ui.library;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.f2prateek.rx.preferences.Preference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.event.LibraryMangasEvent;
-import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
 import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
@@ -30,20 +28,19 @@ import icepick.Icepick;
 import icepick.State;
 import rx.Subscription;
 
-public class LibraryCategoryFragment extends BaseFragment implements
-        ActionMode.Callback, FlexibleViewHolder.OnListItemClickListener {
+public class LibraryCategoryFragment extends BaseFragment
+        implements FlexibleViewHolder.OnListItemClickListener {
 
     @Bind(R.id.library_mangas) AutofitRecyclerView recycler;
 
-    @State Category category;
+    @State int position;
     private LibraryCategoryAdapter adapter;
-    private ActionMode actionMode;
 
     private Subscription numColumnsSubscription;
 
-    public static LibraryCategoryFragment newInstance(Category category) {
+    public static LibraryCategoryFragment newInstance(int position) {
         LibraryCategoryFragment fragment = new LibraryCategoryFragment();
-        fragment.category = category;
+        fragment.position = position;
         return fragment;
     }
 
@@ -54,10 +51,13 @@ public class LibraryCategoryFragment extends BaseFragment implements
         ButterKnife.bind(this, view);
         Icepick.restoreInstanceState(this, savedState);
 
-        recycler.setHasFixedSize(true);
-
         adapter = new LibraryCategoryAdapter(this);
+        recycler.setHasFixedSize(true);
         recycler.setAdapter(adapter);
+
+        if (getLibraryFragment().getActionMode() != null) {
+            setMode(FlexibleAdapter.MODE_MULTI);
+        }
 
         Preference<Integer> columnsPref = getResources().getConfiguration()
                 .orientation == Configuration.ORIENTATION_PORTRAIT ?
@@ -66,6 +66,14 @@ public class LibraryCategoryFragment extends BaseFragment implements
 
         numColumnsSubscription = columnsPref.asObservable()
                 .subscribe(recycler::setSpanCount);
+
+        if (savedState != null) {
+            adapter.onRestoreInstanceState(savedState);
+
+            if (adapter.getMode() == FlexibleAdapter.MODE_SINGLE) {
+                adapter.clearSelection();
+            }
+        }
 
         return view;
     }
@@ -91,13 +99,23 @@ public class LibraryCategoryFragment extends BaseFragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Icepick.saveInstanceState(this, outState);
+        adapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
     @EventBusHook
     public void onEventMainThread(LibraryMangasEvent event) {
-        destroyActionModeIfNeeded();
-        setMangas(event.getMangas().get(category.id));
+        List<Category> categories = getLibraryFragment().getAdapter().categories;
+        // When a category is deleted, the index can be greater than the number of categories
+        if (position >= categories.size())
+            return;
+
+        Category category = categories.get(position);
+        List<Manga> mangas = event.getMangas().get(category.id);
+        if (mangas == null) {
+            mangas = new ArrayList<>();
+        }
+        setMangas(mangas);
     }
 
     protected void openManga(Manga manga) {
@@ -115,7 +133,7 @@ public class LibraryCategoryFragment extends BaseFragment implements
 
     @Override
     public boolean onListItemClick(int position) {
-        if (actionMode != null && position != -1) {
+        if (getLibraryFragment().getActionMode() != null && position != -1) {
             toggleSelection(position);
             return true;
         } else {
@@ -126,55 +144,29 @@ public class LibraryCategoryFragment extends BaseFragment implements
 
     @Override
     public void onListItemLongClick(int position) {
-        if (actionMode == null)
-            actionMode = ((BaseActivity) getActivity()).startSupportActionMode(this);
-
+        getLibraryFragment().createActionModeIfNeeded();
         toggleSelection(position);
     }
 
     private void toggleSelection(int position) {
-        adapter.toggleSelection(position, false);
+        LibraryFragment f = getLibraryFragment();
 
-        int count = adapter.getSelectedItemCount();
+        adapter.toggleSelection(position, false);
+        f.getPresenter().setSelection(adapter.getItem(position), adapter.isSelected(position));
+
+        int count = f.getPresenter().selectedMangas.size();
         if (count == 0) {
-            actionMode.finish();
+            f.destroyActionModeIfNeeded();
         } else {
-            setContextTitle(count);
-            actionMode.invalidate();
+            f.setContextTitle(count);
+            f.invalidateActionMode();
         }
     }
 
-    private void setContextTitle(int count) {
-        actionMode.setTitle(getString(R.string.label_selected, count));
-    }
-
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        mode.getMenuInflater().inflate(R.menu.library_selection, menu);
-        adapter.setMode(LibraryCategoryAdapter.MODE_MULTI);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        adapter.setMode(LibraryCategoryAdapter.MODE_SINGLE);
-        adapter.clearSelection();
-        actionMode = null;
-    }
-
-    public void destroyActionModeIfNeeded() {
-        if (actionMode != null) {
-            actionMode.finish();
+    public void setMode(int mode) {
+        adapter.setMode(mode);
+        if (mode == FlexibleAdapter.MODE_SINGLE) {
+            adapter.clearSelection();
         }
     }
 

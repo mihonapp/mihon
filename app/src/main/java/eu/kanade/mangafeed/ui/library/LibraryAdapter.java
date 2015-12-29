@@ -2,15 +2,15 @@ package eu.kanade.mangafeed.ui.library;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
 import eu.kanade.mangafeed.data.database.models.Category;
+import eu.kanade.mangafeed.ui.base.adapter.SmartFragmentStatePagerAdapter;
 
-class LibraryAdapter extends FragmentStatePagerAdapter {
+public class LibraryAdapter extends SmartFragmentStatePagerAdapter {
 
-    private List<Category> categories;
+    protected List<Category> categories;
 
     public LibraryAdapter(FragmentManager fm) {
         super(fm);
@@ -18,8 +18,7 @@ class LibraryAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Category category = categories.get(position);
-        return LibraryCategoryFragment.newInstance(category);
+        return LibraryCategoryFragment.newInstance(position);
     }
 
     @Override
@@ -35,6 +34,12 @@ class LibraryAdapter extends FragmentStatePagerAdapter {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
         notifyDataSetChanged();
+    }
+
+    public void setSelectionMode(int mode) {
+        for (Fragment fragment : getRegisteredFragments()) {
+            ((LibraryCategoryFragment) fragment).setMode(mode);
+        }
     }
 
 }

@@ -2,15 +2,18 @@ package eu.kanade.mangafeed.data.database;
 
 import android.content.Context;
 
+import com.pushtorefresh.storio.Queries;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
+import com.pushtorefresh.storio.sqlite.operations.delete.PreparedDeleteByQuery;
 import com.pushtorefresh.storio.sqlite.operations.delete.PreparedDeleteCollectionOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.delete.PreparedDeleteObject;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPutCollectionOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPutObject;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 
@@ -386,9 +389,36 @@ public class DatabaseHelper {
                 .prepare();
     }
 
-    public PreparedPutCollectionOfObjects<MangaCategory> insertMangasCategory(List<MangaCategory> mangasCategory) {
+    public PreparedPutCollectionOfObjects<MangaCategory> insertMangasCategories(List<MangaCategory> mangasCategories) {
         return db.put()
-                .objects(mangasCategory)
+                .objects(mangasCategories)
                 .prepare();
     }
+
+    public PreparedDeleteByQuery deleteOldMangasCategories(List<Manga> mangas) {
+        List<Long> mangaIds = Observable.from(mangas)
+                .map(manga -> manga.id)
+                .toList().toBlocking().single();
+
+        return db.delete()
+                .byQuery(DeleteQuery.builder()
+                        .table(MangaCategoryTable.TABLE)
+                        .where(MangaCategoryTable.COLUMN_MANGA_ID + " IN ("
+                                + Queries.placeholders(mangas.size()) + ")")
+                        .whereArgs(mangaIds.toArray())
+                        .build())
+                .prepare();
+    }
+
+    public void setMangaCategories(List<MangaCategory> mangasCategories, List<Manga> mangas) {
+        db.internal().beginTransaction();
+        try {
+            deleteOldMangasCategories(mangas).executeAsBlocking();
+            insertMangasCategories(mangasCategories).executeAsBlocking();
+            db.internal().setTransactionSuccessful();
+        } finally {
+            db.internal().endTransaction();
+        }
+    }
+
 }
