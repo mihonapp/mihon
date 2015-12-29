@@ -134,8 +134,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     }
 
     private Manga networkToLocalManga(Manga networkManga) {
-        List<Manga> dbResult = db.getManga(networkManga.url, source.getId()).executeAsBlocking();
-        Manga localManga = !dbResult.isEmpty() ? dbResult.get(0) : null;
+        Manga localManga = db.getManga(networkManga.url, source.getId()).executeAsBlocking();
         if (localManga == null) {
             PutResult result = db.insertManga(networkManga).executeAsBlocking();
             networkManga.id = result.insertedId();

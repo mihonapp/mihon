@@ -191,8 +191,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     }
 
     public Chapter getNextUnreadChapter() {
-        List<Chapter> chapters = db.getNextUnreadChapter(manga).executeAsBlocking();
-        return !chapters.isEmpty() ? chapters.get(0) : null;
+        return db.getNextUnreadChapter(manga).executeAsBlocking();
     }
 
     public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {

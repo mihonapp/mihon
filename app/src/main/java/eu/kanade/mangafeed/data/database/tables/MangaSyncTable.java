@@ -22,6 +22,8 @@ public class MangaSyncTable {
 
     public static final String COLUMN_SCORE = "score";
 
+    public static final String COLUMN_TOTAL_CHAPTERS = "total_chapters";
+
     @NonNull
     public static String getCreateTableQuery() {
         return "CREATE TABLE " + TABLE + "("
@@ -31,6 +33,7 @@ public class MangaSyncTable {
                 + COLUMN_REMOTE_ID + " INTEGER NOT NULL, "
                 + COLUMN_TITLE + " TEXT NOT NULL, "
                 + COLUMN_LAST_CHAPTER_READ + " INTEGER NOT NULL, "
+                + COLUMN_TOTAL_CHAPTERS + " INTEGER NOT NULL, "
                 + COLUMN_STATUS + " INTEGER NOT NULL, "
                 + COLUMN_SCORE + " FLOAT NOT NULL, "
                 + "FOREIGN KEY(" + COLUMN_MANGA_ID + ") REFERENCES " + MangaTable.TABLE + "(" + MangaTable.COLUMN_ID + ") "

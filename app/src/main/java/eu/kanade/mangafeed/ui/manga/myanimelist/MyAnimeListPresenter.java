@@ -45,7 +45,6 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
 
         restartableLatestCache(GET_MANGA_SYNC,
                 () -> db.getMangaSync(manga, myAnimeList).createObservable()
-                        .flatMap(Observable::from)
                         .doOnNext(mangaSync -> this.mangaSync = mangaSync)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),

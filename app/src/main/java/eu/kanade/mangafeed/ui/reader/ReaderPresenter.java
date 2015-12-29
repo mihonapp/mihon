@@ -249,7 +249,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         if (pageList == null)
             return;
 
-        db.getMangaSync(manga).createObservable()
+        db.getMangasSync(manga).createObservable()
                 .take(1)
                 .flatMap(Observable::from)
                 .doOnNext(mangaSync -> {
@@ -281,12 +281,10 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private void getAdjacentChapters() {
         add(db.getNextChapter(chapter).createObservable()
                 .take(1)
-                .flatMap(Observable::from)
                 .subscribe(result -> nextChapter = result));
 
         add(db.getPreviousChapter(chapter).createObservable()
                 .take(1)
-                .flatMap(Observable::from)
                 .subscribe(result -> previousChapter = result));
     }
 

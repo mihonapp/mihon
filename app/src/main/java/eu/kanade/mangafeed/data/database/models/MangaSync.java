@@ -29,6 +29,9 @@ public class MangaSync implements Serializable {
     @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_LAST_CHAPTER_READ)
     public int last_chapter_read;
 
+    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_TOTAL_CHAPTERS)
+    public int total_chapters;
+
     @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_SCORE)
     public float score;
 
