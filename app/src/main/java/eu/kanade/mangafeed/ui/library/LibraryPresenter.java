@@ -20,7 +20,6 @@ import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.event.LibraryMangasEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class LibraryPresenter extends BasePresenter<LibraryFragment> {
@@ -33,9 +32,7 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
     protected List<Category> categories;
     protected List<Manga> selectedMangas;
 
-    private Subscription librarySubscription;
-
-    private static final int GET_CATEGORIES = 1;
+    private static final int GET_LIBRARY = 1;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -43,11 +40,11 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
 
         selectedMangas = new ArrayList<>();
 
-        restartableLatestCache(GET_CATEGORIES,
-                this::getCategoriesObservable,
-                LibraryFragment::setCategoriesWithDefault);
+        restartableLatestCache(GET_LIBRARY,
+                this::getLibraryObservable,
+                LibraryFragment::onNextLibraryUpdate);
 
-        start(GET_CATEGORIES);
+        start(GET_LIBRARY);
     }
 
     @Override
@@ -56,13 +53,15 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
         super.onDestroy();
     }
 
+    private Observable<Pair<List<Category>, Map<Integer, List<Manga>>>> getLibraryObservable() {
+        return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable(),
+                Pair::create)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<List<Category>> getCategoriesObservable() {
         return db.getCategories().createObservable()
-                .doOnNext(categories -> {
-                    this.categories = categories;
-                    subscribeToLibrary();
-                })
-                .observeOn(AndroidSchedulers.mainThread());
+                .doOnNext(categories -> this.categories = categories);
     }
 
     private Observable<Map<Integer, List<Manga>>> getLibraryMangasObservable() {
@@ -72,14 +71,6 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                         .flatMap(group -> group.toList()
                                 .map(list -> Pair.create(group.getKey(), list)))
                         .toMap(pair -> pair.first, pair -> pair.second));
-    }
-
-    private void subscribeToLibrary() {
-        if (librarySubscription != null && !librarySubscription.isUnsubscribed())
-            return;
-
-        add(librarySubscription = getLibraryMangasObservable().subscribe(
-                mangas -> EventBus.getDefault().postSticky(new LibraryMangasEvent(mangas))));
     }
 
     public void setSelection(Manga manga, boolean selected) {

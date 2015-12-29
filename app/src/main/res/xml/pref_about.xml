@@ -5,7 +5,7 @@
         android:key="acra.enable"
         android:title="@string/pref_enable_acra"
         android:summary="@string/pref_acra_summary"
-        android:defaultValue="false"/>
+        android:defaultValue="true"/>
 
     <Preference
         android:key="@string/pref_version"

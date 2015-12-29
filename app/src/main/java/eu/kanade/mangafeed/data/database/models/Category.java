@@ -29,4 +29,10 @@ public class Category implements Serializable {
         c.name = name;
         return c;
     }
+
+    public static Category createDefault() {
+        Category c = create("Default");
+        c.id = 0;
+        return c;
+    }
 }

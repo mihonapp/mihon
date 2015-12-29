@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.ActionMode;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,9 +20,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
@@ -32,7 +35,6 @@ import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.library.category.CategoryFragment;
 import eu.kanade.mangafeed.ui.main.MainActivity;
-import eu.kanade.mangafeed.util.EventBusHook;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(LibraryPresenter.class)
@@ -83,18 +85,6 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        registerForStickyEvents(1);
-    }
-
-    @Override
-    public void onPause() {
-        unregisterForEvents();
-        super.onPause();
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.library, menu);
     }
@@ -121,31 +111,30 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         ((MainActivity) getActivity()).pushFragment(fragment);
     }
 
-    @EventBusHook
-    public void onEventMainThread(LibraryMangasEvent event) {
-        List<Manga> mangasInDefaultCategory = event.getMangas().get(0);
-        boolean hasDefaultCategory = adapter.hasDefaultCategory();
+    public void onNextLibraryUpdate(Pair<List<Category>, Map<Integer, List<Manga>>> pair) {
+        boolean mangasInDefaultCategory = pair.second.get(0) != null;
+        boolean initialized = adapter.categories != null;
+
         // If there are mangas in the default category and the adapter doesn't have it,
         // create the default category
-        if (mangasInDefaultCategory != null && !hasDefaultCategory) {
-            setCategoriesWithDefault(getPresenter().categories);
+        if (mangasInDefaultCategory && (!initialized || !adapter.hasDefaultCategory())) {
+            setCategoriesWithDefault(pair.first);
         }
         // If there aren't mangas in the default category and the adapter have it,
         // remove the default category
-        else if (mangasInDefaultCategory == null && hasDefaultCategory) {
-            setCategories(getPresenter().categories);
+        else if (!mangasInDefaultCategory && (!initialized || adapter.hasDefaultCategory())) {
+            setCategories(pair.first);
         }
+        // Send the mangas to child fragments after the adapter is updated
+        EventBus.getDefault().postSticky(new LibraryMangasEvent(pair.second));
     }
 
-    public void setCategoriesWithDefault(List<Category> categories) {
-        List<Category> actualCategories = new ArrayList<>();
+    private void setCategoriesWithDefault(List<Category> categories) {
+        List<Category> categoriesWithDefault = new ArrayList<>();
+        categoriesWithDefault.add(Category.createDefault());
+        categoriesWithDefault.addAll(categories);
 
-        Category defaultCat = Category.create("Default");
-        defaultCat.id = 0;
-        actualCategories.add(defaultCat);
-
-        actualCategories.addAll(categories);
-        setCategories(actualCategories);
+        setCategories(categoriesWithDefault);
     }
 
     private void setCategories(List<Category> categories) {
