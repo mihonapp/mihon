@@ -45,10 +45,12 @@ public class MyAnimeListFragment extends BaseRxFragment<MyAnimeListPresenter> {
     }
 
     public void setMangaSync(MangaSync mangaSync) {
-        title.setText(mangaSync.title);
-        chapters.setText(mangaSync.last_chapter_read + "");
-        score.setText(mangaSync.score == 0 ? "-" : decimalFormat.format(mangaSync.score));
-        status.setText(getPresenter().myAnimeList.getStatus(mangaSync.status));
+        if (mangaSync != null) {
+            title.setText(mangaSync.title);
+            chapters.setText(mangaSync.last_chapter_read + "");
+            score.setText(mangaSync.score == 0 ? "-" : decimalFormat.format(mangaSync.score));
+            status.setText(getPresenter().myAnimeList.getStatus(mangaSync.status));
+        }
     }
 
     private void showSearchDialog() {
