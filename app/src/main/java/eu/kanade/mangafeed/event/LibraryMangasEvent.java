@@ -1,8 +1,11 @@
 package eu.kanade.mangafeed.event;
 
+import android.support.annotation.Nullable;
+
 import java.util.List;
 import java.util.Map;
 
+import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
 
 public class LibraryMangasEvent {
@@ -15,5 +18,10 @@ public class LibraryMangasEvent {
 
     public Map<Integer, List<Manga>> getMangas() {
         return mangas;
+    }
+
+    @Nullable
+    public List<Manga> getMangasForCategory(Category category) {
+        return mangas.get(category.id);
     }
 }

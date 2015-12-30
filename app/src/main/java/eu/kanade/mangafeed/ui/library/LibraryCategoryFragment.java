@@ -108,7 +108,7 @@ public class LibraryCategoryFragment extends BaseFragment
             return;
 
         Category category = categories.get(position);
-        List<Manga> mangas = event.getMangas().get(category.id);
+        List<Manga> mangas = event.getMangasForCategory(category);
         if (mangas == null) {
             mangas = new ArrayList<>();
         }

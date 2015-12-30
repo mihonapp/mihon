@@ -42,8 +42,4 @@ public class LibraryAdapter extends SmartFragmentStatePagerAdapter {
         }
     }
 
-    public boolean hasDefaultCategory() {
-        return categories.get(0).id == 0;
-    }
-
 }

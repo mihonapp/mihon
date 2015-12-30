@@ -7,7 +7,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.ActionMode;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -119,26 +118,20 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         startActivity(intent);
     }
 
-    public void onNextLibraryUpdate(Pair<List<Category>, Map<Integer, List<Manga>>> pair) {
-        boolean mangasInDefaultCategory = pair.second.get(0) != null;
-        boolean initialized = adapter.categories != null;
+    public void onNextLibraryUpdate(List<Category> categories, Map<Integer, List<Manga>> mangas) {
+        boolean hasMangasInDefaultCategory = mangas.get(0) != null;
+        int activeCat = adapter.categories != null ? viewPager.getCurrentItem() : activeCategory;
 
-        // If there are mangas in the default category and the adapter doesn't have it,
-        // create the default category
-        if (mangasInDefaultCategory && (!initialized || !adapter.hasDefaultCategory())) {
-            setCategoriesWithDefault(pair.first);
-        }
-        // If there aren't mangas in the default category and the adapter have it,
-        // remove the default category
-        else if (!mangasInDefaultCategory && (!initialized || adapter.hasDefaultCategory())) {
-            setCategories(pair.first);
+        if (hasMangasInDefaultCategory) {
+            setCategoriesWithDefault(categories);
+        } else {
+            setCategories(categories);
         }
         // Restore active category
-        if (!initialized) {
-            viewPager.setCurrentItem(activeCategory, false);
-        }
+        viewPager.setCurrentItem(activeCat, false);
+
         // Send the mangas to child fragments after the adapter is updated
-        EventBus.getDefault().postSticky(new LibraryMangasEvent(pair.second));
+        EventBus.getDefault().postSticky(new LibraryMangasEvent(mangas));
     }
 
     private void setCategoriesWithDefault(List<Category> categories) {

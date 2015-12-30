@@ -42,7 +42,7 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
 
         restartableLatestCache(GET_LIBRARY,
                 this::getLibraryObservable,
-                LibraryFragment::onNextLibraryUpdate);
+                (view, pair) -> view.onNextLibraryUpdate(pair.first, pair.second));
 
         start(GET_LIBRARY);
     }
