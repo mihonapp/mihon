@@ -117,7 +117,7 @@ public class LibraryCategoryFragment extends BaseFragment
 
     protected void openManga(Manga manga) {
         Intent intent = MangaActivity.newIntent(getActivity(), manga);
-        getActivity().startActivity(intent);
+        startActivity(intent);
     }
 
     public void setMangas(List<Manga> mangas) {
