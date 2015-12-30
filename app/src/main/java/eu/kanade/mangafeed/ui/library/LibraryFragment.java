@@ -129,6 +129,8 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         }
         // Restore active category
         viewPager.setCurrentItem(activeCat, false);
+        TabLayout.Tab tab = tabs.getTabAt(viewPager.getCurrentItem());
+        if (tab != null) tab.select();
 
         // Send the mangas to child fragments after the adapter is updated
         EventBus.getDefault().postSticky(new LibraryMangasEvent(mangas));
