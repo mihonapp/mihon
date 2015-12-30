@@ -33,7 +33,6 @@ import eu.kanade.mangafeed.ui.main.MainActivity;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.util.ToastUtil;
 import eu.kanade.mangafeed.widget.EndlessScrollListener;
-import icepick.Icepick;
 import icepick.State;
 import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
@@ -66,7 +65,6 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        Icepick.restoreInstanceState(this, savedState);
         setHasOptionsMenu(true);
     }
 
@@ -166,12 +164,6 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
     public void onDestroyView() {
         toolbar.removeView(spinner);
         super.onDestroyView();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        Icepick.saveInstanceState(this, outState);
-        super.onSaveInstanceState(outState);
     }
 
     private void initializeSearchSubscription() {

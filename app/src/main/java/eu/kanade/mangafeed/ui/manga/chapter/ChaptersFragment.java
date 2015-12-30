@@ -27,7 +27,6 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.download.DownloadService;
 import eu.kanade.mangafeed.data.download.model.Download;
-import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.decoration.DividerItemDecoration;
@@ -329,7 +328,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     @Override
     public void onListItemLongClick(int position) {
         if (actionMode == null)
-            actionMode = ((BaseActivity) getActivity()).startSupportActionMode(this);
+            actionMode = getBaseActivity().startSupportActionMode(this);
 
         toggleSelection(position);
     }

@@ -24,7 +24,6 @@ import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.util.EventBusHook;
 import eu.kanade.mangafeed.widget.AutofitRecyclerView;
-import icepick.Icepick;
 import icepick.State;
 import rx.Subscription;
 
@@ -49,7 +48,6 @@ public class LibraryCategoryFragment extends BaseFragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library_category, container, false);
         ButterKnife.bind(this, view);
-        Icepick.restoreInstanceState(this, savedState);
 
         adapter = new LibraryCategoryAdapter(this);
         recycler.setHasFixedSize(true);
@@ -98,7 +96,6 @@ public class LibraryCategoryFragment extends BaseFragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Icepick.saveInstanceState(this, outState);
         adapter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }

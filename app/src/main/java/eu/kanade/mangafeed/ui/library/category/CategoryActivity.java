@@ -1,17 +1,17 @@
 package eu.kanade.mangafeed.ui.library.category;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -21,19 +21,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Category;
-import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
+import eu.kanade.mangafeed.ui.base.activity.BaseRxActivity;
 import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
 import eu.kanade.mangafeed.ui.base.adapter.OnStartDragListener;
-import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.decoration.DividerItemDecoration;
 import eu.kanade.mangafeed.ui.library.LibraryCategoryAdapter;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
 
 @RequiresPresenter(CategoryPresenter.class)
-public class CategoryFragment extends BaseRxFragment<CategoryPresenter> implements
+public class CategoryActivity extends BaseRxActivity<CategoryPresenter> implements
         ActionMode.Callback, FlexibleViewHolder.OnListItemClickListener, OnStartDragListener {
 
+    @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.categories_list) RecyclerView recycler;
     @Bind(R.id.fab) FloatingActionButton fab;
 
@@ -41,19 +41,20 @@ public class CategoryFragment extends BaseRxFragment<CategoryPresenter> implemen
     private ActionMode actionMode;
     private ItemTouchHelper touchHelper;
 
-    public static CategoryFragment newInstance() {
-        return new CategoryFragment();
+    public static Intent newIntent(Context context) {
+        return new Intent(context, CategoryActivity.class);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
-        View view = inflater.inflate(R.layout.fragment_edit_categories, container, false);
-        ButterKnife.bind(this, view);
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
+        setContentView(R.layout.activity_edit_categories);
+        ButterKnife.bind(this);
 
-        setToolbarTitle(R.string.action_edit_categories);
+        setupToolbar(toolbar);
 
         adapter = new CategoryAdapter(this);
-        recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setHasFixedSize(true);
         recycler.setAdapter(adapter);
         recycler.addItemDecoration(new DividerItemDecoration(
@@ -64,15 +65,13 @@ public class CategoryFragment extends BaseRxFragment<CategoryPresenter> implemen
         touchHelper.attachToRecyclerView(recycler);
 
         fab.setOnClickListener(v -> {
-            new MaterialDialog.Builder(getActivity())
+            new MaterialDialog.Builder(this)
                     .title(R.string.action_add_category)
                     .input(R.string.name, 0, false, (dialog, input) -> {
                         getPresenter().createCategory(input.toString());
                     })
                     .show();
         });
-
-        return view;
     }
 
     public void setCategories(List<Category> categories) {
@@ -99,7 +98,7 @@ public class CategoryFragment extends BaseRxFragment<CategoryPresenter> implemen
     @Override
     public void onListItemLongClick(int position) {
         if (actionMode == null)
-            actionMode = ((BaseActivity) getActivity()).startSupportActionMode(this);
+            actionMode = startSupportActionMode(this);
 
         toggleSelection(position);
     }
@@ -165,7 +164,7 @@ public class CategoryFragment extends BaseRxFragment<CategoryPresenter> implemen
     }
 
     private void editCategory(Category category) {
-        new MaterialDialog.Builder(getActivity())
+        new MaterialDialog.Builder(this)
                 .title(R.string.action_rename_category)
                 .input(getString(R.string.name), category.name, false, (dialog, input) -> {
                     getPresenter().renameCategory(category, input.toString());

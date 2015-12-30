@@ -11,7 +11,7 @@ import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class CategoryPresenter extends BasePresenter<CategoryFragment> {
+public class CategoryPresenter extends BasePresenter<CategoryActivity> {
 
     @Inject DatabaseHelper db;
 
@@ -27,7 +27,7 @@ public class CategoryPresenter extends BasePresenter<CategoryFragment> {
                 () -> db.getCategories().createObservable()
                         .doOnNext(categories -> this.categories = categories)
                         .observeOn(AndroidSchedulers.mainThread()),
-                CategoryFragment::setCategories);
+                CategoryActivity::setCategories);
 
         start(GET_CATEGORIES);
     }

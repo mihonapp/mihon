@@ -59,7 +59,7 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<Category>> getCategoriesObservable() {
+    private Observable<List<Category>> getCategoriesObservable() {
         return db.getCategories().createObservable()
                 .doOnNext(categories -> this.categories = categories);
     }

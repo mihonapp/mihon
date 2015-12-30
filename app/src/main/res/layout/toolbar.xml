@@ -7,4 +7,5 @@
     android:background="@color/colorPrimary"
     android:elevation="4dp"
     android:theme="@style/ThemeOverlay.AppTheme.Dark"
+    app:layout_scrollFlags="scroll|enterAlways"
     app:popupTheme="@style/AppTheme.Popup" />

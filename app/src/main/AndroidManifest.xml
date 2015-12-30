@@ -38,6 +38,11 @@
             android:label="@string/label_settings"
             android:parentActivityName=".ui.main.MainActivity" >
         </activity>
+        <activity
+            android:name=".ui.library.category.CategoryActivity"
+            android:label="@string/label_categories"
+            android:parentActivityName=".ui.main.MainActivity">
+        </activity>
 
         <activity
             android:name=".ui.setting.SettingsDownloadsFragment$CustomLayoutPickerActivity"

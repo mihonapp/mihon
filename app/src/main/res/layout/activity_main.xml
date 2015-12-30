@@ -1,4 +1,6 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
@@ -18,7 +20,7 @@
         android:id="@+id/drawer_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appbar">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- the layout which will be the content of the activity (which will be hosted inside the drawer (NOT the list of the drawer)) -->
         <FrameLayout
@@ -28,4 +30,4 @@
 
         </FrameLayout>
     </FrameLayout>
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

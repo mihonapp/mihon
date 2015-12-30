@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.ActionMode;
 import android.util.Pair;
@@ -31,23 +30,25 @@ import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateService;
 import eu.kanade.mangafeed.event.LibraryMangasEvent;
-import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
-import eu.kanade.mangafeed.ui.library.category.CategoryFragment;
+import eu.kanade.mangafeed.ui.library.category.CategoryActivity;
 import eu.kanade.mangafeed.ui.main.MainActivity;
+import icepick.State;
 import nucleus.factory.RequiresPresenter;
 
 @RequiresPresenter(LibraryPresenter.class)
 public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         implements ActionMode.Callback {
 
-    TabLayout tabs;
-    AppBarLayout appBar;
-
     @Bind(R.id.view_pager) ViewPager viewPager;
+    private TabLayout tabs;
+    private AppBarLayout appBar;
+
     protected LibraryAdapter adapter;
 
     private ActionMode actionMode;
+
+    @State int activeCategory;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -68,12 +69,12 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         ButterKnife.bind(this, view);
 
         appBar = ((MainActivity) getActivity()).getAppBar();
-        tabs = (TabLayout) inflater.inflate(R.layout.tab_layout, appBar, false);
+        tabs = (TabLayout) inflater.inflate(R.layout.library_tab_layout, appBar, false);
         appBar.addView(tabs);
-
 
         adapter = new LibraryAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
+        tabs.setupWithViewPager(viewPager);
 
         return view;
     }
@@ -81,7 +82,14 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     @Override
     public void onDestroyView() {
         appBar.removeView(tabs);
+        EventBus.getDefault().removeStickyEvent(LibraryMangasEvent.class);
         super.onDestroyView();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        activeCategory = viewPager.getCurrentItem();
+        super.onSaveInstanceState(bundle);
     }
 
     @Override
@@ -107,8 +115,8 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     }
 
     private void onEditCategories() {
-        Fragment fragment = CategoryFragment.newInstance();
-        ((MainActivity) getActivity()).pushFragment(fragment);
+        Intent intent = CategoryActivity.newIntent(getActivity());
+        startActivity(intent);
     }
 
     public void onNextLibraryUpdate(Pair<List<Category>, Map<Integer, List<Manga>>> pair) {
@@ -125,6 +133,10 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         else if (!mangasInDefaultCategory && (!initialized || adapter.hasDefaultCategory())) {
             setCategories(pair.first);
         }
+        // Restore active category
+        if (!initialized) {
+            viewPager.setCurrentItem(activeCategory, false);
+        }
         // Send the mangas to child fragments after the adapter is updated
         EventBus.getDefault().postSticky(new LibraryMangasEvent(pair.second));
     }
@@ -139,8 +151,8 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
 
     private void setCategories(List<Category> categories) {
         adapter.setCategories(categories);
-        tabs.setupWithViewPager(viewPager);
-        tabs.setVisibility(categories.size() == 1 ? View.GONE : View.VISIBLE);
+        tabs.setTabsFromPagerAdapter(adapter);
+        tabs.setVisibility(categories.size() <= 1 ? View.GONE : View.VISIBLE);
     }
 
     public void setContextTitle(int count) {
@@ -211,7 +223,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
 
     public void createActionModeIfNeeded() {
         if (actionMode == null) {
-            actionMode = ((BaseActivity) getActivity()).startSupportActionMode(this);
+            actionMode = getBaseActivity().startSupportActionMode(this);
         }
     }
 

@@ -18,11 +18,11 @@ import eu.kanade.mangafeed.ui.base.adapter.ItemTouchHelperAdapter;
 public class CategoryAdapter extends FlexibleAdapter<CategoryHolder, Category> implements
         ItemTouchHelperAdapter {
 
-    private final CategoryFragment fragment;
+    private final CategoryActivity activity;
     private final ColorGenerator generator;
 
-    public CategoryAdapter(CategoryFragment fragment) {
-        this.fragment = fragment;
+    public CategoryAdapter(CategoryActivity activity) {
+        this.activity = activity;
         generator = ColorGenerator.DEFAULT;
         setHasStableIds(true);
     }
@@ -44,9 +44,9 @@ public class CategoryAdapter extends FlexibleAdapter<CategoryHolder, Category> i
 
     @Override
     public CategoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(fragment.getActivity());
+        LayoutInflater inflater = activity.getLayoutInflater();
         View v = inflater.inflate(R.layout.item_edit_categories, parent, false);
-        return new CategoryHolder(v, this, fragment, fragment);
+        return new CategoryHolder(v, this, activity, activity);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CategoryAdapter extends FlexibleAdapter<CategoryHolder, Category> i
             }
         }
 
-        fragment.getPresenter().reorderCategories(mItems);
+        activity.getPresenter().reorderCategories(mItems);
     }
 
     @Override
