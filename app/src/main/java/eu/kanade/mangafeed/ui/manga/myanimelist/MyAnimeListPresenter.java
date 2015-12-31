@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.manga.myanimelist;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import javax.inject.Inject;
 
@@ -55,9 +56,10 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),
                 (view, results) -> {
-                    view.onSearchResults(results);
+                    view.setSearchResults(results);
                 }, (view, error) -> {
                     Timber.e(error.getMessage());
+                    view.setSearchResultsError();
                 });
 
     }
@@ -100,8 +102,16 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     }
 
     public void searchManga(String query) {
+        if (TextUtils.isEmpty(query) || query.equals(this.query))
+            return;
+
         this.query = query;
         start(GET_SEARCH_RESULTS);
+    }
+
+    public void restartSearch() {
+        this.query = null;
+        stop(GET_SEARCH_RESULTS);
     }
 
     public void registerManga(MangaSync manga) {

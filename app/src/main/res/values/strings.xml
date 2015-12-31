@@ -141,6 +141,7 @@
     <string name="on_hold">On hold</string>
     <string name="plan_to_read">Plan to read</string>
     <string name="score">Score</string>
+    <string name="title_hint">Title…</string>
 
     <!-- Reader activity -->
     <string name="downloading">Downloading…</string>

@@ -110,6 +110,7 @@ public class MyAnimeList extends MangaSyncService {
                     MangaSync manga = MangaSync.create(this);
                     manga.title = entry.select("title").first().text();
                     manga.remote_id = Integer.parseInt(entry.select("id").first().text());
+                    manga.total_chapters = Integer.parseInt(entry.select("chapters").first().text());
                     return manga;
                 })
                 .toList();
@@ -141,6 +142,8 @@ public class MyAnimeList extends MangaSyncService {
                     // MAL doesn't support score with decimals
                     manga.score = Integer.parseInt(
                             entry.select("my_score").first().text());
+                    manga.total_chapters = Integer.parseInt(
+                            entry.select("series_chapters").first().text());
                     return manga;
                 })
                 .toList();
@@ -155,6 +158,9 @@ public class MyAnimeList extends MangaSyncService {
 
     public Observable<Response> update(MangaSync manga) {
         try {
+            if (manga.total_chapters != 0 && manga.last_chapter_read == manga.total_chapters) {
+                manga.status = COMPLETED;
+            }
             RequestBody payload = getMangaPostPayload(manga);
             return networkService.postData(getUpdateUrl(manga), payload, headers);
         } catch (IOException e) {

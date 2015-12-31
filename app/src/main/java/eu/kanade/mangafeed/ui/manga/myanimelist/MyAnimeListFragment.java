@@ -33,6 +33,8 @@ public class MyAnimeListFragment extends BaseRxFragment<MyAnimeListPresenter> {
 
     private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
+    private final static String SEARCH_FRAGMENT_TAG = "mal_search";
+
     public static MyAnimeListFragment newInstance() {
         return new MyAnimeListFragment();
     }
@@ -53,21 +55,36 @@ public class MyAnimeListFragment extends BaseRxFragment<MyAnimeListPresenter> {
         }
     }
 
-    private void showSearchDialog() {
-        if (dialog == null)
-            dialog = MyAnimeListDialogFragment.newInstance(this);
+    public void setSearchResults(List<MangaSync> results) {
+        findSearchFragmentIfNeeded();
 
-        dialog.show(getActivity().getSupportFragmentManager(), "search");
+        if (dialog != null) {
+            dialog.onSearchResults(results);
+        }
     }
 
-    public void onSearchResults(List<MangaSync> results) {
-        if (dialog != null)
-            dialog.setResults(results);
+    public void setSearchResultsError() {
+        findSearchFragmentIfNeeded();
+
+        if (dialog != null) {
+            dialog.onSearchResultsError();
+        }
+    }
+
+    private void findSearchFragmentIfNeeded() {
+        if (dialog == null) {
+            dialog = (MyAnimeListDialogFragment) getChildFragmentManager()
+                    .findFragmentByTag(SEARCH_FRAGMENT_TAG);
+        }
     }
 
     @OnClick(R.id.myanimelist_title_layout)
     void onTitleClick() {
-        showSearchDialog();
+        if (dialog == null)
+            dialog = MyAnimeListDialogFragment.newInstance();
+
+        getPresenter().restartSearch();
+        dialog.show(getChildFragmentManager(), SEARCH_FRAGMENT_TAG);
     }
 
     @OnClick(R.id.myanimelist_status_layout)

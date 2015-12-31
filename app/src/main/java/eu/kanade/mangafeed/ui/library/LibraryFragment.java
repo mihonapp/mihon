@@ -81,8 +81,13 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     @Override
     public void onDestroyView() {
         appBar.removeView(tabs);
-        EventBus.getDefault().removeStickyEvent(LibraryMangasEvent.class);
         super.onDestroyView();
+    }
+
+    @Override
+    public void onPause() {
+        EventBus.getDefault().removeStickyEvent(LibraryMangasEvent.class);
+        super.onPause();
     }
 
     @Override
