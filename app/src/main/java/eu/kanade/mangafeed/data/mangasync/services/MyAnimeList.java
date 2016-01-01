@@ -43,7 +43,6 @@ public class MyAnimeList extends MangaSyncService {
     private static final String SCORE_TAG = "score";
     private static final String STATUS_TAG = "status";
 
-    public static final int NOT_IN_LIST = 0;
     public static final int READING = 1;
     public static final int COMPLETED = 2;
     public static final int ON_HOLD = 3;
@@ -125,7 +124,7 @@ public class MyAnimeList extends MangaSyncService {
                 .toString();
     }
 
-    public Observable<List<MangaSync>> getList(String username) {
+    public Observable<List<MangaSync>> getList() {
         // TODO cache this list for a few minutes
         return networkService.getStringResponse(getListUrl(username), headers, null)
                 .map(Jsoup::parse)
@@ -215,15 +214,13 @@ public class MyAnimeList extends MangaSyncService {
     }
 
     public Observable<Response> bind(MangaSync manga) {
-        return getList(username)
+        return getList()
                 .flatMap(list -> {
                     manga.sync_id = getId();
                     for (MangaSync remoteManga : list) {
                         if (remoteManga.remote_id == manga.remote_id) {
                             // Manga is already in the list
-                            manga.score = remoteManga.score;
-                            manga.status = remoteManga.status;
-                            manga.last_chapter_read = remoteManga.last_chapter_read;
+                            manga.copyPersonalFrom(remoteManga);
                             return update(manga);
                         }
                     }

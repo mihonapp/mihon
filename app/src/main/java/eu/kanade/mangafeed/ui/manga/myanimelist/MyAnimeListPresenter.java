@@ -33,6 +33,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
 
     private static final int GET_MANGA_SYNC = 1;
     private static final int GET_SEARCH_RESULTS = 2;
+    private static final int REFRESH = 3;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -62,11 +63,29 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
                     view.setSearchResultsError();
                 });
 
+        restartableFirst(REFRESH,
+                () -> myAnimeList.getList()
+                        .flatMap(myList -> {
+                            for (MangaSync myManga : myList) {
+                                if (myManga.remote_id == mangaSync.remote_id) {
+                                    mangaSync.copyPersonalFrom(myManga);
+                                    return Observable.just(mangaSync);
+                                }
+                            }
+                            return Observable.error(new Exception("Could not find manga"));
+                        })
+                        .flatMap(myManga -> db.insertMangaSync(myManga).createObservable())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()),
+                (view, result) -> view.onRefreshDone(),
+                (view, error) -> view.onRefreshError());
+
     }
 
     private void onProcessRestart() {
         stop(GET_MANGA_SYNC);
         stop(GET_SEARCH_RESULTS);
+        stop(REFRESH);
     }
 
     @Override
@@ -156,5 +175,11 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     public void setLastChapterRead(int chapterNumber) {
         mangaSync.last_chapter_read = chapterNumber;
         updateRemote();
+    }
+
+    public void refresh() {
+        if (mangaSync != null) {
+            start(REFRESH);
+        }
     }
 }

@@ -81,7 +81,7 @@ public class ChaptersHolder extends FlexibleViewHolder {
 
     private void showPopupMenu(View view) {
         // Create a PopupMenu, giving it the clicked view for an anchor
-        PopupMenu popup = new PopupMenu(adapter.getChaptersFragment().getActivity(), view);
+        PopupMenu popup = new PopupMenu(adapter.getFragment().getActivity(), view);
 
         // Inflate our menu resource into the PopupMenu's Menu
         popup.getMenuInflater().inflate(R.menu.chapter_single, popup.getMenu());
@@ -92,13 +92,13 @@ public class ChaptersHolder extends FlexibleViewHolder {
 
             switch (menuItem.getItemId()) {
                 case R.id.action_mark_as_read:
-                    return adapter.getChaptersFragment().onMarkAsRead(chapter);
+                    return adapter.getFragment().onMarkAsRead(chapter);
                 case R.id.action_mark_as_unread:
-                    return adapter.getChaptersFragment().onMarkAsUnread(chapter);
+                    return adapter.getFragment().onMarkAsUnread(chapter);
                 case R.id.action_download:
-                    return adapter.getChaptersFragment().onDownload(chapter);
+                    return adapter.getFragment().onDownload(chapter);
                 case R.id.action_delete:
-                    return adapter.getChaptersFragment().onDelete(chapter);
+                    return adapter.getFragment().onDelete(chapter);
             }
             return false;
         });

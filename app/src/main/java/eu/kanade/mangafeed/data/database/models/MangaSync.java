@@ -43,4 +43,11 @@ public class MangaSync implements Serializable {
         mangasync.sync_id = service.getId();
         return mangasync;
     }
+
+    public void copyPersonalFrom(MangaSync other) {
+        last_chapter_read = other.last_chapter_read;
+        score = other.score;
+        status = other.status;
+    }
+
 }

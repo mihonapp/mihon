@@ -10,18 +10,14 @@ import java.util.List;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
-import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
-import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 
 public class ChaptersAdapter extends FlexibleAdapter<ChaptersHolder, Chapter> {
 
-    private BaseFragment fragment;
-    public FlexibleViewHolder.OnListItemClickListener clickListener;
+    private ChaptersFragment fragment;
 
-    public ChaptersAdapter(BaseFragment fragment) {
+    public ChaptersAdapter(ChaptersFragment fragment) {
         this.fragment = fragment;
         mItems = new ArrayList<>();
-        clickListener = (FlexibleViewHolder.OnListItemClickListener) fragment;
         setHasStableIds(true);
     }
 
@@ -31,7 +27,7 @@ public class ChaptersAdapter extends FlexibleAdapter<ChaptersHolder, Chapter> {
     @Override
     public ChaptersHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(fragment.getActivity()).inflate(R.layout.item_chapter, parent, false);
-        return new ChaptersHolder(v, this, clickListener);
+        return new ChaptersHolder(v, this, fragment);
     }
 
     @Override
@@ -53,7 +49,7 @@ public class ChaptersAdapter extends FlexibleAdapter<ChaptersHolder, Chapter> {
         notifyDataSetChanged();
     }
 
-    public ChaptersFragment getChaptersFragment() {
-        return (ChaptersFragment) fragment;
+    public ChaptersFragment getFragment() {
+        return fragment;
     }
 }

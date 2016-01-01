@@ -9,6 +9,7 @@ import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
 
 import java.io.File;
+import java.io.IOException;
 
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
@@ -38,8 +39,13 @@ public class PreferencesHelper {
                 File.separator + context.getString(R.string.app_name), "downloads");
 
         // Create default directory
-        if (getDownloadsDirectory().equals(defaultDownloadsDir.getAbsolutePath()))
+        if (getDownloadsDirectory().equals(defaultDownloadsDir.getAbsolutePath()) &&
+                !defaultDownloadsDir.exists()) {
             defaultDownloadsDir.mkdirs();
+            try {
+                new File(defaultDownloadsDir, ".nomedia").createNewFile();
+            } catch (IOException e) { /* Ignore */ }
+        }
     }
 
     private String getKey(int keyResource) {

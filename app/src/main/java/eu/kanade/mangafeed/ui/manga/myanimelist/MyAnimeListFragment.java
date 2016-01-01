@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.manga.myanimelist;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class MyAnimeListFragment extends BaseRxFragment<MyAnimeListPresenter> {
     @Bind(R.id.myanimelist_chapters) TextView chapters;
     @Bind(R.id.myanimelist_score) TextView score;
     @Bind(R.id.myanimelist_status) TextView status;
+    @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
 
     private MyAnimeListDialogFragment dialog;
 
@@ -43,16 +45,29 @@ public class MyAnimeListFragment extends BaseRxFragment<MyAnimeListPresenter> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_myanimelist, container, false);
         ButterKnife.bind(this, view);
+
+        swipeRefresh.setEnabled(false);
+        swipeRefresh.setOnRefreshListener(() -> getPresenter().refresh());
         return view;
     }
 
     public void setMangaSync(MangaSync mangaSync) {
+        swipeRefresh.setEnabled(mangaSync != null);
         if (mangaSync != null) {
             title.setText(mangaSync.title);
-            chapters.setText(mangaSync.last_chapter_read + "");
+            chapters.setText(mangaSync.last_chapter_read + "/" +
+                    (mangaSync.total_chapters > 0 ? mangaSync.total_chapters : "-"));
             score.setText(mangaSync.score == 0 ? "-" : decimalFormat.format(mangaSync.score));
             status.setText(getPresenter().myAnimeList.getStatus(mangaSync.status));
         }
+    }
+
+    public void onRefreshDone() {
+        swipeRefresh.setRefreshing(false);
+    }
+
+    public void onRefreshError() {
+        swipeRefresh.setRefreshing(false);
     }
 
     public void setSearchResults(List<MangaSync> results) {
