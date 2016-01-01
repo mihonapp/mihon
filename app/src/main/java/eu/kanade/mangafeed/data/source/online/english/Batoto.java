@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.data.source.online.english;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Headers;
@@ -30,12 +31,13 @@ import java.util.regex.Pattern;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.SourceManager;
-import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.data.source.base.LoginSource;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
 import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.util.Parser;
 import rx.Observable;
 
-public class Batoto extends Source {
+public class Batoto extends LoginSource {
 
     public static final String NAME = "Batoto (EN)";
     public static final String BASE_URL = "http://bato.to";
@@ -87,56 +89,6 @@ public class Batoto extends Source {
         return builder;
     }
 
-    public Observable<List<String>> getGenres() {
-        List<String> genres = new ArrayList<>(38);
-
-        genres.add("4-Koma");
-        genres.add("Action");
-        genres.add("Adventure");
-        genres.add("Award Winning");
-        genres.add("Comedy");
-        genres.add("Cooking");
-        genres.add("Doujinshi");
-        genres.add("Drama");
-        genres.add("Ecchi");
-        genres.add("Fantasy");
-        genres.add("Gender Bender");
-        genres.add("Harem");
-        genres.add("Historical");
-        genres.add("Horror");
-        genres.add("Josei");
-        genres.add("Martial Arts");
-        genres.add("Mecha");
-        genres.add("Medical");
-        genres.add("Music");
-        genres.add("Mystery");
-        genres.add("One Shot");
-        genres.add("Psychological");
-        genres.add("Romance");
-        genres.add("School Life");
-        genres.add("Sci-fi");
-        genres.add("Seinen");
-        genres.add("Shoujo");
-        genres.add("Shoujo Ai");
-        genres.add("Shounen");
-        genres.add("Shounen Ai");
-        genres.add("Slice of Life");
-        genres.add("Smut");
-        genres.add("Sports");
-        genres.add("Supernatural");
-        genres.add("Tragedy");
-        genres.add("Webtoon");
-        genres.add("Yaoi");
-        genres.add("Yuri");
-
-        return Observable.just(genres);
-    }
-
-    @Override
-    public boolean isLoginRequired() {
-        return true;
-    }
-
     @Override
     public String getInitialPopularMangasUrl() {
         return String.format(POPULAR_MANGAS_URL, 1);
@@ -167,140 +119,88 @@ public class Batoto extends Source {
         return String.format(PAGE_URL, id, defaultPageUrl.substring(end+1));
     }
 
-    @Override
-    protected List<Manga> parsePopularMangasFromHtml(Document parsedHtml) {
-        if (parsedHtml.text().contains("No (more) comics found!")) {
-            return new ArrayList<>();
-        }
-
+    private List<Manga> parseMangasFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements updatedHtmlBlocks = parsedHtml.select("tr:not([id]):not([class])");
-        for (Element currentHtmlBlock : updatedHtmlBlocks) {
-            Manga currentlyUpdatedManga = constructMangaFromHtmlBlock(currentHtmlBlock);
-
-            mangaList.add(currentlyUpdatedManga);
+        if (!parsedHtml.text().contains("No (more) comics found!")) {
+            for (Element currentHtmlBlock : parsedHtml.select("tr:not([id]):not([class])")) {
+                Manga manga = constructMangaFromHtmlBlock(currentHtmlBlock);
+                mangaList.add(manga);
+            }
         }
-
         return mangaList;
+    }
+
+    @Override
+    protected List<Manga> parsePopularMangasFromHtml(Document parsedHtml) {
+        return parseMangasFromHtml(parsedHtml);
     }
 
     @Override
     protected String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page) {
-        Element next = parsedHtml.select("#show_more_row").first();
-        if (next == null)
-            return null;
-
-        return String.format(POPULAR_MANGAS_URL, page.page + 1);
+        Element next = Parser.element(parsedHtml, "#show_more_row");
+        return next != null ? String.format(POPULAR_MANGAS_URL, page.page + 1) : null;
     }
 
     @Override
     protected List<Manga> parseSearchFromHtml(Document parsedHtml) {
-        if (parsedHtml.text().contains("No (more) comics found!")) {
-            return new ArrayList<>();
-        }
-
-        List<Manga> mangaList = new ArrayList<>();
-
-        Elements updatedHtmlBlocks = parsedHtml.select("tr:not([id]):not([class])");
-        for (Element currentHtmlBlock : updatedHtmlBlocks) {
-            Manga currentlyUpdatedManga = constructMangaFromHtmlBlock(currentHtmlBlock);
-
-            mangaList.add(currentlyUpdatedManga);
-        }
-
-        return mangaList;
+        return parseMangasFromHtml(parsedHtml);
     }
 
     private Manga constructMangaFromHtmlBlock(Element htmlBlock) {
-        Manga mangaFromHtmlBlock = new Manga();
+        Manga manga = new Manga();
+        manga.source = getId();
 
-        Element urlElement = htmlBlock.select("a[href^=http://bato.to]").first();
-        Element updateElement = htmlBlock.select("td").get(5);
-
-        mangaFromHtmlBlock.source = getId();
-
+        Element urlElement = Parser.element(htmlBlock, "a[href^=http://bato.to]");
         if (urlElement != null) {
-            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
-            mangaFromHtmlBlock.title = urlElement.text().trim();
+            manga.setUrl(urlElement.attr("href"));
+            manga.title = urlElement.text().trim();
         }
-        if (updateElement != null) {
-            mangaFromHtmlBlock.last_update = parseUpdateFromElement(updateElement);
-        }
-
-        return mangaFromHtmlBlock;
+        return manga;
     }
 
     @Override
     protected String parseNextSearchUrl(Document parsedHtml, MangasPage page, String query) {
-        Element next = parsedHtml.select("#show_more_row").first();
-        if (next == null)
-            return null;
-
-        return String.format(SEARCH_URL, query, page.page + 1);
-    }
-
-    private long parseUpdateFromElement(Element updateElement) {
-        String updatedDateAsString = updateElement.text();
-
-        try {
-            Date specificDate = new SimpleDateFormat("dd MMMMM yyyy - hh:mm a", Locale.ENGLISH).parse(updatedDateAsString);
-
-            return specificDate.getTime();
-        } catch (ParseException e) {
-            // Do Nothing.
-        }
-
-        return 0;
+        Element next = Parser.element(parsedHtml, "#show_more_row");
+        return next != null ? String.format(SEARCH_URL, query, page.page + 1) : null;
     }
 
     @Override
     protected Manga parseHtmlToManga(String mangaUrl, String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
-        Elements artistElements = parsedDocument.select("a[href^=http://bato.to/search?artist_name]");
-        Element descriptionElement = parsedDocument.select("tr").get(5);
-        Elements genreElements = parsedDocument.select("img[src=http://bato.to/forums/public/style_images/master/bullet_black.png]");
-        Element thumbnailUrlElement = parsedDocument.select("img[src^=http://img.bato.to/forums/uploads/]").first();
+        Element tbody = parsedDocument.select("tbody").first();
+        Element artistElement = tbody.select("tr:contains(Author/Artist:)").first();
+        Elements genreElements = tbody.select("tr:contains(Genres:) img");
 
-        Manga newManga = new Manga();
-        newManga.url = mangaUrl;
+        Manga manga = Manga.create(mangaUrl);
+        manga.author = Parser.text(artistElement, "td:eq(1)");
+        manga.artist = Parser.text(artistElement, "td:eq(2)", manga.author);
+        manga.description = Parser.text(tbody, "tr:contains(Description:) > td:eq(1)");
+        manga.thumbnail_url = Parser.src(parsedDocument, "img[src^=http://img.bato.to/forums/uploads/]");
+        manga.status = parseStatus(Parser.text(parsedDocument, "tr:contains(Status:) > td:eq(1)"));
 
-        if (artistElements != null) {
-            newManga.author = artistElements.get(0).text();
-            if (artistElements.size() > 1) {
-                newManga.artist = artistElements.get(1).text();
-            } else {
-                newManga.artist = newManga.author;
+        if (!genreElements.isEmpty()) {
+            List<String> genres = new ArrayList<>();
+            for (Element element : genreElements) {
+                genres.add(element.attr("alt"));
             }
-        }
-        if (descriptionElement != null) {
-            newManga.description = descriptionElement.text().substring("Description:".length()).trim();
-        }
-        if (genreElements != null) {
-            String fieldGenres = "";
-            for (int index = 0; index < genreElements.size(); index++) {
-                String currentGenre = genreElements.get(index).attr("alt");
-
-                if (index < genreElements.size() - 1) {
-                    fieldGenres += currentGenre + ", ";
-                } else {
-                    fieldGenres += currentGenre;
-                }
-            }
-            newManga.genre = fieldGenres;
-        }
-        if (thumbnailUrlElement != null) {
-            newManga.thumbnail_url = thumbnailUrlElement.attr("src");
+            manga.genre = TextUtils.join(", ", genres);
         }
 
-        boolean fieldCompleted = unparsedHtml.contains("<td>Complete</td>");
-        //TODO fix
-        newManga.status = 0;
+        manga.initialized = true;
+        return manga;
+    }
 
-        newManga.initialized = true;
-
-        return newManga;
+    private int parseStatus(String status) {
+        switch (status) {
+            case "Ongoing":
+                return Manga.ONGOING;
+            case "Complete":
+                return Manga.COMPLETED;
+            default:
+                return Manga.UNKNOWN;
+        }
     }
 
     @Override
@@ -311,34 +211,30 @@ public class Batoto extends Source {
 
         Elements chapterElements = parsedDocument.select("tr.row.lang_English.chapter_row");
         for (Element chapterElement : chapterElements) {
-            Chapter currentChapter = constructChapterFromHtmlBlock(chapterElement);
-            chapterList.add(currentChapter);
+            Chapter chapter = constructChapterFromHtmlBlock(chapterElement);
+            chapterList.add(chapter);
         }
-
-        //saveChaptersToDatabase(chapterList, mangaUrl);
-
         return chapterList;
 
     }
 
     private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
-        Chapter newChapter = Chapter.create();
+        Chapter chapter = Chapter.create();
 
         Element urlElement = chapterElement.select("a[href^=http://bato.to/reader").first();
         Element dateElement = chapterElement.select("td").get(4);
 
         if (urlElement != null) {
             String fieldUrl = urlElement.attr("href");
-            newChapter.setUrl(fieldUrl);
-            newChapter.name = urlElement.text().trim();
-
+            chapter.setUrl(fieldUrl);
+            chapter.name = urlElement.text().trim();
         }
         if (dateElement != null) {
-            newChapter.date_upload = parseDateFromElement(dateElement);
+            chapter.date_upload = parseDateFromElement(dateElement);
         }
-        newChapter.date_fetch = new Date().getTime();
+        chapter.date_fetch = new Date().getTime();
 
-        return newChapter;
+        return chapter;
     }
 
     private long parseDateFromElement(Element dateElement) {
@@ -372,8 +268,7 @@ public class Batoto extends Source {
 
         List<String> pageUrlList = new ArrayList<>();
 
-        Element selectElement = parsedDocument.select("#page_select").first();
-
+        Element selectElement = Parser.element(parsedDocument, "#page_select");
         if (selectElement != null) {
             for (Element pageUrlElement : selectElement.select("option")) {
                 pageUrlList.add(pageUrlElement.attr("value"));
@@ -389,8 +284,7 @@ public class Batoto extends Source {
     }
 
     @Override
-    protected List<Page> getFirstImageFromPageUrls(List<String> pageUrls, String unparsedHtml) {
-        List<Page> pages = convertToPages(pageUrls);
+    protected List<Page> parseFirstPage(List<Page> pages, String unparsedHtml) {
         if (!unparsedHtml.contains("Want to see this chapter per page instead?")) {
             String firstImage = parseHtmlToImageUrl(unparsedHtml);
             pages.get(0).setImageUrl(firstImage);
@@ -412,9 +306,7 @@ public class Batoto extends Source {
         String trimmedHtml = unparsedHtml.substring(beginIndex, endIndex);
 
         Document parsedDocument = Jsoup.parse(trimmedHtml);
-
         Element imageElement = parsedDocument.getElementById("comic_page");
-
         return imageElement.attr("src");
     }
 
@@ -431,7 +323,7 @@ public class Batoto extends Source {
         String postUrl = form.attr("action");
 
         FormEncodingBuilder formBody = new FormEncodingBuilder();
-        Element authKey = form.select("input[name=auth_key").first();
+        Element authKey = form.select("input[name=auth_key]").first();
 
         formBody.add(authKey.attr("name"), authKey.attr("value"));
         formBody.add("ips_username", username);

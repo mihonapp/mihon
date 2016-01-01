@@ -60,7 +60,18 @@ public class Manga implements Serializable {
 
     public int category;
 
+    public static final int UNKNOWN = 0;
+    public static final int ONGOING = 1;
+    public static final int COMPLETED = 2;
+    public static final int LICENSED = 3;
+
     public Manga() {}
+
+    public static Manga create(String pathUrl) {
+        Manga m = new Manga();
+        m.url = pathUrl;
+        return m;
+    }
 
     public void setUrl(String url) {
         this.url = UrlUtil.getPath(url);

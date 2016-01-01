@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.data.network;
 
 
 import com.squareup.okhttp.CacheControl;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -21,6 +22,7 @@ public final class NetworkHelper {
 
     public final CacheControl NULL_CACHE_CONTROL = new CacheControl.Builder().noCache().build();
     public final Headers NULL_HEADERS = new Headers.Builder().build();
+    public final RequestBody NULL_REQUEST_BODY = new FormEncodingBuilder().build();
 
     public NetworkHelper() {
         client = new OkHttpClient();
@@ -65,7 +67,7 @@ public final class NetworkHelper {
             try {
                 Request request = new Request.Builder()
                         .url(url)
-                        .post(formBody)
+                        .post(formBody != null ? formBody : NULL_REQUEST_BODY)
                         .headers(headers != null ? headers : NULL_HEADERS)
                         .build();
                 return Observable.just(client.newCall(request).execute());

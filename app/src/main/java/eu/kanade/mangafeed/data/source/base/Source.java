@@ -42,6 +42,11 @@ public abstract class Source extends BaseSource {
         glideHeaders = glideHeadersBuilder().build();
     }
 
+    @Override
+    public boolean isLoginRequired() {
+        return false;
+    }
+
     // Get the most popular mangas from the source
     public Observable<MangasPage> pullPopularMangasFromNetwork(MangasPage page) {
         if (page.page == 1)
@@ -95,8 +100,8 @@ public abstract class Source extends BaseSource {
         return networkService
                 .getStringResponse(getBaseUrl() + overrideChapterUrl(chapterUrl), requestHeaders, null)
                 .flatMap(unparsedHtml -> {
-                    List<String> pageUrls = parseHtmlToPageUrls(unparsedHtml);
-                    return Observable.just(getFirstImageFromPageUrls(pageUrls, unparsedHtml));
+                    List<Page> pages = convertToPages(parseHtmlToPageUrls(unparsedHtml));
+                    return Observable.just(parseFirstPage(pages, unparsedHtml));
                 });
     }
 
@@ -182,8 +187,7 @@ public abstract class Source extends BaseSource {
         return pages;
     }
 
-    protected List<Page> getFirstImageFromPageUrls(List<String> pageUrls, String unparsedHtml) {
-        List<Page> pages = convertToPages(pageUrls);
+    protected List<Page> parseFirstPage(List<Page> pages, String unparsedHtml) {
         String firstImage = parseHtmlToImageUrl(unparsedHtml);
         pages.get(0).setImageUrl(firstImage);
         return pages;

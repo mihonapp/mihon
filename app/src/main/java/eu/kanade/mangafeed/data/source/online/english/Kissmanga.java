@@ -10,7 +10,6 @@ import com.squareup.okhttp.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +26,7 @@ import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
 import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.util.Parser;
 import rx.Observable;
 
 public class Kissmanga extends Source {
@@ -65,11 +65,6 @@ public class Kissmanga extends Source {
     }
 
     @Override
-    public boolean isLoginRequired() {
-        return false;
-    }
-
-    @Override
     protected String getInitialPopularMangasUrl() {
         return String.format(POPULAR_MANGAS_URL, 1);
     }
@@ -83,36 +78,32 @@ public class Kissmanga extends Source {
     protected List<Manga> parsePopularMangasFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements mangaHtmlBlocks = parsedHtml.select("table.listing tr:gt(1)");
-        for (Element currentHtmlBlock : mangaHtmlBlocks) {
-            Manga currentManga = constructPopularMangaFromHtmlBlock(currentHtmlBlock);
-            mangaList.add(currentManga);
+        for (Element currentHtmlBlock : parsedHtml.select("table.listing tr:gt(1)")) {
+            Manga manga = constructPopularMangaFromHtml(currentHtmlBlock);
+            mangaList.add(manga);
         }
 
         return mangaList;
     }
 
-    private Manga constructPopularMangaFromHtmlBlock(Element htmlBlock) {
-        Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getId();
+    private Manga constructPopularMangaFromHtml(Element htmlBlock) {
+        Manga manga = new Manga();
+        manga.source = getId();
 
-        Element urlElement = htmlBlock.select("td a:eq(0)").first();
+        Element urlElement = Parser.element(htmlBlock, "td a:eq(0)");
 
         if (urlElement != null) {
-            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
-            mangaFromHtmlBlock.title = urlElement.text();
+            manga.setUrl(urlElement.attr("href"));
+            manga.title = urlElement.text();
         }
 
-        return mangaFromHtmlBlock;
+        return manga;
     }
 
     @Override
     protected String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page) {
-        Element next = parsedHtml.select("li > a:contains(› Next)").first();
-        if (next == null)
-            return null;
-
-        return BASE_URL + next.attr("href");
+        String path = Parser.href(parsedHtml, "li > a:contains(› Next)");
+        return path != null ? BASE_URL + path : null;
     }
 
     public Observable<MangasPage> searchMangasFromNetwork(MangasPage page, String query) {
@@ -147,90 +138,75 @@ public class Kissmanga extends Source {
     @Override
     protected Manga parseHtmlToManga(String mangaUrl, String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
-
         Element infoElement = parsedDocument.select("div.barContent").first();
-        Element titleElement = infoElement.select("a.bigChar").first();
-        Element authorElement = infoElement.select("p:has(span:contains(Author:)) > a").first();
-        Elements genreElement = infoElement.select("p:has(span:contains(Genres:)) > *:gt(0)");
-        Elements descriptionElement = infoElement.select("p:has(span:contains(Summary:)) ~ p");
-        Element thumbnailUrlElement = parsedDocument.select(".rightBox:eq(0) img").first();
 
-        Manga newManga = new Manga();
-        newManga.url = mangaUrl;
+        Manga manga = Manga.create(mangaUrl);
+        manga.title = Parser.text(infoElement, "a.bigChar");
+        manga.author = Parser.text(infoElement, "p:has(span:contains(Author:)) > a");
+        manga.genre = Parser.allText(infoElement, "p:has(span:contains(Genres:)) > *:gt(0)");
+        manga.description = Parser.allText(infoElement, "p:has(span:contains(Summary:)) ~ p");
+        manga.status = parseStatus(Parser.text(infoElement, "p:has(span:contains(Status:))"));
 
-        if (titleElement != null) {
-            newManga.title = titleElement.text();
+        String thumbnail = Parser.src(parsedDocument, ".rightBox:eq(0) img");
+        if (thumbnail != null) {
+            manga.thumbnail_url = Uri.parse(thumbnail).buildUpon().authority(IP).toString();
         }
-        if (authorElement != null) {
-            newManga.author = authorElement.text();
-        }
-        if (descriptionElement != null) {
-            newManga.description = descriptionElement.text();
-        }
-        if (genreElement != null) {
-            newManga.genre = genreElement.text();
-        }
-        if (thumbnailUrlElement != null) {
-            newManga.thumbnail_url = Uri.parse(thumbnailUrlElement.attr("src"))
-                    .buildUpon().authority(IP).toString();
-        }
-//        if (statusElement != null) {
-//            boolean fieldCompleted = statusElement.text().contains("Completed");
-//            newManga.status = fieldCompleted + "";
-//        }
 
-        newManga.initialized = true;
+        manga.initialized = true;
+        return manga;
+    }
 
-        return newManga;
+    private int parseStatus(String status) {
+        if (status.contains("Ongoing")) {
+            return Manga.ONGOING;
+        }
+        if (status.contains("Completed")) {
+            return Manga.COMPLETED;
+        }
+        return Manga.UNKNOWN;
     }
 
     @Override
     protected List<Chapter> parseHtmlToChapters(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
-
         List<Chapter> chapterList = new ArrayList<>();
 
-        Elements chapterElements = parsedDocument.select("table.listing tr:gt(1)");
-        for (Element chapterElement : chapterElements) {
-            Chapter currentChapter = constructChapterFromHtmlBlock(chapterElement);
-
-            chapterList.add(currentChapter);
+        for (Element chapterElement : parsedDocument.select("table.listing tr:gt(1)")) {
+            Chapter chapter = constructChapterFromHtmlBlock(chapterElement);
+            chapterList.add(chapter);
         }
 
         return chapterList;
     }
 
     private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
-        Chapter newChapter = Chapter.create();
+        Chapter chapter = Chapter.create();
 
-        Element urlElement = chapterElement.select("a").first();
-        Element dateElement = chapterElement.select("td:eq(1)").first();
+        Element urlElement = Parser.element(chapterElement, "a");
+        String date = Parser.text(chapterElement, "td:eq(1)");
 
         if (urlElement != null) {
-            newChapter.setUrl(urlElement.attr("href"));
-            newChapter.name = urlElement.text();
+            chapter.setUrl(urlElement.attr("href"));
+            chapter.name = urlElement.text();
         }
-        if (dateElement != null) {
+        if (date != null) {
             try {
-                newChapter.date_upload = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(dateElement.text()).getTime();
-            } catch (ParseException e) {
-                // Do Nothing.
-            }
+                chapter.date_upload = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(date).getTime();
+            } catch (ParseException e) { /* Ignore */ }
         }
 
-        newChapter.date_fetch = new Date().getTime();
-
-        return newChapter;
+        chapter.date_fetch = new Date().getTime();
+        return chapter;
     }
 
+    @Override
     public Observable<List<Page>> pullPageListFromNetwork(final String chapterUrl) {
-        FormEncodingBuilder builder = new FormEncodingBuilder();
         return networkService
-                .postData(getBaseUrl() + overrideChapterUrl(chapterUrl), builder.build(), requestHeaders)
+                .postData(getBaseUrl() + overrideChapterUrl(chapterUrl), null, requestHeaders)
                 .flatMap(networkService::mapResponseToString)
                 .flatMap(unparsedHtml -> {
-                    List<String> pageUrls = parseHtmlToPageUrls(unparsedHtml);
-                    return Observable.just(getFirstImageFromPageUrls(pageUrls, unparsedHtml));
+                    List<Page> pages = convertToPages(parseHtmlToPageUrls(unparsedHtml));
+                    return Observable.just(parseFirstPage(pages, unparsedHtml));
                 });
     }
 
@@ -248,18 +224,13 @@ public class Kissmanga extends Source {
     }
 
     @Override
-    protected List<Page> getFirstImageFromPageUrls(List<String> pageUrls, String unparsedHtml) {
-        List<Page> pages = convertToPages(pageUrls);
-
+    protected List<Page> parseFirstPage(List<Page> pages, String unparsedHtml) {
         Pattern p = Pattern.compile("lstImages.push\\(\"(.+?)\"");
         Matcher m = p.matcher(unparsedHtml);
-        List<String> imageUrls = new ArrayList<>();
-        while (m.find()) {
-            imageUrls.add(m.group(1));
-        }
 
-        for (int i = 0; i < pages.size(); i++) {
-            pages.get(i).setImageUrl(imageUrls.get(i));
+        int i = 0;
+        while (m.find()) {
+            pages.get(i++).setImageUrl(m.group(1));
         }
         return pages;
     }

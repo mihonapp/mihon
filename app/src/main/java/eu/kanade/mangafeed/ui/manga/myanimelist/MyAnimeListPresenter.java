@@ -69,6 +69,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
                             for (MangaSync myManga : myList) {
                                 if (myManga.remote_id == mangaSync.remote_id) {
                                     mangaSync.copyPersonalFrom(myManga);
+                                    mangaSync.total_chapters = myManga.total_chapters;
                                     return Observable.just(mangaSync);
                                 }
                             }

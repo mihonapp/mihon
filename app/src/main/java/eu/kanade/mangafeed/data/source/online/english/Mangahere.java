@@ -21,7 +21,7 @@ import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
-import rx.Observable;
+import eu.kanade.mangafeed.util.Parser;
 
 public class Mangahere extends Source {
 
@@ -50,11 +50,6 @@ public class Mangahere extends Source {
     }
 
     @Override
-    public boolean isLoginRequired() {
-        return false;
-    }
-
-    @Override
     protected String getInitialPopularMangasUrl() {
         return String.format(POPULAR_MANGAS_URL, "");
     }
@@ -64,78 +59,33 @@ public class Mangahere extends Source {
         return String.format(SEARCH_URL, Uri.encode(query), 1);
     }
 
-    public Observable<List<String>> getGenres() {
-        List<String> genres = new ArrayList<>(30);
-
-        genres.add("Action");
-        genres.add("Adventure");
-        genres.add("Comedy");
-        genres.add("Drama");
-        genres.add("Ecchi");
-        genres.add("Fantasy");
-        genres.add("Gender Bender");
-        genres.add("Harem");
-        genres.add("Historical");
-        genres.add("Horror");
-        genres.add("Josei");
-        genres.add("Martial Arts");
-        genres.add("Mature");
-        genres.add("Mecha");
-        genres.add("Mystery");
-        genres.add("One Shot");
-        genres.add("Psychological");
-        genres.add("Romance");
-        genres.add("School Life");
-        genres.add("Sci-fi");
-        genres.add("Seinen");
-        genres.add("Shoujo");
-        genres.add("Shoujo Ai");
-        genres.add("Shounen");
-        genres.add("Shounen Ai");
-        genres.add("Slice of Life");
-        genres.add("Sports");
-        genres.add("Supernatural");
-        genres.add("Tragedy");
-        genres.add("Yaoi");
-        genres.add("Yuri");
-
-        return Observable.just(genres);
-    }
-
     @Override
     public List<Manga> parsePopularMangasFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements mangaHtmlBlocks = parsedHtml.select("div.directory_list > ul > li");
-        for (Element currentHtmlBlock : mangaHtmlBlocks) {
+        for (Element currentHtmlBlock : parsedHtml.select("div.directory_list > ul > li")) {
             Manga currentManga = constructPopularMangaFromHtmlBlock(currentHtmlBlock);
             mangaList.add(currentManga);
         }
-
         return mangaList;
     }
 
     private Manga constructPopularMangaFromHtmlBlock(Element htmlBlock) {
-        Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getId();
+        Manga manga = new Manga();
+        manga.source = getId();
 
-        Element urlElement = htmlBlock.select("div.title > a").first();
-
+        Element urlElement = Parser.element(htmlBlock, "div.title > a");
         if (urlElement != null) {
-            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
-            mangaFromHtmlBlock.title = urlElement.attr("title");
+            manga.setUrl(urlElement.attr("href"));
+            manga.title = urlElement.attr("title");
         }
-
-        return mangaFromHtmlBlock;
+        return manga;
     }
 
     @Override
     protected String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page) {
-        Element next = parsedHtml.select("div.next-page > a.next").first();
-        if (next == null)
-            return null;
-
-        return String.format(POPULAR_MANGAS_URL, next.attr("href"));
+        Element next = Parser.element(parsedHtml, "div.next-page > a.next");
+        return next != null ? String.format(POPULAR_MANGAS_URL, next.attr("href")) : null;
     }
 
     @Override
@@ -147,31 +97,25 @@ public class Mangahere extends Source {
             Manga currentManga = constructSearchMangaFromHtmlBlock(currentHtmlBlock);
             mangaList.add(currentManga);
         }
-
         return mangaList;
     }
 
     private Manga constructSearchMangaFromHtmlBlock(Element htmlBlock) {
-        Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getId();
+        Manga manga = new Manga();
+        manga.source = getId();
 
-        Element urlElement = htmlBlock.select("a.manga_info").first();
-
+        Element urlElement = Parser.element(htmlBlock, "a.manga_info");
         if (urlElement != null) {
-            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
-            mangaFromHtmlBlock.title = urlElement.text();
+            manga.setUrl(urlElement.attr("href"));
+            manga.title = urlElement.text();
         }
-
-        return mangaFromHtmlBlock;
+        return manga;
     }
 
     @Override
     protected String parseNextSearchUrl(Document parsedHtml, MangasPage page, String query) {
-        Element next = parsedHtml.select("div.next-page > a.next").first();
-        if (next == null)
-            return null;
-
-        return BASE_URL + next.attr("href");
+        Element next = Parser.element(parsedHtml, "div.next-page > a.next");
+        return next != null ? BASE_URL + next.attr("href") : null;
     }
 
     private long parseUpdateFromElement(Element updateElement) {
@@ -223,49 +167,41 @@ public class Mangahere extends Source {
         String trimmedHtml = unparsedHtml.substring(beginIndex, endIndex);
 
         Document parsedDocument = Jsoup.parse(trimmedHtml);
+        Element detailElement = parsedDocument.select("ul.detail_topText").first();
 
-        Elements detailElements = parsedDocument.select("ul.detail_topText li");
+        Manga manga = Manga.create(mangaUrl);
+        manga.author = Parser.text(parsedDocument, "a[href^=http://www.mangahere.co/author/]");
+        manga.artist = Parser.text(parsedDocument, "a[href^=http://www.mangahere.co/artist/]");
 
-        Element artistElement = parsedDocument.select("a[href^=http://www.mangahere.co/artist/]").first();
-        Element authorElement = parsedDocument.select("a[href^=http://www.mangahere.co/author/]").first();
-        Element descriptionElement = detailElements.select("#show").first();
-        Element genreElement = detailElements.get(3);
-        Element statusElement = detailElements.get(6);
-
-        Manga newManga = new Manga();
-        newManga.url = mangaUrl;
-
-        if (artistElement != null) {
-            newManga.artist = artistElement.text();
+        String description = Parser.text(detailElement, "#show");
+        if (description != null) {
+            manga.description = description.substring(0, description.length() - "Show less".length());
         }
-        if (authorElement != null) {
-            newManga.author = authorElement.text();
+        String genres = Parser.text(detailElement, "li:eq(3)");
+        if (genres != null) {
+            manga.genre = genres.substring("Genre(s):".length());
         }
-        if (descriptionElement != null) {
-            newManga.description = descriptionElement.text().substring(0, descriptionElement.text().length() - "Show less".length());
-        }
-        if (genreElement != null) {
-            newManga.genre = genreElement.text().substring("Genre(s):".length());
-        }
-        if (statusElement != null) {
-            boolean fieldCompleted = statusElement.text().contains("Completed");
-            // TODO fix status
-//            newManga.status = fieldCompleted + "";
-        }
+        manga.status = parseStatus(Parser.text(detailElement, "li:eq(6)"));
 
         beginIndex = unparsedHtml.indexOf("<img");
         endIndex = unparsedHtml.indexOf("/>", beginIndex);
         trimmedHtml = unparsedHtml.substring(beginIndex, endIndex + 2);
+
         parsedDocument = Jsoup.parse(trimmedHtml);
-        Element thumbnailUrlElement = parsedDocument.select("img").first();
+        manga.thumbnail_url = Parser.src(parsedDocument, "img");
 
-        if (thumbnailUrlElement != null) {
-            newManga.thumbnail_url = thumbnailUrlElement.attr("src");
+        manga.initialized = true;
+        return manga;
+    }
+
+    private int parseStatus(String status) {
+        if (status.contains("Ongoing")) {
+            return Manga.ONGOING;
         }
-
-        newManga.initialized = true;
-
-        return newManga;
+        if (status.contains("Completed")) {
+            return Manga.COMPLETED;
+        }
+        return Manga.UNKNOWN;
     }
 
     @Override
@@ -276,37 +212,31 @@ public class Mangahere extends Source {
 
         Document parsedDocument = Jsoup.parse(trimmedHtml);
 
-        List<Chapter> chapterList = new ArrayList<Chapter>();
+        List<Chapter> chapterList = new ArrayList<>();
 
-        Elements chapterElements = parsedDocument.getElementsByTag("li");
-        for (Element chapterElement : chapterElements) {
+        for (Element chapterElement : parsedDocument.getElementsByTag("li")) {
             Chapter currentChapter = constructChapterFromHtmlBlock(chapterElement);
-
             chapterList.add(currentChapter);
         }
-
         return chapterList;
     }
 
     private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
-        Chapter newChapter = Chapter.create();
+        Chapter chapter = Chapter.create();
 
         Element urlElement = chapterElement.select("a").first();
-        Element nameElement = chapterElement.select("a").first();
         Element dateElement = chapterElement.select("span.right").first();
 
         if (urlElement != null) {
-            newChapter.setUrl(urlElement.attr("href"));
-        }
-        if (nameElement != null) {
-            newChapter.name = nameElement.text();
+            chapter.setUrl(urlElement.attr("href"));
+            chapter.name = urlElement.text();
         }
         if (dateElement != null) {
-            newChapter.date_upload = parseDateFromElement(dateElement);
+            chapter.date_upload = parseDateFromElement(dateElement);
         }
-        newChapter.date_fetch = new Date().getTime();
+        chapter.date_fetch = new Date().getTime();
 
-        return newChapter;
+        return chapter;
     }
 
     private long parseDateFromElement(Element dateElement) {
@@ -348,7 +278,6 @@ public class Mangahere extends Source {
                 // Do Nothing.
             }
         }
-
         return 0;
     }
 
@@ -360,7 +289,7 @@ public class Mangahere extends Source {
 
         Document parsedDocument = Jsoup.parse(trimmedHtml);
 
-        List<String> pageUrlList = new ArrayList<String>();
+        List<String> pageUrlList = new ArrayList<>();
 
         Elements pageUrlElements = parsedDocument.select("select.wid60").first().getElementsByTag("option");
         for (Element pageUrlElement : pageUrlElements) {

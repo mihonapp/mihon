@@ -21,6 +21,7 @@ import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
+import eu.kanade.mangafeed.util.Parser;
 
 public class Mangafox extends Source {
 
@@ -50,11 +51,6 @@ public class Mangafox extends Source {
     }
 
     @Override
-    public boolean isLoginRequired() {
-        return false;
-    }
-
-    @Override
     protected String getInitialPopularMangasUrl() {
         return String.format(POPULAR_MANGAS_URL, "");
     }
@@ -68,48 +64,39 @@ public class Mangafox extends Source {
     protected List<Manga> parsePopularMangasFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements mangaHtmlBlocks = parsedHtml.select("div#mangalist > ul.list > li");
-        for (Element currentHtmlBlock : mangaHtmlBlocks) {
+        for (Element currentHtmlBlock : parsedHtml.select("div#mangalist > ul.list > li")) {
             Manga currentManga = constructPopularMangaFromHtmlBlock(currentHtmlBlock);
             mangaList.add(currentManga);
         }
-
         return mangaList;
     }
 
     private Manga constructPopularMangaFromHtmlBlock(Element htmlBlock) {
-        Manga mangaFromHtmlBlock = new Manga();
-        mangaFromHtmlBlock.source = getId();
+        Manga manga = new Manga();
+        manga.source = getId();
 
-        Element urlElement = htmlBlock.select("a.title").first();
-
+        Element urlElement = Parser.element(htmlBlock, "a.title");
         if (urlElement != null) {
-            mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
-            mangaFromHtmlBlock.title = urlElement.text();
+            manga.setUrl(urlElement.attr("href"));
+            manga.title = urlElement.text();
         }
-
-        return mangaFromHtmlBlock;
+        return manga;
     }
 
     @Override
     protected String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page) {
-        Element next = parsedHtml.select("a:has(span.next)").first();
-        if (next == null)
-            return null;
-
-        return String.format(POPULAR_MANGAS_URL, next.attr("href"));
+        Element next = Parser.element(parsedHtml, "a:has(span.next)");
+        return next != null ? String.format(POPULAR_MANGAS_URL, next.attr("href")) : null;
     }
 
     @Override
     protected List<Manga> parseSearchFromHtml(Document parsedHtml) {
         List<Manga> mangaList = new ArrayList<>();
 
-        Elements mangaHtmlBlocks = parsedHtml.select("table#listing > tbody > tr:gt(0)");
-        for (Element currentHtmlBlock : mangaHtmlBlocks) {
+        for (Element currentHtmlBlock : parsedHtml.select("table#listing > tbody > tr:gt(0)")) {
             Manga currentManga = constructSearchMangaFromHtmlBlock(currentHtmlBlock);
             mangaList.add(currentManga);
         }
-
         return mangaList;
     }
 
@@ -117,23 +104,18 @@ public class Mangafox extends Source {
         Manga mangaFromHtmlBlock = new Manga();
         mangaFromHtmlBlock.source = getId();
 
-        Element urlElement = htmlBlock.select("a.series_preview").first();
-
+        Element urlElement = Parser.element(htmlBlock, "a.series_preview");
         if (urlElement != null) {
             mangaFromHtmlBlock.setUrl(urlElement.attr("href"));
             mangaFromHtmlBlock.title = urlElement.text();
         }
-
         return mangaFromHtmlBlock;
     }
 
     @Override
     protected String parseNextSearchUrl(Document parsedHtml, MangasPage page, String query) {
-        Element next = parsedHtml.select("a:has(span.next)").first();
-        if (next == null)
-            return null;
-
-        return BASE_URL + next.attr("href");
+        Element next = Parser.element(parsedHtml, "a:has(span.next)");
+        return next != null ? BASE_URL + next.attr("href") : null;
     }
 
     @Override
@@ -141,84 +123,60 @@ public class Mangafox extends Source {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         Element infoElement = parsedDocument.select("div#title").first();
-        Element titleElement = infoElement.select("h2 > a").first();
         Element rowElement = infoElement.select("table > tbody > tr:eq(1)").first();
-        Element authorElement = rowElement.select("td:eq(1)").first();
-        Element artistElement = rowElement.select("td:eq(2)").first();
-        Element genreElement = rowElement.select("td:eq(3)").first();
-        Element descriptionElement = infoElement.select("p.summary").first();
-        Element thumbnailUrlElement = parsedDocument.select("div.cover > img").first();
+        Element sideInfoElement = parsedDocument.select("#series_info").first();
 
-        Manga newManga = new Manga();
-        newManga.url = mangaUrl;
+        Manga manga = Manga.create(mangaUrl);
+        manga.author = Parser.text(rowElement, "td:eq(1)");
+        manga.artist = Parser.text(rowElement, "td:eq(2)");
+        manga.description = Parser.text(infoElement, "p.summary");
+        manga.genre = Parser.text(rowElement, "td:eq(3)");
+        manga.thumbnail_url = Parser.src(sideInfoElement, "div.cover > img");
+        manga.status = parseStatus(Parser.text(sideInfoElement, ".data"));
 
-        if (titleElement != null) {
-            String title = titleElement.text();
-            // Strip the last word
-            title = title.substring(0, title.lastIndexOf(" "));
-            newManga.title = title;
-        }
-        if (artistElement != null) {
-            newManga.artist = artistElement.text();
-        }
-        if (authorElement != null) {
-            newManga.author = authorElement.text();
-        }
-        if (descriptionElement != null) {
-            newManga.description = descriptionElement.text();
-        }
-        if (genreElement != null) {
-            newManga.genre = genreElement.text();
-        }
-        if (thumbnailUrlElement != null) {
-            newManga.thumbnail_url = thumbnailUrlElement.attr("src");
-        }
-//        if (statusElement != null) {
-//            boolean fieldCompleted = statusElement.text().contains("Completed");
-//            newManga.status = fieldCompleted + "";
-//        }
+        manga.initialized = true;
+        return manga;
+    }
 
-        newManga.initialized = true;
-
-        return newManga;
+    private int parseStatus(String status) {
+        if (status.contains("Ongoing")) {
+            return Manga.ONGOING;
+        }
+        if (status.contains("Completed")) {
+            return Manga.COMPLETED;
+        }
+        return Manga.UNKNOWN;
     }
 
     @Override
     protected List<Chapter> parseHtmlToChapters(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
-        List<Chapter> chapterList = new ArrayList<Chapter>();
+        List<Chapter> chapterList = new ArrayList<>();
 
-        Elements chapterElements = parsedDocument.select("div#chapters li div");
-        for (Element chapterElement : chapterElements) {
+        for (Element chapterElement : parsedDocument.select("div#chapters li div")) {
             Chapter currentChapter = constructChapterFromHtmlBlock(chapterElement);
-
             chapterList.add(currentChapter);
         }
-
         return chapterList;
     }
 
     private Chapter constructChapterFromHtmlBlock(Element chapterElement) {
-        Chapter newChapter = Chapter.create();
+        Chapter chapter = Chapter.create();
 
         Element urlElement = chapterElement.select("a.tips").first();
-        Element nameElement = chapterElement.select("a.tips").first();
         Element dateElement = chapterElement.select("span.date").first();
 
         if (urlElement != null) {
-            newChapter.setUrl(urlElement.attr("href"));
-        }
-        if (nameElement != null) {
-            newChapter.name = nameElement.text();
+            chapter.setUrl(urlElement.attr("href"));
+            chapter.name = urlElement.text();
         }
         if (dateElement != null) {
-            newChapter.date_upload = parseUpdateFromElement(dateElement);
+            chapter.date_upload = parseUpdateFromElement(dateElement);
         }
+        chapter.date_fetch = new Date().getTime();
 
-        newChapter.date_fetch = new Date().getTime();
-
-        return newChapter;
+        return chapter;
     }
 
     private long parseUpdateFromElement(Element updateElement) {
