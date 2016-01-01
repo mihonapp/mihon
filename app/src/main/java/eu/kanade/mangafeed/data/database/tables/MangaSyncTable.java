@@ -36,6 +36,7 @@ public class MangaSyncTable {
                 + COLUMN_TOTAL_CHAPTERS + " INTEGER NOT NULL, "
                 + COLUMN_STATUS + " INTEGER NOT NULL, "
                 + COLUMN_SCORE + " FLOAT NOT NULL, "
+                + "UNIQUE (" + COLUMN_MANGA_ID + ", " + COLUMN_SYNC_ID + ") ON CONFLICT REPLACE, "
                 + "FOREIGN KEY(" + COLUMN_MANGA_ID + ") REFERENCES " + MangaTable.TABLE + "(" + MangaTable.COLUMN_ID + ") "
                 + "ON DELETE CASCADE"
                 + ");";

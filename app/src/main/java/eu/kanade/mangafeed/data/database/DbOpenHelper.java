@@ -14,7 +14,7 @@ import eu.kanade.mangafeed.data.database.tables.MangaTable;
 public class DbOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mangafeed.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public DbOpenHelper(@NonNull Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,7 +36,12 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion == 1) {
+            db.execSQL("ALTER TABLE manga_sync RENAME TO tmp;");
+            db.execSQL(MangaSyncTable.getCreateTableQuery());
+            db.execSQL("INSERT INTO " + MangaSyncTable.TABLE + " SELECT * FROM tmp;");
+            db.execSQL("DROP TABLE tmp;");
+        }
     }
 
     @Override
