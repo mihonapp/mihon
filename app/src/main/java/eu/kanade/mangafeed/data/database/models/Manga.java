@@ -77,32 +77,31 @@ public class Manga implements Serializable {
         this.url = UrlUtil.getPath(url);
     }
 
-    public static void copyFromNetwork(Manga local, Manga network) {
-        if (network.title != null)
-            local.title = network.title;
+    public void copyFrom(Manga other) {
+        if (other.title != null)
+            title = other.title;
 
-        if (network.author != null)
-            local.author = network.author;
+        if (other.author != null)
+            author = other.author;
 
-        if (network.artist != null)
-            local.artist = network.artist;
+        if (other.artist != null)
+            artist = other.artist;
 
-        if (network.url != null)
-            local.url = network.url;
+        if (other.url != null)
+            url = other.url;
 
-        if (network.description != null)
-            local.description = network.description;
+        if (other.description != null)
+            description = other.description;
 
-        if (network.genre != null)
-            local.genre = network.genre;
+        if (other.genre != null)
+            genre = other.genre;
 
-        if (network.thumbnail_url != null)
-            local.thumbnail_url = network.thumbnail_url;
+        if (other.thumbnail_url != null)
+            thumbnail_url = other.thumbnail_url;
 
-        local.status = network.status;
+        status = other.status;
 
-        local.initialized = true;
-
+        initialized = true;
     }
 
     @Override

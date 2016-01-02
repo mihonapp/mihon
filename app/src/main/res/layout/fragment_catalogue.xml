@@ -15,8 +15,8 @@
         android:layout_gravity="center_vertical|center_horizontal"
         android:visibility="gone"/>
 
-    <GridView
-        android:id="@+id/gridView"
+    <eu.kanade.mangafeed.widget.AutofitRecyclerView
+        android:id="@+id/recycler"
         style="@style/AppTheme.GridView"
         android:layout_height="0dp"
         android:layout_weight="1"

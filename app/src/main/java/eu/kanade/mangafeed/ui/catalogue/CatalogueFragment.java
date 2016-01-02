@@ -3,6 +3,8 @@ package eu.kanade.mangafeed.ui.catalogue;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -14,8 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
@@ -24,15 +24,16 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.base.Source;
+import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
 import eu.kanade.mangafeed.ui.base.fragment.BaseRxFragment;
 import eu.kanade.mangafeed.ui.main.MainActivity;
 import eu.kanade.mangafeed.ui.manga.MangaActivity;
 import eu.kanade.mangafeed.util.ToastUtil;
-import eu.kanade.mangafeed.widget.EndlessScrollListener;
+import eu.kanade.mangafeed.widget.AutofitRecyclerView;
+import eu.kanade.mangafeed.widget.EndlessRecyclerScrollListener;
 import icepick.State;
 import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
@@ -40,16 +41,16 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 @RequiresPresenter(CataloguePresenter.class)
-public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
+public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> implements FlexibleViewHolder.OnListItemClickListener {
 
-    @Bind(R.id.gridView) GridView gridView;
+    @Bind(R.id.recycler) AutofitRecyclerView recycler;
     @Bind(R.id.progress) ProgressBar progress;
     @Bind(R.id.progress_grid) ProgressBar progressGrid;
 
     private Toolbar toolbar;
     private Spinner spinner;
     private CatalogueAdapter adapter;
-    private EndlessScrollListener scrollListener;
+    private EndlessRecyclerScrollListener scrollListener;
 
     @State String query = "";
     @State int selectedIndex = -1;
@@ -75,10 +76,12 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         ButterKnife.bind(this, view);
 
         // Initialize adapter and scroll listener
+        GridLayoutManager layoutManager = (GridLayoutManager) recycler.getLayoutManager();
         adapter = new CatalogueAdapter(this);
-        scrollListener = new EndlessScrollListener(this::requestNextPage);
-        gridView.setAdapter(adapter);
-        gridView.setOnScrollListener(scrollListener);
+        scrollListener = new EndlessRecyclerScrollListener(layoutManager, this::requestNextPage);
+        recycler.setHasFixedSize(true);
+        recycler.setAdapter(adapter);
+        recycler.addOnScrollListener(scrollListener);
 
         // Create toolbar spinner
         Context themedContext = getBaseActivity().getSupportActionBar() != null ?
@@ -192,9 +195,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
 
         query = newQuery;
         showProgressBar();
-        // Set adapter again for scrolling to top: http://stackoverflow.com/a/17577981/3263582
-        gridView.setAdapter(adapter);
-        gridView.setSelection(0);
+        recycler.getLayoutManager().scrollToPosition(0);
 
         getPresenter().restartRequest(query);
     }
@@ -212,48 +213,23 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
             adapter.clear();
             scrollListener.resetScroll();
         }
-        adapter.addAll(pair.second);
+        adapter.addItems(pair.second);
     }
 
     public void onAddPageError() {
         hideProgressBar();
     }
 
-    @OnItemClick(R.id.gridView)
-    public void onMangaClick(int position) {
-        Manga selectedManga = adapter.getItem(position);
-
-        Intent intent = MangaActivity.newIntent(getActivity(), selectedManga);
-        intent.putExtra(MangaActivity.MANGA_ONLINE, true);
-        startActivity(intent);
-    }
-
     public void updateImage(Manga manga) {
-        ImageView imageView = getImageView(getMangaIndex(manga));
-        if (imageView != null && manga.thumbnail_url != null) {
-            getPresenter().coverCache.loadFromNetwork(imageView, manga.thumbnail_url,
-                    getPresenter().getSource().getGlideHeaders());
+        CatalogueHolder holder = getHolder(manga);
+        if (holder != null) {
+            holder.setImage(manga, getPresenter());
         }
     }
 
-    private ImageView getImageView(int position) {
-        if (position == -1) return null;
-
-        View v = gridView.getChildAt(position -
-                gridView.getFirstVisiblePosition());
-
-        if (v == null) return null;
-
-        return (ImageView) v.findViewById(R.id.thumbnail);
-    }
-
-    private int getMangaIndex(Manga manga) {
-        for (int i = adapter.getCount() - 1; i >= 0; i--) {
-            if (manga.id.equals(adapter.getItem(i).id)) {
-                return i;
-            }
-        }
-        return -1;
+    @Nullable
+    private CatalogueHolder getHolder(Manga manga) {
+        return (CatalogueHolder) recycler.findViewHolderForItemId(manga.id);
     }
 
     private void showProgressBar() {
@@ -269,4 +245,18 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> {
         progressGrid.setVisibility(ProgressBar.GONE);
     }
 
+    @Override
+    public boolean onListItemClick(int position) {
+        final Manga selectedManga = adapter.getItem(position);
+
+        Intent intent = MangaActivity.newIntent(getActivity(), selectedManga);
+        intent.putExtra(MangaActivity.MANGA_ONLINE, true);
+        startActivity(intent);
+        return false;
+    }
+
+    @Override
+    public void onListItemLongClick(int position) {
+        // Do nothing
+    }
 }

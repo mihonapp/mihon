@@ -93,7 +93,7 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
     private Observable<Manga> fetchMangaObs() {
         return source.pullMangaFromNetwork(manga.url)
                 .flatMap(networkManga -> {
-                    Manga.copyFromNetwork(manga, networkManga);
+                    manga.copyFrom(networkManga);
                     db.insertManga(manga).executeAsBlocking();
                     return Observable.just(manga);
                 })

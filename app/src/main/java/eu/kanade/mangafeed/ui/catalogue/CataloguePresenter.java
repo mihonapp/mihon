@@ -60,12 +60,12 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                 () -> pager.pages().concatMap(
                         page -> getMangaObs(page + 1)
                                 .map(mangas -> Pair.create(page, mangas))
+                                .doOnNext(pair -> {
+                                    if (mangaDetailSubject != null)
+                                        mangaDetailSubject.onNext(pair.second);
+                                })
                                 .observeOn(AndroidSchedulers.mainThread())),
-                (view, page) -> {
-                    view.onAddPage(page);
-                    if (mangaDetailSubject != null)
-                        mangaDetailSubject.onNext(page.second);
-                },
+                CatalogueFragment::onAddPage,
                 (view, error) -> {
                     view.onAddPageError();
                     Timber.e(error.getMessage());
@@ -73,14 +73,14 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
         restartableLatestCache(GET_MANGA_DETAIL,
                 () -> mangaDetailSubject
+                        .observeOn(Schedulers.io())
                         .flatMap(Observable::from)
                         .filter(manga -> !manga.initialized)
                         .window(3)
                         .concatMap(pack -> pack.concatMap(this::getMangaDetails))
-                        .filter(manga -> manga.initialized)
                         .onBackpressureBuffer()
                         .observeOn(AndroidSchedulers.mainThread()),
-                (view, manga) -> view.updateImage(manga),
+                CatalogueFragment::updateImage,
                 (view, error) -> Timber.e(error.getMessage()));
     }
 
@@ -147,7 +147,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         return source.pullMangaFromNetwork(manga.url)
                 .subscribeOn(Schedulers.io())
                 .flatMap(networkManga -> {
-                    Manga.copyFromNetwork(manga, networkManga);
+                    manga.copyFrom(networkManga);
                     db.insertManga(manga).executeAsBlocking();
                     return Observable.just(manga);
                 })
