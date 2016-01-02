@@ -15,25 +15,25 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.util.DiskUtils;
 import okio.BufferedSink;
 import okio.Okio;
 import rx.Observable;
 
-public class CacheManager {
+public class ChapterCache {
 
     private static final String PARAMETER_CACHE_DIRECTORY = "chapter_disk_cache";
     private static final int PARAMETER_APP_VERSION = 1;
     private static final int PARAMETER_VALUE_COUNT = 1;
+    private static final int PARAMETER_CACHE_SIZE = 75 * 1024 * 1024;
 
     private Context context;
     private Gson gson;
 
     private DiskLruCache diskCache;
 
-    public CacheManager(Context context, PreferencesHelper preferences) {
+    public ChapterCache(Context context) {
         this.context = context;
         gson = new Gson();
 
@@ -42,7 +42,7 @@ public class CacheManager {
                     new File(context.getCacheDir(), PARAMETER_CACHE_DIRECTORY),
                     PARAMETER_APP_VERSION,
                     PARAMETER_VALUE_COUNT,
-                    preferences.cacheSize() * 1024 * 1024
+                    PARAMETER_CACHE_SIZE
             );
         } catch (IOException e) {
             // Do Nothing.

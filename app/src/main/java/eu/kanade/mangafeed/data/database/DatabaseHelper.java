@@ -136,6 +136,16 @@ public class DatabaseHelper {
                 .prepare();
     }
 
+    public PreparedDeleteByQuery deleteMangasNotInLibrary() {
+        return db.delete()
+                .byQuery(DeleteQuery.builder()
+                        .table(MangaTable.TABLE)
+                        .where(MangaTable.COLUMN_FAVORITE + "=?")
+                        .whereArgs(0)
+                        .build())
+                .prepare();
+    }
+
 
     // Chapters related queries
 

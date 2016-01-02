@@ -34,6 +34,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/keep_screen_on"
         style="@style/grey_text"
-        android:text="Keep screen on"/>
+        android:text="@string/pref_keep_screen_on"/>
 
 </LinearLayout>

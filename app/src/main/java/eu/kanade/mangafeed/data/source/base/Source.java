@@ -16,7 +16,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import eu.kanade.mangafeed.App;
-import eu.kanade.mangafeed.data.cache.CacheManager;
+import eu.kanade.mangafeed.data.cache.ChapterCache;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.network.NetworkHelper;
@@ -29,7 +29,7 @@ import rx.schedulers.Schedulers;
 public abstract class Source extends BaseSource {
 
     @Inject protected NetworkHelper networkService;
-    @Inject protected CacheManager cacheManager;
+    @Inject protected ChapterCache chapterCache;
     @Inject protected PreferencesHelper prefs;
     protected Headers requestHeaders;
     protected LazyHeaders glideHeaders;
@@ -89,7 +89,7 @@ public abstract class Source extends BaseSource {
     }
 
     public Observable<List<Page>> getCachedPageListOrPullFromNetwork(final String chapterUrl) {
-        return cacheManager.getPageUrlsFromDiskCache(getChapterCacheKey(chapterUrl))
+        return chapterCache.getPageUrlsFromDiskCache(getChapterCacheKey(chapterUrl))
                 .onErrorResumeNext(throwable -> {
                     return pullPageListFromNetwork(chapterUrl);
                 })
@@ -141,13 +141,13 @@ public abstract class Source extends BaseSource {
 
         return pageObservable
                 .flatMap(p -> {
-                    if (!cacheManager.isImageInCache(page.getImageUrl())) {
+                    if (!chapterCache.isImageInCache(page.getImageUrl())) {
                         return cacheImage(page);
                     }
                     return Observable.just(page);
                 })
                 .flatMap(p -> {
-                    page.setImagePath(cacheManager.getImagePath(page.getImageUrl()));
+                    page.setImagePath(chapterCache.getImagePath(page.getImageUrl()));
                     page.setStatus(Page.READY);
                     return Observable.just(page);
                 })
@@ -162,7 +162,7 @@ public abstract class Source extends BaseSource {
         return getImageProgressResponse(page)
                 .flatMap(resp -> {
                     try {
-                        cacheManager.putImageToDiskCache(page.getImageUrl(), resp);
+                        chapterCache.putImageToDiskCache(page.getImageUrl(), resp);
                     } catch (IOException e) {
                         return Observable.error(e);
                     }
@@ -176,7 +176,7 @@ public abstract class Source extends BaseSource {
 
     public void savePageList(String chapterUrl, List<Page> pages) {
         if (pages != null)
-            cacheManager.putPageUrlsToDiskCache(getChapterCacheKey(chapterUrl), pages);
+            chapterCache.putPageUrlsToDiskCache(getChapterCacheKey(chapterUrl), pages);
     }
 
     protected List<Page> convertToPages(List<String> pageUrls) {

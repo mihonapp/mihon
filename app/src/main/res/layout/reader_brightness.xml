@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="#333333"
+    android:background="@color/reader_menu_background"
     android:paddingRight="10dp"
     android:paddingLeft="5dp"
     android:paddingTop="5dp"

@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import eu.kanade.mangafeed.data.cache.CacheManager;
+import eu.kanade.mangafeed.data.cache.ChapterCache;
 import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
@@ -35,8 +35,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    CacheManager provideCacheManager(Application app, PreferencesHelper preferences) {
-        return new CacheManager(app, preferences);
+    ChapterCache provideChapterCache(Application app) {
+        return new ChapterCache(app);
     }
 
     @Provides

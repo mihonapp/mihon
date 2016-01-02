@@ -10,14 +10,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.mangafeed.App;
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.cache.CacheManager;
+import eu.kanade.mangafeed.data.cache.ChapterCache;
+import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.ui.base.activity.BaseActivity;
 
 public class SettingsActivity extends BaseActivity {
 
     @Inject PreferencesHelper preferences;
-    @Inject CacheManager cacheManager;
+    @Inject ChapterCache chapterCache;
+    @Inject DatabaseHelper db;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
 
@@ -64,9 +66,9 @@ public class SettingsActivity extends BaseActivity {
                     SettingsAccountsFragment.newInstance(
                             R.xml.pref_accounts, R.string.pref_category_accounts));
 
-            registerSubpreference(R.string.pref_category_cache_key,
-                    SettingsCacheFragment.newInstance(
-                            R.xml.pref_cache, R.string.pref_category_cache));
+            registerSubpreference(R.string.pref_category_advanced_key,
+                    SettingsAdvancedFragment.newInstance(
+                            R.xml.pref_advanced, R.string.pref_category_advanced));
 
             registerSubpreference(R.string.pref_category_about_key,
                     SettingsAboutFragment.newInstance(

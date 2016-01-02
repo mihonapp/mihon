@@ -87,8 +87,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             readerMenu.show(false);
 
         readerTheme = preferences.getReaderTheme();
-        if (readerTheme == BLACK_THEME)
-            setBlackTheme();
+        applyTheme();
 
         initializeSettings();
 
@@ -265,10 +264,15 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         recreate();
     }
 
-    private void setBlackTheme() {
-        getWindow().getDecorView().getRootView().setBackgroundColor(Color.BLACK);
-        pageNumber.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
-        pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.page_number_background_black));
+    private void applyTheme() {
+        View rootView = getWindow().getDecorView().getRootView();
+        if (readerTheme == BLACK_THEME) {
+            rootView.setBackgroundColor(Color.BLACK);
+            pageNumber.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
+            pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.page_number_background_black));
+        } else {
+            rootView.setBackgroundColor(Color.WHITE);
+        }
     }
 
     public int getReaderTheme() {

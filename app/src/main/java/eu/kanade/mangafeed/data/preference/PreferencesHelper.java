@@ -56,10 +56,6 @@ public class PreferencesHelper {
         prefs.edit().clear().apply();
     }
 
-    public int cacheSize() {
-        return prefs.getInt(getKey(R.string.pref_chapter_cache_size_key), 75);
-    }
-
     public Preference<Boolean> lockOrientation() {
         return rxPrefs.getBoolean(getKey(R.string.pref_lock_orientation_key), true);
     }
