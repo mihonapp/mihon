@@ -8,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +40,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 @RequiresPresenter(CataloguePresenter.class)
-public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> implements FlexibleViewHolder.OnListItemClickListener {
+public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
+        implements FlexibleViewHolder.OnListItemClickListener {
 
     @Bind(R.id.recycler) AutofitRecyclerView recycler;
     @Bind(R.id.progress) ProgressBar progress;
@@ -207,13 +207,13 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter> implem
         }
     }
 
-    public void onAddPage(Pair<Integer, List<Manga>> pair) {
+    public void onAddPage(int page, List<Manga> mangas) {
         hideProgressBar();
-        if (pair.first == 0) {
+        if (page == 1) {
             adapter.clear();
             scrollListener.resetScroll();
         }
-        adapter.addItems(pair.second);
+        adapter.addItems(mangas);
     }
 
     public void onAddPageError() {

@@ -1,10 +1,13 @@
 package eu.kanade.mangafeed.data.database.models;
 
+import android.content.Context;
+
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import java.io.Serializable;
 
+import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.tables.MangaTable;
 import eu.kanade.mangafeed.util.UrlUtil;
 
@@ -102,6 +105,19 @@ public class Manga implements Serializable {
         status = other.status;
 
         initialized = true;
+    }
+
+    public String getStatus(Context context) {
+        switch (status) {
+            case ONGOING:
+                return context.getString(R.string.ongoing);
+            case COMPLETED:
+                return context.getString(R.string.completed);
+            case LICENSED:
+                return context.getString(R.string.licensed);
+            default:
+                return context.getString(R.string.unknown);
+        }
     }
 
     @Override

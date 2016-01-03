@@ -212,14 +212,20 @@
                     android:singleLine="false"
                     android:text="@string/description" />
 
-                <TextView
-                    android:id="@+id/manga_summary"
-                    style="@style/manga_detail_text"
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:singleLine="false" />
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/manga_summary"
+                        style="@style/manga_detail_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:singleLine="false" />
+
+                </ScrollView>
 
             </LinearLayout>
 

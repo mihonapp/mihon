@@ -57,15 +57,8 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         mangaDetailSubject = PublishSubject.create();
 
         restartableReplay(GET_MANGA_LIST,
-                () -> pager.pages().concatMap(
-                        page -> getMangaObs(page + 1)
-                                .map(mangas -> Pair.create(page, mangas))
-                                .doOnNext(pair -> {
-                                    if (mangaDetailSubject != null)
-                                        mangaDetailSubject.onNext(pair.second);
-                                })
-                                .observeOn(AndroidSchedulers.mainThread())),
-                CatalogueFragment::onAddPage,
+                () -> pager.pages().concatMap(page -> getMangasPageObservable(page + 1)),
+                (view, pair) -> view.onAddPage(pair.first, pair.second),
                 (view, error) -> {
                     view.onAddPageError();
                     Timber.e(error.getMessage());
@@ -116,7 +109,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
             pager.requestNext(++currentPage);
     }
 
-    private Observable<List<Manga>> getMangaObs(int page) {
+    private Observable<Pair<Integer, List<Manga>>> getMangasPageObservable(int page) {
         MangasPage nextMangasPage = new MangasPage(page);
         if (page != 1) {
             nextMangasPage.url = lastMangasPage.nextPageUrl;
@@ -130,7 +123,13 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                 .doOnNext(mangasPage -> lastMangasPage = mangasPage)
                 .flatMap(mangasPage -> Observable.from(mangasPage.mangas))
                 .map(this::networkToLocalManga)
-                .toList();
+                .toList()
+                .map(mangas -> Pair.create(page, mangas))
+                .doOnNext(pair -> {
+                    if (mangaDetailSubject != null)
+                        mangaDetailSubject.onNext(pair.second);
+                })
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private Manga networkToLocalManga(Manga networkManga) {

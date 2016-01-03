@@ -123,8 +123,11 @@
     <string name="chapters">Chapters</string>
     <string name="genres">Genres</string>
     <string name="artist">Artist</string>
-    <string name="status">Status</string>
     <string name="description">Description</string>
+    <string name="status">Status</string>
+    <string name="ongoing">Ongoing</string>
+    <string name="unknown">Unknown</string>
+    <string name="licensed">Licensed</string>
     <string name="add_to_library">Add to library</string>
     <string name="remove_from_library">Remove from library</string>
 

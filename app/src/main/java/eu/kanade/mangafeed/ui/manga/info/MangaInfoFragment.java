@@ -73,7 +73,7 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
         artist.setText(manga.artist);
         author.setText(manga.author);
         genres.setText(manga.genre);
-        status.setText("Ongoing"); //TODO
+        status.setText(manga.getStatus(getActivity()));
         description.setText(manga.description);
 
         setFavoriteText(manga.favorite);
