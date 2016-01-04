@@ -1,5 +1,7 @@
 Mangafeed is a Manga reader for Android that tries to have the same features as Manga Watcher, but being Open Source.
 
+Latest debug build available [here](http://mangafeed.kanade.eu/latest/app-debug.apk)
+
 ## License
 
 Copyright 2015 Javier Tomás
