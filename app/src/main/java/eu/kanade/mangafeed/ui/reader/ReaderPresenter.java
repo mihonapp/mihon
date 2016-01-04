@@ -90,11 +90,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                             start(GET_PAGE_IMAGES);
                             start(RETRY_IMAGES);
                         }),
-                (view, pages) -> {
-                    view.onChapterReady(pages, manga, chapter);
-                    if (currentPage != 0)
-                        view.setSelectedPage(currentPage);
-                },
+                (view, pages) -> view.onChapterReady(pages, manga, chapter, currentPage),
                 (view, error) -> view.onChapterError());
 
         registerForStickyEvents();

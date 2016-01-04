@@ -10,6 +10,7 @@ import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterBoundariesOutListene
 import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterSingleTapListener;
 import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerGestureListener;
 import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerInterface;
+import rx.functions.Action1;
 
 public class HorizontalViewPager extends ViewPager implements ViewPagerInterface {
 
@@ -108,6 +109,16 @@ public class HorizontalViewPager extends ViewPager implements ViewPagerInterface
     @Override
     public OnChapterSingleTapListener getChapterSingleTapListener() {
         return onChapterSingleTapListener;
+    }
+
+    @Override
+    public void setOnPageChangeListener(Action1<Integer> function) {
+        addOnPageChangeListener(new SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                function.call(position);
+            }
+        });
     }
 
 }

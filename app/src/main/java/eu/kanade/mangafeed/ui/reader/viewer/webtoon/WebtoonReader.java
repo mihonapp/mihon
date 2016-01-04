@@ -1,51 +1,71 @@
 package eu.kanade.mangafeed.ui.reader.viewer.webtoon;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 
 import eu.kanade.mangafeed.data.source.model.Page;
-import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
+import static android.view.GestureDetector.SimpleOnGestureListener;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 public class WebtoonReader extends BaseReader {
 
-    private RecyclerView recycler;
-    private LinearLayoutManager layoutManager;
     private WebtoonAdapter adapter;
-    private List<Page> pages;
     private Subscription subscription;
+    private GestureDetector gestureDetector;
 
-    public WebtoonReader(ReaderActivity activity) {
-        super(activity);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
+        adapter = new WebtoonAdapter(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
-        recycler = new RecyclerView(activity);
-        layoutManager = new LinearLayoutManager(activity);
+        RecyclerView recycler = new RecyclerView(getActivity());
+        recycler.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         recycler.setLayoutManager(layoutManager);
-        adapter = new WebtoonAdapter(activity);
+        recycler.setItemAnimator(null);
         recycler.setAdapter(adapter);
-
         recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                currentPosition = layoutManager.findFirstVisibleItemPosition();
+                currentPage = layoutManager.findLastVisibleItemPosition();
                 updatePageNumber();
             }
         });
 
-        container.addView(recycler);
+        gestureDetector = new GestureDetector(getActivity(), new SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                getReaderActivity().onCenterSingleTap();
+                return true;
+            }
+        });
+
+        setPages();
+
+        return recycler;
     }
 
     @Override
-    public int getTotalPages() {
-        return pages.size();
+    public void onPause() {
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
+        super.onPause();
     }
 
     @Override
@@ -55,14 +75,22 @@ public class WebtoonReader extends BaseReader {
     }
 
     @Override
-    public void onPageListReady(List<Page> pages) {
+    public void onPageListReady(List<Page> pages, int currentPage) {
         this.pages = pages;
-        observeStatus(0);
+        if (isResumed()) {
+            setPages();
+        }
+    }
+
+    private void setPages() {
+        if (pages != null) {
+            observeStatus(0);
+        }
     }
 
     @Override
     public boolean onImageTouch(MotionEvent motionEvent) {
-        return true;
+        return gestureDetector.onTouchEvent(motionEvent);
     }
 
     private void observeStatus(int position) {
@@ -99,9 +127,4 @@ public class WebtoonReader extends BaseReader {
         }
     }
 
-    @Override
-    public void destroy() {
-        if (subscription != null && !subscription.isUnsubscribed())
-            subscription.unsubscribe();
-    }
 }

@@ -1,71 +1,72 @@
 package eu.kanade.mangafeed.ui.reader.viewer.base;
 
 import android.view.MotionEvent;
-import android.view.ViewGroup;
 
 import java.util.List;
 
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import eu.kanade.mangafeed.ui.reader.ReaderPresenter;
 import eu.kanade.mangafeed.util.ToastUtil;
 
-public abstract class BaseReader {
+public abstract class BaseReader extends BaseFragment {
 
-    protected ReaderActivity activity;
-    protected ReaderPresenter presenter;
-    protected ViewGroup container;
-    protected int currentPosition;
-
-    public BaseReader(ReaderActivity activity) {
-        this.activity = activity;
-        this.container = activity.getContainer();
-        this.presenter = activity.getPresenter();
-    }
+    protected int currentPage;
+    protected List<Page> pages;
 
     public void updatePageNumber() {
-        activity.onPageChanged(getCurrentPosition(), getTotalPages());
+        getReaderActivity().onPageChanged(getCurrentPage(), getTotalPages());
     }
 
-    // Returns the page index given a position in the viewer. Useful por a right to left viewer,
-    // where the current page is the inverse of the position
-    public int getCurrentPageIndex(int viewerPosition) {
-        return viewerPosition;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
-    public int getCurrentPosition() {
-        return getCurrentPageIndex(currentPosition);
+    public int getPageForPosition(int position) {
+        return position;
+    }
+
+    public int getPositionForPage(int page) {
+        return page;
     }
 
     public void requestNextChapter() {
+        ReaderPresenter presenter = getReaderActivity().getPresenter();
         if (presenter.hasNextChapter()) {
-            presenter.setCurrentPage(getCurrentPosition());
+            presenter.setCurrentPage(getCurrentPage());
             presenter.loadNextChapter();
         } else {
-            ToastUtil.showShort(activity, R.string.no_next_chapter);
+            ToastUtil.showShort(getActivity(), R.string.no_next_chapter);
         }
 
     }
 
     public void requestPreviousChapter() {
+        ReaderPresenter presenter = getReaderActivity().getPresenter();
         if (presenter.hasPreviousChapter()) {
-            presenter.setCurrentPage(getCurrentPosition());
+            presenter.setCurrentPage(getCurrentPage());
             presenter.loadPreviousChapter();
         } else {
-            ToastUtil.showShort(activity, R.string.no_previous_chapter);
+            ToastUtil.showShort(getActivity(), R.string.no_previous_chapter);
         }
     }
 
     public void onPageChanged(int position) {
-        currentPosition = position;
+        currentPage = getPageForPosition(position);
         updatePageNumber();
     }
 
-    public void destroy() {}
+    public int getTotalPages() {
+        return pages == null ? 0 : pages.size();
+    }
 
-    public abstract int getTotalPages();
     public abstract void setSelectedPage(int pageNumber);
-    public abstract void onPageListReady(List<Page> pages);
+    public abstract void onPageListReady(List<Page> pages, int currentPage);
     public abstract boolean onImageTouch(MotionEvent motionEvent);
+
+    public ReaderActivity getReaderActivity() {
+        return (ReaderActivity) getActivity();
+    }
 }

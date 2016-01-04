@@ -11,9 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Surface;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -45,7 +43,6 @@ import rx.subscriptions.CompositeSubscription;
 public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     @Bind(R.id.page_number) TextView pageNumber;
-    @Bind(R.id.reader) FrameLayout container;
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     @Inject PreferencesHelper preferences;
@@ -103,15 +100,14 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     protected void onPause() {
         if (viewer != null)
-            getPresenter().setCurrentPage(viewer.getCurrentPosition());
+            getPresenter().setCurrentPage(viewer.getCurrentPage());
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         subscriptions.unsubscribe();
-        if (viewer != null)
-            viewer.destroy();
+        viewer = null;
         super.onDestroy();
     }
 
@@ -126,13 +122,13 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         ToastUtil.showShort(this, R.string.page_list_error);
     }
 
-    public void onChapterReady(List<Page> pages, Manga manga, Chapter chapter) {
-        if (viewer != null)
-            viewer.destroy();
-        viewer = createViewer(manga);
-        viewer.onPageListReady(pages);
-        viewer.updatePageNumber();
-        readerMenu.onChapterReady(pages.size(), manga, chapter);
+    public void onChapterReady(List<Page> pages, Manga manga, Chapter chapter, int currentPage) {
+        if (viewer == null) {
+            viewer = createViewer(manga);
+            getSupportFragmentManager().beginTransaction().replace(R.id.reader, viewer).commit();
+        }
+        viewer.onPageListReady(pages, currentPage);
+        readerMenu.onChapterReady(pages.size(), manga, chapter, currentPage);
     }
 
     private BaseReader createViewer(Manga manga) {
@@ -140,13 +136,13 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
         switch (mangaViewer) {
             case LEFT_TO_RIGHT: default:
-                return new LeftToRightReader(this);
+                return new LeftToRightReader();
             case RIGHT_TO_LEFT:
-                return new RightToLeftReader(this);
+                return new RightToLeftReader();
             case VERTICAL:
-                return new VerticalReader(this);
+                return new VerticalReader();
             case WEBTOON:
-                return new WebtoonReader(this);
+                return new WebtoonReader();
         }
     }
 
@@ -277,10 +273,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     public int getReaderTheme() {
         return readerTheme;
-    }
-
-    public ViewGroup getContainer() {
-        return container;
     }
 
     public PreferencesHelper getPreferences() {

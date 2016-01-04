@@ -5,25 +5,24 @@ import java.util.Collections;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.source.model.Page;
-import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 
 public class RightToLeftReader extends HorizontalReader {
 
-    public RightToLeftReader(ReaderActivity activity) {
-        super(activity);
-    }
-
     @Override
-    public void onPageListReady(List<Page> pages) {
+    public void onPageListReady(List<Page> pages, int currentPage) {
         ArrayList<Page> inversedPages = new ArrayList<>(pages);
         Collections.reverse(inversedPages);
-        super.onPageListReady(inversedPages);
-        viewPager.setCurrentItem(adapter.getCount() - 1, false);
+        super.onPageListReady(inversedPages, currentPage);
     }
 
     @Override
-    public int getCurrentPageIndex(int viewerPosition) {
-        return getTotalPages() - viewerPosition - 1;
+    public int getPageForPosition(int position) {
+        return (getTotalPages() - 1) - position;
+    }
+
+    @Override
+    public int getPositionForPage(int page) {
+        return (getTotalPages() - 1) - page;
     }
 
     @Override

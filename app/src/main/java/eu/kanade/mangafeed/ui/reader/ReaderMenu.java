@@ -106,7 +106,7 @@ public class ReaderMenu {
         showing = false;
     }
 
-    public void onChapterReady(int numPages, Manga manga, Chapter chapter) {
+    public void onChapterReady(int numPages, Manga manga, Chapter chapter, int currentPageIndex) {
         if (manga.viewer == ReaderActivity.RIGHT_TO_LEFT && !inverted) {
             // Invert the seekbar and textview fields for the right to left reader
             seekBar.setRotation(180);
@@ -119,7 +119,8 @@ public class ReaderMenu {
 
         // Set initial values
         totalPages.setText("" + numPages);
-        currentPage.setText("" + (chapter.last_page_read + 1));
+        currentPage.setText("" + (currentPageIndex + 1));
+        seekBar.setProgress(currentPageIndex);
         seekBar.setMax(numPages - 1);
 
         activity.setToolbarTitle(manga.title);

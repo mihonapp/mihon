@@ -1,33 +1,31 @@
 package eu.kanade.mangafeed.ui.reader.viewer.common;
 
-import android.support.annotation.CallSuper;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 
 import java.util.List;
 
+import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.source.model.Page;
-import eu.kanade.mangafeed.ui.reader.ReaderActivity;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
 import rx.Subscription;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public abstract class ViewPagerReader extends BaseReader {
 
     protected ViewPagerReaderAdapter adapter;
-    protected ViewPagerInterface viewPager;
+    protected ViewPagerInterface pager;
 
     protected boolean transitions;
     protected Subscription transitionsSubscription;
 
-    public ViewPagerReader(ReaderActivity activity) {
-        super(activity);
-
-        transitionsSubscription = activity.getPreferences().enableTransitions().asObservable()
-                .subscribe(value -> transitions = value);
-    }
-
-    protected void initializeViewPager() {
-        viewPager.setOffscreenPageLimit(2);
-        viewPager.setOnChapterBoundariesOutListener(new OnChapterBoundariesOutListener() {
+    protected void initializePager(ViewPagerInterface pager) {
+        this.pager = pager;
+        pager.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        pager.setOffscreenPageLimit(2);
+        pager.setId(R.id.view_pager);
+        pager.setOnChapterBoundariesOutListener(new OnChapterBoundariesOutListener() {
             @Override
             public void onFirstPageOutEvent() {
                 onFirstPageOut();
@@ -38,50 +36,65 @@ public abstract class ViewPagerReader extends BaseReader {
                 onLastPageOut();
             }
         });
-        viewPager.setOnChapterSingleTapListener(new OnChapterSingleTapListener() {
+        pager.setOnChapterSingleTapListener(new OnChapterSingleTapListener() {
             @Override
             public void onCenterTap() {
-                activity.onCenterSingleTap();
+                getReaderActivity().onCenterSingleTap();
             }
 
             @Override
             public void onLeftSideTap() {
-                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, transitions);
+                pager.setCurrentItem(pager.getCurrentItem() - 1, transitions);
             }
 
             @Override
             public void onRightSideTap() {
-                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, transitions);
+                pager.setCurrentItem(pager.getCurrentItem() + 1, transitions);
             }
         });
+
+        adapter = new ViewPagerReaderAdapter(getChildFragmentManager());
+        pager.setAdapter(adapter);
+        setPages();
+
+        transitionsSubscription = getReaderActivity().getPreferences().enableTransitions()
+                .asObservable()
+                .subscribe(value -> transitions = value);
     }
 
     @Override
-    public int getTotalPages() {
-        return adapter.getCount();
+    public void onDestroyView() {
+        transitionsSubscription.unsubscribe();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onPageListReady(List<Page> pages, int currentPage) {
+        this.pages = pages;
+        this.currentPage = currentPage;
+        if (isResumed()) {
+            setPages();
+        }
+    }
+
+    protected void setPages() {
+        if (pages != null) {
+            pager.clearOnPageChangeListeners();
+            adapter.setPages(pages);
+            setSelectedPage(currentPage);
+            updatePageNumber();
+            pager.setOnPageChangeListener(this::onPageChanged);
+        }
     }
 
     @Override
     public void setSelectedPage(int pageNumber) {
-        viewPager.setCurrentItem(getCurrentPageIndex(pageNumber), false);
+        pager.setCurrentItem(getPositionForPage(pageNumber), false);
     }
 
     @Override
     public boolean onImageTouch(MotionEvent motionEvent) {
-        return viewPager.onImageTouch(motionEvent);
-    }
-
-    @Override
-    public void onPageListReady(List<Page> pages) {
-        currentPosition = 0;
-        adapter = new ViewPagerReaderAdapter(activity.getSupportFragmentManager(), pages);
-        viewPager.setAdapter(adapter);
-    }
-
-    @Override
-    @CallSuper
-    public void destroy() {
-        transitionsSubscription.unsubscribe();
+        return pager.onImageTouch(motionEvent);
     }
 
     public abstract void onFirstPageOut();
