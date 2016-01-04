@@ -8,11 +8,11 @@ import java.util.List;
 
 import eu.kanade.mangafeed.data.source.model.Page;
 
-public class ViewPagerReaderAdapter extends FragmentStatePagerAdapter {
+public class PagerReaderAdapter extends FragmentStatePagerAdapter {
 
     private List<Page> pages;
 
-    public ViewPagerReaderAdapter(FragmentManager fragmentManager) {
+    public PagerReaderAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
@@ -23,7 +23,7 @@ public class ViewPagerReaderAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return ViewPagerReaderFragment.newInstance(pages.get(position));
+        return PagerReaderFragment.newInstance(pages.get(position));
     }
 
     public List<Page> getPages() {

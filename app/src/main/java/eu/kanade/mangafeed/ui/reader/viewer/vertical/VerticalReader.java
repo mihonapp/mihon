@@ -5,13 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerReader;
+import eu.kanade.mangafeed.ui.reader.viewer.common.PagerReader;
 
-public class VerticalReader extends ViewPagerReader {
+public class VerticalReader extends PagerReader {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
-        VerticalViewPager pager = new VerticalViewPager(getActivity());
+        VerticalPager pager = new VerticalPager(getActivity());
         initializePager(pager);
         return pager;
     }

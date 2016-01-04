@@ -8,11 +8,11 @@ import android.view.MotionEvent;
 
 import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterBoundariesOutListener;
 import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterSingleTapListener;
-import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerGestureListener;
-import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerInterface;
+import eu.kanade.mangafeed.ui.reader.viewer.common.PagerGestureListener;
+import eu.kanade.mangafeed.ui.reader.viewer.common.Pager;
 import rx.functions.Action1;
 
-public class HorizontalViewPager extends ViewPager implements ViewPagerInterface {
+public class HorizontalPager extends ViewPager implements Pager {
 
     private GestureDetector gestureDetector;
 
@@ -22,18 +22,18 @@ public class HorizontalViewPager extends ViewPager implements ViewPagerInterface
     private static final float SWIPE_TOLERANCE = 0.25f;
     private float startDragX;
 
-    public HorizontalViewPager(Context context) {
+    public HorizontalPager(Context context) {
         super(context);
         init(context);
     }
 
-    public HorizontalViewPager(Context context, AttributeSet attrs) {
+    public HorizontalPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
     private void init(Context context) {
-        gestureDetector = new GestureDetector(context, new ViewPagerGestureListener(this));
+        gestureDetector = new GestureDetector(context, new PagerGestureListener(this));
     }
 
     @Override

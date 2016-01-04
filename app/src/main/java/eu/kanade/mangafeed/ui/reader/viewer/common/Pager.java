@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 import rx.functions.Action1;
 
-public interface ViewPagerInterface {
+public interface Pager {
 
     void setId(int id);
     void setLayoutParams(ViewGroup.LayoutParams layoutParams);

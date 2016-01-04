@@ -31,7 +31,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
-public class ViewPagerReaderFragment extends BaseFragment {
+public class PagerReaderFragment extends BaseFragment {
 
     @Bind(R.id.page_image_view) SubsamplingScaleImageView imageView;
     @Bind(R.id.progress_container) LinearLayout progressContainer;
@@ -43,8 +43,8 @@ public class ViewPagerReaderFragment extends BaseFragment {
     private Subscription progressSubscription;
     private Subscription statusSubscription;
 
-    public static ViewPagerReaderFragment newInstance(Page page) {
-        ViewPagerReaderFragment fragment = new ViewPagerReaderFragment();
+    public static PagerReaderFragment newInstance(Page page) {
+        PagerReaderFragment fragment = new PagerReaderFragment();
         fragment.setPage(page);
         return fragment;
     }

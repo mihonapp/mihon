@@ -12,15 +12,15 @@ import rx.Subscription;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public abstract class ViewPagerReader extends BaseReader {
+public abstract class PagerReader extends BaseReader {
 
-    protected ViewPagerReaderAdapter adapter;
-    protected ViewPagerInterface pager;
+    protected PagerReaderAdapter adapter;
+    protected Pager pager;
 
     protected boolean transitions;
     protected Subscription transitionsSubscription;
 
-    protected void initializePager(ViewPagerInterface pager) {
+    protected void initializePager(Pager pager) {
         this.pager = pager;
         pager.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         pager.setOffscreenPageLimit(2);
@@ -53,7 +53,7 @@ public abstract class ViewPagerReader extends BaseReader {
             }
         });
 
-        adapter = new ViewPagerReaderAdapter(getChildFragmentManager());
+        adapter = new PagerReaderAdapter(getChildFragmentManager());
         pager.setAdapter(adapter);
         setPages();
 

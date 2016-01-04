@@ -7,11 +7,11 @@ import android.view.MotionEvent;
 
 import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterBoundariesOutListener;
 import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterSingleTapListener;
-import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerGestureListener;
-import eu.kanade.mangafeed.ui.reader.viewer.common.ViewPagerInterface;
+import eu.kanade.mangafeed.ui.reader.viewer.common.PagerGestureListener;
+import eu.kanade.mangafeed.ui.reader.viewer.common.Pager;
 import rx.functions.Action1;
 
-public class VerticalViewPager extends VerticalViewPagerImpl implements ViewPagerInterface {
+public class VerticalPager extends VerticalViewPagerImpl implements Pager {
 
     private GestureDetector gestureDetector;
 
@@ -21,18 +21,18 @@ public class VerticalViewPager extends VerticalViewPagerImpl implements ViewPage
     private static final float SWIPE_TOLERANCE = 0.25f;
     private float startDragY;
 
-    public VerticalViewPager(Context context) {
+    public VerticalPager(Context context) {
         super(context);
         init(context);
     }
 
-    public VerticalViewPager(Context context, AttributeSet attrs) {
+    public VerticalPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
     private void init(Context context) {
-        gestureDetector = new GestureDetector(context, new VerticalViewPagerGestureListener(this));
+        gestureDetector = new GestureDetector(context, new VerticalPagerGestureListener(this));
     }
 
     @Override
@@ -120,10 +120,10 @@ public class VerticalViewPager extends VerticalViewPagerImpl implements ViewPage
         });
     }
 
-    private static class VerticalViewPagerGestureListener extends ViewPagerGestureListener {
+    private static class VerticalPagerGestureListener extends PagerGestureListener {
 
-        public VerticalViewPagerGestureListener(ViewPagerInterface viewPager) {
-            super(viewPager);
+        public VerticalPagerGestureListener(Pager pager) {
+            super(pager);
         }
 
         @Override
