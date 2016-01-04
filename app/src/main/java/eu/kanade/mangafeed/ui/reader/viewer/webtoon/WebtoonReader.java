@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.reader.viewer.webtoon;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import java.util.List;
 
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
+import eu.kanade.mangafeed.widget.PreCachingLayoutManager;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
@@ -24,6 +24,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public class WebtoonReader extends BaseReader {
 
     private WebtoonAdapter adapter;
+    private RecyclerView recycler;
     private Subscription subscription;
     private GestureDetector gestureDetector;
 
@@ -31,9 +32,9 @@ public class WebtoonReader extends BaseReader {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         adapter = new WebtoonAdapter(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getActivity());
 
-        RecyclerView recycler = new RecyclerView(getActivity());
+        recycler = new RecyclerView(getActivity());
         recycler.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         recycler.setLayoutManager(layoutManager);
         recycler.setItemAnimator(null);
@@ -70,8 +71,7 @@ public class WebtoonReader extends BaseReader {
 
     @Override
     public void setSelectedPage(int pageNumber) {
-        // TODO
-        return;
+        recycler.scrollToPosition(getPositionForPage(pageNumber));
     }
 
     @Override
