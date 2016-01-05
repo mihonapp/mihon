@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -21,13 +23,11 @@ public class WebtoonAdapter extends RecyclerView.Adapter<WebtoonAdapter.ImageHol
 
     private List<Page> pages;
     private WebtoonReader fragment;
-    private int maxBitmapSize;
     private View.OnTouchListener listener;
 
     public WebtoonAdapter(WebtoonReader fragment) {
         this.fragment = fragment;
         pages = new ArrayList<>();
-        maxBitmapSize = fragment.getReaderActivity().getMaxBitmapSize();
         listener = (v, event) -> fragment.onImageTouch(event);
     }
 
@@ -39,7 +39,7 @@ public class WebtoonAdapter extends RecyclerView.Adapter<WebtoonAdapter.ImageHol
     public ImageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = fragment.getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.item_webtoon_reader, parent, false);
-        return new ImageHolder(v, maxBitmapSize, listener);
+        return new ImageHolder(v, listener);
     }
 
     @Override
@@ -63,24 +63,31 @@ public class WebtoonAdapter extends RecyclerView.Adapter<WebtoonAdapter.ImageHol
         @Bind(R.id.page_image_view) SubsamplingScaleImageView imageView;
         @Bind(R.id.progress) ProgressBar progressBar;
 
-        public ImageHolder(View view, int maxBitmapSize, View.OnTouchListener listener) {
+        private Animation fadeInAnimation;
+
+        public ImageHolder(View view, View.OnTouchListener listener) {
             super(view);
             ButterKnife.bind(this, view);
 
+            fadeInAnimation = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
+
+            imageView.setParallelLoadingEnabled(true);
             imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
             imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
             imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
-            imageView.setZoomEnabled(false);
-            imageView.setPanEnabled(false);
             imageView.setOnTouchListener(listener);
-            // TODO Using tiling here is annoying. RecyclerView isn't good at all for a webtoon reader
-//            imageView.setMaxDimensions(maxBitmapSize, maxBitmapSize);
+            imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
+                @Override
+                public void onImageLoaded() {
+                    imageView.startAnimation(fadeInAnimation);
+                }
+            });
         }
 
         public void onSetValues(Page page) {
             if (page.getImagePath() != null) {
                 imageView.setVisibility(View.VISIBLE);
-                imageView.setImage(ImageSource.uri(page.getImagePath()).tilingDisabled());
+                imageView.setImage(ImageSource.uri(page.getImagePath()));
                 progressBar.setVisibility(View.GONE);
             } else {
                 imageView.setVisibility(View.GONE);

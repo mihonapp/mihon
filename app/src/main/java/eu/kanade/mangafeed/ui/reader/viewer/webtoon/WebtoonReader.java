@@ -33,6 +33,7 @@ public class WebtoonReader extends BaseReader {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         adapter = new WebtoonAdapter(this);
         PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getActivity());
+        layoutManager.setExtraLayoutSpace(getResources().getDisplayMetrics().heightPixels);
 
         recycler = new RecyclerView(getActivity());
         recycler.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -55,6 +56,14 @@ public class WebtoonReader extends BaseReader {
                 getReaderActivity().onCenterSingleTap();
                 return true;
             }
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                // The only way I've found to allow panning. Double tap event (zoom) is lost
+                // but panning should be the most used one
+                return true;
+            }
+
         });
 
         setPages();
