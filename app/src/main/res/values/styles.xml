@@ -7,8 +7,6 @@
         <item name="alertDialogTheme">@style/AlertDialogStyle</item>
         <item name="android:itemTextAppearance">@style/OptionsMenuTextColor</item>
         <item name="android:textColor">@color/primary_text</item>
-        <item name="android:textColorPrimary">@color/primary_text</item>
-        <item name="colorControlNormal">@color/white</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
@@ -19,6 +17,7 @@
         <item name="android:spinnerItemStyle">@style/ActionBarSpinner</item>
         <item name="android:actionModeBackground">@color/colorPrimarySuperDark</item>
         <item name="actionModeBackground">@color/colorPrimarySuperDark</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="AppTheme.Overlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

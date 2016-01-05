@@ -147,14 +147,15 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
         if (!isDownloaded) {
             pageObservable = source.getAllImageUrlsFromPageList(pageList)
-                    .flatMap(source::getCachedImage, 3);
+                    .flatMap(source::getCachedImage, 2);
         } else {
             File chapterDir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
             pageObservable = Observable.from(pageList)
                     .flatMap(page -> downloadManager.getDownloadedImage(page, chapterDir));
         }
-        return pageObservable
+        return Observable.defer(() -> pageObservable)
                 .subscribeOn(Schedulers.io())
+                .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
