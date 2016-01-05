@@ -66,6 +66,11 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="eu.kanade.mangafeed.data.cache.CoverGlideModule"
+            android:value="GlideModule" />
+
     </application>
 
 </manifest>

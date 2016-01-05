@@ -4,7 +4,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorButtonNormal">@color/colorPrimary</item>
         <item name="alertDialogTheme">@style/AlertDialogStyle</item>
         <item name="android:itemTextAppearance">@style/OptionsMenuTextColor</item>
         <item name="android:textColor">@color/primary_text</item>
