@@ -1,23 +1,24 @@
 <resources>
 
-    <style name="AppTheme" parent="AppTheme.Base">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
-
-        <item name="android:background">@color/white</item>
+        <item name="alertDialogTheme">@style/AlertDialogStyle</item>
+        <item name="android:itemTextAppearance">@style/OptionsMenuTextColor</item>
         <item name="android:textColor">@color/primary_text</item>
-
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowActionModeOverlay">true</item>
-        <item name="windowActionModeOverlay">true</item>
-
+    <style name="AppTheme.ActionBar" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:itemTextAppearance">@style/OptionsMenuTextColor</item>
+        <item name="android:spinnerItemStyle">@style/ActionBarSpinner</item>
     </style>
 
-    <style name="ThemeOverlay.AppTheme.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="AppTheme.Overlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorAccent">@color/white</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
@@ -26,14 +27,32 @@
         <item name="actionModeBackground">@color/colorPrimarySuperDark</item>
     </style>
 
-    <style name="AppTheme.Popup" parent="@style/ThemeOverlay.AppTheme.Dark">
+    <style name="AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowTitleStyle">@style/DialogTitleText</item>
+        <item name="colorAccent">@color/primary</item>
+    </style>
+
+    <style name="DialogTitleText">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+
+    <style name="OptionsMenuTextColor" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="ActionBarSpinner" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/hint_foreground_material_dark</item>
+    </style>
+
+    <style name="AppTheme.Popup" parent="@style/AppTheme.Overlay.Dark">
         <item name="colorAccent">@color/white</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="AppTheme.GridView" parent="AppTheme">
-
         <item name="android:layout_width">match_parent</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -58,7 +77,7 @@
 
         <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>
 
-        <item name="nnf_toolbarTheme">@style/ThemeOverlay.AppTheme.Dark</item>
+        <item name="nnf_toolbarTheme">@style/AppTheme.Overlay.Dark</item>
     </style>
 
     <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">

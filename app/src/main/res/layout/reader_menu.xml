@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/reader_menu_background"
-        android:theme="@style/ThemeOverlay.AppTheme.Dark"
+        android:theme="@style/AppTheme.Overlay.Dark"
         app:popupTheme="@style/AppTheme.Popup"
         android:elevation="4dp" />
 
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
-                android:theme="@style/ThemeOverlay.AppTheme.Dark"
+                android:theme="@style/AppTheme.Overlay.Dark"
                 />
 
             <TextView

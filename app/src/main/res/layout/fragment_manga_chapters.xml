@@ -37,7 +37,7 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:gravity="top|start"
-        android:theme="@style/ThemeOverlay.AppTheme.Dark">
+        android:theme="@style/AppTheme.Popup">
 
         <ImageView
             android:id="@+id/action_sort"

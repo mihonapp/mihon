@@ -5,7 +5,7 @@
     android:id="@+id/tabs"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/ThemeOverlay.AppTheme.Dark"
+    android:theme="@style/AppTheme.Overlay.Dark"
     app:tabGravity="fill"
     android:background="@color/colorPrimary"
     android:elevation="4dp"
