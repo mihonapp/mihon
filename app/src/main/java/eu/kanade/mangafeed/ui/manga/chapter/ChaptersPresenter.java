@@ -120,22 +120,20 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     }
 
     private Observable<PostResult> getOnlineChaptersObs() {
-        return source
-                .pullChaptersFromNetwork(manga.url)
+        return source.pullChaptersFromNetwork(manga.url)
                 .subscribeOn(Schedulers.io())
                 .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     private Observable<List<Chapter>> getDbChaptersObs() {
-        return chaptersSubject
-                .observeOn(Schedulers.io())
-                .flatMap(this::applyChapterFilters)
+        return chaptersSubject.flatMap(this::applyChapterFilters)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     private Observable<List<Chapter>> applyChapterFilters(List<Chapter> chapters) {
-        Observable<Chapter> observable = Observable.from(chapters);
+        Observable<Chapter> observable = Observable.from(chapters)
+                .subscribeOn(Schedulers.io());
         if (onlyUnread) {
             observable = observable.filter(chapter -> !chapter.read);
         }

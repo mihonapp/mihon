@@ -17,10 +17,7 @@ import eu.kanade.mangafeed.data.database.models.Category;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.database.models.MangaCategory;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.assertj.core.api.Assertions.*;
 
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
 @RunWith(RobolectricGradleTestRunner.class)
@@ -48,13 +45,13 @@ public class CategoryTest {
         createCategory("Hold");
 
         List<Category> categories = db.getCategories().executeAsBlocking();
-        assertThat(categories, hasSize(2));
+        assertThat(categories).hasSize(2);
     }
 
     @Test
     public void testHasLibraryMangas() {
         List<Manga> mangas = db.getLibraryMangas().executeAsBlocking();
-        assertThat(mangas, hasSize(5));
+        assertThat(mangas).hasSize(5);
     }
 
     @Test
@@ -70,7 +67,7 @@ public class CategoryTest {
         m.favorite = false;
         db.insertManga(m).executeAsBlocking();
         List<Manga> mangas = db.getLibraryMangas().executeAsBlocking();
-        assertThat(mangas, hasSize(5));
+        assertThat(mangas).hasSize(5);
     }
 
     @Test
@@ -81,7 +78,7 @@ public class CategoryTest {
 
         // It should not have 0 as id
         Category c = db.getCategories().executeAsBlocking().get(0);
-        assertThat(c.id, not(0));
+        assertThat(c.id).isNotZero();
 
         // Add a manga to a category
         Manga m = db.getMangas().executeAsBlocking().get(0);
@@ -92,7 +89,7 @@ public class CategoryTest {
         List<Manga> mangas = db.getLibraryMangas().executeAsBlocking();
         for (Manga manga : mangas) {
             if (manga.id.equals(m.id)) {
-                assertThat(manga.category, is(c.id));
+                assertThat(manga.category).isEqualTo(c.id);
             }
         }
     }
