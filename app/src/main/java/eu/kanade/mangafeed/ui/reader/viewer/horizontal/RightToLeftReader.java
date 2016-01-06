@@ -27,12 +27,12 @@ public class RightToLeftReader extends HorizontalReader {
 
     @Override
     public void onFirstPageOut() {
-        requestNextChapter();
+        getReaderActivity().requestNextChapter();
     }
 
     @Override
     public void onLastPageOut() {
-        requestPreviousChapter();
+        getReaderActivity().requestPreviousChapter();
     }
 
 }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -41,6 +43,11 @@ public class ReaderMenu {
     @Bind(R.id.reader_selector) ImageButton readerSelector;
     @Bind(R.id.reader_extra_settings) ImageButton extraSettings;
     @Bind(R.id.reader_brightness) ImageButton brightnessSettings;
+
+    private MenuItem nextChapterBtn;
+    private MenuItem prevChapterBtn;
+    private Chapter prevChapter;
+    private Chapter nextChapter;
 
     private ReaderActivity activity;
     private PreferencesHelper preferences;
@@ -106,6 +113,25 @@ public class ReaderMenu {
         showing = false;
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        activity.getMenuInflater().inflate(R.menu.reader, menu);
+        nextChapterBtn = menu.findItem(R.id.action_next_chapter);
+        prevChapterBtn = menu.findItem(R.id.action_previous_chapter);
+        setAdjacentChaptersVisibility();
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item == prevChapterBtn) {
+            activity.requestPreviousChapter();
+        } else if (item == nextChapterBtn) {
+            activity.requestNextChapter();
+        } else {
+            return false;
+        }
+        return true;
+    }
+
     public void onChapterReady(int numPages, Manga manga, Chapter chapter, int currentPageIndex) {
         if (manga.viewer == ReaderActivity.RIGHT_TO_LEFT && !inverted) {
             // Invert the seekbar and textview fields for the right to left reader
@@ -134,6 +160,17 @@ public class ReaderMenu {
     public void onPageChanged(int pageIndex) {
         currentPage.setText("" + (pageIndex + 1));
         seekBar.setProgress(pageIndex);
+    }
+
+    public void onAdjacentChapters(Chapter previous, Chapter next) {
+        prevChapter = previous;
+        nextChapter = next;
+        setAdjacentChaptersVisibility();
+    }
+
+    private void setAdjacentChaptersVisibility() {
+        if (prevChapterBtn != null) prevChapterBtn.setVisible(prevChapter != null);
+        if (nextChapterBtn != null) nextChapterBtn.setVisible(nextChapter != null);
     }
 
     private void initializeOptions() {

@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.ui.reader;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
 import java.io.File;
 import java.util.List;
@@ -53,8 +54,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     private static final int GET_PAGE_LIST = 1;
     private static final int GET_PAGE_IMAGES = 2;
-    private static final int RETRY_IMAGES = 3;
-    private static final int PRELOAD_NEXT_CHAPTER = 4;
+    private static final int GET_ADJACENT_CHAPTERS = 3;
+    private static final int RETRY_IMAGES = 4;
+    private static final int PRELOAD_NEXT_CHAPTER = 5;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -71,11 +73,15 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 (view, pages) -> {},
                 (view, error) -> Timber.e("An error occurred while preloading a chapter"));
 
-        restartableReplay(GET_PAGE_IMAGES,
-                () -> getPageImagesObservable()
-                        .doOnCompleted(this::preloadNextChapter),
+        restartableLatestCache(GET_PAGE_IMAGES,
+                this::getPageImagesObservable,
                 (view, page) -> {},
                 (view, error) -> Timber.e("An error occurred while downloading an image"));
+
+        restartableLatestCache(GET_ADJACENT_CHAPTERS,
+                this::getAdjacentChaptersObservable,
+                (view, pair) -> view.onAdjacentChapters(pair.first, pair.second),
+                (view, error) -> Timber.e("An error occurred while getting adjacent chapters"));
 
         restartableLatestCache(RETRY_IMAGES,
                 this::getRetryPageObservable,
@@ -86,7 +92,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 () -> getPageListObservable()
                         .doOnNext(pages -> pageList = pages)
                         .doOnCompleted(() -> {
-                            getAdjacentChapters();
+                            start(GET_ADJACENT_CHAPTERS);
                             start(GET_PAGE_IMAGES);
                             start(RETRY_IMAGES);
                         }),
@@ -117,6 +123,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
         // These are started by GET_PAGE_LIST, so we don't let them restart itselves
         stop(GET_PAGE_IMAGES);
+        stop(GET_ADJACENT_CHAPTERS);
         stop(RETRY_IMAGES);
         stop(PRELOAD_NEXT_CHAPTER);
     }
@@ -153,9 +160,19 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
             pageObservable = Observable.from(pageList)
                     .flatMap(page -> downloadManager.getDownloadedImage(page, chapterDir));
         }
-        return Observable.defer(() -> pageObservable)
-                .subscribeOn(Schedulers.io())
-                .onBackpressureBuffer()
+        return pageObservable.subscribeOn(Schedulers.io())
+                .doOnCompleted(this::preloadNextChapter);
+    }
+
+    private Observable<Pair<Chapter, Chapter>> getAdjacentChaptersObservable() {
+        return Observable.zip(
+                db.getPreviousChapter(chapter).createObservable().take(1),
+                db.getNextChapter(chapter).createObservable().take(1),
+                Pair::create)
+                .doOnNext(pair -> {
+                    previousChapter = pair.first;
+                    nextChapter = pair.second;
+                })
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -275,28 +292,22 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         this.currentPage = currentPage;
     }
 
-    private void getAdjacentChapters() {
-        add(db.getNextChapter(chapter).createObservable()
-                .take(1)
-                .subscribe(result -> nextChapter = result));
-
-        add(db.getPreviousChapter(chapter).createObservable()
-                .take(1)
-                .subscribe(result -> previousChapter = result));
-    }
-
-    public void loadNextChapter() {
+    public boolean loadNextChapter() {
         if (hasNextChapter()) {
             onChapterLeft();
             loadChapter(nextChapter);
+            return true;
         }
+        return false;
     }
 
-    public void loadPreviousChapter() {
+    public boolean loadPreviousChapter() {
         if (hasPreviousChapter()) {
             onChapterLeft();
             loadChapter(previousChapter);
+            return true;
         }
+        return false;
     }
 
     public boolean hasNextChapter() {

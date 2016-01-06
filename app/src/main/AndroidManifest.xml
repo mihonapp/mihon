@@ -12,6 +12,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".ui.main.MainActivity">
@@ -27,8 +28,7 @@
         </activity>
         <activity
             android:name=".ui.reader.ReaderActivity"
-            android:parentActivityName=".ui.manga.MangaActivity"
-            android:hardwareAccelerated="true">
+            android:parentActivityName=".ui.manga.MangaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.manga.MangaActivity" />

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
@@ -112,6 +114,16 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return readerMenu.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return readerMenu.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         Icepick.saveInstanceState(readerMenu, outState);
         super.onSaveInstanceState(outState);
@@ -129,6 +141,10 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         }
         viewer.onPageListReady(pages, currentPage);
         readerMenu.onChapterReady(pages.size(), manga, chapter, currentPage);
+    }
+
+    public void onAdjacentChapters(Chapter previous, Chapter next) {
+        readerMenu.onAdjacentChapters(previous, next);
     }
 
     private BaseReader createViewer(Manga manga) {
@@ -158,6 +174,21 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     public void onCenterSingleTap() {
         readerMenu.toggle();
+    }
+
+    public void requestNextChapter() {
+        getPresenter().setCurrentPage(viewer != null ? viewer.getCurrentPage() : 0);
+        if (!getPresenter().loadNextChapter()) {
+            ToastUtil.showShort(this, R.string.no_next_chapter);
+        }
+
+    }
+
+    public void requestPreviousChapter() {
+        getPresenter().setCurrentPage(viewer != null ? viewer.getCurrentPage() : 0);
+        if (!getPresenter().loadPreviousChapter()) {
+            ToastUtil.showShort(this, R.string.no_previous_chapter);
+        }
     }
 
     private void initializeSettings() {

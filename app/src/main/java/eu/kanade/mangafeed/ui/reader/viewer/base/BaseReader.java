@@ -4,12 +4,9 @@ import android.view.MotionEvent;
 
 import java.util.List;
 
-import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
-import eu.kanade.mangafeed.ui.reader.ReaderPresenter;
-import eu.kanade.mangafeed.util.ToastUtil;
 
 public abstract class BaseReader extends BaseFragment {
 
@@ -30,27 +27,6 @@ public abstract class BaseReader extends BaseFragment {
 
     public int getPositionForPage(int page) {
         return page;
-    }
-
-    public void requestNextChapter() {
-        ReaderPresenter presenter = getReaderActivity().getPresenter();
-        if (presenter.hasNextChapter()) {
-            presenter.setCurrentPage(getCurrentPage());
-            presenter.loadNextChapter();
-        } else {
-            ToastUtil.showShort(getActivity(), R.string.no_next_chapter);
-        }
-
-    }
-
-    public void requestPreviousChapter() {
-        ReaderPresenter presenter = getReaderActivity().getPresenter();
-        if (presenter.hasPreviousChapter()) {
-            presenter.setCurrentPage(getCurrentPage());
-            presenter.loadPreviousChapter();
-        } else {
-            ToastUtil.showShort(getActivity(), R.string.no_previous_chapter);
-        }
     }
 
     public void onPageChanged(int position) {

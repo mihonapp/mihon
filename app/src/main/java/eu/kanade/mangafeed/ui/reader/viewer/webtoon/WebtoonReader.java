@@ -73,9 +73,13 @@ public class WebtoonReader extends BaseReader {
 
     @Override
     public void onPause() {
+        unsubscribeStatus();
+        super.onPause();
+    }
+
+    private void unsubscribeStatus() {
         if (subscription != null && !subscription.isUnsubscribed())
             subscription.unsubscribe();
-        super.onPause();
     }
 
     @Override
@@ -85,14 +89,18 @@ public class WebtoonReader extends BaseReader {
 
     @Override
     public void onPageListReady(List<Page> pages, int currentPage) {
-        this.pages = pages;
-        if (isResumed()) {
-            setPages();
+        if (this.pages != pages) {
+            this.pages = pages;
+            if (isResumed()) {
+                setPages();
+            }
         }
     }
 
     private void setPages() {
         if (pages != null) {
+            unsubscribeStatus();
+            adapter.clear();
             observeStatus(0);
         }
     }
@@ -112,8 +120,8 @@ public class WebtoonReader extends BaseReader {
         PublishSubject<Integer> statusSubject = PublishSubject.create();
         page.setStatusSubject(statusSubject);
 
-        if (subscription != null && !subscription.isUnsubscribed())
-            subscription.unsubscribe();
+        // Unsubscribe from the previous page
+        unsubscribeStatus();
 
         subscription = statusSubject
                 .startWith(page.getStatus())

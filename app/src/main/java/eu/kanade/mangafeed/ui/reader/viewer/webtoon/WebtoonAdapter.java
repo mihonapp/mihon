@@ -58,6 +58,13 @@ public class WebtoonAdapter extends RecyclerView.Adapter<WebtoonAdapter.ImageHol
         notifyItemInserted(page.getPageNumber());
     }
 
+    public void clear() {
+        if (pages != null) {
+            pages.clear();
+            notifyDataSetChanged();
+        }
+    }
+
     public static class ImageHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.page_image_view) SubsamplingScaleImageView imageView;

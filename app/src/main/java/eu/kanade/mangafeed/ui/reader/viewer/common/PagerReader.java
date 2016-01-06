@@ -70,10 +70,12 @@ public abstract class PagerReader extends BaseReader {
 
     @Override
     public void onPageListReady(List<Page> pages, int currentPage) {
-        this.pages = pages;
-        this.currentPage = currentPage;
-        if (isResumed()) {
-            setPages();
+        if (this.pages != pages) {
+            this.pages = pages;
+            this.currentPage = currentPage;
+            if (isResumed()) {
+                setPages();
+            }
         }
     }
 
