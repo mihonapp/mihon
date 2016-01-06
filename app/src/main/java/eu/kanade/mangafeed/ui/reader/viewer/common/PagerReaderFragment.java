@@ -173,6 +173,7 @@ public class PagerReaderFragment extends BaseFragment {
         final AtomicInteger currentValue = new AtomicInteger(-1);
 
         progressSubscription = Observable.interval(75, TimeUnit.MILLISECONDS, Schedulers.newThread())
+                .onBackpressureDrop()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tick -> {
                     // Refresh UI only if progress change
