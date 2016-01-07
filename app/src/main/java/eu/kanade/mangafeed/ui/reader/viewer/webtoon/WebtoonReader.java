@@ -25,6 +25,7 @@ public class WebtoonReader extends BaseReader {
 
     private WebtoonAdapter adapter;
     private RecyclerView recycler;
+    private PreCachingLayoutManager layoutManager;
     private Subscription subscription;
     private GestureDetector gestureDetector;
 
@@ -32,7 +33,7 @@ public class WebtoonReader extends BaseReader {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         adapter = new WebtoonAdapter(this);
-        PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getActivity());
+        layoutManager = new PreCachingLayoutManager(getActivity());
         layoutManager.setExtraLayoutSpace(getResources().getDisplayMetrics().heightPixels);
 
         recycler = new RecyclerView(getActivity());
@@ -40,15 +41,6 @@ public class WebtoonReader extends BaseReader {
         recycler.setLayoutManager(layoutManager);
         recycler.setItemAnimator(null);
         recycler.setAdapter(adapter);
-        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                currentPage = layoutManager.findLastVisibleItemPosition();
-                updatePageNumber();
-            }
-        });
 
         gestureDetector = new GestureDetector(getActivity(), new SimpleOnGestureListener() {
             @Override
@@ -100,9 +92,25 @@ public class WebtoonReader extends BaseReader {
     private void setPages() {
         if (pages != null) {
             unsubscribeStatus();
+            recycler.clearOnScrollListeners();
             adapter.clear();
+            recycler.scrollTo(0, 0);
+            adapter.setPages(pages);
+            setScrollListener();
             observeStatus(0);
         }
+    }
+
+    private void setScrollListener() {
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                currentPage = layoutManager.findLastVisibleItemPosition();
+                updatePageNumber();
+            }
+        });
     }
 
     @Override
@@ -115,7 +123,6 @@ public class WebtoonReader extends BaseReader {
             return;
 
         final Page page = pages.get(position);
-        adapter.addPage(page);
 
         PublishSubject<Integer> statusSubject = PublishSubject.create();
         page.setStatusSubject(statusSubject);
@@ -130,17 +137,9 @@ public class WebtoonReader extends BaseReader {
     }
 
     private void processStatus(int position, int status) {
-        switch (status) {
-            case Page.LOAD_PAGE:
-                break;
-            case Page.DOWNLOAD_IMAGE:
-                break;
-            case Page.READY:
-                adapter.notifyItemChanged(position);
-                observeStatus(position + 1);
-                break;
-            case Page.ERROR:
-                break;
+        adapter.notifyItemChanged(position);
+        if (status == Page.READY) {
+            observeStatus(position + 1);
         }
     }
 

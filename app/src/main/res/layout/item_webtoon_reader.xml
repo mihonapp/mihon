@@ -4,12 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/frame_container">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/retry_button"
+            android:text="@string/action_retry"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <include layout="@layout/chapter_image"/>
 
