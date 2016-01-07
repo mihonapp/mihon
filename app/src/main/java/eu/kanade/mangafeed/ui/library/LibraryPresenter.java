@@ -53,6 +53,14 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
         super.onDestroy();
     }
 
+    @Override
+    protected void onTakeView(LibraryFragment libraryFragment) {
+        super.onTakeView(libraryFragment);
+        if (!isSubscribed(GET_LIBRARY)) {
+            start(GET_LIBRARY);
+        }
+    }
+
     private Observable<Pair<List<Category>, Map<Integer, List<Manga>>>> getLibraryObservable() {
         return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable(),
                 Pair::create)
@@ -71,6 +79,13 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                         .flatMap(group -> group.toList()
                                 .map(list -> Pair.create(group.getKey(), list)))
                         .toMap(pair -> pair.first, pair -> pair.second));
+    }
+
+
+
+    public void onOpenManga(Manga manga) {
+        // Avoid further db updates for the library when it's not needed
+        stop(GET_LIBRARY);
     }
 
     public void setSelection(Manga manga, boolean selected) {

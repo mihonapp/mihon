@@ -66,6 +66,10 @@ public class LibraryCategoryAdapter extends FlexibleAdapter<LibraryHolder, Manga
         holder.itemView.setActivated(isSelected(position));
     }
 
+    public int getCoverHeight() {
+        return fragment.recycler.getItemWidth() / 9 * 12;
+    }
+
     @Override
     public Filter getFilter() {
         return filter;

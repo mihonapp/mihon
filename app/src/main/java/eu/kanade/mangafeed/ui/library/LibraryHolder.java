@@ -6,12 +6,14 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.cache.CoverCache;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.ui.base.adapter.FlexibleViewHolder;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.widget.RelativeLayout.LayoutParams;
 
 public class LibraryHolder extends FlexibleViewHolder {
 
@@ -19,9 +21,10 @@ public class LibraryHolder extends FlexibleViewHolder {
     @Bind(R.id.title) TextView title;
     @Bind(R.id.unreadText) TextView unreadText;
 
-    public LibraryHolder(View view, FlexibleAdapter adapter, OnListItemClickListener listener) {
+    public LibraryHolder(View view, LibraryCategoryAdapter adapter, OnListItemClickListener listener) {
         super(view, adapter, listener);
         ButterKnife.bind(this, view);
+        thumbnail.setLayoutParams(new LayoutParams(MATCH_PARENT, adapter.getCoverHeight()));
     }
 
     public void onSetValues(Manga manga, LibraryPresenter presenter) {
