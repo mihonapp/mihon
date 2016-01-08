@@ -29,6 +29,7 @@ import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
+import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
 import icepick.State;
 import rx.Subscription;
 
@@ -245,8 +246,9 @@ public class ReaderMenu {
         @Bind(R.id.show_page_number) CheckBox showPageNumber;
         @Bind(R.id.hide_status_bar) CheckBox hideStatusBar;
         @Bind(R.id.keep_screen_on) CheckBox keepScreenOn;
+        @Bind(R.id.reader_theme) CheckBox readerTheme;
         @Bind(R.id.image_decoder) TextView imageDecoder;
-        @Bind(R.id.reader_theme) TextView readerTheme;
+        @Bind(R.id.image_decoder_initial) TextView imageDecoderInitial;
 
         public SettingsPopupWindow(View view) {
             super(view, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -261,6 +263,8 @@ public class ReaderMenu {
             showPageNumber.setChecked(preferences.showPageNumber().get());
             hideStatusBar.setChecked(preferences.hideStatusBar().get());
             keepScreenOn.setChecked(preferences.keepScreenOn().get());
+            readerTheme.setChecked(preferences.readerTheme().get() == 1);
+            setDecoderInitial(preferences.imageDecoder().get());
 
             // Add a listener to change the corresponding setting
             enableTransitions.setOnCheckedChangeListener((view, isChecked) ->
@@ -275,6 +279,9 @@ public class ReaderMenu {
             keepScreenOn.setOnCheckedChangeListener((view, isChecked) ->
                     preferences.keepScreenOn().set(isChecked));
 
+            readerTheme.setOnCheckedChangeListener((view, isChecked) ->
+                    preferences.readerTheme().set(isChecked ? 1 : 0));
+
             imageDecoder.setOnClickListener(v -> {
                 showImmersiveDialog(new MaterialDialog.Builder(activity)
                         .title(R.string.pref_image_decoder)
@@ -282,22 +289,27 @@ public class ReaderMenu {
                         .itemsCallbackSingleChoice(preferences.imageDecoder().get(),
                                 (dialog, itemView, which, text) -> {
                                     preferences.imageDecoder().set(which);
+                                    setDecoderInitial(which);
                                     return true;
                                 })
                         .build());
             });
+        }
 
-            readerTheme.setOnClickListener(v -> {
-                showImmersiveDialog(new MaterialDialog.Builder(activity)
-                        .title(R.string.pref_reader_theme)
-                        .items(R.array.reader_themes)
-                        .itemsCallbackSingleChoice(preferences.readerTheme().get(),
-                                (dialog, itemView, which, text) -> {
-                                    preferences.readerTheme().set(which);
-                                    return true;
-                                })
-                        .build());
-            });
+        private void setDecoderInitial(int decoder) {
+            String initial;
+            switch (decoder) {
+                case BaseReader.SKIA_DECODER:
+                    initial = "S";
+                    break;
+                case BaseReader.RAPID_DECODER:
+                    initial = "R";
+                    break;
+                default:
+                    initial = "";
+                    break;
+            }
+            imageDecoderInitial.setText(initial);
         }
 
     }

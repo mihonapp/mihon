@@ -27,6 +27,7 @@ public class WebtoonReader extends BaseReader {
     private RecyclerView recycler;
     private PreCachingLayoutManager layoutManager;
     private Subscription subscription;
+    private Subscription decoderSubscription;
     private GestureDetector gestureDetector;
 
     @Nullable
@@ -41,6 +42,13 @@ public class WebtoonReader extends BaseReader {
         recycler.setLayoutManager(layoutManager);
         recycler.setItemAnimator(null);
         recycler.setAdapter(adapter);
+
+        decoderSubscription = getReaderActivity().getPreferences().imageDecoder()
+                .asObservable()
+                .doOnNext(this::setRegionDecoderClass)
+                .skip(1)
+                .distinctUntilChanged()
+                .subscribe(v -> adapter.notifyDataSetChanged());
 
         gestureDetector = new GestureDetector(getActivity(), new SimpleOnGestureListener() {
             @Override
@@ -61,6 +69,12 @@ public class WebtoonReader extends BaseReader {
         setPages();
 
         return recycler;
+    }
+
+    @Override
+    public void onDestroyView() {
+        decoderSubscription.unsubscribe();
+        super.onDestroyView();
     }
 
     @Override

@@ -8,17 +8,30 @@
     android:paddingTop="5dp"
     android:paddingBottom="5dp">
 
-    <TextView
-        android:id="@+id/reader_theme"
-        android:paddingLeft="32dp"
-        style="@style/reader_menu_settings_item"
-        android:text="@string/pref_reader_theme"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/image_decoder"
-        android:paddingLeft="32dp"
+        <TextView
+            android:id="@+id/image_decoder_initial"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"/>
+
+        <TextView
+            android:id="@+id/image_decoder"
+            style="@style/reader_menu_settings_item"
+            android:text="@string/pref_image_decoder"/>
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/reader_theme"
         style="@style/reader_menu_settings_item"
-        android:text="@string/pref_image_decoder"/>
+        android:button="@drawable/reader_background_checkbox"
+        android:text="@string/pref_reader_theme"/>
 
     <CheckBox
         android:id="@+id/enable_transitions"

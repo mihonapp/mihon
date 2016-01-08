@@ -26,9 +26,11 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
 
     private Animation fadeInAnimation;
     private Page page;
+    private WebtoonAdapter adapter;
 
     public WebtoonHolder(View view, WebtoonAdapter adapter, View.OnTouchListener touchListener) {
         super(view);
+        this.adapter = adapter;
         ButterKnife.bind(this, view);
 
         fadeInAnimation = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
@@ -88,6 +90,7 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         setErrorButtonVisible(false);
         setProgressVisible(false);
         setImageVisible(true);
+        imageView.setRegionDecoderClass(adapter.getReader().getRegionDecoderClass());
         imageView.setImage(ImageSource.uri(page.getImagePath()));
     }
 

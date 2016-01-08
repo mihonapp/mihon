@@ -61,4 +61,8 @@ public class WebtoonAdapter extends RecyclerView.Adapter<WebtoonHolder> {
         fragment.getReaderActivity().getPresenter().retryPage(page);
     }
 
+    public WebtoonReader getReader() {
+        return fragment;
+    }
+
 }
