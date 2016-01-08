@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package eu.kanade.mangafeed.ui.reader.viewer.vertical;
+package eu.kanade.mangafeed.ui.reader.viewer.pager.vertical;
 
 import android.content.Context;
 import android.content.res.Resources;

@@ -1,11 +1,12 @@
-package eu.kanade.mangafeed.ui.reader.viewer.vertical;
+package eu.kanade.mangafeed.ui.reader.viewer.pager.vertical;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import eu.kanade.mangafeed.ui.reader.viewer.common.PagerReader;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.PagerReader;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.vertical.VerticalPager;
 
 public class VerticalReader extends PagerReader {
 

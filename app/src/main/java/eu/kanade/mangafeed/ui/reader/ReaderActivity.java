@@ -30,9 +30,9 @@ import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.base.activity.BaseRxActivity;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
-import eu.kanade.mangafeed.ui.reader.viewer.horizontal.LeftToRightReader;
-import eu.kanade.mangafeed.ui.reader.viewer.horizontal.RightToLeftReader;
-import eu.kanade.mangafeed.ui.reader.viewer.vertical.VerticalReader;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.horizontal.LeftToRightReader;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.horizontal.RightToLeftReader;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.vertical.VerticalReader;
 import eu.kanade.mangafeed.ui.reader.viewer.webtoon.WebtoonReader;
 import eu.kanade.mangafeed.util.GLUtil;
 import eu.kanade.mangafeed.util.ToastUtil;
@@ -84,9 +84,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         Icepick.restoreInstanceState(readerMenu, savedState);
         if (savedState != null && readerMenu.showing)
             readerMenu.show(false);
-
-        readerTheme = preferences.getReaderTheme();
-        applyTheme();
 
         initializeSettings();
 
@@ -211,6 +208,11 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         subscriptions.add(preferences.customBrightness()
                 .asObservable()
                 .subscribe(this::setCustomBrightness));
+
+        subscriptions.add(preferences.readerTheme()
+                .asObservable()
+                .distinctUntilChanged()
+                .subscribe(this::applyTheme));
     }
 
     private void setOrientation(boolean locked) {
@@ -291,14 +293,17 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         recreate();
     }
 
-    private void applyTheme() {
+    private void applyTheme(int theme) {
+        readerTheme = theme;
         View rootView = getWindow().getDecorView().getRootView();
-        if (readerTheme == BLACK_THEME) {
+        if (theme == BLACK_THEME) {
             rootView.setBackgroundColor(Color.BLACK);
             pageNumber.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
             pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.page_number_background_black));
         } else {
             rootView.setBackgroundColor(Color.WHITE);
+            pageNumber.setTextColor(ContextCompat.getColor(this, R.color.primary_text));
+            pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.page_number_background));
         }
     }
 

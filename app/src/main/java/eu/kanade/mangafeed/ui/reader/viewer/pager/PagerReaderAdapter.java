@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.ui.reader.viewer.common;
+package eu.kanade.mangafeed.ui.reader.viewer.pager;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

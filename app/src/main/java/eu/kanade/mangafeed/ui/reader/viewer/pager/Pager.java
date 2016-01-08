@@ -1,9 +1,11 @@
-package eu.kanade.mangafeed.ui.reader.viewer.common;
+package eu.kanade.mangafeed.ui.reader.viewer.pager;
 
 import android.support.v4.view.PagerAdapter;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
+import eu.kanade.mangafeed.ui.reader.viewer.base.OnChapterBoundariesOutListener;
+import eu.kanade.mangafeed.ui.reader.viewer.base.OnChapterSingleTapListener;
 import rx.functions.Action1;
 
 public interface Pager {

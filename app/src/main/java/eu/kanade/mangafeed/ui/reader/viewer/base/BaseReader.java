@@ -2,16 +2,24 @@ package eu.kanade.mangafeed.ui.reader.viewer.base;
 
 import android.view.MotionEvent;
 
+import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
+import com.davemorrissey.labs.subscaleview.decoder.SkiaImageRegionDecoder;
+
 import java.util.List;
 
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
+import eu.kanade.mangafeed.ui.reader.decoder.RapidImageRegionDecoder;
 
 public abstract class BaseReader extends BaseFragment {
 
     protected int currentPage;
     protected List<Page> pages;
+    protected Class<? extends ImageRegionDecoder> regionDecoderClass;
+
+    public static final int RAPID_DECODER = 0;
+    public static final int SKIA_DECODER = 1;
 
     public void updatePageNumber() {
         getReaderActivity().onPageChanged(getCurrentPage(), getTotalPages());
@@ -41,6 +49,22 @@ public abstract class BaseReader extends BaseFragment {
     public abstract void setSelectedPage(int pageNumber);
     public abstract void onPageListReady(List<Page> pages, int currentPage);
     public abstract boolean onImageTouch(MotionEvent motionEvent);
+
+    public void setRegionDecoderClass(int value) {
+        switch (value) {
+            case RAPID_DECODER:
+            default:
+                regionDecoderClass = RapidImageRegionDecoder.class;
+                break;
+            case SKIA_DECODER:
+                regionDecoderClass = SkiaImageRegionDecoder.class;
+                break;
+        }
+    }
+
+    public Class<? extends ImageRegionDecoder> getRegionDecoderClass() {
+        return regionDecoderClass;
+    }
 
     public ReaderActivity getReaderActivity() {
         return (ReaderActivity) getActivity();

@@ -12,7 +12,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/grey_text"
+        style="@style/reader_menu_settings_item"
         android:text="@string/pref_custom_brightness"
         android:id="@+id/custom_brightness" />
 

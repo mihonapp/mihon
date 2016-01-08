@@ -38,4 +38,14 @@
         <item>1</item>
     </string-array>
 
+    <string-array name="image_decoders">
+        <item>@string/rapid_decoder</item>
+        <item>@string/skia_decoder</item>
+    </string-array>
+
+    <string-array name="image_decoders_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
 </resources>

@@ -8,32 +8,36 @@
     android:paddingTop="5dp"
     android:paddingBottom="5dp">
 
+    <TextView
+        android:id="@+id/reader_theme"
+        android:paddingLeft="32dp"
+        style="@style/reader_menu_settings_item"
+        android:text="@string/pref_reader_theme"/>
+
+    <TextView
+        android:id="@+id/image_decoder"
+        android:paddingLeft="32dp"
+        style="@style/reader_menu_settings_item"
+        android:text="@string/pref_image_decoder"/>
+
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/enable_transitions"
-        style="@style/grey_text"
+        style="@style/reader_menu_settings_item"
         android:text="@string/pref_enable_transitions"/>
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/show_page_number"
-        style="@style/grey_text"
+        style="@style/reader_menu_settings_item"
         android:text="@string/pref_show_page_number"/>
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/hide_status_bar"
-        style="@style/grey_text"
+        style="@style/reader_menu_settings_item"
         android:text="@string/pref_hide_status_bar"/>
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/keep_screen_on"
-        style="@style/grey_text"
+        style="@style/reader_menu_settings_item"
         android:text="@string/pref_keep_screen_on"/>
 
 </LinearLayout>

@@ -36,4 +36,12 @@
         android:defaultValue="0"
         android:summary="%s"/>
 
+    <eu.kanade.mangafeed.ui.setting.preference.IntListPreference
+        android:title="@string/pref_image_decoder"
+        android:key="@string/pref_image_decoder_key"
+        android:entries="@array/image_decoders"
+        android:entryValues="@array/image_decoders_values"
+        android:defaultValue="0"
+        android:summary="%s" />
+
 </PreferenceScreen>

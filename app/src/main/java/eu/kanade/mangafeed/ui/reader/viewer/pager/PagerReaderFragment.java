@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.ui.reader.viewer.common;
+package eu.kanade.mangafeed.ui.reader.viewer.pager;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -54,6 +54,7 @@ public class PagerReaderFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.item_pager_reader, container, false);
         ButterKnife.bind(this, view);
         ReaderActivity activity = (ReaderActivity) getActivity();
+        BaseReader parentFragment = (BaseReader) getParentFragment();
 
         if (activity.getReaderTheme() == ReaderActivity.BLACK_THEME) {
              progressText.setTextColor(ContextCompat.getColor(getContext(), R.color.light_grey));
@@ -64,8 +65,8 @@ public class PagerReaderFragment extends BaseFragment {
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
-        imageView.setOnTouchListener((v, motionEvent) ->
-                ((BaseReader) getParentFragment()).onImageTouch(motionEvent));
+        imageView.setRegionDecoderClass(parentFragment.getRegionDecoderClass());
+        imageView.setOnTouchListener((v, motionEvent) -> parentFragment.onImageTouch(motionEvent));
 
         retryButton.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -76,25 +77,16 @@ public class PagerReaderFragment extends BaseFragment {
             return true;
         });
 
+        observeStatus();
         return view;
     }
 
     @Override
     public void onDestroyView() {
-        ButterKnife.unbind(this);
-        super.onDestroyView();
-    }
-
-    public void onStart() {
-        super.onStart();
-        observeStatus();
-    }
-
-    @Override
-    public void onStop() {
         unsubscribeProgress();
         unsubscribeStatus();
-        super.onStop();
+        ButterKnife.unbind(this);
+        super.onDestroyView();
     }
 
     public void setPage(Page page) {

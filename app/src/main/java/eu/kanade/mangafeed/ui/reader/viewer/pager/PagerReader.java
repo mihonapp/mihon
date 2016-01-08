@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.ui.reader.viewer.common;
+package eu.kanade.mangafeed.ui.reader.viewer.pager;
 
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -8,7 +8,9 @@ import java.util.List;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.reader.viewer.base.BaseReader;
-import rx.Subscription;
+import eu.kanade.mangafeed.ui.reader.viewer.base.OnChapterBoundariesOutListener;
+import eu.kanade.mangafeed.ui.reader.viewer.base.OnChapterSingleTapListener;
+import rx.subscriptions.CompositeSubscription;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -18,7 +20,7 @@ public abstract class PagerReader extends BaseReader {
     protected Pager pager;
 
     protected boolean transitions;
-    protected Subscription transitionsSubscription;
+    protected CompositeSubscription subscriptions;
 
     protected void initializePager(Pager pager) {
         this.pager = pager;
@@ -55,16 +57,25 @@ public abstract class PagerReader extends BaseReader {
 
         adapter = new PagerReaderAdapter(getChildFragmentManager());
         pager.setAdapter(adapter);
-        setPages();
 
-        transitionsSubscription = getReaderActivity().getPreferences().enableTransitions()
+        subscriptions = new CompositeSubscription();
+        subscriptions.add(getReaderActivity().getPreferences().imageDecoder()
                 .asObservable()
-                .subscribe(value -> transitions = value);
+                .doOnNext(this::setRegionDecoderClass)
+                .skip(1)
+                .distinctUntilChanged()
+                .subscribe(v -> adapter.notifyDataSetChanged()));
+
+        subscriptions.add(getReaderActivity().getPreferences().enableTransitions()
+                .asObservable()
+                .subscribe(value -> transitions = value));
+
+        setPages();
     }
 
     @Override
     public void onDestroyView() {
-        transitionsSubscription.unsubscribe();
+        subscriptions.unsubscribe();
         super.onDestroyView();
     }
 

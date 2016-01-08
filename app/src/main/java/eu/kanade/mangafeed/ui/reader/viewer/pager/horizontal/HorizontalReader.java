@@ -1,11 +1,11 @@
-package eu.kanade.mangafeed.ui.reader.viewer.horizontal;
+package eu.kanade.mangafeed.ui.reader.viewer.pager.horizontal;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import eu.kanade.mangafeed.ui.reader.viewer.common.PagerReader;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.PagerReader;
 
 public abstract class HorizontalReader extends PagerReader {
 

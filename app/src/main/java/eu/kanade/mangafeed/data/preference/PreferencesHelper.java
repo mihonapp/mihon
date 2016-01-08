@@ -84,11 +84,8 @@ public class PreferencesHelper {
         return rxPrefs.getFloat(getKey(R.string.pref_custom_brightness_value_key), 0F);
     }
 
-    public int getReaderTheme() {
-        return prefs.getInt(getKey(R.string.pref_reader_theme_key), 0);
-    }
-
     public int getDefaultViewer() {
+        // TODO use IntListPreference
         return Integer.parseInt(prefs.getString(getKey(R.string.pref_default_viewer_key), "1"));
     }
 
@@ -98,6 +95,14 @@ public class PreferencesHelper {
 
     public Preference<Integer> landscapeColumns() {
         return rxPrefs.getInteger(getKey(R.string.pref_library_columns_landscape_key), 0);
+    }
+
+    public Preference<Integer> imageDecoder() {
+        return rxPrefs.getInteger(getKey(R.string.pref_image_decoder_key), 0);
+    }
+
+    public Preference<Integer> readerTheme() {
+        return rxPrefs.getInteger(getKey(R.string.pref_reader_theme_key), 0);
     }
 
     public String getSourceUsername(Source source) {

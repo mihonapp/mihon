@@ -80,6 +80,9 @@
     <string name="right_to_left_viewer">Right to left</string>
     <string name="vertical_viewer">Vertical</string>
     <string name="webtoon_viewer">Webtoon (experimental)</string>
+    <string name="pref_image_decoder">Image decoder</string>
+    <string name="rapid_decoder">Rapid</string>
+    <string name="skia_decoder">Skia</string>
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>

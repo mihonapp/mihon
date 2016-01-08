@@ -109,7 +109,10 @@
         <item name="android:windowExitAnimation">@anim/exit_to_left</item>
     </style>
 
-    <style name="grey_text">
+    <style name="reader_menu_settings_item">
         <item name="android:textColor">@color/md_grey_300</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:gravity">center</item>
     </style>
 </resources>

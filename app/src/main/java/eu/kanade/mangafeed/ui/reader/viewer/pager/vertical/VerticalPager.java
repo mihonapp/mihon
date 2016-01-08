@@ -1,14 +1,14 @@
-package eu.kanade.mangafeed.ui.reader.viewer.vertical;
+package eu.kanade.mangafeed.ui.reader.viewer.pager.vertical;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterBoundariesOutListener;
-import eu.kanade.mangafeed.ui.reader.viewer.common.OnChapterSingleTapListener;
-import eu.kanade.mangafeed.ui.reader.viewer.common.PagerGestureListener;
-import eu.kanade.mangafeed.ui.reader.viewer.common.Pager;
+import eu.kanade.mangafeed.ui.reader.viewer.base.OnChapterBoundariesOutListener;
+import eu.kanade.mangafeed.ui.reader.viewer.base.OnChapterSingleTapListener;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.PagerGestureListener;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.Pager;
 import rx.functions.Action1;
 
 public class VerticalPager extends VerticalViewPagerImpl implements Pager {

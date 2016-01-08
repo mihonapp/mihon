@@ -1,10 +1,11 @@
-package eu.kanade.mangafeed.ui.reader.viewer.horizontal;
+package eu.kanade.mangafeed.ui.reader.viewer.pager.horizontal;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.source.model.Page;
+import eu.kanade.mangafeed.ui.reader.viewer.pager.horizontal.HorizontalReader;
 
 public class RightToLeftReader extends HorizontalReader {
 

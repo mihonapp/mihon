@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.ui.reader.viewer.common;
+package eu.kanade.mangafeed.ui.reader.viewer.pager;
 
 import android.view.GestureDetector;
 import android.view.MotionEvent;

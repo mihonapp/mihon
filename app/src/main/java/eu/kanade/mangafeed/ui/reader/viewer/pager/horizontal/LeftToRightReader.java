@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.ui.reader.viewer.horizontal;
+package eu.kanade.mangafeed.ui.reader.viewer.pager.horizontal;
 
 public class LeftToRightReader extends HorizontalReader {
 

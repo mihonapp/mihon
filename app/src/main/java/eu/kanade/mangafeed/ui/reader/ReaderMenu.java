@@ -2,7 +2,6 @@ package eu.kanade.mangafeed.ui.reader;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -19,6 +18,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.text.DecimalFormat;
 
@@ -191,15 +192,14 @@ public class ReaderMenu {
         // Reader selector
         readerSelector.setOnClickListener(v -> {
             final Manga manga = activity.getPresenter().getManga();
-            final Dialog dialog = new AlertDialog.Builder(activity)
-                    .setSingleChoiceItems(R.array.viewers_selector, manga.viewer, (d, which) -> {
-                        if (manga.viewer != which) {
-                            activity.setMangaDefaultViewer(which);
-                        }
-                        d.dismiss();
-                    })
-                    .create();
-            showImmersiveDialog(dialog);
+            showImmersiveDialog(new MaterialDialog.Builder(activity)
+                    .items(R.array.viewers_selector)
+                    .itemsCallbackSingleChoice(manga.viewer,
+                            (d, itemView, which, text) -> {
+                                activity.setMangaDefaultViewer(which);
+                                return true;
+                            })
+                    .build());
         });
 
         // Extra settings menu
@@ -245,6 +245,8 @@ public class ReaderMenu {
         @Bind(R.id.show_page_number) CheckBox showPageNumber;
         @Bind(R.id.hide_status_bar) CheckBox hideStatusBar;
         @Bind(R.id.keep_screen_on) CheckBox keepScreenOn;
+        @Bind(R.id.image_decoder) TextView imageDecoder;
+        @Bind(R.id.reader_theme) TextView readerTheme;
 
         public SettingsPopupWindow(View view) {
             super(view, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -272,6 +274,30 @@ public class ReaderMenu {
 
             keepScreenOn.setOnCheckedChangeListener((view, isChecked) ->
                     preferences.keepScreenOn().set(isChecked));
+
+            imageDecoder.setOnClickListener(v -> {
+                showImmersiveDialog(new MaterialDialog.Builder(activity)
+                        .title(R.string.pref_image_decoder)
+                        .items(R.array.image_decoders)
+                        .itemsCallbackSingleChoice(preferences.imageDecoder().get(),
+                                (dialog, itemView, which, text) -> {
+                                    preferences.imageDecoder().set(which);
+                                    return true;
+                                })
+                        .build());
+            });
+
+            readerTheme.setOnClickListener(v -> {
+                showImmersiveDialog(new MaterialDialog.Builder(activity)
+                        .title(R.string.pref_reader_theme)
+                        .items(R.array.reader_themes)
+                        .itemsCallbackSingleChoice(preferences.readerTheme().get(),
+                                (dialog, itemView, which, text) -> {
+                                    preferences.readerTheme().set(which);
+                                    return true;
+                                })
+                        .build());
+            });
         }
 
     }
