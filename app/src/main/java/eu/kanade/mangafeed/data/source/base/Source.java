@@ -84,8 +84,12 @@ public abstract class Source extends BaseSource {
     public Observable<List<Chapter>> pullChaptersFromNetwork(final String mangaUrl) {
         return networkService
                 .getStringResponse(getBaseUrl() + mangaUrl, requestHeaders, null)
-                .flatMap(unparsedHtml ->
-                        Observable.just(parseHtmlToChapters(unparsedHtml)));
+                .flatMap(unparsedHtml -> {
+                    List<Chapter> chapters = parseHtmlToChapters(unparsedHtml);
+                    return !chapters.isEmpty() ?
+                            Observable.just(chapters) :
+                            Observable.error(new Exception("No chapters found"));
+                });
     }
 
     public Observable<List<Page>> getCachedPageListOrPullFromNetwork(final String chapterUrl) {
