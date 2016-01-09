@@ -63,7 +63,10 @@ public class LibraryCategoryFragment extends BaseFragment
                 getLibraryPresenter().preferences.landscapeColumns();
 
         numColumnsSubscription = columnsPref.asObservable()
-                .subscribe(recycler::setSpanCount);
+                .doOnNext(recycler::setSpanCount)
+                .skip(1)
+                // Set again the adapter to recalculate the covers height
+                .subscribe(count -> recycler.setAdapter(adapter));
 
         if (savedState != null) {
             adapter.onRestoreInstanceState(savedState);

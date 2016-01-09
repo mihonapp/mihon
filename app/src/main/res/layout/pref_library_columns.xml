@@ -4,7 +4,10 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingTop="15dp">
+              android:paddingTop="@dimen/dialog_margin_top_content"
+              android:paddingLeft="@dimen/dialog_content_padding"
+              android:paddingRight="@dimen/dialog_content_padding"
+              android:paddingBottom="@dimen/dialog_content_padding">
 
     <LinearLayout
         android:layout_width="0dp"

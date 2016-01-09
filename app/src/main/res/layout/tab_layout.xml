@@ -8,5 +8,5 @@
     android:theme="@style/AppTheme.Overlay.Dark"
     app:tabGravity="fill"
     android:background="@color/colorPrimary"
-    android:elevation="4dp"
+    app:elevation="4dp"
     app:tabIndicatorColor="@color/white"/>

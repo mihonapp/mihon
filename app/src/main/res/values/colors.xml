@@ -23,6 +23,7 @@
     <color name="list_choice_pressed_bg_light">@color/colorPrimaryLight</color>
 
     <color name="manga_unread_bg">@color/colorAccent</color>
+    <color name="manga_cover_title_background">#55333333</color>
 
     <color name="super_light_grey">@color/md_grey_50</color>
     <color name="line_grey">@color/md_light_dividers</color>
@@ -30,4 +31,5 @@
     <color name="page_number_background">#AAE9E9E9</color>
     <color name="page_number_background_black">#99252525</color>
     <color name="reader_menu_background">@color/colorPrimarySuperDark</color>
+
 </resources>

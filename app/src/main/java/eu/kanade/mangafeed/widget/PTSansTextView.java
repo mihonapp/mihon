@@ -2,6 +2,7 @@ package eu.kanade.mangafeed.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -48,5 +49,12 @@ public class PTSansTextView extends TextView {
         }
 
         values.recycle();
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        // Draw two times for a more visible shadow around the text
+        super.draw(canvas);
+        super.draw(canvas);
     }
 }

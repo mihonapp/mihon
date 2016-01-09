@@ -46,16 +46,11 @@
             android:src="@drawable/ic_action_favorite_blue"
             android:visibility="invisible"/>
 
-        <LinearLayout
-            android:id="@+id/footerLinearLayout"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/thumbnail"
-            android:layout_alignLeft="@+id/unreadText"
-            android:layout_alignStart="@+id/unreadText"
-            android:background="@color/white"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:background="@color/manga_cover_title_background">
 
             <eu.kanade.mangafeed.widget.PTSansTextView
                 android:id="@+id/title"
@@ -66,13 +61,16 @@
                 android:lineSpacingExtra="-4dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textColor="@color/primary_text"
+                android:padding="8dp"
+                android:textColor="@color/white"
                 android:textSize="14sp"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowColor="@color/primary_text"
+                android:shadowRadius="4"
                 tools:text="Sample name"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
     </RelativeLayout>
 

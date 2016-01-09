@@ -59,7 +59,7 @@
     <string name="pref_category_about">About</string>
 
       <!-- General section -->
-    <string name="pref_library_columns">Number of columns</string>
+    <string name="pref_library_columns">Library mangas per row</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
     <string name="default_columns">Default</string>
@@ -165,6 +165,7 @@
     <string name="chapter_subtitle">Chapter %1$s</string>
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="no_previous_chapter">Previous chapter not found</string>
+    <string name="decode_image_error">The image could not be loaded.\nTry to change the image decoder</string>
 
     <!-- Library update service notifications -->
     <string name="notification_progress">Update progress: %1$d/%2$d</string>

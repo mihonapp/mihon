@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
-    android:elevation="4dp"
+    app:elevation="4dp"
     android:theme="@style/AppTheme.ActionBar"
     app:layout_scrollFlags="scroll|enterAlways|snap"/>

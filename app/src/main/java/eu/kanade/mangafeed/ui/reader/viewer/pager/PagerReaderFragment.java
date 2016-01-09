@@ -3,6 +3,7 @@ package eu.kanade.mangafeed.ui.reader.viewer.pager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,7 +54,7 @@ public class PagerReaderFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.item_pager_reader, container, false);
         ButterKnife.bind(this, view);
-        ReaderActivity activity = (ReaderActivity) getActivity();
+        ReaderActivity activity = getReaderActivity();
         BaseReader parentFragment = (BaseReader) getParentFragment();
 
         if (activity.getReaderTheme() == ReaderActivity.BLACK_THEME) {
@@ -67,12 +68,17 @@ public class PagerReaderFragment extends BaseFragment {
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
         imageView.setRegionDecoderClass(parentFragment.getRegionDecoderClass());
         imageView.setOnTouchListener((v, motionEvent) -> parentFragment.onImageTouch(motionEvent));
+        imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
+            @Override
+            public void onImageLoadError(Exception e) {
+                showImageLoadError();
+            }
+        });
 
         retryButton.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (page != null)
                     activity.getPresenter().retryPage(page);
-                return true;
             }
             return true;
         });
@@ -119,6 +125,21 @@ public class PagerReaderFragment extends BaseFragment {
 
     private void hideError() {
         retryButton.setVisibility(View.GONE);
+    }
+
+    private void showImageLoadError() {
+        ViewGroup view = (ViewGroup) getView();
+        if (view == null)
+            return;
+
+        TextView errorText = new TextView(getContext());
+        errorText.setGravity(Gravity.CENTER);
+        errorText.setText(R.string.decode_image_error);
+        errorText.setTextColor(getReaderActivity().getReaderTheme() == ReaderActivity.BLACK_THEME ?
+                    ContextCompat.getColor(getContext(), R.color.light_grey) :
+                    ContextCompat.getColor(getContext(), R.color.primary_text));
+
+        view.addView(errorText);
     }
 
     private void processStatus(int status) {
@@ -189,6 +210,10 @@ public class PagerReaderFragment extends BaseFragment {
             progressSubscription.unsubscribe();
             progressSubscription = null;
         }
+    }
+
+    private ReaderActivity getReaderActivity() {
+        return (ReaderActivity) getActivity();
     }
 
 }

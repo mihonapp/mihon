@@ -7,17 +7,15 @@
         <item name="alertDialogTheme">@style/AlertDialogStyle</item>
         <item name="android:itemTextAppearance">@style/OptionsMenuTextColor</item>
         <item name="android:textColor">@color/primary_text</item>
-        <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="AppTheme.ActionBar" parent="AppTheme">
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:itemTextAppearance">@style/OptionsMenuTextColor</item>
+    <style name="AppTheme.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:spinnerItemStyle">@style/ActionBarSpinner</item>
-        <item name="android:actionModeBackground">@color/colorPrimarySuperDark</item>
+        <item name="android:spinnerDropDownItemStyle">@style/ActionBarSpinnerItem</item>
         <item name="actionModeBackground">@color/colorPrimarySuperDark</item>
-        <item name="colorControlNormal">@color/white</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="colorAccent">@color/white</item>
     </style>
 
     <style name="AppTheme.Overlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -43,6 +41,10 @@
         <item name="android:textColorHint">@color/hint_foreground_material_dark</item>
     </style>
 
+    <style name="ActionBarSpinnerItem" parent="@style/Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:background">@color/background_material_light</item>
+    </style>
+
     <style name="AppTheme.Popup" parent="@style/AppTheme.Overlay.Dark">
         <item name="colorAccent">@color/white</item>
         <item name="android:background">@color/colorPrimary</item>
@@ -51,7 +53,7 @@
 
     <style name="AppTheme.GridView" parent="AppTheme">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">5dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:clipToPadding">false</item>
         <item name="android:gravity">top|left</item>
@@ -115,4 +117,5 @@
         <item name="android:layout_height">36dp</item>
         <item name="android:gravity">center</item>
     </style>
+
 </resources>
