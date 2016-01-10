@@ -105,7 +105,9 @@ public abstract class Source extends BaseSource {
                 .getStringResponse(getBaseUrl() + overrideChapterUrl(chapterUrl), requestHeaders, null)
                 .flatMap(unparsedHtml -> {
                     List<Page> pages = convertToPages(parseHtmlToPageUrls(unparsedHtml));
-                    return Observable.just(parseFirstPage(pages, unparsedHtml));
+                    return !pages.isEmpty() ?
+                            Observable.just(parseFirstPage(pages, unparsedHtml)) :
+                            Observable.error(new Exception("Page list is empty"));
                 });
     }
 

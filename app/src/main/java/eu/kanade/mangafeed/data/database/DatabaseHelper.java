@@ -253,7 +253,6 @@ public class DatabaseHelper {
                 .filter(c -> !dbChapters.contains(c))
                 .doOnNext(c -> {
                     c.manga_id = manga.id;
-                    c.date_fetch = new Date().getTime();
                     ChapterRecognition.parseChapterNumber(c, manga);
                 })
                 .toList();

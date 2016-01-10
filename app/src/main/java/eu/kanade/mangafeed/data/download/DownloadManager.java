@@ -164,7 +164,7 @@ public class DownloadManager {
 
     // Check that all the images are downloaded
     private boolean isChapterDownloaded(File directory, List<Page> pages) {
-        return pages != null && pages.size() + 1 == directory.listFiles().length;
+        return pages != null && !pages.isEmpty() && pages.size() + 1 == directory.listFiles().length;
     }
 
     // Download the entire chapter
@@ -359,9 +359,9 @@ public class DownloadManager {
     public File getAbsoluteChapterDirectory(Source source, Manga manga, Chapter chapter) {
         String chapterRelativePath = source.getName() +
                 File.separator +
-                manga.title.replaceAll("[^a-zA-Z0-9.-]", "_") +
+                manga.title.replaceAll("[^\\sa-zA-Z0-9.-]", "_") +
                 File.separator +
-                chapter.name.replaceAll("[^a-zA-Z0-9.-]", "_");
+                chapter.name.replaceAll("[^\\sa-zA-Z0-9.-]", "_") + " (" + chapter.id + ")";
 
         return new File(preferences.getDownloadsDirectory(), chapterRelativePath);
     }
