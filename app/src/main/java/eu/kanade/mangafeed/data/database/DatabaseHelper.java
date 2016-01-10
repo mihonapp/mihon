@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.data.database;
 
 import android.content.Context;
+import android.util.Pair;
 
 import com.pushtorefresh.storio.Queries;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
@@ -12,11 +13,11 @@ import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetObject;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPutCollectionOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPutObject;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 
+import java.util.Date;
 import java.util.List;
 
 import eu.kanade.mangafeed.data.database.models.Category;
@@ -37,7 +38,6 @@ import eu.kanade.mangafeed.data.database.tables.MangaSyncTable;
 import eu.kanade.mangafeed.data.database.tables.MangaTable;
 import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.util.ChapterRecognition;
-import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 
 public class DatabaseHelper {
@@ -246,37 +246,46 @@ public class DatabaseHelper {
     }
 
     // Add new chapters or delete if the source deletes them
-    public Observable<PostResult> insertOrRemoveChapters(Manga manga, List<Chapter> chapters) {
-        for (Chapter chapter : chapters) {
-            chapter.manga_id = manga.id;
-        }
+    public Observable<Pair<Integer, Integer>> insertOrRemoveChapters(Manga manga, List<Chapter> sourceChapters) {
+        List<Chapter> dbChapters = getChapters(manga).executeAsBlocking();
 
-        Observable<List<Chapter>> chapterList = Observable.create(subscriber -> {
-            subscriber.onNext(getChapters(manga).executeAsBlocking());
-            subscriber.onCompleted();
+        Observable<List<Chapter>> newChapters = Observable.from(sourceChapters)
+                .filter(c -> !dbChapters.contains(c))
+                .doOnNext(c -> {
+                    c.manga_id = manga.id;
+                    c.date_fetch = new Date().getTime();
+                    ChapterRecognition.parseChapterNumber(c, manga);
+                })
+                .toList();
+
+        Observable<List<Chapter>> deletedChapters = Observable.from(dbChapters)
+                .filter(c -> !sourceChapters.contains(c))
+                .toList();
+
+        return Observable.zip(newChapters, deletedChapters, (toAdd, toDelete) -> {
+            int added = 0;
+            int deleted = 0;
+            db.internal().beginTransaction();
+            try {
+                if (!toAdd.isEmpty()) {
+                    // Set the date fetch for new items in reverse order to allow another sorting method.
+                    // Sources MUST return the chapters from most to less recent, which is common.
+                    for (int i = toAdd.size() - 1; i >= 0; i--) {
+                        toAdd.get(i).date_fetch = new Date().getTime();
+                    }
+                    added = insertChapters(toAdd).executeAsBlocking().numberOfInserts();
+                }
+
+                if (!toDelete.isEmpty()) {
+                    deleted = deleteChapters(toDelete).executeAsBlocking().results().size();
+                }
+
+                db.internal().setTransactionSuccessful();
+            } finally {
+                db.internal().endTransaction();
+            }
+            return Pair.create(added, deleted);
         });
-
-        Observable<Integer> newChaptersObs = chapterList
-                .flatMap(dbChapters -> Observable.from(chapters)
-                        .filter(c -> !dbChapters.contains(c))
-                        .map(c -> {
-                            ChapterRecognition.parseChapterNumber(c, manga);
-                            return c;
-                        })
-                        .toList()
-                        .flatMap(newChapters -> insertChapters(newChapters).createObservable())
-                        .map(PutResults::numberOfInserts));
-
-        Observable<Integer> deletedChaptersObs = chapterList
-                .flatMap(dbChapters -> Observable.from(dbChapters)
-                        .filter(c -> !chapters.contains(c))
-                        .toList()
-                        .flatMap(deletedChapters -> deleteChapters(deletedChapters).createObservable())
-                        .map(d -> d.results().size()));
-
-        return Observable.zip(newChaptersObs, deletedChaptersObs,
-                (insertions, deletions) -> new PostResult(0, insertions, deletions)
-        );
     }
 
     public PreparedDeleteObject<Chapter> deleteChapter(Chapter chapter) {

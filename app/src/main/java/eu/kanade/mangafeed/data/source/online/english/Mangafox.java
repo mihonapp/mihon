@@ -174,8 +174,6 @@ public class Mangafox extends Source {
         if (dateElement != null) {
             chapter.date_upload = parseUpdateFromElement(dateElement);
         }
-        chapter.date_fetch = new Date().getTime();
-
         return chapter;
     }
 

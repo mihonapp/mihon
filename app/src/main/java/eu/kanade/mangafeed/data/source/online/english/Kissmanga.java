@@ -14,7 +14,6 @@ import org.jsoup.nodes.Element;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -194,8 +193,6 @@ public class Kissmanga extends Source {
                 chapter.date_upload = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(date).getTime();
             } catch (ParseException e) { /* Ignore */ }
         }
-
-        chapter.date_fetch = new Date().getTime();
         return chapter;
     }
 

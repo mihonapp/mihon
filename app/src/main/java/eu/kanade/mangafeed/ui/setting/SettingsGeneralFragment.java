@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.sync.LibraryUpdateAlarm;
-import eu.kanade.mangafeed.ui.setting.preference.IntListPreference;
-import eu.kanade.mangafeed.ui.setting.preference.LibraryColumnsDialog;
+import eu.kanade.mangafeed.widget.preference.IntListPreference;
+import eu.kanade.mangafeed.widget.preference.LibraryColumnsDialog;
 
 public class SettingsGeneralFragment extends SettingsNestedFragment {
 

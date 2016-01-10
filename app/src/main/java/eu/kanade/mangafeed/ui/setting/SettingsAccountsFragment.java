@@ -16,8 +16,8 @@ import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.data.source.base.Source;
-import eu.kanade.mangafeed.ui.setting.preference.MangaSyncLoginDialog;
-import eu.kanade.mangafeed.ui.setting.preference.SourceLoginDialog;
+import eu.kanade.mangafeed.widget.preference.MangaSyncLoginDialog;
+import eu.kanade.mangafeed.widget.preference.SourceLoginDialog;
 import rx.Observable;
 
 public class SettingsAccountsFragment extends SettingsNestedFragment {

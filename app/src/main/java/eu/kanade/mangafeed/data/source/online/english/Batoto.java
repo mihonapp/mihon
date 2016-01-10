@@ -232,8 +232,6 @@ public class Batoto extends LoginSource {
         if (dateElement != null) {
             chapter.date_upload = parseDateFromElement(dateElement);
         }
-        chapter.date_fetch = new Date().getTime();
-
         return chapter;
     }
 

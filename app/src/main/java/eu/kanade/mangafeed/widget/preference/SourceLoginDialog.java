@@ -1,33 +1,33 @@
-package eu.kanade.mangafeed.ui.setting.preference;
+package eu.kanade.mangafeed.widget.preference;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 
 import eu.kanade.mangafeed.R;
-import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
+import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.util.ToastUtil;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MangaSyncLoginDialog extends LoginDialogPreference {
+public class SourceLoginDialog extends LoginDialogPreference {
 
-    private MangaSyncService sync;
+    private Source source;
 
-    public MangaSyncLoginDialog(Context context, PreferencesHelper preferences, MangaSyncService sync) {
+    public SourceLoginDialog(Context context, PreferencesHelper preferences, Source source) {
         super(context, preferences);
-        this.sync = sync;
+        this.source = source;
     }
 
     @Override
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
-        title.setText(getContext().getString(R.string.accounts_login_title, sync.getName()));
+        title.setText(getContext().getString(R.string.accounts_login_title, source.getName()));
 
-        username.setText(preferences.getMangaSyncUsername(sync));
-        password.setText(preferences.getMangaSyncPassword(sync));
+        username.setText(preferences.getSourceUsername(source));
+        password.setText(preferences.getSourcePassword(source));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class MangaSyncLoginDialog extends LoginDialogPreference {
         super.onDialogClosed(positiveResult);
 
         if (positiveResult) {
-            preferences.setMangaSyncCredentials(sync,
+            preferences.setSourceCredentials(source,
                     username.getText().toString(),
                     password.getText().toString());
         }
@@ -50,7 +50,7 @@ public class MangaSyncLoginDialog extends LoginDialogPreference {
 
         loginBtn.setProgress(1);
 
-        requestSubscription = sync
+        requestSubscription = source
                 .login(username.getText().toString(), password.getText().toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -61,7 +61,7 @@ public class MangaSyncLoginDialog extends LoginDialogPreference {
                         dialog.dismiss();
                         ToastUtil.showShort(context, R.string.login_success);
                     } else {
-                        preferences.setMangaSyncCredentials(sync, "", "");
+                        preferences.setSourceCredentials(source, "", "");
                         loginBtn.setProgress(-1);
                     }
                 }, error -> {

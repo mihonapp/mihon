@@ -5,7 +5,7 @@
         android:title="@string/pref_download_directory"
         android:key="@string/pref_download_directory_key"/>
 
-    <eu.kanade.mangafeed.ui.setting.preference.IntListPreference
+    <eu.kanade.mangafeed.widget.preference.IntListPreference
         android:title="@string/pref_download_slots"
         android:key="@string/pref_download_slots_key"
         android:entries="@array/download_slots"

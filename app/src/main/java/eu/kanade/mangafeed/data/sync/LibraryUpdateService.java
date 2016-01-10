@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,6 @@ import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.util.AndroidComponentUtil;
 import eu.kanade.mangafeed.util.NetworkUtil;
 import eu.kanade.mangafeed.util.NotificationUtil;
-import eu.kanade.mangafeed.util.PostResult;
 import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
@@ -34,6 +35,7 @@ public class LibraryUpdateService extends Service {
     @Inject SourceManager sourceManager;
     @Inject PreferencesHelper preferences;
 
+    private PowerManager.WakeLock wakeLock;
     private Subscription subscription;
 
     public static final int UPDATE_NOTIFICATION_ID = 1;
@@ -56,6 +58,7 @@ public class LibraryUpdateService extends Service {
     public void onCreate() {
         super.onCreate();
         App.get(this).getComponent().inject(this);
+        createAndAcquireWakeLock();
     }
 
     @Override
@@ -64,6 +67,7 @@ public class LibraryUpdateService extends Service {
             subscription.unsubscribe();
         // Reset the alarm
         LibraryUpdateAlarm.startAlarm(this);
+        destroyWakeLock();
         super.onDestroy();
     }
 
@@ -111,17 +115,18 @@ public class LibraryUpdateService extends Service {
                 .concatMap(manga -> updateManga(manga)
                         .onErrorReturn(error -> {
                             failedUpdates.add(manga);
-                            return new PostResult(0, 0, 0);
+                            return Pair.create(0, 0);
                         })
-                        .filter(result -> result.getNumberOfRowsInserted() > 0)
-                        .map(result -> new MangaUpdate(manga, result)))
+                        // Filter out mangas without new chapters
+                        .filter(pair -> pair.first > 0)
+                        .map(pair -> new MangaUpdate(manga, pair.first)))
                 .doOnNext(updates::add)
                 .doOnCompleted(() -> NotificationUtil.createBigText(this, UPDATE_NOTIFICATION_ID,
                         getString(R.string.notification_update_completed),
                         getUpdatedMangas(updates, failedUpdates)));
     }
 
-    private Observable<PostResult> updateManga(Manga manga) {
+    private Observable<Pair<Integer, Integer>> updateManga(Manga manga) {
         return sourceManager.get(manga.source)
                 .pullChaptersFromNetwork(manga.url)
                 .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters));
@@ -135,7 +140,7 @@ public class LibraryUpdateService extends Service {
             result.append(getString(R.string.notification_new_chapters));
 
             for (MangaUpdate update : updates) {
-                result.append("\n").append(update.getManga().title);
+                result.append("\n").append(update.manga.title);
             }
         }
         if (!failedUpdates.isEmpty()) {
@@ -154,6 +159,19 @@ public class LibraryUpdateService extends Service {
         return null;
     }
 
+    private void createAndAcquireWakeLock() {
+        wakeLock = ((PowerManager)getSystemService(POWER_SERVICE)).newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK, "LibraryUpdateService:WakeLock");
+        wakeLock.acquire();
+    }
+
+    private void destroyWakeLock() {
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+            wakeLock = null;
+        }
+    }
+
     public static class SyncOnConnectionAvailable extends BroadcastReceiver {
 
         @Override
@@ -169,20 +187,12 @@ public class LibraryUpdateService extends Service {
     }
 
     private static class MangaUpdate {
-        private Manga manga;
-        private PostResult result;
+        public Manga manga;
+        public int newChapters;
 
-        public MangaUpdate(Manga manga, PostResult result) {
+        public MangaUpdate(Manga manga, int newChapters) {
             this.manga = manga;
-            this.result = result;
-        }
-
-        public Manga getManga() {
-            return manga;
-        }
-
-        public PostResult getResult() {
-            return result;
+            this.newChapters = newChapters;
         }
     }
 

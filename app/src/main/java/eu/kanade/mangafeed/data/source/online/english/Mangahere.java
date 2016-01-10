@@ -234,8 +234,6 @@ public class Mangahere extends Source {
         if (dateElement != null) {
             chapter.date_upload = parseDateFromElement(dateElement);
         }
-        chapter.date_fetch = new Date().getTime();
-
         return chapter;
     }
 
