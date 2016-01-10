@@ -6,4 +6,17 @@
         android:persistent="false"
         android:title="@string/pref_library_columns"/>
 
+    <eu.kanade.mangafeed.ui.setting.preference.IntListPreference
+        android:key="@string/pref_library_update_interval_key"
+        android:title="@string/pref_library_update_interval"
+        android:entries="@array/library_update_interval"
+        android:entryValues="@array/library_update_interval_values"
+        android:defaultValue="0"
+        android:summary="%s"/>
+
+    <CheckBoxPreference
+        android:key="@string/pref_update_only_non_completed_key"
+        android:title="@string/pref_update_only_non_completed"
+        android:defaultValue="false"/>
+
 </PreferenceScreen>

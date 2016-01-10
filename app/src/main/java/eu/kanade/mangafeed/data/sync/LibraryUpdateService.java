@@ -17,6 +17,7 @@ import eu.kanade.mangafeed.BuildConfig;
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
 import eu.kanade.mangafeed.util.AndroidComponentUtil;
 import eu.kanade.mangafeed.util.NetworkUtil;
@@ -31,16 +32,23 @@ public class LibraryUpdateService extends Service {
 
     @Inject DatabaseHelper db;
     @Inject SourceManager sourceManager;
+    @Inject PreferencesHelper preferences;
 
-    private Subscription updateSubscription;
+    private Subscription subscription;
 
     public static final int UPDATE_NOTIFICATION_ID = 1;
 
-    public static Intent getStartIntent(Context context) {
+    public static void start(Context context) {
+        if (!isRunning(context)) {
+            context.startService(getStartIntent(context));
+        }
+    }
+
+    private static Intent getStartIntent(Context context) {
         return new Intent(context, LibraryUpdateService.class);
     }
 
-    public static boolean isRunning(Context context) {
+    private static boolean isRunning(Context context) {
         return AndroidComponentUtil.isServiceRunning(context, LibraryUpdateService.class);
     }
 
@@ -52,8 +60,10 @@ public class LibraryUpdateService extends Service {
 
     @Override
     public void onDestroy() {
-        if (updateSubscription != null)
-            updateSubscription.unsubscribe();
+        if (subscription != null)
+            subscription.unsubscribe();
+        // Reset the alarm
+        LibraryUpdateAlarm.startAlarm(this);
         super.onDestroy();
     }
 
@@ -68,44 +78,56 @@ public class LibraryUpdateService extends Service {
             return START_NOT_STICKY;
         }
 
-        Observable.fromCallable(() -> db.getFavoriteMangas().executeAsBlocking())
+        subscription = Observable.fromCallable(() -> db.getFavoriteMangas().executeAsBlocking())
                 .subscribeOn(Schedulers.io())
-                .subscribe(mangas -> {
-                    startUpdating(mangas, startId);
-                });
+                .flatMap(this::updateLibrary)
+                .subscribe(next -> {},
+                        error -> {
+                            NotificationUtil.create(this, UPDATE_NOTIFICATION_ID,
+                                    getString(R.string.notification_update_error), "");
+                            stopSelf(startId);
+                        }, () -> {
+                            Timber.i("Library updated");
+                            stopSelf(startId);
+                        });
 
         return START_STICKY;
     }
 
-    private void startUpdating(final List<Manga> mangas, final int startId) {
+    private Observable<MangaUpdate> updateLibrary(List<Manga> allLibraryMangas) {
         final AtomicInteger count = new AtomicInteger(0);
+        final List<MangaUpdate> updates = new ArrayList<>();
+        final List<Manga> failedUpdates = new ArrayList<>();
 
-        List<MangaUpdate> updates = new ArrayList<>();
+        final List<Manga> mangas = !preferences.updateOnlyNonCompleted() ? allLibraryMangas :
+            Observable.from(allLibraryMangas)
+                    .filter(manga -> manga.status != Manga.COMPLETED)
+                    .toList().toBlocking().single();
 
-        updateSubscription = Observable.from(mangas)
-                .doOnNext(manga -> {
-                    NotificationUtil.create(this, UPDATE_NOTIFICATION_ID,
-                            getString(R.string.notification_progress,
-                                    count.incrementAndGet(), mangas.size()), manga.title);
-                })
-                .concatMap(manga -> sourceManager.get(manga.source)
-                                .pullChaptersFromNetwork(manga.url)
-                                .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
-                                .filter(result -> result.getNumberOfRowsInserted() > 0)
-                                .flatMap(result -> Observable.just(new MangaUpdate(manga, result))))
-                .subscribe(update -> {
-                    updates.add(update);
-                }, error -> {
-                    Timber.e("Error syncing");
-                    stopSelf(startId);
-                }, () -> {
-                    NotificationUtil.createBigText(this, UPDATE_NOTIFICATION_ID,
-                            getString(R.string.notification_completed), getUpdatedMangas(updates));
-                    stopSelf(startId);
-                });
+        return Observable.from(mangas)
+                .doOnNext(manga -> NotificationUtil.create(this, UPDATE_NOTIFICATION_ID,
+                        getString(R.string.notification_update_progress,
+                                count.incrementAndGet(), mangas.size()), manga.title))
+                .concatMap(manga -> updateManga(manga)
+                        .onErrorReturn(error -> {
+                            failedUpdates.add(manga);
+                            return new PostResult(0, 0, 0);
+                        })
+                        .filter(result -> result.getNumberOfRowsInserted() > 0)
+                        .map(result -> new MangaUpdate(manga, result)))
+                .doOnNext(updates::add)
+                .doOnCompleted(() -> NotificationUtil.createBigText(this, UPDATE_NOTIFICATION_ID,
+                        getString(R.string.notification_update_completed),
+                        getUpdatedMangas(updates, failedUpdates)));
     }
 
-    private String getUpdatedMangas(List<MangaUpdate> updates) {
+    private Observable<PostResult> updateManga(Manga manga) {
+        return sourceManager.get(manga.source)
+                .pullChaptersFromNetwork(manga.url)
+                .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters));
+    }
+
+    private String getUpdatedMangas(List<MangaUpdate> updates, List<Manga> failedUpdates) {
         final StringBuilder result = new StringBuilder();
         if (updates.isEmpty()) {
             result.append(getString(R.string.notification_no_new_chapters)).append("\n");
@@ -114,6 +136,13 @@ public class LibraryUpdateService extends Service {
 
             for (MangaUpdate update : updates) {
                 result.append("\n").append(update.getManga().title);
+            }
+        }
+        if (!failedUpdates.isEmpty()) {
+            result.append("\n");
+            result.append(getString(R.string.notification_manga_update_failed));
+            for (Manga manga : failedUpdates) {
+                result.append("\n").append(manga.title);
             }
         }
 

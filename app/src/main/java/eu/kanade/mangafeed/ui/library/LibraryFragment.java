@@ -105,10 +105,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                if (!LibraryUpdateService.isRunning(getActivity())) {
-                    Intent intent = LibraryUpdateService.getStartIntent(getActivity());
-                    getActivity().startService(intent);
-                }
+                LibraryUpdateService.start(getActivity());
                 return true;
             case R.id.action_edit_categories:
                 onEditCategories();

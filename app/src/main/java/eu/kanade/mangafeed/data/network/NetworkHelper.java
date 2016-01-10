@@ -44,7 +44,7 @@ public final class NetworkHelper {
             } catch (Throwable e) {
                 return Observable.error(e);
             }
-        }).retry(2);
+        }).retry(1);
     }
 
     public Observable<String> mapResponseToString(final Response response) {
@@ -74,7 +74,7 @@ public final class NetworkHelper {
             } catch (Throwable e) {
                 return Observable.error(e);
             }
-        }).retry(2);
+        }).retry(1);
     }
 
     public Observable<Response> getProgressResponse(final String url, final Headers headers, final ProgressListener listener) {

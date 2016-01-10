@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 
 import eu.kanade.mangafeed.R;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
+import eu.kanade.mangafeed.data.sync.LibraryUpdateAlarm;
+import eu.kanade.mangafeed.ui.setting.preference.IntListPreference;
 import eu.kanade.mangafeed.ui.setting.preference.LibraryColumnsDialog;
 
 public class SettingsGeneralFragment extends SettingsNestedFragment {
-
-    private LibraryColumnsDialog columnsDialog;
 
     public static SettingsNestedFragment newInstance(int resourcePreference, int resourceTitle) {
         SettingsNestedFragment fragment = new SettingsGeneralFragment();
@@ -25,10 +25,18 @@ public class SettingsGeneralFragment extends SettingsNestedFragment {
 
         PreferencesHelper preferences = getSettingsActivity().preferences;
 
-        columnsDialog = (LibraryColumnsDialog) findPreference(
+        LibraryColumnsDialog columnsDialog = (LibraryColumnsDialog) findPreference(
                 getString(R.string.pref_library_columns_dialog_key));
 
         columnsDialog.setPreferencesHelper(preferences);
+
+        IntListPreference updateInterval = (IntListPreference) findPreference(
+                getString(R.string.pref_library_update_interval_key));
+
+        updateInterval.setOnPreferenceChangeListener((preference, newValue) -> {
+            LibraryUpdateAlarm.startAlarm(getActivity(), Integer.parseInt((String) newValue));
+            return true;
+        });
 
         return view;
     }

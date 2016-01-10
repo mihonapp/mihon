@@ -48,4 +48,26 @@
         <item>1</item>
     </string-array>
 
+    <string-array name="library_update_interval">
+        <item>@string/update_never</item>
+        <item>@string/update_1hour</item>
+        <item>@string/update_2hour</item>
+        <item>@string/update_3hour</item>
+        <item>@string/update_6hour</item>
+        <item>@string/update_12hour</item>
+        <item>@string/update_24hour</item>
+        <item>@string/update_48hour</item>
+    </string-array>
+
+    <string-array name="library_update_interval_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
+        <item>48</item>
+    </string-array>
+
 </resources>

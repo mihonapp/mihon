@@ -63,6 +63,16 @@
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
     <string name="default_columns">Default</string>
+    <string name="pref_library_update_interval">Library update period</string>
+    <string name="pref_update_only_non_completed">Update only non completed mangas</string>
+    <string name="update_never">Manual</string>
+    <string name="update_1hour">Hourly</string>
+    <string name="update_2hour">Every 2 hours</string>
+    <string name="update_3hour">Every 3 hours</string>
+    <string name="update_6hour">Every 6 hours</string>
+    <string name="update_12hour">Every 12 hours</string>
+    <string name="update_24hour">Daily</string>
+    <string name="update_48hour">Every 2 days</string>
 
       <!-- Reader section -->
     <string name="pref_hide_status_bar">Hide status bar</string>
@@ -168,9 +178,11 @@
     <string name="decode_image_error">The image could not be loaded.\nTry to change the image decoder</string>
 
     <!-- Library update service notifications -->
-    <string name="notification_progress">Update progress: %1$d/%2$d</string>
-    <string name="notification_completed">Update completed</string>
+    <string name="notification_update_progress">Update progress: %1$d/%2$d</string>
+    <string name="notification_update_completed">Update completed</string>
+    <string name="notification_update_error">An unexpected error occurred updating the library</string>
     <string name="notification_no_new_chapters">No new chapters found</string>
     <string name="notification_new_chapters">Found new chapters for:</string>
+    <string name="notification_manga_update_failed">Failed updating mangas:</string>
 
 </resources>

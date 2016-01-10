@@ -97,6 +97,10 @@ public class PreferencesHelper {
         return rxPrefs.getInteger(getKey(R.string.pref_library_columns_landscape_key), 0);
     }
 
+    public boolean updateOnlyNonCompleted() {
+        return prefs.getBoolean(getKey(R.string.pref_update_only_non_completed_key), false);
+    }
+
     public Preference<Integer> imageDecoder() {
         return rxPrefs.getInteger(getKey(R.string.pref_image_decoder_key), 0);
     }
@@ -146,6 +150,11 @@ public class PreferencesHelper {
 
     public Preference<Integer> downloadThreads() {
         return rxPrefs.getInteger(getKey(R.string.pref_download_slots_key), 1);
+    }
+
+    public static int getLibraryUpdateInterval(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(
+                context.getString(R.string.pref_library_update_interval_key), 0);
     }
 
 }

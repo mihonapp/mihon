@@ -89,8 +89,8 @@ dependencies {
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.0'
-    compile 'com.squareup.okhttp:okhttp:2.7.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.2'
+    compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.jakewharton:disklrucache:2.0.2'
