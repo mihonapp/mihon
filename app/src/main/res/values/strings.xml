@@ -73,6 +73,8 @@
     <string name="update_12hour">Every 12 hours</string>
     <string name="update_24hour">Daily</string>
     <string name="update_48hour">Every 2 days</string>
+    <string name="pref_auto_update_manga_sync">Automatically update last chapter read in enabled services</string>
+    <string name="pref_ask_update_manga_sync">Ask for confirmation before updating</string>
 
       <!-- Reader section -->
     <string name="pref_hide_status_bar">Hide status bar</string>
@@ -176,6 +178,7 @@
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="no_previous_chapter">Previous chapter not found</string>
     <string name="decode_image_error">The image could not be loaded.\nTry to change the image decoder</string>
+    <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
 
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Update progress: %1$d/%2$d</string>

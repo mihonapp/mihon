@@ -38,6 +38,8 @@ public class MangaSync implements Serializable {
     @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_STATUS)
     public int status;
 
+    public boolean update;
+
     public static MangaSync create(MangaSyncService service) {
         MangaSync mangasync = new MangaSync();
         mangasync.sync_id = service.getId();

@@ -19,4 +19,15 @@
         android:title="@string/pref_update_only_non_completed"
         android:defaultValue="false"/>
 
+    <CheckBoxPreference
+        android:key="@string/pref_auto_update_manga_sync_key"
+        android:title="@string/pref_auto_update_manga_sync"
+        android:defaultValue="true"/>
+
+    <CheckBoxPreference
+        android:key="@string/pref_ask_update_manga_sync_key"
+        android:title="@string/pref_ask_update_manga_sync"
+        android:defaultValue="false"
+        android:dependency="@string/pref_auto_update_manga_sync_key"/>
+
 </PreferenceScreen>

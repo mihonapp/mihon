@@ -81,8 +81,6 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                         .toMap(pair -> pair.first, pair -> pair.second));
     }
 
-
-
     public void onOpenManga(Manga manga) {
         // Avoid further db updates for the library when it's not needed
         stop(GET_LIBRARY);

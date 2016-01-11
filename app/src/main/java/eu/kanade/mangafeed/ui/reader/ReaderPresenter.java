@@ -13,6 +13,7 @@ import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Chapter;
 import eu.kanade.mangafeed.data.database.models.Manga;
+import eu.kanade.mangafeed.data.database.models.MangaSync;
 import eu.kanade.mangafeed.data.download.DownloadManager;
 import eu.kanade.mangafeed.data.mangasync.MangaSyncManager;
 import eu.kanade.mangafeed.data.mangasync.base.MangaSyncService;
@@ -49,6 +50,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private Chapter previousChapter;
     private List<Page> pageList;
     private List<Page> nextChapterPageList;
+    private List<MangaSync> mangaSyncList;
 
     private PublishSubject<Page> retryPageSubject;
 
@@ -57,6 +59,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private static final int GET_ADJACENT_CHAPTERS = 3;
     private static final int RETRY_IMAGES = 4;
     private static final int PRELOAD_NEXT_CHAPTER = 5;
+    private static final int GET_MANGA_SYNC = 6;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -99,22 +102,22 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 (view, pages) -> view.onChapterReady(pages, manga, chapter, currentPage),
                 (view, error) -> view.onChapterError());
 
+        restartableFirst(GET_MANGA_SYNC, this::getMangaSyncObservable,
+                (view, mangaSync) -> {},
+                (view, error) -> {});
+
         registerForStickyEvents();
     }
 
     @Override
     protected void onDestroy() {
         unregisterForEvents();
-        onChapterLeft();
-        updateMangaSyncLastChapterRead();
         super.onDestroy();
     }
 
     @Override
     protected void onSave(@NonNull Bundle state) {
-        if (pageList != null && !isDownloaded)
-            source.savePageList(chapter.url, pageList);
-
+        onChapterLeft();
         super.onSave(state);
     }
 
@@ -135,6 +138,9 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         source = event.getSource();
         sourceId = source.getId();
         loadChapter(event.getChapter());
+        if (prefs.autoUpdateMangaSync()) {
+            start(GET_MANGA_SYNC);
+        }
     }
 
     // Returns the page list of a chapter
@@ -204,6 +210,11 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 .doOnCompleted(this::stopPreloadingNextChapter);
     }
 
+    private Observable<List<MangaSync>> getMangaSyncObservable() {
+        return db.getMangasSync(manga).createObservable()
+                .doOnNext(mangaSync -> this.mangaSyncList = mangaSync);
+    }
+
     // Loads the given chapter
     private void loadChapter(Chapter chapter) {
         // Before loading the chapter, stop preloading (if it's working) and save current progress
@@ -238,11 +249,11 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     // Called before loading another chapter or leaving the reader. It allows to do operations
     // over the chapter read like saving progress
-    private void onChapterLeft() {
+    public void onChapterLeft() {
         if (pageList == null)
             return;
 
-        // Cache page list for online chapters to allow a faster reopen
+        // Cache current page list progress for online chapters to allow a faster reopen
         if (!isDownloaded)
             source.savePageList(chapter.url, pageList);
 
@@ -259,33 +270,39 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         return !chapter.read && currentPage == pageList.size() - 1;
     }
 
-    private void updateMangaSyncLastChapterRead() {
-        if (pageList == null)
-            return;
+    public int getMangaSyncChapterToUpdate() {
+        if (pageList == null || mangaSyncList == null || mangaSyncList.isEmpty())
+            return 0;
 
-        db.getMangasSync(manga).createObservable()
-                .take(1)
-                .flatMap(Observable::from)
-                .doOnNext(mangaSync -> {
-                    MangaSyncService service = syncManager.getSyncService(mangaSync.sync_id);
-                    if (!service.isLogged())
-                        return;
+        int lastChapterReadLocal = 0;
+        // If the current chapter has been read, we check with this one
+        if (chapter.read)
+            lastChapterReadLocal = (int) Math.floor(chapter.chapter_number);
+        // If not, we check if the previous chapter has been read
+        else if (previousChapter != null && previousChapter.read)
+            lastChapterReadLocal = (int) Math.floor(previousChapter.chapter_number);
 
-                    int lastChapterReadLocal = 0;
-                    // If the current chapter has been read, we check with this one
-                    if (chapter.read)
-                        lastChapterReadLocal = (int) Math.floor(chapter.chapter_number);
-                    // If not, we check if the previous chapter has been read
-                    else if (previousChapter != null && previousChapter.read)
-                        lastChapterReadLocal = (int) Math.floor(previousChapter.chapter_number);
+        // We know the chapter we have to check, but we don't know yet if an update is required.
+        // This boolean is used to return 0 if no update is required
+        boolean hasToUpdate = false;
 
-                    if (lastChapterReadLocal > mangaSync.last_chapter_read) {
-                        mangaSync.last_chapter_read = lastChapterReadLocal;
-                        UpdateMangaSyncService.start(getContext(), mangaSync);
-                    }
-                })
-                .subscribe(next -> {},
-                        error -> Timber.e(error.getCause(), error.getMessage()));
+        for (MangaSync mangaSync : mangaSyncList) {
+            if (lastChapterReadLocal > mangaSync.last_chapter_read) {
+                mangaSync.last_chapter_read = lastChapterReadLocal;
+                mangaSync.update = true;
+                hasToUpdate = true;
+            }
+        }
+        return hasToUpdate ? lastChapterReadLocal : 0;
+    }
+
+    public void updateMangaSyncLastChapterRead() {
+        for (MangaSync mangaSync : mangaSyncList) {
+            MangaSyncService service = syncManager.getSyncService(mangaSync.sync_id);
+            if (service.isLogged() && mangaSync.update) {
+                UpdateMangaSyncService.start(getContext(), mangaSync);
+            }
+        }
     }
 
     public void setCurrentPage(int currentPage) {

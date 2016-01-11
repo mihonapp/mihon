@@ -101,6 +101,14 @@ public class PreferencesHelper {
         return prefs.getBoolean(getKey(R.string.pref_update_only_non_completed_key), false);
     }
 
+    public boolean autoUpdateMangaSync() {
+        return prefs.getBoolean(getKey(R.string.pref_auto_update_manga_sync_key), true);
+    }
+
+    public boolean askUpdateMangaSync() {
+        return prefs.getBoolean(getKey(R.string.pref_ask_update_manga_sync_key), false);
+    }
+
     public Preference<Integer> imageDecoder() {
         return rxPrefs.getInteger(getKey(R.string.pref_image_decoder_key), 0);
     }

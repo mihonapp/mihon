@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -124,6 +126,36 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         Icepick.saveInstanceState(readerMenu, outState);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (viewer != null)
+            getPresenter().setCurrentPage(viewer.getCurrentPage());
+        getPresenter().onChapterLeft();
+
+        int chapterToUpdate = getPresenter().getMangaSyncChapterToUpdate();
+
+        if (chapterToUpdate > 0) {
+            if (getPresenter().prefs.askUpdateMangaSync()) {
+                new MaterialDialog.Builder(this)
+                        .content(getString(R.string.confirm_update_manga_sync, chapterToUpdate))
+                        .positiveText(R.string.button_yes)
+                        .negativeText(R.string.button_no)
+                        .onPositive((dialog, which) -> {
+                            getPresenter().updateMangaSyncLastChapterRead();
+                        })
+                        .onAny((dialog1, which1) -> {
+                            finish();
+                        })
+                        .show();
+            } else {
+                getPresenter().updateMangaSyncLastChapterRead();
+                finish();
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public void onChapterError() {
