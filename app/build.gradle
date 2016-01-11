@@ -113,9 +113,6 @@ dependencies {
     compile 'eu.davidea:flexible-adapter:4.2.0@aar'
     compile 'com.nononsenseapps:filepicker:2.5.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    compile 'rapid.decoder:library:0.3.0'
-    compile 'rapid.decoder:jpeg-decoder:0.3.0'
-    compile 'rapid.decoder:png-decoder:0.3.0'
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"

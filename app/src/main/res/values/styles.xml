@@ -5,7 +5,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="alertDialogTheme">@style/AlertDialogStyle</item>
-        <item name="android:itemTextAppearance">@style/OptionsMenuTextColor</item>
         <item name="android:textColor">@color/primary_text</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
@@ -30,10 +29,6 @@
     <style name="DialogTitleText">
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-    </style>
-
-    <style name="OptionsMenuTextColor" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
-        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="ActionBarSpinner" parent="@style/Widget.AppCompat.TextView.SpinnerItem">

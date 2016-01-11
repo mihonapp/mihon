@@ -1,4 +1,4 @@
-package eu.kanade.mangafeed.ui.reader.decoder;
+package com.davemorrissey.labs.subscaleview.decoder;
 
 import android.content.Context;
 import android.graphics.Bitmap;

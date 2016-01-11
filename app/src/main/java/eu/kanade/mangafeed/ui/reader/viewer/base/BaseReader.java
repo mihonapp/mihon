@@ -3,6 +3,7 @@ package eu.kanade.mangafeed.ui.reader.viewer.base;
 import android.view.MotionEvent;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
+import com.davemorrissey.labs.subscaleview.decoder.RapidImageRegionDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageRegionDecoder;
 
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.List;
 import eu.kanade.mangafeed.data.source.model.Page;
 import eu.kanade.mangafeed.ui.base.fragment.BaseFragment;
 import eu.kanade.mangafeed.ui.reader.ReaderActivity;
-import eu.kanade.mangafeed.ui.reader.decoder.RapidImageRegionDecoder;
 
 public abstract class BaseReader extends BaseFragment {
 
