@@ -3,28 +3,33 @@ package eu.kanade.mangafeed.data.download;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.IBinder;
 import android.os.PowerManager;
+
+import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import eu.kanade.mangafeed.App;
+import eu.kanade.mangafeed.R;
+import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.event.DownloadChaptersEvent;
-import eu.kanade.mangafeed.util.ContentObservable;
 import eu.kanade.mangafeed.util.EventBusHook;
-import eu.kanade.mangafeed.util.NetworkUtil;
+import eu.kanade.mangafeed.util.ToastUtil;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class DownloadService extends Service {
 
     @Inject DownloadManager downloadManager;
+    @Inject PreferencesHelper preferences;
 
     private PowerManager.WakeLock wakeLock;
     private Subscription networkChangeSubscription;
     private Subscription queueRunningSubscription;
+    private boolean isRunning;
 
     public static void start(Context context) {
         context.startService(new Intent(context, DownloadService.class));
@@ -73,22 +78,43 @@ public class DownloadService extends Service {
     }
 
     private void listenNetworkChanges() {
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        networkChangeSubscription = ContentObservable.fromBroadcast(this, intentFilter)
+        networkChangeSubscription = new ReactiveNetwork().enableInternetCheck()
+                .observeConnectivity(getApplicationContext())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(state -> {
-                    if (NetworkUtil.isNetworkConnected(this)) {
-                        // If there are no remaining downloads, destroy the service
-                        if (!downloadManager.startDownloads())
-                            stopSelf();
-                    } else {
-                        downloadManager.stopDownloads();
+                    switch (state) {
+                        case WIFI_CONNECTED_HAS_INTERNET:
+                            // If there are no remaining downloads, destroy the service
+                            if (!isRunning && !downloadManager.startDownloads()) {
+                                stopSelf();
+                            }
+                            break;
+                        case MOBILE_CONNECTED:
+                            if (!preferences.downloadOnlyOverWifi()) {
+                                if (!isRunning && !downloadManager.startDownloads()) {
+                                    stopSelf();
+                                }
+                            } else if (isRunning) {
+                                downloadManager.stopDownloads();
+                            }
+                            break;
+                        default:
+                            if (isRunning) {
+                                downloadManager.stopDownloads();
+                            }
+                            break;
                     }
+                }, error -> {
+                    ToastUtil.showShort(this, R.string.download_queue_error);
+                    stopSelf();
                 });
     }
 
     private void listenQueueRunningChanges() {
         queueRunningSubscription = downloadManager.getRunningSubject()
                 .subscribe(running -> {
+                    isRunning = running;
                     if (running)
                         acquireWakeLock();
                     else

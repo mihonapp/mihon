@@ -99,6 +99,7 @@
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
     <string name="pref_download_slots">Simultaneous downloads</string>
+    <string name="pref_download_only_over_wifi">Download only over Wi-Fi</string>
 
       <!-- Advanced section -->
     <string name="pref_clear_chapter_cache">Clear chapter cache</string>
@@ -179,6 +180,9 @@
     <string name="no_previous_chapter">Previous chapter not found</string>
     <string name="decode_image_error">The image could not be loaded.\nTry to change the image decoder</string>
     <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
+
+    <!-- Downloads activity and service -->
+    <string name="download_queue_error">An error occurred while downloading chapters. Restart it from the downloads section</string>
 
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Update progress: %1$d/%2$d</string>

@@ -393,7 +393,7 @@ public class DownloadManager {
             return false;
 
         boolean hasPendingDownloads = false;
-        if (downloadsSubscription == null || threadsNumberSubscription == null)
+        if (downloadsSubscription == null)
             initializeSubscriptions();
 
         for (Download download : queue) {

@@ -5,6 +5,11 @@
         android:title="@string/pref_download_directory"
         android:key="@string/pref_download_directory_key"/>
 
+    <CheckBoxPreference
+        android:title="@string/pref_download_only_over_wifi"
+        android:key="@string/pref_download_only_over_wifi_key"
+        android:defaultValue="true"/>
+
     <eu.kanade.mangafeed.widget.preference.IntListPreference
         android:title="@string/pref_download_slots"
         android:key="@string/pref_download_slots_key"

@@ -160,6 +160,10 @@ public class PreferencesHelper {
         return rxPrefs.getInteger(getKey(R.string.pref_download_slots_key), 1);
     }
 
+    public boolean downloadOnlyOverWifi() {
+        return prefs.getBoolean(getKey(R.string.pref_download_only_over_wifi_key), true);
+    }
+
     public static int getLibraryUpdateInterval(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(
                 context.getString(R.string.pref_library_update_interval_key), 0);
