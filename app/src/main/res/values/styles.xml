@@ -13,6 +13,7 @@
         <item name="android:spinnerItemStyle">@style/ActionBarSpinner</item>
         <item name="android:spinnerDropDownItemStyle">@style/ActionBarSpinnerItem</item>
         <item name="actionModeBackground">@color/colorPrimarySuperDark</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="colorAccent">@color/white</item>
     </style>

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.bumptech.glide.Glide;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 
 import java.util.List;
@@ -20,6 +19,7 @@ import eu.kanade.mangafeed.data.source.base.Source;
 import eu.kanade.mangafeed.data.source.model.MangasPage;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.RxPager;
+import icepick.State;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -34,6 +34,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     @Inject PreferencesHelper prefs;
 
     private Source source;
+    @State int sourceId;
 
     private String query;
 
@@ -78,19 +79,14 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     }
 
     private void onProcessRestart() {
+        source = sourceManager.get(sourceId);
         stop(GET_MANGA_LIST);
         stop(GET_MANGA_DETAIL);
     }
 
-    @Override
-    protected void onDestroy() {
-        // Catalogue covers are probably not going to be needed for a long time
-        Glide.get(getContext()).clearMemory();
-        super.onDestroy();
-    }
-
     public void startRequesting(Source source) {
         this.source = source;
+        sourceId = source.getId();
         restartRequest(null);
     }
 

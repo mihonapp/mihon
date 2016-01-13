@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,12 +59,6 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
 
     public static ChaptersFragment newInstance() {
         return new ChaptersFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -122,22 +115,6 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         super.onPause();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.chapters, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                fetchChapters();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public void onNextChapters(List<Chapter> chapters) {
         // If the list is empty, fetch chapters from source if the conditions are met
         // We use presenter chapters instead because they are always unfiltered
@@ -156,8 +133,10 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     }
 
     public void fetchChapters() {
-        swipeRefresh.setRefreshing(true);
-        getPresenter().fetchChaptersFromSource();
+        if (getPresenter().getManga() != null) {
+            swipeRefresh.setRefreshing(true);
+            getPresenter().fetchChaptersFromSource();
+        }
     }
 
     public void onFetchChaptersDone() {

@@ -21,6 +21,7 @@ import eu.kanade.mangafeed.event.DownloadChaptersEvent;
 import eu.kanade.mangafeed.event.ReaderEvent;
 import eu.kanade.mangafeed.ui.base.presenter.BasePresenter;
 import eu.kanade.mangafeed.util.EventBusHook;
+import icepick.State;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -40,7 +41,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     private boolean sortOrderAToZ = true;
     private boolean onlyUnread = true;
     private boolean onlyDownloaded;
-    private boolean hasRequested;
+    @State boolean hasRequested;
 
     private PublishSubject<List<Chapter>> chaptersSubject;
 

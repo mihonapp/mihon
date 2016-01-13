@@ -1,6 +1,7 @@
 package eu.kanade.mangafeed.data.cache;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +44,9 @@ public class CoverCache {
     // Download the cover with Glide (it can avoid repeating requests) and save the file on this cache
     // Optionally, load the image in the given image view when the resource is ready, if not null
     public void save(String thumbnailUrl, LazyHeaders headers, ImageView imageView) {
+        if (TextUtils.isEmpty(thumbnailUrl))
+            return;
+
         GlideUrl url = new GlideUrl(thumbnailUrl, headers);
         Glide.with(context)
                 .load(url)
@@ -93,6 +97,9 @@ public class CoverCache {
 
     // Delete the cover from cache
     public boolean delete(String thumbnailUrl) {
+        if (TextUtils.isEmpty(thumbnailUrl))
+            return false;
+
         File file = new File(cacheDir, DiskUtils.hashKeyForDisk(thumbnailUrl));
         return file.exists() && file.delete();
     }

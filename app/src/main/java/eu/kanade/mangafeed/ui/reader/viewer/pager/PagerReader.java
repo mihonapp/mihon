@@ -25,7 +25,7 @@ public abstract class PagerReader extends BaseReader {
     protected void initializePager(Pager pager) {
         this.pager = pager;
         pager.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-        pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(1);
         pager.setId(R.id.view_pager);
         pager.setOnChapterBoundariesOutListener(new OnChapterBoundariesOutListener() {
             @Override
