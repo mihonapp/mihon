@@ -269,8 +269,10 @@ public class DatabaseHelper {
                 if (!toAdd.isEmpty()) {
                     // Set the date fetch for new items in reverse order to allow another sorting method.
                     // Sources MUST return the chapters from most to less recent, which is common.
+                    long now = new Date().getTime();
+
                     for (int i = toAdd.size() - 1; i >= 0; i--) {
-                        toAdd.get(i).date_fetch = new Date().getTime();
+                        toAdd.get(i).date_fetch = now++;
                     }
                     added = insertChapters(toAdd).executeAsBlocking().numberOfInserts();
                 }

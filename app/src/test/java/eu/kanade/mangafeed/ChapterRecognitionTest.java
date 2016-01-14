@@ -121,4 +121,18 @@ public class ChapterRecognitionTest {
         assertThat(c.chapter_number).isEqualTo(84f);
     }
 
+    @Test
+    public void testWithVersionBeforeAndAnotherNumber() {
+        Chapter c = createChapter("Onepunch-Man Punch Ver002 086 : Creeping Darkness [3]");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(86f);
+    }
+
+    @Test
+    public void testWithVolumeAfterChapter() {
+        Chapter c = createChapter("Solanin 028 Vol. 2");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(28f);
+    }
+
 }

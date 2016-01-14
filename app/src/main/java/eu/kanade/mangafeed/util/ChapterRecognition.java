@@ -10,16 +10,18 @@ import eu.kanade.mangafeed.data.database.models.Manga;
 
 public class ChapterRecognition {
 
-    private static Pattern p1 = Pattern.compile("Ch[^0-9]?\\s*(\\d+[\\.,]?\\d*)");
-    private static Pattern p2 = Pattern.compile("(\\d+[\\.,]?\\d*)");
-    private static Pattern p3 = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)");
+    private static final Pattern p1 = Pattern.compile("ch[^0-9]?\\s*(\\d+[\\.,]?\\d*)");
+    private static final Pattern p2 = Pattern.compile("(\\d+[\\.,]?\\d*)");
+    private static final Pattern p3 = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)");
+
+    private static final Pattern pUnwanted =
+            Pattern.compile("\\b(v|ver|vol|version|volume)\\.?\\s*\\d+\\b");
 
     public static void parseChapterNumber(Chapter chapter, Manga manga) {
         if (chapter.chapter_number != -1)
             return;
 
-        // Remove spaces and convert to lower case
-        String name = chapter.name;
+        String name = chapter.name.toLowerCase();
         Matcher matcher;
 
         // Safest option, the chapter has a token prepended
@@ -29,34 +31,38 @@ public class ChapterRecognition {
             return;
         }
 
-        List<Float> occurences;
+        // Remove anything related to the volume or version
+        name = pUnwanted.matcher(name).replaceAll("");
+
+        List<Float> occurrences;
 
         // If there's only one number, use it
         matcher = p2.matcher(name);
-        occurences = getAllOccurrences(matcher);
-        if (occurences.size() == 1) {
-            chapter.chapter_number =  occurences.get(0);
+        occurrences = getAllOccurrences(matcher);
+        if (occurrences.size() == 1) {
+            chapter.chapter_number =  occurrences.get(0);
             return;
         }
 
         // If it has a colon, the chapter number should be that one
         matcher = p3.matcher(name);
-        occurences = getAllOccurrences(matcher);
-        if (occurences.size() == 1) {
-            chapter.chapter_number =  occurences.get(0);
+        occurrences = getAllOccurrences(matcher);
+        if (occurrences.size() == 1) {
+            chapter.chapter_number =  occurrences.get(0);
             return;
         }
 
-        name = replaceIrrelevantCharacters(name);
+        // This can lead to issues if two numbers are separated by an space
+        name = name.replaceAll("\\s+", "");
 
         // Try to remove the manga name from the chapter, and try again
         String mangaName = replaceIrrelevantCharacters(manga.title);
         String nameWithoutManga = difference(mangaName, name);
         if (!nameWithoutManga.isEmpty()) {
             matcher = p2.matcher(nameWithoutManga);
-            occurences = getAllOccurrences(matcher);
-            if (occurences.size() == 1) {
-                chapter.chapter_number =  occurences.get(0);
+            occurrences = getAllOccurrences(matcher);
+            if (occurrences.size() == 1) {
+                chapter.chapter_number =  occurrences.get(0);
                 return;
             }
         }

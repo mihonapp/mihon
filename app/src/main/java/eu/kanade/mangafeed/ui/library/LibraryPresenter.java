@@ -44,7 +44,9 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
                 this::getLibraryObservable,
                 (view, pair) -> view.onNextLibraryUpdate(pair.first, pair.second));
 
-        start(GET_LIBRARY);
+        if (savedState == null) {
+            start(GET_LIBRARY);
+        }
     }
 
     @Override
