@@ -36,6 +36,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedState) {
+        // Do not let the launcher create a new activity
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
+
         super.onCreate(savedState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
