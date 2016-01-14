@@ -105,6 +105,7 @@ public class MyAnimeList extends MangaSyncService {
         return networkService.getStringResponse(getSearchUrl(query), headers, null)
                 .map(Jsoup::parse)
                 .flatMap(doc -> Observable.from(doc.select("entry")))
+                .filter(entry -> !entry.select("type").text().equals("Novel"))
                 .map(entry -> {
                     MangaSync manga = MangaSync.create(this);
                     manga.title = entry.select("title").first().text();
