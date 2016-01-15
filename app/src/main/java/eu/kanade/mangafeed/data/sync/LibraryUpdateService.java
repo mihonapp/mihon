@@ -1,11 +1,14 @@
 package eu.kanade.mangafeed.data.sync;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -21,9 +24,9 @@ import eu.kanade.mangafeed.data.database.DatabaseHelper;
 import eu.kanade.mangafeed.data.database.models.Manga;
 import eu.kanade.mangafeed.data.preference.PreferencesHelper;
 import eu.kanade.mangafeed.data.source.SourceManager;
+import eu.kanade.mangafeed.ui.main.MainActivity;
 import eu.kanade.mangafeed.util.AndroidComponentUtil;
 import eu.kanade.mangafeed.util.NetworkUtil;
-import eu.kanade.mangafeed.util.NotificationUtil;
 import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
@@ -87,8 +90,7 @@ public class LibraryUpdateService extends Service {
                 .flatMap(this::updateLibrary)
                 .subscribe(next -> {},
                         error -> {
-                            NotificationUtil.create(this, UPDATE_NOTIFICATION_ID,
-                                    getString(R.string.notification_update_error), "");
+                            showNotification(getString(R.string.notification_update_error), "");
                             stopSelf(startId);
                         }, () -> {
                             Timber.i("Library updated");
@@ -109,7 +111,7 @@ public class LibraryUpdateService extends Service {
                     .toList().toBlocking().single();
 
         return Observable.from(mangas)
-                .doOnNext(manga -> NotificationUtil.create(this, UPDATE_NOTIFICATION_ID,
+                .doOnNext(manga -> showNotification(
                         getString(R.string.notification_update_progress,
                                 count.incrementAndGet(), mangas.size()), manga.title))
                 .concatMap(manga -> updateManga(manga)
@@ -121,8 +123,7 @@ public class LibraryUpdateService extends Service {
                         .filter(pair -> pair.first > 0)
                         .map(pair -> new MangaUpdate(manga, pair.first)))
                 .doOnNext(updates::add)
-                .doOnCompleted(() -> NotificationUtil.createBigText(this, UPDATE_NOTIFICATION_ID,
-                        getString(R.string.notification_update_completed),
+                .doOnCompleted(() -> showBigNotification(getString(R.string.notification_update_completed),
                         getUpdatedMangas(updates, failedUpdates)));
     }
 
@@ -170,6 +171,38 @@ public class LibraryUpdateService extends Service {
             wakeLock.release();
             wakeLock = null;
         }
+    }
+
+    private void showNotification(String title, String body) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_action_refresh)
+                .setContentTitle(title)
+                .setContentText(body);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(UPDATE_NOTIFICATION_ID, builder.build());
+    }
+
+    private void showBigNotification(String title, String body) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_action_refresh)
+                .setContentTitle(title)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setContentIntent(getNotificationIntent())
+                .setAutoCancel(true);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(UPDATE_NOTIFICATION_ID, builder.build());
+    }
+
+    private PendingIntent getNotificationIntent() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public static class SyncOnConnectionAvailable extends BroadcastReceiver {
