@@ -35,7 +35,7 @@ android {
     publishNonDefault true
 
     defaultConfig {
-        applicationId "eu.kanade.mangafeed"
+        applicationId "eu.kanade.tachiyomi"
         minSdkVersion 16
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

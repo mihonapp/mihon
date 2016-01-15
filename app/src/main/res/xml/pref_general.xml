@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <eu.kanade.mangafeed.widget.preference.LibraryColumnsDialog
+    <eu.kanade.tachiyomi.widget.preference.LibraryColumnsDialog
         android:key="@string/pref_library_columns_dialog_key"
         android:persistent="false"
         android:title="@string/pref_library_columns"/>
 
-    <eu.kanade.mangafeed.widget.preference.IntListPreference
+    <eu.kanade.tachiyomi.widget.preference.IntListPreference
         android:key="@string/pref_library_update_interval_key"
         android:title="@string/pref_library_update_interval"
         android:entries="@array/library_update_interval"

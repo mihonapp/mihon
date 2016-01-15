@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context="eu.kanade.mangafeed.ui.manga.MangaActivity">
+    tools:context="eu.kanade.tachiyomi.ui.manga.MangaActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

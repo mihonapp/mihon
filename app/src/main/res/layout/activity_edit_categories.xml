@@ -25,6 +25,6 @@
         android:src="@drawable/ic_action_add_18dp"
         app:layout_anchor="@id/categories_list"
         app:layout_anchorGravity="bottom|right|end"
-        app:layout_behavior="eu.kanade.mangafeed.ui.base.fab.ScrollAwareFABBehavior"/>
+        app:layout_behavior="eu.kanade.tachiyomi.ui.base.fab.ScrollAwareFABBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

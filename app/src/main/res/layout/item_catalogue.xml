@@ -52,7 +52,7 @@
             android:layout_alignBottom="@+id/thumbnail"
             android:background="@color/manga_cover_title_background">
 
-            <eu.kanade.mangafeed.widget.PTSansTextView
+            <eu.kanade.tachiyomi.widget.PTSansTextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

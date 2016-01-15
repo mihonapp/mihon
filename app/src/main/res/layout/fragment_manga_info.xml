@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="eu.kanade.mangafeed.ui.catalogue.CatalogueFragment">
+    tools:context="eu.kanade.tachiyomi.ui.catalogue.CatalogueFragment">
 
 
     <!-- It seems I have to wrap everything in SwipeRefreshLayout because it always take the entire height

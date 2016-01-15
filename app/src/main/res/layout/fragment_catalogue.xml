@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="eu.kanade.mangafeed.ui.catalogue.CatalogueFragment">
+    tools:context="eu.kanade.tachiyomi.ui.catalogue.CatalogueFragment">
 
     <ProgressBar
         android:id="@+id/progress"
@@ -15,7 +15,7 @@
         android:layout_gravity="center_vertical|center_horizontal"
         android:visibility="gone"/>
 
-    <eu.kanade.mangafeed.widget.AutofitRecyclerView
+    <eu.kanade.tachiyomi.widget.AutofitRecyclerView
         android:id="@+id/recycler"
         style="@style/AppTheme.GridView"
         android:layout_height="0dp"
