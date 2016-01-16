@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.download;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -274,7 +275,7 @@ public class DownloadManager {
     // Get the filename for an image given the page
     private String getImageFilename(Page page) {
         String url = page.getImageUrl();
-        return url.substring(url.lastIndexOf("/") + 1, url.length());
+        return Uri.parse(url).getLastPathSegment();
     }
 
     private boolean isImageDownloaded(File imagePath) {

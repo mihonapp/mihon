@@ -1,20 +1,6 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /Users/hitherejoe/Android Studio.app/sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+-dontobfuscate
 
-# Add any project specific keep options here:
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keep class eu.kanade.tachiyomi.injection.** { *; }
 
 # Retrolambda
 -dontwarn java.lang.invoke.*
@@ -27,7 +13,13 @@
 -dontwarn com.squareup.okhttp.**
 -dontwarn okio.**
 
-# Butterknife
+# Okio
+-keep class sun.misc.Unsafe { *; }
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
+
+# ButterKnife 7
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewBinder { *; }
@@ -52,11 +44,6 @@
     public void onEvent*(***);
 }
 
-# Only required if you use AsyncExecutor
--keepclassmembers class * extends de.greenrobot.event.util.ThrowableFailureEvent {
-    public <init>(java.lang.Throwable);
-}
-
 # Don't warn for missing support classes
 -dontwarn de.greenrobot.event.util.*$Support
 -dontwarn de.greenrobot.event.util.*$SupportManagerFragment
@@ -69,22 +56,22 @@
     public *;
 }
 
+# RxJava 1.1.0
 
-# RxJava 0.21
+-dontwarn sun.misc.**
 
--keep class rx.schedulers.Schedulers {
-    public static <methods>;
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
 }
--keep class rx.schedulers.ImmediateScheduler {
-    public <methods>;
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
 }
--keep class rx.schedulers.TestScheduler {
-    public <methods>;
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
--keep class rx.schedulers.Schedulers {
-    public static ** test();
-}
--dontwarn sun.misc.Unsafe
 
 # AppCombat
 -keep public class android.support.v7.widget.** { *; }
@@ -101,3 +88,62 @@
 -keepclasseswithmembernames class * {
     @icepick.* <fields>;
 }
+
+## GSON 2.2.4 specific rules ##
+
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+-keepattributes EnclosingMethod
+
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }
+
+## ACRA 4.5.0 specific rules ##
+
+# we need line numbers in our stack traces otherwise they are pretty useless
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
+# ACRA needs "annotations" so add this...
+-keepattributes *Annotation*
+
+# keep this class so that logging will show 'ACRA' and not a obfuscated name like 'a'.
+# Note: if you are removing log messages elsewhere in this file then this isn't necessary
+-keep class org.acra.ACRA {
+	*;
+}
+
+# keep this around for some enums that ACRA needs
+-keep class org.acra.ReportingInteractionMode {
+    *;
+}
+
+-keepnames class org.acra.sender.HttpSender$** {
+    *;
+}
+
+-keepnames class org.acra.ReportField {
+    *;
+}
+
+# keep this otherwise it is removed by ProGuard
+-keep public class org.acra.ErrorReporter {
+    public void addCustomData(java.lang.String,java.lang.String);
+    public void putCustomData(java.lang.String,java.lang.String);
+    public void removeCustomData(java.lang.String);
+}
+
+# keep this otherwise it is removed by ProGuard
+-keep public class org.acra.ErrorReporter {
+    public void handleSilentException(java.lang.Throwable);
+}
+
+# Keep the support library
+-keep class org.acra.** { *; }
+-keep interface org.acra.** { *; }
