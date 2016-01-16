@@ -12,6 +12,10 @@ Current features:
 * Schedule searching for updates
 * Categories to organize your library
 
+## Download
+
+Available in the [releases page](https://github.com/inorichi/tachiyomi/releases)
+
 ## License
 
     Copyright 2015 Javier Tomás
