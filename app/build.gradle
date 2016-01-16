@@ -112,7 +112,7 @@ dependencies {
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'eu.davidea:flexible-adapter:4.2.0@aar'
-    compile 'com.nononsenseapps:filepicker:2.5.0'
+    compile 'com.nononsenseapps:filepicker:2.5.1'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.github.pwittchen:reactivenetwork:0.1.5'
 
@@ -121,7 +121,7 @@ dependencies {
     apt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile('com.mikepenz:materialdrawer:4.6.1@aar') {
+    compile('com.mikepenz:materialdrawer:4.6.4@aar') {
         transitive = true
     }
     compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {

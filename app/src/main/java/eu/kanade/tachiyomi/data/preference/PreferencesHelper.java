@@ -85,8 +85,7 @@ public class PreferencesHelper {
     }
 
     public int getDefaultViewer() {
-        // TODO use IntListPreference
-        return Integer.parseInt(prefs.getString(getKey(R.string.pref_default_viewer_key), "1"));
+        return prefs.getInt(getKey(R.string.pref_default_viewer_key), 1);
     }
 
     public Preference<Integer> portraitColumns() {
@@ -156,8 +155,8 @@ public class PreferencesHelper {
         prefs.edit().putString(getKey(R.string.pref_download_directory_key), path).apply();
     }
 
-    public Preference<Integer> downloadThreads() {
-        return rxPrefs.getInteger(getKey(R.string.pref_download_slots_key), 1);
+    public int downloadThreads() {
+        return prefs.getInt(getKey(R.string.pref_download_slots_key), 1);
     }
 
     public boolean downloadOnlyOverWifi() {

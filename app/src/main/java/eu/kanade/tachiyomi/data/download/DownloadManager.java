@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.kanade.tachiyomi.data.database.models.Chapter;
@@ -42,10 +43,8 @@ public class DownloadManager {
     private Gson gson;
 
     private PublishSubject<Download> downloadsQueueSubject;
-    private BehaviorSubject<Integer> threadsNumber;
     private BehaviorSubject<Boolean> runningSubject;
     private Subscription downloadsSubscription;
-    private Subscription threadsNumberSubscription;
 
     private DownloadQueue queue;
     private volatile boolean isRunning;
@@ -61,7 +60,6 @@ public class DownloadManager {
         queue = new DownloadQueue();
 
         downloadsQueueSubject = PublishSubject.create();
-        threadsNumber = BehaviorSubject.create();
         runningSubject = BehaviorSubject.create();
     }
 
@@ -69,14 +67,8 @@ public class DownloadManager {
         if (downloadsSubscription != null && !downloadsSubscription.isUnsubscribed())
             downloadsSubscription.unsubscribe();
 
-        if (threadsNumberSubscription != null && !threadsNumberSubscription.isUnsubscribed())
-            threadsNumberSubscription.unsubscribe();
-
-        threadsNumberSubscription = preferences.downloadThreads().asObservable()
-                .subscribe(threadsNumber::onNext);
-
         downloadsSubscription = downloadsQueueSubject
-                .lift(new DynamicConcurrentMergeOperator<>(this::downloadChapter, threadsNumber))
+                .flatMap(this::downloadChapter, preferences.downloadThreads())
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(download -> areAllDownloadsFinished())
@@ -102,11 +94,6 @@ public class DownloadManager {
             downloadsSubscription.unsubscribe();
             downloadsSubscription = null;
         }
-
-        if (threadsNumberSubscription != null && !threadsNumberSubscription.isUnsubscribed()) {
-            threadsNumberSubscription.unsubscribe();
-            threadsNumberSubscription = null;
-        }
     }
 
     // Create a download object for every chapter in the event and add them to the downloads queue
@@ -114,7 +101,14 @@ public class DownloadManager {
         final Manga manga = event.getManga();
         final Source source = sourceManager.get(manga.source);
 
+        // Used to avoid downloading chapters with the same name
+        final List<String> addedChapters = new ArrayList<>();
+
         for (Chapter chapter : event.getChapters()) {
+            if (addedChapters.contains(chapter.name))
+                continue;
+
+            addedChapters.add(chapter.name);
             Download download = new Download(source, manga, chapter);
 
             if (!prepareDownload(download)) {
@@ -362,7 +356,7 @@ public class DownloadManager {
                 File.separator +
                 manga.title.replaceAll("[^\\sa-zA-Z0-9.-]", "_") +
                 File.separator +
-                chapter.name.replaceAll("[^\\sa-zA-Z0-9.-]", "_") + " (" + chapter.id + ")";
+                chapter.name.replaceAll("[^\\sa-zA-Z0-9.-]", "_");
 
         return new File(preferences.getDownloadsDirectory(), chapterRelativePath);
     }
