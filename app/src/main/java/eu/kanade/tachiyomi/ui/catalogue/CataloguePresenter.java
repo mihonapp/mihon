@@ -170,4 +170,8 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         return sourceManager.getSources();
     }
 
+    public void addMangaToLibrary(Manga manga) {
+        manga.favorite = true;
+        db.insertManga(manga).executeAsBlocking();
+    }
 }

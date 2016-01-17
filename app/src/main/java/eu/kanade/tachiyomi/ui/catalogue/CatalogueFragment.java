@@ -18,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -257,6 +259,17 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
 
     @Override
     public void onListItemLongClick(int position) {
-        // Do nothing
+        final Manga selectedManga = adapter.getItem(position);
+
+        new MaterialDialog.Builder(getActivity())
+                .items(getString(R.string.add_to_library))
+                .itemsCallback((dialog, itemView, which, text) -> {
+                    switch (which) {
+                        case 0:
+                            getPresenter().addMangaToLibrary(selectedManga);
+                            break;
+                    }
+                })
+                .show();
     }
 }
