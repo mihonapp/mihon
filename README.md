@@ -1,4 +1,4 @@
-Tachiyomi is a manga reader for Android free and open source.
+Tachiyomi is a free and open source manga reader for Android.
 
 Keep in mind it's still a beta, so expect it to crash sometimes.
 
