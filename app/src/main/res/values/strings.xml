@@ -64,7 +64,7 @@
     <string name="landscape">Landscape</string>
     <string name="default_columns">Default</string>
     <string name="pref_library_update_interval">Library update period</string>
-    <string name="pref_update_only_non_completed">Update only non completed manga</string>
+    <string name="pref_update_only_non_completed">Only update uncomplete manga</string>
     <string name="update_never">Manual</string>
     <string name="update_1hour">Hourly</string>
     <string name="update_2hour">Every 2 hours</string>
@@ -99,16 +99,16 @@
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
     <string name="pref_download_slots">Simultaneous downloads</string>
-    <string name="pref_download_only_over_wifi">Download only over Wi-Fi</string>
+    <string name="pref_download_only_over_wifi">Only download over Wi-Fi</string>
 
       <!-- Advanced section -->
     <string name="pref_clear_chapter_cache">Clear chapter cache</string>
     <string name="used_cache">Used: %1$s</string>
     <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
-    <string name="cache_delete_error">An error occurred clearing cache</string>
+    <string name="cache_delete_error">An error occurred while clearing cache</string>
     <string name="pref_clear_database">Clear database</string>
-    <string name="pref_clear_database_summary">Delete mangas and chapters that are not in your library</string>
-    <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non library mangas will be lost</string>
+    <string name="pref_clear_database_summary">Delete manga and chapters that are not in your library</string>
+    <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library manga will be lost</string>
 
       <!-- About section -->
     <string name="version">Version</string>
@@ -116,7 +116,7 @@
 
     <!-- ACRA -->
     <string name="pref_enable_acra">Send crash reports</string>
-    <string name="pref_acra_summary">Help fixing bugs. Sensitive data is not sent</string>
+    <string name="pref_acra_summary">Helps fixing bugs. No sensitive data is sent</string>
 
 
     <!-- Login dialog -->
@@ -178,7 +178,7 @@
     <string name="chapter_subtitle">Chapter %1$s</string>
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="no_previous_chapter">Previous chapter not found</string>
-    <string name="decode_image_error">The image could not be loaded.\nTry to change the image decoder</string>
+    <string name="decode_image_error">Image could not be loaded.\nTry changing the image decoder</string>
     <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
 
     <!-- Downloads activity and service -->
@@ -187,9 +187,9 @@
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Update progress: %1$d/%2$d</string>
     <string name="notification_update_completed">Update completed</string>
-    <string name="notification_update_error">An unexpected error occurred updating the library</string>
+    <string name="notification_update_error">An unexpected error occurred while updating the library</string>
     <string name="notification_no_new_chapters">No new chapters found</string>
     <string name="notification_new_chapters">Found new chapters for:</string>
-    <string name="notification_manga_update_failed">Failed updating mangas:</string>
+    <string name="notification_manga_update_failed">Failed updating manga:</string>
 
 </resources>
