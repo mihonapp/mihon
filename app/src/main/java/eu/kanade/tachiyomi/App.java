@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.injection.module.AppModule;
 import timber.log.Timber;
 
 @ReportsCrashes(
-        formUri = "http://mangafeed.kanade.eu/crash_report",
+        formUri = "http://tachiyomi.kanade.eu/crash_report",
         reportType = org.acra.sender.HttpSender.Type.JSON,
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
         excludeMatchingSharedPreferencesKeys={".*username.*",".*password.*"}
