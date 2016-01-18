@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.ui.base.activity.BaseActivity;
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueFragment;
 import eu.kanade.tachiyomi.ui.download.DownloadFragment;
 import eu.kanade.tachiyomi.ui.library.LibraryFragment;
+import eu.kanade.tachiyomi.ui.recent.RecentChaptersFragment;
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity;
 import icepick.State;
 import nucleus.view.ViewWithPresenter;
@@ -71,9 +72,9 @@ public class MainActivity extends BaseActivity {
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_library)
                                 .withIdentifier(R.id.nav_drawer_library),
-//                        new PrimaryDrawerItem()
-//                                .withName(R.string.recent_updates_title)
-//                                .withIdentifier(R.id.nav_drawer_recent_updates),
+                        new PrimaryDrawerItem()
+                                .withName(R.string.label_recent_updates)
+                                .withIdentifier(R.id.nav_drawer_recent_updates),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_catalogues)
                                 .withIdentifier(R.id.nav_drawer_catalogues),
@@ -95,6 +96,7 @@ public class MainActivity extends BaseActivity {
                                         setFragment(LibraryFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_recent_updates:
+                                        setFragment(RecentChaptersFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_catalogues:
                                         setFragment(CatalogueFragment.newInstance());

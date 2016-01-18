@@ -26,7 +26,6 @@ import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent;
 import eu.kanade.tachiyomi.util.DiskUtils;
-import eu.kanade.tachiyomi.util.DynamicConcurrentMergeOperator;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;

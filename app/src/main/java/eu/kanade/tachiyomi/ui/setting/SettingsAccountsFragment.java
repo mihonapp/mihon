@@ -12,8 +12,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import eu.kanade.tachiyomi.App;
-import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager;
+import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 import eu.kanade.tachiyomi.data.source.SourceManager;
 import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.widget.preference.MangaSyncLoginDialog;

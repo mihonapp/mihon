@@ -27,10 +27,12 @@ import eu.kanade.tachiyomi.data.database.models.ChapterSQLiteTypeMapping;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.database.models.MangaCategory;
 import eu.kanade.tachiyomi.data.database.models.MangaCategorySQLiteTypeMapping;
+import eu.kanade.tachiyomi.data.database.models.MangaChapter;
 import eu.kanade.tachiyomi.data.database.models.MangaSQLiteTypeMapping;
 import eu.kanade.tachiyomi.data.database.models.MangaSync;
 import eu.kanade.tachiyomi.data.database.models.MangaSyncSQLiteTypeMapping;
 import eu.kanade.tachiyomi.data.database.resolvers.LibraryMangaGetResolver;
+import eu.kanade.tachiyomi.data.database.resolvers.MangaChapterGetResolver;
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable;
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable;
 import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable;
@@ -160,23 +162,14 @@ public class DatabaseHelper {
                 .prepare();
     }
 
-    public PreparedGetListOfObjects<Chapter> getChapters(long manga_id, boolean sortAToZ, boolean onlyUnread) {
-        Query.CompleteBuilder query = Query.builder()
-                .table(ChapterTable.TABLE)
-
-                .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER + (sortAToZ ? " ASC" : " DESC"));
-
-        if (onlyUnread) {
-            query = query.where(ChapterTable.COLUMN_MANGA_ID + "=? AND " + ChapterTable.COLUMN_READ + "=?")
-                    .whereArgs(manga_id, 0);
-        } else {
-            query = query.where(ChapterTable.COLUMN_MANGA_ID + "=?")
-                    .whereArgs(manga_id);
-        }
-
+    public PreparedGetListOfObjects<MangaChapter> getRecentChapters() {
         return db.get()
-                .listOfObjects(Chapter.class)
-                .withQuery(query.build())
+                .listOfObjects(MangaChapter.class)
+                .withQuery(RawQuery.builder()
+                        .query(MangaChapterGetResolver.RECENT_CHAPTERS_QUERY)
+                        .observesTables(ChapterTable.TABLE)
+                        .build())
+                .withGetResolver(MangaChapterGetResolver.INSTANCE)
                 .prepare();
     }
 

@@ -8,8 +8,8 @@ import android.view.MotionEvent;
 
 import eu.kanade.tachiyomi.ui.reader.viewer.base.OnChapterBoundariesOutListener;
 import eu.kanade.tachiyomi.ui.reader.viewer.base.OnChapterSingleTapListener;
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerGestureListener;
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.Pager;
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerGestureListener;
 import rx.functions.Action1;
 
 public class HorizontalPager extends ViewPager implements Pager {

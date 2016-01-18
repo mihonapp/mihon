@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable;
+import eu.kanade.tachiyomi.data.database.tables.ChapterTable;
 import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable;
 import eu.kanade.tachiyomi.data.database.tables.MangaSyncTable;
-import eu.kanade.tachiyomi.data.database.tables.ChapterTable;
 import eu.kanade.tachiyomi.data.database.tables.MangaTable;
 
 public class DbOpenHelper extends SQLiteOpenHelper {

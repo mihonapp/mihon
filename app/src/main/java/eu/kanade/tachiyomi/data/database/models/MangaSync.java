@@ -5,8 +5,8 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import java.io.Serializable;
 
-import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 import eu.kanade.tachiyomi.data.database.tables.MangaSyncTable;
+import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 
 @StorIOSQLiteType(table = MangaSyncTable.TABLE)
 public class MangaSync implements Serializable {
