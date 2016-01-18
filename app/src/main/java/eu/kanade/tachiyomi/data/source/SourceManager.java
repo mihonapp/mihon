@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.source;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,7 +60,9 @@ public class SourceManager {
     }
 
     public List<Source> getSources() {
-        return new ArrayList<>(sourcesMap.values());
+        List<Source> sources = new ArrayList<>(sourcesMap.values());
+        Collections.sort(sources, (s1, s2) -> s1.getName().compareTo(s2.getName()));
+        return sources;
     }
 
 }
