@@ -25,7 +25,9 @@ public class MangaChapterGetResolver extends DefaultGetResolver<MangaChapter> {
             ChapterTable.COLUMN_MANGA_ID);
 
     public static final String RECENT_CHAPTERS_QUERY = String.format(
-            QUERY + " ORDER BY %1$s DESC LIMIT 100", ChapterTable.COLUMN_DATE_UPLOAD);
+            QUERY + " WHERE %1$s = 1 ORDER BY %2$s DESC LIMIT 100",
+            MangaTable.COLUMN_FAVORITE,
+            ChapterTable.COLUMN_DATE_UPLOAD);
 
     @NonNull
     private final MangaStorIOSQLiteGetResolver mangaGetResolver;
