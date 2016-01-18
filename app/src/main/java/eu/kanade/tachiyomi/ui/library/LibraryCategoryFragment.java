@@ -34,6 +34,7 @@ public class LibraryCategoryFragment extends BaseFragment
 
     @State int position;
     private LibraryCategoryAdapter adapter;
+    private List<Manga> mangas;
 
     private Subscription numColumnsSubscription;
 
@@ -112,10 +113,13 @@ public class LibraryCategoryFragment extends BaseFragment
 
         Category category = categories.get(position);
         List<Manga> mangas = event.getMangasForCategory(category);
-        if (mangas == null) {
-            mangas = new ArrayList<>();
+        if (this.mangas != mangas) {
+            this.mangas = mangas;
+            if (mangas == null) {
+                mangas = new ArrayList<>();
+            }
+            setMangas(mangas);
         }
-        setMangas(mangas);
     }
 
     protected void openManga(Manga manga) {

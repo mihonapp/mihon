@@ -32,8 +32,10 @@ public class LibraryAdapter extends SmartFragmentStatePagerAdapter {
     }
 
     public void setCategories(List<Category> categories) {
-        this.categories = categories;
-        notifyDataSetChanged();
+        if (this.categories != categories) {
+            this.categories = categories;
+            notifyDataSetChanged();
+        }
     }
 
     public void setSelectionMode(int mode) {
