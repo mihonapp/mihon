@@ -99,6 +99,8 @@ public class ChaptersHolder extends FlexibleViewHolder {
                     return adapter.getFragment().onDownload(chapter);
                 case R.id.action_delete:
                     return adapter.getFragment().onDelete(chapter);
+                case R.id.action_mark_previous_as_read:
+                    return adapter.getFragment().onMarkPreviousAsRead(item);
             }
             return false;
         });

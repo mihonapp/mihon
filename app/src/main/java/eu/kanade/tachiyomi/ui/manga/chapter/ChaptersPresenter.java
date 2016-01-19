@@ -207,6 +207,15 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 .subscribe());
     }
 
+    public void markPreviousChaptersAsRead(Chapter selected) {
+        Observable.from(chapters)
+                .filter(c -> c.chapter_number > -1 && c.chapter_number < selected.chapter_number)
+                .doOnNext(c -> c.read = true)
+                .toList()
+                .flatMap(chapters -> db.insertChapters(chapters).asRxObservable())
+                .subscribe();
+    }
+
     public void downloadChapters(Observable<Chapter> selectedChapters) {
         add(selectedChapters
                 .toList()

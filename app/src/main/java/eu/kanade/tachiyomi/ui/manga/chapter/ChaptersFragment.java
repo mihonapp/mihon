@@ -254,6 +254,11 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         return true;
     }
 
+    public boolean onMarkPreviousAsRead(Chapter chapter) {
+        getPresenter().markPreviousChaptersAsRead(chapter);
+        return true;
+    }
+
     protected boolean onDownload(Observable<Chapter> chapters) {
         DownloadService.start(getActivity());
 
