@@ -268,7 +268,7 @@ public class DownloadManager {
     // Get the filename for an image given the page
     private String getImageFilename(Page page) {
         String url = page.getImageUrl();
-        return Uri.parse(url).getLastPathSegment();
+        return Uri.parse(url).getLastPathSegment().replaceAll("[^\\sa-zA-Z0-9.-]", "_");
     }
 
     private boolean isImageDownloaded(File imagePath) {
