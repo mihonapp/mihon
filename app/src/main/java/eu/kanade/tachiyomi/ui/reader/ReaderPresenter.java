@@ -172,8 +172,8 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     private Observable<Pair<Chapter, Chapter>> getAdjacentChaptersObservable() {
         return Observable.zip(
-                db.getPreviousChapter(chapter).createObservable().take(1),
-                db.getNextChapter(chapter).createObservable().take(1),
+                db.getPreviousChapter(chapter).asRxObservable().take(1),
+                db.getNextChapter(chapter).asRxObservable().take(1),
                 Pair::create)
                 .doOnNext(pair -> {
                     previousChapter = pair.first;
@@ -211,7 +211,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     private Observable<List<MangaSync>> getMangaSyncObservable() {
-        return db.getMangasSync(manga).createObservable()
+        return db.getMangasSync(manga).asRxObservable()
                 .doOnNext(mangaSync -> this.mangaSyncList = mangaSync);
     }
 
@@ -262,7 +262,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         if (isChapterFinished()) {
             chapter.read = true;
         }
-        db.insertChapter(chapter).createObservable().subscribe();
+        db.insertChapter(chapter).asRxObservable().subscribe();
     }
 
     // Check whether the chapter has been read

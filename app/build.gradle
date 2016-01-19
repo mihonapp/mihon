@@ -81,7 +81,7 @@ dependencies {
     final SUPPORT_LIBRARY_VERSION = '23.1.1'
     final DAGGER_VERSION = '2.0.2'
     final MOCKITO_VERSION = '1.10.19'
-    final STORIO_VERSION = '1.7.0'
+    final STORIO_VERSION = '1.8.0'
     final ICEPICK_VERSION = '3.1.0'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])

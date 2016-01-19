@@ -107,9 +107,8 @@ public class WebtoonReader extends BaseReader {
         if (pages != null) {
             unsubscribeStatus();
             recycler.clearOnScrollListeners();
-            adapter.clear();
-            recycler.scrollTo(0, 0);
             adapter.setPages(pages);
+            recycler.setAdapter(adapter);
             setScrollListener();
             observeStatus(0);
         }

@@ -42,7 +42,7 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
     }
 
     private Observable<List<Object>> getRecentChaptersObservable() {
-        return db.getRecentChapters().createObservable()
+        return db.getRecentChapters().asRxObservable()
                 // group chapters by the date they were fetched on a ordered map
                 .flatMap(recents -> Observable.from(recents)
                         .toMultimap(

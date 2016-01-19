@@ -46,7 +46,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
         myAnimeList = syncManager.getMyAnimeList();
 
         restartableLatestCache(GET_MANGA_SYNC,
-                () -> db.getMangaSync(manga, myAnimeList).createObservable()
+                () -> db.getMangaSync(manga, myAnimeList).asRxObservable()
                         .doOnNext(mangaSync -> this.mangaSync = mangaSync)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),
@@ -75,7 +75,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
                             }
                             return Observable.error(new Exception("Could not find manga"));
                         })
-                        .flatMap(myManga -> db.insertMangaSync(myManga).createObservable())
+                        .flatMap(myManga -> db.insertMangaSync(myManga).asRxObservable())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),
                 (view, result) -> view.onRefreshDone(),
@@ -109,7 +109,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
 
     private void updateRemote() {
         add(myAnimeList.update(mangaSync)
-                .flatMap(response -> db.insertMangaSync(mangaSync).createObservable())
+                .flatMap(response -> db.insertMangaSync(mangaSync).asRxObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(next -> {},
@@ -139,7 +139,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
         add(myAnimeList.bind(manga)
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
-                        return db.insertMangaSync(manga).createObservable();
+                        return db.insertMangaSync(manga).asRxObservable();
                     }
                     return Observable.error(new Exception("Could not bind manga"));
                 })

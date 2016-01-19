@@ -70,12 +70,12 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
     }
 
     private Observable<List<Category>> getCategoriesObservable() {
-        return db.getCategories().createObservable()
+        return db.getCategories().asRxObservable()
                 .doOnNext(categories -> this.categories = categories);
     }
 
     private Observable<Map<Integer, List<Manga>>> getLibraryMangasObservable() {
-        return db.getLibraryMangas().createObservable()
+        return db.getLibraryMangas().asRxObservable()
                 .flatMap(mangas -> Observable.from(mangas)
                         .groupBy(manga -> manga.category)
                         .flatMap(group -> group.toList()

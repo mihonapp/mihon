@@ -63,7 +63,7 @@ public class UpdateMangaSyncService extends Service {
         subscriptions.add(Observable.defer(() -> sync.update(mangaSync))
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
-                        return db.insertMangaSync(mangaSync).createObservable();
+                        return db.insertMangaSync(mangaSync).asRxObservable();
                     }
                     return Observable.error(new Exception("Could not update MAL"));
                 })

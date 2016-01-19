@@ -47,7 +47,6 @@ public class WebtoonAdapter extends RecyclerView.Adapter<WebtoonHolder> {
 
     public void setPages(List<Page> pages) {
         this.pages = pages;
-        notifyDataSetChanged();
     }
 
     public void clear() {

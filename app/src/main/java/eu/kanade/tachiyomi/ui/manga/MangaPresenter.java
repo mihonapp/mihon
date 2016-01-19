@@ -36,7 +36,7 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
     }
 
     private Observable<Manga> getDbMangaObservable() {
-        return db.getManga(mangaId).createObservable()
+        return db.getManga(mangaId).asRxObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(manga -> EventBus.getDefault().postSticky(manga));

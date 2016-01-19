@@ -97,7 +97,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
             source = sourceManager.get(manga.source);
             start(DB_CHAPTERS);
 
-            add(db.getChapters(manga).createObservable()
+            add(db.getChapters(manga).asRxObservable()
                     .subscribeOn(Schedulers.io())
                     .doOnNext(chapters -> {
                         this.chapters = chapters;
@@ -202,7 +202,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                     return chapter;
                 })
                 .toList()
-                .flatMap(chapters -> db.insertChapters(chapters).createObservable())
+                .flatMap(chapters -> db.insertChapters(chapters).asRxObservable())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe());
     }

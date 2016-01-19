@@ -24,7 +24,7 @@ public class CategoryPresenter extends BasePresenter<CategoryActivity> {
         super.onCreate(savedState);
 
         restartableLatestCache(GET_CATEGORIES,
-                () -> db.getCategories().createObservable()
+                () -> db.getCategories().asRxObservable()
                         .doOnNext(categories -> this.categories = categories)
                         .observeOn(AndroidSchedulers.mainThread()),
                 CategoryActivity::setCategories);
@@ -46,11 +46,11 @@ public class CategoryPresenter extends BasePresenter<CategoryActivity> {
         }
         cat.order = max;
 
-        db.insertCategory(cat).createObservable().subscribe();
+        db.insertCategory(cat).asRxObservable().subscribe();
     }
 
     public void deleteCategories(List<Category> categories) {
-        db.deleteCategories(categories).createObservable().subscribe();
+        db.deleteCategories(categories).asRxObservable().subscribe();
     }
 
     public void reorderCategories(List<Category> categories) {
@@ -58,11 +58,11 @@ public class CategoryPresenter extends BasePresenter<CategoryActivity> {
             categories.get(i).order = i;
         }
 
-        db.insertCategories(categories).createObservable().subscribe();
+        db.insertCategories(categories).asRxObservable().subscribe();
     }
 
     public void renameCategory(Category category, String name) {
         category.name = name;
-        db.insertCategory(category).createObservable().subscribe();
+        db.insertCategory(category).asRxObservable().subscribe();
     }
 }

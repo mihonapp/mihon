@@ -75,6 +75,7 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
             case SECTION:
                 final Date date = (Date) getItem(position);
                 ((SectionViewHolder) holder).onSetValues(date);
+                break;
         }
 
         //When user scrolls this bind the correct selection status
