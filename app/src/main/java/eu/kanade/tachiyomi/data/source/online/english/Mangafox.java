@@ -228,12 +228,8 @@ public class Mangafox extends Source {
 
         Elements pageUrlElements = parsedDocument.select("select.m").first().select("option:not([value=0])");
         String baseUrl = parsedDocument.select("div#series a").first().attr("href").replace("1.html", "");
-        int counter = 1;
         for (Element pageUrlElement : pageUrlElements) {
-            if(counter < pageUrlElements.size()) {
-                pageUrlList.add(baseUrl + pageUrlElement.attr("value") + ".html");
-            }
-            counter++;
+            pageUrlList.add(baseUrl + pageUrlElement.attr("value") + ".html");
         }
 
         return pageUrlList;
