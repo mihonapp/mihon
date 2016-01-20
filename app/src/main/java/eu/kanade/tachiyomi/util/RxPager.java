@@ -1,32 +1,26 @@
 package eu.kanade.tachiyomi.util;
 
+import android.util.Pair;
+
+import java.util.List;
+
 import rx.Observable;
+import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
-public class RxPager {
+public class RxPager<T> {
 
-    private final int initialPageCount;
-    private final PublishSubject<Integer> requests = PublishSubject.create();
+    private final PublishSubject<List<T>> results = PublishSubject.create();
     private int requestedCount;
 
-    public RxPager() {
-        this(1);
+    public Observable<Pair<Integer, List<T>>> results() {
+        requestedCount = 0;
+        return results.map(list -> Pair.create(requestedCount++, list));
     }
 
-    public RxPager(int initialPageCount) {
-        this.initialPageCount = initialPageCount;
+    public Observable<List<T>> request(Func1<Integer, Observable<List<T>>> networkObservable) {
+        return networkObservable.call(requestedCount).doOnNext(results::onNext);
     }
 
-    public void requestNext(int page) {
-        requests.onNext(page);
-    }
-
-    public Observable<Integer> pages() {
-        return requests
-            .concatMap(targetPage -> targetPage <= requestedCount ?
-                    Observable.<Integer>empty() :
-                    Observable.range(requestedCount, targetPage - requestedCount))
-            .startWith(Observable.range(0, initialPageCount))
-            .doOnNext(it -> requestedCount = it + 1);
-    }
 }
+

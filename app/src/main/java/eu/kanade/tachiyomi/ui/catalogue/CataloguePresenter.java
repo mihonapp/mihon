@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.catalogue;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 
@@ -38,14 +37,14 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
     private String query;
 
-    private int currentPage;
-    private RxPager pager;
+    private RxPager<Manga> pager;
     private MangasPage lastMangasPage;
 
     private PublishSubject<List<Manga>> mangaDetailSubject;
 
     private static final int GET_MANGA_LIST = 1;
     private static final int GET_MANGA_DETAIL = 2;
+    private static final int GET_MANGA_PAGE = 3;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -57,13 +56,16 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
         mangaDetailSubject = PublishSubject.create();
 
+        pager = new RxPager<>();
+
         restartableReplay(GET_MANGA_LIST,
-                () -> pager.pages().concatMap(page -> getMangasPageObservable(page + 1)),
-                (view, pair) -> view.onAddPage(pair.first, pair.second),
-                (view, error) -> {
-                    view.onAddPageError();
-                    Timber.e(error.getMessage());
-                });
+                pager::results,
+                (view, pair) -> view.onAddPage(pair.first, pair.second));
+
+        restartableFirst(GET_MANGA_PAGE,
+                () -> pager.request(page -> getMangasPageObservable(page + 1)),
+                (view, next) -> {},
+                (view, error) -> view.onAddPageError());
 
         restartableLatestCache(GET_MANGA_DETAIL,
                 () -> mangaDetailSubject
@@ -82,6 +84,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         source = sourceManager.get(sourceId);
         stop(GET_MANGA_LIST);
         stop(GET_MANGA_DETAIL);
+        stop(GET_MANGA_PAGE);
     }
 
     public void startRequesting(Source source) {
@@ -92,20 +95,21 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
     public void restartRequest(String query) {
         this.query = query;
-        stop(GET_MANGA_LIST);
-        currentPage = 1;
-        pager = new RxPager();
+        stop(GET_MANGA_PAGE);
+        lastMangasPage = null;
 
         start(GET_MANGA_DETAIL);
         start(GET_MANGA_LIST);
+        start(GET_MANGA_PAGE);
     }
 
     public void requestNext() {
-        if (hasNextPage())
-            pager.requestNext(++currentPage);
+        if (hasNextPage()) {
+            start(GET_MANGA_PAGE);
+        }
     }
 
-    private Observable<Pair<Integer, List<Manga>>> getMangasPageObservable(int page) {
+    private Observable<List<Manga>> getMangasPageObservable(int page) {
         MangasPage nextMangasPage = new MangasPage(page);
         if (page != 1) {
             nextMangasPage.url = lastMangasPage.nextPageUrl;
@@ -120,10 +124,9 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                 .flatMap(mangasPage -> Observable.from(mangasPage.mangas))
                 .map(this::networkToLocalManga)
                 .toList()
-                .map(mangas -> Pair.create(page, mangas))
-                .doOnNext(pair -> {
+                .doOnNext(mangas -> {
                     if (mangaDetailSubject != null)
-                        mangaDetailSubject.onNext(pair.second);
+                        mangaDetailSubject.onNext(mangas);
                 })
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -149,6 +152,10 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                 .onErrorResumeNext(error -> Observable.just(manga));
     }
 
+    public Manga getDbManga(long id) {
+        return db.getManga(id).executeAsBlocking();
+    }
+
     public Source getSource() {
         return source;
     }
@@ -170,8 +177,8 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         return sourceManager.getSources();
     }
 
-    public void addMangaToLibrary(Manga manga) {
-        manga.favorite = true;
+    public void changeMangaFavorite(Manga manga) {
+        manga.favorite = !manga.favorite;
         db.insertManga(manga).executeAsBlocking();
     }
 }

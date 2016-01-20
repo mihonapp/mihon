@@ -109,6 +109,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
                     } else {
                         selectedIndex = position;
                         showProgressBar();
+                        recycler.setAdapter(adapter);
                         getPresenter().startRequesting(source);
                     }
                 }
@@ -211,7 +212,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
 
     public void onAddPage(int page, List<Manga> mangas) {
         hideProgressBar();
-        if (page == 1) {
+        if (page == 0) {
             adapter.clear();
             scrollListener.resetScroll();
         }
@@ -260,13 +261,16 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
     @Override
     public void onListItemLongClick(int position) {
         final Manga selectedManga = adapter.getItem(position);
+        final Manga dbManga = getPresenter().getDbManga(selectedManga.id);
+
+        int textRes = dbManga.favorite ? R.string.remove_from_library : R.string.add_to_library;
 
         new MaterialDialog.Builder(getActivity())
-                .items(getString(R.string.add_to_library))
+                .items(getString(textRes))
                 .itemsCallback((dialog, itemView, which, text) -> {
                     switch (which) {
                         case 0:
-                            getPresenter().addMangaToLibrary(selectedManga);
+                            getPresenter().changeMangaFavorite(selectedManga);
                             break;
                     }
                 })
