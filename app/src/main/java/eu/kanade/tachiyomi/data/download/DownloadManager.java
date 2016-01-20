@@ -41,7 +41,7 @@ public class DownloadManager {
     private PreferencesHelper preferences;
     private Gson gson;
 
-    private PublishSubject<Download> downloadsQueueSubject;
+    private PublishSubject<List<Download>> downloadsQueueSubject;
     private BehaviorSubject<Boolean> runningSubject;
     private Subscription downloadsSubscription;
 
@@ -67,7 +67,8 @@ public class DownloadManager {
             downloadsSubscription.unsubscribe();
 
         downloadsSubscription = downloadsQueueSubject
-                .flatMap(this::downloadChapter, preferences.downloadThreads())
+                .concatMap(downloads -> Observable.from(downloads)
+                        .flatMap(this::downloadChapter, preferences.downloadThreads()))
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(download -> areAllDownloadsFinished())
@@ -102,6 +103,7 @@ public class DownloadManager {
 
         // Used to avoid downloading chapters with the same name
         final List<String> addedChapters = new ArrayList<>();
+        final List<Download> pending = new ArrayList<>();
 
         for (Chapter chapter : event.getChapters()) {
             if (addedChapters.contains(chapter.name))
@@ -112,9 +114,10 @@ public class DownloadManager {
 
             if (!prepareDownload(download)) {
                 queue.add(download);
-                if (isRunning) downloadsQueueSubject.onNext(download);
+                pending.add(download);
             }
         }
+        if (isRunning) downloadsQueueSubject.onNext(pending);
     }
 
     // Public method to check if a chapter is downloaded
@@ -386,18 +389,19 @@ public class DownloadManager {
         if (queue.isEmpty())
             return false;
 
-        boolean hasPendingDownloads = false;
         if (downloadsSubscription == null)
             initializeSubscriptions();
 
+        final List<Download> pending = new ArrayList<>();
         for (Download download : queue) {
             if (download.getStatus() != Download.DOWNLOADED) {
                 if (download.getStatus() != Download.QUEUE) download.setStatus(Download.QUEUE);
-                if (!hasPendingDownloads) hasPendingDownloads = true;
-                downloadsQueueSubject.onNext(download);
+                pending.add(download);
             }
         }
-        return hasPendingDownloads;
+        downloadsQueueSubject.onNext(pending);
+
+        return !pending.isEmpty();
     }
 
     public void stopDownloads() {
