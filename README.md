@@ -14,7 +14,7 @@ Current features:
 
 ## Download
 
-[![stable release](https://img.shields.io/badge/release-v0.1.0-blue.svg)](https://github.com/inorichi/tachiyomi/releases/download/v0.1.0/tachiyomi-v0.1.0.apk)
+[![stable release](https://img.shields.io/badge/release-v0.1.1-blue.svg)](https://github.com/inorichi/tachiyomi/releases/download/v0.1.1/tachiyomi-v0.1.1.apk)
 [![latest debug build](https://img.shields.io/badge/debug-latest%20build-blue.svg)](http://tachiyomi.kanade.eu/latest/app-debug.apk)
 
 ## License
