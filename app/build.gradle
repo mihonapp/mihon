@@ -114,7 +114,7 @@ dependencies {
     compile "frankiesardo:icepick:$ICEPICK_VERSION"
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
-    compile 'eu.davidea:flexible-adapter:4.2.0@aar'
+    compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.1'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.github.pwittchen:reactivenetwork:0.1.5'

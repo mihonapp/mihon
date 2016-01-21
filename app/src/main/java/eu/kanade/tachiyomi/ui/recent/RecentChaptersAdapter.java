@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.recent;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.MangaChapter;
@@ -18,8 +20,8 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
 
     private RecentChaptersFragment fragment;
 
-    private static final int CHAPTER = 0;
-    private static final int SECTION = 1;
+    private static final int VIEW_TYPE_CHAPTER = 0;
+    private static final int VIEW_TYPE_SECTION = 1;
 
     public RecentChaptersAdapter(RecentChaptersFragment fragment) {
         this.fragment = fragment;
@@ -47,7 +49,7 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        return getItem(position) instanceof MangaChapter ? CHAPTER : SECTION;
+        return getItem(position) instanceof MangaChapter ? VIEW_TYPE_CHAPTER : VIEW_TYPE_SECTION;
     }
 
     @Override
@@ -55,10 +57,10 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v;
         switch (viewType) {
-            case CHAPTER:
+            case VIEW_TYPE_CHAPTER:
                 v = inflater.inflate(R.layout.item_recent_chapter, parent, false);
                 return new RecentChaptersHolder(v, this, fragment);
-            case SECTION:
+            case VIEW_TYPE_SECTION:
                 v = inflater.inflate(R.layout.item_recent_chapter_section, parent, false);
                 return new SectionViewHolder(v);
         }
@@ -68,11 +70,11 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
-            case CHAPTER:
+            case VIEW_TYPE_CHAPTER:
                 final MangaChapter chapter = (MangaChapter) getItem(position);
                 ((RecentChaptersHolder) holder).onSetValues(chapter);
                 break;
-            case SECTION:
+            case VIEW_TYPE_SECTION:
                 final Date date = (Date) getItem(position);
                 ((SectionViewHolder) holder).onSetValues(date);
                 break;
@@ -86,18 +88,21 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
         return fragment;
     }
 
-    private static class SectionViewHolder extends RecyclerView.ViewHolder {
+    public static class SectionViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView view;
+        @Bind(R.id.section_text) TextView section;
+
+        private final long now = new Date().getTime();
 
         public SectionViewHolder(View view) {
             super(view);
-            this.view = (TextView) view;
+            ButterKnife.bind(this, view);
         }
 
         public void onSetValues(Date date) {
-            String s = DateFormat.getDateFormat(view.getContext()).format(date);
-            view.setText(s);
+            CharSequence s = DateUtils.getRelativeTimeSpanString(
+                    date.getTime(), now, DateUtils.DAY_IN_MILLIS);
+            section.setText(s);
         }
     }
 }

@@ -20,7 +20,6 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://clojars.org/repo/" }
-        maven { url "http://dl.bintray.com/davideas/maven" }
         maven { url "https://jitpack.io" }
         maven { url 'http://dl.bintray.com/amulyakhare/maven' }
         maven { url 'https://github.com/suckgamony/RapidDecoder/raw/master/repository' }
