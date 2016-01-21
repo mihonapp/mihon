@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.operations.get.DefaultGetResolver;
 
+import java.util.Date;
+
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.ChapterStorIOSQLiteGetResolver;
 import eu.kanade.tachiyomi.data.database.models.Manga;
@@ -24,10 +26,12 @@ public class MangaChapterGetResolver extends DefaultGetResolver<MangaChapter> {
             MangaTable.COLUMN_ID,
             ChapterTable.COLUMN_MANGA_ID);
 
-    public static final String RECENT_CHAPTERS_QUERY = String.format(
-            QUERY + " WHERE %1$s = 1 ORDER BY %2$s DESC LIMIT 100",
-            MangaTable.COLUMN_FAVORITE,
-            ChapterTable.COLUMN_DATE_UPLOAD);
+    public static String getRecentChaptersQuery(Date date) {
+        return QUERY + String.format(" WHERE %1$s = 1 AND %2$s > %3$d ORDER BY %2$s DESC",
+                MangaTable.COLUMN_FAVORITE,
+                ChapterTable.COLUMN_DATE_UPLOAD,
+                date.getTime());
+    }
 
     @NonNull
     private final MangaStorIOSQLiteGetResolver mangaGetResolver;

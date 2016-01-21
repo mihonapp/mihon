@@ -162,11 +162,11 @@ public class DatabaseHelper {
                 .prepare();
     }
 
-    public PreparedGetListOfObjects<MangaChapter> getRecentChapters() {
+    public PreparedGetListOfObjects<MangaChapter> getRecentChapters(Date date) {
         return db.get()
                 .listOfObjects(MangaChapter.class)
                 .withQuery(RawQuery.builder()
-                        .query(MangaChapterGetResolver.RECENT_CHAPTERS_QUERY)
+                        .query(MangaChapterGetResolver.getRecentChaptersQuery(date))
                         .observesTables(ChapterTable.TABLE)
                         .build())
                 .withGetResolver(MangaChapterGetResolver.INSTANCE)
