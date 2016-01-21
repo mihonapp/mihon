@@ -18,7 +18,6 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         android:id="@+id/section_text"
-        android:text="asd"
         android:layout_gravity="center_vertical"
         android:textStyle="bold" />
 

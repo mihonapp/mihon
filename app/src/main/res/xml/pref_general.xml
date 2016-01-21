@@ -14,17 +14,17 @@
         android:defaultValue="0"
         android:summary="%s"/>
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="@string/pref_update_only_non_completed_key"
         android:title="@string/pref_update_only_non_completed"
         android:defaultValue="false"/>
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="@string/pref_auto_update_manga_sync_key"
         android:title="@string/pref_auto_update_manga_sync"
         android:defaultValue="true"/>
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="@string/pref_ask_update_manga_sync_key"
         android:title="@string/pref_ask_update_manga_sync"
         android:defaultValue="false"

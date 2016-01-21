@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="acra.enable"
         android:title="@string/pref_enable_acra"
         android:summary="@string/pref_acra_summary"

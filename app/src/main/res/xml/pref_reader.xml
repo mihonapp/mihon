@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference android:title="@string/pref_hide_status_bar"
+    <SwitchPreference android:title="@string/pref_hide_status_bar"
         android:key="@string/pref_hide_status_bar_key"
         android:defaultValue="true" />
 
-    <CheckBoxPreference android:title="@string/pref_lock_orientation"
+    <SwitchPreference android:title="@string/pref_lock_orientation"
         android:key="@string/pref_lock_orientation_key"
         android:defaultValue="true" />
 
-    <CheckBoxPreference android:title="@string/pref_enable_transitions"
+    <SwitchPreference android:title="@string/pref_enable_transitions"
         android:key="@string/pref_enable_transitions_key"
         android:defaultValue="true" />
 
-    <CheckBoxPreference android:title="@string/pref_show_page_number"
+    <SwitchPreference android:title="@string/pref_show_page_number"
         android:key="@string/pref_show_page_number_key"
         android:defaultValue="true" />
-
-    <CheckBoxPreference android:title="@string/pref_custom_brightness"
-        android:key="@string/pref_custom_brightness_key"
-        android:defaultValue="false" />
 
     <eu.kanade.tachiyomi.widget.preference.IntListPreference
         android:title="@string/pref_viewer_type"
