@@ -116,6 +116,10 @@ public class PreferencesHelper {
         return rxPrefs.getInteger(getKey(R.string.pref_reader_theme_key), 0);
     }
 
+    public Preference<Boolean> catalogueAsList() {
+        return rxPrefs.getBoolean(getKey(R.string.pref_display_catalogue_as_list), false);
+    }
+
     public String getSourceUsername(Source source) {
         return prefs.getString(SOURCE_ACCOUNT_USERNAME + source.getId(), "");
     }
