@@ -167,10 +167,6 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
                 .onErrorResumeNext(error -> Observable.just(manga));
     }
 
-    public Manga getDbManga(long id) {
-        return db.getManga(id).executeAsBlocking();
-    }
-
     public Source getSource() {
         return source;
     }

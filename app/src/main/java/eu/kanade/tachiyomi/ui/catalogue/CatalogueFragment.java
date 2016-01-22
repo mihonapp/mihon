@@ -243,7 +243,8 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
 
     private void restartRequest(String newQuery) {
         // If text didn't change, do nothing
-        if (query.equals(newQuery)) return;
+        if (query.equals(newQuery) || getPresenter().getSource() == null)
+            return;
 
         query = newQuery;
         showProgressBar();
@@ -325,9 +326,8 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
     @Override
     public void onListItemLongClick(int position) {
         final Manga selectedManga = adapter.getItem(position);
-        final Manga dbManga = getPresenter().getDbManga(selectedManga.id);
 
-        int textRes = dbManga.favorite ? R.string.remove_from_library : R.string.add_to_library;
+        int textRes = selectedManga.favorite ? R.string.remove_from_library : R.string.add_to_library;
 
         new MaterialDialog.Builder(getActivity())
                 .items(getString(textRes))
@@ -335,6 +335,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
                     switch (which) {
                         case 0:
                             getPresenter().changeMangaFavorite(selectedManga);
+                            adapter.notifyItemChanged(position);
                             break;
                     }
                 })

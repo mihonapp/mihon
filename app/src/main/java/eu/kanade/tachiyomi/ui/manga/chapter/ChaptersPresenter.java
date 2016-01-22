@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.data.source.SourceManager;
 import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.event.ChapterCountEvent;
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent;
+import eu.kanade.tachiyomi.event.MangaEvent;
 import eu.kanade.tachiyomi.event.ReaderEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
 import eu.kanade.tachiyomi.util.EventBusHook;
@@ -90,10 +91,10 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     }
 
     @EventBusHook
-    public void onEventMainThread(Manga manga) {
-        this.manga = manga;
+    public void onEventMainThread(MangaEvent event) {
+        this.manga = event.manga;
 
-        if (!isSubscribed(DB_CHAPTERS)) {
+        if (isUnsubscribed(DB_CHAPTERS)) {
             source = sourceManager.get(manga.source);
             start(DB_CHAPTERS);
 

@@ -342,7 +342,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     private void stopPreloadingNextChapter() {
-        if (isSubscribed(PRELOAD_NEXT_CHAPTER)) {
+        if (!isUnsubscribed(PRELOAD_NEXT_CHAPTER)) {
             stop(PRELOAD_NEXT_CHAPTER);
             if (nextChapterPageList != null)
                 source.savePageList(nextChapter.url, nextChapterPageList);

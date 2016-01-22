@@ -31,10 +31,16 @@ public class ChaptersHolder extends FlexibleViewHolder {
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
+    private final int readColor;
+    private final int unreadColor;
+
     public ChaptersHolder(View view, ChaptersAdapter adapter, OnListItemClickListener listener) {
         super(view, adapter, listener);
         this.adapter = adapter;
         ButterKnife.bind(this, view);
+
+        readColor = ContextCompat.getColor(view.getContext(), R.color.hint_text);
+        unreadColor = ContextCompat.getColor(view.getContext(), R.color.primary_text);
 
         chapterMenu.setOnClickListener(v -> v.post(() -> showPopupMenu(v)));
     }
@@ -42,12 +48,7 @@ public class ChaptersHolder extends FlexibleViewHolder {
     public void onSetValues(Context context, Chapter chapter) {
         this.item = chapter;
         title.setText(chapter.name);
-
-        if (chapter.read) {
-            title.setTextColor(ContextCompat.getColor(context, R.color.hint_text));
-        } else {
-            title.setTextColor(ContextCompat.getColor(context, R.color.primary_text));
-        }
+        title.setTextColor(chapter.read ? readColor : unreadColor);
 
         if (!chapter.read && chapter.last_page_read > 0) {
             pages.setText(context.getString(R.string.chapter_progress, chapter.last_page_read + 1));

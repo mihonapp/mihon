@@ -7,17 +7,17 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 import eu.kanade.tachiyomi.data.database.DatabaseHelper;
 import eu.kanade.tachiyomi.data.database.models.Manga;
+import eu.kanade.tachiyomi.event.MangaEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
+import eu.kanade.tachiyomi.util.EventBusHook;
 import icepick.State;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MangaPresenter extends BasePresenter<MangaActivity> {
 
     @Inject DatabaseHelper db;
 
-    @State long mangaId;
+    @State Manga manga;
 
     private static final int DB_MANGA = 1;
 
@@ -26,24 +26,28 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
         super.onCreate(savedState);
 
         restartableLatestCache(DB_MANGA, this::getDbMangaObservable, MangaActivity::setManga);
+
+        if (savedState == null)
+            registerForStickyEvents();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // Avoid new instances receiving wrong manga
-        EventBus.getDefault().removeStickyEvent(Manga.class);
+        EventBus.getDefault().removeStickyEvent(MangaEvent.class);
     }
 
     private Observable<Manga> getDbMangaObservable() {
-        return db.getManga(mangaId).asRxObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(manga -> EventBus.getDefault().postSticky(manga));
+        return Observable.just(manga)
+                .doOnNext(manga -> EventBus.getDefault().postSticky(new MangaEvent(manga)));
     }
 
-    public void queryManga(long mangaId) {
-        this.mangaId = mangaId;
+    @EventBusHook
+    public void onEventMainThread(Manga manga) {
+        EventBus.getDefault().removeStickyEvent(manga);
+        unregisterForEvents();
+        this.manga = manga;
         start(DB_MANGA);
     }
 
