@@ -97,7 +97,7 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(this::refreshManga);
+                .doOnNext(manga -> refreshManga());
     }
 
     public void toggleFavorite() {

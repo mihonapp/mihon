@@ -73,6 +73,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
     private Subscription queryDebouncerSubscription;
 
     private MenuItem displayMode;
+    private MenuItem searchItem;
 
     public static CatalogueFragment newInstance() {
         return new CatalogueFragment();
@@ -164,7 +165,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
         inflater.inflate(R.menu.catalogue_list, menu);
 
         // Initialize search menu
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
 
         if (!TextUtils.isEmpty(query)) {
@@ -217,6 +218,9 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
 
     @Override
     public void onDestroyView() {
+        if (searchItem != null && searchItem.isActionViewExpanded()) {
+            searchItem.collapseActionView();
+        }
         toolbar.removeView(spinner);
         super.onDestroyView();
     }
