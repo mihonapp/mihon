@@ -68,6 +68,10 @@ public class Manga implements Serializable {
     public static final int COMPLETED = 2;
     public static final int LICENSED = 3;
 
+    public static final int SORT_AZ = 0;
+    public static final int SORT_ZA = 1;
+    public static final int SORT_MASK = 1;
+
     public Manga() {}
 
     public static Manga create(String pathUrl) {
@@ -118,6 +122,18 @@ public class Manga implements Serializable {
             default:
                 return context.getString(R.string.unknown);
         }
+    }
+
+    public void setFlags(int flag, int mask) {
+        chapter_flags = (chapter_flags & ~mask) | (flag & mask);
+    }
+
+    public boolean sortChaptersAZ () {
+        return (this.chapter_flags & SORT_MASK) == SORT_AZ;
+    }
+
+    public void setChapterOrder(int order) {
+        setFlags(order, SORT_MASK);
     }
 
     @Override
