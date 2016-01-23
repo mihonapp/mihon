@@ -163,10 +163,10 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
             holder.onProgressChange(getContext(), download.downloadedImages, download.pages.size());
     }
 
-    public void onChapterStatusChange(Chapter chapter) {
-        ChaptersHolder holder = getHolder(chapter);
+    public void onChapterStatusChange(Download download) {
+        ChaptersHolder holder = getHolder(download.chapter);
         if (holder != null)
-            holder.onStatusChange(chapter.status);
+            holder.onStatusChange(download.getStatus());
     }
 
     @Nullable

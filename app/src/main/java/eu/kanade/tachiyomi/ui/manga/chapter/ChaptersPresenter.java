@@ -71,7 +71,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
 
         restartableLatestCache(CHAPTER_STATUS_CHANGES,
                 this::getChapterStatusObs,
-                (view, download) -> view.onChapterStatusChange(download.chapter),
+                (view, download) -> view.onChapterStatusChange(download),
                 (view, error) -> Timber.e(error.getCause(), error.getMessage()));
 
         registerForStickyEvents();
