@@ -215,8 +215,12 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 .doOnNext(mangaSync -> this.mangaSyncList = mangaSync);
     }
 
-    // Loads the given chapter
     private void loadChapter(Chapter chapter) {
+        loadChapter(chapter, 0);
+    }
+
+    // Loads the given chapter
+    private void loadChapter(Chapter chapter, int requestedPage) {
         // Before loading the chapter, stop preloading (if it's working) and save current progress
         stopPreloadingNextChapter();
 
@@ -227,7 +231,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         if (!chapter.read && chapter.last_page_read != 0)
             currentPage = chapter.last_page_read;
         else
-            currentPage = 0;
+            currentPage = requestedPage;
 
         // Reset next and previous chapter. They have to be fetched again
         nextChapter = null;
@@ -312,7 +316,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     public boolean loadNextChapter() {
         if (hasNextChapter()) {
             onChapterLeft();
-            loadChapter(nextChapter);
+            loadChapter(nextChapter, 0);
             return true;
         }
         return false;
@@ -321,7 +325,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     public boolean loadPreviousChapter() {
         if (hasPreviousChapter()) {
             onChapterLeft();
-            loadChapter(previousChapter);
+            loadChapter(previousChapter, -1);
             return true;
         }
         return false;
