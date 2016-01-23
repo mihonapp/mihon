@@ -19,13 +19,13 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
 
     @State Manga manga;
 
-    private static final int DB_MANGA = 1;
+    private static final int GET_MANGA = 1;
 
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        restartableLatestCache(DB_MANGA, this::getDbMangaObservable, MangaActivity::setManga);
+        restartableLatestCache(GET_MANGA, this::getMangaObservable, MangaActivity::setManga);
 
         if (savedState == null)
             registerForStickyEvents();
@@ -38,7 +38,7 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
         EventBus.getDefault().removeStickyEvent(MangaEvent.class);
     }
 
-    private Observable<Manga> getDbMangaObservable() {
+    private Observable<Manga> getMangaObservable() {
         return Observable.just(manga)
                 .doOnNext(manga -> EventBus.getDefault().postSticky(new MangaEvent(manga)));
     }
@@ -48,7 +48,7 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
         EventBus.getDefault().removeStickyEvent(manga);
         unregisterForEvents();
         this.manga = manga;
-        start(DB_MANGA);
+        start(GET_MANGA);
     }
 
 }

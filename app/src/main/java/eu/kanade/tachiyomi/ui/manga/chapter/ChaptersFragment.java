@@ -103,18 +103,6 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        observeChapterDownloadProgress();
-    }
-
-    @Override
-    public void onPause() {
-        unsubscribeChapterDownloadProgress();
-        super.onPause();
-    }
-
     public void onNextChapters(List<Chapter> chapters) {
         // If the list is empty, fetch chapters from source if the conditions are met
         // We use presenter chapters instead because they are always unfiltered

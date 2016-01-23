@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent;
 import eu.kanade.tachiyomi.util.DiskUtils;
+import eu.kanade.tachiyomi.util.UrlUtil;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -279,6 +280,15 @@ public class DownloadManager {
     // Get the filename for an image given the page
     private String getImageFilename(Page page) {
         String url = page.getImageUrl();
+        int number = page.getPageNumber() + 1;
+        // Try to preserve file extension
+        if (UrlUtil.isJpg(url)) {
+            return number + ".jpg";
+        } else if (UrlUtil.isPng(url)) {
+            return number + ".png";
+        } else if (UrlUtil.isGif(url)) {
+            return number + ".gif";
+        }
         return Uri.parse(url).getLastPathSegment().replaceAll("[^\\sa-zA-Z0-9.-]", "_");
     }
 
