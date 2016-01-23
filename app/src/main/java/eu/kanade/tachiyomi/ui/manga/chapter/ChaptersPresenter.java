@@ -39,7 +39,6 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     private Manga manga;
     private Source source;
     private List<Chapter> chapters;
-    private boolean sortOrderAToZ = true;
     private boolean onlyUnread = true;
     private boolean onlyDownloaded;
     @State boolean hasRequested;
@@ -142,7 +141,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         if (onlyDownloaded) {
             observable = observable.filter(chapter -> chapter.status == Download.DOWNLOADED);
         }
-        return observable.toSortedList((chapter, chapter2) -> sortOrderAToZ ?
+        return observable.toSortedList((chapter, chapter2) -> getSortOrder() ?
                 Float.compare(chapter2.chapter_number, chapter.chapter_number) :
                 Float.compare(chapter.chapter_number, chapter2.chapter_number));
     }
@@ -242,8 +241,8 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     }
 
     public void revertSortOrder() {
-        //TODO manga.chapter_order
-        sortOrderAToZ = !sortOrderAToZ;
+        manga.setChapterOrder(getSortOrder() ? Manga.SORT_ZA : Manga.SORT_AZ);
+        db.insertManga(manga).executeAsBlocking();
         refreshChapters();
     }
 
@@ -259,7 +258,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     }
 
     public boolean getSortOrder() {
-        return sortOrderAToZ;
+        return manga.sortChaptersAZ();
     }
 
     public boolean getReadFilter() {
