@@ -159,8 +159,8 @@ public class PreferencesHelper {
         prefs.edit().putString(getKey(R.string.pref_download_directory_key), path).apply();
     }
 
-    public int downloadThreads() {
-        return prefs.getInt(getKey(R.string.pref_download_slots_key), 1);
+    public Preference<Integer> downloadThreads() {
+        return rxPrefs.getInteger(getKey(R.string.pref_download_slots_key), 1);
     }
 
     public boolean downloadOnlyOverWifi() {
