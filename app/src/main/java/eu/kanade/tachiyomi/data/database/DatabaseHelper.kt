@@ -256,6 +256,8 @@ open class DatabaseHelper(context: Context) {
 
     fun insertMangaSync(manga: MangaSync) = db.put().`object`(manga).prepare()
 
+    fun insertMangasSync(mangas: List<MangaSync>) = db.put().objects(mangas).prepare()
+
     fun deleteMangaSync(manga: MangaSync) = db.delete().`object`(manga).prepare()
 
     // Categories related queries
@@ -265,6 +267,13 @@ open class DatabaseHelper(context: Context) {
             .withQuery(Query.builder()
                     .table(CategoryTable.TABLE)
                     .orderBy(CategoryTable.COLUMN_ORDER)
+                    .build())
+            .prepare()
+
+    fun getCategoriesForManga(manga: Manga) = db.get()
+            .listOfObjects(Category::class.java)
+            .withQuery(RawQuery.builder()
+                    .query(getCategoriesForMangaQuery(manga))
                     .build())
             .prepare()
 

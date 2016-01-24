@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import android.view.View
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.backup.BackupFragment
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueFragment
 import eu.kanade.tachiyomi.ui.download.DownloadFragment
@@ -79,6 +80,10 @@ class MainActivity : BaseActivity() {
                 R.id.nav_drawer_settings -> {
                     item.isChecked = false
                     startActivity(Intent(this, SettingsActivity::class.java))
+                }
+                R.id.nav_drawer_backup -> {
+                    setFragment(BackupFragment.newInstance())
+                    item.isChecked = true
                 }
             }
             drawer.closeDrawer(GravityCompat.START)
