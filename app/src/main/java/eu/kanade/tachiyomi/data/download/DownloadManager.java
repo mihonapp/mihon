@@ -78,6 +78,7 @@ public class DownloadManager {
         downloadsSubscription = downloadsQueueSubject
                 .flatMap(Observable::from)
                 .lift(new DynamicConcurrentMergeOperator<>(this::downloadChapter, threadsSubject))
+                .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(download -> areAllDownloadsFinished())
                 .subscribe(finished -> {
