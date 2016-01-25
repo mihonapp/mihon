@@ -24,6 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
+import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.download.DownloadService;
 import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder;
@@ -71,26 +72,14 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         // Init RecyclerView and adapter
         linearLayout = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayout);
-        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.line_divider)));
+        recyclerView.addItemDecoration(new DividerItemDecoration(
+                ContextCompat.getDrawable(getContext(), R.drawable.line_divider)));
         recyclerView.setHasFixedSize(true);
         adapter = new ChaptersAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        // Set initial values
-        setReadFilter();
-        setDownloadedFilter();
-        setSortIcon();
-
-        // Init listeners
         swipeRefresh.setOnRefreshListener(this::fetchChapters);
-        readCb.setOnCheckedChangeListener((arg, isChecked) ->
-                getPresenter().setReadFilter(isChecked));
-        downloadedCb.setOnCheckedChangeListener((v, isChecked) ->
-                getPresenter().setDownloadedFilter(isChecked));
-        sortBtn.setOnClickListener(v -> {
-            getPresenter().revertSortOrder();
-            setSortIcon();
-        });
+
         nextUnreadBtn.setOnClickListener(v -> {
             Chapter chapter = getPresenter().getNextUnreadChapter();
             if (chapter != null) {
@@ -101,6 +90,28 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         });
 
         return view;
+    }
+
+    public void onNextManga(Manga manga) {
+        // Remove listeners before setting the values
+        readCb.setOnCheckedChangeListener(null);
+        downloadedCb.setOnCheckedChangeListener(null);
+        sortBtn.setOnClickListener(null);
+
+        // Set initial values
+        setReadFilter();
+        setDownloadedFilter();
+        setSortIcon();
+
+        // Init listeners
+        readCb.setOnCheckedChangeListener((arg, isChecked) ->
+                getPresenter().setReadFilter(isChecked));
+        downloadedCb.setOnCheckedChangeListener((v, isChecked) ->
+                getPresenter().setDownloadedFilter(isChecked));
+        sortBtn.setOnClickListener(v -> {
+            getPresenter().revertSortOrder();
+            setSortIcon();
+        });
     }
 
     public void onNextChapters(List<Chapter> chapters) {

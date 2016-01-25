@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.manga.info;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,9 +62,7 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
         return view;
     }
 
-    public void onNextManga(Pair<Manga,Source> info) {
-        Manga manga = info.first;
-        Source source = info.second;
+    public void onNextManga(Manga manga, Source source) {
         if (manga.initialized) {
             setMangaInfo(manga, source);
         } else {
