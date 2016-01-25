@@ -167,7 +167,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:layout_below="@id/manga_status"
+                            android:layout_below="@id/manga_status_label"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:text="@string/source" />
