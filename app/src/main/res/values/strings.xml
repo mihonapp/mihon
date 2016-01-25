@@ -144,6 +144,7 @@
     <string name="author">Author</string>
     <string name="chapters">Chapters</string>
     <string name="genres">Genres</string>
+    <string name="source">Source</string>
     <string name="artist">Artist</string>
     <string name="description">Description</string>
     <string name="status">Status</string>

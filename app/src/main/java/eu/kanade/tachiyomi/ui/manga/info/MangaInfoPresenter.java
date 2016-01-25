@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga.info;
 
 import android.os.Bundle;
+import android.util.Pair;
 
 import javax.inject.Inject;
 
@@ -40,7 +41,7 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
         }
 
         restartableLatestCache(GET_MANGA,
-                () -> Observable.just(manga),
+                () -> Observable.just(new Pair<>(manga, source)),
                 MangaInfoFragment::onNextManga);
 
         restartableLatestCache(GET_CHAPTER_COUNT,
