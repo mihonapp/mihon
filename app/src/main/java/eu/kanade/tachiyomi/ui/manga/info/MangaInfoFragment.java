@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.manga.info;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.cache.CoverCache;
 import eu.kanade.tachiyomi.data.database.models.Manga;
+import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 
@@ -29,6 +31,7 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
     @Bind(R.id.manga_chapters) TextView chapterCount;
     @Bind(R.id.manga_genres) TextView genres;
     @Bind(R.id.manga_status) TextView status;
+    @Bind(R.id.manga_source) TextView source;
     @Bind(R.id.manga_summary) TextView description;
     @Bind(R.id.manga_cover) ImageView cover;
 
@@ -60,18 +63,24 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
         return view;
     }
 
-    public void onNextManga(Manga manga) {
+    public void onNextManga(Pair<Manga,Source> info) {
+        Manga manga = info.first;
+        Source source = info.second;
         if (manga.initialized) {
-            setMangaInfo(manga);
+            setMangaInfo(manga, source);
         } else {
             // Initialize manga
             fetchMangaFromSource();
         }
     }
 
-    private void setMangaInfo(Manga manga) {
+    private void setMangaInfo(Manga manga, Source mangaSource) {
         artist.setText(manga.artist);
         author.setText(manga.author);
+
+        if (mangaSource != null) {
+            source.setText(mangaSource.getName());
+        }
         genres.setText(manga.genre);
         status.setText(manga.getStatus(getActivity()));
         description.setText(manga.description);
