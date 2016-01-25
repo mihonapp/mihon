@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,12 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     }
 
     @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -90,6 +97,21 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         });
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.chapters, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_display_mode:
+                showDisplayModeDialog();
+                return true;
+        }
+        return false;
     }
 
     public void onNextManga(Manga manga) {
@@ -155,6 +177,29 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         getPresenter().onOpenChapter(chapter);
         Intent intent = ReaderActivity.newIntent(getActivity());
         startActivity(intent);
+    }
+
+    private void showDisplayModeDialog() {
+        final Manga manga = getPresenter().getManga();
+        if (manga == null)
+            return;
+
+        // Get available modes, ids and the selected mode
+        String[] modes = {getString(R.string.show_title), getString(R.string.show_chapter_number)};
+        int[] ids = {Manga.DISPLAY_NAME, Manga.DISPLAY_NUMBER};
+        int selectedIndex = manga.getDisplayMode() == Manga.DISPLAY_NAME ? 0 : 1;
+
+        new MaterialDialog.Builder(getActivity())
+                .items(modes)
+                .itemsIds(ids)
+                .itemsCallbackSingleChoice(selectedIndex, (dialog, itemView, which, text) -> {
+                    // Save the new display mode
+                    getPresenter().setDisplayMode(itemView.getId());
+                    // Refresh ui
+                    adapter.notifyDataSetChanged();
+                    return true;
+                })
+                .show();
     }
 
     private void observeChapterDownloadProgress() {

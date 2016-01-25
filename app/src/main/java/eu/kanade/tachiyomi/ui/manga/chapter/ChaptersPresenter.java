@@ -264,6 +264,11 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         refreshChapters();
     }
 
+    public void setDisplayMode(int mode) {
+        manga.setDisplayMode(mode);
+        db.insertManga(manga).executeAsBlocking();
+    }
+
     public boolean getSortOrder() {
         return manga.sortChaptersAZ();
     }
