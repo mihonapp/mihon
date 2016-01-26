@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import eu.kanade.tachiyomi.R;
@@ -36,6 +38,8 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     private static final int GET_SEARCH_RESULTS = 2;
     private static final int REFRESH = 3;
 
+    private static final String PREFIX_MY = "my:";
+
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
@@ -54,9 +58,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
                 MyAnimeListFragment::setMangaSync);
 
         restartableLatestCache(GET_SEARCH_RESULTS,
-                () -> myAnimeList.search(query)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()),
+                this::getSearchResultsObservable,
                 (view, results) -> {
                     view.setSearchResults(results);
                 }, (view, error) -> {
@@ -106,6 +108,22 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     public void onEventMainThread(MangaEvent event) {
         this.manga = event.manga;
         start(GET_MANGA_SYNC);
+    }
+
+    private Observable<List<MangaSync>> getSearchResultsObservable() {
+        Observable<List<MangaSync>> observable;
+        if (query.startsWith(PREFIX_MY)) {
+            String realQuery = query.substring(PREFIX_MY.length()).toLowerCase().trim();
+            observable = myAnimeList.getList()
+                    .flatMap(Observable::from)
+                    .filter(manga -> manga.title.toLowerCase().contains(realQuery))
+                    .toList();
+        } else {
+            observable = myAnimeList.search(query);
+        }
+        return observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private void updateRemote() {
