@@ -43,7 +43,7 @@ public class DownloadQueue extends ArrayList<Download> {
     }
 
     public Observable<Download> getStatusObservable() {
-        return statusSubject;
+        return statusSubject.onBackpressureBuffer();
     }
 
     public Observable<Download> getProgressObservable() {

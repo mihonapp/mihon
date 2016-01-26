@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -340,7 +339,7 @@ public class DownloadManager {
                 Type collectionType = new TypeToken<List<Page>>() {}.getType();
                 pages = gson.fromJson(reader, collectionType);
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             Timber.e(e.getCause(), e.getMessage());
         } finally {
             if (reader != null) try { reader.close(); } catch (IOException e) { /* Do nothing */ }
