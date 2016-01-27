@@ -19,18 +19,17 @@ import rx.schedulers.Schedulers;
 
 public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
+    @Inject DatabaseHelper db;
+    @Inject SourceManager sourceManager;
+    @Inject CoverCache coverCache;
+    
+    protected Source source;
+    private Manga manga;
+    private int count = -1;
+
     private static final int GET_MANGA = 1;
     private static final int GET_CHAPTER_COUNT = 2;
     private static final int FETCH_MANGA_INFO = 3;
-    protected Source source;
-    @Inject
-    DatabaseHelper db;
-    @Inject
-    SourceManager sourceManager;
-    @Inject
-    CoverCache coverCache;
-    private Manga manga;
-    private int count = -1;
 
     @Override
     protected void onCreate(Bundle savedState) {
