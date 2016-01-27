@@ -223,7 +223,7 @@ public class CoverCache {
     private void loadFromCache(ImageView imageView, File file) {
         Glide.with(context)
                 .load(file)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(imageView);
     }
