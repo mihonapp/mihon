@@ -8,8 +8,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
 import butterknife.Bind;
@@ -29,11 +31,10 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.appbar) AppBarLayout appBar;
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.drawer_container) FrameLayout container;
-
+    @State
+    int selectedItem;
     private Drawer drawer;
     private FragmentStack fragmentStack;
-
-    @State int selectedItem;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -53,7 +54,7 @@ public class MainActivity extends BaseActivity {
         fragmentStack = new FragmentStack(this, getSupportFragmentManager(), R.id.content_layout,
                 fragment -> {
                     if (fragment instanceof ViewWithPresenter)
-                        ((ViewWithPresenter)fragment).getPresenter().destroy();
+                        ((ViewWithPresenter) fragment).getPresenter().destroy();
                 });
 
         drawer = new DrawerBuilder()
@@ -71,20 +72,27 @@ public class MainActivity extends BaseActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_library)
-                                .withIdentifier(R.id.nav_drawer_library),
+                                .withIdentifier(R.id.nav_drawer_library)
+                                .withIcon(GoogleMaterial.Icon.gmd_book),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_recent_updates)
-                                .withIdentifier(R.id.nav_drawer_recent_updates),
+                                .withIdentifier(R.id.nav_drawer_recent_updates)
+                                .withIcon(GoogleMaterial.Icon.gmd_update),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_catalogues)
-                                .withIdentifier(R.id.nav_drawer_catalogues),
+                                .withIdentifier(R.id.nav_drawer_catalogues)
+
+                                .withIcon(GoogleMaterial.Icon.gmd_explore),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_download_queue)
-                                .withIdentifier(R.id.nav_drawer_downloads),
+                                .withIdentifier(R.id.nav_drawer_downloads)
+                                .withIcon(GoogleMaterial.Icon.gmd_file_download),
+                        new DividerDrawerItem(),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_settings)
                                 .withIdentifier(R.id.nav_drawer_settings)
                                 .withSelectable(false)
+                                .withIcon(GoogleMaterial.Icon.gmd_settings)
                 )
                 .withSavedInstance(savedState)
                 .withOnDrawerItemClickListener(
