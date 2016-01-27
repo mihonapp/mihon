@@ -26,6 +26,14 @@
         android:summary="%s"/>
 
     <eu.kanade.tachiyomi.widget.preference.IntListPreference
+        android:title="@string/pref_image_scale_type"
+        android:key="@string/pref_image_scale_type_key"
+        android:entries="@array/image_scale_type"
+        android:entryValues="@array/image_scale_type_values"
+        android:defaultValue="1"
+        android:summary="%s"/>
+
+    <eu.kanade.tachiyomi.widget.preference.IntListPreference
         android:title="@string/pref_reader_theme"
         android:key="@string/pref_reader_theme_key"
         android:entries="@array/reader_themes"

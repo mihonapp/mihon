@@ -74,18 +74,19 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/reader_brightness"
-                android:src="@drawable/ic_brightness_high"
+                android:id="@+id/lock_orientation"
+                android:src="@drawable/ic_screen_rotation"
                 android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/lock_orientation"
-                android:src="@drawable/ic_screen_rotation"
+                android:id="@+id/reader_scale_type_selector"
+                android:src="@drawable/ic_zoom_out_map_white_24dp"
                 android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
+
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

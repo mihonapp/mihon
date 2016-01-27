@@ -25,7 +25,6 @@ import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment;
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
-import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -55,7 +54,7 @@ public class PagerReaderFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.item_pager_reader, container, false);
         ButterKnife.bind(this, view);
         ReaderActivity activity = getReaderActivity();
-        BaseReader parentFragment = (BaseReader) getParentFragment();
+        PagerReader parentFragment = (PagerReader) getParentFragment();
 
         if (activity.getReaderTheme() == ReaderActivity.BLACK_THEME) {
              progressText.setTextColor(ContextCompat.getColor(getContext(), R.color.light_grey));
@@ -65,7 +64,7 @@ public class PagerReaderFragment extends BaseFragment {
         imageView.setMaxDimensions(activity.getMaxBitmapSize(), activity.getMaxBitmapSize());
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
-        imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
+        imageView.setMinimumScaleType(parentFragment.scaleType);
         imageView.setRegionDecoderClass(parentFragment.getRegionDecoderClass());
         imageView.setOnTouchListener((v, motionEvent) -> parentFragment.onImageTouch(motionEvent));
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {

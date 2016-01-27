@@ -10,7 +10,8 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/image_decoder_container">
 
         <TextView
             android:id="@+id/image_decoder_initial"
@@ -52,5 +53,17 @@
         android:id="@+id/keep_screen_on"
         style="@style/reader_menu_settings_item"
         android:text="@string/pref_keep_screen_on"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/reader_menu_settings_item"
+        android:text="@string/pref_custom_brightness"
+        android:id="@+id/custom_brightness" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/brightness_seekbar" />
 
 </LinearLayout>

@@ -88,6 +88,10 @@ public class PreferencesHelper {
         return prefs.getInt(getKey(R.string.pref_default_viewer_key), 1);
     }
 
+    public Preference<Integer> imageScaleType() {
+        return rxPrefs.getInteger(getKey(R.string.pref_image_scale_type_key), 1);
+    }
+
     public Preference<Integer> portraitColumns() {
         return rxPrefs.getInteger(getKey(R.string.pref_library_columns_portrait_key), 0);
     }

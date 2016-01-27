@@ -48,6 +48,22 @@
         <item>1</item>
     </string-array>
 
+    <string-array name="image_scale_type">
+        <item>@string/scale_type_fit_screen</item>
+        <item>@string/scale_type_stretch</item>
+        <item>@string/scale_type_fit_width</item>
+        <item>@string/scale_type_fit_height</item>
+        <item>@string/scale_type_original_size</item>
+    </string-array>
+
+    <string-array name="image_scale_type_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
     <string-array name="library_update_interval">
         <item>@string/update_never</item>
         <item>@string/update_1hour</item>

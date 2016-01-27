@@ -328,7 +328,6 @@ public class DownloadManager {
 
     // Return the page list from the chapter's directory if it exists, null otherwise
     public List<Page> getSavedPageList(Source source, Manga manga, Chapter chapter) {
-        List<Page> pages = null;
         File chapterDir = getAbsoluteChapterDirectory(source, manga, chapter);
         File pagesFile = new File(chapterDir, PAGE_LIST_FILE);
 
@@ -337,14 +336,14 @@ public class DownloadManager {
             if (pagesFile.exists()) {
                 reader = new JsonReader(new FileReader(pagesFile.getAbsolutePath()));
                 Type collectionType = new TypeToken<List<Page>>() {}.getType();
-                pages = gson.fromJson(reader, collectionType);
+                return gson.fromJson(reader, collectionType);
             }
         } catch (Exception e) {
             Timber.e(e.getCause(), e.getMessage());
         } finally {
             if (reader != null) try { reader.close(); } catch (IOException e) { /* Do nothing */ }
         }
-        return pages;
+        return null;
     }
 
     // Shortcut for the method above

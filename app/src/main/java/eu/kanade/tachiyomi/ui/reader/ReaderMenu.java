@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
@@ -44,7 +45,7 @@ public class ReaderMenu {
     @Bind(R.id.lock_orientation) ImageButton lockOrientation;
     @Bind(R.id.reader_selector) ImageButton readerSelector;
     @Bind(R.id.reader_extra_settings) ImageButton extraSettings;
-    @Bind(R.id.reader_brightness) ImageButton brightnessSettings;
+    @Bind(R.id.reader_scale_type_selector) ImageButton scaleTypeSelector;
 
     private MenuItem nextChapterBtn;
     private MenuItem prevChapterBtn;
@@ -56,7 +57,6 @@ public class ReaderMenu {
 
     @State boolean showing;
     private PopupWindow settingsPopup;
-    private PopupWindow brightnessPopup;
     private boolean inverted;
 
     private DecimalFormat decimalFormat;
@@ -73,7 +73,7 @@ public class ReaderMenu {
         decimalFormat = new DecimalFormat("#.###");
         inverted = false;
 
-        initializeOptions();
+        initializeMenu();
     }
 
     public void add(Subscription subscription) {
@@ -110,7 +110,6 @@ public class ReaderMenu {
         bottomMenu.startAnimation(bottomMenuAnimation);
 
         settingsPopup.dismiss();
-        brightnessPopup.dismiss();
 
         showing = false;
     }
@@ -175,7 +174,7 @@ public class ReaderMenu {
         if (nextChapterBtn != null) nextChapterBtn.setVisible(nextChapter != null);
     }
 
-    private void initializeOptions() {
+    private void initializeMenu() {
         // Orientation changes
         add(preferences.lockOrientation().asObservable()
                 .subscribe(locked -> {
@@ -189,6 +188,18 @@ public class ReaderMenu {
 
         lockOrientation.setOnClickListener(v ->
                 preferences.lockOrientation().set(!preferences.lockOrientation().get()));
+
+        // Scale type selector
+        scaleTypeSelector.setOnClickListener(v -> {
+            showImmersiveDialog(new MaterialDialog.Builder(activity)
+                    .items(R.array.image_scale_type)
+                    .itemsCallbackSingleChoice(preferences.imageScaleType().get() - 1,
+                            (d, itemView, which, text) -> {
+                                preferences.imageScaleType().set(which + 1);
+                                return true;
+                            })
+                    .build());
+        });
 
         // Reader selector
         readerSelector.setOnClickListener(v -> {
@@ -215,17 +226,6 @@ public class ReaderMenu {
                 settingsPopup.dismiss();
         });
 
-        // Brightness popup
-        final View brightnessView = activity.getLayoutInflater().inflate(R.layout.reader_brightness, null);
-        brightnessPopup = new BrightnessPopupWindow(brightnessView);
-
-        brightnessSettings.setOnClickListener(v -> {
-            if (!brightnessPopup.isShowing())
-                brightnessPopup.showAtLocation(brightnessSettings,
-                        Gravity.BOTTOM | Gravity.LEFT, 0, bottomMenu.getHeight());
-            else
-                brightnessPopup.dismiss();
-        });
     }
 
     private void showImmersiveDialog(Dialog dialog) {
@@ -247,8 +247,11 @@ public class ReaderMenu {
         @Bind(R.id.hide_status_bar) CheckBox hideStatusBar;
         @Bind(R.id.keep_screen_on) CheckBox keepScreenOn;
         @Bind(R.id.reader_theme) CheckBox readerTheme;
+        @Bind(R.id.image_decoder_container) ViewGroup imageDecoderContainer;
         @Bind(R.id.image_decoder) TextView imageDecoder;
         @Bind(R.id.image_decoder_initial) TextView imageDecoderInitial;
+        @Bind(R.id.custom_brightness) CheckBox customBrightness;
+        @Bind(R.id.brightness_seekbar) SeekBar brightnessSeekbar;
 
         public SettingsPopupWindow(View view) {
             super(view, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -282,7 +285,7 @@ public class ReaderMenu {
             readerTheme.setOnCheckedChangeListener((view, isChecked) ->
                     preferences.readerTheme().set(isChecked ? 1 : 0));
 
-            imageDecoder.setOnClickListener(v -> {
+            imageDecoderContainer.setOnClickListener(v -> {
                 showImmersiveDialog(new MaterialDialog.Builder(activity)
                         .title(R.string.pref_image_decoder)
                         .items(R.array.image_decoders)
@@ -294,6 +297,21 @@ public class ReaderMenu {
                                 })
                         .build());
             });
+
+            add(preferences.customBrightness()
+                    .asObservable()
+                    .subscribe(isEnabled -> {
+                        customBrightness.setChecked(isEnabled);
+                        brightnessSeekbar.setEnabled(isEnabled);
+                    }));
+
+            customBrightness.setOnCheckedChangeListener((view, isChecked) ->
+                    preferences.customBrightness().set(isChecked));
+
+            brightnessSeekbar.setMax(100);
+            brightnessSeekbar.setProgress(Math.round(
+                    preferences.customBrightnessValue().get() * brightnessSeekbar.getMax()));
+            brightnessSeekbar.setOnSeekBarChangeListener(new BrightnessSeekBarChangeListener());
         }
 
         private void setDecoderInitial(int decoder) {
@@ -310,37 +328,6 @@ public class ReaderMenu {
                     break;
             }
             imageDecoderInitial.setText(initial);
-        }
-
-    }
-
-    class BrightnessPopupWindow extends PopupWindow {
-
-        @Bind(R.id.custom_brightness) CheckBox customBrightness;
-        @Bind(R.id.brightness_seekbar) SeekBar brightnessSeekbar;
-
-        public BrightnessPopupWindow(View view) {
-            super(view, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            setAnimationStyle(R.style.reader_brightness_popup_animation);
-            ButterKnife.bind(this, view);
-            initializePopupMenu();
-        }
-
-        private void initializePopupMenu() {
-            add(preferences.customBrightness()
-                    .asObservable()
-                    .subscribe(isEnabled -> {
-                        customBrightness.setChecked(isEnabled);
-                        brightnessSeekbar.setEnabled(isEnabled);
-                    }));
-
-            customBrightness.setOnCheckedChangeListener((view, isChecked) ->
-                    preferences.customBrightness().set(isChecked));
-
-            brightnessSeekbar.setMax(100);
-            brightnessSeekbar.setProgress(Math.round(
-                    preferences.customBrightnessValue().get() * brightnessSeekbar.getMax()));
-            brightnessSeekbar.setOnSeekBarChangeListener(new BrightnessSeekBarChangeListener());
         }
 
     }

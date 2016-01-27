@@ -22,6 +22,8 @@ public abstract class PagerReader extends BaseReader {
     protected boolean transitions;
     protected CompositeSubscription subscriptions;
 
+    protected int scaleType = 1;
+
     protected void initializePager(Pager pager) {
         this.pager = pager;
         pager.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -62,6 +64,13 @@ public abstract class PagerReader extends BaseReader {
         subscriptions.add(getReaderActivity().getPreferences().imageDecoder()
                 .asObservable()
                 .doOnNext(this::setRegionDecoderClass)
+                .skip(1)
+                .distinctUntilChanged()
+                .subscribe(v -> adapter.notifyDataSetChanged()));
+
+        subscriptions.add(getReaderActivity().getPreferences().imageScaleType()
+                .asObservable()
+                .doOnNext(this::setImageScaleType)
                 .skip(1)
                 .distinctUntilChanged()
                 .subscribe(v -> adapter.notifyDataSetChanged()));
@@ -108,6 +117,10 @@ public abstract class PagerReader extends BaseReader {
     @Override
     public boolean onImageTouch(MotionEvent motionEvent) {
         return pager.onImageTouch(motionEvent);
+    }
+
+    private void setImageScaleType(int scaleType) {
+        this.scaleType = scaleType;
     }
 
     public abstract void onFirstPageOut();

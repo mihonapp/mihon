@@ -97,6 +97,12 @@
     <string name="pref_image_decoder">Image decoder</string>
     <string name="rapid_decoder">Rapid</string>
     <string name="skia_decoder">Skia</string>
+    <string name="pref_image_scale_type">Scale type</string>
+    <string name="scale_type_fit_screen">Fit screen</string>
+    <string name="scale_type_stretch">Stretch</string>
+    <string name="scale_type_fit_width">Fit width</string>
+    <string name="scale_type_fit_height">Fit height</string>
+    <string name="scale_type_original_size">Original size</string>
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
