@@ -1,8 +1,5 @@
 package eu.kanade.tachiyomi.data.source.base;
 
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Response;
-
 import org.jsoup.nodes.Document;
 
 import java.util.List;
@@ -10,6 +7,8 @@ import java.util.List;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
+import okhttp3.Headers;
+import okhttp3.Response;
 import rx.Observable;
 
 public abstract class BaseSource {

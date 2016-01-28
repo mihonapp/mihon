@@ -4,12 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Xml;
 
-import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-
 import org.jsoup.Jsoup;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -26,6 +20,11 @@ import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager;
 import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 import eu.kanade.tachiyomi.data.network.NetworkHelper;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
+import okhttp3.Credentials;
+import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import rx.Observable;
 
 public class MyAnimeList extends MangaSyncService {
@@ -209,7 +208,7 @@ public class MyAnimeList extends MangaSyncService {
         xml.endTag("", ENTRY_TAG);
         xml.endDocument();
 
-        FormEncodingBuilder form = new FormEncodingBuilder();
+        FormBody.Builder form = new FormBody.Builder();
         form.add("data", writer.toString());
         return form.build();
     }

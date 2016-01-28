@@ -81,6 +81,7 @@ android {
 dependencies {
     final SUPPORT_LIBRARY_VERSION = '23.1.1'
     final DAGGER_VERSION = '2.0.2'
+    final OKHTTP_VERSION = '3.0.1'
     final MOCKITO_VERSION = '1.10.19'
     final STORIO_VERSION = '1.8.0'
     final ICEPICK_VERSION = '3.1.0'
@@ -95,8 +96,8 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.2'
-    compile 'com.squareup.okhttp:okhttp:2.7.2'
+    compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp3:okhttp-urlconnection:$OKHTTP_VERSION"
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.jakewharton:disklrucache:2.0.2'

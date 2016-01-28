@@ -47,8 +47,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    NetworkHelper provideNetworkHelper() {
-        return new NetworkHelper();
+    NetworkHelper provideNetworkHelper(Application app) {
+        return new NetworkHelper(app);
     }
 
     @Provides

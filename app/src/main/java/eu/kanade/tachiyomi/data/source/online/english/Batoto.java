@@ -4,10 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Response;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,6 +31,9 @@ import eu.kanade.tachiyomi.data.source.base.LoginSource;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.util.Parser;
+import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.Response;
 import rx.Observable;
 
 public class Batoto extends LoginSource {
@@ -320,7 +319,7 @@ public class Batoto extends LoginSource {
         Element form = doc.select("#login").first();
         String postUrl = form.attr("action");
 
-        FormEncodingBuilder formBody = new FormEncodingBuilder();
+        FormBody.Builder formBody = new FormBody.Builder();
         Element authKey = form.select("input[name=auth_key]").first();
 
         formBody.add(authKey.attr("name"), authKey.attr("value"));
@@ -354,8 +353,13 @@ public class Batoto extends LoginSource {
     @Override
     public Observable<List<Chapter>> pullChaptersFromNetwork(String mangaUrl) {
         Observable<List<Chapter>> observable;
-        if (!isLogged()) {
-            observable = login(prefs.getSourceUsername(this), prefs.getSourcePassword(this))
+        String username = prefs.getSourceUsername(this);
+        String password = prefs.getSourcePassword(this);
+        if (username.isEmpty() && password.isEmpty()) {
+            observable = Observable.error(new Exception("User not logged"));
+        }
+        else if (!isLogged()) {
+            observable = login(username, password)
                     .flatMap(result -> super.pullChaptersFromNetwork(mangaUrl));
         }
         else {

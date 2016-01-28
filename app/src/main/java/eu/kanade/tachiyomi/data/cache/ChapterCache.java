@@ -6,7 +6,6 @@ import android.text.format.Formatter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.disklrucache.DiskLruCache;
-import com.squareup.okhttp.Response;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -17,6 +16,7 @@ import java.util.List;
 
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.util.DiskUtils;
+import okhttp3.Response;
 import okio.BufferedSink;
 import okio.Okio;
 import rx.Observable;

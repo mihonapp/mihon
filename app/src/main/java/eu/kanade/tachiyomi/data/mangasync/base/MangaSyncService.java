@@ -1,8 +1,7 @@
 package eu.kanade.tachiyomi.data.mangasync.base;
 
-import com.squareup.okhttp.Response;
-
 import eu.kanade.tachiyomi.data.database.models.MangaSync;
+import okhttp3.Response;
 import rx.Observable;
 
 public abstract class MangaSyncService {

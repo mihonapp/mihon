@@ -3,8 +3,6 @@ package eu.kanade.tachiyomi.data.source.base;
 import android.content.Context;
 
 import com.bumptech.glide.load.model.LazyHeaders;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Response;
 
 import org.jsoup.Jsoup;
 
@@ -23,6 +21,8 @@ import eu.kanade.tachiyomi.data.network.NetworkHelper;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
+import okhttp3.Headers;
+import okhttp3.Response;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 

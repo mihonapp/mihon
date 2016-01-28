@@ -3,10 +3,6 @@ package eu.kanade.tachiyomi.data.source.online.english;
 import android.content.Context;
 import android.net.Uri;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Response;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,6 +22,9 @@ import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.util.Parser;
+import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.Response;
 import rx.Observable;
 
 public class Kissmanga extends Source {
@@ -109,7 +108,7 @@ public class Kissmanga extends Source {
         if (page.page == 1)
             page.url = getInitialSearchUrl(query);
 
-        FormEncodingBuilder form = new FormEncodingBuilder();
+        FormBody.Builder form = new FormBody.Builder();
         form.add("authorArtist", "");
         form.add("mangaName", query);
         form.add("status", "");
