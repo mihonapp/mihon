@@ -66,7 +66,7 @@
     <string name="landscape">Landscape</string>
     <string name="default_columns">Default</string>
     <string name="pref_library_update_interval">Library update period</string>
-    <string name="pref_update_only_non_completed">Only update uncomplete manga</string>
+    <string name="pref_update_only_non_completed">Only update incomplete manga</string>
     <string name="update_never">Manual</string>
     <string name="update_1hour">Hourly</string>
     <string name="update_2hour">Every 2 hours</string>
@@ -124,7 +124,7 @@
 
     <!-- ACRA -->
     <string name="pref_enable_acra">Send crash reports</string>
-    <string name="pref_acra_summary">Helps fixing bugs. No sensitive data is sent</string>
+    <string name="pref_acra_summary">Helps fix any bugs. No sensitive data will be sent</string>
 
 
     <!-- Login dialog -->
@@ -142,7 +142,7 @@
     <string name="library_selection_title">Selected</string>
 
     <!-- Catalogue fragment -->
-    <string name="source_requires_login">This source requires login</string>
+    <string name="source_requires_login">This source requires you to log in</string>
     <string name="select_source">Select a source</string>
 
     <!-- Manga info fragment -->
@@ -186,7 +186,7 @@
     <string name="downloading">Downloading…</string>
     <string name="download_progress">Downloaded %1$d%%</string>
     <string name="chapter_progress">Page: %1$d</string>
-    <string name="page_list_error">Error fetching page list. Is network available?</string>
+    <string name="page_list_error">Error fetching page list. Check your internet connection.</string>
     <string name="chapter_subtitle">Chapter %1$s</string>
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="no_previous_chapter">Previous chapter not found</string>
@@ -194,14 +194,14 @@
     <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
 
     <!-- Downloads activity and service -->
-    <string name="download_queue_error">An error occurred while downloading chapters. Restart it from the downloads section</string>
+    <string name="download_queue_error">An error occurred while downloading chapters. You can try again in the downloads section</string>
 
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Update progress: %1$d/%2$d</string>
     <string name="notification_update_completed">Update completed</string>
     <string name="notification_update_error">An unexpected error occurred while updating the library</string>
     <string name="notification_no_new_chapters">No new chapters found</string>
-    <string name="notification_new_chapters">Found new chapters for:</string>
-    <string name="notification_manga_update_failed">Failed updating manga:</string>
+    <string name="notification_new_chapters">New chapters found for:</string>
+    <string name="notification_manga_update_failed">Failed to update manga:</string>
 
 </resources>
