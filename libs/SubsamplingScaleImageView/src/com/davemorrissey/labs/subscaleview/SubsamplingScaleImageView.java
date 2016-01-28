@@ -124,11 +124,12 @@ public class SubsamplingScaleImageView extends View {
     public static final int SCALE_TYPE_FIT_WIDTH = 3;
     public static final int SCALE_TYPE_FIT_HEIGHT = 4;
     public static final int SCALE_TYPE_ORIGINAL_SIZE = 5;
+    public static final int SCALE_TYPE_SMART_FIT = 6;
     /** Scale the image so that both dimensions of the image will be equal to or less than the maxScale and equal to or larger than minScale. The image is then centered in the view. */
-    public static final int SCALE_TYPE_CUSTOM = 6;
+    public static final int SCALE_TYPE_CUSTOM = 7;
 
 
-    private static final List<Integer> VALID_SCALE_TYPES = Arrays.asList(SCALE_TYPE_CENTER_CROP, SCALE_TYPE_CENTER_INSIDE, SCALE_TYPE_CUSTOM, SCALE_TYPE_FIT_WIDTH, SCALE_TYPE_FIT_HEIGHT, SCALE_TYPE_ORIGINAL_SIZE);
+    private static final List<Integer> VALID_SCALE_TYPES = Arrays.asList(SCALE_TYPE_CENTER_CROP, SCALE_TYPE_CENTER_INSIDE, SCALE_TYPE_CUSTOM, SCALE_TYPE_FIT_WIDTH, SCALE_TYPE_FIT_HEIGHT, SCALE_TYPE_SMART_FIT, SCALE_TYPE_ORIGINAL_SIZE);
 
     // Bitmap (preview or full image)
     private Bitmap bitmap;
@@ -2019,6 +2020,14 @@ public class SubsamplingScaleImageView extends View {
                 return (getHeight() - vPadding) / (float) sHeight();
             case SCALE_TYPE_ORIGINAL_SIZE:
                 return 1;
+            case SCALE_TYPE_SMART_FIT:
+                if (sWidth <= sHeight) {
+                    // Fit to width
+                    return (getWidth() - hPadding) / (float) sWidth();
+                } else {
+                    // Fit to height
+                    return (getHeight() - vPadding) / (float) sHeight();
+                }
             case SCALE_TYPE_CUSTOM:
                 return minScale;
         }

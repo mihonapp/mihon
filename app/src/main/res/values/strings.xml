@@ -103,6 +103,8 @@
     <string name="scale_type_fit_width">Fit width</string>
     <string name="scale_type_fit_height">Fit height</string>
     <string name="scale_type_original_size">Original size</string>
+    <string name="scale_type_smart_fit">Smart fit</string>
+
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>

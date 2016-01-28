@@ -54,6 +54,7 @@
         <item>@string/scale_type_fit_width</item>
         <item>@string/scale_type_fit_height</item>
         <item>@string/scale_type_original_size</item>
+        <item>@string/scale_type_smart_fit</item>
     </string-array>
 
     <string-array name="image_scale_type_values">
@@ -62,6 +63,7 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
+        <item>6</item>
     </string-array>
 
     <string-array name="library_update_interval">
