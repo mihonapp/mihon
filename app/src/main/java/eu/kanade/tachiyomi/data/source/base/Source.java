@@ -93,7 +93,7 @@ public abstract class Source extends BaseSource {
     }
 
     public Observable<List<Page>> getCachedPageListOrPullFromNetwork(final String chapterUrl) {
-        return chapterCache.getPageUrlsFromDiskCache(getChapterCacheKey(chapterUrl))
+        return chapterCache.getPageListFromCache(getChapterCacheKey(chapterUrl))
                 .onErrorResumeNext(throwable -> {
                     return pullPageListFromNetwork(chapterUrl);
                 })
@@ -168,7 +168,7 @@ public abstract class Source extends BaseSource {
         return getImageProgressResponse(page)
                 .flatMap(resp -> {
                     try {
-                        chapterCache.putImageToDiskCache(page.getImageUrl(), resp);
+                        chapterCache.putImageToCache(page.getImageUrl(), resp);
                     } catch (IOException e) {
                         return Observable.error(e);
                     }
@@ -182,7 +182,7 @@ public abstract class Source extends BaseSource {
 
     public void savePageList(String chapterUrl, List<Page> pages) {
         if (pages != null)
-            chapterCache.putPageUrlsToDiskCache(getChapterCacheKey(chapterUrl), pages);
+            chapterCache.putPageListToCache(getChapterCacheKey(chapterUrl), pages);
     }
 
     protected List<Page> convertToPages(List<String> pageUrls) {

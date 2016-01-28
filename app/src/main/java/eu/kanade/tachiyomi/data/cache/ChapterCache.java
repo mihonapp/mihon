@@ -44,11 +44,14 @@ public class ChapterCache {
     /** Interface to global information about an application environment. */
     private final Context context;
 
-    /** Google Json class used for parsing json files. */
+    /** Google Json class used for parsing JSON files. */
     private final Gson gson;
 
     /** Cache class used for cache management. */
     private DiskLruCache diskCache;
+
+    /** Page list collection used for deserializing from JSON. */
+    private final Type pageListCollection;
 
     /**
      * Constructor of ChapterCache.
@@ -69,28 +72,10 @@ public class ChapterCache {
                     PARAMETER_CACHE_SIZE
             );
         } catch (IOException e) {
-            // Do Nothing. TODO error handling.
+            // Do Nothing.
         }
-    }
 
-    /**
-     * Remove file from cache.
-     * @param file name of chapter file md5.0.
-     * @return false if file is journal or error else returns status of deletion.
-     */
-    public boolean removeFileFromCache(String file) {
-        // Make sure we don't delete the journal file (keeps track of cache).
-        if (file.equals("journal") || file.startsWith("journal."))
-            return false;
-
-        try {
-            // Take dot(.) substring to get filename without the .0 at the end.
-            String key = file.substring(0, file.lastIndexOf("."));
-            // Remove file from cache.
-            return diskCache.remove(key);
-        } catch (IOException e) {
-            return false;
-        }
+        pageListCollection = new TypeToken<List<Page>>() {}.getType();
     }
 
     /**
@@ -118,64 +103,57 @@ public class ChapterCache {
     }
 
     /**
-     * Get page objects from cache.
-     * @param chapterUrl the url of the chapter.
-     * @return list of chapter pages.
+     * Remove file from cache.
+     * @param file name of file "md5.0".
+     * @return status of deletion for the file.
      */
-    public Observable<List<Page>> getPageUrlsFromDiskCache(final String chapterUrl) {
-        return Observable.create(subscriber -> {
+    public boolean removeFileFromCache(String file) {
+        // Make sure we don't delete the journal file (keeps track of cache).
+        if (file.equals("journal") || file.startsWith("journal."))
+            return false;
+
+        try {
+            // Remove the extension from the file to get the key of the cache
+            String key = file.substring(0, file.lastIndexOf("."));
+            // Remove file from cache.
+            return diskCache.remove(key);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get page list from cache.
+     * @param chapterUrl the url of the chapter.
+     * @return an observable of the list of pages.
+     */
+    public Observable<List<Page>> getPageListFromCache(final String chapterUrl) {
+        return Observable.fromCallable(() -> {
+            // Initialize snapshot (a snapshot of the values for an entry).
+            DiskLruCache.Snapshot snapshot = null;
+
             try {
-                // Get list of pages from chapterUrl.
-                List<Page> pages = getPageUrlsFromDiskCacheImpl(chapterUrl);
-                // Provides the Observer with a new item to observe.
-                subscriber.onNext(pages);
-                // Notify the Observer that finished sending push-based notifications.
-                subscriber.onCompleted();
-            } catch (Throwable e) {
-                subscriber.onError(e);
+                // Create md5 key and retrieve snapshot.
+                String key = DiskUtils.hashKeyForDisk(chapterUrl);
+                snapshot = diskCache.get(key);
+
+                // Convert JSON string to list of objects.
+                return gson.fromJson(snapshot.getString(0), pageListCollection);
+
+            } finally {
+                if (snapshot != null) {
+                    snapshot.close();
+                }
             }
         });
     }
 
     /**
-     * Implementation of the getPageUrlsFromDiskCache() function
-     * @param chapterUrl the url of the chapter
-     * @return returns list of chapter pages
-     * @throws IOException does nothing atm
-     */
-    private List<Page> getPageUrlsFromDiskCacheImpl(String chapterUrl) throws IOException /*TODO IOException never thrown*/ {
-        // Initialize snapshot (a snapshot of the values for an entry).
-        DiskLruCache.Snapshot snapshot = null;
-
-        // Initialize list of pages.
-        List<Page> pages = null;
-
-        try {
-            // Create md5 key and retrieve snapshot.
-            String key = DiskUtils.hashKeyForDisk(chapterUrl);
-            snapshot = diskCache.get(key);
-
-
-            // Convert JSON string to list of objects.
-            Type collectionType = new TypeToken<List<Page>>() {}.getType();
-            pages = gson.fromJson(snapshot.getString(0), collectionType);
-
-        } catch (IOException e) {
-            // Do Nothing. //TODO error handling?
-        } finally {
-            if (snapshot != null) {
-                snapshot.close();
-            }
-        }
-        return pages;
-    }
-
-    /**
-     * Add page urls to disk cache.
+     * Add page list to disk cache.
      * @param chapterUrl the url of the chapter.
-     * @param pages list of chapter pages.
+     * @param pages list of pages.
      */
-    public void putPageUrlsToDiskCache(final String chapterUrl, final List<Page> pages) {
+    public void putPageListToCache(final String chapterUrl, final List<Page> pages) {
         // Convert list of pages to json string.
         String cachedValue = gson.toJson(pages);
 
@@ -201,7 +179,7 @@ public class ChapterCache {
             diskCache.flush();
             editor.commit();
         } catch (Exception e) {
-            // Do Nothing. TODO error handling?
+            // Do Nothing.
         } finally {
             if (editor != null) {
                 editor.abortUnlessCommitted();
@@ -210,7 +188,7 @@ public class ChapterCache {
                 try {
                     outputStream.close();
                 } catch (IOException ignore) {
-                    // Do Nothing. TODO error handling?
+                    // Do Nothing.
                 }
             }
         }
@@ -225,9 +203,8 @@ public class ChapterCache {
         try {
             return diskCache.get(DiskUtils.hashKeyForDisk(imageUrl)) != null;
         } catch (IOException e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     /**
@@ -242,18 +219,17 @@ public class ChapterCache {
             File file = new File(diskCache.getDirectory(), imageName);
             return file.getCanonicalPath();
         } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**
-     * Add image to cache
+     * Add image to cache.
      * @param imageUrl url of image.
      * @param response http response from page.
      * @throws IOException image error.
      */
-    public void putImageToDiskCache(final String imageUrl, final Response response) throws IOException {
+    public void putImageToCache(final String imageUrl, final Response response) throws IOException {
         // Initialize editor (edits the values for an entry).
         DiskLruCache.Editor editor = null;
 
@@ -276,6 +252,7 @@ public class ChapterCache {
             diskCache.flush();
             editor.commit();
         } catch (Exception e) {
+            response.body().close();
             throw new IOException("Unable to save image");
         } finally {
             if (editor != null) {
@@ -285,7 +262,6 @@ public class ChapterCache {
                 sink.close();
             }
         }
-
     }
 
 }

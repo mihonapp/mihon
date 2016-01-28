@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.cache;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
@@ -22,9 +23,9 @@ import eu.kanade.tachiyomi.util.DiskUtils;
 
 /**
  * Class used to create cover cache
- * Makes use of Glide(which can avoid repeating requests) for saving the file.
- * It is not necessary to load the images to the cache.
- * Names of files are created with the md5 of the thumbnailURL
+ * It is used to store the covers of the library.
+ * Makes use of Glide (which can avoid repeating requests) to download covers.
+ * Names of files are created with the md5 of the thumbnail URL
  */
 public class CoverCache {
 
@@ -39,7 +40,7 @@ public class CoverCache {
     private final Context context;
 
     /**
-     * Cache class used for cache management.
+     * Cache directory used for cache management.
      */
     private final File cacheDir;
 
@@ -59,16 +60,16 @@ public class CoverCache {
     }
 
     /**
-     * Check if cache dir exist if not create directory.
+     * Create cache directory if it doesn't exist
      *
-     * @return true if cache dir does exist and is created.
+     * @return true if cache dir is created otherwise false.
      */
     private boolean createCacheDir() {
         return !cacheDir.exists() && cacheDir.mkdirs();
     }
 
     /**
-     * Download the cover with Glide (it can avoid repeating requests) and save the file.
+     * Download the cover with Glide and save the file in this cache.
      *
      * @param thumbnailUrl url of thumbnail.
      * @param headers      headers included in Glide request.
@@ -78,17 +79,15 @@ public class CoverCache {
     }
 
     /**
-     * Download the cover with Glide (it can avoid repeating requests) and save the file.
+     * Download the cover with Glide and save the file.
      *
      * @param thumbnailUrl url of thumbnail.
      * @param headers      headers included in Glide request.
      * @param imageView    imageView where picture should be displayed.
      */
-    private void save(String thumbnailUrl, LazyHeaders headers, ImageView imageView) {
-
+    private void save(String thumbnailUrl, LazyHeaders headers, @Nullable ImageView imageView) {
         // Check if url is empty.
         if (TextUtils.isEmpty(thumbnailUrl))
-            // Do not try and create the string. Instead... only try to realize the truth. There is no string.
             return;
 
         // Download the cover with Glide and save the file.
@@ -107,29 +106,27 @@ public class CoverCache {
                                 loadFromCache(imageView, resource);
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            // Do nothing.
                         }
                     }
                 });
     }
 
-
     /**
-     * Copy the cover from Glide's cache to local cache.
+     * Copy the cover from Glide's cache to this cache.
      *
      * @param thumbnailUrl url of thumbnail.
      * @param source       the cover image.
-     * @throws IOException TODO not returned atm?
+     * @throws IOException exception returned
      */
     private void copyToLocalCache(String thumbnailUrl, File source) throws IOException {
-        // Create cache directory and check if directory exist
+        // Create cache directory if needed.
         createCacheDir();
 
-        // Create destination file.
+        // Get destination file.
         File dest = new File(cacheDir, DiskUtils.hashKeyForDisk(thumbnailUrl));
 
-
-        // Check if file already exists, if true delete it.
+        // Delete the current file if it exists.
         if (dest.exists())
             dest.delete();
 
@@ -197,25 +194,8 @@ public class CoverCache {
     }
 
     /**
-     * If the image is already in our cache, use it. If not, load it with glide.
-     * TODO not used atm.
-     *
-     * @param imageView    imageView where picture should be displayed.
-     * @param thumbnailUrl url of thumbnail.
-     * @param headers      headers included in Glide request.
-     */
-    public void loadFromCacheOrNetwork(ImageView imageView, String thumbnailUrl, LazyHeaders headers) {
-        // If localCover exist load it  from cache otherwise load it from network.
-        File localCover = getCoverFromCache(thumbnailUrl);
-        if (localCover.exists()) {
-            loadFromCache(imageView, localCover);
-        } else {
-            loadFromNetwork(imageView, thumbnailUrl, headers);
-        }
-    }
-
-    /**
      * Helper method to load the cover from the cache directory into the specified image view.
+     * Glide stores the resized image in its cache to improve performance.
      *
      * @param imageView imageView where picture should be displayed.
      * @param file      file to load. Must exist!.
@@ -230,7 +210,8 @@ public class CoverCache {
 
     /**
      * Helper method to load the cover from network into the specified image view.
-     * It does NOT save the image in cache!
+     * The source image is stored in Glide's cache so that it can be easily copied to this cache
+     * if the manga is added to the library.
      *
      * @param imageView    imageView where picture should be displayed.
      * @param thumbnailUrl url of thumbnail.
