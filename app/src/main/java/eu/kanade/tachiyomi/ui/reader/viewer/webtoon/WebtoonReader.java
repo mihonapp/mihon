@@ -35,7 +35,7 @@ public class WebtoonReader extends BaseReader {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         adapter = new WebtoonAdapter(this);
         layoutManager = new PreCachingLayoutManager(getActivity());
-        layoutManager.setExtraLayoutSpace(getResources().getDisplayMetrics().heightPixels);
+        layoutManager.setExtraLayoutSpace(getResources().getDisplayMetrics().heightPixels / 2);
 
         recycler = new RecyclerView(getActivity());
         recycler.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));

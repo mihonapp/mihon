@@ -30,7 +30,7 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         super(view);
         this.adapter = adapter;
         ButterKnife.bind(this, view);
-        
+
         int maxDim = ((ReaderActivity)adapter.getReader().getActivity()).getMaxBitmapSize();
 
         imageView.setParallelLoadingEnabled(true);
@@ -40,8 +40,17 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         imageView.setMaxScale(10);
         imageView.setOnTouchListener(touchListener);
         imageView.setMaxDimensions(maxDim, maxDim);
+        imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
+            @Override
+            public void onImageLoaded() {
+                // When the image is loaded, reset the minimum height to avoid gaps
+                container.setMinimumHeight(0);
+            }
+        });
 
-        progressBar.setMinimumHeight(view.getResources().getDisplayMetrics().heightPixels);
+        // Avoid to create a lot of view holders taking all the screen height,
+        // saving memory and a possible OOM
+        container.setMinimumHeight(view.getResources().getDisplayMetrics().heightPixels);
 
         container.setOnTouchListener(touchListener);
         retryButton.setOnTouchListener((v, event) -> {
