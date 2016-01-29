@@ -11,6 +11,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.signature.StringSignature;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -119,7 +120,7 @@ public class CoverCache {
      * @param source       the cover image.
      * @throws IOException exception returned
      */
-    private void copyToLocalCache(String thumbnailUrl, File source) throws IOException {
+    public void copyToLocalCache(String thumbnailUrl, File source) throws IOException {
         // Create cache directory if needed.
         createCacheDir();
 
@@ -200,11 +201,12 @@ public class CoverCache {
      * @param imageView imageView where picture should be displayed.
      * @param file      file to load. Must exist!.
      */
-    private void loadFromCache(ImageView imageView, File file) {
+    public void loadFromCache(ImageView imageView, File file) {
         Glide.with(context)
                 .load(file)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
+                .signature(new StringSignature(String.valueOf(file.lastModified())))
                 .into(imageView);
     }
 
