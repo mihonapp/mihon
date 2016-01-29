@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.io;
+package eu.kanade.tachiyomi.data.io;
 
 import android.content.ContentResolver;
 import android.content.Context;

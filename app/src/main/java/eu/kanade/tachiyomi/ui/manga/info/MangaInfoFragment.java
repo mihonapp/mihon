@@ -27,7 +27,7 @@ import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.cache.CoverCache;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.source.base.Source;
-import eu.kanade.tachiyomi.io.IOHandler;
+import eu.kanade.tachiyomi.data.io.IOHandler;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import eu.kanade.tachiyomi.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
@@ -35,7 +35,6 @@ import nucleus.factory.RequiresPresenter;
 @RequiresPresenter(MangaInfoPresenter.class)
 public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
 
-    private static final int REQUEST_IMAGE_OPEN = 101;
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
     @Bind(R.id.manga_artist) TextView artist;
     @Bind(R.id.manga_author) TextView author;
@@ -47,6 +46,8 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
     @Bind(R.id.manga_cover) ImageView cover;
     @Bind(R.id.action_favorite) Button favoriteBtn;
     @Bind(R.id.fab_edit) FloatingActionButton fabEdit;
+
+    private static final int REQUEST_IMAGE_OPEN = 101;
 
     public static MangaInfoFragment newInstance() {
         return new MangaInfoFragment();
@@ -71,11 +72,11 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
                 .color(ContextCompat.getColor(this.getContext(), R.color.white))
                 .sizeDp(24);
 
-        // Update image of fab buttons
+        // Update image of fab button
         fabEdit.setImageDrawable(edit);
 
         // Set listener.
-        fabEdit.setOnClickListener(v -> MangaInfoFragment.this.selectImage());
+        fabEdit.setOnClickListener(v -> selectImage());
 
         favoriteBtn.setOnClickListener(v -> getPresenter().toggleFavorite());
 
@@ -150,27 +151,25 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_OPEN) {
+            // Get the file's content URI from the incoming Intent
+            Uri selectedImageUri = data.getData();
 
-    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_IMAGE_OPEN) {
-                // Get the file's content URI from the incoming Intent
-                Uri selectedImageUri = data.getData();
+            // Convert to absolute path to prevent FileNotFoundException
+            String result = IOHandler.getFilePath(selectedImageUri,
+                    getContext().getContentResolver(), getContext());
 
-                // Convert to absolute path to prevent FileNotFoundException
-                String result = IOHandler.getFilePath(selectedImageUri, this.getContext().getContentResolver(), this.getContext());
+            // Get file from filepath
+            File picture = new File(result != null ? result : "");
 
-                // Get file from filepath
-                File picture = new File(result != null ? result : "");
+            try {
+                // Update cover to selected file
+                getPresenter().editCoverWithLocalFile(picture, cover);
 
-
-                try {
-                    // Update cover to selected file
-                    getPresenter().editCoverWithLocalFile(picture, cover);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
