@@ -386,13 +386,13 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
 
     public void setReadFilter() {
         if (readCb != null) {
-            readCb.setChecked(getPresenter().getReadFilter());
+            readCb.setChecked(getPresenter().onlyUnread());
         }
     }
 
     public void setDownloadedFilter() {
         if (downloadedCb != null) {
-            downloadedCb.setChecked(getPresenter().getDownloadedFilter());
+            downloadedCb.setChecked(getPresenter().onlyDownloaded());
         }
     }
 

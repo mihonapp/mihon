@@ -39,8 +39,6 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     private Manga manga;
     private Source source;
     private List<Chapter> chapters;
-    private boolean onlyUnread = true;
-    private boolean onlyDownloaded;
     @State boolean hasRequested;
 
     private PublishSubject<List<Chapter>> chaptersSubject;
@@ -142,10 +140,10 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     private Observable<List<Chapter>> applyChapterFilters(List<Chapter> chapters) {
         Observable<Chapter> observable = Observable.from(chapters)
                 .subscribeOn(Schedulers.io());
-        if (onlyUnread) {
+        if (onlyUnread()) {
             observable = observable.filter(chapter -> !chapter.read);
         }
-        if (onlyDownloaded) {
+        if (onlyDownloaded()) {
             observable = observable.filter(chapter -> chapter.status == Download.DOWNLOADED);
         }
         return observable.toSortedList((chapter, chapter2) -> getSortOrder() ?
@@ -182,7 +180,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 break;
             }
         }
-        if (onlyDownloaded && download.getStatus() == Download.DOWNLOADED)
+        if (onlyDownloaded() && download.getStatus() == Download.DOWNLOADED)
             refreshChapters();
     }
 
@@ -238,7 +236,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 }, error -> {
                     Timber.e(error.getMessage());
                 }, () -> {
-                    if (onlyDownloaded)
+                    if (onlyDownloaded())
                         refreshChapters();
                 }));
     }
@@ -254,13 +252,14 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     }
 
     public void setReadFilter(boolean onlyUnread) {
-        //TODO do we need save filter for manga?
-        this.onlyUnread = onlyUnread;
+        manga.setReadFilter(onlyUnread ? Manga.SHOW_UNREAD : Manga.SHOW_ALL);
+        db.insertManga(manga).executeAsBlocking();
         refreshChapters();
     }
 
     public void setDownloadedFilter(boolean onlyDownloaded) {
-        this.onlyDownloaded = onlyDownloaded;
+        manga.setDownloadedFilter(onlyDownloaded ? Manga.SHOW_DOWNLOADED : Manga.SHOW_ALL);
+        db.insertManga(manga).executeAsBlocking();
         refreshChapters();
     }
 
@@ -269,16 +268,16 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         db.insertManga(manga).executeAsBlocking();
     }
 
+    public boolean onlyDownloaded() {
+        return manga.getDownloadedFilter() == Manga.SHOW_DOWNLOADED;
+    }
+
+    public boolean onlyUnread() {
+        return manga.getReadFilter() == Manga.SHOW_UNREAD;
+    }
+
     public boolean getSortOrder() {
         return manga.sortChaptersAZ();
-    }
-
-    public boolean getReadFilter() {
-        return onlyUnread;
-    }
-
-    public boolean getDownloadedFilter() {
-        return onlyDownloaded;
     }
 
     public Manga getManga() {

@@ -48,9 +48,14 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        // Avoid to create a lot of view holders taking all the screen height,
-        // saving memory and a possible OOM
-        container.setMinimumHeight(view.getResources().getDisplayMetrics().heightPixels);
+        // Avoid to create a lot of view holders taking twice the screen height,
+        // saving memory and a possible OOM. When the first image is loaded in this holder,
+        // the minimum size will be removed.
+        // Doing this we get sequential holder instantiation.
+        container.setMinimumHeight(view.getResources().getDisplayMetrics().heightPixels * 2);
+
+        // Leave some space between progress bars
+        progressBar.setMinimumHeight(300);
 
         container.setOnTouchListener(touchListener);
         retryButton.setOnTouchListener((v, event) -> {

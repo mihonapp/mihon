@@ -109,6 +109,7 @@ public class WebtoonReader extends BaseReader {
             recycler.clearOnScrollListeners();
             adapter.setPages(pages);
             recycler.setAdapter(adapter);
+            updatePageNumber();
             setScrollListener();
             observeStatus(0);
         }
