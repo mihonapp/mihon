@@ -4,8 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
@@ -16,6 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.source.model.Page;
+import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
 
 public class WebtoonHolder extends RecyclerView.ViewHolder {
 
@@ -24,7 +23,6 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.progress) ProgressBar progressBar;
     @Bind(R.id.retry_button) Button retryButton;
 
-    private Animation fadeInAnimation;
     private Page page;
     private WebtoonAdapter adapter;
 
@@ -32,20 +30,17 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         super(view);
         this.adapter = adapter;
         ButterKnife.bind(this, view);
-
-        fadeInAnimation = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
+        
+        int maxDim = ((ReaderActivity)adapter.getReader().getActivity()).getMaxBitmapSize();
 
         imageView.setParallelLoadingEnabled(true);
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
-        imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
+        imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH);
+        imageView.setMaxScale(10);
         imageView.setOnTouchListener(touchListener);
-        imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
-            @Override
-            public void onImageLoaded() {
-                imageView.startAnimation(fadeInAnimation);
-            }
-        });
+        imageView.setMaxDimensions(maxDim, maxDim);
+
         progressBar.setMinimumHeight(view.getResources().getDisplayMetrics().heightPixels);
 
         container.setOnTouchListener(touchListener);

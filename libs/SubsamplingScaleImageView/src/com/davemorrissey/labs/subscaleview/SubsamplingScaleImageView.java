@@ -870,7 +870,7 @@ public class SubsamplingScaleImageView extends View {
         }
 
         // When using tiles, on first render with no tile map ready, initialise it and kick off async base image loading.
-        if (tileMap == null && decoder != null) {
+        if (tileMap == null && decoder != null && cWidth == 0 && cHeight == 0) {
             initialiseBaseLayer(getMaxBitmapDimensions(canvas));
         }
 
