@@ -26,8 +26,8 @@ import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.cache.CoverCache;
 import eu.kanade.tachiyomi.data.database.models.Manga;
-import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.data.io.IOHandler;
+import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import eu.kanade.tachiyomi.util.ToastUtil;
 import nucleus.factory.RequiresPresenter;
@@ -35,6 +35,7 @@ import nucleus.factory.RequiresPresenter;
 @RequiresPresenter(MangaInfoPresenter.class)
 public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
 
+    private static final int REQUEST_IMAGE_OPEN = 101;
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout swipeRefresh;
     @Bind(R.id.manga_artist) TextView artist;
     @Bind(R.id.manga_author) TextView author;
@@ -46,8 +47,6 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
     @Bind(R.id.manga_cover) ImageView cover;
     @Bind(R.id.action_favorite) Button favoriteBtn;
     @Bind(R.id.fab_edit) FloatingActionButton fabEdit;
-
-    private static final int REQUEST_IMAGE_OPEN = 101;
 
     public static MangaInfoFragment newInstance() {
         return new MangaInfoFragment();
@@ -165,8 +164,9 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
             File picture = new File(result != null ? result : "");
 
             try {
-                // Update cover to selected file
-                getPresenter().editCoverWithLocalFile(picture, cover);
+                // Update cover to selected file, show error if something went wrong
+                if (!getPresenter().editCoverWithLocalFile(picture, cover))
+                    ToastUtil.showShort(getContext(), R.string.notification_manga_update_failed);
 
             } catch (IOException e) {
                 e.printStackTrace();

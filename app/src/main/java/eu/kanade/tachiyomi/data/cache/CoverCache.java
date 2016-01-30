@@ -201,7 +201,7 @@ public class CoverCache {
      * @param imageView imageView where picture should be displayed.
      * @param file      file to load. Must exist!.
      */
-    public void loadFromCache(ImageView imageView, File file) {
+    private void loadFromCache(ImageView imageView, File file) {
         Glide.with(context)
                 .load(file)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
