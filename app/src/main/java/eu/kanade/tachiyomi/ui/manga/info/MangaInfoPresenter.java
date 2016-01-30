@@ -149,11 +149,16 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
     /**
      * Update cover with local file
      */
-    public void editCoverWithLocalFile(File file, ImageView imageView) throws IOException {
+    public boolean editCoverWithLocalFile(File file, ImageView imageView) throws IOException {
+        if (!manga.initialized)
+            return false;
+
         if (manga.favorite) {
             coverCache.copyToLocalCache(manga.thumbnail_url, file);
-            coverCache.loadFromCache(imageView, file);
+            coverCache.saveOrLoadFromCache(imageView, manga.thumbnail_url, source.getGlideHeaders());
+            return true;
         }
+        return false;
     }
 
     private void onMangaFavoriteChange(boolean isFavorite) {
