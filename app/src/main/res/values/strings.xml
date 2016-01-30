@@ -108,7 +108,7 @@
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
-    <string name="pref_download_slots">Maximum simultaneous downloads</string>
+    <string name="pref_download_slots">Simultaneous downloads</string>
     <string name="pref_download_only_over_wifi">Only download over Wi-Fi</string>
 
       <!-- Advanced section -->
