@@ -23,6 +23,10 @@ public class App extends Application {
     AppComponent applicationComponent;
     ComponentReflectionInjector<AppComponent> componentInjector;
 
+    public static App get(Context context) {
+        return (App) context.getApplicationContext();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -38,20 +42,16 @@ public class App extends Application {
         ACRA.init(this);
     }
 
-    public static App get(Context context) {
-        return (App) context.getApplicationContext();
-    }
-
     public AppComponent getComponent() {
         return applicationComponent;
-    }
-
-    public ComponentReflectionInjector<AppComponent> getComponentReflection() {
-        return componentInjector;
     }
 
     // Needed to replace the component with a test specific one
     public void setComponent(AppComponent applicationComponent) {
         this.applicationComponent = applicationComponent;
+    }
+
+    public ComponentReflectionInjector<AppComponent> getComponentReflection() {
+        return componentInjector;
     }
 }
