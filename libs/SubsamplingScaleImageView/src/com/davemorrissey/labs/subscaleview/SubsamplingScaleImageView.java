@@ -201,8 +201,12 @@ public class SubsamplingScaleImageView extends View {
     private int sOrientation;
     private Rect sRegion;
     private Rect pRegion;
-    private int cWidth;
-    private int cHeight;
+
+    // Max bitmap dimensions the device can display
+    private int maxBitmapDimensions;
+
+    // Vertical pagers/scrollers should enable this
+    private boolean isVerticalScroll;
 
     // Is two-finger zooming in progress
     private boolean isZooming;
@@ -754,16 +758,32 @@ public class SubsamplingScaleImageView extends View {
                             float lastX = vTranslate.x;
                             float lastY = vTranslate.y;
                             fitToBounds(true);
-                            boolean atXEdge = lastX != vTranslate.x;
-                            boolean edgeXSwipe = atXEdge && dx > dy && !isPanning;
-                            boolean yPan = lastY == vTranslate.y && dy > 15;
-                            if (!edgeXSwipe && (!atXEdge || yPan || isPanning)) {
-                                isPanning = true;
-                            } else if (dx > 5) {
-                                // Haven't panned the image, and we're at the left or right edge. Switch to page swipe.
-                                maxTouchCount = 0;
-                                handler.removeMessages(MESSAGE_LONG_CLICK);
-                                getParent().requestDisallowInterceptTouchEvent(false);
+                            if (!isVerticalScroll) {
+                                boolean atXEdge = lastX != vTranslate.x;
+                                boolean edgeXSwipe = atXEdge && dx > dy && !isPanning;
+                                boolean yPan = lastY == vTranslate.y && dy > 15;
+
+                                if (!edgeXSwipe && (!atXEdge || yPan || isPanning)) {
+                                    isPanning = true;
+                                } else if (dx > 5) {
+                                    // Haven't panned the image, and we're at the left or right edge. Switch to page swipe.
+                                    maxTouchCount = 0;
+                                    handler.removeMessages(MESSAGE_LONG_CLICK);
+                                    getParent().requestDisallowInterceptTouchEvent(false);
+                                }
+                            } else {
+                                boolean atYEdge = lastY != vTranslate.y;
+                                boolean edgeYSwipe = atYEdge && dy > dx && !isPanning;
+                                boolean xPan = lastX == vTranslate.x && dx > 15;
+
+                                if (!edgeYSwipe && (!atYEdge || xPan || isPanning)) {
+                                    isPanning = true;
+                                } else if (dy > 5) {
+                                    // Haven't panned the image, and we're at the left or right edge. Switch to page swipe.
+                                    maxTouchCount = 0;
+                                    handler.removeMessages(MESSAGE_LONG_CLICK);
+                                    getParent().requestDisallowInterceptTouchEvent(false);
+                                }
                             }
 
                             if (!panEnabled) {
@@ -870,7 +890,7 @@ public class SubsamplingScaleImageView extends View {
         }
 
         // When using tiles, on first render with no tile map ready, initialise it and kick off async base image loading.
-        if (tileMap == null && decoder != null && cWidth == 0 && cHeight == 0) {
+        if (tileMap == null && decoder != null && maxBitmapDimensions == 0) {
             initialiseBaseLayer(getMaxBitmapDimensions(canvas));
         }
 
@@ -1390,11 +1410,6 @@ public class SubsamplingScaleImageView extends View {
         }
     }
 
-    public void setMaxDimensions(int width, int height) {
-        cWidth = width;
-        cHeight = height;
-    }
-
     /**
      * Async task used to get image details without blocking the UI thread.
      */
@@ -1473,8 +1488,8 @@ public class SubsamplingScaleImageView extends View {
         this.sHeight = sHeight;
         this.sOrientation = sOrientation;
         checkReady();
-        if (!checkImageLoaded() && cWidth != 0 && cHeight != 0) {
-            initialiseBaseLayer(new Point(cWidth, cHeight));
+        if (!checkImageLoaded() && maxBitmapDimensions > 0) {
+            initialiseBaseLayer(new Point(maxBitmapDimensions, maxBitmapDimensions));
         }
         invalidate();
         requestLayout();
@@ -2474,6 +2489,21 @@ public class SubsamplingScaleImageView extends View {
      */
     public void setParallelLoadingEnabled(boolean parallelLoadingEnabled) {
         this.parallelLoadingEnabled = parallelLoadingEnabled;
+    }
+
+    /**
+     * Set max bitmap dimensions the device can display
+     */
+    public void setMaxBitmapDimensions(int maxBitmapDimensions) {
+        this.maxBitmapDimensions = maxBitmapDimensions;
+    }
+
+
+    /**
+     * Set vertical scroll mode to fix gestures
+     */
+    public void setVerticalScroll(boolean isVerticalScroll) {
+        this.isVerticalScroll = isVerticalScroll;
     }
 
     /**

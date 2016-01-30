@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -30,7 +29,6 @@ public class WebtoonReader extends BaseReader {
     private Subscription decoderSubscription;
     private GestureDetector gestureDetector;
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         adapter = new WebtoonAdapter(this);
@@ -56,14 +54,6 @@ public class WebtoonReader extends BaseReader {
                 getReaderActivity().onCenterSingleTap();
                 return true;
             }
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                // The only way I've found to allow panning. Double tap event (zoom) is lost
-                // but panning should be the most used one
-                return true;
-            }
-
         });
 
         setPages();

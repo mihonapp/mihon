@@ -25,6 +25,7 @@ import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment;
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -61,12 +62,13 @@ public class PagerReaderFragment extends BaseFragment {
         }
 
         imageView.setParallelLoadingEnabled(true);
-        imageView.setMaxDimensions(activity.getMaxBitmapSize(), activity.getMaxBitmapSize());
+        imageView.setMaxBitmapDimensions(activity.getMaxBitmapSize());
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(parentFragment.scaleType);
         imageView.setRegionDecoderClass(parentFragment.getRegionDecoderClass());
         imageView.setBitmapDecoderClass(parentFragment.getBitmapDecoderClass());
+        imageView.setVerticalScroll(parentFragment instanceof VerticalReader);
         imageView.setOnTouchListener((v, motionEvent) -> parentFragment.onImageTouch(motionEvent));
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
             @Override

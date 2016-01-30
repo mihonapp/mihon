@@ -32,7 +32,7 @@ public class VerticalPager extends VerticalViewPagerImpl implements Pager {
     }
 
     private void init(Context context) {
-        gestureDetector = new GestureDetector(context, new VerticalPagerGestureListener(this));
+        gestureDetector = new GestureDetector(context, new PagerGestureListener(this));
     }
 
     @Override
@@ -118,21 +118,6 @@ public class VerticalPager extends VerticalViewPagerImpl implements Pager {
                 function.call(position);
             }
         });
-    }
-
-    private static class VerticalPagerGestureListener extends PagerGestureListener {
-
-        public VerticalPagerGestureListener(Pager pager) {
-            super(pager);
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            // Vertical view pager ignores scrolling events sometimes.
-            // Returning true here fixes it, but we lose touch events on the image like
-            // double tap to zoom
-            return true;
-        }
     }
     
 }

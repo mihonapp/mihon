@@ -14,7 +14,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.source.model.Page;
-import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
 
 public class WebtoonHolder extends RecyclerView.ViewHolder {
 
@@ -31,17 +30,16 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         this.adapter = adapter;
         ButterKnife.bind(this, view);
 
-        int maxDim = ((ReaderActivity)adapter.getReader().getActivity()).getMaxBitmapSize();
-
         imageView.setParallelLoadingEnabled(true);
+        imageView.setMaxBitmapDimensions(adapter.getReaderActivity().getMaxBitmapSize());
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH);
         imageView.setMaxScale(10);
         imageView.setRegionDecoderClass(adapter.getReader().getRegionDecoderClass());
         imageView.setBitmapDecoderClass(adapter.getReader().getBitmapDecoderClass());
+        imageView.setVerticalScroll(true);
         imageView.setOnTouchListener(touchListener);
-        imageView.setMaxDimensions(maxDim, maxDim);
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
             @Override
             public void onImageLoaded() {
