@@ -66,6 +66,7 @@ public class PagerReaderFragment extends BaseFragment {
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(parentFragment.scaleType);
         imageView.setRegionDecoderClass(parentFragment.getRegionDecoderClass());
+        imageView.setBitmapDecoderClass(parentFragment.getBitmapDecoderClass());
         imageView.setOnTouchListener((v, motionEvent) -> parentFragment.onImageTouch(motionEvent));
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
             @Override

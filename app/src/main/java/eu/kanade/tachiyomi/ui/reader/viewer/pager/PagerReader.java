@@ -63,7 +63,7 @@ public abstract class PagerReader extends BaseReader {
         subscriptions = new CompositeSubscription();
         subscriptions.add(getReaderActivity().getPreferences().imageDecoder()
                 .asObservable()
-                .doOnNext(this::setRegionDecoderClass)
+                .doOnNext(this::setDecoderClass)
                 .skip(1)
                 .distinctUntilChanged()
                 .subscribe(v -> adapter.notifyDataSetChanged()));

@@ -45,10 +45,10 @@ public class WebtoonReader extends BaseReader {
 
         decoderSubscription = getReaderActivity().getPreferences().imageDecoder()
                 .asObservable()
-                .doOnNext(this::setRegionDecoderClass)
+                .doOnNext(this::setDecoderClass)
                 .skip(1)
                 .distinctUntilChanged()
-                .subscribe(v -> adapter.notifyDataSetChanged());
+                .subscribe(v -> recycler.setAdapter(adapter));
 
         gestureDetector = new GestureDetector(getActivity(), new SimpleOnGestureListener() {
             @Override

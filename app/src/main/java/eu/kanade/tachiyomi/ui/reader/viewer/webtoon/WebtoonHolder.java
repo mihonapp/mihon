@@ -38,6 +38,8 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH);
         imageView.setMaxScale(10);
+        imageView.setRegionDecoderClass(adapter.getReader().getRegionDecoderClass());
+        imageView.setBitmapDecoderClass(adapter.getReader().getBitmapDecoderClass());
         imageView.setOnTouchListener(touchListener);
         imageView.setMaxDimensions(maxDim, maxDim);
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
@@ -99,7 +101,6 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         setErrorButtonVisible(false);
         setProgressVisible(false);
         setImageVisible(true);
-        imageView.setRegionDecoderClass(adapter.getReader().getRegionDecoderClass());
         imageView.setImage(ImageSource.uri(page.getImagePath()));
     }
 
