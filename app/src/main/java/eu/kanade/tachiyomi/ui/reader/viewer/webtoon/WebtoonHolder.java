@@ -38,7 +38,7 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         imageView.setMaxScale(10);
         imageView.setRegionDecoderClass(adapter.getReader().getRegionDecoderClass());
         imageView.setBitmapDecoderClass(adapter.getReader().getBitmapDecoderClass());
-        imageView.setVerticalScroll(true);
+        imageView.setVerticalScrollingParent(true);
         imageView.setOnTouchListener(touchListener);
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
             @Override

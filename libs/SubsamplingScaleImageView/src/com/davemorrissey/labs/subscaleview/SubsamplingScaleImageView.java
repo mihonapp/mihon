@@ -206,7 +206,7 @@ public class SubsamplingScaleImageView extends View {
     private int maxBitmapDimensions;
 
     // Vertical pagers/scrollers should enable this
-    private boolean isVerticalScroll;
+    private boolean isVerticalScrollingParent;
 
     // Is two-finger zooming in progress
     private boolean isZooming;
@@ -758,7 +758,7 @@ public class SubsamplingScaleImageView extends View {
                             float lastX = vTranslate.x;
                             float lastY = vTranslate.y;
                             fitToBounds(true);
-                            if (!isVerticalScroll) {
+                            if (!isVerticalScrollingParent) {
                                 boolean atXEdge = lastX != vTranslate.x;
                                 boolean edgeXSwipe = atXEdge && dx > dy && !isPanning;
                                 boolean yPan = lastY == vTranslate.y && dy > 15;
@@ -779,7 +779,7 @@ public class SubsamplingScaleImageView extends View {
                                 if (!edgeYSwipe && (!atYEdge || xPan || isPanning)) {
                                     isPanning = true;
                                 } else if (dy > 5) {
-                                    // Haven't panned the image, and we're at the left or right edge. Switch to page swipe.
+                                    // Haven't panned the image, and we're at the top or bottom edge. Switch to page swipe.
                                     maxTouchCount = 0;
                                     handler.removeMessages(MESSAGE_LONG_CLICK);
                                     getParent().requestDisallowInterceptTouchEvent(false);
@@ -2502,8 +2502,8 @@ public class SubsamplingScaleImageView extends View {
     /**
      * Set vertical scroll mode to fix gestures
      */
-    public void setVerticalScroll(boolean isVerticalScroll) {
-        this.isVerticalScroll = isVerticalScroll;
+    public void setVerticalScrollingParent(boolean isVerticalScrollingParent) {
+        this.isVerticalScrollingParent = isVerticalScrollingParent;
     }
 
     /**

@@ -68,7 +68,7 @@ public class PagerReaderFragment extends BaseFragment {
         imageView.setMinimumScaleType(parentFragment.scaleType);
         imageView.setRegionDecoderClass(parentFragment.getRegionDecoderClass());
         imageView.setBitmapDecoderClass(parentFragment.getBitmapDecoderClass());
-        imageView.setVerticalScroll(parentFragment instanceof VerticalReader);
+        imageView.setVerticalScrollingParent(parentFragment instanceof VerticalReader);
         imageView.setOnTouchListener((v, motionEvent) -> parentFragment.onImageTouch(motionEvent));
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
             @Override
@@ -187,8 +187,8 @@ public class PagerReaderFragment extends BaseFragment {
 
         final AtomicInteger currentValue = new AtomicInteger(-1);
 
-        progressSubscription = Observable.interval(75, TimeUnit.MILLISECONDS, Schedulers.newThread())
-                .onBackpressureDrop()
+        progressSubscription = Observable.interval(100, TimeUnit.MILLISECONDS, Schedulers.newThread())
+                .onBackpressureLatest()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tick -> {
                     // Refresh UI only if progress change

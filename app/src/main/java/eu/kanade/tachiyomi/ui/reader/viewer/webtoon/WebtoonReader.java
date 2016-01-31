@@ -29,11 +29,20 @@ public class WebtoonReader extends BaseReader {
     private Subscription decoderSubscription;
     private GestureDetector gestureDetector;
 
+    private int scrollDistance;
+
+    private static final float LEFT_REGION = 0.33f;
+    private static final float RIGHT_REGION = 0.66f;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         adapter = new WebtoonAdapter(this);
+
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        scrollDistance = screenHeight * 3 / 4;
+
         layoutManager = new PreCachingLayoutManager(getActivity());
-        layoutManager.setExtraLayoutSpace(getResources().getDisplayMetrics().heightPixels / 2);
+        layoutManager.setExtraLayoutSpace(screenHeight / 2);
 
         recycler = new RecyclerView(getActivity());
         recycler.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -48,10 +57,18 @@ public class WebtoonReader extends BaseReader {
                 .distinctUntilChanged()
                 .subscribe(v -> recycler.setAdapter(adapter));
 
-        gestureDetector = new GestureDetector(getActivity(), new SimpleOnGestureListener() {
+        gestureDetector = new GestureDetector(recycler.getContext(), new SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                getReaderActivity().onCenterSingleTap();
+                final float positionX = e.getX();
+
+                if (positionX < recycler.getWidth() * LEFT_REGION) {
+                    recycler.smoothScrollBy(0, -scrollDistance);
+                } else if (positionX > recycler.getWidth() * RIGHT_REGION) {
+                    recycler.smoothScrollBy(0, scrollDistance);
+                } else {
+                    getReaderActivity().onCenterSingleTap();
+                }
                 return true;
             }
         });
