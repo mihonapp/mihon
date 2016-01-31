@@ -4,7 +4,6 @@ import android.view.MotionEvent;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
-import com.davemorrissey.labs.subscaleview.decoder.RapidImageDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.RapidImageRegionDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageRegionDecoder;
@@ -59,7 +58,10 @@ public abstract class BaseReader extends BaseFragment {
             case RAPID_DECODER:
             default:
                 regionDecoderClass = RapidImageRegionDecoder.class;
-                bitmapDecoderClass = RapidImageDecoder.class;
+                bitmapDecoderClass = SkiaImageDecoder.class;
+                // Using Skia because Rapid isn't stable. Rapid is still used for region decoding.
+                // https://github.com/inorichi/tachiyomi/issues/97
+                //bitmapDecoderClass = RapidImageDecoder.class;
                 break;
             case SKIA_DECODER:
                 regionDecoderClass = SkiaImageRegionDecoder.class;
