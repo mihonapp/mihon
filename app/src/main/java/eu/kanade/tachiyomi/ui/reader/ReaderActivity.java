@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,11 +21,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import eu.kanade.tachiyomi.App;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
@@ -48,8 +46,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     @Bind(R.id.page_number) TextView pageNumber;
     @Bind(R.id.toolbar) Toolbar toolbar;
-
-    @Inject PreferencesHelper preferences;
 
     private BaseReader viewer;
     private ReaderMenu readerMenu;
@@ -75,7 +71,6 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        App.get(this).getComponent().inject(this);
         setContentView(R.layout.activity_reader);
         ButterKnife.bind(this);
 
@@ -169,8 +164,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         }
 
         if (viewer == null) {
-            viewer = createViewer(manga);
-            getSupportFragmentManager().beginTransaction().replace(R.id.reader, viewer).commit();
+            viewer = getOrCreateViewer(manga);
         }
         viewer.onPageListReady(pages, currentPage);
         readerMenu.onChapterReady(pages.size(), manga, chapter, currentPage);
@@ -180,19 +174,33 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         readerMenu.onAdjacentChapters(previous, next);
     }
 
-    private BaseReader createViewer(Manga manga) {
-        int mangaViewer = manga.viewer == 0 ? preferences.getDefaultViewer() : manga.viewer;
+    private BaseReader getOrCreateViewer(Manga manga) {
+        int mangaViewer = manga.viewer == 0 ? getPreferences().getDefaultViewer() : manga.viewer;
 
-        switch (mangaViewer) {
-            case LEFT_TO_RIGHT: default:
-                return new LeftToRightReader();
-            case RIGHT_TO_LEFT:
-                return new RightToLeftReader();
-            case VERTICAL:
-                return new VerticalReader();
-            case WEBTOON:
-                return new WebtoonReader();
+        FragmentManager fm = getSupportFragmentManager();
+
+        // Try to reuse the viewer using its tag
+        BaseReader fragment = (BaseReader) fm.findFragmentByTag(manga.viewer + "");
+        if (fragment == null) {
+            // Create a new viewer
+            switch (mangaViewer) {
+                case LEFT_TO_RIGHT: default:
+                    fragment = new LeftToRightReader();
+                    break;
+                case RIGHT_TO_LEFT:
+                    fragment = new RightToLeftReader();
+                    break;
+                case VERTICAL:
+                    fragment = new VerticalReader();
+                    break;
+                case WEBTOON:
+                    fragment = new WebtoonReader();
+                    break;
+            }
+
+            fm.beginTransaction().replace(R.id.reader, fragment, manga.viewer + "").commit();
         }
+        return fragment;
     }
 
     public void onPageChanged(int currentPageIndex, int totalPages) {
@@ -225,6 +233,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     private void initializeSettings() {
+        PreferencesHelper preferences = getPreferences();
+
         subscriptions.add(preferences.showPageNumber()
                 .asObservable()
                 .subscribe(this::setPageNumberVisibility));
@@ -290,7 +300,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     private void setCustomBrightness(boolean enabled) {
         if (enabled) {
-            subscriptions.add(customBrightnessSubscription = preferences.customBrightnessValue()
+            subscriptions.add(customBrightnessSubscription = getPreferences().customBrightnessValue()
                     .asObservable()
                     .subscribe(this::setCustomBrightnessValue));
         } else {
@@ -348,7 +358,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     public PreferencesHelper getPreferences() {
-        return preferences;
+        return getPresenter().prefs;
     }
 
     public BaseReader getViewer() {

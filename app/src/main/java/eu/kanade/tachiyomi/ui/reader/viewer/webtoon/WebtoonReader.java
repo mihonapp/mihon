@@ -29,7 +29,10 @@ public class WebtoonReader extends BaseReader {
     private Subscription decoderSubscription;
     private GestureDetector gestureDetector;
 
+    private boolean isReady;
     private int scrollDistance;
+
+    private static final String SCROLL_STATE = "scroll_state";
 
     private static final float LEFT_REGION = 0.33f;
     private static final float RIGHT_REGION = 0.66f;
@@ -43,6 +46,9 @@ public class WebtoonReader extends BaseReader {
 
         layoutManager = new PreCachingLayoutManager(getActivity());
         layoutManager.setExtraLayoutSpace(screenHeight / 2);
+        if (savedState != null) {
+            layoutManager.onRestoreInstanceState(savedState.getParcelable(SCROLL_STATE));
+        }
 
         recycler = new RecyclerView(getActivity());
         recycler.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -74,6 +80,7 @@ public class WebtoonReader extends BaseReader {
         });
 
         setPages();
+        isReady = true;
 
         return recycler;
     }
@@ -90,6 +97,12 @@ public class WebtoonReader extends BaseReader {
         super.onPause();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(SCROLL_STATE, layoutManager.onSaveInstanceState());
+    }
+
     private void unsubscribeStatus() {
         if (subscription != null && !subscription.isUnsubscribed())
             subscription.unsubscribe();
@@ -104,7 +117,9 @@ public class WebtoonReader extends BaseReader {
     public void onPageListReady(List<Page> pages, int currentPage) {
         if (this.pages != pages) {
             this.pages = pages;
-            if (isResumed()) {
+            // Restoring current page is not supported. It's getting weird scrolling jumps
+            // this.currentPage = currentPage;
+            if (isReady) {
                 setPages();
             }
         }

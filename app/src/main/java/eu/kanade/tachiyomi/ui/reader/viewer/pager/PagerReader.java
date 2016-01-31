@@ -19,6 +19,7 @@ public abstract class PagerReader extends BaseReader {
     protected PagerReaderAdapter adapter;
     protected Pager pager;
 
+    private boolean isReady;
     protected boolean transitions;
     protected CompositeSubscription subscriptions;
 
@@ -80,6 +81,7 @@ public abstract class PagerReader extends BaseReader {
                 .subscribe(value -> transitions = value));
 
         setPages();
+        isReady = true;
     }
 
     @Override
@@ -93,7 +95,7 @@ public abstract class PagerReader extends BaseReader {
         if (this.pages != pages) {
             this.pages = pages;
             this.currentPage = currentPage;
-            if (isResumed()) {
+            if (isReady) {
                 setPages();
             }
         }
