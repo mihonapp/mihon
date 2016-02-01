@@ -147,8 +147,8 @@ public class ReaderMenu {
         // Set initial values
         totalPages.setText("" + numPages);
         currentPage.setText("" + (currentPageIndex + 1));
-        seekBar.setProgress(currentPageIndex);
         seekBar.setMax(numPages - 1);
+        seekBar.setProgress(currentPageIndex);
 
         activity.setToolbarTitle(manga.title);
         activity.setToolbarSubtitle(chapter.chapter_number != -1 ?

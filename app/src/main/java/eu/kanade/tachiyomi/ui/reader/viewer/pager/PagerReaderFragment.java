@@ -41,13 +41,12 @@ public class PagerReaderFragment extends BaseFragment {
     @Bind(R.id.retry_button) Button retryButton;
 
     private Page page;
+    private boolean isReady;
     private Subscription progressSubscription;
     private Subscription statusSubscription;
 
-    public static PagerReaderFragment newInstance(Page page) {
-        PagerReaderFragment fragment = new PagerReaderFragment();
-        fragment.setPage(page);
-        return fragment;
+    public static PagerReaderFragment newInstance() {
+        return new PagerReaderFragment();
     }
 
     @Override
@@ -86,6 +85,7 @@ public class PagerReaderFragment extends BaseFragment {
         });
 
         observeStatus();
+        isReady = true;
         return view;
     }
 
@@ -99,6 +99,9 @@ public class PagerReaderFragment extends BaseFragment {
 
     public void setPage(Page page) {
         this.page = page;
+        if (isReady) {
+            observeStatus();
+        }
     }
 
     private void showImage() {
