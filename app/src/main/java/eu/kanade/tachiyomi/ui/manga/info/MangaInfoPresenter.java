@@ -64,37 +64,24 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        if (savedState != null) {
-            onProcessRestart();
-        }
-
-        // Update manga cache
-        restartableLatestCache(GET_MANGA,
+        // Notify the view a manga is available or has changed
+        startableLatestCache(GET_MANGA,
                 () -> Observable.just(manga),
                 (view, manga) -> view.onNextManga(manga, source));
 
         // Update chapter count
-        restartableLatestCache(GET_CHAPTER_COUNT,
+        startableLatestCache(GET_CHAPTER_COUNT,
                 () -> Observable.just(count),
                 MangaInfoFragment::setChapterCount);
 
         // Fetch manga info from source
-        restartableFirst(FETCH_MANGA_INFO,
+        startableFirst(FETCH_MANGA_INFO,
                 this::fetchMangaObs,
                 (view, manga) -> view.onFetchMangaDone(),
                 (view, error) -> view.onFetchMangaError());
 
         // onEventMainThread receives an event thanks to this line.
         registerForStickyEvents();
-    }
-
-    /**
-     * Called when savedState not null
-     */
-    private void onProcessRestart() {
-        stop(GET_MANGA);
-        stop(GET_CHAPTER_COUNT);
-        stop(FETCH_MANGA_INFO);
     }
 
     @Override

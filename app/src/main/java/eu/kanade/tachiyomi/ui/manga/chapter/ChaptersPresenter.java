@@ -52,38 +52,27 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        if (savedState != null) {
-            onProcessRestart();
-        }
-
         chaptersSubject = PublishSubject.create();
 
-        restartableLatestCache(GET_MANGA,
+        startableLatestCache(GET_MANGA,
                 () -> Observable.just(manga),
                 ChaptersFragment::onNextManga);
 
-        restartableLatestCache(DB_CHAPTERS,
+        startableLatestCache(DB_CHAPTERS,
                 this::getDbChaptersObs,
                 ChaptersFragment::onNextChapters);
 
-        restartableFirst(FETCH_CHAPTERS,
+        startableFirst(FETCH_CHAPTERS,
                 this::getOnlineChaptersObs,
                 (view, result) -> view.onFetchChaptersDone(),
                 (view, error) -> view.onFetchChaptersError());
 
-        restartableLatestCache(CHAPTER_STATUS_CHANGES,
+        startableLatestCache(CHAPTER_STATUS_CHANGES,
                 this::getChapterStatusObs,
                 (view, download) -> view.onChapterStatusChange(download),
                 (view, error) -> Timber.e(error.getCause(), error.getMessage()));
 
         registerForStickyEvents();
-    }
-
-    private void onProcessRestart() {
-        stop(GET_MANGA);
-        stop(DB_CHAPTERS);
-        stop(FETCH_CHAPTERS);
-        stop(CHAPTER_STATUS_CHANGES);
     }
 
     @Override

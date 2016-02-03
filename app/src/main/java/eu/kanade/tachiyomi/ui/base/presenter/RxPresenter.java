@@ -214,6 +214,137 @@ public class RxPresenter<View> extends Presenter<View> {
     }
 
     /**
+     * A startable behaves the same as a restartable but it does not resubscribe on process restart
+     *
+     * @param startableId       an id of the restartable.
+     * @param observableFactory a factory that should return an Observable when the startable should run.
+     */
+    public <T> void startable(int startableId, final Func0<Observable<T>> observableFactory) {
+        restartables.put(startableId, () -> observableFactory.call().subscribe());
+    }
+
+    /**
+     * A startable behaves the same as a restartable but it does not resubscribe on process restart
+     *
+     * @param startableId       an id of the restartable.
+     * @param observableFactory a factory that should return an Observable when the startable should run.
+     * @param onNext            a callback that will be called when received data should be delivered to view.
+     * @param onError           a callback that will be called if the source observable emits onError.
+     */
+    public <T> void startable(int startableId, final Func0<Observable<T>> observableFactory,
+        final Action1<T> onNext, final Action1<Throwable> onError) {
+
+        restartables.put(startableId, () -> observableFactory.call().subscribe(onNext, onError));
+    }
+
+    /**
+     * A startable behaves the same as a restartable but it does not resubscribe on process restart
+     *
+     * @param startableId       an id of the restartable.
+     * @param observableFactory a factory that should return an Observable when the startable should run.
+     * @param onNext            a callback that will be called when received data should be delivered to view.
+     */
+    public <T> void startable(int startableId, final Func0<Observable<T>> observableFactory, final Action1<T> onNext) {
+        restartables.put(startableId, () -> observableFactory.call().subscribe(onNext));
+    }
+    
+    /**
+     * This is a shortcut that can be used instead of combining together
+     * {@link #startable(int, Func0)},
+     * {@link #deliverFirst()},
+     * {@link #split(Action2, Action2)}.
+     *
+     * @param startableId       an id of the startable.
+     * @param observableFactory a factory that should return an Observable when the startable should run.
+     * @param onNext            a callback that will be called when received data should be delivered to view.
+     * @param onError           a callback that will be called if the source observable emits onError.
+     * @param <T>               the type of the observable.
+     */
+    public <T> void startableFirst(int startableId, final Func0<Observable<T>> observableFactory,
+        final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
+
+        restartables.put(startableId, new Func0<Subscription>() {
+            @Override
+            public Subscription call() {
+                return observableFactory.call()
+                        .compose(RxPresenter.this.<T>deliverFirst())
+                        .subscribe(split(onNext, onError));
+            }
+        });
+    }
+
+    /**
+     * This is a shortcut for calling {@link #startableFirst(int, Func0, Action2, Action2)} with the last parameter = null.
+     */
+    public <T> void startableFirst(int startableId, final Func0<Observable<T>> observableFactory, final Action2<View, T> onNext) {
+        startableFirst(startableId, observableFactory, onNext, null);
+    }
+
+    /**
+     * This is a shortcut that can be used instead of combining together
+     * {@link #startable(int, Func0)},
+     * {@link #deliverLatestCache()},
+     * {@link #split(Action2, Action2)}.
+     *
+     * @param startableId       an id of the startable.
+     * @param observableFactory a factory that should return an Observable when the startable should run.
+     * @param onNext            a callback that will be called when received data should be delivered to view.
+     * @param onError           a callback that will be called if the source observable emits onError.
+     * @param <T>               the type of the observable.
+     */
+    public <T> void startableLatestCache(int startableId, final Func0<Observable<T>> observableFactory,
+        final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
+
+        restartables.put(startableId, new Func0<Subscription>() {
+            @Override
+            public Subscription call() {
+                return observableFactory.call()
+                        .compose(RxPresenter.this.<T>deliverLatestCache())
+                        .subscribe(split(onNext, onError));
+            }
+        });
+    }
+
+    /**
+     * This is a shortcut for calling {@link #startableLatestCache(int, Func0, Action2, Action2)} with the last parameter = null.
+     */
+    public <T> void startableLatestCache(int startableId, final Func0<Observable<T>> observableFactory, final Action2<View, T> onNext) {
+        startableLatestCache(startableId, observableFactory, onNext, null);
+    }
+
+    /**
+     * This is a shortcut that can be used instead of combining together
+     * {@link #startable(int, Func0)},
+     * {@link #deliverReplay()},
+     * {@link #split(Action2, Action2)}.
+     *
+     * @param startableId       an id of the startable.
+     * @param observableFactory a factory that should return an Observable when the startable should run.
+     * @param onNext            a callback that will be called when received data should be delivered to view.
+     * @param onError           a callback that will be called if the source observable emits onError.
+     * @param <T>               the type of the observable.
+     */
+    public <T> void startableReplay(int startableId, final Func0<Observable<T>> observableFactory,
+        final Action2<View, T> onNext, @Nullable final Action2<View, Throwable> onError) {
+
+        restartables.put(startableId, new Func0<Subscription>() {
+            @Override
+            public Subscription call() {
+                return observableFactory.call()
+                        .compose(RxPresenter.this.<T>deliverReplay())
+                        .subscribe(split(onNext, onError));
+            }
+        });
+    }
+
+    /**
+     * This is a shortcut for calling {@link #startableReplay(int, Func0, Action2, Action2)} with the last parameter = null.
+     */
+    public <T> void startableReplay(int startableId, final Func0<Observable<T>> observableFactory, final Action2<View, T> onNext) {
+        startableReplay(startableId, observableFactory, onNext, null);
+    }
+
+    /**
      * Returns an {@link rx.Observable.Transformer} that couples views with data that has been emitted by
      * the source {@link rx.Observable}.
      *

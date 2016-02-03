@@ -53,23 +53,23 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         super.onCreate(savedState);
 
         if (savedState != null) {
-            onProcessRestart();
+            source = sourceManager.get(sourceId);
         }
 
         mangaDetailSubject = PublishSubject.create();
 
         pager = new RxPager<>();
 
-        restartableReplay(GET_MANGA_LIST,
+        startableReplay(GET_MANGA_LIST,
                 pager::results,
                 (view, pair) -> view.onAddPage(pair.first, pair.second));
 
-        restartableFirst(GET_MANGA_PAGE,
+        startableFirst(GET_MANGA_PAGE,
                 () -> pager.request(page -> getMangasPageObservable(page + 1)),
                 (view, next) -> {},
                 (view, error) -> view.onAddPageError());
 
-        restartableLatestCache(GET_MANGA_DETAIL,
+        startableLatestCache(GET_MANGA_DETAIL,
                 () -> mangaDetailSubject
                         .observeOn(Schedulers.io())
                         .flatMap(Observable::from)
@@ -82,13 +82,6 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
 
         add(prefs.catalogueAsList().asObservable()
                 .subscribe(this::setDisplayMode));
-    }
-
-    private void onProcessRestart() {
-        source = sourceManager.get(sourceId);
-        stop(GET_MANGA_LIST);
-        stop(GET_MANGA_DETAIL);
-        stop(GET_MANGA_PAGE);
     }
 
     private void setDisplayMode(boolean asList) {

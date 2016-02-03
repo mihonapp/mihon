@@ -44,20 +44,16 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        if (savedState != null) {
-            onProcessRestart();
-        }
-
         myAnimeList = syncManager.getMyAnimeList();
 
-        restartableLatestCache(GET_MANGA_SYNC,
+        startableLatestCache(GET_MANGA_SYNC,
                 () -> db.getMangaSync(manga, myAnimeList).asRxObservable()
                         .doOnNext(mangaSync -> this.mangaSync = mangaSync)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()),
                 MyAnimeListFragment::setMangaSync);
 
-        restartableLatestCache(GET_SEARCH_RESULTS,
+        startableLatestCache(GET_SEARCH_RESULTS,
                 this::getSearchResultsObservable,
                 (view, results) -> {
                     view.setSearchResults(results);
@@ -66,7 +62,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
                     view.setSearchResultsError();
                 });
 
-        restartableFirst(REFRESH,
+        startableFirst(REFRESH,
                 () -> myAnimeList.getList()
                         .flatMap(myList -> {
                             for (MangaSync myManga : myList) {
@@ -84,12 +80,6 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
                 (view, result) -> view.onRefreshDone(),
                 (view, error) -> view.onRefreshError());
 
-    }
-
-    private void onProcessRestart() {
-        stop(GET_MANGA_SYNC);
-        stop(GET_SEARCH_RESULTS);
-        stop(REFRESH);
     }
 
     @Override

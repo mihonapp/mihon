@@ -30,7 +30,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
-import timber.log.Timber;
 
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
@@ -66,30 +65,17 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         super.onCreate(savedState);
 
         if (savedState != null) {
-            onProcessRestart();
+            source = sourceManager.get(sourceId);
         }
 
         retryPageSubject = PublishSubject.create();
 
-        restartableLatestCache(PRELOAD_NEXT_CHAPTER,
-                this::getPreloadNextChapterObservable,
-                (view, pages) -> {},
-                (view, error) -> Timber.e("An error occurred while preloading a chapter"));
+        startable(PRELOAD_NEXT_CHAPTER, this::getPreloadNextChapterObservable);
+        startable(GET_PAGE_IMAGES, this::getPageImagesObservable);
+        startable(GET_ADJACENT_CHAPTERS, this::getAdjacentChaptersObservable);
+        startable(RETRY_IMAGES, this::getRetryPageObservable);
 
-        restartableLatestCache(GET_PAGE_IMAGES,
-                this::getPageImagesObservable,
-                (view, page) -> {},
-                (view, error) -> Timber.e("An error occurred while downloading an image"));
-
-        restartableLatestCache(GET_ADJACENT_CHAPTERS,
-                this::getAdjacentChaptersObservable,
-                (view, pair) -> view.onAdjacentChapters(pair.first, pair.second),
-                (view, error) -> Timber.e("An error occurred while getting adjacent chapters"));
-
-        restartableLatestCache(RETRY_IMAGES,
-                this::getRetryPageObservable,
-                (view, page) -> {},
-                (view, error) -> Timber.e("An error occurred while downloading an image"));
+        restartable(GET_MANGA_SYNC, () -> getMangaSyncObservable().subscribe());
 
         restartableLatestCache(GET_PAGE_LIST,
                 () -> getPageListObservable()
@@ -102,9 +88,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 (view, pages) -> view.onChapterReady(pages, manga, chapter, currentPage),
                 (view, error) -> view.onChapterError());
 
-        restartableFirst(GET_MANGA_SYNC, this::getMangaSyncObservable,
-                (view, mangaSync) -> {},
-                (view, error) -> {});
 
         registerForStickyEvents();
     }
@@ -119,16 +102,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     protected void onSave(@NonNull Bundle state) {
         onChapterLeft();
         super.onSave(state);
-    }
-
-    private void onProcessRestart() {
-        source = sourceManager.get(sourceId);
-
-        // These are started by GET_PAGE_LIST, so we don't let them restart itselves
-        stop(GET_PAGE_IMAGES);
-        stop(GET_ADJACENT_CHAPTERS);
-        stop(RETRY_IMAGES);
-        stop(PRELOAD_NEXT_CHAPTER);
     }
 
     @EventBusHook
