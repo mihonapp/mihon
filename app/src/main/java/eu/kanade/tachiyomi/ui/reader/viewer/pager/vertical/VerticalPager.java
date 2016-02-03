@@ -46,7 +46,7 @@ public class VerticalPager extends VerticalViewPagerImpl implements Pager {
 
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException e) {
-            return true;
+            return false;
         }
     }
 
@@ -81,7 +81,7 @@ public class VerticalPager extends VerticalViewPagerImpl implements Pager {
 
             return super.onTouchEvent(ev);
         } catch (IllegalArgumentException e) {
-            return true;
+            return false;
         }
     }
 

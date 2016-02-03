@@ -47,7 +47,7 @@ public class HorizontalPager extends ViewPager implements Pager {
 
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException e) {
-            return true;
+            return false;
         }
     }
 
@@ -82,7 +82,7 @@ public class HorizontalPager extends ViewPager implements Pager {
 
             return super.onTouchEvent(ev);
         } catch (IllegalArgumentException e) {
-            return true;
+            return false;
         }
     }
 
