@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.database.models.MangaSync;
 import eu.kanade.tachiyomi.data.download.DownloadManager;
+import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager;
 import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
@@ -27,6 +28,7 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
 import eu.kanade.tachiyomi.util.EventBusHook;
 import icepick.State;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -41,25 +43,25 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     @Inject SourceManager sourceManager;
 
     @State Manga manga;
-    @State Chapter chapter;
+    @State Chapter activeChapter;
     @State int sourceId;
-    @State boolean isDownloaded;
-    @State int currentPage;
+    @State int requestedPage;
+    private Page currentPage;
     private Source source;
     private Chapter nextChapter;
     private Chapter previousChapter;
-    private List<Page> pageList;
-    private List<Page> nextChapterPageList;
     private List<MangaSync> mangaSyncList;
 
     private PublishSubject<Page> retryPageSubject;
+    private PublishSubject<Chapter> pageInitializerSubject;
+
+    private boolean seamlessMode;
+    private Subscription appenderSubscription;
 
     private static final int GET_PAGE_LIST = 1;
-    private static final int GET_PAGE_IMAGES = 2;
-    private static final int GET_ADJACENT_CHAPTERS = 3;
-    private static final int RETRY_IMAGES = 4;
-    private static final int PRELOAD_NEXT_CHAPTER = 5;
-    private static final int GET_MANGA_SYNC = 6;
+    private static final int GET_ADJACENT_CHAPTERS = 2;
+    private static final int GET_MANGA_SYNC = 3;
+    private static final int PRELOAD_NEXT_CHAPTER = 4;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -67,38 +69,29 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
         if (savedState != null) {
             source = sourceManager.get(sourceId);
+            initializeSubjects();
         }
 
-        retryPageSubject = PublishSubject.create();
-
-        startable(PRELOAD_NEXT_CHAPTER, this::getPreloadNextChapterObservable,
-                next -> {},
-                error -> Timber.e("Error preloading chapter"));
-
-        startable(GET_PAGE_IMAGES, this::getPageImagesObservable,
-                next -> {},
-                error -> Timber.e("Error fetching images"));
+        seamlessMode = prefs.seamlessMode();
 
         startableLatestCache(GET_ADJACENT_CHAPTERS, this::getAdjacentChaptersObservable,
                 (view, pair) -> view.onAdjacentChapters(pair.first, pair.second));
 
-        startable(RETRY_IMAGES, this::getRetryPageObservable);
+        startable(PRELOAD_NEXT_CHAPTER, this::getPreloadNextChapterObservable,
+            next -> {},
+            error -> Timber.e("Error preloading chapter"));
+
 
         restartable(GET_MANGA_SYNC, () -> getMangaSyncObservable().subscribe());
 
         restartableLatestCache(GET_PAGE_LIST,
-                () -> getPageListObservable()
-                        .doOnNext(pages -> pageList = pages)
-                        .doOnCompleted(() -> {
-                            start(GET_ADJACENT_CHAPTERS);
-                            start(GET_PAGE_IMAGES);
-                            start(RETRY_IMAGES);
-                        }),
-                (view, pages) -> view.onChapterReady(pages, manga, chapter, currentPage),
+                () -> getPageListObservable(activeChapter),
+                (view, chapter) -> view.onChapterReady(manga, activeChapter, currentPage),
                 (view, error) -> view.onChapterError());
 
-
-        registerForStickyEvents();
+        if (savedState == null) {
+            registerForStickyEvents();
+        }
     }
 
     @Override
@@ -119,43 +112,79 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         manga = event.getManga();
         source = event.getSource();
         sourceId = source.getId();
+        initializeSubjects();
         loadChapter(event.getChapter());
         if (prefs.autoUpdateMangaSync()) {
             start(GET_MANGA_SYNC);
         }
     }
 
+    private void initializeSubjects() {
+        // Listen for pages initialization events
+        pageInitializerSubject = PublishSubject.create();
+        add(pageInitializerSubject
+                .observeOn(Schedulers.io())
+                .concatMap(chapter -> {
+                    Observable observable;
+                    if (chapter.isDownloaded()) {
+                        File chapterDir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
+                        observable = Observable.from(chapter.getPages())
+                                .flatMap(page -> downloadManager.getDownloadedImage(page, chapterDir));
+                    } else {
+                        observable = source.getAllImageUrlsFromPageList(chapter.getPages())
+                                .flatMap(source::getCachedImage, 2)
+                                .doOnCompleted(() -> source.savePageList(chapter.url, chapter.getPages()));
+                    }
+                    return observable.doOnCompleted(() -> {
+                        if (!seamlessMode && activeChapter == chapter) {
+                            preloadNextChapter();
+                        }
+                    });
+                })
+                .subscribe());
+
+        // Listen por retry events
+        retryPageSubject = PublishSubject.create();
+        add(retryPageSubject
+                .observeOn(Schedulers.io())
+                .flatMap(page -> page.getImageUrl() == null ?
+                        source.getImageUrlFromPage(page) :
+                        Observable.just(page))
+                .flatMap(source::getCachedImage)
+                .subscribe());
+    }
+
     // Returns the page list of a chapter
-    private Observable<List<Page>> getPageListObservable() {
-        return isDownloaded ?
+    private Observable<Chapter> getPageListObservable(Chapter chapter) {
+        return (chapter.isDownloaded() ?
                 // Fetch the page list from disk
                 Observable.just(downloadManager.getSavedPageList(source, manga, chapter)) :
                 // Fetch the page list from cache or fallback to network
                 source.getCachedPageListOrPullFromNetwork(chapter.url)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    // Get the chapter images from network or disk
-    private Observable<Page> getPageImagesObservable() {
-        Observable<Page> pageObservable;
-
-        if (!isDownloaded) {
-            pageObservable = source.getAllImageUrlsFromPageList(pageList)
-                    .flatMap(source::getCachedImage, 2);
-        } else {
-            File chapterDir = downloadManager.getAbsoluteChapterDirectory(source, manga, chapter);
-            pageObservable = Observable.from(pageList)
-                    .flatMap(page -> downloadManager.getDownloadedImage(page, chapterDir));
-        }
-        return pageObservable.subscribeOn(Schedulers.io())
-                .doOnCompleted(this::preloadNextChapter);
+                        .observeOn(AndroidSchedulers.mainThread())
+        ).map(pages -> {
+            for (Page page : pages) {
+                page.setChapter(chapter);
+            }
+            chapter.setPages(pages);
+            if (requestedPage >= -1 || currentPage == null) {
+                if (requestedPage == -1) {
+                    currentPage = pages.get(pages.size() - 1);
+                } else {
+                    currentPage = pages.get(requestedPage);
+                }
+            }
+            requestedPage = -2;
+            pageInitializerSubject.onNext(chapter);
+            return chapter;
+        });
     }
 
     private Observable<Pair<Chapter, Chapter>> getAdjacentChaptersObservable() {
         return Observable.zip(
-                db.getPreviousChapter(chapter).asRxObservable().take(1),
-                db.getNextChapter(chapter).asRxObservable().take(1),
+                db.getPreviousChapter(activeChapter).asRxObservable().take(1),
+                db.getNextChapter(activeChapter).asRxObservable().take(1),
                 Pair::create)
                 .doOnNext(pair -> {
                     previousChapter = pair.first;
@@ -164,22 +193,11 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    // Listen for retry page events
-    private Observable<Page> getRetryPageObservable() {
-        return retryPageSubject
-                .observeOn(Schedulers.io())
-                .flatMap(page -> page.getImageUrl() == null ?
-                        source.getImageUrlFromPage(page) :
-                        Observable.just(page))
-                .flatMap(source::getCachedImage);
-    }
-
-    // Preload the first pages of the next chapter
+    // Preload the first pages of the next chapter. Only for non seamless mode
     private Observable<Page> getPreloadNextChapterObservable() {
         return source.getCachedPageListOrPullFromNetwork(nextChapter.url)
                 .flatMap(pages -> {
-                    nextChapterPageList = pages;
-                    // Preload at most 5 pages
+                    nextChapter.setPages(pages);
                     int pagesToPreload = Math.min(pages.size(), 5);
                     return Observable.from(pages).take(pagesToPreload);
                 })
@@ -198,6 +216,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     private Observable<List<MangaSync>> getMangaSyncObservable() {
         return db.getMangasSync(manga).asRxObservable()
+                .take(1)
                 .doOnNext(mangaSync -> this.mangaSyncList = mangaSync);
     }
 
@@ -207,24 +226,58 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     // Loads the given chapter
     private void loadChapter(Chapter chapter, int requestedPage) {
-        // Before loading the chapter, stop preloading (if it's working) and save current progress
-        stopPreloadingNextChapter();
+        if (seamlessMode) {
+            if (appenderSubscription != null)
+                remove(appenderSubscription);
+        } else {
+            stopPreloadingNextChapter();
+        }
 
-        this.chapter = chapter;
-        isDownloaded = isChapterDownloaded(chapter);
+        this.activeChapter = chapter;
+        chapter.status = isChapterDownloaded(chapter) ? Download.DOWNLOADED : Download.NOT_DOWNLOADED;
 
         // If the chapter is partially read, set the starting page to the last the user read
         if (!chapter.read && chapter.last_page_read != 0)
-            currentPage = chapter.last_page_read;
+            this.requestedPage = chapter.last_page_read;
         else
-            currentPage = requestedPage;
+            this.requestedPage = requestedPage;
 
         // Reset next and previous chapter. They have to be fetched again
         nextChapter = null;
         previousChapter = null;
-        nextChapterPageList = null;
 
         start(GET_PAGE_LIST);
+        start(GET_ADJACENT_CHAPTERS);
+    }
+
+    public void setActiveChapter(Chapter chapter) {
+        onChapterLeft(true); // force markAsRead since at this point the current page is already for the next chapter
+        this.activeChapter = chapter;
+        nextChapter = null;
+        previousChapter = null;
+        start(GET_ADJACENT_CHAPTERS);
+    }
+
+    public void appendNextChapter() {
+        if (nextChapter == null)
+            return;
+
+        if (appenderSubscription != null)
+            remove(appenderSubscription);
+
+        nextChapter.status = isChapterDownloaded(nextChapter) ? Download.DOWNLOADED : Download.NOT_DOWNLOADED;
+
+        appenderSubscription = getPageListObservable(nextChapter)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(deliverLatestCache())
+                .subscribe(split((view, chapter) -> {
+                    view.onAppendChapter(chapter);
+                }, (view, error) -> {
+                    view.onChapterAppendError();
+                }));
+
+        add(appenderSubscription);
     }
 
     // Check whether the given chapter is downloaded
@@ -237,37 +290,38 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         retryPageSubject.onNext(page);
     }
 
-    // Called before loading another chapter or leaving the reader. It allows to do operations
-    // over the chapter read like saving progress
     public void onChapterLeft() {
-        if (pageList == null)
-            return;
-
-        // Cache current page list progress for online chapters to allow a faster reopen
-        if (!isDownloaded)
-            source.savePageList(chapter.url, pageList);
-
-        // Save current progress of the chapter. Mark as read if the chapter is finished
-        chapter.last_page_read = currentPage;
-        if (isChapterFinished()) {
-            chapter.read = true;
-        }
-        db.insertChapter(chapter).asRxObservable().subscribe();
+        onChapterLeft(false);
     }
 
-    // Check whether the chapter has been read
-    private boolean isChapterFinished() {
-        return !chapter.read && currentPage == pageList.size() - 1;
+    // Called before loading another chapter or leaving the reader. It allows to do operations
+    // over the chapter read like saving progress
+    public void onChapterLeft(boolean forceMarkAsRead) {
+        if (activeChapter.getPages() == null)
+            return;
+
+        Page activePage = getCurrentPage();
+
+        // Cache current page list progress for online chapters to allow a faster reopen
+        if (!activeChapter.isDownloaded())
+            source.savePageList(activeChapter.url, activePage.getChapter().getPages());
+
+        // Save current progress of the chapter. Mark as read if the chapter is finished
+        activeChapter.last_page_read = activePage.getPageNumber();
+        if (forceMarkAsRead || activePage.isLastPage()) {
+            activeChapter.read = true;
+        }
+        db.insertChapter(activeChapter).asRxObservable().subscribe();
     }
 
     public int getMangaSyncChapterToUpdate() {
-        if (pageList == null || mangaSyncList == null || mangaSyncList.isEmpty())
+        if (activeChapter.getPages() == null || mangaSyncList == null || mangaSyncList.isEmpty())
             return 0;
 
         int lastChapterReadLocal = 0;
         // If the current chapter has been read, we check with this one
-        if (chapter.read)
-            lastChapterReadLocal = (int) Math.floor(chapter.chapter_number);
+        if (activeChapter.read)
+            lastChapterReadLocal = (int) Math.floor(activeChapter.chapter_number);
         // If not, we check if the previous chapter has been read
         else if (previousChapter != null && previousChapter.read)
             lastChapterReadLocal = (int) Math.floor(previousChapter.chapter_number);
@@ -295,7 +349,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         }
     }
 
-    public void setCurrentPage(int currentPage) {
+    public void setCurrentPage(Page currentPage) {
         this.currentPage = currentPage;
     }
 
@@ -334,8 +388,8 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     private void stopPreloadingNextChapter() {
         if (!isUnsubscribed(PRELOAD_NEXT_CHAPTER)) {
             stop(PRELOAD_NEXT_CHAPTER);
-            if (nextChapterPageList != null)
-                source.savePageList(nextChapter.url, nextChapterPageList);
+            if (nextChapter.getPages() != null)
+                source.savePageList(nextChapter.url, nextChapter.getPages());
         }
     }
 
@@ -348,4 +402,11 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         return manga;
     }
 
+    public Page getCurrentPage() {
+        return currentPage;
+    }
+
+    public boolean isSeamlessMode() {
+        return seamlessMode;
+    }
 }

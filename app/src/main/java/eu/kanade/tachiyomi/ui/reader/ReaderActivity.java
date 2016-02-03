@@ -158,16 +158,34 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         ToastUtil.showShort(this, R.string.page_list_error);
     }
 
-    public void onChapterReady(List<Page> pages, Manga manga, Chapter chapter, int currentPage) {
-        if (currentPage == -1) {
-            currentPage = pages.size() - 1;
+    public void onChapterAppendError() {
+        // Ignore
+    }
+
+    public void onChapterReady(Manga manga, Chapter chapter, Page currentPage) {
+        List<Page> pages = chapter.getPages();
+        if (currentPage == null) {
+            currentPage = pages.get(pages.size() - 1);
         }
 
         if (viewer == null) {
             viewer = getOrCreateViewer(manga);
         }
-        viewer.onPageListReady(pages, currentPage);
-        readerMenu.onChapterReady(pages.size(), manga, chapter, currentPage);
+        viewer.onPageListReady(chapter, currentPage);
+        readerMenu.setActiveManga(manga);
+        readerMenu.setActiveChapter(chapter, currentPage.getPageNumber());
+    }
+
+    public void onEnterChapter(Chapter chapter, int currentPage) {
+        if (currentPage == -1) {
+            currentPage = chapter.getPages().size() - 1;
+        }
+        getPresenter().setActiveChapter(chapter);
+        readerMenu.setActiveChapter(chapter, currentPage);
+    }
+
+    public void onAppendChapter(Chapter chapter) {
+        viewer.onPageListAppendReady(chapter);
     }
 
     public void onAdjacentChapters(Chapter previous, Chapter next) {
@@ -209,8 +227,9 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         readerMenu.onPageChanged(currentPageIndex);
     }
 
-    public void setSelectedPage(int pageIndex) {
-        viewer.setSelectedPage(pageIndex);
+    public void gotoPageInCurrentChapter(int pageIndex) {
+        Page requestedPage = viewer.getCurrentPage().getChapter().getPages().get(pageIndex);
+        viewer.setSelectedPage(requestedPage);
     }
 
     public void onCenterSingleTap() {
@@ -218,7 +237,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     public void requestNextChapter() {
-        getPresenter().setCurrentPage(viewer != null ? viewer.getCurrentPage() : 0);
+        getPresenter().setCurrentPage(viewer.getCurrentPage());
         if (!getPresenter().loadNextChapter()) {
             ToastUtil.showShort(this, R.string.no_next_chapter);
         }
@@ -226,7 +245,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     public void requestPreviousChapter() {
-        getPresenter().setCurrentPage(viewer != null ? viewer.getCurrentPage() : 0);
+        getPresenter().setCurrentPage(viewer.getCurrentPage());
         if (!getPresenter().loadPreviousChapter()) {
             ToastUtil.showShort(this, R.string.no_previous_chapter);
         }

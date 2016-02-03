@@ -128,6 +128,10 @@ public class PreferencesHelper {
         return rxPrefs.getInteger(getKey(R.string.pref_last_catalogue_source_key), -1);
     }
 
+    public boolean seamlessMode() {
+        return prefs.getBoolean(getKey(R.string.pref_seamless_mode_key), true);
+    }
+
     public Preference<Boolean> catalogueAsList() {
         return rxPrefs.getBoolean(getKey(R.string.pref_display_catalogue_as_list), false);
     }

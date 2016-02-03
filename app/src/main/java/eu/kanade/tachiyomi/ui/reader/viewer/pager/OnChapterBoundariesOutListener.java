@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.reader.viewer.base;
+package eu.kanade.tachiyomi.ui.reader.viewer.pager;
 
 public interface OnChapterBoundariesOutListener {
     void onFirstPageOutEvent();

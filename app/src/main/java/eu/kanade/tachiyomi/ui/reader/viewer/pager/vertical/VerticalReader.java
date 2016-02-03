@@ -16,14 +16,4 @@ public class VerticalReader extends PagerReader {
         return pager;
     }
 
-    @Override
-    public void onFirstPageOut() {
-        getReaderActivity().requestPreviousChapter();
-    }
-
-    @Override
-    public void onLastPageOut() {
-        getReaderActivity().requestNextChapter();
-    }
-
 }

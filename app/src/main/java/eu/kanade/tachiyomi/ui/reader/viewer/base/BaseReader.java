@@ -1,15 +1,15 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.base;
 
-import android.view.MotionEvent;
-
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.RapidImageRegionDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageRegionDecoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment;
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
@@ -18,40 +18,81 @@ public abstract class BaseReader extends BaseFragment {
 
     protected int currentPage;
     protected List<Page> pages;
+    protected List<Chapter> chapters;
     protected Class<? extends ImageRegionDecoder> regionDecoderClass;
     protected Class<? extends ImageDecoder> bitmapDecoderClass;
+
+    private boolean hasRequestedNextChapter;
 
     public static final int RAPID_DECODER = 0;
     public static final int SKIA_DECODER = 1;
 
     public void updatePageNumber() {
-        getReaderActivity().onPageChanged(getCurrentPage(), getTotalPages());
+        getReaderActivity().onPageChanged(getCurrentPage().getPageNumber(), getCurrentPage().getChapter().getPages().size());
     }
 
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public int getPageForPosition(int position) {
-        return position;
-    }
-
-    public int getPositionForPage(int page) {
-        return page;
+    public Page getCurrentPage() {
+        return pages.get(currentPage);
     }
 
     public void onPageChanged(int position) {
-        currentPage = getPageForPosition(position);
+        if (getReaderActivity().getPresenter().isSeamlessMode()) {
+            Chapter oldChapter = pages.get(currentPage).getChapter();
+            Chapter newChapter = pages.get(position).getChapter();
+            if (!hasRequestedNextChapter && position > pages.size() - 5) {
+                hasRequestedNextChapter = true;
+                getReaderActivity().getPresenter().appendNextChapter();
+            }
+            if (!oldChapter.id.equals(newChapter.id)) {
+                Page page = pages.get(position);
+                onChapterChanged(page.getChapter(), page);
+            }
+        }
+        currentPage = position;
         updatePageNumber();
     }
 
-    public int getTotalPages() {
-        return pages == null ? 0 : pages.size();
+    private void onChapterChanged(Chapter chapter, Page currentPage) {
+        getReaderActivity().onEnterChapter(chapter, currentPage.getPageNumber());
+    }
+
+    public void setSelectedPage(Page page) {
+        setSelectedPage(getPageIndex(page));
+    }
+
+    public int getPageIndex(Page search) {
+        // search for the index of a page in the current list without requiring them to be the same object
+        for (Page page : pages) {
+            if (page.getPageNumber() == search.getPageNumber() &&
+                    page.getChapter().id.equals(search.getChapter().id)) {
+                return pages.indexOf(page);
+            }
+        }
+        return 0;
+    }
+
+    public void onPageListReady(Chapter chapter, Page currentPage) {
+        if (chapters == null || !chapters.contains(chapter)) {
+            // if we reset the loaded page we also need to reset the loaded chapters
+            chapters = new ArrayList<>();
+            chapters.add(chapter);
+            onSetChapter(chapter, currentPage);
+        } else {
+            setSelectedPage(currentPage);
+        }
+    }
+
+    public void onPageListAppendReady(Chapter chapter) {
+        if (!chapters.contains(chapter)) {
+            hasRequestedNextChapter = false;
+            chapters.add(chapter);
+            onAppendChapter(chapter);
+        }
     }
 
     public abstract void setSelectedPage(int pageNumber);
-    public abstract void onPageListReady(List<Page> pages, int currentPage);
-    public abstract boolean onImageTouch(MotionEvent motionEvent);
+    public abstract void onSetChapter(Chapter chapter, Page currentPage);
+    public abstract void onAppendChapter(Chapter chapter);
 
     public void setDecoderClass(int value) {
         switch (value) {
