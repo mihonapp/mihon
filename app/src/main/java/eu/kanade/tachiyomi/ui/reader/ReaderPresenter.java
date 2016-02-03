@@ -30,6 +30,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
+import timber.log.Timber;
 
 public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
@@ -70,9 +71,16 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
         retryPageSubject = PublishSubject.create();
 
-        startable(PRELOAD_NEXT_CHAPTER, this::getPreloadNextChapterObservable);
-        startable(GET_PAGE_IMAGES, this::getPageImagesObservable);
+        startable(PRELOAD_NEXT_CHAPTER, this::getPreloadNextChapterObservable,
+                next -> {},
+                error -> Timber.e("Error preloading chapter"));
+
+        startable(GET_PAGE_IMAGES, this::getPageImagesObservable,
+                next -> {},
+                error -> Timber.e("Error fetching images"));
+
         startable(GET_ADJACENT_CHAPTERS, this::getAdjacentChaptersObservable);
+
         startable(RETRY_IMAGES, this::getRetryPageObservable);
 
         restartable(GET_MANGA_SYNC, () -> getMangaSyncObservable().subscribe());
@@ -151,8 +159,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 .doOnNext(pair -> {
                     previousChapter = pair.first;
                     nextChapter = pair.second;
-                })
-                .observeOn(AndroidSchedulers.mainThread());
+                });
     }
 
     // Listen for retry page events
@@ -162,8 +169,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 .flatMap(page -> page.getImageUrl() == null ?
                         source.getImageUrlFromPage(page) :
                         Observable.just(page))
-                .flatMap(source::getCachedImage)
-                .observeOn(AndroidSchedulers.mainThread());
+                .flatMap(source::getCachedImage);
     }
 
     // Preload the first pages of the next chapter
@@ -175,8 +181,13 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                     int pagesToPreload = Math.min(pages.size(), 5);
                     return Observable.from(pages).take(pagesToPreload);
                 })
+                // Preload up to 5 images
                 .concatMap(page -> page.getImageUrl() == null ?
                         source.getImageUrlFromPage(page) :
+                        Observable.just(page))
+                // Download the first image
+                .concatMap(page -> page.getPageNumber() == 0 ?
+                        source.getCachedImage(page) :
                         Observable.just(page))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
