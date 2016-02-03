@@ -1,4 +1,4 @@
-[![stable release](https://img.shields.io/badge/release-v0.1.2-blue.svg)](https://github.com/inorichi/tachiyomi/releases)
+[![stable release](https://img.shields.io/badge/release-v0.1.3-blue.svg)](https://github.com/inorichi/tachiyomi/releases)
 [![fdroid release](https://img.shields.io/badge/release-F--Droid-blue.svg)](https://f-droid.org/repository/browse/?fdid=eu.kanade.tachiyomi)
 [![latest debug build](https://img.shields.io/badge/debug-latest%20build-blue.svg)](http://tachiyomi.kanade.eu/latest/app-debug.apk)
 
