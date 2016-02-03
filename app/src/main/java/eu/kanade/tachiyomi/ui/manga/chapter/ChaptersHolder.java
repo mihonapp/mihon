@@ -7,9 +7,9 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.Bind;
@@ -38,7 +38,7 @@ public class ChaptersHolder extends FlexibleViewHolder {
     private final int unreadColor;
 
     private final DecimalFormat decimalFormat;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
     public ChaptersHolder(View view, ChaptersAdapter adapter, OnListItemClickListener listener) {
         super(view, adapter, listener);
@@ -71,6 +71,7 @@ public class ChaptersHolder extends FlexibleViewHolder {
         }
         title.setText(name);
         title.setTextColor(chapter.read ? readColor : unreadColor);
+        date.setTextColor(chapter.read ? readColor : unreadColor);
 
         if (!chapter.read && chapter.last_page_read > 0) {
             pages.setText(context.getString(R.string.chapter_progress, chapter.last_page_read + 1));
@@ -79,7 +80,7 @@ public class ChaptersHolder extends FlexibleViewHolder {
         }
 
         onStatusChange(chapter.status);
-        date.setText(sdf.format(new Date(chapter.date_upload)));
+        date.setText(df.format(new Date(chapter.date_upload)));
     }
 
     public void onStatusChange(int status) {
