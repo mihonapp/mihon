@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,8 +17,23 @@ import java.util.TimeZone;
 
 import eu.kanade.tachiyomi.BuildConfig;
 import eu.kanade.tachiyomi.R;
+import eu.kanade.tachiyomi.data.updater.UpdateChecker;
+import eu.kanade.tachiyomi.data.updater.UpdateDownloader;
+import eu.kanade.tachiyomi.util.ToastUtil;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class SettingsAboutFragment extends SettingsNestedFragment {
+    /**
+     * Checks for new releases
+     */
+    private UpdateChecker updateChecker;
+
+    /**
+     * The subscribtion service of the obtained release object
+     */
+    private Subscription releaseSubscription;
 
     public static SettingsNestedFragment newInstance(int resourcePreference, int resourceTitle) {
         SettingsNestedFragment fragment = new SettingsAboutFragment();
@@ -25,13 +42,35 @@ public class SettingsAboutFragment extends SettingsNestedFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
+    public void onCreate(Bundle savedInstanceState) {
+        //Check for update
+        updateChecker = new UpdateChecker(getActivity());
 
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (releaseSubscription != null)
+            releaseSubscription.unsubscribe();
+
+        super.onDestroyView();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         Preference version = findPreference(getString(R.string.pref_version));
         Preference buildTime = findPreference(getString(R.string.pref_build_time));
 
         version.setSummary(BuildConfig.DEBUG ? "r" + BuildConfig.COMMIT_COUNT :
                 BuildConfig.VERSION_NAME);
+
+        //Set onClickListener to check for new version
+        version.setOnPreferenceClickListener(preference -> {
+            if (!BuildConfig.DEBUG)
+                checkVersion();
+            return true;
+        });
 
         buildTime.setSummary(getFormattedBuildTime());
 
@@ -53,5 +92,42 @@ public class SettingsAboutFragment extends SettingsNestedFragment {
             // Do nothing
         }
         return "";
+    }
+
+    /**
+     * Checks version and shows a user prompt when update available.
+     */
+    private void checkVersion() {
+        releaseSubscription = updateChecker.checkForApplicationUpdate()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(next -> {
+                            //Get version of latest releaseSubscription
+                            String newVersion = next.getVersion();
+                            newVersion = newVersion.replaceAll("[^\\d.]", "");
+
+                            //Check if latest version is different from current version
+                            if (!newVersion.equals(BuildConfig.VERSION_NAME)) {
+                                String downloadLink = next.getDownloadLink();
+                                String body = next.getChangeLog();
+
+                                //Create confirmation window
+                                new MaterialDialog.Builder(getActivity())
+                                        .title(getString(R.string.update_check_title))
+                                        .content(body)
+                                        .positiveText(getString(R.string.update_check_confirm))
+                                        .negativeText(getString(R.string.update_check_ignore))
+                                        .onPositive((dialog, which) -> {
+                                            // User output that download has started
+                                            ToastUtil.showShort(getActivity(), getString(R.string.update_check_download_started));
+                                            // Start download
+                                            new UpdateDownloader(getActivity()).execute(downloadLink);
+                                        })
+                                        .show();
+                            } else {
+                                ToastUtil.showShort(getActivity(), getString(R.string.update_check_no_new_updates));
+                            }
+                        },
+                        Throwable::printStackTrace);
     }
 }

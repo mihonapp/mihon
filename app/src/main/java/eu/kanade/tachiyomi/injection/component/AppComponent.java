@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.mangasync.services.MyAnimeList;
 import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.data.sync.LibraryUpdateService;
 import eu.kanade.tachiyomi.data.sync.UpdateMangaSyncService;
+import eu.kanade.tachiyomi.data.updater.UpdateDownloader;
 import eu.kanade.tachiyomi.injection.module.AppModule;
 import eu.kanade.tachiyomi.injection.module.DataModule;
 import eu.kanade.tachiyomi.ui.catalogue.CataloguePresenter;
@@ -50,6 +51,7 @@ public interface AppComponent {
     void inject(ReaderActivity readerActivity);
     void inject(MangaActivity mangaActivity);
     void inject(SettingsAccountsFragment settingsAccountsFragment);
+
     void inject(SettingsActivity settingsActivity);
 
     void inject(Source source);
@@ -59,6 +61,8 @@ public interface AppComponent {
     void inject(LibraryUpdateService libraryUpdateService);
     void inject(DownloadService downloadService);
     void inject(UpdateMangaSyncService updateMangaSyncService);
+
+    void inject(UpdateDownloader updateDownloader);
     Application application();
 
 }

@@ -210,4 +210,12 @@
     <!-- File Picker Titles -->
     <string name="file_select_cover">Select cover image</string>
 
+    <!--UpdateCheck-->
+    <string name="update_check_title">New update available!</string>
+    <string name="update_check_confirm">Download</string>
+    <string name="update_check_ignore">Ignore</string>
+    <string name="update_check_no_new_updates">No new updates available</string>
+    <string name="update_check_download_started">Download Started</string>
+    <string name="update_check_look_for_updates">Looking for updates</string>
+
 </resources>
