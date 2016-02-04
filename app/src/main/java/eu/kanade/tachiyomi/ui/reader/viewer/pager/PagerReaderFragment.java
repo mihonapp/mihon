@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -71,6 +72,23 @@ public class PagerReaderFragment extends BaseFragment {
         imageView.setOnTouchListener((v, motionEvent) -> parentFragment.onImageTouch(motionEvent));
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
             @Override
+            public void onReady() {
+                switch (parentFragment.zoomStart) {
+                    case PagerReader.ALIGN_LEFT:
+                        imageView.setScaleAndCenter(imageView.getScale(), new PointF(0, 0));
+                        break;
+                    case PagerReader.ALIGN_RIGHT:
+                        imageView.setScaleAndCenter(imageView.getScale(), new PointF(99999f, 0));
+                        break;
+                    case PagerReader.ALIGN_CENTER:
+                        PointF center = imageView.getCenter();
+                        center.y = 0;
+                        imageView.setScaleAndCenter(imageView.getScale(), center);
+                        break;
+                }
+            }
+
+            @Override
             public void onImageLoadError(Exception e) {
                 showImageLoadError();
             }
@@ -93,6 +111,7 @@ public class PagerReaderFragment extends BaseFragment {
     public void onDestroyView() {
         unsubscribeProgress();
         unsubscribeStatus();
+        imageView.setOnImageEventListener(null);
         ButterKnife.unbind(this);
         super.onDestroyView();
     }

@@ -116,6 +116,10 @@ public class PreferencesHelper {
         return rxPrefs.getInteger(getKey(R.string.pref_image_decoder_key), 0);
     }
 
+    public Preference<Integer> zoomStart() {
+        return rxPrefs.getInteger(getKey(R.string.pref_zoom_start_key), 1);
+    }
+
     public Preference<Integer> readerTheme() {
         return rxPrefs.getInteger(getKey(R.string.pref_reader_theme_key), 0);
     }

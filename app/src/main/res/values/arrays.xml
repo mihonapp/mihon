@@ -66,6 +66,20 @@
         <item>6</item>
     </string-array>
 
+    <string-array name="zoom_start">
+        <item>@string/zoom_start_automatic</item>
+        <item>@string/zoom_start_left</item>
+        <item>@string/zoom_start_right</item>
+        <item>@string/zoom_start_center</item>
+    </string-array>
+
+    <string-array name="zoom_start_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
     <string-array name="library_update_interval">
         <item>@string/update_never</item>
         <item>@string/update_1hour</item>

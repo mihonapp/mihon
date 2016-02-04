@@ -6,10 +6,13 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import eu.kanade.tachiyomi.R;
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader;
 import eu.kanade.tachiyomi.ui.reader.viewer.base.OnChapterBoundariesOutListener;
 import eu.kanade.tachiyomi.ui.reader.viewer.base.OnChapterSingleTapListener;
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader;
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -24,6 +27,12 @@ public abstract class PagerReader extends BaseReader {
     protected CompositeSubscription subscriptions;
 
     protected int scaleType = 1;
+    protected int zoomStart = 1;
+
+    public static final int ALIGN_AUTO = 1;
+    public static final int ALIGN_LEFT = 2;
+    public static final int ALIGN_RIGHT = 3;
+    public static final int ALIGN_CENTER = 4;
 
     protected void initializePager(Pager pager) {
         this.pager = pager;
@@ -61,22 +70,30 @@ public abstract class PagerReader extends BaseReader {
         adapter = new PagerReaderAdapter(getChildFragmentManager());
         pager.setAdapter(adapter);
 
+        PreferencesHelper preferences = getReaderActivity().getPreferences();
         subscriptions = new CompositeSubscription();
-        subscriptions.add(getReaderActivity().getPreferences().imageDecoder()
+        subscriptions.add(preferences.imageDecoder()
                 .asObservable()
                 .doOnNext(this::setDecoderClass)
                 .skip(1)
                 .distinctUntilChanged()
                 .subscribe(v -> adapter.notifyDataSetChanged()));
 
-        subscriptions.add(getReaderActivity().getPreferences().imageScaleType()
+        subscriptions.add(preferences.imageScaleType()
                 .asObservable()
                 .doOnNext(this::setImageScaleType)
                 .skip(1)
                 .distinctUntilChanged()
                 .subscribe(v -> adapter.notifyDataSetChanged()));
 
-        subscriptions.add(getReaderActivity().getPreferences().enableTransitions()
+        subscriptions.add(preferences.zoomStart()
+                .asObservable()
+                .doOnNext(this::setZoomStart)
+                .skip(1)
+                .distinctUntilChanged()
+                .subscribe(v -> adapter.notifyDataSetChanged()));
+
+        subscriptions.add(preferences.enableTransitions()
                 .asObservable()
                 .subscribe(value -> transitions = value));
 
@@ -123,6 +140,19 @@ public abstract class PagerReader extends BaseReader {
 
     private void setImageScaleType(int scaleType) {
         this.scaleType = scaleType;
+    }
+
+    private void setZoomStart(int zoomStart) {
+        if (zoomStart == ALIGN_AUTO) {
+            if (this instanceof LeftToRightReader)
+                setZoomStart(ALIGN_LEFT);
+            else if (this instanceof RightToLeftReader)
+                setZoomStart(ALIGN_RIGHT);
+            else
+                setZoomStart(ALIGN_CENTER);
+        } else {
+            this.zoomStart = zoomStart;
+        }
     }
 
     public abstract void onFirstPageOut();

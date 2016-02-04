@@ -43,9 +43,10 @@ public class ReaderMenu {
     @Bind(R.id.page_seeker) SeekBar seekBar;
     @Bind(R.id.total_pages) TextView totalPages;
     @Bind(R.id.lock_orientation) ImageButton lockOrientation;
+    @Bind(R.id.reader_zoom_selector) ImageButton zoomSelector;
+    @Bind(R.id.reader_scale_type_selector) ImageButton scaleTypeSelector;
     @Bind(R.id.reader_selector) ImageButton readerSelector;
     @Bind(R.id.reader_extra_settings) ImageButton extraSettings;
-    @Bind(R.id.reader_scale_type_selector) ImageButton scaleTypeSelector;
 
     private MenuItem nextChapterBtn;
     private MenuItem prevChapterBtn;
@@ -189,9 +190,23 @@ public class ReaderMenu {
         lockOrientation.setOnClickListener(v ->
                 preferences.lockOrientation().set(!preferences.lockOrientation().get()));
 
+        // Zoom selector
+        zoomSelector.setOnClickListener(v -> {
+            showImmersiveDialog(new MaterialDialog.Builder(activity)
+                    .title(R.string.pref_zoom_start)
+                    .items(R.array.zoom_start)
+                    .itemsCallbackSingleChoice(preferences.zoomStart().get() - 1,
+                            (d, itemView, which, text) -> {
+                                preferences.zoomStart().set(which + 1);
+                                return true;
+                            })
+                    .build());
+        });
+
         // Scale type selector
         scaleTypeSelector.setOnClickListener(v -> {
             showImmersiveDialog(new MaterialDialog.Builder(activity)
+                    .title(R.string.pref_image_scale_type)
                     .items(R.array.image_scale_type)
                     .itemsCallbackSingleChoice(preferences.imageScaleType().get() - 1,
                             (d, itemView, which, text) -> {
@@ -205,6 +220,7 @@ public class ReaderMenu {
         readerSelector.setOnClickListener(v -> {
             final Manga manga = activity.getPresenter().getManga();
             showImmersiveDialog(new MaterialDialog.Builder(activity)
+                    .title(R.string.pref_viewer_type)
                     .items(R.array.viewers_selector)
                     .itemsCallbackSingleChoice(manga.viewer,
                             (d, itemView, which, text) -> {
