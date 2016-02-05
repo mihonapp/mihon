@@ -67,7 +67,7 @@ public class SettingsAboutFragment extends SettingsNestedFragment {
 
         //Set onClickListener to check for new version
         version.setOnPreferenceClickListener(preference -> {
-            if (!BuildConfig.DEBUG)
+            if (!BuildConfig.DEBUG && BuildConfig.INCLUDE_UPDATER)
                 checkVersion();
             return true;
         });
@@ -101,33 +101,32 @@ public class SettingsAboutFragment extends SettingsNestedFragment {
         releaseSubscription = updateChecker.checkForApplicationUpdate()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(next -> {
-                            //Get version of latest releaseSubscription
-                            String newVersion = next.getVersion();
-                            newVersion = newVersion.replaceAll("[^\\d.]", "");
+                .subscribe(release -> {
+                    //Get version of latest release
+                    String newVersion = release.getVersion();
+                    newVersion = newVersion.replaceAll("[^\\d.]", "");
 
-                            //Check if latest version is different from current version
-                            if (!newVersion.equals(BuildConfig.VERSION_NAME)) {
-                                String downloadLink = next.getDownloadLink();
-                                String body = next.getChangeLog();
+                    //Check if latest version is different from current version
+                    if (!newVersion.equals(BuildConfig.VERSION_NAME)) {
+                        String downloadLink = release.getDownloadLink();
+                        String body = release.getChangeLog();
 
-                                //Create confirmation window
-                                new MaterialDialog.Builder(getActivity())
-                                        .title(getString(R.string.update_check_title))
-                                        .content(body)
-                                        .positiveText(getString(R.string.update_check_confirm))
-                                        .negativeText(getString(R.string.update_check_ignore))
-                                        .onPositive((dialog, which) -> {
-                                            // User output that download has started
-                                            ToastUtil.showShort(getActivity(), getString(R.string.update_check_download_started));
-                                            // Start download
-                                            new UpdateDownloader(getActivity()).execute(downloadLink);
-                                        })
-                                        .show();
-                            } else {
-                                ToastUtil.showShort(getActivity(), getString(R.string.update_check_no_new_updates));
-                            }
-                        },
-                        Throwable::printStackTrace);
+                        //Create confirmation window
+                        new MaterialDialog.Builder(getActivity())
+                                .title(getString(R.string.update_check_title))
+                                .content(body)
+                                .positiveText(getString(R.string.update_check_confirm))
+                                .negativeText(getString(R.string.update_check_ignore))
+                                .onPositive((dialog, which) -> {
+                                    // User output that download has started
+                                    ToastUtil.showShort(getActivity(), getString(R.string.update_check_download_started));
+                                    // Start download
+                                    new UpdateDownloader(getActivity().getApplicationContext()).execute(downloadLink);
+                                })
+                                .show();
+                    } else {
+                        ToastUtil.showShort(getActivity(), getString(R.string.update_check_no_new_updates));
+                    }
+                }, Throwable::printStackTrace);
     }
 }

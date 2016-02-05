@@ -59,11 +59,11 @@ public class UpdateDownloader extends AsyncTask<String, Void, Void> {
 
 
     @Override
-    protected Void doInBackground(String... arg0) {
+    protected Void doInBackground(String... args) {
         try {
             createCacheDir();
 
-            URL url = new URL(arg0[0]);
+            URL url = new URL(args[0]);
             HttpURLConnection c = (HttpURLConnection) url.openConnection();
             c.connect();
 

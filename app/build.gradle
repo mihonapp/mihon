@@ -1,6 +1,5 @@
 import java.text.SimpleDateFormat
 
-apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
@@ -29,6 +28,10 @@ ext {
     }
 }
 
+def includeUpdater() {
+    return hasProperty("include_updater");
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -45,6 +48,7 @@ android {
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
         buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
+        buildConfigField "boolean", "INCLUDE_UPDATER", "${includeUpdater()}"
     }
 
     compileOptions {
