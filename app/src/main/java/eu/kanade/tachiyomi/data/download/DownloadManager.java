@@ -84,7 +84,7 @@ public class DownloadManager {
                     if (finished) {
                         DownloadService.stop(context);
                     }
-                }, e -> Timber.e(e.getCause(), e.getMessage()));
+                }, e -> DownloadService.stop(context));
 
         if (!isRunning) {
             isRunning = true;

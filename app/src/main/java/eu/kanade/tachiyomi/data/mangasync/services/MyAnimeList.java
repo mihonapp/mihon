@@ -83,7 +83,7 @@ public class MyAnimeList extends MangaSyncService {
 
     public Observable<Boolean> login(String username, String password) {
         createHeaders(username, password);
-        return networkService.getResponse(getLoginUrl(), headers, null)
+        return networkService.getResponse(getLoginUrl(), headers, false)
                 .map(response -> response.code() == 200);
     }
 
@@ -101,7 +101,7 @@ public class MyAnimeList extends MangaSyncService {
     }
 
     public Observable<List<MangaSync>> search(String query) {
-        return networkService.getStringResponse(getSearchUrl(query), headers, null)
+        return networkService.getStringResponse(getSearchUrl(query), headers, true)
                 .map(Jsoup::parse)
                 .flatMap(doc -> Observable.from(doc.select("entry")))
                 .filter(entry -> !entry.select("type").text().equals("Novel"))
@@ -126,7 +126,7 @@ public class MyAnimeList extends MangaSyncService {
 
     public Observable<List<MangaSync>> getList() {
         // TODO cache this list for a few minutes
-        return networkService.getStringResponse(getListUrl(username), headers, null)
+        return networkService.getStringResponse(getListUrl(username), headers, true)
                 .map(Jsoup::parse)
                 .flatMap(doc -> Observable.from(doc.select("manga")))
                 .map(entry -> {

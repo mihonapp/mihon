@@ -53,7 +53,7 @@ public abstract class Source extends BaseSource {
             page.url = getInitialPopularMangasUrl();
 
         return networkService
-                .getStringResponse(page.url, requestHeaders, null)
+                .getStringResponse(page.url, requestHeaders, true)
                 .map(Jsoup::parse)
                 .doOnNext(doc -> page.mangas = parsePopularMangasFromHtml(doc))
                 .doOnNext(doc -> page.nextPageUrl = parseNextPopularMangasUrl(doc, page))
@@ -66,7 +66,7 @@ public abstract class Source extends BaseSource {
             page.url = getInitialSearchUrl(query);
 
         return networkService
-                .getStringResponse(page.url, requestHeaders, null)
+                .getStringResponse(page.url, requestHeaders, true)
                 .map(Jsoup::parse)
                 .doOnNext(doc -> page.mangas = parseSearchFromHtml(doc))
                 .doOnNext(doc -> page.nextPageUrl = parseNextSearchUrl(doc, page, query))
@@ -76,14 +76,14 @@ public abstract class Source extends BaseSource {
     // Get manga details from the source
     public Observable<Manga> pullMangaFromNetwork(final String mangaUrl) {
         return networkService
-                .getStringResponse(getBaseUrl() + overrideMangaUrl(mangaUrl), requestHeaders, null)
+                .getStringResponse(getBaseUrl() + overrideMangaUrl(mangaUrl), requestHeaders, true)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToManga(mangaUrl, unparsedHtml)));
     }
 
     // Get chapter list of a manga from the source
     public Observable<List<Chapter>> pullChaptersFromNetwork(final String mangaUrl) {
         return networkService
-                .getStringResponse(getBaseUrl() + mangaUrl, requestHeaders, null)
+                .getStringResponse(getBaseUrl() + mangaUrl, requestHeaders, false)
                 .flatMap(unparsedHtml -> {
                     List<Chapter> chapters = parseHtmlToChapters(unparsedHtml);
                     return !chapters.isEmpty() ?
@@ -102,7 +102,7 @@ public abstract class Source extends BaseSource {
 
     public Observable<List<Page>> pullPageListFromNetwork(final String chapterUrl) {
         return networkService
-                .getStringResponse(getBaseUrl() + overrideChapterUrl(chapterUrl), requestHeaders, null)
+                .getStringResponse(getBaseUrl() + overrideChapterUrl(chapterUrl), requestHeaders, false)
                 .flatMap(unparsedHtml -> {
                     List<Page> pages = convertToPages(parseHtmlToPageUrls(unparsedHtml));
                     return !pages.isEmpty() ?
@@ -127,7 +127,7 @@ public abstract class Source extends BaseSource {
     public Observable<Page> getImageUrlFromPage(final Page page) {
         page.setStatus(Page.LOAD_PAGE);
         return networkService
-                .getStringResponse(overridePageUrl(page.getUrl()), requestHeaders, null)
+                .getStringResponse(overridePageUrl(page.getUrl()), requestHeaders, false)
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
                 .onErrorResumeNext(e -> {
                     page.setStatus(Page.ERROR);

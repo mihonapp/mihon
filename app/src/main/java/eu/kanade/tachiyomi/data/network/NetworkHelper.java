@@ -7,11 +7,13 @@ import java.io.File;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.CookieStore;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.FormBody;
 import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,12 +24,23 @@ import rx.Observable;
 public final class NetworkHelper {
 
     private OkHttpClient client;
+    private OkHttpClient forceCacheClient;
 
     private CookieManager cookieManager;
 
-    public final CacheControl NULL_CACHE_CONTROL = new CacheControl.Builder().noCache().build();
     public final Headers NULL_HEADERS = new Headers.Builder().build();
     public final RequestBody NULL_REQUEST_BODY = new FormBody.Builder().build();
+    public final CacheControl CACHE_CONTROL = new CacheControl.Builder()
+            .maxAge(10, TimeUnit.MINUTES)
+            .build();
+
+    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = chain -> {
+        Response originalResponse = chain.proceed(chain.request());
+        return originalResponse.newBuilder()
+                .removeHeader("Pragma")
+                .header("Cache-Control", "max-age=" + 600)
+                .build();
+    };
 
     private static final int CACHE_SIZE = 5 * 1024 * 1024; // 5 MiB
     private static final String CACHE_DIR_NAME = "network_cache";
@@ -42,18 +55,24 @@ public final class NetworkHelper {
                 .cookieJar(new JavaNetCookieJar(cookieManager))
                 .cache(new Cache(cacheDir, CACHE_SIZE))
                 .build();
+
+        forceCacheClient = client.newBuilder()
+                .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                .build();
     }
 
-    public Observable<Response> getResponse(final String url, final Headers headers, final CacheControl cacheControl) {
+    public Observable<Response> getResponse(final String url, final Headers headers, boolean forceCache) {
         return Observable.defer(() -> {
             try {
+                OkHttpClient c = forceCache ? forceCacheClient : client;
+
                 Request request = new Request.Builder()
                         .url(url)
-                        .cacheControl(cacheControl != null ? cacheControl : NULL_CACHE_CONTROL)
                         .headers(headers != null ? headers : NULL_HEADERS)
+                        .cacheControl(CACHE_CONTROL)
                         .build();
 
-                return Observable.just(client.newCall(request).execute());
+                return Observable.just(c.newCall(request).execute());
             } catch (Throwable e) {
                 return Observable.error(e);
             }
@@ -70,8 +89,8 @@ public final class NetworkHelper {
         });
     }
 
-    public Observable<String> getStringResponse(final String url, final Headers headers, final CacheControl cacheControl) {
-        return getResponse(url, headers, cacheControl)
+    public Observable<String> getStringResponse(final String url, final Headers headers, boolean forceCache) {
+        return getResponse(url, headers, forceCache)
                 .flatMap(this::mapResponseToString);
     }
 
@@ -95,7 +114,7 @@ public final class NetworkHelper {
             try {
                 Request request = new Request.Builder()
                         .url(url)
-                        .cacheControl(NULL_CACHE_CONTROL)
+                        .cacheControl(CacheControl.FORCE_NETWORK)
                         .headers(headers != null ? headers : NULL_HEADERS)
                         .build();
 

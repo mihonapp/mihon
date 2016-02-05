@@ -309,7 +309,7 @@ public class Batoto extends LoginSource {
 
     @Override
     public Observable<Boolean> login(String username, String password) {
-        return networkService.getStringResponse(LOGIN_URL, requestHeaders, null)
+        return networkService.getStringResponse(LOGIN_URL, requestHeaders, false)
                 .flatMap(response -> doLogin(response, username, password))
                 .map(this::isAuthenticationSuccessful);
     }
