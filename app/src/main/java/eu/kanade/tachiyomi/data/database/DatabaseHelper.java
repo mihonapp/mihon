@@ -19,6 +19,7 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TreeSet;
 
 import eu.kanade.tachiyomi.data.database.models.Category;
 import eu.kanade.tachiyomi.data.database.models.CategorySQLiteTypeMapping;
@@ -259,19 +260,30 @@ public class DatabaseHelper {
             int deleted = 0;
             db.internal().beginTransaction();
             try {
+                TreeSet<Float> deletedReadChapterNumbers = new TreeSet<>();
+                if (!toDelete.isEmpty()) {
+                    for (Chapter c : toDelete) {
+                        if (c.read) {
+                            deletedReadChapterNumbers.add(c.chapter_number);
+                        }
+                    }
+                    deleted = deleteChapters(toDelete).executeAsBlocking().results().size();
+                }
+
                 if (!toAdd.isEmpty()) {
                     // Set the date fetch for new items in reverse order to allow another sorting method.
                     // Sources MUST return the chapters from most to less recent, which is common.
                     long now = new Date().getTime();
 
                     for (int i = toAdd.size() - 1; i >= 0; i--) {
-                        toAdd.get(i).date_fetch = now++;
+                        Chapter c = toAdd.get(i);
+                        c.date_fetch = now++;
+                        // Try to mark already read chapters as read when the source deletes them
+                        if (c.chapter_number != -1 && deletedReadChapterNumbers.contains(c.chapter_number)) {
+                            c.read = true;
+                        }
                     }
                     added = insertChapters(toAdd).executeAsBlocking().numberOfInserts();
-                }
-
-                if (!toDelete.isEmpty()) {
-                    deleted = deleteChapters(toDelete).executeAsBlocking().results().size();
                 }
 
                 db.internal().setTransactionSuccessful();
