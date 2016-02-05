@@ -37,6 +37,7 @@ public class LibraryCategoryFragment extends BaseFragment
     private List<Manga> mangas;
 
     private Subscription numColumnsSubscription;
+    private Subscription searchSubscription;
 
     public static LibraryCategoryFragment newInstance(int position) {
         LibraryCategoryFragment fragment = new LibraryCategoryFragment();
@@ -77,12 +78,19 @@ public class LibraryCategoryFragment extends BaseFragment
             }
         }
 
+        searchSubscription = getLibraryPresenter().searchSubject
+                .subscribe(text -> {
+                    adapter.setSearchText(text);
+                    adapter.updateDataSet();
+                });
+
         return view;
     }
 
     @Override
     public void onDestroyView() {
         numColumnsSubscription.unsubscribe();
+        searchSubscription.unsubscribe();
         super.onDestroyView();
     }
 

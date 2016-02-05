@@ -2,21 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
-    <!--
     <item
         android:id="@+id/action_search"
         android:title="@string/action_search"
         android:icon="@drawable/ic_action_search"
-        android:orderInCategory="100"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
-        -->
 
     <item
         android:id="@+id/action_refresh"
         android:title="@string/action_refresh"
         android:icon="@drawable/ic_action_refresh"
-        android:orderInCategory="1"
         app:showAsAction="ifRoom" />
 
     <item

@@ -3,8 +3,6 @@ package eu.kanade.tachiyomi.ui.library;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,28 +10,24 @@ import java.util.List;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Manga;
-import rx.Observable;
 
-public class LibraryCategoryAdapter extends FlexibleAdapter<LibraryHolder, Manga>
-        implements Filterable {
+public class LibraryCategoryAdapter extends FlexibleAdapter<LibraryHolder, Manga> {
 
-    List<Manga> mangas;
-    Filter filter;
+    private List<Manga> mangas;
     private LibraryCategoryFragment fragment;
 
     public LibraryCategoryAdapter(LibraryCategoryFragment fragment) {
         this.fragment = fragment;
         mItems = new ArrayList<>();
-        filter = new LibraryFilter();
         setHasStableIds(true);
     }
 
     public void setItems(List<Manga> list) {
         mItems = list;
-        notifyDataSetChanged();
 
-        // TODO needed for filtering?
-        mangas = list;
+        // A copy of manga that it's always unfiltered
+        mangas = new ArrayList<>(list);
+        updateDataSet(null);
     }
 
     public void clear() {
@@ -47,7 +41,16 @@ public class LibraryCategoryAdapter extends FlexibleAdapter<LibraryHolder, Manga
 
     @Override
     public void updateDataSet(String param) {
+        if (mangas != null) {
+            filterItems(mangas);
+            notifyDataSetChanged();
+        }
+    }
 
+    @Override
+    protected boolean filterObject(Manga manga, String query) {
+        return (manga.title != null && manga.title.toLowerCase().contains(query)) ||
+                (manga.author != null && manga.author.toLowerCase().contains(query));
     }
 
     @Override
@@ -68,42 +71,6 @@ public class LibraryCategoryAdapter extends FlexibleAdapter<LibraryHolder, Manga
 
     public int getCoverHeight() {
         return fragment.recycler.getItemWidth() / 3 * 4;
-    }
-
-    @Override
-    public Filter getFilter() {
-        return filter;
-    }
-
-    private class LibraryFilter extends Filter {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            FilterResults results = new FilterResults();
-            String query = charSequence.toString().toLowerCase();
-
-            if (query.length() == 0) {
-                results.values = mangas;
-                results.count = mangas.size();
-            } else {
-                List<Manga> filteredMangas = Observable.from(mangas)
-                        .filter(x ->
-                                (x.title != null && x.title.toLowerCase().contains(query)) ||
-                                (x.author != null && x.author.toLowerCase().contains(query)) ||
-                                (x.artist != null && x.artist.toLowerCase().contains(query)))
-                        .toList()
-                        .toBlocking()
-                        .single();
-                results.values = filteredMangas;
-                results.count = filteredMangas.size();
-            }
-
-            return results;
-        }
-
-        @Override
-        public void publishResults(CharSequence constraint, FilterResults results) {
-            setItems((List<Manga>) results.values);
-        }
     }
 
 }

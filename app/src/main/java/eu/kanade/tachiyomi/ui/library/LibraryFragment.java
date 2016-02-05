@@ -7,6 +7,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,6 +50,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     private ActionMode actionMode;
 
     @State int activeCategory;
+    @State String query = "";
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -60,8 +63,7 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
         setToolbarTitle(getString(R.string.label_library));
@@ -74,6 +76,10 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         adapter = new LibraryAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
+
+        if (savedState != null) {
+            getPresenter().searchSubject.onNext(query);
+        }
 
         return view;
     }
@@ -99,6 +105,29 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.library, menu);
+
+        // Initialize search menu
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        if (!TextUtils.isEmpty(query)) {
+            searchItem.expandActionView();
+            searchView.setQuery(query, true);
+            searchView.clearFocus();
+        }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                onSearchTextChange(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                onSearchTextChange(newText);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -113,6 +142,11 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onSearchTextChange(String query) {
+        this.query = query;
+        getPresenter().searchSubject.onNext(query);
     }
 
     private void onEditCategories() {

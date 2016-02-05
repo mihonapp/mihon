@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.event.LibraryMangasEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subjects.BehaviorSubject;
 
 public class LibraryPresenter extends BasePresenter<LibraryFragment> {
 
@@ -32,6 +33,8 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
     protected List<Category> categories;
     protected List<Manga> selectedMangas;
 
+    protected BehaviorSubject<String> searchSubject;
+
     private static final int GET_LIBRARY = 1;
 
     @Override
@@ -39,6 +42,8 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
         super.onCreate(savedState);
 
         selectedMangas = new ArrayList<>();
+
+        searchSubject = BehaviorSubject.create();
 
         restartableLatestCache(GET_LIBRARY,
                 this::getLibraryObservable,
