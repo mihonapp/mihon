@@ -57,6 +57,7 @@ public class DownloadPresenter extends BasePresenter<DownloadFragment> {
                 }));
 
         add(pageProgressSubscription = downloadQueue.getProgressObservable()
+                .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(view::updateDownloadedPages));
     }

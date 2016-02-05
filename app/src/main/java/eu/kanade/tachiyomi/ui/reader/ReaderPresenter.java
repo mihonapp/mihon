@@ -79,7 +79,8 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 next -> {},
                 error -> Timber.e("Error fetching images"));
 
-        startable(GET_ADJACENT_CHAPTERS, this::getAdjacentChaptersObservable);
+        startableLatestCache(GET_ADJACENT_CHAPTERS, this::getAdjacentChaptersObservable,
+                (view, pair) -> view.onAdjacentChapters(pair.first, pair.second));
 
         startable(RETRY_IMAGES, this::getRetryPageObservable);
 
