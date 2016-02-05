@@ -36,7 +36,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     @Inject PreferencesHelper preferences;
     @Inject DownloadManager downloadManager;
 
-    private Manga manga;
+    @State Manga manga;
     private Source source;
     private List<Chapter> chapters;
     @State boolean hasRequested;

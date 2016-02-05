@@ -78,7 +78,7 @@ public class PagerReaderFragment extends BaseFragment {
                         imageView.setScaleAndCenter(imageView.getScale(), new PointF(0, 0));
                         break;
                     case PagerReader.ALIGN_RIGHT:
-                        imageView.setScaleAndCenter(imageView.getScale(), new PointF(99999f, 0));
+                        imageView.setScaleAndCenter(imageView.getScale(), new PointF(imageView.getSWidth(), 0));
                         break;
                     case PagerReader.ALIGN_CENTER:
                         PointF center = imageView.getCenter();
