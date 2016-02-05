@@ -160,7 +160,8 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 .doOnNext(pair -> {
                     previousChapter = pair.first;
                     nextChapter = pair.second;
-                });
+                })
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     // Listen for retry page events
