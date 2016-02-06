@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.ViewSwitcher;
@@ -66,7 +67,7 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
     private EndlessListScrollListener listScrollListener;
 
     @State String query = "";
-    @State int selectedIndex = -1;
+    @State int selectedIndex;
     private final int SEARCH_TIMEOUT = 1000;
 
     private PublishSubject<String> queryDebouncerSubject;
@@ -122,25 +123,27 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
         Context themedContext = getBaseActivity().getSupportActionBar() != null ?
                 getBaseActivity().getSupportActionBar().getThemedContext() : getActivity();
         spinner = new Spinner(themedContext);
-        CatalogueSpinnerAdapter spinnerAdapter = new CatalogueSpinnerAdapter(themedContext,
+        ArrayAdapter<Source> spinnerAdapter = new ArrayAdapter<>(themedContext,
                 android.R.layout.simple_spinner_item, getPresenter().getEnabledSources());
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        if (savedState == null) selectedIndex = spinnerAdapter.getEmptyIndex();
+
+        if (savedState == null) {
+            selectedIndex = getPresenter().getLastUsedSourceIndex();
+        }
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(selectedIndex);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Source source = spinnerAdapter.getItem(position);
-                // We add an empty source with id -1 that acts as a placeholder to show a hint
-                // that asks to select a source
-                if (source.getId() != -1 && (selectedIndex != position || adapter.isEmpty())) {
+                if (selectedIndex != position || adapter.isEmpty()) {
                     // Set previous selection if it's not a valid source and notify the user
                     if (!getPresenter().isValidSource(source)) {
-                        spinner.setSelection(spinnerAdapter.getEmptyIndex());
+                        spinner.setSelection(getPresenter().findFirstValidSource());
                         ToastUtil.showShort(getActivity(), R.string.source_requires_login);
                     } else {
                         selectedIndex = position;
+                        getPresenter().setEnabledSource(selectedIndex);
                         showProgressBar();
                         glm.scrollToPositionWithOffset(0, 0);
                         llm.scrollToPositionWithOffset(0, 0);

@@ -92,6 +92,18 @@ public class PreferencesHelper {
         return rxPrefs.getInteger(getKey(R.string.pref_image_scale_type_key), 1);
     }
 
+    public Preference<Integer> imageDecoder() {
+        return rxPrefs.getInteger(getKey(R.string.pref_image_decoder_key), 0);
+    }
+
+    public Preference<Integer> zoomStart() {
+        return rxPrefs.getInteger(getKey(R.string.pref_zoom_start_key), 1);
+    }
+
+    public Preference<Integer> readerTheme() {
+        return rxPrefs.getInteger(getKey(R.string.pref_reader_theme_key), 0);
+    }
+
     public Preference<Integer> portraitColumns() {
         return rxPrefs.getInteger(getKey(R.string.pref_library_columns_portrait_key), 0);
     }
@@ -112,16 +124,8 @@ public class PreferencesHelper {
         return prefs.getBoolean(getKey(R.string.pref_ask_update_manga_sync_key), false);
     }
 
-    public Preference<Integer> imageDecoder() {
-        return rxPrefs.getInteger(getKey(R.string.pref_image_decoder_key), 0);
-    }
-
-    public Preference<Integer> zoomStart() {
-        return rxPrefs.getInteger(getKey(R.string.pref_zoom_start_key), 1);
-    }
-
-    public Preference<Integer> readerTheme() {
-        return rxPrefs.getInteger(getKey(R.string.pref_reader_theme_key), 0);
+    public Preference<Integer> lastUsedCatalogueSource() {
+        return rxPrefs.getInteger(getKey(R.string.pref_last_catalogue_source_key), -1);
     }
 
     public Preference<Boolean> catalogueAsList() {

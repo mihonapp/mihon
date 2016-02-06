@@ -32,6 +32,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
     @Inject CoverCache coverCache;
     @Inject PreferencesHelper prefs;
 
+    private List<Source> sources;
     private Source source;
     @State int sourceId;
 
@@ -55,6 +56,8 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         if (savedState != null) {
             source = sourceManager.get(sourceId);
         }
+
+        sources = sourceManager.getSources();
 
         mangaDetailSubject = PublishSubject.create();
 
@@ -168,12 +171,33 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         return lastMangasPage != null && lastMangasPage.nextPageUrl != null;
     }
 
+    public int getLastUsedSourceIndex() {
+        int index = prefs.lastUsedCatalogueSource().get();
+        if (index < 0 || index >= sources.size() || !isValidSource(sources.get(index))) {
+            return findFirstValidSource();
+        }
+        return index;
+    }
+
     public boolean isValidSource(Source source) {
         if (!source.isLoginRequired() || source.isLogged())
             return true;
 
         return !(prefs.getSourceUsername(source).equals("")
                 || prefs.getSourcePassword(source).equals(""));
+    }
+
+    public int findFirstValidSource() {
+        for (int i = 0; i < sources.size(); i++) {
+            if (isValidSource(sources.get(i))) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public void setEnabledSource(int index) {
+        prefs.lastUsedCatalogueSource().set(index);
     }
 
     public List<Source> getEnabledSources() {
