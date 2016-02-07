@@ -111,7 +111,7 @@ public class LibraryUpdateService extends Service {
                     .toList().toBlocking().single();
 
         return Observable.from(mangas)
-                .doOnNext(manga -> showNotification(
+                .doOnNext(manga -> showProgressNotification(
                         getString(R.string.notification_update_progress,
                                 count.incrementAndGet(), mangas.size()), manga.title))
                 .concatMap(manga -> updateManga(manga)
@@ -123,8 +123,14 @@ public class LibraryUpdateService extends Service {
                         .filter(pair -> pair.first > 0)
                         .map(pair -> new MangaUpdate(manga, pair.first)))
                 .doOnNext(updates::add)
-                .doOnCompleted(() -> showBigNotification(getString(R.string.notification_update_completed),
-                        getUpdatedMangas(updates, failedUpdates)));
+                .doOnCompleted(() -> {
+                    if (updates.isEmpty()) {
+                        cancelNotification();
+                    } else {
+                        showResultNotification(getString(R.string.notification_update_completed),
+                                getUpdatedMangasResult(updates, failedUpdates));
+                    }
+                });
     }
 
     private Observable<Pair<Integer, Integer>> updateManga(Manga manga) {
@@ -133,7 +139,7 @@ public class LibraryUpdateService extends Service {
                 .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters));
     }
 
-    private String getUpdatedMangas(List<MangaUpdate> updates, List<Manga> failedUpdates) {
+    private String getUpdatedMangasResult(List<MangaUpdate> updates, List<Manga> failedUpdates) {
         final StringBuilder result = new StringBuilder();
         if (updates.isEmpty()) {
             result.append(getString(R.string.notification_no_new_chapters)).append("\n");
@@ -185,7 +191,20 @@ public class LibraryUpdateService extends Service {
         notificationManager.notify(UPDATE_NOTIFICATION_ID, builder.build());
     }
 
-    private void showBigNotification(String title, String body) {
+    private void showProgressNotification(String title, String body) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_action_refresh)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setOngoing(true);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(UPDATE_NOTIFICATION_ID, builder.build());
+    }
+
+    private void showResultNotification(String title, String body) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_action_refresh)
                 .setContentTitle(title)
@@ -197,6 +216,13 @@ public class LibraryUpdateService extends Service {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(UPDATE_NOTIFICATION_ID, builder.build());
+    }
+
+    private void cancelNotification() {
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.cancel(UPDATE_NOTIFICATION_ID);
     }
 
     private PendingIntent getNotificationIntent() {
