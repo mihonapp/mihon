@@ -31,12 +31,8 @@ public class PagerReaderAdapter extends FragmentStatePagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         PagerReaderFragment f = (PagerReaderFragment) super.instantiateItem(container, position);
         f.setPage(pages.get(position));
+        f.setPosition(position);
         return f;
-    }
-
-    @Override
-    public int getItemPosition(Object object) {
-        return POSITION_NONE;
     }
 
     public List<Page> getPages() {
@@ -48,4 +44,17 @@ public class PagerReaderAdapter extends FragmentStatePagerAdapter {
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        PagerReaderFragment f = (PagerReaderFragment) object;
+        int position = f.getPosition();
+        if (position >= 0 && position < getCount()) {
+            if (pages.get(position) == f.getPage()) {
+                return POSITION_UNCHANGED;
+            } else {
+                return POSITION_NONE;
+            }
+        }
+        return super.getItemPosition(object);
+    }
 }

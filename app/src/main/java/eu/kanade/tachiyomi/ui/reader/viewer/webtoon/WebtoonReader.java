@@ -8,8 +8,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader;
 import eu.kanade.tachiyomi.widget.PreCachingLayoutManager;
@@ -27,12 +28,11 @@ public class WebtoonReader extends BaseReader {
     private PreCachingLayoutManager layoutManager;
     private Subscription subscription;
     private Subscription decoderSubscription;
-    private GestureDetector gestureDetector;
+    protected GestureDetector gestureDetector;
 
-    private boolean isReady;
     private int scrollDistance;
 
-    private static final String SCROLL_STATE = "scroll_state";
+    private static final String SAVED_POSITION = "saved_position";
 
     private static final float LEFT_REGION = 0.33f;
     private static final float RIGHT_REGION = 0.66f;
@@ -47,7 +47,7 @@ public class WebtoonReader extends BaseReader {
         layoutManager = new PreCachingLayoutManager(getActivity());
         layoutManager.setExtraLayoutSpace(screenHeight / 2);
         if (savedState != null) {
-            layoutManager.onRestoreInstanceState(savedState.getParcelable(SCROLL_STATE));
+            layoutManager.scrollToPositionWithOffset(savedState.getInt(SAVED_POSITION), 0);
         }
 
         recycler = new RecyclerView(getActivity());
@@ -80,8 +80,6 @@ public class WebtoonReader extends BaseReader {
         });
 
         setPages();
-        isReady = true;
-
         return recycler;
     }
 
@@ -100,7 +98,9 @@ public class WebtoonReader extends BaseReader {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SCROLL_STATE, layoutManager.onSaveInstanceState());
+        int savedPosition = pages != null ?
+                pages.get(layoutManager.findFirstVisibleItemPosition()).getPageNumber() : 0;
+        outState.putInt(SAVED_POSITION, savedPosition);
     }
 
     private void unsubscribeStatus() {
@@ -110,18 +110,30 @@ public class WebtoonReader extends BaseReader {
 
     @Override
     public void setSelectedPage(int pageNumber) {
-        recycler.scrollToPosition(getPositionForPage(pageNumber));
+        recycler.scrollToPosition(pageNumber);
     }
 
     @Override
-    public void onPageListReady(List<Page> pages, int currentPage) {
-        if (this.pages != pages) {
-            this.pages = pages;
-            // Restoring current page is not supported. It's getting weird scrolling jumps
-            // this.currentPage = currentPage;
-            if (isReady) {
-                setPages();
-            }
+    public void onSetChapter(Chapter chapter, Page currentPage) {
+        pages = new ArrayList<>(chapter.getPages());
+        // Restoring current page is not supported. It's getting weird scrolling jumps
+        // this.currentPage = currentPage;
+
+        // This method can be called before the view is created
+        if (recycler != null) {
+            setPages();
+        }
+    }
+
+    @Override
+    public void onAppendChapter(Chapter chapter) {
+        int insertStart = pages.size();
+        pages.addAll(chapter.getPages());
+
+        // This method can be called before the view is created
+        if (recycler != null) {
+            adapter.setPages(pages);
+            adapter.notifyItemRangeInserted(insertStart, chapter.getPages().size());
         }
     }
 
@@ -141,17 +153,12 @@ public class WebtoonReader extends BaseReader {
         recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                currentPage = layoutManager.findLastVisibleItemPosition();
-                updatePageNumber();
+                int page = layoutManager.findLastVisibleItemPosition();
+                if (page != currentPage) {
+                    onPageChanged(page);
+                }
             }
         });
-    }
-
-    @Override
-    public boolean onImageTouch(MotionEvent motionEvent) {
-        return gestureDetector.onTouchEvent(motionEvent);
     }
 
     private void observeStatus(int position) {

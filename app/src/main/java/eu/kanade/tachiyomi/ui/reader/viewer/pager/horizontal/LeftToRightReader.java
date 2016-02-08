@@ -1,15 +1,19 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal;
 
-public class LeftToRightReader extends HorizontalReader {
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader;
+
+public class LeftToRightReader extends PagerReader {
 
     @Override
-    public void onFirstPageOut() {
-        getReaderActivity().requestPreviousChapter();
-    }
-
-    @Override
-    public void onLastPageOut() {
-        getReaderActivity().requestNextChapter();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
+        HorizontalPager pager = new HorizontalPager(getActivity());
+        initializePager(pager);
+        return pager;
     }
 
 }

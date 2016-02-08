@@ -4,8 +4,11 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import java.io.Serializable;
+import java.util.List;
 
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable;
+import eu.kanade.tachiyomi.data.download.model.Download;
+import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.util.UrlUtil;
 
 @StorIOSQLiteType(table = ChapterTable.TABLE)
@@ -40,6 +43,8 @@ public class Chapter implements Serializable {
 
     public int status;
 
+    private transient List<Page> pages;
+
     public Chapter() {}
 
     public void setUrl(String url) {
@@ -68,4 +73,15 @@ public class Chapter implements Serializable {
         return chapter;
     }
 
+    public List<Page> getPages() {
+        return pages;
+    }
+
+    public void setPages(List<Page> pages) {
+        this.pages = pages;
+    }
+
+    public boolean isDownloaded() {
+        return status == Download.DOWNLOADED;
+    }
 }

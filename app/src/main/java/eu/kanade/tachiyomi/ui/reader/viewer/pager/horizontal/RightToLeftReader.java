@@ -1,38 +1,30 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import eu.kanade.tachiyomi.data.source.model.Page;
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader;
 
-public class RightToLeftReader extends HorizontalReader {
+public class RightToLeftReader extends PagerReader {
 
     @Override
-    public void onPageListReady(List<Page> pages, int currentPage) {
-        ArrayList<Page> inversedPages = new ArrayList<>(pages);
-        Collections.reverse(inversedPages);
-        super.onPageListReady(inversedPages, currentPage);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
+        HorizontalPager pager = new HorizontalPager(getActivity());
+        pager.setRotation(180);
+        initializePager(pager);
+        return pager;
     }
 
     @Override
-    public int getPageForPosition(int position) {
-        return (getTotalPages() - 1) - position;
+    protected void onLeftSideTap() {
+        super.onRightSideTap();
     }
 
     @Override
-    public int getPositionForPage(int page) {
-        return (getTotalPages() - 1) - page;
-    }
-
-    @Override
-    public void onFirstPageOut() {
-        getReaderActivity().requestNextChapter();
-    }
-
-    @Override
-    public void onLastPageOut() {
-        getReaderActivity().requestPreviousChapter();
+    protected void onRightSideTap() {
+        super.onLeftSideTap();
     }
 
 }

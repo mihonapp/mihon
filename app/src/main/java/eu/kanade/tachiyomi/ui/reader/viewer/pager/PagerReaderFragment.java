@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment;
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader;
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader;
 import rx.Observable;
 import rx.Subscription;
@@ -42,9 +43,12 @@ public class PagerReaderFragment extends BaseFragment {
     @Bind(R.id.retry_button) Button retryButton;
 
     private Page page;
-    private boolean isReady;
     private Subscription progressSubscription;
     private Subscription statusSubscription;
+    private int position = -1;
+
+    private int lightGreyColor;
+    private int blackColor;
 
     public static PagerReaderFragment newInstance() {
         return new PagerReaderFragment();
@@ -57,8 +61,15 @@ public class PagerReaderFragment extends BaseFragment {
         ReaderActivity activity = getReaderActivity();
         PagerReader parentFragment = (PagerReader) getParentFragment();
 
+        lightGreyColor = ContextCompat.getColor(getContext(), R.color.light_grey);
+        blackColor = ContextCompat.getColor(getContext(), R.color.primary_text);
+
         if (activity.getReaderTheme() == ReaderActivity.BLACK_THEME) {
-             progressText.setTextColor(ContextCompat.getColor(getContext(), R.color.light_grey));
+             progressText.setTextColor(lightGreyColor);
+        }
+
+        if (parentFragment instanceof RightToLeftReader) {
+            view.setRotation(-180);
         }
 
         imageView.setParallelLoadingEnabled(true);
@@ -69,7 +80,7 @@ public class PagerReaderFragment extends BaseFragment {
         imageView.setRegionDecoderClass(parentFragment.getRegionDecoderClass());
         imageView.setBitmapDecoderClass(parentFragment.getBitmapDecoderClass());
         imageView.setVerticalScrollingParent(parentFragment instanceof VerticalReader);
-        imageView.setOnTouchListener((v, motionEvent) -> parentFragment.onImageTouch(motionEvent));
+        imageView.setOnTouchListener((v, motionEvent) -> parentFragment.gestureDetector.onTouchEvent(motionEvent));
         imageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
             @Override
             public void onReady() {
@@ -103,7 +114,6 @@ public class PagerReaderFragment extends BaseFragment {
         });
 
         observeStatus();
-        isReady = true;
         return view;
     }
 
@@ -111,6 +121,7 @@ public class PagerReaderFragment extends BaseFragment {
     public void onDestroyView() {
         unsubscribeProgress();
         unsubscribeStatus();
+        imageView.setOnTouchListener(null);
         imageView.setOnImageEventListener(null);
         ButterKnife.unbind(this);
         super.onDestroyView();
@@ -118,9 +129,15 @@ public class PagerReaderFragment extends BaseFragment {
 
     public void setPage(Page page) {
         this.page = page;
-        if (isReady) {
+
+        // This method can be called before the view is created
+        if (imageView != null) {
             observeStatus();
         }
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     private void showImage() {
@@ -160,8 +177,7 @@ public class PagerReaderFragment extends BaseFragment {
         errorText.setGravity(Gravity.CENTER);
         errorText.setText(R.string.decode_image_error);
         errorText.setTextColor(getReaderActivity().getReaderTheme() == ReaderActivity.BLACK_THEME ?
-                    ContextCompat.getColor(getContext(), R.color.light_grey) :
-                    ContextCompat.getColor(getContext(), R.color.primary_text));
+                    lightGreyColor : blackColor);
 
         view.addView(errorText);
     }
@@ -234,6 +250,14 @@ public class PagerReaderFragment extends BaseFragment {
             progressSubscription.unsubscribe();
             progressSubscription = null;
         }
+    }
+
+    public Page getPage() {
+        return page;
+    }
+
+    public int getPosition() {
+        return position;
     }
 
     private ReaderActivity getReaderActivity() {

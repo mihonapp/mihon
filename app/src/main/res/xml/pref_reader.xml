@@ -21,6 +21,10 @@
         android:key="@string/pref_custom_brightness_key"
         android:defaultValue="false" />
 
+    <SwitchPreference android:title="@string/pref_seamless_mode"
+        android:key="@string/pref_seamless_mode_key"
+        android:defaultValue="true" />
+
     <eu.kanade.tachiyomi.widget.preference.IntListPreference
         android:title="@string/pref_viewer_type"
         android:key="@string/pref_default_viewer_key"

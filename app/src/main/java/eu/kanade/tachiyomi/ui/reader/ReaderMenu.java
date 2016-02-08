@@ -134,7 +134,7 @@ public class ReaderMenu {
         return true;
     }
 
-    public void onChapterReady(int numPages, Manga manga, Chapter chapter, int currentPageIndex) {
+    public void setActiveManga(Manga manga) {
         if (manga.viewer == ReaderActivity.RIGHT_TO_LEFT && !inverted) {
             // Invert the seekbar and textview fields for the right to left reader
             seekBar.setRotation(180);
@@ -144,14 +144,17 @@ public class ReaderMenu {
             // Don't invert again on chapter change
             inverted = true;
         }
+        activity.setToolbarTitle(manga.title);
+    }
 
+    public void setActiveChapter(Chapter chapter, int currentPageIndex) {
         // Set initial values
+        int numPages = chapter.getPages().size();
         totalPages.setText("" + numPages);
         currentPage.setText("" + (currentPageIndex + 1));
         seekBar.setMax(numPages - 1);
         seekBar.setProgress(currentPageIndex);
 
-        activity.setToolbarTitle(manga.title);
         activity.setToolbarSubtitle(chapter.chapter_number != -1 ?
                 activity.getString(R.string.chapter_subtitle,
                         decimalFormat.format(chapter.chapter_number)) :
@@ -353,7 +356,7 @@ public class ReaderMenu {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-                activity.setSelectedPage(progress);
+                activity.gotoPageInCurrentChapter(progress);
             }
         }
 
