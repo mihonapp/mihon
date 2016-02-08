@@ -85,7 +85,7 @@ android {
 dependencies {
     final SUPPORT_LIBRARY_VERSION = '23.1.1'
     final DAGGER_VERSION = '2.0.2'
-    final OKHTTP_VERSION = '3.0.1'
+    final OKHTTP_VERSION = '3.1.1'
     final MOCKITO_VERSION = '1.10.19'
     final STORIO_VERSION = '1.8.0'
     final ICEPICK_VERSION = '3.1.0'
@@ -118,7 +118,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.0'
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
-    compile 'ch.acra:acra:4.7.0'
+    compile 'ch.acra:acra:4.8.1'
     compile "frankiesardo:icepick:$ICEPICK_VERSION"
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
@@ -139,7 +139,7 @@ dependencies {
     // Google material icons SVG.
     compile 'com.mikepenz:google-material-typeface:2.1.0.1.original@aar'
 
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.4@aar') {
         transitive = true
     }
 
