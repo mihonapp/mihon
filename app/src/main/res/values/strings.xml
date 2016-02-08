@@ -84,7 +84,7 @@
     <string name="pref_enable_transitions">Enable transitions</string>
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_custom_brightness">Use custom brightness</string>
-    <string name="pref_seamless_mode">Enable seamless chapter transitions</string>
+    <string name="pref_seamless_mode">Seamless chapter transitions</string>
     <string name="pref_keep_screen_on">Keep screen on</string>
     <string name="pref_reader_theme">Background color</string>
     <string name="white_theme">White</string>
