@@ -165,4 +165,11 @@ public class ChapterRecognitionTest {
         ChapterRecognition.parseChapterNumber(c, randomManga);
         assertThat(c.chapter_number).isEqualTo(123f);
     }
+
+    @Test
+    public void testChapterWithChapterPrefixAfterPart() {
+        Chapter c = createChapter("Tokyo ESP 027: Part 002: Chapter 001");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(027f);
+    }
 }

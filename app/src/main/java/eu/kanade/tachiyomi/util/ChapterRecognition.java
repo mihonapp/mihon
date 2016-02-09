@@ -19,6 +19,8 @@ public class ChapterRecognition {
 
     private static final Pattern pUnwanted =
             Pattern.compile("(\\b|\\d)(v|ver|vol|version|volume)\\.?\\s*\\d+\\b");
+    private static final Pattern pPart =
+            Pattern.compile("(\\b|\\d)part\\s*\\d+.+");
 
     public static void parseChapterNumber(Chapter chapter, Manga manga) {
         if (chapter.chapter_number != -1)
@@ -96,8 +98,8 @@ public class ChapterRecognition {
 
         // try splitting the name in parts an pick the first valid one
         String[] nameParts = chapter.name.split("-");
+        Chapter dummyChapter = Chapter.create();
         if (nameParts.length > 1) {
-            Chapter dummyChapter = Chapter.create();
             for (String part : nameParts) {
                 dummyChapter.name = part;
                 parseChapterNumber(dummyChapter, manga);
@@ -106,6 +108,15 @@ public class ChapterRecognition {
                     return;
                 }
             }
+        }
+
+        // Strip anything after "part xxx" and try that
+        name = pPart.matcher(name).replaceAll("$1");
+        dummyChapter.name = name;
+        parseChapterNumber(dummyChapter, manga);
+        if (dummyChapter.chapter_number >= 0) {
+            chapter.chapter_number = dummyChapter.chapter_number;
+            return;
         }
     }
 
