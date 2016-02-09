@@ -14,4 +14,9 @@
           android:visible="false"
           app:showAsAction="ifRoom"/>
 
+    <item android:title="@string/action_clear"
+          android:id="@+id/clear_queue"
+          android:visible="false"
+          app:showAsAction="never"/>
+
 </menu>

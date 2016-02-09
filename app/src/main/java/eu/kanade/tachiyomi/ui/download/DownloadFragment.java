@@ -4,15 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.List;
-
+import android.view.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
@@ -21,6 +13,9 @@ import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiresPresenter(DownloadPresenter.class)
 public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
@@ -66,6 +61,10 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
         startButton = menu.findItem(R.id.start_queue);
         pauseButton = menu.findItem(R.id.pause_queue);
 
+        if(adapter.getItemCount() > 0) {
+            menu.findItem(R.id.clear_queue).setVisible(true);
+        }
+
         // Menu seems to be inflated after onResume in fragments, so we initialize them here
         startButton.setVisible(!isRunning && !getPresenter().downloadManager.getQueue().isEmpty());
         pauseButton.setVisible(isRunning);
@@ -79,6 +78,11 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
                 break;
             case R.id.pause_queue:
                 DownloadService.stop(getActivity());
+                break;
+            case R.id.clear_queue: // Not sure if this is correct
+                DownloadService.stop(getActivity());
+                getPresenter().downloadManager.getQueue().clear();
+                onNextDownloads(new ArrayList<>());
                 break;
         }
         return super.onOptionsItemSelected(item);
