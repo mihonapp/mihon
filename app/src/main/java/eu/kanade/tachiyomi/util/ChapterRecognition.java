@@ -10,12 +10,17 @@ import eu.kanade.tachiyomi.data.database.models.Manga;
 
 public class ChapterRecognition {
 
-    private static final Pattern p1 = Pattern.compile("ch[^0-9]?\\s*(\\d+[\\.,]?\\d*)");
-    private static final Pattern p2 = Pattern.compile("(\\d+[\\.,]?\\d*)");
-    private static final Pattern p3 = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)");
+    private static final Pattern cleanWithToken = Pattern.compile("ch[^0-9]?\\s*(\\d+[\\.,]?\\d+)($|\\b)");
+    private static final Pattern uncleanWithToken = Pattern.compile("ch[^0-9]?\\s*(\\d+[\\.,]?\\d*)");
+    private static final Pattern withAlphaPostfix = Pattern.compile("(\\d+[\\.,]?\\d*\\s*)([a-z])($|\\b)");
+    private static final Pattern cleanNumber = Pattern.compile("(\\d+[\\.,]?\\d+)($|\\b)");
+    private static final Pattern uncleanNumber = Pattern.compile("(\\d+[\\.,]?\\d*)");
+    private static final Pattern withColon = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)");
 
     private static final Pattern pUnwanted =
-            Pattern.compile("\\b(v|ver|vol|version|volume)\\.?\\s*\\d+\\b");
+            Pattern.compile("(\\b|\\d)(v|ver|vol|version|volume)\\.?\\s*\\d+\\b");
+    private static final Pattern pPart =
+            Pattern.compile("(\\b|\\d)part\\s*\\d+.+");
 
     public static void parseChapterNumber(Chapter chapter, Manga manga) {
         if (chapter.chapter_number != -1)
@@ -24,20 +29,34 @@ public class ChapterRecognition {
         String name = chapter.name.toLowerCase();
         Matcher matcher;
 
-        // Safest option, the chapter has a token prepended
-        matcher = p1.matcher(name);
+        // Safest option, the chapter has a token prepended and nothing at the end of the number
+        matcher = cleanWithToken.matcher(name);
+        if (matcher.find()) {
+            chapter.chapter_number = Float.parseFloat(matcher.group(1));
+            return;
+        }
+
+        // a number with a single alpha prefix is parsed as sub-chapter
+        matcher = withAlphaPostfix.matcher(name);
+        if (matcher.find()) {
+            chapter.chapter_number = Float.parseFloat(matcher.group(1)) + parseAlphaPostFix(matcher.group(2));
+            return;
+        }
+
+        // the chapter has a token prepended and something at the end of the number
+        matcher = uncleanWithToken.matcher(name);
         if (matcher.find()) {
             chapter.chapter_number = Float.parseFloat(matcher.group(1));
             return;
         }
 
         // Remove anything related to the volume or version
-        name = pUnwanted.matcher(name).replaceAll("");
+        name = pUnwanted.matcher(name).replaceAll("$1");
 
         List<Float> occurrences;
 
         // If there's only one number, use it
-        matcher = p2.matcher(name);
+        matcher = uncleanNumber.matcher(name);
         occurrences = getAllOccurrences(matcher);
         if (occurrences.size() == 1) {
             chapter.chapter_number =  occurrences.get(0);
@@ -45,7 +64,15 @@ public class ChapterRecognition {
         }
 
         // If it has a colon, the chapter number should be that one
-        matcher = p3.matcher(name);
+        matcher = withColon.matcher(name);
+        occurrences = getAllOccurrences(matcher);
+        if (occurrences.size() == 1) {
+            chapter.chapter_number =  occurrences.get(0);
+            return;
+        }
+
+        // Prefer numbers without anything appended
+        matcher = cleanNumber.matcher(name);
         occurrences = getAllOccurrences(matcher);
         if (occurrences.size() == 1) {
             chapter.chapter_number =  occurrences.get(0);
@@ -59,7 +86,7 @@ public class ChapterRecognition {
         String mangaName = replaceIrrelevantCharacters(manga.title);
         String nameWithoutManga = difference(mangaName, name);
         if (!nameWithoutManga.isEmpty()) {
-            matcher = p2.matcher(nameWithoutManga);
+            matcher = uncleanNumber.matcher(nameWithoutManga);
             occurrences = getAllOccurrences(matcher);
             if (occurrences.size() == 1) {
                 chapter.chapter_number =  occurrences.get(0);
@@ -69,6 +96,36 @@ public class ChapterRecognition {
 
         // TODO more checks (maybe levenshtein?)
 
+        // try splitting the name in parts an pick the first valid one
+        String[] nameParts = chapter.name.split("-");
+        Chapter dummyChapter = Chapter.create();
+        if (nameParts.length > 1) {
+            for (String part : nameParts) {
+                dummyChapter.name = part;
+                parseChapterNumber(dummyChapter, manga);
+                if (dummyChapter.chapter_number >= 0) {
+                    chapter.chapter_number = dummyChapter.chapter_number;
+                    return;
+                }
+            }
+        }
+
+        // Strip anything after "part xxx" and try that
+        name = pPart.matcher(name).replaceAll("$1");
+        dummyChapter.name = name;
+        parseChapterNumber(dummyChapter, manga);
+        if (dummyChapter.chapter_number >= 0) {
+            chapter.chapter_number = dummyChapter.chapter_number;
+            return;
+        }
+    }
+
+    /**
+     * x.a -> x.1, x.b -> x.2, etc
+     */
+    private static float parseAlphaPostFix(String postfix) {
+        char alpha = postfix.charAt(0);
+        return Float.parseFloat("0." + Integer.toString((int)alpha - 96));
     }
 
     public static List<Float> getAllOccurrences(Matcher matcher) {
@@ -76,7 +133,7 @@ public class ChapterRecognition {
         while (matcher.find()) {
             // Match again to get only numbers from the captured text
             String text = matcher.group();
-            Matcher m = p2.matcher(text);
+            Matcher m = uncleanNumber.matcher(text);
             if (m.find()) {
                 try {
                     Float value = Float.parseFloat(m.group(1));
