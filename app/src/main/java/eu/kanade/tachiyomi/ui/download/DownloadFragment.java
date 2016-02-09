@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiresPresenter(DownloadPresenter.class)
@@ -25,6 +24,7 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
 
     private MenuItem startButton;
     private MenuItem pauseButton;
+    private MenuItem clearButton;
 
     private Subscription queueStatusSubscription;
     private boolean isRunning;
@@ -60,9 +60,10 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
         inflater.inflate(R.menu.download_queue, menu);
         startButton = menu.findItem(R.id.start_queue);
         pauseButton = menu.findItem(R.id.pause_queue);
+        clearButton = menu.findItem(R.id.clear_queue);
 
         if(adapter.getItemCount() > 0) {
-            menu.findItem(R.id.clear_queue).setVisible(true);
+            clearButton.setVisible(true);
         }
 
         // Menu seems to be inflated after onResume in fragments, so we initialize them here
@@ -79,10 +80,10 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
             case R.id.pause_queue:
                 DownloadService.stop(getActivity());
                 break;
-            case R.id.clear_queue: // Not sure if this is correct
+            case R.id.clear_queue:
                 DownloadService.stop(getActivity());
-                getPresenter().downloadManager.getQueue().clear();
-                onNextDownloads(new ArrayList<>());
+                getPresenter().clearQueue();
+                clearButton.setVisible(false);
                 break;
         }
         return super.onOptionsItemSelected(item);
