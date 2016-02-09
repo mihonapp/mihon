@@ -3,11 +3,14 @@ package eu.kanade.tachiyomi.ui.manga.chapter;
 import android.os.Bundle;
 import android.util.Pair;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import eu.kanade.tachiyomi.data.database.DatabaseHelper;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
@@ -21,7 +24,6 @@ import eu.kanade.tachiyomi.event.DownloadChaptersEvent;
 import eu.kanade.tachiyomi.event.MangaEvent;
 import eu.kanade.tachiyomi.event.ReaderEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
-import eu.kanade.tachiyomi.util.EventBusHook;
 import icepick.State;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -72,7 +74,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
                 (view, download) -> view.onChapterStatusChange(download),
                 (view, error) -> Timber.e(error.getCause(), error.getMessage()));
 
-        registerForStickyEvents();
+        registerForEvents();
     }
 
     @Override
@@ -82,8 +84,8 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         super.onDestroy();
     }
 
-    @EventBusHook
-    public void onEventMainThread(MangaEvent event) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(MangaEvent event) {
         this.manga = event.manga;
         start(GET_MANGA);
 

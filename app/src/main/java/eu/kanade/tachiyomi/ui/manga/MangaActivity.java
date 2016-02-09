@@ -15,11 +15,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
+import org.greenrobot.eventbus.EventBus;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import eu.kanade.tachiyomi.App;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Manga;

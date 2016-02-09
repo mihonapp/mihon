@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.recent;
 
 import android.os.Bundle;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -12,7 +14,6 @@ import java.util.TreeMap;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import eu.kanade.tachiyomi.data.database.DatabaseHelper;
 import eu.kanade.tachiyomi.data.database.models.MangaChapter;
 import eu.kanade.tachiyomi.data.source.SourceManager;

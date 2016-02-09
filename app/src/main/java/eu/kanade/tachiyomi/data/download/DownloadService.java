@@ -8,14 +8,16 @@ import android.os.PowerManager;
 
 import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import eu.kanade.tachiyomi.App;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent;
-import eu.kanade.tachiyomi.util.EventBusHook;
 import eu.kanade.tachiyomi.util.ToastUtil;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -47,7 +49,7 @@ public class DownloadService extends Service {
         createWakeLock();
 
         listenQueueRunningChanges();
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
         listenNetworkChanges();
     }
 
@@ -71,7 +73,7 @@ public class DownloadService extends Service {
         return null;
     }
 
-    @EventBusHook
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(DownloadChaptersEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         downloadManager.onDownloadChaptersEvent(event);

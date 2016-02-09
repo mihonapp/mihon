@@ -2,14 +2,16 @@ package eu.kanade.tachiyomi.ui.manga;
 
 import android.os.Bundle;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import eu.kanade.tachiyomi.data.database.DatabaseHelper;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.event.MangaEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
-import eu.kanade.tachiyomi.util.EventBusHook;
 import icepick.State;
 import rx.Observable;
 
@@ -28,7 +30,7 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
         restartableLatestCache(GET_MANGA, this::getMangaObservable, MangaActivity::setManga);
 
         if (savedState == null)
-            registerForStickyEvents();
+            registerForEvents();
     }
 
     @Override
@@ -43,8 +45,8 @@ public class MangaPresenter extends BasePresenter<MangaActivity> {
                 .doOnNext(manga -> EventBus.getDefault().postSticky(new MangaEvent(manga)));
     }
 
-    @EventBusHook
-    public void onEventMainThread(Manga manga) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(Manga manga) {
         EventBus.getDefault().removeStickyEvent(manga);
         unregisterForEvents();
         this.manga = manga;

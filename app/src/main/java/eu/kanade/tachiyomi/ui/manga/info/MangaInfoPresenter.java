@@ -3,6 +3,9 @@ package eu.kanade.tachiyomi.ui.manga.info;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -16,7 +19,6 @@ import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.event.ChapterCountEvent;
 import eu.kanade.tachiyomi.event.MangaEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
-import eu.kanade.tachiyomi.util.EventBusHook;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -80,8 +82,8 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
                 (view, manga) -> view.onFetchMangaDone(),
                 (view, error) -> view.onFetchMangaError());
 
-        // onEventMainThread receives an event thanks to this line.
-        registerForStickyEvents();
+        // Listen for events
+        registerForEvents();
     }
 
     @Override
@@ -90,15 +92,15 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
         super.onDestroy();
     }
 
-    @EventBusHook
-    public void onEventMainThread(MangaEvent event) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(MangaEvent event) {
         this.manga = event.manga;
         source = sourceManager.get(manga.source);
         refreshManga();
     }
 
-    @EventBusHook
-    public void onEventMainThread(ChapterCountEvent event) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(ChapterCountEvent event) {
         if (count != event.getCount()) {
             count = event.getCount();
             start(GET_CHAPTER_COUNT);

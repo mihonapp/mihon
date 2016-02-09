@@ -4,7 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+
 import icepick.Icepick;
 import nucleus.view.ViewWithPresenter;
 
@@ -22,10 +23,6 @@ public class BasePresenter<V extends ViewWithPresenter> extends RxPresenter<V> {
     protected void onSave(@NonNull Bundle state) {
         super.onSave(state);
         Icepick.saveInstanceState(this, state);
-    }
-
-    public void registerForStickyEvents() {
-        EventBus.getDefault().registerSticky(this);
     }
 
     public void registerForEvents() {

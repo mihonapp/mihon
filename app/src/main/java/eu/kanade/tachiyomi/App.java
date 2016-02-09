@@ -5,6 +5,7 @@ import android.content.Context;
 
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
+import org.greenrobot.eventbus.EventBus;
 
 import eu.kanade.tachiyomi.injection.ComponentReflectionInjector;
 import eu.kanade.tachiyomi.injection.component.AppComponent;
@@ -38,6 +39,11 @@ public class App extends Application {
 
         componentInjector =
                 new ComponentReflectionInjector<>(AppComponent.class, applicationComponent);
+
+        EventBus.builder()
+                .addIndex(new EventBusIndex())
+                .logNoSubscriberMessages(false)
+                .installDefaultEventBus();
 
         ACRA.init(this);
     }

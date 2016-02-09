@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,7 +19,6 @@ import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager;
 import eu.kanade.tachiyomi.data.mangasync.services.MyAnimeList;
 import eu.kanade.tachiyomi.event.MangaEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
-import eu.kanade.tachiyomi.util.EventBusHook;
 import eu.kanade.tachiyomi.util.ToastUtil;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -85,7 +87,7 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
     @Override
     protected void onTakeView(MyAnimeListFragment view) {
         super.onTakeView(view);
-        registerForStickyEvents();
+        registerForEvents();
     }
 
     @Override
@@ -94,8 +96,8 @@ public class MyAnimeListPresenter extends BasePresenter<MyAnimeListFragment> {
         super.onDropView();
     }
 
-    @EventBusHook
-    public void onEventMainThread(MangaEvent event) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(MangaEvent event) {
         this.manga = event.manga;
         start(GET_MANGA_SYNC);
     }

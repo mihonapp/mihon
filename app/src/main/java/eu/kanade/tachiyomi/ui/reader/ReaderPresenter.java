@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import eu.kanade.tachiyomi.data.database.DatabaseHelper;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
@@ -25,7 +28,6 @@ import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.data.sync.UpdateMangaSyncService;
 import eu.kanade.tachiyomi.event.ReaderEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
-import eu.kanade.tachiyomi.util.EventBusHook;
 import icepick.State;
 import rx.Observable;
 import rx.Subscription;
@@ -90,7 +92,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
                 (view, error) -> view.onChapterError());
 
         if (savedState == null) {
-            registerForStickyEvents();
+            registerForEvents();
         }
     }
 
@@ -106,8 +108,8 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         super.onSave(state);
     }
 
-    @EventBusHook
-    public void onEventMainThread(ReaderEvent event) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(ReaderEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         manga = event.getManga();
         source = event.getSource();

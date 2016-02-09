@@ -18,13 +18,14 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Category;
@@ -88,12 +89,6 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     public void onDestroyView() {
         appBar.removeView(tabs);
         super.onDestroyView();
-    }
-
-    @Override
-    public void onPause() {
-        EventBus.getDefault().removeStickyEvent(LibraryMangasEvent.class);
-        super.onPause();
     }
 
     @Override

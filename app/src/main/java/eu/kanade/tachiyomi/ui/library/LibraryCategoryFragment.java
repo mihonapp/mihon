@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import com.f2prateek.rx.preferences.Preference;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,6 @@ import eu.kanade.tachiyomi.event.LibraryMangasEvent;
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment;
 import eu.kanade.tachiyomi.ui.manga.MangaActivity;
-import eu.kanade.tachiyomi.util.EventBusHook;
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView;
 import icepick.State;
 import rx.Subscription;
@@ -97,7 +99,7 @@ public class LibraryCategoryFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
-        registerForStickyEvents();
+        registerForEvents();
     }
 
     @Override
@@ -112,8 +114,8 @@ public class LibraryCategoryFragment extends BaseFragment
         super.onSaveInstanceState(outState);
     }
 
-    @EventBusHook
-    public void onEventMainThread(LibraryMangasEvent event) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(LibraryMangasEvent event) {
         List<Category> categories = getLibraryFragment().getAdapter().categories;
         // When a category is deleted, the index can be greater than the number of categories
         if (position >= categories.size())

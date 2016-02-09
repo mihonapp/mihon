@@ -3,13 +3,14 @@ package eu.kanade.tachiyomi.ui.library;
 import android.os.Bundle;
 import android.util.Pair;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import eu.kanade.tachiyomi.data.cache.CoverCache;
 import eu.kanade.tachiyomi.data.database.DatabaseHelper;
 import eu.kanade.tachiyomi.data.database.models.Category;
@@ -55,9 +56,9 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDropView() {
         EventBus.getDefault().removeStickyEvent(LibraryMangasEvent.class);
-        super.onDestroy();
+        super.onDropView();
     }
 
     @Override

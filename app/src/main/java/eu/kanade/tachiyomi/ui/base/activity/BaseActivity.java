@@ -5,7 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+
 import icepick.Icepick;
 
 public class BaseActivity extends AppCompatActivity {
@@ -58,20 +59,8 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void registerForStickyEvents() {
-        registerForStickyEvents(0);
-    }
-
-    public void registerForStickyEvents(int priority) {
-        EventBus.getDefault().registerSticky(this, priority);
-    }
-
     public void registerForEvents() {
-        registerForEvents(0);
-    }
-
-    public void registerForEvents(int priority) {
-        EventBus.getDefault().register(this, priority);
+        EventBus.getDefault().register(this);
     }
 
     public void unregisterForEvents() {
