@@ -179,6 +179,9 @@
     <string name="fetch_chapters_error">Error while fetching chapters</string>
     <string name="show_title">Show title</string>
     <string name="show_chapter_number">Show chapter number</string>
+    <string name="manga_download">Download</string>
+    <string name="download_all">Download all</string>
+    <string name="download_unread">Download unread</string>
 
     <!-- MyAnimeList fragment -->
     <string name="reading">Reading</string>
