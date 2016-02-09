@@ -141,4 +141,11 @@ public class ChapterRecognitionTest {
         ChapterRecognition.parseChapterNumber(c, randomManga);
         assertThat(c.chapter_number).isEqualTo(11f);
     }
+
+    @Test
+    public void testWithNumberInChapterTitle() {
+        Chapter c = createChapter("Ansatsu Kyoushitsu 099 Present Time - 2nd Hour");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(99f);
+    }
 }
