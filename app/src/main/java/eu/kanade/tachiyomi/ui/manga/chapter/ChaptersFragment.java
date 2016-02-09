@@ -8,21 +8,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.afollestad.materialdialogs.MaterialDialog;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
@@ -39,6 +30,9 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiresPresenter(ChaptersPresenter.class)
 public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implements
@@ -109,6 +103,9 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         switch (item.getItemId()) {
             case R.id.action_display_mode:
                 showDisplayModeDialog();
+                return true;
+            case R.id.manga_download:
+                showDownloadDialog();
                 return true;
         }
         return false;
@@ -190,6 +187,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         int selectedIndex = manga.getDisplayMode() == Manga.DISPLAY_NAME ? 0 : 1;
 
         new MaterialDialog.Builder(getActivity())
+                .title(R.string.action_display_mode)
                 .items(modes)
                 .itemsIds(ids)
                 .itemsCallbackSingleChoice(selectedIndex, (dialog, itemView, which, text) -> {
@@ -199,6 +197,32 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
                     adapter.notifyDataSetChanged();
                     return true;
                 })
+                .show();
+    }
+
+    private void showDownloadDialog() {
+
+        // Get available modes
+        String[] modes = {getString(R.string.download_all), getString(R.string.download_unread)};
+
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.manga_download)
+                .items(modes)
+                .itemsCallback((dialog, view, i, charSequence) -> {
+                    List<Chapter> chapters = new ArrayList<>();
+
+                    for(Chapter chapter : getPresenter().getChapters()) {
+                        if(!chapter.isDownloaded()) {
+                            if(i == 0 || (i == 1 && !chapter.read)) {
+                                chapters.add(chapter);
+                            }
+                        }
+                    }
+                    if(chapters.size() > 0) {
+                        onDownload(Observable.from(chapters));
+                    }
+                })
+                .negativeText(R.string.button_cancel)
                 .show();
     }
 

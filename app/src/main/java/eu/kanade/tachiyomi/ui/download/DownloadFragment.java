@@ -4,15 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.List;
-
+import android.view.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
@@ -22,6 +14,8 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
 
+import java.util.List;
+
 @RequiresPresenter(DownloadPresenter.class)
 public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
 
@@ -29,7 +23,8 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
     private DownloadAdapter adapter;
 
     private MenuItem startButton;
-    private MenuItem stopButton;
+    private MenuItem pauseButton;
+    private MenuItem clearButton;
 
     private Subscription queueStatusSubscription;
     private boolean isRunning;
@@ -64,11 +59,16 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.download_queue, menu);
         startButton = menu.findItem(R.id.start_queue);
-        stopButton = menu.findItem(R.id.stop_queue);
+        pauseButton = menu.findItem(R.id.pause_queue);
+        clearButton = menu.findItem(R.id.clear_queue);
+
+        if(adapter.getItemCount() > 0) {
+            clearButton.setVisible(true);
+        }
 
         // Menu seems to be inflated after onResume in fragments, so we initialize them here
         startButton.setVisible(!isRunning && !getPresenter().downloadManager.getQueue().isEmpty());
-        stopButton.setVisible(isRunning);
+        pauseButton.setVisible(isRunning);
     }
 
     @Override
@@ -77,8 +77,13 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
             case R.id.start_queue:
                 DownloadService.start(getActivity());
                 break;
-            case R.id.stop_queue:
+            case R.id.pause_queue:
                 DownloadService.stop(getActivity());
+                break;
+            case R.id.clear_queue:
+                DownloadService.stop(getActivity());
+                getPresenter().clearQueue();
+                clearButton.setVisible(false);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -101,8 +106,8 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
         isRunning = running;
         if (startButton != null)
             startButton.setVisible(!running && !getPresenter().downloadManager.getQueue().isEmpty());
-        if (stopButton != null)
-            stopButton.setVisible(running);
+        if (pauseButton != null)
+            pauseButton.setVisible(running);
     }
 
     private void createAdapter() {

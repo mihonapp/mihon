@@ -35,11 +35,12 @@
     <string name="action_next_unread">Next unread</string>
     <string name="action_start">Start</string>
     <string name="action_stop">Stop</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_clear">Clear</string>
     <string name="action_previous_chapter">Previous chapter</string>
     <string name="action_next_chapter">Next chapter</string>
     <string name="action_retry">Retry</string>
     <string name="action_display_mode">Change display mode</string>
-
 
     <!-- Buttons -->
     <string name="button_ok">OK</string>
@@ -179,6 +180,9 @@
     <string name="fetch_chapters_error">Error while fetching chapters</string>
     <string name="show_title">Show title</string>
     <string name="show_chapter_number">Show chapter number</string>
+    <string name="manga_download">Download</string>
+    <string name="download_all">Download all</string>
+    <string name="download_unread">Download unread</string>
 
     <!-- MyAnimeList fragment -->
     <string name="reading">Reading</string>
