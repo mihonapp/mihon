@@ -148,4 +148,14 @@ public class ChapterRecognitionTest {
         ChapterRecognition.parseChapterNumber(c, randomManga);
         assertThat(c.chapter_number).isEqualTo(99f);
     }
+
+    @Test
+    public void testAlphaSubChapters() {
+        Chapter c = createChapter("Asu No Yoichi 19a");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(19.1f);
+        c = createChapter("Asu No Yoichi 19b");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(19.2f);
+    }
 }

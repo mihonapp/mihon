@@ -12,6 +12,7 @@ public class ChapterRecognition {
 
     private static final Pattern cleanWithToken = Pattern.compile("ch[^0-9]?\\s*(\\d+[\\.,]?\\d+)($|\\b)");
     private static final Pattern uncleanWithToken = Pattern.compile("ch[^0-9]?\\s*(\\d+[\\.,]?\\d*)");
+    private static final Pattern withAlphaPostfix = Pattern.compile("(\\d+[\\.,]?\\d*\\s*)([a-z])($|\\b)");
     private static final Pattern cleanNumber = Pattern.compile("(\\d+[\\.,]?\\d+)($|\\b)");
     private static final Pattern uncleanNumber = Pattern.compile("(\\d+[\\.,]?\\d*)");
     private static final Pattern withColon = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)");
@@ -30,6 +31,13 @@ public class ChapterRecognition {
         matcher = cleanWithToken.matcher(name);
         if (matcher.find()) {
             chapter.chapter_number = Float.parseFloat(matcher.group(1));
+            return;
+        }
+
+        // a number with a single alpha prefix is parsed as sub-chapter
+        matcher = withAlphaPostfix.matcher(name);
+        if (matcher.find()) {
+            chapter.chapter_number = Float.parseFloat(matcher.group(1)) + parseAlphaPostFix(matcher.group(2));
             return;
         }
 
@@ -86,6 +94,14 @@ public class ChapterRecognition {
 
         // TODO more checks (maybe levenshtein?)
 
+    }
+
+    /**
+     * x.a -> x.1, x.b -> x.2, etc
+     */
+    private static float parseAlphaPostFix(String postfix) {
+        char alpha = postfix.charAt(0);
+        return Float.parseFloat("0." + Integer.toString((int)alpha - 96));
     }
 
     public static List<Float> getAllOccurrences(Matcher matcher) {
