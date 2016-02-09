@@ -94,6 +94,19 @@ public class ChapterRecognition {
 
         // TODO more checks (maybe levenshtein?)
 
+        // try splitting the name in parts an pick the first valid one
+        String[] nameParts = chapter.name.split("-");
+        if (nameParts.length > 1) {
+            Chapter dummyChapter = Chapter.create();
+            for (String part : nameParts) {
+                dummyChapter.name = part;
+                parseChapterNumber(dummyChapter, manga);
+                if (dummyChapter.chapter_number >= 0) {
+                    chapter.chapter_number = dummyChapter.chapter_number;
+                    return;
+                }
+            }
+        }
     }
 
     /**

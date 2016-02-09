@@ -158,4 +158,11 @@ public class ChapterRecognitionTest {
         ChapterRecognition.parseChapterNumber(c, randomManga);
         assertThat(c.chapter_number).isEqualTo(19.2f);
     }
+
+    @Test
+    public void testChapterWithArcNumber() {
+        Chapter c = createChapter("Manga title 123 - Vol 016 Arc title 002");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(123f);
+    }
 }
