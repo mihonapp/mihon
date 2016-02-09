@@ -35,11 +35,11 @@
     <string name="action_next_unread">Next unread</string>
     <string name="action_start">Start</string>
     <string name="action_stop">Stop</string>
+    <string name="action_pause">Pause</string>
     <string name="action_previous_chapter">Previous chapter</string>
     <string name="action_next_chapter">Next chapter</string>
     <string name="action_retry">Retry</string>
     <string name="action_display_mode">Change display mode</string>
-
 
     <!-- Buttons -->
     <string name="button_ok">OK</string>

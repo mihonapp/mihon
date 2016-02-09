@@ -29,7 +29,7 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
     private DownloadAdapter adapter;
 
     private MenuItem startButton;
-    private MenuItem stopButton;
+    private MenuItem pauseButton;
 
     private Subscription queueStatusSubscription;
     private boolean isRunning;
@@ -64,11 +64,11 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.download_queue, menu);
         startButton = menu.findItem(R.id.start_queue);
-        stopButton = menu.findItem(R.id.stop_queue);
+        pauseButton = menu.findItem(R.id.pause_queue);
 
         // Menu seems to be inflated after onResume in fragments, so we initialize them here
         startButton.setVisible(!isRunning && !getPresenter().downloadManager.getQueue().isEmpty());
-        stopButton.setVisible(isRunning);
+        pauseButton.setVisible(isRunning);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
             case R.id.start_queue:
                 DownloadService.start(getActivity());
                 break;
-            case R.id.stop_queue:
+            case R.id.pause_queue:
                 DownloadService.stop(getActivity());
                 break;
         }
@@ -101,8 +101,8 @@ public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {
         isRunning = running;
         if (startButton != null)
             startButton.setVisible(!running && !getPresenter().downloadManager.getQueue().isEmpty());
-        if (stopButton != null)
-            stopButton.setVisible(running);
+        if (pauseButton != null)
+            pauseButton.setVisible(running);
     }
 
     private void createAdapter() {

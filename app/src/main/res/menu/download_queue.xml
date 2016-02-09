@@ -8,9 +8,9 @@
           android:visible="false"
           app:showAsAction="ifRoom"/>
 
-    <item android:title="@string/action_stop"
-          android:id="@+id/stop_queue"
-          android:icon="@drawable/ic_stop"
+    <item android:title="@string/action_pause"
+          android:id="@+id/pause_queue"
+          android:icon="@drawable/ic_pause"
           android:visible="false"
           app:showAsAction="ifRoom"/>
 
