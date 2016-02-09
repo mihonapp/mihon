@@ -15,7 +15,7 @@ public class ChapterRecognition {
     private static final Pattern p3 = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)");
 
     private static final Pattern pUnwanted =
-            Pattern.compile("\\b(v|ver|vol|version|volume)\\.?\\s*\\d+\\b");
+            Pattern.compile("(\\b|\\d)(v|ver|vol|version|volume)\\.?\\s*\\d+\\b");
 
     public static void parseChapterNumber(Chapter chapter, Manga manga) {
         if (chapter.chapter_number != -1)
@@ -32,7 +32,7 @@ public class ChapterRecognition {
         }
 
         // Remove anything related to the volume or version
-        name = pUnwanted.matcher(name).replaceAll("");
+        name = pUnwanted.matcher(name).replaceAll("$1");
 
         List<Float> occurrences;
 

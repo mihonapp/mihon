@@ -135,4 +135,10 @@ public class ChapterRecognitionTest {
         assertThat(c.chapter_number).isEqualTo(28f);
     }
 
+    @Test
+    public void testWithVolumeAttachedToChapter() {
+        Chapter c = createChapter("Ansatsu Kyoushitsu 011v002: Assembly Time");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(11f);
+    }
 }
