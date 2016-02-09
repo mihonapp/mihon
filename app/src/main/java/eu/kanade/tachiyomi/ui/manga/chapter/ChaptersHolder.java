@@ -2,16 +2,11 @@ package eu.kanade.tachiyomi.ui.manga.chapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.view.Menu;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Date;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
@@ -20,6 +15,11 @@ import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder;
 import rx.Observable;
+
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Date;
 
 public class ChaptersHolder extends FlexibleViewHolder {
 
@@ -110,19 +110,36 @@ public class ChaptersHolder extends FlexibleViewHolder {
         // Inflate our menu resource into the PopupMenu's Menu
         popup.getMenuInflater().inflate(R.menu.chapter_single, popup.getMenu());
 
+        // Hide download and show delete if the chapter is downloaded and
+        if(item.isDownloaded()) {
+            Menu menu = popup.getMenu();
+            menu.findItem(R.id.action_download).setVisible(false);
+            menu.findItem(R.id.action_delete).setVisible(true);
+        }
+
+        // Hide mark as unread when the chapter is unread
+        if(!item.read && item.last_page_read == 0) {
+            popup.getMenu().findItem(R.id.action_mark_as_unread).setVisible(false);
+        }
+
+        // Hide mark as read when the chapter is read
+        if(item.read) {
+            popup.getMenu().findItem(R.id.action_mark_as_read).setVisible(false);
+        }
+
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener(menuItem -> {
             Observable<Chapter> chapter = Observable.just(item);
 
             switch (menuItem.getItemId()) {
-                case R.id.action_mark_as_read:
-                    return adapter.getFragment().onMarkAsRead(chapter);
-                case R.id.action_mark_as_unread:
-                    return adapter.getFragment().onMarkAsUnread(chapter);
                 case R.id.action_download:
                     return adapter.getFragment().onDownload(chapter);
                 case R.id.action_delete:
                     return adapter.getFragment().onDelete(chapter);
+                case R.id.action_mark_as_read:
+                    return adapter.getFragment().onMarkAsRead(chapter);
+                case R.id.action_mark_as_unread:
+                    return adapter.getFragment().onMarkAsUnread(chapter);
                 case R.id.action_mark_previous_as_read:
                     return adapter.getFragment().onMarkPreviousAsRead(item);
             }
