@@ -40,12 +40,16 @@ public class App extends Application {
         componentInjector =
                 new ComponentReflectionInjector<>(AppComponent.class, applicationComponent);
 
+        setupEventBus();
+
+        ACRA.init(this);
+    }
+
+    protected void setupEventBus() {
         EventBus.builder()
                 .addIndex(new EventBusIndex())
                 .logNoSubscriberMessages(false)
                 .installDefaultEventBus();
-
-        ACRA.init(this);
     }
 
     public AppComponent getComponent() {
