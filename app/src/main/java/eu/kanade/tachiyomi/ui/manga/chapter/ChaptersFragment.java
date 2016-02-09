@@ -187,6 +187,7 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         int selectedIndex = manga.getDisplayMode() == Manga.DISPLAY_NAME ? 0 : 1;
 
         new MaterialDialog.Builder(getActivity())
+                .title(R.string.action_display_mode)
                 .items(modes)
                 .itemsIds(ids)
                 .itemsCallbackSingleChoice(selectedIndex, (dialog, itemView, which, text) -> {
