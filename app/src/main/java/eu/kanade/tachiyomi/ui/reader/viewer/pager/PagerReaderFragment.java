@@ -77,6 +77,7 @@ public class PagerReaderFragment extends BaseFragment {
         imageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
         imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
         imageView.setMinimumScaleType(parentFragment.scaleType);
+        imageView.setMinimumDpi(50);
         imageView.setRegionDecoderClass(parentFragment.getRegionDecoderClass());
         imageView.setBitmapDecoderClass(parentFragment.getBitmapDecoderClass());
         imageView.setVerticalScrollingParent(parentFragment instanceof VerticalReader);
