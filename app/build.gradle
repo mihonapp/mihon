@@ -123,7 +123,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.0'
-    compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile 'ch.acra:acra:4.8.1'
     compile "frankiesardo:icepick:$ICEPICK_VERSION"
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"

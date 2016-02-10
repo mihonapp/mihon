@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -25,11 +24,6 @@ import eu.kanade.tachiyomi.data.database.models.MangaSync;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
-import uk.co.ribot.easyadapter.EasyAdapter;
-import uk.co.ribot.easyadapter.ItemViewHolder;
-import uk.co.ribot.easyadapter.PositionInfo;
-import uk.co.ribot.easyadapter.annotations.LayoutId;
-import uk.co.ribot.easyadapter.annotations.ViewId;
 
 public class MyAnimeListDialogFragment extends DialogFragment {
 
@@ -37,7 +31,7 @@ public class MyAnimeListDialogFragment extends DialogFragment {
     @Bind(R.id.myanimelist_search_results) ListView searchResults;
     @Bind(R.id.progress) ProgressBar progressBar;
 
-    private EasyAdapter<MangaSync> adapter;
+    private MyAnimeListSearchAdapter adapter;
     private MangaSync selectedItem;
 
     private Subscription searchSubscription;
@@ -59,7 +53,7 @@ public class MyAnimeListDialogFragment extends DialogFragment {
         ButterKnife.bind(this, dialog.getView());
 
         // Create adapter
-        adapter = new EasyAdapter<>(getActivity(), ResultViewHolder.class);
+        adapter = new MyAnimeListSearchAdapter(getActivity());
         searchResults.setAdapter(adapter);
 
         // Set listeners
@@ -125,7 +119,7 @@ public class MyAnimeListDialogFragment extends DialogFragment {
     public void onSearchResultsError() {
         progressBar.setVisibility(View.GONE);
         searchResults.setVisibility(View.VISIBLE);
-        adapter.getItems().clear();
+        adapter.clear();
     }
 
     public MyAnimeListFragment getMALFragment() {
@@ -134,21 +128,6 @@ public class MyAnimeListDialogFragment extends DialogFragment {
 
     public MyAnimeListPresenter getPresenter() {
         return getMALFragment().getPresenter();
-    }
-
-    @LayoutId(R.layout.dialog_myanimelist_search_item)
-    public static class ResultViewHolder extends ItemViewHolder<MangaSync> {
-
-        @ViewId(R.id.myanimelist_result_title) TextView title;
-
-        public ResultViewHolder(View view) {
-            super(view);
-        }
-
-        @Override
-        public void onSetValues(MangaSync chapter, PositionInfo positionInfo) {
-            title.setText(chapter.title);
-        }
     }
 
     private static class SimpleTextChangeListener implements TextWatcher {
