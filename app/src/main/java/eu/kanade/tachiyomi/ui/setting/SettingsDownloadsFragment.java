@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.setting;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +62,13 @@ public class SettingsDownloadsFragment extends SettingsNestedFragment {
         if (requestCode == DOWNLOAD_DIR_CODE && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
             preferences.setDownloadsDirectory(uri.getPath());
+
+            // Persist access permissions.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                getActivity().getContentResolver().takePersistableUriPermission(uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION |
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
         }
     }
 
