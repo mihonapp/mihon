@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Surface;
@@ -150,6 +151,24 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             }
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_UP && viewer != null)
+                    viewer.moveToNext();
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_UP && viewer != null)
+                    viewer.moveToPrevious();
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
         }
     }
 

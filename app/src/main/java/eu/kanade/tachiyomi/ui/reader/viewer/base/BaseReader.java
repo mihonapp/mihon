@@ -93,6 +93,8 @@ public abstract class BaseReader extends BaseFragment {
     public abstract void setSelectedPage(int pageNumber);
     public abstract void onSetChapter(Chapter chapter, Page currentPage);
     public abstract void onAppendChapter(Chapter chapter);
+    public abstract void moveToNext();
+    public abstract void moveToPrevious();
 
     public void setDecoderClass(int value) {
         switch (value) {

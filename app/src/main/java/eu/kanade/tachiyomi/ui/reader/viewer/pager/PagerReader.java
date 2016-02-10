@@ -148,18 +148,26 @@ public abstract class PagerReader extends BaseReader {
     }
 
     protected void onLeftSideTap() {
-        if (pager.getCurrentItem() != 0) {
-            pager.setCurrentItem(pager.getCurrentItem() - 1, transitions);
-        } else {
-            getReaderActivity().requestPreviousChapter();
-        }
+        moveToPrevious();
     }
 
     protected void onRightSideTap() {
+        moveToNext();
+    }
+
+    public void moveToNext() {
         if (pager.getCurrentItem() != pager.getAdapter().getCount() - 1) {
             pager.setCurrentItem(pager.getCurrentItem() + 1, transitions);
         } else {
             getReaderActivity().requestNextChapter();
+        }
+    }
+
+    public void moveToPrevious() {
+        if (pager.getCurrentItem() != 0) {
+            pager.setCurrentItem(pager.getCurrentItem() - 1, transitions);
+        } else {
+            getReaderActivity().requestPreviousChapter();
         }
     }
 

@@ -19,12 +19,12 @@ public class RightToLeftReader extends PagerReader {
 
     @Override
     protected void onLeftSideTap() {
-        super.onRightSideTap();
+        moveToNext();
     }
 
     @Override
     protected void onRightSideTap() {
-        super.onLeftSideTap();
+        moveToPrevious();
     }
 
 }

@@ -69,9 +69,9 @@ public class WebtoonReader extends BaseReader {
                 final float positionX = e.getX();
 
                 if (positionX < recycler.getWidth() * LEFT_REGION) {
-                    recycler.smoothScrollBy(0, -scrollDistance);
+                    moveToPrevious();
                 } else if (positionX > recycler.getWidth() * RIGHT_REGION) {
-                    recycler.smoothScrollBy(0, scrollDistance);
+                    moveToNext();
                 } else {
                     getReaderActivity().onCenterSingleTap();
                 }
@@ -114,6 +114,16 @@ public class WebtoonReader extends BaseReader {
     }
 
     @Override
+    public void moveToNext() {
+        recycler.smoothScrollBy(0, scrollDistance);
+    }
+
+    @Override
+    public void moveToPrevious() {
+        recycler.smoothScrollBy(0, -scrollDistance);
+    }
+
+    @Override
     public void onSetChapter(Chapter chapter, Page currentPage) {
         pages = new ArrayList<>(chapter.getPages());
         // Restoring current page is not supported. It's getting weird scrolling jumps
@@ -134,6 +144,9 @@ public class WebtoonReader extends BaseReader {
         if (recycler != null) {
             adapter.setPages(pages);
             adapter.notifyItemRangeInserted(insertStart, chapter.getPages().size());
+            if (subscription != null && subscription.isUnsubscribed()) {
+                observeStatus(insertStart);
+            }
         }
     }
 
@@ -162,8 +175,10 @@ public class WebtoonReader extends BaseReader {
     }
 
     private void observeStatus(int position) {
-        if (position == pages.size())
+        if (position == pages.size()) {
+            unsubscribeStatus();
             return;
+        }
 
         final Page page = pages.get(position);
 
