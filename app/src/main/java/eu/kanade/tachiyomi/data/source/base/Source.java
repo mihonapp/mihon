@@ -34,6 +34,8 @@ public abstract class Source extends BaseSource {
     protected Headers requestHeaders;
     protected LazyHeaders glideHeaders;
 
+    protected String lastError;
+
     public Source() {}
 
     public Source(Context context) {
@@ -88,7 +90,7 @@ public abstract class Source extends BaseSource {
                     List<Chapter> chapters = parseHtmlToChapters(unparsedHtml);
                     return !chapters.isEmpty() ?
                             Observable.just(chapters) :
-                            Observable.error(new Exception("No chapters found"));
+                            Observable.error(new Exception((getLastError().equals("")) ? "No chapters found" : getLastError()));
                 });
     }
 
@@ -216,4 +218,7 @@ public abstract class Source extends BaseSource {
         return glideHeaders;
     }
 
+    public String getLastError() {
+        return lastError;
+    }
 }

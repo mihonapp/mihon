@@ -161,9 +161,9 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
         swipeRefresh.setRefreshing(false);
     }
 
-    public void onFetchChaptersError() {
+    public void onFetchChaptersError(Throwable error) {
         swipeRefresh.setRefreshing(false);
-        ToastUtil.showShort(getContext(), R.string.fetch_chapters_error);
+        ToastUtil.showShort(getContext(), error.getMessage());
     }
 
     public boolean isCatalogueManga() {
