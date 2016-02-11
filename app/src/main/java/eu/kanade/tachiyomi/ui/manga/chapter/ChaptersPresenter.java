@@ -67,7 +67,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
         startableFirst(FETCH_CHAPTERS,
                 this::getOnlineChaptersObs,
                 (view, result) -> view.onFetchChaptersDone(),
-                (view, error) -> view.onFetchChaptersError());
+                (view, error) -> view.onFetchChaptersError(error));
 
         startableLatestCache(CHAPTER_STATUS_CHANGES,
                 this::getChapterStatusObs,

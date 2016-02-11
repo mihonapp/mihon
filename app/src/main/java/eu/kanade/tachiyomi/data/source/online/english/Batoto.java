@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.source.SourceManager;
@@ -31,6 +32,7 @@ import eu.kanade.tachiyomi.data.source.base.LoginSource;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.util.Parser;
+import eu.kanade.tachiyomi.util.ToastUtil;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.Response;
@@ -46,6 +48,8 @@ public class Batoto extends LoginSource {
     public static final String PAGE_URL = BASE_URL + "/areader?id=%s&p=%s";
     public static final String MANGA_URL = "/comic_pop?id=%s";
     public static final String LOGIN_URL = BASE_URL + "/forums/index.php?app=core&module=global&section=login";
+
+    public static final Pattern staffNotice = Pattern.compile("=+Batoto Staff Notice=+([^=]+)=+", Pattern.CASE_INSENSITIVE);
 
     private Pattern datePattern;
     private Map<String, Integer> dateFields;
@@ -204,6 +208,13 @@ public class Batoto extends LoginSource {
 
     @Override
     protected List<Chapter> parseHtmlToChapters(String unparsedHtml) {
+        Matcher matcher = staffNotice.matcher(unparsedHtml);
+        if (matcher.find()) {
+            this.lastError = matcher.group(1);
+        } else {
+            lastError = "";
+        }
+
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         List<Chapter> chapterList = new ArrayList<>();
