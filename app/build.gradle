@@ -99,6 +99,7 @@ dependencies {
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(":SubsamplingScaleImageView")
+    compile project(":ReactiveNetwork")
 
     compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
@@ -130,7 +131,6 @@ dependencies {
     compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.1'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-    compile 'com.github.pwittchen:reactivenetwork:0.1.5'
 
     compile "org.greenrobot:eventbus:$EVENTBUS_VERSION"
     apt "org.greenrobot:eventbus-annotation-processor:$EVENTBUS_VERSION"
