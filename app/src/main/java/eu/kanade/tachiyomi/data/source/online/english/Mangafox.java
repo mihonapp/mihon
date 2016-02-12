@@ -29,7 +29,7 @@ public class Mangafox extends Source {
     public static final String BASE_URL = "http://mangafox.me";
     public static final String POPULAR_MANGAS_URL = BASE_URL + "/directory/%s";
     public static final String SEARCH_URL =
-            BASE_URL + "/search.php?name_method=cw&advopts=1&order=az&sort=name&name=%s&page=%s";
+            BASE_URL + "/search.php?name_method=cw&advopts=1&order=za&sort=views&name=%s&page=%s";
 
     public Mangafox(Context context) {
         super(context);
