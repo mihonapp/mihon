@@ -5,10 +5,6 @@
         android:key="@string/pref_hide_status_bar_key"
         android:defaultValue="true" />
 
-    <SwitchPreference android:title="@string/pref_lock_orientation"
-        android:key="@string/pref_lock_orientation_key"
-        android:defaultValue="true" />
-
     <SwitchPreference android:title="@string/pref_enable_transitions"
         android:key="@string/pref_enable_transitions_key"
         android:defaultValue="true" />
@@ -46,6 +42,14 @@
         android:key="@string/pref_zoom_start_key"
         android:entries="@array/zoom_start"
         android:entryValues="@array/zoom_start_values"
+        android:defaultValue="1"
+        android:summary="%s"/>
+
+    <eu.kanade.tachiyomi.widget.preference.IntListPreference
+        android:title="@string/pref_rotation_type"
+        android:key="@string/pref_rotation_type_key"
+        android:entries="@array/rotation_type"
+        android:entryValues="@array/rotation_type_values"
         android:defaultValue="1"
         android:summary="%s"/>
 

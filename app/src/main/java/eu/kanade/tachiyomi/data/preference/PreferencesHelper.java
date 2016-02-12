@@ -56,10 +56,6 @@ public class PreferencesHelper {
         prefs.edit().clear().apply();
     }
 
-    public Preference<Boolean> lockOrientation() {
-        return rxPrefs.getBoolean(getKey(R.string.pref_lock_orientation_key), true);
-    }
-
     public Preference<Integer> rotation() {
         return rxPrefs.getInteger(getKey(R.string.pref_rotation_type_key), 1);
     }

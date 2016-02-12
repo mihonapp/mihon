@@ -182,11 +182,11 @@ public class ReaderMenu {
     @SuppressWarnings("ConstantConditions")
     private void initializeMenu() {
         // Orientation selector
-        add(preferences.lockOrientation().asObservable()
-                .subscribe(locked -> {
+        add(preferences.rotation().asObservable()
+                .subscribe(value -> {
                     boolean isPortrait = activity.getResources().getConfiguration()
                             .orientation == Configuration.ORIENTATION_PORTRAIT;
-                    int resourceId = !locked ? R.drawable.ic_screen_rotation : isPortrait ?
+                    int resourceId = value == 1 ? R.drawable.ic_screen_rotation : isPortrait ?
                                     R.drawable.ic_screen_lock_portrait :
                                     R.drawable.ic_screen_lock_landscape;
 
