@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -178,20 +179,31 @@ public class ReaderMenu {
         if (nextChapterBtn != null) nextChapterBtn.setVisible(nextChapter != null);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void initializeMenu() {
-        // Orientation changes
+        // Orientation selector
         add(preferences.lockOrientation().asObservable()
                 .subscribe(locked -> {
-                    int resourceId = !locked ? R.drawable.ic_screen_rotation :
-                            activity.getResources().getConfiguration().orientation == 1 ?
+                    boolean isPortrait = activity.getResources().getConfiguration()
+                            .orientation == Configuration.ORIENTATION_PORTRAIT;
+                    int resourceId = !locked ? R.drawable.ic_screen_rotation : isPortrait ?
                                     R.drawable.ic_screen_lock_portrait :
                                     R.drawable.ic_screen_lock_landscape;
 
                     lockOrientation.setImageResource(resourceId);
                 }));
 
-        lockOrientation.setOnClickListener(v ->
-                preferences.lockOrientation().set(!preferences.lockOrientation().get()));
+        lockOrientation.setOnClickListener(v -> {
+            showImmersiveDialog(new MaterialDialog.Builder(activity)
+                    .title(R.string.pref_rotation_type)
+                    .items(R.array.rotation_type)
+                    .itemsCallbackSingleChoice(preferences.rotation().get() - 1,
+                            (d, itemView, which, text) -> {
+                                preferences.rotation().set(which + 1);
+                                return true;
+                            })
+                    .build());
+        });
 
         // Zoom selector
         zoomSelector.setOnClickListener(v -> {
@@ -279,6 +291,7 @@ public class ReaderMenu {
             initializePopupMenu();
         }
 
+        @SuppressWarnings("ConstantConditions")
         private void initializePopupMenu() {
             // Load values from preferences
             enableTransitions.setChecked(preferences.enableTransitions().get());

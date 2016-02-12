@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -277,9 +277,9 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
                 .asObservable()
                 .subscribe(this::setPageNumberVisibility));
 
-        subscriptions.add(preferences.lockOrientation()
+        subscriptions.add(preferences.rotation()
                 .asObservable()
-                .subscribe(this::setOrientation));
+                .subscribe(this::setRotation));
 
         subscriptions.add(preferences.hideStatusBar()
                 .asObservable()
@@ -299,28 +299,25 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
                 .subscribe(this::applyTheme));
     }
 
-    private void setOrientation(boolean locked) {
-        if (locked) {
-            int orientation;
-            int rotation = ((WindowManager) getSystemService(
-                    Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-            switch (rotation) {
-                case Surface.ROTATION_0:
-                    orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    break;
-                case Surface.ROTATION_90:
-                    orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                    break;
-                case Surface.ROTATION_180:
-                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-                    break;
-                default:
-                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-                    break;
-            }
-            setRequestedOrientation(orientation);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    private void setRotation(int rotation) {
+        switch (rotation) {
+            // Rotation free
+            case 1:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                break;
+            // Lock in current rotation
+            case 2:
+                int currentOrientation = getResources().getConfiguration().orientation;
+                setRotation(currentOrientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 4);
+                break;
+            // Lock in portrait
+            case 3:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                break;
+            // Lock in landscape
+            case 4:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                break;
         }
     }
 

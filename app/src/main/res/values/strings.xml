@@ -111,6 +111,12 @@
     <string name="zoom_start_left">Left</string>
     <string name="zoom_start_right">Right</string>
     <string name="zoom_start_center">Center</string>
+    <string name="pref_rotation_type">Rotation</string>
+    <string name="rotation_free">Free</string>
+    <string name="rotation_lock">Lock</string>
+    <string name="rotation_force_portrait">Force portrait</string>
+    <string name="rotation_force_landscape">Force landscape</string>
+
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>

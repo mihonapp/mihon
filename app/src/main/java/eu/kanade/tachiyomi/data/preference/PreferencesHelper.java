@@ -60,6 +60,10 @@ public class PreferencesHelper {
         return rxPrefs.getBoolean(getKey(R.string.pref_lock_orientation_key), true);
     }
 
+    public Preference<Integer> rotation() {
+        return rxPrefs.getInteger(getKey(R.string.pref_rotation_type_key), 1);
+    }
+
     public Preference<Boolean> enableTransitions() {
         return rxPrefs.getBoolean(getKey(R.string.pref_enable_transitions_key), true);
     }
