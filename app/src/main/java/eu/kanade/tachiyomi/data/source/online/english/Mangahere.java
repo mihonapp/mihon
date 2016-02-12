@@ -28,7 +28,7 @@ public class Mangahere extends Source {
     public static final String NAME = "Mangahere (EN)";
     public static final String BASE_URL = "http://www.mangahere.co";
     public static final String POPULAR_MANGAS_URL = BASE_URL + "/directory/%s";
-    public static final String SEARCH_URL = BASE_URL + "/search.php?name=%s&page=%s";
+    public static final String SEARCH_URL = BASE_URL + "/search.php?name=%s&page=%s&sort=views&order=za";
 
     public Mangahere(Context context) {
         super(context);
