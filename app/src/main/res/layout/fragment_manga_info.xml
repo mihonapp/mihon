@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
@@ -20,7 +21,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/manga_info_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -254,28 +256,25 @@
                 </LinearLayout>
 
 
+
+
             </LinearLayout>
 
-        </ScrollView>
+
+        </android.support.v4.widget.NestedScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:gravity="bottom">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="@dimen/fab_margin"
-            app:backgroundTint="@color/colorPrimary"
-            app:layout_behavior="eu.kanade.tachiyomi.ui.base.fab.ScrollAwareFABBehavior"/>
-
-    </LinearLayout>
-</RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_edit"
+        android:layout_height="@dimen/fab_size"
+        android:layout_width="@dimen/fab_size"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_mode_edit_white_24dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_anchor="@id/manga_info_scroll_view"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_behavior="eu.kanade.tachiyomi.ui.base.fab.ScrollAwareFABBehavior"/>
+</android.support.design.widget.CoordinatorLayout>

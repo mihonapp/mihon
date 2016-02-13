@@ -18,11 +18,12 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_height="@dimen/fab_size"
+        android:layout_width="@dimen/fab_size"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_action_add_18dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_add_white_24dp"
         app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@id/categories_list"
         app:layout_anchorGravity="bottom|right|end"
