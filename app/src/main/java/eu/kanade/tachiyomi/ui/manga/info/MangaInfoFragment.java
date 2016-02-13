@@ -65,15 +65,6 @@ public class MangaInfoFragment extends BaseRxFragment<MangaInfoPresenter> {
         View view = inflater.inflate(R.layout.fragment_manga_info, container, false);
         ButterKnife.bind(this, view);
 
-        //Create edit drawable with size 24dp (google guidelines)
-        IconicsDrawable edit = new IconicsDrawable(this.getContext())
-                .icon(GoogleMaterial.Icon.gmd_edit)
-                .color(ContextCompat.getColor(this.getContext(), R.color.white))
-                .sizeDp(24);
-
-        // Update image of fab button
-        fabEdit.setImageDrawable(edit);
-
         // Set listener.
         fabEdit.setOnClickListener(v -> selectImage());
 
