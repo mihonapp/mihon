@@ -253,7 +253,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     public void setActiveChapter(Chapter chapter) {
-        onChapterLeft(true); // force markAsRead since at this point the current page is already for the next chapter
+        onChapterLeft();
         this.activeChapter = chapter;
         nextChapter = null;
         previousChapter = null;
@@ -292,25 +292,29 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         retryPageSubject.onNext(page);
     }
 
-    public void onChapterLeft() {
-        onChapterLeft(false);
-    }
-
     // Called before loading another chapter or leaving the reader. It allows to do operations
     // over the chapter read like saving progress
-    public void onChapterLeft(boolean forceMarkAsRead) {
-        if (activeChapter.getPages() == null)
+    public void onChapterLeft() {
+        List<Page> pages = activeChapter.getPages();
+        if (pages == null)
             return;
 
-        Page activePage = getCurrentPage();
+        // Get the last page read
+        int activePageNumber = activeChapter.last_page_read;
+
+        // Just in case, avoid out of index exceptions
+        if (activePageNumber >= pages.size()) {
+            activePageNumber = pages.size() - 1;
+        }
+        Page activePage = pages.get(activePageNumber);
 
         // Cache current page list progress for online chapters to allow a faster reopen
-        if (!activeChapter.isDownloaded())
-            source.savePageList(activeChapter.url, activePage.getChapter().getPages());
+        if (!activeChapter.isDownloaded()) {
+            source.savePageList(activeChapter.url, pages);
+        }
 
         // Save current progress of the chapter. Mark as read if the chapter is finished
-        activeChapter.last_page_read = activePage.getPageNumber();
-        if (forceMarkAsRead || activePage.isLastPage()) {
+        if (activePage.isLastPage()) {
             activeChapter.read = true;
         }
         db.insertChapter(activeChapter).asRxObservable().subscribe();

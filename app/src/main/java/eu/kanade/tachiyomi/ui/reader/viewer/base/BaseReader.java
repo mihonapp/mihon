@@ -36,16 +36,19 @@ public abstract class BaseReader extends BaseFragment {
     }
 
     public void onPageChanged(int position) {
+        Page oldPage = pages.get(currentPage);
+        Page newPage = pages.get(position);
+        newPage.getChapter().last_page_read = newPage.getPageNumber();
+
         if (getReaderActivity().getPresenter().isSeamlessMode()) {
-            Chapter oldChapter = pages.get(currentPage).getChapter();
-            Chapter newChapter = pages.get(position).getChapter();
+            Chapter oldChapter = oldPage.getChapter();
+            Chapter newChapter = newPage.getChapter();
             if (!hasRequestedNextChapter && position > pages.size() - 5) {
                 hasRequestedNextChapter = true;
                 getReaderActivity().getPresenter().appendNextChapter();
             }
             if (!oldChapter.id.equals(newChapter.id)) {
-                Page page = pages.get(position);
-                onChapterChanged(page.getChapter(), page);
+                onChapterChanged(newPage.getChapter(), newPage);
             }
         }
         currentPage = position;
