@@ -28,6 +28,7 @@
     <string name="action_edit_categories">Edit categories</string>
     <string name="action_rename_category">Rename category</string>
     <string name="action_move_category">Move to categories</string>
+    <string name="action_edit_cover">Edit the cover picture</string>
     <string name="action_sort_up">Sort up</string>
     <string name="action_sort_down">Sort down</string>
     <string name="action_show_unread">Unread</string>
@@ -161,18 +162,18 @@
 
     <!-- Manga info fragment -->
     <string name="manga_detail_tab">Info</string>
-    <string name="author">Author</string>
-    <string name="chapters">Chapters</string>
-    <string name="genres">Genres</string>
-    <string name="source">Source</string>
-    <string name="artist">Artist</string>
     <string name="description">Description</string>
-    <string name="status">Status</string>
     <string name="ongoing">Ongoing</string>
     <string name="unknown">Unknown</string>
     <string name="licensed">Licensed</string>
     <string name="add_to_library">Add to library</string>
     <string name="remove_from_library">Remove from library</string>
+    <string name="manga_info_author_label">Author</string>
+    <string name="manga_info_artist_label">Artist</string>
+    <string name="manga_info_chapters_label">Chapters</string>
+    <string name="manga_info_status_label">Status</string>
+    <string name="manga_info_source_label">Source</string>
+    <string name="manga_info_genres_label">Genres</string>
 
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Chapters</string>
@@ -198,6 +199,9 @@
     <string name="plan_to_read">Plan to read</string>
     <string name="score">Score</string>
     <string name="title_hint">Title…</string>
+    <string name="status">Status</string>
+    <string name="chapters">Chapters</string>
+
 
     <!-- Reader activity -->
     <string name="downloading">Downloading…</string>
@@ -232,5 +236,9 @@
     <string name="update_check_no_new_updates">No new updates available</string>
     <string name="update_check_download_started">Download Started</string>
     <string name="update_check_look_for_updates">Looking for updates</string>
+
+    <!--Content Description-->
+    <string name="description_backdrop">Backdrop image of selected manga</string>
+    <string name="description_cover">Cover of selected manga</string>
 
 </resources>

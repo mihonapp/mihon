@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.library;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -20,6 +22,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +34,13 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Category;
 import eu.kanade.tachiyomi.data.database.models.Manga;
+import eu.kanade.tachiyomi.data.io.IOHandler;
 import eu.kanade.tachiyomi.data.sync.LibraryUpdateService;
 import eu.kanade.tachiyomi.event.LibraryMangasEvent;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import eu.kanade.tachiyomi.ui.library.category.CategoryActivity;
 import eu.kanade.tachiyomi.ui.main.MainActivity;
+import eu.kanade.tachiyomi.util.ToastUtil;
 import icepick.State;
 import nucleus.factory.RequiresPresenter;
 
@@ -42,16 +48,24 @@ import nucleus.factory.RequiresPresenter;
 public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         implements ActionMode.Callback {
 
-    @Bind(R.id.view_pager) ViewPager viewPager;
-    private TabLayout tabs;
-    private AppBarLayout appBar;
+
+    private static final int REQUEST_IMAGE_OPEN = 101;
 
     protected LibraryAdapter adapter;
 
-    private ActionMode actionMode;
+    @Bind(R.id.view_pager) ViewPager viewPager;
 
     @State int activeCategory;
+
     @State String query = "";
+
+    private TabLayout tabs;
+
+    private AppBarLayout appBar;
+
+    private ActionMode actionMode;
+
+    private Manga selectedCoverManga;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -187,6 +201,11 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
         actionMode.setTitle(getString(R.string.label_selected, count));
     }
 
+    public void setVisibilityOfCoverEdit(int count) {
+        // If count = 1 display edit button
+        actionMode.getMenu().findItem(R.id.action_edit_cover).setVisible((count == 1));
+    }
+
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         mode.getMenuInflater().inflate(R.menu.library_selection, menu);
@@ -202,6 +221,11 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_edit_cover:
+                changeSelectedCover(getPresenter().selectedMangas);
+                rebuildAdapter();
+                destroyActionModeIfNeeded();
+                return true;
             case R.id.action_move_to_category:
                 moveMangasToCategories(getPresenter().selectedMangas);
                 return true;
@@ -211,6 +235,15 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
                 return true;
         }
         return false;
+    }
+
+    /**
+     * TODO workaround. Covers won't refresh any other way.
+     */
+    public void rebuildAdapter() {
+        adapter = new LibraryAdapter(getChildFragmentManager());
+        viewPager.setAdapter(adapter);
+        tabs.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -223,6 +256,53 @@ public class LibraryFragment extends BaseRxFragment<LibraryPresenter>
     public void destroyActionModeIfNeeded() {
         if (actionMode != null) {
             actionMode.finish();
+        }
+    }
+
+    private void changeSelectedCover(List<Manga> mangas) {
+        if (mangas.size() == 1) {
+            selectedCoverManga = mangas.get(0);
+            if (selectedCoverManga.favorite) {
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,
+                        getString(R.string.file_select_cover)), REQUEST_IMAGE_OPEN);
+            } else {
+                ToastUtil.showShort(getContext(), R.string.notification_first_add_to_library);
+            }
+
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case (REQUEST_IMAGE_OPEN):
+                    if (selectedCoverManga != null) {
+                        // Get the file's content URI from the incoming Intent
+                        Uri selectedImageUri = data.getData();
+
+                        // Convert to absolute path to prevent FileNotFoundException
+                        String result = IOHandler.getFilePath(selectedImageUri,
+                                getContext().getContentResolver(), getContext());
+
+                        // Get file from filepath
+                        File picture = new File(result != null ? result : "");
+
+                        try {
+                            // Update cover to selected file, show error if something went wrong
+                            if (!getPresenter().editCoverWithLocalFile(picture, selectedCoverManga))
+                                ToastUtil.showShort(getContext(), R.string.notification_manga_update_failed);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+            }
         }
     }
 

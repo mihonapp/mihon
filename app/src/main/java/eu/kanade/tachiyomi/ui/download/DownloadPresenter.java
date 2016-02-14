@@ -1,6 +1,12 @@
 package eu.kanade.tachiyomi.ui.download;
 
 import android.os.Bundle;
+
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+
 import eu.kanade.tachiyomi.data.download.DownloadManager;
 import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue;
@@ -12,20 +18,14 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
-
 public class DownloadPresenter extends BasePresenter<DownloadFragment> {
 
+    public final static int GET_DOWNLOAD_QUEUE = 1;
     @Inject DownloadManager downloadManager;
-
     private DownloadQueue downloadQueue;
     private Subscription statusSubscription;
     private Subscription pageProgressSubscription;
     private HashMap<Download, Subscription> progressSubscriptions;
-
-    public final static int GET_DOWNLOAD_QUEUE = 1;
 
     @Override
     protected void onCreate(Bundle savedState) {

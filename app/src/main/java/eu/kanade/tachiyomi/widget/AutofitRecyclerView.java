@@ -5,6 +5,9 @@ import android.content.res.TypedArray;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.widget.ImageView;
+
+import eu.kanade.tachiyomi.R;
 
 public class AutofitRecyclerView extends RecyclerView {
 

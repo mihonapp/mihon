@@ -3,6 +3,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_edit_cover"
+          android:title="@string/action_edit_cover"
+          android:icon="@drawable/ic_create"
+          app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/action_move_to_category"
           android:title="@string/action_move_category"
           android:icon="@drawable/ic_label"

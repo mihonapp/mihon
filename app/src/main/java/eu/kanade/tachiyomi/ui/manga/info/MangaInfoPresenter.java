@@ -1,13 +1,9 @@
 package eu.kanade.tachiyomi.ui.manga.info;
 
 import android.os.Bundle;
-import android.widget.ImageView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.File;
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -135,20 +131,7 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
         refreshManga();
     }
 
-    /**
-     * Update cover with local file
-     */
-    public boolean editCoverWithLocalFile(File file, ImageView imageView) throws IOException {
-        if (!manga.initialized)
-            return false;
 
-        if (manga.favorite) {
-            coverCache.copyToLocalCache(manga.thumbnail_url, file);
-            coverCache.saveOrLoadFromCache(imageView, manga.thumbnail_url, source.getGlideHeaders());
-            return true;
-        }
-        return false;
-    }
 
     private void onMangaFavoriteChange(boolean isFavorite) {
         if (isFavorite) {

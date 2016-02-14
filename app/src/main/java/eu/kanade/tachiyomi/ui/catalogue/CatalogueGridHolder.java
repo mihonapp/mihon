@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mikepenz.iconics.view.IconicsImageView;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
@@ -13,7 +15,7 @@ public class CatalogueGridHolder extends CatalogueHolder {
 
     @Bind(R.id.title) TextView title;
     @Bind(R.id.thumbnail) ImageView thumbnail;
-    @Bind(R.id.favorite_sticker) ImageView favoriteSticker;
+    @Bind(R.id.favorite_sticker) IconicsImageView favoriteSticker;
 
     public CatalogueGridHolder(View view, CatalogueAdapter adapter, OnListItemClickListener listener) {
         super(view, adapter, listener);
@@ -23,7 +25,10 @@ public class CatalogueGridHolder extends CatalogueHolder {
     @Override
     public void onSetValues(Manga manga, CataloguePresenter presenter) {
         title.setText(manga.title);
+        // Set visibility of in library icon.
         favoriteSticker.setVisibility(manga.favorite ? View.VISIBLE : View.GONE);
+        // Set alpha of thumbnail.
+        thumbnail.setAlpha(manga.favorite ? 0.3f : 1.0f);
         setImage(manga, presenter);
     }
 

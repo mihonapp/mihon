@@ -65,7 +65,6 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
 
     @Override
     public void onListItemLongClick(int position) {
-
     }
 
     protected void openChapter(MangaChapter chapter) {

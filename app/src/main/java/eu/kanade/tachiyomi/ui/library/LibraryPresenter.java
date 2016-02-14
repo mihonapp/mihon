@@ -5,6 +5,8 @@ import android.util.Pair;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,17 +28,14 @@ import rx.subjects.BehaviorSubject;
 
 public class LibraryPresenter extends BasePresenter<LibraryFragment> {
 
+    private static final int GET_LIBRARY = 1;
+    protected List<Category> categories;
+    protected List<Manga> selectedMangas;
+    protected BehaviorSubject<String> searchSubject;
     @Inject DatabaseHelper db;
     @Inject PreferencesHelper preferences;
     @Inject CoverCache coverCache;
     @Inject SourceManager sourceManager;
-
-    protected List<Category> categories;
-    protected List<Manga> selectedMangas;
-
-    protected BehaviorSubject<String> searchSubject;
-
-    private static final int GET_LIBRARY = 1;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -140,5 +139,19 @@ public class LibraryPresenter extends BasePresenter<LibraryFragment> {
         }
 
         db.setMangaCategories(mc, mangas);
+    }
+
+    /**
+     * Update cover with local file
+     */
+    public boolean editCoverWithLocalFile(File file, Manga manga) throws IOException {
+        if (!manga.initialized)
+            return false;
+
+        if (manga.favorite) {
+            coverCache.copyToLocalCache(manga.thumbnail_url, file);
+            return true;
+        }
+        return false;
     }
 }
