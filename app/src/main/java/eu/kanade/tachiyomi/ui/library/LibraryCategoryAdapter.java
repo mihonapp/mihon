@@ -64,7 +64,6 @@ public class LibraryCategoryAdapter extends FlexibleAdapter<LibraryHolder, Manga
         final LibraryPresenter presenter = ((LibraryFragment) fragment.getParentFragment()).getPresenter();
         final Manga manga = getItem(position);
         holder.onSetValues(manga, presenter);
-
         //When user scrolls this bind the correct selection status
         holder.itemView.setActivated(isSelected(position));
     }

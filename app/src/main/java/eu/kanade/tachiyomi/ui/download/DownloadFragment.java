@@ -4,7 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
@@ -13,8 +21,6 @@ import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
-
-import java.util.List;
 
 @RequiresPresenter(DownloadPresenter.class)
 public class DownloadFragment extends BaseRxFragment<DownloadPresenter> {

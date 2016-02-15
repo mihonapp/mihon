@@ -7,6 +7,12 @@ import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
@@ -16,29 +22,20 @@ import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder;
 import rx.Observable;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Date;
-
 public class ChaptersHolder extends FlexibleViewHolder {
 
+    private final ChaptersAdapter adapter;
+    private final int readColor;
+    private final int unreadColor;
+    private final DecimalFormat decimalFormat;
+    private final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
     @Bind(R.id.chapter_title) TextView title;
     @Bind(R.id.download_text) TextView downloadText;
     @Bind(R.id.chapter_menu) RelativeLayout chapterMenu;
     @Bind(R.id.chapter_pages) TextView pages;
     @Bind(R.id.chapter_date) TextView date;
-
     private Context context;
-
-    private final ChaptersAdapter adapter;
     private Chapter item;
-
-    private final int readColor;
-    private final int unreadColor;
-
-    private final DecimalFormat decimalFormat;
-    private final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
     public ChaptersHolder(View view, ChaptersAdapter adapter, OnListItemClickListener listener) {
         super(view, adapter, listener);

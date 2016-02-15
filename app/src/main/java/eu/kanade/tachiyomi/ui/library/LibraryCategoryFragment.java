@@ -47,6 +47,8 @@ public class LibraryCategoryFragment extends BaseFragment
         return fragment;
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         // Inflate the layout for this fragment
@@ -86,7 +88,10 @@ public class LibraryCategoryFragment extends BaseFragment
                     adapter.updateDataSet();
                 });
 
+
+
         return view;
+
     }
 
     @Override
@@ -165,15 +170,16 @@ public class LibraryCategoryFragment extends BaseFragment
 
     private void toggleSelection(int position) {
         LibraryFragment f = getLibraryFragment();
-
         adapter.toggleSelection(position, false);
         f.getPresenter().setSelection(adapter.getItem(position), adapter.isSelected(position));
 
         int count = f.getPresenter().selectedMangas.size();
         if (count == 0) {
             f.destroyActionModeIfNeeded();
-        } else {
+        }
+        else {
             f.setContextTitle(count);
+            f.setVisibilityOfCoverEdit(count);
             f.invalidateActionMode();
         }
     }

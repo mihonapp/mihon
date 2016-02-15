@@ -9,10 +9,10 @@
         android:id="@+id/myanimelist_title_layout"
         android:layout_width="match_parent"
         android:layout_height="?android:listPreferredItemHeightSmall"
-        android:paddingLeft="?android:listPreferredItemPaddingLeft"
-        android:paddingRight="?android:listPreferredItemPaddingRight"
         android:background="?attr/selectableItemBackground"
-        android:clickable="true">
+        android:clickable="true"
+        android:paddingLeft="?android:listPreferredItemPaddingLeft"
+        android:paddingRight="?android:listPreferredItemPaddingRight">
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,8 +24,8 @@
             android:id="@+id/myanimelist_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:text="Edit..."/>
 
     </RelativeLayout>
@@ -42,23 +42,23 @@
         android:layout_width="match_parent"
         android:layout_height="?android:listPreferredItemHeightSmall"
         android:layout_below="@id/divider1"
-        android:paddingLeft="?android:listPreferredItemPaddingLeft"
-        android:paddingRight="?android:listPreferredItemPaddingRight"
         android:background="?attr/selectableItemBackground"
-        android:clickable="true">
+        android:clickable="true"
+        android:paddingLeft="?android:listPreferredItemPaddingLeft"
+        android:paddingRight="?android:listPreferredItemPaddingRight">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/status"/>
+            android:text="Status"/>
 
         <TextView
             android:id="@+id/myanimelist_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             tools:text="Reading"/>
 
     </RelativeLayout>
@@ -75,10 +75,10 @@
         android:layout_width="match_parent"
         android:layout_height="?android:listPreferredItemHeightSmall"
         android:layout_below="@id/divider2"
-        android:paddingLeft="?android:listPreferredItemPaddingLeft"
-        android:paddingRight="?android:listPreferredItemPaddingRight"
         android:background="?attr/selectableItemBackground"
-        android:clickable="true">
+        android:clickable="true"
+        android:paddingLeft="?android:listPreferredItemPaddingLeft"
+        android:paddingRight="?android:listPreferredItemPaddingRight">
 
         <TextView
             android:layout_width="wrap_content"
@@ -90,8 +90,8 @@
             android:id="@+id/myanimelist_chapters"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             tools:text="12/24"/>
 
     </RelativeLayout>
@@ -108,10 +108,10 @@
         android:layout_width="match_parent"
         android:layout_height="?android:listPreferredItemHeightSmall"
         android:layout_below="@id/divider3"
-        android:paddingLeft="?android:listPreferredItemPaddingLeft"
-        android:paddingRight="?android:listPreferredItemPaddingRight"
         android:background="?attr/selectableItemBackground"
-        android:clickable="true">
+        android:clickable="true"
+        android:paddingLeft="?android:listPreferredItemPaddingLeft"
+        android:paddingRight="?android:listPreferredItemPaddingRight">
 
         <TextView
             android:layout_width="wrap_content"
@@ -123,8 +123,8 @@
             android:id="@+id/myanimelist_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             tools:text="10"/>
 
     </RelativeLayout>

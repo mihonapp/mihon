@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/selector_chapter_light">
 
     <RelativeLayout
@@ -13,9 +13,9 @@
         android:background="@drawable/card_background">
 
         <android.support.percent.PercentFrameLayout
+            android:id="@+id/image_container"
             android:layout_width="wrap_content"
-            android:layout_height="220dp"
-            android:id="@+id/image_container">
+            android:layout_height="220dp">
 
             <ImageView
                 android:id="@+id/thumbnail"
@@ -28,9 +28,9 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_heightPercent="50%"
                 android:layout_gravity="bottom"
-                android:background="@drawable/gradient_shape"/>
+                android:background="@drawable/gradient_shape"
+                app:layout_heightPercent="50%"/>
 
         </android.support.percent.PercentFrameLayout>
 
@@ -48,35 +48,38 @@
             android:textSize="12sp"
             android:visibility="gone"/>
 
-        <ImageView
+
+        <com.mikepenz.iconics.view.IconicsImageView
             android:id="@+id/favorite_sticker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignEnd="@+id/image_container"
             android:layout_alignRight="@+id/image_container"
             android:layout_alignTop="@+id/image_container"
+            android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/ic_action_favorite_blue"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            app:iiv_color="@color/primary"
+            app:iiv_icon="gmd_bookmark"/>
 
         <eu.kanade.tachiyomi.widget.PTSansTextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/image_container"
             android:layout_gravity="center_vertical"
-            app:typeface="ptsansNarrowBold"
-            android:lineSpacingExtra="-4dp"
             android:ellipsize="end"
+            android:lineSpacingExtra="-4dp"
             android:maxLines="2"
             android:padding="8dp"
-            android:textColor="@color/white"
-            android:textSize="14sp"
+            android:shadowColor="@color/primary_text"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowColor="@color/primary_text"
             android:shadowRadius="4"
-            android:layout_alignBottom="@+id/image_container"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:typeface="ptsansNarrowBold"
             tools:text="Sample name"/>
 
     </RelativeLayout>
