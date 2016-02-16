@@ -42,10 +42,12 @@ public class PreferencesHelper {
         if (getDownloadsDirectory().equals(defaultDownloadsDir.getAbsolutePath()) &&
                 !defaultDownloadsDir.exists()) {
             defaultDownloadsDir.mkdirs();
-            try {
-                new File(defaultDownloadsDir, ".nomedia").createNewFile();
-            } catch (IOException e) { /* Ignore */ }
         }
+
+        // Don't display downloaded chapters in gallery apps creating a ".nomedia" file
+        try {
+            new File(getDownloadsDirectory(), ".nomedia").createNewFile();
+        } catch (IOException e) { /* Ignore */ }
     }
 
     private String getKey(int keyResource) {
