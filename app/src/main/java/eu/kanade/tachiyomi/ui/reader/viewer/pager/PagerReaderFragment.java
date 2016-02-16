@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -145,8 +146,13 @@ public class PagerReaderFragment extends BaseFragment {
         if (page == null || page.getImagePath() == null)
             return;
 
-        imageView.setImage(ImageSource.uri(page.getImagePath()));
-        progressContainer.setVisibility(View.GONE);
+        File imagePath = new File(page.getImagePath());
+        if (imagePath.exists()) {
+            imageView.setImage(ImageSource.uri(page.getImagePath()));
+            progressContainer.setVisibility(View.GONE);
+        } else {
+            page.setStatus(Page.ERROR);
+        }
     }
 
     private void showDownloading() {
@@ -198,7 +204,6 @@ public class PagerReaderFragment extends BaseFragment {
             case Page.READY:
                 showImage();
                 unsubscribeProgress();
-                unsubscribeStatus();
                 break;
             case Page.ERROR:
                 showError();

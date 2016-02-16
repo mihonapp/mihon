@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import java.io.File;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
@@ -62,7 +64,6 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (page != null)
                     adapter.retryPage(page);
-                return true;
             }
             return true;
         });
@@ -99,7 +100,14 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         setErrorButtonVisible(false);
         setProgressVisible(false);
         setImageVisible(true);
-        imageView.setImage(ImageSource.uri(page.getImagePath()));
+
+        File imagePath = new File(page.getImagePath());
+        if (imagePath.exists()) {
+            imageView.setImage(ImageSource.uri(page.getImagePath()));
+        } else {
+            page.setStatus(Page.ERROR);
+            onError();
+        }
     }
 
     private void onError() {
