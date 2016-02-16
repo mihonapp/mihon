@@ -19,42 +19,55 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Presenter of MangaInfoFragment.
+ * Contains information and data for fragment.
+ * Observable updates should be called from here.
+ */
 public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
 
     /**
      * The id of the restartable.
      */
     private static final int GET_MANGA = 1;
+
     /**
      * The id of the restartable.
      */
     private static final int GET_CHAPTER_COUNT = 2;
+
     /**
      * The id of the restartable.
      */
     private static final int FETCH_MANGA_INFO = 3;
+
     /**
-     * Source information
+     * Source information.
      */
     protected Source source;
+
     /**
-     * Used to connect to database
+     * Used to connect to database.
      */
     @Inject DatabaseHelper db;
+
     /**
-     * Used to connect to different manga sources
+     * Used to connect to different manga sources.
      */
     @Inject SourceManager sourceManager;
+
     /**
-     * Used to connect to cache
+     * Used to connect to cache.
      */
     @Inject CoverCache coverCache;
+
     /**
-     * Selected manga information
+     * Selected manga information.
      */
     private Manga manga;
+
     /**
-     * Count of chapters
+     * Count of chapters.
      */
     private int count = -1;
 
@@ -62,23 +75,23 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        // Notify the view a manga is available or has changed
+        // Notify the view a manga is available or has changed.
         startableLatestCache(GET_MANGA,
                 () -> Observable.just(manga),
                 (view, manga) -> view.onNextManga(manga, source));
 
-        // Update chapter count
+        // Update chapter count.
         startableLatestCache(GET_CHAPTER_COUNT,
                 () -> Observable.just(count),
                 MangaInfoFragment::setChapterCount);
 
-        // Fetch manga info from source
+        // Fetch manga info from source.
         startableFirst(FETCH_MANGA_INFO,
                 this::fetchMangaObs,
                 (view, manga) -> view.onFetchMangaDone(),
                 (view, error) -> view.onFetchMangaError());
 
-        // Listen for events
+        // Listen for events.
         registerForEvents();
     }
 
@@ -99,12 +112,13 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
     public void onEvent(ChapterCountEvent event) {
         if (count != event.getCount()) {
             count = event.getCount();
+            // Update chapter count
             start(GET_CHAPTER_COUNT);
         }
     }
 
     /**
-     * Fetch manga info from source
+     * Fetch manga information from source.
      */
     public void fetchMangaFromSource() {
         if (isUnsubscribed(FETCH_MANGA_INFO)) {
@@ -112,6 +126,11 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
         }
     }
 
+    /**
+     * Fetch manga information from source.
+     *
+     * @return manga information.
+     */
     private Observable<Manga> fetchMangaObs() {
         return source.pullMangaFromNetwork(manga.url)
                 .flatMap(networkManga -> {
@@ -124,6 +143,9 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
                 .doOnNext(manga -> refreshManga());
     }
 
+    /**
+     * Update favorite status of manga, (removes / adds) manga (to / from) library.
+     */
     public void toggleFavorite() {
         manga.favorite = !manga.favorite;
         onMangaFavoriteChange(manga.favorite);
@@ -132,7 +154,11 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
     }
 
 
-
+    /**
+     * (Removes / Saves) cover depending on favorite status.
+     *
+     * @param isFavorite determines if manga is favorite or not.
+     */
     private void onMangaFavoriteChange(boolean isFavorite) {
         if (isFavorite) {
             coverCache.save(manga.thumbnail_url, source.getGlideHeaders());
@@ -141,12 +167,10 @@ public class MangaInfoPresenter extends BasePresenter<MangaInfoFragment> {
         }
     }
 
-    public Manga getManga() {
-        return manga;
-    }
-
-    // Used to refresh the view
-    protected void refreshManga() {
+    /**
+     * Refresh MangaInfo view.
+     */
+    private void refreshManga() {
         start(GET_MANGA);
     }
 
