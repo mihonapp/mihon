@@ -179,4 +179,11 @@ public class ChapterRecognitionTest {
         ChapterRecognition.parseChapterNumber(c, randomManga);
         assertThat(c.chapter_number).isEqualTo(-1f);
     }
+
+    @Test
+    public void testChapterWithTime() {
+        Chapter c = createChapter("Fairy Tail 404: 00:00");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(404f);
+    }
 }
