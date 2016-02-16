@@ -172,4 +172,11 @@ public class ChapterRecognitionTest {
         ChapterRecognition.parseChapterNumber(c, randomManga);
         assertThat(c.chapter_number).isEqualTo(027f);
     }
+
+    @Test
+    public void testUnparsable() {
+        Chapter c = createChapter("Foo");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(-1f);
+    }
 }

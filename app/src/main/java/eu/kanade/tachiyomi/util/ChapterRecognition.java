@@ -111,12 +111,15 @@ public class ChapterRecognition {
         }
 
         // Strip anything after "part xxx" and try that
-        name = pPart.matcher(name).replaceAll("$1");
-        dummyChapter.name = name;
-        parseChapterNumber(dummyChapter, manga);
-        if (dummyChapter.chapter_number >= 0) {
-            chapter.chapter_number = dummyChapter.chapter_number;
-            return;
+        matcher = pPart.matcher(name);
+        if (matcher.find()) {
+            name = pPart.matcher(name).replaceAll("$1");
+            dummyChapter.name = name;
+            parseChapterNumber(dummyChapter, manga);
+            if (dummyChapter.chapter_number >= 0) {
+                chapter.chapter_number = dummyChapter.chapter_number;
+                return;
+            }
         }
     }
 
