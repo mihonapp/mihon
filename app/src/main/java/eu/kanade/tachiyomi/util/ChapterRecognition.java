@@ -15,7 +15,8 @@ public class ChapterRecognition {
     private static final Pattern withAlphaPostfix = Pattern.compile("(\\d+[\\.,]?\\d*\\s*)([a-z])($|\\b)");
     private static final Pattern cleanNumber = Pattern.compile("(\\d+[\\.,]?\\d+)($|\\b)");
     private static final Pattern uncleanNumber = Pattern.compile("(\\d+[\\.,]?\\d*)");
-    private static final Pattern withColon = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)");
+    private static final Pattern withColon = Pattern.compile("(\\d+[\\.,]?\\d*\\s*:)([^\\d]|$)");
+    private static final Pattern startingNumber = Pattern.compile("^(\\d+[\\.,]?\\d*)");
 
     private static final Pattern pUnwanted =
             Pattern.compile("(\\b|\\d)(v|ver|vol|version|volume)\\.?\\s*\\d+\\b");
@@ -84,7 +85,7 @@ public class ChapterRecognition {
 
         // Try to remove the manga name from the chapter, and try again
         String mangaName = replaceIrrelevantCharacters(manga.title);
-        String nameWithoutManga = difference(mangaName, name);
+        String nameWithoutManga = difference(mangaName, name).trim();
         if (!nameWithoutManga.isEmpty()) {
             matcher = uncleanNumber.matcher(nameWithoutManga);
             occurrences = getAllOccurrences(matcher);
@@ -120,6 +121,19 @@ public class ChapterRecognition {
                 chapter.chapter_number = dummyChapter.chapter_number;
                 return;
             }
+        }
+
+
+        // check for a number either at the start or right after the manga title
+        matcher = startingNumber.matcher(name);
+        if (matcher.find()) {
+            chapter.chapter_number = Float.parseFloat(matcher.group(1));
+            return;
+        }
+        matcher = startingNumber.matcher(nameWithoutManga);
+        if (matcher.find()) {
+            chapter.chapter_number = Float.parseFloat(matcher.group(1));
+            return;
         }
     }
 

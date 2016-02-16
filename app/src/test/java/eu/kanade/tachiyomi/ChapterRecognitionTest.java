@@ -179,4 +179,20 @@ public class ChapterRecognitionTest {
         ChapterRecognition.parseChapterNumber(c, randomManga);
         assertThat(c.chapter_number).isEqualTo(-1f);
     }
+
+    @Test
+    public void testChapterWithTime() {
+        Chapter c = createChapter("Fairy Tail 404: 00:00");
+        ChapterRecognition.parseChapterNumber(c, randomManga);
+        assertThat(c.chapter_number).isEqualTo(404f);
+    }
+
+    @Test
+    public void testPlainNumberInTitle() {
+        Chapter c = createChapter("Kuroko no Basket 002 Monday at 840 on the Rooftop");
+        Manga manga = new Manga();
+        manga.title = "Kuroko no Basket";
+        ChapterRecognition.parseChapterNumber(c, manga);
+        assertThat(c.chapter_number).isEqualTo(2f);
+    }
 }
