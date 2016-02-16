@@ -122,6 +122,19 @@ public class ChapterRecognition {
                 return;
             }
         }
+
+
+        // check for a number either at the start or right after the manga title
+        matcher = startingNumber.matcher(name);
+        if (matcher.find()) {
+            chapter.chapter_number = Float.parseFloat(matcher.group(1));
+            return;
+        }
+        matcher = startingNumber.matcher(nameWithoutManga);
+        if (matcher.find()) {
+            chapter.chapter_number = Float.parseFloat(matcher.group(1));
+            return;
+        }
     }
 
     /**
