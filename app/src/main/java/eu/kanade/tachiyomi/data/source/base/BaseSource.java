@@ -13,11 +13,19 @@ import rx.Observable;
 
 public abstract class BaseSource {
 
+    private int id;
+
+    // Id of the source
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     // Name of the source to display
     public abstract String getName();
-
-    // Id of the source (must be declared and obtained from SourceManager to avoid conflicts)
-    public abstract int getId();
 
     // Base url of the source, like: http://example.com
     public abstract String getBaseUrl();
@@ -67,24 +75,6 @@ public abstract class BaseSource {
 
     protected boolean isAuthenticationSuccessful(Response response) {
         throw new UnsupportedOperationException("Not implemented");
-    }
-    
-
-    // Default fields, they can be overriden by sources' implementation
-
-    // Get the URL to the details of a manga, useful if the source provides some kind of API or fast calls
-    protected String overrideMangaUrl(String defaultMangaUrl) {
-        return defaultMangaUrl;
-    }
-
-    // Get the URL of the first page that contains a source image and the page list
-    protected String overrideChapterUrl(String defaultPageUrl) {
-        return defaultPageUrl;
-    }
-
-    // Get the URL of the pages that contains source images
-    protected String overridePageUrl(String defaultPageUrl) {
-        return defaultPageUrl;
     }
 
     // Default headers, it can be overriden by children or just add new keys

@@ -51,17 +51,17 @@
             android:theme="@style/FilePickerTheme">
         </activity>
 
-        <service android:name=".data.sync.LibraryUpdateService"
+        <service android:name=".data.library.LibraryUpdateService"
             android:exported="false"/>
 
         <service android:name=".data.download.DownloadService"
             android:exported="false"/>
 
-        <service android:name=".data.sync.UpdateMangaSyncService"
+        <service android:name=".data.mangasync.UpdateMangaSyncService"
             android:exported="false"/>
 
         <receiver
-            android:name=".data.sync.LibraryUpdateService$SyncOnConnectionAvailable"
+            android:name=".data.library.LibraryUpdateService$SyncOnConnectionAvailable"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -69,7 +69,7 @@
         </receiver>
 
         <receiver
-            android:name=".data.sync.LibraryUpdateAlarm">
+            android:name=".data.library.LibraryUpdateAlarm">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="eu.kanade.UPDATE_LIBRARY" />

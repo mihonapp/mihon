@@ -60,7 +60,7 @@ public class SettingsAccountsFragment extends SettingsNestedFragment {
         mangaSyncCategory.setTitle("Sync");
         screen.addPreference(mangaSyncCategory);
 
-        for (MangaSyncService sync : syncManager.getSyncServices()) {
+        for (MangaSyncService sync : syncManager.getServices()) {
             MangaSyncLoginDialog dialog = new MangaSyncLoginDialog(
                     screen.getContext(), preferences, sync);
             dialog.setTitle(sync.getName());

@@ -35,7 +35,7 @@ import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Category;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.io.IOHandler;
-import eu.kanade.tachiyomi.data.sync.LibraryUpdateService;
+import eu.kanade.tachiyomi.data.library.LibraryUpdateService;
 import eu.kanade.tachiyomi.event.LibraryMangasEvent;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import eu.kanade.tachiyomi.ui.library.category.CategoryActivity;

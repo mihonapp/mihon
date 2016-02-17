@@ -18,7 +18,6 @@ import java.util.Locale;
 
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
-import eu.kanade.tachiyomi.data.source.SourceManager;
 import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.util.Parser;
@@ -38,11 +37,6 @@ public class Mangafox extends Source {
     @Override
     public String getName() {
         return NAME;
-    }
-
-    @Override
-    public int getId() {
-        return SourceManager.MANGAFOX;
     }
 
     @Override

@@ -17,15 +17,14 @@ import java.util.regex.Pattern;
 
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
-import eu.kanade.tachiyomi.data.source.SourceManager;
+import eu.kanade.tachiyomi.data.network.ReqKt;
 import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.util.Parser;
 import okhttp3.FormBody;
 import okhttp3.Headers;
-import okhttp3.Response;
-import rx.Observable;
+import okhttp3.Request;
 
 public class Kissmanga extends Source {
 
@@ -53,11 +52,6 @@ public class Kissmanga extends Source {
     }
 
     @Override
-    public int getId() {
-        return SourceManager.KISSMANGA;
-    }
-
-    @Override
     public String getBaseUrl() {
         return BASE_URL;
     }
@@ -70,6 +64,31 @@ public class Kissmanga extends Source {
     @Override
     protected String getInitialSearchUrl(String query) {
         return SEARCH_URL;
+    }
+
+    @Override
+    protected Request searchMangaRequest(MangasPage page, String query) {
+        if (page.page == 1) {
+            page.url = getInitialSearchUrl(query);
+        }
+
+        FormBody.Builder form = new FormBody.Builder();
+        form.add("authorArtist", "");
+        form.add("mangaName", query);
+        form.add("status", "");
+        form.add("genres", "");
+
+        return ReqKt.post(page.url, requestHeaders, form.build());
+    }
+
+    @Override
+    protected Request pageListRequest(String chapterUrl) {
+        return ReqKt.post(getBaseUrl() + chapterUrl, requestHeaders);
+    }
+
+    @Override
+    protected Request imageRequest(Page page) {
+        return ReqKt.get(page.getImageUrl());
     }
 
     @Override
@@ -102,25 +121,6 @@ public class Kissmanga extends Source {
     protected String parseNextPopularMangasUrl(Document parsedHtml, MangasPage page) {
         String path = Parser.href(parsedHtml, "li > a:contains(› Next)");
         return path != null ? BASE_URL + path : null;
-    }
-
-    public Observable<MangasPage> searchMangasFromNetwork(MangasPage page, String query) {
-        if (page.page == 1)
-            page.url = getInitialSearchUrl(query);
-
-        FormBody.Builder form = new FormBody.Builder();
-        form.add("authorArtist", "");
-        form.add("mangaName", query);
-        form.add("status", "");
-        form.add("genres", "");
-
-        return networkService
-                .postData(page.url, form.build(), requestHeaders)
-                .flatMap(networkService::mapResponseToString)
-                .map(Jsoup::parse)
-                .doOnNext(doc -> page.mangas = parseSearchFromHtml(doc))
-                .doOnNext(doc -> page.nextPageUrl = parseNextSearchUrl(doc, page, query))
-                .map(response -> page);
     }
 
     @Override
@@ -196,19 +196,6 @@ public class Kissmanga extends Source {
     }
 
     @Override
-    public Observable<List<Page>> pullPageListFromNetwork(final String chapterUrl) {
-        return networkService
-                .postData(getBaseUrl() + overrideChapterUrl(chapterUrl), null, requestHeaders)
-                .flatMap(networkService::mapResponseToString)
-                .flatMap(unparsedHtml -> {
-                    List<Page> pages = convertToPages(parseHtmlToPageUrls(unparsedHtml));
-                    return !pages.isEmpty() ?
-                            Observable.just(parseFirstPage(pages, unparsedHtml)) :
-                            Observable.error(new Exception("Page list is empty"));
-                });
-    }
-
-    @Override
     protected List<String> parseHtmlToPageUrls(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         List<String> pageUrlList = new ArrayList<>();
@@ -236,11 +223,6 @@ public class Kissmanga extends Source {
     @Override
     protected String parseHtmlToImageUrl(String unparsedHtml) {
         return null;
-    }
-
-    @Override
-    public Observable<Response> getImageProgressResponse(final Page page) {
-        return networkService.getProgressResponse(page.getImageUrl(), null, page);
     }
 
 }

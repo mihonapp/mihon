@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
-import eu.kanade.tachiyomi.data.sync.LibraryUpdateAlarm;
+import eu.kanade.tachiyomi.data.library.LibraryUpdateAlarm;
 import eu.kanade.tachiyomi.widget.preference.IntListPreference;
 import eu.kanade.tachiyomi.widget.preference.LibraryColumnsDialog;
 

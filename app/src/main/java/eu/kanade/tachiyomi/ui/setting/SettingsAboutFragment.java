@@ -17,7 +17,7 @@ import java.util.TimeZone;
 
 import eu.kanade.tachiyomi.BuildConfig;
 import eu.kanade.tachiyomi.R;
-import eu.kanade.tachiyomi.data.updater.UpdateChecker;
+import eu.kanade.tachiyomi.data.updater.GithubUpdateChecker;
 import eu.kanade.tachiyomi.data.updater.UpdateDownloader;
 import eu.kanade.tachiyomi.util.ToastUtil;
 import rx.Subscription;
@@ -28,7 +28,7 @@ public class SettingsAboutFragment extends SettingsNestedFragment {
     /**
      * Checks for new releases
      */
-    private UpdateChecker updateChecker;
+    private GithubUpdateChecker updateChecker;
 
     /**
      * The subscribtion service of the obtained release object
@@ -44,7 +44,7 @@ public class SettingsAboutFragment extends SettingsNestedFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         //Check for update
-        updateChecker = new UpdateChecker(getActivity());
+        updateChecker = new GithubUpdateChecker(getActivity());
 
         super.onCreate(savedInstanceState);
     }

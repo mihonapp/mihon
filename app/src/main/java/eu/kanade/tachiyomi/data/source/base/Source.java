@@ -18,10 +18,12 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.network.NetworkHelper;
+import eu.kanade.tachiyomi.data.network.ReqKt;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import okhttp3.Headers;
+import okhttp3.Request;
 import okhttp3.Response;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -47,13 +49,46 @@ public abstract class Source extends BaseSource {
         return false;
     }
 
+    protected Request popularMangaRequest(MangasPage page) {
+        if (page.page == 1) {
+            page.url = getInitialPopularMangasUrl();
+        }
+
+        return ReqKt.get(page.url, requestHeaders);
+    }
+
+    protected Request searchMangaRequest(MangasPage page, String query) {
+        if (page.page == 1) {
+            page.url = getInitialSearchUrl(query);
+        }
+
+        return ReqKt.get(page.url, requestHeaders);
+    }
+
+    protected Request mangaDetailsRequest(String mangaUrl) {
+        return ReqKt.get(getBaseUrl() + mangaUrl, requestHeaders);
+    }
+
+    protected Request chapterListRequest(String mangaUrl) {
+        return ReqKt.get(getBaseUrl() + mangaUrl, requestHeaders);
+    }
+
+    protected Request pageListRequest(String chapterUrl) {
+        return ReqKt.get(getBaseUrl() + chapterUrl, requestHeaders);
+    }
+
+    protected Request imageUrlRequest(Page page) {
+        return ReqKt.get(page.getUrl(), requestHeaders);
+    }
+
+    protected Request imageRequest(Page page) {
+        return ReqKt.get(page.getImageUrl(), requestHeaders);
+    }
+
     // Get the most popular mangas from the source
     public Observable<MangasPage> pullPopularMangasFromNetwork(MangasPage page) {
-        if (page.page == 1)
-            page.url = getInitialPopularMangasUrl();
-
         return networkService
-                .getStringResponse(page.url, requestHeaders, true)
+                .requestBody(popularMangaRequest(page), true)
                 .map(Jsoup::parse)
                 .doOnNext(doc -> page.mangas = parsePopularMangasFromHtml(doc))
                 .doOnNext(doc -> page.nextPageUrl = parseNextPopularMangasUrl(doc, page))
@@ -62,11 +97,8 @@ public abstract class Source extends BaseSource {
 
     // Get mangas from the source with a query
     public Observable<MangasPage> searchMangasFromNetwork(MangasPage page, String query) {
-        if (page.page == 1)
-            page.url = getInitialSearchUrl(query);
-
         return networkService
-                .getStringResponse(page.url, requestHeaders, true)
+                .requestBody(searchMangaRequest(page, query), true)
                 .map(Jsoup::parse)
                 .doOnNext(doc -> page.mangas = parseSearchFromHtml(doc))
                 .doOnNext(doc -> page.nextPageUrl = parseNextSearchUrl(doc, page, query))
@@ -76,14 +108,14 @@ public abstract class Source extends BaseSource {
     // Get manga details from the source
     public Observable<Manga> pullMangaFromNetwork(final String mangaUrl) {
         return networkService
-                .getStringResponse(getBaseUrl() + overrideMangaUrl(mangaUrl), requestHeaders, true)
+                .requestBody(mangaDetailsRequest(mangaUrl))
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToManga(mangaUrl, unparsedHtml)));
     }
 
     // Get chapter list of a manga from the source
     public Observable<List<Chapter>> pullChaptersFromNetwork(final String mangaUrl) {
         return networkService
-                .getStringResponse(getBaseUrl() + mangaUrl, requestHeaders, false)
+                .requestBody(chapterListRequest(mangaUrl))
                 .flatMap(unparsedHtml -> {
                     List<Chapter> chapters = parseHtmlToChapters(unparsedHtml);
                     return !chapters.isEmpty() ?
@@ -102,7 +134,7 @@ public abstract class Source extends BaseSource {
 
     public Observable<List<Page>> pullPageListFromNetwork(final String chapterUrl) {
         return networkService
-                .getStringResponse(getBaseUrl() + overrideChapterUrl(chapterUrl), requestHeaders, false)
+                .requestBody(pageListRequest(chapterUrl))
                 .flatMap(unparsedHtml -> {
                     List<Page> pages = convertToPages(parseHtmlToPageUrls(unparsedHtml));
                     return !pages.isEmpty() ?
@@ -127,7 +159,7 @@ public abstract class Source extends BaseSource {
     public Observable<Page> getImageUrlFromPage(final Page page) {
         page.setStatus(Page.LOAD_PAGE);
         return networkService
-                .getStringResponse(overridePageUrl(page.getUrl()), requestHeaders, false)
+                .requestBody(imageUrlRequest(page))
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
                 .onErrorResumeNext(e -> {
                     page.setStatus(Page.ERROR);
@@ -177,7 +209,7 @@ public abstract class Source extends BaseSource {
     }
 
     public Observable<Response> getImageProgressResponse(final Page page) {
-        return networkService.getProgressResponse(page.getImageUrl(), requestHeaders, page);
+        return networkService.requestBodyProgress(imageRequest(page), page);
     }
 
     public void savePageList(String chapterUrl, List<Page> pages) {

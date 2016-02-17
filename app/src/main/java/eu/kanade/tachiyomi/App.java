@@ -33,16 +33,18 @@ public class App extends Application {
         super.onCreate();
         if (BuildConfig.DEBUG) Timber.plant(new Timber.DebugTree());
 
-        applicationComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
+        applicationComponent = prepareAppComponent().build();
 
         componentInjector =
                 new ComponentReflectionInjector<>(AppComponent.class, applicationComponent);
 
         setupEventBus();
+        setupAcra();
+    }
 
-        ACRA.init(this);
+    protected DaggerAppComponent.Builder prepareAppComponent() {
+        return DaggerAppComponent.builder()
+                .appModule(new AppModule(this));
     }
 
     protected void setupEventBus() {
@@ -52,13 +54,12 @@ public class App extends Application {
                 .installDefaultEventBus();
     }
 
-    public AppComponent getComponent() {
-        return applicationComponent;
+    protected void setupAcra() {
+        ACRA.init(this);
     }
 
-    // Needed to replace the component with a test specific one
-    public void setComponent(AppComponent applicationComponent) {
-        this.applicationComponent = applicationComponent;
+    public AppComponent getComponent() {
+        return applicationComponent;
     }
 
     public ComponentReflectionInjector<AppComponent> getComponentReflection() {
