@@ -31,6 +31,11 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Fragment that shows recent chapters.
+ * Uses R.layout.fragment_recent_chapters.
+ * UI related actions should be called from here.
+ */
 @RequiresPresenter(RecentChaptersPresenter.class)
 public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresenter> implements FlexibleViewHolder.OnListItemClickListener {
 
@@ -60,14 +65,21 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
         return view;
     }
 
+    /**
+     * Populate adapter with chapters
+     *
+     * @param chapters list of chapters
+     */
     public void onNextMangaChapters(List<Object> chapters) {
         adapter.setItems(chapters);
     }
 
     @Override
     public boolean onListItemClick(int position) {
+        // Get item from position
         Object item = adapter.getItem(position);
         if (item instanceof MangaChapter) {
+            // Open chapter in reader
             openChapter((MangaChapter) item);
         }
         return false;
@@ -75,14 +87,25 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
 
     @Override
     public void onListItemLongClick(int position) {
+        // Empty function
     }
 
-    protected void openChapter(MangaChapter chapter) {
+    /**
+     * Open chapter in reader
+     *
+     * @param chapter selected chapter
+     */
+    private void openChapter(MangaChapter chapter) {
         getPresenter().onOpenChapter(chapter);
         Intent intent = ReaderActivity.newIntent(getActivity());
         startActivity(intent);
     }
 
+    /**
+     * Update download status of chapter
+     *
+     * @param download download object containing download progress.
+     */
     public void onChapterStatusChange(Download download) {
         RecentChaptersHolder holder = getHolder(download.chapter);
         if (holder != null)
@@ -94,6 +117,14 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
         return (RecentChaptersHolder) recyclerView.findViewHolderForItemId(chapter.id);
     }
 
+    /**
+     * Start downloading chapter
+     *
+     * @param chapters selected chapters
+     * @param manga    manga that belongs to chapter
+     * @return true
+     */
+    @SuppressWarnings("SameReturnValue")
     protected boolean onDownload(Observable<Chapter> chapters, Manga manga) {
         // Start the download service.
         DownloadService.start(getActivity());
@@ -107,6 +138,12 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
         return true;
     }
 
+    /**
+     * Start deleting chapter
+     * @param chapters selected chapters
+     * @param manga manga that belongs to chapter
+     * @return success of deletion.
+     */
     protected boolean onDelete(Observable<Chapter> chapters, Manga manga) {
         int size = adapter.getSelectedItemCount();
 
@@ -135,11 +172,25 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
         return true;
     }
 
+    /**
+     * Mark chapter as read
+     *
+     * @param chapters selected chapter
+     * @return true
+     */
+    @SuppressWarnings("SameReturnValue")
     protected boolean onMarkAsRead(Observable<Chapter> chapters) {
         getPresenter().markChaptersRead(chapters, true);
         return true;
     }
 
+    /**
+     * Mark chapter as unread
+     *
+     * @param chapters selected chapter
+     * @return true
+     */
+    @SuppressWarnings("SameReturnValue")
     protected boolean onMarkAsUnread(Observable<Chapter> chapters) {
         getPresenter().markChaptersRead(chapters, false);
         return true;

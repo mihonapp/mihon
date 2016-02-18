@@ -30,58 +30,114 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
+/**
+ * Presenter of RecentChaptersFragment.
+ * Contains information and data for fragment.
+ * Observable updates should be called from here.
+ */
 public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragment> {
 
+    /**
+     * The id of the restartable.
+     */
+    private static final int GET_RECENT_CHAPTERS = 1;
+
+    /**
+     * The id of the restartable.
+     */
+    private static final int CHAPTER_STATUS_CHANGES = 2;
+
+    /**
+     * Used to connect to database
+     */
     @Inject DatabaseHelper db;
+
+    /**
+     * Used to get information from download manager
+     */
     @Inject DownloadManager downloadManager;
+
+    /**
+     * Used to get source from source id
+     */
     @Inject SourceManager sourceManager;
 
+    /**
+     * List containing chapter and manga information
+     */
     private List<MangaChapter> mangaChapters;
-
-    private static final int GET_RECENT_CHAPTERS = 1;
-    private static final int CHAPTER_STATUS_CHANGES = 2;
 
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
+        // Used to get recent chapters
         restartableLatestCache(GET_RECENT_CHAPTERS,
                 this::getRecentChaptersObservable,
                 (recentChaptersFragment, chapters) -> {
+                    // Update adapter to show recent manga's
                     recentChaptersFragment.onNextMangaChapters(chapters);
-                    updateMangaInformation(convertToMangaChaptersList(chapters));
+                    // Update download status
+                    updateChapterStatus(convertToMangaChaptersList(chapters));
                 });
 
+        // Used to update download status
         startableLatestCache(CHAPTER_STATUS_CHANGES,
                 this::getChapterStatusObs,
                 RecentChaptersFragment::onChapterStatusChange,
                 (view, error) -> Timber.e(error.getCause(), error.getMessage()));
 
         if (savedState == null) {
+            // Start fetching recent chapters
             start(GET_RECENT_CHAPTERS);
         }
     }
 
-
-    private void updateMangaInformation(List<MangaChapter> mangaChapters) {
-        this.mangaChapters = mangaChapters;
-
-        for (MangaChapter mangaChapter : mangaChapters)
-            setChapterStatus(mangaChapter);
-
-        start(CHAPTER_STATUS_CHANGES);
-    }
-
-    private List<MangaChapter> convertToMangaChaptersList(List<Object> chapters) {
+    /**
+     * Returns a list only containing MangaChapter objects.
+     *
+     * @param input the list that will be converted.
+     * @return list containing MangaChapters objects.
+     */
+    private List<MangaChapter> convertToMangaChaptersList(List<Object> input) {
+        // Create temp list
         List<MangaChapter> tempMangaChapterList = new ArrayList<>();
-        for (Object object : chapters) {
+
+        // Only add MangaChapter objects
+        //noinspection Convert2streamapi
+        for (Object object : input) {
             if (object instanceof MangaChapter) {
                 tempMangaChapterList.add((MangaChapter) object);
             }
         }
+
+        // Return temp list
         return tempMangaChapterList;
     }
 
+    /**
+     * Update status of chapters
+     *
+     * @param mangaChapters list containing recent chapters
+     */
+    private void updateChapterStatus(List<MangaChapter> mangaChapters) {
+        // Set global list of chapters.
+        this.mangaChapters = mangaChapters;
+
+        // Update status.
+        //noinspection Convert2streamapi
+        for (MangaChapter mangaChapter : mangaChapters)
+            setChapterStatus(mangaChapter);
+
+        // Start onChapterStatusChange restartable.
+        start(CHAPTER_STATUS_CHANGES);
+    }
+
+    /**
+     * Returns observable containing chapter status.
+     *
+     * @return download object containing download progress.
+     */
     private Observable<Download> getChapterStatusObs() {
         return downloadManager.getQueue().getStatusObservable()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,6 +145,11 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
                 .doOnNext(this::updateChapterStatus);
     }
 
+    /**
+     * Function to check if chapter is in recent list
+     * @param chaptersId id of chapter
+     * @return exist in recent list
+     */
     private boolean chapterIdEquals(Long chaptersId) {
         for (MangaChapter mangaChapter : mangaChapters) {
             if (chaptersId.equals(mangaChapter.chapter.id)) {
@@ -98,32 +159,40 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
         return false;
     }
 
-    public void updateChapterStatus(Download download) {
-        for (Object item : mangaChapters) {
-            if (item instanceof MangaChapter) {
-                if (download.chapter.id.equals(((MangaChapter) item).chapter.id)) {
-                    ((MangaChapter) item).chapter.status = download.getStatus();
+    /**
+     * Update status of chapters.
+     *
+     * @param download download object containing progress.
+     */
+    private void updateChapterStatus(Download download) {
+        // Loop through list
+        for (MangaChapter item : mangaChapters) {
+            if (download.chapter.id.equals(item.chapter.id)) {
+                item.chapter.status = download.getStatus();
                     break;
-                }
             }
         }
     }
 
-
-
+    /**
+     * Get observable containing recent chapters and date
+     * @return observable containing recent chapters and date
+     */
     private Observable<List<Object>> getRecentChaptersObservable() {
+        // Set date for recent chapters
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.MONTH, -1);
 
+        // Get recent chapters from database.
         return db.getRecentChapters(cal.getTime()).asRxObservable()
-                // group chapters by the date they were fetched on a ordered map
+                // Group chapters by the date they were fetched on a ordered map.
                 .flatMap(recents -> Observable.from(recents)
                         .toMultimap(
                                 recent -> getMapKey(recent.chapter.date_fetch),
                                 recent -> recent,
                                 () -> new TreeMap<>((d1, d2) -> d2.compareTo(d1))))
-                // add every day and all its chapters to a single list
+                // Add every day and all its chapters to a single list.
                 .map(recents -> {
                     List<Object> items = new ArrayList<>();
                     for (Map.Entry<Date, Collection<MangaChapter>> recent : recents.entrySet()) {
@@ -135,7 +204,12 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * Set the chapter status
+     * @param mangaChapter MangaChapter which status gets updated
+     */
     private void setChapterStatus(MangaChapter mangaChapter) {
+        // Check if chapter in queue
         for (Download download : downloadManager.getQueue()) {
             if (mangaChapter.chapter.id.equals(download.chapter.id)) {
                 mangaChapter.chapter.status = download.getStatus();
@@ -143,7 +217,10 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
             }
         }
 
+        // Get source of chapter
         Source source = sourceManager.get(mangaChapter.manga.source);
+
+        // Check if chapter is downloaded
         if (downloadManager.isChapterDownloaded(source, mangaChapter.manga, mangaChapter.chapter)) {
             mangaChapter.chapter.status = Download.DOWNLOADED;
         } else {
@@ -151,6 +228,11 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
         }
     }
 
+    /**
+     * Get date as time key
+     * @param date desired date
+     * @return date as time key
+     */
     private Date getMapKey(long date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date(date));
@@ -161,11 +243,20 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
         return cal.getTime();
     }
 
+    /**
+     * Open chapter in reader
+     * @param item chapter that is opened
+     */
     public void onOpenChapter(MangaChapter item) {
         Source source = sourceManager.get(item.manga.source);
         EventBus.getDefault().postSticky(new ReaderEvent(source, item.manga, item.chapter));
     }
 
+    /**
+     * Download selected chapter
+     * @param selectedChapter chapter that is selected
+     * @param manga manga that belongs to chapter
+     */
     public void downloadChapter(Observable<Chapter> selectedChapter, Manga manga) {
         add(selectedChapter
                 .toList()
@@ -174,11 +265,20 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
                 }));
     }
 
+    /**
+     * Delete selected chapter
+     * @param chapter chapter that is selected
+     * @param manga manga that belongs to chapter
+     */
     public void deleteChapter(Chapter chapter, Manga manga) {
         Source source = sourceManager.get(manga.source);
         downloadManager.deleteChapter(source, manga, chapter);
     }
 
+    /**
+     * Delete selected chapter observable
+     * @param selectedChapters chapter that are selected
+     */
     public void deleteChapters(Observable<Chapter> selectedChapters) {
         add(selectedChapters
                 .subscribe(chapter -> {
@@ -188,6 +288,11 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
                 }));
     }
 
+    /**
+     * Mark selected chapter as read
+     * @param selectedChapters chapter that is selected
+     * @param read read status
+     */
     public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {
         add(selectedChapters
                 .subscribeOn(Schedulers.io())

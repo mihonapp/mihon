@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.recent;
 
-import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.View;
@@ -17,17 +16,17 @@ import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder;
 import rx.Observable;
 
+/**
+ * Holder that contains chapter item
+ * Uses R.layout.item_recent_chapter.
+ * UI related actions should be called from here.
+ */
 public class RecentChaptersHolder extends FlexibleViewHolder {
 
     /**
      * Adapter for recent chapters
      */
     private final RecentChaptersAdapter adapter;
-
-    /**
-     * Interface to global information about an application environment.
-     */
-    private Context context;
 
     /**
      * TextView containing chapter title
@@ -50,11 +49,6 @@ public class RecentChaptersHolder extends FlexibleViewHolder {
     @Bind(R.id.chapter_menu) RelativeLayout chapterMenu;
 
     /**
-     * TextView containing read progress
-     */
-//    @Bind(R.id.chapter_pages) TextView pages;
-
-    /**
      * Color of read chapter
      */
     private final int readColor;
@@ -71,15 +65,13 @@ public class RecentChaptersHolder extends FlexibleViewHolder {
 
     /**
      * Constructor of RecentChaptersHolder
-     *
-     * @param view
-     * @param adapter
-     * @param onListItemClickListener
+     * @param view view of ChapterHolder
+     * @param adapter adapter of ChapterHolder
+     * @param onListItemClickListener ClickListener
      */
     public RecentChaptersHolder(View view, RecentChaptersAdapter adapter, OnListItemClickListener onListItemClickListener) {
         super(view, adapter, onListItemClickListener);
         this.adapter = adapter;
-        context = view.getContext();
         ButterKnife.bind(this, view);
 
         // Set colors.
@@ -90,28 +82,38 @@ public class RecentChaptersHolder extends FlexibleViewHolder {
         chapterMenu.setOnClickListener(v -> v.post(() -> showPopupMenu(v)));
     }
 
+    /**
+     * Set values of view
+     *
+     * @param item item containing chapter information
+     */
     public void onSetValues(MangaChapter item) {
         this.mangaChapter = item;
+
+        // Set chapter title
         chapterTitle.setText(item.chapter.name);
+
+        // Set manga title
         mangaTitle.setText(item.manga.title);
 
+        // Check if chapter is read and set correct color
         if (item.chapter.read) {
             chapterTitle.setTextColor(readColor);
             mangaTitle.setTextColor(readColor);
         } else {
             chapterTitle.setTextColor(unreadColor);
             mangaTitle.setTextColor(unreadColor);
-
-//            if (item.chapter.last_page_read > 0) {
-//                pages.setText(context.getString(R.string.chapter_progress, item.chapter.last_page_read + 1));
-//            } else {
-//                pages.setText("");
-//            }
         }
 
+        // Set chapter status
         onStatusChange(item.chapter.status);
     }
 
+    /**
+     * Updates chapter status in view.
+     *
+     * @param status download status
+     */
     public void onStatusChange(int status) {
         switch (status) {
             case Download.QUEUE:
@@ -132,6 +134,10 @@ public class RecentChaptersHolder extends FlexibleViewHolder {
         }
     }
 
+    /**
+     * Show pop up menu
+     * @param view view containing popup menu.
+     */
     private void showPopupMenu(View view) {
         // Create a PopupMenu, giving it the clicked view for an anchor
         PopupMenu popup = new PopupMenu(adapter.getFragment().getActivity(), view);
