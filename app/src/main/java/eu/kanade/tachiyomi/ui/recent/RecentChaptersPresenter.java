@@ -27,6 +27,7 @@ import eu.kanade.tachiyomi.event.ReaderEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragment> {
@@ -109,6 +110,7 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
     }
 
 
+
     private Observable<List<Object>> getRecentChaptersObservable() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
@@ -170,5 +172,33 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
                 .subscribe(chapters -> {
                     EventBus.getDefault().postSticky(new DownloadChaptersEvent(manga, chapters));
                 }));
+    }
+
+    public void deleteChapter(Chapter chapter, Manga manga) {
+        Source source = sourceManager.get(manga.source);
+        downloadManager.deleteChapter(source, manga, chapter);
+    }
+
+    public void deleteChapters(Observable<Chapter> selectedChapters) {
+        add(selectedChapters
+                .subscribe(chapter -> {
+                    downloadManager.getQueue().remove(chapter);
+                }, error -> {
+                    Timber.e(error.getMessage());
+                }));
+    }
+
+    public void markChaptersRead(Observable<Chapter> selectedChapters, boolean read) {
+        add(selectedChapters
+                .subscribeOn(Schedulers.io())
+                .map(chapter -> {
+                    chapter.read = read;
+                    if (!read) chapter.last_page_read = 0;
+                    return chapter;
+                })
+                .toList()
+                .flatMap(chapters -> db.insertChapters(chapters).asRxObservable())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
     }
 }

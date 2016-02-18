@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.util.List;
 
 import butterknife.Bind;
@@ -26,6 +28,8 @@ import eu.kanade.tachiyomi.ui.decoration.DividerItemDecoration;
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
 import nucleus.factory.RequiresPresenter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @RequiresPresenter(RecentChaptersPresenter.class)
 public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresenter> implements FlexibleViewHolder.OnListItemClickListener {
@@ -102,5 +106,39 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
         getPresenter().downloadChapter(observable, manga);
         return true;
     }
+
+    protected boolean onDelete(Observable<Chapter> chapters, Manga manga) {
+        int size = adapter.getSelectedItemCount();
+
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.deleting)
+                .progress(false, size, true)
+                .cancelable(false)
+                .show();
+
+        Observable<Chapter> observable = chapters
+                .concatMap(chapter -> {
+                    getPresenter().deleteChapter(chapter, manga);
+                    return Observable.just(chapter);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(chapter -> {
+                    dialog.incrementProgress(1);
+                    chapter.status = Download.NOT_DOWNLOADED;
+                })
+                .doOnCompleted(adapter::notifyDataSetChanged)
+                .finallyDo(dialog::dismiss);
+
+        getPresenter().deleteChapters(observable);
+
+        return true;
+    }
+
+    protected boolean onMarkAsRead(Observable<Chapter> chapters) {
+        getPresenter().markChaptersRead(chapters, true);
+        return true;
+    }
+
 
 }

@@ -133,11 +133,6 @@ public class RecentChaptersHolder extends FlexibleViewHolder {
         }
     }
 
-    public void onProgressChange(Context context, int downloaded, int total) {
-        downloadText.setText(context.getString(
-                R.string.chapter_downloading_progress, downloaded, total));
-    }
-
     private void showPopupMenu(View view) {
         // Create a PopupMenu, giving it the clicked view for an anchor
         PopupMenu popup = new PopupMenu(adapter.getFragment().getActivity(), view);
@@ -170,13 +165,10 @@ public class RecentChaptersHolder extends FlexibleViewHolder {
                 case R.id.action_download:
                     return adapter.getFragment().onDownload(chapterObservable, mangaChapter.manga);
                 case R.id.action_delete:
-                    ToastUtil.showShort(context, "Delete does not work, yet....");
-                    return true;
-//                    return adapter.getFragment().onDelete(chapterObservable);
+                    return adapter.getFragment().onDelete(chapterObservable, mangaChapter.manga);
                 case R.id.action_mark_as_read:
-                    ToastUtil.showShort(context, "Mark as read does not work, yet....");
-                    return true;
-//                    return adapter.getFragment().onMarkAsRead(chapterObservable);
+                    ToastUtil.showShort(context, "Mark as read");
+                    return adapter.getFragment().onMarkAsRead(chapterObservable);
                 case R.id.action_mark_as_unread:
                     ToastUtil.showShort(context, "Mark as unread does not work, yet....");
                     return true;
