@@ -140,5 +140,10 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
         return true;
     }
 
+    protected boolean onMarkAsUnread(Observable<Chapter> chapters) {
+        getPresenter().markChaptersRead(chapters, false);
+        return true;
+    }
+
 
 }

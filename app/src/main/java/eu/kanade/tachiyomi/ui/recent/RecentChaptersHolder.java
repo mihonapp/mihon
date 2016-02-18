@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.MangaChapter;
 import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder;
-import eu.kanade.tachiyomi.util.ToastUtil;
 import rx.Observable;
 
 public class RecentChaptersHolder extends FlexibleViewHolder {
@@ -167,12 +166,9 @@ public class RecentChaptersHolder extends FlexibleViewHolder {
                 case R.id.action_delete:
                     return adapter.getFragment().onDelete(chapterObservable, mangaChapter.manga);
                 case R.id.action_mark_as_read:
-                    ToastUtil.showShort(context, "Mark as read");
                     return adapter.getFragment().onMarkAsRead(chapterObservable);
                 case R.id.action_mark_as_unread:
-                    ToastUtil.showShort(context, "Mark as unread does not work, yet....");
-                    return true;
-//                    return adapter.getFragment().onMarkAsUnread(chapterObservable);
+                    return adapter.getFragment().onMarkAsUnread(chapterObservable);
             }
             return false;
         });
