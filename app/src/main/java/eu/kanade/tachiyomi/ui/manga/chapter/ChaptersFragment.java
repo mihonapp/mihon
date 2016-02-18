@@ -101,6 +101,15 @@ public class ChaptersFragment extends BaseRxFragment<ChaptersPresenter> implemen
     }
 
     @Override
+    public void onPause() {
+        // Stop recycler's scrolling when onPause is called. If the activity is finishing
+        // the presenter will be destroyed, and it could cause NPE
+        // https://github.com/inorichi/tachiyomi/issues/159
+        recyclerView.stopScroll();
+        super.onPause();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.chapters, menu);
     }
