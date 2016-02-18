@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.recent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +15,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import eu.kanade.tachiyomi.R;
+import eu.kanade.tachiyomi.data.database.models.Chapter;
+import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.database.models.MangaChapter;
+import eu.kanade.tachiyomi.data.download.DownloadService;
+import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
 import eu.kanade.tachiyomi.ui.decoration.DividerItemDecoration;
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
 import nucleus.factory.RequiresPresenter;
+import rx.Observable;
 
 @RequiresPresenter(RecentChaptersPresenter.class)
 public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresenter> implements FlexibleViewHolder.OnListItemClickListener {
@@ -72,4 +78,29 @@ public class RecentChaptersFragment extends BaseRxFragment<RecentChaptersPresent
         Intent intent = ReaderActivity.newIntent(getActivity());
         startActivity(intent);
     }
+
+    public void onChapterStatusChange(Download download) {
+        RecentChaptersHolder holder = getHolder(download.chapter);
+        if (holder != null)
+            holder.onStatusChange(download.getStatus());
+    }
+
+    @Nullable
+    private RecentChaptersHolder getHolder(Chapter chapter) {
+        return (RecentChaptersHolder) recyclerView.findViewHolderForItemId(chapter.id);
+    }
+
+    protected boolean onDownload(Observable<Chapter> chapters, Manga manga) {
+        // Start the download service.
+        DownloadService.start(getActivity());
+
+        // Refresh data on download competition.
+        Observable<Chapter> observable = chapters
+                .doOnCompleted(adapter::notifyDataSetChanged);
+
+        // Download chapter.
+        getPresenter().downloadChapter(observable, manga);
+        return true;
+    }
+
 }

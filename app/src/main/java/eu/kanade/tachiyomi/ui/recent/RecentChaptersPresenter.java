@@ -15,20 +15,30 @@ import java.util.TreeMap;
 import javax.inject.Inject;
 
 import eu.kanade.tachiyomi.data.database.DatabaseHelper;
+import eu.kanade.tachiyomi.data.database.models.Chapter;
+import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.database.models.MangaChapter;
+import eu.kanade.tachiyomi.data.download.DownloadManager;
+import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.data.source.SourceManager;
 import eu.kanade.tachiyomi.data.source.base.Source;
+import eu.kanade.tachiyomi.event.DownloadChaptersEvent;
 import eu.kanade.tachiyomi.event.ReaderEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import timber.log.Timber;
 
 public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragment> {
 
     @Inject DatabaseHelper db;
+    @Inject DownloadManager downloadManager;
     @Inject SourceManager sourceManager;
 
+    private List<MangaChapter> mangaChapters;
+
     private static final int GET_RECENT_CHAPTERS = 1;
+    private static final int CHAPTER_STATUS_CHANGES = 2;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -36,11 +46,68 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
 
         restartableLatestCache(GET_RECENT_CHAPTERS,
                 this::getRecentChaptersObservable,
-                RecentChaptersFragment::onNextMangaChapters);
+                (recentChaptersFragment, chapters) -> {
+                    recentChaptersFragment.onNextMangaChapters(chapters);
+                    updateMangaInformation(convertToMangaChaptersList(chapters));
+                });
 
-        if (savedState == null)
+        startableLatestCache(CHAPTER_STATUS_CHANGES,
+                this::getChapterStatusObs,
+                RecentChaptersFragment::onChapterStatusChange,
+                (view, error) -> Timber.e(error.getCause(), error.getMessage()));
+
+        if (savedState == null) {
             start(GET_RECENT_CHAPTERS);
+        }
     }
+
+
+    private void updateMangaInformation(List<MangaChapter> mangaChapters) {
+        this.mangaChapters = mangaChapters;
+
+        for (MangaChapter mangaChapter : mangaChapters)
+            setChapterStatus(mangaChapter);
+
+        start(CHAPTER_STATUS_CHANGES);
+    }
+
+    private List<MangaChapter> convertToMangaChaptersList(List<Object> chapters) {
+        List<MangaChapter> tempMangaChapterList = new ArrayList<>();
+        for (Object object : chapters) {
+            if (object instanceof MangaChapter) {
+                tempMangaChapterList.add((MangaChapter) object);
+            }
+        }
+        return tempMangaChapterList;
+    }
+
+    private Observable<Download> getChapterStatusObs() {
+        return downloadManager.getQueue().getStatusObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(download -> chapterIdEquals(download.chapter.id))
+                .doOnNext(this::updateChapterStatus);
+    }
+
+    private boolean chapterIdEquals(Long chaptersId) {
+        for (MangaChapter mangaChapter : mangaChapters) {
+            if (chaptersId.equals(mangaChapter.chapter.id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateChapterStatus(Download download) {
+        for (Object item : mangaChapters) {
+            if (item instanceof MangaChapter) {
+                if (download.chapter.id.equals(((MangaChapter) item).chapter.id)) {
+                    ((MangaChapter) item).chapter.status = download.getStatus();
+                    break;
+                }
+            }
+        }
+    }
+
 
     private Observable<List<Object>> getRecentChaptersObservable() {
         Calendar cal = Calendar.getInstance();
@@ -66,6 +133,22 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    private void setChapterStatus(MangaChapter mangaChapter) {
+        for (Download download : downloadManager.getQueue()) {
+            if (mangaChapter.chapter.id.equals(download.chapter.id)) {
+                mangaChapter.chapter.status = download.getStatus();
+                return;
+            }
+        }
+
+        Source source = sourceManager.get(mangaChapter.manga.source);
+        if (downloadManager.isChapterDownloaded(source, mangaChapter.manga, mangaChapter.chapter)) {
+            mangaChapter.chapter.status = Download.DOWNLOADED;
+        } else {
+            mangaChapter.chapter.status = Download.NOT_DOWNLOADED;
+        }
+    }
+
     private Date getMapKey(long date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date(date));
@@ -79,5 +162,13 @@ public class RecentChaptersPresenter extends BasePresenter<RecentChaptersFragmen
     public void onOpenChapter(MangaChapter item) {
         Source source = sourceManager.get(item.manga.source);
         EventBus.getDefault().postSticky(new ReaderEvent(source, item.manga, item.chapter));
+    }
+
+    public void downloadChapter(Observable<Chapter> selectedChapter, Manga manga) {
+        add(selectedChapter
+                .toList()
+                .subscribe(chapters -> {
+                    EventBus.getDefault().postSticky(new DownloadChaptersEvent(manga, chapters));
+                }));
     }
 }
