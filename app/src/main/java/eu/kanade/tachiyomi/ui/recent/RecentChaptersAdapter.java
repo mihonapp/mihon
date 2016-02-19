@@ -16,13 +16,33 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.MangaChapter;
 
+/**
+ * Adapter of RecentChaptersHolder.
+ * Connection between Fragment and Holder
+ * Holder updates should be called from here.
+ */
 public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHolder, Object> {
 
-    private RecentChaptersFragment fragment;
+    /**
+     * Fragment of RecentChaptersFragment
+     */
+    private final RecentChaptersFragment fragment;
 
+    /**
+     * The id of the view type
+     */
     private static final int VIEW_TYPE_CHAPTER = 0;
+
+    /**
+     * The id of the view type
+     */
     private static final int VIEW_TYPE_SECTION = 1;
 
+    /**
+     * Constructor
+     *
+     * @param fragment fragment
+     */
     public RecentChaptersAdapter(RecentChaptersFragment fragment) {
         this.fragment = fragment;
         setHasStableIds(true);
@@ -37,6 +57,11 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
             return item.hashCode();
     }
 
+    /**
+     * Update items
+     *
+     * @param items items
+     */
     public void setItems(List<Object> items) {
         mItems = items;
         notifyDataSetChanged();
@@ -56,6 +81,8 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v;
+
+        // Check which view type and set correct values.
         switch (viewType) {
             case VIEW_TYPE_CHAPTER:
                 v = inflater.inflate(R.layout.item_recent_chapter, parent, false);
@@ -69,6 +96,7 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        // Check which view type and set correct values.
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_CHAPTER:
                 final MangaChapter chapter = (MangaChapter) getItem(position);
@@ -84,6 +112,10 @@ public class RecentChaptersAdapter extends FlexibleAdapter<RecyclerView.ViewHold
         holder.itemView.setActivated(isSelected(position));
     }
 
+    /**
+     * Returns fragment
+     * @return RecentChaptersFragment
+     */
     public RecentChaptersFragment getFragment() {
         return fragment;
     }
