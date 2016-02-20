@@ -2,7 +2,7 @@
 [![fdroid release](https://img.shields.io/badge/release-F--Droid-blue.svg)](https://f-droid.org/repository/browse/?fdid=eu.kanade.tachiyomi)
 [![latest debug build](https://img.shields.io/badge/debug-latest%20build-blue.svg)](http://tachiyomi.kanade.eu/latest/app-debug.apk)
 
-## [Report an issue](https://github.com/inorichi/tachiyomi/blob/master/CONTRIBUTING.md)
+## [Report an issue](https://github.com/inorichi/tachiyomi/blob/master/.github/CONTRIBUTING.md)
 
 **Before reporting a new issue, take a look at the [FAQ](https://github.com/inorichi/tachiyomi/wiki/FAQ), the [changelog](https://github.com/inorichi/tachiyomi/releases) and the already opened issues.**
 
