@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi;
 
 import eu.kanade.tachiyomi.injection.component.DaggerAppComponent;
 import eu.kanade.tachiyomi.injection.module.AppModule;
+import eu.kanade.tachiyomi.injection.module.TestDataModule;
 
 public class TestApp extends App {
 

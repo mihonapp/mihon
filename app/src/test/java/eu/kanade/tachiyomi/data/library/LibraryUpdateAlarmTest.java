@@ -10,21 +10,21 @@ import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlarmManager;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowPendingIntent;
 
-import eu.kanade.tachiyomi.CustomBuildConfig;
+import eu.kanade.tachiyomi.BuildConfig;
+import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.robolectric.Shadows.shadowOf;
 
-@Config(constants = CustomBuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
-@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
+@RunWith(CustomRobolectricGradleTestRunner.class)
 public class LibraryUpdateAlarmTest {
 
     ShadowApplication app;

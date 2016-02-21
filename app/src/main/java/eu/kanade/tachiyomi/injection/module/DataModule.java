@@ -29,7 +29,7 @@ public class DataModule {
 
     @Provides
     @Singleton
-    public DatabaseHelper provideDatabaseHelper(Application app) {
+    DatabaseHelper provideDatabaseHelper(Application app) {
         return new DatabaseHelper(app);
     }
 
@@ -47,13 +47,13 @@ public class DataModule {
 
     @Provides
     @Singleton
-    public NetworkHelper provideNetworkHelper(Application app) {
+    NetworkHelper provideNetworkHelper(Application app) {
         return new NetworkHelper(app);
     }
 
     @Provides
     @Singleton
-    public SourceManager provideSourceManager(Application app) {
+    SourceManager provideSourceManager(Application app) {
         return new SourceManager(app);
     }
 
