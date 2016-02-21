@@ -39,14 +39,17 @@
  }
 
 ## GreenRobot EventBus specific rules ##
-# https://github.com/greenrobot/EventBus/blob/master/HOWTO.md#proguard-configuration
+# http://greenrobot.org/eventbus/documentation/proguard/
+-keepattributes *Annotation*
 -keepclassmembers class ** {
-    public void onEvent*(***);
+    @org.greenrobot.eventbus.Subscribe <methods>;
 }
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
 
-# Don't warn for missing support classes
--dontwarn de.greenrobot.event.util.*$Support
--dontwarn de.greenrobot.event.util.*$SupportManagerFragment
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
 
 # Glide specific rules #
 # https://github.com/bumptech/glide
@@ -72,6 +75,27 @@
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
+
+# Retrofit 1.X
+
+-keep class com.squareup.okhttp.** { *; }
+-keep class retrofit.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
+-dontwarn com.squareup.okhttp.**
+-dontwarn okio.**
+-dontwarn retrofit.**
+-dontwarn rx.**
+
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
+}
+
+# If in your rest service interface you use methods with Callback argument.
+-keepattributes Exceptions
+
+# If your rest service methods throw custom exceptions, because you've defined an ErrorHandler.
+-keepattributes Signature
 
 # AppCombat
 -keep public class android.support.v7.widget.** { *; }
