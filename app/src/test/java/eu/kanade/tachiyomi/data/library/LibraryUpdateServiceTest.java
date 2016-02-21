@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.library;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.util.Pair;
 
@@ -48,13 +47,7 @@ public class LibraryUpdateServiceTest {
         source = mock(Source.class);
         when(service.sourceManager.get(anyInt())).thenReturn(source);
     }
-
-    @Test
-    public void testStartCommand() {
-        service.onStartCommand(new Intent(), 0, 0);
-        verify(service.db).getFavoriteMangas();
-    }
-
+    
     @Test
     public void testLifecycle() {
         // Smoke test
