@@ -20,12 +20,12 @@ import eu.kanade.tachiyomi.data.database.models.MangaSync;
 import eu.kanade.tachiyomi.data.download.DownloadManager;
 import eu.kanade.tachiyomi.data.download.model.Download;
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager;
+import eu.kanade.tachiyomi.data.mangasync.UpdateMangaSyncService;
 import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
 import eu.kanade.tachiyomi.data.source.SourceManager;
 import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.data.source.model.Page;
-import eu.kanade.tachiyomi.data.sync.UpdateMangaSyncService;
 import eu.kanade.tachiyomi.event.ReaderEvent;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
 import icepick.State;
@@ -348,7 +348,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     public void updateMangaSyncLastChapterRead() {
         for (MangaSync mangaSync : mangaSyncList) {
-            MangaSyncService service = syncManager.getSyncService(mangaSync.sync_id);
+            MangaSyncService service = syncManager.getService(mangaSync.sync_id);
             if (service.isLogged() && mangaSync.update) {
                 UpdateMangaSyncService.start(getContext(), mangaSync);
             }

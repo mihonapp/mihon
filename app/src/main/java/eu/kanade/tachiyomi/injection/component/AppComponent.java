@@ -6,10 +6,10 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import eu.kanade.tachiyomi.data.download.DownloadService;
-import eu.kanade.tachiyomi.data.mangasync.services.MyAnimeList;
+import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 import eu.kanade.tachiyomi.data.source.base.Source;
-import eu.kanade.tachiyomi.data.sync.LibraryUpdateService;
-import eu.kanade.tachiyomi.data.sync.UpdateMangaSyncService;
+import eu.kanade.tachiyomi.data.library.LibraryUpdateService;
+import eu.kanade.tachiyomi.data.mangasync.UpdateMangaSyncService;
 import eu.kanade.tachiyomi.data.updater.UpdateDownloader;
 import eu.kanade.tachiyomi.injection.module.AppModule;
 import eu.kanade.tachiyomi.injection.module.DataModule;
@@ -22,7 +22,6 @@ import eu.kanade.tachiyomi.ui.manga.MangaPresenter;
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter;
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoPresenter;
 import eu.kanade.tachiyomi.ui.manga.myanimelist.MyAnimeListPresenter;
-import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter;
 import eu.kanade.tachiyomi.ui.recent.RecentChaptersPresenter;
 import eu.kanade.tachiyomi.ui.setting.SettingsAccountsFragment;
@@ -48,15 +47,13 @@ public interface AppComponent {
     void inject(CategoryPresenter categoryPresenter);
     void inject(RecentChaptersPresenter recentChaptersPresenter);
 
-    void inject(ReaderActivity readerActivity);
     void inject(MangaActivity mangaActivity);
     void inject(SettingsAccountsFragment settingsAccountsFragment);
 
     void inject(SettingsActivity settingsActivity);
 
     void inject(Source source);
-
-    void inject(MyAnimeList myAnimeList);
+    void inject(MangaSyncService mangaSyncService);
 
     void inject(LibraryUpdateService libraryUpdateService);
     void inject(DownloadService downloadService);

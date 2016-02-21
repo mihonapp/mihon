@@ -27,13 +27,14 @@ import java.util.regex.Pattern;
 
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
-import eu.kanade.tachiyomi.data.source.SourceManager;
+import eu.kanade.tachiyomi.data.network.ReqKt;
 import eu.kanade.tachiyomi.data.source.base.LoginSource;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.util.Parser;
 import okhttp3.FormBody;
 import okhttp3.Headers;
+import okhttp3.Request;
 import okhttp3.Response;
 import rx.Observable;
 
@@ -41,11 +42,11 @@ public class Batoto extends LoginSource {
 
     public static final String NAME = "Batoto (EN)";
     public static final String BASE_URL = "http://bato.to";
-    public static final String POPULAR_MANGAS_URL = BASE_URL + "/search_ajax?order_cond=views&order=desc&p=%d";
+    public static final String POPULAR_MANGAS_URL = BASE_URL + "/search_ajax?order_cond=views&order=desc&p=%s";
     public static final String SEARCH_URL = BASE_URL + "/search_ajax?name=%s&p=%s";
-    public static final String CHAPTER_URL = "/areader?id=%s&p=1";
+    public static final String CHAPTER_URL = BASE_URL + "/areader?id=%s&p=1";
     public static final String PAGE_URL = BASE_URL + "/areader?id=%s&p=%s";
-    public static final String MANGA_URL = "/comic_pop?id=%s";
+    public static final String MANGA_URL = BASE_URL + "/comic_pop?id=%s";
     public static final String LOGIN_URL = BASE_URL + "/forums/index.php?app=core&module=global&section=login";
 
     public static final Pattern staffNotice = Pattern.compile("=+Batoto Staff Notice=+([^=]+)==+", Pattern.CASE_INSENSITIVE);
@@ -74,11 +75,6 @@ public class Batoto extends LoginSource {
     }
 
     @Override
-    public int getId() {
-        return SourceManager.BATOTO;
-    }
-
-    @Override
     public String getBaseUrl() {
         return BASE_URL;
     }
@@ -102,23 +98,24 @@ public class Batoto extends LoginSource {
     }
 
     @Override
-    protected String overrideMangaUrl(String defaultMangaUrl) {
-        String mangaId = defaultMangaUrl.substring(defaultMangaUrl.lastIndexOf("r") + 1);
-        return String.format(MANGA_URL, mangaId);
+    protected Request mangaDetailsRequest(String mangaUrl) {
+        String mangaId = mangaUrl.substring(mangaUrl.lastIndexOf("r") + 1);
+        return ReqKt.get(String.format(MANGA_URL, mangaId), requestHeaders);
     }
 
     @Override
-    protected String overrideChapterUrl(String defaultPageUrl) {
-        String id = defaultPageUrl.substring(defaultPageUrl.indexOf("#") + 1);
-        return String.format(CHAPTER_URL, id);
+    protected Request pageListRequest(String pageUrl) {
+        String id = pageUrl.substring(pageUrl.indexOf("#") + 1);
+        return ReqKt.get(String.format(CHAPTER_URL, id), requestHeaders);
     }
 
     @Override
-    protected String overridePageUrl(String defaultPageUrl) {
-        int start = defaultPageUrl.indexOf("#") + 1;
-        int end = defaultPageUrl.indexOf("_", start);
-        String id = defaultPageUrl.substring(start, end);
-        return String.format(PAGE_URL, id, defaultPageUrl.substring(end+1));
+    protected Request imageUrlRequest(Page page) {
+        String pageUrl = page.getUrl();
+        int start = pageUrl.indexOf("#") + 1;
+        int end = pageUrl.indexOf("_", start);
+        String id = pageUrl.substring(start, end);
+        return ReqKt.get(String.format(PAGE_URL, id, pageUrl.substring(end+1)), requestHeaders);
     }
 
     private List<Manga> parseMangasFromHtml(Document parsedHtml) {
@@ -318,7 +315,7 @@ public class Batoto extends LoginSource {
 
     @Override
     public Observable<Boolean> login(String username, String password) {
-        return networkService.getStringResponse(LOGIN_URL, requestHeaders, false)
+        return networkService.requestBody(ReqKt.get(LOGIN_URL, requestHeaders))
                 .flatMap(response -> doLogin(response, username, password))
                 .map(this::isAuthenticationSuccessful);
     }
@@ -337,7 +334,7 @@ public class Batoto extends LoginSource {
         formBody.add("invisible", "1");
         formBody.add("rememberMe", "1");
 
-        return networkService.postData(postUrl, formBody.build(), requestHeaders);
+        return networkService.request(ReqKt.post(postUrl, requestHeaders, formBody.build()));
     }
 
     @Override

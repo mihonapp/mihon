@@ -190,4 +190,8 @@ public class PreferencesHelper {
                 context.getString(R.string.pref_library_update_interval_key), 0);
     }
 
+    public Preference<Integer> libraryUpdateInterval() {
+        return rxPrefs.getInteger(getKey(R.string.pref_library_update_interval_key), 0);
+    }
+
 }
