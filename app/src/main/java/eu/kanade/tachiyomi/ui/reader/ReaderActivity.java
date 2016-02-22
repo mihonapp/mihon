@@ -359,8 +359,10 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     private void createUiHideFlags(boolean statusBarHidden) {
         uiFlags = 0;
         uiFlags |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        if (statusBarHidden)
+        if (statusBarHidden) {
             uiFlags |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            uiFlags |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             uiFlags |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
     }
