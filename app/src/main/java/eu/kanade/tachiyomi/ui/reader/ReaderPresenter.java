@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import eu.kanade.tachiyomi.data.cache.ChapterCache;
 import eu.kanade.tachiyomi.data.database.DatabaseHelper;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
@@ -43,6 +44,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     @Inject DownloadManager downloadManager;
     @Inject MangaSyncManager syncManager;
     @Inject SourceManager sourceManager;
+    @Inject ChapterCache chapterCache;
 
     @State Manga manga;
     @State Chapter activeChapter;
@@ -288,8 +290,14 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     }
 
     public void retryPage(Page page) {
-        page.setStatus(Page.QUEUE);
-        retryPageSubject.onNext(page);
+        if (page != null) {
+            page.setStatus(Page.QUEUE);
+            if (page.getImagePath() != null) {
+                File file = new File(page.getImagePath());
+                chapterCache.removeFileFromCache(file.getName());
+            }
+            retryPageSubject.onNext(page);
+        }
     }
 
     // Called before loading another chapter or leaving the reader. It allows to do operations

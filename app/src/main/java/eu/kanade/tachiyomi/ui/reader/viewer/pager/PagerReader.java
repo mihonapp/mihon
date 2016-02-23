@@ -65,21 +65,21 @@ public abstract class PagerReader extends BaseReader {
                 .doOnNext(this::setDecoderClass)
                 .skip(1)
                 .distinctUntilChanged()
-                .subscribe(v -> pager.setAdapter(adapter)));
+                .subscribe(v -> refreshPages()));
 
         subscriptions.add(preferences.imageScaleType()
                 .asObservable()
                 .doOnNext(this::setImageScaleType)
                 .skip(1)
                 .distinctUntilChanged()
-                .subscribe(v -> pager.setAdapter(adapter)));
+                .subscribe(v -> refreshPages()));
 
         subscriptions.add(preferences.zoomStart()
                 .asObservable()
                 .doOnNext(this::setZoomStart)
                 .skip(1)
                 .distinctUntilChanged()
-                .subscribe(v -> pager.setAdapter(adapter)));
+                .subscribe(v -> refreshPages()));
 
         subscriptions.add(preferences.enableTransitions()
                 .asObservable()
@@ -145,6 +145,11 @@ public abstract class PagerReader extends BaseReader {
     @Override
     public void setSelectedPage(int pageNumber) {
         pager.setCurrentItem(pageNumber, false);
+    }
+
+    private void refreshPages() {
+        pager.setAdapter(adapter);
+        pager.setCurrentItem(currentPage, false);
     }
 
     protected void onLeftSideTap() {

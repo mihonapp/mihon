@@ -4,7 +4,6 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +26,7 @@ import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment;
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity;
+import eu.kanade.tachiyomi.ui.reader.viewer.base.PageDecodeErrorLayout;
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader;
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader;
 import rx.Observable;
@@ -103,14 +103,13 @@ public class PagerReaderFragment extends BaseFragment {
 
             @Override
             public void onImageLoadError(Exception e) {
-                showImageLoadError();
+                showImageDecodeError();
             }
         });
 
         retryButton.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (page != null)
-                    activity.getPresenter().retryPage(page);
+                activity.getPresenter().retryPage(page);
             }
             return true;
         });
@@ -175,18 +174,16 @@ public class PagerReaderFragment extends BaseFragment {
         retryButton.setVisibility(View.GONE);
     }
 
-    private void showImageLoadError() {
+    private void showImageDecodeError() {
         ViewGroup view = (ViewGroup) getView();
         if (view == null)
             return;
 
-        TextView errorText = new TextView(getContext());
-        errorText.setGravity(Gravity.CENTER);
-        errorText.setText(R.string.decode_image_error);
-        errorText.setTextColor(getReaderActivity().getReaderTheme() == ReaderActivity.BLACK_THEME ?
-                    lightGreyColor : blackColor);
+        LinearLayout errorLayout = new PageDecodeErrorLayout(getContext(), page,
+                getReaderActivity().getReaderTheme(),
+                () -> getReaderActivity().getPresenter().retryPage(page));
 
-        view.addView(errorText);
+        view.addView(errorLayout);
     }
 
     private void processStatus(int status) {

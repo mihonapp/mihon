@@ -62,8 +62,7 @@ public class WebtoonHolder extends RecyclerView.ViewHolder {
         container.setOnTouchListener(touchListener);
         retryButton.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (page != null)
-                    adapter.retryPage(page);
+                adapter.retryPage(page);
             }
             return true;
         });
