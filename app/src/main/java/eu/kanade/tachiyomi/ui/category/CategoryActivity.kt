@@ -10,12 +10,12 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.adapter.OnStartDragListener
-import eu.kanade.tachiyomi.ui.library.LibraryCategoryAdapter
 import kotlinx.android.synthetic.main.activity_edit_categories.*
 import kotlinx.android.synthetic.main.toolbar.*
 import nucleus.factory.RequiresPresenter
@@ -93,7 +93,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
      * Call this when action mode action is finished.
      */
     fun destroyActionModeIfNeeded() {
-            actionMode?.finish()
+        actionMode?.finish()
     }
 
     /**
@@ -163,8 +163,8 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
                 it.invalidate()
 
                 // Show edit button only when one item is selected
-                val editItem = it.menu?.findItem(R.id.action_edit)
-                editItem?.isVisible = count == 1
+                val editItem = it.menu.findItem(R.id.action_edit)
+                editItem.isVisible = count == 1
             }
         }
     }
@@ -192,15 +192,14 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
             R.id.action_delete -> {
                 // Delete select categories.
                 deleteCategories(getSelectedCategories())
-                return true
             }
             R.id.action_edit -> {
                 // Edit selected category
                 editCategory(getSelectedCategories()?.get(0))
-                return true
             }
+            else -> return false
         }
-        return false
+        return true
     }
 
     /**
@@ -215,7 +214,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
         // Inflate menu.
         mode.menuInflater.inflate(R.menu.category_selection, menu)
         // Enable adapter multi selection.
-        adapter.mode = LibraryCategoryAdapter.MODE_MULTI
+        adapter.mode = FlexibleAdapter.MODE_MULTI
         return true
     }
 
@@ -226,7 +225,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
      */
     override fun onDestroyActionMode(mode: ActionMode?) {
         // Reset adapter to single selection
-        adapter.mode = LibraryCategoryAdapter.MODE_SINGLE
+        adapter.mode = FlexibleAdapter.MODE_SINGLE
         // Clear selected items
         adapter.clearSelection()
         actionMode = null
@@ -239,8 +238,9 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
      */
     override fun onListItemClick(position: Int): Boolean {
         // Check if action mode is initialized and selected item exist.
-        if (actionMode != null && position != -1) {
-            // Toggle selection of clicked item.
+        if (position == -1) {
+            return false
+        } else if (actionMode != null) {
             toggleSelection(position)
             return true
         } else {
