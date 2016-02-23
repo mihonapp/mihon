@@ -153,7 +153,7 @@ public class ChapterRecognition {
             Matcher m = uncleanNumber.matcher(text);
             if (m.find()) {
                 try {
-                    Float value = Float.parseFloat(m.group(1));
+                    Float value = Float.parseFloat(m.group(1).replaceAll(",", "."));
                     if (!occurences.contains(value)) {
                         occurences.add(value);
                     }
