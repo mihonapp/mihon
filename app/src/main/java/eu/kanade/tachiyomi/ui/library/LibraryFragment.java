@@ -38,7 +38,7 @@ import eu.kanade.tachiyomi.data.io.IOHandler;
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService;
 import eu.kanade.tachiyomi.event.LibraryMangasEvent;
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment;
-import eu.kanade.tachiyomi.ui.library.category.CategoryActivity;
+import eu.kanade.tachiyomi.ui.category.CategoryActivity;
 import eu.kanade.tachiyomi.ui.main.MainActivity;
 import eu.kanade.tachiyomi.util.ToastUtil;
 import icepick.State;
