@@ -5,7 +5,7 @@
               android:layout_height="match_parent">
 
     <eu.kanade.tachiyomi.widget.AutofitRecyclerView
-        android:id="@+id/library_mangas"
+        android:id="@+id/recycler"
         style="@style/AppTheme.GridView"
         android:columnWidth="140dp"
         tools:listitem="@layout/item_catalogue_grid" />

@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.library
 
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -20,6 +19,7 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.AndroidComponentUtil
 import eu.kanade.tachiyomi.util.NetworkUtil
 import eu.kanade.tachiyomi.util.notification
+import eu.kanade.tachiyomi.util.notificationManager
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers
@@ -309,12 +309,6 @@ class LibraryUpdateService : Service() {
     private fun cancelNotification() {
         notificationManager.cancel(UPDATE_NOTIFICATION_ID)
     }
-
-    /**
-     * Property that returns the notification manager.
-     */
-    private val notificationManager : NotificationManager
-        get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     /**
      * Property that returns an intent to open the main activity.

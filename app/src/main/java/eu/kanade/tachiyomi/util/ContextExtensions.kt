@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.util
 
 import android.app.AlarmManager
 import android.app.Notification
+import android.app.NotificationManager
 import android.content.Context
 import android.support.annotation.StringRes
 import android.support.v4.app.NotificationCompat
@@ -26,6 +27,12 @@ inline fun Context.notification(func: NotificationCompat.Builder.() -> Unit): No
     builder.func()
     return builder.build()
 }
+
+/**
+ * Property to get the notification manager from the context.
+ */
+val Context.notificationManager : NotificationManager
+    get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 /**
  * Property to get the alarm manager from the context.

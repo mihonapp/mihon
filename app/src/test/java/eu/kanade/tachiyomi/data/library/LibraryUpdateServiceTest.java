@@ -47,7 +47,7 @@ public class LibraryUpdateServiceTest {
         source = mock(Source.class);
         when(service.sourceManager.get(anyInt())).thenReturn(source);
     }
-    
+
     @Test
     public void testLifecycle() {
         // Smoke test
