@@ -28,18 +28,18 @@ class CategoryHolder(view: View, adapter: CategoryAdapter, listener: FlexibleVie
 
     init {
         // Create round letter image onclick to simulate long click
-        itemView.image.setOnClickListener({ v ->
+        itemView.image.setOnClickListener {
             // Simulate long click on this view to enter selection mode
             onLongClick(view)
-        })
+        }
 
         // Set on touch listener for reorder image
-        itemView.reorder.setOnTouchListener({ v, event ->
+        itemView.reorder.setOnTouchListener { v, event ->
             if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
                 dragListener.onStartDrag(this)
             }
             false
-        })
+        }
     }
 
     /**

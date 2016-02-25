@@ -51,7 +51,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
          * @param context context information.
          */
         @JvmStatic
-        fun newIntent(context: Context): Intent? {
+        fun newIntent(context: Context): Intent {
             return Intent(context, CategoryActivity::class.java)
         }
     }
@@ -107,20 +107,11 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
     }
 
     /**
-     * Delete selected categories
-     *
-     * @param categories list containing categories
-     */
-    private fun deleteCategories(categories: List<Category?>?) {
-        presenter.deleteCategories(categories)
-    }
-
-    /**
      * Returns the selected categories
      *
      * @return list of selected categories
      */
-    private fun getSelectedCategories(): List<Category?>? {
+    private fun getSelectedCategories(): List<Category> {
         // Create a list of the selected categories
         return adapter.selectedItems.map { adapter.getItem(it) }
     }
@@ -130,13 +121,13 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
      *
      * @param category category that will be edited.
      */
-    private fun editCategory(category: Category?) {
+    private fun editCategory(category: Category) {
         MaterialDialog.Builder(this)
                 .title(R.string.action_rename_category)
                 .negativeText(R.string.button_cancel)
                 .onNegative { materialDialog, dialogAction -> destroyActionModeIfNeeded() }
-                .input(getString(R.string.name), category?.name, false)
-                { dialog, input -> presenter.renameCategory(category as Category, input.toString()) }
+                .input(getString(R.string.name), category.name, false)
+                { dialog, input -> presenter.renameCategory(category, input.toString()) }
                 .show()
     }
 
@@ -175,7 +166,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
      *
      * @return false
      */
-    override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+    override fun onPrepareActionMode(actionMode: ActionMode, menu: Menu): Boolean {
         return false
     }
 
@@ -191,11 +182,11 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
         when (menuItem.itemId) {
             R.id.action_delete -> {
                 // Delete select categories.
-                deleteCategories(getSelectedCategories())
+                presenter.deleteCategories(getSelectedCategories())
             }
             R.id.action_edit -> {
                 // Edit selected category
-                editCategory(getSelectedCategories()?.get(0))
+                editCategory(getSelectedCategories()[0])
             }
             else -> return false
         }

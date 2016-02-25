@@ -266,7 +266,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         when (item.itemId) {
             R.id.action_edit_cover -> {
                 changeSelectedCover(presenter.selectedMangas)
-                adapter.refreshRegisteredAdapters()
                 destroyActionModeIfNeeded()
             }
             R.id.action_move_to_category -> {
@@ -329,8 +328,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
                 try {
                     // Update cover to selected file, show error if something went wrong
-                    if (!presenter.editCoverWithLocalFile(picture, manga))
+                    if (presenter.editCoverWithLocalFile(picture, manga)) {
+                        adapter.refreshRegisteredAdapters()
+                    } else {
                         ToastUtil.showShort(context, R.string.notification_manga_update_failed)
+                    }
 
                 } catch (e: IOException) {
                     e.printStackTrace()
