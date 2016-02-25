@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
 import org.greenrobot.eventbus.EventBus
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 
 /**
@@ -316,12 +317,12 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_OPEN) {
             selectedCoverManga?.let { manga ->
-                // Get the file's content URI from the incoming Intent
-                val selectedImageUri = data.data
+                // Get the file's input stream from the incoming Intent
+                val inputStream = context.contentResolver.openInputStream(data.data)
 
                 // Convert to absolute path to prevent FileNotFoundException
-                val result = IOHandler.getFilePath(selectedImageUri,
-                        context.contentResolver, context)
+                val result = IOHandler.downloadMediaAndReturnPath(inputStream as FileInputStream,
+                        context)
 
                 // Get file from filepath
                 val picture = File(result ?: "")
