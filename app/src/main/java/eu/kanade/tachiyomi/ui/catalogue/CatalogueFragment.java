@@ -49,6 +49,7 @@ import nucleus.factory.RequiresPresenter;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
+import timber.log.Timber;
 
 @RequiresPresenter(CataloguePresenter.class)
 public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
@@ -278,8 +279,10 @@ public class CatalogueFragment extends BaseRxFragment<CataloguePresenter>
         adapter.addItems(mangas);
     }
 
-    public void onAddPageError() {
+    public void onAddPageError(Throwable error) {
         hideProgressBar();
+        ToastUtil.showShort(getContext(), error.getMessage());
+        Timber.e(error, error.getMessage());
     }
 
     public void updateImage(Manga manga) {

@@ -70,7 +70,7 @@ public class CataloguePresenter extends BasePresenter<CatalogueFragment> {
         startableFirst(GET_MANGA_PAGE,
                 () -> pager.request(page -> getMangasPageObservable(page + 1)),
                 (view, next) -> {},
-                (view, error) -> view.onAddPageError());
+                (view, error) -> view.onAddPageError(error));
 
         startableLatestCache(GET_MANGA_DETAIL,
                 () -> mangaDetailSubject
