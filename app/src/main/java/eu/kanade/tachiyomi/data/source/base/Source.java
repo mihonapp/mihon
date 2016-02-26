@@ -235,6 +235,11 @@ public abstract class Source extends BaseSource {
         return getId() + chapterUrl;
     }
 
+    // Overridable method to allow custom parsing.
+    public void parseChapterNumber(Chapter chapter) {
+
+    }
+
     protected LazyHeaders.Builder glideHeadersBuilder() {
         LazyHeaders.Builder builder = new LazyHeaders.Builder();
         for (Map.Entry<String, List<String>> entry : requestHeaders.toMultimap().entrySet()) {

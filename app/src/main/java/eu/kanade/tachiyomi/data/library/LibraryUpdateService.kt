@@ -201,9 +201,10 @@ class LibraryUpdateService : Service() {
      * @return a pair of the inserted and removed chapters.
      */
     fun updateManga(manga: Manga): Observable<Pair<Int, Int>> {
-        return sourceManager.get(manga.source)!!
+        val source = sourceManager.get(manga.source)
+        return source!!
                 .pullChaptersFromNetwork(manga.url)
-                .flatMap { db.insertOrRemoveChapters(manga, it) }
+                .flatMap { db.insertOrRemoveChapters(manga, it, source) }
     }
 
     /**

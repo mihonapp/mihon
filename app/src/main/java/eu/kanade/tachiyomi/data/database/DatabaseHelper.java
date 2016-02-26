@@ -40,6 +40,7 @@ import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable;
 import eu.kanade.tachiyomi.data.database.tables.MangaSyncTable;
 import eu.kanade.tachiyomi.data.database.tables.MangaTable;
 import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
+import eu.kanade.tachiyomi.data.source.base.Source;
 import eu.kanade.tachiyomi.util.ChapterRecognition;
 import rx.Observable;
 
@@ -240,13 +241,14 @@ public class DatabaseHelper {
     }
 
     // Add new chapters or delete if the source deletes them
-    public Observable<Pair<Integer, Integer>> insertOrRemoveChapters(Manga manga, List<Chapter> sourceChapters) {
+    public Observable<Pair<Integer, Integer>> insertOrRemoveChapters(Manga manga, List<Chapter> sourceChapters, Source source) {
         List<Chapter> dbChapters = getChapters(manga).executeAsBlocking();
 
         Observable<List<Chapter>> newChapters = Observable.from(sourceChapters)
                 .filter(c -> !dbChapters.contains(c))
                 .doOnNext(c -> {
                     c.manga_id = manga.id;
+                    source.parseChapterNumber(c);
                     ChapterRecognition.parseChapterNumber(c, manga);
                 })
                 .toList();

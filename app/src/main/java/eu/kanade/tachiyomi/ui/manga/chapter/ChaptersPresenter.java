@@ -119,7 +119,7 @@ public class ChaptersPresenter extends BasePresenter<ChaptersFragment> {
     private Observable<Pair<Integer, Integer>> getOnlineChaptersObs() {
         return source.pullChaptersFromNetwork(manga.url)
                 .subscribeOn(Schedulers.io())
-                .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters))
+                .flatMap(chapters -> db.insertOrRemoveChapters(manga, chapters, source))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
