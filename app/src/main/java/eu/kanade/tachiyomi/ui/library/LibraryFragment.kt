@@ -80,11 +80,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         const val REQUEST_IMAGE_OPEN = 101
 
         /**
-         * Key to add a manga to an [Intent].
-         */
-        const val MANGA_EXTRA = "manga_extra"
-
-        /**
          * Key to save and restore [query] from a [Bundle].
          */
         const val QUERY_KEY = "query_key"
