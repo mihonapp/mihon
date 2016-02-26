@@ -1,3 +1,2 @@
 include ':app', ':SubsamplingScaleImageView', ':ReactiveNetwork'
 project(':SubsamplingScaleImageView').projectDir = new File('libs/SubsamplingScaleImageView')
-project(':ReactiveNetwork').projectDir = new File('libs/ReactiveNetwork')
