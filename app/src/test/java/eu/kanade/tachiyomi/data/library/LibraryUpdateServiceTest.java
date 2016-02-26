@@ -65,12 +65,12 @@ public class LibraryUpdateServiceTest {
         List<Chapter> chapters = createChapters("/chapter1", "/chapter2");
 
         when(source.pullChaptersFromNetwork(manga.url)).thenReturn(Observable.just(chapters));
-        when(service.db.insertOrRemoveChapters(manga, chapters))
+        when(service.db.insertOrRemoveChapters(manga, chapters, source))
                 .thenReturn(Observable.just(Pair.create(2, 0)));
 
         service.updateManga(manga).subscribe();
 
-        verify(service.db).insertOrRemoveChapters(manga, chapters);
+        verify(service.db).insertOrRemoveChapters(manga, chapters, source);
     }
 
     @Test
@@ -91,15 +91,15 @@ public class LibraryUpdateServiceTest {
         when(source.pullChaptersFromNetwork("manga2")).thenReturn(Observable.error(new Exception()));
         when(source.pullChaptersFromNetwork("manga3")).thenReturn(Observable.just(chapters3));
 
-        when(service.db.insertOrRemoveChapters(manga1, chapters)).thenReturn(Observable.just(Pair.create(2, 0)));
-        when(service.db.insertOrRemoveChapters(manga3, chapters)).thenReturn(Observable.just(Pair.create(2, 0)));
+        when(service.db.insertOrRemoveChapters(manga1, chapters, source)).thenReturn(Observable.just(Pair.create(2, 0)));
+        when(service.db.insertOrRemoveChapters(manga3, chapters, source)).thenReturn(Observable.just(Pair.create(2, 0)));
 
         service.updateLibrary().subscribe();
 
         // There are 3 network attempts and 2 insertions (1 request failed)
         verify(source, times(3)).pullChaptersFromNetwork(any());
-        verify(service.db, times(2)).insertOrRemoveChapters(any(), any());
-        verify(service.db, never()).insertOrRemoveChapters(eq(manga2), any());
+        verify(service.db, times(2)).insertOrRemoveChapters(any(), any(), any());
+        verify(service.db, never()).insertOrRemoveChapters(eq(manga2), any(), any());
     }
 
     private List<Chapter> createChapters(String... urls) {
