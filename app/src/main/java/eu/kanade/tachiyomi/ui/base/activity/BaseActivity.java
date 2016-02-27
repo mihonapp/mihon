@@ -7,6 +7,8 @@ import android.view.MenuItem;
 
 import org.greenrobot.eventbus.EventBus;
 
+import eu.kanade.tachiyomi.App;
+import eu.kanade.tachiyomi.injection.component.AppComponent;
 import icepick.Icepick;
 
 public class BaseActivity extends AppCompatActivity {
@@ -65,6 +67,10 @@ public class BaseActivity extends AppCompatActivity {
 
     public void unregisterForEvents() {
         EventBus.getDefault().unregister(this);
+    }
+
+    protected AppComponent getApplicationComponent() {
+        return App.get(this).getComponent();
     }
 
 }

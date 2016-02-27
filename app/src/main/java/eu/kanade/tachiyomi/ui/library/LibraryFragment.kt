@@ -14,6 +14,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.io.downloadMediaAndReturnPath
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.event.LibraryMangasEvent
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
@@ -21,6 +22,7 @@ import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.ToastUtil
 import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
 import org.greenrobot.eventbus.EventBus
@@ -307,30 +309,29 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_OPEN) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (data != null && resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_OPEN) {
             selectedCoverManga?.let { manga ->
 
                 try {
-                // Get the file's input stream from the incoming Intent
-                val inputStream = context.contentResolver.openInputStream(data.data)
+                    // Get the file's input stream from the incoming Intent
+                    val inputStream = context.contentResolver.openInputStream(data.data)
 
-                // Convert to absolute path to prevent FileNotFoundException
-                    val result = eu.kanade.tachiyomi.data.io.downloadMediaAndReturnPath(inputStream as FileInputStream,
-                        context)
+                    // Convert to absolute path to prevent FileNotFoundException
+                    val result = downloadMediaAndReturnPath(inputStream as FileInputStream, context)
 
-                // Get file from filepath
-                val picture = File(result)
+                    // Get file from filepath
+                    val picture = File(result)
 
                     // Update cover to selected file, show error if something went wrong
                     if (presenter.editCoverWithLocalFile(picture, manga)) {
                         adapter.refreshRegisteredAdapters()
                     } else {
-                        ToastUtil.showShort(context, R.string.notification_manga_update_failed)
+                        context.toast(R.string.notification_manga_update_failed)
                     }
 
                 } catch (e: IOException) {
-                    ToastUtil.showShort(context, R.string.notification_manga_update_failed)
+                    context.toast(R.string.notification_manga_update_failed)
                     e.printStackTrace()
                 }
             }
