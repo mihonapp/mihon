@@ -14,7 +14,6 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.io.IOHandler
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.event.LibraryMangasEvent
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
@@ -311,17 +310,18 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_OPEN) {
             selectedCoverManga?.let { manga ->
+
+                try {
                 // Get the file's input stream from the incoming Intent
                 val inputStream = context.contentResolver.openInputStream(data.data)
 
                 // Convert to absolute path to prevent FileNotFoundException
-                val result = IOHandler.downloadMediaAndReturnPath(inputStream as FileInputStream,
+                    val result = eu.kanade.tachiyomi.data.io.downloadMediaAndReturnPath(inputStream as FileInputStream,
                         context)
 
                 // Get file from filepath
-                val picture = File(result ?: "")
+                val picture = File(result)
 
-                try {
                     // Update cover to selected file, show error if something went wrong
                     if (presenter.editCoverWithLocalFile(picture, manga)) {
                         adapter.refreshRegisteredAdapters()
@@ -330,6 +330,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                     }
 
                 } catch (e: IOException) {
+                    ToastUtil.showShort(context, R.string.notification_manga_update_failed)
                     e.printStackTrace()
                 }
             }
