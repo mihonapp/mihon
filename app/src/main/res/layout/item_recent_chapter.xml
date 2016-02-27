@@ -77,9 +77,12 @@
         android:gravity="center|end"
         android:paddingBottom="18dp"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight">
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft">
 
         <ImageView
+            android:id="@+id/chapterMenu"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentEnd="false"
