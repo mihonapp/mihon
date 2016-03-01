@@ -3,9 +3,11 @@ package eu.kanade.tachiyomi.ui.setting
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import com.afollestad.materialdialogs.MaterialDialog
 import com.nononsenseapps.filepicker.AbstractFilePickerFragment
 import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.FilePickerFragment
@@ -29,22 +31,52 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        downloadDirPref.setOnPreferenceClickListener { preference ->
-            val i = Intent(activity, CustomLayoutPickerActivity::class.java)
-            i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
-            i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true)
-            i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR)
-            i.putExtra(FilePickerActivity.EXTRA_START_PATH, preferences.downloadsDirectory)
+    override fun onViewCreated(view: View, savedState: Bundle?) {
+        downloadDirPref.setOnPreferenceClickListener {
 
-            startActivityForResult(i, DOWNLOAD_DIR_CODE)
+            val externalDirs = getExternalFilesDirs()
+            val selectedIndex = externalDirs.indexOf(File(preferences.downloadsDirectory))
+
+            MaterialDialog.Builder(activity)
+                    .items(externalDirs + getString(R.string.custom_dir))
+                    .itemsCallbackSingleChoice(selectedIndex, { dialog, view, which, text ->
+                        if (which == externalDirs.size) {
+                            // Custom dir selected, open directory selector
+                            val i = Intent(activity, CustomLayoutPickerActivity::class.java)
+                            i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
+                            i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true)
+                            i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR)
+                            i.putExtra(FilePickerActivity.EXTRA_START_PATH, preferences.downloadsDirectory)
+
+                            startActivityForResult(i, DOWNLOAD_DIR_CODE)
+                        } else {
+                            // One of the predefined folders was selected
+                            preferences.downloadsDirectory = text.toString()
+                            updateDownloadsDir()
+                        }
+                        true
+                    })
+                    .show()
+
             true
         }
     }
 
     override fun onResume() {
         super.onResume()
+        updateDownloadsDir()
+    }
+
+    fun updateDownloadsDir() {
         downloadDirPref.summary = preferences.downloadsDirectory
+    }
+
+    fun getExternalFilesDirs(): List<File> {
+        val defaultDir = Environment.getExternalStorageDirectory().absolutePath +
+                File.separator + getString(R.string.app_name) +
+                File.separator + "downloads"
+
+        return mutableListOf(File(defaultDir)) + context.getExternalFilesDirs("")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

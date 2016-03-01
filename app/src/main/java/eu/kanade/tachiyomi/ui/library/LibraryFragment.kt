@@ -225,7 +225,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     private fun setCategories(categories: List<Category>) {
         adapter.categories = categories
-        tabs.setTabsFromPagerAdapter(adapter)
+        tabs.setupWithViewPager(view_pager)
         tabs.visibility = if (categories.size <= 1) View.GONE else View.VISIBLE
     }
 

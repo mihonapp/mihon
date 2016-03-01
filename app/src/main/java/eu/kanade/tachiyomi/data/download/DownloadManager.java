@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent;
 import eu.kanade.tachiyomi.util.DiskUtils;
 import eu.kanade.tachiyomi.util.DynamicConcurrentMergeOperator;
+import eu.kanade.tachiyomi.util.ToastUtil;
 import eu.kanade.tachiyomi.util.UrlUtil;
 import rx.Observable;
 import rx.Subscription;
@@ -84,7 +85,11 @@ public class DownloadManager {
                     if (finished) {
                         DownloadService.stop(context);
                     }
-                }, e -> DownloadService.stop(context));
+                }, e -> {
+                    DownloadService.stop(context);
+                    Timber.e(e, e.getMessage());
+                    ToastUtil.showShort(context, e.getMessage());
+                });
 
         if (!isRunning) {
             isRunning = true;
@@ -410,7 +415,7 @@ public class DownloadManager {
         if (queue.isEmpty())
             return false;
 
-        if (downloadsSubscription == null)
+        if (downloadsSubscription == null || downloadsSubscription.isUnsubscribed())
             initializeSubscriptions();
 
         final List<Download> pending = new ArrayList<>();
