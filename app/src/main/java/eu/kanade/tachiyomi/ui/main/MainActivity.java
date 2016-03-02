@@ -81,7 +81,6 @@ public class MainActivity extends BaseActivity {
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_catalogues)
                                 .withIdentifier(R.id.nav_drawer_catalogues)
-
                                 .withIcon(GoogleMaterial.Icon.gmd_explore),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_download_queue)
