@@ -19,18 +19,19 @@ import rx.Observable
  * @param view the inflated view for this holder.
  * @param adapter the adapter handling this holder.
  * @param listener a listener to react to single tap and long tap events.
- * @constructor creates a new library holder.
+ * @constructor creates a new recent chapter holder.
  */
-class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapter, listener: FlexibleViewHolder.OnListItemClickListener) : FlexibleViewHolder(view, adapter, listener) {
+class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapter, listener: FlexibleViewHolder.OnListItemClickListener) :
+        FlexibleViewHolder(view, adapter, listener) {
     /**
      * Color of read chapter
      */
-    private val readColor: Int
+    private val readColor = ContextCompat.getColor(view.context, R.color.hint_text)
 
     /**
      * Color of unread chapter
      */
-    private val unreadColor: Int
+    private val unreadColor = ContextCompat.getColor(view.context, R.color.primary_text)
 
     /**
      * Object containing chapter information
@@ -38,10 +39,6 @@ class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapte
     private var mangaChapter: MangaChapter? = null
 
     init {
-        // Set colors.
-        readColor = ContextCompat.getColor(view.context, R.color.hint_text)
-        unreadColor = ContextCompat.getColor(view.context, R.color.primary_text)
-
         //Set OnClickListener for download menu
         itemView.chapterMenu.setOnClickListener { v -> v.post({ showPopupMenu(v) }) }
     }

@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.decoration;
+package eu.kanade.tachiyomi.ui.base.decoration;
 
 import android.content.Context;
 import android.content.res.TypedArray;

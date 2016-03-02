@@ -16,8 +16,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
+import eu.kanade.tachiyomi.ui.base.decoration.DividerItemDecoration
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
-import eu.kanade.tachiyomi.ui.decoration.DividerItemDecoration
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.util.ToastUtil
@@ -204,10 +204,10 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         toolbar.addView(spinner)
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
-        bundle.putInt(SELECTED_INDEX_KEY, selectedIndex)
-        bundle.putString(QUERY_KEY, query)
-        super.onSaveInstanceState(bundle)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(SELECTED_INDEX_KEY, selectedIndex)
+        outState.putString(QUERY_KEY, query)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -309,7 +309,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      */
     private fun restartRequest(newQuery: String) {
         // If text didn't change, do nothing
-        if (query == newQuery || presenter.source == null)
+        if (query == newQuery)
             return
 
         query = newQuery

@@ -13,8 +13,8 @@ import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
+import eu.kanade.tachiyomi.ui.base.decoration.DividerItemDecoration
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
-import eu.kanade.tachiyomi.ui.decoration.DividerItemDecoration
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.android.synthetic.main.fragment_recent_chapters.*
 import nucleus.factory.RequiresPresenter
