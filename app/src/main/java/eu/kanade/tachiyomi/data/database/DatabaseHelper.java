@@ -260,6 +260,7 @@ public class DatabaseHelper {
         return Observable.zip(newChapters, deletedChapters, (toAdd, toDelete) -> {
             int added = 0;
             int deleted = 0;
+            int readded = 0;
             db.internal().beginTransaction();
             try {
                 TreeSet<Float> deletedReadChapterNumbers = new TreeSet<>();
@@ -283,6 +284,7 @@ public class DatabaseHelper {
                         // Try to mark already read chapters as read when the source deletes them
                         if (c.chapter_number != -1 && deletedReadChapterNumbers.contains(c.chapter_number)) {
                             c.read = true;
+                            readded++;
                         }
                     }
                     added = insertChapters(toAdd).executeAsBlocking().numberOfInserts();
@@ -292,7 +294,7 @@ public class DatabaseHelper {
             } finally {
                 db.internal().endTransaction();
             }
-            return Pair.create(added, deleted);
+            return Pair.create(added - readded, deleted - readded);
         });
     }
 
