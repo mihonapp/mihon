@@ -76,7 +76,7 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
                 File.separator + getString(R.string.app_name) +
                 File.separator + "downloads"
 
-        return mutableListOf(File(defaultDir)) + context.getExternalFilesDirs("")
+        return mutableListOf(File(defaultDir)) + activity.getExternalFilesDirs("")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

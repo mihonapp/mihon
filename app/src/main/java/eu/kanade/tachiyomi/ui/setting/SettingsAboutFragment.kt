@@ -104,7 +104,7 @@ class SettingsAboutFragment : SettingsNestedFragment() {
                                 .negativeText(getString(R.string.update_check_ignore))
                                 .onPositive { dialog, which ->
                                     // User output that download has started
-                                    context.toast(R.string.update_check_download_started)
+                                    activity.toast(R.string.update_check_download_started)
                                     // Start download
                                     UpdateDownloader(activity.applicationContext).execute(downloadLink)
                                 }.show()
