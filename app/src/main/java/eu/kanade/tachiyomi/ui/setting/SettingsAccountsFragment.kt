@@ -19,24 +19,24 @@ class SettingsAccountsFragment : SettingsNestedFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        PreferenceCategory(context).apply {
+        PreferenceCategory(activity).apply {
             preferenceScreen.addPreference(this)
             title = "Sources"
 
             for (source in getSourcesWithLogin()) {
-                val dialog = SourceLoginDialog(context, preferences, source)
+                val dialog = SourceLoginDialog(activity, preferences, source)
                 dialog.title = source.name
 
                 addPreference(dialog)
             }
         }
 
-        PreferenceCategory(context).apply {
+        PreferenceCategory(activity).apply {
             preferenceScreen.addPreference(this)
             title = "Sync"
 
             for (sync in settingsActivity.syncManager.services) {
-                val dialog = MangaSyncLoginDialog(context, preferences, sync)
+                val dialog = MangaSyncLoginDialog(activity, preferences, sync)
                 dialog.title = sync.name
 
                 addPreference(dialog)
