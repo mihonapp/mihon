@@ -182,4 +182,8 @@ class PreferencesHelper(private val context: Context) {
         return rxPrefs.getInteger(getKey(R.string.pref_library_update_interval_key), 0)
     }
 
+    fun filterDownloaded(): Preference<Boolean> {
+        return rxPrefs.getBoolean(getKey(R.string.pref_filter_downloaded), false)
+    }
+
 }

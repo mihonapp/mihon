@@ -14,6 +14,10 @@
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_filter_downloaded">Downloaded</string>
+    <string name="action_filter_unread">Unread</string>
+    <string name="action_filter_empty">Remove filter</string>
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_select_all">Select all</string>

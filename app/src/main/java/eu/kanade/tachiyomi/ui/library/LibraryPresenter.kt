@@ -5,8 +5,10 @@ import android.util.Pair
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
+import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.event.LibraryMangasEvent
@@ -34,6 +36,8 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * Currently selected manga.
      */
     lateinit var selectedMangas: MutableList<Manga>
+
+    lateinit var libraryFragment: LibraryFragment
 
     /**
      * Search query of the library.
@@ -91,6 +95,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
 
     override fun onTakeView(libraryFragment: LibraryFragment) {
         super.onTakeView(libraryFragment)
+        this.libraryFragment = libraryFragment
         if (isUnsubscribed(GET_LIBRARY)) {
             start(GET_LIBRARY)
         }
@@ -105,6 +110,10 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
         return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable(),
                 { a, b -> Pair(a, b) })
                 .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun updateLibrary() {
+        start(GET_LIBRARY)
     }
 
     /**
@@ -126,10 +135,30 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     fun getLibraryMangasObservable(): Observable<Map<Int, List<Manga>>> {
         return db.libraryMangas.asRxObservable()
                 .flatMap { mangas -> Observable.from(mangas)
+                        .filter {
+                            if (preferences.filterDownloaded().get() as Boolean) {
+                                val downloadManager = DownloadManager(context, sourceManager, preferences)
+
+                                val chapters = getChapters(it)
+
+                                var hasDownloaded = false
+                                chapters?.forEach { chapter ->
+                                    if (downloadManager.isChapterDownloaded(sourceManager.get(it.source), it, chapter)) {
+                                        hasDownloaded = true
+                                    }
+                                }
+                                hasDownloaded
+                            } else
+                                true
+                        }
                         .groupBy { it.category }
                         .flatMap { group -> group.toList().map { Pair(group.key, it) } }
                         .toMap({ it.first }, { it.second })
                 }
+    }
+
+    fun getChapters(manga: Manga): MutableList<Chapter>? {
+        return db.getChapters(manga).executeAsBlocking()
     }
 
     /**

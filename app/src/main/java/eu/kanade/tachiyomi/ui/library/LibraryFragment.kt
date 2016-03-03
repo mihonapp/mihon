@@ -74,6 +74,17 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     private var selectedCoverManga: Manga? = null
 
+
+    /**
+     * TODO
+     */
+    var isFilterDownloaded = false
+
+    /**
+     * TODO
+     */
+    var isFilterUnread = false
+
     companion object {
         /**
          * Key to change the cover of a manga in [onActivityResult].
@@ -104,6 +115,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        isFilterDownloaded = presenter.preferences.filterDownloaded().get() as Boolean
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
@@ -116,6 +128,14 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
         appBar = (activity as MainActivity).appBar
         tabs = appBar.inflate(R.layout.library_tab_layout) as TabLayout
+
+        // Workaround to prevent: Tab belongs to a different TabLayout.
+        // Internal bug in Support library v23.2.0.
+        // See https://code.google.com/p/android/issues/detail?id=201827
+        for (j in 0..16) {
+            tabs.newTab()
+        }
+
         appBar.addView(tabs)
 
         adapter = LibraryAdapter(childFragmentManager)
@@ -144,6 +164,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         inflater.inflate(R.menu.library, menu)
 
         // Initialize search menu
+        val filterDownloadedItem = menu.findItem(R.id.action_filter_downloaded)
+        val filterUnreadItem = menu.findItem(R.id.action_filter_unread)
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
 
@@ -152,6 +174,9 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
             searchView.setQuery(query, true)
             searchView.clearFocus()
         }
+
+        filterDownloadedItem.isChecked = isFilterDownloaded;
+        filterUnreadItem.isChecked = isFilterUnread;
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -168,6 +193,25 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_filter_unread -> {
+                isFilterUnread = !isFilterUnread
+                activity.supportInvalidateOptionsMenu();
+                ToastUtil.showShort(context, "Filter Unread Clicked")
+            }
+            R.id.action_filter_downloaded -> {
+                isFilterDownloaded = !isFilterDownloaded
+                presenter.preferences.filterDownloaded().set(isFilterDownloaded)
+                presenter.updateLibrary()
+                adapter.notifyDataSetChanged()
+                activity.supportInvalidateOptionsMenu();
+                ToastUtil.showShort(context, "Filter Download Clicked")
+            }
+            R.id.action_filter_empty -> {
+                isFilterUnread = false
+                isFilterDownloaded = false
+                activity.supportInvalidateOptionsMenu();
+                ToastUtil.showShort(context, "Filter Clear Clicked")
+            }
             R.id.action_refresh -> LibraryUpdateService.start(activity)
             R.id.action_edit_categories -> {
                 val intent = CategoryActivity.newIntent(activity)
@@ -211,6 +255,10 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         // Restore active category.
         view_pager.setCurrentItem(activeCat, false)
         if (tabs.tabCount > 0) {
+            // Prevent IndexOutOfBoundsException
+            if (tabs.tabCount <= view_pager.currentItem) {
+                view_pager.currentItem = (tabs.tabCount - 1)
+            }
             tabs.getTabAt(view_pager.currentItem)?.select()
         }
 
