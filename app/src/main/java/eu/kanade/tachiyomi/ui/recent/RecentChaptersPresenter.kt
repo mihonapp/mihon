@@ -212,10 +212,10 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
                 // Group chapters by the date they were fetched on a ordered map.
                 .flatMap { recentItems ->
                     Observable.from(recentItems)
-                            .toMultimap {
-                                recent ->
-                                (getMapKey(recent.chapter.date_fetch))
-                            }
+                            .toMultimap(
+                                    { getMapKey(it.chapter.date_fetch) },
+                                    { it },
+                                    { TreeMap { d1, d2 -> d2.compareTo(d1) } })
                 }
                 // Add every day and all its chapters to a single list.
                 .map { recentItems ->
