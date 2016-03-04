@@ -37,8 +37,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     lateinit var selectedMangas: MutableList<Manga>
 
-    lateinit var libraryFragment: LibraryFragment
-
     /**
      * Search query of the library.
      */
@@ -95,7 +93,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
 
     override fun onTakeView(libraryFragment: LibraryFragment) {
         super.onTakeView(libraryFragment)
-        this.libraryFragment = libraryFragment
         if (isUnsubscribed(GET_LIBRARY)) {
             start(GET_LIBRARY)
         }
@@ -112,6 +109,9 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
+    /**
+     * Update the library information
+     */
     fun updateLibrary() {
         start(GET_LIBRARY)
     }
@@ -134,29 +134,72 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     fun getLibraryMangasObservable(): Observable<Map<Int, List<Manga>>> {
         return db.libraryMangas.asRxObservable()
-                .flatMap { mangas -> Observable.from(mangas)
-                        .filter {
-                            if (preferences.filterDownloaded().get() as Boolean) {
-                                val downloadManager = DownloadManager(context, sourceManager, preferences)
-
-                                val chapters = getChapters(it)
-
-                                var hasDownloaded = false
-                                chapters?.forEach { chapter ->
-                                    if (downloadManager.isChapterDownloaded(sourceManager.get(it.source), it, chapter)) {
-                                        hasDownloaded = true
-                                    }
-                                }
-                                hasDownloaded
-                            } else
-                                true
-                        }
-                        .groupBy { it.category }
-                        .flatMap { group -> group.toList().map { Pair(group.key, it) } }
-                        .toMap({ it.first }, { it.second })
+                .flatMap { mangas ->
+                    Observable.from(mangas)
+                            .filter {
+                                // Filter library by options
+                                filterLibrary(it)
+                            }
+                            .groupBy { it.category }
+                            .flatMap { group -> group.toList().map { Pair(group.key, it) } }
+                            .toMap({ it.first }, { it.second })
                 }
     }
 
+    /**
+     * Filter library by preference
+     *
+     * @param manga from library
+     * @return filter status
+     */
+    fun filterLibrary(manga: Manga): Boolean {
+        // Check if filter option is selected
+        if (preferences.filterDownloaded().get() as Boolean || preferences.filterUnread().get() as Boolean) {
+
+            // Does it have downloaded chapters.
+            var hasDownloaded = false
+
+            // Does it have unread chapters.
+            var hasUnread = false
+
+            // Get chapters from database.
+            val chapters = getChapters(manga)
+
+            if (preferences.filterDownloaded().get() as Boolean) {
+                // Get download manager.
+                val downloadManager = DownloadManager(context, sourceManager, preferences)
+                // Loop through chapters and check if library has downloaded manga
+                chapters?.forEach { chapter ->
+                    if (downloadManager.isChapterDownloaded(sourceManager.get(manga.source), manga, chapter)) {
+                        hasDownloaded = true
+                    }
+                }
+            }
+            if (preferences.filterUnread().get() as Boolean) {
+                // Loop through chapters and check if library has unread manga
+                chapters?.forEach { chapter ->
+                    if (!chapter.read) {
+                        hasUnread = true
+                    }
+                }
+            }
+
+            // Return correct filter status
+            if (preferences.filterDownloaded().get() as Boolean && preferences.filterUnread().get() as Boolean) {
+                return (hasDownloaded && hasUnread)
+            } else {
+                return (hasDownloaded || hasUnread)
+            }
+        } else
+            return true
+    }
+
+    /**
+     * Returns list of chapters belonging to manga
+     *
+     * @param manga manga from library
+     * @return list of chapters belonging to manga
+     */
     fun getChapters(manga: Manga): MutableList<Chapter>? {
         return db.getChapters(manga).executeAsBlocking()
     }

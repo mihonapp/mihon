@@ -116,6 +116,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         isFilterDownloaded = presenter.preferences.filterDownloaded().get() as Boolean
+        isFilterUnread = presenter.preferences.filterUnread().get() as Boolean
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
@@ -194,23 +195,30 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter_unread -> {
+                // Change unread filter status.
                 isFilterUnread = !isFilterUnread
-                activity.supportInvalidateOptionsMenu();
-                ToastUtil.showShort(context, "Filter Unread Clicked")
+                // Update settings.
+                presenter.preferences.filterUnread().set(isFilterUnread)
+                // Apply filter.
+                onFilterCheckboxChanged()
             }
             R.id.action_filter_downloaded -> {
+                // Change downloaded filter status.
                 isFilterDownloaded = !isFilterDownloaded
+                // Update settings.
                 presenter.preferences.filterDownloaded().set(isFilterDownloaded)
-                presenter.updateLibrary()
-                adapter.notifyDataSetChanged()
-                activity.supportInvalidateOptionsMenu();
-                ToastUtil.showShort(context, "Filter Download Clicked")
+                // Apply filter.
+                onFilterCheckboxChanged()
             }
             R.id.action_filter_empty -> {
+                // Remove filter status.
                 isFilterUnread = false
                 isFilterDownloaded = false
-                activity.supportInvalidateOptionsMenu();
-                ToastUtil.showShort(context, "Filter Clear Clicked")
+                // Update settings.
+                presenter.preferences.filterUnread().set(isFilterUnread)
+                presenter.preferences.filterDownloaded().set(isFilterDownloaded)
+                // Apply filter
+                onFilterCheckboxChanged()
             }
             R.id.action_refresh -> LibraryUpdateService.start(activity)
             R.id.action_edit_categories -> {
@@ -221,6 +229,17 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         }
 
         return true
+    }
+
+    /**
+     * Applies filter change
+     */
+    private fun onFilterCheckboxChanged() {
+        presenter.updateLibrary()
+        adapter.notifyDataSetChanged()
+        adapter.refreshRegisteredAdapters()
+        activity.supportInvalidateOptionsMenu();
+        ToastUtil.showShort(context, getString(R.string.library_filter_change))
     }
 
     /**

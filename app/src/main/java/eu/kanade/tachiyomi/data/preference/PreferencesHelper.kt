@@ -186,4 +186,8 @@ class PreferencesHelper(private val context: Context) {
         return rxPrefs.getBoolean(getKey(R.string.pref_filter_downloaded), false)
     }
 
+    fun filterUnread(): Preference<Boolean> {
+        return rxPrefs.getBoolean(getKey(R.string.pref_filter_unread), false)
+    }
+
 }

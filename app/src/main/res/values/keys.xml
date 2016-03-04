@@ -29,6 +29,7 @@
     <string name="pref_image_decoder_key">pref_image_decoder_key</string>
     <string name="pref_seamless_mode_key">pref_seamless_mode_key</string>
     <string name="pref_filter_downloaded">pref_filter_downloaded</string>
+    <string name="pref_filter_unread">pref_filter_unread</string>
 
     <string name="pref_download_directory_key">pref_download_directory_key</string>
     <string name="pref_download_slots_key">pref_download_slots_key</string>
