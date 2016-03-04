@@ -97,13 +97,14 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     protected void onPause() {
         if (viewer != null)
-            getPresenter().setCurrentPage(viewer.getCurrentPage());
+            getPresenter().setCurrentPage(viewer.getActivePage());
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         subscriptions.unsubscribe();
+        readerMenu.destroy();
         viewer = null;
         super.onDestroy();
     }
@@ -127,7 +128,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     @Override
     public void onBackPressed() {
         if (viewer != null)
-            getPresenter().setCurrentPage(viewer.getCurrentPage());
+            getPresenter().setCurrentPage(viewer.getActivePage());
         getPresenter().onChapterLeft();
 
         int chapterToUpdate = getPresenter().getMangaSyncChapterToUpdate();
@@ -255,8 +256,8 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     public void gotoPageInCurrentChapter(int pageIndex) {
-        Page requestedPage = viewer.getCurrentPage().getChapter().getPages().get(pageIndex);
-        viewer.setSelectedPage(requestedPage);
+        Page requestedPage = viewer.getActivePage().getChapter().getPages().get(pageIndex);
+        viewer.setActivePage(requestedPage);
     }
 
     public void onCenterSingleTap() {
@@ -264,7 +265,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     public void requestNextChapter() {
-        getPresenter().setCurrentPage(viewer.getCurrentPage());
+        getPresenter().setCurrentPage(viewer.getActivePage());
         if (!getPresenter().loadNextChapter()) {
             ToastUtil.showShort(this, R.string.no_next_chapter);
         }
@@ -272,7 +273,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
     }
 
     public void requestPreviousChapter() {
-        getPresenter().setCurrentPage(viewer.getCurrentPage());
+        getPresenter().setCurrentPage(viewer.getActivePage());
         if (!getPresenter().loadPreviousChapter()) {
             ToastUtil.showShort(this, R.string.no_previous_chapter);
         }

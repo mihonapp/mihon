@@ -31,7 +31,6 @@ import eu.kanade.tachiyomi.R;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
-import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader;
 import icepick.State;
 import rx.Subscription;
 
@@ -114,6 +113,12 @@ public class ReaderMenu {
         settingsPopup.dismiss();
 
         showing = false;
+    }
+
+    public void destroy() {
+        if (settingsPopup != null) {
+            settingsPopup.dismiss();
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -349,11 +354,11 @@ public class ReaderMenu {
         private void setDecoderInitial(int decoder) {
             String initial;
             switch (decoder) {
-                case BaseReader.SKIA_DECODER:
-                    initial = "S";
-                    break;
-                case BaseReader.RAPID_DECODER:
+                case 0:
                     initial = "R";
+                    break;
+                case 1:
+                    initial = "S";
                     break;
                 default:
                     initial = "";
