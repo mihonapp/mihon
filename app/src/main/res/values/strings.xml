@@ -43,6 +43,7 @@
     <string name="action_retry">Retry</string>
     <string name="action_open_in_browser">Open in browser</string>
     <string name="action_display_mode">Change display mode</string>
+    <string name="action_cancel">Cancel</string>
 
     <!-- Buttons -->
     <string name="button_ok">OK</string>

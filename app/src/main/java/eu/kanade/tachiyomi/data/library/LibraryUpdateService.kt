@@ -33,7 +33,7 @@ import javax.inject.Inject
  * @param context the application context.
  * @return the intent of the service.
  */
-fun getStartIntent(context: Context): Intent {
+fun getIntent(context: Context): Intent {
     return Intent(context, LibraryUpdateService::class.java)
 }
 
@@ -78,8 +78,12 @@ class LibraryUpdateService : Service() {
         @JvmStatic
         fun start(context: Context) {
             if (!isRunning(context)) {
-                context.startService(getStartIntent(context))
+                context.startService(getIntent(context))
             }
+        }
+
+        fun stop(context: Context) {
+            context.stopService(getIntent(context))
         }
 
     }
@@ -160,6 +164,9 @@ class LibraryUpdateService : Service() {
         val newUpdates = ArrayList<Manga>()
         val failedUpdates = ArrayList<Manga>()
 
+        val cancelIntent = PendingIntent.getBroadcast(this, 0,
+                Intent(this, CancelUpdateReceiver::class.java), 0)
+
         // Get the manga list that is going to be updated.
         val allLibraryMangas = db.favoriteMangas.executeAsBlocking()
         val toUpdate = if (!preferences.updateOnlyNonCompleted())
@@ -170,7 +177,7 @@ class LibraryUpdateService : Service() {
         // Emit each manga and update it sequentially.
         return Observable.from(toUpdate)
                 // Notify manga that will update.
-                .doOnNext { showProgressNotification(it, count.andIncrement, toUpdate.size) }
+                .doOnNext { showProgressNotification(it, count.andIncrement, toUpdate.size, cancelIntent) }
                 // Update the chapters of the manga.
                 .concatMap { manga -> updateManga(manga)
                         // If there's any error, return empty update and continue.
@@ -262,7 +269,7 @@ class LibraryUpdateService : Service() {
      */
     private fun showNotification(title: String, body: String) {
         val n = notification() {
-            setSmallIcon(R.drawable.ic_action_refresh)
+            setSmallIcon(R.drawable.ic_refresh_white_24dp)
             setContentTitle(title)
             setContentText(body)
         }
@@ -275,12 +282,13 @@ class LibraryUpdateService : Service() {
      * @param current the current progress.
      * @param total the total progress.
      */
-    private fun showProgressNotification(manga: Manga, current: Int, total: Int) {
+    private fun showProgressNotification(manga: Manga, current: Int, total: Int, cancelIntent: PendingIntent) {
         val n = notification() {
-            setSmallIcon(R.drawable.ic_action_refresh)
+            setSmallIcon(R.drawable.ic_refresh_white_24dp)
             setContentTitle(manga.title)
             setProgress(total, current, false)
             setOngoing(true)
+            addAction(R.drawable.ic_clear, getString(R.string.action_cancel), cancelIntent)
         }
         notificationManager.notify(UPDATE_NOTIFICATION_ID, n)
     }
@@ -295,7 +303,7 @@ class LibraryUpdateService : Service() {
         val body = getUpdatedMangasBody(updates, failed)
 
         val n = notification() {
-            setSmallIcon(R.drawable.ic_action_refresh)
+            setSmallIcon(R.drawable.ic_refresh_white_24dp)
             setContentTitle(title)
             setStyle(NotificationCompat.BigTextStyle().bigText(body))
             setContentIntent(notificationIntent)
@@ -335,8 +343,21 @@ class LibraryUpdateService : Service() {
         override fun onReceive(context: Context, intent: Intent) {
             if (NetworkUtil.isNetworkConnected(context)) {
                 AndroidComponentUtil.toggleComponent(context, this.javaClass, false)
-                context.startService(getStartIntent(context))
+                context.startService(getIntent(context))
             }
+        }
+    }
+
+    class CancelUpdateReceiver : BroadcastReceiver() {
+
+        /**
+         * Method called when user stops the update.
+         * @param context the application context.
+         * @param intent the intent received.
+         */
+        override fun onReceive(context: Context, intent: Intent) {
+            LibraryUpdateService.stop(context)
+            context.notificationManager.cancel(UPDATE_NOTIFICATION_ID)
         }
     }
 

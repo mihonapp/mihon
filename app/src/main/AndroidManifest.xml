@@ -69,6 +69,10 @@
         </receiver>
 
         <receiver
+            android:name=".data.library.LibraryUpdateService$CancelUpdateReceiver">
+        </receiver>
+
+        <receiver
             android:name=".data.library.LibraryUpdateAlarm">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
