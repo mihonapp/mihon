@@ -11,6 +11,10 @@ import eu.kanade.tachiyomi.data.source.base.Source
 import java.io.File
 import java.io.IOException
 
+fun <T> Preference<T>.getOrDefault(): T {
+    return get() ?: defaultValue()!!
+}
+
 class PreferencesHelper(private val context: Context) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)

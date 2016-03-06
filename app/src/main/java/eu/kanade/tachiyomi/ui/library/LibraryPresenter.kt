@@ -5,11 +5,11 @@ import android.util.Pair
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.event.LibraryMangasEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
@@ -61,6 +61,11 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * Source manager.
      */
     @Inject lateinit var sourceManager: SourceManager
+
+    /**
+     * Download manager.
+     */
+    @Inject lateinit var downloadManager: DownloadManager
 
     companion object {
         /**
@@ -153,55 +158,40 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * @return filter status
      */
     fun filterLibrary(manga: Manga): Boolean {
+        val prefFilterDownloaded = preferences.filterDownloaded().getOrDefault()
+        val prefFilterUnread = preferences.filterUnread().getOrDefault()
+
         // Check if filter option is selected
-        if (preferences.filterDownloaded().get() as Boolean || preferences.filterUnread().get() as Boolean) {
+        if (prefFilterDownloaded || prefFilterUnread) {
 
             // Does it have downloaded chapters.
             var hasDownloaded = false
 
             // Does it have unread chapters.
-            var hasUnread = false
+            val hasUnread = manga.unread > 0
 
-            // Get chapters from database.
-            val chapters = getChapters(manga)
+            if (prefFilterDownloaded) {
+                val mangaDir = downloadManager.getAbsoluteMangaDirectory(sourceManager.get(manga.source), manga)
 
-            if (preferences.filterDownloaded().get() as Boolean) {
-                // Get download manager.
-                val downloadManager = DownloadManager(context, sourceManager, preferences)
-                // Loop through chapters and check if library has downloaded manga
-                chapters?.forEach { chapter ->
-                    if (downloadManager.isChapterDownloaded(sourceManager.get(manga.source), manga, chapter)) {
-                        hasDownloaded = true
-                    }
-                }
-            }
-            if (preferences.filterUnread().get() as Boolean) {
-                // Loop through chapters and check if library has unread manga
-                chapters?.forEach { chapter ->
-                    if (!chapter.read) {
-                        hasUnread = true
+                if (mangaDir.exists()) {
+                    for (file in mangaDir.listFiles()) {
+                        if (file.isDirectory && file.listFiles().isNotEmpty()) {
+                            hasDownloaded = true
+                            break
+                        }
                     }
                 }
             }
 
             // Return correct filter status
-            if (preferences.filterDownloaded().get() as Boolean && preferences.filterUnread().get() as Boolean) {
+            if (prefFilterDownloaded && prefFilterUnread) {
                 return (hasDownloaded && hasUnread)
             } else {
                 return (hasDownloaded || hasUnread)
             }
-        } else
+        } else {
             return true
-    }
-
-    /**
-     * Returns list of chapters belonging to manga
-     *
-     * @param manga manga from library
-     * @return list of chapters belonging to manga
-     */
-    fun getChapters(manga: Manga): MutableList<Chapter>? {
-        return db.getChapters(manga).executeAsBlocking()
+        }
     }
 
     /**
