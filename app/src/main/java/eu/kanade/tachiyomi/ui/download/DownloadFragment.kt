@@ -137,6 +137,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
         isRunning = running
         startButton?.isVisible = !running && !presenter.downloadQueue.isEmpty()
         pauseButton?.isVisible = running
+        clearButton?.isVisible = running
     }
 
     /**
