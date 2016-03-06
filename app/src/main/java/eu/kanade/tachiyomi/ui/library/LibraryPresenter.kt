@@ -166,9 +166,12 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
 
             // Does it have downloaded chapters.
             var hasDownloaded = false
+            var hasUnread = false
 
-            // Does it have unread chapters.
-            val hasUnread = manga.unread > 0
+            if (prefFilterUnread) {
+                // Does it have unread chapters.
+                hasUnread = manga.unread > 0
+            }
 
             if (prefFilterDownloaded) {
                 val mangaDir = downloadManager.getAbsoluteMangaDirectory(sourceManager.get(manga.source), manga)

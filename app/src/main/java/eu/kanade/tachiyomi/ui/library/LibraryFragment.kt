@@ -239,7 +239,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         adapter.notifyDataSetChanged()
         adapter.refreshRegisteredAdapters()
         activity.supportInvalidateOptionsMenu();
-        ToastUtil.showShort(context, getString(R.string.library_filter_change))
     }
 
     /**
