@@ -51,6 +51,8 @@ android {
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
         buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
         buildConfigField "boolean", "INCLUDE_UPDATER", "${includeUpdater()}"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     compileOptions {
