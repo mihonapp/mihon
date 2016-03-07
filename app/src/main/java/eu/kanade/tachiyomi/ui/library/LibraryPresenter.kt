@@ -7,7 +7,9 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
+import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.event.LibraryMangasEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
@@ -60,6 +62,11 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     @Inject lateinit var sourceManager: SourceManager
 
+    /**
+     * Download manager.
+     */
+    @Inject lateinit var downloadManager: DownloadManager
+
     companion object {
         /**
          * Id of the restartable that listens for library updates.
@@ -108,6 +115,13 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     }
 
     /**
+     * Update the library information
+     */
+    fun updateLibrary() {
+        start(GET_LIBRARY)
+    }
+
+    /**
      * Get the categories from the database.
      *
      * @return an observable of the categories.
@@ -125,11 +139,62 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     fun getLibraryMangasObservable(): Observable<Map<Int, List<Manga>>> {
         return db.libraryMangas.asRxObservable()
-                .flatMap { mangas -> Observable.from(mangas)
-                        .groupBy { it.category }
-                        .flatMap { group -> group.toList().map { Pair(group.key, it) } }
-                        .toMap({ it.first }, { it.second })
+                .flatMap { mangas ->
+                    Observable.from(mangas)
+                            .filter {
+                                // Filter library by options
+                                filterLibrary(it)
+                            }
+                            .groupBy { it.category }
+                            .flatMap { group -> group.toList().map { Pair(group.key, it) } }
+                            .toMap({ it.first }, { it.second })
                 }
+    }
+
+    /**
+     * Filter library by preference
+     *
+     * @param manga from library
+     * @return filter status
+     */
+    fun filterLibrary(manga: Manga): Boolean {
+        val prefFilterDownloaded = preferences.filterDownloaded().getOrDefault()
+        val prefFilterUnread = preferences.filterUnread().getOrDefault()
+
+        // Check if filter option is selected
+        if (prefFilterDownloaded || prefFilterUnread) {
+
+            // Does it have downloaded chapters.
+            var hasDownloaded = false
+            var hasUnread = false
+
+            if (prefFilterUnread) {
+                // Does it have unread chapters.
+                hasUnread = manga.unread > 0
+            }
+
+            if (prefFilterDownloaded) {
+                val mangaDir = downloadManager.getAbsoluteMangaDirectory(sourceManager.get(manga.source), manga)
+
+                if (mangaDir.exists()) {
+                    for (file in mangaDir.listFiles()) {
+                        if (file.isDirectory && file.listFiles().isNotEmpty()) {
+                            hasDownloaded = true
+                            break
+                        }
+                    }
+                }
+            }
+
+            // Return correct filter status
+            if (prefFilterDownloaded && prefFilterUnread) {
+                return (hasDownloaded && hasUnread)
+            } else {
+                return (hasDownloaded || hasUnread)
+            }
+        } else {
+            return true
+        }
     }
 
     /**

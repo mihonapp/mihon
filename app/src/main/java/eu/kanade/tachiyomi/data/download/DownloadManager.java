@@ -378,15 +378,19 @@ public class DownloadManager {
         savePageList(download.source, download.manga, download.chapter, download.pages);
     }
 
-    // Get the absolute path to the chapter directory
-    public File getAbsoluteChapterDirectory(Source source, Manga manga, Chapter chapter) {
+    public File getAbsoluteMangaDirectory(Source source, Manga manga) {
         String chapterRelativePath = source.getName() +
                 File.separator +
-                manga.title.replaceAll("[^\\sa-zA-Z0-9.-]", "_") +
-                File.separator +
-                chapter.name.replaceAll("[^\\sa-zA-Z0-9.-]", "_");
+                manga.title.replaceAll("[^\\sa-zA-Z0-9.-]", "_");
 
         return new File(preferences.getDownloadsDirectory(), chapterRelativePath);
+    }
+
+    // Get the absolute path to the chapter directory
+    public File getAbsoluteChapterDirectory(Source source, Manga manga, Chapter chapter) {
+        String chapterRelativePath = chapter.name.replaceAll("[^\\sa-zA-Z0-9.-]", "_");
+
+        return new File(getAbsoluteMangaDirectory(source, manga), chapterRelativePath);
     }
 
     // Shortcut for the method above

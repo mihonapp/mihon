@@ -15,7 +15,7 @@
         <item name="actionModeBackground">@color/colorPrimarySuperDark</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.Overlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

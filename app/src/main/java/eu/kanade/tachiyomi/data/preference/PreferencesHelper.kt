@@ -11,6 +11,10 @@ import eu.kanade.tachiyomi.data.source.base.Source
 import java.io.File
 import java.io.IOException
 
+fun <T> Preference<T>.getOrDefault(): T {
+    return get() ?: defaultValue()!!
+}
+
 class PreferencesHelper(private val context: Context) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -180,6 +184,14 @@ class PreferencesHelper(private val context: Context) {
 
     fun libraryUpdateInterval(): Preference<Int> {
         return rxPrefs.getInteger(getKey(R.string.pref_library_update_interval_key), 0)
+    }
+
+    fun filterDownloaded(): Preference<Boolean> {
+        return rxPrefs.getBoolean(getKey(R.string.pref_filter_downloaded), false)
+    }
+
+    fun filterUnread(): Preference<Boolean> {
+        return rxPrefs.getBoolean(getKey(R.string.pref_filter_unread), false)
     }
 
 }

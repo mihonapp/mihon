@@ -3,6 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
     <item
+        android:id="@+id/action_filter"
+        android:title="@string/action_filter"
+        android:icon="@drawable/ic_filter_list"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/action_filter_downloaded"
+                android:checkable="true"
+                android:title="@string/action_filter_downloaded"/>
+            <item
+                android:id="@+id/action_filter_unread"
+                android:checkable="true"
+                android:title="@string/action_filter_unread"/>
+            <item
+                android:id="@+id/action_filter_empty"
+                android:title="@string/action_filter_empty"/>
+        </menu>
+    </item>
+
+    <item
         android:id="@+id/action_search"
         android:title="@string/action_search"
         android:icon="@drawable/ic_search_white_24dp"

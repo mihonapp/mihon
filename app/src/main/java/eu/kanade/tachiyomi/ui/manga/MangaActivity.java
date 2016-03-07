@@ -77,6 +77,13 @@ public class MangaActivity extends BaseRxActivity<MangaPresenter> {
         adapter = new MangaDetailAdapter(getSupportFragmentManager(), this);
 
         viewPager.setAdapter(adapter);
+
+        // Workaround to prevent: Tab belongs to a different TabLayout.
+        // Internal bug in Support library v23.2.0.
+        // See https://code.google.com/p/android/issues/detail?id=201827
+        for (int j = 0; j < 17; j++)
+            tabs.newTab();
+
         tabs.setupWithViewPager(viewPager);
 
         if (!isOnline)
