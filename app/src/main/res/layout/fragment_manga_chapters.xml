@@ -93,6 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_play_arrow_white_36dp"
             android:title="@string/action_next_unread"/>

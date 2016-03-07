@@ -75,7 +75,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/lock_orientation"
-                android:src="@drawable/ic_screen_rotation"
+                android:src="@drawable/ic_screen_rotation_white_24dp"
                 android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
 
@@ -102,7 +102,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/reader_selector"
-                android:src="@drawable/ic_view_carousel"
+                android:src="@drawable/ic_view_carousel_white_24dp"
                 android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
 
@@ -111,7 +111,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/reader_extra_settings"
-                android:src="@drawable/ic_more_vert"
+                android:src="@drawable/ic_more_vert_white_24dp"
                 android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground" />
 

@@ -191,9 +191,9 @@ public class ReaderMenu {
                 .subscribe(value -> {
                     boolean isPortrait = activity.getResources().getConfiguration()
                             .orientation == Configuration.ORIENTATION_PORTRAIT;
-                    int resourceId = value == 1 ? R.drawable.ic_screen_rotation : isPortrait ?
-                                    R.drawable.ic_screen_lock_portrait :
-                                    R.drawable.ic_screen_lock_landscape;
+                    int resourceId = value == 1 ? R.drawable.ic_screen_rotation_white_24dp : isPortrait ?
+                            R.drawable.ic_screen_lock_portrait_white_24dp :
+                            R.drawable.ic_screen_lock_landscape_white_24dp;
 
                     lockOrientation.setImageResource(resourceId);
                 }));

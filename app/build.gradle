@@ -156,9 +156,6 @@ dependencies {
         transitive = true
     }
 
-    // Google material icons SVG.
-    compile 'com.mikepenz:google-material-typeface:2.1.0.1.original@aar'
-
     compile('com.github.afollestad.material-dialogs:core:0.8.5.6@aar') {
         transitive = true
     }
