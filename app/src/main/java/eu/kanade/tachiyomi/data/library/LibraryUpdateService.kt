@@ -288,7 +288,7 @@ class LibraryUpdateService : Service() {
             setContentTitle(manga.title)
             setProgress(total, current, false)
             setOngoing(true)
-            addAction(R.drawable.ic_clear, getString(R.string.action_cancel), cancelIntent)
+            addAction(R.drawable.ic_clear_black_24dp, getString(R.string.action_cancel), cancelIntent)
         }
         notificationManager.notify(UPDATE_NOTIFICATION_ID, n)
     }

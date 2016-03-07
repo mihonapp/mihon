@@ -4,13 +4,13 @@
 
     <item android:title="@string/action_start"
           android:id="@+id/start_queue"
-          android:icon="@drawable/ic_play_arrow"
+          android:icon="@drawable/ic_play_arrow_white_24dp"
           android:visible="false"
           app:showAsAction="ifRoom"/>
 
     <item android:title="@string/action_pause"
           android:id="@+id/pause_queue"
-          android:icon="@drawable/ic_pause"
+          android:icon="@drawable/ic_pause_white_24dp"
           android:visible="false"
           app:showAsAction="ifRoom"/>
 

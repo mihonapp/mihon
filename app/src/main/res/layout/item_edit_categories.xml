@@ -32,7 +32,7 @@
         android:layout_centerInParent="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_action_reorder"/>
+        android:src="@drawable/ic_reorder_grey_24dp"/>
 
     <TextView
         android:id="@+id/title"

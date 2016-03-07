@@ -59,9 +59,7 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:visibility="invisible"
-            app:iiv_color="@color/primary"
-            app:iiv_icon="gmd_bookmark"/>
+            android:visibility="invisible"/>
 
         <eu.kanade.tachiyomi.widget.PTSansTextView
             android:id="@+id/title"

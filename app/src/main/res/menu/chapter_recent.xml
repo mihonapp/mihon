@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_download"
         android:title="@string/action_download"
-        android:icon="@drawable/ic_file_download"
+        android:icon="@drawable/ic_file_download_white_24dp"
         android:visible="true"
         app:showAsAction="ifRoom"/>
 
@@ -20,13 +20,13 @@
     <item
         android:id="@+id/action_mark_as_read"
         android:title="@string/action_mark_as_read"
-        android:icon="@drawable/ic_action_done_all"
+        android:icon="@drawable/ic_done_all_white_24dp"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_mark_as_unread"
         android:title="@string/action_mark_as_unread"
-        android:icon="@drawable/ic_action_undone_all"
+        android:icon="@drawable/ic_done_all_grey_24dp"
         app:showAsAction="ifRoom"/>
 
 </menu>

@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.ImageHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
@@ -35,6 +36,7 @@ public class MainActivity extends BaseActivity {
     int selectedItem;
     private Drawer drawer;
     private FragmentStack fragmentStack;
+    private int prevIdentifier = -1;
 
     @Override
     protected void onCreate(Bundle savedState) {
@@ -73,42 +75,50 @@ public class MainActivity extends BaseActivity {
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_library)
                                 .withIdentifier(R.id.nav_drawer_library)
-                                .withIcon(GoogleMaterial.Icon.gmd_book),
+                                .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_book_grey_24dp)),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_recent_updates)
                                 .withIdentifier(R.id.nav_drawer_recent_updates)
-                                .withIcon(GoogleMaterial.Icon.gmd_update),
+                                .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_history_grey_24dp)),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_catalogues)
                                 .withIdentifier(R.id.nav_drawer_catalogues)
-                                .withIcon(GoogleMaterial.Icon.gmd_explore),
+                                .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_explore_grey_24dp)),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_download_queue)
                                 .withIdentifier(R.id.nav_drawer_downloads)
-                                .withIcon(GoogleMaterial.Icon.gmd_file_download),
+                                .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_file_download_grey_24dp)),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem()
                                 .withName(R.string.label_settings)
                                 .withIdentifier(R.id.nav_drawer_settings)
                                 .withSelectable(false)
-                                .withIcon(GoogleMaterial.Icon.gmd_settings)
+                                .withIcon(ContextCompat.getDrawable(this, R.drawable.ic_settings_grey_24dp))
                 )
                 .withSavedInstance(savedState)
                 .withOnDrawerItemClickListener(
                         (view, position, drawerItem) -> {
                             if (drawerItem != null) {
                                 int identifier = drawerItem.getIdentifier();
+                                if (prevIdentifier != -1)
+                                    setIconBackToGrey(prevIdentifier, identifier);
+                                prevIdentifier = identifier;
+
                                 switch (identifier) {
                                     case R.id.nav_drawer_library:
+                                        drawer.updateIcon(identifier, new ImageHolder(ContextCompat.getDrawable(this, R.drawable.ic_book_blue_24dp)));
                                         setFragment(LibraryFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_recent_updates:
+                                        drawer.updateIcon(identifier, new ImageHolder(ContextCompat.getDrawable(this, R.drawable.ic_history_blue_24dp)));
                                         setFragment(RecentChaptersFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_catalogues:
+                                        drawer.updateIcon(identifier, new ImageHolder(ContextCompat.getDrawable(this, R.drawable.ic_explore_blue_24dp)));
                                         setFragment(CatalogueFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_downloads:
+                                        drawer.updateIcon(identifier, new ImageHolder(ContextCompat.getDrawable(this, R.drawable.ic_file_download_blue_24dp)));
                                         setFragment(DownloadFragment.newInstance());
                                         break;
                                     case R.id.nav_drawer_settings:
@@ -132,6 +142,27 @@ public class MainActivity extends BaseActivity {
         } else {
             // Set default selection
             drawer.setSelection(R.id.nav_drawer_library);
+        }
+    }
+
+    private void setIconBackToGrey(int prevIdentifier, int identifier) {
+        // Don't set to grey when settings
+        if (identifier == R.id.nav_drawer_settings)
+            return;
+
+        switch (prevIdentifier) {
+            case R.id.nav_drawer_library:
+                drawer.updateIcon(prevIdentifier, new ImageHolder(ContextCompat.getDrawable(this, R.drawable.ic_book_grey_24dp)));
+                break;
+            case R.id.nav_drawer_recent_updates:
+                drawer.updateIcon(prevIdentifier, new ImageHolder(ContextCompat.getDrawable(this, R.drawable.ic_history_grey_24dp)));
+                break;
+            case R.id.nav_drawer_catalogues:
+                drawer.updateIcon(prevIdentifier, new ImageHolder(ContextCompat.getDrawable(this, R.drawable.ic_explore_grey_24dp)));
+                break;
+            case R.id.nav_drawer_downloads:
+                drawer.updateIcon(prevIdentifier, new ImageHolder(ContextCompat.getDrawable(this, R.drawable.ic_file_download_grey_24dp)));
+                break;
         }
     }
 
