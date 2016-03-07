@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
         android:title="@string/pref_clear_chapter_cache"
@@ -10,4 +11,4 @@
         android:key="@string/pref_clear_database_key"
         android:summary="@string/pref_clear_database_summary"/>
 
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

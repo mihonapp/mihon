@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
-import android.preference.Preference
+import android.support.v7.preference.Preference
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R

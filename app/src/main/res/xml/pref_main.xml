@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <Preference
         android:key="@string/pref_category_general_key"
@@ -31,4 +32,4 @@
         android:persistent="false"
         android:title="@string/pref_category_about" />
 
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

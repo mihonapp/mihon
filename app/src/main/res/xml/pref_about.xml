@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="acra.enable"
         android:title="@string/pref_enable_acra"
         android:summary="@string/pref_acra_summary"
@@ -17,4 +18,4 @@
         android:title="@string/build_time"
         android:persistent="false" />
 
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

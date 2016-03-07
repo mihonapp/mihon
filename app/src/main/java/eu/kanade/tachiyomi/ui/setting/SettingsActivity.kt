@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
-import android.preference.PreferenceFragment
+import android.support.v7.preference.PreferenceFragmentCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -28,46 +28,46 @@ class SettingsActivity : BaseActivity() {
         setupToolbar(toolbar)
 
         if (savedState == null) {
-            fragmentManager.beginTransaction().replace(R.id.settings_content,
-                    SettingsMainFragment()).commit()
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.settings_content,SettingsMainFragment())
+                    .commit()
         }
     }
 
     override fun onBackPressed() {
-        if (!fragmentManager.popBackStackImmediate()) {
+        if (!supportFragmentManager.popBackStackImmediate()) {
             super.onBackPressed()
         }
     }
 
-    class SettingsMainFragment : PreferenceFragment() {
+    class SettingsMainFragment : PreferenceFragmentCompat() {
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
+        override fun onCreatePreferences(savedState: Bundle?, s: String?) {
             addPreferencesFromResource(R.xml.pref_main)
 
-            registerSubpreference(R.string.pref_category_general_key,
-                    SettingsGeneralFragment.newInstance(
-                            R.xml.pref_general, R.string.pref_category_general))
+            registerSubpreference(R.string.pref_category_general_key) {
+                SettingsGeneralFragment.newInstance(R.xml.pref_general, R.string.pref_category_general)
+            }
 
-            registerSubpreference(R.string.pref_category_reader_key,
-                    SettingsNestedFragment.newInstance(
-                            R.xml.pref_reader, R.string.pref_category_reader))
+            registerSubpreference(R.string.pref_category_reader_key) {
+                SettingsNestedFragment.newInstance(R.xml.pref_reader, R.string.pref_category_reader)
+            }
 
-            registerSubpreference(R.string.pref_category_downloads_key,
-                    SettingsDownloadsFragment.newInstance(
-                            R.xml.pref_downloads, R.string.pref_category_downloads))
+            registerSubpreference(R.string.pref_category_downloads_key) {
+                SettingsDownloadsFragment.newInstance(R.xml.pref_downloads, R.string.pref_category_downloads)
+            }
 
-            registerSubpreference(R.string.pref_category_accounts_key,
-                    SettingsAccountsFragment.newInstance(
-                            R.xml.pref_accounts, R.string.pref_category_accounts))
+            registerSubpreference(R.string.pref_category_accounts_key) {
+                SettingsAccountsFragment.newInstance(R.xml.pref_accounts, R.string.pref_category_accounts)
+            }
 
-            registerSubpreference(R.string.pref_category_advanced_key,
-                    SettingsAdvancedFragment.newInstance(
-                            R.xml.pref_advanced, R.string.pref_category_advanced))
+            registerSubpreference(R.string.pref_category_advanced_key) {
+                SettingsAdvancedFragment.newInstance(R.xml.pref_advanced, R.string.pref_category_advanced)
+            }
 
-            registerSubpreference(R.string.pref_category_about_key,
-                    SettingsAboutFragment.newInstance(
-                            R.xml.pref_about, R.string.pref_category_about))
+            registerSubpreference(R.string.pref_category_about_key) {
+                SettingsAboutFragment.newInstance(R.xml.pref_about, R.string.pref_category_about)
+            }
         }
 
         override fun onResume() {
@@ -75,8 +75,9 @@ class SettingsActivity : BaseActivity() {
             (activity as BaseActivity).setToolbarTitle(getString(R.string.label_settings))
         }
 
-        private fun registerSubpreference(preferenceResource: Int, fragment: PreferenceFragment) {
+        private fun registerSubpreference(preferenceResource: Int, func: () -> PreferenceFragmentCompat) {
             findPreference(getString(preferenceResource)).setOnPreferenceClickListener {
+                val fragment = func()
                 fragmentManager.beginTransaction()
                         .replace(R.id.settings_content, fragment)
                         .addToBackStack(fragment.javaClass.simpleName)

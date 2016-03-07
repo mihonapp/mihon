@@ -1,10 +1,10 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
-import android.preference.PreferenceFragment
+import android.support.v7.preference.PreferenceFragmentCompat
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 
-open class SettingsNestedFragment : PreferenceFragment() {
+open class SettingsNestedFragment : PreferenceFragmentCompat() {
 
     companion object {
 
@@ -19,8 +19,7 @@ open class SettingsNestedFragment : PreferenceFragment() {
 
     }
 
-    override fun onCreate(savedState: Bundle?) {
-        super.onCreate(savedState)
+    override fun onCreatePreferences(savedState: Bundle?, s: String?) {
         addPreferencesFromResource(arguments.getInt(RESOURCE_FILE))
     }
 

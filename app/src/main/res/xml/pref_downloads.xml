@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
         android:title="@string/pref_download_directory"
         android:key="@string/pref_download_directory_key"/>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:title="@string/pref_download_only_over_wifi"
         android:key="@string/pref_download_only_over_wifi_key"
         android:defaultValue="true"/>
@@ -18,4 +19,4 @@
         android:defaultValue="1"
         android:summary="%s"/>
 
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>
