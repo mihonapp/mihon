@@ -244,7 +244,7 @@
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_bookmark_border_white_24dp"
+        app:srcCompat="@drawable/ic_bookmark_border_white_24dp"
         app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@id/top_view"
         app:layout_anchorGravity="bottom|right|end"/>

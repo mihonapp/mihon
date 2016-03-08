@@ -25,7 +25,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_add_white_24dp"
+        app:srcCompat="@drawable/ic_add_white_24dp"
         app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@id/recycler"
         app:layout_anchorGravity="bottom|right|end"

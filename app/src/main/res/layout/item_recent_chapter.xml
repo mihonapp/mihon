@@ -3,6 +3,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="fill_parent"
                 android:layout_height="?android:attr/listPreferredItemHeight"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:background="@drawable/selector_chapter_light">
 
 
@@ -89,8 +90,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="?android:selectableItemBackground"
-            android:src="@drawable/ic_more_horiz_black_24dp"
-            />
+            app:srcCompat="@drawable/ic_more_horiz_black_24dp"/>
+
     </RelativeLayout>
 
 
