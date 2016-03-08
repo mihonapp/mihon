@@ -72,7 +72,7 @@ class WebtoonReader : BaseReader() {
         scrollDistance = screenHeight * 3 / 4
 
         layoutManager = PreCachingLayoutManager(activity)
-        layoutManager.setExtraLayoutSpace(screenHeight / 2)
+        layoutManager.extraLayoutSpace = screenHeight / 2
         if (savedState != null) {
             layoutManager.scrollToPositionWithOffset(savedState.getInt(SAVED_POSITION), 0)
         }

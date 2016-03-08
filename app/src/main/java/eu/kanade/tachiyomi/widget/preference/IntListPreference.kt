@@ -4,12 +4,8 @@ import android.content.Context
 import android.support.v7.preference.ListPreference
 import android.util.AttributeSet
 
-class IntListPreference : ListPreference {
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-    }
-
-    constructor(context: Context) : super(context) {
-    }
+class IntListPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+        ListPreference(context, attrs) {
 
     override fun persistString(value: String?): Boolean {
         return value != null && persistInt(value.toInt())

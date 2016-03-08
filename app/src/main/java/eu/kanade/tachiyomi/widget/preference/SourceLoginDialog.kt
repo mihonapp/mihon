@@ -34,10 +34,10 @@ class SourceLoginDialog : LoginDialogPreference() {
         source = (activity as SettingsActivity).sourceManager.get(sourceId)!!
     }
 
-    override fun setCredentialsOnView(view: View) {
-        view.accounts_login.text = getString(R.string.accounts_login_title, source.name)
-        view.username.setText(preferences.getSourceUsername(source))
-        view.password.setText(preferences.getSourcePassword(source))
+    override fun setCredentialsOnView(view: View) = with(view) {
+        accounts_login.text = getString(R.string.accounts_login_title, source.name)
+        username.setText(preferences.getSourceUsername(source))
+        password.setText(preferences.getSourcePassword(source))
     }
 
     override fun checkLogin() {
