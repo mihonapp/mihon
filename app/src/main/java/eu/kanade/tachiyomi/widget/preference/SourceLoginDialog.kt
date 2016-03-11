@@ -33,7 +33,7 @@ class SourceLoginDialog : LoginDialogPreference() {
     }
 
     override fun setCredentialsOnView(view: View) = with(view) {
-        title.text = getString(R.string.login_title, source.visibleName)
+        dialog_title.text = getString(R.string.login_title, source.visibleName)
         username.setText(preferences.getSourceUsername(source))
         password.setText(preferences.getSourcePassword(source))
     }

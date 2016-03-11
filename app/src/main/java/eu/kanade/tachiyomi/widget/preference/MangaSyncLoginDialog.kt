@@ -33,7 +33,7 @@ class MangaSyncLoginDialog : LoginDialogPreference() {
     }
 
     override fun setCredentialsOnView(view: View) = with(view) {
-        title.text = getString(R.string.login_title, sync.name)
+        dialog_title.text = getString(R.string.login_title, sync.name)
         username.setText(preferences.getMangaSyncUsername(sync))
         password.setText(preferences.getMangaSyncPassword(sync))
     }
