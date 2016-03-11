@@ -6,6 +6,9 @@ import eu.kanade.tachiyomi.data.source.online.english.Batoto
 import eu.kanade.tachiyomi.data.source.online.english.Kissmanga
 import eu.kanade.tachiyomi.data.source.online.english.Mangafox
 import eu.kanade.tachiyomi.data.source.online.english.Mangahere
+import eu.kanade.tachiyomi.data.source.online.russian.Mangachan;
+import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga;
+import eu.kanade.tachiyomi.data.source.online.russian.Readmanga;
 import java.util.*
 
 open class SourceManager(private val context: Context) {
@@ -16,8 +19,11 @@ open class SourceManager(private val context: Context) {
     val MANGAHERE = 2
     val MANGAFOX = 3
     val KISSMANGA = 4
+    val READMANGA = 5
+    val MINTMANGA = 6
+    val MANGACHAN = 7
 
-    val LAST_SOURCE = 4
+    val LAST_SOURCE = 7
 
     init {
         sourcesMap = createSourcesMap()
@@ -32,6 +38,9 @@ open class SourceManager(private val context: Context) {
         MANGAHERE -> Mangahere(context)
         MANGAFOX -> Mangafox(context)
         KISSMANGA -> Kissmanga(context)
+        READMANGA -> Readmanga(context)
+        MINTMANGA -> Mintmanga(context)
+        MANGACHAN -> Mangachan(context)
         else -> null
     }
 
