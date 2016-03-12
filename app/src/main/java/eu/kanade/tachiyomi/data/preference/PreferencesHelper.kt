@@ -49,6 +49,12 @@ class PreferencesHelper(private val context: Context) {
             return PreferenceManager.getDefaultSharedPreferences(context).getInt(
                     context.getString(R.string.pref_library_update_interval_key), 0)
         }
+
+        @JvmStatic
+        fun getTheme(context: Context): Int {
+            return PreferenceManager.getDefaultSharedPreferences(context).getInt(
+                    context.getString(R.string.pref_theme_key), 1)
+        }
     }
 
     private fun getKey(keyResource: Int): String {

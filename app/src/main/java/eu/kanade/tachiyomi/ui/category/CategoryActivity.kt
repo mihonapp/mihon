@@ -57,6 +57,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setAppTheme()
         super.onCreate(savedInstanceState)
 
         // Inflate activity_edit_categories.xml.

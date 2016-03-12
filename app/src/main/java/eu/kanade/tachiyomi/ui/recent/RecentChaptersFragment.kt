@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.recent
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +16,7 @@ import eu.kanade.tachiyomi.ui.base.decoration.DividerItemDecoration
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.setInformationDrawable
-import kotlinx.android.synthetic.main.activity_main.*
+import eu.kanade.tachiyomi.util.getResourceDrawable
 import kotlinx.android.synthetic.main.fragment_recent_chapters.*
 import nucleus.factory.RequiresPresenter
 import rx.Observable
@@ -70,19 +68,13 @@ class RecentChaptersFragment : BaseRxFragment<RecentChaptersPresenter>(), Flexib
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         // Init RecyclerView and adapter
         recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.addItemDecoration(DividerItemDecoration(ContextCompat.getDrawable(
-                context, R.drawable.line_divider)))
+        recycler.addItemDecoration(DividerItemDecoration(context.theme.getResourceDrawable(R.attr.divider_drawable)))
         recycler.setHasFixedSize(true)
         adapter = RecentChaptersAdapter(this)
         recycler.adapter = adapter
 
         // Update toolbar text
         setToolbarTitle(R.string.label_recent_updates)
-
-        // Check if recent chapters is empty and update information accordingly.
-        (activity as MainActivity).image_view.setInformationDrawable(R.drawable.ic_history_grey_128dp)
-        (activity as MainActivity).text_label.text = getString(R.string.information_no_recent)
-        (activity as MainActivity).information_layout.bringToFront()
     }
 
     /**
@@ -129,10 +121,9 @@ class RecentChaptersFragment : BaseRxFragment<RecentChaptersPresenter>(), Flexib
      * @param chapters list of chapters
      */
     fun onNextMangaChapters(chapters: List<Any>) {
-        if (!chapters.isEmpty()) {
-            ( activity as MainActivity).image_view.setInformationDrawable(null)
-            ( activity as MainActivity).text_label.text = ""
-        }
+        (activity as MainActivity).updateEmptyView(chapters.isEmpty(),
+                R.string.information_no_recent, R.drawable.ic_history_black_128dp)
+
         adapter.setItems(chapters)
     }
 

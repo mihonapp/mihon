@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -20,6 +19,7 @@ import eu.kanade.tachiyomi.ui.base.decoration.DividerItemDecoration
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
+import eu.kanade.tachiyomi.util.getResourceDrawable
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.EndlessGridScrollListener
 import eu.kanade.tachiyomi.widget.EndlessListScrollListener
@@ -155,8 +155,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         catalogue_list.adapter = adapter
         catalogue_list.layoutManager = llm
         catalogue_list.addOnScrollListener(listScrollListener)
-        catalogue_list.addItemDecoration(DividerItemDecoration(
-                ContextCompat.getDrawable(context, R.drawable.line_divider)))
+        catalogue_list.addItemDecoration(DividerItemDecoration(context.theme.getResourceDrawable(R.attr.divider_drawable)))
 
         if (presenter.isListMode) {
             switcher.showNext()

@@ -48,6 +48,7 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
         private set
 
     override fun onCreate(savedState: Bundle?) {
+        setAppTheme()
         super.onCreate(savedState)
         setContentView(R.layout.activity_manga)
 

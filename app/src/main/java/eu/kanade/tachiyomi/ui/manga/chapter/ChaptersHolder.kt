@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
+import eu.kanade.tachiyomi.util.getResourceColor
 import kotlinx.android.synthetic.main.item_chapter.view.*
 import rx.Observable
 import java.text.DateFormat
@@ -19,8 +20,8 @@ import java.util.*
 class ChaptersHolder(private val view: View, private val adapter: ChaptersAdapter, listener: FlexibleViewHolder.OnListItemClickListener) :
         FlexibleViewHolder(view, adapter, listener) {
 
-    private val readColor = ContextCompat.getColor(view.context, R.color.hint_text)
-    private val unreadColor = ContextCompat.getColor(view.context, R.color.primary_text)
+    private val readColor = view.context.theme.getResourceColor(android.R.attr.textColorHint)
+    private val unreadColor = view.context.theme.getResourceColor(android.R.attr.textColorPrimary)
     private val decimalFormat = DecimalFormat("#.###", DecimalFormatSymbols().apply { decimalSeparator = '.' })
     private val df = DateFormat.getDateInstance(DateFormat.SHORT)
 

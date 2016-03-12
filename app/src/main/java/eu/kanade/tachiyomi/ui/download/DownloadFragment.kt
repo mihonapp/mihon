@@ -8,8 +8,6 @@ import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.util.setInformationDrawable
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_download_queue.*
 import nucleus.factory.RequiresPresenter
 import rx.Subscription
@@ -63,8 +61,8 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
         }
     }
 
-    override fun onCreate(bundle: Bundle?) {
-        super.onCreate(bundle)
+    override fun onCreate(savedState: Bundle?) {
+        super.onCreate(savedState)
         setHasOptionsMenu(true)
     }
 
@@ -190,10 +188,8 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      * Set information view when queue is empty
      */
     private fun setInformationView() {
-        if (presenter.downloadQueue.isEmpty()) {
-            ( activity as MainActivity).image_view.setInformationDrawable(R.drawable.ic_file_download_grey_128dp)
-            ( activity as MainActivity).text_label.text = getString(R.string.information_no_downloads)
-        }
+        (activity as MainActivity).updateEmptyView(presenter.downloadQueue.isEmpty(),
+                R.string.information_no_downloads, R.drawable.ic_file_download_black_128dp)
     }
 
 }

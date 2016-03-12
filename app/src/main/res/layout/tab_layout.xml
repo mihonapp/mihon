@@ -5,7 +5,6 @@
     android:id="@+id/tabs"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.Overlay.Dark"
-    app:tabGravity="fill"
-    android:background="@color/colorPrimary"
-    app:tabIndicatorColor="@color/white"/>
+    android:theme="@style/Theme.ActionBar.Tab.Filled"
+    app:tabIndicatorColor="@android:color/white"
+    />
