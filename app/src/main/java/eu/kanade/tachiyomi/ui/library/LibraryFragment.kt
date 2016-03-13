@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.SearchView
 import android.view.*
-import butterknife.ButterKnife
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
@@ -20,7 +19,6 @@ import eu.kanade.tachiyomi.event.LibraryMangasEvent
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.util.ToastUtil
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_library.*
@@ -125,7 +123,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         setToolbarTitle(getString(R.string.label_library))
-        ButterKnife.bind(this, view)
 
         appBar = (activity as MainActivity).appBar
         tabs = appBar.inflate(R.layout.library_tab_layout) as TabLayout
@@ -369,7 +366,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 startActivityForResult(Intent.createChooser(intent,
                         getString(R.string.file_select_cover)), REQUEST_IMAGE_OPEN)
             } else {
-                ToastUtil.showShort(context, R.string.notification_first_add_to_library)
+                context.toast(R.string.notification_first_add_to_library)
             }
 
         }
@@ -419,8 +416,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                     destroyActionModeIfNeeded()
                     true
                 }
-                .positiveText(R.string.button_ok)
-                .negativeText(R.string.button_cancel)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
                 .show()
     }
 

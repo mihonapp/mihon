@@ -18,6 +18,15 @@ fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) 
 }
 
 /**
+ * Display a toast in this context.
+ * @param text the text to display.
+ * @param duration the duration of the toast. Defaults to short.
+ */
+fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, text, duration).show()
+}
+
+/**
  * Helper method to create a notification.
  * @param func the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
