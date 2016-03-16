@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -9,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -266,14 +264,11 @@ public class ReaderMenu {
 
     private void showImmersiveDialog(Dialog dialog) {
         // Hack to not leave immersive mode
-        dialog.getWindow().setFlags(LayoutParams.FLAG_NOT_FOCUSABLE,
-                LayoutParams.FLAG_NOT_FOCUSABLE);
+        dialog.getWindow().setFlags(LayoutParams.FLAG_NOT_FOCUSABLE, LayoutParams.FLAG_NOT_FOCUSABLE);
+        dialog.show();
         dialog.getWindow().getDecorView().setSystemUiVisibility(
                 activity.getWindow().getDecorView().getSystemUiVisibility());
-        dialog.show();
         dialog.getWindow().clearFlags(LayoutParams.FLAG_NOT_FOCUSABLE);
-        WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
-        wm.updateViewLayout(activity.getWindow().getDecorView(), activity.getWindow().getAttributes());
     }
 
     class SettingsPopupWindow extends PopupWindow {
