@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.TextView
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.injection.component.AppComponent
 import icepick.Icepick
 import org.greenrobot.eventbus.EventBus
 
@@ -29,6 +28,13 @@ open class BaseActivity : AppCompatActivity() {
     protected fun setupToolbar(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    fun setAppTheme() {
+        when (app.appTheme) {
+            2 -> setTheme(R.style.Theme_Tachiyomi_Dark)
+            else -> setTheme(R.style.Theme_Tachiyomi)
+        }
     }
 
     fun setToolbarTitle(title: String) {
@@ -83,7 +89,7 @@ open class BaseActivity : AppCompatActivity() {
         snack.show()
     }
 
-    protected val applicationComponent: AppComponent
-        get() = App.get(this).component
+    protected val app: App
+        get() = App.get(this)
 
 }

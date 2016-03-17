@@ -21,9 +21,10 @@ class SettingsActivity : BaseActivity() {
     @Inject lateinit var syncManager: MangaSyncManager
 
     override fun onCreate(savedState: Bundle?) {
+        setAppTheme()
         super.onCreate(savedState)
         setContentView(R.layout.activity_preferences)
-        applicationComponent.inject(this)
+        app.component.inject(this)
 
         setupToolbar(toolbar)
 

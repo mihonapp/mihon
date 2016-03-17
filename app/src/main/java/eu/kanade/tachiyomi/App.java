@@ -7,6 +7,7 @@ import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 import org.greenrobot.eventbus.EventBus;
 
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
 import eu.kanade.tachiyomi.injection.ComponentReflectionInjector;
 import eu.kanade.tachiyomi.injection.component.AppComponent;
 import eu.kanade.tachiyomi.injection.component.DaggerAppComponent;
@@ -24,6 +25,8 @@ public class App extends Application {
     AppComponent applicationComponent;
     ComponentReflectionInjector<AppComponent> componentInjector;
 
+    private int theme = 0;
+
     public static App get(Context context) {
         return (App) context.getApplicationContext();
     }
@@ -38,8 +41,13 @@ public class App extends Application {
         componentInjector =
                 new ComponentReflectionInjector<>(AppComponent.class, applicationComponent);
 
+        setupTheme();
         setupEventBus();
         setupAcra();
+    }
+
+    private void setupTheme() {
+        theme = PreferencesHelper.getTheme(this);
     }
 
     protected DaggerAppComponent.Builder prepareAppComponent() {
@@ -64,5 +72,13 @@ public class App extends Application {
 
     public ComponentReflectionInjector<AppComponent> getComponentReflection() {
         return componentInjector;
+    }
+
+    public int getAppTheme() {
+        return theme;
+    }
+
+    public void setAppTheme(int theme) {
+        this.theme = theme;
     }
 }

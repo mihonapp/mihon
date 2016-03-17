@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
 import org.greenrobot.eventbus.EventBus
@@ -49,7 +50,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     /**
      * AppBarLayout from [MainActivity].
      */
-    private lateinit var appBar: AppBarLayout
+    private val appbar: AppBarLayout
+        get() = (activity as MainActivity).appbar
 
     /**
      * Position of the active category.
@@ -110,8 +112,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreate(savedState: Bundle?) {
+        super.onCreate(savedState)
         setHasOptionsMenu(true)
         isFilterDownloaded = presenter.preferences.filterDownloaded().get() as Boolean
         isFilterUnread = presenter.preferences.filterUnread().get() as Boolean
@@ -124,17 +126,9 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         setToolbarTitle(getString(R.string.label_library))
 
-        appBar = (activity as MainActivity).appBar
-        tabs = appBar.inflate(R.layout.library_tab_layout) as TabLayout
+        tabs = appbar.inflate(R.layout.library_tab_layout) as TabLayout
 
-        // Workaround to prevent: Tab belongs to a different TabLayout.
-        // Internal bug in Support library v23.2.0.
-        // See https://code.google.com/p/android/issues/detail?id=201827
-        for (j in 0..16) {
-            tabs.newTab()
-        }
-
-        appBar.addView(tabs)
+        appbar.addView(tabs)
 
         adapter = LibraryAdapter(childFragmentManager)
         view_pager.adapter = adapter
@@ -148,14 +142,14 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     override fun onDestroyView() {
-        appBar.removeView(tabs)
+        appbar.removeView(tabs)
         super.onDestroyView()
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
-        bundle.putInt(CATEGORY_KEY, view_pager.currentItem)
-        bundle.putString(QUERY_KEY, query)
-        super.onSaveInstanceState(bundle)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(CATEGORY_KEY, view_pager.currentItem)
+        outState.putString(QUERY_KEY, query)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -257,6 +251,10 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * @param mangaMap a map containing the manga for each category.
      */
     fun onNextLibraryUpdate(categories: List<Category>, mangaMap: Map<Int, List<Manga>>) {
+        // Check if library is empty and update information accordingly.
+        (activity as MainActivity).updateEmptyView(mangaMap.isEmpty(),
+                R.string.information_empty_library, R.drawable.ic_book_black_128dp)
+
         // Get the current active category.
         val activeCat = if (adapter.categories != null) view_pager.currentItem else activeCategory
 

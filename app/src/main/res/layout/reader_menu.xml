@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/reader_menu"
-    android:visibility="gone"
-    tools:visibility="visible">
+<RelativeLayout android:id="@+id/reader_menu"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:visibility="visible">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/reader_menu_background"
-        android:theme="@style/AppTheme.Overlay.Dark"
-        app:popupTheme="@style/AppTheme.Popup"
-        android:elevation="4dp" />
+        android:background="?colorPrimary"
+        android:elevation="4dp"
+        android:theme="?attr/actionBarTheme"/>
 
     <LinearLayout
+        android:id="@+id/reader_menu_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/reader_menu_bottom"
-        android:background="@color/reader_menu_background"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="?colorPrimary"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,87 +32,85 @@
                 android:id="@+id/current_page"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/light_grey"
-                android:textSize="15sp"
-                android:gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp" />
+                android:gravity="center_horizontal"
+                android:textSize="15sp"/>
 
             <SeekBar
                 android:id="@+id/page_seeker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
-                android:theme="@style/AppTheme.Overlay.Dark"
+                android:layout_weight="1"
                 />
 
             <TextView
                 android:id="@+id/total_pages"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/light_grey"
-                android:textSize="15sp"
-                android:gravity="center_horizontal" />
+                android:layout_marginRight="8dp"
+                android:gravity="center_horizontal"
+                android:textSize="15sp"/>
 
         </LinearLayout>
 
-        <View android:background="#777777"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
+            android:layout_height="1dp"
+            android:background="#777777"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
 
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/lock_orientation"
-                app:srcCompat="@drawable/ic_screen_rotation_white_24dp"
-                android:layout_gravity="center_vertical"
-                android:background="?android:selectableItemBackground" />
-
-            <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/ic_screen_rotation_white_24dp"/>
+
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/reader_zoom_selector"
-                app:srcCompat="@drawable/ic_crop_original_white_24dp"
-                android:layout_gravity="center_vertical"
-                android:background="?android:selectableItemBackground"/>
-
-            <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/ic_crop_original_white_24dp"/>
+
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/reader_scale_type_selector"
-                app:srcCompat="@drawable/ic_zoom_out_map_white_24dp"
-                android:layout_gravity="center_vertical"
-                android:background="?android:selectableItemBackground" />
-
-            <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/ic_zoom_out_map_white_24dp"/>
+
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/reader_selector"
-                app:srcCompat="@drawable/ic_view_carousel_white_24dp"
-                android:layout_gravity="center_vertical"
-                android:background="?android:selectableItemBackground" />
-
-            <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/reader_extra_settings"
-                app:srcCompat="@drawable/ic_more_vert_white_24dp"
                 android:layout_gravity="center_vertical"
-                android:background="?android:selectableItemBackground" />
+                android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/ic_view_carousel_white_24dp"/>
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/reader_extra_settings"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/ic_more_vert_white_24dp"/>
 
         </LinearLayout>
 

@@ -15,6 +15,7 @@
     <string name="pref_update_only_non_completed_key">pref_update_only_non_completed_key</string>
     <string name="pref_auto_update_manga_sync_key">pref_auto_update_manga_sync_key</string>
     <string name="pref_ask_update_manga_sync_key">pref_ask_update_manga_sync_key</string>
+    <string name="pref_theme_key">pref_theme_key</string>
 
     <string name="pref_default_viewer_key">pref_default_viewer_key</string>
     <string name="pref_image_scale_type_key">pref_image_scale_type_key</string>
@@ -46,4 +47,8 @@
 
     <string name="pref_display_catalogue_as_list">pref_display_catalogue_as_list</string>
     <string name="pref_last_catalogue_source_key">pref_last_catalogue_source_key</string>
+
+    <!-- String Fonts -->
+    <string name="font_roboto_medium">sans-serif</string>
+    <string name="font_roboto_regular">sans-serif</string>
 </resources>

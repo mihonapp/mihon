@@ -27,9 +27,6 @@ class CatalogueGridHolder(private val view: View, adapter: CatalogueAdapter, lis
         // Set manga title
         view.title.text = manga.title
 
-        // Set visibility of in library icon.
-        view.favorite_sticker.visibility = if (manga.favorite) View.VISIBLE else View.GONE
-
         // Set alpha of thumbnail.
         view.thumbnail.alpha = if (manga.favorite) 0.3f else 1.0f
 

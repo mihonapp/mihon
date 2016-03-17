@@ -40,7 +40,7 @@ inline fun Context.notification(func: NotificationCompat.Builder.() -> Unit): No
 /**
  * Property to get the notification manager from the context.
  */
-val Context.notificationManager : NotificationManager
+val Context.notificationManager: NotificationManager
     get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 /**

@@ -71,6 +71,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
 
     @Override
     public void onCreate(Bundle savedState) {
+        setTheme(R.style.Theme_Reader);
         super.onCreate(savedState);
         setContentView(R.layout.activity_reader);
         ButterKnife.bind(this);
@@ -84,6 +85,7 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
             readerMenu.show(false);
 
         initializeSettings();
+
 
         maxBitmapSize = GLUtil.getMaxTextureSize();
     }
@@ -393,12 +395,12 @@ public class ReaderActivity extends BaseRxActivity<ReaderPresenter> {
         View rootView = getWindow().getDecorView().getRootView();
         if (theme == BLACK_THEME) {
             rootView.setBackgroundColor(Color.BLACK);
-            pageNumber.setTextColor(ContextCompat.getColor(this, R.color.light_grey));
-            pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.page_number_background_black));
+            pageNumber.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimaryDark));
+            pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.backgroundDark));
         } else {
             rootView.setBackgroundColor(Color.WHITE);
-            pageNumber.setTextColor(ContextCompat.getColor(this, R.color.primary_text));
-            pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.page_number_background));
+            pageNumber.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimaryLight));
+            pageNumber.setBackgroundColor(ContextCompat.getColor(this, R.color.backgroundLight));
         }
     }
 

@@ -16,4 +16,9 @@
         <attr name="min" format="integer"/>
         <attr name="max" format="integer"/>
     </declare-styleable>
+
+    <attr name="navigation_view_theme" format="reference"/>
+    <attr name="selectable_list_drawable" format="reference|integer" />
+    <attr name="divider_drawable" format="reference|integer" />
+    <attr name="status_bar_trans" format="reference|color"/>
 </resources>
