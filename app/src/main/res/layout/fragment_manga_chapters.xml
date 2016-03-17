@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
@@ -26,78 +27,10 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        style="@style/Theme.Widget.FAB"
+        app:layout_anchor="@id/recycler"
+        app:srcCompat="@drawable/ic_play_arrow_white_24dp"/>
 
-    <RelativeLayout
-        android:id="@+id/toolbar_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentBottom="true"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:gravity="top|start"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp">
-
-        <ImageView
-            android:id="@+id/sort_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="?android:selectableItemBackground"
-            android:title="@string/action_sort_up"
-            tools:src="@drawable/ic_expand_less_white_36dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toEndOf="@+id/sort_btn"
-            android:layout_toLeftOf="@+id/next_unread_btn"
-            android:layout_toRightOf="@+id/sort_btn"
-            android:gravity="center_vertical">
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:background="@color/md_white_1000"/>
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/show_unread"
-                style="@style/Theme.Widget.CheckBox.Light"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:checkable="true"
-                android:text="@string/action_show_unread"
-                android:title="@string/action_show_unread"/>
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/show_downloaded"
-                style="@style/Theme.Widget.CheckBox.Light"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:checkable="true"
-                android:text="@string/action_show_downloaded"
-                android:title="@string/action_show_downloaded"/>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:background="@color/md_white_1000"/>
-
-        </LinearLayout>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/next_unread_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:title="@string/action_next_unread"
-            app:srcCompat="@drawable/ic_play_arrow_white_36dp"/>
-
-    </RelativeLayout>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

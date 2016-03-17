@@ -3,12 +3,38 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/action_display_mode"
+        android:id="@+id/action_filter"
+        android:icon="@drawable/ic_filter_list_white_24dp"
+        android:title="@string/action_filter"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/action_filter_downloaded"
+                android:checkable="true"
+                android:title="@string/action_filter_downloaded"/>
+            <item
+                android:id="@+id/action_filter_unread"
+                android:checkable="true"
+                android:title="@string/action_filter_unread"/>
+            <item
+                android:id="@+id/action_filter_empty"
+                android:title="@string/action_filter_empty"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort_by_alpha_white_24dp"
+        android:title="@string/action_sort"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_display_mode"
+        android:title="@string/action_display_mode"
         app:showAsAction="never" />
 
     <item
-        android:title="@string/manga_download"
         android:id="@+id/manga_download"
+        android:title="@string/manga_download"
         app:showAsAction="never" />
 </menu>

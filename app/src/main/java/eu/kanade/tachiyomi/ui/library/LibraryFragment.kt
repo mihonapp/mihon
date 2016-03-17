@@ -76,12 +76,12 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
 
     /**
-     * TODO
+     * Status of isFilterDownloaded
      */
     var isFilterDownloaded = false
 
     /**
-     * TODO
+     * Status of isFilterUnread
      */
     var isFilterUnread = false
 

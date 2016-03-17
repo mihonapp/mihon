@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
@@ -71,7 +70,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
         swipe_refresh.setOnRefreshListener { fetchChapters() }
 
-        next_unread_btn.setOnClickListener { v ->
+        fab.setOnClickListener { v ->
             val chapter = presenter.getNextUnreadChapter()
             if (chapter != null) {
                 openChapter(chapter)
@@ -93,35 +92,37 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.chapters, menu)
+        menu.findItem(R.id.action_filter_unread).isChecked = presenter.onlyUnread()
+        menu.findItem(R.id.action_filter_downloaded).isChecked = presenter.onlyDownloaded()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_display_mode -> showDisplayModeDialog()
             R.id.manga_download -> showDownloadDialog()
+            R.id.action_filter_unread -> {
+                item.isChecked = !item.isChecked
+                presenter.setReadFilter(item.isChecked)
+            }
+            R.id.action_filter_downloaded -> {
+                item.isChecked = !item.isChecked
+                presenter.setDownloadedFilter(item.isChecked)
+            }
+            R.id.action_filter_empty -> {
+                presenter.setReadFilter(false)
+                presenter.setDownloadedFilter(false)
+                activity.supportInvalidateOptionsMenu();
+            }
+            R.id.action_sort -> presenter.revertSortOrder()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
     }
 
     fun onNextManga(manga: Manga) {
-        // Remove listeners before setting the values
-        show_unread.setOnCheckedChangeListener(null)
-        show_downloaded.setOnCheckedChangeListener(null)
-        sort_btn.setOnClickListener(null)
-
         // Set initial values
         setReadFilter()
         setDownloadedFilter()
-        setSortIcon()
-
-        // Init listeners
-        show_unread.setOnCheckedChangeListener { arg, isChecked -> presenter.setReadFilter(isChecked) }
-        show_downloaded.setOnCheckedChangeListener { v, isChecked -> presenter.setDownloadedFilter(isChecked) }
-        sort_btn.setOnClickListener {
-            presenter.revertSortOrder()
-            setSortIcon()
-        }
     }
 
     fun onNextChapters(chapters: List<Chapter>) {
@@ -341,23 +342,12 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         actionMode?.title = getString(R.string.label_selected, count)
     }
 
-    fun setSortIcon() {
-        sort_btn?.let {
-            val aToZ = presenter.sortOrder()
-            it.setImageResource(if (!aToZ) R.drawable.ic_expand_less_white_36dp else R.drawable.ic_expand_more_white_36dp)
-        }
-    }
-
     fun setReadFilter() {
-        show_unread?.let {
-            it.isChecked = presenter.onlyUnread()
-        }
+        this.activity.supportInvalidateOptionsMenu()
     }
 
     fun setDownloadedFilter() {
-        show_downloaded?.let {
-            it.isChecked = presenter.onlyDownloaded()
-        }
+        this.activity.supportInvalidateOptionsMenu()
     }
 
 }

@@ -48,6 +48,7 @@
     <string name="action_open_in_browser">Open in browser</string>
     <string name="action_display_mode">Change display mode</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_sort">Sort</string>
 
     <!-- Buttons -->
     <string name="button_ok">OK</string>
