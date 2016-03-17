@@ -74,12 +74,12 @@ class PagerReaderFragment : BaseFragment() {
     /**
      * Text color for black theme.
      */
-    private val lightGreyColor by lazy { ContextCompat.getColor(context, R.color.textColorHintDark) }
+    private val whiteColor = ContextCompat.getColor(context, R.color.textColorSecondaryDark)
 
     /**
      * Text color for white theme.
      */
-    private val blackColor by lazy { ContextCompat.getColor(context, R.color.textColorHintLight) }
+    private val blackColor = ContextCompat.getColor(context, R.color.textColorSecondaryLight)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
         return inflater.inflate(R.layout.item_pager_reader, container, false)
@@ -87,7 +87,9 @@ class PagerReaderFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         if (readerActivity.readerTheme == ReaderActivity.BLACK_THEME) {
-            progress_text.setTextColor(lightGreyColor)
+            progress_text.setTextColor(whiteColor)
+        } else {
+            progress_text.setTextColor(blackColor)
         }
 
         if (pagerReader is RightToLeftReader) {

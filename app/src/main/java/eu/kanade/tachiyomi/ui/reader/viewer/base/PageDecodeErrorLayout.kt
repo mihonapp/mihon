@@ -17,8 +17,15 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 
 class PageDecodeErrorLayout(context: Context) : LinearLayout(context) {
 
-    private val lightGreyColor = ContextCompat.getColor(context, android.R.attr.textColorHint)
-    private val blackColor = ContextCompat.getColor(context, android.R.attr.textColorPrimary)
+    /**
+     * Text color for black theme.
+     */
+    private val whiteColor = ContextCompat.getColor(context, R.color.textColorSecondaryDark)
+
+    /**
+     * Text color for white theme.
+     */
+    private val blackColor = ContextCompat.getColor(context, R.color.textColorSecondaryLight)
 
     init {
         orientation = LinearLayout.VERTICAL
@@ -31,7 +38,7 @@ class PageDecodeErrorLayout(context: Context) : LinearLayout(context) {
         TextView(context).apply {
             gravity = Gravity.CENTER
             setText(R.string.decode_image_error)
-            setTextColor(if (theme == ReaderActivity.BLACK_THEME) lightGreyColor else blackColor)
+            setTextColor(if (theme == ReaderActivity.BLACK_THEME) whiteColor else blackColor)
             addView(this)
         }
 
