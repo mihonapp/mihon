@@ -101,9 +101,9 @@ apt {
 
 dependencies {
     final SUPPORT_LIBRARY_VERSION = '23.2.1'
-    final DAGGER_VERSION = '2.0.2'
+    final DAGGER_VERSION = '2.1'
     final OKHTTP_VERSION = '3.2.0'
-    final RETROFIT_VERSION = '2.0.0-beta4'
+    final RETROFIT_VERSION = '2.0.0'
     final STORIO_VERSION = '1.8.0'
     final ICEPICK_VERSION = '3.2.0'
     final MOCKITO_VERSION = '1.10.19'
@@ -123,7 +123,7 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
     compile "com.squareup.okhttp3:okhttp-urlconnection:$OKHTTP_VERSION"
     compile 'com.squareup.okio:okio:1.6.0'
-    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.jakewharton:disklrucache:2.0.2'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'io.reactivex:rxandroid:1.1.0'
@@ -138,7 +138,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.1'
-    compile 'ch.acra:acra:4.8.2'
+    compile 'ch.acra:acra:4.8.3'
     compile "frankiesardo:icepick:$ICEPICK_VERSION"
     provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
@@ -154,7 +154,7 @@ dependencies {
     apt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.6@aar') {
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {
         transitive = true
     }
 
@@ -172,7 +172,7 @@ dependencies {
 }
 
 buildscript {
-    ext.kotlin_version = '1.0.0'
+    ext.kotlin_version = '1.0.1'
     repositories {
         mavenCentral()
     }
