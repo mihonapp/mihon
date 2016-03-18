@@ -179,7 +179,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     }
 
     fun onOpenChapter(chapter: Chapter) {
-        EventBus.getDefault().postSticky(ReaderEvent(source, manga, chapter))
+        EventBus.getDefault().postSticky(ReaderEvent(manga, chapter))
     }
 
     fun getNextUnreadChapter(): Chapter? {

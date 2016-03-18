@@ -250,8 +250,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * @param item chapter that is opened
      */
     fun onOpenChapter(item: MangaChapter) {
-        val source = sourceManager.get(item.manga.source)
-        EventBus.getDefault().postSticky(ReaderEvent(source, item.manga, item.chapter))
+        EventBus.getDefault().postSticky(ReaderEvent(item.manga, item.chapter))
     }
 
     /**

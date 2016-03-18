@@ -48,7 +48,6 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
 
     @State Manga manga;
     @State Chapter activeChapter;
-    @State int sourceId;
     @State int requestedPage;
     private Page currentPage;
     private Source source;
@@ -72,7 +71,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
         super.onCreate(savedState);
 
         if (savedState != null) {
-            source = sourceManager.get(sourceId);
+            source = sourceManager.get(manga.source);
             initializeSubjects();
         }
 
@@ -114,8 +113,7 @@ public class ReaderPresenter extends BasePresenter<ReaderActivity> {
     public void onEvent(ReaderEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         manga = event.getManga();
-        source = event.getSource();
-        sourceId = source.getId();
+        source = sourceManager.get(manga.source);
         initializeSubjects();
         loadChapter(event.getChapter());
         if (prefs.autoUpdateMangaSync()) {
