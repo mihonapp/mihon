@@ -18,6 +18,7 @@ import timber.log.Timber;
         formUri = "http://tachiyomi.kanade.eu/crash_report",
         reportType = org.acra.sender.HttpSender.Type.JSON,
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
+        buildConfigClass = BuildConfig.class,
         excludeMatchingSharedPreferencesKeys={".*username.*",".*password.*"}
 )
 public class App extends Application {
