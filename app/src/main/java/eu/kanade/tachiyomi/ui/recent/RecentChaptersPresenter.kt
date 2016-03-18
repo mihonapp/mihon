@@ -88,7 +88,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * @return download object containing download progress.
      */
     private fun getChapterStatusObs(): Observable<Download> {
-        return downloadManager.queue.statusObservable
+        return downloadManager.queue.getStatusObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter { download: Download ->
                     if (chapterIdEquals(download.chapter.id))
@@ -188,7 +188,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
         }
 
         // Get source of chapter
-        val source = sourceManager.get(mangaChapter.manga.source)
+        val source = sourceManager.get(mangaChapter.manga.source)!!
 
         // Check if chapter is downloaded
         if (downloadManager.isChapterDownloaded(source, mangaChapter.manga, mangaChapter.chapter)) {
@@ -271,7 +271,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * @param manga manga that belongs to chapter
      */
     fun deleteChapter(chapter: Chapter, manga: Manga) {
-        val source = sourceManager.get(manga.source)
+        val source = sourceManager.get(manga.source)!!
         downloadManager.deleteChapter(source, manga, chapter)
     }
 
@@ -282,7 +282,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
     fun deleteChapters(selectedChapters: Observable<Chapter>) {
         add(selectedChapters
                 .subscribe(
-                        { chapter -> downloadManager.queue.remove(chapter) })
+                        { chapter -> downloadManager.queue.del(chapter) })
                 { error -> Timber.e(error.message) })
     }
 

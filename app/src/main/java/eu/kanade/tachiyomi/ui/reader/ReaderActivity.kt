@@ -243,7 +243,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun onAdjacentChapters(previous: Chapter, next: Chapter) {
+    fun onAdjacentChapters(previous: Chapter?, next: Chapter?) {
         setAdjacentChaptersVisibility()
     }
 

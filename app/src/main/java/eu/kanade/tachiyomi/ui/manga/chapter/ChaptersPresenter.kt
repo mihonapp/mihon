@@ -130,7 +130,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     }
 
     fun getChapterStatusObs(): Observable<Download> {
-        return downloadManager.queue.statusObservable
+        return downloadManager.queue.getStatusObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter { download -> download.manga.id == manga.id }
                 .doOnNext { updateChapterStatus(it) }
@@ -214,7 +214,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
 
     fun deleteChapters(selectedChapters: Observable<Chapter>) {
         add(selectedChapters.subscribe(
-                { chapter -> downloadManager.queue.remove(chapter) },
+                { chapter -> downloadManager.queue.del(chapter) },
                 { error -> Timber.e(error.message) },
                 {
                     if (onlyDownloaded())

@@ -68,14 +68,14 @@ class DownloadPresenter : BasePresenter<DownloadFragment>() {
     override fun onTakeView(view: DownloadFragment) {
         super.onTakeView(view)
 
-        statusSubscription = downloadQueue.statusObservable
-                .startWith(downloadQueue.activeDownloads)
+        statusSubscription = downloadQueue.getStatusObservable()
+                .startWith(downloadQueue.getActiveDownloads())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { processStatus(it, view) }
 
         add(statusSubscription)
 
-        pageProgressSubscription = downloadQueue.progressObservable
+        pageProgressSubscription = downloadQueue.getProgressObservable()
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { view.onUpdateDownloadedPages(it) }
