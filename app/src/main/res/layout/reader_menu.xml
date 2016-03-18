@@ -29,7 +29,7 @@
             android:layout_height="?attr/actionBarSize">
 
             <TextView
-                android:id="@+id/current_page"
+                android:id="@+id/left_page_text"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -40,7 +40,7 @@
                 android:textSize="15sp"/>
 
             <SeekBar
-                android:id="@+id/page_seeker"
+                android:id="@+id/page_seekbar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -48,7 +48,7 @@
                 />
 
             <TextView
-                android:id="@+id/total_pages"
+                android:id="@+id/right_page_text"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

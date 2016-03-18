@@ -31,7 +31,8 @@
         </activity>
         <activity
             android:name=".ui.reader.ReaderActivity"
-            android:parentActivityName=".ui.manga.MangaActivity">
+            android:parentActivityName=".ui.manga.MangaActivity"
+            android:theme="@style/Theme.Reader">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.manga.MangaActivity" />

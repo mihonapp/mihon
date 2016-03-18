@@ -136,7 +136,6 @@ dependencies {
     compile "com.pushtorefresh.storio:sqlite-annotations:$STORIO_VERSION"
     compile 'info.android15.nucleus:nucleus:2.0.5'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.1'
     compile 'ch.acra:acra:4.8.3'
     compile "frankiesardo:icepick:$ICEPICK_VERSION"

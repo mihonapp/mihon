@@ -7,7 +7,7 @@ import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.MangaSync
-import eu.kanade.tachiyomi.widget.SimpleTextWatcher
+import eu.kanade.tachiyomi.ui.base.listener.SimpleTextWatcher
 import kotlinx.android.synthetic.main.dialog_myanimelist_search.view.*
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
