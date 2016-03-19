@@ -144,7 +144,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     override fun onBackPressed() {
         presenter.onChapterLeft()
 
-        val chapterToUpdate = presenter.mangaSyncChapterToUpdate
+        val chapterToUpdate = presenter.getMangaSyncChapterToUpdate()
 
         if (chapterToUpdate > 0) {
             if (presenter.prefs.askUpdateMangaSync()) {

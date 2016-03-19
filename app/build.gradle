@@ -105,7 +105,6 @@ dependencies {
     final OKHTTP_VERSION = '3.2.0'
     final RETROFIT_VERSION = '2.0.0'
     final STORIO_VERSION = '1.8.0'
-    final ICEPICK_VERSION = '3.2.0'
     final MOCKITO_VERSION = '1.10.19'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -138,8 +137,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.jakewharton.timber:timber:4.1.1'
     compile 'ch.acra:acra:4.8.3'
-    compile "frankiesardo:icepick:$ICEPICK_VERSION"
-    provided "frankiesardo:icepick-processor:$ICEPICK_VERSION"
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.2'

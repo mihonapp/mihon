@@ -58,7 +58,7 @@ public class App extends Application {
 
     protected void setupEventBus() {
         EventBus.builder()
-                .addIndex(new EventBusIndex())
+//                .addIndex(new EventBusIndex())
                 .logNoSubscriberMessages(false)
                 .installDefaultEventBus();
     }

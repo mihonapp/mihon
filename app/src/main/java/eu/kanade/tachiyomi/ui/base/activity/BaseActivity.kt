@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.base.activity
 
 import android.graphics.Color
-import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -10,20 +9,9 @@ import android.view.View
 import android.widget.TextView
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
-import icepick.Icepick
 import org.greenrobot.eventbus.EventBus
 
 open class BaseActivity : AppCompatActivity() {
-
-    override fun onCreate(savedState: Bundle?) {
-        super.onCreate(savedState)
-        Icepick.restoreInstanceState(this, savedState)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Icepick.saveInstanceState(this, outState)
-    }
 
     protected fun setupToolbar(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
