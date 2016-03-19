@@ -1,5 +1,8 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
@@ -16,6 +19,7 @@ import eu.kanade.tachiyomi.ui.base.decoration.DividerItemDecoration
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.util.getCoordinates
 import eu.kanade.tachiyomi.util.getResourceDrawable
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_manga_chapters.*
@@ -73,7 +77,19 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         fab.setOnClickListener { v ->
             val chapter = presenter.getNextUnreadChapter()
             if (chapter != null) {
-                openChapter(chapter)
+                // Create animation listener
+                var revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        // On done open chapter
+                        openChapter(chapter, true)
+                    }
+                }
+
+                // Get coordinates and start animation
+                val coordinates = fab.getCoordinates()
+                if (!reveal_view.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
+                    openChapter(chapter)
+                }
             } else {
                 context.toast(R.string.no_next_chapter)
             }
@@ -88,6 +104,16 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         recycler.stopScroll()
 
         super.onPause()
+    }
+
+    override fun onResume() {
+        // Check if animation view is visible
+        if (reveal_view.visibility == View.VISIBLE) {
+            // Show the unReveal effect
+            var coordinates = fab.getCoordinates()
+            reveal_view.hideRevealEffect(coordinates.x, coordinates.y, 1920)
+        }
+        super.onResume()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -159,9 +185,12 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     val isCatalogueManga: Boolean
         get() = (activity as MangaActivity).isCatalogueManga
 
-    protected fun openChapter(chapter: Chapter) {
+    protected fun openChapter(chapter: Chapter, hasAnimation: Boolean = false) {
         presenter.onOpenChapter(chapter)
         val intent = ReaderActivity.newIntent(activity)
+        if (hasAnimation) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        }
         startActivity(intent)
     }
 
@@ -349,5 +378,4 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     fun setDownloadedFilter() {
         this.activity.supportInvalidateOptionsMenu()
     }
-
 }

@@ -7,6 +7,15 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+    <eu.kanade.tachiyomi.widget.RevealAnimationView
+        android:id="@+id/reveal_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorAccent"
+        android:elevation="5dp"
+        android:visibility="invisible"
+        />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"

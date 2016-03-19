@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="fill_parent"
                 android:layout_height="?android:attr/listPreferredItemHeight"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:background="?attr/selectable_list_drawable">
 
 
@@ -25,37 +25,38 @@
 
             <TextView
                 android:id="@+id/chapter_pages"
+                style="@style/TextAppearance.Regular.Caption.Hint"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                style="@style/TextAppearance.Regular.Caption.Hint"
                 tools:text="Pages: 45"/>
 
             <TextView
                 android:id="@+id/chapter_date"
+                style="@style/TextAppearance.Regular.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                style="@style/TextAppearance.Regular.Body1"
                 tools:text="22/02/2016"/>
 
             <TextView
                 android:id="@+id/download_text"
+                style="@style/TextAppearance.Regular.Caption.Hint"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:textAllCaps="true"
-                style="@style/TextAppearance.Regular.Caption.Hint"/>
+                android:textAllCaps="true"/>
         </RelativeLayout>
 
         <TextView
             android:id="@+id/chapter_title"
+            style="@style/TextAppearance.Regular.Body1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/relativeLayout"
@@ -68,8 +69,7 @@
             android:layout_marginRight="30dp"
             android:ellipsize="middle"
             android:gravity="center_vertical"
-            android:maxLines="1"
-            style="@style/TextAppearance.Regular.SubHeading"
+            android:maxLines="2"
             tools:text="Title"/>
 
 
@@ -93,8 +93,8 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            app:srcCompat="@drawable/ic_more_horiz_black_24dp"
-            android:tint="?android:attr/textColorPrimary"/>
+            android:tint="?android:attr/textColorPrimary"
+            app:srcCompat="@drawable/ic_more_horiz_black_24dp"/>
 
     </RelativeLayout>
 
