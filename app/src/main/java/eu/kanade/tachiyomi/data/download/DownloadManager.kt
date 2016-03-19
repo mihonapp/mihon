@@ -162,11 +162,7 @@ class DownloadManager(private val context: Context, private val sourceManager: S
 
     // Download the entire chapter
     private fun downloadChapter(download: Download): Observable<Download> {
-        try {
-            DiskUtils.createDirectory(download.directory)
-        } catch (e: IOException) {
-            return Observable.error<Download>(e)
-        }
+        DiskUtils.createDirectory(download.directory)
 
         val pageListObservable = if (download.pages == null)
             // Pull page list from network and add them to download object
@@ -236,13 +232,8 @@ class DownloadManager(private val context: Context, private val sourceManager: S
         page.status = Page.DOWNLOAD_IMAGE
         return source.getImageProgressResponse(page)
                 .flatMap({ resp ->
-                    try {
-                        DiskUtils.saveBufferedSourceToDirectory(resp.body().source(), directory, filename)
-                        Observable.just(page)
-                    } catch (e: Exception) {
-                        Timber.e(e.cause, e.message)
-                        Observable.error<Page>(e)
-                    }
+                    DiskUtils.saveBufferedSourceToDirectory(resp.body().source(), directory, filename)
+                    Observable.just(page)
                 }).retry(2)
     }
 

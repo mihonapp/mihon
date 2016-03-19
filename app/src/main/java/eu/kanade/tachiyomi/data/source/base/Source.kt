@@ -74,7 +74,7 @@ abstract class Source(context: Context) : BaseSource() {
     }
 
     // Get the most popular mangas from the source
-    fun pullPopularMangasFromNetwork(page: MangasPage): Observable<MangasPage> {
+    open fun pullPopularMangasFromNetwork(page: MangasPage): Observable<MangasPage> {
         return networkService.requestBody(popularMangaRequest(page), true)
                 .map { Jsoup.parse(it) }
                 .doOnNext { doc -> page.mangas = parsePopularMangasFromHtml(doc) }
@@ -83,7 +83,7 @@ abstract class Source(context: Context) : BaseSource() {
     }
 
     // Get mangas from the source with a query
-    fun searchMangasFromNetwork(page: MangasPage, query: String): Observable<MangasPage> {
+    open fun searchMangasFromNetwork(page: MangasPage, query: String): Observable<MangasPage> {
         return networkService.requestBody(searchMangaRequest(page, query), true)
                 .map { Jsoup.parse(it) }
                 .doOnNext { doc -> page.mangas = parseSearchFromHtml(doc) }
@@ -92,7 +92,7 @@ abstract class Source(context: Context) : BaseSource() {
     }
 
     // Get manga details from the source
-    fun pullMangaFromNetwork(mangaUrl: String): Observable<Manga> {
+    open fun pullMangaFromNetwork(mangaUrl: String): Observable<Manga> {
         return networkService.requestBody(mangaDetailsRequest(mangaUrl))
                 .flatMap { Observable.just(parseHtmlToManga(mangaUrl, it)) }
     }
@@ -109,13 +109,13 @@ abstract class Source(context: Context) : BaseSource() {
                 }
     }
 
-    fun getCachedPageListOrPullFromNetwork(chapterUrl: String): Observable<List<Page>> {
+    open fun getCachedPageListOrPullFromNetwork(chapterUrl: String): Observable<List<Page>> {
         return chapterCache.getPageListFromCache(getChapterCacheKey(chapterUrl))
                 .onErrorResumeNext { pullPageListFromNetwork(chapterUrl) }
                 .onBackpressureBuffer()
     }
 
-    fun pullPageListFromNetwork(chapterUrl: String): Observable<List<Page>> {
+    open fun pullPageListFromNetwork(chapterUrl: String): Observable<List<Page>> {
         return networkService.requestBody(pageListRequest(chapterUrl))
                 .flatMap { unparsedHtml ->
                     val pages = convertToPages(parseHtmlToPageUrls(unparsedHtml))
@@ -126,20 +126,20 @@ abstract class Source(context: Context) : BaseSource() {
                 }
     }
 
-    fun getAllImageUrlsFromPageList(pages: List<Page>): Observable<Page> {
+    open fun getAllImageUrlsFromPageList(pages: List<Page>): Observable<Page> {
         return Observable.from(pages)
                 .filter { page -> page.imageUrl != null }
                 .mergeWith(getRemainingImageUrlsFromPageList(pages))
     }
 
     // Get the URLs of the images of a chapter
-    fun getRemainingImageUrlsFromPageList(pages: List<Page>): Observable<Page> {
+    open fun getRemainingImageUrlsFromPageList(pages: List<Page>): Observable<Page> {
         return Observable.from(pages)
                 .filter { page -> page.imageUrl == null }
                 .concatMap { getImageUrlFromPage(it) }
     }
 
-    fun getImageUrlFromPage(page: Page): Observable<Page> {
+    open fun getImageUrlFromPage(page: Page): Observable<Page> {
         page.status = Page.LOAD_PAGE
         return networkService.requestBody(imageUrlRequest(page))
                 .flatMap { unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)) }
@@ -154,7 +154,7 @@ abstract class Source(context: Context) : BaseSource() {
                 .subscribeOn(Schedulers.io())
     }
 
-    fun getCachedImage(page: Page): Observable<Page> {
+    open fun getCachedImage(page: Page): Observable<Page> {
         val pageObservable = Observable.just(page)
         if (page.imageUrl == null)
             return pageObservable
@@ -186,7 +186,7 @@ abstract class Source(context: Context) : BaseSource() {
                 }
     }
 
-    fun getImageProgressResponse(page: Page): Observable<Response> {
+    open fun getImageProgressResponse(page: Page): Observable<Response> {
         return networkService.requestBodyProgress(imageRequest(page), page)
     }
 
@@ -195,7 +195,7 @@ abstract class Source(context: Context) : BaseSource() {
             chapterCache.putPageListToCache(getChapterCacheKey(chapterUrl), pages)
     }
 
-    protected fun convertToPages(pageUrls: List<String>): List<Page> {
+    protected open fun convertToPages(pageUrls: List<String>): List<Page> {
         val pages = ArrayList<Page>()
         for (i in pageUrls.indices) {
             pages.add(Page(i, pageUrls[i]))
@@ -218,7 +218,7 @@ abstract class Source(context: Context) : BaseSource() {
 
     }
 
-    protected fun glideHeadersBuilder(): LazyHeaders.Builder {
+    protected open fun glideHeadersBuilder(): LazyHeaders.Builder {
         val builder = LazyHeaders.Builder()
         for ((key, value) in requestHeaders.toMultimap()) {
             builder.addHeader(key, value[0])

@@ -57,7 +57,7 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
         startableFirst(REFRESH,
                 { getRefreshObservable() },
                 { view, result -> view.onRefreshDone() },
-                { view, error -> view.onRefreshError() })
+                { view, error -> view.onRefreshError(error) })
 
         registerForEvents()
     }
@@ -93,15 +93,12 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
     fun getRefreshObservable(): Observable<PutResult> {
         return mangaSync?.let { mangaSync ->
             myAnimeList.getList()
-                    .flatMap { myList ->
-                        for (myManga in myList) {
-                            if (myManga.remote_id == mangaSync.remote_id) {
-                                mangaSync.copyPersonalFrom(myManga)
-                                mangaSync.total_chapters = myManga.total_chapters
-                                return@flatMap Observable.just(mangaSync)
-                            }
-                        }
-                        Observable.error<MangaSync>(Exception("Could not find manga"))
+                    .map { myList ->
+                        myList.find { it.remote_id == mangaSync.remote_id }?.let {
+                            mangaSync.copyPersonalFrom(it)
+                            mangaSync.total_chapters = it.total_chapters
+                            mangaSync
+                        } ?: throw Exception("Could not find manga")
                     }
                     .flatMap { db.insertMangaSync(it).asRxObservable() }
                     .subscribeOn(Schedulers.io())

@@ -60,8 +60,9 @@ class MyAnimeListFragment : BaseRxFragment<MyAnimeListPresenter>() {
         swipe_refresh.isRefreshing = false
     }
 
-    fun onRefreshError() {
+    fun onRefreshError(error: Throwable) {
         swipe_refresh.isRefreshing = false
+        context.toast(error.message)
     }
 
     fun setSearchResults(results: List<MangaSync>) {
