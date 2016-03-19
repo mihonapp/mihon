@@ -211,7 +211,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         val obs = if (query.isNullOrEmpty())
             source.pullPopularMangasFromNetwork(nextMangasPage)
         else
-            source.searchMangasFromNetwork(nextMangasPage, query)
+            source.searchMangasFromNetwork(nextMangasPage, query!!)
 
         return obs.subscribeOn(Schedulers.io())
                 .doOnNext { lastMangasPage = it }

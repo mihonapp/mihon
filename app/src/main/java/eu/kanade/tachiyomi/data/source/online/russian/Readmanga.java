@@ -203,7 +203,7 @@ public class Readmanga extends Source {
     }
 
     @Override
-    protected List<Page> parseFirstPage(List<Page> pages, String unparsedHtml) {
+    protected List<Page> parseFirstPage(List<? extends Page> pages, String unparsedHtml) {
         int beginIndex = unparsedHtml.indexOf("rm_h.init( [");
         int endIndex = unparsedHtml.indexOf("], 0, false);", beginIndex);
 
@@ -215,7 +215,7 @@ public class Readmanga extends Source {
             String page = urlParts[1] + urlParts[0] + urlParts[2];
             pages.get(i).setImageUrl(page);
         }
-        return pages;
+        return (List<Page>) pages;
     }
 
     @Override

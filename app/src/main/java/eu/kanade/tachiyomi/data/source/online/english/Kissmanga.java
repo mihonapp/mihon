@@ -84,12 +84,12 @@ public class Kissmanga extends Source {
         form.add("status", "");
         form.add("genres", "");
 
-        return ReqKt.post(page.url, requestHeaders, form.build());
+        return ReqKt.post(page.url, getRequestHeaders(), form.build());
     }
 
     @Override
     protected Request pageListRequest(String chapterUrl) {
-        return ReqKt.post(getBaseUrl() + chapterUrl, requestHeaders);
+        return ReqKt.post(getBaseUrl() + chapterUrl, getRequestHeaders());
     }
 
     @Override
@@ -215,7 +215,7 @@ public class Kissmanga extends Source {
     }
 
     @Override
-    protected List<Page> parseFirstPage(List<Page> pages, String unparsedHtml) {
+    protected List<Page> parseFirstPage(List<? extends Page> pages, String unparsedHtml) {
         Pattern p = Pattern.compile("lstImages.push\\(\"(.+?)\"");
         Matcher m = p.matcher(unparsedHtml);
 
@@ -223,7 +223,7 @@ public class Kissmanga extends Source {
         while (m.find()) {
             pages.get(i++).setImageUrl(m.group(1));
         }
-        return pages;
+        return (List<Page>) pages;
     }
 
     @Override

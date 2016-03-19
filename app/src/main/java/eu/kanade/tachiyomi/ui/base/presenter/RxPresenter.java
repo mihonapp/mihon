@@ -220,7 +220,10 @@ public class RxPresenter<View> extends Presenter<View> {
      * @param observableFactory a factory that should return an Observable when the startable should run.
      */
     public <T> void startable(int startableId, final Func0<Observable<T>> observableFactory) {
-        restartables.put(startableId, () -> observableFactory.call().subscribe());
+        restartables.put(startableId, new Func0<Subscription>() {
+            @Override
+            public Subscription call() {return observableFactory.call().subscribe();}
+        });
     }
 
     /**
@@ -234,7 +237,10 @@ public class RxPresenter<View> extends Presenter<View> {
     public <T> void startable(int startableId, final Func0<Observable<T>> observableFactory,
         final Action1<T> onNext, final Action1<Throwable> onError) {
 
-        restartables.put(startableId, () -> observableFactory.call().subscribe(onNext, onError));
+        restartables.put(startableId, new Func0<Subscription>() {
+            @Override
+            public Subscription call() {return observableFactory.call().subscribe(onNext, onError);}
+        });
     }
 
     /**
@@ -245,7 +251,10 @@ public class RxPresenter<View> extends Presenter<View> {
      * @param onNext            a callback that will be called when received data should be delivered to view.
      */
     public <T> void startable(int startableId, final Func0<Observable<T>> observableFactory, final Action1<T> onNext) {
-        restartables.put(startableId, () -> observableFactory.call().subscribe(onNext));
+        restartables.put(startableId, new Func0<Subscription>() {
+            @Override
+            public Subscription call() {return observableFactory.call().subscribe(onNext);}
+        });
     }
     
     /**

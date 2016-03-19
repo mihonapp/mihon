@@ -218,7 +218,7 @@ public class Mangachan extends Source {
     }
 
     @Override
-    protected List<Page> parseFirstPage(List<Page> pages, String unparsedHtml) {
+    protected List<Page> parseFirstPage(List<? extends Page> pages, String unparsedHtml) {
         int beginIndex = unparsedHtml.indexOf("fullimg\":[");
         int endIndex = unparsedHtml.indexOf("]", beginIndex);
 
@@ -230,7 +230,7 @@ public class Mangachan extends Source {
             pages.get(i).setImageUrl(pageUrls[i].replaceAll("im.?\\.", ""));
         }
 
-        return pages;
+        return (List<Page>) pages;
     }
 
     @Override

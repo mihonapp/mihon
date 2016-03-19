@@ -168,7 +168,7 @@ class LibraryUpdateService : Service() {
                 Intent(this, CancelUpdateReceiver::class.java), 0)
 
         // Get the manga list that is going to be updated.
-        val allLibraryMangas = db.favoriteMangas.executeAsBlocking()
+        val allLibraryMangas = db.getFavoriteMangas().executeAsBlocking()
         val toUpdate = if (!preferences.updateOnlyNonCompleted())
             allLibraryMangas
         else

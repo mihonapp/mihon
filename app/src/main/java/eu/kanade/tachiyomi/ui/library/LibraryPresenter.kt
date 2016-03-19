@@ -127,7 +127,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * @return an observable of the categories.
      */
     fun getCategoriesObservable(): Observable<List<Category>> {
-        return db.categories.asRxObservable()
+        return db.getCategories().asRxObservable()
                 .doOnNext { categories -> this.categories = categories }
     }
 
@@ -138,7 +138,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * value.
      */
     fun getLibraryMangasObservable(): Observable<Map<Int, List<Manga>>> {
-        return db.libraryMangas.asRxObservable()
+        return db.getLibraryMangas().asRxObservable()
                 .flatMap { mangas ->
                     Observable.from(mangas)
                             .filter {

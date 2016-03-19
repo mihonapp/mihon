@@ -4,11 +4,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'me.tatarka.retrolambda'
-
-retrolambda {
-    jvmArgs '-noverify'
-}
 
 ext {
     // Git is needed in your system PATH for these commands to work.
@@ -55,11 +50,6 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -93,10 +83,8 @@ android {
 
 }
 
-apt {
-    arguments {
-        eventBusIndex "eu.kanade.tachiyomi.EventBusIndex"
-    }
+kapt {
+    generateStubs = true
 }
 
 dependencies {
@@ -146,8 +134,8 @@ dependencies {
     apt "org.greenrobot:eventbus-annotation-processor:3.0.1"
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
-    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-    apt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
+    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
     compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {

@@ -4,8 +4,6 @@ import android.content.Context;
 
 public abstract class LoginSource extends Source {
 
-    public LoginSource() {}
-
     public LoginSource(Context context) {
         super(context);
     }

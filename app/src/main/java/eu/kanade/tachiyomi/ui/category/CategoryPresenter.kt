@@ -37,7 +37,7 @@ class CategoryPresenter : BasePresenter<CategoryActivity>() {
         // Get categories as list
         restartableLatestCache(GET_CATEGORIES,
                 {
-                    db.categories.asRxObservable()
+                    db.getCategories().asRxObservable()
                             .doOnNext { categories -> this.categories = categories }
                             .observeOn(AndroidSchedulers.mainThread())
                 }, CategoryActivity::setCategories)
@@ -76,7 +76,7 @@ class CategoryPresenter : BasePresenter<CategoryActivity>() {
      *
      * @param categories list of categories
      */
-    fun deleteCategories(categories: List<Category?>?) {
+    fun deleteCategories(categories: List<Category>) {
         db.deleteCategories(categories).asRxObservable().subscribe()
     }
 

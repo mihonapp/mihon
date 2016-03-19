@@ -58,12 +58,15 @@ public abstract class BaseRxActivity<P extends Presenter> extends BaseActivity i
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final PresenterFactory<P> superFactory = getPresenterFactory();
-        setPresenterFactory(() -> {
-            P presenter = superFactory.createPresenter();
-            App app = (App) getApplication();
-            app.getComponentReflection().inject(presenter);
-            ((BasePresenter)presenter).setContext(app.getApplicationContext());
-            return presenter;
+        setPresenterFactory(new PresenterFactory<P>() {
+            @Override
+            public P createPresenter() {
+                P presenter = superFactory.createPresenter();
+                App app = (App) BaseRxActivity.this.getApplication();
+                app.getComponentReflection().inject(presenter);
+                ((BasePresenter) presenter).setContext(app.getApplicationContext());
+                return presenter;
+            }
         });
 
         super.onCreate(savedInstanceState);

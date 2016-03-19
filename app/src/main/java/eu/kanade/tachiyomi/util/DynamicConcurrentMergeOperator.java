@@ -10,6 +10,8 @@ import rx.Observable;
 import rx.Observable.Operator;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
@@ -58,29 +60,35 @@ public class DynamicConcurrentMergeOperator<T, R> implements Operator<R, T> {
         }
 
         public void init(Observable<Integer> workerCount) {
-            Subscription wc = workerCount.subscribe(n -> {
-                int n0 = workers.size();
-                if (n0 < n) {
-                    for (int i = n0; i < n; i++) {
-                        DynamicWorker<T, R> dw = new DynamicWorker<>(++id, this);
-                        workers.add(dw);
-                        request(1);
-                        dw.tryNext();
-                    }
-                } else if (n0 > n) {
-                    for (int i = 0; i < n; i++) {
-                        workers.get(i).start();
+            Subscription wc = workerCount.subscribe(new Action1<Integer>() {
+                @Override
+                public void call(Integer n) {
+                    int n0 = workers.size();
+                    if (n0 < n) {
+                        for (int i = n0; i < n; i++) {
+                            DynamicWorker<T, R> dw = new DynamicWorker<>(++id, DynamicConcurrentMerge.this);
+                            workers.add(dw);
+                            DynamicConcurrentMerge.this.request(1);
+                            dw.tryNext();
+                        }
+                    } else if (n0 > n) {
+                        for (int i = 0; i < n; i++) {
+                            workers.get(i).start();
+                        }
+
+                        for (int i = n0 - 1; i >= n; i--) {
+                            workers.get(i).stop();
+                        }
                     }
 
-                    for (int i = n0 - 1; i >= n; i--) {
-                        workers.get(i).stop();
+                    if (!once.get() && once.compareAndSet(false, true)) {
+                        DynamicConcurrentMerge.this.request(n);
                     }
                 }
-
-                if (!once.get() && once.compareAndSet(false, true)) {
-                    request(n);
-                }
-            }, this::onError);
+            }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable e) {DynamicConcurrentMerge.this.onError(e);}
+            });
 
             composite.add(wc);
         }
@@ -138,9 +146,9 @@ public class DynamicConcurrentMergeOperator<T, R> implements Operator<R, T> {
                     return;
                 }
 
-                Observable out = parent.mapper.call(t);
+                Observable<? extends R> out = parent.mapper.call(t);
 
-                Subscriber<R> s = new Subscriber<R>() {
+                final Subscriber<R> s = new Subscriber<R>() {
                     @Override
                     public void onNext(R t) {
                         parent.actual.onNext(t);
@@ -163,9 +171,11 @@ public class DynamicConcurrentMergeOperator<T, R> implements Operator<R, T> {
                 };
 
                 parent.composite.add(s);
-                s.add(Subscriptions.create(() -> parent.composite.remove(s)));
+                s.add(Subscriptions.create(new Action0() {
+                    @Override
+                    public void call() {parent.composite.remove(s);}
+                }));
 
-                // Unchecked assignment to avoid weird Android Studio errors
                 out.subscribe(s);
             }
         }
