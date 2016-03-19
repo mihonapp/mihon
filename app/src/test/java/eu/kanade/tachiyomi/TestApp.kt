@@ -4,7 +4,7 @@ import eu.kanade.tachiyomi.injection.component.DaggerAppComponent
 import eu.kanade.tachiyomi.injection.module.AppModule
 import eu.kanade.tachiyomi.injection.module.TestDataModule
 
-class TestApp : App() {
+open class TestApp : App() {
 
     override fun prepareAppComponent(): DaggerAppComponent.Builder {
         return DaggerAppComponent.builder()

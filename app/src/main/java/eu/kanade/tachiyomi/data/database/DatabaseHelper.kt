@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.util.ChapterRecognition
 import rx.Observable
 import java.util.*
 
-class DatabaseHelper(context: Context) {
+open class DatabaseHelper(context: Context) {
 
     val db = DefaultStorIOSQLite.builder()
             .sqliteOpenHelper(DbOpenHelper(context))
@@ -58,7 +58,7 @@ class DatabaseHelper(context: Context) {
             .withGetResolver(LibraryMangaGetResolver.INSTANCE)
             .prepare()
 
-    fun getFavoriteMangas() = db.get()
+    open fun getFavoriteMangas() = db.get()
             .listOfObjects(Manga::class.java)
             .withQuery(Query.builder()
                     .table(MangaTable.TABLE)
@@ -178,7 +178,7 @@ class DatabaseHelper(context: Context) {
     fun insertChapters(chapters: List<Chapter>) = db.put().objects(chapters).prepare()
 
     // Add new chapters or delete if the source deletes them
-    fun insertOrRemoveChapters(manga: Manga, sourceChapters: List<Chapter>, source: Source): Observable<Pair<Int, Int>> {
+    open fun insertOrRemoveChapters(manga: Manga, sourceChapters: List<Chapter>, source: Source): Observable<Pair<Int, Int>> {
         val dbChapters = getChapters(manga).executeAsBlocking()
 
         val newChapters = Observable.from(sourceChapters)

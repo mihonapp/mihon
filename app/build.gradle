@@ -113,7 +113,7 @@ dependencies {
     compile 'com.jakewharton:disklrucache:2.0.2'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.1'
+    compile 'io.reactivex:rxjava:1.1.2'
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
@@ -123,7 +123,7 @@ dependencies {
     compile 'info.android15.nucleus:nucleus:2.0.5'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.jakewharton.timber:timber:4.1.1'
-    compile 'ch.acra:acra:4.8.3'
+    compile 'ch.acra:acra:4.8.5'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.2'
@@ -142,7 +142,7 @@ dependencies {
 
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:2.3.0'
+    testCompile 'org.assertj:assertj-core:1.7.1'
     testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
     testCompile('org.robolectric:robolectric:3.0') {
         exclude group: 'commons-logging', module: 'commons-logging'
