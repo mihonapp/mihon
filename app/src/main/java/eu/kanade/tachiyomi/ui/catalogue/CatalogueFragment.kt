@@ -172,7 +172,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         val onItemSelected = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View? , position: Int, id: Long) {
                 val source = spinnerAdapter.getItem(position)
                 if (selectedIndex != position || adapter.isEmpty) {
                     // Set previous selection if it's not a valid source and notify the user

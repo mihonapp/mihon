@@ -124,7 +124,7 @@ class LibraryUpdateService : Service() {
      * @param startId the start id of this command.
      * @return the start value of the command.
      */
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         // If there's no network available, set a component to start this service again when
         // a connection is available.
         if (!NetworkUtil.isNetworkConnected(this)) {
