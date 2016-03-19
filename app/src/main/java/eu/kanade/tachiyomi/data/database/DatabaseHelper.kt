@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Pair
 import com.pushtorefresh.storio.Queries
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite
-import com.pushtorefresh.storio.sqlite.operations.delete.PreparedDeleteByQuery
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetObject
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.Query
@@ -281,17 +280,13 @@ open class DatabaseHelper(context: Context) {
 
     fun insertMangasCategories(mangasCategories: List<MangaCategory>) = db.put().objects(mangasCategories).prepare()
 
-    fun deleteOldMangasCategories(mangas: List<Manga>): PreparedDeleteByQuery {
-        val mangaIds = Observable.from(mangas).map { manga -> manga.id }.toList().toBlocking().single()
-
-        return db.delete()
-                .byQuery(DeleteQuery.builder()
-                        .table(MangaCategoryTable.TABLE)
-                        .where("${MangaCategoryTable.COLUMN_MANGA_ID} IN (${Queries.placeholders(mangas.size)})")
-                        .whereArgs(mangaIds)
-                        .build())
-                .prepare()
-    }
+    fun deleteOldMangasCategories(mangas: List<Manga>) = db.delete()
+            .byQuery(DeleteQuery.builder()
+                    .table(MangaCategoryTable.TABLE)
+                    .where("${MangaCategoryTable.COLUMN_MANGA_ID} IN (${Queries.placeholders(mangas.size)})")
+                    .whereArgs(*mangas.map { it.id }.toTypedArray())
+                    .build())
+            .prepare()
 
     fun setMangaCategories(mangasCategories: List<MangaCategory>, mangas: List<Manga>) {
         inTransaction {
