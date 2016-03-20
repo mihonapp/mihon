@@ -175,12 +175,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         val action = event.action
         val keyCode = event.keyCode
         when (keyCode) {
-            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (action == KeyEvent.ACTION_UP)
                     viewer?.moveToNext()
                 return true
             }
-            KeyEvent.KEYCODE_VOLUME_UP -> {
+            KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (action == KeyEvent.ACTION_UP)
                     viewer?.moveToPrevious()
                 return true
