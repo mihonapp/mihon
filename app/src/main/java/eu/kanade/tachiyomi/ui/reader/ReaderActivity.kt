@@ -180,7 +180,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                     viewer?.moveToNext()
                 return true
             }
-            KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_DPAD_RIGHT -> {
+            KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (action == KeyEvent.ACTION_UP)
                     viewer?.moveToPrevious()
                 return true
