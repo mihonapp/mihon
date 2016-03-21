@@ -134,6 +134,7 @@
     <string name="pref_download_directory">Downloads directory</string>
     <string name="pref_download_slots">Simultaneous downloads</string>
     <string name="pref_download_only_over_wifi">Only download over Wi-Fi</string>
+    <string name="pref_remove_after_marked_as_read">Remove when marked as read</string>
     <string name="custom_dir">Custom directory</string>
 
       <!-- Sources section -->

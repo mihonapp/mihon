@@ -103,7 +103,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                         }
                         start(CHAPTER_STATUS_CHANGES)
                     }
-                    .subscribe{ chaptersSubject.onNext(it) })
+                    .subscribe { chaptersSubject.onNext(it) })
         }
     }
 
@@ -191,6 +191,11 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .doOnNext { chapter ->
                     chapter.read = read
                     if (!read) chapter.last_page_read = 0
+
+                    // Delete chapter when marked as read if desired by user.
+                    if (preferences.removeAfterMarkedAsRead() && read) {
+                        deleteChapter(chapter)
+                    }
                 }
                 .toList()
                 .flatMap { chapters -> db.insertChapters(chapters).asRxObservable() }

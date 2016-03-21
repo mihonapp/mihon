@@ -202,9 +202,9 @@ class RecentChaptersFragment : BaseRxFragment<RecentChaptersPresenter>(), Flexib
      * @param chapters selected chapter
      * @return true
      */
-    fun onMarkAsRead(chapters: Observable<Chapter>): Boolean {
+    fun onMarkAsRead(chapters: Observable<Chapter>, manga : Manga): Boolean {
         // Set marked as read
-        presenter.markChaptersRead(chapters, true)
+        presenter.markChaptersRead(chapters, manga, true)
         return true
     }
 
@@ -214,9 +214,9 @@ class RecentChaptersFragment : BaseRxFragment<RecentChaptersPresenter>(), Flexib
      * @param chapters selected chapter
      * @return true
      */
-    fun onMarkAsUnread(chapters: Observable<Chapter>): Boolean {
+    fun onMarkAsUnread(chapters: Observable<Chapter> , manga : Manga): Boolean {
         // Set marked as unread
-        presenter.markChaptersRead(chapters, false)
+        presenter.markChaptersRead(chapters, manga, false)
         return true
     }
 
