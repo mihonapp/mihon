@@ -60,7 +60,7 @@ public abstract class BaseRxFragment<P extends Presenter> extends BaseFragment i
             @Override
             public P createPresenter() {
                 P presenter = superFactory.createPresenter();
-                App app = (App) BaseRxFragment.this.getActivity().getApplication();
+                App app = (App) getActivity().getApplication();
                 app.getComponentReflection().inject(presenter);
                 ((BasePresenter) presenter).setContext(app.getApplicationContext());
                 return presenter;

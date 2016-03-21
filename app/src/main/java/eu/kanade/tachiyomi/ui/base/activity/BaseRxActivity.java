@@ -62,7 +62,7 @@ public abstract class BaseRxActivity<P extends Presenter> extends BaseActivity i
             @Override
             public P createPresenter() {
                 P presenter = superFactory.createPresenter();
-                App app = (App) BaseRxActivity.this.getApplication();
+                App app = (App) getApplication();
                 app.getComponentReflection().inject(presenter);
                 ((BasePresenter) presenter).setContext(app.getApplicationContext());
                 return presenter;

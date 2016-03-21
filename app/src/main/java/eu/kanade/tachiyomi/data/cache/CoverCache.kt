@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.cache
 
 import android.content.Context
-import android.text.TextUtils
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -38,9 +37,9 @@ class CoverCache(private val context: Context) {
      * @param imageView    imageView where picture should be displayed.
      */
     @JvmOverloads
-    fun save(thumbnailUrl: String, headers: LazyHeaders, imageView: ImageView? = null) {
+    fun save(thumbnailUrl: String?, headers: LazyHeaders, imageView: ImageView? = null) {
         // Check if url is empty.
-        if (TextUtils.isEmpty(thumbnailUrl))
+        if (thumbnailUrl.isNullOrEmpty())
             return
 
         // Download the cover with Glide and save the file.
@@ -51,7 +50,7 @@ class CoverCache(private val context: Context) {
                     override fun onResourceReady(resource: File, anim: GlideAnimation<in File>) {
                         try {
                             // Copy the cover from Glide's cache to local cache.
-                            copyToLocalCache(thumbnailUrl, resource)
+                            copyToLocalCache(thumbnailUrl!!, resource)
 
                             // Check if imageView isn't null and show picture in imageView.
                             if (imageView != null) {
@@ -93,9 +92,9 @@ class CoverCache(private val context: Context) {
      * @param thumbnailUrl the thumbnail url.
      * @return status of deletion.
      */
-    fun deleteCoverFromCache(thumbnailUrl: String): Boolean {
+    fun deleteCoverFromCache(thumbnailUrl: String?): Boolean {
         // Check if url is empty.
-        if (TextUtils.isEmpty(thumbnailUrl))
+        if (thumbnailUrl.isNullOrEmpty())
             return false
 
         // Remove file.
@@ -142,9 +141,9 @@ class CoverCache(private val context: Context) {
      * @param thumbnailUrl url of thumbnail.
      * @param headers      headers included in Glide request.
      */
-    fun loadFromNetwork(imageView: ImageView, thumbnailUrl: String, headers: LazyHeaders) {
+    fun loadFromNetwork(imageView: ImageView, thumbnailUrl: String?, headers: LazyHeaders) {
         // Check if url is empty.
-        if (TextUtils.isEmpty(thumbnailUrl))
+        if (thumbnailUrl.isNullOrEmpty())
             return
 
         val url = GlideUrl(thumbnailUrl, headers)
