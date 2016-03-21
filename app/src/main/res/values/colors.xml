@@ -32,6 +32,10 @@
 
     <color name="selectorColorDark">@color/md_blue_400_50</color>
 
+    <!-- Reader Theme -->
+    <color name="pageNumberBackgroundLight">@color/md_grey_50_75</color>
+    <color name="pageNumberBackgroundDark">@color/md_grey_900_75</color>
+
     <!-- Text Colors -->
     <color name="md_black_1000_87">#DE000000</color>
     <color name="md_black_1000_54">#8A000000</color>
@@ -47,10 +51,12 @@
     <color name="md_black_1000">#000000</color>
 
     <color name="md_grey_50">#FAFAFA</color>
+    <color name="md_grey_50_75">#BFFAFAFA</color>
     <color name="md_grey_100">#F5F5F5</color>
     <color name="md_grey_300">#E0E0E0</color>
     <color name="md_grey_800">#424242</color>
     <color name="md_grey_900">#212121</color>
+    <color name="md_grey_900_75">#BF212121</color>
 
     <color name="md_blue_400">#42A5F5</color>
     <color name="md_blue_400_50">#8042A5F5</color>

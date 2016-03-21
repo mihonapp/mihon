@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -76,7 +77,7 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
                 File.separator + getString(R.string.app_name) +
                 File.separator + "downloads"
 
-        return mutableListOf(File(defaultDir)) + activity.getExternalFilesDirs("")
+        return mutableListOf(File(defaultDir)) + ContextCompat.getExternalFilesDirs(activity, "")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

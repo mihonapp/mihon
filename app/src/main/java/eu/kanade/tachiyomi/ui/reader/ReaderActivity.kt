@@ -517,11 +517,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         if (theme == BLACK_THEME) {
             rootView.setBackgroundColor(Color.BLACK)
             page_number.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimaryDark))
-            page_number.setBackgroundColor(ContextCompat.getColor(this, R.color.backgroundDark))
+            page_number.setBackgroundColor(ContextCompat.getColor(this, R.color.pageNumberBackgroundDark))
         } else {
             rootView.setBackgroundColor(Color.WHITE)
             page_number.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimaryLight))
-            page_number.setBackgroundColor(ContextCompat.getColor(this, R.color.backgroundLight))
+            page_number.setBackgroundColor(ContextCompat.getColor(this, R.color.pageNumberBackgroundLight))
         }
     }
 
