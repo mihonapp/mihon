@@ -20,7 +20,6 @@ import java.io.File
 class SettingsDownloadsFragment : SettingsNestedFragment() {
 
     val downloadDirPref by lazy { findPreference(getString(R.string.pref_download_directory_key)) }
-
     companion object {
 
         val DOWNLOAD_DIR_CODE = 103

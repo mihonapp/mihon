@@ -85,7 +85,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 { view, pair -> view.onAdjacentChapters(pair.first, pair.second) })
 
         startable(PRELOAD_NEXT_CHAPTER, { getPreloadNextChapterObservable() },
-                {  },
+                { },
                 { error -> Timber.e("Error preloading chapter") })
 
 
@@ -335,8 +335,30 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         // Save current progress of the chapter. Mark as read if the chapter is finished
         if (activePage.isLastPage) {
             chapter.read = true
+
+            // Check if remove after read is selected by user
+            if (prefs.removeAfterRead()) {
+                if (prefs.removeAfterReadPrevious() ) {
+                    if (previousChapter != null) {
+                        deleteChapter(previousChapter!!, manga)
+                    }
+                } else {
+                    deleteChapter(chapter, manga)
+                }
+            }
         }
         db.insertChapter(chapter).asRxObservable().subscribe()
+    }
+
+    /**
+     * Delete selected chapter
+     * @param chapter chapter that is selected
+     * *
+     * @param manga manga that belongs to chapter
+     */
+    fun deleteChapter(chapter: Chapter, manga: Manga) {
+        val source = sourceManager.get(manga.source)!!
+        downloadManager.deleteChapter(source, manga, chapter)
     }
 
     // If the current chapter has been read, we check with this one
@@ -417,5 +439,4 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         manga.viewer = viewer
         db.insertManga(manga).executeAsBlocking()
     }
-
 }

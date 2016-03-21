@@ -3,26 +3,41 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
-        android:title="@string/pref_download_directory"
-        android:key="@string/pref_download_directory_key"/>
+        android:key="@string/pref_download_directory_key"
+        android:title="@string/pref_download_directory"/>
 
     <SwitchPreferenceCompat
-        android:title="@string/pref_download_only_over_wifi"
+        android:defaultValue="true"
         android:key="@string/pref_download_only_over_wifi_key"
-        android:defaultValue="true"/>
-
-    <SwitchPreferenceCompat
-        android:title="@string/pref_remove_after_marked_as_read"
-        android:key="@string/pref_remove_after_marked_as_read_key"
-        android:defaultValue="false"/>
-
+        android:title="@string/pref_download_only_over_wifi"/>
 
     <eu.kanade.tachiyomi.widget.preference.IntListPreference
-        android:title="@string/pref_download_slots"
-        android:key="@string/pref_download_slots_key"
+        android:defaultValue="1"
         android:entries="@array/download_slots"
         android:entryValues="@array/download_slots"
-        android:defaultValue="1"
-        android:summary="%s"/>
+        android:key="@string/pref_download_slots_key"
+        android:summary="%s"
+        android:title="@string/pref_download_slots"/>
+
+    <PreferenceCategory
+        android:persistent="false"
+        android:title="@string/cat_remove_after_read"/>
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="@string/pref_remove_after_marked_as_read_key"
+        android:title="@string/pref_remove_after_marked_as_read"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="@string/pref_remove_after_read_key"
+        android:summary="@string/current_chapter"
+        android:title="@string/pref_remove_after_read"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:dependency="@string/pref_remove_after_read_key"
+        android:key="@string/pref_remove_after_read_previous_key"
+        android:summary="@string/previous_chapter"
+        android:title="@string/pref_remove_after_read"/>
 
 </android.support.v7.preference.PreferenceScreen>

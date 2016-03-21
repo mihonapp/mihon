@@ -135,7 +135,12 @@
     <string name="pref_download_slots">Simultaneous downloads</string>
     <string name="pref_download_only_over_wifi">Only download over Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Remove when marked as read</string>
+    <string name="pref_remove_after_read">Remove after read</string>
+    <string name="cat_remove_after_read">Remove after read</string>
+    <string name="current_chapter">Current chapter</string>
+    <string name="previous_chapter">Previous chapter</string>
     <string name="custom_dir">Custom directory</string>
+
 
       <!-- Sources section -->
     <string name="languages">Languages</string>
