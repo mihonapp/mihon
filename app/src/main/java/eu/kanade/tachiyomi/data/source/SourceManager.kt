@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.source.online.english.Mangahere
 import eu.kanade.tachiyomi.data.source.online.russian.Mangachan;
 import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga;
 import eu.kanade.tachiyomi.data.source.online.russian.Readmanga;
+import eu.kanade.tachiyomi.data.source.online.english.ReadMangaToday
 import java.util.*
 
 open class SourceManager(private val context: Context) {
@@ -22,8 +23,9 @@ open class SourceManager(private val context: Context) {
     val READMANGA = 5
     val MINTMANGA = 6
     val MANGACHAN = 7
+    val READMANGATODAY = 8
 
-    val LAST_SOURCE = 7
+    val LAST_SOURCE = 8
 
     init {
         sourcesMap = createSourcesMap()
@@ -41,6 +43,7 @@ open class SourceManager(private val context: Context) {
         READMANGA -> Readmanga(context)
         MINTMANGA -> Mintmanga(context)
         MANGACHAN -> Mangachan(context)
+        READMANGATODAY -> ReadMangaToday(context)
         else -> null
     }
 
