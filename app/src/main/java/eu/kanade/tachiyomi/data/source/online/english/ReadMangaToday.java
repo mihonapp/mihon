@@ -3,6 +3,12 @@ package eu.kanade.tachiyomi.data.source.online.english;
 import android.content.Context;
 import android.net.Uri;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,12 +27,8 @@ import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.util.Parser;
 import okhttp3.Headers;
 import rx.Observable;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonArray;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 public class ReadMangaToday extends Source {
     public static final String NAME = "ReadMangaToday";
@@ -96,11 +98,21 @@ public class ReadMangaToday extends Source {
     }
 
     @Override
-    public Observable<MangasPage> searchMangasFromNetwork(MangasPage page, String query) {
+    public Observable<MangasPage> searchMangasFromNetwork(final MangasPage page, String query) {
         return networkService
                 .requestBody(searchMangaRequest(page, query), true)
-                .doOnNext(doc -> page.mangas = parseSearchFromJson(doc))
-                .map(response -> page);
+                .doOnNext(new Action1<String>() {
+                    @Override
+                    public void call(String doc) {
+                        page.mangas = ReadMangaToday.this.parseSearchFromJson(doc);
+                    }
+                })
+                .map(new Func1<String, MangasPage>() {
+                    @Override
+                    public MangasPage call(String response) {
+                        return page;
+                    }
+                });
     }
 
     @Override
