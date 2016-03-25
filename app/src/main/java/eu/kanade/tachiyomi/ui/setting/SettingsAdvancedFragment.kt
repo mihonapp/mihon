@@ -74,10 +74,10 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
                     dialog.incrementProgress(1)
                 }, {
                     dialog.dismiss()
-                    context.toast(R.string.cache_delete_error)
+                    activity.toast(R.string.cache_delete_error)
                 }, {
                     dialog.dismiss()
-                    context.toast(getString(R.string.cache_deleted, deletedFiles.get()))
+                    activity.toast(getString(R.string.cache_deleted, deletedFiles.get()))
                     preference.summary = getString(R.string.used_cache, chapterCache.readableSize)
                 })
     }

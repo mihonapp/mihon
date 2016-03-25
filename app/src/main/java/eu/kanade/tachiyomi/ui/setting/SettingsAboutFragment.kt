@@ -108,7 +108,7 @@ class SettingsAboutFragment : SettingsNestedFragment() {
                                     UpdateDownloader(activity.applicationContext).execute(downloadLink)
                                 }.show()
                     } else {
-                        context.toast(R.string.update_check_no_new_updates)
+                        activity.toast(R.string.update_check_no_new_updates)
                     }
                 }, {
                     it.printStackTrace()
