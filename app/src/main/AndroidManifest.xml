@@ -15,6 +15,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:hardwareAccelerated="true"
+        android:largeHeap="true"
         android:theme="@style/Theme.Tachiyomi" >
         <activity
             android:name=".ui.main.MainActivity"
