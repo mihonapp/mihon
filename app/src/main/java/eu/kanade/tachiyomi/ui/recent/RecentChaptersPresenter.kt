@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent
 import eu.kanade.tachiyomi.event.ReaderEvent
@@ -24,6 +25,11 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * Used to connect to database
      */
     @Inject lateinit var db: DatabaseHelper
+
+    /**
+     * Used to get settings
+     */
+    @Inject lateinit var preferences: PreferencesHelper
 
     /**
      * Used to get information from download manager
@@ -291,15 +297,16 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * *
      * @param read read status
      */
-    fun markChaptersRead(selectedChapters: Observable<Chapter>, read: Boolean) {
-        add(selectedChapters
-                .subscribeOn(Schedulers.io())
-                .map { chapter ->
+    fun markChaptersRead(selectedChapters: Observable<Chapter>, manga: Manga, read: Boolean) {
+        add(selectedChapters.subscribeOn(Schedulers.io())
+                .doOnNext { chapter ->
                     chapter.read = read
-                    if (!read) {
-                        chapter.last_page_read = 0
+                    if (!read) chapter.last_page_read = 0
+
+                    // Delete chapter when marked as read if desired by user.
+                    if (preferences.removeAfterMarkedAsRead() && read) {
+                        deleteChapter(chapter,manga)
                     }
-                    chapter
                 }
                 .toList()
                 .flatMap { chapters -> db.insertChapters(chapters).asRxObservable() }

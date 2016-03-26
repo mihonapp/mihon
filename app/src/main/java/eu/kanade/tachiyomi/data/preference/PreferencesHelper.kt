@@ -190,6 +190,18 @@ class PreferencesHelper(private val context: Context) {
         return prefs.getBoolean(getKey(R.string.pref_download_only_over_wifi_key), true)
     }
 
+    fun removeAfterRead(): Boolean {
+        return prefs.getBoolean(getKey(R.string.pref_remove_after_read_key), false)
+    }
+
+    fun removeAfterReadPrevious(): Boolean {
+        return prefs.getBoolean(getKey(R.string.pref_remove_after_read_previous_key), false)
+    }
+
+    fun removeAfterMarkedAsRead(): Boolean {
+        return prefs.getBoolean(getKey(R.string.pref_remove_after_marked_as_read_key), false)
+    }
+
     fun libraryUpdateInterval(): Preference<Int> {
         return rxPrefs.getInteger(getKey(R.string.pref_library_update_interval_key), 0)
     }

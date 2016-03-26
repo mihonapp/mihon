@@ -27,7 +27,6 @@ import nucleus.factory.RequiresPresenter
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.util.*
 
 @RequiresPresenter(ChaptersPresenter::class)
 class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callback, FlexibleViewHolder.OnListItemClickListener {
@@ -217,23 +216,41 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     private fun showDownloadDialog() {
         // Get available modes
-        val modes = listOf(getString(R.string.download_all), getString(R.string.download_unread))
+        val modes = listOf(getString(R.string.download_1), getString(R.string.download_5), getString(R.string.download_10),
+                getString(R.string.download_unread), getString(R.string.download_all))
 
         MaterialDialog.Builder(activity)
                 .title(R.string.manga_download)
                 .negativeText(android.R.string.cancel)
                 .items(modes)
                 .itemsCallback { dialog, view, i, charSequence ->
-                    val chapters = ArrayList<Chapter>()
+                    var chapters: MutableList<Chapter> = arrayListOf()
 
+                    // i = 0: Download 1
+                    // i = 1: Download 5
+                    // i = 2: Download 10
+                    // i = 3: Download unread
+                    // i = 4: Download all
                     for (chapter in presenter.chapters) {
                         if (!chapter.isDownloaded) {
-                            if (i == 0 || (i == 1 && !chapter.read)) {
+                            if (i == 4 || (i != 4 && !chapter.read)) {
                                 chapters.add(chapter)
                             }
                         }
                     }
                     if (chapters.size > 0) {
+                        when (i) {
+                        // Set correct chapters size if desired
+                            0 -> chapters = chapters.subList(0, 1)
+                            1 -> {
+                                if (chapters.size >= 5)
+                                    chapters = chapters.subList(0, 5)
+                            }
+                            2 -> {
+                                if (chapters.size >= 10)
+                                    chapters = chapters.subList(0, 10)
+                            }
+                        }
                         onDownload(Observable.from(chapters))
                     }
                 }

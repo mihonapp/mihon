@@ -252,6 +252,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         nextChapterBtn?.isVisible = presenter.hasNextChapter()
     }
 
+
     private fun getOrCreateViewer(manga: Manga): BaseReader {
         val mangaViewer = if (manga.viewer == 0) preferences.defaultViewer else manga.viewer
 
