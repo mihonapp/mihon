@@ -239,6 +239,9 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                         }
                     }
                     if (chapters.size > 0) {
+                        if (!presenter.sortOrder()) {
+                            chapters.reverse()
+                        }
                         when (i) {
                         // Set correct chapters size if desired
                             0 -> chapters = chapters.subList(0, 1)
