@@ -59,9 +59,9 @@ public class Manga implements Serializable {
     @StorIOSQLiteColumn(name = MangaTable.COLUMN_CHAPTER_FLAGS)
     public int chapter_flags;
 
-    public int unread;
+    public transient int unread;
 
-    public int category;
+    public transient int category;
 
     public static final int UNKNOWN = 0;
     public static final int ONGOING = 1;

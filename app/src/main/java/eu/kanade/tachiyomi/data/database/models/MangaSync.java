@@ -40,6 +40,10 @@ public class MangaSync implements Serializable {
 
     public boolean update;
 
+    public static MangaSync create() {
+        return new MangaSync();
+    }
+
     public static MangaSync create(MangaSyncService service) {
         MangaSync mangasync = new MangaSync();
         mangasync.sync_id = service.getId();
@@ -52,4 +56,23 @@ public class MangaSync implements Serializable {
         status = other.status;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MangaSync mangaSync = (MangaSync) o;
+
+        if (manga_id != mangaSync.manga_id) return false;
+        if (sync_id != mangaSync.sync_id) return false;
+        return remote_id == mangaSync.remote_id;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (manga_id ^ (manga_id >>> 32));
+        result = 31 * result + sync_id;
+        result = 31 * result + remote_id;
+        return result;
+    }
 }

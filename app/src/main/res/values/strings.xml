@@ -11,6 +11,7 @@
     <string name="label_catalogues">Catalogues</string>
     <string name="label_categories">Categories</string>
     <string name="label_selected">Selected: %1$d</string>
+    <string name="label_backup">Backup</string>
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
@@ -242,6 +243,13 @@
     <string name="no_previous_chapter">Previous chapter not found</string>
     <string name="decode_image_error">Image could not be loaded.\nTry changing the image decoder or with one of the options below</string>
     <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
+
+    <!-- Backup fragment -->
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="backup_please_wait">Backup in progress. Please wait…</string>
+    <string name="backup_completed">Backup successfully restored</string>
+    <string name="restore_please_wait">Restoring backup. Please wait…</string>
 
     <!-- Downloads activity and service -->
     <string name="download_queue_error">An error occurred while downloading chapters. You can try again in the downloads section</string>

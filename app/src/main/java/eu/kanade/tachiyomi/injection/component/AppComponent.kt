@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.data.updater.UpdateDownloader
 import eu.kanade.tachiyomi.injection.module.AppModule
 import eu.kanade.tachiyomi.injection.module.DataModule
+import eu.kanade.tachiyomi.ui.backup.BackupPresenter
 import eu.kanade.tachiyomi.ui.catalogue.CataloguePresenter
 import eu.kanade.tachiyomi.ui.category.CategoryPresenter
 import eu.kanade.tachiyomi.ui.download.DownloadPresenter
@@ -38,6 +39,7 @@ interface AppComponent {
     fun inject(myAnimeListPresenter: MyAnimeListPresenter)
     fun inject(categoryPresenter: CategoryPresenter)
     fun inject(recentChaptersPresenter: RecentChaptersPresenter)
+    fun inject(backupPresenter: BackupPresenter)
 
     fun inject(mangaActivity: MangaActivity)
     fun inject(settingsActivity: SettingsActivity)
