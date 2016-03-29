@@ -87,9 +87,9 @@
     <string name="update_48hour">Every 2 days</string>
     <string name="pref_auto_update_manga_sync">Sync chapters after reading</string>
     <string name="pref_ask_update_manga_sync">Confirm before updating</string>
-    <string name="pref_theme">Application Theme</string>
-    <string name="light_theme">Main Theme</string>
-    <string name="dark_theme">Dark Theme</string>
+    <string name="pref_theme">Application theme</string>
+    <string name="light_theme">Main theme</string>
+    <string name="dark_theme">Dark theme</string>
 
 
       <!-- Reader section -->
@@ -263,7 +263,7 @@
     <string name="update_check_confirm">Download</string>
     <string name="update_check_ignore">Ignore</string>
     <string name="update_check_no_new_updates">No new updates available</string>
-    <string name="update_check_download_started">Download Started</string>
+    <string name="update_check_download_started">Download started</string>
     <string name="update_check_look_for_updates">Looking for updates</string>
 
     <!--Content Description-->
@@ -271,8 +271,8 @@
     <string name="description_cover">Cover of selected manga</string>
 
     <!-- Information Text -->
-    <string name="information_no_downloads">No Downloads</string>
-    <string name="information_no_recent">No Recent Chapters</string>
-    <string name="information_empty_library">Empty Library</string>
+    <string name="information_no_downloads">No downloads</string>
+    <string name="information_no_recent">No recent chapters</string>
+    <string name="information_empty_library">Empty library</string>
 
 </resources>

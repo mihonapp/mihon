@@ -73,8 +73,8 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         super.onCreate(savedState)
 
         if (savedState != null) {
-            source = sourceManager.get(manga.source)!!
             manga = savedState.getSerializable(MANGA_KEY) as Manga
+            source = sourceManager.get(manga.source)!!
             chapter = savedState.getSerializable(CHAPTER_KEY) as Chapter
             requestedPage = savedState.getInt(PAGE_KEY)
             initializeSubjects()
