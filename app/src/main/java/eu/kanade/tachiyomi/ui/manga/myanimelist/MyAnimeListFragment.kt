@@ -46,14 +46,17 @@ class MyAnimeListFragment : BaseRxFragment<MyAnimeListPresenter>() {
     fun setMangaSync(mangaSync: MangaSync?) {
         swipe_refresh.isEnabled = mangaSync != null
         mangaSync?.let {
+            myanimelist_title.setTextAppearance(R.style.TextAppearance_Regular_Body1_Secondary)
+            myanimelist_title.setAllCaps(false)
             myanimelist_title.text = it.title
-            val chaptersText = if (it.total_chapters > 0)
+            myanimelist_chapters.text = if (it.total_chapters > 0)
                 "${it.last_chapter_read}/${it.total_chapters}" else "${it.last_chapter_read}/-"
-
-            myanimelist_chapters.text = chaptersText
             myanimelist_score.text = if (it.score == 0f) "-" else decimalFormat.format(it.score)
             myanimelist_status.text = presenter.myAnimeList.getStatus(it.status)
+        } ?: run {
+            myanimelist_title.setTextAppearance(R.style.TextAppearance_Medium_Button)
         }
+
     }
 
     fun onRefreshDone() {
