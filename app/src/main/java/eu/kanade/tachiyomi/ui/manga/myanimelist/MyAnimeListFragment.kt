@@ -43,10 +43,11 @@ class MyAnimeListFragment : BaseRxFragment<MyAnimeListPresenter>() {
         myanimelist_score_layout.setOnClickListener { onScoreClick() }
     }
 
+    @Suppress("DEPRECATION")
     fun setMangaSync(mangaSync: MangaSync?) {
         swipe_refresh.isEnabled = mangaSync != null
         mangaSync?.let {
-            myanimelist_title.setTextAppearance(R.style.TextAppearance_Regular_Body1_Secondary)
+            myanimelist_title.setTextAppearance(context, R.style.TextAppearance_Regular_Body1_Secondary)
             myanimelist_title.setAllCaps(false)
             myanimelist_title.text = it.title
             myanimelist_chapters.text = if (it.total_chapters > 0)
@@ -54,7 +55,7 @@ class MyAnimeListFragment : BaseRxFragment<MyAnimeListPresenter>() {
             myanimelist_score.text = if (it.score == 0f) "-" else decimalFormat.format(it.score)
             myanimelist_status.text = presenter.myAnimeList.getStatus(it.status)
         } ?: run {
-            myanimelist_title.setTextAppearance(R.style.TextAppearance_Medium_Button)
+            myanimelist_title.setTextAppearance(context, R.style.TextAppearance_Medium_Button)
         }
 
     }
