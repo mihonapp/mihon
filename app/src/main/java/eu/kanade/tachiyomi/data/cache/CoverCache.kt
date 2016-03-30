@@ -12,6 +12,7 @@ import com.bumptech.glide.signature.StringSignature
 import eu.kanade.tachiyomi.util.DiskUtils
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 
 /**
  * Class used to create cover cache.
@@ -64,19 +65,32 @@ class CoverCache(private val context: Context) {
     }
 
     /**
-     * Copy the cover from Glide's cache to this cache.
+     * Copy the given file to this cache.
      * @param thumbnailUrl url of thumbnail.
      * @param sourceFile   the source file of the cover image.
-     * @throws IOException exception returned
+     * @throws IOException if there's any error.
      */
     @Throws(IOException::class)
     fun copyToLocalCache(thumbnailUrl: String, sourceFile: File) {
         // Get destination file.
-        val destFile = File(cacheDir, DiskUtils.hashKeyForDisk(thumbnailUrl))
+        val destFile = getCoverFromCache(thumbnailUrl)
 
         sourceFile.copyTo(destFile, overwrite = true)
     }
 
+    /**
+     * Copy the given stream to this cache.
+     * @param thumbnailUrl url of the thumbnail.
+     * @param inputStream  the stream to copy.
+     * @throws IOException if there's any error.
+     */
+    @Throws(IOException::class)
+    fun copyToLocalCache(thumbnailUrl: String, inputStream: InputStream) {
+        // Get destination file.
+        val destFile = getCoverFromCache(thumbnailUrl)
+
+        destFile.outputStream().use { inputStream.copyTo(it) }
+    }
 
     /**
      * Returns the cover from cache.

@@ -13,7 +13,6 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.io.downloadMediaAndReturnPath
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.event.LibraryMangasEvent
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
@@ -25,8 +24,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
 import org.greenrobot.eventbus.EventBus
-import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
 
 /**
@@ -376,21 +373,14 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
                 try {
                     // Get the file's input stream from the incoming Intent
-                    val inputStream = context.contentResolver.openInputStream(data.data)
-
-                    // Convert to absolute path to prevent FileNotFoundException
-                    val result = downloadMediaAndReturnPath(inputStream as FileInputStream, context)
-
-                    // Get file from filepath
-                    val picture = File(result)
-
-                    // Update cover to selected file, show error if something went wrong
-                    if (presenter.editCoverWithLocalFile(picture, manga)) {
-                        adapter.refreshRegisteredAdapters()
-                    } else {
-                        context.toast(R.string.notification_manga_update_failed)
+                    context.contentResolver.openInputStream(data.data).use {
+                        // Update cover to selected file, show error if something went wrong
+                        if (presenter.editCoverWithStream(it, manga)) {
+                            adapter.refreshRegisteredAdapters()
+                        } else {
+                            context.toast(R.string.notification_manga_update_failed)
+                        }
                     }
-
                 } catch (e: IOException) {
                     context.toast(R.string.notification_manga_update_failed)
                     e.printStackTrace()

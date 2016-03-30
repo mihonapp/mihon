@@ -97,8 +97,9 @@ class BackupFragment : BaseRxFragment<BackupPresenter>() {
                     .progress(true, 0)
                     .show()
 
-            val stream = context.contentResolver.openInputStream(data.data)
-            presenter.restoreBackup(stream)
+            context.contentResolver.openInputStream(data.data).use {
+                presenter.restoreBackup(it)
+            }
         }
     }
 

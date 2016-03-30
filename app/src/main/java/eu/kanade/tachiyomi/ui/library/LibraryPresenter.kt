@@ -17,8 +17,8 @@ import org.greenrobot.eventbus.EventBus
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.BehaviorSubject
-import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -273,17 +273,14 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Update cover with local file.
      *
-     * @param file the new cover.
+     * @param inputStream the new cover.
      * @param manga the manga edited.
      * @return true if the cover is updated, false otherwise
      */
     @Throws(IOException::class)
-    fun editCoverWithLocalFile(file: File, manga: Manga): Boolean {
-        if (!manga.initialized)
-            return false
-
-        if (manga.favorite) {
-            coverCache.copyToLocalCache(manga.thumbnail_url, file)
+    fun editCoverWithStream(inputStream: InputStream, manga: Manga): Boolean {
+        if (manga.thumbnail_url != null && manga.favorite) {
+            coverCache.copyToLocalCache(manga.thumbnail_url, inputStream)
             return true
         }
         return false
