@@ -61,30 +61,12 @@ class MainActivity : BaseActivity() {
             text_label.text = ""
 
             when (item.itemId) {
-                R.id.nav_drawer_library -> {
-                    setFragment(LibraryFragment.newInstance())
-                    item.isChecked = true
-                }
-                R.id.nav_drawer_recent_updates -> {
-                    setFragment(RecentChaptersFragment.newInstance())
-                    item.isChecked = true
-                }
-                R.id.nav_drawer_catalogues -> {
-                    setFragment(CatalogueFragment.newInstance())
-                    item.isChecked = true
-                }
-                R.id.nav_drawer_downloads -> {
-                    setFragment(DownloadFragment.newInstance())
-                    item.isChecked = true
-                }
-                R.id.nav_drawer_settings -> {
-                    item.isChecked = false
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                }
-                R.id.nav_drawer_backup -> {
-                    setFragment(BackupFragment.newInstance())
-                    item.isChecked = true
-                }
+                R.id.nav_drawer_library -> setFragment(LibraryFragment.newInstance())
+                R.id.nav_drawer_recent_updates -> setFragment(RecentChaptersFragment.newInstance())
+                R.id.nav_drawer_catalogues -> setFragment(CatalogueFragment.newInstance())
+                R.id.nav_drawer_downloads -> setFragment(DownloadFragment.newInstance())
+                R.id.nav_drawer_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.nav_drawer_backup -> setFragment(BackupFragment.newInstance())
             }
             drawer.closeDrawer(GravityCompat.START)
             true
