@@ -36,7 +36,7 @@ val libraryQuery =
  * @param date the delimiting date.
  */
 fun getRecentsQuery(date: Date): String =
-    "SELECT * FROM ${Manga.TABLE} JOIN ${Chapter.TABLE} " +
+    "SELECT ${Manga.TABLE}.${Manga.COLUMN_URL} as mangaUrl, * FROM ${Manga.TABLE} JOIN ${Chapter.TABLE} " +
     "ON ${Manga.TABLE}.${Manga.COLUMN_ID} = ${Chapter.TABLE}.${Chapter.COLUMN_MANGA_ID} " +
     "WHERE ${Manga.COLUMN_FAVORITE} = 1 AND ${Chapter.COLUMN_DATE_UPLOAD} > ${date.time} " +
     "ORDER BY ${Chapter.COLUMN_DATE_UPLOAD} DESC"
