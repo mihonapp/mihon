@@ -359,11 +359,12 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     }
 
     override fun onListItemClick(position: Int): Boolean {
+        val item = adapter.getItem(position) ?: return false
         if (actionMode != null && adapter.mode == FlexibleAdapter.MODE_MULTI) {
             toggleSelection(position)
             return true
         } else {
-            openChapter(adapter.getItem(position))
+            openChapter(item)
             return false
         }
     }

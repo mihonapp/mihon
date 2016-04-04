@@ -427,9 +427,9 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      * @return true if the item should be selected, false otherwise.
      */
     override fun onListItemClick(position: Int): Boolean {
-        val selectedManga = adapter.getItem(position)
+        val item = adapter.getItem(position) ?: return false
 
-        val intent = MangaActivity.newIntent(activity, selectedManga)
+        val intent = MangaActivity.newIntent(activity, item)
         intent.putExtra(MangaActivity.FROM_CATALOGUE, true)
         startActivity(intent)
         return false

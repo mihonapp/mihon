@@ -162,13 +162,12 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
      */
     override fun onListItemClick(position: Int): Boolean {
         // If the action mode is created and the position is valid, toggle the selection.
-        if (position == -1) {
-            return false
-        } else if (libraryFragment.actionMode != null) {
+        val item = adapter.getItem(position) ?: return false
+        if (libraryFragment.actionMode != null) {
             toggleSelection(position)
             return true
         } else {
-            openManga(adapter.getItem(position))
+            openManga(item)
             return false
         }
     }
