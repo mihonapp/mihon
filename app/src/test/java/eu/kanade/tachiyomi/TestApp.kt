@@ -12,10 +12,6 @@ open class TestApp : App() {
                 .dataModule(TestDataModule())
     }
 
-    override fun setupEventBus() {
-        // Do nothing
-    }
-
     override fun setupAcra() {
         // Do nothing
     }

@@ -16,7 +16,6 @@ import eu.kanade.tachiyomi.event.MangaEvent
 import eu.kanade.tachiyomi.event.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.SharedData
-import org.greenrobot.eventbus.EventBus
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -198,7 +197,8 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
 
     fun downloadChapters(selectedChapters: Observable<Chapter>) {
         add(selectedChapters.toList()
-                .subscribe { chapters -> EventBus.getDefault().postSticky(DownloadChaptersEvent(manga, chapters)) })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { downloadManager.onDownloadChaptersEvent(DownloadChaptersEvent(manga, it)) })
     }
 
     fun deleteChapters(selectedChapters: Observable<Chapter>) {

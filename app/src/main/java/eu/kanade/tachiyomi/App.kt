@@ -9,7 +9,6 @@ import eu.kanade.tachiyomi.injection.component.DaggerAppComponent
 import eu.kanade.tachiyomi.injection.module.AppModule
 import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
-import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 
 @ReportsCrashes(
@@ -38,7 +37,6 @@ open class App : Application() {
         componentReflection = ComponentReflectionInjector(AppComponent::class.java, component)
 
         setupTheme()
-        setupEventBus()
         setupAcra()
     }
 
@@ -49,12 +47,6 @@ open class App : Application() {
     protected open fun prepareAppComponent(): DaggerAppComponent.Builder {
         return DaggerAppComponent.builder()
                 .appModule(AppModule(this))
-    }
-
-    protected open fun setupEventBus() {
-        EventBus.builder()
-                .logNoSubscriberMessages(false)
-                .installDefaultEventBus()
     }
 
     protected open fun setupAcra() {

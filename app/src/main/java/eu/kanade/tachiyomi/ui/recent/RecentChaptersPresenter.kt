@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.event.DownloadChaptersEvent
 import eu.kanade.tachiyomi.event.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.SharedData
-import org.greenrobot.eventbus.EventBus
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -267,7 +266,9 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * @param manga manga that belongs to chapter
      */
     fun downloadChapter(selectedChapter: Observable<Chapter>, manga: Manga) {
-        add(selectedChapter.toList().subscribe { chapters -> EventBus.getDefault().postSticky(DownloadChaptersEvent(manga, chapters)) })
+        add(selectedChapter.toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { downloadManager.onDownloadChaptersEvent(DownloadChaptersEvent(manga, it)) })
     }
 
     /**
@@ -289,7 +290,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
         add(selectedChapters
                 .subscribe(
                         { chapter -> downloadManager.queue.del(chapter) })
-                { error -> Timber.e(error.message) })
+                        { error -> Timber.e(error.message) })
     }
 
     /**

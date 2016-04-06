@@ -10,11 +10,7 @@ import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.event.DownloadChaptersEvent
 import eu.kanade.tachiyomi.util.toast
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -48,7 +44,6 @@ class DownloadService : Service() {
         createWakeLock()
 
         listenQueueRunningChanges()
-        EventBus.getDefault().register(this)
         listenNetworkChanges()
     }
 
@@ -57,7 +52,6 @@ class DownloadService : Service() {
     }
 
     override fun onDestroy() {
-        EventBus.getDefault().unregister(this)
         queueRunningSubscription?.unsubscribe()
         networkChangeSubscription?.unsubscribe()
         downloadManager.destroySubscriptions()
@@ -67,12 +61,6 @@ class DownloadService : Service() {
 
     override fun onBind(intent: Intent): IBinder? {
         return null
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onEvent(event: DownloadChaptersEvent) {
-        EventBus.getDefault().removeStickyEvent(event)
-        downloadManager.onDownloadChaptersEvent(event)
     }
 
     private fun listenNetworkChanges() {

@@ -130,8 +130,6 @@ dependencies {
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
 
-    compile "org.greenrobot:eventbus:3.0.0"
-
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
