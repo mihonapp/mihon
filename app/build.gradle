@@ -51,6 +51,7 @@ android {
 
     buildTypes {
         debug {
+            versionNameSuffix ".${getCommitCount()}"
             applicationIdSuffix ".debug"
         }
         release {
