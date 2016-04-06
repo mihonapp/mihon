@@ -11,9 +11,8 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.event.LibraryMangasEvent
+import eu.kanade.tachiyomi.event.LibraryMangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import org.greenrobot.eventbus.EventBus
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.BehaviorSubject
@@ -35,12 +34,17 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Currently selected manga.
      */
-    lateinit var selectedMangas: MutableList<Manga>
+    var selectedMangas = mutableListOf<Manga>()
 
     /**
      * Search query of the library.
      */
-    lateinit var searchSubject: BehaviorSubject<String>
+    val searchSubject = BehaviorSubject.create<String>()
+
+    /**
+     * Subject to notify the library's viewpager for updates.
+     */
+    val libraryMangaSubject = BehaviorSubject.create<LibraryMangaEvent?>()
 
     /**
      * Database.
@@ -77,10 +81,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        selectedMangas = ArrayList()
-
-        searchSubject = BehaviorSubject.create()
-
         restartableLatestCache(GET_LIBRARY,
                 { getLibraryObservable() },
                 { view, pair -> view.onNextLibraryUpdate(pair.first, pair.second) })
@@ -92,7 +92,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     }
 
     override fun onDropView() {
-        EventBus.getDefault().removeStickyEvent(LibraryMangasEvent::class.java)
+        libraryMangaSubject.onNext(null)
         super.onDropView()
     }
 

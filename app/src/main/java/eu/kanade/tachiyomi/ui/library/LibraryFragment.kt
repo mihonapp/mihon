@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
-import eu.kanade.tachiyomi.event.LibraryMangasEvent
+import eu.kanade.tachiyomi.event.LibraryMangaEvent
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -23,7 +23,6 @@ import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
-import org.greenrobot.eventbus.EventBus
 import java.io.IOException
 
 /**
@@ -273,7 +272,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         }
 
         // Send the manga map to child fragments after the adapter is updated.
-        EventBus.getDefault().postSticky(LibraryMangasEvent(mangaMap))
+        presenter.libraryMangaSubject.onNext(LibraryMangaEvent(mangaMap))
     }
 
     /**

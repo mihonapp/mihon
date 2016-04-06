@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.TextView
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
-import org.greenrobot.eventbus.EventBus
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -49,14 +48,6 @@ open class BaseActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    fun registerForEvents() {
-        EventBus.getDefault().register(this)
-    }
-
-    fun unregisterForEvents() {
-        EventBus.getDefault().unregister(this)
     }
 
     fun snack(text: String?, duration: Int = Snackbar.LENGTH_LONG) {

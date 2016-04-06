@@ -53,7 +53,6 @@ open class App : Application() {
 
     protected open fun setupEventBus() {
         EventBus.builder()
-                .addIndex(EventBusIndex())
                 .logNoSubscriberMessages(false)
                 .installDefaultEventBus()
     }
