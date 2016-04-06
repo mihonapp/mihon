@@ -9,8 +9,7 @@ import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.event.ChapterCountEvent
 import eu.kanade.tachiyomi.event.MangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -51,11 +50,6 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
     @Inject lateinit var coverCache: CoverCache
 
     /**
-     * Count of chapters.
-     */
-    private var count = -1
-
-    /**
      * The id of the restartable.
      */
     private val GET_MANGA = 1
@@ -63,12 +57,7 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
     /**
      * The id of the restartable.
      */
-    private val GET_CHAPTER_COUNT = 2
-
-    /**
-     * The id of the restartable.
-     */
-    private val FETCH_MANGA_INFO = 3
+    private val FETCH_MANGA_INFO = 2
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -78,39 +67,19 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
                 { Observable.just(manga) },
                 { view, manga -> view.onNextManga(manga, source) })
 
-        // Update chapter count.
-        startableLatestCache(GET_CHAPTER_COUNT,
-                { Observable.just(count) },
-                { view, count -> view.setChapterCount(count) })
-
         // Fetch manga info from source.
         startableFirst(FETCH_MANGA_INFO,
                 { fetchMangaObs() },
                 { view, manga -> view.onFetchMangaDone() },
                 { view, error -> view.onFetchMangaError() })
 
-        // Listen for events.
-        registerForEvents()
-    }
-
-    override fun onDestroy() {
-        unregisterForEvents()
-        super.onDestroy()
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onEvent(event: MangaEvent) {
-        manga = event.manga
+        manga = SharedData.get(MangaEvent::class.java)!!.manga
         source = sourceManager.get(manga.source)!!
         refreshManga()
-    }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onEvent(event: ChapterCountEvent) {
-        if (count != event.count) {
-            count = event.count
-            // Update chapter count
-            start(GET_CHAPTER_COUNT)
+        // Update chapter count
+        SharedData.get(ChapterCountEvent::class.java)?.let {
+            add(it.observable.subscribeLatestCache({ view, count -> view.setChapterCount(count) }))
         }
     }
 

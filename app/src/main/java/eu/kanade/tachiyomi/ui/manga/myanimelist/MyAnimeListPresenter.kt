@@ -9,9 +9,8 @@ import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
 import eu.kanade.tachiyomi.event.MangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.toast
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -59,17 +58,7 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
                 { view, result -> view.onRefreshDone() },
                 { view, error -> view.onRefreshError(error) })
 
-        registerForEvents()
-    }
-
-    override fun onDestroy() {
-        unregisterForEvents()
-        super.onDestroy()
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onEvent(event: MangaEvent) {
-        manga = event.manga
+        manga = SharedData.get(MangaEvent::class.java)!!.manga
         start(GET_MANGA_SYNC)
     }
 

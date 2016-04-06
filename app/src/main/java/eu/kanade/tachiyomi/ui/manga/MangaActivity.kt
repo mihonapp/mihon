@@ -13,15 +13,16 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.event.MangaEvent
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersFragment
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoFragment
 import eu.kanade.tachiyomi.ui.manga.myanimelist.MyAnimeListFragment
+import eu.kanade.tachiyomi.util.SharedData
 import kotlinx.android.synthetic.main.activity_manga.*
 import kotlinx.android.synthetic.main.tab_layout.*
 import kotlinx.android.synthetic.main.toolbar.*
 import nucleus.factory.RequiresPresenter
-import org.greenrobot.eventbus.EventBus
 
 @RequiresPresenter(MangaPresenter::class)
 class MangaActivity : BaseRxActivity<MangaPresenter>() {
@@ -33,11 +34,9 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
         val CHAPTERS_FRAGMENT = 1
         val MYANIMELIST_FRAGMENT = 2
 
-        fun newIntent(context: Context, manga: Manga?): Intent {
+        fun newIntent(context: Context, manga: Manga): Intent {
             val intent = Intent(context, MangaActivity::class.java)
-            if (manga != null) {
-                EventBus.getDefault().postSticky(manga)
-            }
+            SharedData.put(MangaEvent(manga))
             return intent
         }
     }

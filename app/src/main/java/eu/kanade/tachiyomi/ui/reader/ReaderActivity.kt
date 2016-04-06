@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.reader_menu.*
 import nucleus.factory.RequiresPresenter
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription
+import timber.log.Timber
 import java.text.DecimalFormat
 
 @RequiresPresenter(ReaderPresenter::class)
@@ -83,7 +84,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     val preferences: PreferencesHelper
         get() = presenter.prefs
 
-    public override fun onCreate(savedState: Bundle?) {
+    override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         setContentView(R.layout.activity_reader)
 
@@ -189,8 +190,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
     }
 
-    fun onChapterError() {
+    fun onChapterError(error: Throwable) {
         finish()
+        Timber.e(error, error.message)
         toast(R.string.page_list_error)
     }
 

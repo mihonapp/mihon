@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent
 import eu.kanade.tachiyomi.event.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.SharedData
 import org.greenrobot.eventbus.EventBus
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -256,7 +257,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * @param item chapter that is opened
      */
     fun onOpenChapter(item: MangaChapter) {
-        EventBus.getDefault().postSticky(ReaderEvent(item.manga, item.chapter))
+        SharedData.put(ReaderEvent(item.manga, item.chapter))
     }
 
     /**

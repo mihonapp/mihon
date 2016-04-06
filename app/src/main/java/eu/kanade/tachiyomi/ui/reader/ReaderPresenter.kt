@@ -17,9 +17,7 @@ import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.event.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -72,19 +70,26 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        if (savedState != null) {
+        if (savedState == null) {
+            val event = SharedData.remove(ReaderEvent::class.java)!!
+            manga = event.manga
+            chapter = event.chapter
+        } else {
             manga = savedState.getSerializable(MANGA_KEY) as Manga
-            source = sourceManager.get(manga.source)!!
             chapter = savedState.getSerializable(CHAPTER_KEY) as Chapter
             requestedPage = savedState.getInt(PAGE_KEY)
-            initializeSubjects()
         }
+
+        source = sourceManager.get(manga.source)!!
+
+        initializeSubjects()
 
         startableLatestCache(GET_ADJACENT_CHAPTERS,
                 { getAdjacentChaptersObservable() },
                 { view, pair -> view.onAdjacentChapters(pair.first, pair.second) })
 
-        startable(PRELOAD_NEXT_CHAPTER, { getPreloadNextChapterObservable() },
+        startable(PRELOAD_NEXT_CHAPTER,
+                { getPreloadNextChapterObservable() },
                 { },
                 { error -> Timber.e("Error preloading chapter") })
 
@@ -95,36 +100,22 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         restartableLatestCache(GET_PAGE_LIST,
                 { getPageListObservable(chapter) },
                 { view, chapter -> view.onChapterReady(manga, chapter, currentPage) },
-                { view, error -> view.onChapterError() })
+                { view, error -> view.onChapterError(error) })
 
         if (savedState == null) {
-            registerForEvents()
+            loadChapter(chapter)
+            if (prefs.autoUpdateMangaSync()) {
+                start(GET_MANGA_SYNC)
+            }
         }
-    }
-
-    override fun onDestroy() {
-        unregisterForEvents()
-        super.onDestroy()
     }
 
     override fun onSave(state: Bundle) {
         onChapterLeft()
         state.putSerializable(MANGA_KEY, manga)
         state.putSerializable(CHAPTER_KEY, chapter)
-        state.putSerializable(PAGE_KEY, requestedPage)
+        state.putSerializable(PAGE_KEY, currentPage?.pageNumber ?: 0)
         super.onSave(state)
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onEvent(event: ReaderEvent) {
-        EventBus.getDefault().removeStickyEvent(event)
-        manga = event.manga
-        source = sourceManager.get(manga.source)!!
-        initializeSubjects()
-        loadChapter(event.chapter)
-        if (prefs.autoUpdateMangaSync()) {
-            start(GET_MANGA_SYNC)
-        }
     }
 
     private fun initializeSubjects() {

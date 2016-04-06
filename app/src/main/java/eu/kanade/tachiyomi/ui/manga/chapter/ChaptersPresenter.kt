@@ -15,9 +15,8 @@ import eu.kanade.tachiyomi.event.DownloadChaptersEvent
 import eu.kanade.tachiyomi.event.MangaEvent
 import eu.kanade.tachiyomi.event.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.SharedData
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -47,19 +46,14 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     var hasRequested: Boolean = false
         private set
 
-    private val GET_MANGA = 1
-    private val DB_CHAPTERS = 2
-    private val FETCH_CHAPTERS = 3
-    private val CHAPTER_STATUS_CHANGES = 4
+    private val DB_CHAPTERS = 1
+    private val FETCH_CHAPTERS = 2
+    private val CHAPTER_STATUS_CHANGES = 3
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
         chaptersSubject = PublishSubject.create()
-
-        startableLatestCache(GET_MANGA,
-                { Observable.just(manga) },
-                { view, manga -> view.onNextManga(manga) })
 
         startableLatestCache(DB_CHAPTERS,
                 { getDbChaptersObs() },
@@ -75,36 +69,26 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 { view, download -> view.onChapterStatusChange(download) },
                 { view, error -> Timber.e(error.cause, error.message) })
 
-        registerForEvents()
-    }
+        manga = SharedData.get(MangaEvent::class.java)!!.manga
+        add(Observable.just(manga)
+                .subscribeLatestCache({ view, manga -> view.onNextManga(manga) }))
 
-    override fun onDestroy() {
-        unregisterForEvents()
-        EventBus.getDefault().removeStickyEvent(ChapterCountEvent::class.java)
-        super.onDestroy()
-    }
+        source = sourceManager.get(manga.source)!!
+        start(DB_CHAPTERS)
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onEvent(event: MangaEvent) {
-        this.manga = event.manga
-        start(GET_MANGA)
-
-        if (isUnsubscribed(DB_CHAPTERS)) {
-            source = sourceManager.get(manga.source)!!
-            start(DB_CHAPTERS)
-
-            add(db.getChapters(manga).asRxObservable()
-                    .subscribeOn(Schedulers.io())
-                    .doOnNext { chapters ->
-                        this.chapters = chapters
-                        EventBus.getDefault().postSticky(ChapterCountEvent(chapters.size))
-                        for (chapter in chapters) {
-                            setChapterStatus(chapter)
-                        }
-                        start(CHAPTER_STATUS_CHANGES)
+        add(db.getChapters(manga).asRxObservable()
+                .subscribeOn(Schedulers.io())
+                .doOnNext { chapters ->
+                    this.chapters = chapters
+                    SharedData.get(ChapterCountEvent::class.java)?.let {
+                        it.emit(chapters.size)
                     }
-                    .subscribe { chaptersSubject.onNext(it) })
-        }
+                    for (chapter in chapters) {
+                        setChapterStatus(chapter)
+                    }
+                    start(CHAPTER_STATUS_CHANGES)
+                }
+                .subscribe { chaptersSubject.onNext(it) })
     }
 
     fun fetchChaptersFromSource() {
@@ -179,7 +163,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     }
 
     fun onOpenChapter(chapter: Chapter) {
-        EventBus.getDefault().postSticky(ReaderEvent(manga, chapter))
+        SharedData.put(ReaderEvent(manga, chapter))
     }
 
     fun getNextUnreadChapter(): Chapter? {

@@ -12,7 +12,7 @@ import nucleus.view.PresenterLifecycleDelegate;
 import nucleus.view.ViewWithPresenter;
 
 /**
- * This class is an example of how an activity could controls it's presenter.
+ * This view is an example of how a view should control it's presenter.
  * You can inherit from this class or copy/paste this class's code to
  * create your own view implementation.
  *
@@ -87,12 +87,11 @@ public abstract class BaseRxFragment<P extends Presenter> extends BaseFragment i
     @Override
     public void onPause() {
         super.onPause();
-        presenterDelegate.onPause(getActivity().isFinishing() || shouldDestroyPresenter(this));
+        presenterDelegate.onPause(getActivity().isFinishing() || isRemoving(this));
     }
 
-    private boolean shouldDestroyPresenter(Fragment fragment) {
-        if (fragment == null) return false;
-        else return fragment.isRemoving() || shouldDestroyPresenter(fragment.getParentFragment());
+    private static boolean isRemoving(Fragment fragment) {
+        Fragment parent = fragment.getParentFragment();
+        return fragment.isRemoving() || (parent != null && isRemoving(parent));
     }
-
 }
