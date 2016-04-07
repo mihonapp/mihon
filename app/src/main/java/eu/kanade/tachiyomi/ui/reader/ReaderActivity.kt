@@ -143,6 +143,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     override fun onBackPressed() {
+        if (isFinishing) return
+
         presenter.onChapterLeft()
 
         val chapterToUpdate = presenter.getMangaSyncChapterToUpdate()
@@ -173,26 +175,28 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        val action = event.action
-        val keyCode = event.keyCode
-        when (keyCode) {
-            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (action == KeyEvent.ACTION_UP)
-                    viewer?.moveToNext()
-                return true
+        if (!isFinishing) {
+            val action = event.action
+            val keyCode = event.keyCode
+            when (keyCode) {
+                KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                    if (action == KeyEvent.ACTION_UP)
+                        viewer?.moveToNext()
+                    return true
+                }
+                KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_DPAD_LEFT -> {
+                    if (action == KeyEvent.ACTION_UP)
+                        viewer?.moveToPrevious()
+                    return true
+                }
             }
-            KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_DPAD_LEFT -> {
-                if (action == KeyEvent.ACTION_UP)
-                    viewer?.moveToPrevious()
-                return true
-            }
-            else -> return super.dispatchKeyEvent(event)
         }
+        return super.dispatchKeyEvent(event)
     }
 
     fun onChapterError(error: Throwable) {
-        finish()
         Timber.e(error, error.message)
+        finish()
         toast(R.string.page_list_error)
     }
 
