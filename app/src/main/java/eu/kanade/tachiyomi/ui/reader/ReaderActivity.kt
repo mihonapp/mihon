@@ -154,11 +154,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         .positiveText(android.R.string.yes)
                         .negativeText(android.R.string.no)
                         .onPositive { dialog, which -> presenter.updateMangaSyncLastChapterRead() }
-                        .onAny { dialog1, which1 -> finish() }
+                        .onAny { dialog1, which1 -> super.onBackPressed() }
                         .show()
             } else {
                 presenter.updateMangaSyncLastChapterRead()
-                finish()
+                super.onBackPressed()
             }
         } else {
             super.onBackPressed()
