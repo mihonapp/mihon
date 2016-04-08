@@ -237,7 +237,9 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         this.query = query
 
         // Notify the subject the query has changed.
-        presenter.searchSubject.onNext(query)
+        if (isResumed) {
+            presenter.searchSubject.onNext(query)
+        }
     }
 
     /**

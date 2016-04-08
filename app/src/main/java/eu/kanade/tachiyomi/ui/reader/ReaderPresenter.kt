@@ -71,7 +71,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         super.onCreate(savedState)
 
         if (savedState == null) {
-            val event = SharedData.remove(ReaderEvent::class.java)!!
+            val event = SharedData.remove(ReaderEvent::class.java) ?: return
             manga = event.manga
             chapter = event.chapter
         } else {

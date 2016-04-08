@@ -58,7 +58,7 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
                 { view, result -> view.onRefreshDone() },
                 { view, error -> view.onRefreshError(error) })
 
-        manga = SharedData.get(MangaEvent::class.java)!!.manga
+        manga = SharedData.get(MangaEvent::class.java)?.manga ?: return
         start(GET_MANGA_SYNC)
     }
 

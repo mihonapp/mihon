@@ -73,7 +73,7 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
                 { view, manga -> view.onFetchMangaDone() },
                 { view, error -> view.onFetchMangaError() })
 
-        manga = SharedData.get(MangaEvent::class.java)!!.manga
+        manga = SharedData.get(MangaEvent::class.java)?.manga ?: return
         source = sourceManager.get(manga.source)!!
         refreshManga()
 

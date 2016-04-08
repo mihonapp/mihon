@@ -68,7 +68,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 { view, download -> view.onChapterStatusChange(download) },
                 { view, error -> Timber.e(error.cause, error.message) })
 
-        manga = SharedData.get(MangaEvent::class.java)!!.manga
+        manga = SharedData.get(MangaEvent::class.java)?.manga ?: return
         add(Observable.just(manga)
                 .subscribeLatestCache({ view, manga -> view.onNextManga(manga) }))
 
@@ -79,9 +79,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .subscribeOn(Schedulers.io())
                 .doOnNext { chapters ->
                     this.chapters = chapters
-                    SharedData.get(ChapterCountEvent::class.java)?.let {
-                        it.emit(chapters.size)
-                    }
+                    SharedData.get(ChapterCountEvent::class.java)?.emit(chapters.size)
                     for (chapter in chapters) {
                         setChapterStatus(chapter)
                     }
