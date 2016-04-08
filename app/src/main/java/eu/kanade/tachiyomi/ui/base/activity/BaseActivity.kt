@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import eu.kanade.tachiyomi.App
@@ -12,9 +11,12 @@ import eu.kanade.tachiyomi.R
 
 open class BaseActivity : AppCompatActivity() {
 
-    protected fun setupToolbar(toolbar: Toolbar) {
+    protected fun setupToolbar(toolbar: Toolbar, backNavigation: Boolean = true) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        if (backNavigation) {
+            toolbar.setNavigationOnClickListener { onBackPressed() }
+        }
     }
 
     fun setAppTheme() {
@@ -38,16 +40,6 @@ open class BaseActivity : AppCompatActivity() {
 
     fun setToolbarSubtitle(titleResource: Int) {
         supportActionBar?.subtitle = getString(titleResource)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     fun snack(text: String?, duration: Int = Snackbar.LENGTH_LONG) {

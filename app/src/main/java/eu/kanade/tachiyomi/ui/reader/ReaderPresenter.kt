@@ -99,7 +99,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
         restartableLatestCache(GET_PAGE_LIST,
                 { getPageListObservable(chapter) },
-                { view, chapter -> view.onChapterReady(manga, chapter, currentPage) },
+                { view, chapter -> view.onChapterReady(manga, this.chapter, currentPage) },
                 { view, error -> view.onChapterError(error) })
 
         if (savedState == null) {

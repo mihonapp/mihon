@@ -37,7 +37,7 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         // Handle Toolbar
-        setupToolbar(toolbar)
+        setupToolbar(toolbar, backNavigation = false)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
 
         drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
