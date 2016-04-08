@@ -25,12 +25,12 @@ ext {
 }
 
 def includeUpdater() {
-    return hasProperty("include_updater");
+    return hasProperty("include_updater")
 }
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
     publishNonDefault true
 
     defaultConfig {
@@ -88,7 +88,7 @@ kapt {
 }
 
 dependencies {
-    final SUPPORT_LIBRARY_VERSION = '23.2.1'
+    final SUPPORT_LIBRARY_VERSION = '23.3.0'
     final DAGGER_VERSION = '2.2'
     final OKHTTP_VERSION = '3.2.0'
     final RETROFIT_VERSION = '2.0.1'

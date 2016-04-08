@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
-import eu.kanade.tachiyomi.util.setDrawableCompat
 import kotlinx.android.synthetic.main.fragment_manga_info.*
 import nucleus.factory.RequiresPresenter
 
@@ -137,7 +136,7 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
     private fun setFavoriteDrawable(isFavorite: Boolean) {
         // Set the Favorite drawable to the correct one.
         // Border drawable if false, filled drawable if true.
-        fab_favorite.setDrawableCompat(if (isFavorite)
+        fab_favorite.setImageResource(if (isFavorite)
             R.drawable.ic_bookmark_white_24dp
         else
             R.drawable.ic_bookmark_border_white_24dp)

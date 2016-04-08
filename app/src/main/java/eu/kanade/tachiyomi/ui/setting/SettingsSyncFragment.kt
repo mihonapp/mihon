@@ -33,7 +33,7 @@ class SettingsSyncFragment : SettingsNestedFragment() {
                 setOnPreferenceClickListener {
                     val fragment = MangaSyncLoginDialog.newInstance(sync)
                     fragment.setTargetFragment(this@SettingsSyncFragment, SYNC_CHANGE_REQUEST)
-                    fragment.show(childFragmentManager, null)
+                    fragment.show(fragmentManagerCompat, null)
                     true
                 }
             }

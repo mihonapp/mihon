@@ -39,10 +39,6 @@
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:gravity="center"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
         android:text="@string/pref_reader_theme"/>
 
     <android.support.v7.widget.AppCompatCheckBox

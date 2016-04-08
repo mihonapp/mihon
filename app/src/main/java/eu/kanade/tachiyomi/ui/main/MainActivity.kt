@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.ui.library.LibraryFragment
 import eu.kanade.tachiyomi.ui.recent.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import eu.kanade.tachiyomi.util.getResourceColor
-import eu.kanade.tachiyomi.util.setDrawableCompat
+import eu.kanade.tachiyomi.util.setVectorCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -57,7 +57,7 @@ class MainActivity : BaseActivity() {
         // Set behavior of Navigation drawer
         nav_view.setNavigationItemSelectedListener { item ->
             // Make information view invisible
-            image_view.setDrawableCompat(null)
+            image_view.setImageResource(android.R.color.transparent)
             text_label.text = ""
 
             when (item.itemId) {
@@ -93,10 +93,10 @@ class MainActivity : BaseActivity() {
 
     fun updateEmptyView(show: Boolean, textResource: Int, drawable: Int) {
         if (show) {
-            image_view.setDrawableCompat(drawable)
+            image_view.setVectorCompat(drawable, theme.getResourceColor(android.R.attr.textColorHint))
             text_label.text = getString(textResource)
         } else {
-            image_view.setDrawableCompat(null)
+            image_view.setImageResource(android.R.color.transparent)
             text_label.text = ""
         }
     }

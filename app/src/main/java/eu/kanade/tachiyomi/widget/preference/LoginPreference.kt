@@ -18,13 +18,10 @@ class LoginPreference @JvmOverloads constructor(context: Context, attrs: Attribu
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
 
-        with(holder.itemView.image_view) {
-            if (getPersistedString("").isNullOrEmpty()) {
-                setImageResource(android.R.color.transparent)
-            } else {
-                setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_done_green_24dp))
-            }
-        }
+        holder.itemView.image_view.setImageResource(if (getPersistedString("").isNullOrEmpty())
+            android.R.color.transparent
+        else
+            R.drawable.ic_done_green_24dp)
     }
 
     override public fun notifyChanged() {

@@ -74,7 +74,7 @@ class SettingsGeneralFragment : SettingsNestedFragment() {
         if (preference === columnsPreference) {
             val fragment = LibraryColumnsDialog.newInstance(preference)
             fragment.setTargetFragment(this, 0)
-            fragment.show(childFragmentManager, null)
+            fragment.show(fragmentManagerCompat, null)
         } else {
             super.onDisplayPreferenceDialog(preference)
         }

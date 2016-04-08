@@ -77,9 +77,8 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
             val chapter = presenter.getNextUnreadChapter()
             if (chapter != null) {
                 // Create animation listener
-                var revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        // On done open chapter
+                val revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator?) {
                         openChapter(chapter, true)
                     }
                 }
@@ -109,7 +108,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         // Check if animation view is visible
         if (reveal_view.visibility == View.VISIBLE) {
             // Show the unReveal effect
-            var coordinates = fab.getCoordinates()
+            val coordinates = fab.getCoordinates()
             reveal_view.hideRevealEffect(coordinates.x, coordinates.y, 1920)
         }
         super.onResume()
@@ -184,7 +183,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     val isCatalogueManga: Boolean
         get() = (activity as MangaActivity).isCatalogueManga
 
-    protected fun openChapter(chapter: Chapter, hasAnimation: Boolean = false) {
+    fun openChapter(chapter: Chapter, hasAnimation: Boolean = false) {
         presenter.onOpenChapter(chapter)
         val intent = ReaderActivity.newIntent(activity)
         if (hasAnimation) {

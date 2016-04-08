@@ -110,7 +110,7 @@ class WebtoonReader : BaseReader() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val savedPosition = pages[layoutManager.findFirstVisibleItemPosition()].pageNumber
+        val savedPosition = pages.getOrNull(layoutManager.findFirstVisibleItemPosition())?.pageNumber ?: 0
         outState.putInt(SAVED_POSITION, savedPosition)
         super.onSaveInstanceState(outState)
     }
