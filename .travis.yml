@@ -5,7 +5,7 @@ android:
     - tools
 
     # The BuildTools version used by your project
-    - build-tools-23.0.1
+    - build-tools-23.0.3
     - android-23
     - extra-android-m2repository
     - extra-google-m2repository
@@ -15,5 +15,5 @@ android:
 before_script:
     - chmod +x gradlew
 #Build, and run tests
-script: "./gradlew build testDebug"
+script: "./gradlew clean assembleDebug testDebugUnitTest"
 sudo: false
