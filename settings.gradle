@@ -1,2 +1,1 @@
-include ':app', ':SubsamplingScaleImageView'
-project(':SubsamplingScaleImageView').projectDir = new File('libs/SubsamplingScaleImageView')
+include ':app'

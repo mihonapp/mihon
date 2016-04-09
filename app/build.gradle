@@ -95,9 +95,11 @@ dependencies {
     final STORIO_VERSION = '1.8.0'
     final MOCKITO_VERSION = '1.10.19'
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(":SubsamplingScaleImageView")
+    // Modified dependencies
+    compile 'com.github.inorichi:subsampling-scale-image-view:7dc97eb'
+    compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
+    // Android support library
     compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
@@ -107,39 +109,65 @@ dependencies {
     compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:preference-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:preference-v14:$SUPPORT_LIBRARY_VERSION"
-    compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
-    compile "com.squareup.okhttp3:okhttp-urlconnection:$OKHTTP_VERSION"
-    compile 'com.squareup.okio:okio:1.6.0'
-    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
-    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
-    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
-    compile 'com.jakewharton:disklrucache:2.0.2'
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'org.jsoup:jsoup:1.8.3'
+
+    // ReactiveX
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.1'
+
+    // Network client
+    compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp3:okhttp-urlconnection:$OKHTTP_VERSION"
+
+    // REST
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+
+    // IO
+    compile 'com.squareup.okio:okio:1.6.0'
+
+    // JSON
+    compile 'com.google.code.gson:gson:2.6.2'
+
+    // Disk cache
+    compile 'com.jakewharton:disklrucache:2.0.2'
+
+    // Parse HTML
+    compile 'org.jsoup:jsoup:1.8.3'
+
+    // Database
     compile "com.pushtorefresh.storio:sqlite:$STORIO_VERSION"
     compile "com.pushtorefresh.storio:sqlite-annotations:$STORIO_VERSION"
+    kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
+
+    // Model View Presenter
     compile 'info.android15.nucleus:nucleus:2.0.5'
+
+    // Dependency injection
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    // Image library
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    // Logging
     compile 'com.jakewharton.timber:timber:4.1.2'
+
+    // Crash reports
     compile 'ch.acra:acra:4.8.5'
+
+    // UI
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-
-    compile "com.google.dagger:dagger:$DAGGER_VERSION"
-    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-    kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-
     compile('com.github.afollestad.material-dialogs:core:0.8.5.5@aar') {
         transitive = true
     }
 
-
+    // Tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.1'
     testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
