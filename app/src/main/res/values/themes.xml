@@ -12,7 +12,7 @@
     <style name="Theme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccentLight</item>
         <item name="android:textColorPrimary">@color/textColorPrimaryLight</item>
         <item name="android:textColorSecondary">@color/textColorSecondaryLight</item>
         <item name="android:textColorHint">@color/textColorHintLight</item>
@@ -20,7 +20,7 @@
         <item name="android:textColorSecondaryInverse">@color/textColorSecondaryDark</item>
         <item name="android:textColorHintInverse">@color/textColorHintDark</item>
         <item name="android:colorBackground">@color/backgroundLight</item>
-        <item name="android:listSelector">@color/colorAccent</item>
+        <item name="android:listSelector">?colorAccent</item>
         <item name="android:divider">@color/dividerLight</item>
 
         <!-- Themes -->
@@ -46,7 +46,7 @@
     <style name="Theme.Base.Dark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccentDark</item>
         <item name="android:textColorPrimary">@color/textColorPrimaryDark</item>
         <item name="android:textColorSecondary">@color/textColorSecondaryDark</item>
         <item name="android:textColorHint">@color/textColorHintDark</item>
@@ -54,7 +54,7 @@
         <item name="android:textColorSecondaryInverse">@color/textColorSecondaryLight</item>
         <item name="android:textColorHintInverse">@color/textColorHintLight</item>
         <item name="android:colorBackground">@color/backgroundDark</item>
-        <item name="android:listSelector">@color/colorAccent</item>
+        <item name="android:listSelector">?colorAccent</item>
         <item name="android:divider">@color/dividerDark</item>
 
         <!-- Themes -->

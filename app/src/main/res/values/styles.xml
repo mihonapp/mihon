@@ -26,7 +26,7 @@
 
     <style name="Theme.Widget.NavigationView.Dark">
         <item name="colorControlHighlight">@color/md_grey_900</item>
-        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimary">?colorAccent</item>
     </style>
 
     <!--===============-->
@@ -168,7 +168,7 @@
     <style name="FilePickerTheme" parent="NNF_BaseTheme.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccentLight</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
         <item name="android:textSize">14sp</item>
 

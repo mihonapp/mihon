@@ -20,7 +20,7 @@
             android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="?colorAccent"
             style="@style/TextAppearance.Regular.SubHeading"/>
 
         <TextView

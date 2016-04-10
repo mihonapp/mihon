@@ -4,9 +4,9 @@
     <color name="colorPrimary">#54759e</color>
     <color name="colorPrimaryDark">#435e7e</color>
     <color name="colorPrimaryDarkTrans">#40435e7e</color>
-    <color name="colorAccent">@color/md_blue_400</color>
 
     <!-- Light Theme -->
+    <color name="colorAccentLight">@color/md_blue_A400</color>
     <color name="textColorPrimaryLight">@color/md_black_1000_87</color>
     <color name="textColorSecondaryLight">@color/md_black_1000_54</color>
     <color name="textColorHintLight">@color/md_black_1000_38</color>
@@ -17,9 +17,10 @@
     <color name="backgroundLight">@color/md_grey_50</color>
     <color name="dialogLight">@color/md_white_1000</color>
 
-    <color name="selectorColorLight">@color/md_blue_400_38</color>
+    <color name="selectorColorLight">@color/md_blue_A400_38</color>
 
     <!-- Dark Theme -->
+    <color name="colorAccentDark">@color/md_blue_A200</color>
     <color name="textColorPrimaryDark">@color/md_white_1000</color>
     <color name="textColorSecondaryDark">@color/md_white_1000_70</color>
     <color name="textColorHintDark">@color/md_white_1000_50</color>
@@ -30,7 +31,7 @@
     <color name="backgroundDark">#303030</color>
     <color name="dialogDark">@color/md_grey_800</color>
 
-    <color name="selectorColorDark">@color/md_blue_400_50</color>
+    <color name="selectorColorDark">@color/md_blue_A200_50</color>
 
     <!-- Reader Theme -->
     <color name="pageNumberBackgroundLight">@color/md_grey_50_75</color>
@@ -58,9 +59,11 @@
     <color name="md_grey_900">#212121</color>
     <color name="md_grey_900_75">#BF212121</color>
 
-    <color name="md_blue_400">#42A5F5</color>
-    <color name="md_blue_400_50">#8042A5F5</color>
-    <color name="md_blue_400_38">#6142A5F5</color>
+    <color name="md_blue_A200">#448AFF</color>
+    <color name="md_blue_A200_50">#80448AFF</color>
+
+    <color name="md_blue_A400">#2979FF</color>
+    <color name="md_blue_A400_38">#612979FF</color>
 
     <color name="md_blue_grey_900">#263238</color>
 
