@@ -19,4 +19,7 @@ class PreCachingLayoutManager(context: Context) : LinearLayoutManager(context) {
         return DEFAULT_EXTRA_LAYOUT_SPACE
     }
 
+    // http://stackoverflow.com/questions/30220771/recyclerview-inconsistency-detected-invalid-item-position
+    override fun supportsPredictiveItemAnimations() = false
+
 }
