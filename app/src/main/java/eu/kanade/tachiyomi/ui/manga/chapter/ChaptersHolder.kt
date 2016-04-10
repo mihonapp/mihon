@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.PopupMenu
 import eu.kanade.tachiyomi.R
@@ -46,8 +45,12 @@ class ChaptersHolder(private val view: View, private val adapter: ChaptersAdapte
         chapter_title.text = name
         chapter_title.setTextColor(if (chapter.read) readColor else unreadColor)
 
-        chapter_date.text = df.format(Date(chapter.date_upload))
-        chapter_date.setTextColor(if (chapter.read) readColor else unreadColor)
+        if (chapter.date_upload > 0) {
+            chapter_date.text = df.format(Date(chapter.date_upload))
+            chapter_date.setTextColor(if (chapter.read) readColor else unreadColor)
+        } else {
+            chapter_date.text = ""
+        }
 
         if (!chapter.read && chapter.last_page_read > 0) {
             chapter_pages.text = context.getString(R.string.chapter_progress, chapter.last_page_read + 1)
