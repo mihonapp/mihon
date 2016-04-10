@@ -3,7 +3,6 @@
     <!-- Application Colors -->
     <color name="colorPrimary">#54759e</color>
     <color name="colorPrimaryDark">#435e7e</color>
-    <color name="colorPrimaryDarkTrans">#40435e7e</color>
 
     <!-- Light Theme -->
     <color name="colorAccentLight">@color/md_blue_A400</color>

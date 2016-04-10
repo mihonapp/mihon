@@ -33,7 +33,6 @@
         <!-- Custom Attributes-->
         <item name="selectable_list_drawable">@drawable/list_item_selector_light</item>
         <item name="divider_drawable">@drawable/line_divider_light</item>
-        <item name="status_bar_trans">@color/colorPrimaryDarkTrans</item>
     </style>
 
     <style name="Theme.Tachiyomi" parent="Theme.Base">
@@ -68,7 +67,6 @@
         <item name="navigation_view_theme">@style/Theme.Widget.NavigationView.Dark</item>
         <item name="selectable_list_drawable">@drawable/list_item_selector_dark</item>
         <item name="divider_drawable">@drawable/line_divider_dark</item>
-        <item name="status_bar_trans">@color/colorPrimaryDarkTrans</item>
     </style>
 
     <style name="Theme.Tachiyomi.Dark" parent="Theme.Base.Dark">

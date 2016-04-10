@@ -8,6 +8,7 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:alertDialogTheme">@style/Theme.AlertDialog.Light</item>
     </style>
 
     <!--============-->
@@ -18,5 +19,6 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:alertDialogTheme">@style/Theme.AlertDialog.Dark</item>
     </style>
 </resources>
