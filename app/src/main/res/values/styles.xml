@@ -170,9 +170,9 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
     
-    <style name="ActionBarSpinnerItem" parent="@style/Widget.AppCompat.DropDownItem.Spinner">
+    <style name="ActionBarSpinnerItem" parent="@style/Widget.AppCompat.Light.DropDownItem.Spinner">
         <item name="android:textColor">@color/textColorPrimaryLight</item>
-        <item name="android:background">@color/background_material_light</item>
+        <item name="android:background">@drawable/list_item_selector_light</item>
     </style>
 
     <style name="FilePickerTheme" parent="NNF_BaseTheme.Light">
