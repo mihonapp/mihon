@@ -85,8 +85,8 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
     private fun clearDatabase() {
         MaterialDialog.Builder(activity)
                 .content(R.string.clear_database_confirmation)
-                .positiveText(R.string.button_yes)
-                .negativeText(R.string.button_no)
+                .positiveText(android.R.string.yes)
+                .negativeText(android.R.string.no)
                 .onPositive { dialog, which -> db.deleteMangasNotInLibrary().executeAsBlocking() }
                 .show()
     }

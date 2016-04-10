@@ -51,12 +51,6 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_sort">Sort</string>
 
-    <!-- Buttons -->
-    <string name="button_ok">OK</string>
-    <string name="button_cancel">Cancel</string>
-    <string name="button_yes">Yes</string>
-    <string name="button_no">No</string>
-
     <!-- Operations -->
     <string name="deleting">Deleting…</string>
     <string name="loading">Loading…</string>

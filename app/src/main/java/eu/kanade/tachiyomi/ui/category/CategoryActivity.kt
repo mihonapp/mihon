@@ -82,7 +82,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
         fab.setOnClickListener({ v ->
             MaterialDialog.Builder(this)
                     .title(R.string.action_add_category)
-                    .negativeText(R.string.button_cancel)
+                    .negativeText(android.R.string.cancel)
                     .input(R.string.name, 0, false)
                     { dialog, input -> presenter.createCategory(input.toString()) }
                     .show()
@@ -125,7 +125,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
     private fun editCategory(category: Category) {
         MaterialDialog.Builder(this)
                 .title(R.string.action_rename_category)
-                .negativeText(R.string.button_cancel)
+                .negativeText(android.R.string.cancel)
                 .onNegative { materialDialog, dialogAction -> destroyActionModeIfNeeded() }
                 .input(getString(R.string.name), category.name, false)
                 { dialog, input -> presenter.renameCategory(category, input.toString()) }
