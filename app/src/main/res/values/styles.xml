@@ -6,6 +6,7 @@
     <!--========-->
     <style name="Theme.ActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:spinnerDropDownItemStyle">@style/ActionBarSpinnerItem</item>
     </style>
 
     <!--====-->
@@ -168,19 +169,11 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
-
-
-
-    <!--<style name="ActionBarSpinner" parent="@style/Widget.AppCompat.TextView.SpinnerItem">-->
-        <!--<item name="android:textColor">@color/white</item>-->
-        <!--<item name="android:textColorHint">@color/hint_foreground_material_dark</item>-->
-    <!--</style>-->
-
-    <!--<style name="ActionBarSpinnerItem" parent="@style/Widget.AppCompat.DropDownItem.Spinner">-->
-        <!--<item name="android:background">@color/background_material_light</item>-->
-    <!--</style>-->
-
-
+    
+    <style name="ActionBarSpinnerItem" parent="@style/Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">@color/textColorPrimaryLight</item>
+        <item name="android:background">@color/background_material_light</item>
+    </style>
 
     <style name="FilePickerTheme" parent="NNF_BaseTheme.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
