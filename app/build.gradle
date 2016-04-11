@@ -96,7 +96,7 @@ dependencies {
     final MOCKITO_VERSION = '1.10.19'
 
     // Modified dependencies
-    compile 'com.github.inorichi:subsampling-scale-image-view:7dc97eb'
+    compile 'com.github.inorichi:subsampling-scale-image-view:421fb81'
     compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
     // Android support library
