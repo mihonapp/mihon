@@ -370,7 +370,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      * @param manga the manga initialized
      */
     fun onMangaInitialized(manga: Manga) {
-        getHolder(manga)?.setImage(manga, presenter)
+        getHolder(manga)?.setImage(manga)
     }
 
     /**

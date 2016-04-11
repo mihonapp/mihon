@@ -19,7 +19,6 @@ abstract class CatalogueHolder(view: View, adapter: CatalogueAdapter, listener: 
      * holder with the given manga.
      *
      * @param manga the manga to bind.
-     * @param presenter the catalogue presenter.
      */
-    abstract fun onSetValues(manga: Manga, presenter: CataloguePresenter)
+    abstract fun onSetValues(manga: Manga)
 }

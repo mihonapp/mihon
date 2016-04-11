@@ -12,7 +12,7 @@ import java.util.*
  *
  * @param fragment the fragment containing this adapter.
  */
-class CatalogueAdapter(private val fragment: CatalogueFragment) : FlexibleAdapter<CatalogueHolder, Manga>() {
+class CatalogueAdapter(val fragment: CatalogueFragment) : FlexibleAdapter<CatalogueHolder, Manga>() {
 
     /**
      * Property to get the list of manga in the adapter.
@@ -83,7 +83,7 @@ class CatalogueAdapter(private val fragment: CatalogueFragment) : FlexibleAdapte
      */
     override fun onBindViewHolder(holder: CatalogueHolder, position: Int) {
         val manga = getItem(position)
-        holder.onSetValues(manga, fragment.presenter)
+        holder.onSetValues(manga)
     }
 
 }

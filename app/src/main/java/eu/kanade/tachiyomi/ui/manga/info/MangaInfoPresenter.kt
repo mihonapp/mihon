@@ -130,7 +130,7 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
         if (isFavorite) {
             coverCache.save(manga.thumbnail_url, source.glideHeaders)
         } else {
-            coverCache.deleteCoverFromCache(manga.thumbnail_url)
+            coverCache.deleteFromCache(manga.thumbnail_url)
         }
     }
 

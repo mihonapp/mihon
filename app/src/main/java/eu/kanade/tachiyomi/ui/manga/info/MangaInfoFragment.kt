@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.signature.StringSignature
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.base.Source
@@ -95,26 +99,37 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         val headers = presenter.source.glideHeaders
 
         // Check if thumbnail_url is given.
-        if (manga.thumbnail_url != null) {
-            // Check if cover is already drawn.
-            if (manga_cover.drawable == null) {
-                // If manga is in library then (download / save) (from / to) local cache if available,
-                // else download from network.
-                if (manga.favorite) {
-                    coverCache.saveOrLoadFromCache(manga_cover, manga.thumbnail_url, headers)
-                } else {
-                    coverCache.loadFromNetwork(manga_cover, manga.thumbnail_url, headers)
+        manga.thumbnail_url?.let { url ->
+            if (manga.favorite) {
+                coverCache.saveOrLoadFromCache(url, headers) {
+                    if (isResumed) {
+                        Glide.with(context)
+                                .load(it)
+                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                .centerCrop()
+                                .signature(StringSignature(it.lastModified().toString()))
+                                .into(manga_cover)
+
+                        Glide.with(context)
+                                .load(it)
+                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                .centerCrop()
+                                .signature(StringSignature(it.lastModified().toString()))
+                                .into(backdrop)
+                    }
                 }
-            }
-            // Check if backdrop is already drawn.
-            if (backdrop.drawable == null) {
-                // If manga is in library then (download / save) (from / to) local cache if available,
-                // else download from network.
-                if (manga.favorite) {
-                    coverCache.saveOrLoadFromCache(backdrop, manga.thumbnail_url, headers)
-                } else {
-                    coverCache.loadFromNetwork(backdrop, manga.thumbnail_url, headers)
-                }
+            } else {
+                Glide.with(context)
+                        .load(if (headers != null) GlideUrl(url, headers) else url)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .centerCrop()
+                        .into(manga_cover)
+
+                Glide.with(context)
+                        .load(if (headers != null) GlideUrl(url, headers) else url)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .centerCrop()
+                        .into(backdrop)
             }
         }
     }

@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
 import android.os.Bundle
-import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -32,11 +31,6 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * Database.
      */
     @Inject lateinit var db: DatabaseHelper
-
-    /**
-     * Cover cache.
-     */
-    @Inject lateinit var coverCache: CoverCache
 
     /**
      * Preferences.

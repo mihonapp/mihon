@@ -1,6 +1,9 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.signature.StringSignature
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.base.Source
@@ -16,8 +19,10 @@ import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
  * @param listener a listener to react to single tap and long tap events.
  * @constructor creates a new library holder.
  */
-class LibraryHolder(view: View, adapter: LibraryCategoryAdapter, listener: FlexibleViewHolder.OnListItemClickListener) :
+class LibraryHolder(private val view: View, adapter: LibraryCategoryAdapter, listener: FlexibleViewHolder.OnListItemClickListener) :
         FlexibleViewHolder(view, adapter, listener) {
+
+    private var manga: Manga? = null
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this
@@ -27,11 +32,13 @@ class LibraryHolder(view: View, adapter: LibraryCategoryAdapter, listener: Flexi
      * @param presenter the library presenter.
      */
     fun onSetValues(manga: Manga, presenter: LibraryPresenter) {
+        this.manga = manga
+
         // Update the title of the manga.
-        itemView.title.text = manga.title
+        view.title.text = manga.title
 
         // Update the unread count and its visibility.
-        with(itemView.unreadText) {
+        with(view.unreadText) {
             visibility = if (manga.unread > 0) View.VISIBLE else View.GONE
             text = manga.unread.toString()
         }
@@ -49,9 +56,18 @@ class LibraryHolder(view: View, adapter: LibraryCategoryAdapter, listener: Flexi
      */
     private fun loadCover(manga: Manga, source: Source, coverCache: CoverCache) {
         if (manga.thumbnail_url != null) {
-            coverCache.saveOrLoadFromCache(itemView.thumbnail, manga.thumbnail_url, source.glideHeaders)
+            coverCache.saveOrLoadFromCache(manga.thumbnail_url, source.glideHeaders) {
+                if (this.manga == manga) {
+                    Glide.with(view.context)
+                            .load(it)
+                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .centerCrop()
+                            .signature(StringSignature(it.lastModified().toString()))
+                            .into(itemView.thumbnail)
+                }
+            }
         } else {
-            itemView.thumbnail.setImageResource(android.R.color.transparent)
+            view.thumbnail.setImageResource(android.R.color.transparent)
         }
     }
 

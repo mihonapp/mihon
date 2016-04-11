@@ -25,9 +25,8 @@ class CatalogueListHolder(private val view: View, adapter: CatalogueAdapter, lis
      * holder with the given manga.
      *
      * @param manga the manga to bind.
-     * @param presenter the catalogue presenter.
      */
-    override fun onSetValues(manga: Manga, presenter: CataloguePresenter) {
+    override fun onSetValues(manga: Manga) {
         view.title.text = manga.title
         view.title.setTextColor(if (manga.favorite) favoriteColor else unfavoriteColor)
     }

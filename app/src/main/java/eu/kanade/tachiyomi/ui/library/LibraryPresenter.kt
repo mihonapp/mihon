@@ -280,7 +280,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     @Throws(IOException::class)
     fun editCoverWithStream(inputStream: InputStream, manga: Manga): Boolean {
         if (manga.thumbnail_url != null && manga.favorite) {
-            coverCache.copyToLocalCache(manga.thumbnail_url, inputStream)
+            coverCache.copyToCache(manga.thumbnail_url, inputStream)
             return true
         }
         return false
