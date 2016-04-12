@@ -24,11 +24,6 @@ class PreferencesHelper(private val context: Context) {
         defaultDownloadsDir = File(Environment.getExternalStorageDirectory().absolutePath +
                 File.separator + context.getString(R.string.app_name), "downloads")
 
-        // Create default directory
-        if (downloadsDirectory == defaultDownloadsDir.absolutePath && !defaultDownloadsDir.exists()) {
-            defaultDownloadsDir.mkdirs()
-        }
-
         // Don't display downloaded chapters in gallery apps creating a ".nomedia" file
         try {
             File(downloadsDirectory, ".nomedia").createNewFile()
