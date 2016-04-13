@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.library
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.TabLayout
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.SearchView
@@ -18,7 +17,6 @@ import eu.kanade.tachiyomi.event.LibraryMangaEvent
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
@@ -41,13 +39,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     /**
      * TabLayout of the categories.
      */
-    private lateinit var tabs: TabLayout
-
-    /**
-     * AppBarLayout from [MainActivity].
-     */
-    private val appbar: AppBarLayout
-        get() = (activity as MainActivity).appbar
+    private val tabs: TabLayout
+        get() = (activity as MainActivity).tabs
 
     /**
      * Position of the active category.
@@ -69,7 +62,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Selected manga for editing its cover.
      */
     private var selectedCoverManga: Manga? = null
-
 
     /**
      * Status of isFilterDownloaded
@@ -122,10 +114,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         setToolbarTitle(getString(R.string.label_library))
 
-        tabs = appbar.inflate(R.layout.library_tab_layout) as TabLayout
-
-        appbar.addView(tabs)
-
         adapter = LibraryAdapter(childFragmentManager)
         view_pager.adapter = adapter
         tabs.setupWithViewPager(view_pager)
@@ -138,7 +126,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     override fun onDestroyView() {
-        appbar.removeView(tabs)
+        tabs.visibility = View.GONE
         super.onDestroyView()
     }
 

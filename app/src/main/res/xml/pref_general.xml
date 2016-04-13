@@ -2,6 +2,14 @@
 <android.support.v7.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <eu.kanade.tachiyomi.widget.preference.IntListPreference
+        android:defaultValue="1"
+        android:entries="@array/themes"
+        android:entryValues="@array/themes_values"
+        android:key="@string/pref_theme_key"
+        android:summary="%s"
+        android:title="@string/pref_theme"/>
+
     <eu.kanade.tachiyomi.widget.preference.SimpleDialogPreference
         android:dialogLayout="@layout/pref_library_columns"
         android:key="@string/pref_library_columns_dialog_key"
@@ -15,14 +23,6 @@
         android:key="@string/pref_library_update_interval_key"
         android:summary="%s"
         android:title="@string/pref_library_update_interval"/>
-
-    <eu.kanade.tachiyomi.widget.preference.IntListPreference
-        android:defaultValue="1"
-        android:entries="@array/themes"
-        android:entryValues="@array/themes_values"
-        android:key="@string/pref_theme_key"
-        android:summary="%s"
-        android:title="@string/pref_theme"/>
 
     <SwitchPreferenceCompat
         android:defaultValue="false"

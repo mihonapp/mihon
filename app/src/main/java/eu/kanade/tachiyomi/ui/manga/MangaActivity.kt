@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.ui.manga.info.MangaInfoFragment
 import eu.kanade.tachiyomi.ui.manga.myanimelist.MyAnimeListFragment
 import eu.kanade.tachiyomi.util.SharedData
 import kotlinx.android.synthetic.main.activity_manga.*
-import kotlinx.android.synthetic.main.tab_layout.*
 import kotlinx.android.synthetic.main.toolbar.*
 import nucleus.factory.RequiresPresenter
 
