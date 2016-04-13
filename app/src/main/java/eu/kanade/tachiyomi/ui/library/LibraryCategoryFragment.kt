@@ -119,7 +119,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
     override fun onResume() {
         super.onResume()
         libraryMangaSubscription = libraryPresenter.libraryMangaSubject
-                .subscribe({ onNextLibraryManga(it) })
+                .subscribe { if (it != null) onNextLibraryManga(it) }
     }
 
     override fun onPause() {
@@ -139,7 +139,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
      *
      * @param event the event received.
      */
-    fun onNextLibraryManga(event: LibraryMangaEvent?) {
+    fun onNextLibraryManga(event: LibraryMangaEvent) {
         // Get the categories from the parent fragment.
         val categories = libraryFragment.adapter.categories ?: return
 
@@ -147,7 +147,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
         if (position >= categories.size) return
 
         // Get the manga list for this category
-        val mangaForCategory = event?.getMangasForCategory(categories[position])
+        val mangaForCategory = event.getMangasForCategory(categories[position])
 
         // Update the list only if the reference to the list is different, avoiding reseting the
         // adapter after every onResume.
