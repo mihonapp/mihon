@@ -68,7 +68,7 @@ class LibraryHolder(private val view: View, adapter: LibraryCategoryAdapter, lis
                 }
             }
         } else {
-            view.thumbnail.setImageResource(android.R.color.transparent)
+            Glide.clear(view.thumbnail)
         }
     }
 

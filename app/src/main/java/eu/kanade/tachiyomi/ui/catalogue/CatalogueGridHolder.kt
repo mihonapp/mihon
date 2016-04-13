@@ -54,7 +54,7 @@ class CatalogueGridHolder(private val view: View, private val adapter: Catalogue
                     .into(view.thumbnail)
 
         } else {
-            view.thumbnail.setImageResource(android.R.color.transparent)
+            Glide.clear(view.thumbnail)
         }
     }
 }
