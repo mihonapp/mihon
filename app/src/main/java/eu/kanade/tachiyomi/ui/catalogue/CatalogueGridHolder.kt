@@ -50,6 +50,7 @@ class CatalogueGridHolder(private val view: View, private val adapter: Catalogue
                     .load(if (headers != null) GlideUrl(url, headers) else url)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .centerCrop()
+                    .skipMemoryCache(true)
                     .placeholder(android.R.color.transparent)
                     .into(view.thumbnail)
 
