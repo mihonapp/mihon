@@ -63,6 +63,7 @@ class LibraryHolder(private val view: View, adapter: LibraryCategoryAdapter, lis
                             .diskCacheStrategy(DiskCacheStrategy.RESULT)
                             .centerCrop()
                             .signature(StringSignature(it.lastModified().toString()))
+                            .placeholder(android.R.color.transparent)
                             .into(itemView.thumbnail)
                 }
             }
