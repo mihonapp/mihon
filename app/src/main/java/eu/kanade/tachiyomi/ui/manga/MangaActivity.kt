@@ -1,16 +1,11 @@
 package eu.kanade.tachiyomi.ui.manga
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.ContextCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.event.MangaEvent
@@ -67,19 +62,6 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
 
     fun onSetManga(manga: Manga) {
         setToolbarTitle(manga.title)
-    }
-
-    private fun requestPermissionsOnMarshmallow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
-                        1)
-
-            }
-        }
     }
 
     internal class MangaDetailAdapter(fm: FragmentManager, activity: MangaActivity) : FragmentPagerAdapter(fm) {

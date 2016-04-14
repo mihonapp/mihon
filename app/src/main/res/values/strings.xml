@@ -265,6 +265,7 @@
 
     <!-- File Picker Titles -->
     <string name="file_select_cover">Select cover image</string>
+    <string name="file_select_backup">Select backup file</string>
 
     <!--UpdateCheck-->
     <string name="update_check_title">New update available!</string>

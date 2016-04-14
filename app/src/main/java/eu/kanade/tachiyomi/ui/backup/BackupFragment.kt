@@ -14,6 +14,11 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_backup.*
 import nucleus.factory.RequiresPresenter
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.internal.util.SubscriptionList
+import rx.schedulers.Schedulers
+import timber.log.Timber
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,11 +33,16 @@ class BackupFragment : BaseRxFragment<BackupPresenter>() {
     private var backupDialog: Dialog? = null
     private var restoreDialog: Dialog? = null
 
+    private lateinit var subscriptions: SubscriptionList
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_backup, container, false)
     }
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
+        baseActivity.requestPermissionsOnMarshmallow()
+        subscriptions = SubscriptionList()
+
         backup_button.setOnClickListener {
             val today = SimpleDateFormat("yyyy-MM-dd").format(Date())
             val file = File(activity.externalCacheDir, "tachiyomi-$today.json")
@@ -48,9 +58,14 @@ class BackupFragment : BaseRxFragment<BackupPresenter>() {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             intent.type = "application/octet-stream"
-            val chooser = Intent.createChooser(intent, getString(R.string.file_select_cover))
+            val chooser = Intent.createChooser(intent, getString(R.string.file_select_backup))
             startActivityForResult(chooser, REQUEST_BACKUP_OPEN)
         }
+    }
+
+    override fun onDestroyView() {
+        subscriptions.unsubscribe()
+        super.onDestroyView()
     }
 
     /**
@@ -99,8 +114,18 @@ class BackupFragment : BaseRxFragment<BackupPresenter>() {
                     .progress(true, 0)
                     .show()
 
-            val stream = context.contentResolver.openInputStream(data.data)
-            presenter.restoreBackup(stream)
+            // When using cloud services, we have to open the input stream in a background thread.
+            Observable.fromCallable { context.contentResolver.openInputStream(data.data) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        presenter.restoreBackup(it)
+                    }, {
+                        context.toast(it.message)
+                        Timber.e(it, it.message)
+                    })
+                    .apply { subscriptions.add(this) }
+
         }
     }
 

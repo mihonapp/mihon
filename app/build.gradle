@@ -125,7 +125,7 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
 
     // IO
-    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'com.squareup.okio:okio:1.7.0'
 
     // JSON
     compile 'com.google.code.gson:gson:2.6.2'

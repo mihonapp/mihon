@@ -1,7 +1,12 @@
 package eu.kanade.tachiyomi.ui.base.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -40,6 +45,22 @@ open class BaseActivity : AppCompatActivity() {
 
     fun setToolbarSubtitle(titleResource: Int) {
         supportActionBar?.subtitle = getString(titleResource)
+    }
+
+    /**
+     * Requests read and write permissions on Android M and higher.
+     */
+    fun requestPermissionsOnMarshmallow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
+                        1)
+
+            }
+        }
     }
 
     protected val app: App
