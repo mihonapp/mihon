@@ -260,16 +260,15 @@ class DownloadManager(private val context: Context, private val sourceManager: S
     // Get the filename for an image given the page
     private fun getImageFilename(page: Page): String {
         val url = page.imageUrl
-        val number = page.pageNumber + 1
+        val number = String.format("%03d", page.pageNumber + 1)
+
         // Try to preserve file extension
-        if (UrlUtil.isJpg(url)) {
-            return "$number.jpg"
-        } else if (UrlUtil.isPng(url)) {
-            return "$number.png"
-        } else if (UrlUtil.isGif(url)) {
-            return "$number.gif"
+        return when {
+            UrlUtil.isJpg(url) -> "$number.jpg"
+            UrlUtil.isPng(url) -> "$number.png"
+            UrlUtil.isGif(url) -> "$number.gif"
+            else -> Uri.parse(url).lastPathSegment.replace(imageFilenameRegex, "_")
         }
-        return Uri.parse(url).lastPathSegment.replace(imageFilenameRegex, "_")
     }
 
     private fun isImageDownloaded(imagePath: File): Boolean {
