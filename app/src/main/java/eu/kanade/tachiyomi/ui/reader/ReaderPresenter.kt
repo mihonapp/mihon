@@ -51,8 +51,8 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     private var previousChapter: Chapter? = null
     private var mangaSyncList: List<MangaSync>? = null
 
-    private lateinit var retryPageSubject: PublishSubject<Page>
-    private lateinit var pageInitializerSubject: PublishSubject<Chapter>
+    private val retryPageSubject by lazy { PublishSubject.create<Page>() }
+    private val pageInitializerSubject by lazy { PublishSubject.create<Chapter>() }
 
     val isSeamlessMode by lazy { prefs.seamlessMode() }
 
@@ -120,7 +120,6 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
     private fun initializeSubjects() {
         // Listen for pages initialization events
-        pageInitializerSubject = PublishSubject.create<Chapter>()
         add(pageInitializerSubject.observeOn(Schedulers.io())
                 .concatMap { ch ->
                     val observable: Observable<Page>
@@ -141,7 +140,6 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 }.subscribe())
 
         // Listen por retry events
-        retryPageSubject = PublishSubject.create<Page>()
         add(retryPageSubject.observeOn(Schedulers.io())
                 .flatMap { page ->
                     if (page.imageUrl == null)

@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
  * @param listener a listener to react to single tap and long tap events.
  * @constructor creates a new library holder.
  */
-class LibraryHolder(private val view: View, adapter: LibraryCategoryAdapter, listener: FlexibleViewHolder.OnListItemClickListener) :
+class LibraryHolder(private val view: View, private val adapter: LibraryCategoryAdapter, listener: FlexibleViewHolder.OnListItemClickListener) :
         FlexibleViewHolder(view, adapter, listener) {
 
     private var manga: Manga? = null
@@ -55,9 +55,9 @@ class LibraryHolder(private val view: View, adapter: LibraryCategoryAdapter, lis
      * @param coverCache the cache that stores the cover in the filesystem.
      */
     private fun loadCover(manga: Manga, source: Source, coverCache: CoverCache) {
-        if (manga.thumbnail_url != null) {
+        if (!manga.thumbnail_url.isNullOrEmpty()) {
             coverCache.saveOrLoadFromCache(manga.thumbnail_url, source.glideHeaders) {
-                if (this.manga == manga) {
+                if (adapter.fragment.isResumed && this.manga == manga) {
                     Glide.with(view.context)
                             .load(it)
                             .diskCacheStrategy(DiskCacheStrategy.RESULT)

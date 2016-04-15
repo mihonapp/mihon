@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.catalogue
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.*
@@ -24,6 +23,7 @@ import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.EndlessGridScrollListener
 import eu.kanade.tachiyomi.widget.EndlessListScrollListener
+import eu.kanade.tachiyomi.widget.NpaLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_catalogue.*
 import kotlinx.android.synthetic.main.toolbar.*
 import nucleus.factory.RequiresPresenter
@@ -150,7 +150,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         catalogue_grid.adapter = adapter
         catalogue_grid.addOnScrollListener(gridScrollListener)
 
-        val llm = LinearLayoutManager(activity)
+        val llm = NpaLinearLayoutManager(activity)
         listScrollListener = EndlessListScrollListener(llm, { requestNextPage() })
         catalogue_list.setHasFixedSize(true)
         catalogue_list.adapter = adapter

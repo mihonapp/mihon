@@ -42,7 +42,7 @@ class CatalogueGridHolder(private val view: View, private val adapter: Catalogue
      * @param manga the manga to bind.
      */
     fun setImage(manga: Manga) {
-        if (manga.thumbnail_url != null) {
+        if (!manga.thumbnail_url.isNullOrEmpty()) {
             val url = manga.thumbnail_url!!
             val headers = adapter.fragment.presenter.source.glideHeaders
 

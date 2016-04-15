@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.view.ActionMode
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
@@ -16,6 +15,7 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.adapter.OnStartDragListener
+import eu.kanade.tachiyomi.widget.NpaLinearLayoutManager
 import kotlinx.android.synthetic.main.activity_edit_categories.*
 import kotlinx.android.synthetic.main.toolbar.*
 import nucleus.factory.RequiresPresenter
@@ -70,7 +70,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
         adapter = CategoryAdapter(this)
 
         // Create view and inject category items into view
-        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.layoutManager = NpaLinearLayoutManager(this)
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
 
