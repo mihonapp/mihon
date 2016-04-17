@@ -1,12 +1,14 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
+import android.support.v7.preference.SwitchPreferenceCompat
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.GithubUpdateChecker
 import eu.kanade.tachiyomi.data.updater.UpdateDownloader
+import eu.kanade.tachiyomi.data.updater.UpdateDownloaderAlarm
 import eu.kanade.tachiyomi.util.toast
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -27,6 +29,10 @@ class SettingsAboutFragment : SettingsNestedFragment() {
      */
     private var releaseSubscription: Subscription? = null
 
+    val automaticUpdateToggle by lazy {
+        findPreference(getString(R.string.pref_enable_automatic_updates_key)) as SwitchPreferenceCompat
+    }
+
     companion object {
 
         fun newInstance(resourcePreference: Int, resourceTitle: Int): SettingsNestedFragment {
@@ -45,11 +51,25 @@ class SettingsAboutFragment : SettingsNestedFragment() {
         else
             BuildConfig.VERSION_NAME
 
-        //Set onClickListener to check for new version
-        version.setOnPreferenceClickListener {
-            if (!BuildConfig.DEBUG && BuildConfig.INCLUDE_UPDATER)
-                checkVersion()
-            true
+        if (!BuildConfig.DEBUG && BuildConfig.INCLUDE_UPDATER) {
+            //Set onClickListener to check for new version
+            version.setOnPreferenceClickListener {
+                true
+            }
+
+            automaticUpdateToggle.isEnabled = true
+            automaticUpdateToggle.setOnPreferenceChangeListener { preference, any ->
+                val status = any as Boolean
+                UpdateDownloaderAlarm.startAlarm(activity, 12, status)
+                true
+            }
+
+            automaticUpdateToggle.isEnabled = true
+            automaticUpdateToggle.setOnPreferenceChangeListener { preference, any ->
+                val status = any as Boolean
+                UpdateDownloaderAlarm.startAlarm(activity, 12, status)
+                true
+            }
         }
 
         buildTime.summary = getFormattedBuildTime()

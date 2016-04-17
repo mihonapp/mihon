@@ -39,6 +39,11 @@ class PreferencesHelper(private val context: Context) {
                     context.getString(R.string.pref_library_update_interval_key), 0)
         }
 
+        fun getAutomaticUpdateStatus(context: Context): Boolean {
+            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+                    context.getString(R.string.pref_enable_automatic_updates), false)
+        }
+
         @JvmStatic
         fun getTheme(context: Context): Int {
             return PreferenceManager.getDefaultSharedPreferences(context).getInt(
@@ -132,9 +137,9 @@ class PreferencesHelper(private val context: Context) {
 
     fun removeAfterMarkedAsRead() = prefs.getBoolean(keys.removeAfterMarkedAsRead, false)
 
-    fun updateOnlyWhenCharging() = prefs.getBoolean(keys.updateOnlyWhenCharging, false)
-
     fun libraryUpdateInterval() = rxPrefs.getInteger(keys.libraryUpdateInterval, 0)
+
+    fun libraryUpdateRestriction() = prefs.getStringSet(keys.libraryUpdateRestriction, emptySet())
 
     fun filterDownloaded() = rxPrefs.getBoolean(keys.filterDownloaded, false)
 

@@ -3,19 +3,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="acra.enable"
-        android:title="@string/pref_enable_acra"
         android:summary="@string/pref_acra_summary"
-        android:defaultValue="true"/>
+        android:title="@string/pref_enable_acra"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:enabled="false"
+        android:key="@string/pref_enable_automatic_updates_key"
+        android:summary="@string/pref_enable_automatic_updates_summary"
+        android:title="@string/pref_enable_automatic_updates"/>
 
     <Preference
         android:key="@string/pref_version"
-        android:title="@string/version"
-        android:persistent="false" />
+        android:persistent="false"
+        android:title="@string/version"/>
 
     <Preference
         android:key="@string/pref_build_time"
-        android:title="@string/build_time"
-        android:persistent="false" />
+        android:persistent="false"
+        android:title="@string/build_time"/>
 
 </android.support.v7.preference.PreferenceScreen>
