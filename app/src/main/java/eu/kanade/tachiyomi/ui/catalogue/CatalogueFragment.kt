@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.Spinner
 import com.afollestad.materialdialogs.MaterialDialog
+import com.f2prateek.rx.preferences.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
@@ -84,6 +86,11 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      * Subscription of the debouncer subject.
      */
     private var queryDebouncerSubscription: Subscription? = null
+
+    /**
+     * Subscription of the number of manga per row.
+     */
+    private var numColumnsSubscription: Subscription? = null
 
     /**
      * Display mode of the catalogue (list or grid mode).
@@ -161,6 +168,12 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         if (presenter.isListMode) {
             switcher.showNext()
         }
+
+        numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
+                .doOnNext { catalogue_grid.spanCount = it }
+                .skip(1)
+                // Set again the adapter to recalculate the covers height
+                .subscribe { catalogue_grid.adapter = adapter }
 
         switcher.inAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)
         switcher.outAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_out)
@@ -266,6 +279,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
     }
 
     override fun onDestroyView() {
+        numColumnsSubscription?.unsubscribe()
         searchItem?.let {
             if (it.isActionViewExpanded) it.collapseActionView()
         }
@@ -389,6 +403,18 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
             // Initialize mangas if going to grid view
             presenter.initializeMangas(adapter.items)
         }
+    }
+
+    /**
+     * Returns a preference for the number of manga per row based on the current orientation.
+     *
+     * @return the preference.
+     */
+    fun getColumnsPreferenceForCurrentOrientation(): Preference<Int> {
+        return if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+            presenter.prefs.portraitColumns()
+        else
+            presenter.prefs.landscapeColumns()
     }
 
     /**
