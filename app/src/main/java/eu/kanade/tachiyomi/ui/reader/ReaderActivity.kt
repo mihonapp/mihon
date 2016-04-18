@@ -495,13 +495,15 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private fun setCustomBrightness(enabled: Boolean) {
         if (enabled) {
             customBrightnessSubscription = preferences.customBrightnessValue().asObservable()
+                    .map { Math.max(0.01f, it) }
                     .subscribe { setCustomBrightnessValue(it) }
 
             subscriptions.add(customBrightnessSubscription)
         } else {
-            if (customBrightnessSubscription != null)
+            if (customBrightnessSubscription != null) {
                 subscriptions.remove(customBrightnessSubscription)
-            setCustomBrightnessValue(-1f)
+            }
+            setCustomBrightnessValue(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE)
         }
     }
 
