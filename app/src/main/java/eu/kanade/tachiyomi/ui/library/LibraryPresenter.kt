@@ -220,11 +220,13 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     }
 
     /**
-     * Get the category names as a list.
+     * Returns the common categories for the given list of manga.
+     *
+     * @param mangas the list of manga.
      */
-    fun getCategoryNames(): List<String> {
-        return categories.map { it.name }
-    }
+    fun getCommonCategories(mangas: List<Manga>) = mangas.toSet()
+            .map { db.getCategoriesForManga(it).executeAsBlocking() }
+            .reduce { set1: Iterable<Category>, set2 -> set1.intersect(set2) }
 
     /**
      * Remove the selected manga from the library.

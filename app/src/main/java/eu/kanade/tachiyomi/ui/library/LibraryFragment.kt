@@ -385,10 +385,15 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * @param mangas the manga list to move.
      */
     private fun moveMangasToCategories(mangas: List<Manga>) {
+        val categories = presenter.categories
+        val commonCategoriesIndexes = presenter.getCommonCategories(mangas)
+                .map { categories.indexOf(it) }
+                .toTypedArray()
+
         MaterialDialog.Builder(activity)
                 .title(R.string.action_move_category)
-                .items(presenter.getCategoryNames())
-                .itemsCallbackMultiChoice(null) { dialog, positions, text ->
+                .items(categories.map { it.name })
+                .itemsCallbackMultiChoice(commonCategoriesIndexes) { dialog, positions, text ->
                     presenter.moveMangasToCategories(positions, mangas)
                     destroyActionModeIfNeeded()
                     true
