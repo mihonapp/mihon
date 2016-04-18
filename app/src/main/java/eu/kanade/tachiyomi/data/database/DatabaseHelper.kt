@@ -260,6 +260,14 @@ open class DatabaseHelper(context: Context) {
 
     fun deleteMangaSync(manga: MangaSync) = db.delete().`object`(manga).prepare()
 
+    fun deleteMangaSyncForManga(manga: Manga) = db.delete()
+            .byQuery(DeleteQuery.builder()
+                    .table(MangaSyncTable.TABLE)
+                    .where("${MangaSyncTable.COLUMN_MANGA_ID} = ?")
+                    .whereArgs(manga.id)
+                    .build())
+            .prepare()
+
     // Categories related queries
 
     fun getCategories() = db.get()

@@ -44,10 +44,11 @@ class NetworkHelper(context: Context) {
 
     @JvmOverloads
     fun request(request: Request, forceCache: Boolean = false): Observable<Response> {
+        var response: Response? = null
         return Observable.fromCallable {
             val c = if (forceCache) forceCacheClient else client
-            c.newCall(request).execute()
-        }
+            c.newCall(request).execute().apply { response = this }
+        }.doOnUnsubscribe { response?.body()?.close() }
     }
 
     @JvmOverloads
@@ -57,6 +58,7 @@ class NetworkHelper(context: Context) {
     }
 
     fun requestBodyProgress(request: Request, listener: ProgressListener): Observable<Response> {
+        var response: Response? = null
         return Observable.fromCallable {
             val progressClient = client.newBuilder()
                     .cache(null)
@@ -68,8 +70,8 @@ class NetworkHelper(context: Context) {
                     }
                     .build()
 
-            progressClient.newCall(request).execute()
-        }.retry(1)
+            progressClient.newCall(request).execute().apply { response = this }
+        }.doOnUnsubscribe { response?.body()?.close() }.retry(1)
     }
 
     val cookies: CookieStore

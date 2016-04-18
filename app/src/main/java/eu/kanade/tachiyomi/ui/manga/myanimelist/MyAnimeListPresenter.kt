@@ -123,20 +123,24 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
         stop(GET_SEARCH_RESULTS)
     }
 
-    fun registerManga(sync: MangaSync) {
-        sync.manga_id = manga.id
-        add(myAnimeList.bind(sync)
-                .flatMap { response ->
-                    if (response.isSuccessful) {
-                        db.insertMangaSync(sync).asRxObservable()
-                    } else {
-                        Observable.error(Exception("Could not bind manga"))
+    fun registerManga(sync: MangaSync?) {
+        if (sync != null) {
+            sync.manga_id = manga.id
+            add(myAnimeList.bind(sync)
+                    .flatMap { response ->
+                        if (response.isSuccessful) {
+                            db.insertMangaSync(sync).asRxObservable()
+                        } else {
+                            Observable.error(Exception("Could not bind manga"))
+                        }
                     }
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ },
-                        { error -> context.toast(error.message) }))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ },
+                            { error -> context.toast(error.message) }))
+        } else {
+            db.deleteMangaSyncForManga(manga).executeAsBlocking()
+        }
     }
 
     fun getAllStatus(): List<String> {

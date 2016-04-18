@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="Edit"
+            android:text="@string/action_edit"
             style="@style/TextAppearance.Medium.Button"/>
 
     </RelativeLayout>

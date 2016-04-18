@@ -56,6 +56,10 @@ class MyAnimeListFragment : BaseRxFragment<MyAnimeListPresenter>() {
             myanimelist_status.text = presenter.myAnimeList.getStatus(it.status)
         } ?: run {
             myanimelist_title.setTextAppearance(context, R.style.TextAppearance_Medium_Button)
+            myanimelist_title.setText(R.string.action_edit)
+            myanimelist_chapters.text = ""
+            myanimelist_score.text = ""
+            myanimelist_status.text = ""
         }
 
     }

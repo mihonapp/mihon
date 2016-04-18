@@ -91,9 +91,7 @@ class MyAnimeListDialogFragment : DialogFragment() {
     }
 
     private fun onPositiveButtonClick() {
-        selectedItem?.let {
-            presenter.registerManga(it)
-        }
+        presenter.registerManga(selectedItem)
     }
 
     private fun search(query: String) {
