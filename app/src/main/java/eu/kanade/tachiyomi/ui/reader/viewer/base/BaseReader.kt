@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.base
 
 import com.davemorrissey.labs.subscaleview.decoder.*
 import eu.kanade.tachiyomi.data.database.models.Chapter
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -53,6 +54,11 @@ abstract class BaseReader : BaseFragment() {
      */
     lateinit var bitmapDecoderClass: Class<out ImageDecoder>
         private set
+
+    /**
+     * Whether tap navigation is enabled or not.
+     */
+    val tappingEnabled by lazy { readerActivity.preferences.readWithTapping().getOrDefault() }
 
     /**
      * Whether the reader has requested to append a chapter. Used with seamless mode to avoid

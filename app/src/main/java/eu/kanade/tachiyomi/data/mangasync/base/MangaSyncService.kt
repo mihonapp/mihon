@@ -24,8 +24,8 @@ abstract class MangaSyncService(private val context: Context, val id: Int) {
     abstract fun login(username: String, password: String): Observable<Boolean>
 
     open val isLogged: Boolean
-        get() = !preferences.getMangaSyncUsername(this).isEmpty() &&
-                !preferences.getMangaSyncPassword(this).isEmpty()
+        get() = !preferences.mangaSyncUsername(this).isEmpty() &&
+                !preferences.mangaSyncPassword(this).isEmpty()
 
     abstract fun update(manga: MangaSync): Observable<Response>
 

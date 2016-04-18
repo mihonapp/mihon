@@ -6,7 +6,6 @@ import android.support.v14.preference.MultiSelectListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceGroup
 import android.view.View
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.data.source.getLanguages
@@ -65,7 +64,7 @@ class SettingsSourcesFragment : SettingsNestedFragment() {
 
     fun createSource(source: Source): Preference {
         return LoginPreference(preferenceManager.context).apply {
-            key = PreferencesHelper.SOURCE_ACCOUNT_USERNAME + source.id
+            key = preferences.keys.sourceUsername(source.id)
             title = source.visibleName
 
             setOnPreferenceClickListener {
@@ -80,7 +79,7 @@ class SettingsSourcesFragment : SettingsNestedFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == SOURCE_CHANGE_REQUEST) {
-            val pref = findPreference(PreferencesHelper.SOURCE_ACCOUNT_USERNAME + resultCode) as? LoginPreference
+            val pref = findPreference(preferences.keys.sourceUsername(resultCode)) as? LoginPreference
             pref?.notifyChanged()
         }
     }

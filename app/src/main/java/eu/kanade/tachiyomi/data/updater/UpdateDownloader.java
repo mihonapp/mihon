@@ -41,7 +41,7 @@ public class UpdateDownloader extends AsyncTask<String, Void, Void> {
         this.context = context;
 
         // Get cache directory from parameter.
-        cacheDir = new File(preferencesHelper.getDownloadsDirectory(), PARAMETER_CACHE_DIRECTORY);
+        cacheDir = new File(preferencesHelper.downloadsDirectory().get(), PARAMETER_CACHE_DIRECTORY);
 
         // Create cache directory.
         createCacheDir();

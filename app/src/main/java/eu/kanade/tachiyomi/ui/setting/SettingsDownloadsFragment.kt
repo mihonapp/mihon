@@ -14,12 +14,13 @@ import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.FilePickerFragment
 import com.nononsenseapps.filepicker.LogicHandler
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.inflate
+import rx.Subscription
 import java.io.File
 
 class SettingsDownloadsFragment : SettingsNestedFragment() {
 
-    val downloadDirPref by lazy { findPreference(getString(R.string.pref_download_directory_key)) }
     companion object {
 
         val DOWNLOAD_DIR_CODE = 103
@@ -31,11 +32,16 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
         }
     }
 
+    val downloadDirPref by lazy { findPreference(getString(R.string.pref_download_directory_key)) }
+
+    var downloadDirSubscription: Subscription? = null
+
     override fun onViewCreated(view: View, savedState: Bundle?) {
         downloadDirPref.setOnPreferenceClickListener {
 
+            val currentDir = preferences.downloadsDirectory().getOrDefault()
             val externalDirs = getExternalFilesDirs()
-            val selectedIndex = externalDirs.indexOf(File(preferences.downloadsDirectory))
+            val selectedIndex = externalDirs.indexOf(File(currentDir))
 
             MaterialDialog.Builder(activity)
                     .items(externalDirs + getString(R.string.custom_dir))
@@ -46,13 +52,12 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
                             i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
                             i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true)
                             i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR)
-                            i.putExtra(FilePickerActivity.EXTRA_START_PATH, preferences.downloadsDirectory)
+                            i.putExtra(FilePickerActivity.EXTRA_START_PATH, currentDir)
 
                             startActivityForResult(i, DOWNLOAD_DIR_CODE)
                         } else {
                             // One of the predefined folders was selected
-                            preferences.downloadsDirectory = text.toString()
-                            updateDownloadsDir()
+                            preferences.downloadsDirectory().set(text.toString())
                         }
                         true
                     })
@@ -60,15 +65,14 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
 
             true
         }
+
+        downloadDirSubscription = preferences.downloadsDirectory().asObservable()
+                .subscribe { downloadDirPref.summary = it }
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateDownloadsDir()
-    }
-
-    fun updateDownloadsDir() {
-        downloadDirPref.summary = preferences.downloadsDirectory
+    override fun onDestroyView() {
+        downloadDirSubscription?.unsubscribe()
+        super.onDestroyView()
     }
 
     fun getExternalFilesDirs(): List<File> {
@@ -81,7 +85,7 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (data != null && requestCode == DOWNLOAD_DIR_CODE && resultCode == Activity.RESULT_OK) {
-            preferences.downloadsDirectory = data.data.path
+            preferences.downloadsDirectory().set(data.data.path)
         }
     }
 

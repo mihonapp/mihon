@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.data.source.model.Page
@@ -365,7 +366,7 @@ class DownloadManager(private val context: Context, private val sourceManager: S
                 File.separator +
                 manga.title.replace("[^\\sa-zA-Z0-9.-]".toRegex(), "_")
 
-        return File(preferences.downloadsDirectory, mangaRelativePath)
+        return File(preferences.downloadsDirectory().getOrDefault(), mangaRelativePath)
     }
 
     // Get the absolute path to the chapter directory

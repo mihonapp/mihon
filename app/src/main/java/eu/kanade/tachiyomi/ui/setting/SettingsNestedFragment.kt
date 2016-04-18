@@ -44,9 +44,5 @@ open class SettingsNestedFragment : PreferenceFragment() {
         get() = settingsActivity.preferences
 
     val fragmentManagerCompat: FragmentManager
-        get() = if (Build.VERSION.SDK_INT >= 17) {
-            childFragmentManager
-        } else {
-            fragmentManager
-        }
+        get() = if (Build.VERSION.SDK_INT >= 17) childFragmentManager else fragmentManager
 }

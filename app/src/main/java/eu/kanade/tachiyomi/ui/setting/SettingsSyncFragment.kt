@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.preference.PreferenceCategory
 import android.view.View
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
 import eu.kanade.tachiyomi.widget.preference.MangaSyncLoginDialog
 
@@ -27,7 +26,7 @@ class SettingsSyncFragment : SettingsNestedFragment() {
 
         for (sync in settingsActivity.syncManager.services) {
             val pref = LoginPreference(themedContext).apply {
-                key = PreferencesHelper.MANGASYNC_ACCOUNT_USERNAME + sync.id
+                key = preferences.keys.syncUsername(sync.id)
                 title = sync.name
 
                 setOnPreferenceClickListener {
@@ -44,7 +43,7 @@ class SettingsSyncFragment : SettingsNestedFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == SYNC_CHANGE_REQUEST) {
-            val pref = findPreference(PreferencesHelper.MANGASYNC_ACCOUNT_USERNAME + resultCode) as? LoginPreference
+            val pref = findPreference(preferences.keys.syncUsername(resultCode)) as? LoginPreference
             pref?.notifyChanged()
         }
     }

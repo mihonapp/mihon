@@ -288,7 +288,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         if (!isLoginRequired || isLogged)
             return true
 
-        prefs.getSourceUsername(this) != "" && prefs.getSourcePassword(this) != ""
+        prefs.sourceUsername(this) != "" && prefs.sourcePassword(this) != ""
     }
 
     /**

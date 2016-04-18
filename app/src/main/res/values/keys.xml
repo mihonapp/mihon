@@ -31,6 +31,8 @@
     <string name="pref_reader_theme_key">pref_reader_theme_key</string>
     <string name="pref_image_decoder_key">pref_image_decoder_key</string>
     <string name="pref_seamless_mode_key">pref_seamless_mode_key</string>
+    <string name="pref_read_with_volume_keys_key">reader_volume_keys</string>
+    <string name="pref_read_with_tapping_key">reader_tap</string>
     <string name="pref_filter_downloaded_key">pref_filter_downloaded_key</string>
     <string name="pref_filter_unread_key">pref_filter_unread_key</string>
 

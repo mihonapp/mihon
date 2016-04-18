@@ -15,30 +15,24 @@ fun <T> Preference<T>.getOrDefault(): T = get() ?: defaultValue()!!
 
 class PreferencesHelper(private val context: Context) {
 
+    val keys = PreferenceKeys(context)
+
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     private val rxPrefs = RxSharedPreferences.create(prefs)
 
-    private val defaultDownloadsDir: File
+    private val defaultDownloadsDir = File(Environment.getExternalStorageDirectory().absolutePath +
+            File.separator + context.getString(R.string.app_name), "downloads")
 
     init {
-        defaultDownloadsDir = File(Environment.getExternalStorageDirectory().absolutePath +
-                File.separator + context.getString(R.string.app_name), "downloads")
-
         // Don't display downloaded chapters in gallery apps creating a ".nomedia" file
         try {
-            File(downloadsDirectory, ".nomedia").createNewFile()
+            File(downloadsDirectory().getOrDefault(), ".nomedia").createNewFile()
         } catch (e: IOException) {
             /* Ignore */
         }
-
     }
 
     companion object {
-
-        const val SOURCE_ACCOUNT_USERNAME = "pref_source_username_"
-        const val SOURCE_ACCOUNT_PASSWORD = "pref_source_password_"
-        const val MANGASYNC_ACCOUNT_USERNAME = "pref_mangasync_username_"
-        const val MANGASYNC_ACCOUNT_PASSWORD = "pref_mangasync_password_"
 
         fun getLibraryUpdateInterval(context: Context): Int {
             return PreferenceManager.getDefaultSharedPreferences(context).getInt(
@@ -52,165 +46,96 @@ class PreferencesHelper(private val context: Context) {
         }
     }
 
-    private fun getKey(keyResource: Int): String {
-        return context.getString(keyResource)
-    }
-
     fun clear() {
         prefs.edit().clear().apply()
     }
 
-    fun rotation(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_rotation_type_key), 1)
-    }
+    fun rotation() = rxPrefs.getInteger(keys.rotation, 1)
 
-    fun enableTransitions(): Preference<Boolean> {
-        return rxPrefs.getBoolean(getKey(R.string.pref_enable_transitions_key), true)
-    }
+    fun enableTransitions() = rxPrefs.getBoolean(keys.enableTransitions, true)
 
-    fun showPageNumber(): Preference<Boolean> {
-        return rxPrefs.getBoolean(getKey(R.string.pref_show_page_number_key), true)
-    }
+    fun showPageNumber() = rxPrefs.getBoolean(keys.showPageNumber, true)
 
-    fun hideStatusBar(): Preference<Boolean> {
-        return rxPrefs.getBoolean(getKey(R.string.pref_hide_status_bar_key), true)
-    }
+    fun hideStatusBar() = rxPrefs.getBoolean(keys.hideStatusBar, true)
 
-    fun keepScreenOn(): Preference<Boolean> {
-        return rxPrefs.getBoolean(getKey(R.string.pref_keep_screen_on_key), true)
-    }
+    fun keepScreenOn() = rxPrefs.getBoolean(keys.keepScreenOn, true)
 
-    fun customBrightness(): Preference<Boolean> {
-        return rxPrefs.getBoolean(getKey(R.string.pref_custom_brightness_key), false)
-    }
+    fun customBrightness() = rxPrefs.getBoolean(keys.customBrightness, false)
 
-    fun customBrightnessValue(): Preference<Float> {
-        return rxPrefs.getFloat(getKey(R.string.pref_custom_brightness_value_key), 0f)
-    }
+    fun customBrightnessValue() = rxPrefs.getFloat(keys.customBrightnessValue, 0f)
 
-    val defaultViewer: Int
-        get() = prefs.getInt(getKey(R.string.pref_default_viewer_key), 1)
+    fun defaultViewer() = prefs.getInt(keys.defaultViewer, 1)
 
-    fun imageScaleType(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_image_scale_type_key), 1)
-    }
+    fun imageScaleType() = rxPrefs.getInteger(keys.imageScaleType, 1)
 
-    fun imageDecoder(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_image_decoder_key), 0)
-    }
+    fun imageDecoder() = rxPrefs.getInteger(keys.imageDecoder, 0)
 
-    fun zoomStart(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_zoom_start_key), 1)
-    }
+    fun zoomStart() = rxPrefs.getInteger(keys.zoomStart, 1)
 
-    fun readerTheme(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_reader_theme_key), 0)
-    }
+    fun readerTheme() = rxPrefs.getInteger(keys.readerTheme, 0)
 
-    fun portraitColumns(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_library_columns_portrait_key), 0)
-    }
+    fun readWithTapping() = rxPrefs.getBoolean(keys.readWithTapping, true)
 
-    fun landscapeColumns(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_library_columns_landscape_key), 0)
-    }
+    fun readWithVolumeKeys() = rxPrefs.getBoolean(keys.readWithVolumeKeys, false)
 
-    fun updateOnlyNonCompleted(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_update_only_non_completed_key), false)
-    }
+    fun portraitColumns() = rxPrefs.getInteger(keys.portraitColumns, 0)
 
-    fun autoUpdateMangaSync(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_auto_update_manga_sync_key), true)
-    }
+    fun landscapeColumns() = rxPrefs.getInteger(keys.landscapeColumns, 0)
 
-    fun askUpdateMangaSync(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_ask_update_manga_sync_key), false)
-    }
+    fun updateOnlyNonCompleted() = prefs.getBoolean(keys.updateOnlyNonCompleted, false)
 
-    fun lastUsedCatalogueSource(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_last_catalogue_source_key), -1)
-    }
+    fun autoUpdateMangaSync() = prefs.getBoolean(keys.autoUpdateMangaSync, true)
 
-    fun seamlessMode(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_seamless_mode_key), true)
-    }
+    fun askUpdateMangaSync() = prefs.getBoolean(keys.askUpdateMangaSync, false)
 
-    fun catalogueAsList(): Preference<Boolean> {
-        return rxPrefs.getBoolean(getKey(R.string.pref_display_catalogue_as_list), false)
-    }
+    fun lastUsedCatalogueSource() = rxPrefs.getInteger(keys.lastUsedCatalogueSource, -1)
 
-    fun enabledLanguages(): Preference<MutableSet<String>> {
-        return rxPrefs.getStringSet(getKey(R.string.pref_source_languages), setOf("EN"))
-    }
+    fun seamlessMode() = prefs.getBoolean(keys.seamlessMode, true)
 
-    fun getSourceUsername(source: Source): String {
-        return prefs.getString(SOURCE_ACCOUNT_USERNAME + source.id, "")
-    }
+    fun catalogueAsList() = rxPrefs.getBoolean(keys.catalogueAsList, false)
 
-    fun getSourcePassword(source: Source): String {
-        return prefs.getString(SOURCE_ACCOUNT_PASSWORD + source.id, "")
-    }
+    fun enabledLanguages() = rxPrefs.getStringSet(keys.enabledLanguages, setOf("EN"))
+
+    fun sourceUsername(source: Source) = prefs.getString(keys.sourceUsername(source.id), "")
+
+    fun sourcePassword(source: Source) = prefs.getString(keys.sourcePassword(source.id), "")
 
     fun setSourceCredentials(source: Source, username: String, password: String) {
         prefs.edit()
-                .putString(SOURCE_ACCOUNT_USERNAME + source.id, username)
-                .putString(SOURCE_ACCOUNT_PASSWORD + source.id, password)
+                .putString(keys.sourceUsername(source.id), username)
+                .putString(keys.sourcePassword(source.id), password)
                 .apply()
     }
 
-    fun getMangaSyncUsername(sync: MangaSyncService): String {
-        return prefs.getString(MANGASYNC_ACCOUNT_USERNAME + sync.id, "")
-    }
+    fun mangaSyncUsername(sync: MangaSyncService) = prefs.getString(keys.syncUsername(sync.id), "")
 
-    fun getMangaSyncPassword(sync: MangaSyncService): String {
-        return prefs.getString(MANGASYNC_ACCOUNT_PASSWORD + sync.id, "")
-    }
+    fun mangaSyncPassword(sync: MangaSyncService) = prefs.getString(keys.syncPassword(sync.id), "")
 
     fun setMangaSyncCredentials(sync: MangaSyncService, username: String, password: String) {
         prefs.edit()
-                .putString(MANGASYNC_ACCOUNT_USERNAME + sync.id, username)
-                .putString(MANGASYNC_ACCOUNT_PASSWORD + sync.id, password)
+                .putString(keys.syncUsername(sync.id), username)
+                .putString(keys.syncPassword(sync.id), password)
                 .apply()
     }
 
-    var downloadsDirectory: String
-        get() = prefs.getString(getKey(R.string.pref_download_directory_key), defaultDownloadsDir.absolutePath)
-        set(path) = prefs.edit().putString(getKey(R.string.pref_download_directory_key), path).apply()
+    fun downloadsDirectory() = rxPrefs.getString(keys.downloadsDirectory, defaultDownloadsDir.absolutePath)
 
-    fun downloadThreads(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_download_slots_key), 1)
-    }
+    fun downloadThreads() = rxPrefs.getInteger(keys.downloadThreads, 1)
 
-    fun downloadOnlyOverWifi(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_download_only_over_wifi_key), true)
-    }
+    fun downloadOnlyOverWifi() = prefs.getBoolean(keys.downloadOnlyOverWifi, true)
 
-    fun removeAfterRead(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_remove_after_read_key), false)
-    }
+    fun removeAfterRead() = prefs.getBoolean(keys.removeAfterRead, false)
 
-    fun removeAfterReadPrevious(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_remove_after_read_previous_key), false)
-    }
+    fun removeAfterReadPrevious() = prefs.getBoolean(keys.removeAfterReadPrevious, false)
 
-    fun removeAfterMarkedAsRead(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_remove_after_marked_as_read_key), false)
-    }
+    fun removeAfterMarkedAsRead() = prefs.getBoolean(keys.removeAfterMarkedAsRead, false)
 
-    fun updateOnlyWhenCharging(): Boolean {
-        return prefs.getBoolean(getKey(R.string.pref_update_only_when_charging_key), false)
-    }
+    fun updateOnlyWhenCharging() = prefs.getBoolean(keys.updateOnlyWhenCharging, false)
 
-    fun libraryUpdateInterval(): Preference<Int> {
-        return rxPrefs.getInteger(getKey(R.string.pref_library_update_interval_key), 0)
-    }
+    fun libraryUpdateInterval() = rxPrefs.getInteger(keys.libraryUpdateInterval, 0)
 
-    fun filterDownloaded(): Preference<Boolean> {
-        return rxPrefs.getBoolean(getKey(R.string.pref_filter_downloaded_key), false)
-    }
+    fun filterDownloaded() = rxPrefs.getBoolean(keys.filterDownloaded, false)
 
-    fun filterUnread(): Preference<Boolean> {
-        return rxPrefs.getBoolean(getKey(R.string.pref_filter_unread_key), false)
-    }
+    fun filterUnread() = rxPrefs.getBoolean(keys.filterUnread, false)
 
 }

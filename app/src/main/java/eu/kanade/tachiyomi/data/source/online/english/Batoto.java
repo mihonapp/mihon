@@ -372,8 +372,8 @@ public class Batoto extends LoginSource {
     @Override
     public Observable<List<Chapter>> pullChaptersFromNetwork(final String mangaUrl) {
         Observable<List<Chapter>> observable;
-        String username = getPrefs().getSourceUsername(this);
-        String password = getPrefs().getSourcePassword(this);
+        String username = getPrefs().sourceUsername(this);
+        String password = getPrefs().sourcePassword(this);
         if (username.isEmpty() && password.isEmpty()) {
             observable = Observable.error(new Exception("User not logged"));
         }

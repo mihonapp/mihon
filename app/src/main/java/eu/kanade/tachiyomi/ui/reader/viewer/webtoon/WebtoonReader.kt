@@ -126,9 +126,9 @@ class WebtoonReader : BaseReader() {
                 val positionX = e.x
 
                 if (positionX < recycler.width * LEFT_REGION) {
-                    moveToPrevious()
+                    if (tappingEnabled) moveToPrevious()
                 } else if (positionX > recycler.width * RIGHT_REGION) {
-                    moveToNext()
+                    if (tappingEnabled) moveToNext()
                 } else {
                     readerActivity.onCenterSingleTap()
                 }

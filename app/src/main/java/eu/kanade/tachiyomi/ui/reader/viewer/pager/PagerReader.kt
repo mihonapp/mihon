@@ -164,9 +164,9 @@ abstract class PagerReader : BaseReader() {
                 val positionX = e.x
 
                 if (positionX < pager.width * LEFT_REGION) {
-                    onLeftSideTap()
+                    if (tappingEnabled) onLeftSideTap()
                 } else if (positionX > pager.width * RIGHT_REGION) {
-                    onRightSideTap()
+                    if (tappingEnabled) onRightSideTap()
                 } else {
                     readerActivity.onCenterSingleTap()
                 }

@@ -46,8 +46,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
     }
 
     init {
-        val username = preferences.getMangaSyncUsername(this)
-        val password = preferences.getMangaSyncPassword(this)
+        val username = preferences.mangaSyncUsername(this)
+        val password = preferences.mangaSyncPassword(this)
 
         if (!username.isEmpty() && !password.isEmpty()) {
             createHeaders(username, password)

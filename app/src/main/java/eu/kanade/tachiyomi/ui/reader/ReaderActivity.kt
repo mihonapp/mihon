@@ -81,6 +81,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private var prevChapterBtn: MenuItem? = null
 
+    private val volumeKeysEnabled by lazy { preferences.readWithVolumeKeys().getOrDefault() }
+
     val preferences: PreferencesHelper
         get() = presenter.prefs
 
@@ -174,18 +176,32 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (!isFinishing) {
-            val action = event.action
-            val keyCode = event.keyCode
-            when (keyCode) {
-                KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                    if (action == KeyEvent.ACTION_UP)
-                        viewer?.moveToNext()
-                    return true
+            when (event.keyCode) {
+                KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                    if (volumeKeysEnabled) {
+                        if (event.action == KeyEvent.ACTION_UP) {
+                            viewer?.moveToNext()
+                        }
+                        return true
+                    }
                 }
-                KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_DPAD_LEFT -> {
-                    if (action == KeyEvent.ACTION_UP)
+                KeyEvent.KEYCODE_VOLUME_UP -> {
+                    if (volumeKeysEnabled) {
+                        if (event.action == KeyEvent.ACTION_UP) {
+                            viewer?.moveToPrevious()
+                        }
+                        return true
+                    }
+                }
+                KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                    if (event.action == KeyEvent.ACTION_UP) {
+                        viewer?.moveToNext()
+                    }
+                }
+                KeyEvent.KEYCODE_DPAD_LEFT -> {
+                    if (event.action == KeyEvent.ACTION_UP) {
                         viewer?.moveToPrevious()
-                    return true
+                    }
                 }
             }
         }
@@ -258,7 +274,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
 
     private fun getOrCreateViewer(manga: Manga): BaseReader {
-        val mangaViewer = if (manga.viewer == 0) preferences.defaultViewer else manga.viewer
+        val mangaViewer = if (manga.viewer == 0) preferences.defaultViewer() else manga.viewer
 
         // Try to reuse the viewer using its tag
         var fragment: BaseReader? = supportFragmentManager.findFragmentByTag(manga.viewer.toString()) as? BaseReader
