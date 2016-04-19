@@ -87,9 +87,8 @@ public abstract class BaseRxActivity<P extends Presenter> extends BaseActivity i
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        presenterDelegate.onDropView();
-        presenterDelegate.onDestroy(!isChangingConfigurations());
+    protected void onPause() {
+        super.onPause();
+        presenterDelegate.onPause(isFinishing());
     }
 }
