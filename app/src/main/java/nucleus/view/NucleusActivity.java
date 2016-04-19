@@ -1,16 +1,12 @@
-package eu.kanade.tachiyomi.ui.base.activity;
+package nucleus.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import eu.kanade.tachiyomi.App;
-import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
 import nucleus.factory.PresenterFactory;
 import nucleus.factory.ReflectionPresenterFactory;
 import nucleus.presenter.Presenter;
-import nucleus.view.PresenterLifecycleDelegate;
-import nucleus.view.ViewWithPresenter;
-
 
 /**
  * This class is an example of how an activity could controls it's presenter.
@@ -19,12 +15,12 @@ import nucleus.view.ViewWithPresenter;
  *
  * @param <P> a type of presenter to return with {@link #getPresenter}.
  */
-public abstract class BaseRxActivity<P extends Presenter> extends BaseActivity implements ViewWithPresenter<P> {
+public abstract class NucleusActivity<P extends Presenter> extends Activity implements ViewWithPresenter<P> {
 
     private static final String PRESENTER_STATE_KEY = "presenter_state";
 
     private PresenterLifecycleDelegate<P> presenterDelegate =
-            new PresenterLifecycleDelegate<>(ReflectionPresenterFactory.<P>fromViewClass(getClass()));
+        new PresenterLifecycleDelegate<>(ReflectionPresenterFactory.<P>fromViewClass(getClass()));
 
     /**
      * Returns a current presenter factory.
@@ -57,18 +53,6 @@ public abstract class BaseRxActivity<P extends Presenter> extends BaseActivity i
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final PresenterFactory<P> superFactory = getPresenterFactory();
-        setPresenterFactory(new PresenterFactory<P>() {
-            @Override
-            public P createPresenter() {
-                P presenter = superFactory.createPresenter();
-                App app = (App) getApplication();
-                app.getComponentReflection().inject(presenter);
-                ((BasePresenter) presenter).setContext(app.getApplicationContext());
-                return presenter;
-            }
-        });
-
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null)
             presenterDelegate.onRestoreInstanceState(savedInstanceState.getBundle(PRESENTER_STATE_KEY));
