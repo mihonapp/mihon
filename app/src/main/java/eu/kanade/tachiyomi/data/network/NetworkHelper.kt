@@ -44,21 +44,21 @@ class NetworkHelper(context: Context) {
 
     @JvmOverloads
     fun request(request: Request, forceCache: Boolean = false): Observable<Response> {
-        var response: Response? = null
         return Observable.fromCallable {
             val c = if (forceCache) forceCacheClient else client
-            c.newCall(request).execute().apply { response = this }
-        }.doOnUnsubscribe { response?.body()?.close() }
+            c.newCall(request).execute().apply { body().close() }
+        }
     }
 
     @JvmOverloads
     fun requestBody(request: Request, forceCache: Boolean = false): Observable<String> {
-        return request(request, forceCache)
-                .map { it.body().string() }
+        return Observable.fromCallable {
+            val c = if (forceCache) forceCacheClient else client
+            c.newCall(request).execute().body().string()
+        }
     }
 
     fun requestBodyProgress(request: Request, listener: ProgressListener): Observable<Response> {
-        var response: Response? = null
         return Observable.fromCallable {
             val progressClient = client.newBuilder()
                     .cache(null)
@@ -70,8 +70,8 @@ class NetworkHelper(context: Context) {
                     }
                     .build()
 
-            progressClient.newCall(request).execute().apply { response = this }
-        }.doOnUnsubscribe { response?.body()?.close() }.retry(1)
+            progressClient.newCall(request).execute()
+        }
     }
 
     val cookies: CookieStore

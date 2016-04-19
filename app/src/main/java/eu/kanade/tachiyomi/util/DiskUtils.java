@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import okhttp3.internal.Util;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
@@ -59,9 +60,8 @@ public final class DiskUtils {
             writeFile.delete();
             throw new IOException("Unable to save image");
         } finally {
-            if (bufferedSink != null) {
-                bufferedSink.close();
-            }
+            Util.closeQuietly(bufferedSink);
+            Util.closeQuietly(bufferedSource);
         }
 
         return writeFile;

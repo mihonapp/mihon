@@ -202,9 +202,9 @@ class ChapterCache(private val context: Context) {
             diskCache.flush()
             editor.commit()
         } catch (e: Exception) {
-            response.body().close()
             throw IOException("Unable to save image")
         } finally {
+            response.body().close()
             editor?.abortUnlessCommitted()
         }
     }
