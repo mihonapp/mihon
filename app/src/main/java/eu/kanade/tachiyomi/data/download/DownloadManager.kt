@@ -233,7 +233,11 @@ class DownloadManager(private val context: Context, private val sourceManager: S
         page.status = Page.DOWNLOAD_IMAGE
         return source.getImageProgressResponse(page)
                 .flatMap({ resp ->
-                    DiskUtils.saveBufferedSourceToDirectory(resp.body().source(), directory, filename)
+                    try {
+                        DiskUtils.saveBufferedSourceToDirectory(resp.body().source(), directory, filename)
+                    } finally {
+                        resp.body().close()
+                    }
                     Observable.just(page)
                 }).retry(2)
     }
