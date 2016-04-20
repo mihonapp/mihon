@@ -188,6 +188,12 @@ abstract class Source(context: Context) : BaseSource() {
 
     open fun getImageProgressResponse(page: Page): Observable<Response> {
         return networkService.requestBodyProgress(imageRequest(page), page)
+                .doOnNext {
+                    if (!it.isSuccessful) {
+                        it.body().close()
+                        throw RuntimeException("Not a valid response")
+                    }
+                }
     }
 
     fun savePageList(chapterUrl: String, pages: List<Page>?) {
