@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import eu.kanade.tachiyomi.data.database.models.Chapter;
@@ -25,15 +24,19 @@ public class Page implements ProgressListener {
     public static final int READY = 3;
     public static final int ERROR = 4;
 
+    public Page(int pageNumber, String url) {
+        this(pageNumber, url, null, null);
+    }
+
+    public Page(int pageNumber, String url, String imageUrl) {
+        this(pageNumber, url, imageUrl, null);
+    }
+
     public Page(int pageNumber, String url, String imageUrl, String imagePath) {
         this.pageNumber = pageNumber;
         this.url = url;
         this.imageUrl = imageUrl;
         this.imagePath = imagePath;
-    }
-
-    public Page(int pageNumber, String url) {
-        this(pageNumber, url, null, null);
     }
 
     public int getPageNumber() {

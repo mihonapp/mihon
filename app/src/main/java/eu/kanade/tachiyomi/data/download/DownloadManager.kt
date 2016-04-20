@@ -15,10 +15,7 @@ import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent
-import eu.kanade.tachiyomi.util.DiskUtils
-import eu.kanade.tachiyomi.util.DynamicConcurrentMergeOperator
-import eu.kanade.tachiyomi.util.UrlUtil
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.*
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -27,9 +24,7 @@ import rx.subjects.BehaviorSubject
 import rx.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
-import java.io.FileOutputStream
 import java.io.FileReader
-import java.io.IOException
 import java.util.*
 
 class DownloadManager(private val context: Context, private val sourceManager: SourceManager, private val preferences: PreferencesHelper) {
@@ -176,7 +171,7 @@ class DownloadManager(private val context: Context, private val sourceManager: S
             // Or if the page list already exists, start from the file
             Observable.just(download.pages)
 
-        return Observable.defer<Download> { pageListObservable
+        return Observable.defer { pageListObservable
                 .doOnNext { pages ->
                     download.downloadedImages = 0
                     download.status = Download.DOWNLOADING
@@ -232,14 +227,11 @@ class DownloadManager(private val context: Context, private val sourceManager: S
     private fun downloadImage(page: Page, source: Source, directory: File, filename: String): Observable<Page> {
         page.status = Page.DOWNLOAD_IMAGE
         return source.getImageProgressResponse(page)
-                .flatMap({ resp ->
-                    try {
-                        DiskUtils.saveBufferedSourceToDirectory(resp.body().source(), directory, filename)
-                    } finally {
-                        resp.body().close()
-                    }
+                .flatMap {
+                    it.body().source().saveTo(File(directory, filename))
                     Observable.just(page)
-                }).retry(2)
+                }
+                .retry(2)
     }
 
     // Public method to get the image from the filesystem. It does NOT provide any way to download the image
@@ -311,26 +303,14 @@ class DownloadManager(private val context: Context, private val sourceManager: S
         val chapterDir = getAbsoluteChapterDirectory(source, manga, chapter)
         val pagesFile = File(chapterDir, PAGE_LIST_FILE)
 
-        var reader: JsonReader? = null
-        try {
-            if (pagesFile.exists()) {
-                reader = JsonReader(FileReader(pagesFile.absolutePath))
-                val collectionType = object : TypeToken<List<Page>>() {
-
-                }.type
-                return gson.fromJson<List<Page>>(reader, collectionType)
+        return try {
+            JsonReader(FileReader(pagesFile)).use {
+                val collectionType = object : TypeToken<List<Page>>() {}.type
+                gson.fromJson(it, collectionType)
             }
         } catch (e: Exception) {
-            Timber.e(e.cause, e.message)
-        } finally {
-            if (reader != null) try {
-                reader.close()
-            } catch (e: IOException) {
-                /* Do nothing */
-            }
-
+            null
         }
-        return null
     }
 
     // Shortcut for the method above
@@ -343,20 +323,13 @@ class DownloadManager(private val context: Context, private val sourceManager: S
         val chapterDir = getAbsoluteChapterDirectory(source, manga, chapter)
         val pagesFile = File(chapterDir, PAGE_LIST_FILE)
 
-        var out: FileOutputStream? = null
-        try {
-            out = FileOutputStream(pagesFile)
-            out.write(gson.toJson(pages).toByteArray())
-            out.flush()
-        } catch (e: IOException) {
-            Timber.e(e.cause, e.message)
-        } finally {
-            if (out != null) try {
-                out.close()
-            } catch (e: IOException) {
-                /* Do nothing */
+        pagesFile.outputStream().use {
+            try {
+                it.write(gson.toJson(pages).toByteArray())
+                it.flush()
+            } catch (e: Exception) {
+                Timber.e(e, e.message)
             }
-
         }
     }
 

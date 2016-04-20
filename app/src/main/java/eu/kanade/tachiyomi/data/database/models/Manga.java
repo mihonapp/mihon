@@ -95,6 +95,13 @@ public class Manga implements Serializable {
         return m;
     }
 
+    public static Manga create(String pathUrl, int source) {
+        Manga m = new Manga();
+        m.url = pathUrl;
+        m.source = source;
+        return m;
+    }
+
     public void setUrl(String url) {
         this.url = UrlUtil.getPath(url);
     }

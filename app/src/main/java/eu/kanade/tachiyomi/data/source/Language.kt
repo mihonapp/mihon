@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.data.source
 
-class Language(val lang: String, val code: String)
+class Language(val code: String, val lang: String)
 
-val EN = Language("English", "EN")
-val RU = Language("Russian", "RU")
+val EN = Language("EN", "English")
+val RU = Language("RU", "Russian")
 
-fun getLanguages(): List<Language> = listOf(EN, RU)
+fun getLanguages() = listOf(EN, RU)

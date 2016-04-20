@@ -11,8 +11,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.dd.processbutton.iml.ActionProcessButton
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import eu.kanade.tachiyomi.ui.base.listener.SimpleTextWatcher
+import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import kotlinx.android.synthetic.main.pref_account_login.view.*
 import rx.Subscription
 
@@ -30,7 +30,7 @@ abstract class LoginDialogPreference : DialogFragment() {
         val dialog = MaterialDialog.Builder(activity)
                 .customView(R.layout.pref_account_login, false)
                 .negativeText(android.R.string.cancel)
-                .build();
+                .build()
 
         onViewCreated(dialog.view, savedState)
 

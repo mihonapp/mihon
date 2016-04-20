@@ -33,7 +33,7 @@ class CoverCache(private val context: Context) {
      * @param headers      headers included in Glide request.
      * @param onReady      function to call when the image is ready
      */
-    fun save(thumbnailUrl: String?, headers: LazyHeaders, onReady: ((File) -> Unit)? = null) {
+    fun save(thumbnailUrl: String?, headers: LazyHeaders?, onReady: ((File) -> Unit)? = null) {
         // Check if url is empty.
         if (thumbnailUrl.isNullOrEmpty())
             return
@@ -62,7 +62,7 @@ class CoverCache(private val context: Context) {
      * @param headers      headers included in Glide request.
      * @param onReady      function to call when the image is ready
      */
-    fun saveOrLoadFromCache(thumbnailUrl: String?, headers: LazyHeaders, onReady: ((File) -> Unit)?) {
+    fun saveOrLoadFromCache(thumbnailUrl: String?, headers: LazyHeaders?, onReady: ((File) -> Unit)?) {
         // Check if url is empty.
         if (thumbnailUrl.isNullOrEmpty())
             return

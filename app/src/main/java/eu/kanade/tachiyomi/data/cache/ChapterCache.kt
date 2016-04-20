@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.jakewharton.disklrucache.DiskLruCache
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.util.DiskUtils
+import eu.kanade.tachiyomi.util.saveTo
 import okhttp3.Response
 import okio.Okio
 import rx.Observable
@@ -194,10 +195,7 @@ class ChapterCache(private val context: Context) {
             editor = diskCache.edit(key) ?: throw IOException("Unable to edit key")
 
             // Get OutputStream and write image with Okio.
-            Okio.buffer(Okio.sink(editor.newOutputStream(0))).use {
-                it.writeAll(response.body().source())
-                it.flush()
-            }
+            response.body().source().saveTo(editor.newOutputStream(0))
 
             diskCache.flush()
             editor.commit()
