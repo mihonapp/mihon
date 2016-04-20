@@ -76,7 +76,7 @@ class PreferenceKeys(context: Context) {
 
     val filterUnread = context.getString(R.string.pref_filter_unread_key)
 
-    fun sourceUsername(sourceId: Int) = "pref_source_username_$sourceId}"
+    fun sourceUsername(sourceId: Int) = "pref_source_username_$sourceId"
 
     fun sourcePassword(sourceId: Int) = "pref_source_password_$sourceId"
 
