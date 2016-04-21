@@ -26,6 +26,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileReader
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class DownloadManager(private val context: Context, private val sourceManager: SourceManager, private val preferences: PreferencesHelper) {
 
@@ -238,7 +239,10 @@ class DownloadManager(private val context: Context, private val sourceManager: S
                     }
                     Observable.just(page)
                 }
-                .retry(2)
+                .retryWhen {
+                    it.zipWith(Observable.range(1, 3)) { errors, retries -> retries }
+                            .flatMap { retries -> Observable.timer((retries * 2).toLong(), TimeUnit.SECONDS) }
+                }
     }
 
     // Public method to get the image from the filesystem. It does NOT provide any way to download the image
