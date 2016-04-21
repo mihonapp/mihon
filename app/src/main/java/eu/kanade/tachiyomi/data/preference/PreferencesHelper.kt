@@ -78,6 +78,8 @@ class PreferencesHelper(private val context: Context) {
 
     fun readWithVolumeKeys() = rxPrefs.getBoolean(keys.readWithVolumeKeys, false)
 
+    fun reencodeImage() = prefs.getBoolean(keys.reencodeImage, false)
+
     fun portraitColumns() = rxPrefs.getInteger(keys.portraitColumns, 0)
 
     fun landscapeColumns() = rxPrefs.getInteger(keys.landscapeColumns, 0)

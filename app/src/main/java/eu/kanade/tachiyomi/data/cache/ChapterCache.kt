@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.jakewharton.disklrucache.DiskLruCache
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.util.DiskUtils
-import eu.kanade.tachiyomi.util.saveTo
+import eu.kanade.tachiyomi.util.saveImageTo
 import okhttp3.Response
 import okio.Okio
 import rx.Observable
@@ -185,7 +185,7 @@ class ChapterCache(private val context: Context) {
      * @throws IOException image error.
      */
     @Throws(IOException::class)
-    fun putImageToCache(imageUrl: String, response: Response) {
+    fun putImageToCache(imageUrl: String, response: Response, reencode: Boolean) {
         // Initialize editor (edits the values for an entry).
         var editor: DiskLruCache.Editor? = null
 
@@ -195,12 +195,10 @@ class ChapterCache(private val context: Context) {
             editor = diskCache.edit(key) ?: throw IOException("Unable to edit key")
 
             // Get OutputStream and write image with Okio.
-            response.body().source().saveTo(editor.newOutputStream(0))
+            response.body().source().saveImageTo(editor.newOutputStream(0), reencode)
 
             diskCache.flush()
             editor.commit()
-        } catch (e: Exception) {
-            throw IOException("Unable to save image")
         } finally {
             response.body().close()
             editor?.abortUnlessCommitted()

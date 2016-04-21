@@ -11,4 +11,10 @@
         android:key="@string/pref_clear_database_key"
         android:summary="@string/pref_clear_database_summary"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="@string/pref_reencode_key"
+        android:summary="@string/pref_reencode_summary"
+        android:title="@string/pref_reencode"/>
+
 </android.support.v7.preference.PreferenceScreen>

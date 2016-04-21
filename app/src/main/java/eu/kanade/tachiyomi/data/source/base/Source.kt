@@ -181,7 +181,7 @@ abstract class Source(context: Context) : BaseSource() {
         page.status = Page.DOWNLOAD_IMAGE
         return getImageProgressResponse(page)
                 .flatMap { resp ->
-                    chapterCache.putImageToCache(page.imageUrl, resp)
+                    chapterCache.putImageToCache(page.imageUrl, resp, prefs.reencodeImage())
                     Observable.just(page)
                 }
     }

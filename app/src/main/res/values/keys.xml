@@ -33,6 +33,7 @@
     <string name="pref_seamless_mode_key">pref_seamless_mode_key</string>
     <string name="pref_read_with_volume_keys_key">reader_volume_keys</string>
     <string name="pref_read_with_tapping_key">reader_tap</string>
+    <string name="pref_reencode_key">reencode_image</string>
     <string name="pref_filter_downloaded_key">pref_filter_downloaded_key</string>
     <string name="pref_filter_unread_key">pref_filter_unread_key</string>
 

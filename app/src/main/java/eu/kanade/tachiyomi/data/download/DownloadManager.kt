@@ -228,7 +228,14 @@ class DownloadManager(private val context: Context, private val sourceManager: S
         page.status = Page.DOWNLOAD_IMAGE
         return source.getImageProgressResponse(page)
                 .flatMap {
-                    it.body().source().saveTo(File(directory, filename))
+                    try {
+                        val file = File(directory, filename)
+                        file.parentFile.mkdirs()
+                        it.body().source().saveImageTo(file.outputStream(), preferences.reencodeImage())
+                    } catch (e: Exception) {
+                        it.body().close()
+                        throw e
+                    }
                     Observable.just(page)
                 }
                 .retry(2)

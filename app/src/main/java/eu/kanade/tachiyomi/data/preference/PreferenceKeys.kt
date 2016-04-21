@@ -38,6 +38,8 @@ class PreferenceKeys(context: Context) {
 
     val readWithVolumeKeys = context.getString(R.string.pref_read_with_volume_keys_key)
 
+    val reencodeImage = context.getString(R.string.pref_reencode_key)
+
     val portraitColumns = context.getString(R.string.pref_library_columns_portrait_key)
 
     val landscapeColumns = context.getString(R.string.pref_library_columns_landscape_key)
