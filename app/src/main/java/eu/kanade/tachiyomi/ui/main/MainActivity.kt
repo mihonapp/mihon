@@ -39,7 +39,7 @@ class MainActivity : BaseActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
 
         if (Build.VERSION.SDK_INT >= 21) {
-            window.statusBarColor = android.R.color.transparent;
+            window.statusBarColor = android.R.color.transparent
         }
 
         // Set behavior of Navigation drawer
@@ -71,6 +71,16 @@ class MainActivity : BaseActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    override fun onBackPressed() {
+        supportFragmentManager.findFragmentById(R.id.frame_container)?.let {
+            if (it !is LibraryFragment) {
+                setFragment(LibraryFragment.newInstance())
+            } else {
+                super.onBackPressed()
+            }
+        } ?: super.onBackPressed()
     }
 
     fun setFragment(fragment: Fragment) {
