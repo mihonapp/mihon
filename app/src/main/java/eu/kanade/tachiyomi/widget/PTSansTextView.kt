@@ -6,6 +6,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.widget.TextView
 import eu.kanade.tachiyomi.R
+import java.util.*
 
 
 class PTSansTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
@@ -14,6 +15,9 @@ class PTSansTextView @JvmOverloads constructor(context: Context, attrs: Attribut
     companion object {
         const val PTSANS_NARROW = 0
         const val PTSANS_NARROW_BOLD = 1
+
+        // Map where typefaces are cached
+        private val typefaces = HashMap<Int, Typeface>(2)
     }
 
     init {
@@ -22,11 +26,13 @@ class PTSansTextView @JvmOverloads constructor(context: Context, attrs: Attribut
 
             val typeface = values.getInt(R.styleable.PTSansTextView_typeface, 0)
 
-            when (typeface) {
-                PTSANS_NARROW -> setTypeface(Typeface.createFromAsset(context.assets, "fonts/PTSans-Narrow.ttf"))
-                PTSANS_NARROW_BOLD -> setTypeface(Typeface.createFromAsset(context.assets, "fonts/PTSans-NarrowBold.ttf"))
-                else -> throw IllegalArgumentException("Font not found " + typeface)
-            }
+            setTypeface(typefaces.getOrPut(typeface) {
+                Typeface.createFromAsset(context.assets, when (typeface) {
+                    PTSANS_NARROW -> "fonts/PTSans-Narrow.ttf"
+                    PTSANS_NARROW_BOLD -> "fonts/PTSans-NarrowBold.ttf"
+                    else -> throw IllegalArgumentException("Font not found " + typeface)
+                })
+            })
 
             values.recycle()
         }
