@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.base.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import eu.kanade.tachiyomi.App;
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter;
@@ -85,13 +84,14 @@ public abstract class BaseRxFragment<P extends Presenter> extends BaseFragment i
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        presenterDelegate.onPause(getActivity().isFinishing() || isRemoving(this));
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenterDelegate.onDropView();
     }
 
-    private static boolean isRemoving(Fragment fragment) {
-        Fragment parent = fragment.getParentFragment();
-        return fragment.isRemoving() || (parent != null && isRemoving(parent));
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenterDelegate.onDestroy(!getActivity().isChangingConfigurations());
     }
 }

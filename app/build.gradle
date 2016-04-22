@@ -142,7 +142,7 @@ dependencies {
     kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
 
     // Model View Presenter
-    compile 'info.android15.nucleus:nucleus:2.0.5'
+    compile 'info.android15.nucleus:nucleus:3.0.0-beta'
 
     // Dependency injection
     compile "com.google.dagger:dagger:$DAGGER_VERSION"

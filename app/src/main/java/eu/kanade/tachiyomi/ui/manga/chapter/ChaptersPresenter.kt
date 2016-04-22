@@ -159,10 +159,6 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
             refreshChapters()
     }
 
-    fun onOpenChapter(chapter: Chapter) {
-        SharedData.put(ReaderEvent(manga, chapter))
-    }
-
     fun getNextUnreadChapter(): Chapter? {
         return db.getNextUnreadChapter(manga).executeAsBlocking()
     }

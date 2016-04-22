@@ -23,21 +23,24 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
 
     companion object {
 
-        val FROM_CATALOGUE = "from_catalogue"
-        val INFO_FRAGMENT = 0
-        val CHAPTERS_FRAGMENT = 1
-        val MYANIMELIST_FRAGMENT = 2
+        const val FROM_CATALOGUE_EXTRA = "from_catalogue"
+        const val MANGA_EXTRA = "manga"
+        const val INFO_FRAGMENT = 0
+        const val CHAPTERS_FRAGMENT = 1
+        const val MYANIMELIST_FRAGMENT = 2
 
-        fun newIntent(context: Context, manga: Manga): Intent {
-            val intent = Intent(context, MangaActivity::class.java)
+        fun newIntent(context: Context, manga: Manga, fromCatalogue: Boolean = false): Intent {
             SharedData.put(MangaEvent(manga))
-            return intent
+            return Intent(context, MangaActivity::class.java).apply {
+                putExtra(FROM_CATALOGUE_EXTRA, fromCatalogue)
+                putExtra(MANGA_EXTRA, manga.id)
+            }
         }
     }
 
     private lateinit var adapter: MangaDetailAdapter
 
-    var isCatalogueManga: Boolean = false
+    var fromCatalogue: Boolean = false
         private set
 
     override fun onCreate(savedState: Bundle?) {
@@ -45,16 +48,21 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
         super.onCreate(savedState)
         setContentView(R.layout.activity_manga)
 
+        presenter.setMangaEvent(SharedData.getOrPut(MangaEvent::class.java) {
+            val id = intent.getLongExtra(MANGA_EXTRA, 0)
+            MangaEvent(presenter.db.getManga(id).executeAsBlocking()!!)
+        })
+
         setupToolbar(toolbar)
 
-        isCatalogueManga = intent.getBooleanExtra(FROM_CATALOGUE, false)
+        fromCatalogue = intent.getBooleanExtra(FROM_CATALOGUE_EXTRA, false)
 
         adapter = MangaDetailAdapter(supportFragmentManager, this)
         view_pager.adapter = adapter
 
         tabs.setupWithViewPager(view_pager)
 
-        if (!isCatalogueManga)
+        if (!fromCatalogue)
             view_pager.currentItem = CHAPTERS_FRAGMENT
 
         requestPermissionsOnMarshmallow()
@@ -72,7 +80,7 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
 
         init {
             pageCount = 2
-            if (!activity.isCatalogueManga && activity.presenter.syncManager.myAnimeList.isLogged)
+            if (!activity.fromCatalogue && activity.presenter.syncManager.myAnimeList.isLogged)
                 pageCount++
         }
 

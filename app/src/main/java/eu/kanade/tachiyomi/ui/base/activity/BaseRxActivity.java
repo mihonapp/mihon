@@ -11,7 +11,6 @@ import nucleus.presenter.Presenter;
 import nucleus.view.PresenterLifecycleDelegate;
 import nucleus.view.ViewWithPresenter;
 
-
 /**
  * This class is an example of how an activity could controls it's presenter.
  * You can inherit from this class or copy/paste this class's code to
@@ -87,8 +86,9 @@ public abstract class BaseRxActivity<P extends Presenter> extends BaseActivity i
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        presenterDelegate.onPause(isFinishing());
+    protected void onDestroy() {
+        super.onDestroy();
+        presenterDelegate.onDropView();
+        presenterDelegate.onDestroy(!isChangingConfigurations());
     }
 }

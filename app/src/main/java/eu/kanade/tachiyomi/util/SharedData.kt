@@ -14,7 +14,7 @@ object SharedData {
     /**
      * Map where the objects are saved.
      */
-    private val map = HashMap<Class<*>, Any>()
+    val map = HashMap<Class<*>, Any>()
 
     /**
      * Publish an object to the shared data.
@@ -41,5 +41,15 @@ object SharedData {
      * @return the object removed, null otherwise.
      */
     fun <T : Any> remove(classType: Class<T>) = get(classType)?.apply { map.remove(classType) }
+
+    /**
+     * Returns an object from the shared data or introduces a new one with the given function.
+     *
+     * @param classType the class of the object to retrieve.
+     * @param fn the function to execute if it didn't find the object.
+     * @return an object of type T.
+     */
+    @Suppress("UNCHECKED_CAST")
+    inline fun <T : Any> getOrPut(classType: Class<T>, fn: () -> T) = map.getOrPut(classType, fn) as T
 
 }

@@ -458,8 +458,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
     override fun onListItemClick(position: Int): Boolean {
         val item = adapter.getItem(position) ?: return false
 
-        val intent = MangaActivity.newIntent(activity, item)
-        intent.putExtra(MangaActivity.FROM_CATALOGUE, true)
+        val intent = MangaActivity.newIntent(activity, item, true)
         startActivity(intent)
         return false
     }

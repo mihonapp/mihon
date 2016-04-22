@@ -10,9 +10,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.event.DownloadChaptersEvent
-import eu.kanade.tachiyomi.event.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -249,14 +247,6 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
         cal[Calendar.SECOND] = 0
         cal[Calendar.MILLISECOND] = 0
         return cal.time
-    }
-
-    /**
-     * Open chapter in reader
-     * @param item chapter that is opened
-     */
-    fun onOpenChapter(item: MangaChapter) {
-        SharedData.put(ReaderEvent(item.manga, item.chapter))
     }
 
     /**

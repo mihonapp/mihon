@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.event.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.base.listener.SimpleAnimationListener
 import eu.kanade.tachiyomi.ui.base.listener.SimpleSeekBarListener
@@ -30,6 +31,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonReader
 import eu.kanade.tachiyomi.util.GLUtil
+import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.activity_reader.*
 import kotlinx.android.synthetic.main.reader_menu.*
@@ -53,7 +55,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         const val MENU_VISIBLE = "menu_visible"
 
-        fun newIntent(context: Context): Intent {
+        fun newIntent(context: Context, manga: Manga, chapter: Chapter): Intent {
+            SharedData.put(ReaderEvent(manga, chapter))
             return Intent(context, ReaderActivity::class.java)
         }
     }
@@ -89,6 +92,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         setContentView(R.layout.activity_reader)
+
+        if (savedState == null && SharedData.get(ReaderEvent::class.java) == null) {
+            finish()
+            return
+        }
 
         setupToolbar(toolbar)
         subscriptions = CompositeSubscription()

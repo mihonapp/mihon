@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.event.MangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable
+import rx.Subscription
 import javax.inject.Inject
 
 /**
@@ -31,37 +32,21 @@ class MangaPresenter : BasePresenter<MangaActivity>() {
      */
     lateinit var manga: Manga
 
-    /**
-     * Key to save and restore [manga] from a bundle.
-     */
-    private val MANGA_KEY = "manga_key"
+    var mangaSubscription: Subscription? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        if (savedState == null) {
-            manga = SharedData.get(MangaEvent::class.java)!!.manga
-        } else {
-            manga = savedState.getSerializable(MANGA_KEY) as Manga
-            SharedData.put(MangaEvent(manga))
-        }
-
         // Prepare a subject to communicate the chapters and info presenters for the chapter count.
         SharedData.put(ChapterCountEvent())
-
-        Observable.just(manga)
-                .subscribeLatestCache({ view, manga -> view.onSetManga(manga) })
     }
 
-    override fun onDestroy() {
-        SharedData.remove(MangaEvent::class.java)
-        SharedData.remove(ChapterCountEvent::class.java)
-        super.onDestroy()
-    }
-
-    override fun onSave(state: Bundle) {
-        state.putSerializable(MANGA_KEY, manga)
-        super.onSave(state)
+    fun setMangaEvent(event: MangaEvent) {
+        if (isUnsubscribed(mangaSubscription)) {
+            manga = event.manga
+            mangaSubscription = Observable.just(manga)
+                    .subscribeLatestCache({ view, manga -> view.onSetManga(manga) })
+        }
     }
 
 }

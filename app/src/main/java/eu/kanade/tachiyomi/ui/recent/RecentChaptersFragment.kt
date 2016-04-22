@@ -103,21 +103,17 @@ class RecentChaptersFragment : BaseRxFragment<RecentChaptersPresenter>(), Flexib
 
     /**
      * Open chapter in reader
-
+     *
      * @param chapter selected chapter
      */
     private fun openChapter(chapter: MangaChapter) {
-        // Start reader event
-        presenter.onOpenChapter(chapter)
-
-        //Start reader intent
-        val intent = ReaderActivity.newIntent(activity)
+        val intent = ReaderActivity.newIntent(activity, chapter.manga, chapter.chapter)
         startActivity(intent)
     }
 
     /**
      * Populate adapter with chapters
-
+     *
      * @param chapters list of chapters
      */
     fun onNextMangaChapters(chapters: List<Any>) {

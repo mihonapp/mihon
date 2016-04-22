@@ -181,11 +181,10 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     }
 
     val isCatalogueManga: Boolean
-        get() = (activity as MangaActivity).isCatalogueManga
+        get() = (activity as MangaActivity).fromCatalogue
 
     fun openChapter(chapter: Chapter, hasAnimation: Boolean = false) {
-        presenter.onOpenChapter(chapter)
-        val intent = ReaderActivity.newIntent(activity)
+        val intent = ReaderActivity.newIntent(activity, presenter.manga, chapter)
         if (hasAnimation) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         }
