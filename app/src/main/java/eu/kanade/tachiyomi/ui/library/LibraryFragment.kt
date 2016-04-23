@@ -125,6 +125,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.subscribeLibrary()
+    }
+
     override fun onDestroyView() {
         tabs.visibility = View.GONE
         super.onDestroyView()

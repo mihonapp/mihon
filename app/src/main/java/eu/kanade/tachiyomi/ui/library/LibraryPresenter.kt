@@ -44,7 +44,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Subject to notify the library's viewpager for updates.
      */
-    val libraryMangaSubject = BehaviorSubject.create<LibraryMangaEvent?>()
+    val libraryMangaSubject = BehaviorSubject.create<LibraryMangaEvent>()
 
     /**
      * Database.
@@ -91,18 +91,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
 
     }
 
-    override fun onDropView() {
-        libraryMangaSubject.onNext(null)
-        super.onDropView()
-    }
-
-    override fun onTakeView(libraryFragment: LibraryFragment) {
-        super.onTakeView(libraryFragment)
-        if (isUnsubscribed(GET_LIBRARY)) {
-            start(GET_LIBRARY)
-        }
-    }
-
     /**
      * Get the categories and all its manga from the database.
      *
@@ -112,13 +100,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
         return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable(),
                 { a, b -> Pair(a, b) })
                 .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    /**
-     * Update the library information
-     */
-    fun updateLibrary() {
-        start(GET_LIBRARY)
     }
 
     /**
@@ -149,6 +130,22 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
                             .flatMap { group -> group.toList().map { Pair(group.key, it) } }
                             .toMap({ it.first }, { it.second })
                 }
+    }
+
+    /**
+     * Resubscribes to library if needed.
+     */
+    fun subscribeLibrary() {
+        if (isUnsubscribed(GET_LIBRARY)) {
+            start(GET_LIBRARY)
+        }
+    }
+
+    /**
+     * Resubscribes to library.
+     */
+    fun updateLibrary() {
+        start(GET_LIBRARY)
     }
 
     /**

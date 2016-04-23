@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import kotlinx.android.synthetic.main.fragment_library_category.*
 import rx.Subscription
-import java.util.*
 
 /**
  * Fragment containing the library manga for a certain category.
@@ -33,14 +32,6 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
      * Position in the adapter from [LibraryAdapter].
      */
     private var position: Int = 0
-
-    /**
-     * Manga in this category.
-     */
-    private var mangas: List<Manga>? = null
-        set(value) {
-            field = value ?: ArrayList()
-        }
 
     /**
      * Subscription for the library manga.
@@ -119,7 +110,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
     override fun onResume() {
         super.onResume()
         libraryMangaSubscription = libraryPresenter.libraryMangaSubject
-                .subscribe { if (it != null) onNextLibraryManga(it) }
+                .subscribe { onNextLibraryManga(it) }
     }
 
     override fun onPause() {
@@ -134,8 +125,8 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
     }
 
     /**
-     * Subscribe to [LibraryMangaEvent]. When an event is received, it updates [mangas] if needed
-     * and refresh the content of the adapter.
+     * Subscribe to [LibraryMangaEvent]. When an event is received, it updates the content of the
+     * adapter.
      *
      * @param event the event received.
      */
@@ -146,15 +137,11 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
         // When a category is deleted, the index can be greater than the number of categories.
         if (position >= categories.size) return
 
-        // Get the manga list for this category
-        val mangaForCategory = event.getMangasForCategory(categories[position])
+        // Get the manga list for this category.
+        val mangaForCategory = event.getMangaForCategory(categories[position]) ?: emptyList()
 
-        // Update the list only if the reference to the list is different, avoiding reseting the
-        // adapter after every onResume.
-        if (mangas !== mangaForCategory) {
-            mangas = mangaForCategory
-            adapter.setItems(mangas ?: emptyList())
-        }
+        // Update the category with its manga.
+        adapter.setItems(mangaForCategory)
     }
 
     /**
