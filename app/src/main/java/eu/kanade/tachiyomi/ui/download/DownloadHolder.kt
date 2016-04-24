@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.item_download.view.*
  * All the elements from the layout file "item_download" are available in this class.
  *
  * @param view the inflated view for this holder.
- * @constructor creates a new library holder.
+ * @constructor creates a new download holder.
  */
 class DownloadHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
