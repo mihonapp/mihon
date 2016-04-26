@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.GithubUpdateChecker
 import eu.kanade.tachiyomi.data.updater.UpdateDownloader
-import eu.kanade.tachiyomi.data.updater.UpdateDownloaderAlarm
 import eu.kanade.tachiyomi.util.toast
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -57,19 +56,13 @@ class SettingsAboutFragment : SettingsNestedFragment() {
                 true
             }
 
-            automaticUpdateToggle.isEnabled = true
-            automaticUpdateToggle.setOnPreferenceChangeListener { preference, any ->
-                val status = any as Boolean
-                UpdateDownloaderAlarm.startAlarm(activity, 12, status)
-                true
-            }
-
-            automaticUpdateToggle.isEnabled = true
-            automaticUpdateToggle.setOnPreferenceChangeListener { preference, any ->
-                val status = any as Boolean
-                UpdateDownloaderAlarm.startAlarm(activity, 12, status)
-                true
-            }
+            //TODO One glorious day enable this and add the magnificent option for auto update checking.
+            // automaticUpdateToggle.isEnabled = true
+            //            automaticUpdateToggle.setOnPreferenceChangeListener { preference, any ->
+            //                val status = any as Boolean
+            //                UpdateDownloaderAlarm.startAlarm(activity, 12, status)
+            //                true
+            //            }
         }
 
         buildTime.summary = getFormattedBuildTime()
