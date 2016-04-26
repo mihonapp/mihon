@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.data.source.model.MangasPage
@@ -51,12 +52,13 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     /**
      * Query from the view.
      */
-    private var query: String? = null
+    var query: String? = null
+        private set
 
     /**
      * Pager containing a list of manga results.
      */
-    private lateinit var pager: RxPager<Manga>
+    private var pager = RxPager<Manga>()
 
     /**
      * Last fetched page from network.
@@ -76,45 +78,36 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
 
     companion object {
         /**
-         * Id of the restartable that delivers a list of manga from network.
+         * Id of the restartable that delivers a list of manga.
          */
-        const val GET_MANGA_LIST = 1
+        const val PAGER = 1
 
         /**
-         * Id of the restartable that requests the list of manga from network.
+         * Id of the restartable that requests a page of manga from network.
          */
-        const val GET_MANGA_PAGE = 2
+        const val REQUEST_PAGE = 2
 
         /**
-         * Id of the restartable that initializes the details of a manga.
+         * Id of the restartable that initializes the details of manga.
          */
-        const val GET_MANGA_DETAIL = 3
+        const val GET_MANGA_DETAILS = 3
 
         /**
-         * Key to save and restore [source] from a [Bundle].
+         * Key to save and restore [query] from a [Bundle].
          */
-        const val ACTIVE_SOURCE_KEY = "active_source"
+        const val QUERY_KEY = "query_key"
     }
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
+        source = getLastUsedSource()
+
         if (savedState != null) {
-            source = sourceManager.get(savedState.getInt(ACTIVE_SOURCE_KEY))!!
+            query = savedState.getString(QUERY_KEY)
         }
 
-        pager = RxPager()
-
-        startableReplay(GET_MANGA_LIST,
-                { pager.results() },
-                { view, pair -> view.onAddPage(pair.first, pair.second) })
-
-        startableFirst(GET_MANGA_PAGE,
-                { pager.request { page -> getMangasPageObservable(page + 1) } },
-                { view, next -> },
-                { view, error -> view.onAddPageError(error) })
-
-        startableLatestCache(GET_MANGA_DETAIL,
+        startableLatestCache(GET_MANGA_DETAILS,
                 { mangaDetailSubject.observeOn(Schedulers.io())
                         .flatMap { Observable.from(it) }
                         .filter { !it.initialized }
@@ -126,10 +119,22 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
 
         add(prefs.catalogueAsList().asObservable()
                 .subscribe { setDisplayMode(it) })
+
+        startableReplay(PAGER,
+                { pager.results() },
+                { view, pair -> view.onAddPage(pair.first, pair.second) })
+
+        startableFirst(REQUEST_PAGE,
+                { pager.request { page -> getMangasPageObservable(page + 1) } },
+                { view, next -> },
+                { view, error -> view.onAddPageError(error) })
+
+        start(PAGER)
+        start(REQUEST_PAGE)
     }
 
     override fun onSave(state: Bundle) {
-        state.putInt(ACTIVE_SOURCE_KEY, source.id)
+        state.putString(QUERY_KEY, query)
         super.onSave(state)
     }
 
@@ -141,37 +146,38 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     private fun setDisplayMode(asList: Boolean) {
         isListMode = asList
         if (asList) {
-            stop(GET_MANGA_DETAIL)
+            stop(GET_MANGA_DETAILS)
         } else {
-            start(GET_MANGA_DETAIL)
+            start(GET_MANGA_DETAILS)
         }
     }
 
     /**
-     * Starts the request with the given source.
+     * Sets the active source and restarts the pager.
      *
-     * @param source the active source.
+     * @param source the new active source.
      */
-    fun startRequesting(source: Source) {
+    fun setActiveSource(source: Source) {
+        prefs.lastUsedCatalogueSource().set(source.id)
         this.source = source
-        restartRequest(null)
+        restartPager(null)
     }
 
     /**
-     * Restarts the request for the active source with a query.
+     * Restarts the request for the active source.
      *
-     * @param query a query, or null if searching popular manga.
+     * @param query the query, or null if searching popular manga.
      */
-    fun restartRequest(query: String?) {
+    fun restartPager(query: String?) {
         this.query = query
-        stop(GET_MANGA_PAGE)
+        stop(REQUEST_PAGE)
         lastMangasPage = null
 
         if (!isListMode) {
-            start(GET_MANGA_DETAIL)
+            start(GET_MANGA_DETAILS)
         }
-        start(GET_MANGA_LIST)
-        start(GET_MANGA_PAGE)
+        start(PAGER)
+        start(REQUEST_PAGE)
     }
 
     /**
@@ -179,15 +185,22 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      */
     fun requestNext() {
         if (hasNextPage()) {
-            start(GET_MANGA_PAGE)
+            start(REQUEST_PAGE)
         }
     }
 
     /**
-     * Retry a failed request.
+     * Returns true if the last fetched page has a next page.
      */
-    fun retryRequest() {
-        start(GET_MANGA_PAGE)
+    fun hasNextPage(): Boolean {
+        return lastMangasPage?.nextPageUrl != null
+    }
+
+    /**
+     * Retries the current request that failed.
+     */
+    fun retryPage() {
+        start(REQUEST_PAGE)
     }
 
     /**
@@ -202,12 +215,12 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
             nextMangasPage.url = lastMangasPage!!.nextPageUrl
         }
 
-        val obs = if (query.isNullOrEmpty())
+        val observable = if (query.isNullOrEmpty())
             source.pullPopularMangasFromNetwork(nextMangasPage)
         else
             source.searchMangasFromNetwork(nextMangasPage, query!!)
 
-        return obs.subscribeOn(Schedulers.io())
+        return observable.subscribeOn(Schedulers.io())
                 .doOnNext { lastMangasPage = it }
                 .flatMap { Observable.from(it.mangas) }
                 .map { networkToLocalManga(it) }
@@ -259,23 +272,17 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     }
 
     /**
-     * Returns true if the last fetched page has a next page.
-     */
-    fun hasNextPage(): Boolean {
-        return lastMangasPage?.nextPageUrl != null
-    }
-
-    /**
-     * Gets the last used source from preferences, or the first valid source.
+     * Returns the last used source from preferences or the first valid source.
      *
-     * @return the index of the last used source.
+     * @return a source.
      */
-    fun getLastUsedSourceIndex(): Int {
-        val index = prefs.lastUsedCatalogueSource().get() ?: -1
-        if (index < 0 || index >= sources.size || !isValidSource(sources[index])) {
+    fun getLastUsedSource(): Source {
+        val id = prefs.lastUsedCatalogueSource().get() ?: -1
+        val source = sourceManager.get(id)
+        if (!isValidSource(source)) {
             return findFirstValidSource()
         }
-        return index
+        return source!!
     }
 
     /**
@@ -284,11 +291,16 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * @param source the source to check.
      * @return true if the source is valid, false otherwise.
      */
-    fun isValidSource(source: Source): Boolean = with(source) {
-        if (!isLoginRequired || isLogged)
-            return true
+    fun isValidSource(source: Source?): Boolean {
+        if (source == null) return false
 
-        prefs.sourceUsername(this) != "" && prefs.sourcePassword(this) != ""
+        return with(source) {
+            if (!isLoginRequired || isLogged) {
+                true
+            } else {
+                prefs.sourceUsername(this) != "" && prefs.sourcePassword(this) != ""
+            }
+        }
     }
 
     /**
@@ -296,17 +308,8 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      *
      * @return the index of the first valid source.
      */
-    fun findFirstValidSource(): Int {
-        return sources.indexOfFirst { isValidSource(it) }
-    }
-
-    /**
-     * Sets the enabled source.
-     *
-     * @param index the index of the source in [sources].
-     */
-    fun setEnabledSource(index: Int) {
-        prefs.lastUsedCatalogueSource().set(index)
+    fun findFirstValidSource(): Source {
+        return sources.find { isValidSource(it) }!!
     }
 
     /**
@@ -317,7 +320,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
 
         // Ensure at least one language
         if (languages.isEmpty()) {
-            languages.add("EN")
+            languages.add(EN.code)
         }
 
         return sourceManager.getSources()

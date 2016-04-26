@@ -98,38 +98,40 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         val coverCache = presenter.coverCache
         val headers = presenter.source.glideHeaders
 
-        // Check if thumbnail_url is given.
-        manga.thumbnail_url?.let { url ->
-            if (manga.favorite) {
-                coverCache.saveOrLoadFromCache(url, headers) {
-                    if (isResumed) {
-                        Glide.with(context)
-                                .load(it)
-                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                                .centerCrop()
-                                .signature(StringSignature(it.lastModified().toString()))
-                                .into(manga_cover)
+        // Set cover if it wasn't already.
+        if (manga_cover.drawable == null) {
+            manga.thumbnail_url?.let { url ->
+                if (manga.favorite) {
+                    coverCache.saveOrLoadFromCache(url, headers) {
+                        if (isResumed) {
+                            Glide.with(context)
+                                    .load(it)
+                                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                    .centerCrop()
+                                    .signature(StringSignature(it.lastModified().toString()))
+                                    .into(manga_cover)
 
-                        Glide.with(context)
-                                .load(it)
-                                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                                .centerCrop()
-                                .signature(StringSignature(it.lastModified().toString()))
-                                .into(backdrop)
+                            Glide.with(context)
+                                    .load(it)
+                                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                                    .centerCrop()
+                                    .signature(StringSignature(it.lastModified().toString()))
+                                    .into(backdrop)
+                        }
                     }
-                }
-            } else {
-                Glide.with(context)
-                        .load(if (headers != null) GlideUrl(url, headers) else url)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .centerCrop()
-                        .into(manga_cover)
+                } else {
+                    Glide.with(context)
+                            .load(if (headers != null) GlideUrl(url, headers) else url)
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .centerCrop()
+                            .into(manga_cover)
 
-                Glide.with(context)
-                        .load(if (headers != null) GlideUrl(url, headers) else url)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .centerCrop()
-                        .into(backdrop)
+                    Glide.with(context)
+                            .load(if (headers != null) GlideUrl(url, headers) else url)
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .centerCrop()
+                            .into(backdrop)
+                }
             }
         }
     }

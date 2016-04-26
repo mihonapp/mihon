@@ -33,7 +33,7 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.MILLISECONDS
 
 /**
  * Fragment that shows the manga from the catalogue.
@@ -65,7 +65,8 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
     /**
      * Query of the search box.
      */
-    private var query = ""
+    private val query: String?
+        get() = presenter.query
 
     /**
      * Selected index of the spinner (selected source).
@@ -109,23 +110,11 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         get() = (activity as MainActivity).toolbar
 
     companion object {
-
-        /**
-         * Key to save and restore [query] from a [Bundle].
-         */
-        const val QUERY_KEY = "query_key"
-
-        /**
-         * Key to save and restore [selectedIndex] from a [Bundle].
-         */
-        const val SELECTED_INDEX_KEY = "selected_index_key"
-
         /**
          * Creates a new instance of this fragment.
          *
          * @return a new instance of [CatalogueFragment].
          */
-        @JvmStatic
         fun newInstance(): CatalogueFragment {
             return CatalogueFragment()
         }
@@ -134,13 +123,6 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         setHasOptionsMenu(true)
-
-        if (savedState != null) {
-            selectedIndex = savedState.getInt(SELECTED_INDEX_KEY)
-            query = savedState.getString(QUERY_KEY)
-        } else {
-            selectedIndex = presenter.getLastUsedSourceIndex()
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
@@ -188,19 +170,15 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         val onItemSelected = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val source = spinnerAdapter.getItem(position)
-                if (selectedIndex != position || adapter.isEmpty) {
-                    // Set previous selection if it's not a valid source and notify the user
-                    if (!presenter.isValidSource(source)) {
-                        spinner.setSelection(presenter.findFirstValidSource())
-                        context.toast(R.string.source_requires_login)
-                    } else {
-                        selectedIndex = position
-                        presenter.setEnabledSource(selectedIndex)
-                        showProgressBar()
-                        glm.scrollToPositionWithOffset(0, 0)
-                        llm.scrollToPositionWithOffset(0, 0)
-                        presenter.startRequesting(source)
-                    }
+                if (!presenter.isValidSource(source)) {
+                    spinner.setSelection(selectedIndex)
+                    context.toast(R.string.source_requires_login)
+                } else if (source != presenter.source) {
+                    selectedIndex = position
+                    showProgressBar()
+                    glm.scrollToPositionWithOffset(0, 0)
+                    llm.scrollToPositionWithOffset(0, 0)
+                    presenter.setActiveSource(source)
                 }
             }
 
@@ -210,18 +188,15 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
 
         spinner = Spinner(themedContext).apply {
             adapter = spinnerAdapter
+            selectedIndex = presenter.sources.indexOf(presenter.source)
             setSelection(selectedIndex)
             onItemSelectedListener = onItemSelected
         }
 
         setToolbarTitle("")
         toolbar.addView(spinner)
-    }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(SELECTED_INDEX_KEY, selectedIndex)
-        outState.putString(QUERY_KEY, query)
-        super.onSaveInstanceState(outState)
+        showProgressBar()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -268,14 +243,16 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         return true
     }
 
-    override fun onStart() {
-        super.onStart()
-        initializeSearchSubscription()
+    override fun onResume() {
+        super.onResume()
+        queryDebouncerSubscription = queryDebouncerSubject.debounce(SEARCH_TIMEOUT, MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { searchWithQuery(it) }
     }
 
-    override fun onStop() {
-        destroySearchSubscription()
-        super.onStop()
+    override fun onPause() {
+        queryDebouncerSubscription?.unsubscribe()
+        super.onPause()
     }
 
     override fun onDestroyView() {
@@ -288,51 +265,34 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
     }
 
     /**
-     * Listen for query events on the debouncer.
-     */
-    private fun initializeSearchSubscription() {
-        queryDebouncerSubscription = queryDebouncerSubject.debounce(SEARCH_TIMEOUT, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { restartRequest(it) }
-    }
-
-    /**
-     * Unsubscribe from the query debouncer.
-     */
-    private fun destroySearchSubscription() {
-        queryDebouncerSubscription?.unsubscribe()
-    }
-
-    /**
-     * Called when the input text changes or is submitted
+     * Called when the input text changes or is submitted.
      *
      * @param query the new query.
      * @param now whether to send the network call now or debounce it by [SEARCH_TIMEOUT].
      */
     private fun onSearchEvent(query: String, now: Boolean) {
         if (now) {
-            restartRequest(query)
+            searchWithQuery(query)
         } else {
             queryDebouncerSubject.onNext(query)
         }
     }
 
     /**
-     * Restarts the request.
+     * Restarts the request with a new query.
      *
      * @param newQuery the new query.
      */
-    private fun restartRequest(newQuery: String) {
+    private fun searchWithQuery(newQuery: String) {
         // If text didn't change, do nothing
         if (query == newQuery)
             return
 
-        query = newQuery
         showProgressBar()
         catalogue_grid.layoutManager.scrollToPosition(0)
         catalogue_list.layoutManager.scrollToPosition(0)
 
-        presenter.restartRequest(query)
+        presenter.restartPager(newQuery)
     }
 
     /**
@@ -373,7 +333,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         catalogue_view.snack(error.message ?: "") {
             setAction(R.string.action_retry) {
                 showProgressBar()
-                presenter.retryRequest()
+                presenter.retryPage()
             }
         }
     }
@@ -469,16 +429,16 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      * @param position the position of the element clicked.
      */
     override fun onListItemLongClick(position: Int) {
-        val selectedManga = adapter.getItem(position)
+        val manga = adapter.getItem(position) ?: return
 
-        val textRes = if (selectedManga.favorite) R.string.remove_from_library else R.string.add_to_library
+        val textRes = if (manga.favorite) R.string.remove_from_library else R.string.add_to_library
 
         MaterialDialog.Builder(activity)
                 .items(getString(textRes))
                 .itemsCallback { dialog, itemView, which, text ->
                     when (which) {
                         0 -> {
-                            presenter.changeMangaFavorite(selectedManga)
+                            presenter.changeMangaFavorite(manga)
                             adapter.notifyItemChanged(position)
                         }
                     }

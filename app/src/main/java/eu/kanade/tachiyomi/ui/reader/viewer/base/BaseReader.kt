@@ -78,7 +78,7 @@ abstract class BaseReader : BaseFragment() {
      * Returns the active page.
      */
     fun getActivePage(): Page {
-        return pages[currentPage]
+        return pages.getOrElse(currentPage) { pages[0] }
     }
 
     /**
