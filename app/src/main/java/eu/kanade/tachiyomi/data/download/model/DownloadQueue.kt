@@ -4,9 +4,9 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.source.model.Page
 import rx.Observable
 import rx.subjects.PublishSubject
-import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
-class DownloadQueue : ArrayList<Download>() {
+class DownloadQueue : CopyOnWriteArrayList<Download>() {
 
     private val statusSubject = PublishSubject.create<Download>()
 
