@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
+import android.support.v7.preference.SwitchPreferenceCompat
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.BuildConfig
@@ -27,6 +28,10 @@ class SettingsAboutFragment : SettingsNestedFragment() {
      */
     private var releaseSubscription: Subscription? = null
 
+    val automaticUpdateToggle by lazy {
+        findPreference(getString(R.string.pref_enable_automatic_updates_key)) as SwitchPreferenceCompat
+    }
+
     companion object {
 
         fun newInstance(resourcePreference: Int, resourceTitle: Int): SettingsNestedFragment {
@@ -45,11 +50,19 @@ class SettingsAboutFragment : SettingsNestedFragment() {
         else
             BuildConfig.VERSION_NAME
 
-        //Set onClickListener to check for new version
-        version.setOnPreferenceClickListener {
-            if (!BuildConfig.DEBUG && BuildConfig.INCLUDE_UPDATER)
-                checkVersion()
-            true
+        if (!BuildConfig.DEBUG && BuildConfig.INCLUDE_UPDATER) {
+            //Set onClickListener to check for new version
+            version.setOnPreferenceClickListener {
+                true
+            }
+
+            //TODO One glorious day enable this and add the magnificent option for auto update checking.
+            // automaticUpdateToggle.isEnabled = true
+            //            automaticUpdateToggle.setOnPreferenceChangeListener { preference, any ->
+            //                val status = any as Boolean
+            //                UpdateDownloaderAlarm.startAlarm(activity, 12, status)
+            //                true
+            //            }
         }
 
         buildTime.summary = getFormattedBuildTime()

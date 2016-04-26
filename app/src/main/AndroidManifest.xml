@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="eu.kanade.tachiyomi"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="eu.kanade.tachiyomi">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -68,7 +68,19 @@
         </receiver>
 
         <receiver
-            android:name=".data.library.LibraryUpdateService$LibraryUpdateReceiver">
+            android:name=".data.library.LibraryUpdateService$SyncOnPowerConnected"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".data.library.LibraryUpdateService$CancelUpdateReceiver">
+        </receiver>
+
+        <receiver
+            android:name=".data.updater.UpdateDownloader$InstallOnReceived">
         </receiver>
 
         <receiver
@@ -78,6 +90,15 @@
                 <action android:name="eu.kanade.UPDATE_LIBRARY" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".data.updater.UpdateDownloaderAlarm">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="eu.kanade.CHECK_UPDATE"/>
+            </intent-filter>
+        </receiver>
+
 
         <meta-data
             android:name="eu.kanade.tachiyomi.data.cache.CoverGlideModule"

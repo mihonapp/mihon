@@ -24,14 +24,16 @@
         android:summary="%s"
         android:title="@string/pref_library_update_interval"/>
 
+    <MultiSelectListPreference
+        android:entries="@array/library_update_restrictions"
+        android:entryValues="@array/library_update_restrictions_values"
+        android:key="@string/pref_library_update_restriction_key"
+        android:summary="@string/pref_library_update_restriction_summary"
+        android:title="@string/pref_library_update_restriction" />
+
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="@string/pref_update_only_non_completed_key"
         android:title="@string/pref_update_only_non_completed"/>
-
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="@string/pref_update_only_when_charging_key"
-        android:title="@string/pref_update_only_when_charging"/>
 
 </android.support.v7.preference.PreferenceScreen>

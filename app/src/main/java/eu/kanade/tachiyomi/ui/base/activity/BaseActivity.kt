@@ -73,5 +73,4 @@ open class BaseActivity : AppCompatActivity() {
         snack.f()
         snack.show()
     }
-
 }

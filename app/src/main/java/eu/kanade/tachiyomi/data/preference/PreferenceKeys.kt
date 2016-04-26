@@ -70,15 +70,16 @@ class PreferenceKeys(context: Context) {
 
     val removeAfterMarkedAsRead = context.getString(R.string.pref_remove_after_marked_as_read_key)
 
-    val updateOnlyWhenCharging = context.getString(R.string.pref_update_only_when_charging_key)
-
     val libraryUpdateInterval = context.getString(R.string.pref_library_update_interval_key)
+
+    val libraryUpdateRestriction = context.getString(R.string.pref_library_update_restriction_key)
 
     val filterDownloaded = context.getString(R.string.pref_filter_downloaded_key)
 
     val filterUnread = context.getString(R.string.pref_filter_unread_key)
 
     fun sourceUsername(sourceId: Int) = "pref_source_username_$sourceId"
+
 
     fun sourcePassword(sourceId: Int) = "pref_source_password_$sourceId"
 

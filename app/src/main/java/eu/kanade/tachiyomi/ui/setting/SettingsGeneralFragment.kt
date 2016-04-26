@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v14.preference.MultiSelectListPreference
 import android.support.v4.app.TaskStackBuilder
 import android.support.v7.preference.Preference
 import android.view.View
@@ -33,13 +34,28 @@ class SettingsGeneralFragment : SettingsNestedFragment() {
         findPreference(getString(R.string.pref_library_update_interval_key)) as IntListPreference
     }
 
+    val updateRestriction by lazy {
+        findPreference(getString(R.string.pref_library_update_restriction_key)) as MultiSelectListPreference
+    }
+
     val themePreference by lazy {
         findPreference(getString(R.string.pref_theme_key)) as IntListPreference
     }
 
+    var updateIntervalSubscription: Subscription? = null
+
     var columnsSubscription: Subscription? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        updateIntervalSubscription = preferences.libraryUpdateInterval().asObservable()
+                .subscribe { updateRestriction.isVisible = it > 0 }
+
+        columnsSubscription = Observable.combineLatest(
+                preferences.portraitColumns().asObservable(),
+                preferences.landscapeColumns().asObservable())
+                { portraitColumns, landscapeColumns -> Pair(portraitColumns, landscapeColumns) }
+                .subscribe { updateColumnsSummary(it.first, it.second) }
+
         updateInterval.setOnPreferenceChangeListener { preference, newValue ->
             LibraryUpdateAlarm.startAlarm(activity, (newValue as String).toInt())
             true
@@ -57,17 +73,11 @@ class SettingsGeneralFragment : SettingsNestedFragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        columnsSubscription = Observable.combineLatest(preferences.portraitColumns().asObservable(),
-                preferences.landscapeColumns().asObservable(),
-                { portraitColumns, landscapeColumns -> Pair(portraitColumns, landscapeColumns) })
-                .subscribe { updateColumnsSummary(it.first, it.second) }
-    }
-
-    override fun onPause() {
+    override fun onDestroyView() {
+        updateIntervalSubscription?.unsubscribe()
         columnsSubscription?.unsubscribe()
-        super.onPause()
+        super.onDestroyView()
+
     }
 
     override fun onDisplayPreferenceDialog(preference: Preference) {

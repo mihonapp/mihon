@@ -126,4 +126,14 @@
         <item>48</item>
     </string-array>
 
+    <string-array name="library_update_restrictions">
+        <item>@string/wifi</item>
+        <item>@string/charging</item>
+    </string-array>
+
+    <string-array name="library_update_restrictions_values">
+        <item>wifi</item>
+        <item>ac</item>
+    </string-array>
+
 </resources>
