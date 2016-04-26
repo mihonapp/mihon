@@ -52,7 +52,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     /**
      * Query from the view.
      */
-    var query: String? = null
+    var query = ""
         private set
 
     /**
@@ -104,7 +104,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         source = getLastUsedSource()
 
         if (savedState != null) {
-            query = savedState.getString(QUERY_KEY)
+            query = savedState.getString(QUERY_KEY, "")
         }
 
         startableLatestCache(GET_MANGA_DETAILS,
@@ -160,7 +160,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     fun setActiveSource(source: Source) {
         prefs.lastUsedCatalogueSource().set(source.id)
         this.source = source
-        restartPager(null)
+        restartPager()
     }
 
     /**
@@ -168,7 +168,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      *
      * @param query the query, or null if searching popular manga.
      */
-    fun restartPager(query: String?) {
+    fun restartPager(query: String = "") {
         this.query = query
         stop(REQUEST_PAGE)
         lastMangasPage = null
@@ -215,10 +215,10 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
             nextMangasPage.url = lastMangasPage!!.nextPageUrl
         }
 
-        val observable = if (query.isNullOrEmpty())
+        val observable = if (query.isEmpty())
             source.pullPopularMangasFromNetwork(nextMangasPage)
         else
-            source.searchMangasFromNetwork(nextMangasPage, query!!)
+            source.searchMangasFromNetwork(nextMangasPage, query)
 
         return observable.subscribeOn(Schedulers.io())
                 .doOnNext { lastMangasPage = it }
