@@ -92,6 +92,7 @@ dependencies {
     final DAGGER_VERSION = '2.2'
     final OKHTTP_VERSION = '3.2.0'
     final RETROFIT_VERSION = '2.0.1'
+    final NUCLEUS_VERSION = '3.0.0-beta'
     final STORIO_VERSION = '1.8.0'
     final MOCKITO_VERSION = '1.10.19'
 
@@ -142,7 +143,9 @@ dependencies {
     kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
 
     // Model View Presenter
-    compile 'info.android15.nucleus:nucleus:3.0.0-beta'
+    compile "info.android15.nucleus:nucleus:$NUCLEUS_VERSION"
+    compile "info.android15.nucleus:nucleus-support-v4:$NUCLEUS_VERSION"
+    compile "info.android15.nucleus:nucleus-support-v7:$NUCLEUS_VERSION"
 
     // Dependency injection
     compile "com.google.dagger:dagger:$DAGGER_VERSION"

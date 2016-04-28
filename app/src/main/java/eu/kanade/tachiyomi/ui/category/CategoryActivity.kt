@@ -260,7 +260,7 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
      *
      * @param viewHolder view that contains dragged item
      */
-    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder?) {
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
         // Notify touchHelper
         touchHelper.startDrag(viewHolder)
     }

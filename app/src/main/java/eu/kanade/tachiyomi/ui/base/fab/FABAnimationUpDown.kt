@@ -9,46 +9,42 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import eu.kanade.tachiyomi.R
 
-class FABAnimationUpDown() : FABAnimationBase()
-{
-    override var mIsAnimatingOut: Boolean = false
-        get() = super.mIsAnimatingOut
+class FABAnimationUpDown @JvmOverloads constructor(ctx: Context, attrs: AttributeSet? = null) : FABAnimationBase() {
 
     private val INTERPOLATOR = FastOutSlowInInterpolator()
 
-    /**
-     * Needed to prevent NoSuchMethodException
-     */
-    constructor(ctx: Context, attrs: AttributeSet) : this() { }
+    private val outAnimation by lazy {
+        AnimationUtils.loadAnimation(ctx, R.anim.fab_hide_to_bottom).apply {
+            duration = 200
+            interpolator = INTERPOLATOR
+        }
+    }
+    private val inAnimation by lazy {
+        AnimationUtils.loadAnimation(ctx, R.anim.fab_show_from_bottom).apply {
+            duration = 200
+            interpolator = INTERPOLATOR
+        }
+    }
 
     override fun animateOut(button: FloatingActionButton) {
-        super.animateIn(button)
-        val anim = AnimationUtils.loadAnimation(button.context, R.anim.fab_hide_to_bottom)
-        anim.interpolator = INTERPOLATOR
-        anim.duration = 200L
-        anim.setAnimationListener(object : Animation.AnimationListener {
+        outAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
-                mIsAnimatingOut = true
+                isAnimatingOut = true
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                mIsAnimatingOut = false
+                isAnimatingOut = false
                 button.visibility = View.GONE
             }
 
             override fun onAnimationRepeat(animation: Animation) {
             }
         })
-        button.startAnimation(anim)
-
+        button.startAnimation(outAnimation)
     }
 
     override fun animateIn(button: FloatingActionButton) {
-        super.animateOut(button)
         button.visibility = View.VISIBLE
-        val anim = AnimationUtils.loadAnimation(button.context, R.anim.fab_show_from_bottom)
-        anim.duration = 200L
-        anim.interpolator = INTERPOLATOR
-        button.startAnimation(anim)
+        button.startAnimation(inAnimation)
     }
 }

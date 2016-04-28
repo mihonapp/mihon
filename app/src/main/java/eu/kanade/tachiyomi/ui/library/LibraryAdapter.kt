@@ -62,7 +62,7 @@ class LibraryAdapter(fm: FragmentManager) : SmartFragmentStatePagerAdapter(fm) {
      * @param mode the mode to set.
      */
     fun setSelectionMode(mode: Int) {
-        for (fragment in registeredFragments) {
+        for (fragment in getRegisteredFragments()) {
             (fragment as LibraryCategoryFragment).setSelectionMode(mode)
         }
     }
@@ -71,7 +71,7 @@ class LibraryAdapter(fm: FragmentManager) : SmartFragmentStatePagerAdapter(fm) {
      * Notifies the adapters in all the registered fragments to refresh their content.
      */
     fun refreshRegisteredAdapters() {
-        for (fragment in registeredFragments) {
+        for (fragment in getRegisteredFragments()) {
             (fragment as LibraryCategoryFragment).adapter.notifyDataSetChanged()
         }
     }

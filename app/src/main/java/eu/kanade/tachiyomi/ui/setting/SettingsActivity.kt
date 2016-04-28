@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
 import android.support.v14.preference.PreferenceFragment
+import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -24,7 +25,7 @@ class SettingsActivity : BaseActivity() {
         setAppTheme()
         super.onCreate(savedState)
         setContentView(R.layout.activity_preferences)
-        app.component.inject(this)
+        App.get(this).component.inject(this)
 
         setupToolbar(toolbar)
 
