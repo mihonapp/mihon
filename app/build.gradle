@@ -89,10 +89,10 @@ kapt {
 
 dependencies {
     final SUPPORT_LIBRARY_VERSION = '23.3.0'
-    final DAGGER_VERSION = '2.2'
+    final DAGGER_VERSION = '2.4'
     final OKHTTP_VERSION = '3.2.0'
-    final RETROFIT_VERSION = '2.0.1'
-    final NUCLEUS_VERSION = '3.0.0-beta'
+    final RETROFIT_VERSION = '2.0.2'
+    final NUCLEUS_VERSION = '3.0.0'
     final STORIO_VERSION = '1.8.0'
     final MOCKITO_VERSION = '1.10.19'
 
@@ -113,7 +113,7 @@ dependencies {
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.1'
+    compile 'io.reactivex:rxjava:1.1.3'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.1'
 
     // Network client
@@ -135,7 +135,7 @@ dependencies {
     compile 'com.jakewharton:disklrucache:2.0.2'
 
     // Parse HTML
-    compile 'org.jsoup:jsoup:1.8.3'
+    compile 'org.jsoup:jsoup:1.9.1'
 
     // Database
     compile "com.pushtorefresh.storio:sqlite:$STORIO_VERSION"
