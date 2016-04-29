@@ -369,7 +369,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     override fun onListItemLongClick(position: Int) {
         if (actionMode == null)
-            actionMode = baseActivity.startSupportActionMode(this)
+            actionMode = activity.startSupportActionMode(this)
 
         toggleSelection(position)
     }
@@ -391,10 +391,10 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     }
 
     fun setReadFilter() {
-        this.activity.supportInvalidateOptionsMenu()
+        activity.supportInvalidateOptionsMenu()
     }
 
     fun setDownloadedFilter() {
-        this.activity.supportInvalidateOptionsMenu()
+        activity.supportInvalidateOptionsMenu()
     }
 }

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.base.activity.ActivityMixin
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_backup.*
@@ -40,7 +41,7 @@ class BackupFragment : BaseRxFragment<BackupPresenter>() {
     }
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
-        baseActivity.requestPermissionsOnMarshmallow()
+        (activity as ActivityMixin).requestPermissionsOnMarshmallow()
         subscriptions = SubscriptionList()
 
         backup_button.setOnClickListener {

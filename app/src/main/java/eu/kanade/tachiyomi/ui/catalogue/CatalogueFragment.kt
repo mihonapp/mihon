@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.catalogue
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
@@ -161,7 +162,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         switcher.outAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_out)
 
         // Create toolbar spinner
-        val themedContext = baseActivity.supportActionBar?.themedContext ?: activity
+        val themedContext = activity.supportActionBar?.themedContext ?: activity
 
         val spinnerAdapter = ArrayAdapter(themedContext,
                 android.R.layout.simple_spinner_item, presenter.sources)

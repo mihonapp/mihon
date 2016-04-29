@@ -413,7 +413,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     fun createActionModeIfNeeded() {
         if (actionMode == null) {
-            actionMode = baseActivity.startSupportActionMode(this)
+            actionMode = activity.startSupportActionMode(this)
         }
     }
 
