@@ -38,7 +38,7 @@ class LibraryHolder(private val view: View, private val adapter: LibraryCategory
         view.title.text = manga.title
 
         // Update the unread count and its visibility.
-        with(view.unreadText) {
+        with(view.unread_text) {
             visibility = if (manga.unread > 0) View.VISIBLE else View.GONE
             text = manga.unread.toString()
         }

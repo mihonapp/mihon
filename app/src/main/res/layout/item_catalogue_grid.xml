@@ -7,40 +7,32 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectable_list_drawable">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="220dp"
+        android:id="@+id/card"
         android:background="@drawable/card_background">
 
-        <android.support.percent.PercentFrameLayout
-            android:id="@+id/image_container"
-            android:layout_width="wrap_content"
-            android:layout_height="220dp">
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/colorBackground"
+            tools:background="?android:attr/colorBackground"
+            tools:src="@mipmap/ic_launcher" />
 
-            <ImageView
-                android:id="@+id/thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?android:attr/colorBackground"
-                tools:background="?android:attr/colorBackground"
-                tools:src="@mipmap/ic_launcher"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:background="@drawable/gradient_shape"
-                app:layout_heightPercent="50%"/>
-
-
-        </android.support.percent.PercentFrameLayout>
+        <View
+            android:id="@+id/gradient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient_shape" />
 
         <TextView
-            android:id="@+id/unreadText"
+            android:id="@+id/unread_text"
             style="@style/TextAppearance.Regular.Caption.Light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
             android:background="?attr/colorAccent"
             android:paddingBottom="1dp"
             android:paddingLeft="3dp"
@@ -54,8 +46,7 @@
             app:typeface="ptsansNarrowBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/image_container"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="bottom"
             android:ellipsize="end"
             android:lineSpacingExtra="-4dp"
             android:maxLines="2"
@@ -66,6 +57,6 @@
             android:shadowRadius="4"
             tools:text="Sample name"/>
 
-    </RelativeLayout>
+    </FrameLayout>
 
 </FrameLayout>

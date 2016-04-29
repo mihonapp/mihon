@@ -1,8 +1,9 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
+import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.widget.RelativeLayout
+import android.widget.FrameLayout
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -71,12 +72,14 @@ class CatalogueAdapter(val fragment: CatalogueFragment) : FlexibleAdapter<Catalo
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatalogueHolder {
         if (parent.id == R.id.catalogue_grid) {
-            val v = parent.inflate(R.layout.item_catalogue_grid)
-            v.image_container.layoutParams = RelativeLayout.LayoutParams(MATCH_PARENT, coverHeight)
-            return CatalogueGridHolder(v, this, fragment)
+            val view = parent.inflate(R.layout.item_catalogue_grid).apply {
+                card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
+                gradient.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM)
+            }
+            return CatalogueGridHolder(view, this, fragment)
         } else {
-            val v = parent.inflate(R.layout.item_catalogue_list)
-            return CatalogueListHolder(v, this, fragment)
+            val view = parent.inflate(R.layout.item_catalogue_list)
+            return CatalogueListHolder(view, this, fragment)
         }
     }
 

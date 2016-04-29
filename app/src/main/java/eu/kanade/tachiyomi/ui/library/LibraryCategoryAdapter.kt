@@ -1,8 +1,9 @@
 package eu.kanade.tachiyomi.ui.library
 
+import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.widget.RelativeLayout
+import android.widget.FrameLayout
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -83,8 +84,10 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
      * @return a new view holder for a manga.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryHolder {
-        val view = parent.inflate(R.layout.item_catalogue_grid)
-        view.image_container.layoutParams = RelativeLayout.LayoutParams(MATCH_PARENT, coverHeight)
+        val view = parent.inflate(R.layout.item_catalogue_grid).apply {
+            card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
+            gradient.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM)
+        }
         return LibraryHolder(view, this, fragment)
     }
 

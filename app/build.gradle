@@ -107,7 +107,6 @@ dependencies {
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:preference-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:preference-v14:$SUPPORT_LIBRARY_VERSION"
 
