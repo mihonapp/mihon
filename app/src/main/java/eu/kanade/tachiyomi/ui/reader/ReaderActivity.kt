@@ -201,19 +201,20 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         return true
                     }
                 }
-                KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                    if (event.action == KeyEvent.ACTION_UP) {
-                        viewer?.moveToNext()
-                    }
-                }
-                KeyEvent.KEYCODE_DPAD_LEFT -> {
-                    if (event.action == KeyEvent.ACTION_UP) {
-                        viewer?.moveToPrevious()
-                    }
-                }
             }
         }
         return super.dispatchKeyEvent(event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        if (!isFinishing) {
+            when (keyCode) {
+                KeyEvent.KEYCODE_DPAD_RIGHT -> viewer?.moveToNext()
+                KeyEvent.KEYCODE_DPAD_LEFT -> viewer?.moveToPrevious()
+                KeyEvent.KEYCODE_MENU -> toggleMenu()
+            }
+        }
+        return super.onKeyUp(keyCode, event)
     }
 
     fun onChapterError(error: Throwable) {
@@ -318,7 +319,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
     }
 
-    fun onCenterSingleTap() {
+    fun toggleMenu() {
         setMenuVisibility(reader_menu.visibility == View.GONE)
     }
 

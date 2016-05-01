@@ -130,7 +130,7 @@ class WebtoonReader : BaseReader() {
                 } else if (positionX > recycler.width * RIGHT_REGION) {
                     if (tappingEnabled) moveToNext()
                 } else {
-                    readerActivity.onCenterSingleTap()
+                    readerActivity.toggleMenu()
                 }
                 return true
             }

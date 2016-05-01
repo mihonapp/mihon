@@ -76,7 +76,8 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
         supportFragmentManager.findFragmentById(R.id.frame_container)?.let {
             if (it !is LibraryFragment) {
-                setFragment(LibraryFragment.newInstance())
+                nav_view.setCheckedItem(R.id.nav_drawer_library)
+                nav_view.menu.performIdentifierAction(R.id.nav_drawer_library, 0)
             } else {
                 super.onBackPressed()
             }

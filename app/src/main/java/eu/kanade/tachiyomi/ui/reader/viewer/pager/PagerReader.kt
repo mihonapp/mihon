@@ -168,7 +168,7 @@ abstract class PagerReader : BaseReader() {
                 } else if (positionX > pager.width * RIGHT_REGION) {
                     if (tappingEnabled) onRightSideTap()
                 } else {
-                    readerActivity.onCenterSingleTap()
+                    readerActivity.toggleMenu()
                 }
                 return true
             }
