@@ -1,7 +1,5 @@
-package eu.kanade.tachiyomi.data.database
+package eu.kanade.tachiyomi.data.database.queries
 
-import java.util.*
-import eu.kanade.tachiyomi.data.database.models.Manga as MangaModel
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable as Category
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable as Chapter
 import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable as MangaCategory
@@ -32,23 +30,19 @@ val libraryQuery =
 
 /**
  * Query to get the recent chapters of manga from the library up to a date.
- *
- * @param date the delimiting date.
  */
-fun getRecentsQuery(date: Date): String =
+fun getRecentsQuery() =
     "SELECT ${Manga.TABLE}.${Manga.COLUMN_URL} as mangaUrl, * FROM ${Manga.TABLE} JOIN ${Chapter.TABLE} " +
     "ON ${Manga.TABLE}.${Manga.COLUMN_ID} = ${Chapter.TABLE}.${Chapter.COLUMN_MANGA_ID} " +
-    "WHERE ${Manga.COLUMN_FAVORITE} = 1 AND ${Chapter.COLUMN_DATE_UPLOAD} > ${date.time} " +
+    "WHERE ${Manga.COLUMN_FAVORITE} = 1 AND ${Chapter.COLUMN_DATE_UPLOAD} > ? " +
     "ORDER BY ${Chapter.COLUMN_DATE_UPLOAD} DESC"
 
 
 /**
- * Query to get the categorias for a manga.
- *
- * @param manga the manga.
+ * Query to get the categories for a manga.
  */
-fun getCategoriesForMangaQuery(manga: MangaModel) =
+fun getCategoriesForMangaQuery() =
     "SELECT ${Category.TABLE}.* FROM ${Category.TABLE} " +
     "JOIN ${MangaCategory.TABLE} ON ${Category.TABLE}.${Category.COLUMN_ID} = " +
     "${MangaCategory.TABLE}.${MangaCategory.COLUMN_CATEGORY_ID} " +
-    "WHERE ${MangaCategory.COLUMN_MANGA_ID} = ${manga.id}"
+    "WHERE ${MangaCategory.COLUMN_MANGA_ID} = ?"

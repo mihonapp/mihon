@@ -6,14 +6,13 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.event.ChapterCountEvent
-import eu.kanade.tachiyomi.event.DownloadChaptersEvent
 import eu.kanade.tachiyomi.event.MangaEvent
-import eu.kanade.tachiyomi.event.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable
@@ -163,50 +162,59 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         return db.getNextUnreadChapter(manga).executeAsBlocking()
     }
 
-    fun markChaptersRead(selectedChapters: Observable<Chapter>, read: Boolean) {
-        add(selectedChapters.subscribeOn(Schedulers.io())
+    fun markChaptersRead(selectedChapters: List<Chapter>, read: Boolean) {
+        Observable.from(selectedChapters)
                 .doOnNext { chapter ->
                     chapter.read = read
-                    if (!read) chapter.last_page_read = 0
-
-                    // Delete chapter when marked as read if desired by user.
-                    if (preferences.removeAfterMarkedAsRead() && read) {
-                        deleteChapter(chapter)
+                    if (!read) {
+                        chapter.last_page_read = 0
                     }
                 }
                 .toList()
-                .flatMap { chapters -> db.insertChapters(chapters).asRxObservable() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
+                .flatMap { db.insertChapters(it).asRxObservable() }
+                .subscribeOn(Schedulers.io())
+                .subscribe()
     }
 
     fun markPreviousChaptersAsRead(selected: Chapter) {
         Observable.from(chapters)
-                .filter { c -> c.chapter_number > -1 && c.chapter_number < selected.chapter_number }
-                .doOnNext { c -> c.read = true }
+                .filter { it.chapter_number > -1 && it.chapter_number < selected.chapter_number }
+                .doOnNext { it.read = true }
                 .toList()
-                .flatMap { chapters -> db.insertChapters(chapters).asRxObservable() }
+                .flatMap { db.insertChapters(it).asRxObservable() }
                 .subscribe()
     }
 
-    fun downloadChapters(selectedChapters: Observable<Chapter>) {
-        add(selectedChapters.toList()
+    fun downloadChapters(chapters: List<Chapter>) {
+        DownloadService.start(context)
+        downloadManager.downloadChapters(manga, chapters)
+    }
+
+    fun deleteChapters(chapters: List<Chapter>) {
+        val wasRunning = downloadManager.isRunning
+        if (wasRunning) {
+            DownloadService.stop(context)
+        }
+        Observable.from(chapters)
+                .doOnNext { deleteChapter(it) }
+                .toList()
+                .doOnNext { if (onlyDownloaded()) refreshChapters() }
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { downloadManager.onDownloadChaptersEvent(DownloadChaptersEvent(manga, it)) })
+                .subscribeFirst({ view, result ->
+                    view.onChaptersDeleted()
+                    if (wasRunning) {
+                        DownloadService.start(context)
+                    }
+                }, { view, error ->
+                    view.onChaptersDeletedError(error)
+                })
     }
 
-    fun deleteChapters(selectedChapters: Observable<Chapter>) {
-        add(selectedChapters.subscribe(
-                { chapter -> downloadManager.queue.del(chapter) },
-                { error -> Timber.e(error.message) },
-                {
-                    if (onlyDownloaded())
-                        refreshChapters()
-                }))
-    }
-
-    fun deleteChapter(chapter: Chapter) {
+    private fun deleteChapter(chapter: Chapter) {
+        downloadManager.queue.del(chapter)
         downloadManager.deleteChapter(source, manga, chapter)
+        chapter.status = Download.NOT_DOWNLOADED
     }
 
     fun revertSortOrder() {

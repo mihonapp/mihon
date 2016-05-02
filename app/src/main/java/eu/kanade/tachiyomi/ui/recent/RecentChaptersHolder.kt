@@ -1,16 +1,13 @@
 package eu.kanade.tachiyomi.ui.recent
 
-import android.content.Context
 import android.view.View
 import android.widget.PopupMenu
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.util.getResourceColor
 import kotlinx.android.synthetic.main.item_recent_chapter.view.*
-import rx.Observable
 
 /**
  * Holder that contains chapter item
@@ -32,7 +29,7 @@ class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapte
     /**
      * Color of unread chapter
      */
-    private var unreadColor  = view.context.theme.getResourceColor(android.R.attr.textColorPrimary)
+    private var unreadColor = view.context.theme.getResourceColor(android.R.attr.textColorPrimary)
 
     /**
      * Object containing chapter information
@@ -40,9 +37,10 @@ class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapte
     private var mangaChapter: MangaChapter? = null
 
     init {
-        //Set OnClickListener for download menu
-        itemView.chapterMenu.setOnClickListener { v -> v.post({ showPopupMenu(v) }) }
-
+        // We need to post a Runnable to show the popup to make sure that the PopupMenu is
+        // correctly positioned. The reason being that the view may change position before the
+        // PopupMenu is shown.
+        itemView.chapterMenu.setOnClickListener { it.post({ showPopupMenu(it) }) }
     }
 
     /**
@@ -120,15 +118,14 @@ class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapte
 
             // Set a listener so we are notified if a menu item is clicked
             popup.setOnMenuItemClickListener { menuItem ->
-                val chapterObservable = Observable.just<Chapter>(it.chapter)
 
                 when (menuItem.itemId) {
-                    R.id.action_download -> adapter.fragment.onDownload(chapterObservable, it.manga)
-                    R.id.action_delete -> adapter.fragment.onDelete(chapterObservable, it.manga)
-                    R.id.action_mark_as_read -> adapter.fragment.onMarkAsRead(chapterObservable, it.manga);
-                    R.id.action_mark_as_unread -> adapter.fragment.onMarkAsUnread(chapterObservable, it.manga);
+                    R.id.action_download -> adapter.fragment.downloadChapter(it)
+                    R.id.action_delete -> adapter.fragment.deleteChapter(it)
+                    R.id.action_mark_as_read -> adapter.fragment.markAsRead(it)
+                    R.id.action_mark_as_unread -> adapter.fragment.markAsUnread(it)
                 }
-                false
+                true
             }
 
         }

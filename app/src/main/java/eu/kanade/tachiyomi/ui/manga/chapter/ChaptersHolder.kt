@@ -10,14 +10,16 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.util.getResourceColor
 import kotlinx.android.synthetic.main.item_chapter.view.*
-import rx.Observable
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
 
-class ChaptersHolder(private val view: View, private val adapter: ChaptersAdapter, listener: FlexibleViewHolder.OnListItemClickListener) :
-        FlexibleViewHolder(view, adapter, listener) {
+class ChaptersHolder(
+        private val view: View,
+        private val adapter: ChaptersAdapter,
+        listener: FlexibleViewHolder.OnListItemClickListener)
+: FlexibleViewHolder(view, adapter, listener) {
 
     private val readColor = view.context.theme.getResourceColor(android.R.attr.textColorHint)
     private val unreadColor = view.context.theme.getResourceColor(android.R.attr.textColorPrimary)
@@ -27,7 +29,10 @@ class ChaptersHolder(private val view: View, private val adapter: ChaptersAdapte
     private var item: Chapter? = null
 
     init {
-        view.chapter_menu.setOnClickListener { v -> v.post { showPopupMenu(v) } }
+        // We need to post a Runnable to show the popup to make sure that the PopupMenu is
+        // correctly positioned. The reason being that the view may change position before the
+        // PopupMenu is shown.
+        view.chapter_menu.setOnClickListener { it.post { showPopupMenu(it) } }
     }
 
     fun onSetValues(chapter: Chapter, manga: Manga?) = with(view) {
@@ -101,14 +106,14 @@ class ChaptersHolder(private val view: View, private val adapter: ChaptersAdapte
 
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
-            val chapter = Observable.just(item)
+            val chapter = listOf(item)
 
             when (menuItem.itemId) {
-                R.id.action_download -> adapter.fragment.onDownload(chapter)
-                R.id.action_delete -> adapter.fragment.onDelete(chapter)
-                R.id.action_mark_as_read -> adapter.fragment.onMarkAsRead(chapter)
-                R.id.action_mark_as_unread -> adapter.fragment.onMarkAsUnread(chapter)
-                R.id.action_mark_previous_as_read -> adapter.fragment.onMarkPreviousAsRead(item)
+                R.id.action_download -> adapter.fragment.downloadChapters(chapter)
+                R.id.action_delete -> adapter.fragment.deleteChapters(chapter)
+                R.id.action_mark_as_read -> adapter.fragment.markAsRead(chapter)
+                R.id.action_mark_as_unread -> adapter.fragment.markAsUnread(chapter)
+                R.id.action_mark_previous_as_read -> adapter.fragment.markPreviousAsRead(item)
             }
             true
         }

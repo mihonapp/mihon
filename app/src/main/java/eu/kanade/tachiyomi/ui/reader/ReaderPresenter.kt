@@ -336,7 +336,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 }
             }
         }
-        db.insertChapter(chapter).asRxObservable().subscribe()
+        db.updateChapterProgress(chapter).asRxObservable().subscribe()
     }
 
     /**

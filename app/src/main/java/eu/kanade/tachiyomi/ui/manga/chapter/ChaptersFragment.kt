@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v7.view.ActionMode
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
@@ -11,7 +12,6 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.decoration.DividerItemDecoration
@@ -21,12 +21,11 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.getCoordinates
 import eu.kanade.tachiyomi.util.getResourceDrawable
 import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.widget.DeletingChaptersDialog
 import eu.kanade.tachiyomi.widget.NpaLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_manga_chapters.*
 import nucleus.factory.RequiresPresenter
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import timber.log.Timber
 
 @RequiresPresenter(ChaptersPresenter::class)
 class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callback, FlexibleViewHolder.OnListItemClickListener {
@@ -40,6 +39,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         fun newInstance(): ChaptersFragment {
             return ChaptersFragment()
         }
+
     }
 
     /**
@@ -73,7 +73,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
         swipe_refresh.setOnRefreshListener { fetchChapters() }
 
-        fab.setOnClickListener { v ->
+        fab.setOnClickListener {
             val chapter = presenter.getNextUnreadChapter()
             if (chapter != null) {
                 // Create animation listener
@@ -252,7 +252,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                                     chapters = chapters.subList(0, 10)
                             }
                         }
-                        onDownload(Observable.from(chapters))
+                        downloadChapters(chapters)
                     }
                 }
                 .show()
@@ -278,11 +278,11 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_select_all -> onSelectAll()
-            R.id.action_mark_as_read -> onMarkAsRead(getSelectedChapters())
-            R.id.action_mark_as_unread -> onMarkAsUnread(getSelectedChapters())
-            R.id.action_download -> onDownload(getSelectedChapters())
-            R.id.action_delete -> onDelete(getSelectedChapters())
+            R.id.action_select_all -> selectAll()
+            R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
+            R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
+            R.id.action_download -> downloadChapters(getSelectedChapters())
+            R.id.action_delete -> deleteChapters(getSelectedChapters())
             else -> return false
         }
         return true
@@ -294,66 +294,57 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         actionMode = null
     }
 
-    fun getSelectedChapters(): Observable<Chapter> {
-        val chapters = adapter.selectedItems.map { adapter.getItem(it) }
-        return Observable.from(chapters)
+    fun getSelectedChapters(): List<Chapter> {
+        return adapter.selectedItems.map { adapter.getItem(it) }
     }
 
     fun destroyActionModeIfNeeded() {
         actionMode?.finish()
     }
 
-    protected fun onSelectAll() {
+    fun selectAll() {
         adapter.selectAll()
         setContextTitle(adapter.selectedItemCount)
     }
 
-    fun onMarkAsRead(chapters: Observable<Chapter>) {
+    fun markAsRead(chapters: List<Chapter>) {
         presenter.markChaptersRead(chapters, true)
+        if (presenter.preferences.removeAfterMarkedAsRead()) {
+            deleteChapters(chapters)
+        }
     }
 
-    fun onMarkAsUnread(chapters: Observable<Chapter>) {
+    fun markAsUnread(chapters: List<Chapter>) {
         presenter.markChaptersRead(chapters, false)
     }
 
-    fun onMarkPreviousAsRead(chapter: Chapter) {
+    fun markPreviousAsRead(chapter: Chapter) {
         presenter.markPreviousChaptersAsRead(chapter)
     }
 
-    fun onDownload(chapters: Observable<Chapter>) {
-        DownloadService.start(activity)
-
-        val observable = chapters.doOnCompleted { adapter.notifyDataSetChanged() }
-
-        presenter.downloadChapters(observable)
+    fun downloadChapters(chapters: List<Chapter>) {
         destroyActionModeIfNeeded()
+        presenter.downloadChapters(chapters)
     }
 
-    fun onDelete(chapters: Observable<Chapter>) {
-        val size = adapter.selectedItemCount
-
-        val dialog = MaterialDialog.Builder(activity)
-                .title(R.string.deleting)
-                .progress(false, size, true)
-                .cancelable(false)
-                .show()
-
-        val observable = chapters
-                .concatMap { chapter ->
-                    presenter.deleteChapter(chapter)
-                    Observable.just(chapter)
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { chapter ->
-                    dialog.incrementProgress(1)
-                    chapter.status = Download.NOT_DOWNLOADED
-                }
-                .doOnCompleted { adapter.notifyDataSetChanged() }
-                .doAfterTerminate { dialog.dismiss() }
-
-        presenter.deleteChapters(observable)
+    fun deleteChapters(chapters: List<Chapter>) {
         destroyActionModeIfNeeded()
+        DeletingChaptersDialog().show(childFragmentManager, DeletingChaptersDialog.TAG)
+        presenter.deleteChapters(chapters)
+    }
+
+    fun onChaptersDeleted() {
+        dismissDeletingDialog()
+        adapter.notifyDataSetChanged()
+    }
+
+    fun onChaptersDeletedError(error: Throwable) {
+        dismissDeletingDialog()
+        Timber.e(error, error.message)
+    }
+
+    fun dismissDeletingDialog() {
+        (childFragmentManager.findFragmentByTag(DeletingChaptersDialog.TAG) as? DialogFragment)?.dismiss()
     }
 
     override fun onListItemClick(position: Int): Boolean {

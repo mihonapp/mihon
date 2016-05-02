@@ -1,14 +1,12 @@
 package eu.kanade.tachiyomi.ui.recent
 
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
-import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.decoration.DividerItemDecoration
@@ -16,12 +14,11 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.getResourceDrawable
+import eu.kanade.tachiyomi.widget.DeletingChaptersDialog
 import eu.kanade.tachiyomi.widget.NpaLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_recent_chapters.*
 import nucleus.factory.RequiresPresenter
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import timber.log.Timber
 
 /**
  * Fragment that shows recent chapters.
@@ -143,78 +140,57 @@ class RecentChaptersFragment : BaseRxFragment<RecentChaptersPresenter>(), Flexib
     }
 
     /**
-     * Start downloading chapter
-
-     * @param chapters selected chapters
-     * @param manga    manga that belongs to chapter
-     * @return true
+     * Mark chapter as read
+     *
+     * @param item selected chapter with manga
      */
-    fun onDownload(chapters: Observable<Chapter>, manga: Manga): Boolean {
-        // Start the download service.
-        DownloadService.start(activity)
+    fun markAsRead(item: MangaChapter) {
+        presenter.markChapterRead(item.chapter, true)
+        if (presenter.preferences.removeAfterMarkedAsRead()) {
+            deleteChapter(item)
+        }
+    }
 
-        // Refresh data on download competition.
-        val observable = chapters
-                .doOnCompleted({
-                    adapter.notifyDataSetChanged()
-                    presenter.start(presenter.CHAPTER_STATUS_CHANGES)
-                })
+    /**
+     * Mark chapter as unread
+     *
+     * @param item selected chapter with manga
+     */
+    fun markAsUnread(item: MangaChapter) {
+        presenter.markChapterRead(item.chapter, false)
+    }
 
-        // Download chapter.
-        presenter.downloadChapter(observable, manga)
-        return true
+    /**
+     * Start downloading chapter
+     *
+     * @param item selected chapter with manga
+     */
+    fun downloadChapter(item: MangaChapter) {
+        presenter.downloadChapter(item)
     }
 
     /**
      * Start deleting chapter
      *
-     * @param chapters selected chapters
-     * @param manga manga that belongs to chapter
-     * @return success of deletion.
+     * @param item selected chapter with manga
      */
-    fun onDelete(chapters: Observable<Chapter>, manga: Manga): Boolean {
-        //Create observable
-        val observable = chapters
-                .concatMap { chapter ->
-                    presenter.deleteChapter(chapter, manga)
-                    Observable.just(chapter)
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { chapter ->
-                    chapter.status = Download.NOT_DOWNLOADED
-                }
-                .doOnCompleted { adapter.notifyDataSetChanged() }
-
-        // Delete chapters with observable
-        presenter.deleteChapters(observable)
-
-        return true
+    fun deleteChapter(item: MangaChapter) {
+        DeletingChaptersDialog().show(childFragmentManager, DeletingChaptersDialog.TAG)
+        presenter.deleteChapter(item)
     }
 
-    /**
-     * Mark chapter as read
-
-     * @param chapters selected chapter
-     * @return true
-     */
-    fun onMarkAsRead(chapters: Observable<Chapter>, manga : Manga): Boolean {
-        // Set marked as read
-        presenter.markChaptersRead(chapters, manga, true)
-        return true
+    fun onChaptersDeleted() {
+        dismissDeletingDialog()
+        adapter.notifyDataSetChanged()
     }
 
-    /**
-     * Mark chapter as unread
-
-     * @param chapters selected chapter
-     * @return true
-     */
-    fun onMarkAsUnread(chapters: Observable<Chapter> , manga : Manga): Boolean {
-        // Set marked as unread
-        presenter.markChaptersRead(chapters, manga, false)
-        return true
+    fun onChaptersDeletedError(error: Throwable) {
+        dismissDeletingDialog()
+        Timber.e(error, error.message)
     }
 
+    fun dismissDeletingDialog() {
+        (childFragmentManager.findFragmentByTag(DeletingChaptersDialog.TAG) as? DialogFragment)?.dismiss()
+    }
 
 }

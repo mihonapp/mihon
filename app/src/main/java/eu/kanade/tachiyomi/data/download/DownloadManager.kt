@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.event.DownloadChaptersEvent
 import eu.kanade.tachiyomi.util.*
 import rx.Observable
 import rx.Subscription
@@ -45,7 +44,8 @@ class DownloadManager(private val context: Context, private val sourceManager: S
 
     val PAGE_LIST_FILE = "index.json"
 
-    @Volatile private var isRunning: Boolean = false
+    @Volatile var isRunning: Boolean = false
+        private set
 
     private fun initializeSubscriptions() {
         downloadsSubscription?.unsubscribe()
@@ -91,16 +91,15 @@ class DownloadManager(private val context: Context, private val sourceManager: S
 
     }
 
-    // Create a download object for every chapter in the event and add them to the downloads queue
-    fun onDownloadChaptersEvent(event: DownloadChaptersEvent) {
-        val manga = event.manga
+    // Create a download object for every chapter and add them to the downloads queue
+    fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
         val source = sourceManager.get(manga.source)
 
         // Used to avoid downloading chapters with the same name
         val addedChapters = ArrayList<String>()
         val pending = ArrayList<Download>()
 
-        for (chapter in event.chapters) {
+        for (chapter in chapters) {
             if (addedChapters.contains(chapter.name))
                 continue
 

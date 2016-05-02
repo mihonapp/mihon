@@ -6,10 +6,10 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.event.DownloadChaptersEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -250,59 +250,69 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
     }
 
     /**
-     * Download selected chapter
-     * @param selectedChapter chapter that is selected
-     * *
-     * @param manga manga that belongs to chapter
+     * Mark selected chapter as read
+     *
+     * @param chapter selected chapter
+     * @param read read status
      */
-    fun downloadChapter(selectedChapter: Observable<Chapter>, manga: Manga) {
-        add(selectedChapter.toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { downloadManager.onDownloadChaptersEvent(DownloadChaptersEvent(manga, it)) })
+    fun markChapterRead(chapter: Chapter, read: Boolean) {
+        Observable.just(chapter)
+                .doOnNext { chapter ->
+                    chapter.read = read
+                    if (!read) {
+                        chapter.last_page_read = 0
+                    }
+                }
+                .flatMap { db.updateChapterProgress(it).asRxObservable() }
+                .subscribeOn(Schedulers.io())
+                .subscribe()
+    }
+
+    /**
+     * Download selected chapter
+     *
+     * @param item chapter that is selected
+     */
+    fun downloadChapter(item: MangaChapter) {
+        DownloadService.start(context)
+        downloadManager.downloadChapters(item.manga, listOf(item.chapter))
     }
 
     /**
      * Delete selected chapter
+     *
+     * @param item chapter that are selected
+     */
+    fun deleteChapter(item: MangaChapter) {
+        val wasRunning = downloadManager.isRunning
+        if (wasRunning) {
+            DownloadService.stop(context)
+        }
+        Observable.just(item)
+                .doOnNext { deleteChapter(it.chapter, it.manga) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeFirst({ view, result ->
+                    view.onChaptersDeleted()
+                    if (wasRunning) {
+                        DownloadService.start(context)
+                    }
+                }, { view, error ->
+                    view.onChaptersDeletedError(error)
+                })
+    }
+
+    /**
+     * Delete selected chapter
+     *
      * @param chapter chapter that is selected
-     * *
      * @param manga manga that belongs to chapter
      */
-    fun deleteChapter(chapter: Chapter, manga: Manga) {
-        val source = sourceManager.get(manga.source)!!
+    private fun deleteChapter(chapter: Chapter, manga: Manga) {
+        val source = sourceManager.get(manga.source) ?: return
+        downloadManager.queue.del(chapter)
         downloadManager.deleteChapter(source, manga, chapter)
+        chapter.status = Download.NOT_DOWNLOADED
     }
 
-    /**
-     * Delete selected chapter observable
-     * @param selectedChapters chapter that are selected
-     */
-    fun deleteChapters(selectedChapters: Observable<Chapter>) {
-        add(selectedChapters
-                .subscribe(
-                        { chapter -> downloadManager.queue.del(chapter) })
-                        { error -> Timber.e(error.message) })
-    }
-
-    /**
-     * Mark selected chapter as read
-     * @param selectedChapters chapter that is selected
-     * *
-     * @param read read status
-     */
-    fun markChaptersRead(selectedChapters: Observable<Chapter>, manga: Manga, read: Boolean) {
-        add(selectedChapters.subscribeOn(Schedulers.io())
-                .doOnNext { chapter ->
-                    chapter.read = read
-                    if (!read) chapter.last_page_read = 0
-
-                    // Delete chapter when marked as read if desired by user.
-                    if (preferences.removeAfterMarkedAsRead() && read) {
-                        deleteChapter(chapter,manga)
-                    }
-                }
-                .toList()
-                .flatMap { chapters -> db.insertChapters(chapters).asRxObservable() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
-    }
 }
