@@ -14,6 +14,7 @@ import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
@@ -36,38 +37,51 @@ import javax.inject.Inject
  */
 class LibraryUpdateService : Service() {
 
-    // Dependencies injected through dagger.
+    /**
+     * Database helper.
+     */
     @Inject lateinit var db: DatabaseHelper
+
+    /**
+     * Source manager.
+     */
     @Inject lateinit var sourceManager: SourceManager
+
+    /**
+     * Preferences.
+     */
     @Inject lateinit var preferences: PreferencesHelper
 
-    // Wake lock that will be held until the service is destroyed.
+    /**
+     * Wake lock that will be held until the service is destroyed.
+     */
     private lateinit var wakeLock: PowerManager.WakeLock
 
-    // Subscription where the update is done.
+    /**
+     * Subscription where the update is done.
+     */
     private var subscription: Subscription? = null
 
 
     companion object {
-        val UPDATE_NOTIFICATION_ID = 1
-
-        // Intent key for manual library update
-        val UPDATE_IS_MANUAL = "is_manual"
+        /**
+         * Id of the library update notification.
+         */
+        const val UPDATE_NOTIFICATION_ID = 1
 
         /**
-         * Get the start intent for [LibraryUpdateService].
-         * @param context the application context.
-         * @param isManual true when user triggers library update.
-         * @return the intent of the service.
+         * Key for manual library update.
          */
-        fun getIntent(context: Context, isManual: Boolean = false): Intent {
-            return Intent(context, LibraryUpdateService::class.java).apply {
-                putExtra(UPDATE_IS_MANUAL, isManual)
-            }
-        }
+        const val UPDATE_IS_MANUAL = "is_manual"
+
+        /**
+         * Key for category to update.
+         */
+        const val UPDATE_CATEGORY = "category"
 
         /**
          * Returns the status of the service.
+         *
          * @param context the application context.
          * @return true if the service is running, false otherwise.
          */
@@ -76,19 +90,30 @@ class LibraryUpdateService : Service() {
         }
 
         /**
-         * Static method to start the service. It will be started only if there isn't another
-         * instance already running.
+         * Starts the service. It will be started only if there isn't another instance already
+         * running.
+         *
          * @param context the application context.
+         * @param isManual whether the update has been manually triggered.
+         * @param category a specific category to update, or null for all in the library.
          */
-        @JvmStatic
-        fun start(context: Context, isForced: Boolean = false) {
+        fun start(context: Context, isManual: Boolean = false, category: Category? = null) {
             if (!isRunning(context)) {
-                context.startService(getIntent(context, isForced))
+                val intent = Intent(context, LibraryUpdateService::class.java).apply {
+                    putExtra(UPDATE_IS_MANUAL, isManual)
+                    category?.let { putExtra(UPDATE_CATEGORY, it.id) }
+                }
+                context.startService(intent)
             }
         }
 
+        /**
+         * Stops the service.
+         *
+         * @param context the application context.
+         */
         fun stop(context: Context) {
-            context.stopService(getIntent(context))
+            context.stopService(Intent(context, LibraryUpdateService::class.java))
         }
 
     }
@@ -104,7 +129,7 @@ class LibraryUpdateService : Service() {
     }
 
     /**
-     * Method called when the service is destroyed. It destroy the running subscription, resets
+     * Method called when the service is destroyed. It destroys the running subscription, resets
      * the alarm and release the wake lock.
      */
     override fun onDestroy() {
@@ -121,9 +146,9 @@ class LibraryUpdateService : Service() {
         return null
     }
 
-
     /**
      * Method called when the service receives an intent.
+     *
      * @param intent the start intent from.
      * @param flags the flags of the command.
      * @param startId the start id of this command.
@@ -145,7 +170,7 @@ class LibraryUpdateService : Service() {
 
         // Check if device has internet connection
         // Check if device has wifi connection if only wifi is enabled
-        if (connection == ConnectivityStatus.OFFLINE || ("wifi" in restrictions
+        if (connection == ConnectivityStatus.OFFLINE || (!isManualUpdate && "wifi" in restrictions
                 && connection != ConnectivityStatus.WIFI_CONNECTED_HAS_INTERNET)) {
 
             if (isManualUpdate) {
@@ -174,7 +199,7 @@ class LibraryUpdateService : Service() {
         subscription?.unsubscribe()
 
         // Update favorite manga. Destroy service when completed or in case of an error.
-        subscription = Observable.defer { updateLibrary() }
+        subscription = Observable.defer { updateMangaList(getMangaToUpdate(intent)) }
                 .subscribeOn(Schedulers.io())
                 .subscribe({},
                         {
@@ -188,13 +213,36 @@ class LibraryUpdateService : Service() {
     }
 
     /**
-     * Method that updates the library. It's called in a background thread, so it's safe to do
-     * heavy operations or network calls here.
+     * Returns the list of manga to be updated.
+     *
+     * @param intent the update intent.
+     * @return a list of manga to update
+     */
+    fun getMangaToUpdate(intent: Intent?): List<Manga> {
+        val categoryId = intent?.getIntExtra(UPDATE_CATEGORY, -1) ?: -1
+
+        var toUpdate = if (categoryId != -1)
+            db.getLibraryMangas().executeAsBlocking().filter { it.category == categoryId }
+        else
+            db.getFavoriteMangas().executeAsBlocking()
+
+        if (preferences.updateOnlyNonCompleted()) {
+            toUpdate = toUpdate.filter { it.status != Manga.COMPLETED }
+        }
+
+        return toUpdate
+    }
+
+    /**
+     * Method that updates the given list of manga. It's called in a background thread, so it's safe
+     * to do heavy operations or network calls here.
      * For each manga it calls [updateManga] and updates the notification showing the current
      * progress.
+     *
+     * @param mangaToUpdate the list to update
      * @return an observable delivering the progress of each update.
      */
-    fun updateLibrary(): Observable<Manga> {
+    fun updateMangaList(mangaToUpdate: List<Manga>): Observable<Manga> {
         // Initialize the variables holding the progress of the updates.
         val count = AtomicInteger(0)
         val newUpdates = ArrayList<Manga>()
@@ -203,17 +251,10 @@ class LibraryUpdateService : Service() {
         val cancelIntent = PendingIntent.getBroadcast(this, 0,
                 Intent(this, CancelUpdateReceiver::class.java), 0)
 
-        // Get the manga list that is going to be updated.
-        val allLibraryMangas = db.getFavoriteMangas().executeAsBlocking()
-        val toUpdate = if (!preferences.updateOnlyNonCompleted())
-            allLibraryMangas
-        else
-            allLibraryMangas.filter { it.status != Manga.COMPLETED }
-
         // Emit each manga and update it sequentially.
-        return Observable.from(toUpdate)
+        return Observable.from(mangaToUpdate)
                 // Notify manga that will update.
-                .doOnNext { showProgressNotification(it, count.andIncrement, toUpdate.size, cancelIntent) }
+                .doOnNext { showProgressNotification(it, count.andIncrement, mangaToUpdate.size, cancelIntent) }
                 // Update the chapters of the manga.
                 .concatMap { manga ->
                     updateManga(manga)
@@ -241,6 +282,7 @@ class LibraryUpdateService : Service() {
 
     /**
      * Updates the chapters for the given manga and adds them to the database.
+     *
      * @param manga the manga to update.
      * @return a pair of the inserted and removed chapters.
      */
@@ -253,6 +295,7 @@ class LibraryUpdateService : Service() {
 
     /**
      * Returns the text that will be displayed in the notification when there are new chapters.
+     *
      * @param updates a list of manga that contains new chapters.
      * @param failedUpdates a list of manga that failed to update.
      * @return the body of the notification to display.
@@ -301,6 +344,7 @@ class LibraryUpdateService : Service() {
 
     /**
      * Shows the notification with the given title and body.
+     *
      * @param title the title of the notification.
      * @param body the body of the notification.
      */
@@ -314,6 +358,7 @@ class LibraryUpdateService : Service() {
 
     /**
      * Shows the notification containing the currently updating manga and the progress.
+     *
      * @param manga the manga that's being updated.
      * @param current the current progress.
      * @param total the total progress.
@@ -331,6 +376,7 @@ class LibraryUpdateService : Service() {
 
     /**
      * Shows the notification containing the result of the update done by the service.
+     *
      * @param updates a list of manga with new updates.
      * @param failed a list of manga that failed to update.
      */
@@ -371,6 +417,7 @@ class LibraryUpdateService : Service() {
     class SyncOnConnectionAvailable : BroadcastReceiver() {
         /**
          * Method called when a network change occurs.
+         *
          * @param context the application context.
          * @param intent the intent received.
          */
@@ -388,6 +435,7 @@ class LibraryUpdateService : Service() {
     class SyncOnPowerConnected: BroadcastReceiver() {
         /**
          * Method called when AC is connected.
+         *
          * @param context the application context.
          * @param intent the intent received.
          */
@@ -403,6 +451,7 @@ class LibraryUpdateService : Service() {
     class CancelUpdateReceiver : BroadcastReceiver() {
         /**
          * Method called when user wants a library update.
+         * 
          * @param context the application context.
          * @param intent the intent received.
          */

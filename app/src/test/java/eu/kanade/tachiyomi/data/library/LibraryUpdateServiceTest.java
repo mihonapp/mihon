@@ -95,7 +95,7 @@ public class LibraryUpdateServiceTest {
         when(service.db.insertOrRemoveChapters(manga1, chapters, source)).thenReturn(Observable.just(Pair.create(2, 0)));
         when(service.db.insertOrRemoveChapters(manga3, chapters, source)).thenReturn(Observable.just(Pair.create(2, 0)));
 
-        service.updateLibrary().subscribe();
+        service.updateMangaList(service.getMangaToUpdate(null)).subscribe();
 
         // There are 3 network attempts and 2 insertions (1 request failed)
         verify(source, times(3)).pullChaptersFromNetwork((String)any());

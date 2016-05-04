@@ -98,7 +98,15 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     fun getLibraryObservable(): Observable<Pair<List<Category>, Map<Int, List<Manga>>>> {
         return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable(),
-                { a, b -> Pair(a, b) })
+                { dbCategories, libraryManga ->
+                    val categories = if (libraryManga.containsKey(0))
+                        arrayListOf(Category.createDefault()) + dbCategories
+                    else
+                        dbCategories
+
+                    this.categories = categories
+                    Pair(categories, libraryManga)
+                })
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -109,7 +117,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     fun getCategoriesObservable(): Observable<List<Category>> {
         return db.getCategories().asRxObservable()
-                .doOnNext { categories -> this.categories = categories }
     }
 
     /**

@@ -156,8 +156,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
             searchView.clearFocus()
         }
 
-        filterDownloadedItem.isChecked = isFilterDownloaded;
-        filterUnreadItem.isChecked = isFilterUnread;
+        filterDownloadedItem.isChecked = isFilterDownloaded
+        filterUnreadItem.isChecked = isFilterUnread
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -200,7 +200,13 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 // Apply filter
                 onFilterCheckboxChanged()
             }
-            R.id.action_refresh -> LibraryUpdateService.start(activity, true) // Force refresh
+            R.id.action_update_library -> {
+                LibraryUpdateService.start(activity, true)
+            }
+            R.id.action_update_category -> {
+                val category = presenter.categories[view_pager.currentItem]
+                LibraryUpdateService.start(activity, true, category)
+            }
             R.id.action_edit_categories -> {
                 val intent = CategoryActivity.newIntent(activity)
                 startActivity(intent)
@@ -218,7 +224,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         presenter.updateLibrary()
         adapter.notifyDataSetChanged()
         adapter.refreshRegisteredAdapters()
-        activity.supportInvalidateOptionsMenu();
+        activity.supportInvalidateOptionsMenu()
     }
 
     /**
@@ -249,12 +255,10 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         // Get the current active category.
         val activeCat = if (adapter.categories != null) view_pager.currentItem else activeCategory
 
-        // Add the default category if it contains manga.
-        if (mangaMap[0] != null) {
-            setCategories(arrayListOf(Category.createDefault()) + categories)
-        } else {
-            setCategories(categories)
-        }
+        // Set the categories
+        adapter.categories = categories
+        tabs.setupWithViewPager(view_pager)
+        tabs.visibility = if (categories.size <= 1) View.GONE else View.VISIBLE
 
         // Restore active category.
         view_pager.setCurrentItem(activeCat, false)
@@ -268,17 +272,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
         // Send the manga map to child fragments after the adapter is updated.
         presenter.libraryMangaSubject.onNext(LibraryMangaEvent(mangaMap))
-    }
-
-    /**
-     * Sets the categories in the adapter and the tab layout.
-     *
-     * @param categories the categories to set.
-     */
-    private fun setCategories(categories: List<Category>) {
-        adapter.categories = categories
-        tabs.setupWithViewPager(view_pager)
-        tabs.visibility = if (categories.size <= 1) View.GONE else View.VISIBLE
     }
 
     /**

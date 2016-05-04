@@ -20,7 +20,6 @@
     <string name="action_filter_unread">Unread</string>
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_search">Search</string>
-    <string name="action_refresh">Refresh</string>
     <string name="action_select_all">Select all</string>
     <string name="action_mark_as_read">Mark as read</string>
     <string name="action_mark_as_unread">Mark as unread</string>
@@ -28,6 +27,8 @@
     <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
     <string name="action_update">Update</string>
+    <string name="action_update_library">Update library</string>
+    <string name="action_update_category">Update active category</string>
     <string name="action_edit">Edit</string>
     <string name="action_add_category">Add category</string>
     <string name="action_edit_categories">Edit categories</string>
