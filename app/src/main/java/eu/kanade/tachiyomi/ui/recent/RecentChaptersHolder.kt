@@ -40,7 +40,7 @@ class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapte
         // We need to post a Runnable to show the popup to make sure that the PopupMenu is
         // correctly positioned. The reason being that the view may change position before the
         // PopupMenu is shown.
-        itemView.chapterMenu.setOnClickListener { it.post({ showPopupMenu(it) }) }
+        itemView.chapter_menu.setOnClickListener { it.post({ showPopupMenu(it) }) }
     }
 
     /**

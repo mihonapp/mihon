@@ -57,15 +57,12 @@ class DownloadManager(private val context: Context, private val sourceManager: S
                 .lift(DynamicConcurrentMergeOperator<Download, Download>({ downloadChapter(it) }, threadsSubject))
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext {
+                .subscribe({
                     // Delete successful downloads from queue
                     if (it.status == Download.DOWNLOADED) {
                         queue.del(it)
                     }
-                }
-                .map { download -> areAllDownloadsFinished() }
-                .subscribe({ finished ->
-                    if (finished!!) {
+                    if (areAllDownloadsFinished()) {
                         DownloadService.stop(context)
                     }
                 }, { e ->
