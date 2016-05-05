@@ -57,6 +57,12 @@ class DownloadManager(private val context: Context, private val sourceManager: S
                 .lift(DynamicConcurrentMergeOperator<Download, Download>({ downloadChapter(it) }, threadsSubject))
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext {
+                    // Delete successful downloads from queue
+                    if (it.status == Download.DOWNLOADED) {
+                        queue.del(it)
+                    }
+                }
                 .map { download -> areAllDownloadsFinished() }
                 .subscribe({ finished ->
                     if (finished!!) {
@@ -302,10 +308,6 @@ class DownloadManager(private val context: Context, private val sourceManager: S
         }
         download.totalProgress = actualProgress
         download.status = status
-        // Delete successful downloads from queue after notifying
-        if (status == Download.DOWNLOADED) {
-            queue.del(download)
-        }
     }
 
     // Return the page list from the chapter's directory if it exists, null otherwise
