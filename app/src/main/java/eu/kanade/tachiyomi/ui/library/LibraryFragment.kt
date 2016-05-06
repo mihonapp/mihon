@@ -204,8 +204,9 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 LibraryUpdateService.start(activity, true)
             }
             R.id.action_update_category -> {
-                val category = presenter.categories[view_pager.currentItem]
-                LibraryUpdateService.start(activity, true, category)
+                presenter.categories.getOrNull(view_pager.currentItem)?.let {
+                    LibraryUpdateService.start(activity, true, it)
+                }
             }
             R.id.action_edit_categories -> {
                 val intent = CategoryActivity.newIntent(activity)
