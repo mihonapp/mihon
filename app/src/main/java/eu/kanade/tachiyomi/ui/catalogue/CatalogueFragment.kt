@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.catalogue
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
@@ -24,8 +23,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.util.getResourceDrawable
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
-import eu.kanade.tachiyomi.widget.EndlessGridScrollListener
-import eu.kanade.tachiyomi.widget.EndlessListScrollListener
+import eu.kanade.tachiyomi.widget.EndlessScrollListener
 import eu.kanade.tachiyomi.widget.NpaLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_catalogue.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -56,12 +54,12 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
     /**
      * Scroll listener for grid mode. It loads next pages when the end of the list is reached.
      */
-    private lateinit var gridScrollListener: EndlessGridScrollListener
+    private lateinit var gridScrollListener: EndlessScrollListener
 
     /**
      * Scroll listener for list mode. It loads next pages when the end of the list is reached.
      */
-    private lateinit var listScrollListener: EndlessListScrollListener
+    private lateinit var listScrollListener: EndlessScrollListener
 
     /**
      * Query of the search box.
@@ -135,13 +133,13 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         adapter = CatalogueAdapter(this)
 
         val glm = catalogue_grid.layoutManager as GridLayoutManager
-        gridScrollListener = EndlessGridScrollListener(glm, { requestNextPage() })
+        gridScrollListener = EndlessScrollListener(glm, { requestNextPage() })
         catalogue_grid.setHasFixedSize(true)
         catalogue_grid.adapter = adapter
         catalogue_grid.addOnScrollListener(gridScrollListener)
 
         val llm = NpaLinearLayoutManager(activity)
-        listScrollListener = EndlessListScrollListener(llm, { requestNextPage() })
+        listScrollListener = EndlessScrollListener(llm, { requestNextPage() })
         catalogue_list.setHasFixedSize(true)
         catalogue_list.adapter = adapter
         catalogue_list.layoutManager = llm

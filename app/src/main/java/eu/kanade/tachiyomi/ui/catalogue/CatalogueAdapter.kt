@@ -26,7 +26,7 @@ class CatalogueAdapter(val fragment: CatalogueFragment) : FlexibleAdapter<Catalo
         get() = mItems
 
     init {
-        mItems = ArrayList<Manga>()
+        mItems = ArrayList()
         setHasStableIds(true)
     }
 
@@ -36,8 +36,9 @@ class CatalogueAdapter(val fragment: CatalogueFragment) : FlexibleAdapter<Catalo
      * @param list the list to add.
      */
     fun addItems(list: List<Manga>) {
+        val sizeBeforeAdding = mItems.size
         mItems.addAll(list)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(sizeBeforeAdding, list.size)
     }
 
     /**
