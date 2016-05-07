@@ -22,12 +22,7 @@ class DownloadQueue : CopyOnWriteArrayList<Download>() {
     }
 
     fun del(chapter: Chapter) {
-        for (download in this) {
-            if (download.chapter.id == chapter.id) {
-                del(download)
-                break
-            }
-        }
+        find { it.chapter.id == chapter.id }?.let { del(it) }
     }
 
     fun getActiveDownloads() =

@@ -427,14 +427,14 @@ class DownloadManager(private val context: Context, private val sourceManager: S
         return !pending.isEmpty()
     }
 
-    fun stopDownloads(error: String = "") {
+    fun stopDownloads(errorMessage: String? = null) {
         destroySubscriptions()
         for (download in queue) {
             if (download.status == Download.DOWNLOADING) {
                 download.status = Download.ERROR
             }
         }
-        downloadNotifier.onError(error)
+        errorMessage?.let { downloadNotifier.onError(it) }
     }
 
     fun clearQueue() {

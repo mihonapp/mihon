@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.util.notificationManager
 
 /**
  * DownloadNotifier is used to show notifications when downloading one or multiple chapters.
+ *
  * @param context context of application
  */
 class DownloadNotifier(private val context: Context) {
@@ -21,7 +22,8 @@ class DownloadNotifier(private val context: Context) {
     /**
      * Id of the notification.
      */
-    private val notificationId = Constants.NOTIFICATION_DOWNLOAD_CHAPTER_ID
+    private val notificationId: Int
+        get() = Constants.NOTIFICATION_DOWNLOAD_CHAPTER_ID
 
     /**
      * Status of download. Used for correct notification icon.
@@ -41,33 +43,31 @@ class DownloadNotifier(private val context: Context) {
     /**
      * Called when download progress changes.
      * Note: Only accepted when multi download active.
+     *
      * @param queue the queue containing downloads.
      */
     internal fun onProgressChange(queue: DownloadQueue) {
-        // If single download mode return.
-        if (!multipleDownloadThreads)
-            return
-        // Update progress.
-        doOnProgressChange(null, queue)
+        if (multipleDownloadThreads) {
+            doOnProgressChange(null, queue)
+        }
     }
 
     /**
      * Called when download progress changes
      * Note: Only accepted when single download active
+     *
      * @param download download object containing download information
      * @param queue the queue containing downloads
      */
     internal fun onProgressChange(download: Download, queue: DownloadQueue) {
-        // If multi download mode return.
-        if (multipleDownloadThreads)
-            return
-        // Update progress.
-        doOnProgressChange(download, queue)
+        if (!multipleDownloadThreads) {
+            doOnProgressChange(download, queue)
+        }
     }
-
 
     /**
      * Show notification progress of chapter
+     *
      * @param download download object containing download information
      * @param queue the queue containing downloads
      */
@@ -86,8 +86,7 @@ class DownloadNotifier(private val context: Context) {
         }
 
         // Create notification
-        with (notificationBuilder)
-        {
+        with (notificationBuilder) {
             // Check if icon needs refresh
             if (!isDownloading) {
                 setSmallIcon(android.R.drawable.stat_sys_download)
@@ -95,10 +94,10 @@ class DownloadNotifier(private val context: Context) {
             }
 
             if (multipleDownloadThreads) {
-                    setContentTitle(context.getString(R.string.app_name))
+                setContentTitle(context.getString(R.string.app_name))
 
-                    setContentText(context.getString(R.string.chapter_downloading_progress)
-                            .format(initialQueueSize - queue.size, initialQueueSize))
+                setContentText(context.getString(R.string.chapter_downloading_progress)
+                        .format(initialQueueSize - queue.size, initialQueueSize))
                 setProgress(initialQueueSize, initialQueueSize - queue.size, false)
             } else {
                 download?.let {
@@ -120,18 +119,13 @@ class DownloadNotifier(private val context: Context) {
 
     /**
      * Called when chapter is downloaded
+     *
      * @param download download object containing download information
      */
     private fun onComplete(download: Download?) {
-        //Create notification.
+        // Create notification.
         with(notificationBuilder) {
-            // Set notification title
-            if (download != null)
-                setContentTitle(download.chapter?.name)
-            else
-                setContentTitle(context.getString(R.string.app_name))
-
-            // Set content information and progress.
+            setContentTitle(download?.chapter?.name ?: context.getString(R.string.app_name))
             setContentText(context.getString(R.string.update_check_notification_download_complete))
             setSmallIcon(android.R.drawable.stat_sys_download_done)
             setProgress(0, 0, false)
@@ -154,23 +148,15 @@ class DownloadNotifier(private val context: Context) {
 
     /**
      * Called on error while downloading chapter
+     *
      * @param error string containing error information
      * @param chapter string containing chapter title
      */
-    internal fun onError(error: String? = "", chapter: String = "") {
+    internal fun onError(error: String? = null, chapter: String? = null) {
         // Create notification
         with(notificationBuilder) {
-            if (chapter.isNullOrEmpty()) {
-                setContentTitle(context.getString(R.string.download_notifier_title_error))
-            } else {
-                setContentTitle(chapter)
-            }
-
-            if (error.isNullOrEmpty())
-                setContentText(context.getString(R.string.download_notifier_unkown_error))
-            else
-                setContentText(error)
-
+            setContentTitle(chapter ?: context.getString(R.string.download_notifier_title_error))
+            setContentText(error ?: context.getString(R.string.download_notifier_unkown_error))
             setSmallIcon(android.R.drawable.stat_sys_warning)
             setProgress(0, 0, false)
         }

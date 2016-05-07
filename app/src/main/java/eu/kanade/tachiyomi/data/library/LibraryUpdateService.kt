@@ -63,13 +63,14 @@ class LibraryUpdateService : Service() {
      */
     private var subscription: Subscription? = null
 
+    /**
+     * Id of the library update notification.
+     */
+    private val notificationId: Int
+        get() = Constants.NOTIFICATION_LIBRARY_ID
+
 
     companion object {
-        /**
-         * Id of the library update notification.
-         */
-        const val UPDATE_NOTIFICATION_ID = Constants.NOTIFICATION_LIBRARY_ID
-
         /**
          * Key for manual library update.
          */
@@ -350,7 +351,7 @@ class LibraryUpdateService : Service() {
      * @param body the body of the notification.
      */
     private fun showNotification(title: String, body: String) {
-        notificationManager.notify(UPDATE_NOTIFICATION_ID, notification() {
+        notificationManager.notify(notificationId, notification() {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setContentTitle(title)
             setContentText(body)
@@ -365,7 +366,7 @@ class LibraryUpdateService : Service() {
      * @param total the total progress.
      */
     private fun showProgressNotification(manga: Manga, current: Int, total: Int, cancelIntent: PendingIntent) {
-        notificationManager.notify(UPDATE_NOTIFICATION_ID, notification() {
+        notificationManager.notify(notificationId, notification() {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setContentTitle(manga.title)
             setProgress(total, current, false)
@@ -385,7 +386,7 @@ class LibraryUpdateService : Service() {
         val title = getString(R.string.notification_update_completed)
         val body = getUpdatedMangasBody(updates, failed)
 
-        notificationManager.notify(UPDATE_NOTIFICATION_ID, notification() {
+        notificationManager.notify(notificationId, notification() {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setContentTitle(title)
             setStyle(NotificationCompat.BigTextStyle().bigText(body))
@@ -398,7 +399,7 @@ class LibraryUpdateService : Service() {
      * Cancels the notification.
      */
     private fun cancelNotification() {
-        notificationManager.cancel(UPDATE_NOTIFICATION_ID)
+        notificationManager.cancel(notificationId)
     }
 
     /**
@@ -457,7 +458,7 @@ class LibraryUpdateService : Service() {
          */
         override fun onReceive(context: Context, intent: Intent) {
             LibraryUpdateService.stop(context)
-            context.notificationManager.cancel(UPDATE_NOTIFICATION_ID)
+            context.notificationManager.cancel(Constants.NOTIFICATION_LIBRARY_ID)
         }
     }
 }

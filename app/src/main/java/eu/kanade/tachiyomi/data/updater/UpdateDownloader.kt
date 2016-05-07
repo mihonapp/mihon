@@ -44,13 +44,19 @@ class UpdateDownloader(private val context: Context) :
     /**
      * Default download dir
      */
-    val apkFile = File(context.externalCacheDir, "update.apk")
+    private val apkFile = File(context.externalCacheDir, "update.apk")
 
 
     /**
      * Notification builder
      */
-    val notificationBuilder = NotificationCompat.Builder(context)
+    private val notificationBuilder = NotificationCompat.Builder(context)
+
+    /**
+     * Id of the notification
+     */
+    private val notificationId: Int
+        get() = Constants.NOTIFICATION_UPDATER_ID
 
     init {
         App.get(context).component.inject(this)
@@ -117,7 +123,7 @@ class UpdateDownloader(private val context: Context) :
         values.getOrNull(0)?.let {
             notificationBuilder.setProgress(100, it, false)
             // Displays the progress bar on notification
-            context.notificationManager.notify(InstallOnReceived.notificationId, notificationBuilder.build())
+            context.notificationManager.notify(notificationId, notificationBuilder.build())
         }
     }
 
@@ -146,7 +152,7 @@ class UpdateDownloader(private val context: Context) :
         }
         val notification = notificationBuilder.build()
         notification.flags = Notification.FLAG_NO_CLEAR
-        context.notificationManager.notify(InstallOnReceived.notificationId, notification)
+        context.notificationManager.notify(notificationId, notification)
     }
 
     /**
@@ -170,29 +176,26 @@ class UpdateDownloader(private val context: Context) :
     class InstallOnReceived : BroadcastReceiver() {
         companion object {
             // Install apk action
-            val INSTALL_APK = "eu.kanade.INSTALL_APK"
+            const val INSTALL_APK = "eu.kanade.INSTALL_APK"
 
             // Retry download action
-            val RETRY_DOWNLOAD = "eu.kanade.RETRY_DOWNLOAD"
+            const val RETRY_DOWNLOAD = "eu.kanade.RETRY_DOWNLOAD"
 
             // Retry download action
-            val CANCEL_NOTIFICATION = "eu.kanade.CANCEL_NOTIFICATION"
+            const val CANCEL_NOTIFICATION = "eu.kanade.CANCEL_NOTIFICATION"
 
             // Absolute path of file || URL of file
-            val FILE_LOCATION = "file_location"
-
-            // Id of the notification
-            val notificationId = Constants.NOTIFICATION_UPDATER_ID
+            const val FILE_LOCATION = "file_location"
         }
 
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-            // Install apk.
+                // Install apk.
                 INSTALL_APK -> UpdateDownloader.installAPK(context, File(intent.getStringExtra(FILE_LOCATION)))
-            // Retry download.
+                // Retry download.
                 RETRY_DOWNLOAD -> UpdateDownloader(context).execute(intent.getStringExtra(FILE_LOCATION))
 
-                CANCEL_NOTIFICATION -> context.notificationManager.cancel(notificationId)
+                CANCEL_NOTIFICATION -> context.notificationManager.cancel(Constants.NOTIFICATION_UPDATER_ID)
             }
         }
 
