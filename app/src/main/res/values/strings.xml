@@ -228,6 +228,7 @@
     <string name="download_10">Download next 10 chapters</string>
     <string name="download_all">Download all</string>
     <string name="download_unread">Download unread</string>
+    <string name="confirm_delete_chapters">Are you sure you want to delete selected chapters?</string>
 
     <!-- MyAnimeList fragment -->
     <string name="reading">Reading</string>

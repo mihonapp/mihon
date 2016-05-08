@@ -282,7 +282,14 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
             R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
             R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
             R.id.action_download -> downloadChapters(getSelectedChapters())
-            R.id.action_delete -> deleteChapters(getSelectedChapters())
+            R.id.action_delete -> {
+                MaterialDialog.Builder(activity)
+                        .content(R.string.confirm_delete_chapters)
+                        .positiveText(android.R.string.yes)
+                        .negativeText(android.R.string.no)
+                        .onPositive { dialog, action -> deleteChapters(getSelectedChapters()) }
+                        .show()
+            }
             else -> return false
         }
         return true
