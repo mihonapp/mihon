@@ -1,9 +1,9 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.model.GlideUrl
@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
+import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_manga_info.*
 import nucleus.factory.RequiresPresenter
 
@@ -34,6 +35,11 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         }
     }
 
+    override fun onCreate(savedState: Bundle?) {
+        super.onCreate(savedState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_manga_info, container, false)
     }
@@ -44,6 +50,18 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
 
         // Set SwipeRefresh to refresh manga data.
         swipe_refresh.setOnRefreshListener { fetchMangaFromSource() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.manga_info, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_open_in_browser -> openInBrowser()
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     /**
@@ -143,6 +161,18 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
      */
     fun setChapterCount(count: Int) {
         manga_chapters.text = count.toString()
+    }
+
+    /**
+     * Open the manga in browser.
+     */
+    fun openInBrowser() {
+        try {
+            val url = presenter.source.baseUrl + presenter.manga.url
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (e: Exception) {
+            context.toast(e.message)
+        }
     }
 
     /**
