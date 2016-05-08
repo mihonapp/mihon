@@ -9,10 +9,12 @@ import com.f2prateek.rx.preferences.Preference
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.event.LibraryMangaEvent
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
+import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_library_category.*
 import rx.Subscription
 
@@ -98,6 +100,17 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
             if (adapter.mode == FlexibleAdapter.MODE_SINGLE) {
                 adapter.clearSelection()
             }
+        }
+
+        swipe_refresh.setOnRefreshListener {
+            if (!LibraryUpdateService.isRunning(activity)) {
+                libraryPresenter.categories.getOrNull(position)?.let {
+                    LibraryUpdateService.start(activity, true, it)
+                    context.toast(R.string.updating_category)
+                }
+            }
+            // It can be a very long operation, so we disable swipe refresh and show a toast.
+            swipe_refresh.isRefreshing = false
         }
     }
 

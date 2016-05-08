@@ -190,6 +190,7 @@
     <!-- Library fragment -->
     <string name="library_search_hint">Title or author…</string>
     <string name="library_selection_title">Selected</string>
+    <string name="updating_category">Updating category</string>
 
     <!-- Catalogue fragment -->
     <string name="source_requires_login">This source requires you to log in</string>
