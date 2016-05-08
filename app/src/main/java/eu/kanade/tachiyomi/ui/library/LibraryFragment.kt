@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.SearchView
 import android.view.*
@@ -13,6 +14,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.event.LibraryMangaEvent
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
@@ -116,12 +118,19 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
         adapter = LibraryAdapter(childFragmentManager)
         view_pager.adapter = adapter
+        view_pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                presenter.preferences.lastUsedCategory().set(position)
+            }
+        })
         tabs.setupWithViewPager(view_pager)
 
         if (savedState != null) {
             activeCategory = savedState.getInt(CATEGORY_KEY)
             query = savedState.getString(QUERY_KEY)
             presenter.searchSubject.onNext(query)
+        } else {
+            activeCategory = presenter.preferences.lastUsedCategory().getOrDefault()
         }
     }
 

@@ -52,6 +52,8 @@ class PreferenceKeys(context: Context) {
 
     val lastUsedCatalogueSource = context.getString(R.string.pref_last_catalogue_source_key)
 
+    val lastUsedCategory = context.getString(R.string.pref_last_used_category_key)
+
     val seamlessMode = context.getString(R.string.pref_seamless_mode_key)
 
     val catalogueAsList = context.getString(R.string.pref_display_catalogue_as_list)
@@ -79,7 +81,6 @@ class PreferenceKeys(context: Context) {
     val filterUnread = context.getString(R.string.pref_filter_unread_key)
 
     fun sourceUsername(sourceId: Int) = "pref_source_username_$sourceId"
-
 
     fun sourcePassword(sourceId: Int) = "pref_source_password_$sourceId"
 
