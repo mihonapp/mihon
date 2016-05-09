@@ -55,6 +55,7 @@ class LibraryHolder(private val view: View, private val adapter: LibraryCategory
      * @param coverCache the cache that stores the cover in the filesystem.
      */
     private fun loadCover(manga: Manga, source: Source, coverCache: CoverCache) {
+        Glide.clear(view.thumbnail)
         if (!manga.thumbnail_url.isNullOrEmpty()) {
             coverCache.saveOrLoadFromCache(manga.thumbnail_url, source.glideHeaders) {
                 if (adapter.fragment.isResumed && this.manga == manga) {
@@ -67,8 +68,6 @@ class LibraryHolder(private val view: View, private val adapter: LibraryCategory
                             .into(itemView.thumbnail)
                 }
             }
-        } else {
-            Glide.clear(view.thumbnail)
         }
     }
 
