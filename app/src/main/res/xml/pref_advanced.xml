@@ -7,6 +7,10 @@
         android:title="@string/pref_clear_chapter_cache"/>
 
     <Preference
+        android:key="@string/pref_clear_cookies_key"
+        android:title="@string/pref_clear_cookies"/>
+
+    <Preference
         android:key="@string/pref_clear_database_key"
         android:summary="@string/pref_clear_database_summary"
         android:title="@string/pref_clear_database"/>

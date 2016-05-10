@@ -6,9 +6,8 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.base.Source
-import eu.kanade.tachiyomi.event.ChapterCountEvent
-import eu.kanade.tachiyomi.event.MangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -116,22 +115,11 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
      */
     fun toggleFavorite() {
         manga.favorite = !manga.favorite
-        onMangaFavoriteChange(manga.favorite)
-        db.insertManga(manga).executeAsBlocking()
-        refreshManga()
-    }
-
-    /**
-     * (Removes / Saves) cover depending on favorite status.
-     *
-     * @param isFavorite determines if manga is favorite or not.
-     */
-    private fun onMangaFavoriteChange(isFavorite: Boolean) {
-        if (isFavorite) {
-            coverCache.save(manga.thumbnail_url, source.glideHeaders)
-        } else {
+        if (!manga.favorite) {
             coverCache.deleteFromCache(manga.thumbnail_url)
         }
+        db.insertManga(manga).executeAsBlocking()
+        refreshManga()
     }
 
     /**

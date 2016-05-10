@@ -101,7 +101,7 @@
 
 
         <meta-data
-            android:name="eu.kanade.tachiyomi.data.cache.CoverGlideModule"
+            android:name="eu.kanade.tachiyomi.data.glide.AppGlideModule"
             android:value="GlideModule" />
 
     </application>

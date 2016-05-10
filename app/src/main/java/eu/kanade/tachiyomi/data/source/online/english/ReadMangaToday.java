@@ -100,7 +100,7 @@ public class ReadMangaToday extends Source {
     @Override
     public Observable<MangasPage> searchMangasFromNetwork(final MangasPage page, String query) {
         return networkService
-                .requestBody(searchMangaRequest(page, query), true)
+                .requestBody(searchMangaRequest(page, query), networkService.getDefaultClient())
                 .doOnNext(new Action1<String>() {
                     @Override
                     public void call(String doc) {

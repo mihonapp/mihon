@@ -102,7 +102,7 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
 
     // MAL doesn't support score with decimals
     fun getList(): Observable<List<MangaSync>> {
-        return networkService.requestBody(get(getListUrl(username), headers), true)
+        return networkService.requestBody(get(getListUrl(username), headers), networkService.forceCacheClient)
                 .map { Jsoup.parse(it) }
                 .flatMap { Observable.from(it.select("manga")) }
                 .map {

@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.source.base
 
 import android.content.Context
-import com.bumptech.glide.load.model.LazyHeaders
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -11,6 +10,7 @@ import eu.kanade.tachiyomi.data.network.get
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.Jsoup
@@ -27,11 +27,12 @@ abstract class Source(context: Context) : BaseSource() {
 
     val requestHeaders by lazy { headersBuilder().build() }
 
-    val glideHeaders by lazy { glideHeadersBuilder().build() }
-
     init {
         App.get(context).component.inject(this)
     }
+
+    open val networkClient: OkHttpClient
+        get() = networkService.defaultClient
 
     override fun isLoginRequired(): Boolean {
         return false
@@ -75,7 +76,7 @@ abstract class Source(context: Context) : BaseSource() {
 
     // Get the most popular mangas from the source
     open fun pullPopularMangasFromNetwork(page: MangasPage): Observable<MangasPage> {
-        return networkService.requestBody(popularMangaRequest(page), true)
+        return networkService.requestBody(popularMangaRequest(page), networkClient)
                 .map { Jsoup.parse(it) }
                 .doOnNext { doc -> page.mangas = parsePopularMangasFromHtml(doc) }
                 .doOnNext { doc -> page.nextPageUrl = parseNextPopularMangasUrl(doc, page) }
@@ -84,7 +85,7 @@ abstract class Source(context: Context) : BaseSource() {
 
     // Get mangas from the source with a query
     open fun searchMangasFromNetwork(page: MangasPage, query: String): Observable<MangasPage> {
-        return networkService.requestBody(searchMangaRequest(page, query), true)
+        return networkService.requestBody(searchMangaRequest(page, query), networkClient)
                 .map { Jsoup.parse(it) }
                 .doOnNext { doc -> page.mangas = parseSearchFromHtml(doc) }
                 .doOnNext { doc -> page.nextPageUrl = parseNextSearchUrl(doc, page, query) }
@@ -93,13 +94,13 @@ abstract class Source(context: Context) : BaseSource() {
 
     // Get manga details from the source
     open fun pullMangaFromNetwork(mangaUrl: String): Observable<Manga> {
-        return networkService.requestBody(mangaDetailsRequest(mangaUrl))
+        return networkService.requestBody(mangaDetailsRequest(mangaUrl), networkClient)
                 .flatMap { Observable.just(parseHtmlToManga(mangaUrl, it)) }
     }
 
     // Get chapter list of a manga from the source
     open fun pullChaptersFromNetwork(mangaUrl: String): Observable<List<Chapter>> {
-        return networkService.requestBody(chapterListRequest(mangaUrl))
+        return networkService.requestBody(chapterListRequest(mangaUrl), networkClient)
                 .flatMap { unparsedHtml ->
                     val chapters = parseHtmlToChapters(unparsedHtml)
                     if (!chapters.isEmpty())
@@ -116,7 +117,7 @@ abstract class Source(context: Context) : BaseSource() {
     }
 
     open fun pullPageListFromNetwork(chapterUrl: String): Observable<List<Page>> {
-        return networkService.requestBody(pageListRequest(chapterUrl))
+        return networkService.requestBody(pageListRequest(chapterUrl), networkClient)
                 .flatMap { unparsedHtml ->
                     val pages = convertToPages(parseHtmlToPageUrls(unparsedHtml))
                     if (!pages.isEmpty())
@@ -141,7 +142,7 @@ abstract class Source(context: Context) : BaseSource() {
 
     open fun getImageUrlFromPage(page: Page): Observable<Page> {
         page.status = Page.LOAD_PAGE
-        return networkService.requestBody(imageUrlRequest(page))
+        return networkService.requestBody(imageUrlRequest(page), networkClient)
                 .flatMap { unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)) }
                 .onErrorResumeNext { e ->
                     page.status = Page.ERROR
@@ -222,15 +223,6 @@ abstract class Source(context: Context) : BaseSource() {
     // Overridable method to allow custom parsing.
     open fun parseChapterNumber(chapter: Chapter) {
 
-    }
-
-    protected open fun glideHeadersBuilder(): LazyHeaders.Builder {
-        val builder = LazyHeaders.Builder()
-        for ((key, value) in requestHeaders.toMultimap()) {
-            builder.addHeader(key, value[0])
-        }
-
-        return builder
     }
 
 }

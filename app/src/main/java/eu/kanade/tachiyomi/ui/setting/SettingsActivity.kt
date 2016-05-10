@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
+import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -20,6 +21,7 @@ class SettingsActivity : BaseActivity() {
     @Inject lateinit var db: DatabaseHelper
     @Inject lateinit var sourceManager: SourceManager
     @Inject lateinit var syncManager: MangaSyncManager
+    @Inject lateinit var networkHelper: NetworkHelper
 
     override fun onCreate(savedState: Bundle?) {
         setAppTheme()

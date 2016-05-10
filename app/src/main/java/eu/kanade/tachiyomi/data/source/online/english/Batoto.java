@@ -10,7 +10,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -34,6 +33,7 @@ import eu.kanade.tachiyomi.data.source.base.LoginSource;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.util.Parser;
+import okhttp3.Cookie;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.Request;
@@ -358,8 +358,8 @@ public class Batoto extends LoginSource {
     @Override
     public boolean isLogged() {
         try {
-            for ( HttpCookie cookie : getNetworkService().getCookies().get(new URI(BASE_URL)) ) {
-                if (cookie.getName().equals("pass_hash"))
+            for (Cookie cookie : getNetworkService().getCookies().get(new URI(BASE_URL))) {
+                if (cookie.name().equals("pass_hash"))
                     return true;
             }
 

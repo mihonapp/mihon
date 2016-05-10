@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.catalogue
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.model.GlideUrl
 import eu.kanade.tachiyomi.data.database.models.Manga
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
 
@@ -42,20 +41,16 @@ class CatalogueGridHolder(private val view: View, private val adapter: Catalogue
      * @param manga the manga to bind.
      */
     fun setImage(manga: Manga) {
+        Glide.clear(view.thumbnail)
         if (!manga.thumbnail_url.isNullOrEmpty()) {
-            val url = manga.thumbnail_url!!
-            val headers = adapter.fragment.presenter.source.glideHeaders
-
             Glide.with(view.context)
-                    .load(if (headers != null) GlideUrl(url, headers) else url)
+                    .load(manga)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .centerCrop()
                     .skipMemoryCache(true)
                     .placeholder(android.R.color.transparent)
                     .into(view.thumbnail)
 
-        } else {
-            Glide.clear(view.thumbnail)
         }
     }
 }

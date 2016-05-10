@@ -4,8 +4,8 @@ import android.os.Bundle
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
-import eu.kanade.tachiyomi.event.ChapterCountEvent
-import eu.kanade.tachiyomi.event.MangaEvent
+import eu.kanade.tachiyomi.ui.manga.info.ChapterCountEvent
+import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable

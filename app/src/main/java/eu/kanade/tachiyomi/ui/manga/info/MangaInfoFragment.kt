@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.signature.StringSignature
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.base.Source
@@ -112,45 +110,19 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         // Set the favorite drawable to the correct one.
         setFavoriteDrawable(manga.favorite)
 
-        // Initialize CoverCache and Glide headers to retrieve cover information.
-        val coverCache = presenter.coverCache
-        val headers = presenter.source.glideHeaders
-
         // Set cover if it wasn't already.
-        if (manga_cover.drawable == null) {
-            manga.thumbnail_url?.let { url ->
-                if (manga.favorite) {
-                    coverCache.saveOrLoadFromCache(url, headers) {
-                        if (isResumed) {
-                            Glide.with(context)
-                                    .load(it)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                                    .centerCrop()
-                                    .signature(StringSignature(it.lastModified().toString()))
-                                    .into(manga_cover)
+        if (manga_cover.drawable == null && !manga.thumbnail_url.isNullOrEmpty()) {
+            Glide.with(context)
+                    .load(manga)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .centerCrop()
+                    .into(manga_cover)
 
-                            Glide.with(context)
-                                    .load(it)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                                    .centerCrop()
-                                    .signature(StringSignature(it.lastModified().toString()))
-                                    .into(backdrop)
-                        }
-                    }
-                } else {
-                    Glide.with(context)
-                            .load(if (headers != null) GlideUrl(url, headers) else url)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .centerCrop()
-                            .into(manga_cover)
-
-                    Glide.with(context)
-                            .load(if (headers != null) GlideUrl(url, headers) else url)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .centerCrop()
-                            .into(backdrop)
-                }
-            }
+            Glide.with(context)
+                    .load(manga)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .centerCrop()
+                    .into(backdrop)
         }
     }
 

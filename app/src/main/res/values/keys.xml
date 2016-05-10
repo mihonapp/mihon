@@ -52,6 +52,7 @@
 
     <string name="pref_clear_chapter_cache_key">pref_clear_chapter_cache_key</string>
     <string name="pref_clear_database_key">pref_clear_database_key</string>
+    <string name="pref_clear_cookies_key">pref_clear_cookies_key</string>
 
     <string name="pref_version">pref_version</string>
     <string name="pref_build_time">pref_build_time</string>

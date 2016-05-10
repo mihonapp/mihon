@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.event.MangaEvent
+import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersFragment
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoFragment

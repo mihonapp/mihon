@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
 import android.os.Bundle
+import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -37,6 +38,11 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * Preferences.
      */
     @Inject lateinit var prefs: PreferencesHelper
+
+    /**
+     * Cover cache.
+     */
+    @Inject lateinit var coverCache: CoverCache
 
     /**
      * Enabled sources.
@@ -335,6 +341,9 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      */
     fun changeMangaFavorite(manga: Manga) {
         manga.favorite = !manga.favorite
+        if (!manga.favorite) {
+            coverCache.deleteFromCache(manga.thumbnail_url)
+        }
         db.insertManga(manga).executeAsBlocking()
     }
 

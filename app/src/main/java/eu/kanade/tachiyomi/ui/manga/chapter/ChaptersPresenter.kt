@@ -11,8 +11,8 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.base.Source
-import eu.kanade.tachiyomi.event.ChapterCountEvent
-import eu.kanade.tachiyomi.event.MangaEvent
+import eu.kanade.tachiyomi.ui.manga.info.ChapterCountEvent
+import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable

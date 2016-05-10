@@ -11,10 +11,10 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.event.LibraryMangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
 import java.io.IOException
 import java.io.InputStream
@@ -236,26 +236,18 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * Remove the selected manga from the library.
      */
     fun deleteMangas() {
-        for (manga in selectedMangas) {
-            manga.favorite = false
-        }
+        // Create a set of the list
+        val mangaToDelete = selectedMangas.toSet()
 
-        db.insertMangas(selectedMangas).executeAsBlocking()
-    }
-
-    /**
-     * Move the given list of manga to categories.
-     *
-     * @param positions the indexes of the selected categories.
-     * @param mangas the list of manga to move.
-     */
-    fun moveMangasToCategories(positions: Array<Int>, mangas: List<Manga>) {
-        val categoriesToAdd = ArrayList<Category>()
-        for (index in positions) {
-            categoriesToAdd.add(categories[index])
-        }
-
-        moveMangasToCategories(categoriesToAdd, mangas)
+        Observable.from(mangaToDelete)
+                .subscribeOn(Schedulers.io())
+                .doOnNext {
+                    it.favorite = false
+                    coverCache.deleteFromCache(it.thumbnail_url)
+                }
+                .toList()
+                .flatMap { db.insertMangas(it).asRxObservable() }
+                .subscribe()
     }
 
     /**

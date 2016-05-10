@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.event.LibraryMangaEvent
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -388,7 +387,10 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * @param mangas the manga list to move.
      */
     private fun moveMangasToCategories(mangas: List<Manga>) {
-        val categories = presenter.categories
+        // Hide the default category because it has a different behavior than the ones from db.
+        val categories = presenter.categories.filter { it.id != 0 }
+
+        // Get indexes of the common categories to preselect.
         val commonCategoriesIndexes = presenter.getCommonCategories(mangas)
                 .map { categories.indexOf(it) }
                 .toTypedArray()
@@ -397,7 +399,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 .title(R.string.action_move_category)
                 .items(categories.map { it.name })
                 .itemsCallbackMultiChoice(commonCategoriesIndexes) { dialog, positions, text ->
-                    presenter.moveMangasToCategories(positions, mangas)
+                    val selectedCategories = positions.map { categories[it] }
+                    presenter.moveMangasToCategories(selectedCategories, mangas)
                     destroyActionModeIfNeeded()
                     true
                 }

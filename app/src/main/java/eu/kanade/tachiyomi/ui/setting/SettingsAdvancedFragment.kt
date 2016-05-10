@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
-import android.support.v7.preference.Preference
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
@@ -16,8 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class SettingsAdvancedFragment : SettingsNestedFragment() {
 
-    private var clearCacheSubscription: Subscription? = null
-
     companion object {
 
         fun newInstance(resourcePreference: Int, resourceTitle: Int): SettingsNestedFragment {
@@ -27,17 +24,28 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
         }
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        val clearCache = findPreference(getString(R.string.pref_clear_chapter_cache_key))
-        val clearDatabase = findPreference(getString(R.string.pref_clear_database_key))
+    private val clearCache by lazy { findPreference(getString(R.string.pref_clear_chapter_cache_key)) }
 
-        clearCache.setOnPreferenceClickListener { preference ->
-            clearChapterCache(preference)
+    private val clearDatabase by lazy { findPreference(getString(R.string.pref_clear_database_key)) }
+
+    private val clearCookies by lazy { findPreference(getString(R.string.pref_clear_cookies_key)) }
+
+    private var clearCacheSubscription: Subscription? = null
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        clearCache.setOnPreferenceClickListener {
+            clearChapterCache()
             true
         }
         clearCache.summary = getString(R.string.used_cache, chapterCache.readableSize)
 
-        clearDatabase.setOnPreferenceClickListener { preference ->
+        clearCookies.setOnPreferenceClickListener {
+            settingsActivity.networkHelper.cookies.removeAll()
+            activity.toast(R.string.cookies_cleared)
+            true
+        }
+
+        clearDatabase.setOnPreferenceClickListener {
             clearDatabase()
             true
         }
@@ -48,7 +56,7 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
         super.onDestroyView()
     }
 
-    private fun clearChapterCache(preference: Preference) {
+    private fun clearChapterCache() {
         val deletedFiles = AtomicInteger()
 
         val files = chapterCache.cacheDir.listFiles()
@@ -78,7 +86,7 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
                 }, {
                     dialog.dismiss()
                     activity.toast(getString(R.string.cache_deleted, deletedFiles.get()))
-                    preference.summary = getString(R.string.used_cache, chapterCache.readableSize)
+                    clearCache.summary = getString(R.string.used_cache, chapterCache.readableSize)
                 })
     }
 
@@ -87,7 +95,10 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
                 .content(R.string.clear_database_confirmation)
                 .positiveText(android.R.string.yes)
                 .negativeText(android.R.string.no)
-                .onPositive { dialog, which -> db.deleteMangasNotInLibrary().executeAsBlocking() }
+                .onPositive { dialog, which ->
+                    db.deleteMangasNotInLibrary().executeAsBlocking()
+                    activity.toast(R.string.clear_database_completed)
+                }
                 .show()
     }
 

@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.event
+package eu.kanade.tachiyomi.ui.manga
 
 import eu.kanade.tachiyomi.data.database.models.Manga
 

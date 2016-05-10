@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.event
+package eu.kanade.tachiyomi.ui.manga.info
 
 import rx.Observable
 import rx.subjects.BehaviorSubject

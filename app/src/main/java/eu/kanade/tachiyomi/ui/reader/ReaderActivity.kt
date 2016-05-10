@@ -21,7 +21,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.event.ReaderEvent
+import eu.kanade.tachiyomi.ui.reader.ReaderEvent
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.base.listener.SimpleAnimationListener
 import eu.kanade.tachiyomi.ui.base.listener.SimpleSeekBarListener

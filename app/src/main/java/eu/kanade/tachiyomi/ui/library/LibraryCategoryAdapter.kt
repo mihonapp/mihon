@@ -98,10 +98,9 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
      * @param position the position to bind.
      */
     override fun onBindViewHolder(holder: LibraryHolder, position: Int) {
-        val presenter = (fragment.parentFragment as LibraryFragment).presenter
         val manga = getItem(position)
 
-        holder.onSetValues(manga, presenter)
+        holder.onSetValues(manga)
         //When user scrolls this bind the correct selection status
         holder.itemView.isActivated = isSelected(position)
     }

@@ -1,12 +1,12 @@
 package eu.kanade.tachiyomi.data.network
 
 import android.content.Context
-import okhttp3.*
+import okhttp3.Cache
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import rx.Observable
 import java.io.File
-import java.net.CookieManager
-import java.net.CookiePolicy
-import java.net.CookieStore
 
 class NetworkHelper(context: Context) {
 
@@ -14,43 +14,41 @@ class NetworkHelper(context: Context) {
 
     private val cacheSize = 5L * 1024 * 1024 // 5 MiB
 
-    private val cookieManager = CookieManager().apply {
-        setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-    }
+    private val cookieManager = PersistentCookieJar(context)
 
-    private val forceCacheInterceptor = { chain: Interceptor.Chain ->
-        val originalResponse = chain.proceed(chain.request())
-        originalResponse.newBuilder()
-                .removeHeader("Pragma")
-                .header("Cache-Control", "max-age=" + 600)
-                .build()
-    }
-
-    private val client = OkHttpClient.Builder()
-            .cookieJar(JavaNetCookieJar(cookieManager))
+    val defaultClient = OkHttpClient.Builder()
+            .cookieJar(cookieManager)
             .cache(Cache(cacheDir, cacheSize))
             .build()
 
-    private val forceCacheClient = client.newBuilder()
-            .addNetworkInterceptor(forceCacheInterceptor)
+    val forceCacheClient = defaultClient.newBuilder()
+            .addNetworkInterceptor({ chain ->
+                val originalResponse = chain.proceed(chain.request())
+                originalResponse.newBuilder()
+                        .removeHeader("Pragma")
+                        .header("Cache-Control", "max-age=" + 600)
+                        .build()
+            })
             .build()
 
-    val cookies: CookieStore
-        get() = cookieManager.cookieStore
+    val cloudflareClient = defaultClient.newBuilder()
+            .addInterceptor { CloudflareScraper.request(it, cookies) }
+            .build()
+
+    val cookies: PersistentCookieStore
+        get() = cookieManager.store
 
     @JvmOverloads
-    fun request(request: Request, forceCache: Boolean = false): Observable<Response> {
+    fun request(request: Request, client: OkHttpClient = defaultClient): Observable<Response> {
         return Observable.fromCallable {
-            val c = if (forceCache) forceCacheClient else client
-            c.newCall(request).execute().apply { body().close() }
+            client.newCall(request).execute().apply { body().close() }
         }
     }
 
     @JvmOverloads
-    fun requestBody(request: Request, forceCache: Boolean = false): Observable<String> {
+    fun requestBody(request: Request, client: OkHttpClient = defaultClient): Observable<String> {
         return Observable.fromCallable {
-            val c = if (forceCache) forceCacheClient else client
-            c.newCall(request).execute().body().string()
+            client.newCall(request).execute().body().string()
         }
     }
 
@@ -59,7 +57,7 @@ class NetworkHelper(context: Context) {
     }
 
     fun requestBodyProgressBlocking(request: Request, listener: ProgressListener): Response {
-        val progressClient = client.newBuilder()
+        val progressClient = defaultClient.newBuilder()
                 .cache(null)
                 .addNetworkInterceptor { chain ->
                     val originalResponse = chain.proceed(chain.request())
@@ -71,6 +69,5 @@ class NetworkHelper(context: Context) {
 
         return progressClient.newCall(request).execute()
     }
-
 
 }
