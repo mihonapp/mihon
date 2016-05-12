@@ -113,6 +113,8 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
             }
         })
 
+        // Double the distance required to trigger sync
+        swipe_refresh.setDistanceToTriggerSync((2 * 64 * resources.displayMetrics.density).toInt())
         swipe_refresh.setOnRefreshListener {
             if (!LibraryUpdateService.isRunning(activity)) {
                 libraryPresenter.categories.getOrNull(position)?.let {

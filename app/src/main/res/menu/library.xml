@@ -36,11 +36,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_update_category"
-        android:title="@string/action_update_category"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_edit_categories"
         android:title="@string/action_edit_categories"
         app:showAsAction="never" />

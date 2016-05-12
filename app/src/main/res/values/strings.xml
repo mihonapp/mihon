@@ -28,7 +28,6 @@
     <string name="action_delete">Delete</string>
     <string name="action_update">Update</string>
     <string name="action_update_library">Update library</string>
-    <string name="action_update_category">Update active category</string>
     <string name="action_edit">Edit</string>
     <string name="action_add_category">Add category</string>
     <string name="action_edit_categories">Edit categories</string>
