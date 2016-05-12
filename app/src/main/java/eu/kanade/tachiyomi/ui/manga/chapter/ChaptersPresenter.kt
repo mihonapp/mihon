@@ -75,7 +75,6 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         start(DB_CHAPTERS)
 
         add(db.getChapters(manga).asRxObservable()
-                .subscribeOn(Schedulers.io())
                 .doOnNext { chapters ->
                     this.chapters = chapters
                     SharedData.get(ChapterCountEvent::class.java)?.emit(chapters.size)

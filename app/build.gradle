@@ -89,7 +89,7 @@ kapt {
 }
 
 dependencies {
-    final SUPPORT_LIBRARY_VERSION = '23.3.0'
+    final SUPPORT_LIBRARY_VERSION = '23.4.0'
     final DAGGER_VERSION = '2.4'
     final OKHTTP_VERSION = '3.2.0'
     final RETROFIT_VERSION = '2.0.2'
@@ -112,8 +112,8 @@ dependencies {
     compile "com.android.support:preference-v14:$SUPPORT_LIBRARY_VERSION"
 
     // ReactiveX
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.1'
+    compile 'io.reactivex:rxandroid:1.2.0'
+    compile 'io.reactivex:rxjava:1.1.5'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.1'
 
     // Network client
@@ -126,7 +126,7 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
 
     // IO
-    compile 'com.squareup.okio:okio:1.7.0'
+    compile 'com.squareup.okio:okio:1.8.0'
 
     // JSON
     compile 'com.google.code.gson:gson:2.6.2'
