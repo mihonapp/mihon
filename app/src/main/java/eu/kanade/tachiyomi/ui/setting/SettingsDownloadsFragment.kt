@@ -40,13 +40,13 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
         downloadDirPref.setOnPreferenceClickListener {
 
             val currentDir = preferences.downloadsDirectory().getOrDefault()
-            val externalDirs = getExternalFilesDirs()
+            val externalDirs = getExternalFilesDirs() + getString(R.string.custom_dir)
             val selectedIndex = externalDirs.indexOf(File(currentDir))
 
             MaterialDialog.Builder(activity)
-                    .items(externalDirs + getString(R.string.custom_dir))
+                    .items(externalDirs)
                     .itemsCallbackSingleChoice(selectedIndex, { dialog, view, which, text ->
-                        if (which == externalDirs.size) {
+                        if (which == externalDirs.lastIndex) {
                             // Custom dir selected, open directory selector
                             val i = Intent(activity, CustomLayoutPickerActivity::class.java)
                             i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
@@ -80,7 +80,8 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
                 File.separator + getString(R.string.app_name) +
                 File.separator + "downloads"
 
-        return mutableListOf(File(defaultDir)) + ContextCompat.getExternalFilesDirs(activity, "")
+        return mutableListOf(File(defaultDir)) +
+                ContextCompat.getExternalFilesDirs(activity, "").filterNotNull()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
