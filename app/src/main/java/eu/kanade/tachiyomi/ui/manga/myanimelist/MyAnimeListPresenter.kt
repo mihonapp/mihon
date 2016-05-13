@@ -44,7 +44,6 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
         startableLatestCache(GET_MANGA_SYNC,
                 { db.getMangaSync(manga, myAnimeList).asRxObservable()
                         .doOnNext { mangaSync = it }
-                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()) },
                 { view, mangaSync -> view.setMangaSync(mangaSync) })
 
@@ -98,12 +97,12 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
     private fun updateRemote() {
         mangaSync?.let { mangaSync ->
             add(myAnimeList.update(mangaSync)
-                    .flatMap { response -> db.insertMangaSync(mangaSync).asRxObservable() }
                     .subscribeOn(Schedulers.io())
+                    .flatMap { response -> db.insertMangaSync(mangaSync).asRxObservable() }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ next -> },
                             { error ->
-                                Timber.e(error.message)
+                                Timber.e(error, error.message)
                                 // Restart on error to set old values
                                 start(GET_MANGA_SYNC)
                             }))
