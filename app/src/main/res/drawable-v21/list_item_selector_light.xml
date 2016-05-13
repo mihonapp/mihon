@@ -14,7 +14,7 @@
             </item>
 
             <item>
-                <color android:color="@color/backgroundLight" />
+                <color android:color="@color/dialogLight"/>
             </item>
         </selector>
     </item>

@@ -41,27 +41,12 @@
             android:layout_height="match_parent"
             android:layout_below="@id/appbar">
 
-            <RelativeLayout
-                android:id="@+id/information_layout"
+            <eu.kanade.tachiyomi.widget.EmptyView
+                android:id="@+id/empty_view"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/image_view"
-                    android:layout_width="128dp"
-                    android:layout_height="128dp"
-                    android:layout_centerHorizontal="true"/>
-
-                <TextView
-                    android:id="@+id/text_label"
-                    style="@style/TextAppearance.Medium.Body2.Hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/image_view"
-                    android:layout_centerHorizontal="true"/>
-
-            </RelativeLayout>
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
 
         </FrameLayout>
     </RelativeLayout>

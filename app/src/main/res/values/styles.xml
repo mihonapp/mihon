@@ -4,9 +4,12 @@
     <!--========-->
     <!--Toolbars-->
     <!--========-->
-    <style name="Theme.ActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    <style name="Theme.ActionBar" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="android:spinnerDropDownItemStyle">@style/ActionBarSpinnerItem</item>
+    </style>
+
+    <style name="Theme.ActionBar.Light" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <!--====-->

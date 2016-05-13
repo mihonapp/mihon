@@ -4,23 +4,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_bottom"
-    android:paddingLeft="@dimen/margin_left"
-    android:paddingRight="@dimen/margin_right"
-    android:paddingTop="@dimen/margin_top">
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include layout="@layout/card_myanimelist_personal"/>
-
-        </android.support.v7.widget.CardView>
+        <include layout="@layout/card_myanimelist_personal"/>
 
     </ScrollView>
 
