@@ -2,8 +2,6 @@ package eu.kanade.tachiyomi.util
 
 import android.support.annotation.DrawableRes
 import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.widget.ImageView
 
 /**

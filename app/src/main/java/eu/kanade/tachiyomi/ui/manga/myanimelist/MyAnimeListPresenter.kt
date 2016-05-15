@@ -7,8 +7,8 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
-import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.toast
 import rx.Observable

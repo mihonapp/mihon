@@ -2,14 +2,10 @@ package eu.kanade.tachiyomi.data.source
 
 import android.content.Context
 import eu.kanade.tachiyomi.data.source.base.Source
-import eu.kanade.tachiyomi.data.source.online.english.Batoto
-import eu.kanade.tachiyomi.data.source.online.english.Kissmanga
-import eu.kanade.tachiyomi.data.source.online.english.Mangafox
-import eu.kanade.tachiyomi.data.source.online.english.Mangahere
-import eu.kanade.tachiyomi.data.source.online.russian.Mangachan;
-import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga;
-import eu.kanade.tachiyomi.data.source.online.russian.Readmanga;
-import eu.kanade.tachiyomi.data.source.online.english.ReadMangaToday
+import eu.kanade.tachiyomi.data.source.online.english.*
+import eu.kanade.tachiyomi.data.source.online.russian.Mangachan
+import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga
+import eu.kanade.tachiyomi.data.source.online.russian.Readmanga
 import java.util.*
 
 open class SourceManager(private val context: Context) {

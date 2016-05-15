@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.injection.component
 
 import android.app.Application
 import dagger.Component
-import eu.kanade.tachiyomi.data.glide.AppGlideModule
 import eu.kanade.tachiyomi.data.download.DownloadService
+import eu.kanade.tachiyomi.data.glide.AppGlideModule
 import eu.kanade.tachiyomi.data.glide.MangaModelLoader
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.mangasync.UpdateMangaSyncService
