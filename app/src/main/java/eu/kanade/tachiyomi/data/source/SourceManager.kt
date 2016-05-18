@@ -10,6 +10,9 @@ import eu.kanade.tachiyomi.data.source.online.english.Batoto
 import eu.kanade.tachiyomi.data.source.online.english.Kissmanga
 import eu.kanade.tachiyomi.data.source.online.english.Mangafox
 import eu.kanade.tachiyomi.data.source.online.english.Mangahere
+import eu.kanade.tachiyomi.data.source.online.russian.Mangachan
+import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga
+import eu.kanade.tachiyomi.data.source.online.russian.Readmanga
 import org.yaml.snakeyaml.Yaml
 import timber.log.Timber
 import java.io.File
@@ -40,6 +43,9 @@ open class SourceManager(private val context: Context) {
         KISSMANGA -> Kissmanga(context, id)
         MANGAHERE -> Mangahere(context, id)
         MANGAFOX -> Mangafox(context, id)
+        READMANGA -> Readmanga(context, id)
+        MINTMANGA -> Mintmanga(context, id)
+        MANGACHAN -> Mangachan(context, id)
         else -> null
     }
 
