@@ -34,6 +34,9 @@ public final class ChapterTable {
 	@NonNull
 	public static final String COLUMN_CHAPTER_NUMBER = "chapter_number";
 
+	@NonNull
+	public static final String COLUMN_SOURCE_ORDER = "source_order";
+
 	private ChapterTable() throws InstantiationException {
 		throw new InstantiationException("This class is not for instantiation");
 	}
@@ -48,6 +51,7 @@ public final class ChapterTable {
 				+ COLUMN_READ + " BOOLEAN NOT NULL, "
 				+ COLUMN_LAST_PAGE_READ + " INT NOT NULL, "
 				+ COLUMN_CHAPTER_NUMBER + " FLOAT NOT NULL, "
+				+ COLUMN_SOURCE_ORDER + " INTEGER NOT NULL, "
 				+ COLUMN_DATE_FETCH + " LONG NOT NULL, "
 				+ COLUMN_DATE_UPLOAD + " LONG NOT NULL, "
 				+ "FOREIGN KEY(" + COLUMN_MANGA_ID + ") REFERENCES " + MangaTable.TABLE + "(" + MangaTable.COLUMN_ID + ") "
@@ -55,9 +59,15 @@ public final class ChapterTable {
 				+ ");";
 	}
 
+	@NonNull
 	public static String getCreateMangaIdIndexQuery() {
 		return "CREATE INDEX " + TABLE + "_" + COLUMN_MANGA_ID + "_index ON " + TABLE + "(" + COLUMN_MANGA_ID + ");";
 
+	}
+
+	@NonNull
+	public static String getSourceOrderUpdateQuery() {
+		return "ALTER TABLE " + TABLE + " ADD COLUMN " + COLUMN_SOURCE_ORDER + " INTEGER DEFAULT 0";
 	}
 	
 }

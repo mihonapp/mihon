@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.os.Bundle
-import android.util.Pair
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -15,6 +14,7 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.ui.manga.info.ChapterCountEvent
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -98,7 +98,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     fun getOnlineChaptersObs(): Observable<Pair<Int, Int>> {
         return source.pullChaptersFromNetwork(manga.url)
                 .subscribeOn(Schedulers.io())
-                .flatMap { chapters -> db.insertOrRemoveChapters(manga, chapters, source) }
+                .map { syncChaptersWithSource(db, it, manga, source) }
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -170,7 +170,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                     }
                 }
                 .toList()
-                .flatMap { db.insertChapters(it).asRxObservable() }
+                .flatMap { db.updateChaptersProgress(it).asRxObservable() }
                 .subscribeOn(Schedulers.io())
                 .subscribe()
     }
@@ -180,7 +180,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .filter { it.chapter_number > -1 && it.chapter_number < selected.chapter_number }
                 .doOnNext { it.read = true }
                 .toList()
-                .flatMap { db.insertChapters(it).asRxObservable() }
+                .flatMap { db.updateChaptersProgress(it).asRxObservable() }
                 .subscribe()
     }
 

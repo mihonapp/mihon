@@ -5,7 +5,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import eu.kanade.tachiyomi.data.database.tables.*
 
-class DbOpenHelper(context: Context) : SQLiteOpenHelper(context, DbOpenHelper.DATABASE_NAME, null, DbOpenHelper.DATABASE_VERSION) {
+class DbOpenHelper(context: Context)
+: SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         /**
@@ -16,7 +17,7 @@ class DbOpenHelper(context: Context) : SQLiteOpenHelper(context, DbOpenHelper.DA
         /**
          * Version of the database.
          */
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
     }
 
     override fun onCreate(db: SQLiteDatabase) = with(db) {
@@ -33,7 +34,9 @@ class DbOpenHelper(context: Context) : SQLiteOpenHelper(context, DbOpenHelper.DA
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-
+        if (oldVersion < 2) {
+            db.execSQL(ChapterTable.getSourceOrderUpdateQuery())
+        }
     }
 
     override fun onConfigure(db: SQLiteDatabase) {

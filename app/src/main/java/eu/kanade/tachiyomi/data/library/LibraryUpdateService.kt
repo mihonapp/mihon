@@ -8,7 +8,6 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.PowerManager
 import android.support.v4.app.NotificationCompat
-import android.util.Pair
 import com.github.pwittchen.reactivenetwork.library.ConnectivityStatus
 import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork
 import eu.kanade.tachiyomi.App
@@ -292,7 +291,7 @@ class LibraryUpdateService : Service() {
         val source = sourceManager.get(manga.source)
         return source!!
                 .pullChaptersFromNetwork(manga.url)
-                .flatMap { db.insertOrRemoveChapters(manga, it, source) }
+                .map { syncChaptersWithSource(db, it, manga, source) }
     }
 
     /**

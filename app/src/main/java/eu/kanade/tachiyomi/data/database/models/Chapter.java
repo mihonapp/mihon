@@ -41,6 +41,9 @@ public class Chapter implements Serializable {
     @StorIOSQLiteColumn(name = ChapterTable.COLUMN_CHAPTER_NUMBER)
     public float chapter_number;
 
+    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_SOURCE_ORDER)
+    public int source_order;
+
     public int status;
 
     private transient List<Page> pages;

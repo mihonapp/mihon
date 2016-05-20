@@ -1,20 +1,16 @@
 package eu.kanade.tachiyomi.data.database.queries
 
-import android.util.Pair
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetObject
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
 import eu.kanade.tachiyomi.data.database.DbProvider
-import eu.kanade.tachiyomi.data.database.inTransaction
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.database.resolvers.ChapterProgressPutResolver
+import eu.kanade.tachiyomi.data.database.resolvers.ChapterSourceOrderPutResolver
 import eu.kanade.tachiyomi.data.database.resolvers.MangaChapterGetResolver
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable
-import eu.kanade.tachiyomi.data.source.base.Source
-import eu.kanade.tachiyomi.util.ChapterRecognition
-import rx.Observable
 import java.util.*
 
 interface ChapterQueries : DbProvider {
@@ -92,67 +88,23 @@ interface ChapterQueries : DbProvider {
 
     fun insertChapters(chapters: List<Chapter>) = db.put().objects(chapters).prepare()
 
-    // TODO this logic shouldn't be here
-    // Add new chapters or delete if the source deletes them
-    open fun insertOrRemoveChapters(manga: Manga, sourceChapters: List<Chapter>, source: Source): Observable<Pair<Int, Int>> {
-        val dbChapters = getChapters(manga).executeAsBlocking()
-
-        val newChapters = Observable.from(sourceChapters)
-                .filter { it !in dbChapters }
-                .doOnNext { c ->
-                    c.manga_id = manga.id
-                    source.parseChapterNumber(c)
-                    ChapterRecognition.parseChapterNumber(c, manga)
-                }.toList()
-
-        val deletedChapters = Observable.from(dbChapters)
-                .filter { it !in sourceChapters }
-                .toList()
-
-        return Observable.zip(newChapters, deletedChapters) { toAdd, toDelete ->
-            var added = 0
-            var deleted = 0
-            var readded = 0
-
-            db.inTransaction {
-                val deletedReadChapterNumbers = TreeSet<Float>()
-                if (!toDelete.isEmpty()) {
-                    for (c in toDelete) {
-                        if (c.read) {
-                            deletedReadChapterNumbers.add(c.chapter_number)
-                        }
-                    }
-                    deleted = deleteChapters(toDelete).executeAsBlocking().results().size
-                }
-
-                if (!toAdd.isEmpty()) {
-                    // Set the date fetch for new items in reverse order to allow another sorting method.
-                    // Sources MUST return the chapters from most to less recent, which is common.
-                    var now = Date().time
-
-                    for (i in toAdd.indices.reversed()) {
-                        val c = toAdd[i]
-                        c.date_fetch = now++
-                        // Try to mark already read chapters as read when the source deletes them
-                        if (c.chapter_number != -1f && c.chapter_number in deletedReadChapterNumbers) {
-                            c.read = true
-                            readded++
-                        }
-                    }
-                    added = insertChapters(toAdd).executeAsBlocking().numberOfInserts()
-                }
-            }
-            Pair.create(added - readded, deleted - readded)
-        }
-    }
-
     fun deleteChapter(chapter: Chapter) = db.delete().`object`(chapter).prepare()
 
     fun deleteChapters(chapters: List<Chapter>) = db.delete().objects(chapters).prepare()
 
     fun updateChapterProgress(chapter: Chapter) = db.put()
             .`object`(chapter)
-            .withPutResolver(ChapterProgressPutResolver.instance)
+            .withPutResolver(ChapterProgressPutResolver())
+            .prepare()
+
+    fun updateChaptersProgress(chapters: List<Chapter>) = db.put()
+            .objects(chapters)
+            .withPutResolver(ChapterProgressPutResolver())
+            .prepare()
+
+    fun fixChaptersSourceOrder(chapters: List<Chapter>) = db.put()
+            .objects(chapters)
+            .withPutResolver(ChapterSourceOrderPutResolver())
             .prepare()
 
 }

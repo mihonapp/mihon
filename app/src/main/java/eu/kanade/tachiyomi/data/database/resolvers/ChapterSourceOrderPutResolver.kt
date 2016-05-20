@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.data.database.inTransactionReturn
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable
 
-class ChapterProgressPutResolver : PutResolver<Chapter>() {
+class ChapterSourceOrderPutResolver : PutResolver<Chapter>() {
 
     override fun performPut(db: StorIOSQLite, chapter: Chapter) = db.inTransactionReturn {
         val updateQuery = mapToUpdateQuery(chapter)
@@ -21,14 +21,12 @@ class ChapterProgressPutResolver : PutResolver<Chapter>() {
 
     fun mapToUpdateQuery(chapter: Chapter) = UpdateQuery.builder()
             .table(ChapterTable.TABLE)
-            .where("${ChapterTable.COLUMN_ID} = ?")
-            .whereArgs(chapter.id)
+            .where("${ChapterTable.COLUMN_URL} = ? AND ${ChapterTable.COLUMN_MANGA_ID} = ?")
+            .whereArgs(chapter.url, chapter.manga_id)
             .build()
 
-    fun mapToContentValues(chapter: Chapter) = ContentValues(2).apply {
-        put(ChapterTable.COLUMN_READ, chapter.read)
-        put(ChapterTable.COLUMN_LAST_PAGE_READ, chapter.last_page_read)
+    fun mapToContentValues(chapter: Chapter) = ContentValues(1).apply {
+        put(ChapterTable.COLUMN_SOURCE_ORDER, chapter.source_order)
     }
 
 }
-
