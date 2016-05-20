@@ -10,16 +10,16 @@ import eu.kanade.tachiyomi.data.database.tables.CategoryTable;
 @StorIOSQLiteType(table = CategoryTable.TABLE)
 public class Category implements Serializable {
 
-    @StorIOSQLiteColumn(name = CategoryTable.COLUMN_ID, key = true)
+    @StorIOSQLiteColumn(name = CategoryTable.COL_ID, key = true)
     public Integer id;
 
-    @StorIOSQLiteColumn(name = CategoryTable.COLUMN_NAME)
+    @StorIOSQLiteColumn(name = CategoryTable.COL_NAME)
     public String name;
 
-    @StorIOSQLiteColumn(name = CategoryTable.COLUMN_ORDER)
+    @StorIOSQLiteColumn(name = CategoryTable.COL_ORDER)
     public int order;
 
-    @StorIOSQLiteColumn(name = CategoryTable.COLUMN_FLAGS)
+    @StorIOSQLiteColumn(name = CategoryTable.COL_FLAGS)
     public int flags;
 
     public Category() {}

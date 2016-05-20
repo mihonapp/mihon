@@ -21,21 +21,21 @@ class DbOpenHelper(context: Context)
     }
 
     override fun onCreate(db: SQLiteDatabase) = with(db) {
-        execSQL(MangaTable.getCreateTableQuery())
-        execSQL(ChapterTable.getCreateTableQuery())
-        execSQL(MangaSyncTable.getCreateTableQuery())
-        execSQL(CategoryTable.getCreateTableQuery())
-        execSQL(MangaCategoryTable.getCreateTableQuery())
+        execSQL(MangaTable.createTableQuery)
+        execSQL(ChapterTable.createTableQuery)
+        execSQL(MangaSyncTable.createTableQuery)
+        execSQL(CategoryTable.createTableQuery)
+        execSQL(MangaCategoryTable.createTableQuery)
 
         // DB indexes
-        execSQL(MangaTable.getCreateUrlIndexQuery())
-        execSQL(MangaTable.getCreateFavoriteIndexQuery())
-        execSQL(ChapterTable.getCreateMangaIdIndexQuery())
+        execSQL(MangaTable.createUrlIndexQuery)
+        execSQL(MangaTable.createFavoriteIndexQuery)
+        execSQL(ChapterTable.createMangaIdIndexQuery)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
-            db.execSQL(ChapterTable.getSourceOrderUpdateQuery())
+            db.execSQL(ChapterTable.sourceOrderUpdateQuery)
         }
     }
 

@@ -11,31 +11,31 @@ import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService;
 @StorIOSQLiteType(table = MangaSyncTable.TABLE)
 public class MangaSync implements Serializable {
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_ID, key = true)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_ID, key = true)
     public Long id;
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_MANGA_ID)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_MANGA_ID)
     public long manga_id;
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_SYNC_ID)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_SYNC_ID)
     public int sync_id;
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_REMOTE_ID)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_REMOTE_ID)
     public int remote_id;
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_TITLE)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_TITLE)
     public String title;
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_LAST_CHAPTER_READ)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_LAST_CHAPTER_READ)
     public int last_chapter_read;
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_TOTAL_CHAPTERS)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_TOTAL_CHAPTERS)
     public int total_chapters;
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_SCORE)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_SCORE)
     public float score;
 
-    @StorIOSQLiteColumn(name = MangaSyncTable.COLUMN_STATUS)
+    @StorIOSQLiteColumn(name = MangaSyncTable.COL_STATUS)
     public int status;
 
     public boolean update;

@@ -14,8 +14,8 @@ interface MangaSyncQueries : DbProvider {
             .`object`(MangaSync::class.java)
             .withQuery(Query.builder()
                     .table(MangaSyncTable.TABLE)
-                    .where("${MangaSyncTable.COLUMN_MANGA_ID} = ? AND " +
-                            "${MangaSyncTable.COLUMN_SYNC_ID} = ?")
+                    .where("${MangaSyncTable.COL_MANGA_ID} = ? AND " +
+                            "${MangaSyncTable.COL_SYNC_ID} = ?")
                     .whereArgs(manga.id, sync.id)
                     .build())
             .prepare()
@@ -24,7 +24,7 @@ interface MangaSyncQueries : DbProvider {
             .listOfObjects(MangaSync::class.java)
             .withQuery(Query.builder()
                     .table(MangaSyncTable.TABLE)
-                    .where("${MangaSyncTable.COLUMN_MANGA_ID} = ?")
+                    .where("${MangaSyncTable.COL_MANGA_ID} = ?")
                     .whereArgs(manga.id)
                     .build())
             .prepare()
@@ -38,7 +38,7 @@ interface MangaSyncQueries : DbProvider {
     fun deleteMangaSyncForManga(manga: Manga) = db.delete()
             .byQuery(DeleteQuery.builder()
                     .table(MangaSyncTable.TABLE)
-                    .where("${MangaSyncTable.COLUMN_MANGA_ID} = ?")
+                    .where("${MangaSyncTable.COL_MANGA_ID} = ?")
                     .whereArgs(manga.id)
                     .build())
             .prepare()

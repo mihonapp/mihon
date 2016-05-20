@@ -8,13 +8,13 @@ import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable;
 @StorIOSQLiteType(table = MangaCategoryTable.TABLE)
 public class MangaCategory {
 
-    @StorIOSQLiteColumn(name = MangaCategoryTable.COLUMN_ID, key = true)
+    @StorIOSQLiteColumn(name = MangaCategoryTable.COL_ID, key = true)
     public Long id;
 
-    @StorIOSQLiteColumn(name = MangaCategoryTable.COLUMN_MANGA_ID)
+    @StorIOSQLiteColumn(name = MangaCategoryTable.COL_MANGA_ID)
     public long manga_id;
 
-    @StorIOSQLiteColumn(name = MangaCategoryTable.COLUMN_CATEGORY_ID)
+    @StorIOSQLiteColumn(name = MangaCategoryTable.COL_CATEGORY_ID)
     public int category_id;
 
     public MangaCategory() {}

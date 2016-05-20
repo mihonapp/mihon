@@ -13,7 +13,7 @@ interface CategoryQueries : DbProvider {
             .listOfObjects(Category::class.java)
             .withQuery(Query.builder()
                     .table(CategoryTable.TABLE)
-                    .orderBy(CategoryTable.COLUMN_ORDER)
+                    .orderBy(CategoryTable.COL_ORDER)
                     .build())
             .prepare()
 

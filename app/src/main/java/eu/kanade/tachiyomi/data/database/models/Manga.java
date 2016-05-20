@@ -14,49 +14,49 @@ import eu.kanade.tachiyomi.util.UrlUtil;
 @StorIOSQLiteType(table = MangaTable.TABLE)
 public class Manga implements Serializable {
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_ID, key = true)
+    @StorIOSQLiteColumn(name = MangaTable.COL_ID, key = true)
     public Long id;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_SOURCE)
+    @StorIOSQLiteColumn(name = MangaTable.COL_SOURCE)
     public int source;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_URL)
+    @StorIOSQLiteColumn(name = MangaTable.COL_URL)
     public String url;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_ARTIST)
+    @StorIOSQLiteColumn(name = MangaTable.COL_ARTIST)
     public String artist;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_AUTHOR)
+    @StorIOSQLiteColumn(name = MangaTable.COL_AUTHOR)
     public String author;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_DESCRIPTION)
+    @StorIOSQLiteColumn(name = MangaTable.COL_DESCRIPTION)
     public String description;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_GENRE)
+    @StorIOSQLiteColumn(name = MangaTable.COL_GENRE)
     public String genre;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_TITLE)
+    @StorIOSQLiteColumn(name = MangaTable.COL_TITLE)
     public String title;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_STATUS)
+    @StorIOSQLiteColumn(name = MangaTable.COL_STATUS)
     public int status;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_THUMBNAIL_URL)
+    @StorIOSQLiteColumn(name = MangaTable.COL_THUMBNAIL_URL)
     public String thumbnail_url;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_FAVORITE)
+    @StorIOSQLiteColumn(name = MangaTable.COL_FAVORITE)
     public boolean favorite;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_LAST_UPDATE)
+    @StorIOSQLiteColumn(name = MangaTable.COL_LAST_UPDATE)
     public long last_update;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_INITIALIZED)
+    @StorIOSQLiteColumn(name = MangaTable.COL_INITIALIZED)
     public boolean initialized;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_VIEWER)
+    @StorIOSQLiteColumn(name = MangaTable.COL_VIEWER)
     public int viewer;
 
-    @StorIOSQLiteColumn(name = MangaTable.COLUMN_CHAPTER_FLAGS)
+    @StorIOSQLiteColumn(name = MangaTable.COL_CHAPTER_FLAGS)
     public int chapter_flags;
 
     public transient int unread;

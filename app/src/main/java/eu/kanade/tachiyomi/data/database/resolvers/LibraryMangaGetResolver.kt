@@ -15,10 +15,10 @@ class LibraryMangaGetResolver : MangaStorIOSQLiteGetResolver() {
     override fun mapFromCursor(cursor: Cursor): Manga {
         val manga = super.mapFromCursor(cursor)
 
-        val unreadColumn = cursor.getColumnIndex(MangaTable.COLUMN_UNREAD)
+        val unreadColumn = cursor.getColumnIndex(MangaTable.COL_UNREAD)
         manga.unread = cursor.getInt(unreadColumn)
 
-        val categoryColumn = cursor.getColumnIndex(MangaTable.COLUMN_CATEGORY)
+        val categoryColumn = cursor.getColumnIndex(MangaTable.COL_CATEGORY)
         manga.category = cursor.getInt(categoryColumn)
 
         return manga

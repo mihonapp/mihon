@@ -17,7 +17,7 @@ interface MangaCategoryQueries : DbProvider {
     fun deleteOldMangasCategories(mangas: List<Manga>) = db.delete()
             .byQuery(DeleteQuery.builder()
                     .table(MangaCategoryTable.TABLE)
-                    .where("${MangaCategoryTable.COLUMN_MANGA_ID} IN (${Queries.placeholders(mangas.size)})")
+                    .where("${MangaCategoryTable.COL_MANGA_ID} IN (${Queries.placeholders(mangas.size)})")
                     .whereArgs(*mangas.map { it.id }.toTypedArray())
                     .build())
             .prepare()

@@ -14,34 +14,34 @@ import eu.kanade.tachiyomi.util.UrlUtil;
 @StorIOSQLiteType(table = ChapterTable.TABLE)
 public class Chapter implements Serializable {
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_ID, key = true)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_ID, key = true)
     public Long id;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_MANGA_ID)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_MANGA_ID)
     public Long manga_id;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_URL)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_URL)
     public String url;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_NAME)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_NAME)
     public String name;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_READ)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_READ)
     public boolean read;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_LAST_PAGE_READ)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_LAST_PAGE_READ)
     public int last_page_read;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_DATE_FETCH)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_DATE_FETCH)
     public long date_fetch;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_DATE_UPLOAD)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_DATE_UPLOAD)
     public long date_upload;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_CHAPTER_NUMBER)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_CHAPTER_NUMBER)
     public float chapter_number;
 
-    @StorIOSQLiteColumn(name = ChapterTable.COLUMN_SOURCE_ORDER)
+    @StorIOSQLiteColumn(name = ChapterTable.COL_SOURCE_ORDER)
     public int source_order;
 
     public int status;

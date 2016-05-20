@@ -19,7 +19,7 @@ interface ChapterQueries : DbProvider {
             .listOfObjects(Chapter::class.java)
             .withQuery(Query.builder()
                     .table(ChapterTable.TABLE)
-                    .where("${ChapterTable.COLUMN_MANGA_ID} = ?")
+                    .where("${ChapterTable.COL_MANGA_ID} = ?")
                     .whereArgs(manga.id)
                     .build())
             .prepare()
@@ -43,11 +43,11 @@ interface ChapterQueries : DbProvider {
                 .`object`(Chapter::class.java)
                 .withQuery(Query.builder()
                         .table(ChapterTable.TABLE)
-                        .where("${ChapterTable.COLUMN_MANGA_ID} = ? AND " +
-                                "${ChapterTable.COLUMN_CHAPTER_NUMBER} > ? AND " +
-                                "${ChapterTable.COLUMN_CHAPTER_NUMBER} <= ?")
+                        .where("${ChapterTable.COL_MANGA_ID} = ? AND " +
+                                "${ChapterTable.COL_CHAPTER_NUMBER} > ? AND " +
+                                "${ChapterTable.COL_CHAPTER_NUMBER} <= ?")
                         .whereArgs(chapter.manga_id, chapterNumber, chapterNumber + 1)
-                        .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER)
+                        .orderBy(ChapterTable.COL_CHAPTER_NUMBER)
                         .limit(1)
                         .build())
                 .prepare()
@@ -61,11 +61,11 @@ interface ChapterQueries : DbProvider {
         return db.get()
                 .`object`(Chapter::class.java)
                 .withQuery(Query.builder().table(ChapterTable.TABLE)
-                        .where("${ChapterTable.COLUMN_MANGA_ID} = ? AND " +
-                                "${ChapterTable.COLUMN_CHAPTER_NUMBER} < ? AND " +
-                                "${ChapterTable.COLUMN_CHAPTER_NUMBER} >= ?")
+                        .where("${ChapterTable.COL_MANGA_ID} = ? AND " +
+                                "${ChapterTable.COL_CHAPTER_NUMBER} < ? AND " +
+                                "${ChapterTable.COL_CHAPTER_NUMBER} >= ?")
                         .whereArgs(chapter.manga_id, chapterNumber, chapterNumber - 1)
-                        .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER + " DESC")
+                        .orderBy(ChapterTable.COL_CHAPTER_NUMBER + " DESC")
                         .limit(1)
                         .build())
                 .prepare()
@@ -75,11 +75,11 @@ interface ChapterQueries : DbProvider {
             .`object`(Chapter::class.java)
             .withQuery(Query.builder()
                     .table(ChapterTable.TABLE)
-                    .where("${ChapterTable.COLUMN_MANGA_ID} = ? AND " +
-                            "${ChapterTable.COLUMN_READ} = ? AND " +
-                            "${ChapterTable.COLUMN_CHAPTER_NUMBER} >= ?")
+                    .where("${ChapterTable.COL_MANGA_ID} = ? AND " +
+                            "${ChapterTable.COL_READ} = ? AND " +
+                            "${ChapterTable.COL_CHAPTER_NUMBER} >= ?")
                     .whereArgs(manga.id, 0, 0)
-                    .orderBy(ChapterTable.COLUMN_CHAPTER_NUMBER)
+                    .orderBy(ChapterTable.COL_CHAPTER_NUMBER)
                     .limit(1)
                     .build())
             .prepare()
