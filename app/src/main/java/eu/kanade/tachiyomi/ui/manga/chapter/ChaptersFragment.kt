@@ -124,6 +124,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         when (item.itemId) {
             R.id.action_display_mode -> showDisplayModeDialog()
             R.id.manga_download -> showDownloadDialog()
+            R.id.action_sorting_mode -> showSortingDialog()
             R.id.action_filter_unread -> {
                 item.isChecked = !item.isChecked
                 presenter.setReadFilter(item.isChecked)
@@ -135,7 +136,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
             R.id.action_filter_empty -> {
                 presenter.setReadFilter(false)
                 presenter.setDownloadedFilter(false)
-                activity.supportInvalidateOptionsMenu();
+                activity.supportInvalidateOptionsMenu()
             }
             R.id.action_sort -> presenter.revertSortOrder()
             else -> return super.onOptionsItemSelected(item)
@@ -192,21 +193,38 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     }
 
     private fun showDisplayModeDialog() {
-
         // Get available modes, ids and the selected mode
-        val modes = listOf(getString(R.string.show_title), getString(R.string.show_chapter_number))
+        val modes = intArrayOf(R.string.show_title, R.string.show_chapter_number)
         val ids = intArrayOf(Manga.DISPLAY_NAME, Manga.DISPLAY_NUMBER)
         val selectedIndex = if (presenter.manga.displayMode == Manga.DISPLAY_NAME) 0 else 1
 
         MaterialDialog.Builder(activity)
                 .title(R.string.action_display_mode)
-                .items(modes)
+                .items(modes.map { getString(it) })
                 .itemsIds(ids)
                 .itemsCallbackSingleChoice(selectedIndex) { dialog, itemView, which, text ->
                     // Save the new display mode
                     presenter.setDisplayMode(itemView.id)
                     // Refresh ui
                     adapter.notifyDataSetChanged()
+                    true
+                }
+                .show()
+    }
+
+    private fun showSortingDialog() {
+        // Get available modes, ids and the selected mode
+        val modes = intArrayOf(R.string.sort_by_number, R.string.sort_by_source)
+        val ids = intArrayOf(Manga.SORTING_NUMBER, Manga.SORTING_SOURCE)
+        val selectedIndex = if (presenter.manga.sorting == Manga.SORTING_NUMBER) 0 else 1
+
+        MaterialDialog.Builder(activity)
+                .title(R.string.sorting_mode)
+                .items(modes.map { getString(it) })
+                .itemsIds(ids)
+                .itemsCallbackSingleChoice(selectedIndex) { dialog, itemView, which, text ->
+                    // Save the new display mode
+                    presenter.setSorting(itemView.id)
                     true
                 }
                 .show()

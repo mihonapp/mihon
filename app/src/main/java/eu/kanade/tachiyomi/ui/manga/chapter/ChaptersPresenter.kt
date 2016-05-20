@@ -123,11 +123,22 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         if (onlyDownloaded()) {
             observable = observable.filter { chapter -> chapter.status == Download.DOWNLOADED }
         }
-        return observable.toSortedList { chapter, chapter2 ->
-            if (sortOrder())
-                chapter2.chapter_number.compareTo(chapter.chapter_number)
-            else
-                chapter.chapter_number.compareTo(chapter2.chapter_number)
+        return observable.toSortedList { chapter1, chapter2 ->
+            when (manga.sorting) {
+                Manga.SORTING_NUMBER -> {
+                    if (sortOrder())
+                        chapter2.chapter_number.compareTo(chapter1.chapter_number)
+                    else
+                        chapter1.chapter_number.compareTo(chapter2.chapter_number)
+                }
+                Manga.SORTING_SOURCE -> {
+                    if (sortOrder())
+                        chapter1.source_order.compareTo(chapter2.source_order)
+                    else
+                        chapter2.source_order.compareTo(chapter1.source_order)
+                }
+                else -> throw AssertionError("Unknown sorting method")
+            }
         }
     }
 
@@ -237,6 +248,12 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     fun setDisplayMode(mode: Int) {
         manga.displayMode = mode
         db.insertManga(manga).executeAsBlocking()
+    }
+
+    fun setSorting(mode: Int) {
+        manga.sorting = mode
+        db.insertManga(manga).executeAsBlocking()
+        refreshChapters()
     }
 
     fun onlyDownloaded(): Boolean {

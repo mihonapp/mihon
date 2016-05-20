@@ -34,6 +34,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_sorting_mode"
+        android:title="@string/sorting_mode"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/manga_download"
         android:title="@string/manga_download"
         app:showAsAction="never" />

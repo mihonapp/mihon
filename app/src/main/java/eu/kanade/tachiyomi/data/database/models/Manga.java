@@ -72,6 +72,9 @@ public class Manga implements Serializable {
     public static final int SORT_ZA   = 0x00000001;
     public static final int SORT_MASK = 0x00000001;
 
+    // Generic filter that does not filter anything
+    public static final int SHOW_ALL    = 0x00000000;
+
     public static final int SHOW_UNREAD = 0x00000002;
     public static final int SHOW_READ   = 0x00000004;
     public static final int READ_MASK   = 0x00000006;
@@ -80,8 +83,9 @@ public class Manga implements Serializable {
     public static final int SHOW_NOT_DOWNLOADED = 0x00000010;
     public static final int DOWNLOADED_MASK     = 0x00000018;
 
-    // Generic filter that does not filter anything
-    public static final int SHOW_ALL    = 0x00000000;
+    public static final int SORTING_NUMBER = 0x00000000;
+    public static final int SORTING_SOURCE = 0x00000100;
+    public static final int SORTING_MASK   = 0x00000100;
 
     public static final int DISPLAY_NAME   = 0x00000000;
     public static final int DISPLAY_NUMBER = 0x00100000;
@@ -162,6 +166,10 @@ public class Manga implements Serializable {
         setFlags(filter, DOWNLOADED_MASK);
     }
 
+    public void setSorting(int sort) {
+        setFlags(sort, SORTING_MASK);
+    }
+
     private void setFlags(int flag, int mask) {
         chapter_flags = (chapter_flags & ~mask) | (flag & mask);
     }
@@ -181,6 +189,10 @@ public class Manga implements Serializable {
 
     public int getDownloadedFilter() {
         return chapter_flags & DOWNLOADED_MASK;
+    }
+
+    public int getSorting() {
+        return chapter_flags & SORTING_MASK;
     }
 
     @Override
