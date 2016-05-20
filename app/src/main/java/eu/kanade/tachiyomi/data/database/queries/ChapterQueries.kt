@@ -53,6 +53,18 @@ interface ChapterQueries : DbProvider {
                 .prepare()
     }
 
+    fun getNextChapterBySource(chapter: Chapter) = db.get()
+            .`object`(Chapter::class.java)
+            .withQuery(Query.builder()
+                    .table(ChapterTable.TABLE)
+                    .where("""${ChapterTable.COL_MANGA_ID} = ? AND
+                            ${ChapterTable.COL_SOURCE_ORDER} < ?""")
+                    .whereArgs(chapter.manga_id, chapter.source_order)
+                    .orderBy("${ChapterTable.COL_SOURCE_ORDER} DESC")
+                    .limit(1)
+                    .build())
+            .prepare()
+
     fun getPreviousChapter(chapter: Chapter): PreparedGetObject<Chapter> {
         // Add a delta to the chapter number, because binary decimal representation
         // can retrieve the same chapter again
@@ -65,11 +77,23 @@ interface ChapterQueries : DbProvider {
                                 "${ChapterTable.COL_CHAPTER_NUMBER} < ? AND " +
                                 "${ChapterTable.COL_CHAPTER_NUMBER} >= ?")
                         .whereArgs(chapter.manga_id, chapterNumber, chapterNumber - 1)
-                        .orderBy(ChapterTable.COL_CHAPTER_NUMBER + " DESC")
+                        .orderBy("${ChapterTable.COL_CHAPTER_NUMBER} DESC")
                         .limit(1)
                         .build())
                 .prepare()
     }
+
+    fun getPreviousChapterBySource(chapter: Chapter) = db.get()
+            .`object`(Chapter::class.java)
+            .withQuery(Query.builder()
+                    .table(ChapterTable.TABLE)
+                    .where("""${ChapterTable.COL_MANGA_ID} = ? AND
+                            ${ChapterTable.COL_SOURCE_ORDER} > ?""")
+                    .whereArgs(chapter.manga_id, chapter.source_order)
+                    .orderBy(ChapterTable.COL_SOURCE_ORDER)
+                    .limit(1)
+                    .build())
+            .prepare()
 
     fun getNextUnreadChapter(manga: Manga) = db.get()
             .`object`(Chapter::class.java)

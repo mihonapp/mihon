@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.os.Bundle
-import android.util.Pair
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -180,15 +179,23 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     }
 
     private fun getAdjacentChaptersObservable(): Observable<Pair<Chapter, Chapter>> {
-        return Observable.zip(
-                db.getPreviousChapter(chapter).asRxObservable().take(1),
-                db.getNextChapter(chapter).asRxObservable().take(1),
-                { a, b -> Pair.create(a, b) })
+        val strategy = getAdjacentChaptersStrategy()
+        return Observable.zip(strategy.first, strategy.second) { prev, next -> Pair(prev, next) }
                 .doOnNext { pair ->
                     previousChapter = pair.first
                     nextChapter = pair.second
                 }
                 .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    private fun getAdjacentChaptersStrategy() = when (manga.sorting) {
+        Manga.SORTING_NUMBER -> Pair(
+                db.getPreviousChapter(chapter).asRxObservable().take(1),
+                db.getNextChapter(chapter).asRxObservable().take(1))
+        Manga.SORTING_SOURCE -> Pair(
+                db.getPreviousChapterBySource(chapter).asRxObservable().take(1),
+                db.getNextChapterBySource(chapter).asRxObservable().take(1))
+        else -> throw AssertionError("Unknown sorting method")
     }
 
     // Preload the first pages of the next chapter. Only for non seamless mode
