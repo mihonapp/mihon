@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -14,8 +13,6 @@ import eu.kanade.tachiyomi.ui.download.DownloadFragment
 import eu.kanade.tachiyomi.ui.library.LibraryFragment
 import eu.kanade.tachiyomi.ui.recent.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
-import eu.kanade.tachiyomi.util.getResourceColor
-import eu.kanade.tachiyomi.util.setVectorCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -31,22 +28,17 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        // Inflate activity_edit_categories.xml.
+        // Inflate activity_main.xml.
         setContentView(R.layout.activity_main)
 
         // Handle Toolbar
         setupToolbar(toolbar, backNavigation = false)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            window.statusBarColor = android.R.color.transparent
-        }
-
         // Set behavior of Navigation drawer
         nav_view.setNavigationItemSelectedListener { item ->
             // Make information view invisible
-            image_view.setImageResource(android.R.color.transparent)
-            text_label.text = ""
+            empty_view.hide()
 
             when (item.itemId) {
                 R.id.nav_drawer_library -> setFragment(LibraryFragment.newInstance())
@@ -91,12 +83,6 @@ class MainActivity : BaseActivity() {
     }
 
     fun updateEmptyView(show: Boolean, textResource: Int, drawable: Int) {
-        if (show) {
-            image_view.setVectorCompat(drawable, theme.getResourceColor(android.R.attr.textColorHint))
-            text_label.text = getString(textResource)
-        } else {
-            image_view.setImageResource(android.R.color.transparent)
-            text_label.text = ""
-        }
+        if (show) empty_view.show(drawable, textResource) else empty_view.hide()
     }
 }

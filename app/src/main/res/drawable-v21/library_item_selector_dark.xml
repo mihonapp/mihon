@@ -6,15 +6,15 @@
     <item>
         <selector>
             <item android:state_selected="true">
-                <color android:color="@color/selectorColorDark" />
+                <color android:color="@color/selectorColorDark"/>
             </item>
 
             <item android:state_activated="true">
-                <color android:color="@color/selectorColorDark" />
+                <color android:color="@color/selectorColorDark"/>
             </item>
 
             <item>
-                <color android:color="@color/dialogDark"/>
+                <color android:color="@color/backgroundDark"/>
             </item>
         </selector>
     </item>

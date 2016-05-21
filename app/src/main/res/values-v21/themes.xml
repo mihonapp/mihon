@@ -6,7 +6,7 @@
     <style name="Theme.Tachiyomi" parent="Theme.Base">
         <!-- Attributes specific for SDK 21 and up  -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <item name="android:alertDialogTheme">@style/Theme.AlertDialog.Light</item>
     </style>
@@ -17,7 +17,7 @@
     <style name="Theme.Tachiyomi.Dark" parent="Theme.Base.Dark">
         <!-- Attributes specific for SDK 21 and up  -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <item name="android:alertDialogTheme">@style/Theme.AlertDialog.Dark</item>
     </style>

@@ -19,5 +19,6 @@
 
     <attr name="navigation_view_theme" format="reference"/>
     <attr name="selectable_list_drawable" format="reference|integer" />
+    <attr name="selectable_library_drawable" format="reference|integer"/>
     <attr name="divider_drawable" format="reference|integer" />
 </resources>

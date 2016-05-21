@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectable_list_drawable">
+    android:background="?attr/selectable_library_drawable">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@drawable/gradient_shape" />
+            android:background="@drawable/gradient_shape"/>
 
         <TextView
             android:id="@+id/unread_text"

@@ -25,13 +25,12 @@
 
         <!-- Themes -->
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeBackground">?colorPrimaryDark</item>
-        <item name="actionBarTheme">@style/Theme.ActionBar</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="actionBarTheme">@style/Theme.ActionBar.Light</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
         <!-- Custom Attributes-->
         <item name="selectable_list_drawable">@drawable/list_item_selector_light</item>
+        <item name="selectable_library_drawable">@drawable/library_item_selector_light</item>
         <item name="divider_drawable">@drawable/line_divider_light</item>
     </style>
 
@@ -58,7 +57,6 @@
 
         <!-- Themes -->
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeBackground">?colorPrimaryDark</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -66,6 +64,7 @@
         <!-- Custom Attributes-->
         <item name="navigation_view_theme">@style/Theme.Widget.NavigationView.Dark</item>
         <item name="selectable_list_drawable">@drawable/list_item_selector_dark</item>
+        <item name="selectable_library_drawable">@drawable/library_item_selector_dark</item>
         <item name="divider_drawable">@drawable/line_divider_dark</item>
     </style>
 
