@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -29,16 +28,12 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        // Inflate activity_edit_categories.xml.
+        // Inflate activity_main.xml.
         setContentView(R.layout.activity_main)
 
         // Handle Toolbar
         setupToolbar(toolbar, backNavigation = false)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            window.statusBarColor = android.R.color.transparent
-        }
 
         // Set behavior of Navigation drawer
         nav_view.setNavigationItemSelectedListener { item ->
