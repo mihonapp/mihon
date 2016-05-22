@@ -129,10 +129,8 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
         return db.getLibraryMangas().asRxObservable()
                 .flatMap { mangas ->
                     Observable.from(mangas)
-                            .filter {
-                                // Filter library by options
-                                filterLibrary(it)
-                            }
+                            // Filter library by options
+                            .filter { filterManga(it) }
                             .groupBy { it.category }
                             .flatMap { group -> group.toList().map { Pair(group.key, it) } }
                             .toMap({ it.first }, { it.second })
@@ -156,12 +154,15 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     }
 
     /**
-     * Filter library by preference
+     * Filters an entry of the library.
      *
-     * @param manga from library
-     * @return filter status
+     * @param manga a favorite manga from the database.
+     * @return true if the entry is included, false otherwise.
      */
-    fun filterLibrary(manga: Manga): Boolean {
+    fun filterManga(manga: Manga): Boolean {
+        // Filter out manga without source
+        val source = sourceManager.get(manga.source) ?: return false
+
         val prefFilterDownloaded = preferences.filterDownloaded().getOrDefault()
         val prefFilterUnread = preferences.filterUnread().getOrDefault()
 
@@ -178,7 +179,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
             }
 
             if (prefFilterDownloaded) {
-                val mangaDir = downloadManager.getAbsoluteMangaDirectory(sourceManager.get(manga.source)!!, manga)
+                val mangaDir = downloadManager.getAbsoluteMangaDirectory(source, manga)
 
                 if (mangaDir.exists()) {
                     for (file in mangaDir.listFiles()) {
