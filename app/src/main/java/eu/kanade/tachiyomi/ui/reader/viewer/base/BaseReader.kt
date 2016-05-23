@@ -94,13 +94,16 @@ abstract class BaseReader : BaseFragment() {
         if (readerActivity.presenter.isSeamlessMode) {
             val oldChapter = oldPage.chapter
             val newChapter = newPage.chapter
-            if (!hasRequestedNextChapter && position > pages.size - 5) {
+
+            // Active chapter has changed.
+            if (oldChapter.id != newChapter.id) {
+                readerActivity.onEnterChapter(newPage.chapter, newPage.pageNumber)
+            }
+            // Request next chapter only when the conditions are met.
+            if (pages.size - position < 5 && chapters.last().id == newChapter.id
+                    && readerActivity.presenter.hasNextChapter() && !hasRequestedNextChapter) {
                 hasRequestedNextChapter = true
                 readerActivity.presenter.appendNextChapter()
-            }
-            if (oldChapter.id != newChapter.id) {
-                // Active chapter has changed.
-                readerActivity.onEnterChapter(newPage.chapter, newPage.pageNumber)
             }
         }
         currentPage = position
