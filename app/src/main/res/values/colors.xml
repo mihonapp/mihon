@@ -21,7 +21,7 @@
     <color name="selectorColorLight">@color/md_blue_A400_38</color>
 
     <!-- Dark Theme -->
-    <color name="colorAccentDark">@color/md_blue_A200</color>
+    <color name="colorAccentDark">#3399ff</color>
     <color name="textColorPrimaryDark">@color/md_white_1000</color>
     <color name="textColorSecondaryDark">@color/md_white_1000_70</color>
     <color name="textColorHintDark">@color/md_white_1000_50</color>

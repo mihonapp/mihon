@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
+import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.backup.BackupFragment
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueFragment
@@ -15,8 +17,11 @@ import eu.kanade.tachiyomi.ui.recent.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
+import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
+
+    @Inject lateinit var preferences: PreferencesHelper
 
     override fun onCreate(savedState: Bundle?) {
         setAppTheme()
@@ -27,6 +32,8 @@ class MainActivity : BaseActivity() {
             finish()
             return
         }
+
+        App.get(this).component.inject(this)
 
         // Inflate activity_main.xml.
         setContentView(R.layout.activity_main)
@@ -54,6 +61,7 @@ class MainActivity : BaseActivity() {
 
         if (savedState == null) {
             setFragment(LibraryFragment.newInstance())
+            ChangelogDialogFragment.show(preferences, supportFragmentManager)
         }
     }
 

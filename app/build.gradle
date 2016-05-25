@@ -143,6 +143,9 @@ dependencies {
     // Parse HTML
     compile 'org.jsoup:jsoup:1.9.1'
 
+    // Changelog
+    compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
+
     // Database
     compile "com.pushtorefresh.storio:sqlite:$STORIO_VERSION"
     compile "com.pushtorefresh.storio:sqlite-annotations:$STORIO_VERSION"
