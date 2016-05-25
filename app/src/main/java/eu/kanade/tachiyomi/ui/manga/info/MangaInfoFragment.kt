@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.customtabs.CustomTabsIntent
 import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
+import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_manga_info.*
 import nucleus.factory.RequiresPresenter
@@ -140,8 +141,11 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
      */
     fun openInBrowser() {
         try {
-            val url = presenter.source.baseUrl + presenter.manga.url
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            val url = Uri.parse(presenter.source.baseUrl + presenter.manga.url)
+            val intent = CustomTabsIntent.Builder()
+                    .setToolbarColor(context.theme.getResourceColor(R.attr.colorPrimary))
+                    .build()
+            intent.launchUrl(activity, url)
         } catch (e: Exception) {
             context.toast(e.message)
         }
