@@ -34,8 +34,8 @@ object ChapterRecognition {
     private val unwantedWhiteSpace = Regex("""(\s)(extra|special|omake)""")
 
     fun parseChapterNumber(chapter: Chapter, manga: Manga) {
-        //If chapter number is known return.
-        if (chapter.chapter_number != -1f)
+        // If chapter number is known return.
+        if (chapter.chapter_number == -2f || chapter.chapter_number > -1f)
             return
 
         // Get chapter title with lower case
