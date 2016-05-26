@@ -77,8 +77,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
     }
 
     fun search(query: String): Observable<List<MangaSync>> {
-        return networkService.requestBody(get(getSearchUrl(query), headers))
-                .map { Jsoup.parse(it) }
+        return networkService.request(get(getSearchUrl(query), headers))
+                .map { Jsoup.parse(it.body().string()) }
                 .flatMap { Observable.from(it.select("entry")) }
                 .filter { it.select("type").text() != "Novel" }
                 .map {
@@ -102,8 +102,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
 
     // MAL doesn't support score with decimals
     fun getList(): Observable<List<MangaSync>> {
-        return networkService.requestBody(get(getListUrl(username), headers), networkService.forceCacheClient)
-                .map { Jsoup.parse(it) }
+        return networkService.request(get(getListUrl(username), headers), networkService.forceCacheClient)
+                .map { Jsoup.parse(it.body().string()) }
                 .flatMap { Observable.from(it.select("manga")) }
                 .map {
                     val manga = MangaSync.create(this)
