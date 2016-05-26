@@ -99,6 +99,8 @@ class PreferencesHelper(private val context: Context) {
 
     fun lastUsedCategory() = rxPrefs.getInteger(keys.lastUsedCategory, 0)
 
+    fun lastVersionCode() = rxPrefs.getInteger("last_version_code", 0)
+
     fun seamlessMode() = prefs.getBoolean(keys.seamlessMode, true)
 
     fun catalogueAsList() = rxPrefs.getBoolean(keys.catalogueAsList, false)

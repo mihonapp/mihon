@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.source.base.OnlineSource
 import eu.kanade.tachiyomi.data.source.base.Source
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.util.getResourceColor
@@ -96,7 +97,7 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
 
         // If manga source is known update source TextView.
         if (source != null) {
-            manga_source.text = source.visibleName
+            manga_source.text = source.toString()
         }
 
         // Update genres TextView.
@@ -140,8 +141,9 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
      * Open the manga in browser.
      */
     fun openInBrowser() {
+        val source = presenter.source as? OnlineSource ?: return
         try {
-            val url = Uri.parse(presenter.source.baseUrl + presenter.manga.url)
+            val url = Uri.parse(source.baseUrl + presenter.manga.url)
             val intent = CustomTabsIntent.Builder()
                     .setToolbarColor(context.theme.getResourceColor(R.attr.colorPrimary))
                     .build()

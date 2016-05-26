@@ -214,16 +214,16 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     private fun showSortingDialog() {
         // Get available modes, ids and the selected mode
-        val modes = intArrayOf(R.string.sort_by_number, R.string.sort_by_source)
-        val ids = intArrayOf(Manga.SORTING_NUMBER, Manga.SORTING_SOURCE)
-        val selectedIndex = if (presenter.manga.sorting == Manga.SORTING_NUMBER) 0 else 1
+        val modes = intArrayOf(R.string.sort_by_source, R.string.sort_by_number)
+        val ids = intArrayOf(Manga.SORTING_SOURCE, Manga.SORTING_NUMBER)
+        val selectedIndex = if (presenter.manga.sorting == Manga.SORTING_SOURCE) 0 else 1
 
         MaterialDialog.Builder(activity)
                 .title(R.string.sorting_mode)
                 .items(modes.map { getString(it) })
                 .itemsIds(ids)
                 .itemsCallbackSingleChoice(selectedIndex) { dialog, itemView, which, text ->
-                    // Save the new display mode
+                    // Save the new sorting mode
                     presenter.setSorting(itemView.id)
                     true
                 }
@@ -232,13 +232,13 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     private fun showDownloadDialog() {
         // Get available modes
-        val modes = listOf(getString(R.string.download_1), getString(R.string.download_5), getString(R.string.download_10),
-                getString(R.string.download_unread), getString(R.string.download_all))
+        val modes = intArrayOf(R.string.download_1, R.string.download_5, R.string.download_10,
+                R.string.download_unread, R.string.download_all)
 
         MaterialDialog.Builder(activity)
                 .title(R.string.manga_download)
                 .negativeText(android.R.string.cancel)
-                .items(modes)
+                .items(modes.map { getString(it) })
                 .itemsCallback { dialog, view, i, charSequence ->
                     var chapters: MutableList<Chapter> = arrayListOf()
 

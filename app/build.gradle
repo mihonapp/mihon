@@ -131,6 +131,9 @@ dependencies {
     // JSON
     compile 'com.google.code.gson:gson:2.6.2'
 
+    // YAML
+    compile 'org.yaml:snakeyaml:1.17'
+
     // JavaScript engine
     compile 'com.squareup.duktape:duktape-android:0.9.5'
 
@@ -139,6 +142,9 @@ dependencies {
 
     // Parse HTML
     compile 'org.jsoup:jsoup:1.9.1'
+
+    // Changelog
+    compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
     compile "com.pushtorefresh.storio:sqlite:$STORIO_VERSION"

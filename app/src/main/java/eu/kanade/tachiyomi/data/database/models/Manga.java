@@ -83,8 +83,8 @@ public class Manga implements Serializable {
     public static final int SHOW_NOT_DOWNLOADED = 0x00000010;
     public static final int DOWNLOADED_MASK     = 0x00000018;
 
-    public static final int SORTING_NUMBER = 0x00000000;
-    public static final int SORTING_SOURCE = 0x00000100;
+    public static final int SORTING_SOURCE = 0x00000000;
+    public static final int SORTING_NUMBER = 0x00000100;
     public static final int SORTING_MASK   = 0x00000100;
 
     public static final int DISPLAY_NAME   = 0x00000000;

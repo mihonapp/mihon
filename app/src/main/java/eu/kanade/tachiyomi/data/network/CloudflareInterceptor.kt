@@ -6,7 +6,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 
-object CloudflareScraper {
+class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interceptor {
 
     //language=RegExp
     private val operationPattern = Regex("""setTimeout\(function\(\)\{\s+(var t,r,a,f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n""")
@@ -17,7 +17,7 @@ object CloudflareScraper {
     //language=RegExp
     private val challengePattern = Regex("""name="jschl_vc" value="(\w+)"""")
 
-    fun request(chain: Interceptor.Chain, cookies: PersistentCookieStore): Response {
+    override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
 
         // Check if we already solved a challenge
