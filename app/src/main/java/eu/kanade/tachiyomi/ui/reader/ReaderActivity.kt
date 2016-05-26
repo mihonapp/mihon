@@ -260,7 +260,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         page_seekbar.max = numPages - 1
         page_seekbar.progress = currentPage
 
-        setToolbarSubtitle(if (chapter.chapter_number != -1f)
+        setToolbarSubtitle(if (chapter.isRecognizedNumber)
             getString(R.string.chapter_subtitle, decimalFormat.format(chapter.chapter_number.toDouble()))
         else
             chapter.name)

@@ -87,4 +87,8 @@ public class Chapter implements Serializable {
     public boolean isDownloaded() {
         return status == Download.DOWNLOADED;
     }
+
+    public boolean isRecognizedNumber() {
+        return chapter_number >= 0f;
+    }
 }

@@ -71,7 +71,7 @@ fun syncChaptersWithSource(db: DatabaseHelper,
                 val c = toAdd[i]
                 c.date_fetch = now++
                 // Try to mark already read chapters as read when the source deletes them
-                if (c.chapter_number != -1f && c.chapter_number in deletedReadChapterNumbers) {
+                if (c.isRecognizedNumber && c.chapter_number in deletedReadChapterNumbers) {
                     c.read = true
                     readded++
                 }

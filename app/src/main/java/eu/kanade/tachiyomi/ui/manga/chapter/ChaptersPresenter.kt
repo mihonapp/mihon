@@ -188,7 +188,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
 
     fun markPreviousChaptersAsRead(selected: Chapter) {
         Observable.from(chapters)
-                .filter { it.chapter_number > -1 && it.chapter_number < selected.chapter_number }
+                .filter { it.isRecognizedNumber && it.chapter_number < selected.chapter_number }
                 .doOnNext { it.read = true }
                 .toList()
                 .flatMap { db.updateChaptersProgress(it).asRxObservable() }
