@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.base.fab
+package eu.kanade.tachiyomi.widget
 
 import android.content.Context
 import android.support.design.widget.FloatingActionButton

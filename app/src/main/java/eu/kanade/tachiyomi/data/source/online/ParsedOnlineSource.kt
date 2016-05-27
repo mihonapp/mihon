@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.source.base
+package eu.kanade.tachiyomi.data.source.online
 
 import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter

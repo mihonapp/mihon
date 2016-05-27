@@ -5,8 +5,8 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.Language
-import eu.kanade.tachiyomi.data.source.base.ParsedOnlineSource
 import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.data.source.online.ParsedOnlineSource
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.ParseException

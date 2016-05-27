@@ -5,8 +5,8 @@ import java.util.List;
 
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
-import eu.kanade.tachiyomi.data.source.base.OnlineSource;
 import eu.kanade.tachiyomi.data.source.model.Page;
+import eu.kanade.tachiyomi.data.source.online.OnlineSource;
 import rx.subjects.PublishSubject;
 
 public class Download {

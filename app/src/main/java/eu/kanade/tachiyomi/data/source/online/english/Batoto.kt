@@ -9,9 +9,9 @@ import eu.kanade.tachiyomi.data.network.get
 import eu.kanade.tachiyomi.data.network.post
 import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.Language
-import eu.kanade.tachiyomi.data.source.base.ParsedOnlineSource
 import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.data.source.online.ParsedOnlineSource
 import okhttp3.FormBody
 import okhttp3.Request
 import okhttp3.Response

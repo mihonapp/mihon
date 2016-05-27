@@ -134,7 +134,7 @@
         <item name="android:scaleType">fitCenter</item>
         <item name="layout_anchorGravity">bottom|right|end</item>
         <item name="android:tint">@color/md_white_1000</item>
-        <item name="layout_behavior">eu.kanade.tachiyomi.ui.base.fab.FABAnimationUpDown</item>
+        <item name="layout_behavior">eu.kanade.tachiyomi.widget.FABAnimationUpDown</item>
     </style>
 
     <style name="Theme.Widget.GridView">

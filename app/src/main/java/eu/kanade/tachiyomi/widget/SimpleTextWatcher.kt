@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.base.listener
+package eu.kanade.tachiyomi.widget
 
 import android.text.Editable
 import android.text.TextWatcher

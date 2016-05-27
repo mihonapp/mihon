@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.source.base
+package eu.kanade.tachiyomi.data.source.online
 
 import android.content.Context
 import eu.kanade.tachiyomi.App
@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.data.network.get
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.Language
+import eu.kanade.tachiyomi.data.source.Source
 import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
 import okhttp3.*

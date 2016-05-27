@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.BuildConfig;
 import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner;
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
-import eu.kanade.tachiyomi.data.source.base.OnlineSource;
+import eu.kanade.tachiyomi.data.source.online.OnlineSource;
 import rx.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;

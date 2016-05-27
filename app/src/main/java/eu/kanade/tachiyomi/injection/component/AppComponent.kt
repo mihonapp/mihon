@@ -8,8 +8,8 @@ import eu.kanade.tachiyomi.data.glide.MangaModelLoader
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.mangasync.UpdateMangaSyncService
 import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService
-import eu.kanade.tachiyomi.data.source.base.OnlineSource
-import eu.kanade.tachiyomi.data.source.base.Source
+import eu.kanade.tachiyomi.data.source.Source
+import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.data.updater.UpdateDownloader
 import eu.kanade.tachiyomi.injection.module.AppModule
 import eu.kanade.tachiyomi.injection.module.DataModule

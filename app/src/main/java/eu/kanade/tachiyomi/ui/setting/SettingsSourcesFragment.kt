@@ -7,7 +7,7 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceGroup
 import android.view.View
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.data.source.base.Source
+import eu.kanade.tachiyomi.data.source.Source
 import eu.kanade.tachiyomi.data.source.getLanguages
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog

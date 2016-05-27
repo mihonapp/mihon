@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.util
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.source.base.OnlineSource
-import eu.kanade.tachiyomi.data.source.base.Source
+import eu.kanade.tachiyomi.data.source.Source
+import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import java.util.*
 
 /**

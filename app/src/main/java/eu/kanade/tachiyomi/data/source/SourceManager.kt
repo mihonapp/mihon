@@ -3,11 +3,12 @@ package eu.kanade.tachiyomi.data.source
 import android.content.Context
 import android.os.Environment
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.source.base.OnlineSource
-import eu.kanade.tachiyomi.data.source.base.Source
-import eu.kanade.tachiyomi.data.source.base.YamlOnlineSource
+import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.data.source.online.YamlOnlineSource
 import eu.kanade.tachiyomi.data.source.online.english.*
-import eu.kanade.tachiyomi.data.source.online.russian.*
+import eu.kanade.tachiyomi.data.source.online.russian.Mangachan
+import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga
+import eu.kanade.tachiyomi.data.source.online.russian.Readmanga
 import org.yaml.snakeyaml.Yaml
 import timber.log.Timber
 import java.io.File

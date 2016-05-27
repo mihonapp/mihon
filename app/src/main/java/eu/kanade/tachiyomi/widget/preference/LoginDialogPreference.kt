@@ -11,8 +11,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.dd.processbutton.iml.ActionProcessButton
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.base.listener.SimpleTextWatcher
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
+import eu.kanade.tachiyomi.widget.SimpleTextWatcher
 import kotlinx.android.synthetic.main.pref_account_login.view.*
 import rx.Subscription
 

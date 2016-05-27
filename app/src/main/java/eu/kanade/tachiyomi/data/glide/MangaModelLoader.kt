@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.base.OnlineSource
+import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import java.io.File
 import java.io.InputStream
 import javax.inject.Inject

@@ -22,8 +22,6 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
-import eu.kanade.tachiyomi.ui.base.listener.SimpleAnimationListener
-import eu.kanade.tachiyomi.ui.base.listener.SimpleSeekBarListener
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
@@ -32,6 +30,8 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonReader
 import eu.kanade.tachiyomi.util.GLUtil
 import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.widget.SimpleAnimationListener
+import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import kotlinx.android.synthetic.main.activity_reader.*
 import kotlinx.android.synthetic.main.reader_menu.*
 import nucleus.factory.RequiresPresenter

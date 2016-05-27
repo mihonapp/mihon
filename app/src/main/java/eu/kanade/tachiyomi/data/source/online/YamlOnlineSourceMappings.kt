@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package eu.kanade.tachiyomi.data.source.base
+package eu.kanade.tachiyomi.data.source.online
 
 import eu.kanade.tachiyomi.data.database.models.Manga
 import okhttp3.FormBody
