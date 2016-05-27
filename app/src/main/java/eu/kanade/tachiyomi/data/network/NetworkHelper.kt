@@ -1,12 +1,10 @@
 package eu.kanade.tachiyomi.data.network
 
 import android.content.Context
-import okhttp3.Cache
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import rx.Observable
 import rx.subscriptions.Subscriptions
+import timber.log.Timber
 import java.io.File
 import java.io.IOException
 
@@ -43,20 +41,30 @@ class NetworkHelper(context: Context) {
     fun request(request: Request, client: OkHttpClient = defaultClient): Observable<Response> {
         return Observable.create { subscriber ->
             val call = client.newCall(request)
-            subscriber.add(Subscriptions.create { call.cancel() })
+            subscriber.add(Subscriptions.create {
+                call.cancel()
+                Timber.i("Cancel call on thread ${Thread.currentThread().id}")
+            })
 
-            try {
-                val response = call.execute()
-                if (!subscriber.isUnsubscribed) {
-                    subscriber.add(Subscriptions.create { response.body().close() })
-                    subscriber.onNext(response)
-                    subscriber.onCompleted()
+            call.enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    if (!subscriber.isUnsubscribed) {
+                        subscriber.add(Subscriptions.create {
+                            response.body().close()
+                            Timber.i("Close body on thread ${Thread.currentThread().id}")
+                        })
+                        subscriber.onNext(response)
+                        Timber.i("Emit response on thread ${Thread.currentThread().id}")
+                        subscriber.onCompleted()
+                    }
                 }
-            } catch (error: IOException) {
-                if (!subscriber.isUnsubscribed) {
-                    subscriber.onError(error)
+
+                override fun onFailure(call: Call, error: IOException) {
+                    if (!subscriber.isUnsubscribed) {
+                        subscriber.onError(error)
+                    }
                 }
-            }
+            })
         }
     }
 
