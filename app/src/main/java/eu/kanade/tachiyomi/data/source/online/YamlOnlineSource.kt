@@ -145,8 +145,7 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
             }
 
             for ((i, element) in document.select(image_css).withIndex()) {
-                val page = pages.getOrElse(i) { Page(i, "").apply { pages.add(this) } }
-                page.imageUrl = element.attr(image_attr).let {
+                pages.getOrNull(i)?.imageUrl = element.attr(image_attr).let {
                     getAbsoluteUrl(it, response.request().url())
                 }
             }

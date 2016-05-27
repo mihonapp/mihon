@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.Source
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.model.MangasPage
+import eu.kanade.tachiyomi.data.source.online.LoginSource
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.RxPager
@@ -299,15 +300,13 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * @return true if the source is valid, false otherwise.
      */
     fun isValidSource(source: Source?): Boolean {
-        if (source == null || source !is OnlineSource) return false
+        if (source == null) return false
 
-        return with(source) {
-            if (!isLoginRequired() || isLogged()) {
-                true
-            } else {
-                prefs.sourceUsername(this) != "" && prefs.sourcePassword(this) != ""
-            }
+        if (source is LoginSource) {
+            return source.isLogged() ||
+                    (prefs.sourceUsername(source) != "" && prefs.sourcePassword(source) != "")
         }
+        return true
     }
 
     /**

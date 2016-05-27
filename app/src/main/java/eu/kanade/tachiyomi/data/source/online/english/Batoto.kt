@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.Language
 import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.data.source.online.LoginSource
 import eu.kanade.tachiyomi.data.source.online.ParsedOnlineSource
 import okhttp3.FormBody
 import okhttp3.Request
@@ -26,7 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
-class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(context) {
+class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(context), LoginSource {
 
     override val name = "Batoto"
 
@@ -237,8 +238,6 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
 
         return client.newCall(POST(url, headers, payload)).asObservable()
     }
-
-    override fun isLoginRequired() = true
 
     override fun isAuthenticationSuccessful(response: Response) =
         response.priorResponse() != null && response.priorResponse().code() == 302

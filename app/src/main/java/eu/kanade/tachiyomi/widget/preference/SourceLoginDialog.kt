@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.Source
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.data.source.online.LoginSource
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.pref_account_login.view.*
@@ -24,13 +24,13 @@ class SourceLoginDialog : LoginDialogPreference() {
         }
     }
 
-    lateinit var source: OnlineSource
+    lateinit var source: LoginSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val sourceId = arguments.getInt("key")
-        source = (activity as SettingsActivity).sourceManager.get(sourceId) as OnlineSource
+        source = (activity as SettingsActivity).sourceManager.get(sourceId) as LoginSource
     }
 
     override fun setCredentialsOnView(view: View) = with(view) {

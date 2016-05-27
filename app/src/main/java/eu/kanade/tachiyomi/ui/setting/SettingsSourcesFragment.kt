@@ -9,6 +9,7 @@ import android.view.View
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.Source
 import eu.kanade.tachiyomi.data.source.getLanguages
+import eu.kanade.tachiyomi.data.source.online.LoginSource
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
 import rx.Subscription
@@ -45,11 +46,9 @@ class SettingsSourcesFragment : SettingsNestedFragment() {
                     val enabledSources = settingsActivity.sourceManager.getOnlineSources()
                             .filter { it.lang.code in languages }
 
-                    for (source in enabledSources) {
-                        if (source.isLoginRequired()) {
-                            val pref = createSource(source)
-                            sourcesPref.addPreference(pref)
-                        }
+                    for (source in enabledSources.filterIsInstance(LoginSource::class.java)) {
+                        val pref = createLoginSourceEntry(source)
+                        sourcesPref.addPreference(pref)
                     }
 
                     // Hide category if it doesn't have any child
@@ -62,7 +61,7 @@ class SettingsSourcesFragment : SettingsNestedFragment() {
         super.onDestroyView()
     }
 
-    fun createSource(source: Source): Preference {
+    fun createLoginSourceEntry(source: Source): Preference {
         return LoginPreference(preferenceManager.context).apply {
             key = preferences.keys.sourceUsername(source.id)
             title = source.toString()

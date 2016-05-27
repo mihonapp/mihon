@@ -78,18 +78,6 @@ abstract class OnlineSource(context: Context) : Source {
      */
     override fun toString() = "$name (${lang.code})"
 
-    // Login source
-
-    open fun isLoginRequired() = false
-
-    open fun isLogged(): Boolean = throw Exception("Not implemented")
-
-    open fun login(username: String, password: String): Observable<Boolean>
-            = throw Exception("Not implemented")
-
-    open fun isAuthenticationSuccessful(response: Response): Boolean
-            = throw Exception("Not implemented")
-
     /**
      * Returns an observable containing a page with a list of manga. Normally it's not needed to
      * override this method.

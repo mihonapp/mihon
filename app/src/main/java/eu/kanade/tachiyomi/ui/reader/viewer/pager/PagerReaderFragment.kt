@@ -97,7 +97,6 @@ class PagerReaderFragment : BaseFragment() {
         }
 
         with(image_view) {
-            setParallelLoadingEnabled(true)
             setMaxBitmapDimensions(readerActivity.maxBitmapSize)
             setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED)
             setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
