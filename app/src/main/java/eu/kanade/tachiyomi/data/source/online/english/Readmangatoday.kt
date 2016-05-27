@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.source.online.english
 import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.network.post
+import eu.kanade.tachiyomi.data.network.POST
 import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.Language
 import eu.kanade.tachiyomi.data.source.model.MangasPage
@@ -47,7 +47,7 @@ class Readmangatoday(context: Context, override val id: Int) : ParsedOnlineSourc
         var builder = okhttp3.FormBody.Builder()
         builder.add("query", query)
 
-        return post(page.url, headers, builder.build())
+        return POST(page.url, headers, builder.build())
     }
 
     override fun searchMangaSelector() = "div.content-list > div.style-list > div.box"

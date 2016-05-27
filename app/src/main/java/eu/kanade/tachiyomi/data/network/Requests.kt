@@ -7,8 +7,7 @@ private val DEFAULT_CACHE_CONTROL = CacheControl.Builder().maxAge(10, MINUTES).b
 private val DEFAULT_HEADERS = Headers.Builder().build()
 private val DEFAULT_BODY: RequestBody = FormBody.Builder().build()
 
-@JvmOverloads
-fun get(url: String,
+fun GET(url: String,
         headers: Headers = DEFAULT_HEADERS,
         cache: CacheControl = DEFAULT_CACHE_CONTROL): Request {
 
@@ -19,8 +18,7 @@ fun get(url: String,
             .build()
 }
 
-@JvmOverloads
-fun post(url: String,
+fun POST(url: String,
          headers: Headers = DEFAULT_HEADERS,
          body: RequestBody = DEFAULT_BODY,
          cache: CacheControl = DEFAULT_CACHE_CONTROL): Request {

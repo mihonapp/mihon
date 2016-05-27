@@ -70,6 +70,6 @@ class PersistentCookieStore(context: Context) {
         return cookieMap[url].orEmpty().filter { !it.hasExpired() }
     }
 
-    fun Cookie.hasExpired() = System.currentTimeMillis() >= expiresAt()
+    private fun Cookie.hasExpired() = System.currentTimeMillis() >= expiresAt()
 
 }

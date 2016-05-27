@@ -22,7 +22,7 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
 
         // Check if we already solved a challenge
         if (response.code() != 502 &&
-                cookies.get(response.request().url()).find { it.name() == "cf_clearance" } != null) {
+                cookies.get(response.request().url()).any { it.name() == "cf_clearance" }) {
             return response
         }
 
@@ -72,7 +72,7 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
                     .toString()
 
             val referer = originalRequest.url().toString()
-            return get(url, originalRequest.headers().newBuilder().add("Referer", referer).build())
+            return GET(url, originalRequest.headers().newBuilder().add("Referer", referer).build())
         } finally {
             duktape.close()
         }

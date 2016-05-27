@@ -91,7 +91,6 @@ kapt {
 dependencies {
     final SUPPORT_LIBRARY_VERSION = '23.4.0'
     final DAGGER_VERSION = '2.4'
-    final OKHTTP_VERSION = '3.2.0'
     final RETROFIT_VERSION = '2.0.2'
     final NUCLEUS_VERSION = '3.0.0'
     final STORIO_VERSION = '1.8.0'
@@ -118,7 +117,7 @@ dependencies {
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.1'
 
     // Network client
-    compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp3:okhttp:3.3.0"
 
     // REST
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
@@ -141,7 +140,7 @@ dependencies {
     compile 'com.jakewharton:disklrucache:2.0.2'
 
     // Parse HTML
-    compile 'org.jsoup:jsoup:1.9.1'
+    compile 'org.jsoup:jsoup:1.9.2'
 
     // Changelog
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
@@ -176,9 +175,7 @@ dependencies {
     compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.5@aar') {
-        transitive = true
-    }
+    compile 'com.afollestad.material-dialogs:core:0.8.5.9'
 
     // Tests
     testCompile 'junit:junit:4.12'

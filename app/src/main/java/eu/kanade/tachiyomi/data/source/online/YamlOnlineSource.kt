@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.data.source.online
 import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.network.get
-import eu.kanade.tachiyomi.data.network.post
+import eu.kanade.tachiyomi.data.network.GET
+import eu.kanade.tachiyomi.data.network.POST
 import eu.kanade.tachiyomi.data.source.getLanguages
 import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
@@ -32,7 +32,7 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
 
     override val client = when(map.client) {
         "cloudflare" -> network.cloudflareClient
-        else -> network.defaultClient
+        else -> network.client
     }
 
     override val id = map.id.let {
@@ -44,8 +44,8 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
             page.url = popularMangaInitialUrl()
         }
         return when (map.popular.method?.toLowerCase()) {
-            "post" -> post(page.url, headers, map.popular.createForm())
-            else -> get(page.url, headers)
+            "post" -> POST(page.url, headers, map.popular.createForm())
+            else -> GET(page.url, headers)
         }
     }
 
@@ -74,8 +74,8 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
             page.url = searchMangaInitialUrl(query)
         }
         return when (map.search.method?.toLowerCase()) {
-            "post" -> post(page.url, headers, map.search.createForm())
-            else -> get(page.url, headers)
+            "post" -> POST(page.url, headers, map.search.createForm())
+            else -> GET(page.url, headers)
         }
     }
 

@@ -11,9 +11,10 @@ import android.support.v4.app.NotificationCompat
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.data.network.ProgressListener
-import eu.kanade.tachiyomi.data.network.get
+import eu.kanade.tachiyomi.data.network.newCallWithProgress
 import eu.kanade.tachiyomi.util.notificationManager
 import eu.kanade.tachiyomi.util.saveTo
 import timber.log.Timber
@@ -100,12 +101,14 @@ class UpdateDownloader(private val context: Context) :
 
         try {
             // Make the request and download the file
-            val response = network.requestBodyProgressBlocking(get(result.url), progressListener)
+            val response = network.client.newCallWithProgress(GET(result.url), progressListener).execute()
 
             if (response.isSuccessful) {
                 response.body().source().saveTo(apkFile)
                 // Set download successful
                 result.successful = true
+            } else {
+                response.close()
             }
         } catch (e: Exception) {
             Timber.e(e, e.message)

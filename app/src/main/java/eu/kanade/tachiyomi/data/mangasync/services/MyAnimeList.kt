@@ -6,8 +6,8 @@ import android.util.Xml
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService
-import eu.kanade.tachiyomi.data.network.get
-import eu.kanade.tachiyomi.data.network.post
+import eu.kanade.tachiyomi.data.network.GET
+import eu.kanade.tachiyomi.data.network.POST
 import eu.kanade.tachiyomi.util.selectInt
 import eu.kanade.tachiyomi.util.selectText
 import okhttp3.*
@@ -65,7 +65,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
 
     override fun login(username: String, password: String): Observable<Boolean> {
         createHeaders(username, password)
-        return networkService.request(get(getLoginUrl(), headers))
+        return networkService.request(GET(getLoginUrl(), headers))
+                .doOnNext { it.close() }
                 .map { it.code() == 200 }
     }
 
@@ -77,7 +78,7 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
     }
 
     fun search(query: String): Observable<List<MangaSync>> {
-        return networkService.request(get(getSearchUrl(query), headers))
+        return networkService.request(GET(getSearchUrl(query), headers))
                 .map { Jsoup.parse(it.body().string()) }
                 .flatMap { Observable.from(it.select("entry")) }
                 .filter { it.select("type").text() != "Novel" }
@@ -102,7 +103,7 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
 
     // MAL doesn't support score with decimals
     fun getList(): Observable<List<MangaSync>> {
-        return networkService.request(get(getListUrl(username), headers), networkService.forceCacheClient)
+        return networkService.request(GET(getListUrl(username), headers), networkService.forceCacheClient)
                 .map { Jsoup.parse(it.body().string()) }
                 .flatMap { Observable.from(it.select("manga")) }
                 .map {
@@ -130,7 +131,7 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
             if (manga.total_chapters != 0 && manga.last_chapter_read == manga.total_chapters) {
                 manga.status = COMPLETED
             }
-            networkService.request(post(getUpdateUrl(manga), headers, getMangaPostPayload(manga)))
+            networkService.request(POST(getUpdateUrl(manga), headers, getMangaPostPayload(manga)))
         }
 
     }
@@ -144,7 +145,7 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
 
     override fun add(manga: MangaSync): Observable<Response> {
         return Observable.defer {
-            networkService.request(post(getAddUrl(manga), headers, getMangaPostPayload(manga)))
+            networkService.request(POST(getAddUrl(manga), headers, getMangaPostPayload(manga)))
         }
     }
 

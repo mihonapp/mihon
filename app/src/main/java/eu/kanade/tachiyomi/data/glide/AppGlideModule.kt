@@ -28,7 +28,7 @@ class AppGlideModule : GlideModule {
     override fun registerComponents(context: Context, glide: Glide) {
         App.get(context).component.inject(this)
         glide.register(GlideUrl::class.java, InputStream::class.java,
-                OkHttpUrlLoader.Factory(networkHelper.defaultClient))
+                OkHttpUrlLoader.Factory(networkHelper.client))
         glide.register(Manga::class.java, InputStream::class.java, MangaModelLoader.Factory())
     }
 }

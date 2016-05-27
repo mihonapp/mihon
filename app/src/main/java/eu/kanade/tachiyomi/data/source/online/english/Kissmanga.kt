@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.data.source.online.english
 import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.network.get
-import eu.kanade.tachiyomi.data.network.post
+import eu.kanade.tachiyomi.data.network.GET
+import eu.kanade.tachiyomi.data.network.POST
 import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.Language
 import eu.kanade.tachiyomi.data.source.model.MangasPage
@@ -54,7 +54,7 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
             add("genres", "")
         }.build()
 
-        return post(page.url, headers, form)
+        return POST(page.url, headers, form)
     }
 
     override fun searchMangaInitialUrl(query: String) = "$baseUrl/AdvanceSearch"
@@ -95,7 +95,7 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
         } ?: 0
     }
 
-    override fun pageListRequest(chapter: Chapter) = post(baseUrl + chapter.url, headers)
+    override fun pageListRequest(chapter: Chapter) = POST(baseUrl + chapter.url, headers)
 
     override fun pageListParse(response: Response, pages: MutableList<Page>) {
         //language=RegExp
@@ -111,7 +111,7 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
     // Not used
     override fun pageListParse(document: Document, pages: MutableList<Page>) {}
 
-    override fun imageUrlRequest(page: Page) = get(page.url)
+    override fun imageUrlRequest(page: Page) = GET(page.url)
 
     override fun imageUrlParse(document: Document) = ""
 

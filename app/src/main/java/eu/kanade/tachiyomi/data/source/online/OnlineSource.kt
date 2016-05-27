@@ -5,8 +5,10 @@ import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.NetworkHelper
-import eu.kanade.tachiyomi.data.network.get
+import eu.kanade.tachiyomi.data.network.asObservable
+import eu.kanade.tachiyomi.data.network.newCallWithProgress
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.Language
 import eu.kanade.tachiyomi.data.source.Source
@@ -57,7 +59,7 @@ abstract class OnlineSource(context: Context) : Source {
      * Default network client for doing requests.
      */
     open val client: OkHttpClient
-        get() = network.defaultClient
+        get() = network.client
 
     init {
         // Inject dependencies.
@@ -114,7 +116,7 @@ abstract class OnlineSource(context: Context) : Source {
         if (page.page == 1) {
             page.url = popularMangaInitialUrl()
         }
-        return get(page.url, headers)
+        return GET(page.url, headers)
     }
 
     /**
@@ -159,7 +161,7 @@ abstract class OnlineSource(context: Context) : Source {
         if (page.page == 1) {
             page.url = searchMangaInitialUrl(query)
         }
-        return get(page.url, headers)
+        return GET(page.url, headers)
     }
 
     /**
@@ -201,7 +203,7 @@ abstract class OnlineSource(context: Context) : Source {
      * @param manga the manga to be updated.
      */
     open protected fun mangaDetailsRequest(manga: Manga): Request {
-        return get(baseUrl + manga.url, headers)
+        return GET(baseUrl + manga.url, headers)
     }
 
     /**
@@ -236,7 +238,7 @@ abstract class OnlineSource(context: Context) : Source {
      * @param manga the manga to look for chapters.
      */
     open protected fun chapterListRequest(manga: Manga): Request {
-        return get(baseUrl + manga.url, headers)
+        return GET(baseUrl + manga.url, headers)
     }
 
     /**
@@ -281,7 +283,7 @@ abstract class OnlineSource(context: Context) : Source {
      * @param chapter the chapter whose page list has to be fetched
      */
     open protected fun pageListRequest(chapter: Chapter): Request {
-        return get(baseUrl + chapter.url, headers)
+        return GET(baseUrl + chapter.url, headers)
     }
 
     /**
@@ -321,7 +323,7 @@ abstract class OnlineSource(context: Context) : Source {
      * @param page the chapter whose page list has to be fetched
      */
     open protected fun imageUrlRequest(page: Page): Request {
-        return get(page.url, headers)
+        return GET(page.url, headers)
     }
 
     /**
@@ -347,11 +349,12 @@ abstract class OnlineSource(context: Context) : Source {
      *
      * @param page the page whose source image has to be downloaded.
      */
-    fun imageResponse(page: Page): Observable<Response> = network
-            .requestBodyProgress(imageRequest(page), page)
+    fun imageResponse(page: Page): Observable<Response> = client
+            .newCallWithProgress(imageRequest(page), page)
+            .asObservable()
             .doOnNext {
                 if (!it.isSuccessful) {
-                    it.body().close()
+                    it.close()
                     throw RuntimeException("Not a valid response")
                 }
             }
@@ -363,7 +366,7 @@ abstract class OnlineSource(context: Context) : Source {
      * @param page the chapter whose page list has to be fetched
      */
     open protected fun imageRequest(page: Page): Request {
-        return get(page.imageUrl, headers)
+        return GET(page.imageUrl, headers)
     }
 
     /**

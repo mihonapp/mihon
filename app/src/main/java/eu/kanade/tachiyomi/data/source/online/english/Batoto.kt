@@ -5,8 +5,8 @@ import android.net.Uri
 import android.text.Html
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.network.get
-import eu.kanade.tachiyomi.data.network.post
+import eu.kanade.tachiyomi.data.network.GET
+import eu.kanade.tachiyomi.data.network.POST
 import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.Language
 import eu.kanade.tachiyomi.data.source.model.MangasPage
@@ -20,7 +20,6 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import rx.Observable
 import java.net.URI
-import java.net.URISyntaxException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,12 +57,12 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
 
     override fun mangaDetailsRequest(manga: Manga): Request {
         val mangaId = manga.url.substringAfterLast("r")
-        return get("$baseUrl/comic_pop?id=$mangaId", headers)
+        return GET("$baseUrl/comic_pop?id=$mangaId", headers)
     }
 
     override fun pageListRequest(chapter: Chapter): Request {
         val id = chapter.url.substringAfterLast("#")
-        return get("$baseUrl/areader?id=$id&p=1", headers)
+        return GET("$baseUrl/areader?id=$id&p=1", headers)
     }
 
     override fun imageUrlRequest(page: Page): Request {
@@ -71,7 +70,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
         val start = pageUrl.indexOf("#") + 1
         val end = pageUrl.indexOf("_", start)
         val id = pageUrl.substring(start, end)
-        return get("$baseUrl/areader?id=$id&p=${pageUrl.substring(end+1)}", headers)
+        return GET("$baseUrl/areader?id=$id&p=${pageUrl.substring(end+1)}", headers)
     }
 
     override fun popularMangaParse(response: Response, page: MangasPage) {
@@ -216,9 +215,8 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
     }
 
     override fun login(username: String, password: String) =
-        network.request(get("$baseUrl/forums/index.php?app=core&module=global&section=login", headers))
-                .map { it.body().string() }
-                .flatMap { doLogin(it, username, password) }
+        network.request(GET("$baseUrl/forums/index.php?app=core&module=global&section=login", headers))
+                .flatMap { doLogin(it.body().string(), username, password) }
                 .map { isAuthenticationSuccessful(it) }
 
     private fun doLogin(response: String, username: String, password: String): Observable<Response> {
@@ -235,7 +233,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
             add("rememberMe", "1")
         }.build()
 
-        return network.request(post(url, headers, payload))
+        return network.request(POST(url, headers, payload))
     }
 
     override fun isLoginRequired() = true
@@ -244,12 +242,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
         response.priorResponse() != null && response.priorResponse().code() == 302
 
     override fun isLogged(): Boolean {
-        try {
-            return network.cookies.get(URI(baseUrl)).find { it.name() == "pass_hash" } != null
-        } catch (e: URISyntaxException) {
-            // Ignore
-        }
-        return false
+        return network.cookies.get(URI(baseUrl)).any { it.name() == "pass_hash" }
     }
 
     override fun fetchChapterList(manga: Manga): Observable<List<Chapter>> {
