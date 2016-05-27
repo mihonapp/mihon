@@ -108,6 +108,7 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
         val source = sourceManager.get(manga.source) as? OnlineSource ?: return LazyHeaders.DEFAULT
         return cachedHeaders.getOrPut(manga.source) {
             LazyHeaders.Builder().apply {
+                setHeader("User-Agent", null as? String)
                 for ((key, value) in source.headers.toMultimap()) {
                     addHeader(key, value[0])
                 }
