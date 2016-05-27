@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.POST
+import eu.kanade.tachiyomi.data.network.asObservable
 import eu.kanade.tachiyomi.data.source.EN
 import eu.kanade.tachiyomi.data.source.Language
 import eu.kanade.tachiyomi.data.source.model.MangasPage
@@ -215,7 +216,8 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
     }
 
     override fun login(username: String, password: String) =
-        network.request(GET("$baseUrl/forums/index.php?app=core&module=global&section=login", headers))
+        client.newCall(GET("$baseUrl/forums/index.php?app=core&module=global&section=login", headers))
+                .asObservable()
                 .flatMap { doLogin(it.body().string(), username, password) }
                 .map { isAuthenticationSuccessful(it) }
 
@@ -233,7 +235,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
             add("rememberMe", "1")
         }.build()
 
-        return network.request(POST(url, headers, payload))
+        return client.newCall(POST(url, headers, payload)).asObservable()
     }
 
     override fun isLoginRequired() = true

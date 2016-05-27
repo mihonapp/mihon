@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import okhttp3.OkHttpClient
 import okhttp3.Response
 import rx.Observable
 import javax.inject.Inject
@@ -17,6 +18,9 @@ abstract class MangaSyncService(private val context: Context, val id: Int) {
     init {
         App.get(context).component.inject(this)
     }
+
+    open val client: OkHttpClient
+        get() = networkService.client
 
     // Name of the manga sync service to display
     abstract val name: String

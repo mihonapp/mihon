@@ -97,8 +97,9 @@ abstract class OnlineSource(context: Context) : Source {
      * @param page the page object where the information will be saved, like the list of manga,
      *             the current page and the next page url.
      */
-    open fun fetchPopularManga(page: MangasPage): Observable<MangasPage> = network
-            .request(popularMangaRequest(page), client)
+    open fun fetchPopularManga(page: MangasPage): Observable<MangasPage> = client
+            .newCall(popularMangaRequest(page))
+            .asObservable()
             .map { response ->
                 page.apply {
                     mangas = mutableListOf<Manga>()
@@ -141,8 +142,9 @@ abstract class OnlineSource(context: Context) : Source {
      *             the current page and the next page url.
      * @param query the search query.
      */
-    open fun fetchSearchManga(page: MangasPage, query: String): Observable<MangasPage> = network
-            .request(searchMangaRequest(page, query), client)
+    open fun fetchSearchManga(page: MangasPage, query: String): Observable<MangasPage> = client
+            .newCall(searchMangaRequest(page, query))
+            .asObservable()
             .map { response ->
                 page.apply {
                     mangas = mutableListOf<Manga>()
@@ -187,8 +189,9 @@ abstract class OnlineSource(context: Context) : Source {
      *
      * @param manga the manga to be updated.
      */
-    override fun fetchMangaDetails(manga: Manga): Observable<Manga> = network
-            .request(mangaDetailsRequest(manga), client)
+    override fun fetchMangaDetails(manga: Manga): Observable<Manga> = client
+            .newCall(mangaDetailsRequest(manga))
+            .asObservable()
             .map { response ->
                 Manga.create(manga.url, id).apply {
                     mangaDetailsParse(response, this)
@@ -220,8 +223,9 @@ abstract class OnlineSource(context: Context) : Source {
      *
      * @param manga the manga to look for chapters.
      */
-    override fun fetchChapterList(manga: Manga): Observable<List<Chapter>> = network
-            .request(chapterListRequest(manga), client)
+    override fun fetchChapterList(manga: Manga): Observable<List<Chapter>> = client
+            .newCall(chapterListRequest(manga))
+            .asObservable()
             .map { response ->
                 mutableListOf<Chapter>().apply {
                     chapterListParse(response, this)
@@ -265,8 +269,9 @@ abstract class OnlineSource(context: Context) : Source {
      *
      * @param chapter the chapter whose page list has to be fetched.
      */
-    open fun fetchPageListFromNetwork(chapter: Chapter): Observable<List<Page>> = network
-            .request(pageListRequest(chapter), client)
+    open fun fetchPageListFromNetwork(chapter: Chapter): Observable<List<Page>> = client
+            .newCall(pageListRequest(chapter))
+            .asObservable()
             .map { response ->
                 mutableListOf<Page>().apply {
                     pageListParse(response, this)
@@ -307,8 +312,9 @@ abstract class OnlineSource(context: Context) : Source {
      */
     open protected fun fetchImageUrl(page: Page): Observable<Page> {
         page.status = Page.LOAD_PAGE
-        return network
-                .request(imageUrlRequest(page), client)
+        return client
+                .newCall(imageUrlRequest(page))
+                .asObservable()
                 .map { imageUrlParse(it) }
                 .doOnError { page.status = Page.ERROR }
                 .onErrorReturn { null }

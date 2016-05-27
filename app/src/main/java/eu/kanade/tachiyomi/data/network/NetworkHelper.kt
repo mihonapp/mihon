@@ -3,9 +3,6 @@ package eu.kanade.tachiyomi.data.network
 import android.content.Context
 import okhttp3.Cache
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import rx.Observable
 import java.io.File
 
 class NetworkHelper(context: Context) {
@@ -37,9 +34,5 @@ class NetworkHelper(context: Context) {
 
     val cookies: PersistentCookieStore
         get() = cookieManager.store
-
-    fun request(request: Request, client: OkHttpClient = this.client): Observable<Response> {
-        return client.newCall(request).asObservable()
-    }
 
 }

@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.POST
+import eu.kanade.tachiyomi.data.network.asObservable
 import eu.kanade.tachiyomi.util.selectInt
 import eu.kanade.tachiyomi.util.selectText
 import okhttp3.*
@@ -15,12 +16,6 @@ import org.jsoup.Jsoup
 import org.xmlpull.v1.XmlSerializer
 import rx.Observable
 import java.io.StringWriter
-
-fun XmlSerializer.inTag(tag: String, body: String, namespace: String = "") {
-    startTag(namespace, tag)
-    text(body)
-    endTag(namespace, tag)
-}
 
 class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(context, id) {
 
@@ -65,7 +60,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
 
     override fun login(username: String, password: String): Observable<Boolean> {
         createHeaders(username, password)
-        return networkService.request(GET(getLoginUrl(), headers))
+        return client.newCall(GET(getLoginUrl(), headers))
+                .asObservable()
                 .doOnNext { it.close() }
                 .map { it.code() == 200 }
     }
@@ -78,7 +74,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
     }
 
     fun search(query: String): Observable<List<MangaSync>> {
-        return networkService.request(GET(getSearchUrl(query), headers))
+        return client.newCall(GET(getSearchUrl(query), headers))
+                .asObservable()
                 .map { Jsoup.parse(it.body().string()) }
                 .flatMap { Observable.from(it.select("entry")) }
                 .filter { it.select("type").text() != "Novel" }
@@ -103,7 +100,9 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
 
     // MAL doesn't support score with decimals
     fun getList(): Observable<List<MangaSync>> {
-        return networkService.request(GET(getListUrl(username), headers), networkService.forceCacheClient)
+        return networkService.forceCacheClient
+                .newCall(GET(getListUrl(username), headers))
+                .asObservable()
                 .map { Jsoup.parse(it.body().string()) }
                 .flatMap { Observable.from(it.select("manga")) }
                 .map {
@@ -131,7 +130,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
             if (manga.total_chapters != 0 && manga.last_chapter_read == manga.total_chapters) {
                 manga.status = COMPLETED
             }
-            networkService.request(POST(getUpdateUrl(manga), headers, getMangaPostPayload(manga)))
+            client.newCall(POST(getUpdateUrl(manga), headers, getMangaPostPayload(manga)))
+                    .asObservable()
         }
 
     }
@@ -145,7 +145,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
 
     override fun add(manga: MangaSync): Observable<Response> {
         return Observable.defer {
-            networkService.request(POST(getAddUrl(manga), headers, getMangaPostPayload(manga)))
+            client.newCall(POST(getAddUrl(manga), headers, getMangaPostPayload(manga)))
+                    .asObservable()
         }
     }
 
@@ -175,6 +176,12 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
         val form = FormBody.Builder()
         form.add("data", writer.toString())
         return form.build()
+    }
+
+    fun XmlSerializer.inTag(tag: String, body: String, namespace: String = "") {
+        startTag(namespace, tag)
+        text(body)
+        endTag(namespace, tag)
     }
 
     override fun bind(manga: MangaSync): Observable<Response> {
