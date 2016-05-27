@@ -111,11 +111,14 @@ class DownloadManager(private val context: Context, private val sourceManager: S
     fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
         val source = sourceManager.get(manga.source) as? OnlineSource ?: return
 
+        // Add chapters to queue from the start
+        val sortedChapters = chapters.sortedByDescending { it.source_order }
+
         // Used to avoid downloading chapters with the same name
         val addedChapters = ArrayList<String>()
         val pending = ArrayList<Download>()
 
-        for (chapter in chapters) {
+        for (chapter in sortedChapters) {
             if (addedChapters.contains(chapter.name))
                 continue
 
