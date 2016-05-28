@@ -255,7 +255,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                         }
                     }
                     if (chapters.size > 0) {
-                        if (!presenter.sortOrder()) {
+                        if (!presenter.sortDescending()) {
                             chapters.reverse()
                         }
                         when (i) {

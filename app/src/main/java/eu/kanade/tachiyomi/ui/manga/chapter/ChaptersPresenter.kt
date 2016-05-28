@@ -123,23 +123,18 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         if (onlyDownloaded()) {
             observable = observable.filter { chapter -> chapter.status == Download.DOWNLOADED }
         }
-        return observable.toSortedList { chapter1, chapter2 ->
-            when (manga.sorting) {
-                Manga.SORTING_NUMBER -> {
-                    if (sortOrder())
-                        chapter2.chapter_number.compareTo(chapter1.chapter_number)
-                    else
-                        chapter1.chapter_number.compareTo(chapter2.chapter_number)
-                }
-                Manga.SORTING_SOURCE -> {
-                    if (sortOrder())
-                        chapter1.source_order.compareTo(chapter2.source_order)
-                    else
-                        chapter2.source_order.compareTo(chapter1.source_order)
-                }
-                else -> throw AssertionError("Unknown sorting method")
+        val sortFunction: (Chapter, Chapter) -> Int = when (manga.sorting) {
+            Manga.SORTING_SOURCE -> when (sortDescending()) {
+                true  -> { c1, c2 -> c1.source_order.compareTo(c2.source_order) }
+                false -> { c1, c2 -> c2.source_order.compareTo(c1.source_order) }
             }
+            Manga.SORTING_NUMBER -> when (sortDescending()) {
+                true  -> { c1, c2 -> c2.chapter_number.compareTo(c1.chapter_number) }
+                false -> { c1, c2 -> c1.chapter_number.compareTo(c2.chapter_number) }
+            }
+            else -> throw NotImplementedError("Unimplemented sorting method")
         }
+        return observable.toSortedList(sortFunction)
     }
 
     private fun setChapterStatus(chapter: Chapter) {
@@ -169,7 +164,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     }
 
     fun getNextUnreadChapter(): Chapter? {
-        return db.getNextUnreadChapter(manga).executeAsBlocking()
+        return chapters.sortedByDescending { it.source_order }.find { !it.read }
     }
 
     fun markChaptersRead(selectedChapters: List<Chapter>, read: Boolean) {
@@ -228,7 +223,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     }
 
     fun revertSortOrder() {
-        manga.setChapterOrder(if (sortOrder()) Manga.SORT_ZA else Manga.SORT_AZ)
+        manga.setChapterOrder(if (sortDescending()) Manga.SORT_ASC else Manga.SORT_DESC)
         db.insertManga(manga).executeAsBlocking()
         refreshChapters()
     }
@@ -264,8 +259,8 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         return manga.readFilter == Manga.SHOW_UNREAD
     }
 
-    fun sortOrder(): Boolean {
-        return manga.sortChaptersAZ()
+    fun sortDescending(): Boolean {
+        return manga.sortDescending()
     }
 
 }

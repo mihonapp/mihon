@@ -68,8 +68,8 @@ public class Manga implements Serializable {
     public static final int COMPLETED = 2;
     public static final int LICENSED = 3;
 
-    public static final int SORT_AZ   = 0x00000000;
-    public static final int SORT_ZA   = 0x00000001;
+    public static final int SORT_DESC = 0x00000000;
+    public static final int SORT_ASC  = 0x00000001;
     public static final int SORT_MASK = 0x00000001;
 
     // Generic filter that does not filter anything
@@ -174,8 +174,8 @@ public class Manga implements Serializable {
         chapter_flags = (chapter_flags & ~mask) | (flag & mask);
     }
 
-    public boolean sortChaptersAZ() {
-        return (chapter_flags & SORT_MASK) == SORT_AZ;
+    public boolean sortDescending() {
+        return (chapter_flags & SORT_MASK) == SORT_DESC;
     }
 
     // Used to display the chapter's title one way or another

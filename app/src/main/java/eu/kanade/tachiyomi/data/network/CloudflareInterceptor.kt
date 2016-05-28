@@ -21,7 +21,7 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
         val response = chain.proceed(chain.request())
 
         // Check if we already solved a challenge
-        if (response.code() != 502 &&
+        if (response.code() != 503 &&
                 cookies.get(response.request().url()).any { it.name() == "cf_clearance" }) {
             return response
         }
