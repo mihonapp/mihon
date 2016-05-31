@@ -48,15 +48,13 @@ class UpdateMangaSyncService : Service() {
 
     private fun updateLastChapterRead(mangaSync: MangaSync, startId: Int) {
         val sync = syncManager.getService(mangaSync.sync_id)
+        if (sync == null) {
+            stopSelf(startId)
+            return
+        }
 
         subscriptions.add(Observable.defer { sync.update(mangaSync) }
-                .flatMap {
-                    if (it.isSuccessful) {
-                        db.insertMangaSync(mangaSync).asRxObservable()
-                    } else {
-                        Observable.error(Exception("Could not update manga in remote service"))
-                    }
-                }
+                .flatMap { db.insertMangaSync(mangaSync).asRxObservable() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ stopSelf(startId) },

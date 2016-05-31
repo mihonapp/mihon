@@ -1,26 +1,29 @@
-package eu.kanade.tachiyomi.data.mangasync.services
+package eu.kanade.tachiyomi.data.mangasync.myanimelist
 
 import android.content.Context
 import android.net.Uri
 import android.util.Xml
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.MangaSync
-import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService
+import eu.kanade.tachiyomi.data.mangasync.MangaSyncService
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.POST
 import eu.kanade.tachiyomi.data.network.asObservable
 import eu.kanade.tachiyomi.util.selectInt
 import eu.kanade.tachiyomi.util.selectText
-import okhttp3.*
+import okhttp3.Credentials
+import okhttp3.FormBody
+import okhttp3.Headers
+import okhttp3.RequestBody
 import org.jsoup.Jsoup
 import org.xmlpull.v1.XmlSerializer
+import rx.Completable
 import rx.Observable
 import java.io.StringWriter
 
 class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(context, id) {
 
     private lateinit var headers: Headers
-    private lateinit var username: String
 
     companion object {
         val BASE_URL = "http://myanimelist.net"
@@ -41,8 +44,8 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
     }
 
     init {
-        val username = preferences.mangaSyncUsername(this)
-        val password = preferences.mangaSyncPassword(this)
+        val username = getUsername()
+        val password = getPassword()
 
         if (!username.isEmpty() && !password.isEmpty()) {
             createHeaders(username, password)
@@ -52,25 +55,39 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
     override val name: String
         get() = "MyAnimeList"
 
-    fun getLoginUrl(): String {
-        return Uri.parse(BASE_URL).buildUpon()
-                .appendEncodedPath("api/account/verify_credentials.xml")
-                .toString()
-    }
+    fun getLoginUrl() = Uri.parse(BASE_URL).buildUpon()
+            .appendEncodedPath("api/account/verify_credentials.xml")
+            .toString()
 
-    override fun login(username: String, password: String): Observable<Boolean> {
+    fun getSearchUrl(query: String) = Uri.parse(BASE_URL).buildUpon()
+            .appendEncodedPath("api/manga/search.xml")
+            .appendQueryParameter("q", query)
+            .toString()
+
+    fun getListUrl(username: String) = Uri.parse(BASE_URL).buildUpon()
+            .appendPath("malappinfo.php")
+            .appendQueryParameter("u", username)
+            .appendQueryParameter("status", "all")
+            .appendQueryParameter("type", "manga")
+            .toString()
+
+    fun getUpdateUrl(manga: MangaSync) = Uri.parse(BASE_URL).buildUpon()
+            .appendEncodedPath("api/mangalist/update")
+            .appendPath("${manga.remote_id}.xml")
+            .toString()
+
+    fun getAddUrl(manga: MangaSync) = Uri.parse(BASE_URL).buildUpon()
+            .appendEncodedPath("api/mangalist/add")
+            .appendPath("${manga.remote_id}.xml")
+            .toString()
+
+    override fun login(username: String, password: String): Completable {
         createHeaders(username, password)
         return client.newCall(GET(getLoginUrl(), headers))
                 .asObservable()
                 .doOnNext { it.close() }
-                .map { it.code() == 200 }
-    }
-
-    fun getSearchUrl(query: String): String {
-        return Uri.parse(BASE_URL).buildUpon()
-                .appendEncodedPath("api/manga/search.xml")
-                .appendQueryParameter("q", query)
-                .toString()
+                .doOnNext { if (it.code() != 200) throw Exception("Login error") }
+                .toCompletable()
     }
 
     fun search(query: String): Observable<List<MangaSync>> {
@@ -80,73 +97,56 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
                 .flatMap { Observable.from(it.select("entry")) }
                 .filter { it.select("type").text() != "Novel" }
                 .map {
-                    val manga = MangaSync.create(this)
-                    manga.title = it.selectText("title")
-                    manga.remote_id = it.selectInt("id")
-                    manga.total_chapters = it.selectInt("chapters")
-                    manga
+                    MangaSync.create(this).apply {
+                        title = it.selectText("title")
+                        remote_id = it.selectInt("id")
+                        total_chapters = it.selectInt("chapters")
+                    }
                 }
                 .toList()
-    }
-
-    fun getListUrl(username: String): String {
-        return Uri.parse(BASE_URL).buildUpon()
-                .appendPath("malappinfo.php")
-                .appendQueryParameter("u", username)
-                .appendQueryParameter("status", "all")
-                .appendQueryParameter("type", "manga")
-                .toString()
     }
 
     // MAL doesn't support score with decimals
     fun getList(): Observable<List<MangaSync>> {
         return networkService.forceCacheClient
-                .newCall(GET(getListUrl(username), headers))
+                .newCall(GET(getListUrl(getUsername()), headers))
                 .asObservable()
                 .map { Jsoup.parse(it.body().string()) }
                 .flatMap { Observable.from(it.select("manga")) }
                 .map {
-                    val manga = MangaSync.create(this)
-                    manga.title = it.selectText("series_title")
-                    manga.remote_id = it.selectInt("series_mangadb_id")
-                    manga.last_chapter_read = it.selectInt("my_read_chapters")
-                    manga.status = it.selectInt("my_status")
-                    manga.score = it.selectInt("my_score").toFloat()
-                    manga.total_chapters = it.selectInt("series_chapters")
-                    manga
+                    MangaSync.create(this).apply {
+                        title = it.selectText("series_title")
+                        remote_id = it.selectInt("series_mangadb_id")
+                        last_chapter_read = it.selectInt("my_read_chapters")
+                        status = it.selectInt("my_status")
+                        score = it.selectInt("my_score").toFloat()
+                        total_chapters = it.selectInt("series_chapters")
+                    }
                 }
                 .toList()
     }
 
-    fun getUpdateUrl(manga: MangaSync): String {
-        return Uri.parse(BASE_URL).buildUpon()
-                .appendEncodedPath("api/mangalist/update")
-                .appendPath(manga.remote_id.toString() + ".xml")
-                .toString()
-    }
-
-    override fun update(manga: MangaSync): Observable<Response> {
+    override fun update(manga: MangaSync): Observable<MangaSync> {
         return Observable.defer {
             if (manga.total_chapters != 0 && manga.last_chapter_read == manga.total_chapters) {
                 manga.status = COMPLETED
             }
             client.newCall(POST(getUpdateUrl(manga), headers, getMangaPostPayload(manga)))
                     .asObservable()
+                    .doOnNext { it.close() }
+                    .doOnNext { if (!it.isSuccessful) throw Exception("Could not update manga") }
+                    .map { manga }
         }
 
     }
 
-    fun getAddUrl(manga: MangaSync): String {
-        return Uri.parse(BASE_URL).buildUpon()
-                .appendEncodedPath("api/mangalist/add")
-                .appendPath(manga.remote_id.toString() + ".xml")
-                .toString()
-    }
-
-    override fun add(manga: MangaSync): Observable<Response> {
+    override fun add(manga: MangaSync): Observable<MangaSync> {
         return Observable.defer {
             client.newCall(POST(getAddUrl(manga), headers, getMangaPostPayload(manga)))
                     .asObservable()
+                    .doOnNext { it.close() }
+                    .doOnNext { if (!it.isSuccessful) throw Exception("Could not add manga") }
+                    .map { manga }
         }
     }
 
@@ -184,21 +184,20 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
         endTag(namespace, tag)
     }
 
-    override fun bind(manga: MangaSync): Observable<Response> {
+    override fun bind(manga: MangaSync): Observable<MangaSync> {
         return getList()
-                .flatMap {
+                .flatMap { userlist ->
                     manga.sync_id = id
-                    for (remoteManga in it) {
-                        if (remoteManga.remote_id == manga.remote_id) {
-                            // Manga is already in the list
-                            manga.copyPersonalFrom(remoteManga)
-                            return@flatMap update(manga)
-                        }
+                    val mangaFromList = userlist.find { it.remote_id == manga.remote_id }
+                    if (mangaFromList != null) {
+                        manga.copyPersonalFrom(mangaFromList)
+                        update(manga)
+                    } else {
+                        // Set default fields if it's not found in the list
+                        manga.score = DEFAULT_SCORE.toFloat()
+                        manga.status = DEFAULT_STATUS
+                        add(manga)
                     }
-                    // Set default fields if it's not found in the list
-                    manga.score = DEFAULT_SCORE.toFloat()
-                    manga.status = DEFAULT_STATUS
-                    return@flatMap add(manga)
                 }
     }
 
@@ -214,7 +213,6 @@ class MyAnimeList(private val context: Context, id: Int) : MangaSyncService(cont
     }
 
     fun createHeaders(username: String, password: String) {
-        this.username = username
         val builder = Headers.Builder()
         builder.add("Authorization", Credentials.basic(username, password))
         builder.add("User-Agent", "api-indiv-9F93C52A963974CF674325391990191C")

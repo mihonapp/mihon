@@ -98,7 +98,7 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
         mangaSync?.let { mangaSync ->
             add(myAnimeList.update(mangaSync)
                     .subscribeOn(Schedulers.io())
-                    .flatMap { response -> db.insertMangaSync(mangaSync).asRxObservable() }
+                    .flatMap { db.insertMangaSync(mangaSync).asRxObservable() }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ next -> },
                             { error ->
@@ -126,13 +126,7 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
         if (sync != null) {
             sync.manga_id = manga.id
             add(myAnimeList.bind(sync)
-                    .flatMap { response ->
-                        if (response.isSuccessful) {
-                            db.insertMangaSync(sync).asRxObservable()
-                        } else {
-                            Observable.error(Exception("Could not bind manga"))
-                        }
-                    }
+                    .flatMap { db.insertMangaSync(sync).asRxObservable() }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ },

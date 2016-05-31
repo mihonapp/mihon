@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.data.database.DbProvider
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.database.tables.MangaSyncTable
-import eu.kanade.tachiyomi.data.mangasync.base.MangaSyncService
+import eu.kanade.tachiyomi.data.mangasync.MangaSyncService
 
 interface MangaSyncQueries : DbProvider {
 

@@ -374,7 +374,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
     fun updateMangaSyncLastChapterRead() {
         for (mangaSync in mangaSyncList ?: emptyList()) {
-            val service = syncManager.getService(mangaSync.sync_id)
+            val service = syncManager.getService(mangaSync.sync_id) ?: continue
             if (service.isLogged && mangaSync.update) {
                 UpdateMangaSyncService.start(context, mangaSync)
             }
