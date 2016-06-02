@@ -57,10 +57,11 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
     private var appenderSubscription: Subscription? = null
 
-    private val GET_PAGE_LIST = 1
-    private val GET_ADJACENT_CHAPTERS = 2
-    private val GET_MANGA_SYNC = 3
-    private val PRELOAD_NEXT_CHAPTER = 4
+    private val PREPARE_READER = 1
+    private val GET_PAGE_LIST = 2
+    private val GET_ADJACENT_CHAPTERS = 3
+    private val GET_MANGA_SYNC = 4
+    private val PRELOAD_NEXT_CHAPTER = 5
 
     private val MANGA_KEY = "manga_key"
     private val CHAPTER_KEY = "chapter_key"
@@ -83,6 +84,10 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
         initializeSubjects()
 
+        restartableLatestCache(PREPARE_READER,
+                { Observable.just(manga) },
+                { view, manga -> view.onMangaOpen(manga) })
+
         startableLatestCache(GET_ADJACENT_CHAPTERS,
                 { getAdjacentChaptersObservable() },
                 { view, pair -> view.onAdjacentChapters(pair.first, pair.second) })
@@ -102,6 +107,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 { view, error -> view.onChapterError(error) })
 
         if (savedState == null) {
+            start(PREPARE_READER)
             loadChapter(chapter)
             if (prefs.autoUpdateMangaSync()) {
                 start(GET_MANGA_SYNC)

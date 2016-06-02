@@ -98,7 +98,11 @@ class WebtoonReader : BaseReader() {
                 .doOnNext { setDecoderClass(it) }
                 .skip(1)
                 .distinctUntilChanged()
-                .subscribe { recycler.adapter = adapter })
+                .subscribe {
+                    val activePage = layoutManager.findFirstVisibleItemPosition()
+                    recycler.adapter = adapter
+                    setActivePage(activePage)
+                })
 
         setPagesOnAdapter()
         return recycler

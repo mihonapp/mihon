@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.data.source.online.LoginSource
 import eu.kanade.tachiyomi.data.source.online.ParsedOnlineSource
+import eu.kanade.tachiyomi.util.selectText
 import okhttp3.FormBody
 import okhttp3.Request
 import okhttp3.Response
@@ -51,29 +52,12 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
 
     override fun headersBuilder() = super.headersBuilder()
             .add("Cookie", "lang_option=English")
+
+    private val pageHeaders = super.headersBuilder()
             .add("Referer", "http://bato.to/reader")
+            .build()
 
     override fun popularMangaInitialUrl() = "$baseUrl/search_ajax?order_cond=views&order=desc&p=1"
-
-    override fun searchMangaInitialUrl(query: String) = "$baseUrl/search_ajax?name=${Uri.encode(query)}&p=1"
-
-    override fun mangaDetailsRequest(manga: Manga): Request {
-        val mangaId = manga.url.substringAfterLast("r")
-        return GET("$baseUrl/comic_pop?id=$mangaId", headers)
-    }
-
-    override fun pageListRequest(chapter: Chapter): Request {
-        val id = chapter.url.substringAfterLast("#")
-        return GET("$baseUrl/areader?id=$id&p=1", headers)
-    }
-
-    override fun imageUrlRequest(page: Page): Request {
-        val pageUrl = page.url
-        val start = pageUrl.indexOf("#") + 1
-        val end = pageUrl.indexOf("_", start)
-        val id = pageUrl.substring(start, end)
-        return GET("$baseUrl/areader?id=$id&p=${pageUrl.substring(end+1)}", headers)
-    }
 
     override fun popularMangaParse(response: Response, page: MangasPage) {
         val document = Jsoup.parse(response.body().string())
@@ -101,6 +85,8 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
 
     override fun popularMangaNextPageSelector() = "#show_more_row"
 
+    override fun searchMangaInitialUrl(query: String) = "$baseUrl/search_ajax?name=${Uri.encode(query)}&p=1"
+
     override fun searchMangaParse(response: Response, page: MangasPage, query: String) {
         val document = Jsoup.parse(response.body().string())
         for (element in document.select(searchMangaSelector())) {
@@ -124,15 +110,20 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
 
     override fun searchMangaNextPageSelector() = popularMangaNextPageSelector()
 
+    override fun mangaDetailsRequest(manga: Manga): Request {
+        val mangaId = manga.url.substringAfterLast("r")
+        return GET("$baseUrl/comic_pop?id=$mangaId", headers)
+    }
+
     override fun mangaDetailsParse(document: Document, manga: Manga) {
         val tbody = document.select("tbody").first()
         val artistElement = tbody.select("tr:contains(Author/Artist:)").first()
 
-        manga.author = artistElement.select("td:eq(1)").first()?.text()
-        manga.artist = artistElement.select("td:eq(2)").first()?.text() ?: manga.author
-        manga.description = tbody.select("tr:contains(Description:) > td:eq(1)").first()?.text()
+        manga.author = artistElement.selectText("td:eq(1)")
+        manga.artist = artistElement.selectText("td:eq(2)") ?: manga.author
+        manga.description = tbody.selectText("tr:contains(Description:) > td:eq(1)")
         manga.thumbnail_url = document.select("img[src^=http://img.bato.to/forums/uploads/]").first()?.attr("src")
-        manga.status = parseStatus(document.select("tr:contains(Status:) > td:eq(1)").first()?.text())
+        manga.status = parseStatus(document.selectText("tr:contains(Status:) > td:eq(1)"))
         manga.genre = tbody.select("tr:contains(Genres:) img").map { it.attr("alt") }.joinToString(", ")
     }
 
@@ -147,7 +138,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
         val matcher = staffNotice.matcher(body)
         if (matcher.find()) {
             val notice = Html.fromHtml(matcher.group(1)).toString().trim()
-            throw RuntimeException(notice)
+            throw Exception(notice)
         }
 
         val document = Jsoup.parse(body)
@@ -197,6 +188,11 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
         return date.time
     }
 
+    override fun pageListRequest(chapter: Chapter): Request {
+        val id = chapter.url.substringAfterLast("#")
+        return GET("$baseUrl/areader?id=$id&p=1", pageHeaders)
+    }
+
     override fun pageListParse(document: Document, pages: MutableList<Page>) {
         val selectElement = document.select("#page_select").first()
         if (selectElement != null) {
@@ -210,6 +206,14 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
                 pages.add(Page(i, "", element.attr("src")))
             }
         }
+    }
+
+    override fun imageUrlRequest(page: Page): Request {
+        val pageUrl = page.url
+        val start = pageUrl.indexOf("#") + 1
+        val end = pageUrl.indexOf("_", start)
+        val id = pageUrl.substring(start, end)
+        return GET("$baseUrl/areader?id=$id&p=${pageUrl.substring(end+1)}", pageHeaders)
     }
 
     override fun imageUrlParse(document: Document): String {

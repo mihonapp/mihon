@@ -226,19 +226,24 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         // Ignore
     }
 
-    fun onChapterReady(manga: Manga, chapter: Chapter, currentPage: Page?) {
-        val activePage = currentPage ?: chapter.pages.last()
-
+    fun onMangaOpen(manga: Manga) {
         if (viewer == null) {
             viewer = getOrCreateViewer(manga)
         }
-        viewer?.onPageListReady(chapter, activePage)
-
         if (viewer is RightToLeftReader && page_seekbar.rotation != 180f) {
             // Invert the seekbar for the right to left reader
             page_seekbar.rotation = 180f
         }
         setToolbarTitle(manga.title)
+        please_wait.visibility = View.VISIBLE
+        please_wait.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_long))
+    }
+
+    fun onChapterReady(manga: Manga, chapter: Chapter, currentPage: Page?) {
+        please_wait.visibility = View.GONE
+        val activePage = currentPage ?: chapter.pages.last()
+
+        viewer?.onPageListReady(chapter, activePage)
         setActiveChapter(chapter, activePage.pageNumber)
     }
 

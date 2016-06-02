@@ -9,6 +9,13 @@
         android:layout_height="match_parent">
     </FrameLayout>
 
+    <ProgressBar
+        android:id="@+id/please_wait"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
     <TextView
         android:id="@+id/page_number"
         style="@style/TextAppearance.Regular.Caption"
