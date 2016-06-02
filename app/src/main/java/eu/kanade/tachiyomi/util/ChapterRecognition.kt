@@ -29,8 +29,12 @@ object ChapterRecognition {
      * Regex used to remove unwanted tags
      * Example Prison School 12 v.1 vol004 version1243 volume64 -R> Prison School 12
      */
-    private val unwanted = Regex("""(?:(v|ver|vol|version|volume).?[0-9]+)""")
+    private val unwanted = Regex("""(?:(v|ver|vol|version|volume|season).?[0-9]+)""")
 
+    /**
+     * Regex used to remove unwanted whitespace
+     * Example One Piece 12 special -R> One Piece 12special
+     */
     private val unwantedWhiteSpace = Regex("""(\s)(extra|special|omake)""")
 
     fun parseChapterNumber(chapter: Chapter, manga: Manga) {
