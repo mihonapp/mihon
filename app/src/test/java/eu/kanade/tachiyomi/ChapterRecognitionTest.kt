@@ -418,4 +418,15 @@ class ChapterRecognitionTest {
         assertThat(chapter.chapter_number).isEqualTo(24.005f)
     }
 
+    /**
+     * Test for chapters containing season
+     */
+    @Test fun chapterContainingSeasonCase() {
+        createManga("D.I.C.E")
+
+        createChapter("D.I.C.E[Season 001] Ep. 007")
+        ChapterRecognition.parseChapterNumber(chapter, manga)
+        assertThat(chapter.chapter_number).isEqualTo(7f)
+    }
+
 }
