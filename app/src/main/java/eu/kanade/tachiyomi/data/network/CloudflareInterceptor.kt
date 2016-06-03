@@ -9,8 +9,8 @@ import okhttp3.Response
 class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interceptor {
 
     //language=RegExp
-    private val operationPattern = Regex("""setTimeout\(function\(\)\{\s+(var t,r,a,f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n""")
-
+    private val operationPattern = Regex("""setTimeout\(function\(\)\{\s+(var (?:\w,)+f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n""")
+    
     //language=RegExp
     private val passPattern = Regex("""name="pass" value="(.+?)"""")
 
