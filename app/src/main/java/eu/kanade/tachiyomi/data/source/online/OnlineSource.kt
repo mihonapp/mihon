@@ -261,6 +261,9 @@ abstract class OnlineSource(context: Context) : Source {
             .newCall(pageListRequest(chapter))
             .asObservable()
             .map { response ->
+                if (!response.isSuccessful) {
+                    throw Exception("Webpage sent ${response.code()} code")
+                }
                 mutableListOf<Page>().apply {
                     pageListParse(response, this)
                     if (isEmpty()) {

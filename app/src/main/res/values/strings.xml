@@ -252,7 +252,6 @@
     <string name="downloading">Downloading…</string>
     <string name="download_progress">Downloaded %1$d%%</string>
     <string name="chapter_progress">Page: %1$d</string>
-    <string name="page_list_error">Error fetching page list. Check your internet connection.</string>
     <string name="chapter_subtitle">Chapter %1$s</string>
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="no_previous_chapter">Previous chapter not found</string>
