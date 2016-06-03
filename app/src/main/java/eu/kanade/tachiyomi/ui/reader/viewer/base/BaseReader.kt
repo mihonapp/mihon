@@ -71,14 +71,16 @@ abstract class BaseReader : BaseFragment() {
      */
     fun updatePageNumber() {
         val activePage = getActivePage()
-        readerActivity.onPageChanged(activePage.pageNumber, activePage.chapter.pages.size)
+        if (activePage != null) {
+            readerActivity.onPageChanged(activePage.pageNumber, activePage.chapter.pages.size)
+        }
     }
 
     /**
      * Returns the active page.
      */
-    fun getActivePage(): Page {
-        return pages.getOrElse(currentPage) { pages[0] }
+    fun getActivePage(): Page? {
+        return pages.getOrNull(currentPage)
     }
 
     /**

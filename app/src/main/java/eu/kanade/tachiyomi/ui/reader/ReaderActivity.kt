@@ -117,7 +117,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     override fun onPause() {
         viewer?.let {
-            presenter.currentPage = it.getActivePage()
+            val activePage = it.getActivePage()
+            if (activePage != null) {
+                presenter.currentPage = activePage
+            }
         }
         super.onPause()
     }
@@ -318,8 +321,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     fun gotoPageInCurrentChapter(pageIndex: Int) {
         viewer?.let {
-            val requestedPage = it.getActivePage().chapter.pages[pageIndex]
-            it.setActivePage(requestedPage)
+            val activePage = it.getActivePage()
+            if (activePage != null) {
+                val requestedPage = activePage.chapter.pages[pageIndex]
+                it.setActivePage(requestedPage)
+            }
+
         }
     }
 
