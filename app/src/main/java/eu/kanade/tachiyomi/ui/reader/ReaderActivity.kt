@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonReader
 import eu.kanade.tachiyomi.util.GLUtil
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
@@ -451,10 +452,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     private fun initializeSettings() {
-        subscriptions.add(preferences.showPageNumber().asObservable()
-                .subscribe { setPageNumberVisibility(it) })
+        subscriptions += preferences.showPageNumber().asObservable()
+                .subscribe { setPageNumberVisibility(it) }
 
-        subscriptions.add(preferences.rotation().asObservable()
+        subscriptions += preferences.rotation().asObservable()
                 .subscribe {
                     setRotation(it)
 
@@ -468,20 +469,20 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         R.drawable.ic_screen_lock_landscape_white_24dp
 
                     lock_orientation.setImageResource(resourceId)
-                })
+                }
 
-        subscriptions.add(preferences.hideStatusBar().asObservable()
-                .subscribe { setStatusBarVisibility(it) })
+        subscriptions += preferences.hideStatusBar().asObservable()
+                .subscribe { setStatusBarVisibility(it) }
 
-        subscriptions.add(preferences.keepScreenOn().asObservable()
-                .subscribe { setKeepScreenOn(it) })
+        subscriptions += preferences.keepScreenOn().asObservable()
+                .subscribe { setKeepScreenOn(it) }
 
-        subscriptions.add(preferences.customBrightness().asObservable()
-                .subscribe { setCustomBrightness(it) })
+        subscriptions += preferences.customBrightness().asObservable()
+                .subscribe { setCustomBrightness(it) }
 
-        subscriptions.add(preferences.readerTheme().asObservable()
+        subscriptions += preferences.readerTheme().asObservable()
                 .distinctUntilChanged()
-                .subscribe { applyTheme(it) })
+                .subscribe { applyTheme(it) }
     }
 
     private fun setRotation(rotation: Int) {

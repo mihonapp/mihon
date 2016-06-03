@@ -114,13 +114,13 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
 
         // Set cover if it wasn't already.
         if (manga_cover.drawable == null && !manga.thumbnail_url.isNullOrEmpty()) {
-            Glide.with(context)
+            Glide.with(this)
                     .load(manga)
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
                     .into(manga_cover)
 
-            Glide.with(context)
+            Glide.with(this)
                     .load(manga)
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()

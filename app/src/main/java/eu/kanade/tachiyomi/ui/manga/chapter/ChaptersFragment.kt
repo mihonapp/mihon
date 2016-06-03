@@ -240,37 +240,27 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                 .negativeText(android.R.string.cancel)
                 .items(modes.map { getString(it) })
                 .itemsCallback { dialog, view, i, charSequence ->
-                    var chapters: MutableList<Chapter> = arrayListOf()
+
+                    fun getUnreadChaptersSorted() = presenter.chapters
+                            .filter { !it.read && !it.isDownloaded }
+                            .sortedByDescending { it.source_order }
 
                     // i = 0: Download 1
                     // i = 1: Download 5
                     // i = 2: Download 10
                     // i = 3: Download unread
                     // i = 4: Download all
-                    for (chapter in presenter.chapters) {
-                        if (!chapter.isDownloaded) {
-                            if (i == 4 || (i != 4 && !chapter.read)) {
-                                chapters.add(chapter)
-                            }
-                        }
+                    val chaptersToDownload = when (i) {
+                        0 -> getUnreadChaptersSorted().take(1)
+                        1 -> getUnreadChaptersSorted().take(5)
+                        2 -> getUnreadChaptersSorted().take(10)
+                        3 -> presenter.chapters.filter { !it.read }
+                        4 -> presenter.chapters
+                        else -> emptyList()
                     }
-                    if (chapters.size > 0) {
-                        if (!presenter.sortDescending()) {
-                            chapters.reverse()
-                        }
-                        when (i) {
-                        // Set correct chapters size if desired
-                            0 -> chapters = chapters.subList(0, 1)
-                            1 -> {
-                                if (chapters.size >= 5)
-                                    chapters = chapters.subList(0, 5)
-                            }
-                            2 -> {
-                                if (chapters.size >= 10)
-                                    chapters = chapters.subList(0, 10)
-                            }
-                        }
-                        downloadChapters(chapters)
+
+                    if (chaptersToDownload.isNotEmpty()) {
+                        downloadChapters(chaptersToDownload)
                     }
                 }
                 .show()

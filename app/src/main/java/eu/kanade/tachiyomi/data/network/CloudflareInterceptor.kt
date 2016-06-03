@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.network
 
-import android.net.Uri
 import com.squareup.duktape.Duktape
+import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -42,8 +42,8 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
             val domain = originalRequest.url().host()
             val content = response.body().string()
 
-            // CloudFlare requires waiting 5 seconds before resolving the challenge
-            Thread.sleep(5000)
+            // CloudFlare requires waiting 4 seconds before resolving the challenge
+            Thread.sleep(4000)
 
             val operation = operationPattern.find(content)?.groups?.get(1)?.value
             val challenge = challengePattern.find(content)?.groups?.get(1)?.value
@@ -65,10 +65,10 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
 
             val answer = "${result + domain.length}"
 
-            val url = Uri.parse("http://$domain/cdn-cgi/l/chk_jschl").buildUpon()
-                    .appendQueryParameter("jschl_vc", challenge)
-                    .appendQueryParameter("pass", pass)
-                    .appendQueryParameter("jschl_answer", answer)
+            val url = HttpUrl.parse("http://$domain/cdn-cgi/l/chk_jschl").newBuilder()
+                    .addQueryParameter("jschl_vc", challenge)
+                    .addQueryParameter("pass", pass)
+                    .addQueryParameter("jschl_answer", answer)
                     .toString()
 
             val referer = originalRequest.url().toString()

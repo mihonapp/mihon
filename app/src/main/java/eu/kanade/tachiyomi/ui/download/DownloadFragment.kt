@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.widget.NpaLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_download_queue.*
 import nucleus.factory.RequiresPresenter
@@ -46,9 +47,9 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
     private var clearButton: MenuItem? = null
 
     /**
-     * Subscription list to be cleared during [onPause].
+     * Subscription list to be cleared during [onDestroyView].
      */
-    private val resumeSubscriptions by lazy { CompositeSubscription() }
+    private val subscriptions by lazy { CompositeSubscription() }
 
     /**
      * Map of subscriptions for active downloads.
@@ -94,6 +95,28 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
         // Set the layout manager for the recycler and fixed size.
         recycler.layoutManager = NpaLinearLayoutManager(activity)
         recycler.setHasFixedSize(true)
+
+        // Suscribe to changes
+        subscriptions += presenter.downloadManager.runningSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { onQueueStatusChange(it) }
+
+        subscriptions += presenter.getStatusObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { onStatusChange(it) }
+
+        subscriptions += presenter.getProgressObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { onUpdateDownloadedPages(it) }
+    }
+
+    override fun onDestroyView() {
+        for (subscription in progressSubscriptions.values) {
+            subscription.unsubscribe()
+        }
+        progressSubscriptions.clear()
+        subscriptions.clear()
+        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -129,33 +152,6 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.downloadManager.runningSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { onQueueStatusChange(it) }
-                .apply { resumeSubscriptions.add(this) }
-
-        presenter.getStatusObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { onStatusChange(it) }
-                .apply { resumeSubscriptions.add(this) }
-
-        presenter.getProgressObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { onUpdateDownloadedPages(it) }
-                .apply { resumeSubscriptions.add(this) }
-    }
-
-    override fun onPause() {
-        for (subscription in progressSubscriptions.values) {
-            subscription.unsubscribe()
-        }
-        progressSubscriptions.clear()
-        resumeSubscriptions.clear()
-        super.onPause()
     }
 
     /**
