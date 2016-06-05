@@ -37,7 +37,7 @@ class Mangahere(context: Context, override val id: Int) : ParsedOnlineSource(con
     override fun searchMangaInitialUrl(query: String) =
             "$baseUrl/search.php?name=$query&page=1&sort=views&order=za"
 
-    override fun searchMangaSelector() = "div.result_search > dl"
+    override fun searchMangaSelector() = "div.result_search > dl:has(dt)"
 
     override fun searchMangaFromElement(element: Element, manga: Manga) {
         element.select("a.manga_info").first().let {

@@ -224,30 +224,30 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
 
     fun revertSortOrder() {
         manga.setChapterOrder(if (sortDescending()) Manga.SORT_ASC else Manga.SORT_DESC)
-        db.insertManga(manga).executeAsBlocking()
+        db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
     }
 
     fun setReadFilter(onlyUnread: Boolean) {
         manga.readFilter = if (onlyUnread) Manga.SHOW_UNREAD else Manga.SHOW_ALL
-        db.insertManga(manga).executeAsBlocking()
+        db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
     }
 
     fun setDownloadedFilter(onlyDownloaded: Boolean) {
         manga.downloadedFilter = if (onlyDownloaded) Manga.SHOW_DOWNLOADED else Manga.SHOW_ALL
-        db.insertManga(manga).executeAsBlocking()
+        db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
     }
 
     fun setDisplayMode(mode: Int) {
         manga.displayMode = mode
-        db.insertManga(manga).executeAsBlocking()
+        db.updateFlags(manga).executeAsBlocking()
     }
 
     fun setSorting(mode: Int) {
         manga.sorting = mode
-        db.insertManga(manga).executeAsBlocking()
+        db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
     }
 
