@@ -313,13 +313,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 changeSelectedCover(presenter.selectedMangas)
                 destroyActionModeIfNeeded()
             }
-            R.id.action_move_to_category -> {
-                moveMangasToCategories(presenter.selectedMangas)
-            }
-            R.id.action_delete -> {
-                presenter.deleteMangas()
-                destroyActionModeIfNeeded()
-            }
+            R.id.action_move_to_category -> moveMangasToCategories(presenter.selectedMangas)
+            R.id.action_delete -> showDeleteMangaDialog()
             else -> return false
         }
         return true
@@ -406,6 +401,18 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 }
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
+                .show()
+    }
+
+    private fun showDeleteMangaDialog() {
+        MaterialDialog.Builder(activity)
+                .content(R.string.confirm_delete_manga)
+                .positiveText(android.R.string.yes)
+                .negativeText(android.R.string.no)
+                .onPositive { dialog, action ->
+                    presenter.removeMangaFromLibrary()
+                    destroyActionModeIfNeeded()
+                }
                 .show()
     }
 

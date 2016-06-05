@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.source
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Context
 import android.os.Environment
 import eu.kanade.tachiyomi.R
@@ -9,6 +10,7 @@ import eu.kanade.tachiyomi.data.source.online.english.*
 import eu.kanade.tachiyomi.data.source.online.russian.Mangachan
 import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga
 import eu.kanade.tachiyomi.data.source.online.russian.Readmanga
+import eu.kanade.tachiyomi.util.hasPermission
 import org.yaml.snakeyaml.Yaml
 import timber.log.Timber
 import java.io.File
@@ -54,7 +56,7 @@ open class SourceManager(private val context: Context) {
         val parsersDir = File(Environment.getExternalStorageDirectory().absolutePath +
                 File.separator + context.getString(R.string.app_name), "parsers")
 
-        if (parsersDir.exists()) {
+        if (parsersDir.exists() && context.hasPermission(READ_EXTERNAL_STORAGE)) {
             val yaml = Yaml()
             for (file in parsersDir.listFiles().filter { it.extension == "yml" }) {
                 try {

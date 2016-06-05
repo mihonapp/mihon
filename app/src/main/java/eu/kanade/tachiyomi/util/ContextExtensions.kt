@@ -4,8 +4,10 @@ import android.app.AlarmManager
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.support.annotation.StringRes
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.widget.Toast
 
 /**
@@ -36,6 +38,14 @@ inline fun Context.notification(func: NotificationCompat.Builder.() -> Unit): No
     builder.func()
     return builder.build()
 }
+
+/**
+ * Checks if the give permission is granted.
+ * @param permission the permission to check.
+ * @return true if it has permissions.
+ */
+fun Context.hasPermission(permission: String)
+        = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
 /**
  * Property to get the notification manager from the context.

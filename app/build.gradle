@@ -117,7 +117,7 @@ dependencies {
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.1'
 
     // Network client
-    compile "com.squareup.okhttp3:okhttp:3.3.0"
+    compile "com.squareup.okhttp3:okhttp:3.3.1"
 
     // REST
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"

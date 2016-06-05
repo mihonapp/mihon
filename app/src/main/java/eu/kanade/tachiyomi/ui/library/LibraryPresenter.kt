@@ -236,7 +236,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Remove the selected manga from the library.
      */
-    fun deleteMangas() {
+    fun removeMangaFromLibrary() {
         // Create a set of the list
         val mangaToDelete = selectedMangas.toSet()
 

@@ -134,7 +134,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
 
         // Set clear button visibility.
         clearButton = menu.findItem(R.id.clear_queue).apply {
-            if (adapter.itemCount > 0) {
+            if (!presenter.downloadQueue.isEmpty()) {
                 isVisible = true
             }
         }
@@ -147,7 +147,6 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
             R.id.clear_queue -> {
                 DownloadService.stop(activity)
                 presenter.clearQueue()
-                clearButton?.isVisible = false
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -223,7 +222,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
         isRunning = running
         startButton?.isVisible = !running && !presenter.downloadQueue.isEmpty()
         pauseButton?.isVisible = running
-        clearButton?.isVisible = running
+        clearButton?.isVisible = !presenter.downloadQueue.isEmpty()
 
         // Check if download queue is empty and update information accordingly.
         setInformationView()

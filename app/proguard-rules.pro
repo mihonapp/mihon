@@ -119,3 +119,11 @@
 # Keep the support library
 -keep class org.acra.** { *; }
 -keep interface org.acra.** { *; }
+
+# SnakeYaml
+-keep class org.yaml.snakeyaml.** { public protected private *; }
+-keep class org.yaml.snakeyaml.** { public protected private *; }
+-dontwarn org.yaml.snakeyaml.**
+
+# Duktape
+-keep class com.squareup.duktape.** { *; }
