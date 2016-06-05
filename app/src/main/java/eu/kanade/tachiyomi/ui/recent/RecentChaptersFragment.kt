@@ -123,9 +123,6 @@ class RecentChaptersFragment : BaseRxFragment<RecentChaptersPresenter>(), Action
         adapter = RecentChaptersAdapter(this)
         recycler.adapter = adapter
 
-        // Set swipe refresh listener
-        swipe_refresh.setOnRefreshListener { fetchChapters() }
-
         // Update toolbar text
         setToolbarTitle(R.string.label_recent_updates)
     }
@@ -314,30 +311,6 @@ class RecentChaptersFragment : BaseRxFragment<RecentChaptersPresenter>(), Action
      */
     fun dismissDeletingDialog() {
         (childFragmentManager.findFragmentByTag(DeletingChaptersDialog.TAG) as? DialogFragment)?.dismiss()
-    }
-
-    /**
-     * Called when swipe refresh activated.
-     */
-    fun fetchChapters() {
-        swipe_refresh.isRefreshing = true
-        presenter.fetchChaptersFromSource()
-    }
-
-    /**
-     * Called after refresh is completed
-     */
-    fun onFetchChaptersDone() {
-        swipe_refresh.isRefreshing = false
-    }
-
-    /**
-     * Called when something went wrong while refreshing
-     * @param error information on what went wrong
-     */
-    fun onFetchChaptersError(error: Throwable) {
-        swipe_refresh.isRefreshing = false
-        context.toast(error.message)
     }
 
 }

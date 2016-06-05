@@ -65,11 +65,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
                     fragment.onNextMangaChapters(chapters)
                     // Update download status
                     updateChapterStatus(convertToMangaChaptersList(chapters))
-                    // Stop refresh
-                    fragment.onFetchChaptersDone()
-
-                },
-                { fragment, error -> fragment.onFetchChaptersError(error) }
+                }
         )
 
         // Used to update download status
@@ -346,8 +342,5 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
         chapter.status = Download.NOT_DOWNLOADED
     }
 
-    fun fetchChaptersFromSource() {
-        start(GET_RECENT_CHAPTERS)
-    }
 
 }
