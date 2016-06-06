@@ -3,10 +3,9 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.content.Context
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.injection.AppComponentFactory
 import eu.kanade.tachiyomi.injection.ComponentReflectionInjector
 import eu.kanade.tachiyomi.injection.component.AppComponent
-import eu.kanade.tachiyomi.injection.component.DaggerAppComponent
-import eu.kanade.tachiyomi.injection.module.AppModule
 import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
 import timber.log.Timber
@@ -32,7 +31,7 @@ open class App : Application() {
         super.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
-        component = prepareAppComponent().build()
+        component = createAppComponent()
 
         componentReflection = ComponentReflectionInjector(AppComponent::class.java, component)
 
@@ -44,9 +43,8 @@ open class App : Application() {
         appTheme = PreferencesHelper.getTheme(this)
     }
 
-    protected open fun prepareAppComponent(): DaggerAppComponent.Builder {
-        return DaggerAppComponent.builder()
-                .appModule(AppModule(this))
+    protected open fun createAppComponent(): AppComponent {
+        return AppComponentFactory.create(this)
     }
 
     protected open fun setupAcra() {

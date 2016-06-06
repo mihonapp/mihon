@@ -2,7 +2,11 @@ package eu.kanade.tachiyomi.data.database.resolvers
 
 import android.database.Cursor
 import com.pushtorefresh.storio.sqlite.operations.get.DefaultGetResolver
-import eu.kanade.tachiyomi.data.database.models.*
+import eu.kanade.tachiyomi.data.database.mappers.ChapterGetResolver
+import eu.kanade.tachiyomi.data.database.mappers.HistoryGetResolver
+import eu.kanade.tachiyomi.data.database.mappers.MangaGetResolver
+import eu.kanade.tachiyomi.data.database.models.MangaChapter
+import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
 
 class MangaChapterHistoryGetResolver : DefaultGetResolver<MangaChapterHistory>() {
     companion object {
@@ -12,17 +16,17 @@ class MangaChapterHistoryGetResolver : DefaultGetResolver<MangaChapterHistory>()
     /**
      * Manga get resolver
      */
-    private val mangaGetResolver = MangaStorIOSQLiteGetResolver()
+    private val mangaGetResolver = MangaGetResolver()
 
     /**
      * Chapter get resolver
      */
-    private val chapterResolver = ChapterStorIOSQLiteGetResolver()
+    private val chapterResolver = ChapterGetResolver()
 
     /**
      * History get resolver
      */
-    private val historyGetResolver = HistoryStorIOSQLiteGetResolver()
+    private val historyGetResolver = HistoryGetResolver()
 
     /**
      * Map correct objects from cursor result

@@ -1,12 +1,11 @@
 package eu.kanade.tachiyomi.data.database.resolvers
 
 import android.database.Cursor
-
+import eu.kanade.tachiyomi.data.database.mappers.MangaGetResolver
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.MangaStorIOSQLiteGetResolver
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
 
-class LibraryMangaGetResolver : MangaStorIOSQLiteGetResolver() {
+class LibraryMangaGetResolver : MangaGetResolver() {
 
     companion object {
         val INSTANCE = LibraryMangaGetResolver()

@@ -84,10 +84,6 @@ android {
 
 }
 
-kapt {
-    generateStubs = true
-}
-
 dependencies {
     final SUPPORT_LIBRARY_VERSION = '23.4.0'
     final DAGGER_VERSION = '2.4'
@@ -148,7 +144,6 @@ dependencies {
     // Database
     compile "com.pushtorefresh.storio:sqlite:$STORIO_VERSION"
     compile "com.pushtorefresh.storio:sqlite-annotations:$STORIO_VERSION"
-    kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$STORIO_VERSION"
 
     // Model View Presenter
     compile "info.android15.nucleus:nucleus:$NUCLEUS_VERSION"
