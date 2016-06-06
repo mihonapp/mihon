@@ -22,8 +22,8 @@ import java.text.DecimalFormatSymbols
  * @param adapter the adapter handling this holder.
  * @constructor creates a new recent chapter holder.
  */
-class RecentlyReadHolder(view: View, private val adapter: RecentlyReadAdapter) :
-        RecyclerView.ViewHolder(view) {
+class RecentlyReadHolder(view: View, private val adapter: RecentlyReadAdapter)
+: RecyclerView.ViewHolder(view) {
 
     /**
      * DecimalFormat used to display correct chapter number

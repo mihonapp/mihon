@@ -14,16 +14,19 @@ import java.util.*
 import javax.inject.Inject
 
 /**
- * The id of the restartable.
- */
-const private val GET_RECENT_MANGA = 1
-
-/**
  * Presenter of RecentlyReadFragment.
  * Contains information and data for fragment.
  * Observable updates should be called from here.
  */
 class RecentlyReadPresenter : BasePresenter<RecentlyReadFragment>() {
+
+    companion object {
+        /**
+         * The id of the restartable.
+         */
+        const private val GET_RECENT_MANGA = 1
+    }
+
     /**
      * Used to connect to database
      */
@@ -35,9 +38,9 @@ class RecentlyReadPresenter : BasePresenter<RecentlyReadFragment>() {
         // Used to get recent manga
         restartableLatestCache(GET_RECENT_MANGA,
                 { getRecentMangaObservable() },
-                { recentMangaFragment, manga ->
+                { view, manga ->
                     // Update adapter to show recent manga's
-                    recentMangaFragment.onNextManga(manga)
+                    view.onNextManga(manga)
                 }
         )
 
