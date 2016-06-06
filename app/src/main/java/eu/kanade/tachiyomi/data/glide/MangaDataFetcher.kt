@@ -29,10 +29,15 @@ class MangaDataFetcher(private val networkFetcher: DataFetcher<InputStream>,
             if (!file.exists()) {
                 file.parentFile.mkdirs()
                 networkFetcher.loadData(priority)?.let {
-                    it.use { input ->
-                        file.outputStream().use { output ->
-                            input.copyTo(output)
+                    try {
+                        it.use { input ->
+                            file.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
                         }
+                    } catch (e: Exception) {
+                        file.delete()
+                        throw e
                     }
                 }
             }
