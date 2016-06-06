@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v0.2.2" changeDate="">
+        <changelogtext>[b]Important![/b] Now chapters follow the order of the sources. [b]It's required that you update your entire library
+            before reading to sync them.[/b] Old behavior can be restored for a manga in the overflow menu of the chapters tab.
+        </changelogtext>
+
+        <changelogtext>Kissmanga now loads through CloudFlare.</changelogtext>
+
+        <changelogtext>Persistent cookies have been added for a better experience with CloudFlare sites.</changelogtext>
+
+        <changelogtext>Added link to manga website in the info page. [a href="https://github.com/inorichi/tachiyomi/issues/157"]#157[/a]</changelogtext>
+
+        <changelogtext>Added notifications for downloads. [a href="https://github.com/inorichi/tachiyomi/pull/289"]#289[/a]</changelogtext>
+
+        <changelogtext>Added more options to recent updates. [a href="https://github.com/inorichi/tachiyomi/pull/324"]#324[/a]</changelogtext>
+
+        <changelogtext>Remember last active category. [a href="https://github.com/inorichi/tachiyomi/issues/261"]#261[/a]</changelogtext>
+
+        <changelogtext>Fixed a bug with seamless mode for chapters with less than 5 pages. [a href="https://github.com/inorichi/tachiyomi/issues/291"]#291[/a]</changelogtext>
+
+        <changelogtext>Improved chapter recognition.</changelogtext>
+
+        <changelogtext>Bugfixes and more improvements.</changelogtext>
+    </changelogversion>
+
 </changelog>

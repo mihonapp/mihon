@@ -30,7 +30,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="@dimen/listPreferredItemHeightSmall"
-        android:padding="@dimen/chglib_material_keyline1"
+        android:paddingLeft="@dimen/chglib_material_keyline1"
+        android:paddingRight="@dimen/chglib_material_keyline1"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:textAppearance="@style/TextAppearance.Regular.Body1"
         tools:text="Use DashClock with Android 4.2's Daydream feature; great for use with desktop docks!"
         />

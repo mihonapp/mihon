@@ -36,6 +36,10 @@ class DbOpenHelper(context: Context)
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
             db.execSQL(ChapterTable.sourceOrderUpdateQuery)
+
+            // Fix kissmanga covers after supporting cloudflare
+            db.execSQL("""UPDATE mangas SET thumbnail_url =
+                    REPLACE(thumbnail_url, '93.174.95.110', 'kissmanga.com') WHERE source = 4""")
         }
     }
 
