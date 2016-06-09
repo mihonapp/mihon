@@ -139,6 +139,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     override fun onDestroyView() {
+        tabs.setupWithViewPager(null)
         tabs.visibility = View.GONE
         super.onDestroyView()
     }
@@ -261,18 +262,12 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
         // Set the categories
         adapter.categories = categories
-        tabs.setupWithViewPager(view_pager)
         tabs.visibility = if (categories.size <= 1) View.GONE else View.VISIBLE
 
         // Restore active category.
         view_pager.setCurrentItem(activeCat, false)
-        if (tabs.tabCount > 0) {
-            // Prevent IndexOutOfBoundsException
-            if (tabs.tabCount <= view_pager.currentItem) {
-                view_pager.currentItem = (tabs.tabCount - 1)
-            }
-            tabs.getTabAt(view_pager.currentItem)?.select()
-        }
+        // Delay the scroll position to allow the view to be properly measured.
+        view_pager.post { tabs.setScrollPosition(view_pager.currentItem, 0f, true) }
 
         // Send the manga map to child fragments after the adapter is updated.
         presenter.libraryMangaSubject.onNext(LibraryMangaEvent(mangaMap))
