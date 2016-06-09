@@ -258,16 +258,17 @@ class DownloadManager(private val context: Context, private val sourceManager: S
     private fun downloadImage(page: Page, source: OnlineSource, directory: File, filename: String): Observable<Page> {
         page.status = Page.DOWNLOAD_IMAGE
         return source.imageResponse(page)
-                .flatMap {
+                .map {
+                    val file = File(directory, filename)
                     try {
-                        val file = File(directory, filename)
                         file.parentFile.mkdirs()
                         it.body().source().saveImageTo(file.outputStream(), preferences.reencodeImage())
                     } catch (e: Exception) {
-                        it.body().close()
+                        it.close()
+                        file.delete()
                         throw e
                     }
-                    Observable.just(page)
+                    page
                 }
                 .retryWhen {
                     it.zipWith(Observable.range(1, 3)) { errors, retries -> retries }
