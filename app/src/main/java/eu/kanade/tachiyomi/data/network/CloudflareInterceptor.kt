@@ -55,7 +55,7 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
 
             val js = operation
                     //language=RegExp
-                    .replace(Regex("""a\.value =(.+?) \+ .+?;"""), "$1")
+                    .replace(Regex("""a\.value =(.+?) \+.*"""), "$1")
                     //language=RegExp
                     .replace(Regex("""\s{3,}[a-z](?: = |\.).+"""), "")
                     .replace("\n", "")
