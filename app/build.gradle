@@ -39,7 +39,6 @@ android {
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 9
-        versionCode project.findProperty('versionCode')?.toInteger() ?: 9
         versionName "0.2.2-1"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
