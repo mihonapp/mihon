@@ -38,9 +38,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 8
-        versionCode project.findProperty('versionCode')?.toInteger() ?: 8
-        versionName "0.2.2"
+        versionCode 9
+        versionName "0.2.2-1"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
