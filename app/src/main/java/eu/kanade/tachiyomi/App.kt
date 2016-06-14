@@ -3,12 +3,10 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.content.Context
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.injection.AppComponentFactory
-import eu.kanade.tachiyomi.injection.ComponentReflectionInjector
-import eu.kanade.tachiyomi.injection.component.AppComponent
 import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
 import timber.log.Timber
+import uy.kohesive.injekt.Injekt
 
 @ReportsCrashes(
         formUri = "http://tachiyomi.kanade.eu/crash_report",
@@ -19,21 +17,12 @@ import timber.log.Timber
 )
 open class App : Application() {
 
-    lateinit var component: AppComponent
-        private set
-
-    lateinit var componentReflection: ComponentReflectionInjector<AppComponent>
-        private set
-
     var appTheme = 0
 
     override fun onCreate() {
         super.onCreate()
+        Injekt.importModule(AppModule(this))
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-
-        component = createAppComponent()
-
-        componentReflection = ComponentReflectionInjector(AppComponent::class.java, component)
 
         setupTheme()
         setupAcra()
@@ -41,10 +30,6 @@ open class App : Application() {
 
     private fun setupTheme() {
         appTheme = PreferencesHelper.getTheme(this)
-    }
-
-    protected open fun createAppComponent(): AppComponent {
-        return AppComponentFactory.create(this)
     }
 
     protected open fun setupAcra() {
