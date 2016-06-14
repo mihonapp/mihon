@@ -43,7 +43,7 @@ class ChapterRecognitionTest {
      * Called before test
      */
     @Before fun setup() {
-        manga = Manga().apply { title = "random" }
+        manga = Manga.create(0).apply { title = "random" }
         chapter = Chapter.create()
     }
 
