@@ -10,6 +10,7 @@ import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
 import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.tachiyomi.data.database.models.CategoryImpl
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable.COL_FLAGS
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable.COL_ID
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable.COL_NAME
@@ -44,7 +45,7 @@ class CategoryPutResolver : DefaultPutResolver<Category>() {
 
 class CategoryGetResolver : DefaultGetResolver<Category>() {
 
-    override fun mapFromCursor(cursor: Cursor) = Category().apply {
+    override fun mapFromCursor(cursor: Cursor): Category = CategoryImpl().apply {
         id = cursor.getInt(cursor.getColumnIndex(COL_ID))
         name = cursor.getString(cursor.getColumnIndex(COL_NAME))
         order = cursor.getInt(cursor.getColumnIndex(COL_ORDER))

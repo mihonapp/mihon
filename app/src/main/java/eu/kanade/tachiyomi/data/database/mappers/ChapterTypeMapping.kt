@@ -10,6 +10,7 @@ import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
 import eu.kanade.tachiyomi.data.database.models.Chapter
+import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable.COL_CHAPTER_NUMBER
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable.COL_DATE_FETCH
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable.COL_DATE_UPLOAD
@@ -56,7 +57,7 @@ class ChapterPutResolver : DefaultPutResolver<Chapter>() {
 
 class ChapterGetResolver : DefaultGetResolver<Chapter>() {
 
-    override fun mapFromCursor(cursor: Cursor) = Chapter().apply {
+    override fun mapFromCursor(cursor: Cursor): Chapter = ChapterImpl().apply {
         id = cursor.getLong(cursor.getColumnIndex(COL_ID))
         manga_id = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID))
         url = cursor.getString(cursor.getColumnIndex(COL_URL))

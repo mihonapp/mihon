@@ -44,7 +44,7 @@ class HistoryPutResolver : DefaultPutResolver<History>() {
 
 class HistoryGetResolver : DefaultGetResolver<History>() {
 
-    override fun mapFromCursor(cursor: Cursor) = History().apply {
+    override fun mapFromCursor(cursor: Cursor): History = History().apply {
         id = cursor.getLong(cursor.getColumnIndex(COL_ID))
         chapter_id = cursor.getLong(cursor.getColumnIndex(COL_CHAPTER_ID))
         last_read = cursor.getLong(cursor.getColumnIndex(COL_LAST_READ))

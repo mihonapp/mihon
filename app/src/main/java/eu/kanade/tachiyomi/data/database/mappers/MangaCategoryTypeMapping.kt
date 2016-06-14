@@ -42,7 +42,7 @@ class MangaCategoryPutResolver : DefaultPutResolver<MangaCategory>() {
 
 class MangaCategoryGetResolver : DefaultGetResolver<MangaCategory>() {
 
-    override fun mapFromCursor(cursor: Cursor) = MangaCategory().apply {
+    override fun mapFromCursor(cursor: Cursor): MangaCategory = MangaCategory().apply {
         id = cursor.getLong(cursor.getColumnIndex(COL_ID))
         manga_id = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID))
         category_id = cursor.getInt(cursor.getColumnIndex(COL_CATEGORY_ID))

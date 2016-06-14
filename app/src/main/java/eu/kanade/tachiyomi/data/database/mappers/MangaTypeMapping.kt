@@ -10,6 +10,7 @@ import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.data.database.tables.MangaTable.COL_ARTIST
 import eu.kanade.tachiyomi.data.database.tables.MangaTable.COL_AUTHOR
 import eu.kanade.tachiyomi.data.database.tables.MangaTable.COL_CHAPTER_FLAGS
@@ -66,7 +67,7 @@ class MangaPutResolver : DefaultPutResolver<Manga>() {
 
 open class MangaGetResolver : DefaultGetResolver<Manga>() {
 
-    override fun mapFromCursor(cursor: Cursor) = Manga().apply {
+    override fun mapFromCursor(cursor: Cursor): Manga = MangaImpl().apply {
         id = cursor.getLong(cursor.getColumnIndex(COL_ID))
         source = cursor.getInt(cursor.getColumnIndex(COL_SOURCE))
         url = cursor.getString(cursor.getColumnIndex(COL_URL))
