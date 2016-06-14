@@ -5,8 +5,8 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.ui.reader.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
@@ -181,7 +181,7 @@ abstract class PagerReader : BaseReader() {
      * @param chapter the chapter set.
      * @param currentPage the initial page to display.
      */
-    override fun onChapterSet(chapter: Chapter, currentPage: Page) {
+    override fun onChapterSet(chapter: ReaderChapter, currentPage: Page) {
         this.currentPage = getPageIndex(currentPage) // we might have a new page object
 
         // Make sure the view is already initialized.
@@ -195,7 +195,7 @@ abstract class PagerReader : BaseReader() {
      *
      * @param chapter the chapter appended.
      */
-    override fun onChapterAppended(chapter: Chapter) {
+    override fun onChapterAppended(chapter: ReaderChapter) {
         // Make sure the view is already initialized.
         if (view != null) {
             adapter.pages = pages

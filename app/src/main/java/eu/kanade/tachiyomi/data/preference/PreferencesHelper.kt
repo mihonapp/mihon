@@ -101,8 +101,6 @@ class PreferencesHelper(private val context: Context) {
 
     fun lastVersionCode() = rxPrefs.getInteger("last_version_code", 0)
 
-    fun seamlessMode() = prefs.getBoolean(keys.seamlessMode, true)
-
     fun catalogueAsList() = rxPrefs.getBoolean(keys.catalogueAsList, false)
 
     fun enabledLanguages() = rxPrefs.getStringSet(keys.enabledLanguages, setOf("EN"))

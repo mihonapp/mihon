@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
@@ -114,16 +113,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     override fun onResume() {
         super.onResume()
         setSystemUiVisibility()
-    }
-
-    override fun onPause() {
-        viewer?.let {
-            val activePage = it.getActivePage()
-            if (activePage != null) {
-                presenter.currentPage = activePage
-            }
-        }
-        super.onPause()
     }
 
     override fun onDestroy() {
@@ -230,6 +219,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         // Ignore
     }
 
+    /**
+     * Called from the presenter at startup, allowing to prepare the selected reader.
+     */
     fun onMangaOpen(manga: Manga) {
         if (viewer == null) {
             viewer = getOrCreateViewer(manga)
@@ -243,22 +235,23 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         please_wait.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_long))
     }
 
-    fun onChapterReady(manga: Manga, chapter: Chapter, currentPage: Page?) {
+    fun onChapterReady(chapter: ReaderChapter) {
         please_wait.visibility = View.GONE
-        val activePage = currentPage ?: chapter.pages.last()
+        val pages = chapter.pages ?: run { onChapterError(Exception("Null pages")); return }
+        val activePage = pages.getOrElse(chapter.requestedPage) { pages.first() }
 
         viewer?.onPageListReady(chapter, activePage)
         setActiveChapter(chapter, activePage.pageNumber)
     }
 
-    fun onEnterChapter(chapter: Chapter, currentPage: Int) {
-        val activePage = if (currentPage == -1) chapter.pages.lastIndex else currentPage
+    fun onEnterChapter(chapter: ReaderChapter, currentPage: Int) {
+        val activePage = if (currentPage == -1) chapter.pages!!.lastIndex else currentPage
         presenter.setActiveChapter(chapter)
         setActiveChapter(chapter, activePage)
     }
 
-    fun setActiveChapter(chapter: Chapter, currentPage: Int) {
-        val numPages = chapter.pages.size
+    fun setActiveChapter(chapter: ReaderChapter, currentPage: Int) {
+        val numPages = chapter.pages!!.size
         if (page_seekbar.rotation != 180f) {
             right_page_text.text = "$numPages"
             left_page_text.text = "${currentPage + 1}"
@@ -275,7 +268,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             chapter.name)
     }
 
-    fun onAppendChapter(chapter: Chapter) {
+    fun onAppendChapter(chapter: ReaderChapter) {
         viewer?.onPageListAppendReady(chapter)
     }
 
@@ -324,7 +317,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         viewer?.let {
             val activePage = it.getActivePage()
             if (activePage != null) {
-                val requestedPage = activePage.chapter.pages[pageIndex]
+                val requestedPage = activePage.chapter.pages!![pageIndex]
                 it.setActivePage(requestedPage)
             }
 

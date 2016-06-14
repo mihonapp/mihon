@@ -1,11 +1,11 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.base
 
 import com.davemorrissey.labs.subscaleview.decoder.*
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.ui.reader.ReaderChapter
 import java.util.*
 
 /**
@@ -29,7 +29,7 @@ abstract class BaseReader : BaseFragment() {
     /**
      * List of chapters added in the reader.
      */
-    private var chapters = ArrayList<Chapter>()
+    private val chapters = ArrayList<ReaderChapter>()
 
     /**
      * List of pages added in the reader. It can contain pages from more than one chapter.
@@ -72,7 +72,7 @@ abstract class BaseReader : BaseFragment() {
     fun updatePageNumber() {
         val activePage = getActivePage()
         if (activePage != null) {
-            readerActivity.onPageChanged(activePage.pageNumber, activePage.chapter.pages.size)
+            readerActivity.onPageChanged(activePage.pageNumber, activePage.chapter.pages!!.size)
         }
     }
 
@@ -91,23 +91,22 @@ abstract class BaseReader : BaseFragment() {
     fun onPageChanged(position: Int) {
         val oldPage = pages[currentPage]
         val newPage = pages[position]
-        newPage.chapter.last_page_read = newPage.pageNumber
+        readerActivity.presenter.onPageChanged(newPage)
 
-        if (readerActivity.presenter.isSeamlessMode) {
-            val oldChapter = oldPage.chapter
-            val newChapter = newPage.chapter
+        val oldChapter = oldPage.chapter
+        val newChapter = newPage.chapter
 
-            // Active chapter has changed.
-            if (oldChapter.id != newChapter.id) {
-                readerActivity.onEnterChapter(newPage.chapter, newPage.pageNumber)
-            }
-            // Request next chapter only when the conditions are met.
-            if (pages.size - position < 5 && chapters.last().id == newChapter.id
-                    && readerActivity.presenter.hasNextChapter() && !hasRequestedNextChapter) {
-                hasRequestedNextChapter = true
-                readerActivity.presenter.appendNextChapter()
-            }
+        // Active chapter has changed.
+        if (oldChapter.id != newChapter.id) {
+            readerActivity.onEnterChapter(newPage.chapter, newPage.pageNumber)
         }
+        // Request next chapter only when the conditions are met.
+        if (pages.size - position < 5 && chapters.last().id == newChapter.id
+                && readerActivity.presenter.hasNextChapter() && !hasRequestedNextChapter) {
+            hasRequestedNextChapter = true
+            readerActivity.presenter.appendNextChapter()
+        }
+
         currentPage = position
         updatePageNumber()
     }
@@ -144,10 +143,10 @@ abstract class BaseReader : BaseFragment() {
      * @param chapter the chapter to set.
      * @param currentPage the initial page to display.
      */
-    fun onPageListReady(chapter: Chapter, currentPage: Page) {
+    fun onPageListReady(chapter: ReaderChapter, currentPage: Page) {
         if (!chapters.contains(chapter)) {
             // if we reset the loaded page we also need to reset the loaded chapters
-            chapters = ArrayList<Chapter>()
+            chapters.clear()
             chapters.add(chapter)
             pages = ArrayList(chapter.pages)
             onChapterSet(chapter, currentPage)
@@ -162,11 +161,11 @@ abstract class BaseReader : BaseFragment() {
      *
      * @param chapter the chapter to append.
      */
-    fun onPageListAppendReady(chapter: Chapter) {
+    fun onPageListAppendReady(chapter: ReaderChapter) {
         if (!chapters.contains(chapter)) {
             hasRequestedNextChapter = false
             chapters.add(chapter)
-            pages.addAll(chapter.pages)
+            pages.addAll(chapter.pages!!)
             onChapterAppended(chapter)
         }
     }
@@ -184,14 +183,14 @@ abstract class BaseReader : BaseFragment() {
      * @param chapter the chapter set.
      * @param currentPage the initial page to display.
      */
-    abstract fun onChapterSet(chapter: Chapter, currentPage: Page)
+    abstract fun onChapterSet(chapter: ReaderChapter, currentPage: Page)
 
     /**
      * Called when a chapter is appended in [BaseReader].
      *
      * @param chapter the chapter appended.
      */
-    abstract fun onChapterAppended(chapter: Chapter)
+    abstract fun onChapterAppended(chapter: ReaderChapter)
 
     /**
      * Moves pages forward. Implementations decide how to move (by a page, by some distance...).
