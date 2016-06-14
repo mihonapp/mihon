@@ -1,10 +1,8 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
-import android.content.Context
 import android.view.View
 import android.widget.PopupMenu
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
@@ -26,7 +24,7 @@ class ChaptersHolder(
     private val decimalFormat = DecimalFormat("#.###", DecimalFormatSymbols().apply { decimalSeparator = '.' })
     private val df = DateFormat.getDateInstance(DateFormat.SHORT)
 
-    private var item: Chapter? = null
+    private var item: ChapterModel? = null
 
     init {
         // We need to post a Runnable to show the popup to make sure that the PopupMenu is
@@ -35,19 +33,16 @@ class ChaptersHolder(
         view.chapter_menu.setOnClickListener { it.post { showPopupMenu(it) } }
     }
 
-    fun onSetValues(chapter: Chapter, manga: Manga?) = with(view) {
+    fun onSetValues(chapter: ChapterModel, manga: Manga?) = with(view) {
         item = chapter
 
-        val name: String
-        when (manga?.displayMode) {
+        chapter_title.text = when (manga?.displayMode) {
             Manga.DISPLAY_NUMBER -> {
                 val formattedNumber = decimalFormat.format(chapter.chapter_number.toDouble())
-                name = context.getString(R.string.display_mode_chapter, formattedNumber)
+                context.getString(R.string.display_mode_chapter, formattedNumber)
             }
-            else -> name = chapter.name
+            else -> chapter.name
         }
-
-        chapter_title.text = name
         chapter_title.setTextColor(if (chapter.read) readColor else unreadColor)
 
         if (chapter.date_upload > 0) {
@@ -57,31 +52,26 @@ class ChaptersHolder(
             chapter_date.text = ""
         }
 
-        if (!chapter.read && chapter.last_page_read > 0) {
-            chapter_pages.text = context.getString(R.string.chapter_progress, chapter.last_page_read + 1)
+        chapter_pages.text = if (!chapter.read && chapter.last_page_read > 0) {
+            context.getString(R.string.chapter_progress, chapter.last_page_read + 1)
         } else {
-            chapter_pages.text = ""
+            ""
         }
 
         notifyStatus(chapter.status)
     }
 
-    fun notifyStatus(status: Int) = with(view) {
+    fun notifyStatus(status: Int) = with(view.download_text) {
         when (status) {
-            Download.QUEUE -> download_text.setText(R.string.chapter_queued)
-            Download.DOWNLOADING -> download_text.setText(R.string.chapter_downloading)
-            Download.DOWNLOADED -> download_text.setText(R.string.chapter_downloaded)
-            Download.ERROR -> download_text.setText(R.string.chapter_error)
-            else -> download_text.text = ""
+            Download.QUEUE -> setText(R.string.chapter_queued)
+            Download.DOWNLOADING -> setText(R.string.chapter_downloading)
+            Download.DOWNLOADED -> setText(R.string.chapter_downloaded)
+            Download.ERROR -> setText(R.string.chapter_error)
+            else -> text = ""
         }
     }
 
-    fun onProgressChange(context: Context, downloaded: Int, total: Int) {
-        view.download_text.text = context.getString(
-                R.string.chapter_downloading_progress, downloaded, total)
-    }
-
-    private fun showPopupMenu(view: View) = item?.let { item ->
+    private fun showPopupMenu(view: View) = item?.let { chapter ->
         // Create a PopupMenu, giving it the clicked view for an anchor
         val popup = PopupMenu(view.context, view)
 
@@ -89,32 +79,35 @@ class ChaptersHolder(
         popup.menuInflater.inflate(R.menu.chapter_single, popup.menu)
 
         // Hide download and show delete if the chapter is downloaded
-        if (item.isDownloaded) {
+        if (chapter.isDownloaded) {
             popup.menu.findItem(R.id.action_download).isVisible = false
             popup.menu.findItem(R.id.action_delete).isVisible = true
         }
 
         // Hide mark as unread when the chapter is unread
-        if (!item.read && item.last_page_read == 0) {
+        if (!chapter.read && chapter.last_page_read == 0) {
             popup.menu.findItem(R.id.action_mark_as_unread).isVisible = false
         }
 
         // Hide mark as read when the chapter is read
-        if (item.read) {
+        if (chapter.read) {
             popup.menu.findItem(R.id.action_mark_as_read).isVisible = false
         }
 
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
-            val chapter = listOf(item)
+            val chapterList = listOf(chapter)
 
-            when (menuItem.itemId) {
-                R.id.action_download -> adapter.fragment.downloadChapters(chapter)
-                R.id.action_delete -> adapter.fragment.deleteChapters(chapter)
-                R.id.action_mark_as_read -> adapter.fragment.markAsRead(chapter)
-                R.id.action_mark_as_unread -> adapter.fragment.markAsUnread(chapter)
-                R.id.action_mark_previous_as_read -> adapter.fragment.markPreviousAsRead(item)
+            with(adapter.fragment) {
+                when (menuItem.itemId) {
+                    R.id.action_download -> downloadChapters(chapterList)
+                    R.id.action_delete -> deleteChapters(chapterList)
+                    R.id.action_mark_as_read -> markAsRead(chapterList)
+                    R.id.action_mark_as_unread -> markAsUnread(chapterList)
+                    R.id.action_mark_previous_as_read -> markPreviousAsRead(chapter)
+                }
             }
+
             true
         }
 

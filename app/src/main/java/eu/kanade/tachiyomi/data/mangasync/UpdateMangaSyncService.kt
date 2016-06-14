@@ -4,25 +4,23 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 class UpdateMangaSyncService : Service() {
 
-    @Inject lateinit var syncManager: MangaSyncManager
-    @Inject lateinit var db: DatabaseHelper
+    val syncManager: MangaSyncManager by injectLazy()
+    val db: DatabaseHelper by injectLazy()
 
     private lateinit var subscriptions: CompositeSubscription
 
     override fun onCreate() {
         super.onCreate()
-        App.get(this).component.inject(this)
         subscriptions = CompositeSubscription()
     }
 

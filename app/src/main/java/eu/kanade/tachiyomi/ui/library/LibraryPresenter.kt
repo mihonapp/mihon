@@ -16,10 +16,10 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
+import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
-import javax.inject.Inject
 
 /**
  * Presenter of [LibraryFragment].
@@ -49,27 +49,27 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Database.
      */
-    @Inject lateinit var db: DatabaseHelper
+    val db: DatabaseHelper by injectLazy()
 
     /**
      * Preferences.
      */
-    @Inject lateinit var preferences: PreferencesHelper
+    val preferences: PreferencesHelper by injectLazy()
 
     /**
      * Cover cache.
      */
-    @Inject lateinit var coverCache: CoverCache
+    val coverCache: CoverCache by injectLazy()
 
     /**
      * Source manager.
      */
-    @Inject lateinit var sourceManager: SourceManager
+    val sourceManager: SourceManager by injectLazy()
 
     /**
      * Download manager.
      */
-    @Inject lateinit var downloadManager: DownloadManager
+    val downloadManager: DownloadManager by injectLazy()
 
     companion object {
         /**
@@ -279,7 +279,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     @Throws(IOException::class)
     fun editCoverWithStream(inputStream: InputStream, manga: Manga): Boolean {
         if (manga.thumbnail_url != null && manga.favorite) {
-            coverCache.copyToCache(manga.thumbnail_url, inputStream)
+            coverCache.copyToCache(manga.thumbnail_url!!, inputStream)
             return true
         }
         return false

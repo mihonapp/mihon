@@ -49,7 +49,7 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
      * @return an identifier for the item.
      */
     override fun getItemId(position: Int): Long {
-        return mItems[position].id
+        return mItems[position].id!!
     }
 
     /**
@@ -72,8 +72,8 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
      * @return true if the manga should be included, false otherwise.
      */
     override fun filterObject(manga: Manga, query: String): Boolean = with(manga) {
-        title != null && title.toLowerCase().contains(query) ||
-                author != null && author.toLowerCase().contains(query)
+        title.toLowerCase().contains(query) ||
+                author != null && author!!.toLowerCase().contains(query)
     }
 
     /**

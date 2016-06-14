@@ -35,7 +35,7 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
 
     override fun popularMangaFromElement(element: Element, manga: Manga) {
         element.select("td a:eq(0)").first().let {
-            manga.setUrl(it.attr("href"))
+            manga.setUrlWithoutDomain(it.attr("href"))
             manga.title = it.text()
         }
     }
@@ -88,7 +88,7 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
     override fun chapterFromElement(element: Element, chapter: Chapter) {
         val urlElement = element.select("a").first()
 
-        chapter.setUrl(urlElement.attr("href"))
+        chapter.setUrlWithoutDomain(urlElement.attr("href"))
         chapter.name = urlElement.text()
         chapter.date_upload = element.select("td:eq(1)").first()?.text()?.let {
             SimpleDateFormat("MM/dd/yyyy").parse(it).time

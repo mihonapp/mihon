@@ -3,10 +3,9 @@ package eu.kanade.tachiyomi.ui.manga.chapter
 import android.view.ViewGroup
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.util.inflate
 
-class ChaptersAdapter(val fragment: ChaptersFragment) : FlexibleAdapter<ChaptersHolder, Chapter>() {
+class ChaptersAdapter(val fragment: ChaptersFragment) : FlexibleAdapter<ChaptersHolder, ChapterModel>() {
 
     init {
         setHasStableIds(true)
@@ -30,10 +29,10 @@ class ChaptersAdapter(val fragment: ChaptersFragment) : FlexibleAdapter<Chapters
     }
 
     override fun getItemId(position: Int): Long {
-        return mItems[position].id
+        return mItems[position].id!!
     }
 
-    fun setItems(chapters: List<Chapter>) {
+    fun setItems(chapters: List<ChapterModel>) {
         mItems = chapters
         notifyDataSetChanged()
     }

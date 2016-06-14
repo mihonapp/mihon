@@ -10,12 +10,12 @@ import android.os.PowerManager
 import android.support.v4.app.NotificationCompat
 import com.github.pwittchen.reactivenetwork.library.ConnectivityStatus
 import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Companion.start
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
@@ -24,9 +24,9 @@ import eu.kanade.tachiyomi.util.*
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers
+import uy.kohesive.injekt.injectLazy
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Inject
 
 /**
  * This class will take care of updating the chapters of the manga from the library. It can be
@@ -41,17 +41,17 @@ class LibraryUpdateService : Service() {
     /**
      * Database helper.
      */
-    @Inject lateinit var db: DatabaseHelper
+    val db: DatabaseHelper by injectLazy()
 
     /**
      * Source manager.
      */
-    @Inject lateinit var sourceManager: SourceManager
+    val sourceManager: SourceManager by injectLazy()
 
     /**
      * Preferences.
      */
-    @Inject lateinit var preferences: PreferencesHelper
+    val preferences: PreferencesHelper by injectLazy()
 
     /**
      * Wake lock that will be held until the service is destroyed.
@@ -126,7 +126,6 @@ class LibraryUpdateService : Service() {
      */
     override fun onCreate() {
         super.onCreate()
-        App.get(this).component.inject(this)
         createAndAcquireWakeLock()
     }
 

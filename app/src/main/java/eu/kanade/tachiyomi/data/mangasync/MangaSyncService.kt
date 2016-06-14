@@ -2,23 +2,18 @@ package eu.kanade.tachiyomi.data.mangasync
 
 import android.content.Context
 import android.support.annotation.CallSuper
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import okhttp3.OkHttpClient
 import rx.Completable
 import rx.Observable
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 abstract class MangaSyncService(private val context: Context, val id: Int) {
 
-    @Inject lateinit var preferences: PreferencesHelper
-    @Inject lateinit var networkService: NetworkHelper
-
-    init {
-        App.get(context).component.inject(this)
-    }
+    val preferences: PreferencesHelper by injectLazy()
+    val networkService: NetworkHelper by injectLazy()
 
     open val client: OkHttpClient
         get() = networkService.client

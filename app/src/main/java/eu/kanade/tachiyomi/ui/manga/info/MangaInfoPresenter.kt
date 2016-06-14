@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Presenter of MangaInfoFragment.
@@ -36,17 +36,17 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
     /**
      * Used to connect to database.
      */
-    @Inject lateinit var db: DatabaseHelper
+    val db: DatabaseHelper by injectLazy()
 
     /**
      * Used to connect to different manga sources.
      */
-    @Inject lateinit var sourceManager: SourceManager
+    val sourceManager: SourceManager by injectLazy()
 
     /**
      * Used to connect to cache.
      */
-    @Inject lateinit var coverCache: CoverCache
+    val coverCache: CoverCache by injectLazy()
 
     /**
      * The id of the restartable.

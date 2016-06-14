@@ -12,7 +12,6 @@ abstract class BaseRxActivity<P : BasePresenter<*>> : NucleusAppCompatActivity<P
         setPresenterFactory {
             superFactory.createPresenter().apply {
                 val app = application as App
-                app.componentReflection.inject(this)
                 context = app.applicationContext
             }
         }

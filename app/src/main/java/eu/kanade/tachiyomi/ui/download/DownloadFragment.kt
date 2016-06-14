@@ -262,7 +262,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      * @return the holder of the download or null if it's not bound.
      */
     private fun getHolder(download: Download): DownloadHolder? {
-        return recycler.findViewHolderForItemId(download.chapter.id) as? DownloadHolder
+        return recycler.findViewHolderForItemId(download.chapter.id!!) as? DownloadHolder
     }
 
     /**

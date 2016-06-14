@@ -104,7 +104,12 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         manga_genres.text = manga.genre
 
         // Update status TextView.
-        manga_status.text = manga.getStatus(activity)
+        manga_status.setText(when (manga.status) {
+            Manga.ONGOING -> R.string.ongoing
+            Manga.COMPLETED -> R.string.completed
+            Manga.LICENSED -> R.string.licensed
+            else -> R.string.unknown
+        })
 
         // Update description TextView.
         manga_summary.text = manga.description

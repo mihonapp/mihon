@@ -35,7 +35,7 @@ class DownloadAdapter(private val context: Context) : FlexibleAdapter<DownloadHo
      * @return an identifier for the item.
      */
     override fun getItemId(position: Int): Long {
-        return getItem(position).chapter.id
+        return getItem(position).chapter.id!!
     }
 
     /**

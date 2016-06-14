@@ -8,9 +8,9 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.InputStream
-import javax.inject.Inject
 
 /**
  * Presenter of [BackupFragment].
@@ -20,7 +20,7 @@ class BackupPresenter : BasePresenter<BackupFragment>() {
     /**
      * Database.
      */
-    @Inject lateinit var db: DatabaseHelper
+    val db: DatabaseHelper by injectLazy()
 
     /**
      * Backup manager.

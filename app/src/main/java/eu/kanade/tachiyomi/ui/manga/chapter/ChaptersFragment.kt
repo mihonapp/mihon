@@ -134,8 +134,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                 presenter.setDownloadedFilter(item.isChecked)
             }
             R.id.action_filter_empty -> {
-                presenter.setReadFilter(false)
-                presenter.setDownloadedFilter(false)
+                presenter.removeFilters()
                 activity.supportInvalidateOptionsMenu()
             }
             R.id.action_sort -> presenter.revertSortOrder()
@@ -150,7 +149,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         setDownloadedFilter()
     }
 
-    fun onNextChapters(chapters: List<Chapter>) {
+    fun onNextChapters(chapters: List<ChapterModel>) {
         // If the list is empty, fetch chapters from source if the conditions are met
         // We use presenter chapters instead because they are always unfiltered
         if (presenter.chapters.isEmpty())
@@ -206,7 +205,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                     // Save the new display mode
                     presenter.setDisplayMode(itemView.id)
                     // Refresh ui
-                    adapter.notifyDataSetChanged()
+                    adapter.notifyItemRangeChanged(0, adapter.itemCount)
                     true
                 }
                 .show()
@@ -271,7 +270,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     }
 
     private fun getHolder(chapter: Chapter): ChaptersHolder? {
-        return recycler.findViewHolderForItemId(chapter.id) as? ChaptersHolder
+        return recycler.findViewHolderForItemId(chapter.id!!) as? ChaptersHolder
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
@@ -309,7 +308,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         actionMode = null
     }
 
-    fun getSelectedChapters(): List<Chapter> {
+    fun getSelectedChapters(): List<ChapterModel> {
         return adapter.selectedItems.map { adapter.getItem(it) }
     }
 
@@ -322,27 +321,27 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         setContextTitle(adapter.selectedItemCount)
     }
 
-    fun markAsRead(chapters: List<Chapter>) {
+    fun markAsRead(chapters: List<ChapterModel>) {
         presenter.markChaptersRead(chapters, true)
         if (presenter.preferences.removeAfterMarkedAsRead()) {
             deleteChapters(chapters)
         }
     }
 
-    fun markAsUnread(chapters: List<Chapter>) {
+    fun markAsUnread(chapters: List<ChapterModel>) {
         presenter.markChaptersRead(chapters, false)
     }
 
-    fun markPreviousAsRead(chapter: Chapter) {
+    fun markPreviousAsRead(chapter: ChapterModel) {
         presenter.markPreviousChaptersAsRead(chapter)
     }
 
-    fun downloadChapters(chapters: List<Chapter>) {
+    fun downloadChapters(chapters: List<ChapterModel>) {
         destroyActionModeIfNeeded()
         presenter.downloadChapters(chapters)
     }
 
-    fun deleteChapters(chapters: List<Chapter>) {
+    fun deleteChapters(chapters: List<ChapterModel>) {
         destroyActionModeIfNeeded()
         DeletingChaptersDialog().show(childFragmentManager, DeletingChaptersDialog.TAG)
         presenter.deleteChapters(chapters)
@@ -350,7 +349,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     fun onChaptersDeleted() {
         dismissDeletingDialog()
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemRangeChanged(0, adapter.itemCount)
     }
 
     fun onChaptersDeletedError(error: Throwable) {

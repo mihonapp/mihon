@@ -8,7 +8,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.support.v4.app.NotificationCompat
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.network.GET
@@ -18,8 +17,8 @@ import eu.kanade.tachiyomi.data.network.newCallWithProgress
 import eu.kanade.tachiyomi.util.notificationManager
 import eu.kanade.tachiyomi.util.saveTo
 import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 import java.io.File
-import javax.inject.Inject
 
 class UpdateDownloader(private val context: Context) :
         AsyncTask<String, Int, UpdateDownloader.DownloadResult>() {
@@ -40,7 +39,7 @@ class UpdateDownloader(private val context: Context) :
         }
     }
 
-    @Inject lateinit var network: NetworkHelper
+    val network: NetworkHelper by injectLazy()
 
     /**
      * Default download dir
@@ -59,9 +58,6 @@ class UpdateDownloader(private val context: Context) :
     private val notificationId: Int
         get() = Constants.NOTIFICATION_UPDATER_ID
 
-    init {
-        App.get(context).component.inject(this)
-    }
 
     /**
      * Class containing download result

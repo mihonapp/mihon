@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
 import android.support.v14.preference.PreferenceFragment
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -12,22 +11,21 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import kotlinx.android.synthetic.main.toolbar.*
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 class SettingsActivity : BaseActivity() {
 
-    @Inject lateinit var preferences: PreferencesHelper
-    @Inject lateinit var chapterCache: ChapterCache
-    @Inject lateinit var db: DatabaseHelper
-    @Inject lateinit var sourceManager: SourceManager
-    @Inject lateinit var syncManager: MangaSyncManager
-    @Inject lateinit var networkHelper: NetworkHelper
+    val preferences: PreferencesHelper by injectLazy()
+    val chapterCache: ChapterCache by injectLazy()
+    val db: DatabaseHelper by injectLazy()
+    val sourceManager: SourceManager by injectLazy()
+    val syncManager: MangaSyncManager by injectLazy()
+    val networkHelper: NetworkHelper by injectLazy()
 
     override fun onCreate(savedState: Bundle?) {
         setAppTheme()
         super.onCreate(savedState)
         setContentView(R.layout.activity_preferences)
-        App.get(this).component.inject(this)
 
         setupToolbar(toolbar)
 

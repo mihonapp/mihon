@@ -9,9 +9,9 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 /**
  * Presenter of RecentlyReadFragment.
@@ -30,7 +30,7 @@ class RecentlyReadPresenter : BasePresenter<RecentlyReadFragment>() {
     /**
      * Used to connect to database
      */
-    @Inject lateinit var db: DatabaseHelper
+    val db: DatabaseHelper by injectLazy()
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)

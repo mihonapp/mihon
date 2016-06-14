@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.ui.manga.info.ChapterCountEvent
 import eu.kanade.tachiyomi.util.SharedData
 import rx.Observable
 import rx.Subscription
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Presenter of [MangaActivity].
@@ -19,12 +19,12 @@ class MangaPresenter : BasePresenter<MangaActivity>() {
     /**
      * Database helper.
      */
-    @Inject lateinit var db: DatabaseHelper
+    val db: DatabaseHelper by injectLazy()
 
     /**
      * Manga sync manager.
      */
-    @Inject lateinit var syncManager: MangaSyncManager
+    val syncManager: MangaSyncManager by injectLazy()
 
     /**
      * Manga associated with this instance.

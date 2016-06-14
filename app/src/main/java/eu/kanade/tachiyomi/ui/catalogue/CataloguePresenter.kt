@@ -19,7 +19,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import timber.log.Timber
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Presenter of [CatalogueFragment].
@@ -29,22 +29,22 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     /**
      * Source manager.
      */
-    @Inject lateinit var sourceManager: SourceManager
+    val sourceManager: SourceManager by injectLazy()
 
     /**
      * Database.
      */
-    @Inject lateinit var db: DatabaseHelper
+    val db: DatabaseHelper by injectLazy()
 
     /**
      * Preferences.
      */
-    @Inject lateinit var prefs: PreferencesHelper
+    val prefs: PreferencesHelper by injectLazy()
 
     /**
      * Cover cache.
      */
-    @Inject lateinit var coverCache: CoverCache
+    val coverCache: CoverCache by injectLazy()
 
     /**
      * Enabled sources.

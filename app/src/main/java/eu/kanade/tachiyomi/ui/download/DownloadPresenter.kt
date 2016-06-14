@@ -7,7 +7,7 @@ import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import rx.Observable
 import timber.log.Timber
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Presenter of [DownloadFragment].
@@ -24,7 +24,7 @@ class DownloadPresenter : BasePresenter<DownloadFragment>() {
     /**
      * Download manager.
      */
-    @Inject lateinit var downloadManager: DownloadManager
+    val downloadManager: DownloadManager by injectLazy()
 
     /**
      * Property to get the queue from the download manager.
