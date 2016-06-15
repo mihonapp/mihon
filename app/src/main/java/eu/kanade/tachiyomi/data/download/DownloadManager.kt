@@ -187,7 +187,7 @@ class DownloadManager(
     private fun downloadChapter(download: Download): Observable<Download> {
         DiskUtils.createDirectory(download.directory)
 
-        val pageListObservable = if (download.pages == null)
+        val pageListObservable: Observable<List<Page>> = if (download.pages == null)
             // Pull page list from network and add them to download object
             download.source.fetchPageListFromNetwork(download.chapter)
                     .doOnNext { pages ->
@@ -324,7 +324,7 @@ class DownloadManager(
         var actualProgress = 0
         var status = Download.DOWNLOADED
         // If any page has an error, the download result will be error
-        for (page in download.pages) {
+        for (page in download.pages!!) {
             actualProgress += page.progress
             if (page.status != Page.READY) {
                 status = Download.ERROR
@@ -377,7 +377,7 @@ class DownloadManager(
 
     // Shortcut for the method above
     private fun savePageList(download: Download) {
-        savePageList(download.source, download.manga, download.chapter, download.pages)
+        savePageList(download.source, download.manga, download.chapter, download.pages!!)
     }
 
     fun getAbsoluteMangaDirectory(source: Source, manga: Manga): File {

@@ -32,12 +32,13 @@ class DownloadHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         view.manga_title.text = download.manga.title
 
         // Update the progress bar and the number of downloaded pages
-        if (download.pages == null) {
+        val pages = download.pages
+        if (pages == null) {
             view.download_progress.progress = 0
             view.download_progress.max = 1
             view.download_progress_text.text = ""
         } else {
-            view.download_progress.max = download.pages.size * 100
+            view.download_progress.max = pages.size * 100
             notifyProgress()
             notifyDownloadedPages()
         }
@@ -48,7 +49,7 @@ class DownloadHolder(private val view: View) : RecyclerView.ViewHolder(view) {
      */
     fun notifyProgress() {
         if (view.download_progress.max == 1) {
-            view.download_progress.max = download.pages.size * 100
+            view.download_progress.max = download.pages!!.size * 100
         }
         view.download_progress.progress = download.totalProgress
     }
@@ -57,7 +58,7 @@ class DownloadHolder(private val view: View) : RecyclerView.ViewHolder(view) {
      * Updates the text field of the number of downloaded pages.
      */
     fun notifyDownloadedPages() {
-        view.download_progress_text.text = "${download.downloadedImages}/${download.pages.size}"
+        view.download_progress_text.text = "${download.downloadedImages}/${download.pages!!.size}"
     }
 
 }

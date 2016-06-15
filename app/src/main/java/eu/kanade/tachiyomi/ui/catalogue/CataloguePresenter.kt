@@ -220,7 +220,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     private fun getMangasPageObservable(page: Int): Observable<List<Manga>> {
         val nextMangasPage = MangasPage(page)
         if (page != 1) {
-            nextMangasPage.url = lastMangasPage!!.nextPageUrl
+            nextMangasPage.url = lastMangasPage!!.nextPageUrl!!
         }
 
         val observable = if (query.isEmpty())

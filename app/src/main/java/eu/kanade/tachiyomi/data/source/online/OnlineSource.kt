@@ -84,10 +84,8 @@ abstract class OnlineSource(context: Context) : Source {
             .newCall(popularMangaRequest(page))
             .asObservable()
             .map { response ->
-                page.apply {
-                    mangas = mutableListOf<Manga>()
-                    popularMangaParse(response, this)
-                }
+                popularMangaParse(response, page)
+                page
             }
 
     /**
@@ -129,10 +127,8 @@ abstract class OnlineSource(context: Context) : Source {
             .newCall(searchMangaRequest(page, query))
             .asObservable()
             .map { response ->
-                page.apply {
-                    mangas = mutableListOf<Manga>()
-                    searchMangaParse(response, this, query)
-                }
+                searchMangaParse(response, page, query)
+                page
             }
 
     /**
@@ -358,7 +354,7 @@ abstract class OnlineSource(context: Context) : Source {
      * @param page the chapter whose page list has to be fetched
      */
     open protected fun imageRequest(page: Page): Request {
-        return GET(page.imageUrl, headers)
+        return GET(page.imageUrl!!, headers)
     }
 
     /**
@@ -368,20 +364,18 @@ abstract class OnlineSource(context: Context) : Source {
      * @param page the page.
      */
     fun getCachedImage(page: Page): Observable<Page> {
-        val pageObservable = Observable.just(page)
-        if (page.imageUrl.isNullOrEmpty())
-            return pageObservable
+        val imageUrl = page.imageUrl ?: return Observable.just(page)
 
-        return pageObservable
+        return Observable.just(page)
                 .flatMap {
-                    if (!chapterCache.isImageInCache(page.imageUrl)) {
+                    if (!chapterCache.isImageInCache(imageUrl)) {
                         cacheImage(page)
                     } else {
                         Observable.just(page)
                     }
                 }
                 .doOnNext {
-                    page.imagePath = chapterCache.getImagePath(page.imageUrl)
+                    page.imagePath = chapterCache.getImagePath(imageUrl)
                     page.status = Page.READY
                 }
                 .doOnError { page.status = Page.ERROR }
@@ -396,7 +390,7 @@ abstract class OnlineSource(context: Context) : Source {
     private fun cacheImage(page: Page): Observable<Page> {
         page.status = Page.DOWNLOAD_IMAGE
         return imageResponse(page)
-                .doOnNext { chapterCache.putImageToCache(page.imageUrl, it, preferences.reencodeImage()) }
+                .doOnNext { chapterCache.putImageToCache(page.imageUrl!!, it, preferences.reencodeImage()) }
                 .map { page }
     }
 

@@ -79,7 +79,7 @@ class DownloadNotifier(private val context: Context) {
                 return
             }
         } else {
-            if (download != null && download.pages.size == download.downloadedImages) {
+            if (download != null && download.pages!!.size == download.downloadedImages) {
                 onComplete(download)
                 return
             }
@@ -107,8 +107,8 @@ class DownloadNotifier(private val context: Context) {
                         setContentTitle(it.chapter.name)
 
                     setContentText(context.getString(R.string.chapter_downloading_progress)
-                            .format(it.downloadedImages, it.pages.size))
-                    setProgress(it.pages.size, it.downloadedImages, false)
+                            .format(it.downloadedImages, it.pages!!.size))
+                    setProgress(it.pages!!.size, it.downloadedImages, false)
 
                 }
             }
