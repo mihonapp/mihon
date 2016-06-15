@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.library
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import eu.kanade.tachiyomi.AppModule
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner
@@ -29,7 +28,7 @@ import uy.kohesive.injekt.api.addSingleton
 import uy.kohesive.injekt.registry.default.DefaultRegistrar
 import java.util.*
 
-@Config(constants = BuildConfig::class, sdk = intArrayOf(Build.VERSION_CODES.LOLLIPOP))
+@Config(constants = BuildConfig::class)
 @RunWith(CustomRobolectricGradleTestRunner::class)
 class LibraryUpdateServiceTest {
 
@@ -62,8 +61,6 @@ class LibraryUpdateServiceTest {
 
     @Test
     fun testLifecycle() {
-        println(service.db)
-
         // Smoke test
         Robolectric.buildService(LibraryUpdateService::class.java)
                 .attach()
@@ -75,8 +72,6 @@ class LibraryUpdateServiceTest {
 
     @Test
     fun testUpdateManga() {
-        println(service.db)
-
         val manga = createManga("/manga1")[0]
         manga.id = 1L
         service.db.insertManga(manga).executeAsBlocking()
@@ -93,7 +88,6 @@ class LibraryUpdateServiceTest {
     @Test
     fun testContinuesUpdatingWhenAMangaFails() {
         var favManga = createManga("/manga1", "/manga2", "/manga3")
-        println(service.db)
         service.db.insertMangas(favManga).executeAsBlocking()
         favManga = service.db.getFavoriteMangas().executeAsBlocking()
 

@@ -78,9 +78,6 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    // http://stackoverflow.com/questions/32759529/androidhttpclient-not-found-when-running-robolectric
-    useLibrary 'org.apache.http.legacy'
-
 }
 
 dependencies {
@@ -104,13 +101,13 @@ dependencies {
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.0'
     compile 'io.reactivex:rxjava:1.1.5'
-    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.1'
+    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
 
     // Network client
     compile "com.squareup.okhttp3:okhttp:3.3.1"
 
     // REST
-    final retrofit_version = '2.0.2'
+    final retrofit_version = '2.1.0'
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
@@ -119,8 +116,8 @@ dependencies {
     compile 'com.squareup.okio:okio:1.8.0'
 
     // JSON
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.github.salomonbrys.kotson:kotson:2.2.1'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.github.salomonbrys.kotson:kotson:2.2.2'
 
     // YAML
     compile 'org.yaml:snakeyaml:1.17'
@@ -138,9 +135,7 @@ dependencies {
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
-    final storio_version = '1.8.0'
-    compile "com.pushtorefresh.storio:sqlite:$storio_version"
-    compile "com.pushtorefresh.storio:sqlite-annotations:$storio_version"
+    compile "com.pushtorefresh.storio:sqlite:1.9.0"
 
     // Model View Presenter
     final nucleus_version = '3.0.0'
@@ -171,11 +166,8 @@ dependencies {
     // Tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.1'
-    testCompile "org.mockito:mockito-core:1.10.19"
-    testCompile('org.robolectric:robolectric:3.0') {
-        exclude group: 'commons-logging', module: 'commons-logging'
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    }
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.robolectric:robolectric:3.1'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

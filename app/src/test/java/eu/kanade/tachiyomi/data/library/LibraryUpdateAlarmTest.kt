@@ -95,18 +95,6 @@ class LibraryUpdateAlarmTest {
     }
 
     @Test
-    fun testLibraryUpdateServiceIsStartedWhenUpdateIntentIsReceived() {
-        val intent = Intent(context, LibraryUpdateService::class.java)
-        intent.putExtra("is_manual", false)
-        assertThat(app.nextStartedService).isNotEqualTo(intent)
-
-        val alarm = LibraryUpdateAlarm()
-        alarm.onReceive(context, Intent(LibraryUpdateAlarm.LIBRARY_UPDATE_ACTION))
-
-        assertThat(app.nextStartedService).isEqualTo(intent)
-    }
-
-    @Test
     fun testReceiverDoesntReactToNullActions() {
         val prefs = PreferencesHelper(context)
         prefs.libraryUpdateInterval().set(1)
@@ -128,7 +116,9 @@ class LibraryUpdateAlarmTest {
         val shouldRunAt = SystemClock.elapsedRealtime() + hours * 60 * 60 * 1000
 
         // Margin error of 3 seconds
-        assertThat(alarmManager.nextScheduledAlarm.triggerAtTime).isGreaterThan(shouldRunAt - 3000).isLessThan(shouldRunAt + 3000)
+        assertThat(alarmManager.nextScheduledAlarm.triggerAtTime)
+                .isGreaterThan(shouldRunAt - 3000)
+                .isLessThan(shouldRunAt + 3000)
     }
 
 }
