@@ -1,7 +1,8 @@
-package eu.kanade.tachiyomi
+package eu.kanade.tachiyomi.data.database
 
 import android.os.Build
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner
 import eu.kanade.tachiyomi.data.database.models.CategoryImpl
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory

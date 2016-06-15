@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi
+package eu.kanade.tachiyomi.data.database
 
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
