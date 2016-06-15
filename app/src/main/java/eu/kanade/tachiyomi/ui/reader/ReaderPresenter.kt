@@ -336,14 +336,19 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * over the chapter read like saving progress
      */
     fun onChapterLeft() {
-        val pages = chapter.pages ?: return
-
         // Reference these locally because they are needed later from another thread.
         val chapter = chapter
         val prevChapter = prevChapter
 
+        val pages = chapter.pages ?: return
+
         Observable
                 .fromCallable {
+                    // Chapters with 1 page don't trigger page changes, so mark them as read.
+                    if (pages.size == 1) {
+                        chapter.read = true
+                    }
+
                     if (!chapter.isDownloaded) {
                         source.let { if (it is OnlineSource) it.savePageList(chapter, pages) }
                     }
