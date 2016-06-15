@@ -8,8 +8,10 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 interface ActivityMixin {
 
@@ -22,7 +24,7 @@ interface ActivityMixin {
     }
 
     fun setAppTheme() {
-        setTheme(when (App.get(getActivity()).appTheme) {
+        setTheme(when (Injekt.get<PreferencesHelper>().theme()) {
             2 -> R.style.Theme_Tachiyomi_Dark
             else -> R.style.Theme_Tachiyomi
         })

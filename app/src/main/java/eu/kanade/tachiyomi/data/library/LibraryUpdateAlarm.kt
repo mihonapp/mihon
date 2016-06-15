@@ -7,7 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.alarmManager
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
  * This class is used to update the library by firing an alarm after a specified time.
@@ -25,10 +28,8 @@ class LibraryUpdateAlarm : BroadcastReceiver() {
          * @param intervalInHours the time in hours when it will be executed. Defaults to the
          * value stored in preferences.
          */
-        @JvmStatic
-        @JvmOverloads
         fun startAlarm(context: Context,
-                       intervalInHours: Int = PreferencesHelper.getLibraryUpdateInterval(context)) {
+                       intervalInHours: Int = Injekt.get<PreferencesHelper>().libraryUpdateInterval().getOrDefault()) {
             // Stop previous running alarms if needed, and do not restart it if the interval is 0.
             stopAlarm(context)
             if (intervalInHours == 0)

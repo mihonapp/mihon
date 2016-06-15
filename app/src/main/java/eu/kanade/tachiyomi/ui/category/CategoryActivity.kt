@@ -50,7 +50,6 @@ class CategoryActivity : BaseRxActivity<CategoryPresenter>(), ActionMode.Callbac
          *
          * @param context context information.
          */
-        @JvmStatic
         fun newIntent(context: Context): Intent {
             return Intent(context, CategoryActivity::class.java)
         }

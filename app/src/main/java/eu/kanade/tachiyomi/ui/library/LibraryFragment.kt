@@ -95,7 +95,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
          *
          * @return a new instance of [LibraryFragment].
          */
-        @JvmStatic
         fun newInstance(): LibraryFragment {
             return LibraryFragment()
         }

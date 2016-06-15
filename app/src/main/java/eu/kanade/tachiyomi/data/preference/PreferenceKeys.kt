@@ -10,6 +10,8 @@ import eu.kanade.tachiyomi.R
  */
 class PreferenceKeys(context: Context) {
 
+    val theme = context.getString(R.string.pref_theme_key)
+
     val rotation = context.getString(R.string.pref_rotation_type_key)
 
     val enableTransitions = context.getString(R.string.pref_enable_transitions_key)
@@ -77,6 +79,8 @@ class PreferenceKeys(context: Context) {
     val filterDownloaded = context.getString(R.string.pref_filter_downloaded_key)
 
     val filterUnread = context.getString(R.string.pref_filter_unread_key)
+
+    val automaticUpdateStatus = context.getString(R.string.pref_enable_automatic_updates_key)
 
     fun sourceUsername(sourceId: Int) = "pref_source_username_$sourceId"
 

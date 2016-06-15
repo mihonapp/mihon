@@ -27,9 +27,7 @@ class RecentlyReadFragment : BaseRxFragment<RecentlyReadPresenter>() {
     companion object {
         /**
          * Create new RecentChaptersFragment.
-         *
          */
-        @JvmStatic
         fun newInstance(): RecentlyReadFragment {
             return RecentlyReadFragment()
         }

@@ -6,7 +6,6 @@ import android.support.v14.preference.MultiSelectListPreference
 import android.support.v4.app.TaskStackBuilder
 import android.support.v7.preference.Preference
 import android.view.View
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateAlarm
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -62,8 +61,6 @@ class SettingsGeneralFragment : SettingsNestedFragment() {
         }
 
         themePreference.setOnPreferenceChangeListener { preference, newValue ->
-            App.get(activity).appTheme = (newValue as String).toInt()
-
             // Rebuild activity's to apply themes.
             TaskStackBuilder.create(activity)
                     .addNextIntent(Intent(activity, MainActivity::class.java))

@@ -15,6 +15,8 @@ import eu.kanade.tachiyomi.util.notification
 import eu.kanade.tachiyomi.util.notificationManager
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class UpdateDownloaderAlarm : BroadcastReceiver() {
 
@@ -26,9 +28,8 @@ class UpdateDownloaderAlarm : BroadcastReceiver() {
          * @param context the application context.
          * @param intervalInHours the time in hours when it will be executed.
          */
-        @JvmStatic
-        @JvmOverloads
-        fun startAlarm(context: Context, intervalInHours: Int = 12, isEnabled: Boolean = PreferencesHelper.getAutomaticUpdateStatus(context)) {
+        fun startAlarm(context: Context, intervalInHours: Int = 12,
+                       isEnabled: Boolean = Injekt.get<PreferencesHelper>().automaticUpdateStatus()) {
             // Stop previous running alarms if needed, and do not restart it if the interval is 0.
             UpdateDownloaderAlarm.stopAlarm(context)
             if (intervalInHours == 0 || !isEnabled)

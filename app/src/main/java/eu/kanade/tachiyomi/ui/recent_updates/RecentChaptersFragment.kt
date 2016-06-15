@@ -34,7 +34,6 @@ class RecentChaptersFragment
          * Create new RecentChaptersFragment.
          * @return a new instance of [RecentChaptersFragment].
          */
-        @JvmStatic
         fun newInstance(): RecentChaptersFragment {
             return RecentChaptersFragment()
         }

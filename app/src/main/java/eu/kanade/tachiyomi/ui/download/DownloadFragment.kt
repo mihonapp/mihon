@@ -67,7 +67,6 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
          *
          * @return a new instance of [DownloadFragment].
          */
-        @JvmStatic
         fun newInstance(): DownloadFragment {
             return DownloadFragment()
         }

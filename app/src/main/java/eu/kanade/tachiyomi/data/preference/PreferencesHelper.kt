@@ -13,7 +13,7 @@ import java.io.IOException
 
 fun <T> Preference<T>.getOrDefault(): T = get() ?: defaultValue()!!
 
-class PreferencesHelper(private val context: Context) {
+class PreferencesHelper(context: Context) {
 
     val keys = PreferenceKeys(context)
 
@@ -32,28 +32,9 @@ class PreferencesHelper(private val context: Context) {
         }
     }
 
-    companion object {
+    fun clear() = prefs.edit().clear().apply()
 
-        fun getLibraryUpdateInterval(context: Context): Int {
-            return PreferenceManager.getDefaultSharedPreferences(context).getInt(
-                    context.getString(R.string.pref_library_update_interval_key), 0)
-        }
-
-        fun getAutomaticUpdateStatus(context: Context): Boolean {
-            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-                    context.getString(R.string.pref_enable_automatic_updates), false)
-        }
-
-        @JvmStatic
-        fun getTheme(context: Context): Int {
-            return PreferenceManager.getDefaultSharedPreferences(context).getInt(
-                    context.getString(R.string.pref_theme_key), 1)
-        }
-    }
-
-    fun clear() {
-        prefs.edit().clear().apply()
-    }
+    fun theme() = prefs.getInt(keys.theme, 1)
 
     fun rotation() = rxPrefs.getInteger(keys.rotation, 1)
 
@@ -146,5 +127,7 @@ class PreferencesHelper(private val context: Context) {
     fun filterDownloaded() = rxPrefs.getBoolean(keys.filterDownloaded, false)
 
     fun filterUnread() = rxPrefs.getBoolean(keys.filterUnread, false)
+
+    fun automaticUpdateStatus() = prefs.getBoolean(keys.automaticUpdateStatus, false)
 
 }
