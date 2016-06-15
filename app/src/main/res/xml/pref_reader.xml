@@ -75,11 +75,6 @@
         android:key="@string/pref_keep_screen_on_key"
         android:defaultValue="true" />
 
-    <SwitchPreferenceCompat
-        android:title="@string/pref_seamless_mode"
-        android:key="@string/pref_seamless_mode_key"
-        android:defaultValue="true" />
-
     <PreferenceCategory
         android:title="@string/pref_reader_navigation">
 

@@ -5,14 +5,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.*
 import com.bumptech.glide.load.model.stream.StreamModelLoader
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.InputStream
-import javax.inject.Inject
 
 /**
  * A class for loading a cover associated with a [Manga] that can be present in our own cache.
@@ -30,12 +29,12 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
     /**
      * Cover cache where persistent covers are stored.
      */
-    @Inject lateinit var coverCache: CoverCache
+    val coverCache: CoverCache by injectLazy()
 
     /**
      * Source manager.
      */
-    @Inject lateinit var sourceManager: SourceManager
+    val sourceManager: SourceManager by injectLazy()
 
     /**
      * Base network loader.
@@ -53,10 +52,6 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
      * Map where request headers are stored for a source.
      */
     private val cachedHeaders = hashMapOf<Int, LazyHeaders>()
-
-    init {
-        App.get(context).component.inject(this)
-    }
 
     /**
      * Factory class for creating [MangaModelLoader] instances.
@@ -88,7 +83,7 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
         // Obtain the request url and the file for this url from the LRU cache, or calculate it
         // and add them to the cache.
         val (glideUrl, file) = modelCache.get(url, width, height) ?:
-            Pair(GlideUrl(url, getHeaders(manga)), coverCache.getCoverFile(url)).apply {
+            Pair(GlideUrl(url, getHeaders(manga)), coverCache.getCoverFile(url!!)).apply {
                 modelCache.put(url, width, height, this)
             }
 

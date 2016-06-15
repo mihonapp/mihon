@@ -37,8 +37,8 @@ class RecentlyReadHolder(view: View, private val adapter: RecentlyReadAdapter)
      */
     fun onSetValues(item: MangaChapterHistory) {
         // Retrieve objects
-        val manga = item.mangaChapter.manga
-        val chapter = item.mangaChapter.chapter
+        val manga = item.manga
+        val chapter = item.chapter
         val history = item.history
 
         // Set manga title
@@ -71,7 +71,7 @@ class RecentlyReadHolder(view: View, private val adapter: RecentlyReadAdapter)
                     .onPositive { materialDialog, dialogAction ->
                         // Check if user wants all chapters reset
                         if (materialDialog.customView?.removeAll?.isChecked as Boolean) {
-                            adapter.fragment.removeAllFromHistory(manga.id)
+                            adapter.fragment.removeAllFromHistory(manga.id!!)
                         } else {
                             adapter.fragment.removeFromHistory(history)
                         }

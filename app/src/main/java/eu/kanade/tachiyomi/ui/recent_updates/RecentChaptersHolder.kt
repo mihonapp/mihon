@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.recent_updates
 import android.view.View
 import android.widget.PopupMenu
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.util.getResourceColor
@@ -19,8 +18,11 @@ import kotlinx.android.synthetic.main.item_recent_chapters.view.*
  * @param listener a listener to react to single tap and long tap events.
  * @constructor creates a new recent chapter holder.
  */
-class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapter, listener: OnListItemClickListener) :
-        FlexibleViewHolder(view, adapter, listener) {
+class RecentChaptersHolder(
+        private val view: View,
+        private val adapter: RecentChaptersAdapter,
+        listener: OnListItemClickListener)
+: FlexibleViewHolder(view, adapter, listener) {
     /**
      * Color of read chapter
      */
@@ -34,100 +36,97 @@ class RecentChaptersHolder(view: View, private val adapter: RecentChaptersAdapte
     /**
      * Object containing chapter information
      */
-    private var mangaChapter: MangaChapter? = null
+    private var chapter: RecentChapter? = null
 
     init {
         // We need to post a Runnable to show the popup to make sure that the PopupMenu is
         // correctly positioned. The reason being that the view may change position before the
         // PopupMenu is shown.
-        itemView.chapter_menu.setOnClickListener { it.post({ showPopupMenu(it) }) }
+        view.chapter_menu.setOnClickListener { it.post({ showPopupMenu(it) }) }
     }
 
     /**
      * Set values of view
      *
-     * @param item item containing chapter information
+     * @param chapter item containing chapter information
      */
-    fun onSetValues(item: MangaChapter) {
-        this.mangaChapter = item
+    fun onSetValues(chapter: RecentChapter) {
+        this.chapter = chapter
 
         // Set chapter title
-        itemView.chapter_title.text = item.chapter.name
+        view.chapter_title.text = chapter.name
 
         // Set manga title
-        itemView.manga_title.text = item.manga.title
+        view.manga_title.text = chapter.manga.title
 
         // Check if chapter is read and set correct color
-        if (item.chapter.read) {
-            itemView.chapter_title.setTextColor(readColor)
-            itemView.manga_title.setTextColor(readColor)
+        if (chapter.read) {
+            view.chapter_title.setTextColor(readColor)
+            view.manga_title.setTextColor(readColor)
         } else {
-            itemView.chapter_title.setTextColor(unreadColor)
-            itemView.manga_title.setTextColor(unreadColor)
+            view.chapter_title.setTextColor(unreadColor)
+            view.manga_title.setTextColor(unreadColor)
         }
 
         // Set chapter status
-        onStatusChange(item.chapter.status)
+        notifyStatus(chapter.status)
     }
 
     /**
      * Updates chapter status in view.
-
+     *
      * @param status download status
      */
-    fun onStatusChange(status: Int) {
+    fun notifyStatus(status: Int) = with(view.download_text) {
         when (status) {
-            Download.QUEUE -> itemView.download_text.setText(R.string.chapter_queued)
-            Download.DOWNLOADING -> itemView.download_text.setText(R.string.chapter_downloading)
-            Download.DOWNLOADED -> itemView.download_text.setText(R.string.chapter_downloaded)
-            Download.ERROR -> itemView.download_text.setText(R.string.chapter_error)
-            else -> itemView.download_text.text = ""
+            Download.QUEUE -> setText(R.string.chapter_queued)
+            Download.DOWNLOADING -> setText(R.string.chapter_downloading)
+            Download.DOWNLOADED -> setText(R.string.chapter_downloaded)
+            Download.ERROR -> setText(R.string.chapter_error)
+            else -> text = ""
         }
     }
 
     /**
      * Show pop up menu
+     *
      * @param view view containing popup menu.
      */
-    private fun showPopupMenu(view: View) {
+    private fun showPopupMenu(view: View) = chapter?.let { chapter ->
         // Create a PopupMenu, giving it the clicked view for an anchor
-        val popup = PopupMenu(adapter.fragment.activity, view)
+        val popup = PopupMenu(view.context, view)
 
         // Inflate our menu resource into the PopupMenu's Menu
         popup.menuInflater.inflate(R.menu.chapter_recent, popup.menu)
 
-        mangaChapter?.let {
+        // Hide download and show delete if the chapter is downloaded and
+        if (chapter.isDownloaded) {
+            popup.menu.findItem(R.id.action_download).isVisible = false
+            popup.menu.findItem(R.id.action_delete).isVisible = true
+        }
 
-            // Hide download and show delete if the chapter is downloaded and
-            if (it.chapter.isDownloaded) {
-                val menu = popup.menu
-                menu.findItem(R.id.action_download).isVisible = false
-                menu.findItem(R.id.action_delete).isVisible = true
-            }
+        // Hide mark as unread when the chapter is unread
+        if (!chapter.read /*&& mangaChapter.chapter.last_page_read == 0*/) {
+            popup.menu.findItem(R.id.action_mark_as_unread).isVisible = false
+        }
 
-            // Hide mark as unread when the chapter is unread
-            if (!it.chapter.read /*&& mangaChapter.chapter.last_page_read == 0*/) {
-                popup.menu.findItem(R.id.action_mark_as_unread).isVisible = false
-            }
+        // Hide mark as read when the chapter is read
+        if (chapter.read) {
+            popup.menu.findItem(R.id.action_mark_as_read).isVisible = false
+        }
 
-            // Hide mark as read when the chapter is read
-            if (it.chapter.read) {
-                popup.menu.findItem(R.id.action_mark_as_read).isVisible = false
-            }
-
-
-            // Set a listener so we are notified if a menu item is clicked
-            popup.setOnMenuItemClickListener { menuItem ->
-
+        // Set a listener so we are notified if a menu item is clicked
+        popup.setOnMenuItemClickListener { menuItem ->
+            with(adapter.fragment) {
                 when (menuItem.itemId) {
-                    R.id.action_download -> adapter.fragment.downloadChapter(it)
-                    R.id.action_delete -> adapter.fragment.deleteChapter(it)
-                    R.id.action_mark_as_read -> adapter.fragment.markAsRead(listOf(it))
-                    R.id.action_mark_as_unread -> adapter.fragment.markAsUnread(listOf(it))
+                    R.id.action_download -> downloadChapter(chapter)
+                    R.id.action_delete -> deleteChapter(chapter)
+                    R.id.action_mark_as_read -> markAsRead(listOf(chapter))
+                    R.id.action_mark_as_unread -> markAsUnread(listOf(chapter))
                 }
-                true
             }
 
+            true
         }
 
         // Finally show the PopupMenu

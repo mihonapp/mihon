@@ -10,6 +10,7 @@ import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
 import eu.kanade.tachiyomi.data.database.models.MangaSync
+import eu.kanade.tachiyomi.data.database.models.MangaSyncImpl
 import eu.kanade.tachiyomi.data.database.tables.MangaSyncTable.COL_ID
 import eu.kanade.tachiyomi.data.database.tables.MangaSyncTable.COL_LAST_CHAPTER_READ
 import eu.kanade.tachiyomi.data.database.tables.MangaSyncTable.COL_MANGA_ID
@@ -54,7 +55,7 @@ class MangaSyncPutResolver : DefaultPutResolver<MangaSync>() {
 
 class MangaSyncGetResolver : DefaultGetResolver<MangaSync>() {
 
-    override fun mapFromCursor(cursor: Cursor) = MangaSync().apply {
+    override fun mapFromCursor(cursor: Cursor): MangaSync = MangaSyncImpl().apply {
         id = cursor.getLong(cursor.getColumnIndex(COL_ID))
         manga_id = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID))
         sync_id = cursor.getInt(cursor.getColumnIndex(COL_SYNC_ID))

@@ -5,7 +5,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import rx.android.schedulers.AndroidSchedulers
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Presenter of CategoryActivity.
@@ -17,7 +17,7 @@ class CategoryPresenter : BasePresenter<CategoryActivity>() {
     /**
      * Used to connect to database
      */
-    @Inject lateinit var db: DatabaseHelper
+    val db: DatabaseHelper by injectLazy()
 
     /**
      * List containing categories

@@ -7,14 +7,13 @@ import android.os.IBinder
 import android.os.PowerManager
 import com.github.pwittchen.reactivenetwork.library.ConnectivityStatus
 import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork
-import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.toast
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 class DownloadService : Service() {
 
@@ -29,8 +28,8 @@ class DownloadService : Service() {
         }
     }
 
-    @Inject lateinit var downloadManager: DownloadManager
-    @Inject lateinit var preferences: PreferencesHelper
+    val downloadManager: DownloadManager by injectLazy()
+    val preferences: PreferencesHelper by injectLazy()
 
     private var wakeLock: PowerManager.WakeLock? = null
     private var networkChangeSubscription: Subscription? = null
@@ -39,7 +38,6 @@ class DownloadService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        App.get(this).component.inject(this)
 
         createWakeLock()
 

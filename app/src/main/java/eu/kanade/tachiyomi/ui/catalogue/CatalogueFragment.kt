@@ -383,7 +383,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      * @return the holder of the manga or null if it's not bound.
      */
     private fun getHolder(manga: Manga): CatalogueGridHolder? {
-        return catalogue_grid.findViewHolderForItemId(manga.id) as? CatalogueGridHolder
+        return catalogue_grid.findViewHolderForItemId(manga.id!!) as? CatalogueGridHolder
     }
 
     /**

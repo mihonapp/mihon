@@ -28,7 +28,7 @@ class Readmangatoday(context: Context, override val id: Int) : ParsedOnlineSourc
 
     override fun popularMangaFromElement(element: Element, manga: Manga) {
         element.select("div.title > h2 > a").first().let {
-            manga.setUrl(it.attr("href"))
+            manga.setUrlWithoutDomain(it.attr("href"))
             manga.title = it.attr("title")
         }
     }
@@ -54,7 +54,7 @@ class Readmangatoday(context: Context, override val id: Int) : ParsedOnlineSourc
 
     override fun searchMangaFromElement(element: Element, manga: Manga) {
         element.select("div.title > h2 > a").first().let {
-            manga.setUrl(it.attr("href"))
+            manga.setUrlWithoutDomain(it.attr("href"))
             manga.title = it.attr("title")
         }
     }
@@ -83,7 +83,7 @@ class Readmangatoday(context: Context, override val id: Int) : ParsedOnlineSourc
     override fun chapterFromElement(element: Element, chapter: Chapter) {
         val urlElement = element.select("a").first()
 
-        chapter.setUrl(urlElement.attr("href"))
+        chapter.setUrlWithoutDomain(urlElement.attr("href"))
         chapter.name = urlElement.select("span.val").text()
         chapter.date_upload = element.select("span.dte").first()?.text()?.let { parseChapterDate(it) } ?: 0
     }

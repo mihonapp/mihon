@@ -84,27 +84,22 @@ android {
 }
 
 dependencies {
-    final SUPPORT_LIBRARY_VERSION = '23.4.0'
-    final DAGGER_VERSION = '2.4'
-    final RETROFIT_VERSION = '2.0.2'
-    final NUCLEUS_VERSION = '3.0.0'
-    final STORIO_VERSION = '1.8.0'
-    final MOCKITO_VERSION = '1.10.19'
 
     // Modified dependencies
     compile 'com.github.inorichi:subsampling-scale-image-view:421fb81'
     compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
     // Android support library
-    compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:preference-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:preference-v14:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:customtabs:$SUPPORT_LIBRARY_VERSION"
+    final support_library_version = '23.4.0'
+    compile "com.android.support:support-v4:$support_library_version"
+    compile "com.android.support:appcompat-v7:$support_library_version"
+    compile "com.android.support:cardview-v7:$support_library_version"
+    compile "com.android.support:design:$support_library_version"
+    compile "com.android.support:recyclerview-v7:$support_library_version"
+    compile "com.android.support:support-annotations:$support_library_version"
+    compile "com.android.support:preference-v7:$support_library_version"
+    compile "com.android.support:preference-v14:$support_library_version"
+    compile "com.android.support:customtabs:$support_library_version"
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.0'
@@ -115,15 +110,17 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:3.3.1"
 
     // REST
-    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
-    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
-    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+    final retrofit_version = '2.0.2'
+    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
     // IO
     compile 'com.squareup.okio:okio:1.8.0'
 
     // JSON
     compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.github.salomonbrys.kotson:kotson:2.2.1'
 
     // YAML
     compile 'org.yaml:snakeyaml:1.17'
@@ -141,18 +138,18 @@ dependencies {
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
-    compile "com.pushtorefresh.storio:sqlite:$STORIO_VERSION"
-    compile "com.pushtorefresh.storio:sqlite-annotations:$STORIO_VERSION"
+    final storio_version = '1.8.0'
+    compile "com.pushtorefresh.storio:sqlite:$storio_version"
+    compile "com.pushtorefresh.storio:sqlite-annotations:$storio_version"
 
     // Model View Presenter
-    compile "info.android15.nucleus:nucleus:$NUCLEUS_VERSION"
-    compile "info.android15.nucleus:nucleus-support-v4:$NUCLEUS_VERSION"
-    compile "info.android15.nucleus:nucleus-support-v7:$NUCLEUS_VERSION"
+    final nucleus_version = '3.0.0'
+    compile "info.android15.nucleus:nucleus:$nucleus_version"
+    compile "info.android15.nucleus:nucleus-support-v4:$nucleus_version"
+    compile "info.android15.nucleus:nucleus-support-v7:$nucleus_version"
 
     // Dependency injection
-    compile "com.google.dagger:dagger:$DAGGER_VERSION"
-    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile "uy.kohesive.injekt:injekt-core:1.16.1"
 
     // Image library
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -174,13 +171,12 @@ dependencies {
     // Tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.1'
-    testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
+    testCompile "org.mockito:mockito-core:1.10.19"
     testCompile('org.robolectric:robolectric:3.0') {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
 
-    kaptTest "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 

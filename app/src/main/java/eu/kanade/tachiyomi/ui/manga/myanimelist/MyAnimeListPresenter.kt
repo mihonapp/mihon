@@ -15,12 +15,12 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import timber.log.Timber
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
 class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
 
-    @Inject lateinit var db: DatabaseHelper
-    @Inject lateinit var syncManager: MangaSyncManager
+    val db: DatabaseHelper by injectLazy()
+    val syncManager: MangaSyncManager by injectLazy()
 
     val myAnimeList by lazy { syncManager.myAnimeList }
 
@@ -124,7 +124,7 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
 
     fun registerManga(sync: MangaSync?) {
         if (sync != null) {
-            sync.manga_id = manga.id
+            sync.manga_id = manga.id!!
             add(myAnimeList.bind(sync)
                     .flatMap { db.insertMangaSync(sync).asRxObservable() }
                     .subscribeOn(Schedulers.io())

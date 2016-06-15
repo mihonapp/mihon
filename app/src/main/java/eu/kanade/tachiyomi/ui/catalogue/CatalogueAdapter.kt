@@ -56,7 +56,7 @@ class CatalogueAdapter(val fragment: CatalogueFragment) : FlexibleAdapter<Catalo
      * @return an identifier for the item.
      */
     override fun getItemId(position: Int): Long {
-        return mItems[position].id
+        return mItems[position].id!!
     }
 
     /**

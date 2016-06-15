@@ -6,8 +6,8 @@ import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.ui.reader.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.widget.PreCachingLayoutManager
 import rx.subscriptions.CompositeSubscription
@@ -147,7 +147,7 @@ class WebtoonReader : BaseReader() {
      * @param chapter the chapter set.
      * @param currentPage the initial page to display.
      */
-    override fun onChapterSet(chapter: Chapter, currentPage: Page) {
+    override fun onChapterSet(chapter: ReaderChapter, currentPage: Page) {
         // Restoring current page is not supported. It's getting weird scrolling jumps
         // this.currentPage = currentPage;
 
@@ -162,11 +162,11 @@ class WebtoonReader : BaseReader() {
      *
      * @param chapter the chapter appended.
      */
-    override fun onChapterAppended(chapter: Chapter) {
+    override fun onChapterAppended(chapter: ReaderChapter) {
         // Make sure the view is already initialized.
         if (view != null) {
-            val insertStart = pages.size - chapter.pages.size
-            adapter.notifyItemRangeInserted(insertStart, chapter.pages.size)
+            val insertStart = pages.size - chapter.pages!!.size
+            adapter.notifyItemRangeInserted(insertStart, chapter.pages!!.size)
         }
     }
 

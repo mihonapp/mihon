@@ -26,8 +26,7 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
     override fun popularMangaParse(response: Response, page: MangasPage) {
         val document = Jsoup.parse(response.body().string())
         for (element in document.select(popularMangaSelector())) {
-            Manga().apply {
-                source = this@ParsedOnlineSource.id
+            Manga.create(id).apply {
                 popularMangaFromElement(element, this)
                 page.mangas.add(this)
             }
@@ -70,8 +69,7 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
     override fun searchMangaParse(response: Response, page: MangasPage, query: String) {
         val document = Jsoup.parse(response.body().string())
         for (element in document.select(searchMangaSelector())) {
-            Manga().apply {
-                source = this@ParsedOnlineSource.id
+            Manga.create(id).apply {
                 searchMangaFromElement(element, this)
                 page.mangas.add(this)
             }

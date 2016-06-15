@@ -5,7 +5,6 @@ import com.pushtorefresh.storio.sqlite.operations.get.DefaultGetResolver
 import eu.kanade.tachiyomi.data.database.mappers.ChapterGetResolver
 import eu.kanade.tachiyomi.data.database.mappers.HistoryGetResolver
 import eu.kanade.tachiyomi.data.database.mappers.MangaGetResolver
-import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
 
 class MangaChapterHistoryGetResolver : DefaultGetResolver<MangaChapterHistory>() {
@@ -46,10 +45,7 @@ class MangaChapterHistoryGetResolver : DefaultGetResolver<MangaChapterHistory>()
         manga.url = cursor.getString(cursor.getColumnIndex("mangaUrl"))
         chapter.id = history.chapter_id
 
-        // Create mangaChapter object
-        val mangaChapter = MangaChapter(manga, chapter)
-
         // Return result
-        return MangaChapterHistory(mangaChapter, history)
+        return MangaChapterHistory(manga, chapter, history)
     }
 }

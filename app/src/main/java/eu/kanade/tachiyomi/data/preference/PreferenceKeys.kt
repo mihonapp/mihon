@@ -54,8 +54,6 @@ class PreferenceKeys(context: Context) {
 
     val lastUsedCategory = context.getString(R.string.pref_last_used_category_key)
 
-    val seamlessMode = context.getString(R.string.pref_seamless_mode_key)
-
     val catalogueAsList = context.getString(R.string.pref_display_catalogue_as_list)
 
     val enabledLanguages = context.getString(R.string.pref_source_languages)

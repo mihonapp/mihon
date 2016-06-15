@@ -1,14 +1,13 @@
 package eu.kanade.tachiyomi.data.backup
 
+import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.*
-import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import eu.kanade.tachiyomi.data.backup.serializer.IdExclusion
 import eu.kanade.tachiyomi.data.backup.serializer.IntegerSerializer
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.*
 import java.io.*
-import java.lang.reflect.Type
 import java.util.*
 
 /**
@@ -191,8 +190,7 @@ class BackupManager(private val db: DatabaseHelper) {
     private fun restoreCategories(jsonCategories: JsonArray) {
         // Get categories from file and from db
         val dbCategories = db.getCategories().executeAsBlocking()
-        val backupCategories = getArrayOrEmpty<Category>(jsonCategories,
-                object : TypeToken<List<Category>>() {}.type)
+        val backupCategories = gson.fromJson<List<CategoryImpl>>(jsonCategories)
 
         // Iterate over them
         for (category in backupCategories) {
@@ -224,17 +222,13 @@ class BackupManager(private val db: DatabaseHelper) {
      * @param jsonMangas the mangas and its related data (chapters, sync, categories) from the json.
      */
     private fun restoreMangas(jsonMangas: JsonArray) {
-        val chapterToken = object : TypeToken<List<Chapter>>() {}.type
-        val mangaSyncToken = object : TypeToken<List<MangaSync>>() {}.type
-        val categoriesNamesToken = object : TypeToken<List<String>>() {}.type
-
         for (backupManga in jsonMangas) {
             // Map every entry to objects
             val element = backupManga.asJsonObject
-            val manga = gson.fromJson(element.get(MANGA), Manga::class.java)
-            val chapters = getArrayOrEmpty<Chapter>(element.get(CHAPTERS), chapterToken)
-            val sync = getArrayOrEmpty<MangaSync>(element.get(MANGA_SYNC), mangaSyncToken)
-            val categories = getArrayOrEmpty<String>(element.get(CATEGORIES), categoriesNamesToken)
+            val manga = gson.fromJson(element.get(MANGA), MangaImpl::class.java)
+            val chapters = gson.fromJson<List<ChapterImpl>>(element.get(CHAPTERS) ?: JsonArray())
+            val sync = gson.fromJson<List<MangaSyncImpl>>(element.get(MANGA_SYNC) ?: JsonArray())
+            val categories = gson.fromJson<List<String>>(element.get(CATEGORIES) ?: JsonArray())
 
             // Restore everything related to this manga
             restoreManga(manga)
@@ -340,7 +334,7 @@ class BackupManager(private val db: DatabaseHelper) {
     private fun restoreSyncForManga(manga: Manga, sync: List<MangaSync>) {
         // Fix foreign keys with the current manga id
         for (mangaSync in sync) {
-            mangaSync.manga_id = manga.id
+            mangaSync.manga_id = manga.id!!
         }
 
         val dbSyncs = db.getMangasSync(manga).executeAsBlocking()
@@ -365,17 +359,6 @@ class BackupManager(private val db: DatabaseHelper) {
         if (!syncToUpdate.isEmpty()) {
             db.insertMangasSync(syncToUpdate).executeAsBlocking()
         }
-    }
-
-    /**
-     * Returns a list of items from a json element, or an empty list if the element is null.
-     *
-     * @param element the json to be mapped to a list of items.
-     * @param type the gson mapping to restore the list.
-     * @return a list of items.
-     */
-    private fun <T> getArrayOrEmpty(element: JsonElement?, type: Type): List<T> {
-        return gson.fromJson<List<T>>(element, type) ?: ArrayList<T>()
     }
 
 }

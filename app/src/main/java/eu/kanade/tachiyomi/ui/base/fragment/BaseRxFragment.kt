@@ -12,7 +12,6 @@ abstract class BaseRxFragment<P : BasePresenter<*>> : NucleusSupportFragment<P>(
         setPresenterFactory {
             superFactory.createPresenter().apply {
                 val app = activity.application as App
-                app.componentReflection.inject(this)
                 context = app.applicationContext
             }
         }

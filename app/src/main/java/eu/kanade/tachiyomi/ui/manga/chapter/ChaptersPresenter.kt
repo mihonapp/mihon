@@ -20,108 +20,197 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import timber.log.Timber
-import javax.inject.Inject
+import uy.kohesive.injekt.injectLazy
 
+/**
+ * Presenter of [ChaptersFragment].
+ */
 class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
 
-    @Inject lateinit var db: DatabaseHelper
-    @Inject lateinit var sourceManager: SourceManager
-    @Inject lateinit var preferences: PreferencesHelper
-    @Inject lateinit var downloadManager: DownloadManager
+    /**
+     * Database helper.
+     */
+    val db: DatabaseHelper by injectLazy()
 
+    /**
+     * Source manager.
+     */
+    val sourceManager: SourceManager by injectLazy()
+
+    /**
+     * Preferences.
+     */
+    val preferences: PreferencesHelper by injectLazy()
+
+    /**
+     * Downloads manager.
+     */
+    val downloadManager: DownloadManager by injectLazy()
+
+    /**
+     * Active manga.
+     */
     lateinit var manga: Manga
         private set
 
+    /**
+     * Source of the manga.
+     */
     lateinit var source: Source
         private set
 
-    lateinit var chapters: List<Chapter>
+    /**
+     * List of chapters of the manga. It's always unfiltered and unsorted.
+     */
+    lateinit var chapters: List<ChapterModel>
         private set
 
-    lateinit var chaptersSubject: PublishSubject<List<Chapter>>
+    /**
+     * Subject of list of chapters to allow updating the view without going to DB.
+     */
+    val chaptersSubject by lazy { PublishSubject.create<List<ChapterModel>>() }
+
+    /**
+     * Whether the chapter list has been requested to the source.
+     */
+    var hasRequested = false
         private set
 
-    var hasRequested: Boolean = false
-        private set
+    companion object {
+        /**
+         * Id of the restartable which sends a filtered and ordered list of chapters to the view.
+         */
+        private const val GET_CHAPTERS = 1
 
-    private val DB_CHAPTERS = 1
-    private val FETCH_CHAPTERS = 2
-    private val CHAPTER_STATUS_CHANGES = 3
+        /**
+         * Id of the restartable which requests an updated list of chapters to the source.
+         */
+        private const val FETCH_CHAPTERS = 2
+
+        /**
+         * Id of the restartable which listens for download status changes.
+         */
+        private const val CHAPTER_STATUS_CHANGES = 3
+    }
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        chaptersSubject = PublishSubject.create()
-
-        startableLatestCache(DB_CHAPTERS,
-                { getDbChaptersObs() },
+        startableLatestCache(GET_CHAPTERS,
+                // On each subject emission, apply filters and sort then update the view.
+                { chaptersSubject
+                        .flatMap { applyChapterFilters(it) }
+                        .observeOn(AndroidSchedulers.mainThread()) },
                 { view, chapters -> view.onNextChapters(chapters) })
 
         startableFirst(FETCH_CHAPTERS,
-                { getOnlineChaptersObs() },
+                { getRemoteChaptersObservable() },
                 { view, result -> view.onFetchChaptersDone() },
                 { view, error -> view.onFetchChaptersError(error) })
 
         startableLatestCache(CHAPTER_STATUS_CHANGES,
-                { getChapterStatusObs() },
+                { getChapterStatusObservable() },
                 { view, download -> view.onChapterStatusChange(download) },
                 { view, error -> Timber.e(error.cause, error.message) })
 
+        // Find the active manga from the shared data or return.
         manga = SharedData.get(MangaEvent::class.java)?.manga ?: return
         Observable.just(manga)
                 .subscribeLatestCache({ view, manga -> view.onNextManga(manga) })
 
+        // Find the source for this manga.
         source = sourceManager.get(manga.source)!!
-        start(DB_CHAPTERS)
 
+        // Prepare the publish subject.
+        start(GET_CHAPTERS)
+
+        // Add the subscription that retrieves the chapters from the database, keeps subscribed to
+        // changes, and sends the list of chapters to the publish subject.
         add(db.getChapters(manga).asRxObservable()
+                .map { chapters ->
+                    // Convert every chapter to a model.
+                    chapters.map { it.toModel() }
+                }
                 .doOnNext { chapters ->
+                    // Store the last emission
                     this.chapters = chapters
-                    SharedData.get(ChapterCountEvent::class.java)?.emit(chapters.size)
-                    for (chapter in chapters) {
-                        setChapterStatus(chapter)
-                    }
+
+                    // Listen for download status changes
                     start(CHAPTER_STATUS_CHANGES)
+
+                    // Emit the number of chapters to the info tab.
+                    SharedData.get(ChapterCountEvent::class.java)?.emit(chapters.size)
                 }
                 .subscribe { chaptersSubject.onNext(it) })
     }
 
+    /**
+     * Converts a chapter from the database to an extended model, allowing to store new fields.
+     */
+    private fun Chapter.toModel(): ChapterModel {
+        // Create the model object.
+        val model = ChapterModel(this)
+
+        // Find an active download for this chapter.
+        val download = downloadManager.queue.find { it.chapter.id == id }
+
+        if (download != null) {
+            // If there's an active download, assign it.
+            model.download = download
+        } else {
+            // Otherwise ask the manager if the chapter is downloaded and assign it to the status.
+            model.status = if (downloadManager.isChapterDownloaded(source, manga, this))
+                Download.DOWNLOADED
+            else
+                Download.NOT_DOWNLOADED
+        }
+        return model
+    }
+
+    /**
+     * Requests an updated list of chapters from the source.
+     */
     fun fetchChaptersFromSource() {
         hasRequested = true
         start(FETCH_CHAPTERS)
     }
 
+    /**
+     * Updates the UI after applying the filters.
+     */
     private fun refreshChapters() {
         chaptersSubject.onNext(chapters)
     }
 
-    fun getOnlineChaptersObs(): Observable<Pair<Int, Int>> {
-        return source.fetchChapterList(manga)
-                .subscribeOn(Schedulers.io())
-                .map { syncChaptersWithSource(db, it, manga, source) }
-                .observeOn(AndroidSchedulers.mainThread())
-    }
+    /**
+     * Returns an observable that updates the chapter list with the latest from the source.
+     */
+    fun getRemoteChaptersObservable() = source.fetchChapterList(manga)
+            .subscribeOn(Schedulers.io())
+            .map { syncChaptersWithSource(db, it, manga, source) }
+            .observeOn(AndroidSchedulers.mainThread())
 
-    fun getDbChaptersObs(): Observable<List<Chapter>> {
-        return chaptersSubject
-                .flatMap { applyChapterFilters(it) }
-                .observeOn(AndroidSchedulers.mainThread())
-    }
+    /**
+     * Returns an observable that listens to download queue status changes.
+     */
+    fun getChapterStatusObservable() = downloadManager.queue.getStatusObservable()
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter { download -> download.manga.id == manga.id }
+            .doOnNext { onDownloadStatusChange(it) }
 
-    fun getChapterStatusObs(): Observable<Download> {
-        return downloadManager.queue.getStatusObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter { download -> download.manga.id == manga.id }
-                .doOnNext { updateChapterStatus(it) }
-    }
-
-    private fun applyChapterFilters(chapters: List<Chapter>): Observable<List<Chapter>> {
+    /**
+     * Applies the view filters to the list of chapters obtained from the database.
+     *
+     * @param chapters the list of chapters from the database
+     * @return an observable of the list of chapters filtered and sorted.
+     */
+    private fun applyChapterFilters(chapters: List<ChapterModel>): Observable<List<ChapterModel>> {
         var observable = Observable.from(chapters).subscribeOn(Schedulers.io())
         if (onlyUnread()) {
-            observable = observable.filter { chapter -> !chapter.read }
+            observable = observable.filter { !it.read }
         }
         if (onlyDownloaded()) {
-            observable = observable.filter { chapter -> chapter.status == Download.DOWNLOADED }
+            observable = observable.filter { it.isDownloaded }
         }
         val sortFunction: (Chapter, Chapter) -> Int = when (manga.sorting) {
             Manga.SORTING_SOURCE -> when (sortDescending()) {
@@ -137,37 +226,40 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         return observable.toSortedList(sortFunction)
     }
 
-    private fun setChapterStatus(chapter: Chapter) {
-        for (download in downloadManager.queue) {
-            if (chapter.id == download.chapter.id) {
-                chapter.status = download.status
-                return
+    /**
+     * Called when a download for the active manga changes status.
+     *
+     * @param download the download whose status changed.
+     */
+    fun onDownloadStatusChange(download: Download) {
+        // Assign the download to the model object.
+        if (download.status == Download.QUEUE) {
+            chapters.find { it.id == download.chapter.id }?.let {
+                if (it.download == null) {
+                    it.download = download
+                }
             }
         }
 
-        if (downloadManager.isChapterDownloaded(source, manga, chapter)) {
-            chapter.status = Download.DOWNLOADED
-        } else {
-            chapter.status = Download.NOT_DOWNLOADED
-        }
-    }
-
-    fun updateChapterStatus(download: Download) {
-        for (chapter in chapters) {
-            if (download.chapter.id == chapter.id) {
-                chapter.status = download.status
-                break
-            }
-        }
+        // Force UI update if downloaded filter active and download finished.
         if (onlyDownloaded() && download.status == Download.DOWNLOADED)
             refreshChapters()
     }
 
-    fun getNextUnreadChapter(): Chapter? {
+    /**
+     * Returns the next unread chapter or null if everything is read.
+     */
+    fun getNextUnreadChapter(): ChapterModel? {
         return chapters.sortedByDescending { it.source_order }.find { !it.read }
     }
 
-    fun markChaptersRead(selectedChapters: List<Chapter>, read: Boolean) {
+    /**
+     * Mark the selected chapter list as read/unread.
+     *
+     * @param selectedChapters the list of selected chapters.
+     * @param read whether to mark chapters as read or unread.
+     */
+    fun markChaptersRead(selectedChapters: List<ChapterModel>, read: Boolean) {
         Observable.from(selectedChapters)
                 .doOnNext { chapter ->
                     chapter.read = read
@@ -181,21 +273,36 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .subscribe()
     }
 
-    fun markPreviousChaptersAsRead(selected: Chapter) {
+    /**
+     * Mark the previous chapters to the selected one as read.
+     *
+     * @param chapter the selected chapter.
+     */
+    fun markPreviousChaptersAsRead(chapter: ChapterModel) {
         Observable.from(chapters)
-                .filter { it.isRecognizedNumber && it.chapter_number < selected.chapter_number }
+                .filter { it.isRecognizedNumber && it.chapter_number < chapter.chapter_number }
                 .doOnNext { it.read = true }
                 .toList()
                 .flatMap { db.updateChaptersProgress(it).asRxObservable() }
                 .subscribe()
     }
 
-    fun downloadChapters(chapters: List<Chapter>) {
+    /**
+     * Downloads the given list of chapters with the manager.
+     *
+     * @param chapters the list of chapters to download.
+     */
+    fun downloadChapters(chapters: List<ChapterModel>) {
         DownloadService.start(context)
         downloadManager.downloadChapters(manga, chapters)
     }
 
-    fun deleteChapters(chapters: List<Chapter>) {
+    /**
+     * Deletes the given list of chapter.
+     *
+     * @param chapters the list of chapters to delete.
+     */
+    fun deleteChapters(chapters: List<ChapterModel>) {
         val wasRunning = downloadManager.isRunning
         if (wasRunning) {
             DownloadService.stop(context)
@@ -216,49 +323,97 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 })
     }
 
-    private fun deleteChapter(chapter: Chapter) {
+    /**
+     * Deletes a chapter from disk. This method is called in a background thread.
+     *
+     * @param chapter the chapter to delete.
+     */
+    private fun deleteChapter(chapter: ChapterModel) {
         downloadManager.queue.del(chapter)
         downloadManager.deleteChapter(source, manga, chapter)
         chapter.status = Download.NOT_DOWNLOADED
+        chapter.download = null
     }
 
+    /**
+     * Reverses the sorting and requests an UI update.
+     */
     fun revertSortOrder() {
         manga.setChapterOrder(if (sortDescending()) Manga.SORT_ASC else Manga.SORT_DESC)
         db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
     }
 
+    /**
+     * Sets the read filter and requests an UI update.
+     *
+     * @param onlyUnread whether to display only unread chapters or all chapters.
+     */
     fun setReadFilter(onlyUnread: Boolean) {
         manga.readFilter = if (onlyUnread) Manga.SHOW_UNREAD else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
     }
 
+    /**
+     * Sets the download filter and requests an UI update.
+     *
+     * @param onlyDownloaded whether to display only downloaded chapters or all chapters.
+     */
     fun setDownloadedFilter(onlyDownloaded: Boolean) {
         manga.downloadedFilter = if (onlyDownloaded) Manga.SHOW_DOWNLOADED else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
     }
 
+    /**
+     * Removes all filters and requests an UI update.
+     */
+    fun removeFilters() {
+        manga.readFilter = Manga.SHOW_ALL
+        manga.downloadedFilter = Manga.SHOW_ALL
+        db.updateFlags(manga).executeAsBlocking()
+        refreshChapters()
+    }
+
+    /**
+     * Sets the active display mode.
+     *
+     * @param mode the mode to set.
+     */
     fun setDisplayMode(mode: Int) {
         manga.displayMode = mode
         db.updateFlags(manga).executeAsBlocking()
     }
 
-    fun setSorting(mode: Int) {
-        manga.sorting = mode
+    /**
+     * Sets the sorting method and requests an UI update.
+     *
+     * @param sort the sorting mode.
+     */
+    fun setSorting(sort: Int) {
+        manga.sorting = sort
         db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
     }
 
+    /**
+     * Whether the display only downloaded filter is enabled.
+     */
     fun onlyDownloaded(): Boolean {
         return manga.downloadedFilter == Manga.SHOW_DOWNLOADED
     }
 
+    /**
+     * Whether the display only unread filter is enabled.
+     */
     fun onlyUnread(): Boolean {
         return manga.readFilter == Manga.SHOW_UNREAD
     }
 
+    /**
+     * Whether the sorting method is descending or ascending.
+     */
     fun sortDescending(): Boolean {
         return manga.sortDescending()
     }

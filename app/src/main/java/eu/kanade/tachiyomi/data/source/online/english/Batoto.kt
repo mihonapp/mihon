@@ -62,8 +62,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
     override fun popularMangaParse(response: Response, page: MangasPage) {
         val document = Jsoup.parse(response.body().string())
         for (element in document.select(popularMangaSelector())) {
-            Manga().apply {
-                source = this@Batoto.id
+            Manga.create(id).apply {
                 popularMangaFromElement(element, this)
                 page.mangas.add(this)
             }
@@ -78,7 +77,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
 
     override fun popularMangaFromElement(element: Element, manga: Manga) {
         element.select("a[href^=http://bato.to]").first().let {
-            manga.setUrl(it.attr("href"))
+            manga.setUrlWithoutDomain(it.attr("href"))
             manga.title = it.text().trim()
         }
     }
@@ -90,8 +89,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
     override fun searchMangaParse(response: Response, page: MangasPage, query: String) {
         val document = Jsoup.parse(response.body().string())
         for (element in document.select(searchMangaSelector())) {
-            Manga().apply {
-                source = this@Batoto.id
+            Manga.create(id).apply {
                 searchMangaFromElement(element, this)
                 page.mangas.add(this)
             }
@@ -156,7 +154,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
     override fun chapterFromElement(element: Element, chapter: Chapter) {
         val urlElement = element.select("a[href^=http://bato.to/reader").first()
 
-        chapter.setUrl(urlElement.attr("href"))
+        chapter.setUrlWithoutDomain(urlElement.attr("href"))
         chapter.name = urlElement.text()
         chapter.date_upload = element.select("td").getOrNull(4)?.let {
             parseDateFromElement(it)

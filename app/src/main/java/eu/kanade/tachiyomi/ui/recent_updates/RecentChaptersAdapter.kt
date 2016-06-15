@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.util.inflate
 import java.util.*
 
@@ -18,7 +17,8 @@ import java.util.*
  * @constructor creates an instance of the adapter.
  */
 
-class RecentChaptersAdapter(val fragment: RecentChaptersFragment) : FlexibleAdapter<RecyclerView.ViewHolder, Any>() {
+class RecentChaptersAdapter(val fragment: RecentChaptersFragment)
+: FlexibleAdapter<RecyclerView.ViewHolder, Any>() {
     /**
      * The id of the view type
      */
@@ -45,7 +45,7 @@ class RecentChaptersAdapter(val fragment: RecentChaptersFragment) : FlexibleAdap
         val item = getItem(position)
         when (holder.itemViewType) {
             VIEW_TYPE_CHAPTER -> {
-                if (item is MangaChapter) {
+                if (item is RecentChapter) {
                     (holder as RecentChaptersHolder).onSetValues(item)
                 }
             }
@@ -89,7 +89,7 @@ class RecentChaptersAdapter(val fragment: RecentChaptersFragment) : FlexibleAdap
      * @param position position of item
      */
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position) is MangaChapter) VIEW_TYPE_CHAPTER else VIEW_TYPE_SECTION
+        return if (getItem(position) is RecentChapter) VIEW_TYPE_CHAPTER else VIEW_TYPE_SECTION
     }
 
 
@@ -110,8 +110,8 @@ class RecentChaptersAdapter(val fragment: RecentChaptersFragment) : FlexibleAdap
      */
     override fun getItemId(position: Int): Long {
         val item = getItem(position)
-        if (item is MangaChapter)
-            return item.chapter.id
+        if (item is RecentChapter)
+            return item.id!!
         else
             return item.hashCode().toLong()
     }
