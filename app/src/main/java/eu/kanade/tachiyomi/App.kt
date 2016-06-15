@@ -5,6 +5,8 @@ import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.InjektScope
+import uy.kohesive.injekt.registry.default.DefaultRegistrar
 
 @ReportsCrashes(
         formUri = "http://tachiyomi.kanade.eu/crash_report",
@@ -17,7 +19,9 @@ open class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Injekt = InjektScope(DefaultRegistrar())
         Injekt.importModule(AppModule(this))
+
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         setupAcra()

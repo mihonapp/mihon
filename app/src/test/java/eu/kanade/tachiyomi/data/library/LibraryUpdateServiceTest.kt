@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.library
 
 import android.app.Application
 import android.content.Context
-import eu.kanade.tachiyomi.AppModule
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -23,9 +22,7 @@ import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektModule
 import uy.kohesive.injekt.api.InjektRegistrar
-import uy.kohesive.injekt.api.InjektScope
 import uy.kohesive.injekt.api.addSingleton
-import uy.kohesive.injekt.registry.default.DefaultRegistrar
 import java.util.*
 
 @Config(constants = BuildConfig::class)
@@ -48,10 +45,6 @@ class LibraryUpdateServiceTest {
                 addSingleton(Mockito.mock(SourceManager::class.java, RETURNS_DEEP_STUBS))
             }
         }
-
-        // Restart injections for each test
-        Injekt = InjektScope(DefaultRegistrar())
-        Injekt.importModule(AppModule(app))
         Injekt.importModule(module)
 
         service = Robolectric.setupService(LibraryUpdateService::class.java)

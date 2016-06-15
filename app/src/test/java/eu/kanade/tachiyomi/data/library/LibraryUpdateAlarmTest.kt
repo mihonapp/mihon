@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.SystemClock
-import eu.kanade.tachiyomi.App
-import eu.kanade.tachiyomi.AppModule
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -19,9 +17,6 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowAlarmManager
 import org.robolectric.shadows.ShadowApplication
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.InjektScope
-import uy.kohesive.injekt.registry.default.DefaultRegistrar
 
 @Config(constants = BuildConfig::class, sdk = intArrayOf(Build.VERSION_CODES.LOLLIPOP))
 @RunWith(CustomRobolectricGradleTestRunner::class)
@@ -35,8 +30,6 @@ class LibraryUpdateAlarmTest {
     fun setup() {
         app = ShadowApplication.getInstance()
         context = spy(app.applicationContext)
-        Injekt = InjektScope(DefaultRegistrar())
-        Injekt.importModule(AppModule(context as App))
 
         alarmManager = shadowOf(context.getSystemService(Context.ALARM_SERVICE) as AlarmManager)
     }
