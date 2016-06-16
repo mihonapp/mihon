@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
 import android.support.v7.preference.SwitchPreferenceCompat
+import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.BuildConfig
@@ -17,7 +18,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SettingsAboutFragment : SettingsNestedFragment() {
+class SettingsAboutFragment : SettingsFragment() {
     /**
      * Checks for new releases
      */
@@ -33,15 +34,16 @@ class SettingsAboutFragment : SettingsNestedFragment() {
     }
 
     companion object {
-
-        fun newInstance(resourcePreference: Int, resourceTitle: Int): SettingsNestedFragment {
-            val fragment = SettingsAboutFragment()
-            fragment.setArgs(resourcePreference, resourceTitle)
-            return fragment
+        fun newInstance(rootKey: String): SettingsAboutFragment {
+            val args = Bundle()
+            args.putString(XpPreferenceFragment.ARG_PREFERENCE_ROOT, rootKey)
+            return SettingsAboutFragment().apply { arguments = args }
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedState: Bundle?) {
+        super.onViewCreated(view, savedState)
+
         val version = findPreference(getString(R.string.pref_version))
         val buildTime = findPreference(getString(R.string.pref_build_time))
 

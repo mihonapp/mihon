@@ -94,8 +94,6 @@ dependencies {
     compile "com.android.support:design:$support_library_version"
     compile "com.android.support:recyclerview-v7:$support_library_version"
     compile "com.android.support:support-annotations:$support_library_version"
-    compile "com.android.support:preference-v7:$support_library_version"
-    compile "com.android.support:preference-v14:$support_library_version"
     compile "com.android.support:customtabs:$support_library_version"
 
     // ReactiveX
@@ -162,6 +160,7 @@ dependencies {
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
+    compile 'net.xpece.android:support-preference:0.8.1'
 
     // Tests
     testCompile 'junit:junit:4.12'

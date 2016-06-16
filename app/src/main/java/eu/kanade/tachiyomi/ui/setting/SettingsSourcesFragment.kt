@@ -2,36 +2,45 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v14.preference.MultiSelectListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceGroup
+import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.Source
+import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.getLanguages
 import eu.kanade.tachiyomi.data.source.online.LoginSource
+import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
-import rx.Subscription
+import net.xpece.android.support.preference.MultiSelectListPreference
+import uy.kohesive.injekt.injectLazy
 
-class SettingsSourcesFragment : SettingsNestedFragment() {
+class SettingsSourcesFragment : SettingsFragment() {
 
     companion object {
         const val SOURCE_CHANGE_REQUEST = 120
 
-        fun newInstance(resourcePreference: Int, resourceTitle: Int): SettingsNestedFragment {
-            val fragment = SettingsSourcesFragment()
-            fragment.setArgs(resourcePreference, resourceTitle)
-            return fragment
+        fun newInstance(rootKey: String?): SettingsSourcesFragment {
+            val args = Bundle()
+            args.putString(XpPreferenceFragment.ARG_PREFERENCE_ROOT, rootKey)
+            return SettingsSourcesFragment().apply { arguments = args }
         }
     }
 
+    private val preferences: PreferencesHelper by injectLazy()
+
+    private val sourceManager: SourceManager by injectLazy()
+
     val languagesPref by lazy { findPreference("pref_source_languages") as MultiSelectListPreference }
+
     val sourcesPref by lazy { findPreference("pref_sources") as PreferenceGroup }
 
-    var languagesSubscription: Subscription? = null
-
     override fun onViewCreated(view: View, savedState: Bundle?) {
+        super.onViewCreated(view, savedState)
+
         val langs = getLanguages()
 
         val entryKeys = langs.map { it.code }
@@ -39,11 +48,11 @@ class SettingsSourcesFragment : SettingsNestedFragment() {
         languagesPref.entryValues = entryKeys.toTypedArray()
         languagesPref.values = preferences.enabledLanguages().getOrDefault()
 
-        languagesSubscription = preferences.enabledLanguages().asObservable()
+        subscriptions += preferences.enabledLanguages().asObservable()
                 .subscribe { languages ->
                     sourcesPref.removeAll()
 
-                    val enabledSources = settingsActivity.sourceManager.getOnlineSources()
+                    val enabledSources = sourceManager.getOnlineSources()
                             .filter { it.lang.code in languages }
 
                     for (source in enabledSources.filterIsInstance(LoginSource::class.java)) {
@@ -56,11 +65,6 @@ class SettingsSourcesFragment : SettingsNestedFragment() {
                 }
     }
 
-    override fun onDestroyView() {
-        languagesSubscription?.unsubscribe()
-        super.onDestroyView()
-    }
-
     fun createLoginSourceEntry(source: Source): Preference {
         return LoginPreference(preferenceManager.context).apply {
             key = preferences.keys.sourceUsername(source.id)
@@ -69,7 +73,7 @@ class SettingsSourcesFragment : SettingsNestedFragment() {
             setOnPreferenceClickListener {
                 val fragment = SourceLoginDialog.newInstance(source)
                 fragment.setTargetFragment(this@SettingsSourcesFragment, SOURCE_CHANGE_REQUEST)
-                fragment.show(fragmentManagerCompat, null)
+                fragment.show(childFragmentManager, null)
                 true
             }
 

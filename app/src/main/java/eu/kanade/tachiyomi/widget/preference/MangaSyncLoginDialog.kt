@@ -3,12 +3,13 @@ package eu.kanade.tachiyomi.widget.preference
 import android.os.Bundle
 import android.view.View
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncService
-import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.pref_account_login.view.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import uy.kohesive.injekt.injectLazy
 
 class MangaSyncLoginDialog : LoginDialogPreference() {
 
@@ -23,13 +24,15 @@ class MangaSyncLoginDialog : LoginDialogPreference() {
         }
     }
 
+    val syncManager: MangaSyncManager by injectLazy()
+
     lateinit var sync: MangaSyncService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val syncId = arguments.getInt("key")
-        sync = (activity as SettingsActivity).syncManager.getService(syncId)!!
+        sync = syncManager.getService(syncId)!!
     }
 
     override fun setCredentialsOnView(view: View) = with(view) {

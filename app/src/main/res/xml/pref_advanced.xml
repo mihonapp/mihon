@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference
-        android:key="@string/pref_clear_chapter_cache_key"
-        android:title="@string/pref_clear_chapter_cache"/>
+    <PreferenceScreen
+        android:key="advanced_screen"
+        android:persistent="false"
+        android:title="@string/pref_category_advanced">
 
-    <Preference
-        android:key="@string/pref_clear_cookies_key"
-        android:title="@string/pref_clear_cookies"/>
+        <Preference
+            android:key="@string/pref_clear_chapter_cache_key"
+            android:title="@string/pref_clear_chapter_cache"/>
 
-    <Preference
-        android:key="@string/pref_clear_database_key"
-        android:summary="@string/pref_clear_database_summary"
-        android:title="@string/pref_clear_database"/>
+        <Preference
+            android:key="@string/pref_clear_cookies_key"
+            android:title="@string/pref_clear_cookies"/>
 
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="@string/pref_reencode_key"
-        android:summary="@string/pref_reencode_summary"
-        android:title="@string/pref_reencode"/>
+        <Preference
+            android:key="@string/pref_clear_database_key"
+            android:summary="@string/pref_clear_database_summary"
+            android:title="@string/pref_clear_database"/>
 
-</android.support.v7.preference.PreferenceScreen>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_reencode_key"
+            android:summary="@string/pref_reencode_summary"
+            android:title="@string/pref_reencode"/>
+
+    </PreferenceScreen>
+
+</PreferenceScreen>

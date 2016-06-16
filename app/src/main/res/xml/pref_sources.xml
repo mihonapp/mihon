@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orderingFromXml="true">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <MultiSelectListPreference
-        android:key="@string/pref_source_languages"
-        android:title="@string/languages"
-        android:summary="@string/languages_summary"/>
-
-    <PreferenceCategory
-        android:key="pref_sources"
+    <PreferenceScreen
+        android:key="sources_screen"
         android:persistent="false"
-        android:title="@string/accounts"/>
+        android:title="@string/pref_category_sources">
 
-</android.support.v7.preference.PreferenceScreen>
+        <MultiSelectListPreference
+            android:key="@string/pref_source_languages"
+            android:title="@string/languages"
+            android:summary="@string/languages_summary"/>
+
+        <PreferenceCategory
+            android:key="pref_sources"
+            android:persistent="false"
+            android:title="@string/accounts"/>
+
+    </PreferenceScreen>
+
+</PreferenceScreen>

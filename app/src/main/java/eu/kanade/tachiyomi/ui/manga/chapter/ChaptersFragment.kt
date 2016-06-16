@@ -61,7 +61,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         return inflater.inflate(R.layout.fragment_manga_chapters, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedState: Bundle?) {
         // Init RecyclerView and adapter
         adapter = ChaptersAdapter(this)
 

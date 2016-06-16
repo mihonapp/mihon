@@ -26,7 +26,9 @@
         <!-- Themes -->
         <item name="windowActionModeOverlay">true</item>
         <item name="actionBarTheme">@style/Theme.ActionBar.Light</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Material</item>
+        <item name="alertDialogTheme">@style/Theme.AlertDialog.Light</item>
+
 
         <!-- Custom Attributes-->
         <item name="selectable_list_drawable">@drawable/list_item_selector_light</item>
@@ -61,7 +63,9 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Material</item>
+        <item name="alertDialogTheme">@style/Theme.AlertDialog.Dark</item>
+
 
         <!-- Custom Attributes-->
         <item name="navigation_view_theme">@style/Theme.Widget.NavigationView.Dark</item>

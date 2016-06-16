@@ -64,9 +64,9 @@ class RecentChaptersFragment
     /**
      * Called when view is created
      * @param view created view
-     * @param savedInstanceState status of saved sate
+     * @param savedState status of saved sate
      */
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedState: Bundle?) {
         // Init RecyclerView and adapter
         recycler.layoutManager = NpaLinearLayoutManager(activity)
         recycler.addItemDecoration(DividerItemDecoration(context.theme.getResourceDrawable(R.attr.divider_drawable)))

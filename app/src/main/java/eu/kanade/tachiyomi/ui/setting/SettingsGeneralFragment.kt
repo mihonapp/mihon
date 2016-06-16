@@ -2,28 +2,36 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v14.preference.MultiSelectListPreference
 import android.support.v4.app.TaskStackBuilder
 import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceFragmentCompat
+import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateAlarm
-import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
 import eu.kanade.tachiyomi.widget.preference.LibraryColumnsDialog
 import eu.kanade.tachiyomi.widget.preference.SimpleDialogPreference
+import net.xpece.android.support.preference.MultiSelectListPreference
 import rx.Observable
-import rx.Subscription
+import uy.kohesive.injekt.injectLazy
 
-class SettingsGeneralFragment : SettingsNestedFragment() {
+class SettingsGeneralFragment : SettingsFragment(),
+        PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
+
 
     companion object {
-        fun newInstance(resourcePreference: Int, resourceTitle: Int): SettingsGeneralFragment {
-            val fragment = SettingsGeneralFragment();
-            fragment.setArgs(resourcePreference, resourceTitle);
-            return fragment;
+        fun newInstance(rootKey: String): SettingsGeneralFragment {
+            val args = Bundle()
+            args.putString(XpPreferenceFragment.ARG_PREFERENCE_ROOT, rootKey)
+            return SettingsGeneralFragment().apply { arguments = args }
         }
     }
+
+    private val preferences: PreferencesHelper by injectLazy()
+
 
     val columnsPreference by lazy {
         findPreference(getString(R.string.pref_library_columns_dialog_key)) as SimpleDialogPreference
@@ -41,15 +49,13 @@ class SettingsGeneralFragment : SettingsNestedFragment() {
         findPreference(getString(R.string.pref_theme_key)) as IntListPreference
     }
 
-    var updateIntervalSubscription: Subscription? = null
+    override fun onViewCreated(view: View, savedState: Bundle?) {
+        super.onViewCreated(view, savedState)
 
-    var columnsSubscription: Subscription? = null
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        updateIntervalSubscription = preferences.libraryUpdateInterval().asObservable()
+        subscriptions += preferences.libraryUpdateInterval().asObservable()
                 .subscribe { updateRestriction.isVisible = it > 0 }
 
-        columnsSubscription = Observable.combineLatest(
+        subscriptions += Observable.combineLatest(
                 preferences.portraitColumns().asObservable(),
                 preferences.landscapeColumns().asObservable())
                 { portraitColumns, landscapeColumns -> Pair(portraitColumns, landscapeColumns) }
@@ -62,29 +68,21 @@ class SettingsGeneralFragment : SettingsNestedFragment() {
 
         themePreference.setOnPreferenceChangeListener { preference, newValue ->
             // Rebuild activity's to apply themes.
-            TaskStackBuilder.create(activity)
-                    .addNextIntent(Intent(activity, MainActivity::class.java))
-                    .addNextIntent(activity.intent)
+            TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(Intent(activity.intent))
                     .startActivities()
             true
         }
     }
 
-    override fun onDestroyView() {
-        updateIntervalSubscription?.unsubscribe()
-        columnsSubscription?.unsubscribe()
-        super.onDestroyView()
-
-    }
-
-    override fun onDisplayPreferenceDialog(preference: Preference) {
-        if (preference === columnsPreference) {
-            val fragment = LibraryColumnsDialog.newInstance(preference)
+    override fun onPreferenceDisplayDialog(p0: PreferenceFragmentCompat?, p: Preference): Boolean {
+        if (p.key == getString(R.string.pref_library_columns_dialog_key)) {
+            val fragment = LibraryColumnsDialog.newInstance(p)
             fragment.setTargetFragment(this, 0)
-            fragment.show(fragmentManagerCompat, null)
-        } else {
-            super.onDisplayPreferenceDialog(preference)
+            fragment.show(childFragmentManager, null)
+            return true
         }
+        return false
     }
 
     private fun updateColumnsSummary(portraitColumns: Int, landscapeColumns: Int) {

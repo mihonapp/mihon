@@ -1,28 +1,27 @@
 package eu.kanade.tachiyomi.widget.preference
 
 import android.app.Dialog
-import android.app.DialogFragment
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.dd.processbutton.iml.ActionProcessButton
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import eu.kanade.tachiyomi.widget.SimpleTextWatcher
 import kotlinx.android.synthetic.main.pref_account_login.view.*
 import rx.Subscription
+import uy.kohesive.injekt.injectLazy
 
 abstract class LoginDialogPreference : DialogFragment() {
 
     var v: View? = null
         private set
 
-    val preferences: PreferencesHelper
-        get() = (activity as SettingsActivity).preferences
+    val preferences: PreferencesHelper by injectLazy()
 
     var requestSubscription: Subscription? = null
 

@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="acra.enable"
-        android:summary="@string/pref_acra_summary"
-        android:title="@string/pref_enable_acra"/>
+    <PreferenceScreen
+        android:key="about_screen"
+        android:title="@string/pref_category_about"
+        android:persistent="false">
 
-    <!--<SwitchPreferenceCompat-->
-    <!--android:defaultValue="false"-->
-    <!--android:enabled="false"-->
-    <!--android:key="@string/pref_enable_automatic_updates_key"-->
-    <!--android:summary="@string/pref_enable_automatic_updates_summary"-->
-    <!--android:title="@string/pref_enable_automatic_updates"/>-->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="acra.enable"
+            android:summary="@string/pref_acra_summary"
+            android:title="@string/pref_enable_acra"/>
 
-    <Preference
-        android:key="@string/pref_version"
-        android:persistent="false"
-        android:title="@string/version"/>
+        <!--<SwitchPreferenceCompat-->
+        <!--android:defaultValue="false"-->
+        <!--android:enabled="false"-->
+        <!--android:key="@string/pref_enable_automatic_updates_key"-->
+        <!--android:summary="@string/pref_enable_automatic_updates_summary"-->
+        <!--android:title="@string/pref_enable_automatic_updates"/>-->
 
-    <Preference
-        android:key="@string/pref_build_time"
-        android:persistent="false"
-        android:title="@string/build_time"/>
+        <Preference
+            android:key="@string/pref_version"
+            android:persistent="false"
+            android:title="@string/version"/>
 
-</android.support.v7.preference.PreferenceScreen>
+        <Preference
+            android:key="@string/pref_build_time"
+            android:persistent="false"
+            android:title="@string/build_time"/>
+
+    </PreferenceScreen>
+
+</PreferenceScreen>

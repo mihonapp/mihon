@@ -54,9 +54,9 @@ class RecentlyReadFragment : BaseRxFragment<RecentlyReadPresenter>() {
      * Called when view is created
      *
      * @param view created view
-     * @param savedInstanceState status of saved sate
+     * @param savedState status of saved sate
      */
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View?, savedState: Bundle?) {
         // Initialize adapter
         recycler.layoutManager = NpaLinearLayoutManager(activity)
         adapter = RecentlyReadAdapter(this)

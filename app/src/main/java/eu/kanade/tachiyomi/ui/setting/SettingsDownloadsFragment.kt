@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.ContextCompat
+import android.support.v7.preference.XpPreferenceFragment
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -14,29 +15,32 @@ import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.FilePickerFragment
 import com.nononsenseapps.filepicker.LogicHandler
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.inflate
-import rx.Subscription
+import eu.kanade.tachiyomi.util.plusAssign
+import uy.kohesive.injekt.injectLazy
 import java.io.File
 
-class SettingsDownloadsFragment : SettingsNestedFragment() {
+class SettingsDownloadsFragment : SettingsFragment() {
 
     companion object {
-
         val DOWNLOAD_DIR_CODE = 103
 
-        fun newInstance(resourcePreference: Int, resourceTitle: Int): SettingsNestedFragment {
-            val fragment = SettingsDownloadsFragment()
-            fragment.setArgs(resourcePreference, resourceTitle)
-            return fragment
+        fun newInstance(rootKey: String): SettingsDownloadsFragment {
+            val args = Bundle()
+            args.putString(XpPreferenceFragment.ARG_PREFERENCE_ROOT, rootKey)
+            return SettingsDownloadsFragment().apply { arguments = args }
         }
     }
 
+    private val preferences: PreferencesHelper by injectLazy()
+
     val downloadDirPref by lazy { findPreference(getString(R.string.pref_download_directory_key)) }
 
-    var downloadDirSubscription: Subscription? = null
-
     override fun onViewCreated(view: View, savedState: Bundle?) {
+        super.onViewCreated(view, savedState)
+
         downloadDirPref.setOnPreferenceClickListener {
 
             val currentDir = preferences.downloadsDirectory().getOrDefault()
@@ -66,13 +70,8 @@ class SettingsDownloadsFragment : SettingsNestedFragment() {
             true
         }
 
-        downloadDirSubscription = preferences.downloadsDirectory().asObservable()
+        subscriptions += preferences.downloadsDirectory().asObservable()
                 .subscribe { downloadDirPref.summary = it }
-    }
-
-    override fun onDestroyView() {
-        downloadDirSubscription?.unsubscribe()
-        super.onDestroyView()
     }
 
     fun getExternalFilesDirs(): List<File> {

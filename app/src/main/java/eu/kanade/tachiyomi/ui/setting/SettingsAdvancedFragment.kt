@@ -1,28 +1,36 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
+import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.network.NetworkHelper
+import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
 import rx.Observable
-import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import uy.kohesive.injekt.injectLazy
 import java.util.concurrent.atomic.AtomicInteger
 
-class SettingsAdvancedFragment : SettingsNestedFragment() {
+class SettingsAdvancedFragment : SettingsFragment() {
 
     companion object {
-
-        fun newInstance(resourcePreference: Int, resourceTitle: Int): SettingsNestedFragment {
-            val fragment = SettingsAdvancedFragment()
-            fragment.setArgs(resourcePreference, resourceTitle)
-            return fragment
+        fun newInstance(rootKey: String): SettingsAdvancedFragment {
+            val args = Bundle()
+            args.putString(XpPreferenceFragment.ARG_PREFERENCE_ROOT, rootKey)
+            return SettingsAdvancedFragment().apply { arguments = args }
         }
     }
+
+    private val network: NetworkHelper by injectLazy()
+
+    private val chapterCache: ChapterCache by injectLazy()
+
+    private val db: DatabaseHelper by injectLazy()
 
     private val clearCache by lazy { findPreference(getString(R.string.pref_clear_chapter_cache_key)) }
 
@@ -30,9 +38,9 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
 
     private val clearCookies by lazy { findPreference(getString(R.string.pref_clear_cookies_key)) }
 
-    private var clearCacheSubscription: Subscription? = null
+    override fun onViewCreated(view: View, savedState: Bundle?) {
+        super.onViewCreated(view, savedState)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         clearCache.setOnPreferenceClickListener {
             clearChapterCache()
             true
@@ -40,7 +48,7 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
         clearCache.summary = getString(R.string.used_cache, chapterCache.readableSize)
 
         clearCookies.setOnPreferenceClickListener {
-            settingsActivity.networkHelper.cookies.removeAll()
+            network.cookies.removeAll()
             activity.toast(R.string.cookies_cleared)
             true
         }
@@ -49,11 +57,6 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
             clearDatabase()
             true
         }
-    }
-
-    override fun onDestroyView() {
-        clearCacheSubscription?.unsubscribe()
-        super.onDestroyView()
     }
 
     private fun clearChapterCache() {
@@ -67,9 +70,7 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
                 .cancelable(false)
                 .show()
 
-        clearCacheSubscription?.unsubscribe()
-
-        clearCacheSubscription = Observable.defer { Observable.from(files) }
+        subscriptions += Observable.defer { Observable.from(files) }
                 .concatMap { file ->
                     if (chapterCache.removeFileFromCache(file.name)) {
                         deletedFiles.incrementAndGet()
@@ -101,11 +102,5 @@ class SettingsAdvancedFragment : SettingsNestedFragment() {
                 }
                 .show()
     }
-
-    private val chapterCache: ChapterCache
-        get() = settingsActivity.chapterCache
-
-    private val db: DatabaseHelper
-        get() = settingsActivity.db
 
 }

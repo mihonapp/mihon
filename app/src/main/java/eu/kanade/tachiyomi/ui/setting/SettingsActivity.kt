@@ -1,97 +1,63 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
-import android.support.v14.preference.PreferenceFragment
+import android.support.v7.preference.PreferenceFragmentCompat
+import android.support.v7.preference.PreferenceScreen
+import android.view.MenuItem
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.cache.ChapterCache
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
-import eu.kanade.tachiyomi.data.network.NetworkHelper
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import kotlinx.android.synthetic.main.toolbar.*
-import uy.kohesive.injekt.injectLazy
+import net.xpece.android.support.preference.PreferenceScreenNavigationStrategy
+import net.xpece.android.support.preference.PreferenceScreenNavigationStrategy.ReplaceFragment
 
-class SettingsActivity : BaseActivity() {
+class SettingsActivity : BaseActivity(),
+        PreferenceFragmentCompat.OnPreferenceStartScreenCallback,
+        PreferenceScreenNavigationStrategy.ReplaceFragment.Callbacks {
 
-    val preferences: PreferencesHelper by injectLazy()
-    val chapterCache: ChapterCache by injectLazy()
-    val db: DatabaseHelper by injectLazy()
-    val sourceManager: SourceManager by injectLazy()
-    val syncManager: MangaSyncManager by injectLazy()
-    val networkHelper: NetworkHelper by injectLazy()
+    private lateinit var replaceFragmentStrategy: ReplaceFragment
 
     override fun onCreate(savedState: Bundle?) {
         setAppTheme()
         super.onCreate(savedState)
         setContentView(R.layout.activity_preferences)
 
-        setupToolbar(toolbar)
+        replaceFragmentStrategy = ReplaceFragment(this,
+                R.anim.abc_fade_in, R.anim.abc_fade_out,
+                R.anim.abc_fade_in, R.anim.abc_fade_out)
 
         if (savedState == null) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.settings_content, SettingsMainFragment())
-                    .commit()
+            supportFragmentManager.beginTransaction()
+                .add(R.id.settings_content, SettingsFragment.newInstance(null), "Settings")
+                .commit()
+        }
+
+        setupToolbar(toolbar, backNavigation = false)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> onBackPressed()
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    override fun onBuildPreferenceFragment(key: String?): PreferenceFragmentCompat {
+        return when (key) {
+            "general_screen" -> SettingsGeneralFragment.newInstance(key)
+            "downloads_screen" -> SettingsDownloadsFragment.newInstance(key)
+            "sources_screen" -> SettingsSourcesFragment.newInstance(key)
+            "sync_screen" -> SettingsSyncFragment.newInstance(key)
+            "advanced_screen" -> SettingsAdvancedFragment.newInstance(key)
+            "about_screen" -> SettingsAboutFragment.newInstance(key)
+            else -> SettingsFragment.newInstance(key)
         }
     }
 
-    override fun onBackPressed() {
-        if (!fragmentManager.popBackStackImmediate()) {
-            super.onBackPressed()
-        }
-    }
-
-    class SettingsMainFragment : PreferenceFragment() {
-
-        override fun onCreatePreferences(savedState: Bundle?, s: String?) {
-            addPreferencesFromResource(R.xml.pref_main)
-
-            registerSubpreference(R.string.pref_category_general_key) {
-                SettingsGeneralFragment.newInstance(R.xml.pref_general, R.string.pref_category_general)
-            }
-
-            registerSubpreference(R.string.pref_category_reader_key) {
-                SettingsNestedFragment.newInstance(R.xml.pref_reader, R.string.pref_category_reader)
-            }
-
-            registerSubpreference(R.string.pref_category_downloads_key) {
-                SettingsDownloadsFragment.newInstance(R.xml.pref_downloads, R.string.pref_category_downloads)
-            }
-
-            registerSubpreference(R.string.pref_category_sources_key) {
-                SettingsSourcesFragment.newInstance(R.xml.pref_sources, R.string.pref_category_sources)
-            }
-
-            registerSubpreference(R.string.pref_category_sync_key) {
-                SettingsSyncFragment.newInstance(R.xml.pref_sync, R.string.pref_category_sync)
-            }
-
-            registerSubpreference(R.string.pref_category_advanced_key) {
-                SettingsAdvancedFragment.newInstance(R.xml.pref_advanced, R.string.pref_category_advanced)
-            }
-
-            registerSubpreference(R.string.pref_category_about_key) {
-                SettingsAboutFragment.newInstance(R.xml.pref_about, R.string.pref_category_about)
-            }
-        }
-
-        override fun onResume() {
-            super.onResume()
-            (activity as BaseActivity).setToolbarTitle(getString(R.string.label_settings))
-        }
-
-        private fun registerSubpreference(preferenceResource: Int, func: () -> PreferenceFragment) {
-            findPreference(getString(preferenceResource)).setOnPreferenceClickListener {
-                val fragment = func()
-                fragmentManager.beginTransaction()
-                        .replace(R.id.settings_content, fragment)
-                        .addToBackStack(fragment.javaClass.simpleName)
-                        .commit()
-                true
-            }
-        }
-
+    override fun onPreferenceStartScreen(p0: PreferenceFragmentCompat, p1: PreferenceScreen): Boolean {
+        replaceFragmentStrategy.onPreferenceStartScreen(supportFragmentManager, p0, p1)
+        return true
     }
 
 }
