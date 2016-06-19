@@ -9,8 +9,10 @@ import eu.kanade.tachiyomi.data.source.getLanguages
 import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.util.asJsoup
+import eu.kanade.tachiyomi.util.attrOrText
 import okhttp3.Request
 import okhttp3.Response
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 import java.util.*
@@ -127,28 +129,59 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
     }
 
     override fun pageListParse(response: Response, pages: MutableList<Page>) {
-        val document = response.asJsoup()
+        val body = response.body().string()
+        val url = response.request().url().toString()
+
+        // TODO lazy initialization in Kotlin 1.1
+        val document = Jsoup.parse(body, url)
+
         with(map.pages) {
-            val url = response.request().url().toString()
-            pages_css?.let {
-                for (element in document.select(it)) {
-                    val value = element.attr(pages_attr)
-                    val pageUrl = replace?.let { url.replace(it.toRegex(), replacement!!.replace("\$value", value)) } ?: value
-                    pages.add(Page(pages.size, pageUrl))
-                }
+            // Capture a list of values where page urls will be resolved.
+            val capturedPages = if (pages_regex != null)
+                pages_regex!!.toRegex().findAll(body).map { it.value }.toList()
+            else if (pages_css != null)
+                document.select(pages_css).map { it.attrOrText(pages_attr!!) }
+            else
+                null
+
+            // For each captured value, obtain the url and create a new page.
+            capturedPages?.forEach { value ->
+                // If the captured value isn't an url, we have to use replaces with the chapter url.
+                val pageUrl = if (replace != null && replacement != null)
+                    url.replace(replace!!.toRegex(), replacement!!.replace("\$value", value))
+                else
+                    value
+
+                pages.add(Page(pages.size, pageUrl))
             }
 
-            for ((i, element) in document.select(image_css).withIndex()) {
-                pages.getOrNull(i)?.imageUrl = element.absUrl(image_attr)
+            // Capture a list of images.
+            val capturedImages = if (image_regex != null)
+                image_regex!!.toRegex().findAll(body).map { it.groups[1]?.value }.toList()
+            else if (image_css != null)
+                document.select(image_css).map { it.absUrl(image_attr) }
+            else
+                null
+
+            // Assign the image url to each page
+            capturedImages?.forEachIndexed { i, url ->
+                val page = pages.getOrElse(i) { Page(i, "").apply { pages.add(this) } }
+                page.imageUrl = url
             }
         }
-
     }
 
     override fun imageUrlParse(response: Response): String {
-        val document = response.asJsoup()
-        return with(map.pages) {
-            document.select(image_css).first().absUrl(image_attr)
+        val body = response.body().string()
+        val url = response.request().url().toString()
+
+        with(map.pages) {
+            return if (image_regex != null)
+                image_regex!!.toRegex().find(body)!!.groups[1]!!.value
+            else if (image_css != null)
+                Jsoup.parse(body, url).select(image_css).first().absUrl(image_attr)
+            else
+                throw Exception("image_regex and image_css are null")
         }
     }
 

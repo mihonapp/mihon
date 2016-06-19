@@ -194,6 +194,9 @@ class DateNode(private val map: Map<String, Any?>) : SelectableNode(map) {
 
 class PagesNode(private val map: Map<String, Any?>) {
 
+    val pages_regex: String?
+        get() = map["pages_regex"] as? String
+
     val pages_css: String?
         get() = map["pages_css"] as? String
 
@@ -206,7 +209,11 @@ class PagesNode(private val map: Map<String, Any?>) {
     val replacement: String?
         get() = map["url_replacement"] as? String
 
-    val image_css: String by map
+    val image_regex: String?
+        get() = map["image_regex"] as? String
+
+    val image_css: String?
+        get() = map["image_css"] as? String
 
     val image_attr: String
         get() = map["image_attr"] as? String ?: "src"
