@@ -97,8 +97,8 @@ dependencies {
     compile "com.android.support:customtabs:$support_library_version"
 
     // ReactiveX
-    compile 'io.reactivex:rxandroid:1.2.0'
-    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
 
     // Network client
@@ -115,7 +115,7 @@ dependencies {
 
     // JSON
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.github.salomonbrys.kotson:kotson:2.2.2'
+    compile 'com.github.salomonbrys.kotson:kotson:2.3.0'
 
     // YAML
     compile 'org.yaml:snakeyaml:1.17'
@@ -152,7 +152,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.1.2'
 
     // Crash reports
-    compile 'ch.acra:acra:4.8.5'
+    compile 'ch.acra:acra:4.9.0'
 
     // UI
     compile 'com.dmitrymalkovich.android:material-design-dimens:1.2'
@@ -160,7 +160,7 @@ dependencies {
     compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-    compile 'com.afollestad.material-dialogs:core:0.8.5.9'
+    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
     compile 'net.xpece.android:support-preference:0.8.1'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
 
