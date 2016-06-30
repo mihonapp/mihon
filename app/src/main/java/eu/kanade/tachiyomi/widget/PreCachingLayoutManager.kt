@@ -1,9 +1,10 @@
 package eu.kanade.tachiyomi.widget
 
 import android.content.Context
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
-class PreCachingLayoutManager(context: Context) : NpaLinearLayoutManager(context) {
+class PreCachingLayoutManager(context: Context) : LinearLayoutManager(context) {
 
     companion object {
         const val DEFAULT_EXTRA_LAYOUT_SPACE = 600

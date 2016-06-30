@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.download
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
@@ -8,7 +9,6 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.plusAssign
-import eu.kanade.tachiyomi.widget.NpaLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_download_queue.*
 import nucleus.factory.RequiresPresenter
 import rx.Observable
@@ -92,7 +92,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
         recycler.adapter = adapter
 
         // Set the layout manager for the recycler and fixed size.
-        recycler.layoutManager = NpaLinearLayoutManager(activity)
+        recycler.layoutManager = LinearLayoutManager(activity)
         recycler.setHasFixedSize(true)
 
         // Suscribe to changes

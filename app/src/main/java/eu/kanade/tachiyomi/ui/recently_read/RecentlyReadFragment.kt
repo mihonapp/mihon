@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.recently_read
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.widget.NpaLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_recently_read.*
 import nucleus.factory.RequiresPresenter
 
@@ -58,7 +58,7 @@ class RecentlyReadFragment : BaseRxFragment<RecentlyReadPresenter>() {
      */
     override fun onViewCreated(view: View?, savedState: Bundle?) {
         // Initialize adapter
-        recycler.layoutManager = NpaLinearLayoutManager(activity)
+        recycler.layoutManager = LinearLayoutManager(activity)
         adapter = RecentlyReadAdapter(this)
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
