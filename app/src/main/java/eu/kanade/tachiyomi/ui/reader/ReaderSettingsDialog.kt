@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.plusAssign
-import eu.kanade.tachiyomi.widget.SimpleItemSelectedListener
+import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import kotlinx.android.synthetic.main.dialog_reader_settings.view.*
 import rx.Observable
@@ -39,8 +39,7 @@ class ReaderSettingsDialog : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedState: Bundle?) = with(view) {
-        viewer.setSelection((activity as ReaderActivity).presenter.manga.viewer, false)
-        viewer.onItemSelectedListener = SimpleItemSelectedListener { position ->
+        viewer.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             subscriptions += Observable.timer(250, MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
@@ -48,35 +47,36 @@ class ReaderSettingsDialog : DialogFragment() {
                         activity.recreate()
                     }
         }
+        viewer.setSelection((activity as ReaderActivity).presenter.manga.viewer, false)
 
-        rotation_mode.setSelection(preferences.rotation().getOrDefault() - 1, false)
-        rotation_mode.onItemSelectedListener = SimpleItemSelectedListener { position ->
+        rotation_mode.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             subscriptions += Observable.timer(250, MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         preferences.rotation().set(position + 1)
                     }
         }
+        rotation_mode.setSelection(preferences.rotation().getOrDefault() - 1, false)
 
-        scale_type.setSelection(preferences.imageScaleType().getOrDefault() - 1, false)
-        scale_type.onItemSelectedListener = SimpleItemSelectedListener { position ->
+        scale_type.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             preferences.imageScaleType().set(position + 1)
         }
+        scale_type.setSelection(preferences.imageScaleType().getOrDefault() - 1, false)
 
-        zoom_start.setSelection(preferences.zoomStart().getOrDefault() - 1, false)
-        zoom_start.onItemSelectedListener = SimpleItemSelectedListener { position ->
+        zoom_start.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             preferences.zoomStart().set(position + 1)
         }
+        zoom_start.setSelection(preferences.zoomStart().getOrDefault() - 1, false)
 
-        image_decoder.setSelection(preferences.imageDecoder().getOrDefault(), false)
-        image_decoder.onItemSelectedListener = SimpleItemSelectedListener { position ->
+        image_decoder.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             preferences.imageDecoder().set(position)
         }
+        image_decoder.setSelection(preferences.imageDecoder().getOrDefault(), false)
 
-        background_color.setSelection(preferences.readerTheme().getOrDefault(), false)
-        background_color.onItemSelectedListener = SimpleItemSelectedListener { position ->
+        background_color.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             preferences.readerTheme().set(position)
         }
+        background_color.setSelection(preferences.readerTheme().getOrDefault(), false)
 
         enable_transitions.isChecked = preferences.enableTransitions().getOrDefault()
         enable_transitions.setOnCheckedChangeListener { v, isChecked ->
