@@ -236,6 +236,10 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
         adapter.setItems(downloads)
     }
 
+    fun onDownloadRemoved(position: Int) {
+        adapter.notifyItemRemoved(position)
+    }
+
     /**
      * Called when the progress of a download changes.
      *

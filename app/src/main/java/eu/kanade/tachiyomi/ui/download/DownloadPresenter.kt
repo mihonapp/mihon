@@ -6,20 +6,15 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
+import java.util.*
 
 /**
  * Presenter of [DownloadFragment].
  */
 class DownloadPresenter : BasePresenter<DownloadFragment>() {
-
-    companion object {
-        /**
-         * Id of the restartable that returns the download queue.
-         */
-        const val GET_DOWNLOAD_QUEUE = 1
-    }
 
     /**
      * Download manager.
@@ -34,15 +29,28 @@ class DownloadPresenter : BasePresenter<DownloadFragment>() {
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
+        
+        Observable.just(ArrayList(downloadQueue))
+                .doOnNext { syncQueue(it) }
+                .subscribeLatestCache({ view, downloads ->
+                    view.onNextDownloads(downloads)
+                }, { view, error ->
+                    Timber.e(error, error.message)
+                })
+    }
 
-        restartableLatestCache(GET_DOWNLOAD_QUEUE,
-                { Observable.just(downloadQueue) },
-                { view, downloads -> view.onNextDownloads(downloads) },
-                { view, error -> Timber.e(error.message) })
+    private fun syncQueue(queue: MutableList<Download>) {
+        add(downloadQueue.getRemovedObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { download ->
+                    val position = queue.indexOf(download)
+                    if (position != -1) {
+                        queue.removeAt(position)
 
-        if (savedState == null) {
-            start(GET_DOWNLOAD_QUEUE)
-        }
+                        @Suppress("DEPRECATION")
+                        view?.onDownloadRemoved(position)
+                    }
+                })
     }
 
     fun getStatusObservable(): Observable<Download> {
@@ -60,7 +68,6 @@ class DownloadPresenter : BasePresenter<DownloadFragment>() {
      */
     fun clearQueue() {
         downloadManager.clearQueue()
-        start(GET_DOWNLOAD_QUEUE)
     }
 
 }

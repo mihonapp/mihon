@@ -6,29 +6,41 @@ import rx.Observable
 import rx.subjects.PublishSubject
 import java.util.concurrent.CopyOnWriteArrayList
 
-class DownloadQueue : CopyOnWriteArrayList<Download>() {
+class DownloadQueue(private val queue: MutableList<Download> = CopyOnWriteArrayList<Download>())
+: List<Download> by queue {
 
     private val statusSubject = PublishSubject.create<Download>()
 
-    override fun add(download: Download): Boolean {
+    private val removeSubject = PublishSubject.create<Download>()
+
+    fun add(download: Download): Boolean {
         download.setStatusSubject(statusSubject)
         download.status = Download.QUEUE
-        return super.add(download)
+        return queue.add(download)
     }
 
     fun del(download: Download) {
-        super.remove(download)
+        val removed = queue.remove(download)
         download.setStatusSubject(null)
+        if (removed) {
+            removeSubject.onNext(download)
+        }
     }
 
     fun del(chapter: Chapter) {
         find { it.chapter.id == chapter.id }?.let { del(it) }
     }
 
-    fun getActiveDownloads() =
+    fun clear() {
+        queue.forEach { del(it) }
+    }
+
+    fun getActiveDownloads(): Observable<Download> =
         Observable.from(this).filter { download -> download.status == Download.DOWNLOADING }
 
-    fun getStatusObservable() = statusSubject.onBackpressureBuffer()
+    fun getStatusObservable(): Observable<Download> = statusSubject.onBackpressureBuffer()
+
+    fun getRemovedObservable(): Observable<Download> = removeSubject.onBackpressureBuffer()
 
     fun getProgressObservable(): Observable<Download> {
         return statusSubject.onBackpressureBuffer()

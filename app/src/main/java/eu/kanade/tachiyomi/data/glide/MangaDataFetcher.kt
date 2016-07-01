@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.glide
 
+import android.support.v4.util.AtomicFile
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.data.DataFetcher
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -27,16 +28,14 @@ class MangaDataFetcher(private val networkFetcher: DataFetcher<InputStream>,
     override fun loadData(priority: Priority): InputStream? {
         if (manga.favorite) {
             if (!file.exists()) {
-                file.parentFile.mkdirs()
-                networkFetcher.loadData(priority)?.let {
+                networkFetcher.loadData(priority)?.let { input ->
+                    val atomicFile = AtomicFile(file)
+                    val output = atomicFile.startWrite()
                     try {
-                        it.use { input ->
-                            file.outputStream().use { output ->
-                                input.copyTo(output)
-                            }
-                        }
+                        input.use { it.copyTo(output) }
+                        atomicFile.finishWrite(output)
                     } catch (e: Exception) {
-                        file.delete()
+                        atomicFile.failWrite(output)
                         throw e
                     }
                 }

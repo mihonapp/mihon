@@ -47,7 +47,6 @@ class LibraryHolder(private val view: View,
                 .load(manga)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
-                .placeholder(android.R.color.transparent)
                 .into(view.thumbnail)
     }
 
