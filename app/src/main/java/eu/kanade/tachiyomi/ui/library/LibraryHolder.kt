@@ -21,8 +21,6 @@ class LibraryHolder(private val view: View,
                     listener: FlexibleViewHolder.OnListItemClickListener)
 : FlexibleViewHolder(view, adapter, listener) {
 
-    private var manga: Manga? = null
-
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this
      * holder with the given manga.
@@ -30,8 +28,6 @@ class LibraryHolder(private val view: View,
      * @param manga the manga to bind.
      */
     fun onSetValues(manga: Manga) {
-        this.manga = manga
-
         // Update the title of the manga.
         view.title.text = manga.title
 

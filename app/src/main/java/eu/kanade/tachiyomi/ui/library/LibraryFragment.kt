@@ -266,7 +266,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         // Restore active category.
         view_pager.setCurrentItem(activeCat, false)
         // Delay the scroll position to allow the view to be properly measured.
-        view_pager.post { tabs.setScrollPosition(view_pager.currentItem, 0f, true) }
+        view_pager.post { if (isAdded) tabs.setScrollPosition(view_pager.currentItem, 0f, true) }
 
         // Send the manga map to child fragments after the adapter is updated.
         presenter.libraryMangaSubject.onNext(LibraryMangaEvent(mangaMap))

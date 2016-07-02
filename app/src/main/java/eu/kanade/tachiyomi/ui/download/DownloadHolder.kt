@@ -26,7 +26,7 @@ class DownloadHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         this.download = download
 
         // Update the chapter name.
-        view.download_title.text = download.chapter.name
+        view.chapter_title.text = download.chapter.name
 
         // Update the manga title
         view.manga_title.text = download.manga.title
