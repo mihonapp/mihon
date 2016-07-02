@@ -229,6 +229,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
             source.fetchSearchManga(nextMangasPage, query)
 
         return observable.subscribeOn(Schedulers.io())
+                .doOnNext { if (it.mangas.isEmpty()) throw Exception("Empty page") }
                 .doOnNext { lastMangasPage = it }
                 .flatMap { Observable.from(it.mangas) }
                 .map { networkToLocalManga(it) }
