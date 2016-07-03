@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.glide
 
 import android.content.Context
+import android.util.LruCache
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.*
@@ -46,7 +47,7 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
      * LRU cache whose key is the thumbnail url of the manga, and the value contains the request url
      * and the file where it should be stored in case the manga is a favorite.
      */
-    private val modelCache = ModelCache<String, Pair<GlideUrl, File>>(100)
+    private val lruCache = LruCache<String, Pair<GlideUrl, File>>(100)
 
     /**
      * Map where request headers are stored for a source.
@@ -74,6 +75,7 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
     override fun getResourceFetcher(manga: Manga,
                                     width: Int,
                                     height: Int): DataFetcher<InputStream>? {
+
         // Check thumbnail is not null or empty
         val url = manga.thumbnail_url
         if (url.isNullOrEmpty()) {
@@ -82,9 +84,9 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
 
         // Obtain the request url and the file for this url from the LRU cache, or calculate it
         // and add them to the cache.
-        val (glideUrl, file) = modelCache.get(url, width, height) ?:
+        val (glideUrl, file) = lruCache.get(url) ?:
             Pair(GlideUrl(url, getHeaders(manga)), coverCache.getCoverFile(url!!)).apply {
-                modelCache.put(url, width, height, this)
+                lruCache.put(url, this)
             }
 
         // Get the network fetcher for this request url.
@@ -103,7 +105,8 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
         val source = sourceManager.get(manga.source) as? OnlineSource ?: return LazyHeaders.DEFAULT
         return cachedHeaders.getOrPut(manga.source) {
             LazyHeaders.Builder().apply {
-                setHeader("User-Agent", null as? String)
+                val nullStr: String? = null
+                setHeader("User-Agent", nullStr)
                 for ((key, value) in source.headers.toMultimap()) {
                     addHeader(key, value[0])
                 }

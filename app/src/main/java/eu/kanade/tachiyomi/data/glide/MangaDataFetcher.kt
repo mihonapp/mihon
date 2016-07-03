@@ -1,11 +1,10 @@
 package eu.kanade.tachiyomi.data.glide
 
-import android.support.v4.util.AtomicFile
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.data.DataFetcher
 import eu.kanade.tachiyomi.data.database.models.Manga
 import java.io.File
-import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.InputStream
 
 /**
@@ -27,20 +26,32 @@ class MangaDataFetcher(private val networkFetcher: DataFetcher<InputStream>,
     @Throws(Exception::class)
     override fun loadData(priority: Priority): InputStream? {
         if (manga.favorite) {
-            if (!file.exists()) {
-                networkFetcher.loadData(priority)?.let { input ->
-                    val atomicFile = AtomicFile(file)
-                    val output = atomicFile.startWrite()
+            synchronized(file) {
+                if (!file.exists()) {
+                    val tmpFile = File(file.path + ".tmp")
                     try {
-                        input.use { it.copyTo(output) }
-                        atomicFile.finishWrite(output)
+                        // Retrieve source stream.
+                        val input = networkFetcher.loadData(priority)
+                                ?: throw Exception("Couldn't open source stream")
+
+                        // Retrieve destination stream, create parent folders if needed.
+                        val output = try {
+                            tmpFile.outputStream()
+                        } catch (e: FileNotFoundException) {
+                            tmpFile.parentFile.mkdirs()
+                            tmpFile.outputStream()
+                        }
+
+                        // Copy the file and rename to the original.
+                        input.use { output.use { input.copyTo(output) } }
+                        tmpFile.renameTo(file)
                     } catch (e: Exception) {
-                        atomicFile.failWrite(output)
+                        tmpFile.delete()
                         throw e
                     }
                 }
             }
-            return FileInputStream(file)
+            return file.inputStream()
         } else {
             if (file.exists()) {
                 file.delete()
