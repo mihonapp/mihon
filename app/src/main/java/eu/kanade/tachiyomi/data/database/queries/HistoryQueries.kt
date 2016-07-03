@@ -50,4 +50,14 @@ interface HistoryQueries : DbProvider {
             .`object`(history)
             .withPutResolver(HistoryLastReadPutResolver())
             .prepare()
+
+    /**
+     * Updates the history last read.
+     * Inserts history object if not yet in database
+     * @param historyList history object list
+     */
+    fun updateHistoryLastRead(historyList: List<History>) = db.put()
+            .objects(historyList)
+            .withPutResolver(HistoryLastReadPutResolver())
+            .prepare()
 }

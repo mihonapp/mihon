@@ -2,15 +2,15 @@ package eu.kanade.tachiyomi.ui.recently_read
 
 import android.os.Bundle
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.History
+import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -20,13 +20,6 @@ import java.util.*
  */
 class RecentlyReadPresenter : BasePresenter<RecentlyReadFragment>() {
 
-    companion object {
-        /**
-         * The id of the restartable.
-         */
-        const private val GET_RECENT_MANGA = 1
-    }
-
     /**
      * Used to connect to database
      */
@@ -35,26 +28,18 @@ class RecentlyReadPresenter : BasePresenter<RecentlyReadFragment>() {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        // Used to get recent manga
-        restartableLatestCache(GET_RECENT_MANGA,
-                { getRecentMangaObservable() },
-                { view, manga ->
-                    // Update adapter to show recent manga's
-                    view.onNextManga(manga)
-                }
-        )
-
-        if (savedState == null) {
-            // Start fetching recent manga
-            start(GET_RECENT_MANGA)
-        }
+        // Used to get a list of recently read manga
+        getRecentMangaObservable()
+                .subscribeLatestCache({ view, historyList ->
+                    view.onNextManga(historyList)
+                })
     }
 
     /**
      * Get recent manga observable
      * @return list of history
      */
-    fun getRecentMangaObservable(): Observable<MutableList<MangaChapterHistory>> {
+    fun getRecentMangaObservable(): Observable<List<MangaChapterHistory>> {
         // Set date for recent manga
         val cal = Calendar.getInstance()
         cal.time = Date()
@@ -71,30 +56,67 @@ class RecentlyReadPresenter : BasePresenter<RecentlyReadFragment>() {
     fun removeFromHistory(history: History) {
         history.last_read = 0L
         db.updateHistoryLastRead(history).asRxObservable()
-                .doOnError { Timber.e(it.message) }.subscribe()
+                .subscribe()
     }
 
     /**
-     * Removes all chapters belonging to manga from library
+     * Removes all chapters belonging to manga from history.
      * @param mangaId id of manga
      */
     fun removeAllFromHistory(mangaId: Long) {
-        db.getHistoryByMangaId(mangaId).asRxObservable()
-                .take(1)
-                .flatMapIterable { it }
-                .doOnError { Timber.e(it.message) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result -> removeFromHistory(result) })
+        db.getHistoryByMangaId(mangaId).asRxSingle()
+                .map { list ->
+                    list.forEach { it.last_read = 0L }
+                    db.updateHistoryLastRead(list).executeAsBlocking()
+                }
+                .subscribe()
     }
 
     /**
-     * Returns the timestamp of last read
-     * @param history history containing time of last read
+     * Open the next chapter instead of the current one.
+     * @param chapter the chapter of the history object.
+     * @param manga the manga of the chapter.
      */
-    fun getLastRead(history: History): String? {
-        return SimpleDateFormat("dd-MM-yyyy HH:mm",
-                Locale.getDefault()).format(Date(history.last_read))
+    fun openNextChapter(chapter: Chapter, manga: Manga) {
+        val sortFunction: (Chapter, Chapter) -> Int = when (manga.sorting) {
+            Manga.SORTING_SOURCE -> { c1, c2 -> c2.source_order.compareTo(c1.source_order) }
+            Manga.SORTING_NUMBER -> { c1, c2 -> c1.chapter_number.compareTo(c2.chapter_number) }
+            else -> throw NotImplementedError("Unknown sorting method")
+        }
+
+        db.getChapters(manga).asRxSingle()
+                .map { it.sortedWith(Comparator<Chapter> { c1, c2 -> sortFunction(c1, c2) }) }
+                .map { chapters ->
+                    val currChapterIndex = chapters.indexOfFirst { chapter.id == it.id }
+                    when (manga.sorting) {
+                        Manga.SORTING_SOURCE -> {
+                            chapters.getOrNull(currChapterIndex + 1)
+                        }
+                        Manga.SORTING_NUMBER -> {
+                            val chapterNumber = chapter.chapter_number
+
+                            var nextChapter: Chapter? = null
+                            for (i in (currChapterIndex + 1) until chapters.size) {
+                                val c = chapters[i]
+                                if (c.chapter_number > chapterNumber &&
+                                        c.chapter_number <= chapterNumber + 1) {
+
+                                    nextChapter = c
+                                    break
+                                }
+                            }
+                            nextChapter
+                        }
+                        else -> throw NotImplementedError("Unknown sorting method")
+                    }
+                }
+                .toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeFirst({ view, chapter ->
+                    view.onOpenNextChapter(chapter, manga)
+                }, { view, error ->
+                    Timber.e(error, error.message)
+                })
     }
 
 }

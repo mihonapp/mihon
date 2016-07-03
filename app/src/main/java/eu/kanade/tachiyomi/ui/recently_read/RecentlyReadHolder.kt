@@ -10,8 +10,11 @@ import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
 import eu.kanade.tachiyomi.data.source.SourceManager
 import kotlinx.android.synthetic.main.dialog_remove_recently.view.*
 import kotlinx.android.synthetic.main.item_recently_read.view.*
+import uy.kohesive.injekt.injectLazy
+import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.util.*
 
 /**
  * Holder that contains recent manga item
@@ -30,6 +33,10 @@ class RecentlyReadHolder(view: View, private val adapter: RecentlyReadAdapter)
      */
     private val decimalFormat = DecimalFormat("#.###", DecimalFormatSymbols().apply { decimalSeparator = '.' })
 
+    private val sourceManager by injectLazy<SourceManager>()
+
+    private val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+
     /**
      * Set values of view
      *
@@ -47,10 +54,10 @@ class RecentlyReadHolder(view: View, private val adapter: RecentlyReadAdapter)
         // Set source + chapter title
         val formattedNumber = decimalFormat.format(chapter.chapter_number.toDouble())
         itemView.manga_source.text = itemView.context.getString(R.string.recent_manga_source)
-                .format(SourceManager(adapter.fragment.context).get(manga.source)?.name, formattedNumber)
+                .format(sourceManager.get(manga.source)?.name, formattedNumber)
 
         // Set last read timestamp title
-        itemView.last_read.text = adapter.fragment.getLastRead(history)
+        itemView.last_read.text = df.format(Date(history.last_read))
 
         // Set cover
         if (!manga.thumbnail_url.isNullOrEmpty()) {
@@ -79,7 +86,7 @@ class RecentlyReadHolder(view: View, private val adapter: RecentlyReadAdapter)
                     .onNegative { materialDialog, dialogAction ->
                         materialDialog.dismiss()
                     }
-                    .show();
+                    .show()
         }
 
         // Set continue reading clickListener

@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.fragment_recently_read.*
 import nucleus.factory.RequiresPresenter
 
@@ -85,7 +86,6 @@ class RecentlyReadFragment : BaseRxFragment<RecentlyReadPresenter>() {
      */
     fun removeFromHistory(history: History) {
         presenter.removeFromHistory(history)
-        adapter.notifyDataSetChanged()
     }
 
     /**
@@ -94,7 +94,6 @@ class RecentlyReadFragment : BaseRxFragment<RecentlyReadPresenter>() {
      */
     fun removeAllFromHistory(mangaId: Long) {
         presenter.removeAllFromHistory(mangaId)
-        adapter.notifyDataSetChanged()
     }
 
     /**
@@ -103,8 +102,29 @@ class RecentlyReadFragment : BaseRxFragment<RecentlyReadPresenter>() {
      * @param manga manga belonging to chapter
      */
     fun openChapter(chapter: Chapter, manga: Manga) {
-        val intent = ReaderActivity.newIntent(activity, manga, chapter)
-        startActivity(intent)
+        if (!chapter.read) {
+            val intent = ReaderActivity.newIntent(activity, manga, chapter)
+            startActivity(intent)
+        } else {
+            presenter.openNextChapter(chapter, manga)
+        }
+    }
+
+    /**
+     * Called from the presenter when wanting to open the next chapter of the current one.
+     * @param chapter the next chapter or null if it doesn't exist.
+     * @param manga the manga of the chapter.
+     */
+    fun onOpenNextChapter(chapter: Chapter?, manga: Manga) {
+        if (chapter == null) {
+            context.toast(R.string.no_next_chapter)
+        }
+        // Avoid crashes if the fragment isn't resumed, the event will be ignored but it's unlikely
+        // to happen.
+        else if (isResumed) {
+            val intent = ReaderActivity.newIntent(activity, manga, chapter)
+            startActivity(intent)
+        }
     }
 
     /**
@@ -114,14 +134,6 @@ class RecentlyReadFragment : BaseRxFragment<RecentlyReadPresenter>() {
     fun openMangaInfo(manga: Manga) {
         val intent = MangaActivity.newIntent(activity, manga, true)
         startActivity(intent)
-    }
-
-    /**
-     * Returns the timestamp of last read
-     * @param history history containing time of last read
-     */
-    fun getLastRead(history: History): String? {
-        return presenter.getLastRead(history)
     }
 
 }
