@@ -311,10 +311,6 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      * @param mangas the list of manga of the page.
      */
     fun onAddPage(page: Int, mangas: List<Manga>) {
-        // Avoid IndexOutOfBoundsException: Inconsistency detected. Invalid view holder adapter...
-        catalogue_grid.stopScroll()
-        catalogue_list.stopScroll()
-
         hideProgressBar()
         if (page == 0) {
             adapter.clear()

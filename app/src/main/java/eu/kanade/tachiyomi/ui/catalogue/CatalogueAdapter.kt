@@ -45,8 +45,9 @@ class CatalogueAdapter(val fragment: CatalogueFragment) : FlexibleAdapter<Catalo
      * Clears the list of manga from the adapter.
      */
     fun clear() {
+        val sizeBeforeRemoving = mItems.size
         mItems.clear()
-        notifyDataSetChanged()
+        notifyItemRangeRemoved(0, sizeBeforeRemoving)
     }
 
     /**
