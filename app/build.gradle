@@ -118,7 +118,7 @@ dependencies {
     compile 'com.github.salomonbrys.kotson:kotson:2.3.0'
 
     // YAML
-    compile 'org.yaml:snakeyaml:1.17'
+    compile 'com.github.bmoliveira:snake-yaml:v1.18-android'
 
     // JavaScript engine
     compile 'com.squareup.duktape:duktape-android:0.9.5'
