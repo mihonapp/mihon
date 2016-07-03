@@ -14,7 +14,7 @@ class RecentChapter(mc: MangaChapter) : Chapter by mc.chapter {
         get() = download?.status ?: _status
         set(value) { _status = value }
 
-    var download: Download? = null
+    @Transient var download: Download? = null
 
     val isDownloaded: Boolean
         get() = status == Download.DOWNLOADED

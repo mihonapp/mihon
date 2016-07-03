@@ -62,7 +62,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     /**
      * List of chapters of the manga. It's always unfiltered and unsorted.
      */
-    lateinit var chapters: List<ChapterModel>
+    var chapters: List<ChapterModel> = emptyList()
         private set
 
     /**
