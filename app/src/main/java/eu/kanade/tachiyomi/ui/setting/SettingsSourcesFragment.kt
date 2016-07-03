@@ -73,7 +73,7 @@ class SettingsSourcesFragment : SettingsFragment() {
             setOnPreferenceClickListener {
                 val fragment = SourceLoginDialog.newInstance(source)
                 fragment.setTargetFragment(this@SettingsSourcesFragment, SOURCE_CHANGE_REQUEST)
-                fragment.show(childFragmentManager, null)
+                fragment.show(fragmentManager, null)
                 true
             }
 

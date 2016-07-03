@@ -79,7 +79,7 @@ class SettingsGeneralFragment : SettingsFragment(),
         if (p.key == getString(R.string.pref_library_columns_dialog_key)) {
             val fragment = LibraryColumnsDialog.newInstance(p)
             fragment.setTargetFragment(this, 0)
-            fragment.show(childFragmentManager, null)
+            fragment.show(fragmentManager, null)
             return true
         }
         return false
