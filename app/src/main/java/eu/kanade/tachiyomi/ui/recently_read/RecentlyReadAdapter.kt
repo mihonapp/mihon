@@ -4,7 +4,9 @@ import android.view.ViewGroup
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
+import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.util.inflate
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Adapter of RecentlyReadHolder.
@@ -16,6 +18,8 @@ import eu.kanade.tachiyomi.util.inflate
  */
 class RecentlyReadAdapter(val fragment: RecentlyReadFragment)
 : FlexibleAdapter<RecentlyReadHolder, MangaChapterHistory>() {
+
+    val sourceManager by injectLazy<SourceManager>()
 
     /**
      * Called when ViewHolder is created
