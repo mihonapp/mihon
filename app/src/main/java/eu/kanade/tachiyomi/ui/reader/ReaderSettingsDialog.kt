@@ -4,15 +4,14 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.View
-import android.widget.SeekBar
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
-import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import kotlinx.android.synthetic.main.dialog_reader_settings.view.*
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
@@ -108,17 +107,18 @@ class ReaderSettingsDialog : DialogFragment() {
             preferences.customBrightness().set(isChecked)
         }
 
-        brightness_seekbar.max = 100
-        brightness_seekbar.progress = Math.round(
-                preferences.customBrightnessValue().getOrDefault() * brightness_seekbar.max)
-        brightness_seekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+        brightness_seekbar.progress = preferences.customBrightnessValue().getOrDefault()
+        brightness_seekbar.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
+            override fun onProgressChanged(seekBar: DiscreteSeekBar, value: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    preferences.customBrightnessValue().set(progress.toFloat() / seekBar.max)
+                    preferences.customBrightnessValue().set(value)
                 }
             }
-        })
 
+            override fun onStartTrackingTouch(seekBar: DiscreteSeekBar) {}
+
+            override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {}
+        })
     }
 
     override fun onDestroyView() {

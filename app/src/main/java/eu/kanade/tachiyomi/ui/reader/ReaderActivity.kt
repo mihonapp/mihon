@@ -415,20 +415,39 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private fun setCustomBrightness(enabled: Boolean) {
         if (enabled) {
             customBrightnessSubscription = preferences.customBrightnessValue().asObservable()
-                    .map { Math.max(0.01f, it) }
                     .subscribe { setCustomBrightnessValue(it) }
 
             subscriptions.add(customBrightnessSubscription)
         } else {
-            if (customBrightnessSubscription != null) {
-                subscriptions.remove(customBrightnessSubscription)
-            }
-            setCustomBrightnessValue(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE)
+            customBrightnessSubscription?.let { subscriptions.remove(it) }
+            setCustomBrightnessValue(0)
         }
     }
 
-    private fun setCustomBrightnessValue(value: Float) {
-        window.attributes = window.attributes.apply { screenBrightness = value }
+    /**
+     * Sets the brightness of the screen. Range is [-50, 100].
+     * From -50 to -1 a semi-transparent black view is shown at the top with the minimum brightness.
+     * From 1 to 100 it sets that value as brightness.
+     * 0 sets system brightness and hides the overlay.
+     */
+    private fun setCustomBrightnessValue(value: Int) {
+        // Calculate and set reader brightness.
+        val readerBrightness = if (value > 0) {
+            value / 100f
+        } else if (value < 0) {
+            0.01f
+        } else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+
+        window.attributes = window.attributes.apply { screenBrightness = readerBrightness }
+
+        // Set black overlay visibility.
+        if (value < 0) {
+            brightness_overlay.visibility = View.VISIBLE
+            val alpha = (Math.abs(value) * 2.56).toInt()
+            brightness_overlay.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
+        } else {
+            brightness_overlay.visibility = View.GONE
+        }
     }
 
     private fun applyTheme(theme: Int) {

@@ -48,7 +48,7 @@ class PreferencesHelper(context: Context) {
 
     fun customBrightness() = rxPrefs.getBoolean(keys.customBrightness, false)
 
-    fun customBrightnessValue() = rxPrefs.getFloat(keys.customBrightnessValue, 0f)
+    fun customBrightnessValue() = rxPrefs.getInteger(keys.customBrightnessValue, 0)
 
     fun defaultViewer() = prefs.getInt(keys.defaultViewer, 1)
 
