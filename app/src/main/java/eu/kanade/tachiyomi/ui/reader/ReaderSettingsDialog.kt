@@ -77,11 +77,6 @@ class ReaderSettingsDialog : DialogFragment() {
         }
         background_color.setSelection(preferences.readerTheme().getOrDefault(), false)
 
-        enable_transitions.isChecked = preferences.enableTransitions().getOrDefault()
-        enable_transitions.setOnCheckedChangeListener { v, isChecked ->
-            preferences.enableTransitions().set(isChecked)
-        }
-
         show_page_number.isChecked = preferences.showPageNumber().getOrDefault()
         show_page_number.setOnCheckedChangeListener { v, isChecked ->
             preferences.showPageNumber().set(isChecked)
@@ -92,17 +87,7 @@ class ReaderSettingsDialog : DialogFragment() {
             preferences.fullscreen().set(isChecked)
         }
 
-        keep_screen_on.isChecked = preferences.keepScreenOn().getOrDefault()
-        keep_screen_on.setOnCheckedChangeListener { v, isChecked ->
-            preferences.keepScreenOn().set(isChecked)
-        }
-
-        subscriptions += preferences.customBrightness().asObservable()
-                .subscribe { isEnabled ->
-                    custom_brightness.isChecked = isEnabled
-                    brightness_seekbar.isEnabled = isEnabled
-                }
-
+        custom_brightness.isChecked = preferences.customBrightness().getOrDefault()
         custom_brightness.setOnCheckedChangeListener { v, isChecked ->
             preferences.customBrightness().set(isChecked)
         }

@@ -160,12 +160,6 @@
     </LinearLayout>
 
     <android.support.v7.widget.SwitchCompat
-        android:id="@+id/enable_transitions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pref_enable_transitions"/>
-
-    <android.support.v7.widget.SwitchCompat
         android:id="@+id/show_page_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -178,12 +172,6 @@
         android:text="@string/pref_fullscreen"/>
 
     <android.support.v7.widget.SwitchCompat
-        android:id="@+id/keep_screen_on"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pref_keep_screen_on"/>
-
-    <android.support.v7.widget.SwitchCompat
         android:id="@+id/custom_brightness"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -193,7 +181,7 @@
         android:id="@+id/brightness_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:dsb_min="-50"
+        app:dsb_min="-75"
         app:dsb_max="100"
         app:dsb_indicatorFormatter="%d%%"
         app:dsb_indicatorTextAppearance="@style/TextAppearance.Regular"

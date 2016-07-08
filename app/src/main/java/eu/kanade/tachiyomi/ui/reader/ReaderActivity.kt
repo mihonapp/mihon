@@ -425,8 +425,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     /**
-     * Sets the brightness of the screen. Range is [-50, 100].
-     * From -50 to -1 a semi-transparent black view is shown at the top with the minimum brightness.
+     * Sets the brightness of the screen. Range is [-75, 100].
+     * From -75 to -1 a semi-transparent black view is shown at the top with the minimum brightness.
      * From 1 to 100 it sets that value as brightness.
      * 0 sets system brightness and hides the overlay.
      */
