@@ -14,7 +14,6 @@ import nucleus.factory.RequiresPresenter
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -179,7 +178,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      * @param download the download to observe its progress.
      */
     private fun observeProgress(download: Download) {
-        val subscription = Observable.interval(50, TimeUnit.MILLISECONDS, Schedulers.newThread())
+        val subscription = Observable.interval(50, TimeUnit.MILLISECONDS)
                 // Get the sum of percentages for all the pages.
                 .flatMap {
                     Observable.from(download.pages)

@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.item_pager_reader.*
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import rx.subjects.SerializedSubject
 import java.io.File
@@ -168,7 +167,7 @@ class PagerReaderFragment : BaseFragment() {
         val currentValue = AtomicInteger(-1)
 
         progressSubscription?.unsubscribe()
-        progressSubscription = Observable.interval(100, TimeUnit.MILLISECONDS, Schedulers.newThread())
+        progressSubscription = Observable.interval(100, TimeUnit.MILLISECONDS)
                 .onBackpressureLatest()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
