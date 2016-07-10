@@ -39,8 +39,7 @@ class ReaderSettingsDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedState: Bundle?) = with(view) {
         viewer.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
-            subscriptions += Observable.timer(250, MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
+            subscriptions += Observable.timer(250, MILLISECONDS, AndroidSchedulers.mainThread())
                     .subscribe {
                         (activity as ReaderActivity).presenter.updateMangaViewer(position)
                         activity.recreate()
@@ -50,7 +49,6 @@ class ReaderSettingsDialog : DialogFragment() {
 
         rotation_mode.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             subscriptions += Observable.timer(250, MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         preferences.rotation().set(position + 1)
                     }
