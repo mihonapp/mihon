@@ -52,6 +52,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         const val VERTICAL = 3
         const val WEBTOON = 4
 
+        const val WHITE_THEME = 0
         const val BLACK_THEME = 1
 
         const val MENU_VISIBLE = "menu_visible"
@@ -64,8 +65,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private var viewer: BaseReader? = null
 
-    lateinit var subscriptions: CompositeSubscription
-        private set
+    val subscriptions by lazy { CompositeSubscription() }
 
     private var customBrightnessSubscription: Subscription? = null
 
@@ -95,7 +95,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
 
         setupToolbar(toolbar)
-        subscriptions = CompositeSubscription()
 
         initializeSettings()
         initializeBottomMenu()
