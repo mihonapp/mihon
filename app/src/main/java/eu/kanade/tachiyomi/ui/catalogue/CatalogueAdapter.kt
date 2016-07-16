@@ -36,9 +36,11 @@ class CatalogueAdapter(val fragment: CatalogueFragment) : FlexibleAdapter<Catalo
      * @param list the list to add.
      */
     fun addItems(list: List<Manga>) {
-        val sizeBeforeAdding = mItems.size
-        mItems.addAll(list)
-        notifyItemRangeInserted(sizeBeforeAdding, list.size)
+        if (list.isNotEmpty()) {
+            val sizeBeforeAdding = mItems.size
+            mItems.addAll(list)
+            notifyItemRangeInserted(sizeBeforeAdding, list.size)
+        }
     }
 
     /**

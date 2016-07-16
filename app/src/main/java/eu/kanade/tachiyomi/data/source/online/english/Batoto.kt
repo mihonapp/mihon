@@ -73,7 +73,7 @@ class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(contex
         }
     }
 
-    override fun popularMangaSelector() = "tr:not([id]):not([class])"
+    override fun popularMangaSelector() = "tr:has(a)"
 
     override fun popularMangaFromElement(element: Element, manga: Manga) {
         element.select("a[href^=http://bato.to]").first().let {
