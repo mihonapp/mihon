@@ -15,7 +15,7 @@ class MangaFlagsPutResolver : PutResolver<Manga>() {
         val updateQuery = mapToUpdateQuery(manga)
         val contentValues = mapToContentValues(manga)
 
-        val numberOfRowsUpdated = db.internal().update(updateQuery, contentValues)
+        val numberOfRowsUpdated = db.lowLevel().update(updateQuery, contentValues)
         PutResult.newUpdateResult(numberOfRowsUpdated, updateQuery.table())
     }
 

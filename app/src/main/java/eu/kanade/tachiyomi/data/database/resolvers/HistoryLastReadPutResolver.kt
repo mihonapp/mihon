@@ -21,11 +21,11 @@ class HistoryLastReadPutResolver : PutResolver<History>() {
         val contentValues = mapToContentValues(history)
 
         // Execute query
-        val numberOfRowsUpdated = db.internal().update(updateQuery, contentValues)
+        val numberOfRowsUpdated = db.lowLevel().update(updateQuery, contentValues)
 
         // If chapter not found in history insert into database
         if (numberOfRowsUpdated == 0) {
-            db.put().`object`(history).prepare().asRxObservable().subscribe()
+            db.put().`object`(history).prepare().executeAsBlocking()
         }
         // Update result
         PutResult.newUpdateResult(numberOfRowsUpdated, updateQuery.table())

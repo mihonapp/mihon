@@ -3,23 +3,23 @@ package eu.kanade.tachiyomi.data.database
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
 
 inline fun StorIOSQLite.inTransaction(block: () -> Unit) {
-    internal().beginTransaction()
+    lowLevel().beginTransaction()
     try {
         block()
-        internal().setTransactionSuccessful()
+        lowLevel().setTransactionSuccessful()
     } finally {
-        internal().endTransaction()
+        lowLevel().endTransaction()
     }
 }
 
 inline fun <T> StorIOSQLite.inTransactionReturn(block: () -> T): T {
-    internal().beginTransaction()
+    lowLevel().beginTransaction()
     try {
         val result = block()
-        internal().setTransactionSuccessful()
+        lowLevel().setTransactionSuccessful()
         return result
     } finally {
-        internal().endTransaction()
+        lowLevel().endTransaction()
     }
 }
 

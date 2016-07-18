@@ -15,7 +15,7 @@ class ChapterSourceOrderPutResolver : PutResolver<Chapter>() {
         val updateQuery = mapToUpdateQuery(chapter)
         val contentValues = mapToContentValues(chapter)
 
-        val numberOfRowsUpdated = db.internal().update(updateQuery, contentValues)
+        val numberOfRowsUpdated = db.lowLevel().update(updateQuery, contentValues)
         PutResult.newUpdateResult(numberOfRowsUpdated, updateQuery.table())
     }
 
