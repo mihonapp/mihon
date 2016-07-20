@@ -97,6 +97,7 @@ class SettingsAdvancedFragment : SettingsFragment() {
                 .positiveText(android.R.string.yes)
                 .negativeText(android.R.string.no)
                 .onPositive { dialog, which ->
+                    (activity as SettingsActivity).parentFlags = SettingsActivity.FLAG_DATABASE_CLEARED
                     db.deleteMangasNotInLibrary().executeAsBlocking()
                     activity.toast(R.string.clear_database_completed)
                 }

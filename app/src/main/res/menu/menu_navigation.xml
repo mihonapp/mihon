@@ -8,7 +8,7 @@
             android:icon="@drawable/ic_book_black_24dp"
             android:title="@string/label_library" />
         <item
-            android:id="@+id/nav_drawer_recent_manga"
+            android:id="@+id/nav_drawer_recently_read"
             android:icon="@drawable/ic_glasses_black_24dp"
             android:title="@string/label_recent_manga"/>
         <item

@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.TaskStackBuilder
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import eu.kanade.tachiyomi.R
@@ -22,6 +23,15 @@ import uy.kohesive.injekt.injectLazy
 class MainActivity : BaseActivity() {
 
     val preferences: PreferencesHelper by injectLazy()
+
+    private val startScreenId by lazy {
+        when (preferences.startScreen()) {
+            1 -> R.id.nav_drawer_library
+            2 -> R.id.nav_drawer_recently_read
+            3 -> R.id.nav_drawer_recent_updates
+            else -> R.id.nav_drawer_library
+        }
+    }
 
     override fun onCreate(savedState: Bundle?) {
         setAppTheme()
@@ -45,28 +55,28 @@ class MainActivity : BaseActivity() {
             // Make information view invisible
             empty_view.hide()
 
-            when (item.itemId) {
-                R.id.nav_drawer_library -> setFragment(LibraryFragment.newInstance())
-                R.id.nav_drawer_recent_updates -> setFragment(RecentChaptersFragment.newInstance())
-                R.id.nav_drawer_recent_manga -> setFragment(RecentlyReadFragment.newInstance())
-                R.id.nav_drawer_catalogues -> setFragment(CatalogueFragment.newInstance())
-                R.id.nav_drawer_downloads -> setFragment(DownloadFragment.newInstance())
-                R.id.nav_drawer_settings -> startActivity(Intent(this, SettingsActivity::class.java))
-                R.id.nav_drawer_backup -> setFragment(BackupFragment.newInstance())
+            val id = item.itemId
+            when (id) {
+                R.id.nav_drawer_library -> setFragment(LibraryFragment.newInstance(), id)
+                R.id.nav_drawer_recently_read -> setFragment(RecentlyReadFragment.newInstance(), id)
+                R.id.nav_drawer_recent_updates -> setFragment(RecentChaptersFragment.newInstance(), id)
+                R.id.nav_drawer_catalogues -> setFragment(CatalogueFragment.newInstance(), id)
+                R.id.nav_drawer_downloads -> setFragment(DownloadFragment.newInstance(), id)
+                R.id.nav_drawer_settings -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivityForResult(intent, REQUEST_OPEN_SETTINGS)
+                }
+                R.id.nav_drawer_backup -> setFragment(BackupFragment.newInstance(), id)
             }
             drawer.closeDrawer(GravityCompat.START)
             true
         }
 
         if (savedState == null) {
+            // Set start screen
+            setSelectedDrawerItem(startScreenId)
 
-            when (preferences.startScreen()) {
-                1 -> setFragment(LibraryFragment.newInstance())
-                2 -> setFragment(RecentlyReadFragment.newInstance())
-                3 -> setFragment(RecentChaptersFragment.newInstance())
-                else -> setFragment(LibraryFragment.newInstance())
-            }
-
+            // Show changelog if needed
             ChangelogDialogFragment.show(preferences, supportFragmentManager)
         }
     }
@@ -80,23 +90,45 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        supportFragmentManager.findFragmentById(R.id.frame_container)?.let {
-            if (it !is LibraryFragment) {
-                nav_view.setCheckedItem(R.id.nav_drawer_library)
-                nav_view.menu.performIdentifierAction(R.id.nav_drawer_library, 0)
-            } else {
-                super.onBackPressed()
-            }
-        } ?: super.onBackPressed()
+        val fragment = supportFragmentManager.findFragmentById(R.id.frame_container)
+        if (fragment != null && fragment.tag.toInt() != startScreenId) {
+            setSelectedDrawerItem(startScreenId)
+        } else {
+            super.onBackPressed()
+        }
     }
 
-    fun setFragment(fragment: Fragment) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_OPEN_SETTINGS && resultCode != 0) {
+            if (resultCode and SettingsActivity.FLAG_DATABASE_CLEARED != 0) {
+                // If database is cleared avoid undefined behavior by recreating the stack.
+                TaskStackBuilder.create(this)
+                        .addNextIntent(Intent(this, MainActivity::class.java))
+                        .startActivities()
+            } else if (resultCode and SettingsActivity.FLAG_THEME_CHANGED != 0) {
+                recreate()
+            }
+        }
+    }
+
+    private fun setSelectedDrawerItem(itemId: Int, triggerAction: Boolean = true) {
+        nav_view.setCheckedItem(itemId)
+        if (triggerAction) {
+            nav_view.menu.performIdentifierAction(itemId, 0)
+        }
+    }
+
+    private fun setFragment(fragment: Fragment, itemId: Int) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.frame_container, fragment)
+                .replace(R.id.frame_container, fragment, "$itemId")
                 .commit()
     }
 
     fun updateEmptyView(show: Boolean, textResource: Int, drawable: Int) {
         if (show) empty_view.show(drawable, textResource) else empty_view.hide()
+    }
+
+    companion object {
+        private const val REQUEST_OPEN_SETTINGS = 200
     }
 }

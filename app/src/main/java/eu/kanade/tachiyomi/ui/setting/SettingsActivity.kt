@@ -16,6 +16,15 @@ class SettingsActivity : BaseActivity(),
 
     private lateinit var replaceFragmentStrategy: ReplaceFragment
 
+    /**
+     * Flags to send to the parent activity for reacting to preference changes.
+     */
+    var parentFlags = 0
+        set(value) {
+            field = field or value
+            setResult(field)
+        }
+
     override fun onCreate(savedState: Bundle?) {
         setAppTheme()
         super.onCreate(savedState)
@@ -29,10 +38,16 @@ class SettingsActivity : BaseActivity(),
             supportFragmentManager.beginTransaction()
                 .add(R.id.settings_content, SettingsFragment.newInstance(null), "Settings")
                 .commit()
+        } else {
+            parentFlags = savedState.getInt(SettingsActivity::parentFlags.name)
         }
 
         setupToolbar(toolbar, backNavigation = false)
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(SettingsActivity::parentFlags.name, parentFlags)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -58,6 +73,11 @@ class SettingsActivity : BaseActivity(),
     override fun onPreferenceStartScreen(p0: PreferenceFragmentCompat, p1: PreferenceScreen): Boolean {
         replaceFragmentStrategy.onPreferenceStartScreen(supportFragmentManager, p0, p1)
         return true
+    }
+
+    companion object {
+        const val FLAG_THEME_CHANGED = 0x1
+        const val FLAG_DATABASE_CLEARED = 0x2
     }
 
 }

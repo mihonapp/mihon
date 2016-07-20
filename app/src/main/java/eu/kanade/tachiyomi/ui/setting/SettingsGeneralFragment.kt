@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.ui.setting
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.TaskStackBuilder
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.XpPreferenceFragment
@@ -67,16 +65,14 @@ class SettingsGeneralFragment : SettingsFragment(),
         }
 
         themePreference.setOnPreferenceChangeListener { preference, newValue ->
-            // Rebuild activity's to apply themes.
-            TaskStackBuilder.create(context)
-                    .addNextIntentWithParentStack(Intent(activity.intent))
-                    .startActivities()
+            (activity as SettingsActivity).parentFlags = SettingsActivity.FLAG_THEME_CHANGED
+            activity.recreate()
             true
         }
     }
 
     override fun onPreferenceDisplayDialog(p0: PreferenceFragmentCompat?, p: Preference): Boolean {
-        if (p.key == getString(R.string.pref_library_columns_dialog_key)) {
+        if (p === columnsPreference) {
             val fragment = LibraryColumnsDialog.newInstance(p)
             fragment.setTargetFragment(this, 0)
             fragment.show(fragmentManager, null)
