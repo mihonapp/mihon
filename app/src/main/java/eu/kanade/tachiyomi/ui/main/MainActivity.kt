@@ -108,6 +108,8 @@ class MainActivity : BaseActivity() {
             } else if (resultCode and SettingsActivity.FLAG_THEME_CHANGED != 0) {
                 recreate()
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
