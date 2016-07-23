@@ -22,7 +22,7 @@ class HistoryTypeMapping : SQLiteTypeMapping<History>(
         HistoryDeleteResolver()
 )
 
-class HistoryPutResolver : DefaultPutResolver<History>() {
+open class HistoryPutResolver : DefaultPutResolver<History>() {
 
     override fun mapToInsertQuery(obj: History) = InsertQuery.builder()
             .table(TABLE)
