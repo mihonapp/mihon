@@ -95,7 +95,7 @@
     <string name="dark_theme">Tema oscuro</string>
 
       <!-- Reader section -->
-    <string name="pref_hide_status_bar">Ocultar barra de estado</string>
+    <string name="pref_fullscreen">Pantalla completa</string>
     <string name="pref_lock_orientation">Bloquear orientación</string>
     <string name="pref_enable_transitions">Habilitar transiciones</string>
     <string name="pref_show_page_number">Mostrar el número de página</string>
@@ -262,6 +262,7 @@
     <string name="no_previous_chapter">Capítulo anterior no encontrado</string>
     <string name="decode_image_error">La imagen no se pudo decodificar. Intente de nuevo cambiándolo o seleccione una de las siguientes opciones</string>
     <string name="confirm_update_manga_sync">¿Actualizar el último capítulo leído a %1$d en los servicios activos?</string>
+    <string name="viewer_for_this_series">Lector para esta serie</string>
 
     <!-- Backup fragment -->
     <string name="backup">Copia de seguridad</string>

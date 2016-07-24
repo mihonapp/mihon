@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v0.2.3" changeDate="">
+        <changelogtext>Added a history of reading. ([a href="https://github.com/inorichi/tachiyomi/issues/316"]#316[/a])</changelogtext>
+
+        <changelogtext>Added an option to select the initial screen. ([a href="https://github.com/inorichi/tachiyomi/issues/395"]#395[/a])</changelogtext>
+
+        <changelogtext>Added spanish and portuguese translations. ([a href="https://github.com/inorichi/tachiyomi/issues/365"]#365[/a], [a href="https://github.com/inorichi/tachiyomi/issues/375"]#375[/a])</changelogtext>
+
+        <changelogtext>Added sources "Mangasee" and "Wie Manga!" ([a href="https://github.com/inorichi/tachiyomi/issues/355"]#355[/a], [a href="https://github.com/inorichi/tachiyomi/issues/379"]#379[/a])</changelogtext>
+
+        <changelogtext>New design for the reader's menu. ([a href="https://github.com/inorichi/tachiyomi/issues/368"]#368[/a])</changelogtext>
+
+        <changelogtext>When resuming chapters, the new loader starts from the page that was opened, instead of from the beginning. ([a href="https://github.com/inorichi/tachiyomi/issues/268"]#268[/a])</changelogtext>
+
+        <changelogtext>Custom brightness in the reader can be set even lower by applying a black layer on the top. ([a href="https://github.com/inorichi/tachiyomi/issues/362"]#362[/a])</changelogtext>
+
+        <changelogtext>Fixed reader's status bar reappearing in Android versions older than Kit Kat. ([a href="https://github.com/inorichi/tachiyomi/issues/359"]#359[/a])</changelogtext>
+
+        <changelogtext>Fixed UI bugs. ([a href="https://github.com/inorichi/tachiyomi/issues/332"]#332[/a], [a href="https://github.com/inorichi/tachiyomi/issues/333"]#333[/a], [a href="https://github.com/inorichi/tachiyomi/issues/351"]#351[/a], [a href="https://github.com/inorichi/tachiyomi/issues/361"]#361[/a])</changelogtext>
+
+        <changelogtext>Fixed empty library covers.</changelogtext>
+
+        <changelogtext>Fixed some random crashes (most of them when downloading chapters).</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.2.2" changeDate="">
         <changelogtext>[b]Important![/b] Now chapters follow the order of the sources. [b]It's required that you update your entire library
             before reading to sync them.[/b] Old behavior can be restored for a manga in the overflow menu of the chapters tab.

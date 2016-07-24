@@ -1,7 +1,5 @@
 -dontobfuscate
 
--keep class eu.kanade.tachiyomi.injection.** { *; }
-
 # OkHttp
 -keepattributes Signature
 -keepattributes *Annotation*

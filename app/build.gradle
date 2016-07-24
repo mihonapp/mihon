@@ -38,8 +38,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 9
-        versionName "0.2.2-1"
+        versionCode 10
+        versionName "0.2.3"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
@@ -51,7 +51,7 @@ android {
 
     buildTypes {
         debug {
-            versionNameSuffix ".${getCommitCount()}"
+            versionNameSuffix "-${getCommitCount()}"
             applicationIdSuffix ".debug"
         }
         release {

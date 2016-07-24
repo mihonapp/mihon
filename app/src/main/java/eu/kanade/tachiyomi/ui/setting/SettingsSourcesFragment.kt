@@ -41,7 +41,7 @@ class SettingsSourcesFragment : SettingsFragment() {
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
 
-        val langs = getLanguages()
+        val langs = getLanguages().sortedBy { it.lang }
 
         val entryKeys = langs.map { it.code }
         languagesPref.entries = langs.map { it.lang }.toTypedArray()
