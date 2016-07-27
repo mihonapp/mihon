@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
@@ -22,6 +23,7 @@ import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
+import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 
 /**
@@ -38,6 +40,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         private set
 
     /**
+     * Preferences.
+     */
+    val preferences: PreferencesHelper by injectLazy()
+
+    /**
      * TabLayout of the categories.
      */
     private val tabs: TabLayout
@@ -52,6 +59,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Query of the search box.
      */
     private var query: String? = null
+
+    /**
+     * Display mode of the library (list or grid mode).
+     */
+    private var displayMode: MenuItem? = null
 
     /**
      * Action mode for manga selection.
@@ -178,6 +190,18 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 return true
             }
         })
+
+        //set the icon for the display mode button
+        displayMode = menu.findItem(R.id.action_library_display_mode).apply {
+            val icon = if (preferences.libraryAsList().getOrDefault())
+                R.drawable.ic_view_module_white_24dp
+            else
+                R.drawable.ic_view_list_white_24dp
+
+            setIcon(icon)
+        }
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -208,6 +232,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 // Apply filter
                 onFilterCheckboxChanged()
             }
+            R.id.action_library_display_mode -> swapDisplayMode()
             R.id.action_update_library -> {
                 LibraryUpdateService.start(activity, true)
             }
@@ -230,6 +255,23 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         adapter.refreshRegisteredAdapters()
         activity.supportInvalidateOptionsMenu()
     }
+
+    /**
+     * swap display mode
+     */
+    private fun swapDisplayMode() {
+
+        presenter.swapDisplayMode()
+        val isListMode = presenter.displayAsList
+        val icon = if (isListMode)
+            R.drawable.ic_view_module_white_24dp
+        else
+            R.drawable.ic_view_list_white_24dp
+
+        displayMode?.setIcon(icon)
+
+    }
+
 
     /**
      * Updates the query.
