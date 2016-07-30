@@ -55,14 +55,14 @@ class MangaSyncLoginDialog : LoginDialogPreference() {
             requestSubscription = sync.login(user, pass)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ error ->
-                        sync.logout()
-                        login.progress = -1
-                        login.setText(R.string.unknown_error)
-                    }, {
+                    .subscribe({
                         sync.saveCredentials(user, pass)
                         dialog.dismiss()
                         context.toast(R.string.login_success)
+                    }, { error ->
+                        sync.logout()
+                        login.progress = -1
+                        login.setText(R.string.unknown_error)
                     })
 
         }

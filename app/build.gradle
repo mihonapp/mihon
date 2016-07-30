@@ -29,14 +29,14 @@ def includeUpdater() {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
     publishNonDefault true
 
     defaultConfig {
         applicationId "eu.kanade.tachiyomi"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 10
         versionName "0.2.3"
@@ -87,7 +87,7 @@ dependencies {
     compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
     // Android support library
-    final support_library_version = '23.4.0'
+    final support_library_version = '24.1.1'
     compile "com.android.support:support-v4:$support_library_version"
     compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:cardview-v7:$support_library_version"
@@ -98,11 +98,11 @@ dependencies {
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxjava:1.1.8'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
 
     // Network client
-    compile "com.squareup.okhttp3:okhttp:3.3.1"
+    compile "com.squareup.okhttp3:okhttp:3.4.1"
 
     // REST
     final retrofit_version = '2.1.0'
@@ -111,7 +111,7 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
     // IO
-    compile 'com.squareup.okio:okio:1.8.0'
+    compile 'com.squareup.okio:okio:1.9.0'
 
     // JSON
     compile 'com.google.code.gson:gson:2.7'
@@ -133,7 +133,7 @@ dependencies {
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
-    compile "com.pushtorefresh.storio:sqlite:1.9.0"
+    compile "com.pushtorefresh.storio:sqlite:1.10.0"
 
     // Model View Presenter
     final nucleus_version = '3.0.0'
@@ -160,7 +160,7 @@ dependencies {
     compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
+    compile 'com.afollestad.material-dialogs:core:0.8.6.2'
     compile 'net.xpece.android:support-preference:0.8.1'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
@@ -170,7 +170,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.1'
     testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile 'org.robolectric:robolectric:3.1'
+    testCompile 'org.robolectric:robolectric:3.1.2'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
