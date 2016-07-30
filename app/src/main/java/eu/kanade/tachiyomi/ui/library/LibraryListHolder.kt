@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.item_library_list.view.*
  */
 
 class LibraryListHolder(private val view: View,
-                    private val adapter: LibraryCategoryAdapter,
-                    listener: FlexibleViewHolder.OnListItemClickListener)
+                        private val adapter: LibraryCategoryAdapter,
+                        listener: FlexibleViewHolder.OnListItemClickListener)
 : LibraryHolder(view, adapter, listener) {
 
     /**

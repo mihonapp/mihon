@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.library
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -91,8 +92,6 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_library_category, container, false)
-
-
     }
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
@@ -100,14 +99,16 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
 
         //set up grid
         recycler.setHasFixedSize(true)
+        (recycler.layoutManager as GridLayoutManager).recycleChildrenOnDetach = true
+        recycler.recycledViewPool = libraryFragment.pool
         recycler.adapter = adapter
 
         //set up list
         library_list.setHasFixedSize(true)
-        library_list.adapter = adapter
         library_list.layoutManager = LinearLayoutManager(activity)
-
-
+        library_list.recycledViewPool = libraryFragment.pool
+        (library_list.layoutManager as LinearLayoutManager).recycleChildrenOnDetach = true
+        library_list.adapter = adapter
 
         if (libraryFragment.actionMode != null) {
             setSelectionMode(FlexibleAdapter.MODE_MULTI)
@@ -119,18 +120,18 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
                 // Set again the adapter to recalculate the covers height
                 .subscribe { recycler.adapter = adapter }
 
-        searchSubscription = libraryPresenter.searchSubject?.subscribe { text ->
+        searchSubscription = libraryPresenter.searchSubject.subscribe { text ->
             adapter.searchText = text
             adapter.updateDataSet()
         }
 
-        toggleViewSubscription = preferences.libraryAsList().asObservable().subscribe {onViewModeChange(it)}
+        toggleViewSubscription = preferences.libraryAsList().asObservable()
+                .subscribe { onViewModeChange(it) }
 
-        if(libraryPresenter.displayAsList != displayAsList) {
+        if (libraryPresenter.displayAsList != displayAsList) {
             library_switcher.showNext()
             displayAsList = libraryPresenter.displayAsList
         }
-
 
         library_switcher.inAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)
         library_switcher.outAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_out)
@@ -176,11 +177,8 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
 
     override fun onResume() {
         super.onResume()
-
-
         libraryMangaSubscription = libraryPresenter.libraryMangaSubject
-                ?.subscribe { onNextLibraryManga(it) }
-
+                .subscribe { onNextLibraryManga(it) }
     }
 
     override fun onPause() {
@@ -310,7 +308,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
 
     fun onViewModeChange(isList: Boolean) {
         //do nothing if the display does not need to change
-        if(isList == displayAsList) return
+        if (isList == displayAsList) return
 
         //else change view and display mode
         library_switcher.showNext()

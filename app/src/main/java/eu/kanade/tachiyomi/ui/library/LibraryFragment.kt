@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.view.ActionMode
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
@@ -86,6 +87,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     var isFilterUnread = false
 
+    /**
+     * A pool to share view holders between all the registered categories (fragments).
+     */
+    val pool = RecyclerView.RecycledViewPool()
+
     companion object {
         /**
          * Key to change the cover of a manga in [onActivityResult].
@@ -138,7 +144,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         if (savedState != null) {
             activeCategory = savedState.getInt(CATEGORY_KEY)
             query = savedState.getString(QUERY_KEY)
-            presenter.searchSubject?.onNext(query)
+            presenter.searchSubject.onNext(query)
         } else {
             activeCategory = presenter.preferences.lastUsedCategory().getOrDefault()
         }
@@ -311,7 +317,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         view_pager.post { if (isAdded) tabs.setScrollPosition(view_pager.currentItem, 0f, true) }
 
         // Send the manga map to child fragments after the adapter is updated.
-        presenter.libraryMangaSubject?.onNext(LibraryMangaEvent(mangaMap))
+        presenter.libraryMangaSubject.onNext(LibraryMangaEvent(mangaMap))
     }
 
     /**

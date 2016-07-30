@@ -85,10 +85,9 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryHolder {
         //depending on preferences, display a list or display a grid
-        if(parent.id == R.id.library_list) {
+        if (parent.id == R.id.library_list) {
             val view = parent.inflate(R.layout.item_library_list)
             return LibraryListHolder(view, this, fragment)
-
         } else {
             val view = parent.inflate(R.layout.item_catalogue_grid).apply {
                 card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)

@@ -39,12 +39,12 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Search query of the library.
      */
-    val searchSubject: BehaviorSubject<String>? = BehaviorSubject.create<String>()
+    val searchSubject: BehaviorSubject<String> = BehaviorSubject.create<String>()
 
     /**
      * Subject to notify the library's viewpager for updates.
      */
-    val libraryMangaSubject: BehaviorSubject<LibraryMangaEvent>? = BehaviorSubject.create<LibraryMangaEvent>()
+    val libraryMangaSubject: BehaviorSubject<LibraryMangaEvent> = BehaviorSubject.create<LibraryMangaEvent>()
 
     /**
      * Database.
@@ -95,9 +95,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
             start(GET_LIBRARY)
         }
 
-
-        add(preferences.libraryAsList().asObservable().subscribe{setDisplayMode(it)})
-
+        add(preferences.libraryAsList().asObservable().subscribe { setDisplayMode(it) })
     }
 
     /**
