@@ -11,8 +11,10 @@ import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
  * @param listener a listener to react to the single tap and long tap events.
  */
 
-abstract class LibraryHolder(private val view: View, adapter: LibraryCategoryAdapter, listener: FlexibleViewHolder.OnListItemClickListener)
-    : FlexibleViewHolder(view, adapter, listener) {
+abstract class LibraryHolder(private val view: View,
+                             adapter: LibraryCategoryAdapter,
+                             listener: FlexibleViewHolder.OnListItemClickListener)
+: FlexibleViewHolder(view, adapter, listener) {
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this

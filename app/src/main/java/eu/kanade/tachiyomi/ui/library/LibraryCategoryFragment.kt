@@ -1,24 +1,23 @@
 package eu.kanade.tachiyomi.ui.library
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import com.f2prateek.rx.preferences.Preference
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
+import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.fragment_library_category.*
 import rx.Subscription
 import uy.kohesive.injekt.injectLazy
@@ -51,24 +50,9 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
     private var libraryMangaSubscription: Subscription? = null
 
     /**
-     * Subscription of the number of manga per row.
-     */
-    private var numColumnsSubscription: Subscription? = null
-
-    /**
-     * subscription to view toggle
-     */
-    private var toggleViewSubscription: Subscription? = null
-
-    /**
      * Subscription of the library search.
      */
     private var searchSubscription: Subscription? = null
-
-    /**
-     * display mode
-     */
-    private var displayAsList: Boolean = false
 
     companion object {
         /**
@@ -97,44 +81,30 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
     override fun onViewCreated(view: View, savedState: Bundle?) {
         adapter = LibraryCategoryAdapter(this)
 
-        //set up grid
-        recycler.setHasFixedSize(true)
-        (recycler.layoutManager as GridLayoutManager).recycleChildrenOnDetach = true
-        recycler.recycledViewPool = libraryFragment.pool
-        recycler.adapter = adapter
+        val recycler = if (preferences.libraryAsList().getOrDefault()) {
+            (swipe_refresh.inflate(R.layout.library_grid_recycler) as AutofitRecyclerView).apply {
+                spanCount = libraryFragment.mangaPerRow
+            }
+        } else {
+            (swipe_refresh.inflate(R.layout.library_list_recycler) as RecyclerView).apply {
+                layoutManager = LinearLayoutManager(context)
+            }
+        }
 
-        //set up list
-        library_list.setHasFixedSize(true)
-        library_list.layoutManager = LinearLayoutManager(activity)
-        library_list.recycledViewPool = libraryFragment.pool
-        (library_list.layoutManager as LinearLayoutManager).recycleChildrenOnDetach = true
-        library_list.adapter = adapter
+        (recycler.layoutManager as LinearLayoutManager).recycleChildrenOnDetach = true
+        recycler.recycledViewPool = libraryFragment.pool
+        recycler.setHasFixedSize(true)
+        recycler.adapter = adapter
+        swipe_refresh.addView(recycler)
 
         if (libraryFragment.actionMode != null) {
             setSelectionMode(FlexibleAdapter.MODE_MULTI)
         }
 
-        numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
-                .doOnNext { recycler.spanCount = it }
-                .skip(1)
-                // Set again the adapter to recalculate the covers height
-                .subscribe { recycler.adapter = adapter }
-
         searchSubscription = libraryPresenter.searchSubject.subscribe { text ->
             adapter.searchText = text
             adapter.updateDataSet()
         }
-
-        toggleViewSubscription = preferences.libraryAsList().asObservable()
-                .subscribe { onViewModeChange(it) }
-
-        if (libraryPresenter.displayAsList != displayAsList) {
-            library_switcher.showNext()
-            displayAsList = libraryPresenter.displayAsList
-        }
-
-        library_switcher.inAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)
-        library_switcher.outAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_out)
 
         if (savedState != null) {
             position = savedState.getInt(POSITION_KEY)
@@ -157,9 +127,9 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
         // Double the distance required to trigger sync
         swipe_refresh.setDistanceToTriggerSync((2 * 64 * resources.displayMetrics.density).toInt())
         swipe_refresh.setOnRefreshListener {
-            if (!LibraryUpdateService.isRunning(activity)) {
+            if (!LibraryUpdateService.isRunning(context)) {
                 libraryPresenter.categories.getOrNull(position)?.let {
-                    LibraryUpdateService.start(activity, true, it)
+                    LibraryUpdateService.start(context, true, it)
                     context.toast(R.string.updating_category)
                 }
             }
@@ -169,9 +139,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
     }
 
     override fun onDestroyView() {
-        numColumnsSubscription?.unsubscribe()
         searchSubscription?.unsubscribe()
-        toggleViewSubscription?.unsubscribe()
         super.onDestroyView()
     }
 
@@ -250,7 +218,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
         libraryPresenter.onOpenManga()
 
         // Create a new activity with the manga.
-        val intent = MangaActivity.newIntent(activity, manga)
+        val intent = MangaActivity.newIntent(context, manga)
         startActivity(intent)
     }
 
@@ -283,18 +251,6 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
     }
 
     /**
-     * Returns a preference for the number of manga per row based on the current orientation.
-     *
-     * @return the preference.
-     */
-    fun getColumnsPreferenceForCurrentOrientation(): Preference<Int> {
-        return if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-            libraryPresenter.preferences.portraitColumns()
-        else
-            libraryPresenter.preferences.landscapeColumns()
-    }
-
-    /**
      * Sets the mode for the adapter.
      *
      * @param mode the mode to set. It should be MODE_SINGLE or MODE_MULTI.
@@ -304,15 +260,6 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
         if (mode == FlexibleAdapter.MODE_SINGLE) {
             adapter.clearSelection()
         }
-    }
-
-    fun onViewModeChange(isList: Boolean) {
-        //do nothing if the display does not need to change
-        if (isList == displayAsList) return
-
-        //else change view and display mode
-        library_switcher.showNext()
-        displayAsList = isList
     }
 
     /**

@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.library
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.adapter.SmartFragmentStatePagerAdapter
 

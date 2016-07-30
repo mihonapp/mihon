@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.library
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.f2prateek.rx.preferences.Preference
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -24,6 +26,7 @@ import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
+import rx.Subscription
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 
@@ -62,11 +65,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     private var query: String? = null
 
     /**
-     * Display mode of the library (list or grid mode).
-     */
-    private var displayMode: MenuItem? = null
-
-    /**
      * Action mode for manga selection.
      */
     var actionMode: ActionMode? = null
@@ -88,9 +86,17 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     var isFilterUnread = false
 
     /**
+     * Number of manga per row in grid mode.
+     */
+    var mangaPerRow = 0
+        private set
+
+    /**
      * A pool to share view holders between all the registered categories (fragments).
      */
-    val pool = RecyclerView.RecycledViewPool()
+    var pool = RecyclerView.RecycledViewPool()
+
+    private var numColumnsSubscription: Subscription? = null
 
     companion object {
         /**
@@ -148,6 +154,12 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         } else {
             activeCategory = presenter.preferences.lastUsedCategory().getOrDefault()
         }
+
+        numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
+                .doOnNext { mangaPerRow = it }
+                .skip(1)
+                // Set again the adapter to recalculate the covers height
+                .subscribe { reattachAdapter() }
     }
 
     override fun onResume() {
@@ -156,6 +168,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     override fun onDestroyView() {
+        numColumnsSubscription?.unsubscribe()
         tabs.setupWithViewPager(null)
         tabs.visibility = View.GONE
         super.onDestroyView()
@@ -196,17 +209,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 return true
             }
         })
-
-        //set the icon for the display mode button
-        displayMode = menu.findItem(R.id.action_library_display_mode).apply {
-            val icon = if (preferences.libraryAsList().getOrDefault())
-                R.drawable.ic_view_module_white_24dp
-            else
-                R.drawable.ic_view_list_white_24dp
-
-            setIcon(icon)
-        }
-
 
     }
 
@@ -257,27 +259,40 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     private fun onFilterCheckboxChanged() {
         presenter.updateLibrary()
-        adapter.notifyDataSetChanged()
         adapter.refreshRegisteredAdapters()
         activity.supportInvalidateOptionsMenu()
     }
 
     /**
-     * swap display mode
+     * Swap display mode
      */
     private fun swapDisplayMode() {
-
         presenter.swapDisplayMode()
-        val isListMode = presenter.displayAsList
-        val icon = if (isListMode)
-            R.drawable.ic_view_module_white_24dp
-        else
-            R.drawable.ic_view_list_white_24dp
-
-        displayMode?.setIcon(icon)
-
+        reattachAdapter()
     }
 
+    /**
+     * Reattaches the adapter to the view pager to recreate fragments
+     */
+    private fun reattachAdapter() {
+        pool.clear()
+        pool = RecyclerView.RecycledViewPool()
+        val position = view_pager.currentItem
+        view_pager.adapter = adapter
+        view_pager.currentItem = position
+    }
+
+    /**
+     * Returns a preference for the number of manga per row based on the current orientation.
+     *
+     * @return the preference.
+     */
+    private fun getColumnsPreferenceForCurrentOrientation(): Preference<Int> {
+        return if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+            preferences.portraitColumns()
+        else
+            preferences.landscapeColumns()
+    }
 
     /**
      * Updates the query.
@@ -289,7 +304,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
         // Notify the subject the query has changed.
         if (isResumed) {
-            presenter.searchSubject?.onNext(query)
+            presenter.searchSubject.onNext(query)
         }
     }
 

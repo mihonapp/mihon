@@ -71,12 +71,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     val downloadManager: DownloadManager by injectLazy()
 
-    /**
-     * display the library as a list?
-     */
-    var displayAsList: Boolean = false
-        private set
-
     companion object {
         /**
          * Id of the restartable that listens for library updates.
@@ -95,16 +89,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
             start(GET_LIBRARY)
         }
 
-        add(preferences.libraryAsList().asObservable().subscribe { setDisplayMode(it) })
-    }
-
-    /**
-     * Sets the display mode
-     *
-     * @param asList display as list or not
-     */
-    fun setDisplayMode(asList: Boolean)    {
-        displayAsList = asList
     }
 
     /**
@@ -305,6 +289,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * Changes the active display mode.
      */
     fun swapDisplayMode() {
+        val displayAsList = preferences.libraryAsList().getOrDefault()
         preferences.libraryAsList().set(!displayAsList)
     }
 
