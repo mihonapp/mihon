@@ -149,6 +149,13 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         super.onSaveInstanceState(outState)
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            setMenuVisibility(menuVisible, animate = false)
+        }
+    }
+
     override fun onBackPressed() {
         val chapterToUpdate = presenter.getMangaSyncChapterToUpdate()
 
@@ -463,37 +470,42 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
     }
 
-    private fun setMenuVisibility(visible: Boolean) {
+    private fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
         menuVisible = visible
         if (visible) {
             systemUi?.show()
             reader_menu.visibility = View.VISIBLE
 
-            val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
-            toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
-                override fun onAnimationStart(animation: Animation) {
-                    // Fix status bar being translucent the first time it's opened.
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            if (animate) {
+                val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
+                toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
+                    override fun onAnimationStart(animation: Animation) {
+                        // Fix status bar being translucent the first time it's opened.
+                        if (Build.VERSION.SDK_INT >= 21) {
+                            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                        }
                     }
-                }
-            })
-            toolbar.startAnimation(toolbarAnimation)
+                })
+                toolbar.startAnimation(toolbarAnimation)
 
-            val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
-            reader_menu_bottom.startAnimation(bottomMenuAnimation)
+                val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
+                reader_menu_bottom.startAnimation(bottomMenuAnimation)
+            }
         } else {
             systemUi?.hide()
-            val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
-            toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
-                override fun onAnimationEnd(animation: Animation) {
-                    reader_menu.visibility = View.GONE
-                }
-            })
-            toolbar.startAnimation(toolbarAnimation)
 
-            val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
-            reader_menu_bottom.startAnimation(bottomMenuAnimation)
+            if (animate) {
+                val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
+                toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
+                    override fun onAnimationEnd(animation: Animation) {
+                        reader_menu.visibility = View.GONE
+                    }
+                })
+                toolbar.startAnimation(toolbarAnimation)
+
+                val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
+                reader_menu_bottom.startAnimation(bottomMenuAnimation)
+            }
         }
     }
 
