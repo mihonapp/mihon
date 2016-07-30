@@ -82,12 +82,12 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
         adapter = LibraryCategoryAdapter(this)
 
         val recycler = if (preferences.libraryAsList().getOrDefault()) {
-            (swipe_refresh.inflate(R.layout.library_grid_recycler) as AutofitRecyclerView).apply {
-                spanCount = libraryFragment.mangaPerRow
-            }
-        } else {
             (swipe_refresh.inflate(R.layout.library_list_recycler) as RecyclerView).apply {
                 layoutManager = LinearLayoutManager(context)
+            }
+        } else {
+            (swipe_refresh.inflate(R.layout.library_grid_recycler) as AutofitRecyclerView).apply {
+                spanCount = libraryFragment.mangaPerRow
             }
         }
 
