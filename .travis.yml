@@ -12,6 +12,9 @@ android:
     - extra-android-support
     - extra-google-google_play_services
 
+jdk:
+  - oraclejdk8
+
 before_script:
     - chmod +x gradlew
 #Build, and run tests
