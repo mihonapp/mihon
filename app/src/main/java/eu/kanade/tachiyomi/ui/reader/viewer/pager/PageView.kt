@@ -1,23 +1,23 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
-import android.graphics.PointF
-import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.view.LayoutInflater
+import android.content.Context
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.PageDecodeErrorLayout
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader.Companion.ALIGN_CENTER
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader.Companion.ALIGN_LEFT
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader.Companion.ALIGN_RIGHT
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader
-import kotlinx.android.synthetic.main.chapter_image.*
-import kotlinx.android.synthetic.main.item_pager_reader.*
+import kotlinx.android.synthetic.main.chapter_image.view.*
+import kotlinx.android.synthetic.main.item_pager_reader.view.*
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -25,41 +25,15 @@ import rx.subjects.PublishSubject
 import rx.subjects.SerializedSubject
 import java.io.File
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * Fragment for a single page of the ViewPager reader.
- * All the elements from the layout file "item_pager_reader" are available in this class.
- */
-class PagerReaderFragment : BaseFragment() {
-
-    companion object {
-        /**
-         * Creates a new instance of this fragment.
-         *
-         * @return a new instance of [PagerReaderFragment].
-         */
-        fun newInstance(): PagerReaderFragment {
-            return PagerReaderFragment()
-        }
-    }
+class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
+: FrameLayout(context, attrs) {
 
     /**
      * Page of a chapter.
      */
     var page: Page? = null
-        set(value) {
-            field = value
-            // Observe status if the view is initialized
-            if (view != null) {
-                observeStatus()
-            }
-        }
-
-    /**
-     * Position of the fragment in the adapter.
-     */
-    var position = -1
+        private set
 
     /**
      * Subscription for progress changes of the page.
@@ -71,47 +45,34 @@ class PagerReaderFragment : BaseFragment() {
      */
     private var statusSubscription: Subscription? = null
 
-    /**
-     * Text color for black theme.
-     */
-    private val whiteColor by lazy { ContextCompat.getColor(context, R.color.textColorSecondaryDark) }
+    fun initialize(reader: PagerReader, page: Page?) {
+        val activity = reader.activity as ReaderActivity
 
-    /**
-     * Text color for white theme.
-     */
-    private val blackColor by lazy { ContextCompat.getColor(context, R.color.textColorSecondaryLight) }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
-        return inflater.inflate(R.layout.item_pager_reader, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedState: Bundle?) {
-        if (readerActivity.readerTheme == ReaderActivity.BLACK_THEME) {
-            progress_text.setTextColor(whiteColor)
-        } else {
-            progress_text.setTextColor(blackColor)
+        when (activity.readerTheme) {
+            ReaderActivity.BLACK_THEME -> progress_text.setTextColor(reader.whiteColor)
+            ReaderActivity.WHITE_THEME -> progress_text.setTextColor(reader.blackColor)
         }
 
-        if (pagerReader is RightToLeftReader) {
-            view.rotation = -180f
+        if (reader is RightToLeftReader) {
+            rotation = -180f
         }
 
         with(image_view) {
-            setMaxBitmapDimensions(readerActivity.maxBitmapSize)
-            setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED)
-            setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
-            setMinimumScaleType(pagerReader.scaleType)
+            setMaxBitmapDimensions((reader.activity as ReaderActivity).maxBitmapSize)
+            setDoubleTapZoomStyle(com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.ZOOM_FOCUS_FIXED)
+            setPanLimit(com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
+            setMinimumScaleType(reader.scaleType)
             setMinimumDpi(50)
-            setRegionDecoderClass(pagerReader.regionDecoderClass)
-            setBitmapDecoderClass(pagerReader.bitmapDecoderClass)
-            setVerticalScrollingParent(pagerReader is VerticalReader)
-            setOnTouchListener { v, motionEvent -> pagerReader.gestureDetector.onTouchEvent(motionEvent) }
+            setRegionDecoderClass(reader.regionDecoderClass)
+            setBitmapDecoderClass(reader.bitmapDecoderClass)
+            setVerticalScrollingParent(reader is VerticalReader)
+            setOnTouchListener { v, motionEvent -> reader.gestureDetector.onTouchEvent(motionEvent) }
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
-                    when (pagerReader.zoomType) {
-                        PagerReader.ALIGN_LEFT -> setScaleAndCenter(scale, PointF(0f, 0f))
-                        PagerReader.ALIGN_RIGHT -> setScaleAndCenter(scale, PointF(sWidth.toFloat(), 0f))
-                        PagerReader.ALIGN_CENTER -> {
+                    when (reader.zoomType) {
+                        ALIGN_LEFT -> setScaleAndCenter(scale, android.graphics.PointF(0f, 0f))
+                        ALIGN_RIGHT -> setScaleAndCenter(scale, android.graphics.PointF(sWidth.toFloat(), 0f))
+                        ALIGN_CENTER -> {
                             val newCenter = center
                             newCenter.y = 0f
                             setScaleAndCenter(scale, newCenter)
@@ -120,27 +81,34 @@ class PagerReaderFragment : BaseFragment() {
                 }
 
                 override fun onImageLoadError(e: Exception) {
-                    onImageDecodeError()
+                    onImageDecodeError(activity)
                 }
             })
         }
 
         retry_button.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_UP) {
-                readerActivity.presenter.retryPage(page)
+                activity.presenter.retryPage(page)
             }
             true
         }
 
-        observeStatus()
+        if (page != null) {
+            this.page = page
+            observeStatus()
+        }
     }
 
-    override fun onDestroyView() {
+    fun cleanup() {
         unsubscribeProgress()
         unsubscribeStatus()
         image_view.setOnTouchListener(null)
         image_view.setOnImageEventListener(null)
-        super.onDestroyView()
+    }
+
+    override fun onDetachedFromWindow() {
+        cleanup()
+        super.onDetachedFromWindow()
     }
 
     /**
@@ -149,33 +117,31 @@ class PagerReaderFragment : BaseFragment() {
      * @see processStatus
      */
     private fun observeStatus() {
-        page?.let { page ->
-            val statusSubject = SerializedSubject(PublishSubject.create<Int>())
-            page.setStatusSubject(statusSubject)
+        statusSubscription?.unsubscribe()
+        val page = page ?: return
 
-            statusSubscription?.unsubscribe()
-            statusSubscription = statusSubject.startWith(page.status)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { processStatus(it) }
-        }
+        val statusSubject = SerializedSubject(PublishSubject.create<Int>())
+        page.setStatusSubject(statusSubject)
+
+        statusSubscription = statusSubject.startWith(page.status)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { processStatus(it) }
     }
 
     /**
      * Observes the progress of the page and updates view.
      */
     private fun observeProgress() {
-        val currentValue = AtomicInteger(-1)
-
         progressSubscription?.unsubscribe()
+        val page = page ?: return
+
         progressSubscription = Observable.interval(100, TimeUnit.MILLISECONDS)
+                .map { page.progress }
+                .distinctUntilChanged()
                 .onBackpressureLatest()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    // Refresh UI only if progress change
-                    if (page?.progress != currentValue.get()) {
-                        currentValue.set(page?.progress ?: 0)
-                        progress_text.text = getString(R.string.download_progress, currentValue.get())
-                    }
+                .subscribe { progress ->
+                    progress_text.text = context.getString(R.string.download_progress, progress)
                 }
     }
 
@@ -269,27 +235,13 @@ class PagerReaderFragment : BaseFragment() {
     /**
      * Called when an image fails to decode.
      */
-    private fun onImageDecodeError() {
-        val view = view as? ViewGroup ?: return
-
+    private fun onImageDecodeError(activity: ReaderActivity) {
         page?.let { page ->
-            val errorLayout = PageDecodeErrorLayout(context, page, readerActivity.readerTheme,
-                    { readerActivity.presenter.retryPage(page) })
+            val errorLayout = PageDecodeErrorLayout(context, page, activity.readerTheme,
+                    { activity.presenter.retryPage(page) })
 
-            view.addView(errorLayout)
+            addView(errorLayout)
         }
     }
-
-    /**
-     * Property to get the reader activity.
-     */
-    private val readerActivity: ReaderActivity
-        get() = activity as ReaderActivity
-
-    /**
-     * Property to get the pager reader.
-     */
-    private val pagerReader: PagerReader
-        get() = parentFragment as PagerReader
 
 }
