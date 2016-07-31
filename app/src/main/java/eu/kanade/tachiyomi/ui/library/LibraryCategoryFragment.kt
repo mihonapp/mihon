@@ -91,7 +91,9 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
             }
         }
 
-        (recycler.layoutManager as LinearLayoutManager).recycleChildrenOnDetach = true
+        // This crashes when opening a manga after changing categories, but then viewholders aren't
+        // recycled between pages. It may be fixed if this fragment is replaced with a custom view.
+        //(recycler.layoutManager as LinearLayoutManager).recycleChildrenOnDetach = true
         recycler.recycledViewPool = libraryFragment.pool
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter

@@ -94,7 +94,10 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     /**
      * A pool to share view holders between all the registered categories (fragments).
      */
-    var pool = RecyclerView.RecycledViewPool()
+    var pool = RecyclerView.RecycledViewPool().apply { setMaxRecycledViews(0, 20) }
+        private set(value) {
+            field = value.apply { setMaxRecycledViews(0, 20) }
+        }
 
     private var numColumnsSubscription: Subscription? = null
 
@@ -127,8 +130,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         setHasOptionsMenu(true)
-        isFilterDownloaded = presenter.preferences.filterDownloaded().get() as Boolean
-        isFilterUnread = presenter.preferences.filterUnread().get() as Boolean
+        isFilterDownloaded = preferences.filterDownloaded().get() as Boolean
+        isFilterUnread = preferences.filterUnread().get() as Boolean
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
@@ -142,7 +145,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         view_pager.adapter = adapter
         view_pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
-                presenter.preferences.lastUsedCategory().set(position)
+                preferences.lastUsedCategory().set(position)
             }
         })
         tabs.setupWithViewPager(view_pager)
@@ -152,7 +155,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
             query = savedState.getString(QUERY_KEY)
             presenter.searchSubject.onNext(query)
         } else {
-            activeCategory = presenter.preferences.lastUsedCategory().getOrDefault()
+            activeCategory = preferences.lastUsedCategory().getOrDefault()
         }
 
         numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
@@ -218,7 +221,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 // Change unread filter status.
                 isFilterUnread = !isFilterUnread
                 // Update settings.
-                presenter.preferences.filterUnread().set(isFilterUnread)
+                preferences.filterUnread().set(isFilterUnread)
                 // Apply filter.
                 onFilterCheckboxChanged()
             }
@@ -226,7 +229,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 // Change downloaded filter status.
                 isFilterDownloaded = !isFilterDownloaded
                 // Update settings.
-                presenter.preferences.filterDownloaded().set(isFilterDownloaded)
+                preferences.filterDownloaded().set(isFilterDownloaded)
                 // Apply filter.
                 onFilterCheckboxChanged()
             }
@@ -235,8 +238,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 isFilterUnread = false
                 isFilterDownloaded = false
                 // Update settings.
-                presenter.preferences.filterUnread().set(isFilterUnread)
-                presenter.preferences.filterDownloaded().set(isFilterDownloaded)
+                preferences.filterUnread().set(isFilterUnread)
+                preferences.filterDownloaded().set(isFilterDownloaded)
                 // Apply filter
                 onFilterCheckboxChanged()
             }
