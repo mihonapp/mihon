@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.view.ActionMode
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
@@ -94,10 +93,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     /**
      * A pool to share view holders between all the registered categories (fragments).
      */
-    var pool = RecyclerView.RecycledViewPool().apply { setMaxRecycledViews(0, 20) }
-        private set(value) {
-            field = value.apply { setMaxRecycledViews(0, 20) }
-        }
+    // TODO find out why this breaks sometimes
+//    var pool = RecyclerView.RecycledViewPool().apply { setMaxRecycledViews(0, 20) }
+//        private set(value) {
+//            field = value.apply { setMaxRecycledViews(0, 20) }
+//        }
 
     private var numColumnsSubscription: Subscription? = null
 
@@ -278,8 +278,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Reattaches the adapter to the view pager to recreate fragments
      */
     private fun reattachAdapter() {
-        pool.clear()
-        pool = RecyclerView.RecycledViewPool()
+//        pool.clear()
+//        pool = RecyclerView.RecycledViewPool()
         val position = view_pager.currentItem
         view_pager.adapter = adapter
         view_pager.currentItem = position
