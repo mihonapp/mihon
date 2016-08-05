@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/dl_button_panel"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+        <Button
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CANCEL"
+                android:id="@+id/btnCancel" android:layout_gravity="bottom|right"/>
+
+        <Button
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RECHECK"
+            android:id="@+id/btnAdvanced"
+            android:layout_gravity="bottom|right" />
+    </LinearLayout>
+    <WebView
+            android:layout_width="fill_parent"
+            android:id="@+id/webView"
+            android:layout_above="@+id/dl_button_panel"
+            android:layout_alignParentTop="true"
+            android:layout_height="fill_parent"/>
+</RelativeLayout>

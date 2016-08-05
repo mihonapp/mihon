@@ -26,6 +26,10 @@
             android:summary="@string/pref_reencode_summary"
             android:title="@string/pref_reencode"/>
 
+        <exh.OpenPEPref
+            android:title="Advanced Preferences"
+            android:summary="For advanced users only! Opens SharedPreferences editor."/>
+
     </PreferenceScreen>
 
 </PreferenceScreen>

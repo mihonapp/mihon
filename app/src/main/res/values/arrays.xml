@@ -156,4 +156,21 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="ehentai_quality">
+        <item>Auto</item>
+        <item>2400x</item>
+        <item>1600x</item>
+        <item>1280x</item>
+        <item>980x</item>
+        <item>780x</item>
+    </string-array>
+    <string-array name="ehentai_quality_values">
+        <item>auto</item>
+        <item>ovrs_2400</item>
+        <item>ovrs_1600</item>
+        <item>high</item>
+        <item>med</item>
+        <item>low</item>
+    </string-array>
+
 </resources>

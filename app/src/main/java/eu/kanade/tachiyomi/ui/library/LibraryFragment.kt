@@ -11,14 +11,17 @@ import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.source.online.english.EHentai
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.toast
+import exh.FavoritesSyncManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
@@ -74,6 +77,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     var isFilterUnread = false
 
+    lateinit var favoritesSyncManager: FavoritesSyncManager
+
     companion object {
         /**
          * Key to change the cover of a manga in [onActivityResult].
@@ -105,6 +110,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         setHasOptionsMenu(true)
         isFilterDownloaded = presenter.preferences.filterDownloaded().get() as Boolean
         isFilterUnread = presenter.preferences.filterUnread().get() as Boolean
+        favoritesSyncManager = FavoritesSyncManager(context, DatabaseHelper(context))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
@@ -208,8 +214,13 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 // Apply filter
                 onFilterCheckboxChanged()
             }
-            R.id.action_update_library -> {
-                LibraryUpdateService.start(activity, true)
+//            R.id.action_update_library -> {
+//                LibraryUpdateService.start(activity, true)
+//            }
+            R.id.action_sync -> {
+                favoritesSyncManager.guiSyncFavorites({
+                    (activity as MainActivity).setFragment(LibraryFragment.newInstance(), 0)
+                });
             }
             R.id.action_edit_categories -> {
                 val intent = CategoryActivity.newIntent(activity)
@@ -307,6 +318,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 changeSelectedCover(presenter.selectedMangas)
                 destroyActionModeIfNeeded()
             }
+            R.id.action_share -> EHentai.exportMangaURLs(this.activity, presenter.selectedMangas)
             R.id.action_move_to_category -> moveMangasToCategories(presenter.selectedMangas)
             R.id.action_delete -> showDeleteMangaDialog()
             else -> return false

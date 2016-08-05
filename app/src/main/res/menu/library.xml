@@ -29,9 +29,15 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
-    <item
+    <!--<item
         android:id="@+id/action_update_library"
         android:title="@string/action_update_library"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        app:showAsAction="ifRoom" />-->
+
+    <item
+        android:id="@+id/action_sync"
+        android:title="Download Favorites"
         android:icon="@drawable/ic_refresh_white_24dp"
         app:showAsAction="ifRoom" />
 

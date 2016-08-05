@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="eu.kanade.tachiyomi">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
@@ -21,14 +21,14 @@
             android:name=".ui.main.MainActivity"
             android:theme="@style/Theme.BrandedLaunch">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.manga.MangaActivity"
-            android:parentActivityName=".ui.main.MainActivity" >
+            android:parentActivityName=".ui.main.MainActivity">
         </activity>
         <activity
             android:name=".ui.reader.ReaderActivity"
@@ -37,7 +37,7 @@
         <activity
             android:name=".ui.setting.SettingsActivity"
             android:label="@string/label_settings"
-            android:parentActivityName=".ui.main.MainActivity" >
+            android:parentActivityName=".ui.main.MainActivity">
         </activity>
         <activity
             android:name=".ui.category.CategoryActivity"
@@ -104,6 +104,39 @@
             android:name="eu.kanade.tachiyomi.data.glide.AppGlideModule"
             android:value="GlideModule" />
 
+        <activity
+            android:name="exh.ActivityPE"
+            android:label="Advanced Preferences">
+        </activity>
+        <activity
+            android:name="exh.ActivityInterceptLink"
+            android:label="TachiyomiEH">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="g.e-hentai.org"
+                    android:pathPrefix="/g/"
+                    android:scheme="http"/>
+                <data
+                    android:host="g.e-hentai.org"
+                    android:pathPrefix="/g/"
+                    android:scheme="https"/>
+                <data
+                    android:host="exhentai.org"
+                    android:pathPrefix="/g/"
+                    android:scheme="http"/>
+                <data
+                    android:host="exhentai.org"
+                    android:pathPrefix="/g/"
+                    android:scheme="https"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="exh.ActivityBatchAdd">
+        </activity>
     </application>
 
 </manifest>

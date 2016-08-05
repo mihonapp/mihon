@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.network
 
 import android.content.Context
+import eu.kanade.tachiyomi.data.source.online.english.EHentai
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import java.io.File
@@ -14,8 +15,9 @@ class NetworkHelper(context: Context) {
     private val cookieManager = PersistentCookieJar(context)
 
     val client = OkHttpClient.Builder()
-            .cookieJar(cookieManager)
+//            .cookieJar(cookieManager)
             .cache(Cache(cacheDir, cacheSize))
+            .addInterceptor(EHentai.buildInterceptor(context))
             .build()
 
     val forceCacheClient = client.newBuilder()

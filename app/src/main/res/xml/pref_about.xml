@@ -6,11 +6,11 @@
         android:title="@string/pref_category_about"
         android:persistent="false">
 
-        <SwitchPreference
-            android:defaultValue="true"
+        <SwitchPreferenceCompat
             android:key="acra.enable"
             android:summary="@string/pref_acra_summary"
-            android:title="@string/pref_enable_acra"/>
+            android:title="@string/pref_enable_acra"
+            android:defaultValue="false"/>
 
         <!--<SwitchPreferenceCompat-->
         <!--android:defaultValue="false"-->
@@ -28,6 +28,15 @@
             android:key="@string/pref_build_time"
             android:persistent="false"
             android:title="@string/build_time"/>
+
+        <SwitchPreferenceCompat
+            android:key="auto_update"
+            android:defaultValue="true"
+            android:title="Auto Update"
+            android:summary="Automatically check for updates on startup."/>
+        <exh.CheckUpdatePref
+            android:title="Check for Updates"
+            android:summary="Check for update right now."/>
 
     </PreferenceScreen>
 

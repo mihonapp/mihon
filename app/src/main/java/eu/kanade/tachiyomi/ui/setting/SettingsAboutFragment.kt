@@ -46,18 +46,9 @@ class SettingsAboutFragment : SettingsFragment() {
 
         val version = findPreference(getString(R.string.pref_version))
         val buildTime = findPreference(getString(R.string.pref_build_time))
+        findPreference("acra.enable").isEnabled = false;
 
-        version.summary = if (BuildConfig.DEBUG)
-            "r" + BuildConfig.COMMIT_COUNT
-        else
-            BuildConfig.VERSION_NAME
-
-        if (!BuildConfig.DEBUG && BuildConfig.INCLUDE_UPDATER) {
-            //Set onClickListener to check for new version
-            version.setOnPreferenceClickListener {
-                checkVersion()
-                true
-            }
+        version.summary = BuildConfig.VERSION_NAME
 
             //TODO One glorious day enable this and add the magnificent option for auto update checking.
             // automaticUpdateToggle.isEnabled = true
@@ -66,7 +57,6 @@ class SettingsAboutFragment : SettingsFragment() {
             //                UpdateDownloaderAlarm.startAlarm(activity, 12, status)
             //                true
             //            }
-        }
 
         buildTime.summary = getFormattedBuildTime()
     }

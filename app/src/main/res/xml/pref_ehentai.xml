@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceScreen
+        android:key="ehentai_screen"
+        android:persistent="false"
+        android:title="@string/pref_category_eh">
+    <ListPreference
+        android:defaultValue="auto"
+        android:key="ehentai_quality"
+        android:summary="The quality of the downloaded images. (The file size stated in the 'Synopsis' no longer applies if this is changed)"
+        android:title="Image Quality"
+        android:entries="@array/ehentai_quality"
+        android:entryValues="@array/ehentai_quality_values"
+        />
+    <exh.ExHentaiLoginPref
+        android:defaultValue="false"
+        android:key="enable_exhentai"
+        android:summary="Restart the app once this setting is changed."
+        android:title="Enable ExHentai"
+        />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="secure_exh"
+            android:summary="Use the HTTPS version of ExHentai. Uncheck if ExHentai is not working."
+            android:title="Use Secure ExHentai"
+            android:dependency="enable_exhentai"/>
+    </PreferenceScreen>
+
+</PreferenceScreen>

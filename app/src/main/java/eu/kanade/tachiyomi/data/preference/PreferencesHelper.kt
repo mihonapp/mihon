@@ -17,7 +17,7 @@ class PreferencesHelper(context: Context) {
 
     val keys = PreferenceKeys(context)
 
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     private val rxPrefs = RxSharedPreferences.create(prefs)
 
     private val defaultDownloadsDir = File(Environment.getExternalStorageDirectory().absolutePath +
@@ -86,7 +86,7 @@ class PreferencesHelper(context: Context) {
 
     fun catalogueAsList() = rxPrefs.getBoolean(keys.catalogueAsList, false)
 
-    fun enabledLanguages() = rxPrefs.getStringSet(keys.enabledLanguages, setOf("EN"))
+    fun enabledLanguages() = rxPrefs.getStringSet(keys.enabledLanguages, setOf("ALL"))
 
     fun sourceUsername(source: Source) = prefs.getString(keys.sourceUsername(source.id), "")
 

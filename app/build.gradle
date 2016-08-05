@@ -38,8 +38,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 10
-        versionName "0.2.3"
+        versionCode 218
+        versionName "Tachiyomi-EH-2.18 (Update 18)"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
@@ -51,11 +51,14 @@ android {
 
     buildTypes {
         debug {
-            versionNameSuffix "-${getCommitCount()}"
-            applicationIdSuffix ".debug"
+            applicationIdSuffix ".eh"
+            minifyEnabled false
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            minifyEnabled true
+            applicationIdSuffix ".eh"
+            minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -164,6 +167,9 @@ dependencies {
     compile 'net.xpece.android:support-preference:0.8.1'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
+
+    //EXH
+    compile 'com.jakewharton:process-phoenix:1.0.2'
 
     // Tests
     testCompile 'junit:junit:4.12'

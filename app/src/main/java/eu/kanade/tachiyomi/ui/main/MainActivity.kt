@@ -16,6 +16,8 @@ import eu.kanade.tachiyomi.ui.library.LibraryFragment
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
+import exh.ActivityAskUpdate
+import exh.ActivityBatchAdd
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import uy.kohesive.injekt.injectLazy
@@ -66,6 +68,7 @@ class MainActivity : BaseActivity() {
                     val intent = Intent(this, SettingsActivity::class.java)
                     startActivityForResult(intent, REQUEST_OPEN_SETTINGS)
                 }
+                R.id.nav_drawer_batch_add -> startActivity(Intent(this, ActivityBatchAdd::class.java))
                 R.id.nav_drawer_backup -> setFragment(BackupFragment.newInstance(), id)
             }
             drawer.closeDrawer(GravityCompat.START)
@@ -76,9 +79,10 @@ class MainActivity : BaseActivity() {
             // Set start screen
             setSelectedDrawerItem(startScreenId)
 
-            // Show changelog if needed
-            ChangelogDialogFragment.show(preferences, supportFragmentManager)
-        }
+            //Check for update
+            val context = this
+            Thread { ActivityAskUpdate.checkAndDoUpdateIfNeeded(context, true) }.start()
+       }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -121,7 +125,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun setFragment(fragment: Fragment, itemId: Int) {
+    fun setFragment(fragment: Fragment, itemId: Int) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_container, fragment, "$itemId")
                 .commit()

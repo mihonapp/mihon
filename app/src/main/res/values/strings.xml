@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tachiyomi</string>
+    <string name="app_name">TachiyomiEH</string>
 
     <string name="name">Name</string>
 
@@ -9,7 +9,7 @@
     <string name="label_library">My library</string>
     <string name="label_recent_manga">Recently read</string>
     <string name="label_recent_updates">Recent updates</string>
-    <string name="label_catalogues">Catalogues</string>
+    <string name="label_catalogues">Galleries</string>
     <string name="label_categories">Categories</string>
     <string name="label_selected">Selected: %1$d</string>
     <string name="label_backup">Backup</string>
@@ -63,6 +63,7 @@
       <!-- Subsections -->
     <string name="pref_category_general">General</string>
     <string name="pref_category_reader">Reader</string>
+    <string name="pref_category_eh">EHentai/ExHentai</string>
     <string name="pref_category_downloads">Downloads</string>
     <string name="pref_category_sources">Sources</string>
     <string name="pref_category_sync">Sync</string>
@@ -178,7 +179,8 @@
     <string name="pref_enable_automatic_updates_summary">Automatically check for application updates</string>
     <!-- ACRA -->
     <string name="pref_enable_acra">Send crash reports</string>
-    <string name="pref_acra_summary">Helps fix any bugs. No sensitive data will be sent</string>
+    <!--<string name="pref_acra_summary">Helps fix any bugs. No sensitive data will be sent</string>-->
+    <string name="pref_acra_summary">Currently unavailable to prevent crash reports from being sent to the original developer!</string>
 
 
     <!-- Login dialog -->

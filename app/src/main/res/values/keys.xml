@@ -3,6 +3,7 @@
 
     <string name="pref_category_general_key">pref_category_general_key</string>
     <string name="pref_category_reader_key">pref_category_reader_key</string>
+    <string name="pref_category_eh_key">pref_category_eh_key</string>
     <string name="pref_category_sync_key">pref_category_sync_key</string>
     <string name="pref_category_downloads_key">pref_category_downloads_key</string>
     <string name="pref_category_advanced_key">pref_category_advanced_key</string>

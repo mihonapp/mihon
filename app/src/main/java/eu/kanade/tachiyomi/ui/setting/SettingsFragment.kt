@@ -34,9 +34,10 @@ open class SettingsFragment : XpPreferenceFragment() {
         addPreferencesFromResource(R.xml.pref_general)
         addPreferencesFromResource(R.xml.pref_reader)
         addPreferencesFromResource(R.xml.pref_downloads)
-        addPreferencesFromResource(R.xml.pref_sources)
-        addPreferencesFromResource(R.xml.pref_sync)
+//        addPreferencesFromResource(R.xml.pref_sources)
+//        addPreferencesFromResource(R.xml.pref_sync)
         addPreferencesFromResource(R.xml.pref_advanced)
+        addPreferencesFromResource(R.xml.pref_ehentai)
         addPreferencesFromResource(R.xml.pref_about)
 
         // Add an icon to each subscreen
@@ -76,9 +77,10 @@ open class SettingsFragment : XpPreferenceFragment() {
             "general_screen" to R.drawable.ic_tune_black_24dp,
             "reader_screen" to R.drawable.ic_chrome_reader_mode_black_24dp,
             "downloads_screen" to R.drawable.ic_file_download_black_24dp,
-            "sources_screen" to R.drawable.ic_language_black_24dp,
-            "sync_screen" to R.drawable.ic_sync_black_24dp,
+//            "sources_screen" to R.drawable.ic_language_black_24dp,
+//            "sync_screen" to R.drawable.ic_sync_black_24dp,
             "advanced_screen" to R.drawable.ic_code_black_24dp,
+            "ehentai_screen" to R.drawable.ic_whatshot_black_24dp,
             "about_screen" to R.drawable.ic_help_black_24dp
     )
 

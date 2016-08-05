@@ -16,6 +16,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.f2prateek.rx.preferences.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.source.online.english.EHentai
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -64,7 +65,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
     /**
      * Query of the search box.
      */
-    private val query: String?
+    val query: String?
         get() = presenter.query
 
     /**
@@ -212,12 +213,12 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
             }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    onSearchEvent(query, true)
+                    onSearchEvent(query, true, false)
                     return true
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
-                    onSearchEvent(newText, false)
+                    onSearchEvent(newText, false, false)
                     return true
                 }
             })
@@ -237,6 +238,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_display_mode -> swapDisplayMode()
+            R.id.action_genre_filter -> EHentai.launchGenreSelectionDialog(context, this)
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -246,7 +248,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
         super.onResume()
         queryDebouncerSubscription = queryDebouncerSubject.debounce(SEARCH_TIMEOUT, MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { searchWithQuery(it) }
+                .subscribe { searchWithQuery(it, false) }
     }
 
     override fun onPause() {
@@ -269,9 +271,9 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      * @param query the new query.
      * @param now whether to send the network call now or debounce it by [SEARCH_TIMEOUT].
      */
-    private fun onSearchEvent(query: String, now: Boolean) {
+    fun onSearchEvent(query: String, now: Boolean, forceRequest: Boolean) {
         if (now) {
-            searchWithQuery(query)
+            searchWithQuery(query, forceRequest)
         } else {
             queryDebouncerSubject.onNext(query)
         }
@@ -282,9 +284,9 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      *
      * @param newQuery the new query.
      */
-    private fun searchWithQuery(newQuery: String) {
+    private fun searchWithQuery(newQuery: String, forceRequest: Boolean) {
         // If text didn't change, do nothing
-        if (query == newQuery)
+        if (query == newQuery && !forceRequest)
             return
 
         showProgressBar()

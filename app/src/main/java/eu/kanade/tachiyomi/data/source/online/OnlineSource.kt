@@ -345,7 +345,7 @@ abstract class OnlineSource(context: Context) : Source {
             .asObservable()
             .doOnNext {
                 if (!it.isSuccessful) {
-                    it.close()
+                    it.body().close()
                     throw RuntimeException("Not a valid response")
                 }
             }

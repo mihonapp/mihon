@@ -62,9 +62,10 @@ class SettingsActivity : BaseActivity(),
         return when (key) {
             "general_screen" -> SettingsGeneralFragment.newInstance(key)
             "downloads_screen" -> SettingsDownloadsFragment.newInstance(key)
-            "sources_screen" -> SettingsSourcesFragment.newInstance(key)
-            "sync_screen" -> SettingsSyncFragment.newInstance(key)
+//            "sources_screen" -> SettingsSourcesFragment.newInstance(key)
+//            "sync_screen" -> SettingsSyncFragment.newInstance(key)
             "advanced_screen" -> SettingsAdvancedFragment.newInstance(key)
+            "ehentai_screen" -> SettingsEHFragment.newInstance(key)
             "about_screen" -> SettingsAboutFragment.newInstance(key)
             else -> SettingsFragment.newInstance(key)
         }

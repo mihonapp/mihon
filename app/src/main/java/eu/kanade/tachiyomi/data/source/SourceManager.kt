@@ -7,29 +7,23 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.data.source.online.YamlOnlineSource
 import eu.kanade.tachiyomi.data.source.online.english.*
-import eu.kanade.tachiyomi.data.source.online.german.WieManga
-import eu.kanade.tachiyomi.data.source.online.russian.Mangachan
-import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga
-import eu.kanade.tachiyomi.data.source.online.russian.Readmanga
 import eu.kanade.tachiyomi.util.hasPermission
+import exh.DialogLogin
 import org.yaml.snakeyaml.Yaml
 import timber.log.Timber
 import java.io.File
 
 open class SourceManager(private val context: Context) {
 
-    val BATOTO = 1
-    val MANGAHERE = 2
-    val MANGAFOX = 3
-    val KISSMANGA = 4
-    val READMANGA = 5
-    val MINTMANGA = 6
-    val MANGACHAN = 7
-    val READMANGATODAY = 8
-    val MANGASEE = 9
-    val WIEMANGA = 10
+    val EHENTAI = 1
+    val EXHENTAI = 2
 
-    val LAST_SOURCE = 10
+    val LAST_SOURCE by lazy {
+        if (DialogLogin.isLoggedIn(context, false))
+            2
+        else
+            1
+    }
 
     val sourcesMap = createSources()
 
@@ -40,16 +34,8 @@ open class SourceManager(private val context: Context) {
     fun getOnlineSources() = sourcesMap.values.filterIsInstance(OnlineSource::class.java)
 
     private fun createSource(id: Int): Source? = when (id) {
-        BATOTO -> Batoto(context, id)
-        KISSMANGA -> Kissmanga(context, id)
-        MANGAHERE -> Mangahere(context, id)
-        MANGAFOX -> Mangafox(context, id)
-        READMANGA -> Readmanga(context, id)
-        MINTMANGA -> Mintmanga(context, id)
-        MANGACHAN -> Mangachan(context, id)
-        READMANGATODAY -> Readmangatoday(context, id)
-        MANGASEE -> Mangasee(context, id)
-        WIEMANGA -> WieManga(context, id)
+        EHENTAI -> EHentai(context, id, false)
+        EXHENTAI -> EHentai(context, id, true)
         else -> null
     }
 

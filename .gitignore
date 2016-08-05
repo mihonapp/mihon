@@ -1,4 +1,4 @@
-.gradle
+.gradle/
 /local.properties
 /.idea/workspace.xml
 .DS_Store
@@ -7,3 +7,4 @@
 *iml
 *.iml
 */build
+/libs/SubsamplingScaleImageView/build
