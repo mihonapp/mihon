@@ -39,7 +39,7 @@ android {
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 2180
-        versionName "2.18.0"
+        versionName "v2.18.0-EH"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
