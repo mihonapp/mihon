@@ -1,5 +1,5 @@
-| Download | Auto Update |
-|----------|-------------|
+| Download |
+|----------|
 | [![stable release](https://img.shields.io/github/release/NerdNumber9/TachiyomiEH.svg?maxAge=3600&label=stable)](https://github.com/NerdNumber9/TachiyomiEH/releases) |
 
 ## [Report an issue](https://github.com/NerdNumber9/TachiyomiEH/blob/master/.github/CONTRIBUTING.md)
