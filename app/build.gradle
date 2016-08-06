@@ -34,12 +34,12 @@ android {
     publishNonDefault true
 
     defaultConfig {
-        applicationId "eu.kanade.tachiyomi"
+        applicationId "eu.kanade.tachiyomi.eh"
         minSdkVersion 16
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 218
-        versionName "Tachiyomi-EH-2.18 (Update 18)"
+        versionCode 2180
+        versionName "2.18.0"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
@@ -51,13 +51,11 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".eh"
             minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            applicationIdSuffix ".eh"
             minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
