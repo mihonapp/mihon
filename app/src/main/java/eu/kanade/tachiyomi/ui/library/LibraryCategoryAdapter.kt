@@ -17,7 +17,7 @@ import java.util.*
  *
  * @param fragment the fragment containing this adapter.
  */
-class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
+class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
         FlexibleAdapter<LibraryHolder, Manga>() {
 
     /**

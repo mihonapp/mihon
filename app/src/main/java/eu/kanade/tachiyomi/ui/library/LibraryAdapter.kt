@@ -32,7 +32,7 @@ class LibraryAdapter(private val fragment: LibraryFragment) : RecyclerViewPagerA
      * @return a new view.
      */
     override fun createView(container: ViewGroup): View {
-        val view = container.inflate(R.layout.item_library_category) as LibraryCategoryFragment
+        val view = container.inflate(R.layout.item_library_category) as LibraryCategoryView
         view.onCreate(fragment)
         return view
     }
@@ -44,7 +44,7 @@ class LibraryAdapter(private val fragment: LibraryFragment) : RecyclerViewPagerA
      * @param position the position in the adapter.
      */
     override fun bindView(view: View, position: Int) {
-        (view as LibraryCategoryFragment).onBind(categories[position])
+        (view as LibraryCategoryView).onBind(categories[position])
     }
 
     /**
@@ -54,7 +54,7 @@ class LibraryAdapter(private val fragment: LibraryFragment) : RecyclerViewPagerA
      * @param position the position in the adapter.
      */
     override fun recycleView(view: View, position: Int) {
-        (view as LibraryCategoryFragment).onRecycle()
+        (view as LibraryCategoryView).onRecycle()
     }
 
     /**

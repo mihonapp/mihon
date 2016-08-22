@@ -25,7 +25,7 @@ import uy.kohesive.injekt.injectLazy
  * Fragment containing the library manga for a certain category.
  * Uses R.layout.fragment_library_category.
  */
-class LibraryCategoryFragment @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
+class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
 : FrameLayout(context, attrs), FlexibleViewHolder.OnListItemClickListener {
 
     /**
