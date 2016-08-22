@@ -11,7 +11,6 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.f2prateek.rx.preferences.Preference
-import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -26,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
 import rx.Subscription
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 
@@ -66,8 +66,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     /**
      * Action mode for manga selection.
      */
-    var actionMode: ActionMode? = null
-        private set
+    private var actionMode: ActionMode? = null
 
     /**
      * Selected manga for editing its cover.
@@ -91,14 +90,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         private set
 
     /**
-     * A pool to share view holders between all the registered categories (fragments).
+     * Subscription for the number of manga per row.
      */
-    // TODO find out why this breaks sometimes
-//    var pool = RecyclerView.RecycledViewPool().apply { setMaxRecycledViews(0, 20) }
-//        private set(value) {
-//            field = value.apply { setMaxRecycledViews(0, 20) }
-//        }
-
     private var numColumnsSubscription: Subscription? = null
 
     companion object {
@@ -141,7 +134,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         setToolbarTitle(getString(R.string.label_library))
 
-        adapter = LibraryAdapter(childFragmentManager)
+        adapter = LibraryAdapter(this)
         view_pager.adapter = adapter
         view_pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
@@ -154,6 +147,9 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
             activeCategory = savedState.getInt(CATEGORY_KEY)
             query = savedState.getString(QUERY_KEY)
             presenter.searchSubject.onNext(query)
+            if (presenter.selectedMangas.isNotEmpty()) {
+                createActionModeIfNeeded()
+            }
         } else {
             activeCategory = preferences.lastUsedCategory().getOrDefault()
         }
@@ -261,8 +257,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Applies filter change
      */
     private fun onFilterCheckboxChanged() {
-        presenter.updateLibrary()
-        adapter.refreshRegisteredAdapters()
+        presenter.resubscribeLibrary()
         activity.supportInvalidateOptionsMenu()
     }
 
@@ -278,11 +273,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Reattaches the adapter to the view pager to recreate fragments
      */
     private fun reattachAdapter() {
-//        pool.clear()
-//        pool = RecyclerView.RecycledViewPool()
         val position = view_pager.currentItem
+        adapter.recycle = false
         view_pager.adapter = adapter
         view_pager.currentItem = position
+        adapter.recycle = true
     }
 
     /**
@@ -323,7 +318,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 R.string.information_empty_library, R.drawable.ic_book_black_128dp)
 
         // Get the current active category.
-        val activeCat = if (adapter.categories != null) view_pager.currentItem else activeCategory
+        val activeCat = if (adapter.categories.isNotEmpty()) view_pager.currentItem else activeCategory
 
         // Set the categories
         adapter.categories = categories
@@ -339,31 +334,42 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     /**
-     * Sets the title of the action mode.
-     *
-     * @param count the number of items selected.
+     * Creates the action mode if it's not created already.
      */
-    fun setContextTitle(count: Int) {
-        actionMode?.title = getString(R.string.label_selected, count)
+    fun createActionModeIfNeeded() {
+        if (actionMode == null) {
+            actionMode = activity.startSupportActionMode(this)
+        }
     }
 
     /**
-     * Sets the visibility of the edit cover item.
-     *
-     * @param count the number of items selected.
+     * Destroys the action mode.
      */
-    fun setVisibilityOfCoverEdit(count: Int) {
-        // If count = 1 display edit button
-        actionMode?.menu?.findItem(R.id.action_edit_cover)?.isVisible = count == 1
+    fun destroyActionModeIfNeeded() {
+        actionMode?.finish()
+    }
+
+    /**
+     * Invalidates the action mode, forcing it to refresh its content.
+     */
+    fun invalidateActionMode() {
+        actionMode?.invalidate()
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.library_selection, menu)
-        adapter.setSelectionMode(FlexibleAdapter.MODE_MULTI)
         return true
     }
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+        val count = presenter.selectedMangas.size
+        if (count == 0) {
+            // Destroy action mode if there are no items selected.
+            destroyActionModeIfNeeded()
+        } else {
+            mode.title = getString(R.string.label_selected, count)
+            menu.findItem(R.id.action_edit_cover)?.isVisible = count == 1
+        }
         return false
     }
 
@@ -381,16 +387,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        adapter.setSelectionMode(FlexibleAdapter.MODE_SINGLE)
-        presenter.selectedMangas.clear()
+        presenter.clearSelections()
         actionMode = null
-    }
-
-    /**
-     * Destroys the action mode.
-     */
-    fun destroyActionModeIfNeeded() {
-        actionMode?.finish()
     }
 
     /**
@@ -422,14 +420,14 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                     context.contentResolver.openInputStream(data.data).use {
                         // Update cover to selected file, show error if something went wrong
                         if (presenter.editCoverWithStream(it, manga)) {
-                            adapter.refreshRegisteredAdapters()
+                            // TODO refresh cover
                         } else {
                             context.toast(R.string.notification_manga_update_failed)
                         }
                     }
-                } catch (e: IOException) {
+                } catch (error: IOException) {
                     context.toast(R.string.notification_manga_update_failed)
-                    e.printStackTrace()
+                    Timber.e(error, error.message)
                 }
             }
 
@@ -474,22 +472,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                     destroyActionModeIfNeeded()
                 }
                 .show()
-    }
-
-    /**
-     * Creates the action mode if it's not created already.
-     */
-    fun createActionModeIfNeeded() {
-        if (actionMode == null) {
-            actionMode = activity.startSupportActionMode(this)
-        }
-    }
-
-    /**
-     * Invalidates the action mode, forcing it to refresh its content.
-     */
-    fun invalidateActionMode() {
-        actionMode?.invalidate()
     }
 
 }

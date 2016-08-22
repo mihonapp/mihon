@@ -84,7 +84,7 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
      * @return a new view holder for a manga.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryHolder {
-        //depending on preferences, display a list or display a grid
+        // Depending on preferences, display a list or display a grid
         if (parent is AutofitRecyclerView) {
             val view = parent.inflate(R.layout.item_catalogue_grid).apply {
                 val coverHeight = parent.itemWidth / 3 * 4
@@ -96,7 +96,6 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
             val view = parent.inflate(R.layout.item_library_list)
             return LibraryListHolder(view, this, fragment)
         }
-
     }
 
     /**
@@ -109,8 +108,17 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
         val manga = getItem(position)
 
         holder.onSetValues(manga)
-        //When user scrolls this bind the correct selection status
+        // When user scrolls this bind the correct selection status
         holder.itemView.isActivated = isSelected(position)
+    }
+
+    /**
+     * Returns the position in the adapter for the given manga.
+     *
+     * @param manga the manga to find.
+     */
+    fun indexOf(manga: Manga): Int {
+        return mangas.orEmpty().indexOfFirst { it.id == manga.id }
     }
 
 }

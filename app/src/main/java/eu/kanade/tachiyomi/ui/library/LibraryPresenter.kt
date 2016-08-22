@@ -16,6 +16,7 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
+import rx.subjects.PublishSubject
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import java.io.InputStream
@@ -29,22 +30,27 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Categories of the library.
      */
-    lateinit var categories: List<Category>
+    var categories: List<Category> = emptyList()
 
     /**
      * Currently selected manga.
      */
-    var selectedMangas = mutableListOf<Manga>()
+    val selectedMangas = mutableListOf<Manga>()
 
     /**
      * Search query of the library.
      */
-    val searchSubject: BehaviorSubject<String> = BehaviorSubject.create<String>()
+    val searchSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     /**
      * Subject to notify the library's viewpager for updates.
      */
-    val libraryMangaSubject: BehaviorSubject<LibraryMangaEvent> = BehaviorSubject.create<LibraryMangaEvent>()
+    val libraryMangaSubject: BehaviorSubject<LibraryMangaEvent> = BehaviorSubject.create()
+
+    /**
+     * Subject to notify the UI of selection updates.
+     */
+    val selectionSubject: PublishSubject<LibrarySelectionEvent> = PublishSubject.create()
 
     /**
      * Database.
@@ -149,7 +155,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Resubscribes to library.
      */
-    fun updateLibrary() {
+    fun resubscribeLibrary() {
         start(GET_LIBRARY)
     }
 
@@ -219,9 +225,19 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     fun setSelection(manga: Manga, selected: Boolean) {
         if (selected) {
             selectedMangas.add(manga)
+            selectionSubject.onNext(LibrarySelectionEvent.Selected(manga))
         } else {
             selectedMangas.remove(manga)
+            selectionSubject.onNext(LibrarySelectionEvent.Unselected(manga))
         }
+    }
+
+    /**
+     * Clears all the manga selections and notifies the UI.
+     */
+    fun clearSelections() {
+        selectedMangas.clear()
+        selectionSubject.onNext(LibrarySelectionEvent.Cleared())
     }
 
     /**

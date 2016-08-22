@@ -1,24 +1,23 @@
 package eu.kanade.tachiyomi.ui.library
 
-import android.os.Bundle
+import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.AttributeSet
+import android.widget.FrameLayout
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
-import eu.kanade.tachiyomi.ui.base.fragment.BaseFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import kotlinx.android.synthetic.main.fragment_library_category.*
+import kotlinx.android.synthetic.main.item_library_category.view.*
 import rx.Subscription
 import uy.kohesive.injekt.injectLazy
 
@@ -26,23 +25,33 @@ import uy.kohesive.injekt.injectLazy
  * Fragment containing the library manga for a certain category.
  * Uses R.layout.fragment_library_category.
  */
-class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemClickListener {
+class LibraryCategoryFragment @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
+: FrameLayout(context, attrs), FlexibleViewHolder.OnListItemClickListener {
 
     /**
      * Preferences.
      */
-    val preferences: PreferencesHelper by injectLazy()
+    private val preferences: PreferencesHelper by injectLazy()
+
+    /**
+     * The fragment containing this view.
+     */
+    private lateinit var fragment: LibraryFragment
+
+    /**
+     * Category for this view.
+     */
+    private lateinit var category: Category
+
+    /**
+     * Recycler view of the list of manga.
+     */
+    private lateinit var recycler: RecyclerView
 
     /**
      * Adapter to hold the manga in this category.
      */
-    lateinit var adapter: LibraryCategoryAdapter
-        private set
-
-    /**
-     * Position in the adapter from [LibraryAdapter].
-     */
-    private var position: Int = 0
+    private lateinit var adapter: LibraryCategoryAdapter
 
     /**
      * Subscription for the library manga.
@@ -54,68 +63,29 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
      */
     private var searchSubscription: Subscription? = null
 
-    companion object {
-        /**
-         * Key to save and restore [position] from a [Bundle].
-         */
-        const val POSITION_KEY = "position_key"
+    /**
+     * Subscription of the library selections.
+     */
+    private var selectionSubscription: Subscription? = null
 
-        /**
-         * Creates a new instance of this class.
-         *
-         * @param position the position in the adapter from [LibraryAdapter].
-         * @return a new instance of [LibraryCategoryFragment].
-         */
-        fun newInstance(position: Int): LibraryCategoryFragment {
-            val fragment = LibraryCategoryFragment()
-            fragment.position = position
+    fun onCreate(fragment: LibraryFragment) {
+        this.fragment = fragment
 
-            return fragment
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_library_category, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedState: Bundle?) {
-        adapter = LibraryCategoryAdapter(this)
-
-        val recycler = if (preferences.libraryAsList().getOrDefault()) {
+        recycler = if (preferences.libraryAsList().getOrDefault()) {
             (swipe_refresh.inflate(R.layout.library_list_recycler) as RecyclerView).apply {
                 layoutManager = LinearLayoutManager(context)
             }
         } else {
             (swipe_refresh.inflate(R.layout.library_grid_recycler) as AutofitRecyclerView).apply {
-                spanCount = libraryFragment.mangaPerRow
+                spanCount = fragment.mangaPerRow
             }
         }
 
-        // This crashes when opening a manga after changing categories, but then viewholders aren't
-        // recycled between pages. It may be fixed if this fragment is replaced with a custom view.
-        //(recycler.layoutManager as LinearLayoutManager).recycleChildrenOnDetach = true
-        //recycler.recycledViewPool = libraryFragment.pool
+        adapter = LibraryCategoryAdapter(this)
+
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
         swipe_refresh.addView(recycler)
-
-        if (libraryFragment.actionMode != null) {
-            setSelectionMode(FlexibleAdapter.MODE_MULTI)
-        }
-
-        searchSubscription = libraryPresenter.searchSubject.subscribe { text ->
-            adapter.searchText = text
-            adapter.updateDataSet()
-        }
-
-        if (savedState != null) {
-            position = savedState.getInt(POSITION_KEY)
-            adapter.onRestoreInstanceState(savedState)
-
-            if (adapter.mode == FlexibleAdapter.MODE_SINGLE) {
-                adapter.clearSelection()
-            }
-        }
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recycler: RecyclerView, newState: Int) {
@@ -130,36 +100,47 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
         swipe_refresh.setDistanceToTriggerSync((2 * 64 * resources.displayMetrics.density).toInt())
         swipe_refresh.setOnRefreshListener {
             if (!LibraryUpdateService.isRunning(context)) {
-                libraryPresenter.categories.getOrNull(position)?.let {
-                    LibraryUpdateService.start(context, true, it)
-                    context.toast(R.string.updating_category)
-                }
+                LibraryUpdateService.start(context, true, category)
+                context.toast(R.string.updating_category)
             }
             // It can be a very long operation, so we disable swipe refresh and show a toast.
             swipe_refresh.isRefreshing = false
         }
     }
 
-    override fun onDestroyView() {
-        searchSubscription?.unsubscribe()
-        super.onDestroyView()
-    }
+    fun onBind(category: Category) {
+        this.category = category
 
-    override fun onResume() {
-        super.onResume()
-        libraryMangaSubscription = libraryPresenter.libraryMangaSubject
+        val presenter = fragment.presenter
+
+        searchSubscription = presenter.searchSubject.subscribe { text ->
+            adapter.searchText = text
+            adapter.updateDataSet()
+        }
+
+        adapter.mode = if (presenter.selectedMangas.isNotEmpty()) {
+            FlexibleAdapter.MODE_MULTI
+        } else {
+            FlexibleAdapter.MODE_SINGLE
+        }
+
+        libraryMangaSubscription = presenter.libraryMangaSubject
                 .subscribe { onNextLibraryManga(it) }
+
+        selectionSubscription = presenter.selectionSubject
+                .subscribe { onSelectionChanged(it) }
     }
 
-    override fun onPause() {
+    fun onRecycle() {
+        adapter.setItems(emptyList())
+        adapter.clearSelection()
+    }
+
+    override fun onDetachedFromWindow() {
+        searchSubscription?.unsubscribe()
         libraryMangaSubscription?.unsubscribe()
-        super.onPause()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(POSITION_KEY, position)
-        adapter.onSaveInstanceState(outState)
-        super.onSaveInstanceState(outState)
+        selectionSubscription?.unsubscribe()
+        super.onDetachedFromWindow()
     }
 
     /**
@@ -169,17 +150,61 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
      * @param event the event received.
      */
     fun onNextLibraryManga(event: LibraryMangaEvent) {
-        // Get the categories from the parent fragment.
-        val categories = libraryFragment.adapter.categories ?: return
-
-        // When a category is deleted, the index can be greater than the number of categories.
-        if (position >= categories.size) return
-
         // Get the manga list for this category.
-        val mangaForCategory = event.getMangaForCategory(categories[position]) ?: emptyList()
+        val mangaForCategory = event.getMangaForCategory(category).orEmpty()
 
         // Update the category with its manga.
         adapter.setItems(mangaForCategory)
+
+        if (adapter.mode == FlexibleAdapter.MODE_MULTI) {
+            fragment.presenter.selectedMangas.forEach { manga ->
+                val position = adapter.indexOf(manga)
+                if (position != -1 && !adapter.isSelected(position)) {
+                    adapter.toggleSelection(position)
+                    (recycler.findViewHolderForItemId(manga.id!!) as? LibraryHolder)?.toggleActivation()
+                }
+            }
+        }
+    }
+
+    /**
+     * Subscribe to [LibrarySelectionEvent]. When an event is received, it updates the selection
+     * depending on the type of event received.
+     *
+     * @param event the selection event received.
+     */
+    private fun onSelectionChanged(event: LibrarySelectionEvent) {
+        when (event) {
+            is LibrarySelectionEvent.Selected -> {
+                if (adapter.mode != FlexibleAdapter.MODE_MULTI) {
+                    adapter.mode = FlexibleAdapter.MODE_MULTI
+                }
+                findAndToggleSelection(event.manga)
+            }
+            is LibrarySelectionEvent.Unselected -> {
+                findAndToggleSelection(event.manga)
+                if (fragment.presenter.selectedMangas.isEmpty()) {
+                    adapter.mode = FlexibleAdapter.MODE_SINGLE
+                }
+            }
+            is LibrarySelectionEvent.Cleared -> {
+                adapter.mode = FlexibleAdapter.MODE_SINGLE
+                adapter.clearSelection()
+            }
+        }
+    }
+
+    /**
+     * Toggles the selection for the given manga and updates the view if needed.
+     *
+     * @param manga the manga to toggle.
+     */
+    private fun findAndToggleSelection(manga: Manga) {
+        val position = adapter.indexOf(manga)
+        if (position != -1) {
+            adapter.toggleSelection(position)
+            (recycler.findViewHolderForItemId(manga.id!!) as? LibraryHolder)?.toggleActivation()
+        }
     }
 
     /**
@@ -191,7 +216,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
     override fun onListItemClick(position: Int): Boolean {
         // If the action mode is created and the position is valid, toggle the selection.
         val item = adapter.getItem(position) ?: return false
-        if (libraryFragment.actionMode != null) {
+        if (adapter.mode == FlexibleAdapter.MODE_MULTI) {
             toggleSelection(position)
             return true
         } else {
@@ -206,7 +231,7 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
      * @param position the position of the element clicked.
      */
     override fun onListItemLongClick(position: Int) {
-        libraryFragment.createActionModeIfNeeded()
+        fragment.createActionModeIfNeeded()
         toggleSelection(position)
     }
 
@@ -217,63 +242,24 @@ class LibraryCategoryFragment : BaseFragment(), FlexibleViewHolder.OnListItemCli
      */
     private fun openManga(manga: Manga) {
         // Notify the presenter a manga is being opened.
-        libraryPresenter.onOpenManga()
+        fragment.presenter.onOpenManga()
 
         // Create a new activity with the manga.
         val intent = MangaActivity.newIntent(context, manga)
-        startActivity(intent)
+        fragment.startActivity(intent)
     }
 
 
     /**
-     * Toggles the selection for a manga.
+     * Tells the presenter to toggle the selection for the given position.
      *
      * @param position the position to toggle.
      */
     private fun toggleSelection(position: Int) {
-        val library = libraryFragment
+        val manga = adapter.getItem(position) ?: return
 
-        // Toggle the selection.
-        adapter.toggleSelection(position, false)
-
-        // Notify the selection to the presenter.
-        library.presenter.setSelection(adapter.getItem(position), adapter.isSelected(position))
-
-        // Get the selected count.
-        val count = library.presenter.selectedMangas.size
-        if (count == 0) {
-            // Destroy action mode if there are no items selected.
-            library.destroyActionModeIfNeeded()
-        } else {
-            // Update action mode with the new selection.
-            library.setContextTitle(count)
-            library.setVisibilityOfCoverEdit(count)
-            library.invalidateActionMode()
-        }
+        fragment.presenter.setSelection(manga, !adapter.isSelected(position))
+        fragment.invalidateActionMode()
     }
-
-    /**
-     * Sets the mode for the adapter.
-     *
-     * @param mode the mode to set. It should be MODE_SINGLE or MODE_MULTI.
-     */
-    fun setSelectionMode(mode: Int) {
-        adapter.mode = mode
-        if (mode == FlexibleAdapter.MODE_SINGLE) {
-            adapter.clearSelection()
-        }
-    }
-
-    /**
-     * Property to get the library fragment.
-     */
-    private val libraryFragment: LibraryFragment
-        get() = parentFragment as LibraryFragment
-
-    /**
-     * Property to get the library presenter.
-     */
-    private val libraryPresenter: LibraryPresenter
-        get() = libraryFragment.presenter
 
 }

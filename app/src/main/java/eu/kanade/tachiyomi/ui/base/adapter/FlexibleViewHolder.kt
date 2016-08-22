@@ -27,7 +27,7 @@ abstract class FlexibleViewHolder(view: View,
         return true
     }
 
-    protected fun toggleActivation() {
+    fun toggleActivation() {
         itemView.isActivated = adapter.isSelected(adapterPosition)
     }
 
