@@ -64,7 +64,7 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
      * @param page the page object to be filled.
      * @param query the search query.
      */
-    override fun searchMangaParse(response: Response, page: MangasPage, query: String) {
+    override fun searchMangaParse(response: Response, page: MangasPage, query: String, filters: List<Filter>) {
         val document = response.asJsoup()
         for (element in document.select(searchMangaSelector())) {
             Manga.create(id).apply {
@@ -179,5 +179,4 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
      * @param document the parsed document.
      */
     abstract protected fun imageUrlParse(document: Document): String
-
 }

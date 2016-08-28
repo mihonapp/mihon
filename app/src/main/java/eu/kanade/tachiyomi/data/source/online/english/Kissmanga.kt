@@ -42,22 +42,34 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
 
     override fun popularMangaNextPageSelector() = "li > a:contains(› Next)"
 
-    override fun searchMangaRequest(page: MangasPage, query: String): Request {
+    override fun searchMangaRequest(page: MangasPage, query: String, filters: List<Filter>): Request {
         if (page.page == 1) {
-            page.url = searchMangaInitialUrl(query)
+            page.url = searchMangaInitialUrl(query, filters)
         }
 
         val form = FormBody.Builder().apply {
             add("authorArtist", "")
             add("mangaName", query)
             add("status", "")
-            add("genres", "")
-        }.build()
+        }
 
-        return POST(page.url, headers, form)
+        val filterIndexes = filters.map { it.id.toInt() }
+        val maxFilterIndex = filterIndexes.max()
+
+        if (maxFilterIndex !== null) {
+            for (i in 0..maxFilterIndex) {
+                form.add("genres", if (filterIndexes.contains(i)) {
+                    "1"
+                } else {
+                    "0"
+                })
+            }
+        }
+
+        return POST(page.url, headers, form.build())
     }
 
-    override fun searchMangaInitialUrl(query: String) = "$baseUrl/AdvanceSearch"
+    override fun searchMangaInitialUrl(query: String, filters: List<Filter>) = "$baseUrl/AdvanceSearch"
 
     override fun searchMangaSelector() = popularMangaSelector()
 
@@ -73,7 +85,7 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
         manga.author = infoElement.select("p:has(span:contains(Author:)) > a").first()?.text()
         manga.genre = infoElement.select("p:has(span:contains(Genres:)) > *:gt(0)").text()
         manga.description = infoElement.select("p:has(span:contains(Summary:)) ~ p").text()
-        manga.status = infoElement.select("p:has(span:contains(Status:))").first()?.text().orEmpty().let { parseStatus(it)}
+        manga.status = infoElement.select("p:has(span:contains(Status:))").first()?.text().orEmpty().let { parseStatus(it) }
         manga.thumbnail_url = document.select(".rightBox:eq(0) img").first()?.attr("src")
     }
 
@@ -109,10 +121,59 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
     }
 
     // Not used
-    override fun pageListParse(document: Document, pages: MutableList<Page>) {}
+    override fun pageListParse(document: Document, pages: MutableList<Page>) {
+    }
 
     override fun imageUrlRequest(page: Page) = GET(page.url)
 
     override fun imageUrlParse(document: Document) = ""
 
+    // $("select[name=\"genres\"]").map((i,el) => `Filter("${i}", "${$(el).next().text().trim()}")`).get().join(',\n')
+    // on http://kissmanga.com/AdvanceSearch
+    override fun getFilterList(): List<Filter> = listOf(
+            Filter("0", "Action"),
+            Filter("1", "Adult"),
+            Filter("2", "Adventure"),
+            Filter("3", "Comedy"),
+            Filter("4", "Comic"),
+            Filter("5", "Cooking"),
+            Filter("6", "Doujinshi"),
+            Filter("7", "Drama"),
+            Filter("8", "Ecchi"),
+            Filter("9", "Fantasy"),
+            Filter("10", "Gender Bender"),
+            Filter("11", "Harem"),
+            Filter("12", "Historical"),
+            Filter("13", "Horror"),
+            Filter("14", "Josei"),
+            Filter("15", "Lolicon"),
+            Filter("16", "Manga"),
+            Filter("17", "Manhua"),
+            Filter("18", "Manhwa"),
+            Filter("19", "Martial Arts"),
+            Filter("20", "Mature"),
+            Filter("21", "Mecha"),
+            Filter("22", "Medical"),
+            Filter("23", "Music"),
+            Filter("24", "Mystery"),
+            Filter("25", "One shot"),
+            Filter("26", "Psychological"),
+            Filter("27", "Romance"),
+            Filter("28", "School Life"),
+            Filter("29", "Sci-fi"),
+            Filter("30", "Seinen"),
+            Filter("31", "Shotacon"),
+            Filter("32", "Shoujo"),
+            Filter("33", "Shoujo Ai"),
+            Filter("34", "Shounen"),
+            Filter("35", "Shounen Ai"),
+            Filter("36", "Slice of Life"),
+            Filter("37", "Smut"),
+            Filter("38", "Sports"),
+            Filter("39", "Supernatural"),
+            Filter("40", "Tragedy"),
+            Filter("41", "Webtoon"),
+            Filter("42", "Yaoi"),
+            Filter("43", "Yuri")
+    )
 }

@@ -47,5 +47,4 @@ interface Source {
      * @param page the page.
      */
     fun fetchImage(page: Page): Observable<Page>
-
 }
