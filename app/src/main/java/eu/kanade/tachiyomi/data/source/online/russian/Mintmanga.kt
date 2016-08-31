@@ -24,7 +24,8 @@ class Mintmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
 
     override fun popularMangaInitialUrl() = "$baseUrl/list?sortType=rate"
 
-    override fun searchMangaInitialUrl(query: String, filters: List<Filter>) = "$baseUrl/search?q=$query"
+    override fun searchMangaInitialUrl(query: String, filters: List<Filter>) =
+            "$baseUrl/search?q=$query&${filters.map { it.id + "=in" }.joinToString("&")}"
 
     override fun popularMangaSelector() = "div.desc"
 
@@ -43,7 +44,8 @@ class Mintmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
         popularMangaFromElement(element, manga)
     }
 
-    override fun searchMangaNextPageSelector() = popularMangaNextPageSelector()
+    // max 200 results
+    override fun searchMangaNextPageSelector() = null
 
     override fun mangaDetailsParse(document: Document, manga: Manga) {
         val infoElement = document.select("div.leftContent").first()
@@ -99,4 +101,54 @@ class Mintmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
     override fun pageListParse(document: Document, pages: MutableList<Page>) { }
 
     override fun imageUrlParse(document: Document) = ""
+
+    /* [...document.querySelectorAll("tr.advanced_option:nth-child(1) > td:nth-child(3) span.js-link")].map((el,i) => {
+    * const onClick=el.getAttribute('onclick');const id=onClick.substr(31,onClick.length-33);
+    * return `Filter("${id}", "${el.textContent.trim()}")` }).join(',\n')
+    * on http://mintmanga.com/search
+    */
+    override fun getFilterList(): List<Filter> = listOf(
+            Filter("el_2220", "арт"),
+            Filter("el_1353", "бара"),
+            Filter("el_1346", "боевик"),
+            Filter("el_1334", "боевые искусства"),
+            Filter("el_1339", "вампиры"),
+            Filter("el_1333", "гарем"),
+            Filter("el_1347", "гендерная интрига"),
+            Filter("el_1337", "героическое фэнтези"),
+            Filter("el_1343", "детектив"),
+            Filter("el_1349", "дзёсэй"),
+            Filter("el_1332", "додзинси"),
+            Filter("el_1310", "драма"),
+            Filter("el_5229", "игра"),
+            Filter("el_1311", "история"),
+            Filter("el_1351", "киберпанк"),
+            Filter("el_1328", "комедия"),
+            Filter("el_1318", "меха"),
+            Filter("el_1324", "мистика"),
+            Filter("el_1325", "научная фантастика"),
+            Filter("el_1327", "повседневность"),
+            Filter("el_1342", "постапокалиптика"),
+            Filter("el_1322", "приключения"),
+            Filter("el_1335", "психология"),
+            Filter("el_1313", "романтика"),
+            Filter("el_1316", "самурайский боевик"),
+            Filter("el_1350", "сверхъестественное"),
+            Filter("el_1314", "сёдзё"),
+            Filter("el_1320", "сёдзё-ай"),
+            Filter("el_1326", "сёнэн"),
+            Filter("el_1330", "сёнэн-ай"),
+            Filter("el_1321", "спорт"),
+            Filter("el_1329", "сэйнэн"),
+            Filter("el_1344", "трагедия"),
+            Filter("el_1341", "триллер"),
+            Filter("el_1317", "ужасы"),
+            Filter("el_1331", "фантастика"),
+            Filter("el_1323", "фэнтези"),
+            Filter("el_1319", "школа"),
+            Filter("el_1340", "эротика"),
+            Filter("el_1354", "этти"),
+            Filter("el_1315", "юри"),
+            Filter("el_1336", "яой")
+    )
 }
