@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.source.online.english
 
 import android.content.Context
+import android.util.Log
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.EN
@@ -34,8 +35,7 @@ class Mangahere(context: Context, override val id: Int) : ParsedOnlineSource(con
 
     override fun popularMangaNextPageSelector() = "div.next-page > a.next"
 
-    override fun searchMangaInitialUrl(query: String, filters: List<Filter>) =
-            "$baseUrl/search.php?name=$query&page=1&sort=views&order=za"
+    override fun searchMangaInitialUrl(query: String, filters: List<Filter>) = "$baseUrl/search.php?name=$query&page=1&sort=views&order=za&${filters.map { it.id + "=1" }.joinToString("&")}&advopts=1"
 
     override fun searchMangaSelector() = "div.result_search > dl:has(dt)"
 
@@ -110,4 +110,40 @@ class Mangahere(context: Context, override val id: Int) : ParsedOnlineSource(con
 
     override fun imageUrlParse(document: Document) = document.getElementById("image").attr("src")
 
+    // [...document.querySelectorAll("select[id^='genres'")].map((el,i) => `Filter("${el.getAttribute('name')}", "${el.nextSibling.nextSibling.textContent.trim()}")`).join(',\n')
+    // http://www.mangahere.co/advsearch.htm
+    override fun getFilterList(): List<Filter> = listOf(
+            Filter("genres[Action]", "Action"),
+            Filter("genres[Adventure]", "Adventure"),
+            Filter("genres[Comedy]", "Comedy"),
+            Filter("genres[Doujinshi]", "Doujinshi"),
+            Filter("genres[Drama]", "Drama"),
+            Filter("genres[Ecchi]", "Ecchi"),
+            Filter("genres[Fantasy]", "Fantasy"),
+            Filter("genres[Gender Bender]", "Gender Bender"),
+            Filter("genres[Harem]", "Harem"),
+            Filter("genres[Historical]", "Historical"),
+            Filter("genres[Horror]", "Horror"),
+            Filter("genres[Josei]", "Josei"),
+            Filter("genres[Martial Arts]", "Martial Arts"),
+            Filter("genres[Mature]", "Mature"),
+            Filter("genres[Mecha]", "Mecha"),
+            Filter("genres[Mystery]", "Mystery"),
+            Filter("genres[One Shot]", "One Shot"),
+            Filter("genres[Psychological]", "Psychological"),
+            Filter("genres[Romance]", "Romance"),
+            Filter("genres[School Life]", "School Life"),
+            Filter("genres[Sci-fi]", "Sci-fi"),
+            Filter("genres[Seinen]", "Seinen"),
+            Filter("genres[Shoujo]", "Shoujo"),
+            Filter("genres[Shoujo Ai]", "Shoujo Ai"),
+            Filter("genres[Shounen]", "Shounen"),
+            Filter("genres[Shounen Ai]", "Shounen Ai"),
+            Filter("genres[Slice of Life]", "Slice of Life"),
+            Filter("genres[Sports]", "Sports"),
+            Filter("genres[Supernatural]", "Supernatural"),
+            Filter("genres[Tragedy]", "Tragedy"),
+            Filter("genres[Yaoi]", "Yaoi"),
+            Filter("genres[Yuri]", "Yuri")
+    )
 }

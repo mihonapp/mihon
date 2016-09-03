@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.data.source.online.ParsedOnlineSource
+import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.nodes.Document
@@ -27,6 +28,14 @@ class Readmangatoday(context: Context, override val id: Int) : ParsedOnlineSourc
 
     override val client: OkHttpClient get() = network.cloudflareClient
 
+    /**
+     * Search only returns data with this set
+     */
+    override fun headersBuilder() = Headers.Builder().apply {
+        add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64)")
+        add("X-Requested-With", "XMLHttpRequest")
+    }
+
     override fun popularMangaInitialUrl() = "$baseUrl/hot-manga/"
 
     override fun popularMangaSelector() = "div.hot-manga > div.style-list > div.box"
@@ -41,7 +50,7 @@ class Readmangatoday(context: Context, override val id: Int) : ParsedOnlineSourc
     override fun popularMangaNextPageSelector() = "div.hot-manga > ul.pagination > li > a:contains(»)"
 
     override fun searchMangaInitialUrl(query: String, filters: List<Filter>) =
-            "$baseUrl/search"
+            "$baseUrl/service/advanced_search"
 
 
     override fun searchMangaRequest(page: MangasPage, query: String, filters: List<OnlineSource.Filter>): Request {
@@ -50,12 +59,17 @@ class Readmangatoday(context: Context, override val id: Int) : ParsedOnlineSourc
         }
 
         val builder = okhttp3.FormBody.Builder()
-        builder.add("query", query)
+        builder.add("manga-name", query)
+        builder.add("type", "all")
+        builder.add("status", "both")
+        for (filter in filters) {
+            builder.add("include[]", filter.id)
+        }
 
         return POST(page.url, headers, builder.build())
     }
 
-    override fun searchMangaSelector() = "div.content-list > div.style-list > div.box"
+    override fun searchMangaSelector() = "div.style-list > div.box"
 
     override fun searchMangaFromElement(element: Element, manga: Manga) {
         element.select("div.title > h2 > a").first().let {
@@ -129,4 +143,43 @@ class Readmangatoday(context: Context, override val id: Int) : ParsedOnlineSourc
 
     override fun imageUrlParse(document: Document) = document.select("img.img-responsive-2").first().attr("src")
 
+    // [...document.querySelectorAll("ul.manga-cat span")].map(el => `Filter("${el.getAttribute('data-id')}", "${el.nextSibling.textContent.trim()}")`).join(',\n')
+    // http://www.readmanga.today/advanced-search
+    override fun getFilterList(): List<Filter> = listOf(
+            Filter("2", "Action"),
+            Filter("4", "Adventure"),
+            Filter("5", "Comedy"),
+            Filter("6", "Doujinshi"),
+            Filter("7", "Drama"),
+            Filter("8", "Ecchi"),
+            Filter("9", "Fantasy"),
+            Filter("10", "Gender Bender"),
+            Filter("11", "Harem"),
+            Filter("12", "Historical"),
+            Filter("13", "Horror"),
+            Filter("14", "Josei"),
+            Filter("15", "Lolicon"),
+            Filter("16", "Martial Arts"),
+            Filter("17", "Mature"),
+            Filter("18", "Mecha"),
+            Filter("19", "Mystery"),
+            Filter("20", "One shot"),
+            Filter("21", "Psychological"),
+            Filter("22", "Romance"),
+            Filter("23", "School Life"),
+            Filter("24", "Sci-fi"),
+            Filter("25", "Seinen"),
+            Filter("26", "Shotacon"),
+            Filter("27", "Shoujo"),
+            Filter("28", "Shoujo Ai"),
+            Filter("29", "Shounen"),
+            Filter("30", "Shounen Ai"),
+            Filter("31", "Slice of Life"),
+            Filter("32", "Smut"),
+            Filter("33", "Sports"),
+            Filter("34", "Supernatural"),
+            Filter("35", "Tragedy"),
+            Filter("36", "Yaoi"),
+            Filter("37", "Yuri")
+    )
 }

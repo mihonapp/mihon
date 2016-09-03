@@ -48,7 +48,7 @@ class Mangasee(context: Context, override val id: Int) : ParsedOnlineSource(cont
     override fun popularMangaNextPageSelector() = "ul.pagination > li > a:contains(Next)"
 
     override fun searchMangaInitialUrl(query: String, filters: List<Filter>) =
-            "$baseUrl/advanced-search/result.php?sortBy=alphabet&direction=ASC&textOnly=no&resPerPage=20&page=1&seriesName=$query"
+            "$baseUrl/advanced-search/result.php?sortBy=alphabet&direction=ASC&textOnly=no&resPerPage=20&page=1&seriesName=$query&${filters.map { it.id + "=Yes" }.joinToString("&")}"
 
     override fun searchMangaSelector() = "div.row > div > div > div > h1"
 
@@ -122,4 +122,44 @@ class Mangasee(context: Context, override val id: Int) : ParsedOnlineSource(cont
 
     override fun imageUrlParse(document: Document) = document.select("div > a > img").attr("src")
 
+    // [...document.querySelectorAll("label.triStateCheckBox input")].map(el => `Filter("${el.getAttribute('name')}", "${el.nextSibling.textContent.trim()}")`).join(',\n')
+    // http://mangasee.co/advanced-search/
+    override fun getFilterList(): List<Filter> = listOf(
+            Filter("Action", "Action"),
+            Filter("Adult", "Adult"),
+            Filter("Adventure", "Adventure"),
+            Filter("Comedy", "Comedy"),
+            Filter("Doujinshi", "Doujinshi"),
+            Filter("Drama", "Drama"),
+            Filter("Ecchi", "Ecchi"),
+            Filter("Fantasy", "Fantasy"),
+            Filter("Gender_Bender", "Gender Bender"),
+            Filter("Harem", "Harem"),
+            Filter("Hentai", "Hentai"),
+            Filter("Historical", "Historical"),
+            Filter("Horror", "Horror"),
+            Filter("Josei", "Josei"),
+            Filter("Lolicon", "Lolicon"),
+            Filter("Martial_Arts", "Martial Arts"),
+            Filter("Mature", "Mature"),
+            Filter("Mecha", "Mecha"),
+            Filter("Mystery", "Mystery"),
+            Filter("Psychological", "Psychological"),
+            Filter("Romance", "Romance"),
+            Filter("School_Life", "School Life"),
+            Filter("Sci-fi", "Sci-fi"),
+            Filter("Seinen", "Seinen"),
+            Filter("Shotacon", "Shotacon"),
+            Filter("Shoujo", "Shoujo"),
+            Filter("Shoujo_Ai", "Shoujo Ai"),
+            Filter("Shounen", "Shounen"),
+            Filter("Shounen_Ai", "Shounen Ai"),
+            Filter("Slice_of_Life", "Slice of Life"),
+            Filter("Smut", "Smut"),
+            Filter("Sports", "Sports"),
+            Filter("Supernatural", "Supernatural"),
+            Filter("Tragedy", "Tragedy"),
+            Filter("Yaoi", "Yaoi"),
+            Filter("Yuri", "Yuri")
+    )
 }
