@@ -25,25 +25,20 @@
 
         <PreferenceCategory
             android:persistent="false"
-            android:title="@string/cat_remove_after_read"/>
+            android:title="@string/pref_remove_after_read" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_remove_after_marked_as_read_key"
             android:title="@string/pref_remove_after_marked_as_read"/>
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/pref_remove_after_read_key"
-            android:summary="@string/current_chapter"
-            android:title="@string/pref_remove_after_read"/>
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:dependency="@string/pref_remove_after_read_key"
-            android:key="@string/pref_remove_after_read_previous_key"
-            android:summary="@string/previous_chapter"
-            android:title="@string/pref_remove_after_read"/>
+        <eu.kanade.tachiyomi.widget.preference.IntListPreference
+            android:defaultValue="-1"
+            android:entries="@array/remove_after_read_slots"
+            android:entryValues="@array/remove_after_read_slots_values"
+            android:key="@string/pref_remove_after_read_slots_key"
+            android:summary="%s"
+            android:title="@string/pref_remove_after_read" />
 
     </PreferenceScreen>
 

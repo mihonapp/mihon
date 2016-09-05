@@ -66,9 +66,7 @@ class PreferenceKeys(context: Context) {
 
     val downloadOnlyOverWifi = context.getString(R.string.pref_download_only_over_wifi_key)
 
-    val removeAfterRead = context.getString(R.string.pref_remove_after_read_key)
-
-    val removeAfterReadPrevious = context.getString(R.string.pref_remove_after_read_previous_key)
+    val removeAfterReadSlots = context.getString(R.string.pref_remove_after_read_slots_key)
 
     val removeAfterMarkedAsRead = context.getString(R.string.pref_remove_after_marked_as_read_key)
 
