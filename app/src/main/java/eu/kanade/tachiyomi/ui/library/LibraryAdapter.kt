@@ -77,10 +77,12 @@ class LibraryAdapter(private val fragment: LibraryFragment) : RecyclerViewPagerA
     }
 
     /**
-     * Returns the position of the item. Always assume the position has changed.
+     * Returns the position of the view.
      */
-    override fun getItemPosition(`object`: Any?): Int {
-        return POSITION_NONE
+    override fun getItemPosition(obj: Any?): Int {
+        val view = obj as? LibraryCategoryView ?: return POSITION_NONE
+        val index = categories.indexOfFirst { it.id == view.category.id }
+        return if (index == -1) POSITION_NONE else index
     }
 
 }

@@ -41,7 +41,8 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     /**
      * Category for this view.
      */
-    private lateinit var category: Category
+    lateinit var category: Category
+        private set
 
     /**
      * Recycler view of the list of manga.
