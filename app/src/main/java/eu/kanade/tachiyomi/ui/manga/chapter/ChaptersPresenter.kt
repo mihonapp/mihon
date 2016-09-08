@@ -111,7 +111,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         startableLatestCache(CHAPTER_STATUS_CHANGES,
                 { getChapterStatusObservable() },
                 { view, download -> view.onChapterStatusChange(download) },
-                { view, error -> Timber.e(error.cause, error.message) })
+                { view, error -> Timber.e(error) })
 
         // Find the active manga from the shared data or return.
         manga = SharedData.get(MangaEvent::class.java)?.manga ?: return

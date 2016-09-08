@@ -213,7 +213,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     fun onChapterError(error: Throwable) {
-        Timber.e(error, error.message)
+        Timber.e(error)
         finish()
         toast(error.message)
     }

@@ -253,7 +253,7 @@ class RecentChaptersFragment
      */
     fun onChaptersDeletedError(error: Throwable) {
         dismissDeletingDialog()
-        Timber.e(error, error.message)
+        Timber.e(error)
     }
 
     /**

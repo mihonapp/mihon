@@ -143,7 +143,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
                 .subscribeReplay({ view, page ->
                     view.onAddPage(page.page, page.mangas)
                 }, { view, error ->
-                    Timber.e(error, error.message)
+                    Timber.e(error)
                 })
 
         // Request first page.
@@ -211,7 +211,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
                     @Suppress("DEPRECATION")
                     view?.onMangaInitialized(manga)
                 }, { error ->
-                    Timber.e(error, error.message)
+                    Timber.e(error)
                 })
                 .apply { add(this) }
     }

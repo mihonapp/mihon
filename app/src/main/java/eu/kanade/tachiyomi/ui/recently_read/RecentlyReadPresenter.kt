@@ -115,7 +115,7 @@ class RecentlyReadPresenter : BasePresenter<RecentlyReadFragment>() {
                 .subscribeFirst({ view, chapter ->
                     view.onOpenNextChapter(chapter, manga)
                 }, { view, error ->
-                    Timber.e(error, error.message)
+                    Timber.e(error)
                 })
     }
 

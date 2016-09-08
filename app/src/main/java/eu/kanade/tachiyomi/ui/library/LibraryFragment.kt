@@ -427,7 +427,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                     }
                 } catch (error: IOException) {
                     context.toast(R.string.notification_manga_update_failed)
-                    Timber.e(error, error.message)
+                    Timber.e(error)
                 }
             }
 

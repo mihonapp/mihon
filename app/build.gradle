@@ -83,7 +83,7 @@ android {
 dependencies {
 
     // Modified dependencies
-    compile 'com.github.inorichi:subsampling-scale-image-view:421fb81'
+    compile 'com.github.inorichi:subsampling-scale-image-view:2d9c854'
     compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
     // Android support library
@@ -100,7 +100,7 @@ dependencies {
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'io.reactivex:rxjava:1.1.10'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
 
     // Network client
@@ -113,7 +113,7 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
     // IO
-    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.squareup.okio:okio:1.10.0'
 
     // JSON
     compile 'com.google.code.gson:gson:2.7'
@@ -151,7 +151,7 @@ dependencies {
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
 
     // Logging
-    compile 'com.jakewharton.timber:timber:4.1.2'
+    compile 'com.jakewharton.timber:timber:4.3.0'
 
     // Crash reports
     compile 'ch.acra:acra:4.9.0'

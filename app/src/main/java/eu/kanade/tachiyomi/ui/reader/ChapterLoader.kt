@@ -42,9 +42,9 @@ class ChapterLoader(
                 .repeat()
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                }, {
-                    if (it !is InterruptedException) {
-                        Timber.e(it, it.message)
+                }, { error ->
+                    if (error !is InterruptedException) {
+                        Timber.e(error)
                     }
                 })
     }

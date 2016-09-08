@@ -133,7 +133,7 @@ class SettingsAboutFragment : SettingsFragment() {
                         }
                     }
                 }, { error ->
-                    Timber.e(error, error.message)
+                    Timber.e(error)
                 })
     }
 

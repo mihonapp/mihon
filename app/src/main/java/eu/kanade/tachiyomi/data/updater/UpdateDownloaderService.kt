@@ -121,8 +121,8 @@ class UpdateDownloaderService : IntentService(UpdateDownloaderService::class.jav
                         UpdateNotificationReceiver.cancelNotificationIntent(ctx))
             }
 
-        } catch (e: Exception) {
-            Timber.e(e, e.message)
+        } catch (error: Exception) {
+            Timber.e(error)
 
             // Prompt the user to retry the download.
             NotificationCompat.Builder(this).update {

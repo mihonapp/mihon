@@ -332,7 +332,7 @@ class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHold
      */
     fun onAddPageError(error: Throwable) {
         hideProgressBar()
-        Timber.e(error, error.message)
+        Timber.e(error)
 
         catalogue_view.snack(error.message ?: "", Snackbar.LENGTH_INDEFINITE) {
             setAction(R.string.action_retry) {

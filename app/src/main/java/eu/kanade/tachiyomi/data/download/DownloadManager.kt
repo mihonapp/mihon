@@ -80,10 +80,10 @@ class DownloadManager(
                     if (areAllDownloadsFinished()) {
                         DownloadService.stop(context)
                     }
-                }, { e ->
+                }, { error ->
                     DownloadService.stop(context)
-                    Timber.e(e, e.message)
-                    downloadNotifier.onError(e.message)
+                    Timber.e(error)
+                    downloadNotifier.onError(error.message)
                 })
 
         if (!isRunning) {
@@ -369,8 +369,8 @@ class DownloadManager(
             try {
                 it.write(gson.toJson(pages).toByteArray())
                 it.flush()
-            } catch (e: Exception) {
-                Timber.e(e, e.message)
+            } catch (error: Exception) {
+                Timber.e(error)
             }
         }
     }

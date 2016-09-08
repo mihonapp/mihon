@@ -376,7 +376,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     fun onChaptersDeletedError(error: Throwable) {
         dismissDeletingDialog()
-        Timber.e(error, error.message)
+        Timber.e(error)
     }
 
     fun dismissDeletingDialog() {

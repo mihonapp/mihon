@@ -121,9 +121,9 @@ class BackupFragment : BaseRxFragment<BackupPresenter>() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         presenter.restoreBackup(it)
-                    }, {
-                        context.toast(it.message)
-                        Timber.e(it, it.message)
+                    }, { error ->
+                        context.toast(error.message)
+                        Timber.e(error)
                     })
                     .apply { subscriptions.add(this) }
 

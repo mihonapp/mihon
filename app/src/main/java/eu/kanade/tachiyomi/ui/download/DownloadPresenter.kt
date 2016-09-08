@@ -35,7 +35,7 @@ class DownloadPresenter : BasePresenter<DownloadFragment>() {
                 .subscribeLatestCache({ view, downloads ->
                     view.onNextDownloads(downloads)
                 }, { view, error ->
-                    Timber.e(error, error.message)
+                    Timber.e(error)
                 })
     }
 

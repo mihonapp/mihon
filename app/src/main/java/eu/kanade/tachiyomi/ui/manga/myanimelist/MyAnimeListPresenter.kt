@@ -102,7 +102,7 @@ class MyAnimeListPresenter : BasePresenter<MyAnimeListFragment>() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ next -> },
                             { error ->
-                                Timber.e(error, error.message)
+                                Timber.e(error)
                                 // Restart on error to set old values
                                 start(GET_MANGA_SYNC)
                             }))
