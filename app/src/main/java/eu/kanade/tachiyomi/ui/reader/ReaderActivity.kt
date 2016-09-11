@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
@@ -308,15 +309,18 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         return fragment
     }
 
-    fun onPageChanged(currentPageIndex: Int, totalPages: Int) {
-        val page = currentPageIndex + 1
-        page_number.text = "$page/$totalPages"
+    fun onPageChanged(page: Page) {
+        presenter.onPageChanged(page)
+
+        val pageNumber = page.pageNumber + 1
+        val pageCount = page.chapter.pages!!.size
+        page_number.text = "$pageNumber/$pageCount"
         if (page_seekbar.rotation != 180f) {
-            left_page_text.text = "$page"
+            left_page_text.text = "$pageNumber"
         } else {
-            right_page_text.text = "$page"
+            right_page_text.text = "$pageNumber"
         }
-        page_seekbar.progress = currentPageIndex
+        page_seekbar.progress = page.pageNumber
     }
 
     fun gotoPageInCurrentChapter(pageIndex: Int) {
@@ -326,7 +330,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 val requestedPage = activePage.chapter.pages!![pageIndex]
                 it.setActivePage(requestedPage)
             }
-
         }
     }
 

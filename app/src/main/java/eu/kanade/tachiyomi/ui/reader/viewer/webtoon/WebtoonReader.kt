@@ -177,7 +177,7 @@ class WebtoonReader : BaseReader() {
         if (pages.isNotEmpty()) {
             adapter.pages = pages
             recycler.adapter = adapter
-            updatePageNumber()
+            onPageChanged(currentPage)
         }
     }
 

@@ -219,8 +219,11 @@ abstract class PagerReader : BaseReader() {
     protected fun setPagesOnAdapter() {
         if (pages.isNotEmpty()) {
             adapter.pages = pages
-            setActivePage(currentPage)
-            updatePageNumber()
+            if (currentPage == pager.currentItem) {
+                onPageChanged(currentPage)
+            } else {
+                setActivePage(currentPage)
+            }
         }
     }
 
