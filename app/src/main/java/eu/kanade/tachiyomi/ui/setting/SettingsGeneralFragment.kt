@@ -84,10 +84,16 @@ class SettingsGeneralFragment : SettingsFragment(),
 
         subscriptions += preferences.libraryUpdateCategories().asObservable()
                 .subscribe {
-                    categoryUpdate.summary = it
+                    val selectedCategories = it
                             .mapNotNull { id -> dbCategories.find { it.id == id.toInt() } }
                             .sortedBy { it.order }
-                            .joinToString { it.name }
+
+                    val summary = if (selectedCategories.isEmpty())
+                        getString(R.string.all)
+                    else
+                        selectedCategories.joinToString { it.name }
+
+                    categoryUpdate.summary = summary
                 }
 
         themePreference.setOnPreferenceChangeListener { preference, newValue ->
