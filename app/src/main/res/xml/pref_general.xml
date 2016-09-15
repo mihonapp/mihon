@@ -37,15 +37,15 @@
             android:title="@string/pref_library_update_interval"/>
 
         <MultiSelectListPreference
-            android:key="@string/pref_library_update_categories_key"
-            android:title="@string/pref_library_update_categories"/>
-
-        <MultiSelectListPreference
             android:entries="@array/library_update_restrictions"
             android:entryValues="@array/library_update_restrictions_values"
             android:key="@string/pref_library_update_restriction_key"
             android:summary="@string/pref_library_update_restriction_summary"
             android:title="@string/pref_library_update_restriction" />
+
+        <MultiSelectListPreference
+            android:key="@string/pref_library_update_categories_key"
+            android:title="@string/pref_library_update_categories"/>
 
         <SwitchPreference
             android:defaultValue="false"
