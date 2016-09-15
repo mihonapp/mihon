@@ -21,6 +21,7 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.*
@@ -349,38 +350,42 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
         val pages = chapter.pages ?: return
 
-        Observable
-                .fromCallable {
-                    // Chapters with 1 page don't trigger page changes, so mark them as read.
-                    if (pages.size == 1) {
-                        chapter.read = true
-                    }
+        Observable.fromCallable {
+            // Chapters with 1 page don't trigger page changes, so mark them as read.
+            if (pages.size == 1) {
+                chapter.read = true
+            }
 
-                    // Cache current page list progress for online chapters to allow a faster reopen
-                    if (!chapter.isDownloaded) {
-                        source.let { if (it is OnlineSource) it.savePageList(chapter, pages) }
-                    }
+            // Cache current page list progress for online chapters to allow a faster reopen
+            if (!chapter.isDownloaded) {
+                source.let { if (it is OnlineSource) it.savePageList(chapter, pages) }
+            }
 
-                    if (chapter.read) {
-                        val removeAfterReadSlots = prefs.removeAfterReadSlots()
-                        when (removeAfterReadSlots) {
-                        // Setting disabled
-                            -1 -> { /**Empty function**/ }
-                        // Remove current read chapter
-                            0 -> deleteChapter(chapter, manga)
-                        // Remove previous chapter specified by user in settings.
-                            else -> getAdjacentChaptersStrategy(chapter, removeAfterReadSlots)
-                                    .first?.let { deleteChapter(it, manga) }
-                        }
-                    }
-
-                    db.updateChapterProgress(chapter).executeAsBlocking()
-
-                    val history = History.create(chapter).apply { last_read = Date().time }
-                    db.updateHistoryLastRead(history).executeAsBlocking()
+            if (chapter.read) {
+                val removeAfterReadSlots = prefs.removeAfterReadSlots()
+                when (removeAfterReadSlots) {
+                // Setting disabled
+                    -1 -> { /**Empty function**/ }
+                // Remove current read chapter
+                    0 -> deleteChapter(chapter, manga)
+                // Remove previous chapter specified by user in settings.
+                    else -> getAdjacentChaptersStrategy(chapter, removeAfterReadSlots)
+                            .first?.let { deleteChapter(it, manga) }
                 }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            }
+
+            db.updateChapterProgress(chapter).executeAsBlocking()
+
+            try {
+                val history = History.create(chapter).apply { last_read = Date().time }
+                db.updateHistoryLastRead(history).executeAsBlocking()
+            } catch (error: Exception) {
+                // TODO find out why it crashes
+                Timber.e(error)
+            }
+        }
+        .subscribeOn(Schedulers.io())
+        .subscribe()
     }
 
     /**
