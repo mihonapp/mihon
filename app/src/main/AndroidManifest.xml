@@ -60,6 +60,15 @@
             android:exported="false"/>
 
         <service
+            android:name=".data.library.LibraryUpdateTrigger"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
+            <intent-filter>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+            </intent-filter>
+        </service>
+
+        <service
             android:name=".data.updater.UpdateCheckerService"
             android:exported="true"
             android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
@@ -74,31 +83,7 @@
         <receiver android:name=".data.updater.UpdateNotificationReceiver"/>
 
         <receiver
-            android:name=".data.library.LibraryUpdateService$SyncOnConnectionAvailable"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".data.library.LibraryUpdateService$SyncOnPowerConnected"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
             android:name=".data.library.LibraryUpdateService$CancelUpdateReceiver">
-        </receiver>
-
-        <receiver
-            android:name=".data.library.LibraryUpdateAlarm">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="eu.kanade.UPDATE_LIBRARY" />
-            </intent-filter>
         </receiver>
 
         <meta-data

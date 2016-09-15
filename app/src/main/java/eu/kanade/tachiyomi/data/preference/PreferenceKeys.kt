@@ -74,6 +74,8 @@ class PreferenceKeys(context: Context) {
 
     val libraryUpdateRestriction = context.getString(R.string.pref_library_update_restriction_key)
 
+    val libraryUpdateCategories = context.getString(R.string.pref_library_update_categories_key)
+
     val filterDownloaded = context.getString(R.string.pref_filter_downloaded_key)
 
     val filterUnread = context.getString(R.string.pref_filter_unread_key)

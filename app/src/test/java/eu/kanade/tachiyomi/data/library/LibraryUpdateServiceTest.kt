@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.library
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner
@@ -93,7 +94,8 @@ class LibraryUpdateServiceTest {
         `when`(source.fetchChapterList(favManga[1])).thenReturn(Observable.error<List<Chapter>>(Exception()))
         `when`(source.fetchChapterList(favManga[2])).thenReturn(Observable.just(chapters3))
 
-        service.updateMangaList(service.getMangaToUpdate(null)).subscribe()
+        val intent = Intent()
+        service.updateMangaList(service.getMangaToUpdate(intent)).subscribe()
 
         // There are 3 network attempts and 2 insertions (1 request failed)
         assertThat(service.db.getChapters(favManga[0]).executeAsBlocking()).hasSize(2)

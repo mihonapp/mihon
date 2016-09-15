@@ -14,6 +14,7 @@
     <string name="pref_library_columns_portrait_key">pref_library_columns_portrait_key</string>
     <string name="pref_library_columns_landscape_key">pref_library_columns_landscape_key</string>
     <string name="pref_library_update_interval_key">pref_library_update_interval_key</string>
+    <string name="pref_library_update_categories_key">library_update_categories</string>
     <string name="pref_update_only_non_completed_key">pref_update_only_non_completed_key</string>
     <string name="pref_auto_update_manga_sync_key">pref_auto_update_manga_sync_key</string>
     <string name="pref_ask_update_manga_sync_key">pref_ask_update_manga_sync_key</string>
