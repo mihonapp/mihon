@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.widget.preference.LibraryColumnsDialog
 import eu.kanade.tachiyomi.widget.preference.SimpleDialogPreference
 import net.xpece.android.support.preference.MultiSelectListPreference
 import rx.Observable
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
 class SettingsGeneralFragment : SettingsFragment(),
@@ -85,7 +84,6 @@ class SettingsGeneralFragment : SettingsFragment(),
 
         subscriptions += preferences.libraryUpdateCategories().asObservable()
                 .subscribe {
-                    Timber.e(it.joinToString())
                     categoryUpdate.summary = it
                             .mapNotNull { id -> dbCategories.find { it.id == id.toInt() } }
                             .sortedBy { it.order }
