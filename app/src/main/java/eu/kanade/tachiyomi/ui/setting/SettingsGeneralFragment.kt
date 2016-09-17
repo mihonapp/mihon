@@ -67,9 +67,9 @@ class SettingsGeneralFragment : SettingsFragment(),
                 .subscribe { updateColumnsSummary(it.first, it.second) }
 
         updateInterval.setOnPreferenceChangeListener { preference, newValue ->
-            val enabled = (newValue as String).toInt() > 0
-            if (enabled)
-                LibraryUpdateTrigger.setupTask(context)
+            val interval = (newValue as String).toInt()
+            if (interval > 0)
+                LibraryUpdateTrigger.setupTask(context, interval)
             else
                 LibraryUpdateTrigger.cancelTask(context)
 
