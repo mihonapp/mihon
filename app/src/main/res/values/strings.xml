@@ -105,6 +105,7 @@
     <string name="pref_enable_transitions">Enable transitions</string>
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_custom_brightness">Use custom brightness</string>
+    <string name="pref_custom_color_filter">Use custom color filter</string>
     <string name="pref_keep_screen_on">Keep screen on</string>
     <string name="pref_reader_navigation">Navigation</string>
     <string name="pref_read_with_volume_keys">Volume keys</string>
@@ -138,6 +139,11 @@
     <string name="rotation_lock">Lock</string>
     <string name="rotation_force_portrait">Force portrait</string>
     <string name="rotation_force_landscape">Force landscape</string>
+    <string name="color_filter_r_value">R</string>
+    <string name="color_filter_g_value">G</string>
+    <string name="color_filter_b_value">B</string>
+    <string name="color_filter_a_value">A</string>
+
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>

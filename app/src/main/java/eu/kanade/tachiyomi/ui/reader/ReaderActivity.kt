@@ -38,10 +38,12 @@ import me.zhanghai.android.systemuihelper.SystemUiHelper
 import me.zhanghai.android.systemuihelper.SystemUiHelper.*
 import nucleus.factory.RequiresPresenter
 import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.text.DecimalFormat
+import java.util.concurrent.TimeUnit
 
 @RequiresPresenter(ReaderPresenter::class)
 class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
@@ -69,6 +71,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     val subscriptions by lazy { CompositeSubscription() }
 
     private var customBrightnessSubscription: Subscription? = null
+
+    private var customFilterColorSubscription: Subscription? = null
 
     var readerTheme: Int = 0
         private set
@@ -140,6 +144,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> ReaderSettingsDialog().show(supportFragmentManager, "settings")
+            R.id.action_custom_filter -> ReaderCustomFilterDialog().show(supportFragmentManager, "filter")
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -354,9 +359,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         reader_menu_bottom.setOnTouchListener { v, event -> true }
 
         page_seekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    gotoPageInCurrentChapter(progress)
+                    gotoPageInCurrentChapter(value)
                 }
             }
         })
@@ -377,6 +382,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         subscriptions += preferences.customBrightness().asObservable()
                 .subscribe { setCustomBrightness(it) }
+
+        subscriptions += preferences.colorFilter().asObservable()
+                .subscribe { setColorFilter(it) }
 
         subscriptions += preferences.readerTheme().asObservable()
                 .distinctUntilChanged()
@@ -424,12 +432,26 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private fun setCustomBrightness(enabled: Boolean) {
         if (enabled) {
             customBrightnessSubscription = preferences.customBrightnessValue().asObservable()
+                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
                     .subscribe { setCustomBrightnessValue(it) }
 
             subscriptions.add(customBrightnessSubscription)
         } else {
             customBrightnessSubscription?.let { subscriptions.remove(it) }
             setCustomBrightnessValue(0)
+        }
+    }
+
+    private fun setColorFilter(enabled: Boolean) {
+        if (enabled) {
+            customFilterColorSubscription = preferences.colorFilterValue().asObservable()
+                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                    .subscribe { setColorFilterValue(it) }
+
+            subscriptions.add(customFilterColorSubscription)
+        } else {
+            customFilterColorSubscription?.let { subscriptions.remove(it) }
+            color_overlay.visibility = View.GONE
         }
     }
 
@@ -457,6 +479,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         } else {
             brightness_overlay.visibility = View.GONE
         }
+    }
+
+    private fun setColorFilterValue(value: Int) {
+        color_overlay.visibility = View.VISIBLE
+        color_overlay.setBackgroundColor(value)
     }
 
     private fun applyTheme(theme: Int) {
