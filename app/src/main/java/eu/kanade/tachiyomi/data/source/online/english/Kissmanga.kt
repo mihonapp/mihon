@@ -51,18 +51,9 @@ class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
             add("authorArtist", "")
             add("mangaName", query)
             add("status", "")
-        }
 
-        val filterIndexes = filters.map { it.id.toInt() }
-        val maxFilterIndex = filterIndexes.max()
-
-        if (maxFilterIndex !== null) {
-            for (i in 0..maxFilterIndex) {
-                form.add("genres", if (filterIndexes.contains(i)) {
-                    "1"
-                } else {
-                    "0"
-                })
+            this@Kissmanga.filters.forEach { filter ->
+                add("genres", if (filter in filters) "1" else "0")
             }
         }
 
