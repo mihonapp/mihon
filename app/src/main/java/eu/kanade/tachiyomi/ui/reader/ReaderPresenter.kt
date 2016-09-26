@@ -1,15 +1,23 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.os.Bundle
+import android.os.Environment
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.History
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.ImageNotifier
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
 import eu.kanade.tachiyomi.data.mangasync.UpdateMangaSyncService
+import eu.kanade.tachiyomi.data.network.GET
+import eu.kanade.tachiyomi.data.network.NetworkHelper
+import eu.kanade.tachiyomi.data.network.ProgressListener
+import eu.kanade.tachiyomi.data.network.newCallWithProgress
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.model.Page
@@ -17,6 +25,8 @@ import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.saveTo
+import eu.kanade.tachiyomi.util.toast
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -24,12 +34,19 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 /**
  * Presenter of [ReaderActivity].
  */
 class ReaderPresenter : BasePresenter<ReaderActivity>() {
+
+    /**
+     * Network helper
+     */
+    private val network: NetworkHelper by injectLazy()
 
     /**
      * Preferences.
@@ -62,6 +79,11 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     val chapterCache: ChapterCache by injectLazy()
 
     /**
+     * Cover cache.
+     */
+    val coverCache: CoverCache by injectLazy()
+
+    /**
      * Manga being read.
      */
     lateinit var manga: Manga
@@ -87,6 +109,20 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * Source of the manga.
      */
     private val source by lazy { sourceManager.get(manga.source)!! }
+
+    /**
+     *
+     */
+    val imageNotifier by lazy { ImageNotifier(context) }
+
+    /**
+     * Directory of pictures
+     */
+    private val pictureDirectory: String by lazy {
+        Environment.getExternalStorageDirectory().absolutePath + File.separator +
+                Environment.DIRECTORY_PICTURES + File.separator +
+                context.getString(R.string.app_name) + File.separator
+    }
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
@@ -365,7 +401,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 val removeAfterReadSlots = prefs.removeAfterReadSlots()
                 when (removeAfterReadSlots) {
                 // Setting disabled
-                    -1 -> { /**Empty function**/ }
+                    -1 -> {
+                        /**Empty function**/
+                    }
                 // Remove current read chapter
                     0 -> deleteChapter(chapter, manga)
                 // Remove previous chapter specified by user in settings.
@@ -384,8 +422,8 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 Timber.e(error)
             }
         }
-        .subscribeOn(Schedulers.io())
-        .subscribe()
+                .subscribeOn(Schedulers.io())
+                .subscribe()
     }
 
     /**
@@ -508,4 +546,87 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         db.insertManga(manga).executeAsBlocking()
     }
 
+    /**
+     * Update cover with page file.
+     */
+    internal fun setCover() {
+        chapter.pages?.get(chapter.last_page_read)?.let {
+            // Update cover to selected file, show error if something went wrong
+            try {
+                if (editCoverWithStream(File(it.imagePath).inputStream(), manga)) {
+                    context.toast(R.string.cover_updated)
+                } else {
+                    throw Exception("Stream copy failed")
+                }
+            } catch(e: Exception) {
+                context.toast(R.string.notification_manga_update_failed)
+                Timber.e(e.message)
+            }
+        }
+    }
+
+    /**
+     * Called to copy image to cache
+     * @param inputStream the new cover.
+     * @param manga the manga edited.
+     * @return true if the cover is updated, false otherwise
+     */
+    @Throws(IOException::class)
+    private fun editCoverWithStream(inputStream: InputStream, manga: Manga): Boolean {
+        if (manga.thumbnail_url != null && manga.favorite) {
+            coverCache.copyToCache(manga.thumbnail_url!!, inputStream)
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Save page to local storage
+     * @throws IOException
+     */
+    @Throws(IOException::class)
+    internal fun savePage() {
+        chapter.pages?.get(chapter.last_page_read)?.let { page ->
+            // File where the image will be saved
+            val destFile = File(pictureDirectory, manga.title + " - " + chapter.name +
+                    " - " + downloadManager.getImageFilename(page))
+
+            if (destFile.exists()) {
+                imageNotifier.onComplete(destFile)
+            } else {
+                // Progress of the download
+                var savedProgress = 0
+
+                val progressListener = object : ProgressListener {
+                    override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
+                        val progress = (100 * bytesRead / contentLength).toInt()
+                        if (progress > savedProgress) {
+                            savedProgress = progress
+                            imageNotifier.onProgressChange(progress)
+                        }
+                    }
+                }
+
+                // Download and save the image.
+                Observable.fromCallable { ->
+                    network.client.newCallWithProgress(GET(page.imageUrl!!), progressListener).execute()
+                }.map {
+                    response ->
+                    if (response.isSuccessful) {
+                        response.body().source().saveTo(destFile)
+                        imageNotifier.onComplete(destFile)
+                    } else {
+                        response.close()
+                        throw Exception("Unsuccessful response")
+                    }
+                }
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({}, { error ->
+                            Timber.e(error.message)
+                            imageNotifier.onError(error.message)
+                        })
+            }
+        }
+    }
 }

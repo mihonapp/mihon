@@ -297,7 +297,7 @@ class DownloadManager(
     }
 
     // Get the filename for an image given the page
-    private fun getImageFilename(page: Page): String {
+    fun getImageFilename(page: Page): String {
         val url = page.imageUrl
         val number = String.format("%03d", page.pageNumber + 1)
 

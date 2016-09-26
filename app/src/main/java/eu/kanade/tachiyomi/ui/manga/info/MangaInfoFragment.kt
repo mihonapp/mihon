@@ -184,10 +184,9 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
             val url = source.mangaDetailsRequest(presenter.manga).url().toString()
             val sharingIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(android.content.Intent.EXTRA_SUBJECT, presenter.manga.title)
                 putExtra(android.content.Intent.EXTRA_TEXT, resources.getString(R.string.share_text, presenter.manga.title, url))
             }
-            startActivity(Intent.createChooser(sharingIntent, resources.getText(R.string.share_subject)))
+            startActivity(Intent.createChooser(sharingIntent, resources.getText(R.string.action_share)))
         } catch (e: Exception) {
             context.toast(e.message)
         }

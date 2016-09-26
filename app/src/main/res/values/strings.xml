@@ -223,7 +223,6 @@
     <string name="manga_info_status_label">Status</string>
     <string name="manga_info_source_label">Source</string>
     <string name="manga_info_genres_label">Genres</string>
-    <string name="share_subject">Share…</string>
     <string name="share_text">Check out %1$s! at %2$s</string>
     <string name="circular_icon">Circular icon</string>
     <string name="rounded_icon">Rounded icon</string>
@@ -267,10 +266,18 @@
     <string name="status">Status</string>
     <string name="chapters">Chapters</string>
 
+    <!-- Reader Activity -->
+    <string name="custom_filter">Custom filter</string>
+    <string name="save_page">Download page</string>
+    <string name="set_as_cover">Set as cover</string>
+    <string name="cover_updated">Cover updated</string>
     <!-- Dialog remove recently view -->
     <string name="dialog_remove_recently_description">This will remove the read date of this chapter. Are you sure?</string>
     <string name="dialog_remove_recently_reset">Reset all chapters for this manga</string>
 
+    <!-- Image notifier -->
+    <string name="picture_saved">Picture saved</string>
+    <string name="saving_picture">Saving picture</string>
 
     <!-- Reader activity -->
     <string name="custom_filter">Custom filter</string>

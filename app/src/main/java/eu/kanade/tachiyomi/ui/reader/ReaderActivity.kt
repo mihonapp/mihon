@@ -145,6 +145,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         when (item.itemId) {
             R.id.action_settings -> ReaderSettingsDialog().show(supportFragmentManager, "settings")
             R.id.action_custom_filter -> ReaderCustomFilterDialog().show(supportFragmentManager, "filter")
+            R.id.action_save_page -> presenter.savePage()
+            R.id.action_set_as_cover -> presenter.setCover()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -393,16 +395,16 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private fun setRotation(rotation: Int) {
         when (rotation) {
-            // Rotation free
+        // Rotation free
             1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            // Lock in current rotation
+        // Lock in current rotation
             2 -> {
                 val currentOrientation = resources.configuration.orientation
                 setRotation(if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) 3 else 4)
             }
-            // Lock in portrait
+        // Lock in portrait
             3 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            // Lock in landscape
+        // Lock in landscape
             4 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         }
     }
