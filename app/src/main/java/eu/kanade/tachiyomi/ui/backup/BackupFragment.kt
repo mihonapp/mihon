@@ -41,6 +41,8 @@ class BackupFragment : BaseRxFragment<BackupPresenter>() {
     }
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
+        setToolbarTitle(getString(R.string.label_backup))
+
         (activity as ActivityMixin).requestPermissionsOnMarshmallow()
         subscriptions = SubscriptionList()
 

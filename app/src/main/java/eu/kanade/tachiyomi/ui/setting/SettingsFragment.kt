@@ -7,9 +7,9 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.getResourceId
 import net.xpece.android.support.preference.PreferenceIconHelper
 import net.xpece.android.support.preference.PreferenceScreenNavigationStrategy
-import net.xpece.android.support.preference.Util
 import rx.subscriptions.CompositeSubscription
 
 open class SettingsFragment : XpPreferenceFragment() {
@@ -24,8 +24,8 @@ open class SettingsFragment : XpPreferenceFragment() {
 
     lateinit var subscriptions: CompositeSubscription
 
-    private val iconTint by lazy { ContextCompat.getColorStateList(
-            context, Util.resolveResourceId(context, R.attr.colorAccent, 0))
+    private val iconTint by lazy { ContextCompat.getColorStateList(context,
+            context.theme.getResourceId(R.attr.colorAccent, 0))
     }
 
     override final fun onCreatePreferences2(savedState: Bundle?, rootKey: String?) {
@@ -59,6 +59,7 @@ open class SettingsFragment : XpPreferenceFragment() {
 
     @CallSuper
     override fun onViewCreated(view: View, savedState: Bundle?) {
+        super.onViewCreated(view, savedState)
         listView.isFocusable = false
     }
 

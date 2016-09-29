@@ -60,8 +60,7 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
                     .replace(Regex("""\s{3,}[a-z](?: = |\.).+"""), "")
                     .replace("\n", "")
 
-            // Duktape can only return strings, so the result has to be converted to string first
-            val result = duktape.evaluate("$js.toString()").toInt()
+            val result = (duktape.evaluate(js) as Double).toInt()
 
             val answer = "${result + domain.length}"
 
