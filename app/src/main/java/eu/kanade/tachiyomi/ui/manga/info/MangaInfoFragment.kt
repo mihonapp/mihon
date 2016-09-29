@@ -260,11 +260,8 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         context.sendBroadcast(addIntent)
         //Go to launcher to show this shiny new shortcut!
         val startMain = Intent(Intent.ACTION_MAIN)
-        startMain.addCategory(Intent.CATEGORY_HOME)
-                .flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        activity.runOnUiThread {
-            startActivity(startMain)
-        }
+        startMain.addCategory(Intent.CATEGORY_HOME).flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(startMain)
     }
 
     /**
