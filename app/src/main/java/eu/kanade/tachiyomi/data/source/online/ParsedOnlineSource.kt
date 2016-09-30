@@ -38,31 +38,9 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
     }
 
     /**
-     * Parse the response from the site for latest updates and fills [page].
-     */
-    override fun latestUpdatesParse(response: Response, page: MangasPage) {
-        val document = response.asJsoup()
-        for (element in document.select(latestUpdatesSelector())) {
-            Manga.create(id).apply {
-                latestUpdatesFromElement(element, this)
-                page.mangas.add(this)
-            }
-        }
-
-        latestUpdatesNextPageSelector()?.let { selector ->
-            page.nextPageUrl = document.select(selector).first()?.absUrl("href")
-        }
-    }
-
-    /**
      * Returns the Jsoup selector that returns a list of [Element] corresponding to each manga.
      */
     abstract protected fun popularMangaSelector(): String
-
-    /**
-     * Returns the Jsoup selector similar to [popularMangaSelector], but for latest updates.
-     */
-    abstract protected fun latestUpdatesSelector(): String
 
     /**
      * Fills [manga] with the given [element]. Most sites only show the title and the url, it's
@@ -74,20 +52,10 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
     abstract protected fun popularMangaFromElement(element: Element, manga: Manga)
 
     /**
-     * Fills [manga] with the given [element]. For latest updates.
-     */
-    abstract protected fun latestUpdatesFromElement(element: Element, manga: Manga)
-
-    /**
      * Returns the Jsoup selector that returns the <a> tag linking to the next page, or null if
      * there's no next page.
      */
     abstract protected fun popularMangaNextPageSelector(): String?
-
-    /**
-     * Returns the Jsoup selector that returns the <a> tag, like [popularMangaNextPageSelector].
-     */
-    abstract protected fun latestUpdatesNextPageSelector(): String?
 
     /**
      * Parse the response from the site and fills [page].
@@ -129,6 +97,38 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
      * there's no next page.
      */
     abstract protected fun searchMangaNextPageSelector(): String?
+
+    /**
+     * Parse the response from the site for latest updates and fills [page].
+     */
+    override fun latestUpdatesParse(response: Response, page: MangasPage) {
+        val document = response.asJsoup()
+        for (element in document.select(latestUpdatesSelector())) {
+            Manga.create(id).apply {
+                latestUpdatesFromElement(element, this)
+                page.mangas.add(this)
+            }
+        }
+
+        latestUpdatesNextPageSelector()?.let { selector ->
+            page.nextPageUrl = document.select(selector).first()?.absUrl("href")
+        }
+    }
+
+    /**
+     * Returns the Jsoup selector similar to [popularMangaSelector], but for latest updates.
+     */
+    abstract protected fun latestUpdatesSelector(): String
+
+    /**
+     * Fills [manga] with the given [element]. For latest updates.
+     */
+    abstract protected fun latestUpdatesFromElement(element: Element, manga: Manga)
+
+    /**
+     * Returns the Jsoup selector that returns the <a> tag, like [popularMangaNextPageSelector].
+     */
+    abstract protected fun latestUpdatesNextPageSelector(): String?
 
     /**
      * Parse the response from the site and fills the details of [manga].

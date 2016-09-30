@@ -25,14 +25,12 @@ class YamlSourceNode(uncheckedMap: Map<*, *>) {
 
     val lang: String by map
 
-    val supportsLatest: String by map
-
     val client: String?
         get() = map["client"] as? String
 
     val popular = PopularNode(toMap(map["popular"])!!)
 
-    val latestupdates = LatestUpdatesNode(toMap(map["latest_updates"])!!)
+    val latestupdates = toMap(map["latest_updates"])?.let { LatestUpdatesNode(it) }
 
     val search = SearchNode(toMap(map["search"])!!)
 

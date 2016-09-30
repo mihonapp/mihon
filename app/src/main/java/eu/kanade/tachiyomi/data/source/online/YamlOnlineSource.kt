@@ -5,7 +5,6 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.POST
-import eu.kanade.tachiyomi.data.source.Source
 import eu.kanade.tachiyomi.data.source.getLanguages
 import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.model.Page
@@ -15,7 +14,6 @@ import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import rx.Observable
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,7 +32,7 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
         getLanguages().find { code == it.code }!!
     }
 
-    override val supportsLatest = map.supportsLatest.toBoolean()
+    override val supportsLatest = map.latestupdates != null
 
     override val client = when(map.client) {
         "cloudflare" -> network.cloudflareClient
@@ -55,38 +53,11 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
         }
     }
 
-    override fun latestUpdatesRequest(page: MangasPage): Request {
-        if (page.page == 1) {
-            page.url = latestUpdatesInitialUrl()
-        }
-        return when (map.latestupdates.method?.toLowerCase()) {
-            "post" -> POST(page.url, headers, map.latestupdates.createForm())
-            else -> GET(page.url, headers)
-        }
-    }
-
     override fun popularMangaInitialUrl() = map.popular.url
-
-    override fun latestUpdatesInitialUrl() = map.latestupdates.url
 
     override fun popularMangaParse(response: Response, page: MangasPage) {
         val document = response.asJsoup()
         for (element in document.select(map.popular.manga_css)) {
-            Manga.create(id).apply {
-                title = element.text()
-                setUrlWithoutDomain(element.attr("href"))
-                page.mangas.add(this)
-            }
-        }
-
-        map.popular.next_url_css?.let { selector ->
-            page.nextPageUrl = document.select(selector).first()?.absUrl("href")
-        }
-    }
-
-    override fun latestUpdatesParse(response: Response, page: MangasPage) {
-        val document = response.asJsoup()
-        for (element in document.select(map.latestupdates.manga_css)) {
             Manga.create(id).apply {
                 title = element.text()
                 setUrlWithoutDomain(element.attr("href"))
@@ -122,6 +93,33 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
         }
 
         map.search.next_url_css?.let { selector ->
+            page.nextPageUrl = document.select(selector).first()?.absUrl("href")
+        }
+    }
+
+    override fun latestUpdatesRequest(page: MangasPage): Request {
+        if (page.page == 1) {
+            page.url = latestUpdatesInitialUrl()
+        }
+        return when (map.latestupdates!!.method?.toLowerCase()) {
+            "post" -> POST(page.url, headers, map.latestupdates.createForm())
+            else -> GET(page.url, headers)
+        }
+    }
+
+    override fun latestUpdatesInitialUrl() = map.latestupdates!!.url
+
+    override fun latestUpdatesParse(response: Response, page: MangasPage) {
+        val document = response.asJsoup()
+        for (element in document.select(map.latestupdates!!.manga_css)) {
+            Manga.create(id).apply {
+                title = element.text()
+                setUrlWithoutDomain(element.attr("href"))
+                page.mangas.add(this)
+            }
+        }
+
+        map.latestupdates.next_url_css?.let { selector ->
             page.nextPageUrl = document.select(selector).first()?.absUrl("href")
         }
     }
