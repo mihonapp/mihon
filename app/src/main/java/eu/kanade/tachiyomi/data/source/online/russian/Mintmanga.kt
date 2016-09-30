@@ -22,12 +22,18 @@ class Mintmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
 
     override val lang: Language get() = RU
 
+    override val supportsLatest = true
+
     override fun popularMangaInitialUrl() = "$baseUrl/list?sortType=rate"
+
+    override fun latestUpdatesInitialUrl() = "$baseUrl/list?sortType=updated"
 
     override fun searchMangaInitialUrl(query: String, filters: List<Filter>) =
             "$baseUrl/search?q=$query&${filters.map { it.id + "=in" }.joinToString("&")}"
 
     override fun popularMangaSelector() = "div.desc"
+
+    override fun latestUpdatesSelector() = "div.desc"
 
     override fun popularMangaFromElement(element: Element, manga: Manga) {
         element.select("h3 > a").first().let {
@@ -36,7 +42,13 @@ class Mintmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
         }
     }
 
+    override fun latestUpdatesFromElement(element: Element, manga: Manga) {
+        popularMangaFromElement(element, manga)
+    }
+
     override fun popularMangaNextPageSelector() = "a.nextLink"
+
+    override fun latestUpdatesNextPageSelector() = "a.nextLink"
 
     override fun searchMangaSelector() = popularMangaSelector()
 
@@ -151,4 +163,5 @@ class Mintmanga(context: Context, override val id: Int) : ParsedOnlineSource(con
             Filter("el_1315", "юри"),
             Filter("el_1336", "яой")
     )
+
 }

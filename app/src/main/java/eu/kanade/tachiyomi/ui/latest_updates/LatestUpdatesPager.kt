@@ -1,11 +1,14 @@
-package eu.kanade.tachiyomi.ui.catalogue
+package eu.kanade.tachiyomi.ui.latest_updates
 
 import eu.kanade.tachiyomi.data.source.model.MangasPage
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
-import eu.kanade.tachiyomi.data.source.online.OnlineSource.Filter
+import eu.kanade.tachiyomi.ui.catalogue.Pager
 import rx.Observable
 
-open class CataloguePager(val source: OnlineSource, val query: String, val filters: List<Filter>): Pager() {
+/**
+ * LatestUpdatesPager inherited from the general Pager.
+ */
+class LatestUpdatesPager(val source: OnlineSource): Pager() {
 
     override fun requestNext(transformer: (Observable<MangasPage>) -> Observable<MangasPage>): Observable<MangasPage> {
         val lastPage = lastPage
@@ -15,14 +18,11 @@ open class CataloguePager(val source: OnlineSource, val query: String, val filte
         else
             MangasPage(lastPage.page + 1).apply { url = lastPage.nextPageUrl!! }
 
-        val observable = if (query.isBlank() && filters.isEmpty())
-            source.fetchPopularManga(page)
-        else
-            source.fetchSearchManga(page, query, filters)
+        val observable = source.fetchLatestUpdates(page)
 
         return transformer(observable)
                 .doOnNext { results.onNext(it) }
-                .doOnNext { this@CataloguePager.lastPage = it }
+                .doOnNext { this@LatestUpdatesPager.lastPage = it }
     }
 
 }

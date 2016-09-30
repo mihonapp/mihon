@@ -21,11 +21,17 @@ class Mangachan(context: Context, override val id: Int) : ParsedOnlineSource(con
 
     override val lang: Language get() = RU
 
+    override val supportsLatest = true
+
     override fun popularMangaInitialUrl() = "$baseUrl/mostfavorites"
+
+    override fun latestUpdatesInitialUrl() = "$baseUrl/manga/new"
 
     override fun searchMangaInitialUrl(query: String, filters: List<Filter>) = "$baseUrl/?do=search&subaction=search&story=$query"
 
     override fun popularMangaSelector() = "div.content_row"
+
+    override fun latestUpdatesSelector() = "div.content_row"
 
     override fun popularMangaFromElement(element: Element, manga: Manga) {
         element.select("h2 > a").first().let {
@@ -34,7 +40,13 @@ class Mangachan(context: Context, override val id: Int) : ParsedOnlineSource(con
         }
     }
 
+    override fun latestUpdatesFromElement(element: Element, manga: Manga) {
+        popularMangaFromElement(element, manga)
+    }
+
     override fun popularMangaNextPageSelector() = "a:contains(Вперед)"
+
+    override fun latestUpdatesNextPageSelector() = "a:contains(Вперед)"
 
     override fun searchMangaSelector() = popularMangaSelector()
 
@@ -91,4 +103,5 @@ class Mangachan(context: Context, override val id: Int) : ParsedOnlineSource(con
     override fun pageListParse(document: Document, pages: MutableList<Page>) { }
 
     override fun imageUrlParse(document: Document) = ""
+
 }

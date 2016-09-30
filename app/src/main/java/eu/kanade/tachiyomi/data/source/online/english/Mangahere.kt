@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.source.online.english
 
 import android.content.Context
-import android.util.Log
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.EN
@@ -22,9 +21,15 @@ class Mangahere(context: Context, override val id: Int) : ParsedOnlineSource(con
 
     override val lang: Language get() = EN
 
-    override fun popularMangaInitialUrl() = "$baseUrl/directory/"
+    override val supportsLatest = true
+
+    override fun popularMangaInitialUrl() = "$baseUrl/directory/?views.za"
+
+    override fun latestUpdatesInitialUrl() = "$baseUrl/directory/?last_chapter_time.za"
 
     override fun popularMangaSelector() = "div.directory_list > ul > li"
+
+    override fun latestUpdatesSelector() = "div.directory_list > ul > li"
 
     override fun popularMangaFromElement(element: Element, manga: Manga) {
         element.select("div.title > a").first().let {
@@ -33,7 +38,13 @@ class Mangahere(context: Context, override val id: Int) : ParsedOnlineSource(con
         }
     }
 
+    override fun latestUpdatesFromElement(element: Element, manga: Manga) {
+        popularMangaFromElement(element, manga)
+    }
+
     override fun popularMangaNextPageSelector() = "div.next-page > a.next"
+
+    override fun latestUpdatesNextPageSelector() = "div.next-page > a.next"
 
     override fun searchMangaInitialUrl(query: String, filters: List<Filter>) = "$baseUrl/search.php?name=$query&page=1&sort=views&order=za&${filters.map { it.id + "=1" }.joinToString("&")}&advopts=1"
 
@@ -146,4 +157,5 @@ class Mangahere(context: Context, override val id: Int) : ParsedOnlineSource(con
             Filter("genres[Yaoi]", "Yaoi"),
             Filter("genres[Yuri]", "Yuri")
     )
+
 }

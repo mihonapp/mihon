@@ -26,7 +26,7 @@ import java.util.NoSuchElementException
 /**
  * Presenter of [CatalogueFragment].
  */
-class CataloguePresenter : BasePresenter<CatalogueFragment>() {
+open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
 
     /**
      * Source manager.
@@ -73,7 +73,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     /**
      * Pager containing a list of manga results.
      */
-    private lateinit var pager: CataloguePager
+    private lateinit var pager: Pager
 
     /**
      * Subject that initializes a list of manga.
@@ -140,7 +140,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         }
 
         // Create a new pager.
-        pager = CataloguePager(source, query, filters)
+        pager = createPager(query, filters)
 
         // Prepare the pager.
         pagerSubscription?.let { remove(it) }
@@ -305,7 +305,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * @param source the source to check.
      * @return true if the source is valid, false otherwise.
      */
-    fun isValidSource(source: Source?): Boolean {
+    open fun isValidSource(source: Source?): Boolean {
         if (source == null) return false
 
         if (source is LoginSource) {
@@ -327,7 +327,7 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     /**
      * Returns a list of enabled sources ordered by language and name.
      */
-    private fun getEnabledSources(): List<OnlineSource> {
+    open protected fun getEnabledSources(): List<OnlineSource> {
         val languages = prefs.enabledLanguages().getOrDefault()
         val hiddenCatalogues = prefs.hiddenCatalogues().getOrDefault()
 
@@ -369,6 +369,10 @@ class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      */
     fun setSourceFilter(selectedFilters: List<Filter>) {
         restartPager(filters = selectedFilters)
+    }
+
+    open fun createPager(query: String, filters: List<Filter>): Pager {
+        return CataloguePager(source, query, filters)
     }
 
 }

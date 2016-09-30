@@ -54,6 +54,11 @@ abstract class OnlineSource(context: Context) : Source {
     abstract val lang: Language
 
     /**
+     * If the Source has Support for Latest Updates
+     */
+    abstract val supportsLatest : Boolean
+
+    /**
      * Headers used for requests.
      */
     val headers by lazy { headersBuilder().build() }
@@ -97,6 +102,17 @@ abstract class OnlineSource(context: Context) : Source {
             }
 
     /**
+     * Returns an observable containing a page with a list of latest manga.
+     */
+    open fun fetchLatestUpdates(page: MangasPage): Observable<MangasPage> = client
+            .newCall(latestUpdatesRequest(page))
+            .asObservable()
+            .map { response ->
+                latestUpdatesParse(response, page)
+                page
+            }
+
+    /**
      * Returns the request for the popular manga given the page. Override only if it's needed to
      * send different headers or request method like POST.
      *
@@ -110,9 +126,24 @@ abstract class OnlineSource(context: Context) : Source {
     }
 
     /**
+     * Returns the request for latest manga given the page.
+     */
+    open protected fun latestUpdatesRequest(page: MangasPage): Request {
+        if (page.page == 1) {
+            page.url = latestUpdatesInitialUrl()
+        }
+        return GET(page.url, headers)
+    }
+
+    /**
      * Returns the absolute url of the first page to popular manga.
      */
     abstract protected fun popularMangaInitialUrl(): String
+
+    /**
+     * Returns the absolute url of the first page to latest manga.
+     */
+    abstract protected fun latestUpdatesInitialUrl(): String
 
     /**
      * Parse the response from the site. It should add a list of manga and the absolute url to the
@@ -122,6 +153,11 @@ abstract class OnlineSource(context: Context) : Source {
      * @param page the page object to be filled.
      */
     abstract protected fun popularMangaParse(response: Response, page: MangasPage)
+
+    /**
+     * Same as [popularMangaParse], but for latest manga.
+     */
+    abstract protected fun latestUpdatesParse(response: Response, page: MangasPage)
 
     /**
      * Returns an observable containing a page with a list of manga. Normally it's not needed to
