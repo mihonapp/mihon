@@ -27,6 +27,7 @@ import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.saveTo
 import eu.kanade.tachiyomi.util.toast
+import okio.BufferedSource
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -34,6 +35,7 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
@@ -587,6 +589,8 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     @Throws(IOException::class)
     internal fun savePage() {
         chapter.pages?.get(chapter.last_page_read)?.let { page ->
+            val inputFile = File(page.imagePath)
+
             // File where the image will be saved
             val destFile = File(pictureDirectory, manga.title + " - " + chapter.name +
                     " - " + downloadManager.getImageFilename(page))
@@ -594,38 +598,16 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             if (destFile.exists()) {
                 imageNotifier.onComplete(destFile)
             } else {
-                // Progress of the download
-                var savedProgress = 0
-
-                val progressListener = object : ProgressListener {
-                    override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
-                        val progress = (100 * bytesRead / contentLength).toInt()
-                        if (progress > savedProgress) {
-                            savedProgress = progress
-                            imageNotifier.onProgressChange(progress)
-                        }
-                    }
+                if (inputFile.exists()) {
+                    Observable.fromCallable { inputFile.copyTo(destFile) }
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(
+                                    { imageNotifier.onComplete(it) }, { error ->
+                                Timber.e(error.message)
+                                imageNotifier.onError(error.message)
+                            })
                 }
-
-                // Download and save the image.
-                Observable.fromCallable { ->
-                    network.client.newCallWithProgress(GET(page.imageUrl!!), progressListener).execute()
-                }.map {
-                    response ->
-                    if (response.isSuccessful) {
-                        response.body().source().saveTo(destFile)
-                        imageNotifier.onComplete(destFile)
-                    } else {
-                        response.close()
-                        throw Exception("Unsuccessful response")
-                    }
-                }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({}, { error ->
-                            Timber.e(error.message)
-                            imageNotifier.onError(error.message)
-                        })
             }
         }
     }
