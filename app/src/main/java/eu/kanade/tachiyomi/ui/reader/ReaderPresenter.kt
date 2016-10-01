@@ -14,10 +14,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.ImageNotifier
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
 import eu.kanade.tachiyomi.data.mangasync.UpdateMangaSyncService
-import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.NetworkHelper
-import eu.kanade.tachiyomi.data.network.ProgressListener
-import eu.kanade.tachiyomi.data.network.newCallWithProgress
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.model.Page
@@ -25,9 +22,7 @@ import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.SharedData
-import eu.kanade.tachiyomi.util.saveTo
 import eu.kanade.tachiyomi.util.toast
-import okio.BufferedSource
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -35,7 +30,6 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
@@ -589,24 +583,31 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     @Throws(IOException::class)
     internal fun savePage() {
         chapter.pages?.get(chapter.last_page_read)?.let { page ->
+            // Location of image file.
             val inputFile = File(page.imagePath)
 
-            // File where the image will be saved
+            // File where the image will be saved.
             val destFile = File(pictureDirectory, manga.title + " - " + chapter.name +
                     " - " + downloadManager.getImageFilename(page))
 
+            //Remove the notification if already exist (user feedback)
+            imageNotifier.onClear()
+
+            //Check if file doesn't already exist
             if (destFile.exists()) {
                 imageNotifier.onComplete(destFile)
             } else {
                 if (inputFile.exists()) {
+                    // Copy file
                     Observable.fromCallable { inputFile.copyTo(destFile) }
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribeOn(Schedulers.io())
                             .subscribe(
-                                    { imageNotifier.onComplete(it) }, { error ->
-                                Timber.e(error.message)
-                                imageNotifier.onError(error.message)
-                            })
+                                    { imageNotifier.onComplete(it) },
+                                    { error ->
+                                        Timber.e(error.message)
+                                        imageNotifier.onError(error.message)
+                                    })
                 }
             }
         }
