@@ -7,6 +7,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
@@ -38,6 +39,8 @@ class SettingsAdvancedFragment : SettingsFragment() {
 
     private val clearCookies by lazy { findPreference(getString(R.string.pref_clear_cookies_key)) }
 
+    private val refreshMetadata by lazy { findPreference(getString(R.string.pref_refresh_library_metadata_key)) }
+
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
 
@@ -55,6 +58,11 @@ class SettingsAdvancedFragment : SettingsFragment() {
 
         clearDatabase.setOnPreferenceClickListener {
             clearDatabase()
+            true
+        }
+
+        refreshMetadata.setOnPreferenceClickListener {
+            LibraryUpdateService.start(context, details = true)
             true
         }
     }

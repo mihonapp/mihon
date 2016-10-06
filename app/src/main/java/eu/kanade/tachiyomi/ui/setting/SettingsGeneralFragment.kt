@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.widget.preference.LibraryColumnsDialog
 import eu.kanade.tachiyomi.widget.preference.SimpleDialogPreference
 import net.xpece.android.support.preference.MultiSelectListPreference
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
 
 class SettingsGeneralFragment : SettingsFragment(),
@@ -72,6 +73,15 @@ class SettingsGeneralFragment : SettingsFragment(),
                 LibraryUpdateTrigger.setupTask(context, interval)
             else
                 LibraryUpdateTrigger.cancelTask(context)
+
+            true
+        }
+
+        updateRestriction.setOnPreferenceChangeListener { preference, newValue ->
+            // Post to event looper to allow the preference to be updated.
+            subscriptions += Observable.fromCallable {
+                LibraryUpdateTrigger.setupTask(context)
+            }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()
 
             true
         }

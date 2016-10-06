@@ -71,17 +71,17 @@ class LibraryUpdateService : Service() {
     private val notificationId: Int
         get() = Constants.NOTIFICATION_LIBRARY_ID
 
-
     companion object {
-        /**
-         * Key for manual library update.
-         */
-        const val UPDATE_IS_MANUAL = "is_manual"
 
         /**
          * Key for category to update.
          */
         const val UPDATE_CATEGORY = "category"
+
+        /**
+         * Key for updating the details instead of the chapters.
+         */
+        const val UPDATE_DETAILS = "details"
 
         /**
          * Returns the status of the service.
@@ -98,13 +98,13 @@ class LibraryUpdateService : Service() {
          * running.
          *
          * @param context the application context.
-         * @param isManual whether the update has been manually triggered.
          * @param category a specific category to update, or null for global update.
+         * @param details whether to update the details instead of the list of chapters.
          */
-        fun start(context: Context, isManual: Boolean = false, category: Category? = null) {
+        fun start(context: Context, category: Category? = null, details: Boolean = false) {
             if (!isRunning(context)) {
                 val intent = Intent(context, LibraryUpdateService::class.java).apply {
-                    putExtra(UPDATE_IS_MANUAL, isManual)
+                    putExtra(UPDATE_DETAILS, details)
                     category?.let { putExtra(UPDATE_CATEGORY, it.id) }
                 }
                 context.startService(intent)
@@ -164,7 +164,16 @@ class LibraryUpdateService : Service() {
         subscription?.unsubscribe()
 
         // Update favorite manga. Destroy service when completed or in case of an error.
-        subscription = Observable.defer { updateMangaList(getMangaToUpdate(intent)) }
+        subscription = Observable
+                .defer {
+                    val mangaList = getMangaToUpdate(intent)
+
+                    // Update either chapter list or manga details.
+                    if (!intent.getBooleanExtra(UPDATE_DETAILS, false))
+                        updateChapterList(mangaList)
+                    else
+                        updateDetails(mangaList)
+                }
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                 }, {
@@ -216,7 +225,7 @@ class LibraryUpdateService : Service() {
      * @param mangaToUpdate the list to update
      * @return an observable delivering the progress of each update.
      */
-    fun updateMangaList(mangaToUpdate: List<Manga>): Observable<Manga> {
+    fun updateChapterList(mangaToUpdate: List<Manga>): Observable<Manga> {
         // Initialize the variables holding the progress of the updates.
         val count = AtomicInteger(0)
         val newUpdates = ArrayList<Manga>()
@@ -264,6 +273,41 @@ class LibraryUpdateService : Service() {
         val source = sourceManager.get(manga.source) as? OnlineSource ?: return Observable.empty()
         return source.fetchChapterList(manga)
                 .map { syncChaptersWithSource(db, it, manga, source) }
+    }
+
+    /**
+     * Method that updates the details of the given list of manga. It's called in a background
+     * thread, so it's safe to do heavy operations or network calls here.
+     * For each manga it calls [updateManga] and updates the notification showing the current
+     * progress.
+     *
+     * @param mangaToUpdate the list to update
+     * @return an observable delivering the progress of each update.
+     */
+    fun updateDetails(mangaToUpdate: List<Manga>): Observable<Manga> {
+        // Initialize the variables holding the progress of the updates.
+        val count = AtomicInteger(0)
+
+        val cancelIntent = PendingIntent.getBroadcast(this, 0,
+                Intent(this, CancelUpdateReceiver::class.java), 0)
+
+        // Emit each manga and update it sequentially.
+        return Observable.from(mangaToUpdate)
+                // Notify manga that will update.
+                .doOnNext { showProgressNotification(it, count.andIncrement, mangaToUpdate.size, cancelIntent) }
+                // Update the details of the manga.
+                .concatMap { manga ->
+                    val source = sourceManager.get(manga.source) as? OnlineSource
+                            ?: return@concatMap Observable.empty<Manga>()
+
+                    source.fetchMangaDetails(manga).doOnNext { networkManga ->
+                        manga.copyFrom(networkManga)
+                        db.insertManga(manga).executeAsBlocking()
+                    }
+                }
+                .doOnCompleted {
+                    cancelNotification()
+                }
     }
 
     /**

@@ -241,7 +241,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
             }
             R.id.action_library_display_mode -> swapDisplayMode()
             R.id.action_update_library -> {
-                LibraryUpdateService.start(activity, true)
+                LibraryUpdateService.start(activity)
             }
             R.id.action_edit_categories -> {
                 val intent = CategoryActivity.newIntent(activity)
