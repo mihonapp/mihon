@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
+import android.support.v7.preference.Preference
 import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
@@ -33,13 +34,13 @@ class SettingsAdvancedFragment : SettingsFragment() {
 
     private val db: DatabaseHelper by injectLazy()
 
-    private val clearCache by lazy { findPreference(getString(R.string.pref_clear_chapter_cache_key)) }
+    private val clearCache: Preference by bindPref(R.string.pref_clear_chapter_cache_key)
 
-    private val clearDatabase by lazy { findPreference(getString(R.string.pref_clear_database_key)) }
+    private val clearDatabase: Preference by bindPref(R.string.pref_clear_database_key)
 
-    private val clearCookies by lazy { findPreference(getString(R.string.pref_clear_cookies_key)) }
+    private val clearCookies: Preference by bindPref(R.string.pref_clear_cookies_key)
 
-    private val refreshMetadata by lazy { findPreference(getString(R.string.pref_refresh_library_metadata_key)) }
+    private val refreshMetadata: Preference by bindPref(R.string.pref_refresh_library_metadata_key)
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)

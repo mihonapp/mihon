@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.preference.Preference
 import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import eu.kanade.tachiyomi.R
@@ -82,5 +83,9 @@ open class SettingsFragment : XpPreferenceFragment() {
             "advanced_screen" to R.drawable.ic_code_black_24dp,
             "about_screen" to R.drawable.ic_help_black_24dp
     )
+
+    protected inline fun <reified T : Preference> bindPref(resId: Int): Lazy<T> {
+        return lazy { findPreference(getString(resId)) as T }
+    }
 
 }

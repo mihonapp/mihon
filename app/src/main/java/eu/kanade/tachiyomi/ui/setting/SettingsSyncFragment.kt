@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.preference.PreferenceCategory
 import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -28,7 +29,7 @@ class SettingsSyncFragment : SettingsFragment() {
 
     private val preferences: PreferencesHelper by injectLazy()
 
-    val syncCategory by lazy { findPreference("pref_category_manga_sync_accounts") as PreferenceCategory }
+    val syncCategory: PreferenceCategory by bindPref(R.string.pref_category_manga_sync_accounts_key)
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)

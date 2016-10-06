@@ -34,26 +34,15 @@ class SettingsGeneralFragment : SettingsFragment(),
 
     private val db: DatabaseHelper by injectLazy()
 
+    val columnsPreference: SimpleDialogPreference by bindPref(R.string.pref_library_columns_dialog_key)
 
-    val columnsPreference by lazy {
-        findPreference(getString(R.string.pref_library_columns_dialog_key)) as SimpleDialogPreference
-    }
+    val updateInterval: IntListPreference by bindPref(R.string.pref_library_update_interval_key)
 
-    val updateInterval by lazy {
-        findPreference(getString(R.string.pref_library_update_interval_key)) as IntListPreference
-    }
+    val updateRestriction: MultiSelectListPreference by bindPref(R.string.pref_library_update_restriction_key)
 
-    val updateRestriction by lazy {
-        findPreference(getString(R.string.pref_library_update_restriction_key)) as MultiSelectListPreference
-    }
+    val themePreference: IntListPreference by bindPref(R.string.pref_theme_key)
 
-    val themePreference by lazy {
-        findPreference(getString(R.string.pref_theme_key)) as IntListPreference
-    }
-
-    val categoryUpdate by lazy {
-        findPreference(getString(R.string.pref_library_update_categories_key)) as MultiSelectListPreference
-    }
+    val categoryUpdate: MultiSelectListPreference by bindPref(R.string.pref_library_update_categories_key)
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)

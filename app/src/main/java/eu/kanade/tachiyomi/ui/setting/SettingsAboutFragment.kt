@@ -22,6 +22,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class SettingsAboutFragment : SettingsFragment() {
+
+    companion object {
+        fun newInstance(rootKey: String): SettingsAboutFragment {
+            val args = Bundle()
+            args.putString(XpPreferenceFragment.ARG_PREFERENCE_ROOT, rootKey)
+            return SettingsAboutFragment().apply { arguments = args }
+        }
+    }
+
     /**
      * Checks for new releases
      */
@@ -32,17 +41,7 @@ class SettingsAboutFragment : SettingsFragment() {
      */
     private var releaseSubscription: Subscription? = null
 
-    val automaticUpdates by lazy {
-        findPreference(getString(R.string.pref_enable_automatic_updates_key)) as SwitchPreference
-    }
-
-    companion object {
-        fun newInstance(rootKey: String): SettingsAboutFragment {
-            val args = Bundle()
-            args.putString(XpPreferenceFragment.ARG_PREFERENCE_ROOT, rootKey)
-            return SettingsAboutFragment().apply { arguments = args }
-        }
-    }
+    val automaticUpdates: SwitchPreference by bindPref(R.string.pref_enable_automatic_updates_key)
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)

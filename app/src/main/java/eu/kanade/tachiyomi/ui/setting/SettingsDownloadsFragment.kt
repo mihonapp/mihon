@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.ContextCompat
+import android.support.v7.preference.Preference
 import android.support.v7.preference.XpPreferenceFragment
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -36,7 +37,7 @@ class SettingsDownloadsFragment : SettingsFragment() {
 
     private val preferences: PreferencesHelper by injectLazy()
 
-    val downloadDirPref by lazy { findPreference(getString(R.string.pref_download_directory_key)) }
+    val downloadDirPref: Preference by bindPref(R.string.pref_download_directory_key)
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
