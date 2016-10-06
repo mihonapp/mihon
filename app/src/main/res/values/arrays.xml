@@ -174,4 +174,16 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="reader_image_options">
+        <item>@string/set_as_cover</item>
+        <item>@string/share_image</item>
+        <item>@string/save_image</item>
+    </string-array>
+
+    <string-array name="reader_image_options_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>

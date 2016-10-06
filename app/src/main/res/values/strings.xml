@@ -281,6 +281,11 @@
 
     <!-- Reader activity -->
     <string name="custom_filter">Custom filter</string>
+    <string name="set_as_cover">Set as cover</string>
+    <string name="share_image">Share image</string>
+    <string name="save_image">Save image</string>
+    <string name="cover_updated">Cover updated</string>
+    <string name="page_downloaded">Page copied to %1$s</string>
     <string name="downloading">Downloading…</string>
     <string name="download_progress">Downloaded %1$d%%</string>
     <string name="chapter_progress">Page: %1$d</string>

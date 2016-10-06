@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import eu.kanade.tachiyomi.R
@@ -576,6 +578,19 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         return false
     }
 
+    fun shareImage() {
+        chapter.pages?.get(chapter.last_page_read)?.let { page ->
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, Uri.parse(page.imagePath))
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                type = "image/jpeg"
+            }
+            context.startActivity(Intent.createChooser(shareIntent, context.resources.getText(R.string.action_share))
+                    .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK })
+        }
+    }
+
     /**
      * Save page to local storage
      * @throws IOException
@@ -595,7 +610,10 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
             //Check if file doesn't already exist
             if (destFile.exists()) {
-                imageNotifier.onComplete(destFile)
+                if (prefs.showSavePageNotification())
+                    imageNotifier.onComplete(destFile)
+                else
+                    context.toast(context.getString(R.string.page_downloaded, destFile.path))
             } else {
                 if (inputFile.exists()) {
                     // Copy file
@@ -606,7 +624,10 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                                     { imageNotifier.onComplete(it) },
                                     { error ->
                                         Timber.e(error.message)
-                                        imageNotifier.onError(error.message)
+                                        if (prefs.showSavePageNotification())
+                                            imageNotifier.onError(error.message)
+                                        else
+                                            context.toast(error.message)
                                     })
                 }
             }

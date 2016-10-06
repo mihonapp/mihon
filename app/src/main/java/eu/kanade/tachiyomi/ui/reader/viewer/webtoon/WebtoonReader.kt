@@ -140,6 +140,11 @@ class WebtoonReader : BaseReader() {
                 }
                 return true
             }
+
+            override fun onLongPress(e: MotionEvent?) {
+                super.onLongPress(e)
+                readerActivity.onLongPress()
+            }
         })
     }
 

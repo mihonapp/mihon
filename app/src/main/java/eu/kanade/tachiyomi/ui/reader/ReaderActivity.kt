@@ -145,8 +145,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         when (item.itemId) {
             R.id.action_settings -> ReaderSettingsDialog().show(supportFragmentManager, "settings")
             R.id.action_custom_filter -> ReaderCustomFilterDialog().show(supportFragmentManager, "filter")
-            R.id.action_save_page -> presenter.savePage()
-            R.id.action_set_as_cover -> presenter.setCover()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -228,6 +226,22 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     fun onChapterAppendError() {
         // Ignore
+    }
+
+    fun onLongPress() {
+        MaterialDialog.Builder(this).apply {
+            title = "Choose"
+            items(R.array.reader_image_options)
+                    .itemsIds(R.array.reader_image_options_values)
+            itemsCallback { materialDialog, view, i, charSequence ->
+                when (i) {
+                    0 -> presenter.setCover()
+                    1 -> presenter.shareImage()
+                    2 -> presenter.savePage()
+                }
+
+            }.show()
+        }
     }
 
     /**

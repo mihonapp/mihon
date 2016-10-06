@@ -185,6 +185,11 @@ abstract class PagerReader : BaseReader() {
                 }
                 return true
             }
+
+            override fun onLongPress(e: MotionEvent?) {
+                super.onLongPress(e)
+                readerActivity.onLongPress()
+            }
         })
     }
 

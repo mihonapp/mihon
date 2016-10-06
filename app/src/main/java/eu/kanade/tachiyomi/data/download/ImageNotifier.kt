@@ -1,11 +1,10 @@
 package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
 import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.decodeSampledBitmap
 import eu.kanade.tachiyomi.util.notificationManager
 import java.io.File
 
@@ -52,9 +51,9 @@ class ImageNotifier(private val context: Context) {
 
     /**
      * Called when image download is complete
-     * @param bitmap image file containing downloaded page image
+     * @param file image file containing downloaded page image
      */
-    fun onComplete(bitmap: Bitmap, file: File) {
+    fun onComplete(file: File) {
         with(notificationBuilder) {
             if (isDownloading) {
                 setProgress(0, 0, false)
@@ -62,8 +61,8 @@ class ImageNotifier(private val context: Context) {
             }
             setContentTitle(context.getString(R.string.picture_saved))
             setSmallIcon(R.drawable.ic_insert_photo_black_24dp)
-            setLargeIcon(bitmap)
-            setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
+            setLargeIcon(file.decodeSampledBitmap(100, 100))
+            setStyle(NotificationCompat.BigPictureStyle().bigPicture(file.decodeSampledBitmap(1024, 1024)))
             setAutoCancel(true)
 
             // Clear old actions if they exist
@@ -82,10 +81,6 @@ class ImageNotifier(private val context: Context) {
         }
         // Displays the progress bar on notification
         context.notificationManager.notify(notificationId, notificationBuilder.build())
-    }
-
-    fun onComplete(file: File) {
-        onComplete(convertToBitmap(file), file)
     }
 
     /**
@@ -110,15 +105,6 @@ class ImageNotifier(private val context: Context) {
         }
         context.notificationManager.notify(notificationId, notificationBuilder.build())
         isDownloading = false
-    }
-
-    /**
-     * Converts file to bitmap
-     */
-    fun convertToBitmap(image: File): Bitmap {
-        val options = BitmapFactory.Options()
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888
-        return BitmapFactory.decodeFile(image.absolutePath, options)
     }
 
 }

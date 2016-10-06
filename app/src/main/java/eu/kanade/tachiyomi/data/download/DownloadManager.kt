@@ -47,6 +47,8 @@ class DownloadManager(
     private val threadsSubject = BehaviorSubject.create<Int>()
     private var threadsSubscription: Subscription? = null
 
+    private var notificationSubscription: Subscription? = null
+
     val queue = DownloadQueue()
 
     val imageFilenameRegex = "[^\\sa-zA-Z0-9.-]".toRegex()
@@ -64,6 +66,12 @@ class DownloadManager(
                 .subscribe {
                     threadsSubject.onNext(it)
                     downloadNotifier.multipleDownloadThreads = it > 1
+                }
+
+        notificationSubscription = preferences.showMangaDownloadNotification().asObservable()
+                .subscribe {
+                    downloadNotifier.onClear()
+                    downloadNotifier.showNotification = it
                 }
 
         downloadsSubscription = downloadsQueueSubject.flatMap { Observable.from(it) }
@@ -105,6 +113,10 @@ class DownloadManager(
 
         if (threadsSubscription != null) {
             threadsSubscription?.unsubscribe()
+        }
+
+        if (notificationSubscription != null) {
+            notificationSubscription?.unsubscribe()
         }
 
     }
@@ -188,7 +200,7 @@ class DownloadManager(
         DiskUtils.createDirectory(download.directory)
 
         val pageListObservable: Observable<List<Page>> = if (download.pages == null)
-            // Pull page list from network and add them to download object
+        // Pull page list from network and add them to download object
             download.source.fetchPageListFromNetwork(download.chapter)
                     .doOnNext { pages ->
                         download.pages = pages
