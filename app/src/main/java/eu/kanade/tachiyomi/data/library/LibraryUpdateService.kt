@@ -209,7 +209,7 @@ class LibraryUpdateService : Service() {
                 db.getFavoriteMangas().executeAsBlocking().distinctBy { it.id }
         }
 
-        if (preferences.updateOnlyNonCompleted()) {
+        if (!intent.getBooleanExtra(UPDATE_DETAILS, false) && preferences.updateOnlyNonCompleted()) {
             listToUpdate = listToUpdate.filter { it.status != Manga.COMPLETED }
         }
 
