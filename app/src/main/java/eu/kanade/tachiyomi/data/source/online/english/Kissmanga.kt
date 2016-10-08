@@ -19,7 +19,7 @@ import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
-class Kissmanga(context: Context, override val id: Int) : ParsedOnlineSource(context) {
+class Kissmanga(override val id: Int) : ParsedOnlineSource() {
 
     override val name = "Kissmanga"
 

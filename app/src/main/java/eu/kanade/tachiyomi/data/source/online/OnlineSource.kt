@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.online
 
-import android.content.Context
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -23,10 +22,8 @@ import uy.kohesive.injekt.injectLazy
 
 /**
  * A simple implementation for sources from a website.
- *
- * @param context the application context.
  */
-abstract class OnlineSource(context: Context) : Source {
+abstract class OnlineSource() : Source {
 
     /**
      * Network service.

@@ -13,7 +13,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 
-class WieManga(context: Context, override val id: Int) : ParsedOnlineSource(context) {
+class WieManga(override val id: Int) : ParsedOnlineSource() {
 
     override val name = "Wie Manga!"
 

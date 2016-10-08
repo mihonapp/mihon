@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
-class Readmanga(context: Context, override val id: Int) : ParsedOnlineSource(context) {
+class Readmanga(override val id: Int) : ParsedOnlineSource() {
 
     override val name = "Readmanga"
 

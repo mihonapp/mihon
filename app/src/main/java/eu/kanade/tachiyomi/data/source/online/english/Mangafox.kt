@@ -15,7 +15,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Mangafox(context: Context, override val id: Int) : ParsedOnlineSource(context) {
+class Mangafox(override val id: Int) : ParsedOnlineSource() {
 
     override val name = "Mangafox"
 

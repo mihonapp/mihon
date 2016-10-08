@@ -13,7 +13,7 @@ import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Mangachan(context: Context, override val id: Int) : ParsedOnlineSource(context) {
+class Mangachan(override val id: Int) : ParsedOnlineSource() {
 
     override val name = "Mangachan"
 

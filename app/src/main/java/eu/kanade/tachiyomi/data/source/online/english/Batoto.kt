@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.online.english
 
-import android.content.Context
 import android.net.Uri
 import android.text.Html
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -28,7 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
-class Batoto(context: Context, override val id: Int) : ParsedOnlineSource(context), LoginSource {
+class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
 
     override val name = "Batoto"
 

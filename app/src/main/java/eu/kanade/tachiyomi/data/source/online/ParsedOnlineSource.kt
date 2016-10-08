@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.online
 
-import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.model.MangasPage
@@ -12,10 +11,8 @@ import org.jsoup.nodes.Element
 
 /**
  * A simple implementation for sources from a website using Jsoup, an HTML parser.
- *
- * @param context the application context.
  */
-abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
+abstract class ParsedOnlineSource() : OnlineSource() {
 
     /**
      * Parse the response from the site and fills [page].

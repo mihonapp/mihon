@@ -22,8 +22,7 @@
         android:largeHeap="true"
         android:theme="@style/Theme.Tachiyomi" >
         <activity
-            android:name=".ui.main.MainActivity"
-            android:theme="@style/Theme.BrandedLaunch">
+            android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

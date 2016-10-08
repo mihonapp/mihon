@@ -13,7 +13,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Mangahere(context: Context, override val id: Int) : ParsedOnlineSource(context) {
+class Mangahere(override val id: Int) : ParsedOnlineSource() {
 
     override val name = "Mangahere"
 

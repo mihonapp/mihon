@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.online
 
-import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.network.GET
@@ -17,7 +16,7 @@ import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 import java.util.*
 
-class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(context) {
+class YamlOnlineSource(mappings: Map<*, *>) : OnlineSource() {
 
     val map = YamlSourceNode(mappings)
 

@@ -14,7 +14,7 @@ import org.jsoup.nodes.Element
 import java.util.*
 import java.util.regex.Pattern
 
-class Mangasee(context: Context, override val id: Int) : ParsedOnlineSource(context) {
+class Mangasee(override val id: Int) : ParsedOnlineSource() {
 
     override val name = "Mangasee"
 
