@@ -300,10 +300,12 @@ class LibraryUpdateService : Service() {
                     val source = sourceManager.get(manga.source) as? OnlineSource
                             ?: return@concatMap Observable.empty<Manga>()
 
-                    source.fetchMangaDetails(manga).doOnNext { networkManga ->
-                        manga.copyFrom(networkManga)
-                        db.insertManga(manga).executeAsBlocking()
-                    }
+                    source.fetchMangaDetails(manga)
+                            .doOnNext { networkManga ->
+                                manga.copyFrom(networkManga)
+                                db.insertManga(manga).executeAsBlocking()
+                            }
+                            .onErrorReturn { manga }
                 }
                 .doOnCompleted {
                     cancelNotification()
