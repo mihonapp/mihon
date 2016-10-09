@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.content.Context
+import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -59,11 +60,11 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         with(image_view) {
             setMaxBitmapDimensions((reader.activity as ReaderActivity).maxBitmapSize)
-            setDoubleTapZoomStyle(com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.ZOOM_FOCUS_FIXED)
-            setPanLimit(com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
+            setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED)
+            setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
             setMinimumScaleType(reader.scaleType)
             setMinimumDpi(100)
-            setMinimumTileDpi(180)
+            setMinimumTileDpi(200)
             setRegionDecoderClass(reader.regionDecoderClass)
             setBitmapDecoderClass(reader.bitmapDecoderClass)
             setVerticalScrollingParent(reader is VerticalReader)
@@ -71,8 +72,8 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
                     when (reader.zoomType) {
-                        ALIGN_LEFT -> setScaleAndCenter(scale, android.graphics.PointF(0f, 0f))
-                        ALIGN_RIGHT -> setScaleAndCenter(scale, android.graphics.PointF(sWidth.toFloat(), 0f))
+                        ALIGN_LEFT -> setScaleAndCenter(scale, PointF(0f, 0f))
+                        ALIGN_RIGHT -> setScaleAndCenter(scale, PointF(sWidth.toFloat(), 0f))
                         ALIGN_CENTER -> {
                             val newCenter = center
                             newCenter.y = 0f
