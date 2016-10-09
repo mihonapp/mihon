@@ -127,14 +127,16 @@ class WebtoonReader : BaseReader() {
     protected fun createGestureDetector(): GestureDetector {
         return GestureDetector(context, object : SimpleOnGestureListener() {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                val positionX = e.x
+                if (isAdded) {
+                    val positionX = e.x
 
-                if (positionX < recycler.width * LEFT_REGION) {
-                    if (tappingEnabled) moveToPrevious()
-                } else if (positionX > recycler.width * RIGHT_REGION) {
-                    if (tappingEnabled) moveToNext()
-                } else {
-                    readerActivity.toggleMenu()
+                    if (positionX < recycler.width * LEFT_REGION) {
+                        if (tappingEnabled) moveToPrevious()
+                    } else if (positionX > recycler.width * RIGHT_REGION) {
+                        if (tappingEnabled) moveToNext()
+                    } else {
+                        readerActivity.toggleMenu()
+                    }
                 }
                 return true
             }

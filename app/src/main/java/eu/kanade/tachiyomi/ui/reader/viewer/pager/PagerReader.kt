@@ -172,14 +172,16 @@ abstract class PagerReader : BaseReader() {
     protected fun createGestureDetector(): GestureDetector {
         return GestureDetector(activity, object : GestureDetector.SimpleOnGestureListener() {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                val positionX = e.x
+                if (isAdded) {
+                    val positionX = e.x
 
-                if (positionX < pager.width * LEFT_REGION) {
-                    if (tappingEnabled) onLeftSideTap()
-                } else if (positionX > pager.width * RIGHT_REGION) {
-                    if (tappingEnabled) onRightSideTap()
-                } else {
-                    readerActivity.toggleMenu()
+                    if (positionX < pager.width * LEFT_REGION) {
+                        if (tappingEnabled) onLeftSideTap()
+                    } else if (positionX > pager.width * RIGHT_REGION) {
+                        if (tappingEnabled) onRightSideTap()
+                    } else {
+                        readerActivity.toggleMenu()
+                    }
                 }
                 return true
             }
