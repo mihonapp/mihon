@@ -85,9 +85,9 @@ class WebtoonReader : BaseReader() {
         recycler.adapter = adapter
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                val page = layoutManager.findLastVisibleItemPosition()
-                if (page != currentPage) {
-                    onPageChanged(page)
+                val index = layoutManager.findLastVisibleItemPosition()
+                if (index != currentPage) {
+                    pages.getOrNull(index)?.let { onPageChanged(index) }
                 }
             }
         })
