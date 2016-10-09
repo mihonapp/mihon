@@ -27,16 +27,16 @@ open class SourceManager(private val context: Context) {
     fun getOnlineSources() = sourcesMap.values.filterIsInstance(OnlineSource::class.java)
 
     private fun createOnlineSourceList(): List<Source> = listOf(
-        Batoto(1),
-        Kissmanga(2),
-        Mangahere(3),
-        Mangafox(4),
-        Readmanga(5),
-        Mintmanga(6),
-        Mangachan(7),
-        Readmangatoday(8),
-        Mangasee(9),
-        WieManga(10)
+            Batoto(1),
+            Mangahere(2),
+            Mangafox(3),
+            Kissmanga(4),
+            Readmanga(5),
+            Mintmanga(6),
+            Mangachan(7),
+            Readmangatoday(8),
+            Mangasee(9),
+            WieManga(10)
     )
 
     private fun createSources(): Map<Int, Source> = hashMapOf<Int, Source>().apply {
