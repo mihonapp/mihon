@@ -610,10 +610,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
             //Check if file doesn't already exist
             if (destFile.exists()) {
-                if (prefs.showSavePageNotification())
                     imageNotifier.onComplete(destFile)
-                else
-                    context.toast(context.getString(R.string.page_downloaded, destFile.path))
             } else {
                 if (inputFile.exists()) {
                     // Copy file
@@ -624,10 +621,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                                     { imageNotifier.onComplete(it) },
                                     { error ->
                                         Timber.e(error.message)
-                                        if (prefs.showSavePageNotification())
                                             imageNotifier.onError(error.message)
-                                        else
-                                            context.toast(error.message)
                                     })
                 }
             }

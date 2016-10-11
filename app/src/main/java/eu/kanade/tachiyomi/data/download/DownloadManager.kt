@@ -47,8 +47,6 @@ class DownloadManager(
     private val threadsSubject = BehaviorSubject.create<Int>()
     private var threadsSubscription: Subscription? = null
 
-    private var notificationSubscription: Subscription? = null
-
     val queue = DownloadQueue()
 
     val imageFilenameRegex = "[^\\sa-zA-Z0-9.-]".toRegex()
@@ -66,12 +64,6 @@ class DownloadManager(
                 .subscribe {
                     threadsSubject.onNext(it)
                     downloadNotifier.multipleDownloadThreads = it > 1
-                }
-
-        notificationSubscription = preferences.showMangaDownloadNotification().asObservable()
-                .subscribe {
-                    downloadNotifier.onClear()
-                    downloadNotifier.showNotification = it
                 }
 
         downloadsSubscription = downloadsQueueSubject.flatMap { Observable.from(it) }
@@ -113,10 +105,6 @@ class DownloadManager(
 
         if (threadsSubscription != null) {
             threadsSubscription?.unsubscribe()
-        }
-
-        if (notificationSubscription != null) {
-            notificationSubscription?.unsubscribe()
         }
 
     }

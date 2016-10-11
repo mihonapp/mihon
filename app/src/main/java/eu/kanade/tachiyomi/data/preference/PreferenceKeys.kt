@@ -72,10 +72,6 @@ class PreferenceKeys(context: Context) {
 
     val removeAfterMarkedAsRead = context.getString(R.string.pref_remove_after_marked_as_read_key)
 
-    val showMangaDownloadNotification = context.getString(R.string.pref_notifications_manga_download_key)
-
-    val showSavePageNotification = context.getString(R.string.pref_notifications_single_page_key)
-
     val libraryUpdateInterval = context.getString(R.string.pref_library_update_interval_key)
 
     val libraryUpdateRestriction = context.getString(R.string.pref_library_update_restriction_key)

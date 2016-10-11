@@ -122,10 +122,6 @@ class PreferencesHelper(context: Context) {
 
     fun removeAfterMarkedAsRead() = prefs.getBoolean(keys.removeAfterMarkedAsRead, false)
 
-    fun showMangaDownloadNotification() = rxPrefs.getBoolean(keys.showMangaDownloadNotification, true)
-
-    fun showSavePageNotification() = prefs.getBoolean(keys.showSavePageNotification, false)
-
     fun libraryUpdateInterval() = rxPrefs.getInteger(keys.libraryUpdateInterval, 0)
 
     fun libraryUpdateRestriction() = prefs.getStringSet(keys.libraryUpdateRestriction, emptySet())

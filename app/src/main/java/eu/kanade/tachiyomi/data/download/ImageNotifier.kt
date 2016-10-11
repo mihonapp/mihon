@@ -1,10 +1,13 @@
 package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.support.v4.app.NotificationCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.target.SimpleTarget
 import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.decodeSampledBitmap
 import eu.kanade.tachiyomi.util.notificationManager
 import java.io.File
 
@@ -61,8 +64,27 @@ class ImageNotifier(private val context: Context) {
             }
             setContentTitle(context.getString(R.string.picture_saved))
             setSmallIcon(R.drawable.ic_insert_photo_black_24dp)
-            setLargeIcon(file.decodeSampledBitmap(100, 100))
-            setStyle(NotificationCompat.BigPictureStyle().bigPicture(file.decodeSampledBitmap(1024, 1024)))
+            Glide.with(context).load(file).asBitmap().into(object : SimpleTarget<Bitmap>(100, 100) {
+                /**
+                 * The method that will be called when the resource load has finished.
+                 * @param resource the loaded resource.
+                 */
+                override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
+                    setLargeIcon(resource)
+                    context.notificationManager.notify(notificationId, notificationBuilder.build())
+                }
+            })
+            Glide.with(context).load(file).asBitmap().into(object : SimpleTarget<Bitmap>(512, 384) {
+                /**
+                 * The method that will be called when the resource load has finished.
+                 * @param resource the loaded resource.
+                 */
+                override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
+                    setStyle(NotificationCompat.BigPictureStyle().bigPicture(resource))
+                    context.notificationManager.notify(notificationId, notificationBuilder.build())
+                }
+            })
+
             setAutoCancel(true)
 
             // Clear old actions if they exist

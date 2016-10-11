@@ -176,8 +176,8 @@
 
     <string-array name="reader_image_options">
         <item>@string/set_as_cover</item>
-        <item>@string/share_image</item>
-        <item>@string/save_image</item>
+        <item>@string/action_share</item>
+        <item>@string/action_save</item>
     </string-array>
 
     <string-array name="reader_image_options_values">
