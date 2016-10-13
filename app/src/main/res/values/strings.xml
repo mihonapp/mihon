@@ -267,11 +267,6 @@
     <string name="status">Status</string>
     <string name="chapters">Chapters</string>
 
-    <!-- Reader Activity -->
-    <string name="custom_filter">Custom filter</string>
-    <string name="save_page">Download page</string>
-    <string name="set_as_cover">Set as cover</string>
-    <string name="cover_updated">Cover updated</string>
     <!-- Dialog remove recently view -->
     <string name="dialog_remove_recently_description">This will remove the read date of this chapter. Are you sure?</string>
     <string name="dialog_remove_recently_reset">Reset all chapters for this manga</string>
@@ -279,6 +274,7 @@
     <!-- Image notifier -->
     <string name="picture_saved">Picture saved</string>
     <string name="saving_picture">Saving picture</string>
+    <string name="options">Options</string>
 
     <!-- Reader activity -->
     <string name="custom_filter">Custom filter</string>
@@ -315,6 +311,7 @@
     <string name="notification_no_new_chapters">No new chapters found</string>
     <string name="notification_new_chapters">New chapters found for:</string>
     <string name="notification_manga_update_failed">Failed to update manga:</string>
+    <string name="notification_cover_update_failed">Failed to update cover</string>
     <string name="notification_first_add_to_library">Please add the manga to your library before doing this</string>
     <string name="notification_not_connected_to_ac_title">Sync canceled</string>
     <string name="notification_not_connected_to_ac_body">Not connected to AC power</string>

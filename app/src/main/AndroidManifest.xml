@@ -88,7 +88,7 @@
 
         <receiver android:name=".data.library.LibraryUpdateService$CancelUpdateReceiver" />
 
-        <receiver android:name=".data.download.ImageNotificationReceiver" />
+        <receiver android:name=".ui.reader.notification.ImageNotificationReceiver" />
 
         <meta-data
             android:name="eu.kanade.tachiyomi.data.glide.AppGlideModule"

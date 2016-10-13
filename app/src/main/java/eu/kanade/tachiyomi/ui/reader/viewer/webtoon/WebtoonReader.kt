@@ -6,9 +6,11 @@ import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
+import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.PreCachingLayoutManager
 import rx.subscriptions.CompositeSubscription
 
@@ -142,17 +144,21 @@ class WebtoonReader : BaseReader() {
             }
 
             override fun onLongPress(e: MotionEvent) {
-                super.onLongPress(e)
-                val a = recycler.findChildViewUnder(e.rawX, e.rawY)
-                val i = recycler.getChildAdapterPosition(a)
-                readerActivity.onLongPress(adapter.getItem(i))
+                if (isAdded) {
+                    val child = recycler.findChildViewUnder(e.rawX, e.rawY)
+                    val position = recycler.getChildAdapterPosition(child)
+                    val page = adapter.pages?.getOrNull(position)
+                    if (page != null)
+                        readerActivity.onLongPress(page)
+                    else
+                        context.toast(getString(R.string.unknown_error))
+                }
             }
         })
     }
 
     /**
      * Called when a new chapter is set in [BaseReader].
-     *
      * @param chapter the chapter set.
      * @param currentPage the initial page to display.
      */
@@ -167,7 +173,6 @@ class WebtoonReader : BaseReader() {
 
     /**
      * Called when a chapter is appended in [BaseReader].
-     *
      * @param chapter the chapter appended.
      */
     override fun onChapterAppended(chapter: ReaderChapter) {
@@ -191,7 +196,6 @@ class WebtoonReader : BaseReader() {
 
     /**
      * Sets the active page.
-     *
      * @param pageNumber the index of the page from [pages].
      */
     override fun setActivePage(pageNumber: Int) {

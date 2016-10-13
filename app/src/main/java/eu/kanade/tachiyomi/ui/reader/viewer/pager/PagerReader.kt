@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
+import eu.kanade.tachiyomi.util.toast
 import rx.subscriptions.CompositeSubscription
 
 /**
@@ -187,8 +188,13 @@ abstract class PagerReader : BaseReader() {
             }
 
             override fun onLongPress(e: MotionEvent?) {
-                super.onLongPress(e)
-                readerActivity.onLongPress(adapter.pages!![pager.currentItem])
+                if (isAdded) {
+                    val page = adapter.pages.getOrNull(pager.currentItem)
+                    if (page != null)
+                        readerActivity.onLongPress(page)
+                    else
+                        context.toast(getString(R.string.unknown_error))
+                }
             }
         })
     }

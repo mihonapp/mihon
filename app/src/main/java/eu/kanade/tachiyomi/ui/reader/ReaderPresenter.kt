@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import eu.kanade.tachiyomi.R
@@ -13,15 +11,14 @@ import eu.kanade.tachiyomi.data.database.models.History
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.download.ImageNotifier
 import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
 import eu.kanade.tachiyomi.data.mangasync.UpdateMangaSyncService
-import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.ui.reader.notification.ImageNotifier
 import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.toast
@@ -33,19 +30,12 @@ import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
 import java.util.*
 
 /**
  * Presenter of [ReaderActivity].
  */
 class ReaderPresenter : BasePresenter<ReaderActivity>() {
-
-    /**
-     * Network helper
-     */
-    private val network: NetworkHelper by injectLazy()
-
     /**
      * Preferences.
      */
@@ -107,11 +97,6 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * Source of the manga.
      */
     private val source by lazy { sourceManager.get(manga.source)!! }
-
-    /**
-     *
-     */
-    val imageNotifier by lazy { ImageNotifier(context) }
 
     /**
      * Directory of pictures
@@ -398,13 +383,13 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             if (chapter.read) {
                 val removeAfterReadSlots = prefs.removeAfterReadSlots()
                 when (removeAfterReadSlots) {
-                // Setting disabled
+                    // Setting disabled
                     -1 -> {
                         /**Empty function**/
                     }
-                // Remove current read chapter
+                    // Remove current read chapter
                     0 -> deleteChapter(chapter, manga)
-                // Remove previous chapter specified by user in settings.
+                    // Remove previous chapter specified by user in settings.
                     else -> getAdjacentChaptersStrategy(chapter, removeAfterReadSlots)
                             .first?.let { deleteChapter(it, manga) }
                 }
@@ -548,43 +533,21 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * Update cover with page file.
      */
     internal fun setCover(page: Page) {
-            // Update cover to selected file, show error if something went wrong
-            try {
-                if (editCoverWithStream(File(page.imagePath).inputStream(), manga)) {
+        try {
+            if (manga.favorite) {
+                if (manga.thumbnail_url != null) {
+                    coverCache.copyToCache(manga.thumbnail_url!!, File(page.imagePath).inputStream())
                     context.toast(R.string.cover_updated)
                 } else {
-                    throw Exception("Stream copy failed")
+                    throw Exception("Image url not found")
                 }
-            } catch(e: Exception) {
-                context.toast(R.string.notification_manga_update_failed)
-                Timber.e(e.message)
+            } else {
+                context.toast(R.string.notification_first_add_to_library)
             }
-    }
-
-    /**
-     * Called to copy image to cache
-     * @param inputStream the new cover.
-     * @param manga the manga edited.
-     * @return true if the cover is updated, false otherwise
-     */
-    @Throws(IOException::class)
-    private fun editCoverWithStream(inputStream: InputStream, manga: Manga): Boolean {
-        if (manga.thumbnail_url != null && manga.favorite) {
-            coverCache.copyToCache(manga.thumbnail_url!!, inputStream)
-            return true
+        } catch (error: Exception) {
+            context.toast(R.string.notification_cover_update_failed)
+            Timber.e(error)
         }
-        return false
-    }
-
-    fun shareImage(page: Page) {
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, Uri.parse(page.imagePath))
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                type = "image/jpeg"
-            }
-            context.startActivity(Intent.createChooser(shareIntent, context.resources.getText(R.string.action_share))
-                    .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK })
     }
 
     /**
@@ -593,6 +556,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      */
     @Throws(IOException::class)
     internal fun savePage(page: Page) {
+        // Used to show image notification
+        val imageNotifier = ImageNotifier(context)
+
         // Location of image file.
         val inputFile = File(page.imagePath)
 
@@ -602,23 +568,20 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
         //Remove the notification if already exist (user feedback)
         imageNotifier.onClear()
-
-        //Check if file doesn't already exist
-        if (destFile.exists()) {
-            imageNotifier.onComplete(destFile)
-        } else {
-            if (inputFile.exists()) {
-                // Copy file
-                Observable.fromCallable { inputFile.copyTo(destFile) }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(
-                                { imageNotifier.onComplete(it) },
-                                { error ->
-                                    Timber.e(error.message)
-                                    imageNotifier.onError(error.message)
-                                })
-            }
+        if (inputFile.exists()) {
+            // Copy file
+            Observable.fromCallable { inputFile.copyTo(destFile, true) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            {
+                                // Show notification
+                                imageNotifier.onComplete(it)
+                            },
+                            { error ->
+                                Timber.e(error)
+                                imageNotifier.onError(error.message)
+                            })
         }
     }
 }

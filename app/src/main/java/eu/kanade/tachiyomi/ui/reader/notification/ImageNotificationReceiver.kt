@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.download
+package eu.kanade.tachiyomi.ui.reader.notification
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -9,6 +9,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.notificationManager
 import java.io.File
 
+/**
+ * The BroadcastReceiver of [ImageNotifier]
+ * Intent calls should be made from this class.
+ */
 class ImageNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
@@ -25,23 +29,36 @@ class ImageNotificationReceiver : BroadcastReceiver() {
         }
     }
 
-    fun deleteImage(path: String) {
+    /**
+     * Called to delete image
+     * @param path path of file
+     */
+    private fun deleteImage(path: String) {
         val file = File(path)
         if (file.exists()) file.delete()
     }
 
-    fun shareImage(context: Context, path: String) {
+    /**
+     * Called to start share intent to share image
+     * @param context context of application
+     * @param path path of file
+     */
+    private fun shareImage(context: Context, path: String) {
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, Uri.parse(path))
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
             type = "image/jpeg"
         }
         context.startActivity(Intent.createChooser(shareIntent, context.resources.getText(R.string.action_share))
                 .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK })
     }
 
-    fun showImage(context: Context, path: String) {
+    /**
+     * Called to show image in gallery application
+     * @param context context of application
+     * @param path path of file
+     */
+    private fun showImage(context: Context, path: String) {
         val intent = Intent().apply {
             action = Intent.ACTION_VIEW
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
@@ -51,17 +68,17 @@ class ImageNotificationReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val ACTION_SHARE_IMAGE = "eu.kanade.SHARE_IMAGE"
+        private const val ACTION_SHARE_IMAGE = "eu.kanade.SHARE_IMAGE"
 
-        const val ACTION_SHOW_IMAGE = "eu.kanade.SHOW_IMAGE"
+        private const val ACTION_SHOW_IMAGE = "eu.kanade.SHOW_IMAGE"
 
-        const val ACTION_DELETE_IMAGE = "eu.kanade.DELETE_IMAGE"
+        private const val ACTION_DELETE_IMAGE = "eu.kanade.DELETE_IMAGE"
 
-        const val EXTRA_FILE_LOCATION = "file_location"
+        private const val EXTRA_FILE_LOCATION = "file_location"
 
-        const val NOTIFICATION_ID = "notification_id"
+        private const val NOTIFICATION_ID = "notification_id"
 
-        fun shareImageIntent(context: Context, path: String, notificationId: Int): PendingIntent {
+        internal fun shareImageIntent(context: Context, path: String, notificationId: Int): PendingIntent {
             val intent = Intent(context, ImageNotificationReceiver::class.java).apply {
                 action = ACTION_SHARE_IMAGE
                 putExtra(EXTRA_FILE_LOCATION, path)
@@ -70,7 +87,7 @@ class ImageNotificationReceiver : BroadcastReceiver() {
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
-        fun showImageIntent(context: Context, path: String): PendingIntent {
+        internal fun showImageIntent(context: Context, path: String): PendingIntent {
             val intent = Intent(context, ImageNotificationReceiver::class.java).apply {
                 action = ACTION_SHOW_IMAGE
                 putExtra(EXTRA_FILE_LOCATION, path)
@@ -78,7 +95,7 @@ class ImageNotificationReceiver : BroadcastReceiver() {
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
-        fun deleteImageIntent(context: Context, path: String, notificationId: Int): PendingIntent {
+        internal fun deleteImageIntent(context: Context, path: String, notificationId: Int): PendingIntent {
             val intent = Intent(context, ImageNotificationReceiver::class.java).apply {
                 action = ACTION_DELETE_IMAGE
                 putExtra(EXTRA_FILE_LOCATION, path)
