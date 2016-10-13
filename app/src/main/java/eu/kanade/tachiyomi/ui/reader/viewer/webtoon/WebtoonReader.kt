@@ -141,9 +141,11 @@ class WebtoonReader : BaseReader() {
                 return true
             }
 
-            override fun onLongPress(e: MotionEvent?) {
+            override fun onLongPress(e: MotionEvent) {
                 super.onLongPress(e)
-                readerActivity.onLongPress()
+                val a = recycler.findChildViewUnder(e.rawX, e.rawY)
+                val i = recycler.getChildAdapterPosition(a)
+                readerActivity.onLongPress(adapter.getItem(i))
             }
         })
     }

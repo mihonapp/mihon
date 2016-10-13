@@ -64,7 +64,7 @@ class ImageNotifier(private val context: Context) {
             }
             setContentTitle(context.getString(R.string.picture_saved))
             setSmallIcon(R.drawable.ic_insert_photo_black_24dp)
-            Glide.with(context).load(file).asBitmap().into(object : SimpleTarget<Bitmap>(100, 100) {
+            Glide.with(context).load(file).asBitmap().into(object : SimpleTarget<Bitmap>(96, 96) {
                 /**
                  * The method that will be called when the resource load has finished.
                  * @param resource the loaded resource.
@@ -74,7 +74,7 @@ class ImageNotifier(private val context: Context) {
                     context.notificationManager.notify(notificationId, notificationBuilder.build())
                 }
             })
-            Glide.with(context).load(file).asBitmap().into(object : SimpleTarget<Bitmap>(512, 384) {
+            Glide.with(context).load(file).asBitmap().into(object : SimpleTarget<Bitmap>(720, 1280) {
                 /**
                  * The method that will be called when the resource load has finished.
                  * @param resource the loaded resource.

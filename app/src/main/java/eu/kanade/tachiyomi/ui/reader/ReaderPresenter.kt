@@ -547,11 +547,10 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     /**
      * Update cover with page file.
      */
-    internal fun setCover() {
-        chapter.pages?.get(chapter.last_page_read)?.let {
+    internal fun setCover(page: Page) {
             // Update cover to selected file, show error if something went wrong
             try {
-                if (editCoverWithStream(File(it.imagePath).inputStream(), manga)) {
+                if (editCoverWithStream(File(page.imagePath).inputStream(), manga)) {
                     context.toast(R.string.cover_updated)
                 } else {
                     throw Exception("Stream copy failed")
@@ -560,7 +559,6 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 context.toast(R.string.notification_manga_update_failed)
                 Timber.e(e.message)
             }
-        }
     }
 
     /**
@@ -578,8 +576,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         return false
     }
 
-    fun shareImage() {
-        chapter.pages?.get(chapter.last_page_read)?.let { page ->
+    fun shareImage(page: Page) {
             val shareIntent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_STREAM, Uri.parse(page.imagePath))
@@ -588,7 +585,6 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             }
             context.startActivity(Intent.createChooser(shareIntent, context.resources.getText(R.string.action_share))
                     .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK })
-        }
     }
 
     /**
@@ -596,34 +592,32 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * @throws IOException
      */
     @Throws(IOException::class)
-    internal fun savePage() {
-        chapter.pages?.get(chapter.last_page_read)?.let { page ->
-            // Location of image file.
-            val inputFile = File(page.imagePath)
+    internal fun savePage(page: Page) {
+        // Location of image file.
+        val inputFile = File(page.imagePath)
 
-            // File where the image will be saved.
-            val destFile = File(pictureDirectory, manga.title + " - " + chapter.name +
-                    " - " + downloadManager.getImageFilename(page))
+        // File where the image will be saved.
+        val destFile = File(pictureDirectory, manga.title + " - " + chapter.name +
+                " - " + downloadManager.getImageFilename(page))
 
-            //Remove the notification if already exist (user feedback)
-            imageNotifier.onClear()
+        //Remove the notification if already exist (user feedback)
+        imageNotifier.onClear()
 
-            //Check if file doesn't already exist
-            if (destFile.exists()) {
-                    imageNotifier.onComplete(destFile)
-            } else {
-                if (inputFile.exists()) {
-                    // Copy file
-                    Observable.fromCallable { inputFile.copyTo(destFile) }
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(
-                                    { imageNotifier.onComplete(it) },
-                                    { error ->
-                                        Timber.e(error.message)
-                                            imageNotifier.onError(error.message)
-                                    })
-                }
+        //Check if file doesn't already exist
+        if (destFile.exists()) {
+            imageNotifier.onComplete(destFile)
+        } else {
+            if (inputFile.exists()) {
+                // Copy file
+                Observable.fromCallable { inputFile.copyTo(destFile) }
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                { imageNotifier.onComplete(it) },
+                                { error ->
+                                    Timber.e(error.message)
+                                    imageNotifier.onError(error.message)
+                                })
             }
         }
     }

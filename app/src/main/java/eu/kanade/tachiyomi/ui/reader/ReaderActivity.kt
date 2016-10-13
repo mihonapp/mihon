@@ -228,16 +228,16 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         // Ignore
     }
 
-    fun onLongPress() {
+    fun onLongPress(page: Page) {
         MaterialDialog.Builder(this).apply {
             title = "Choose"
             items(R.array.reader_image_options)
                     .itemsIds(R.array.reader_image_options_values)
             itemsCallback { materialDialog, view, i, charSequence ->
                 when (i) {
-                    0 -> presenter.setCover()
-                    1 -> presenter.shareImage()
-                    2 -> presenter.savePage()
+                    0 -> presenter.setCover(page)
+                    1 -> presenter.shareImage(page)
+                    2 -> presenter.savePage(page)
                 }
 
             }.show()
