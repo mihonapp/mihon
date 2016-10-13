@@ -5,6 +5,8 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.IBinder
 import android.os.PowerManager
 import android.support.v4.app.NotificationCompat
@@ -70,6 +72,8 @@ class LibraryUpdateService : Service() {
      */
     private val notificationId: Int
         get() = Constants.NOTIFICATION_LIBRARY_ID
+
+    private var notificationBitmap: Bitmap? = null
 
     companion object {
 
@@ -137,6 +141,8 @@ class LibraryUpdateService : Service() {
      */
     override fun onDestroy() {
         subscription?.unsubscribe()
+        notificationBitmap?.recycle()
+        notificationBitmap = null
         LibraryUpdateAlarm.startAlarm(this)
         destroyWakeLock()
         super.onDestroy()
@@ -159,6 +165,10 @@ class LibraryUpdateService : Service() {
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return Service.START_NOT_STICKY
+
+        if (notificationBitmap == null) {
+            notificationBitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+        }
 
         // Unsubscribe from any previous subscription if needed.
         subscription?.unsubscribe()
@@ -369,7 +379,8 @@ class LibraryUpdateService : Service() {
      */
     private fun showNotification(title: String, body: String) {
         notificationManager.notify(notificationId, notification() {
-            setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
+            setSmallIcon(R.drawable.notification_icon)
+            setLargeIcon(notificationBitmap)
             setContentTitle(title)
             setContentText(body)
         })
@@ -384,7 +395,8 @@ class LibraryUpdateService : Service() {
      */
     private fun showProgressNotification(manga: Manga, current: Int, total: Int, cancelIntent: PendingIntent) {
         notificationManager.notify(notificationId, notification() {
-            setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
+            setSmallIcon(R.drawable.notification_icon)
+            setLargeIcon(notificationBitmap)
             setContentTitle(manga.title)
             setProgress(total, current, false)
             setOngoing(true)
@@ -404,7 +416,8 @@ class LibraryUpdateService : Service() {
         val body = getUpdatedMangasBody(updates, failed)
 
         notificationManager.notify(notificationId, notification() {
-            setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
+            setSmallIcon(R.drawable.notification_icon)
+            setLargeIcon(notificationBitmap)
             setContentTitle(title)
             setStyle(NotificationCompat.BigTextStyle().bigText(body))
             setContentIntent(notificationIntent)
