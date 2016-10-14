@@ -51,6 +51,11 @@ android {
         buildConfigField "boolean", "INCLUDE_UPDATER", "${includeUpdater()}"
 
         vectorDrawables.useSupportLibrary = true
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86"
+
+        }
     }
 
     buildTypes {
@@ -104,7 +109,7 @@ dependencies {
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.0'
+    compile 'io.reactivex:rxjava:1.2.1'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
 
     // Network client
@@ -139,7 +144,7 @@ dependencies {
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
-    compile "com.pushtorefresh.storio:sqlite:1.10.0"
+    compile "com.pushtorefresh.storio:sqlite:1.11.0"
 
     // Model View Presenter
     final nucleus_version = '3.0.0'
@@ -160,7 +165,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.3.1'
 
     // Crash reports
-    compile 'ch.acra:acra:4.9.0'
+    compile 'ch.acra:acra:4.9.1'
 
     // UI
     compile 'com.dmitrymalkovich.android:material-design-dimens:1.4'
