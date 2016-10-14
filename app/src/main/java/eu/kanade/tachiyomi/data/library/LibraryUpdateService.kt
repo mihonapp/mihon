@@ -143,7 +143,6 @@ class LibraryUpdateService : Service() {
         subscription?.unsubscribe()
         notificationBitmap?.recycle()
         notificationBitmap = null
-        LibraryUpdateAlarm.startAlarm(this)
         destroyWakeLock()
         super.onDestroy()
     }
@@ -188,10 +187,8 @@ class LibraryUpdateService : Service() {
                 .subscribe({
                 }, {
                     showNotification(getString(R.string.notification_update_error), "")
-                    LibraryUpdateTrigger.setupTask(this)
                     stopSelf(startId)
                 }, {
-                    LibraryUpdateTrigger.setupTask(this)
                     stopSelf(startId)
                 })
 
@@ -270,6 +267,7 @@ class LibraryUpdateService : Service() {
                     } else {
                         showResultNotification(newUpdates, failedUpdates)
                     }
+                    LibraryUpdateTrigger.setupTask(this)
                 }
     }
 
