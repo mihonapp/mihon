@@ -377,7 +377,7 @@ class LibraryUpdateService : Service() {
      */
     private fun showNotification(title: String, body: String) {
         notificationManager.notify(notificationId, notification() {
-            setSmallIcon(R.drawable.notification_icon)
+            setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setLargeIcon(notificationBitmap)
             setContentTitle(title)
             setContentText(body)
@@ -393,7 +393,7 @@ class LibraryUpdateService : Service() {
      */
     private fun showProgressNotification(manga: Manga, current: Int, total: Int, cancelIntent: PendingIntent) {
         notificationManager.notify(notificationId, notification() {
-            setSmallIcon(R.drawable.notification_icon)
+            setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setLargeIcon(notificationBitmap)
             setContentTitle(manga.title)
             setProgress(total, current, false)
@@ -414,7 +414,7 @@ class LibraryUpdateService : Service() {
         val body = getUpdatedMangasBody(updates, failed)
 
         notificationManager.notify(notificationId, notification() {
-            setSmallIcon(R.drawable.notification_icon)
+            setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setLargeIcon(notificationBitmap)
             setContentTitle(title)
             setStyle(NotificationCompat.BigTextStyle().bigText(body))
