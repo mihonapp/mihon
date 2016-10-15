@@ -150,8 +150,7 @@ class WebtoonReader : BaseReader() {
      * @param currentPage the initial page to display.
      */
     override fun onChapterSet(chapter: ReaderChapter, currentPage: Page) {
-        // Restoring current page is not supported. It's getting weird scrolling jumps
-        // this.currentPage = currentPage;
+        this.currentPage = currentPage.pageNumber
 
         // Make sure the view is already initialized.
         if (view != null) {
