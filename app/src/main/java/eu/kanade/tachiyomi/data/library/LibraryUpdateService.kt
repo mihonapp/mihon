@@ -165,16 +165,16 @@ class LibraryUpdateService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return Service.START_NOT_STICKY
 
-        if (notificationBitmap == null) {
-            notificationBitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-        }
-
         // Unsubscribe from any previous subscription if needed.
         subscription?.unsubscribe()
 
         // Update favorite manga. Destroy service when completed or in case of an error.
         subscription = Observable
                 .defer {
+                    if (notificationBitmap == null) {
+                        notificationBitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+                    }
+
                     val mangaList = getMangaToUpdate(intent)
 
                     // Update either chapter list or manga details.

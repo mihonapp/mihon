@@ -110,7 +110,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         setMenuVisibility(menuVisible)
 
-        maxBitmapSize = GLUtil.getMaxTextureSize()
+        maxBitmapSize = Math.min(2048, GLUtil.getMaxTextureSize())
 
         left_chapter.setOnClickListener {
             if (viewer != null) {
