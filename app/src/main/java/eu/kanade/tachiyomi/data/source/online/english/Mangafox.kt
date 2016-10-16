@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.online.english
 
-import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.EN
@@ -120,7 +119,7 @@ class Mangafox(override val id: Int) : ParsedOnlineSource() {
         val document = response.asJsoup()
 
         val url = response.request().url().toString().substringBeforeLast('/')
-        document.select("select.m").first().select("option:not([value=0])").forEach {
+        document.select("select.m").first()?.select("option:not([value=0])")?.forEach {
             pages.add(Page(pages.size, "$url/${it.attr("value")}.html"))
         }
     }
