@@ -105,6 +105,7 @@ class ChaptersHolder(
                     R.id.action_mark_as_read -> markAsRead(chapterList)
                     R.id.action_mark_as_unread -> markAsUnread(chapterList)
                     R.id.action_mark_previous_as_read -> markPreviousAsRead(chapter)
+                    R.id.action_delete_page_list -> deletePageList(chapter)
                 }
             }
 

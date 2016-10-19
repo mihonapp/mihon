@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.os.Bundle
+import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -46,6 +47,11 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      * Downloads manager.
      */
     val downloadManager: DownloadManager by injectLazy()
+
+    /**
+     * Chapter cache
+     */
+    val chapterCache: ChapterCache by injectLazy()
 
     /**
      * Active manga.
@@ -336,6 +342,10 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         downloadManager.deleteChapter(source, manga, chapter)
         chapter.status = Download.NOT_DOWNLOADED
         chapter.download = null
+    }
+
+    fun deletePageList(chapter: ChapterModel) {
+        chapterCache.removePageListFromCache(chapter.url)
     }
 
     /**

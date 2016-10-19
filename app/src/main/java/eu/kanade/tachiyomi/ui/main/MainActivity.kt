@@ -81,9 +81,8 @@ class MainActivity : BaseActivity() {
             // Set start screen
             setSelectedDrawerItem(startScreenId)
 
-            //Check for update
-            val context = this
-            Thread { ActivityAskUpdate.checkAndDoUpdateIfNeeded(context, true) }.start()
+            // Show changelog if needed
+            ChangelogDialogFragment.show(preferences, supportFragmentManager)
        }
     }
 

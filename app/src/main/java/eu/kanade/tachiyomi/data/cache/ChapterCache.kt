@@ -116,6 +116,15 @@ class ChapterCache(private val context: Context) {
         }
     }
 
+    fun removePageListFromCache(chapterUrl: String) {
+        // Get the key for the chapter.
+        val key = DiskUtils.hashKeyForDisk(chapterUrl)
+        try {
+            diskCache.remove(key)
+        } catch(e: IOException) {
+        }
+    }
+
     /**
      * Add page list to disk cache.
      * @param chapterUrl the url of the chapter.

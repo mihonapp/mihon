@@ -19,6 +19,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.io.IOException;
 import java.net.CookieStore;
 import java.net.HttpCookie;
@@ -28,9 +30,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import eu.kanade.tachiyomi.R;
 import okhttp3.Request;
 import okhttp3.Response;
+import uy.kohesive.injekt.InjektKt;
 
 public class DialogLogin extends AppCompatDialog {
 
+    private FirebaseAnalytics analytics = InjektKt.getInjekt().getInstance(FirebaseAnalytics.class);
     public static ReentrantLock DIALOG_LOCK = new ReentrantLock();
 
     public DialogLogin(Context context) {
@@ -89,6 +93,21 @@ public class DialogLogin extends AppCompatDialog {
         }
     }
 
+    private void logLoginAttempt() {
+        Bundle params = new Bundle();
+        analytics.logEvent("login_try", params);
+    }
+
+    private void logLoginCancel() {
+        Bundle params = new Bundle();
+        analytics.logEvent("login_cancel", params);
+    }
+
+    private void logLoginSuccess() {
+        Bundle params = new Bundle();
+        analytics.logEvent("login_success", params);
+    }
+
     public static boolean isLoggedIn(final Context context, boolean useWeb) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String ehCookieString = prefs.getString("eh_cookie_string", "");
@@ -125,6 +144,7 @@ public class DialogLogin extends AppCompatDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         DIALOG_LOCK.lock();
+        logLoginAttempt();
         setContentView(R.layout.activity_dialog_login);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         final WebView wv = (WebView) findViewById(R.id.webView);
@@ -132,6 +152,7 @@ public class DialogLogin extends AppCompatDialog {
         findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 instance.dismiss();
+                logLoginCancel();
             }
         });
         findViewById(R.id.btnAdvanced).setOnClickListener(new View.OnClickListener() {
@@ -239,6 +260,7 @@ public class DialogLogin extends AppCompatDialog {
                                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
                                             preferences.edit().putString("eh_cookie_string", "ipb_member_id=" + memberID + "; ipb_pass_hash=" + passHash + "; igneous=" + igneous + "; ").commit();
                                             instance.dismiss();
+                                            logLoginSuccess();
                                         } else {
                                             Log.i("EHentai", "@ ExHentai but cookies not fully set, waiting...");
                                         }

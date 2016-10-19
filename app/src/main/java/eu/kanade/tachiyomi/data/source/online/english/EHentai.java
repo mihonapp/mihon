@@ -2,14 +2,12 @@ package eu.kanade.tachiyomi.data.source.online.english;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ShareCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -26,11 +24,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import eu.kanade.tachiyomi.data.database.models.Chapter;
 import eu.kanade.tachiyomi.data.database.models.Manga;
@@ -38,16 +35,12 @@ import eu.kanade.tachiyomi.data.network.RequestsKt;
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper;
 import eu.kanade.tachiyomi.data.source.Language;
 import eu.kanade.tachiyomi.data.source.LanguageKt;
-import eu.kanade.tachiyomi.data.source.SourceManager;
 import eu.kanade.tachiyomi.data.source.model.MangasPage;
 import eu.kanade.tachiyomi.data.source.model.Page;
 import eu.kanade.tachiyomi.data.source.online.OnlineSource;
-import eu.kanade.tachiyomi.ui.catalogue.CatalogueFragment;
 import exh.DialogLogin;
-import exh.ExHentaiLoginPref;
 import exh.NetworkManager;
 import exh.StringJoiner;
-import exh.Util;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -68,9 +61,6 @@ public class EHentai extends OnlineSource {
             "misc"
     };
 
-    public static ArrayList<String> ENABLED_GENRES = null;
-    public static final String KEY_GENRE_FILTER = "exh_genre_filter";
-
     public static final String QUERY_PREFIX = "?f_apply=Apply+Filter";
 
     public static String HOST = "http://g.e-hentai.org/";
@@ -82,14 +72,14 @@ public class EHentai extends OnlineSource {
 
     public static final String FAVORITES_PATH = "favorites.php";
 
-    boolean isExhentai = false;
-    Context context;
-    int id;
+    private boolean isExhentai = false;
+    private Context context;
+    private int id;
 
-    PreferencesHelper helper;
+    private PreferencesHelper helper;
 
     public EHentai(Context context, int id, boolean isExhentai) {
-        super(context);
+        super();
         this.context = context.getApplicationContext();
         this.isExhentai = isExhentai;
         helper = new PreferencesHelper(context);
@@ -98,82 +88,27 @@ public class EHentai extends OnlineSource {
 //        glideHeaders = glideHeadersBuilder().build();
     }
 
-    public static void saveGenreFilter(PreferencesHelper helper) {
-        Set<String> genreSet = new HashSet<>();
-        genreSet.addAll(ENABLED_GENRES);
-        helper.getPrefs().edit().putStringSet(KEY_GENRE_FILTER, genreSet).commit();
-    }
-
-    public static void loadGenreFilter(PreferencesHelper helper) {
-        Set<String> defaultSet = new HashSet<>();
-        defaultSet.addAll(Arrays.asList(GENRE_LIST));
-        ENABLED_GENRES.clear();
-        ENABLED_GENRES.addAll(helper.getPrefs().getStringSet(KEY_GENRE_FILTER, defaultSet));
-    }
-
-    public static List<String> getEnabledGenres(PreferencesHelper helper) {
-        if(ENABLED_GENRES == null) {
-            ENABLED_GENRES = new ArrayList<>();
-            loadGenreFilter(helper);
+    private static boolean isGenreEnabled(String genre, List<Filter> filters) {
+        for(Filter filter : filters) {
+            if(filter.getId().equals(genre)) {
+                return true;
+            }
         }
-        return ENABLED_GENRES;
+        return false;
     }
 
-    public static void launchGenreSelectionDialog(Context context, final CatalogueFragment catalogueFragment) {
-        final PreferencesHelper helper = new PreferencesHelper(context);
-        final boolean[] selectedGenres = new boolean[GENRE_LIST.length];
-        for (int i = 0; i < GENRE_LIST.length; i++) {
-            selectedGenres[i] = getEnabledGenres(helper).contains(GENRE_LIST[i]);
-        }
-        AlertDialog dialog = new AlertDialog.Builder(context)
-                .setTitle("Genre Filter")
-                .setMultiChoiceItems(GENRE_LIST, selectedGenres, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog1, int indexSelected, boolean isChecked) {
-                        if (isChecked) {
-                            selectedGenres[indexSelected] = true;
-                        } else if (selectedGenres[indexSelected]) {
-                            selectedGenres[indexSelected] = false;
-                        }
-                    }
-                }).setPositiveButton("Apply", new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog1, int id) {
-                        dialog1.dismiss();
-                        getEnabledGenres(helper).clear();
-                        for (int i = 0; i < GENRE_LIST.length; i++) {
-                            if (selectedGenres[i]) {
-                                getEnabledGenres(helper).add(GENRE_LIST[i]);
-                            }
-                        }
-                        //Save the new genre filter
-                        saveGenreFilter(helper);
-                        String originalQuery = catalogueFragment.getQuery();
-                        if(originalQuery == null){
-                            originalQuery = "";
-                        }
-                        //Force a new search event
-                        catalogueFragment.onSearchEvent(originalQuery, true, true);
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog1, int id) {
-                        dialog1.dismiss();
-                    }
-                }).create();
-        dialog.show();
-    }
-
-    public static String buildGenreString(PreferencesHelper helper) {
+    private static String buildGenreString(List<Filter> filters) {
         StringBuilder genreString = new StringBuilder();
         for (String genre : GENRE_LIST) {
             genreString.append("&f_");
             genreString.append(genre);
             genreString.append("=");
-            genreString.append(getEnabledGenres(helper).contains(genre) ? "1" : "0");
+            genreString.append(filters.isEmpty() || isGenreEnabled(genre, filters) ? "1" : "0");
         }
         return genreString.toString();
     }
 
-    public static String getQualityMode(PreferencesHelper prefHelper) {
+    private static String getQualityMode(PreferencesHelper prefHelper) {
         return prefHelper.getPrefs().getString("ehentai_quality", "auto");
     }
 
@@ -207,14 +142,14 @@ public class EHentai extends OnlineSource {
 
     @NonNull
     @Override protected String popularMangaInitialUrl() {
-        return getBaseUrl() + QUERY_PREFIX + buildGenreString(helper);
+        return getBaseUrl() + QUERY_PREFIX + buildGenreString(Collections.<Filter>emptyList());
     }
 
-    @NonNull
-    @Override protected String searchMangaInitialUrl(@NonNull String query) {
+    @NotNull
+    @Override protected String searchMangaInitialUrl(@NotNull String query, @NotNull List<Filter> filters) {
         try {
-            log("Query: " + getBaseUrl() + QUERY_PREFIX + buildGenreString(helper) + "&f_search=" + URLEncoder.encode(query, "UTF-8"));
-            return getBaseUrl() + QUERY_PREFIX + buildGenreString(helper) + "&f_search=" + URLEncoder.encode(query, "UTF-8");
+            log("Query: " + getBaseUrl() + QUERY_PREFIX + buildGenreString(filters) + "&f_search=" + URLEncoder.encode(query, "UTF-8"));
+            return getBaseUrl() + QUERY_PREFIX + buildGenreString(filters) + "&f_search=" + URLEncoder.encode(query, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             //How can this happen :/
             throw new RuntimeException(e);
@@ -263,6 +198,28 @@ public class EHentai extends OnlineSource {
                 .startChooser();
     }
 
+    @Override
+    public boolean getSupportsLatest() {
+        return true;
+    }
+
+    @Override
+    protected void searchMangaParse(@NotNull Response response, @NotNull MangasPage page, @NotNull String query, @NotNull List<Filter> filters) {
+        popularMangaParse(response, page);
+    }
+
+    @NotNull
+    @Override
+    protected String latestUpdatesInitialUrl() {
+        //TODO Change this when we actually parse the popular stuff!
+        return popularMangaInitialUrl();
+    }
+
+    @Override
+    protected void latestUpdatesParse(@NotNull Response response, @NotNull MangasPage page) {
+        popularMangaParse(response, page);
+    }
+
     public static class FavoritesResponse {
         public Map<String, List<Manga>> favs;
         public List<String> favCategories;
@@ -282,7 +239,8 @@ public class EHentai extends OnlineSource {
             this.id = id;
         }
     }
-    public static BuildFavoritesBaseResponse buildFavoritesBase(Context context, SharedPreferences preferences) {
+
+    private  static BuildFavoritesBaseResponse buildFavoritesBase(Context context, SharedPreferences preferences) {
         String favoritesBase;
         int id;
         if(DialogLogin.isLoggedIn(context, false)) {
@@ -334,7 +292,7 @@ public class EHentai extends OnlineSource {
         public Map<String, List<Manga>> mangas;
     }
 
-    public static ParsedMangaPage parseMangaPage(Response response, int id) {
+    private static ParsedMangaPage parseMangaPage(Response response, int id) {
         ParsedMangaPage mangaPage = new ParsedMangaPage();
         Map<String, List<Manga>> mangas = new HashMap<>();
         mangaPage.mangas = mangas;
@@ -426,12 +384,6 @@ public class EHentai extends OnlineSource {
             return url;
         }
     }
-
-    @Override
-    protected void searchMangaParse(@NotNull Response response, @NotNull MangasPage page, @NotNull String query) {
-        popularMangaParse(response, page);
-    }
-
 
     protected static String parseNextSearchUrl(Document parsedHtml) {
         Elements buttons = parsedHtml.select("a[onclick=return false]");
@@ -559,15 +511,11 @@ public class EHentai extends OnlineSource {
                 }
             });
             return false;
-//            DialogLogin.requestLogin(context);
-//            if (!DialogLogin.isLoggedIn(context, true)) {
-//                return false;
-//            }
         }
         return true;
     }
 
-    String parseChapterPage(ArrayList<String> urls, String url) throws Exception {
+    private String parseChapterPage(ArrayList<String> urls, String url) throws Exception {
         log("Parsing chapter page: " + url);
         String source = getClient().newCall(RequestsKt.GET(getBaseUrl() + url, getHeaders(), RequestsKt.getDEFAULT_CACHE_CONTROL()))
                 .execute().body().string();
@@ -578,9 +526,6 @@ public class EHentai extends OnlineSource {
             String pageUrl = next.attr("href");
             int pageNumber = Integer.parseInt(next.children().first().attr("alt"));
             log("Got page: " + pageNumber + ", " + pageUrl);
-//            List<Page> pages = c.getPages();
-//            if(pages == null) pages = new ArrayList<>();
-//            pages.add(new Page(pageNumber, pageUrl));
             urls.add(pageUrl);
         }
 
@@ -726,6 +671,22 @@ public class EHentai extends OnlineSource {
             }
         }
         return foundCookies;
+    }
+
+    private static List<Filter> filterList = createFilterList();
+
+    private static List<Filter> createFilterList() {
+        List<Filter> filters = new ArrayList<>();
+        for(String genre : GENRE_LIST) {
+            filters.add(new Filter(genre, genre));
+        }
+        return filters;
+    }
+
+    @NotNull
+    @Override
+    public List<Filter> getFilterList() {
+        return filterList;
     }
 
     private static void log(String string) {

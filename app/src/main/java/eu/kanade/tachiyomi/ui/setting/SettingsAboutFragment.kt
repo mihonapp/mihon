@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
+import android.support.v4.app.ShareCompat
 import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
+import com.google.firebase.iid.FirebaseInstanceId
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.GithubUpdateChecker
@@ -48,14 +50,26 @@ class SettingsAboutFragment : SettingsFragment() {
 
         val version = findPreference(getString(R.string.pref_version))
         val buildTime = findPreference(getString(R.string.pref_build_time))
-        findPreference("acra.enable").isEnabled = false;
+
+        val fcmRegToken = findPreference("pref_fcm_reg_token")
+        fcmRegToken.summary = FirebaseInstanceId.getInstance().token
+        fcmRegToken.setOnPreferenceClickListener {
+            ShareCompat.IntentBuilder
+                    .from(activity)
+                    .setText(FirebaseInstanceId.getInstance().token)
+                    .setType("text/plain") // most general text sharing MIME type
+                    .setChooserTitle("Share FCM Token")
+                    .startChooser()
+            true
+        }
+        findPreference("acra.enable").isEnabled = false
 
         version.summary = if (BuildConfig.DEBUG)
             "r" + BuildConfig.COMMIT_COUNT
         else
             BuildConfig.VERSION_NAME
 
-        if (!BuildConfig.DEBUG && BuildConfig.INCLUDE_UPDATER) {
+        if (BuildConfig.INCLUDE_UPDATER) {
             //Set onClickListener to check for new version
             version.setOnPreferenceClickListener {
                 checkVersion()

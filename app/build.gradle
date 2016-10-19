@@ -34,7 +34,7 @@ def includeUpdater() {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
     publishNonDefault true
 
     defaultConfig {
@@ -48,7 +48,7 @@ android {
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
         buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
-        buildConfigField "boolean", "INCLUDE_UPDATER", "${includeUpdater()}"
+        buildConfigField "boolean", "INCLUDE_UPDATER", "true"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -60,7 +60,7 @@ android {
     buildTypes {
         debug {
             versionNameSuffix "-${getCommitCount()}"
-            applicationIdSuffix ".debug"
+//            applicationIdSuffix ".debug"
             multiDexEnabled true
         }
         release {
@@ -108,7 +108,8 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.google.android.gms:play-services-gcm:9.6.1'
+    //@9.2.1 to resolve firebase API init failure (hidden error in logcat)
+    compile 'com.google.android.gms:play-services-gcm:9.2.1'
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
@@ -193,6 +194,11 @@ dependencies {
     testCompile 'org.robolectric:shadows-play-services:3.1.2'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    //Firebase
+    compile 'com.google.firebase:firebase-core:9.2.1'
+    compile 'com.google.firebase:firebase-messaging:9.2.1'
+    compile 'com.google.firebase:firebase-crash:9.2.1'
 }
 
 buildscript {
@@ -208,3 +214,5 @@ buildscript {
 repositories {
     mavenCentral()
 }
+//Firebase
+apply plugin: 'com.google.gms.google-services'

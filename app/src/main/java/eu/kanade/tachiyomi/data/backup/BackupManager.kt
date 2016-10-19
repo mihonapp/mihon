@@ -105,12 +105,6 @@ class BackupManager(private val db: DatabaseHelper) {
             entry.add(CHAPTERS, gson.toJsonTree(chapters))
         }
 
-        // Backup manga sync
-        val mangaSync = db.getMangasSync(manga).executeAsBlocking()
-        if (!mangaSync.isEmpty()) {
-            entry.add(MANGA_SYNC, gson.toJsonTree(mangaSync))
-        }
-
         // Backup categories for this manga
         val categoriesForManga = db.getCategoriesForManga(manga).executeAsBlocking()
         if (!categoriesForManga.isEmpty()) {
@@ -332,33 +326,7 @@ class BackupManager(private val db: DatabaseHelper) {
      * @param sync the sync to restore.
      */
     private fun restoreSyncForManga(manga: Manga, sync: List<MangaSync>) {
-        // Fix foreign keys with the current manga id
-        for (mangaSync in sync) {
-            mangaSync.manga_id = manga.id!!
-        }
-
-        val dbSyncs = db.getMangasSync(manga).executeAsBlocking()
-        val syncToUpdate = ArrayList<MangaSync>()
-        for (backupSync in sync) {
-            // Try to find existing chapter in db
-            val pos = dbSyncs.indexOf(backupSync)
-            if (pos != -1) {
-                // The sync is already in the db, only update its fields
-                val dbSync = dbSyncs[pos]
-                // Mark the max chapter as read and nothing else
-                dbSync.last_chapter_read = Math.max(backupSync.last_chapter_read, dbSync.last_chapter_read)
-                syncToUpdate.add(dbSync)
-            } else {
-                // Insert new sync. Let the db assign the id
-                backupSync.id = null
-                syncToUpdate.add(backupSync)
-            }
-        }
-
-        // Update database
-        if (!syncToUpdate.isEmpty()) {
-            db.insertMangasSync(syncToUpdate).executeAsBlocking()
-        }
+        //Sync disabled
     }
 
 }

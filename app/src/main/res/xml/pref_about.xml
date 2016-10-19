@@ -6,14 +6,8 @@
         android:title="@string/pref_category_about"
         android:persistent="false">
 
-        <SwitchPreferenceCompat
-            android:key="acra.enable"
-            android:summary="@string/pref_acra_summary"
-            android:title="@string/pref_enable_acra"
-            android:defaultValue="false"/>
-
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="ftrue"
             android:key="@string/pref_enable_automatic_updates_key"
             android:summary="@string/pref_enable_automatic_updates_summary"
             android:title="@string/pref_enable_automatic_updates"/>
@@ -28,15 +22,10 @@
             android:persistent="false"
             android:title="@string/build_time"/>
 
-        <SwitchPreferenceCompat
-            android:key="auto_update"
-            android:defaultValue="true"
-            android:title="Auto Update"
-            android:summary="Automatically check for updates on startup."/>
-        <exh.CheckUpdatePref
-            android:title="Check for Updates"
-            android:summary="Check for update right now."/>
-
+        <Preference
+            android:key="pref_fcm_reg_token"
+            android:persistent="false"
+            android:title="FCM Registration Token"/>
     </PreferenceScreen>
 
 </PreferenceScreen>

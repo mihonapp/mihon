@@ -6,7 +6,6 @@ import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences.Preference
 import com.f2prateek.rx.preferences.RxSharedPreferences
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.mangasync.MangaSyncService
 import eu.kanade.tachiyomi.data.source.Source
 import java.io.File
 import java.io.IOException
@@ -100,17 +99,6 @@ class PreferencesHelper(context: Context) {
         prefs.edit()
                 .putString(keys.sourceUsername(source.id), username)
                 .putString(keys.sourcePassword(source.id), password)
-                .apply()
-    }
-
-    fun mangaSyncUsername(sync: MangaSyncService) = prefs.getString(keys.syncUsername(sync.id), "")
-
-    fun mangaSyncPassword(sync: MangaSyncService) = prefs.getString(keys.syncPassword(sync.id), "")
-
-    fun setMangaSyncCredentials(sync: MangaSyncService, username: String, password: String) {
-        prefs.edit()
-                .putString(keys.syncUsername(sync.id), username)
-                .putString(keys.syncPassword(sync.id), password)
                 .apply()
     }
 

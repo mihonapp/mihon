@@ -25,9 +25,9 @@ open class SourceManager(private val context: Context) {
 
     private fun createOnlineSourceList(): List<Source> =
             if (DialogLogin.isLoggedIn(context, false))
-                listOf(EHentai(1, false), EHentai(2, true))
+                listOf(EHentai(context, 1, false), EHentai(context, 2, true))
             else
-                listOf(EHentai(1, false))
+                listOf(EHentai(context, 1, false))
 
     private fun createSources(): Map<Int, Source> = hashMapOf<Int, Source>().apply {
         createOnlineSourceList().forEach { put(it.id, it) }

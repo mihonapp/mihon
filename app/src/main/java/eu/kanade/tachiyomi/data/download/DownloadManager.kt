@@ -273,7 +273,7 @@ class DownloadManager(
                     page
                 }
                 // Retry 3 times, waiting 2, 4 and 8 seconds between attempts.
-                .retryWhen(RetryWithDelay(3, { (2 shl it - 1) * 1000 }, Schedulers.trampoline()))
+                .retryWhen(RetryWithDelay(5, { (2 shl it - 1) * 1000 }, Schedulers.trampoline()))
     }
 
     // Public method to get the image from the filesystem. It does NOT provide any way to download the image

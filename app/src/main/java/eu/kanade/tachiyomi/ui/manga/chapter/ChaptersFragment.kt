@@ -370,6 +370,11 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         presenter.deleteChapters(chapters)
     }
 
+    fun deletePageList(chapter: ChapterModel) {
+        destroyActionModeIfNeeded()
+        presenter.deletePageList(chapter)
+    }
+
     fun onChaptersDeleted() {
         dismissDeletingDialog()
         adapter.notifyItemRangeChanged(0, adapter.itemCount)

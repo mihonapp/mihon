@@ -8,8 +8,6 @@ import eu.kanade.tachiyomi.data.database.models.History
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaSync
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.mangasync.MangaSyncManager
-import eu.kanade.tachiyomi.data.mangasync.UpdateMangaSyncService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.model.Page
@@ -45,11 +43,6 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * Download manager.
      */
     val downloadManager: DownloadManager by injectLazy()
-
-    /**
-     * Sync manager.
-     */
-    val syncManager: MangaSyncManager by injectLazy()
 
     /**
      * Source manager.
@@ -151,12 +144,6 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         // Send the active manga to the view to initialize the reader.
         Observable.just(manga)
                 .subscribeLatestCache({ view, manga -> view.onMangaOpen(manga) })
-
-        // Retrieve the sync list if auto syncing is enabled.
-        if (prefs.autoUpdateMangaSync()) {
-            add(db.getMangasSync(manga).asRxSingle()
-                    .subscribe({ mangaSyncList = it }))
-        }
 
         restartableLatestCache(LOAD_ACTIVE_CHAPTER,
                 { loadChapterObservable(chapter) },
@@ -448,12 +435,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * Starts the service that updates the last chapter read in sync services
      */
     fun updateMangaSyncLastChapterRead() {
-        mangaSyncList?.forEach { sync ->
-            val service = syncManager.getService(sync.sync_id)
-            if (service != null && service.isLogged && sync.update) {
-                UpdateMangaSyncService.start(context, sync)
-            }
-        }
+        //Sync disabled
     }
 
     /**

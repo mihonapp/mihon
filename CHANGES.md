@@ -1,0 +1,9 @@
+- Upstream merge
+- Fix auto-updater
+- Add ability to delete page list
+- Add crash reporting
+- Increase retries in downloader
+- Use integrated genre filtering
+- Remove useless manga sync code
+- General code cleanup
+- Performance improvements
