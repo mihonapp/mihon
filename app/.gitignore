@@ -1,4 +1,5 @@
 /build
 *iml
 *.iml
-.idea
+custom.gradle
+google-services.json

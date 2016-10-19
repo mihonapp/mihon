@@ -6,7 +6,8 @@ import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.library.LibraryUpdateAlarm
+import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.library.LibraryUpdateTrigger
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
@@ -14,6 +15,7 @@ import eu.kanade.tachiyomi.widget.preference.LibraryColumnsDialog
 import eu.kanade.tachiyomi.widget.preference.SimpleDialogPreference
 import net.xpece.android.support.preference.MultiSelectListPreference
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
 
 class SettingsGeneralFragment : SettingsFragment(),
@@ -30,22 +32,17 @@ class SettingsGeneralFragment : SettingsFragment(),
 
     private val preferences: PreferencesHelper by injectLazy()
 
+    private val db: DatabaseHelper by injectLazy()
 
-    val columnsPreference by lazy {
-        findPreference(getString(R.string.pref_library_columns_dialog_key)) as SimpleDialogPreference
-    }
+    val columnsPreference: SimpleDialogPreference by bindPref(R.string.pref_library_columns_dialog_key)
 
-    val updateInterval by lazy {
-        findPreference(getString(R.string.pref_library_update_interval_key)) as IntListPreference
-    }
+    val updateInterval: IntListPreference by bindPref(R.string.pref_library_update_interval_key)
 
-    val updateRestriction by lazy {
-        findPreference(getString(R.string.pref_library_update_restriction_key)) as MultiSelectListPreference
-    }
+    val updateRestriction: MultiSelectListPreference by bindPref(R.string.pref_library_update_restriction_key)
 
-    val themePreference by lazy {
-        findPreference(getString(R.string.pref_theme_key)) as IntListPreference
-    }
+    val themePreference: IntListPreference by bindPref(R.string.pref_theme_key)
+
+    val categoryUpdate: MultiSelectListPreference by bindPref(R.string.pref_library_update_categories_key)
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
@@ -60,9 +57,43 @@ class SettingsGeneralFragment : SettingsFragment(),
                 .subscribe { updateColumnsSummary(it.first, it.second) }
 
         updateInterval.setOnPreferenceChangeListener { preference, newValue ->
-            LibraryUpdateAlarm.startAlarm(activity, (newValue as String).toInt())
+            val interval = (newValue as String).toInt()
+            if (interval > 0)
+                LibraryUpdateTrigger.setupTask(context, interval)
+            else
+                LibraryUpdateTrigger.cancelTask(context)
+
             true
         }
+
+        updateRestriction.setOnPreferenceChangeListener { preference, newValue ->
+            // Post to event looper to allow the preference to be updated.
+            subscriptions += Observable.fromCallable {
+                LibraryUpdateTrigger.setupTask(context)
+            }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()
+
+            true
+        }
+
+        val dbCategories = db.getCategories().executeAsBlocking()
+        categoryUpdate.apply {
+            entries = dbCategories.map { it.name }.toTypedArray()
+            entryValues = dbCategories.map { it.id.toString() }.toTypedArray()
+        }
+
+        subscriptions += preferences.libraryUpdateCategories().asObservable()
+                .subscribe {
+                    val selectedCategories = it
+                            .mapNotNull { id -> dbCategories.find { it.id == id.toInt() } }
+                            .sortedBy { it.order }
+
+                    val summary = if (selectedCategories.isEmpty())
+                        getString(R.string.all)
+                    else
+                        selectedCategories.joinToString { it.name }
+
+                    categoryUpdate.summary = summary
+                }
 
         themePreference.setOnPreferenceChangeListener { preference, newValue ->
             (activity as SettingsActivity).parentFlags = SettingsActivity.FLAG_THEME_CHANGED

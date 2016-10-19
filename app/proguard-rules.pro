@@ -1,5 +1,7 @@
 -dontobfuscate
 
+-keep class eu.kanade.tachiyomi.**
+
 # OkHttp
 -keepattributes Signature
 -keepattributes *Annotation*

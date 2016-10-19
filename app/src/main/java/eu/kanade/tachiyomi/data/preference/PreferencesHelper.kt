@@ -52,6 +52,10 @@ class PreferencesHelper(context: Context) {
 
     fun customBrightnessValue() = rxPrefs.getInteger(keys.customBrightnessValue, 0)
 
+    fun colorFilter() = rxPrefs.getBoolean(keys.colorFilter, false)
+
+    fun colorFilterValue() = rxPrefs.getInteger(keys.colorFilterValue, 0)
+
     fun defaultViewer() = prefs.getInt(keys.defaultViewer, 1)
 
     fun imageScaleType() = rxPrefs.getInteger(keys.imageScaleType, 1)
@@ -116,9 +120,7 @@ class PreferencesHelper(context: Context) {
 
     fun downloadOnlyOverWifi() = prefs.getBoolean(keys.downloadOnlyOverWifi, true)
 
-    fun removeAfterRead() = prefs.getBoolean(keys.removeAfterRead, false)
-
-    fun removeAfterReadPrevious() = prefs.getBoolean(keys.removeAfterReadPrevious, false)
+    fun removeAfterReadSlots() = prefs.getInt(keys.removeAfterReadSlots, -1)
 
     fun removeAfterMarkedAsRead() = prefs.getBoolean(keys.removeAfterMarkedAsRead, false)
 
@@ -126,10 +128,16 @@ class PreferencesHelper(context: Context) {
 
     fun libraryUpdateRestriction() = prefs.getStringSet(keys.libraryUpdateRestriction, emptySet())
 
+    fun libraryUpdateCategories() = rxPrefs.getStringSet(keys.libraryUpdateCategories, emptySet())
+
+    fun libraryAsList() = rxPrefs.getBoolean(keys.libraryAsList, false)
+
     fun filterDownloaded() = rxPrefs.getBoolean(keys.filterDownloaded, false)
 
     fun filterUnread() = rxPrefs.getBoolean(keys.filterUnread, false)
 
-    fun automaticUpdateStatus() = prefs.getBoolean(keys.automaticUpdateStatus, false)
+    fun automaticUpdates() = prefs.getBoolean(keys.automaticUpdates, false)
+
+    fun hiddenCatalogues() = rxPrefs.getStringSet("hidden_catalogues", emptySet())
 
 }

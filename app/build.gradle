@@ -4,6 +4,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+if (file("custom.gradle").exists()) {
+    apply from: "custom.gradle"
+}
+
 ext {
     // Git is needed in your system PATH for these commands to work.
     // If it's not installed, you can return a random value as a workaround
@@ -29,14 +33,14 @@ def includeUpdater() {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
     publishNonDefault true
 
     defaultConfig {
         applicationId "eu.kanade.tachiyomi.eh"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 2180
         versionName "v2.18.0-EH"
@@ -47,17 +51,22 @@ android {
         buildConfigField "boolean", "INCLUDE_UPDATER", "${includeUpdater()}"
 
         vectorDrawables.useSupportLibrary = true
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86"
+        }
     }
 
     buildTypes {
         debug {
-            minifyEnabled false
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            versionNameSuffix "-${getCommitCount()}"
+            applicationIdSuffix ".debug"
+            multiDexEnabled true
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
+            multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -84,11 +93,11 @@ android {
 dependencies {
 
     // Modified dependencies
-    compile 'com.github.inorichi:subsampling-scale-image-view:421fb81'
+    compile 'com.github.inorichi:subsampling-scale-image-view:2d9c854'
     compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
     // Android support library
-    final support_library_version = '23.4.0'
+    final support_library_version = '24.2.1'
     compile "com.android.support:support-v4:$support_library_version"
     compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:cardview-v7:$support_library_version"
@@ -97,13 +106,17 @@ dependencies {
     compile "com.android.support:support-annotations:$support_library_version"
     compile "com.android.support:customtabs:$support_library_version"
 
+    compile 'com.android.support:multidex:1.0.1'
+
+    compile 'com.google.android.gms:play-services-gcm:9.6.1'
+
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxjava:1.2.1'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
 
     // Network client
-    compile "com.squareup.okhttp3:okhttp:3.3.1"
+    compile "com.squareup.okhttp3:okhttp:3.4.1"
 
     // REST
     final retrofit_version = '2.1.0'
@@ -112,17 +125,17 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
     // IO
-    compile 'com.squareup.okio:okio:1.8.0'
+    compile 'com.squareup.okio:okio:1.10.0'
 
     // JSON
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.github.salomonbrys.kotson:kotson:2.3.0'
+    compile 'com.github.salomonbrys.kotson:kotson:2.4.0'
 
     // YAML
     compile 'com.github.bmoliveira:snake-yaml:v1.18-android'
 
     // JavaScript engine
-    compile 'com.squareup.duktape:duktape-android:0.9.5'
+    compile 'com.squareup.duktape:duktape-android:1.0.0'
 
     // Disk cache
     compile 'com.jakewharton:disklrucache:2.0.2'
@@ -134,7 +147,7 @@ dependencies {
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
-    compile "com.pushtorefresh.storio:sqlite:1.9.0"
+    compile "com.pushtorefresh.storio:sqlite:1.11.0"
 
     // Model View Presenter
     final nucleus_version = '3.0.0'
@@ -148,23 +161,25 @@ dependencies {
     // Image library
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
+    // Transformations
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
 
     // Logging
-    compile 'com.jakewharton.timber:timber:4.1.2'
+    compile 'com.jakewharton.timber:timber:4.3.1'
 
     // Crash reports
-    compile 'ch.acra:acra:4.9.0'
+    compile 'ch.acra:acra:4.9.1'
 
     // UI
-    compile 'com.dmitrymalkovich.android:material-design-dimens:1.2'
+    compile 'com.dmitrymalkovich.android:material-design-dimens:1.4'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'eu.davidea:flexible-adapter:4.2.0'
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
-    compile 'net.xpece.android:support-preference:0.8.1'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
+    compile 'net.xpece.android:support-preference:1.0.3'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
-    compile 'org.adw.library:discrete-seekbar:1.0.1'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 
     //EXH
     compile 'com.jakewharton:process-phoenix:1.0.2'
@@ -173,13 +188,15 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.1'
     testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile 'org.robolectric:robolectric:3.1'
+    testCompile 'org.robolectric:robolectric:3.1.2'
+    testCompile 'org.robolectric:shadows-multidex:3.1.2'
+    testCompile 'org.robolectric:shadows-play-services:3.1.2'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 buildscript {
-    ext.kotlin_version = '1.0.3'
+    ext.kotlin_version = '1.0.4'
     repositories {
         mavenCentral()
     }

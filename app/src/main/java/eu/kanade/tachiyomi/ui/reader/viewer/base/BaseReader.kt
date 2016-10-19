@@ -67,16 +67,6 @@ abstract class BaseReader : BaseFragment() {
     private var hasRequestedNextChapter: Boolean = false
 
     /**
-     * Updates the reader activity with the active page.
-     */
-    fun updatePageNumber() {
-        val activePage = getActivePage()
-        if (activePage != null) {
-            readerActivity.onPageChanged(activePage.pageNumber, activePage.chapter.pages!!.size)
-        }
-    }
-
-    /**
      * Returns the active page.
      */
     fun getActivePage(): Page? {
@@ -91,10 +81,12 @@ abstract class BaseReader : BaseFragment() {
     fun onPageChanged(position: Int) {
         val oldPage = pages[currentPage]
         val newPage = pages[position]
-        readerActivity.presenter.onPageChanged(newPage)
 
         val oldChapter = oldPage.chapter
         val newChapter = newPage.chapter
+
+        // Update page indicator and seekbar
+        readerActivity.onPageChanged(newPage)
 
         // Active chapter has changed.
         if (oldChapter.id != newChapter.id) {
@@ -108,7 +100,6 @@ abstract class BaseReader : BaseFragment() {
         }
 
         currentPage = position
-        updatePageNumber()
     }
 
     /**

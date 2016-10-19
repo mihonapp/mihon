@@ -8,7 +8,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.inflate
-import kotlinx.android.synthetic.main.fragment_library_category.*
+import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
 import java.util.*
 
@@ -17,7 +17,7 @@ import java.util.*
  *
  * @param fragment the fragment containing this adapter.
  */
-class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
+class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
         FlexibleAdapter<LibraryHolder, Manga>() {
 
     /**
@@ -84,11 +84,18 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
      * @return a new view holder for a manga.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryHolder {
-        val view = parent.inflate(R.layout.item_catalogue_grid).apply {
-            card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
-            gradient.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM)
+        // Depending on preferences, display a list or display a grid
+        if (parent is AutofitRecyclerView) {
+            val view = parent.inflate(R.layout.item_catalogue_grid).apply {
+                val coverHeight = parent.itemWidth / 3 * 4
+                card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
+                gradient.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM)
+            }
+            return LibraryGridHolder(view, this, fragment)
+        } else {
+            val view = parent.inflate(R.layout.item_library_list)
+            return LibraryListHolder(view, this, fragment)
         }
-        return LibraryHolder(view, this, fragment)
     }
 
     /**
@@ -101,14 +108,17 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryFragment) :
         val manga = getItem(position)
 
         holder.onSetValues(manga)
-        //When user scrolls this bind the correct selection status
+        // When user scrolls this bind the correct selection status
         holder.itemView.isActivated = isSelected(position)
     }
 
     /**
-     * Property to return the height for the covers based on the width to keep an aspect ratio.
+     * Returns the position in the adapter for the given manga.
+     *
+     * @param manga the manga to find.
      */
-    val coverHeight: Int
-        get() = fragment.recycler.itemWidth / 3 * 4
+    fun indexOf(manga: Manga): Int {
+        return mangas.orEmpty().indexOfFirst { it.id == manga.id }
+    }
 
 }

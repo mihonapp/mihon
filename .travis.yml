@@ -5,12 +5,15 @@ android:
     - tools
 
     # The BuildTools version used by your project
-    - build-tools-23.0.3
-    - android-23
+    - build-tools-24.0.2
+    - android-24
     - extra-android-m2repository
     - extra-google-m2repository
     - extra-android-support
     - extra-google-google_play_services
+
+jdk:
+  - oraclejdk8
 
 before_script:
     - chmod +x gradlew

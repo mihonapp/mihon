@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v0.3.1" changeDate="">
+        <changelogtext>Fixed a crash when opening latest updates. ([a href="https://github.com/inorichi/tachiyomi/issues/495"]#495[/a])</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="v0.3.0" changeDate="">
+        <changelogtext>Added a new tab to show latest manga updates from the catalogues. ([a href="https://github.com/inorichi/tachiyomi/issues/61"]#61[/a])</changelogtext>
+
+        <changelogtext>Added genre filter for catalogues. ([a href="https://github.com/inorichi/tachiyomi/issues/428"]#428[/a])</changelogtext>
+
+        <changelogtext>Added an optional auto updater (not available for F-Droid installs). ([a href="https://github.com/inorichi/tachiyomi/issues/449"]#449[/a])</changelogtext>
+
+        <changelogtext>Added an option to display the library as a list. ([a href="https://github.com/inorichi/tachiyomi/issues/224"]#224[/a])</changelogtext>
+
+        <changelogtext>Added a customizable color filter for the reader. ([a href="https://github.com/inorichi/tachiyomi/issues/432"]#432[/a])</changelogtext>
+
+        <changelogtext>Added share intent in the info tab of a manga. ([a href="https://github.com/inorichi/tachiyomi/issues/340"]#340[/a])</changelogtext>
+
+        <changelogtext>Allow to launcher shortcuts for manga. ([a href="https://github.com/inorichi/tachiyomi/issues/435"]#435[/a])</changelogtext>
+
+        <changelogtext>Allow to select categories to update in global update. ([a href="https://github.com/inorichi/tachiyomi/issues/461"]#461[/a])</changelogtext>
+
+        <changelogtext>Redesigned source tab in preferences, now it allows to hide unwanted sources and languages. ([a href="https://github.com/inorichi/tachiyomi/issues/447"]#447[/a])</changelogtext>
+
+        <changelogtext>Fixed single page chapters not appending the next one. ([a href="https://github.com/inorichi/tachiyomi/issues/468"]#468[/a])</changelogtext>
+
+        <changelogtext>Fixed reader status bar reappearing after focus restore. ([a href="https://github.com/inorichi/tachiyomi/issues/408"]#408[/a])</changelogtext>
+
+        <changelogtext>Fixed various crashes in the webtoon reader.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.2.3" changeDate="">
         <changelogtext>Added a history of reading. ([a href="https://github.com/inorichi/tachiyomi/issues/316"]#316[/a])</changelogtext>
 

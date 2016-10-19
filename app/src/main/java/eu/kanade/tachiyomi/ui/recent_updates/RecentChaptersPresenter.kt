@@ -71,7 +71,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
                     // Set chapter status
                     view.onChapterStatusChange(download)
                 },
-                { view, error -> Timber.e(error.cause, error.message) }
+                { view, error -> Timber.e(error) }
         )
 
         if (savedState == null) {

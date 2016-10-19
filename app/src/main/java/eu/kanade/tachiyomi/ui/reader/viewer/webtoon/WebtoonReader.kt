@@ -85,9 +85,9 @@ class WebtoonReader : BaseReader() {
         recycler.adapter = adapter
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                val page = layoutManager.findLastVisibleItemPosition()
-                if (page != currentPage) {
-                    onPageChanged(page)
+                val index = layoutManager.findLastVisibleItemPosition()
+                if (index != currentPage) {
+                    pages.getOrNull(index)?.let { onPageChanged(index) }
                 }
             }
         })
@@ -127,14 +127,16 @@ class WebtoonReader : BaseReader() {
     protected fun createGestureDetector(): GestureDetector {
         return GestureDetector(context, object : SimpleOnGestureListener() {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                val positionX = e.x
+                if (isAdded) {
+                    val positionX = e.x
 
-                if (positionX < recycler.width * LEFT_REGION) {
-                    if (tappingEnabled) moveToPrevious()
-                } else if (positionX > recycler.width * RIGHT_REGION) {
-                    if (tappingEnabled) moveToNext()
-                } else {
-                    readerActivity.toggleMenu()
+                    if (positionX < recycler.width * LEFT_REGION) {
+                        if (tappingEnabled) moveToPrevious()
+                    } else if (positionX > recycler.width * RIGHT_REGION) {
+                        if (tappingEnabled) moveToNext()
+                    } else {
+                        readerActivity.toggleMenu()
+                    }
                 }
                 return true
             }
@@ -148,8 +150,7 @@ class WebtoonReader : BaseReader() {
      * @param currentPage the initial page to display.
      */
     override fun onChapterSet(chapter: ReaderChapter, currentPage: Page) {
-        // Restoring current page is not supported. It's getting weird scrolling jumps
-        // this.currentPage = currentPage;
+        this.currentPage = currentPage.pageNumber
 
         // Make sure the view is already initialized.
         if (view != null) {
@@ -177,7 +178,7 @@ class WebtoonReader : BaseReader() {
         if (pages.isNotEmpty()) {
             adapter.pages = pages
             recycler.adapter = adapter
-            updatePageNumber()
+            onPageChanged(currentPage)
         }
     }
 

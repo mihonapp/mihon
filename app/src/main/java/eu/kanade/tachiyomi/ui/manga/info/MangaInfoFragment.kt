@@ -1,20 +1,34 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.view.*
+import com.afollestad.materialdialogs.MaterialDialog
+import com.bumptech.glide.BitmapRequestBuilder
+import com.bumptech.glide.BitmapTypeRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.Source
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
+import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.toast
+import jp.wasabeef.glide.transformations.CropCircleTransformation
+import jp.wasabeef.glide.transformations.CropSquareTransformation
+import jp.wasabeef.glide.transformations.MaskTransformation
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.fragment_manga_info.*
 import nucleus.factory.RequiresPresenter
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 
 /**
  * Fragment that shows manga information.
@@ -33,6 +47,7 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         fun newInstance(): MangaInfoFragment {
             return MangaInfoFragment()
         }
+
     }
 
     override fun onCreate(savedState: Bundle?) {
@@ -59,6 +74,8 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_open_in_browser -> openInBrowser()
+            R.id.action_share -> shareManga()
+            R.id.action_add_to_home_screen -> addToHomeScreen()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -156,6 +173,95 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         } catch (e: Exception) {
             context.toast(e.message)
         }
+    }
+
+    /**
+     * Called to run Intent with [Intent.ACTION_SEND], which show share dialog.
+     */
+    private fun shareManga() {
+        val source = presenter.source as? OnlineSource ?: return
+        try {
+            val url = source.mangaDetailsRequest(presenter.manga).url().toString()
+            val sharingIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(android.content.Intent.EXTRA_SUBJECT, presenter.manga.title)
+                putExtra(android.content.Intent.EXTRA_TEXT, resources.getString(R.string.share_text, presenter.manga.title, url))
+            }
+            startActivity(Intent.createChooser(sharingIntent, resources.getText(R.string.share_subject)))
+        } catch (e: Exception) {
+            context.toast(e.message)
+        }
+    }
+
+    /**
+     * Add the manga to the home screen
+     */
+    fun addToHomeScreen() {
+        val shortcutIntent = activity.intent
+        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra(MangaActivity.FROM_LAUNCHER_EXTRA, true)
+
+        val addIntent = Intent()
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
+                .action = "com.android.launcher.action.INSTALL_SHORTCUT"
+
+        //Set shortcut title
+        MaterialDialog.Builder(activity)
+                .title(R.string.shortcut_title)
+                .input("", presenter.manga.title, { md, text ->
+                    //Set shortcut title
+                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, text.toString())
+
+                    reshapeIconBitmap(addIntent,
+                            Glide.with(context).load(presenter.manga).asBitmap())
+                })
+                .negativeText(android.R.string.cancel)
+                .onNegative { materialDialog, dialogAction -> materialDialog.cancel() }
+                .show()
+    }
+
+    fun reshapeIconBitmap(addIntent: Intent, request: BitmapTypeRequest<out Any>) {
+        val modes = intArrayOf(R.string.circular_icon,
+                R.string.rounded_icon,
+                R.string.square_icon,
+                R.string.star_icon)
+
+        fun BitmapRequestBuilder<out Any, Bitmap>.toIcon(): Bitmap {
+            return this.into(96, 96).get()
+        }
+
+        MaterialDialog.Builder(activity)
+                .title(R.string.icon_shape)
+                .negativeText(android.R.string.cancel)
+                .items(modes.map { getString(it) })
+                .itemsCallback { dialog, view, i, charSequence ->
+                    Observable.fromCallable {
+                        // i = 0: Circular icon
+                        // i = 1: Rounded icon
+                        // i = 2: Square icon
+                        // i = 3: Star icon (because boredom)
+                        when (i) {
+                            0 -> request.transform(CropCircleTransformation(context)).toIcon()
+                            1 -> request.transform(RoundedCornersTransformation(context, 5, 0)).toIcon()
+                            2 -> request.transform(CropSquareTransformation(context)).toIcon()
+                            3 -> request.transform(CenterCrop(context), MaskTransformation(context, R.drawable.mask_star)).toIcon()
+                            else -> null
+                        }
+                    }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ if (it != null) createShortcut(addIntent, it) },
+                            { context.toast(R.string.icon_creation_fail) })
+                }.show()
+    }
+
+    fun createShortcut(addIntent: Intent, icon: Bitmap) {
+        //Send shortcut intent
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
+        context.sendBroadcast(addIntent)
+        //Go to launcher to show this shiny new shortcut!
+        val startMain = Intent(Intent.ACTION_MAIN)
+        startMain.addCategory(Intent.CATEGORY_HOME).flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(startMain)
     }
 
     /**

@@ -1,12 +1,14 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Bundle
+import android.support.v7.preference.Preference
 import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
@@ -32,11 +34,13 @@ class SettingsAdvancedFragment : SettingsFragment() {
 
     private val db: DatabaseHelper by injectLazy()
 
-    private val clearCache by lazy { findPreference(getString(R.string.pref_clear_chapter_cache_key)) }
+    private val clearCache: Preference by bindPref(R.string.pref_clear_chapter_cache_key)
 
-    private val clearDatabase by lazy { findPreference(getString(R.string.pref_clear_database_key)) }
+    private val clearDatabase: Preference by bindPref(R.string.pref_clear_database_key)
 
-    private val clearCookies by lazy { findPreference(getString(R.string.pref_clear_cookies_key)) }
+    private val clearCookies: Preference by bindPref(R.string.pref_clear_cookies_key)
+
+    private val refreshMetadata: Preference by bindPref(R.string.pref_refresh_library_metadata_key)
 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
@@ -55,6 +59,11 @@ class SettingsAdvancedFragment : SettingsFragment() {
 
         clearDatabase.setOnPreferenceClickListener {
             clearDatabase()
+            true
+        }
+
+        refreshMetadata.setOnPreferenceClickListener {
+            LibraryUpdateService.start(context, details = true)
             true
         }
     }

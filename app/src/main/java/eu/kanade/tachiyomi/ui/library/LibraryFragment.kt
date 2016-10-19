@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.library
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
@@ -9,12 +10,13 @@ import android.support.v7.view.ActionMode
 import android.support.v7.widget.SearchView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
-import eu.davidea.flexibleadapter.FlexibleAdapter
+import com.f2prateek.rx.preferences.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.online.english.EHentai
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
@@ -25,6 +27,9 @@ import exh.FavoritesSyncManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
+import rx.Subscription
+import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 
 /**
@@ -39,6 +44,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     lateinit var adapter: LibraryAdapter
         private set
+
+    /**
+     * Preferences.
+     */
+    val preferences: PreferencesHelper by injectLazy()
 
     /**
      * TabLayout of the categories.
@@ -59,8 +69,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     /**
      * Action mode for manga selection.
      */
-    var actionMode: ActionMode? = null
-        private set
+    private var actionMode: ActionMode? = null
 
     /**
      * Selected manga for editing its cover.
@@ -78,6 +87,17 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     var isFilterUnread = false
 
     lateinit var favoritesSyncManager: FavoritesSyncManager
+
+    /**
+     * Number of manga per row in grid mode.
+     */
+    var mangaPerRow = 0
+        private set
+
+    /**
+     * Subscription for the number of manga per row.
+     */
+    private var numColumnsSubscription: Subscription? = null
 
     companion object {
         /**
@@ -108,8 +128,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         setHasOptionsMenu(true)
-        isFilterDownloaded = presenter.preferences.filterDownloaded().get() as Boolean
-        isFilterUnread = presenter.preferences.filterUnread().get() as Boolean
+        isFilterDownloaded = preferences.filterDownloaded().get() as Boolean
+        isFilterUnread = preferences.filterUnread().get() as Boolean
         favoritesSyncManager = FavoritesSyncManager(context, DatabaseHelper(context))
     }
 
@@ -120,11 +140,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onViewCreated(view: View, savedState: Bundle?) {
         setToolbarTitle(getString(R.string.label_library))
 
-        adapter = LibraryAdapter(childFragmentManager)
+        adapter = LibraryAdapter(this)
         view_pager.adapter = adapter
         view_pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
-                presenter.preferences.lastUsedCategory().set(position)
+                preferences.lastUsedCategory().set(position)
             }
         })
         tabs.setupWithViewPager(view_pager)
@@ -133,9 +153,18 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
             activeCategory = savedState.getInt(CATEGORY_KEY)
             query = savedState.getString(QUERY_KEY)
             presenter.searchSubject.onNext(query)
+            if (presenter.selectedMangas.isNotEmpty()) {
+                createActionModeIfNeeded()
+            }
         } else {
-            activeCategory = presenter.preferences.lastUsedCategory().getOrDefault()
+            activeCategory = preferences.lastUsedCategory().getOrDefault()
         }
+
+        numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
+                .doOnNext { mangaPerRow = it }
+                .skip(1)
+                // Set again the adapter to recalculate the covers height
+                .subscribe { reattachAdapter() }
     }
 
     override fun onResume() {
@@ -144,6 +173,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     override fun onDestroyView() {
+        numColumnsSubscription?.unsubscribe()
         tabs.setupWithViewPager(null)
         tabs.visibility = View.GONE
         super.onDestroyView()
@@ -184,6 +214,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 return true
             }
         })
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -192,7 +223,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 // Change unread filter status.
                 isFilterUnread = !isFilterUnread
                 // Update settings.
-                presenter.preferences.filterUnread().set(isFilterUnread)
+                preferences.filterUnread().set(isFilterUnread)
                 // Apply filter.
                 onFilterCheckboxChanged()
             }
@@ -200,7 +231,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 // Change downloaded filter status.
                 isFilterDownloaded = !isFilterDownloaded
                 // Update settings.
-                presenter.preferences.filterDownloaded().set(isFilterDownloaded)
+                preferences.filterDownloaded().set(isFilterDownloaded)
                 // Apply filter.
                 onFilterCheckboxChanged()
             }
@@ -209,14 +240,14 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 isFilterUnread = false
                 isFilterDownloaded = false
                 // Update settings.
-                presenter.preferences.filterUnread().set(isFilterUnread)
-                presenter.preferences.filterDownloaded().set(isFilterDownloaded)
+                preferences.filterUnread().set(isFilterUnread)
+                preferences.filterDownloaded().set(isFilterDownloaded)
                 // Apply filter
                 onFilterCheckboxChanged()
             }
-//            R.id.action_update_library -> {
-//                LibraryUpdateService.start(activity, true)
-//            }
+            R.id.action_library_display_mode -> swapDisplayMode()
+            //R.id.action_update_library -> {
+            //    LibraryUpdateService.start(activity)
             R.id.action_sync -> {
                 favoritesSyncManager.guiSyncFavorites({
                     (activity as MainActivity).setFragment(LibraryFragment.newInstance(), 0)
@@ -236,10 +267,39 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Applies filter change
      */
     private fun onFilterCheckboxChanged() {
-        presenter.updateLibrary()
-        adapter.notifyDataSetChanged()
-        adapter.refreshRegisteredAdapters()
+        presenter.resubscribeLibrary()
         activity.supportInvalidateOptionsMenu()
+    }
+
+    /**
+     * Swap display mode
+     */
+    private fun swapDisplayMode() {
+        presenter.swapDisplayMode()
+        reattachAdapter()
+    }
+
+    /**
+     * Reattaches the adapter to the view pager to recreate fragments
+     */
+    private fun reattachAdapter() {
+        val position = view_pager.currentItem
+        adapter.recycle = false
+        view_pager.adapter = adapter
+        view_pager.currentItem = position
+        adapter.recycle = true
+    }
+
+    /**
+     * Returns a preference for the number of manga per row based on the current orientation.
+     *
+     * @return the preference.
+     */
+    private fun getColumnsPreferenceForCurrentOrientation(): Preference<Int> {
+        return if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+            preferences.portraitColumns()
+        else
+            preferences.landscapeColumns()
     }
 
     /**
@@ -268,7 +328,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 R.string.information_empty_library, R.drawable.ic_book_black_128dp)
 
         // Get the current active category.
-        val activeCat = if (adapter.categories != null) view_pager.currentItem else activeCategory
+        val activeCat = if (adapter.categories.isNotEmpty()) view_pager.currentItem else activeCategory
 
         // Set the categories
         adapter.categories = categories
@@ -284,31 +344,42 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     /**
-     * Sets the title of the action mode.
-     *
-     * @param count the number of items selected.
+     * Creates the action mode if it's not created already.
      */
-    fun setContextTitle(count: Int) {
-        actionMode?.title = getString(R.string.label_selected, count)
+    fun createActionModeIfNeeded() {
+        if (actionMode == null) {
+            actionMode = activity.startSupportActionMode(this)
+        }
     }
 
     /**
-     * Sets the visibility of the edit cover item.
-     *
-     * @param count the number of items selected.
+     * Destroys the action mode.
      */
-    fun setVisibilityOfCoverEdit(count: Int) {
-        // If count = 1 display edit button
-        actionMode?.menu?.findItem(R.id.action_edit_cover)?.isVisible = count == 1
+    fun destroyActionModeIfNeeded() {
+        actionMode?.finish()
+    }
+
+    /**
+     * Invalidates the action mode, forcing it to refresh its content.
+     */
+    fun invalidateActionMode() {
+        actionMode?.invalidate()
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.library_selection, menu)
-        adapter.setSelectionMode(FlexibleAdapter.MODE_MULTI)
         return true
     }
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+        val count = presenter.selectedMangas.size
+        if (count == 0) {
+            // Destroy action mode if there are no items selected.
+            destroyActionModeIfNeeded()
+        } else {
+            mode.title = getString(R.string.label_selected, count)
+            menu.findItem(R.id.action_edit_cover)?.isVisible = count == 1
+        }
         return false
     }
 
@@ -327,16 +398,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        adapter.setSelectionMode(FlexibleAdapter.MODE_SINGLE)
-        presenter.selectedMangas.clear()
+        presenter.clearSelections()
         actionMode = null
-    }
-
-    /**
-     * Destroys the action mode.
-     */
-    fun destroyActionModeIfNeeded() {
-        actionMode?.finish()
     }
 
     /**
@@ -368,14 +431,14 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                     context.contentResolver.openInputStream(data.data).use {
                         // Update cover to selected file, show error if something went wrong
                         if (presenter.editCoverWithStream(it, manga)) {
-                            adapter.refreshRegisteredAdapters()
+                            // TODO refresh cover
                         } else {
                             context.toast(R.string.notification_manga_update_failed)
                         }
                     }
-                } catch (e: IOException) {
+                } catch (error: IOException) {
                     context.toast(R.string.notification_manga_update_failed)
-                    e.printStackTrace()
+                    Timber.e(error)
                 }
             }
 
@@ -420,22 +483,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                     destroyActionModeIfNeeded()
                 }
                 .show()
-    }
-
-    /**
-     * Creates the action mode if it's not created already.
-     */
-    fun createActionModeIfNeeded() {
-        if (actionMode == null) {
-            actionMode = activity.startSupportActionMode(this)
-        }
-    }
-
-    /**
-     * Invalidates the action mode, forcing it to refresh its content.
-     */
-    fun invalidateActionMode() {
-        actionMode?.invalidate()
     }
 
 }

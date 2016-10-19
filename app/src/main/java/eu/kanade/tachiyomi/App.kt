@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi
 
 import android.app.Application
+import android.content.Context
+import android.support.multidex.MultiDex
 import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
 import timber.log.Timber
@@ -25,6 +27,13 @@ open class App : Application() {
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         setupAcra()
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        if (BuildConfig.DEBUG) {
+            MultiDex.install(this)
+        }
     }
 
     protected open fun setupAcra() {

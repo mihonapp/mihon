@@ -5,11 +5,11 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.IBinder
 import android.os.PowerManager
 import android.support.v4.app.NotificationCompat
-import com.github.pwittchen.reactivenetwork.library.ConnectivityStatus
-import com.github.pwittchen.reactivenetwork.library.ReactiveNetwork
 import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -17,10 +17,14 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Companion.start
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.util.*
+import eu.kanade.tachiyomi.util.AndroidComponentUtil
+import eu.kanade.tachiyomi.util.notification
+import eu.kanade.tachiyomi.util.notificationManager
+import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers
@@ -69,17 +73,19 @@ class LibraryUpdateService : Service() {
     private val notificationId: Int
         get() = Constants.NOTIFICATION_LIBRARY_ID
 
+    private var notificationBitmap: Bitmap? = null
 
     companion object {
-        /**
-         * Key for manual library update.
-         */
-        const val UPDATE_IS_MANUAL = "is_manual"
 
         /**
          * Key for category to update.
          */
         const val UPDATE_CATEGORY = "category"
+
+        /**
+         * Key for updating the details instead of the chapters.
+         */
+        const val UPDATE_DETAILS = "details"
 
         /**
          * Returns the status of the service.
@@ -96,13 +102,13 @@ class LibraryUpdateService : Service() {
          * running.
          *
          * @param context the application context.
-         * @param isManual whether the update has been manually triggered.
-         * @param category a specific category to update, or null for all in the library.
+         * @param category a specific category to update, or null for global update.
+         * @param details whether to update the details instead of the list of chapters.
          */
-        fun start(context: Context, isManual: Boolean = false, category: Category? = null) {
+        fun start(context: Context, category: Category? = null, details: Boolean = false) {
             if (!isRunning(context)) {
                 val intent = Intent(context, LibraryUpdateService::class.java).apply {
-                    putExtra(UPDATE_IS_MANUAL, isManual)
+                    putExtra(UPDATE_DETAILS, details)
                     category?.let { putExtra(UPDATE_CATEGORY, it.id) }
                 }
                 context.startService(intent)
@@ -135,7 +141,8 @@ class LibraryUpdateService : Service() {
      */
     override fun onDestroy() {
         subscription?.unsubscribe()
-        LibraryUpdateAlarm.startAlarm(this)
+        notificationBitmap?.recycle()
+        notificationBitmap = null
         destroyWakeLock()
         super.onDestroy()
     }
@@ -156,61 +163,36 @@ class LibraryUpdateService : Service() {
      * @return the start value of the command.
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        // Get connectivity status
-        val connection = ReactiveNetwork().getConnectivityStatus(this, true)
-
-        // Get library update restrictions
-        val restrictions = preferences.libraryUpdateRestriction()
-
-        // Check if users updates library manual
-        val isManualUpdate = intent?.getBooleanExtra(UPDATE_IS_MANUAL, false) ?: false
-
-        // Whether to cancel the update.
-        var cancelUpdate = false
-
-        // Check if device has internet connection
-        // Check if device has wifi connection if only wifi is enabled
-        if (connection == ConnectivityStatus.OFFLINE || (!isManualUpdate && "wifi" in restrictions
-                && connection != ConnectivityStatus.WIFI_CONNECTED_HAS_INTERNET)) {
-
-            if (isManualUpdate) {
-                toast(R.string.notification_no_connection_title)
-            }
-
-            // Enable library update when connection available
-            AndroidComponentUtil.toggleComponent(this, SyncOnConnectionAvailable::class.java, true)
-            cancelUpdate = true
-        }
-        if (!isManualUpdate && "ac" in restrictions && !DeviceUtil.isPowerConnected(this)) {
-            AndroidComponentUtil.toggleComponent(this, SyncOnPowerConnected::class.java, true)
-            cancelUpdate = true
-        }
-
-        if (cancelUpdate) {
-            stopSelf(startId)
-            return Service.START_NOT_STICKY
-        }
-
-        // Stop enabled components.
-        AndroidComponentUtil.toggleComponent(this, SyncOnConnectionAvailable::class.java, false)
-        AndroidComponentUtil.toggleComponent(this, SyncOnPowerConnected::class.java, false)
+        if (intent == null) return Service.START_NOT_STICKY
 
         // Unsubscribe from any previous subscription if needed.
         subscription?.unsubscribe()
 
         // Update favorite manga. Destroy service when completed or in case of an error.
-        subscription = Observable.defer { updateMangaList(getMangaToUpdate(intent)) }
+        subscription = Observable
+                .defer {
+                    if (notificationBitmap == null) {
+                        notificationBitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+                    }
+
+                    val mangaList = getMangaToUpdate(intent)
+
+                    // Update either chapter list or manga details.
+                    if (!intent.getBooleanExtra(UPDATE_DETAILS, false))
+                        updateChapterList(mangaList)
+                    else
+                        updateDetails(mangaList)
+                }
                 .subscribeOn(Schedulers.io())
-                .subscribe({},
-                        {
-                            showNotification(getString(R.string.notification_update_error), "")
-                            stopSelf(startId)
-                        }, {
+                .subscribe({
+                }, {
+                    showNotification(getString(R.string.notification_update_error), "")
+                    stopSelf(startId)
+                }, {
                     stopSelf(startId)
                 })
 
-        return Service.START_STICKY
+        return Service.START_REDELIVER_INTENT
     }
 
     /**
@@ -219,19 +201,26 @@ class LibraryUpdateService : Service() {
      * @param intent the update intent.
      * @return a list of manga to update
      */
-    fun getMangaToUpdate(intent: Intent?): List<Manga> {
-        val categoryId = intent?.getIntExtra(UPDATE_CATEGORY, -1) ?: -1
+    fun getMangaToUpdate(intent: Intent): List<Manga> {
+        val categoryId = intent.getIntExtra(UPDATE_CATEGORY, -1)
 
-        var toUpdate = if (categoryId != -1)
+        var listToUpdate = if (categoryId != -1)
             db.getLibraryMangas().executeAsBlocking().filter { it.category == categoryId }
-        else
-            db.getFavoriteMangas().executeAsBlocking()
-
-        if (preferences.updateOnlyNonCompleted()) {
-            toUpdate = toUpdate.filter { it.status != Manga.COMPLETED }
+        else {
+            val categoriesToUpdate = preferences.libraryUpdateCategories().getOrDefault().map { it.toInt() }
+            if (categoriesToUpdate.isNotEmpty())
+                db.getLibraryMangas().executeAsBlocking()
+                        .filter { it.category in categoriesToUpdate }
+                        .distinctBy { it.id }
+            else
+                db.getFavoriteMangas().executeAsBlocking().distinctBy { it.id }
         }
 
-        return toUpdate
+        if (!intent.getBooleanExtra(UPDATE_DETAILS, false) && preferences.updateOnlyNonCompleted()) {
+            listToUpdate = listToUpdate.filter { it.status != Manga.COMPLETED }
+        }
+
+        return listToUpdate
     }
 
     /**
@@ -243,7 +232,7 @@ class LibraryUpdateService : Service() {
      * @param mangaToUpdate the list to update
      * @return an observable delivering the progress of each update.
      */
-    fun updateMangaList(mangaToUpdate: List<Manga>): Observable<Manga> {
+    fun updateChapterList(mangaToUpdate: List<Manga>): Observable<Manga> {
         // Initialize the variables holding the progress of the updates.
         val count = AtomicInteger(0)
         val newUpdates = ArrayList<Manga>()
@@ -278,6 +267,7 @@ class LibraryUpdateService : Service() {
                     } else {
                         showResultNotification(newUpdates, failedUpdates)
                     }
+                    LibraryUpdateTrigger.setupTask(this)
                 }
     }
 
@@ -291,6 +281,43 @@ class LibraryUpdateService : Service() {
         val source = sourceManager.get(manga.source) as? OnlineSource ?: return Observable.empty()
         return source.fetchChapterList(manga)
                 .map { syncChaptersWithSource(db, it, manga, source) }
+    }
+
+    /**
+     * Method that updates the details of the given list of manga. It's called in a background
+     * thread, so it's safe to do heavy operations or network calls here.
+     * For each manga it calls [updateManga] and updates the notification showing the current
+     * progress.
+     *
+     * @param mangaToUpdate the list to update
+     * @return an observable delivering the progress of each update.
+     */
+    fun updateDetails(mangaToUpdate: List<Manga>): Observable<Manga> {
+        // Initialize the variables holding the progress of the updates.
+        val count = AtomicInteger(0)
+
+        val cancelIntent = PendingIntent.getBroadcast(this, 0,
+                Intent(this, CancelUpdateReceiver::class.java), 0)
+
+        // Emit each manga and update it sequentially.
+        return Observable.from(mangaToUpdate)
+                // Notify manga that will update.
+                .doOnNext { showProgressNotification(it, count.andIncrement, mangaToUpdate.size, cancelIntent) }
+                // Update the details of the manga.
+                .concatMap { manga ->
+                    val source = sourceManager.get(manga.source) as? OnlineSource
+                            ?: return@concatMap Observable.empty<Manga>()
+
+                    source.fetchMangaDetails(manga)
+                            .doOnNext { networkManga ->
+                                manga.copyFrom(networkManga)
+                                db.insertManga(manga).executeAsBlocking()
+                            }
+                            .onErrorReturn { manga }
+                }
+                .doOnCompleted {
+                    cancelNotification()
+                }
     }
 
     /**
@@ -351,6 +378,7 @@ class LibraryUpdateService : Service() {
     private fun showNotification(title: String, body: String) {
         notificationManager.notify(notificationId, notification() {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
+            setLargeIcon(notificationBitmap)
             setContentTitle(title)
             setContentText(body)
         })
@@ -366,6 +394,7 @@ class LibraryUpdateService : Service() {
     private fun showProgressNotification(manga: Manga, current: Int, total: Int, cancelIntent: PendingIntent) {
         notificationManager.notify(notificationId, notification() {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
+            setLargeIcon(notificationBitmap)
             setContentTitle(manga.title)
             setProgress(total, current, false)
             setOngoing(true)
@@ -386,6 +415,7 @@ class LibraryUpdateService : Service() {
 
         notificationManager.notify(notificationId, notification() {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
+            setLargeIcon(notificationBitmap)
             setContentTitle(title)
             setStyle(NotificationCompat.BigTextStyle().bigText(body))
             setContentIntent(notificationIntent)
@@ -409,41 +439,6 @@ class LibraryUpdateService : Service() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
-
-    /**
-     * Class that triggers the library to update when a connection is available. It receives
-     * network changes.
-     */
-    class SyncOnConnectionAvailable : BroadcastReceiver() {
-        /**
-         * Method called when a network change occurs.
-         *
-         * @param context the application context.
-         * @param intent the intent received.
-         */
-        override fun onReceive(context: Context, intent: Intent) {
-            if (DeviceUtil.isNetworkConnected(context)) {
-                AndroidComponentUtil.toggleComponent(context, this.javaClass, false)
-                start(context)
-            }
-        }
-    }
-
-    /**
-     * Class that triggers the library to update when connected to power.
-     */
-    class SyncOnPowerConnected: BroadcastReceiver() {
-        /**
-         * Method called when AC is connected.
-         *
-         * @param context the application context.
-         * @param intent the intent received.
-         */
-        override fun onReceive(context: Context, intent: Intent) {
-            AndroidComponentUtil.toggleComponent(context, this.javaClass, false)
-            start(context)
-        }
-    }
 
     /**
      * Class that stops updating the library.

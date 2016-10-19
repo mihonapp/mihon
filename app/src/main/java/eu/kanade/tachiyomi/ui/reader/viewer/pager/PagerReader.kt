@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
+import android.support.v4.content.ContextCompat
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ViewGroup
@@ -91,12 +92,22 @@ abstract class PagerReader : BaseReader() {
         private set
 
     /**
+     * Text color for black theme.
+     */
+    val whiteColor by lazy { ContextCompat.getColor(context, R.color.textColorSecondaryDark) }
+
+    /**
+     * Text color for white theme.
+     */
+    val blackColor by lazy { ContextCompat.getColor(context, R.color.textColorSecondaryLight) }
+
+    /**
      * Initializes the pager.
      *
      * @param pager the pager to initialize.
      */
     protected fun initializePager(pager: Pager) {
-        adapter = PagerReaderAdapter(childFragmentManager)
+        adapter = PagerReaderAdapter(this)
 
         this.pager = pager.apply {
             setLayoutParams(ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT))
@@ -161,14 +172,16 @@ abstract class PagerReader : BaseReader() {
     protected fun createGestureDetector(): GestureDetector {
         return GestureDetector(activity, object : GestureDetector.SimpleOnGestureListener() {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                val positionX = e.x
+                if (isAdded) {
+                    val positionX = e.x
 
-                if (positionX < pager.width * LEFT_REGION) {
-                    if (tappingEnabled) onLeftSideTap()
-                } else if (positionX > pager.width * RIGHT_REGION) {
-                    if (tappingEnabled) onRightSideTap()
-                } else {
-                    readerActivity.toggleMenu()
+                    if (positionX < pager.width * LEFT_REGION) {
+                        if (tappingEnabled) onLeftSideTap()
+                    } else if (positionX > pager.width * RIGHT_REGION) {
+                        if (tappingEnabled) onRightSideTap()
+                    } else {
+                        readerActivity.toggleMenu()
+                    }
                 }
                 return true
             }
@@ -208,8 +221,11 @@ abstract class PagerReader : BaseReader() {
     protected fun setPagesOnAdapter() {
         if (pages.isNotEmpty()) {
             adapter.pages = pages
-            setActivePage(currentPage)
-            updatePageNumber()
+            if (currentPage == pager.currentItem) {
+                onPageChanged(currentPage)
+            } else {
+                setActivePage(currentPage)
+            }
         }
     }
 

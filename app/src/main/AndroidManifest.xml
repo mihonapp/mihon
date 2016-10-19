@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="eu.kanade.tachiyomi">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="eu.kanade.tachiyomi">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -8,6 +10,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <application
         android:name=".App"
@@ -18,8 +22,7 @@
         android:largeHeap="true"
         android:theme="@style/Theme.Tachiyomi" >
         <activity
-            android:name=".ui.main.MainActivity"
-            android:theme="@style/Theme.BrandedLaunch">
+            android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -28,7 +31,8 @@
         </activity>
         <activity
             android:name=".ui.manga.MangaActivity"
-            android:parentActivityName=".ui.main.MainActivity">
+            android:parentActivityName=".ui.main.MainActivity"
+            android:exported="true">
         </activity>
         <activity
             android:name=".ui.reader.ReaderActivity"
@@ -59,46 +63,32 @@
         <service android:name=".data.mangasync.UpdateMangaSyncService"
             android:exported="false"/>
 
-        <receiver
-            android:name=".data.library.LibraryUpdateService$SyncOnConnectionAvailable"
-            android:enabled="false">
+        <service
+            android:name=".data.library.LibraryUpdateTrigger"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
             </intent-filter>
-        </receiver>
+        </service>
 
-        <receiver
-            android:name=".data.library.LibraryUpdateService$SyncOnPowerConnected"
-            android:enabled="false">
+        <service
+            android:name=".data.updater.UpdateCheckerService"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
             <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
             </intent-filter>
-        </receiver>
+        </service>
+
+        <service android:name=".data.updater.UpdateDownloaderService"
+            android:exported="false"/>
+
+        <receiver android:name=".data.updater.UpdateNotificationReceiver"/>
 
         <receiver
             android:name=".data.library.LibraryUpdateService$CancelUpdateReceiver">
         </receiver>
-
-        <receiver
-            android:name=".data.updater.UpdateDownloader$InstallOnReceived">
-        </receiver>
-
-        <receiver
-            android:name=".data.library.LibraryUpdateAlarm">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="eu.kanade.UPDATE_LIBRARY" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".data.updater.UpdateDownloaderAlarm">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="eu.kanade.CHECK_UPDATE"/>
-            </intent-filter>
-        </receiver>
-
 
         <meta-data
             android:name="eu.kanade.tachiyomi.data.glide.AppGlideModule"

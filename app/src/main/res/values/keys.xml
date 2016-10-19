@@ -10,10 +10,12 @@
     <string name="pref_category_about_key">pref_category_about_key</string>
     <string name="pref_category_sources_key">pref_category_sources_key</string>
 
+    <string name="pref_display_library_as_list">pref_display_library_as_list</string>
     <string name="pref_library_columns_dialog_key">pref_library_columns_dialog_key</string>
     <string name="pref_library_columns_portrait_key">pref_library_columns_portrait_key</string>
     <string name="pref_library_columns_landscape_key">pref_library_columns_landscape_key</string>
     <string name="pref_library_update_interval_key">pref_library_update_interval_key</string>
+    <string name="pref_library_update_categories_key">library_update_categories</string>
     <string name="pref_update_only_non_completed_key">pref_update_only_non_completed_key</string>
     <string name="pref_auto_update_manga_sync_key">pref_auto_update_manga_sync_key</string>
     <string name="pref_ask_update_manga_sync_key">pref_ask_update_manga_sync_key</string>
@@ -31,6 +33,9 @@
     <string name="pref_keep_screen_on_key">pref_keep_screen_on_key</string>
     <string name="pref_custom_brightness_key">pref_custom_brightness_key</string>
     <string name="pref_custom_brightness_value_key">custom_brightness_value</string>
+    <string name="pref_color_filter_key">pref_color_filter_key</string>
+    <string name="pref_color_filter_value_key">color_filter_value</string>
+    <string name="pref_red_filter_value_key">pref_red_filter_value</string>
     <string name="pref_reader_theme_key">pref_reader_theme_key</string>
     <string name="pref_image_decoder_key">pref_image_decoder_key</string>
     <string name="pref_read_with_volume_keys_key">reader_volume_keys</string>
@@ -41,20 +46,20 @@
 
     <string name="pref_download_directory_key">pref_download_directory_key</string>
     <string name="pref_download_slots_key">pref_download_slots_key</string>
+    <string name="pref_remove_after_read_slots_key">remove_after_read_slots</string>
     <string name="pref_download_only_over_wifi_key">pref_download_only_over_wifi_key</string>
     <string name="pref_remove_after_marked_as_read_key">pref_remove_after_marked_as_read_key</string>
     <string name="pref_category_remove_after_read_key">pref_category_remove_after_read_key</string>
 
-    <string name="pref_remove_after_read_key">pref_remove_after_read_key</string>
-    <string name="pref_remove_after_read_previous_key">pref_remove_after_read_previous_key</string>
-
     <string name="pref_last_used_category_key">last_used_category</string>
 
     <string name="pref_source_languages">pref_source_languages</string>
+    <string name="pref_category_manga_sync_accounts_key">category_manga_sync_accounts</string>
 
     <string name="pref_clear_chapter_cache_key">pref_clear_chapter_cache_key</string>
     <string name="pref_clear_database_key">pref_clear_database_key</string>
     <string name="pref_clear_cookies_key">pref_clear_cookies_key</string>
+    <string name="pref_refresh_library_metadata_key">refresh_library_metadata</string>
 
     <string name="pref_version">pref_version</string>
     <string name="pref_build_time">pref_build_time</string>

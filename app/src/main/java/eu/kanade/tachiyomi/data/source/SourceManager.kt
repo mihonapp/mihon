@@ -15,17 +15,7 @@ import java.io.File
 
 open class SourceManager(private val context: Context) {
 
-    val EHENTAI = 1
-    val EXHENTAI = 2
-
-    val LAST_SOURCE by lazy {
-        if (DialogLogin.isLoggedIn(context, false))
-            2
-        else
-            1
-    }
-
-    val sourcesMap = createSources()
+    private val sourcesMap = createSources()
 
     open fun get(sourceKey: Int): Source? {
         return sourcesMap[sourceKey]
@@ -33,16 +23,14 @@ open class SourceManager(private val context: Context) {
 
     fun getOnlineSources() = sourcesMap.values.filterIsInstance(OnlineSource::class.java)
 
-    private fun createSource(id: Int): Source? = when (id) {
-        EHENTAI -> EHentai(context, id, false)
-        EXHENTAI -> EHentai(context, id, true)
-        else -> null
-    }
+    private fun createOnlineSourceList(): List<Source> =
+            if (DialogLogin.isLoggedIn(context, false))
+                listOf(EHentai(1, false), EHentai(2, true))
+            else
+                listOf(EHentai(1, false))
 
     private fun createSources(): Map<Int, Source> = hashMapOf<Int, Source>().apply {
-        for (i in 1..LAST_SOURCE) {
-            createSource(i)?.let { put(i, it) }
-        }
+        createOnlineSourceList().forEach { put(it.id, it) }
 
         val parsersDir = File(Environment.getExternalStorageDirectory().absolutePath +
                 File.separator + context.getString(R.string.app_name), "parsers")
@@ -52,7 +40,7 @@ open class SourceManager(private val context: Context) {
             for (file in parsersDir.listFiles().filter { it.extension == "yml" }) {
                 try {
                     val map = file.inputStream().use { yaml.loadAs(it, Map::class.java) }
-                    YamlOnlineSource(context, map).let { put(it.id, it) }
+                    YamlOnlineSource(map).let { put(it.id, it) }
                 } catch (e: Exception) {
                     Timber.e("Error loading source from file. Bad format?")
                 }

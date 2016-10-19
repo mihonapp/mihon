@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.online
 
-import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.network.GET
@@ -17,7 +16,7 @@ import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 import java.util.*
 
-class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(context) {
+class YamlOnlineSource(mappings: Map<*, *>) : OnlineSource() {
 
     val map = YamlSourceNode(mappings)
 
@@ -31,6 +30,8 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
     override val lang = map.lang.toUpperCase().let { code ->
         getLanguages().find { code == it.code }!!
     }
+
+    override val supportsLatest = map.latestupdates != null
 
     override val client = when(map.client) {
         "cloudflare" -> network.cloudflareClient
@@ -68,9 +69,9 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
         }
     }
 
-    override fun searchMangaRequest(page: MangasPage, query: String): Request {
+    override fun searchMangaRequest(page: MangasPage, query: String, filters: List<Filter>): Request {
         if (page.page == 1) {
-            page.url = searchMangaInitialUrl(query)
+            page.url = searchMangaInitialUrl(query, filters)
         }
         return when (map.search.method?.toLowerCase()) {
             "post" -> POST(page.url, headers, map.search.createForm())
@@ -78,9 +79,9 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
         }
     }
 
-    override fun searchMangaInitialUrl(query: String) = map.search.url.replace("\$query", query)
+    override fun searchMangaInitialUrl(query: String, filters: List<Filter>) = map.search.url.replace("\$query", query)
 
-    override fun searchMangaParse(response: Response, page: MangasPage, query: String) {
+    override fun searchMangaParse(response: Response, page: MangasPage, query: String, filters: List<Filter>) {
         val document = response.asJsoup()
         for (element in document.select(map.search.manga_css)) {
             Manga.create(id).apply {
@@ -91,6 +92,33 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
         }
 
         map.search.next_url_css?.let { selector ->
+            page.nextPageUrl = document.select(selector).first()?.absUrl("href")
+        }
+    }
+
+    override fun latestUpdatesRequest(page: MangasPage): Request {
+        if (page.page == 1) {
+            page.url = latestUpdatesInitialUrl()
+        }
+        return when (map.latestupdates!!.method?.toLowerCase()) {
+            "post" -> POST(page.url, headers, map.latestupdates.createForm())
+            else -> GET(page.url, headers)
+        }
+    }
+
+    override fun latestUpdatesInitialUrl() = map.latestupdates!!.url
+
+    override fun latestUpdatesParse(response: Response, page: MangasPage) {
+        val document = response.asJsoup()
+        for (element in document.select(map.latestupdates!!.manga_css)) {
+            Manga.create(id).apply {
+                title = element.text()
+                setUrlWithoutDomain(element.attr("href"))
+                page.mangas.add(this)
+            }
+        }
+
+        map.latestupdates.next_url_css?.let { selector ->
             page.nextPageUrl = document.select(selector).first()?.absUrl("href")
         }
     }
@@ -184,5 +212,4 @@ class YamlOnlineSource(context: Context, mappings: Map<*, *>) : OnlineSource(con
                 throw Exception("image_regex and image_css are null")
         }
     }
-
 }

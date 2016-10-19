@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.online
 
-import android.content.Context
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -23,10 +22,8 @@ import uy.kohesive.injekt.injectLazy
 
 /**
  * A simple implementation for sources from a website.
- *
- * @param context the application context.
  */
-abstract class OnlineSource(context: Context) : Source {
+abstract class OnlineSource() : Source {
 
     /**
      * Network service.
@@ -54,9 +51,19 @@ abstract class OnlineSource(context: Context) : Source {
     abstract val lang: Language
 
     /**
+     * Whether the source has support for latest updates.
+     */
+    abstract val supportsLatest : Boolean
+
+    /**
      * Headers used for requests.
      */
     val headers by lazy { headersBuilder().build() }
+
+    /**
+     * Genre filters.
+     */
+    val filters by lazy { getFilterList() }
 
     /**
      * Default network client for doing requests.
@@ -126,11 +133,11 @@ abstract class OnlineSource(context: Context) : Source {
      *             the current page and the next page url.
      * @param query the search query.
      */
-    open fun fetchSearchManga(page: MangasPage, query: String): Observable<MangasPage> = client
-            .newCall(searchMangaRequest(page, query))
+    open fun fetchSearchManga(page: MangasPage, query: String, filters: List<Filter>): Observable<MangasPage> = client
+            .newCall(searchMangaRequest(page, query, filters))
             .asObservable()
             .map { response ->
-                searchMangaParse(response, page, query)
+                searchMangaParse(response, page, query, filters)
                 page
             }
 
@@ -141,9 +148,9 @@ abstract class OnlineSource(context: Context) : Source {
      * @param page the page object.
      * @param query the search query.
      */
-    open protected fun searchMangaRequest(page: MangasPage, query: String): Request {
+    open protected fun searchMangaRequest(page: MangasPage, query: String, filters: List<Filter>): Request {
         if (page.page == 1) {
-            page.url = searchMangaInitialUrl(query)
+            page.url = searchMangaInitialUrl(query, filters)
         }
         return GET(page.url, headers)
     }
@@ -153,7 +160,7 @@ abstract class OnlineSource(context: Context) : Source {
      *
      * @param query the search query.
      */
-    abstract protected fun searchMangaInitialUrl(query: String): String
+    abstract protected fun searchMangaInitialUrl(query: String, filters: List<Filter>): String
 
     /**
      * Parse the response from the site. It should add a list of manga and the absolute url to the
@@ -163,7 +170,38 @@ abstract class OnlineSource(context: Context) : Source {
      * @param page the page object to be filled.
      * @param query the search query.
      */
-    abstract protected fun searchMangaParse(response: Response, page: MangasPage, query: String)
+    abstract protected fun searchMangaParse(response: Response, page: MangasPage, query: String, filters: List<Filter>)
+
+    /**
+     * Returns an observable containing a page with a list of latest manga.
+     */
+    open fun fetchLatestUpdates(page: MangasPage): Observable<MangasPage> = client
+            .newCall(latestUpdatesRequest(page))
+            .asObservable()
+            .map { response ->
+                latestUpdatesParse(response, page)
+                page
+            }
+
+    /**
+     * Returns the request for latest manga given the page.
+     */
+    open protected fun latestUpdatesRequest(page: MangasPage): Request {
+        if (page.page == 1) {
+            page.url = latestUpdatesInitialUrl()
+        }
+        return GET(page.url, headers)
+    }
+
+    /**
+     * Returns the absolute url of the first page to latest manga.
+     */
+    abstract protected fun latestUpdatesInitialUrl(): String
+
+    /**
+     * Same as [popularMangaParse], but for latest manga.
+     */
+    abstract protected fun latestUpdatesParse(response: Response, page: MangasPage)
 
     /**
      * Returns an observable with the updated details for a manga. Normally it's not needed to
@@ -187,7 +225,7 @@ abstract class OnlineSource(context: Context) : Source {
      *
      * @param manga the manga to be updated.
      */
-    open protected fun mangaDetailsRequest(manga: Manga): Request {
+    open fun mangaDetailsRequest(manga: Manga): Request {
         return GET(baseUrl + manga.url, headers)
     }
 
@@ -428,4 +466,7 @@ abstract class OnlineSource(context: Context) : Source {
 
     }
 
+    data class Filter(val id: String, val name: String)
+
+    open fun getFilterList(): List<Filter> = emptyList()
 }

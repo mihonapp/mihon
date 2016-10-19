@@ -26,6 +26,10 @@ class PreferenceKeys(context: Context) {
 
     val customBrightnessValue = context.getString(R.string.pref_custom_brightness_value_key)
 
+    val colorFilter = context.getString(R.string.pref_color_filter_key)
+
+    val colorFilterValue = context.getString(R.string.pref_color_filter_value_key)
+
     val defaultViewer = context.getString(R.string.pref_default_viewer_key)
 
     val imageScaleType = context.getString(R.string.pref_image_scale_type_key)
@@ -66,9 +70,7 @@ class PreferenceKeys(context: Context) {
 
     val downloadOnlyOverWifi = context.getString(R.string.pref_download_only_over_wifi_key)
 
-    val removeAfterRead = context.getString(R.string.pref_remove_after_read_key)
-
-    val removeAfterReadPrevious = context.getString(R.string.pref_remove_after_read_previous_key)
+    val removeAfterReadSlots = context.getString(R.string.pref_remove_after_read_slots_key)
 
     val removeAfterMarkedAsRead = context.getString(R.string.pref_remove_after_marked_as_read_key)
 
@@ -76,11 +78,13 @@ class PreferenceKeys(context: Context) {
 
     val libraryUpdateRestriction = context.getString(R.string.pref_library_update_restriction_key)
 
+    val libraryUpdateCategories = context.getString(R.string.pref_library_update_categories_key)
+
     val filterDownloaded = context.getString(R.string.pref_filter_downloaded_key)
 
     val filterUnread = context.getString(R.string.pref_filter_unread_key)
 
-    val automaticUpdateStatus = context.getString(R.string.pref_enable_automatic_updates_key)
+    val automaticUpdates = context.getString(R.string.pref_enable_automatic_updates_key)
 
     val startScreen = context.getString(R.string.pref_start_screen_key)
 
@@ -91,5 +95,7 @@ class PreferenceKeys(context: Context) {
     fun syncUsername(syncId: Int) = "pref_mangasync_username_$syncId"
 
     fun syncPassword(syncId: Int) = "pref_mangasync_password_$syncId"
+
+    val  libraryAsList = context.getString(R.string.pref_display_library_as_list)
 
 }

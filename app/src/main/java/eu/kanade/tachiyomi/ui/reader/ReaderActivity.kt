@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
@@ -37,10 +38,12 @@ import me.zhanghai.android.systemuihelper.SystemUiHelper
 import me.zhanghai.android.systemuihelper.SystemUiHelper.*
 import nucleus.factory.RequiresPresenter
 import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.text.DecimalFormat
+import java.util.concurrent.TimeUnit
 
 @RequiresPresenter(ReaderPresenter::class)
 class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
@@ -68,6 +71,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     val subscriptions by lazy { CompositeSubscription() }
 
     private var customBrightnessSubscription: Subscription? = null
+
+    private var customFilterColorSubscription: Subscription? = null
 
     var readerTheme: Int = 0
         private set
@@ -105,7 +110,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         setMenuVisibility(menuVisible)
 
-        maxBitmapSize = GLUtil.getMaxTextureSize()
+        maxBitmapSize = Math.min(2048, GLUtil.getMaxTextureSize())
 
         left_chapter.setOnClickListener {
             if (viewer != null) {
@@ -139,6 +144,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> ReaderSettingsDialog().show(supportFragmentManager, "settings")
+            R.id.action_custom_filter -> ReaderCustomFilterDialog().show(supportFragmentManager, "filter")
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -147,6 +153,13 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(MENU_VISIBLE, menuVisible)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            setMenuVisibility(menuVisible, animate = false)
+        }
     }
 
     override fun onBackPressed() {
@@ -206,7 +219,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     fun onChapterError(error: Throwable) {
-        Timber.e(error, error.message)
+        Timber.e(error)
         finish()
         toast(error.message)
     }
@@ -301,15 +314,18 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         return fragment
     }
 
-    fun onPageChanged(currentPageIndex: Int, totalPages: Int) {
-        val page = currentPageIndex + 1
-        page_number.text = "$page/$totalPages"
+    fun onPageChanged(page: Page) {
+        presenter.onPageChanged(page)
+
+        val pageNumber = page.pageNumber + 1
+        val pageCount = page.chapter.pages!!.size
+        page_number.text = "$pageNumber/$pageCount"
         if (page_seekbar.rotation != 180f) {
-            left_page_text.text = "$page"
+            left_page_text.text = "$pageNumber"
         } else {
-            right_page_text.text = "$page"
+            right_page_text.text = "$pageNumber"
         }
-        page_seekbar.progress = currentPageIndex
+        page_seekbar.progress = page.pageNumber
     }
 
     fun gotoPageInCurrentChapter(pageIndex: Int) {
@@ -319,7 +335,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 val requestedPage = activePage.chapter.pages!![pageIndex]
                 it.setActivePage(requestedPage)
             }
-
         }
     }
 
@@ -344,9 +359,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         reader_menu_bottom.setOnTouchListener { v, event -> true }
 
         page_seekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    gotoPageInCurrentChapter(progress)
+                    gotoPageInCurrentChapter(value)
                 }
             }
         })
@@ -367,6 +382,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         subscriptions += preferences.customBrightness().asObservable()
                 .subscribe { setCustomBrightness(it) }
+
+        subscriptions += preferences.colorFilter().asObservable()
+                .subscribe { setColorFilter(it) }
 
         subscriptions += preferences.readerTheme().asObservable()
                 .distinctUntilChanged()
@@ -414,12 +432,26 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private fun setCustomBrightness(enabled: Boolean) {
         if (enabled) {
             customBrightnessSubscription = preferences.customBrightnessValue().asObservable()
+                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
                     .subscribe { setCustomBrightnessValue(it) }
 
             subscriptions.add(customBrightnessSubscription)
         } else {
             customBrightnessSubscription?.let { subscriptions.remove(it) }
             setCustomBrightnessValue(0)
+        }
+    }
+
+    private fun setColorFilter(enabled: Boolean) {
+        if (enabled) {
+            customFilterColorSubscription = preferences.colorFilterValue().asObservable()
+                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                    .subscribe { setColorFilterValue(it) }
+
+            subscriptions.add(customFilterColorSubscription)
+        } else {
+            customFilterColorSubscription?.let { subscriptions.remove(it) }
+            color_overlay.visibility = View.GONE
         }
     }
 
@@ -449,6 +481,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
     }
 
+    private fun setColorFilterValue(value: Int) {
+        color_overlay.visibility = View.VISIBLE
+        color_overlay.setBackgroundColor(value)
+    }
+
     private fun applyTheme(theme: Int) {
         readerTheme = theme
         val rootView = window.decorView.rootView
@@ -463,37 +500,42 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
     }
 
-    private fun setMenuVisibility(visible: Boolean) {
+    private fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
         menuVisible = visible
         if (visible) {
             systemUi?.show()
             reader_menu.visibility = View.VISIBLE
 
-            val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
-            toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
-                override fun onAnimationStart(animation: Animation) {
-                    // Fix status bar being translucent the first time it's opened.
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            if (animate) {
+                val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
+                toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
+                    override fun onAnimationStart(animation: Animation) {
+                        // Fix status bar being translucent the first time it's opened.
+                        if (Build.VERSION.SDK_INT >= 21) {
+                            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                        }
                     }
-                }
-            })
-            toolbar.startAnimation(toolbarAnimation)
+                })
+                toolbar.startAnimation(toolbarAnimation)
 
-            val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
-            reader_menu_bottom.startAnimation(bottomMenuAnimation)
+                val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
+                reader_menu_bottom.startAnimation(bottomMenuAnimation)
+            }
         } else {
             systemUi?.hide()
-            val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
-            toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
-                override fun onAnimationEnd(animation: Animation) {
-                    reader_menu.visibility = View.GONE
-                }
-            })
-            toolbar.startAnimation(toolbarAnimation)
 
-            val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
-            reader_menu_bottom.startAnimation(bottomMenuAnimation)
+            if (animate) {
+                val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
+                toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
+                    override fun onAnimationEnd(animation: Animation) {
+                        reader_menu.visibility = View.GONE
+                    }
+                })
+                toolbar.startAnimation(toolbarAnimation)
+
+                val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
+                reader_menu_bottom.startAnimation(bottomMenuAnimation)
+            }
         }
     }
 

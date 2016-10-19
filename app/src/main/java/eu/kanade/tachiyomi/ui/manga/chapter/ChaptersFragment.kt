@@ -116,8 +116,25 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.chapters, menu)
-        menu.findItem(R.id.action_filter_unread).isChecked = presenter.onlyUnread()
-        menu.findItem(R.id.action_filter_downloaded).isChecked = presenter.onlyDownloaded()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        // Initialize menu items.
+        val menuFilterRead = menu.findItem(R.id.action_filter_read)
+        val menuFilterUnread = menu.findItem(R.id.action_filter_unread)
+        val menuFilterDownloaded = menu.findItem(R.id.action_filter_downloaded)
+
+        // Set correct checkbox values.
+        menuFilterRead.isChecked = presenter.onlyRead()
+        menuFilterUnread.isChecked = presenter.onlyUnread()
+        menuFilterDownloaded.isChecked = presenter.onlyDownloaded()
+
+        if (presenter.onlyRead())
+            //Disable unread filter option if read filter is enabled.
+            menuFilterUnread.isEnabled = false
+        if (presenter.onlyUnread())
+            //Disable read filter option if unread filter is enabled.
+            menuFilterRead.isEnabled = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -127,7 +144,13 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
             R.id.action_sorting_mode -> showSortingDialog()
             R.id.action_filter_unread -> {
                 item.isChecked = !item.isChecked
+                presenter.setUnreadFilter(item.isChecked)
+                activity.supportInvalidateOptionsMenu()
+            }
+            R.id.action_filter_read -> {
+                item.isChecked = !item.isChecked
                 presenter.setReadFilter(item.isChecked)
+                activity.supportInvalidateOptionsMenu()
             }
             R.id.action_filter_downloaded -> {
                 item.isChecked = !item.isChecked
@@ -145,8 +168,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     fun onNextManga(manga: Manga) {
         // Set initial values
-        setReadFilter()
-        setDownloadedFilter()
+        activity.supportInvalidateOptionsMenu()
     }
 
     fun onNextChapters(chapters: List<ChapterModel>) {
@@ -242,6 +264,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
                     fun getUnreadChaptersSorted() = presenter.chapters
                             .filter { !it.read && !it.isDownloaded }
+                            .distinctBy { it.name }
                             .sortedByDescending { it.source_order }
 
                     // i = 0: Download 1
@@ -354,7 +377,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     fun onChaptersDeletedError(error: Throwable) {
         dismissDeletingDialog()
-        Timber.e(error, error.message)
+        Timber.e(error)
     }
 
     fun dismissDeletingDialog() {
@@ -393,13 +416,5 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     private fun setContextTitle(count: Int) {
         actionMode?.title = getString(R.string.label_selected, count)
-    }
-
-    fun setReadFilter() {
-        activity.supportInvalidateOptionsMenu()
-    }
-
-    fun setDownloadedFilter() {
-        activity.supportInvalidateOptionsMenu()
     }
 }

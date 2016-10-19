@@ -37,8 +37,8 @@ class AutofitRecyclerView @JvmOverloads constructor(context: Context, attrs: Att
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         super.onMeasure(widthSpec, heightSpec)
         if (spanCount == 0 && columnWidth > 0) {
-            val spanCount = Math.max(1, measuredWidth / columnWidth)
-            manager.spanCount = spanCount
+            val count = Math.max(1, measuredWidth / columnWidth)
+            spanCount = count
         }
     }
 

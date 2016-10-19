@@ -8,8 +8,9 @@
     <string name="label_download_queue">Download queue</string>
     <string name="label_library">My library</string>
     <string name="label_recent_manga">Recently read</string>
-    <string name="label_recent_updates">Recent updates</string>
     <string name="label_catalogues">Galleries</string>
+    <string name="label_recent_updates">Library updates</string>
+    <string name="label_latest_updates">Latest updates</string>
     <string name="label_categories">Categories</string>
     <string name="label_selected">Selected: %1$d</string>
     <string name="label_backup">Backup</string>
@@ -19,6 +20,7 @@
     <string name="action_filter">Filter</string>
     <string name="action_filter_downloaded">Downloaded</string>
     <string name="action_filter_unread">Unread</string>
+    <string name="action_filter_read">Read</string>
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_search">Search</string>
     <string name="action_select_all">Select all</string>
@@ -50,10 +52,13 @@
     <string name="action_remove">Remove</string>
     <string name="action_resume">Resume</string>
     <string name="action_open_in_browser">Open in browser</string>
+    <string name="action_add_to_home_screen">Add to home screen</string>
     <string name="action_display_mode">Change display mode</string>
+    <string name="action_set_filter">Set filter</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_sort">Sort</string>
     <string name="action_install">Install</string>
+    <string name="action_share">Share</string>
 
     <!-- Operations -->
     <string name="deleting">Deleting…</string>
@@ -84,6 +89,8 @@
     <string name="update_12hour">Every 12 hours</string>
     <string name="update_24hour">Daily</string>
     <string name="update_48hour">Every 2 days</string>
+    <string name="pref_library_update_categories">Categories to include in global update</string>
+    <string name="all">All</string>
     <string name="pref_library_update_restriction">Library update restrictions</string>
     <string name="pref_library_update_restriction_summary">Update only when the conditions are met</string>
     <string name="wifi">Wi-Fi</string>
@@ -102,6 +109,7 @@
     <string name="pref_enable_transitions">Enable transitions</string>
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_custom_brightness">Use custom brightness</string>
+    <string name="pref_custom_color_filter">Use custom color filter</string>
     <string name="pref_keep_screen_on">Keep screen on</string>
     <string name="pref_reader_navigation">Navigation</string>
     <string name="pref_read_with_volume_keys">Volume keys</string>
@@ -135,6 +143,11 @@
     <string name="rotation_lock">Lock</string>
     <string name="rotation_force_portrait">Force portrait</string>
     <string name="rotation_force_landscape">Force landscape</string>
+    <string name="color_filter_r_value">R</string>
+    <string name="color_filter_g_value">G</string>
+    <string name="color_filter_b_value">B</string>
+    <string name="color_filter_a_value">A</string>
+
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
@@ -142,16 +155,13 @@
     <string name="pref_download_only_over_wifi">Only download over Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Remove when marked as read</string>
     <string name="pref_remove_after_read">Remove after read</string>
-    <string name="cat_remove_after_read">Remove after read</string>
-    <string name="current_chapter">Current chapter</string>
-    <string name="previous_chapter">Previous chapter</string>
     <string name="custom_dir">Custom directory</string>
-
-
-      <!-- Sources section -->
-    <string name="languages">Languages</string>
-    <string name="languages_summary">Select the languages to show sources from</string>
-    <string name="accounts">Accounts</string>
+    <string name="disabled">Disabled</string>
+    <string name="last_read_chapter">Last read chapter</string>
+    <string name="second_to_last">Second to last chapter</string>
+    <string name="third_to_last">Third to last chapter</string>
+    <string name="fourth_to_last">Fourth to last chapter</string>
+    <string name="fifth_to_last">Fifth to last chapter</string>
 
       <!-- Sync section -->
     <string name="services">Services</string>
@@ -167,8 +177,8 @@
     <string name="pref_clear_database_summary">Delete manga and chapters that are not in your library</string>
     <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library manga will be lost</string>
     <string name="clear_database_completed">Entries deleted</string>
-    <string name="pref_show_warning_message">Show warnings</string>
-    <string name="pref_show_warning_message_summary">Show warning messages during library sync </string>
+    <string name="pref_refresh_library_metadata">Refresh library metadata</string>
+    <string name="pref_refresh_library_metadata_summary">Updates covers, genres, description and manga status information</string>
     <string name="pref_reencode">Reencode images</string>
     <string name="pref_reencode_summary">Enable reencoding if images can\'t be decoded. Expect best results with Skia</string>
 
@@ -201,6 +211,7 @@
     <!-- Catalogue fragment -->
     <string name="source_requires_login">This source requires you to log in</string>
     <string name="select_source">Select a source</string>
+    <string name="no_valid_sources">Please enable at least one valid source</string>
 
     <!-- Manga info fragment -->
     <string name="manga_detail_tab">Info</string>
@@ -216,6 +227,15 @@
     <string name="manga_info_status_label">Status</string>
     <string name="manga_info_source_label">Source</string>
     <string name="manga_info_genres_label">Genres</string>
+    <string name="share_subject">Share…</string>
+    <string name="share_text">Check out %1$s! at %2$s</string>
+    <string name="circular_icon">Circular icon</string>
+    <string name="rounded_icon">Rounded icon</string>
+    <string name="square_icon">Square icon</string>
+    <string name="star_icon">Star icon</string>
+    <string name="shortcut_title">Shortcut title</string>
+    <string name="icon_shape">Icon shape</string>
+    <string name="icon_creation_fail">Failed to create shortcut!</string>
 
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Chapters</string>
@@ -257,6 +277,7 @@
 
 
     <!-- Reader activity -->
+    <string name="custom_filter">Custom filter</string>
     <string name="downloading">Downloading…</string>
     <string name="download_progress">Downloaded %1$d%%</string>
     <string name="chapter_progress">Page: %1$d</string>
@@ -296,6 +317,7 @@
     <!-- File Picker Titles -->
     <string name="file_select_cover">Select cover image</string>
     <string name="file_select_backup">Select backup file</string>
+    <string name="file_select_icon">Select shortcut icon</string>
 
     <!--UpdateCheck-->
     <string name="update_check_title">New update available!</string>

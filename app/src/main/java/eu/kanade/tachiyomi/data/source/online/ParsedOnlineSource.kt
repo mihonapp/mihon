@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.source.online
 
-import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.model.MangasPage
@@ -12,10 +11,8 @@ import org.jsoup.nodes.Element
 
 /**
  * A simple implementation for sources from a website using Jsoup, an HTML parser.
- *
- * @param context the application context.
  */
-abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
+abstract class ParsedOnlineSource() : OnlineSource() {
 
     /**
      * Parse the response from the site and fills [page].
@@ -64,7 +61,7 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
      * @param page the page object to be filled.
      * @param query the search query.
      */
-    override fun searchMangaParse(response: Response, page: MangasPage, query: String) {
+    override fun searchMangaParse(response: Response, page: MangasPage, query: String, filters: List<Filter>) {
         val document = response.asJsoup()
         for (element in document.select(searchMangaSelector())) {
             Manga.create(id).apply {
@@ -97,6 +94,38 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
      * there's no next page.
      */
     abstract protected fun searchMangaNextPageSelector(): String?
+
+    /**
+     * Parse the response from the site for latest updates and fills [page].
+     */
+    override fun latestUpdatesParse(response: Response, page: MangasPage) {
+        val document = response.asJsoup()
+        for (element in document.select(latestUpdatesSelector())) {
+            Manga.create(id).apply {
+                latestUpdatesFromElement(element, this)
+                page.mangas.add(this)
+            }
+        }
+
+        latestUpdatesNextPageSelector()?.let { selector ->
+            page.nextPageUrl = document.select(selector).first()?.absUrl("href")
+        }
+    }
+
+    /**
+     * Returns the Jsoup selector similar to [popularMangaSelector], but for latest updates.
+     */
+    abstract protected fun latestUpdatesSelector(): String
+
+    /**
+     * Fills [manga] with the given [element]. For latest updates.
+     */
+    abstract protected fun latestUpdatesFromElement(element: Element, manga: Manga)
+
+    /**
+     * Returns the Jsoup selector that returns the <a> tag, like [popularMangaNextPageSelector].
+     */
+    abstract protected fun latestUpdatesNextPageSelector(): String?
 
     /**
      * Parse the response from the site and fills the details of [manga].
@@ -179,5 +208,4 @@ abstract class ParsedOnlineSource(context: Context) : OnlineSource(context) {
      * @param document the parsed document.
      */
     abstract protected fun imageUrlParse(document: Document): String
-
 }

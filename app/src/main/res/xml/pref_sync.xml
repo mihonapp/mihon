@@ -18,7 +18,7 @@
             android:dependency="@string/pref_auto_update_manga_sync_key"/>
 
         <PreferenceCategory
-            android:key="pref_category_manga_sync_accounts"
+            android:key="@string/pref_category_manga_sync_accounts_key"
             android:title="@string/services"
             android:persistent="false"/>
 

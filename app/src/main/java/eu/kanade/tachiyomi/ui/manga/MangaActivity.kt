@@ -23,6 +23,7 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
 
         const val FROM_CATALOGUE_EXTRA = "from_catalogue"
         const val MANGA_EXTRA = "manga"
+        const val FROM_LAUNCHER_EXTRA = "from_launcher"
         const val INFO_FRAGMENT = 0
         const val CHAPTERS_FRAGMENT = 1
 
@@ -44,6 +45,11 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
         setAppTheme()
         super.onCreate(savedState)
         setContentView(R.layout.activity_manga)
+
+        val fromLauncher = intent.getBooleanExtra(FROM_LAUNCHER_EXTRA, false)
+
+        //Remove any current manga if we are launching from launcher
+        if(fromLauncher) SharedData.remove(MangaEvent::class.java)
 
         presenter.setMangaEvent(SharedData.getOrPut(MangaEvent::class.java) {
             val id = intent.getLongExtra(MANGA_EXTRA, 0)

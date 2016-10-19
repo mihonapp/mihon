@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <eu.kanade.tachiyomi.widget.AutofitRecyclerView
-            android:id="@+id/recycler"
-            style="@style/Theme.Widget.GridView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnWidth="140dp"
-            tools:listitem="@layout/item_catalogue_grid"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

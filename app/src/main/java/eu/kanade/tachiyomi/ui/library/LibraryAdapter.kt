@@ -1,23 +1,23 @@
 package eu.kanade.tachiyomi.ui.library
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-
+import android.view.View
+import android.view.ViewGroup
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.ui.base.adapter.SmartFragmentStatePagerAdapter
+import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.widget.RecyclerViewPagerAdapter
 
 /**
  * This adapter stores the categories from the library, used with a ViewPager.
  *
- * @param fm the fragment manager.
  * @constructor creates an instance of the adapter.
  */
-class LibraryAdapter(fm: FragmentManager) : SmartFragmentStatePagerAdapter(fm) {
+class LibraryAdapter(private val fragment: LibraryFragment) : RecyclerViewPagerAdapter() {
 
     /**
      * The categories to bind in the adapter.
      */
-    var categories: List<Category>? = null
+    var categories: List<Category> = emptyList()
         // This setter helps to not refresh the adapter if the reference to the list doesn't change.
         set(value) {
             if (field !== value) {
@@ -27,13 +27,34 @@ class LibraryAdapter(fm: FragmentManager) : SmartFragmentStatePagerAdapter(fm) {
         }
 
     /**
-     * Creates a new fragment for the given position when it's called.
+     * Creates a new view for this adapter.
      *
-     * @param position the position to instantiate.
-     * @return a fragment for the given position.
+     * @return a new view.
      */
-    override fun getItem(position: Int): Fragment {
-        return LibraryCategoryFragment.newInstance(position)
+    override fun createView(container: ViewGroup): View {
+        val view = container.inflate(R.layout.item_library_category) as LibraryCategoryView
+        view.onCreate(fragment)
+        return view
+    }
+
+    /**
+     * Binds a view with a position.
+     *
+     * @param view the view to bind.
+     * @param position the position in the adapter.
+     */
+    override fun bindView(view: View, position: Int) {
+        (view as LibraryCategoryView).onBind(categories[position])
+    }
+
+    /**
+     * Recycles a view.
+     *
+     * @param view the view to recycle.
+     * @param position the position in the adapter.
+     */
+    override fun recycleView(view: View, position: Int) {
+        (view as LibraryCategoryView).onRecycle()
     }
 
     /**
@@ -42,7 +63,7 @@ class LibraryAdapter(fm: FragmentManager) : SmartFragmentStatePagerAdapter(fm) {
      * @return the number of categories or 0 if the list is null.
      */
     override fun getCount(): Int {
-        return categories?.size ?: 0
+        return categories.size
     }
 
     /**
@@ -52,28 +73,16 @@ class LibraryAdapter(fm: FragmentManager) : SmartFragmentStatePagerAdapter(fm) {
      * @return the title to display.
      */
     override fun getPageTitle(position: Int): CharSequence {
-        return categories!![position].name
+        return categories[position].name
     }
 
     /**
-     * Method to enable or disable the action mode (multiple selection) for all the instantiated
-     * fragments.
-     *
-     * @param mode the mode to set.
+     * Returns the position of the view.
      */
-    fun setSelectionMode(mode: Int) {
-        for (fragment in getRegisteredFragments()) {
-            (fragment as LibraryCategoryFragment).setSelectionMode(mode)
-        }
-    }
-
-    /**
-     * Notifies the adapters in all the registered fragments to refresh their content.
-     */
-    fun refreshRegisteredAdapters() {
-        for (fragment in getRegisteredFragments()) {
-            (fragment as LibraryCategoryFragment).adapter.notifyDataSetChanged()
-        }
+    override fun getItemPosition(obj: Any?): Int {
+        val view = obj as? LibraryCategoryView ?: return POSITION_NONE
+        val index = categories.indexOfFirst { it.id == view.category.id }
+        return if (index == -1) POSITION_NONE else index
     }
 
 }

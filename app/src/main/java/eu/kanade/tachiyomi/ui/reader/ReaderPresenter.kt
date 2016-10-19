@@ -21,6 +21,7 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.*
@@ -228,12 +229,14 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * strategy set for the manga.
      *
      * @param chapter the current active chapter.
+     * @param previousChapterAmount the desired number of chapters preceding the current active chapter (Default: 1).
+     * @param nextChapterAmount the desired number of chapters succeeding the current active chapter (Default: 1).
      */
-    private fun getAdjacentChaptersStrategy(chapter: ReaderChapter) = when (manga.sorting) {
+    private fun getAdjacentChaptersStrategy(chapter: ReaderChapter, previousChapterAmount: Int = 1, nextChapterAmount: Int = 1) = when (manga.sorting) {
         Manga.SORTING_SOURCE -> {
             val currChapterIndex = chapterList.indexOfFirst { chapter.id == it.id }
-            val nextChapter = chapterList.getOrNull(currChapterIndex + 1)
-            val prevChapter = chapterList.getOrNull(currChapterIndex - 1)
+            val nextChapter = chapterList.getOrNull(currChapterIndex + nextChapterAmount)
+            val prevChapter = chapterList.getOrNull(currChapterIndex - previousChapterAmount)
             Pair(prevChapter, nextChapter)
         }
         Manga.SORTING_NUMBER -> {
@@ -241,18 +244,18 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             val chapterNumber = chapter.chapter_number
 
             var prevChapter: ReaderChapter? = null
-            for (i in (currChapterIndex - 1) downTo 0) {
+            for (i in (currChapterIndex - previousChapterAmount) downTo 0) {
                 val c = chapterList[i]
-                if (c.chapter_number < chapterNumber && c.chapter_number >= chapterNumber - 1) {
+                if (c.chapter_number < chapterNumber && c.chapter_number >= chapterNumber - previousChapterAmount) {
                     prevChapter = c
                     break
                 }
             }
 
             var nextChapter: ReaderChapter? = null
-            for (i in (currChapterIndex + 1) until chapterList.size) {
+            for (i in (currChapterIndex + nextChapterAmount) until chapterList.size) {
                 val c = chapterList[i]
-                if (c.chapter_number > chapterNumber && c.chapter_number <= chapterNumber + 1) {
+                if (c.chapter_number > chapterNumber && c.chapter_number <= chapterNumber + nextChapterAmount) {
                     nextChapter = c
                     break
                 }
@@ -344,42 +347,45 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     fun onChapterLeft() {
         // Reference these locally because they are needed later from another thread.
         val chapter = chapter
-        val prevChapter = prevChapter
 
         val pages = chapter.pages ?: return
 
-        Observable
-                .fromCallable {
-                    // Chapters with 1 page don't trigger page changes, so mark them as read.
-                    if (pages.size == 1) {
-                        chapter.read = true
-                    }
+        Observable.fromCallable {
+            // Chapters with 1 page don't trigger page changes, so mark them as read.
+            if (pages.size == 1) {
+                chapter.read = true
+            }
 
-                    if (!chapter.isDownloaded) {
-                        source.let { if (it is OnlineSource) it.savePageList(chapter, pages) }
-                    }
+            // Cache current page list progress for online chapters to allow a faster reopen
+            if (!chapter.isDownloaded) {
+                source.let { if (it is OnlineSource) it.savePageList(chapter, pages) }
+            }
 
-                    // Cache current page list progress for online chapters to allow a faster reopen
-                    if (chapter.read) {
-                        // Check if remove after read is selected by user
-                        if (prefs.removeAfterRead()) {
-                            if (prefs.removeAfterReadPrevious() ) {
-                                if (prevChapter != null) {
-                                    deleteChapter(prevChapter, manga)
-                                }
-                            } else {
-                                deleteChapter(chapter, manga)
-                            }
-                        }
-                    }
-
-                    db.updateChapterProgress(chapter).executeAsBlocking()
-
-                    val history = History.create(chapter).apply { last_read = Date().time }
-                    db.updateHistoryLastRead(history).executeAsBlocking()
+            if (chapter.read) {
+                val removeAfterReadSlots = prefs.removeAfterReadSlots()
+                when (removeAfterReadSlots) {
+                // Setting disabled
+                    -1 -> { /**Empty function**/ }
+                // Remove current read chapter
+                    0 -> deleteChapter(chapter, manga)
+                // Remove previous chapter specified by user in settings.
+                    else -> getAdjacentChaptersStrategy(chapter, removeAfterReadSlots)
+                            .first?.let { deleteChapter(it, manga) }
                 }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            }
+
+            db.updateChapterProgress(chapter).executeAsBlocking()
+
+            try {
+                val history = History.create(chapter).apply { last_read = Date().time }
+                db.updateHistoryLastRead(history).executeAsBlocking()
+            } catch (error: Exception) {
+                // TODO find out why it crashes
+                Timber.e(error)
+            }
+        }
+        .subscribeOn(Schedulers.io())
+        .subscribe()
     }
 
     /**
