@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.TaskStackBuilder
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
+import com.google.firebase.analytics.FirebaseAnalytics
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.backup.BackupFragment
@@ -19,6 +20,7 @@ import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import exh.ActivityAskUpdate
 import exh.ActivityBatchAdd
+import exh.DialogLogin
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import uy.kohesive.injekt.injectLazy
@@ -26,6 +28,8 @@ import uy.kohesive.injekt.injectLazy
 class MainActivity : BaseActivity() {
 
     val preferences: PreferencesHelper by injectLazy()
+
+    val mFirebaseAnalytics: FirebaseAnalytics by injectLazy()
 
     private val startScreenId by lazy {
         when (preferences.startScreen()) {
@@ -81,9 +85,14 @@ class MainActivity : BaseActivity() {
             // Set start screen
             setSelectedDrawerItem(startScreenId)
 
-            // Show changelog if needed
-            ChangelogDialogFragment.show(preferences, supportFragmentManager)
+            //Update user properties
+            updateProperties()
        }
+    }
+
+    fun updateProperties() {
+        mFirebaseAnalytics.setUserProperty("exh_logged_in",
+                DialogLogin.isLoggedIn(this, false).toString())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
