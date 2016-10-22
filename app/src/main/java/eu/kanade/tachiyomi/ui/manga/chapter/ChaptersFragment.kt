@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.view.ActionMode
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
@@ -20,8 +19,10 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.getCoordinates
+import eu.kanade.tachiyomi.util.getResourceDrawable
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DeletingChaptersDialog
+import eu.kanade.tachiyomi.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_manga_chapters.*
 import nucleus.factory.RequiresPresenter
 import timber.log.Timber
@@ -66,7 +67,8 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        recycler.addItemDecoration(DividerItemDecoration(
+                context.theme.getResourceDrawable(R.attr.divider_drawable)))
         recycler.setHasFixedSize(true)
 
         swipe_refresh.setOnRefreshListener { fetchChapters() }

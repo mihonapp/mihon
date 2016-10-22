@@ -3,7 +3,10 @@ package eu.kanade.tachiyomi.ui.catalogue
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.widget.*
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
+import android.support.v7.widget.Toolbar
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
@@ -18,8 +21,10 @@ import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
+import eu.kanade.tachiyomi.util.getResourceDrawable
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.widget.DividerItemDecoration
 import eu.kanade.tachiyomi.widget.EndlessScrollListener
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import kotlinx.android.synthetic.main.fragment_catalogue.*
@@ -144,7 +149,9 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         catalogue_list.adapter = adapter
         catalogue_list.layoutManager = llm
         catalogue_list.addOnScrollListener(listScrollListener)
-        catalogue_list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        catalogue_list.addItemDecoration(
+                DividerItemDecoration(context.theme.getResourceDrawable(R.attr.divider_drawable)))
+
         if (presenter.isListMode) {
             switcher.showNext()
         }

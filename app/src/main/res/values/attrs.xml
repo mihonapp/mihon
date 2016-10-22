@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- Define the values for the attribute -->
     <attr name="typeface" format="enum">
         <enum name="ptsansNarrow" value="0"/>
         <enum name="ptsansNarrowBold" value="1"/>
     </attr>
 
+    <!-- Tell Android that the class "CustomButton" can be styled,
+         and which attributes it supports -->
     <declare-styleable name="PTSansTextView">
         <attr name="typeface"/>
     </declare-styleable>
@@ -23,6 +25,7 @@
     <attr name="navigation_view_theme" format="reference"/>
     <attr name="selectable_list_drawable" format="reference|integer" />
     <attr name="selectable_library_drawable" format="reference|integer"/>
+    <attr name="divider_drawable" format="reference|integer" />
     <attr name="text_color_primary" format="reference|integer"/>
     <attr name="background_card" format="reference|integer"/>
 </resources>
