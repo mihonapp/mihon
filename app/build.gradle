@@ -33,14 +33,14 @@ def includeUpdater() {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
     publishNonDefault true
 
     defaultConfig {
         applicationId "eu.kanade.tachiyomi"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 12
         versionName "0.3.1"
@@ -97,7 +97,7 @@ dependencies {
     compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
     // Android support library
-    final support_library_version = '24.2.1'
+    final support_library_version = '25.0.0'
     compile "com.android.support:support-v4:$support_library_version"
     compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:cardview-v7:$support_library_version"
