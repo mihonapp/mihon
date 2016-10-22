@@ -93,7 +93,7 @@ android {
 dependencies {
 
     // Modified dependencies
-    compile 'com.github.inorichi:subsampling-scale-image-view:2d9c854'
+    compile 'com.github.inorichi:subsampling-scale-image-view:c3e3a87'
     compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
     // Android support library
