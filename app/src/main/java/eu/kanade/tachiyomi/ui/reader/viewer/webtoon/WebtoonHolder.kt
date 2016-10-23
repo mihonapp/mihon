@@ -64,7 +64,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             setVerticalScrollingParent(true)
             setOnTouchListener(adapter.touchListener)
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
-                override fun onImageLoaded() {
+                override fun onReady() {
                     onImageDecoded()
                 }
 
