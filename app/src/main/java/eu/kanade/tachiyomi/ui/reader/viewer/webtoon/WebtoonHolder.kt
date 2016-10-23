@@ -6,16 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.PageDecodeErrorLayout
 import kotlinx.android.synthetic.main.chapter_image.view.*
 import kotlinx.android.synthetic.main.item_webtoon_reader.view.*
+import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
 import rx.subjects.SerializedSubject
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 /**
  * Holder for webtoon reader for a single page of a chapter.
@@ -39,6 +42,11 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
     private var statusSubscription: Subscription? = null
 
     /**
+     * Subscription for progress changes of the page.
+     */
+    private var progressSubscription: Subscription? = null
+
+    /**
      * Layout of decode error.
      */
     private var decodeErrorLayout: PageDecodeErrorLayout? = null
@@ -57,8 +65,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             setOnTouchListener(adapter.touchListener)
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onImageLoaded() {
-                    // When the image is loaded, reset the minimum height to avoid gaps
-                    view.frame_container.minimumHeight = 30
+                    onImageDecoded()
                 }
 
                 override fun onImageLoadError(e: Exception) {
@@ -67,16 +74,9 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             })
         }
 
-        // Avoid to create a lot of view holders taking twice the screen height,
-        // saving memory and a possible OOM. When the first image is loaded in this holder,
-        // the minimum size will be removed.
-        // Doing this we get sequential holder instantiation.
-        view.frame_container.minimumHeight = view.resources.displayMetrics.heightPixels * 2
+        view.progress_container.minimumHeight = view.resources.displayMetrics.heightPixels
 
-        // Leave some space between progress bars
-        view.progress.minimumHeight = 300
-
-        view.frame_container.setOnTouchListener(adapter.touchListener)
+        view.setOnTouchListener(adapter.touchListener)
         view.retry_button.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 readerActivity.presenter.retryPage(page)
@@ -92,13 +92,22 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
      * @param page the page to bind.
      */
     fun onSetValues(page: Page) {
+        this.page = page
+        observeStatus()
+    }
+
+    /**
+     * Called when the view is recycled and added to the view pool.
+     */
+    fun onRecycle() {
+        unsubscribeStatus()
+        unsubscribeProgress()
         decodeErrorLayout?.let {
             (view as ViewGroup).removeView(it)
             decodeErrorLayout = null
         }
-
-        this.page = page
-        observeStatus()
+        view.image_view.recycle()
+        view.progress_container.visibility = View.VISIBLE
     }
 
     /**
@@ -107,17 +116,35 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
      * @see processStatus
      */
     private fun observeStatus() {
-        page?.let { page ->
-            val statusSubject = SerializedSubject(PublishSubject.create<Int>())
-            page.setStatusSubject(statusSubject)
+        val page = page ?: return
 
-            statusSubscription?.unsubscribe()
-            statusSubscription = statusSubject.startWith(page.status)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { processStatus(it) }
+        val statusSubject = SerializedSubject(PublishSubject.create<Int>())
+        page.setStatusSubject(statusSubject)
 
-            webtoonReader.subscriptions.add(statusSubscription)
-        }
+        statusSubscription?.unsubscribe()
+        statusSubscription = statusSubject.startWith(page.status)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { processStatus(it) }
+
+        webtoonReader.subscriptions.add(statusSubscription)
+    }
+
+    /**
+     * Observes the progress of the page and updates view.
+     */
+    private fun observeProgress() {
+        progressSubscription?.unsubscribe()
+
+        val page = page ?: return
+
+        progressSubscription = Observable.interval(100, TimeUnit.MILLISECONDS)
+                .map { page.progress }
+                .distinctUntilChanged()
+                .onBackpressureLatest()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { progress ->
+                    view.progress_text.text = view.context.getString(R.string.download_progress, progress)
+                }
     }
 
     /**
@@ -127,104 +154,109 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
      */
     private fun processStatus(status: Int) {
         when (status) {
-            Page.QUEUE -> onQueue()
-            Page.LOAD_PAGE -> onLoading()
-            Page.DOWNLOAD_IMAGE -> onLoading()
-            Page.READY -> onReady()
-            Page.ERROR -> onError()
+            Page.QUEUE -> setQueued()
+            Page.LOAD_PAGE -> setLoading()
+            Page.DOWNLOAD_IMAGE -> {
+                observeProgress()
+                setDownloading()
+            }
+            Page.READY -> {
+                setImage()
+                unsubscribeProgress()
+            }
+            Page.ERROR -> {
+                setError()
+                unsubscribeProgress()
+            }
         }
     }
 
     /**
      * Unsubscribes from the status subscription.
      */
-    fun unsubscribeStatus() {
+    private fun unsubscribeStatus() {
+        page?.setStatusSubject(null)
         statusSubscription?.unsubscribe()
         statusSubscription = null
     }
 
     /**
+     * Unsubscribes from the progress subscription.
+     */
+    private fun unsubscribeProgress() {
+        progressSubscription?.unsubscribe()
+        progressSubscription = null
+    }
+
+    /**
+     * Called when the page is queued.
+     */
+    private fun setQueued() = with(view) {
+        progress_container.visibility = View.VISIBLE
+        progress_text.visibility = View.INVISIBLE
+        retry_button.visibility = View.GONE
+        decodeErrorLayout?.let {
+            (view as ViewGroup).removeView(it)
+            decodeErrorLayout = null
+        }
+    }
+
+    /**
      * Called when the page is loading.
      */
-    private fun onLoading() {
-        setRetryButtonVisible(false)
-        setImageVisible(false)
-        setProgressVisible(true)
+    private fun setLoading() = with(view) {
+        progress_container.visibility = View.VISIBLE
+        progress_text.visibility = View.VISIBLE
+        progress_text.setText(R.string.downloading)
+    }
+
+    /**
+     * Called when the page is downloading
+     */
+    private fun setDownloading() = with(view) {
+        progress_container.visibility = View.VISIBLE
+        progress_text.visibility = View.VISIBLE
     }
 
     /**
      * Called when the page is ready.
      */
-    private fun onReady() {
-        setRetryButtonVisible(false)
-        setProgressVisible(false)
-        setImageVisible(true)
-
-        page?.imagePath?.let { path ->
-            if (File(path).exists()) {
-                view.image_view.setImage(ImageSource.uri(path))
-                view.progress.visibility = View.GONE
-            } else {
-                page?.status = Page.ERROR
-            }
+    private fun setImage() = with(view) {
+        val path = page?.imagePath
+        if (path != null && File(path).exists()) {
+            progress_text.visibility = View.INVISIBLE
+            image_view.setImage(ImageSource.uri(path))
+        } else {
+            page?.status = Page.ERROR
         }
     }
 
     /**
      * Called when the page has an error.
      */
-    private fun onError() {
-        setImageVisible(false)
-        setProgressVisible(false)
-        setRetryButtonVisible(true)
+    private fun setError() = with(view) {
+        progress_container.visibility = View.GONE
+        retry_button.visibility = View.VISIBLE
     }
 
     /**
-     * Called when the page is queued.
+     * Called when the image is decoded and going to be displayed.
      */
-    private fun onQueue() {
-        setImageVisible(false)
-        setRetryButtonVisible(false)
-        setProgressVisible(false)
+    private fun onImageDecoded() {
+        view.progress_container.visibility = View.GONE
     }
 
     /**
      * Called when the image fails to decode.
      */
     private fun onImageDecodeError() {
-        page?.let { page ->
-            decodeErrorLayout = PageDecodeErrorLayout(view.context, page, readerActivity.readerTheme,
-                    { readerActivity.presenter.retryPage(page) })
+        val page = page ?: return
+        if (decodeErrorLayout != null || !webtoonReader.isAdded) return
 
-            (view as ViewGroup).addView(decodeErrorLayout)
-        }
-    }
+        decodeErrorLayout = PageDecodeErrorLayout(view.context, page, readerActivity.readerTheme,
+                { readerActivity.presenter.retryPage(page) })
 
-    /**
-     * Sets the visibility of the progress bar.
-     *
-     * @param visible whether to show it or not.
-     */
-    private fun setProgressVisible(visible: Boolean) {
-        view.progress.visibility = if (visible) View.VISIBLE else View.GONE
-    }
-
-    /**
-     * Sets the visibility of the image view.
-     *
-     * @param visible whether to show it or not.
-     */
-    private fun setImageVisible(visible: Boolean) {
-        view.image_view.visibility = if (visible) View.VISIBLE else View.GONE
-    }
-
-    /**
-     * Sets the visibility of the retry button.
-     *
-     * @param visible whether to show it or not.
-     */
-    private fun setRetryButtonVisible(visible: Boolean) {
-        view.retry_button.visibility = if (visible) View.VISIBLE else View.GONE
+        (view as ViewGroup).addView(decodeErrorLayout)
     }
 
     /**

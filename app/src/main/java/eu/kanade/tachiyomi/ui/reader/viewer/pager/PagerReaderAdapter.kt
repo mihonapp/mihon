@@ -15,7 +15,7 @@ class PagerReaderAdapter(private val reader: PagerReader) : ViewPagerAdapter() {
     /**
      * Pages stored in the adapter.
      */
-    var pages: List<Page>? = null
+    var pages: List<Page> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -23,17 +23,15 @@ class PagerReaderAdapter(private val reader: PagerReader) : ViewPagerAdapter() {
 
     override fun createView(container: ViewGroup, position: Int): View {
         val view = container.inflate(R.layout.item_pager_reader) as PageView
-        view.initialize(reader, pages?.getOrNull(position))
+        view.initialize(reader, pages[position])
         return view
     }
 
     /**
      * Returns the number of pages.
-     *
-     * @return the number of pages or 0 if the list is null.
      */
     override fun getCount(): Int {
-        return pages?.size ?: 0
+        return pages.size
     }
 
 }

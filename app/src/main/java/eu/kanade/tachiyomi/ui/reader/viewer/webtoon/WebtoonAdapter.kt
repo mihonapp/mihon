@@ -72,7 +72,7 @@ class WebtoonAdapter(val fragment: WebtoonReader) : RecyclerView.Adapter<Webtoon
      * @param holder the holder to recycle.
      */
     override fun onViewRecycled(holder: WebtoonHolder) {
-        holder.unsubscribeStatus()
+        holder.onRecycle()
     }
 
 }

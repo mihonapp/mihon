@@ -12,9 +12,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.PageDecodeErrorLayout
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader.Companion.ALIGN_CENTER
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader.Companion.ALIGN_LEFT
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader.Companion.ALIGN_RIGHT
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader
 import kotlinx.android.synthetic.main.chapter_image.view.*
@@ -33,8 +30,12 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     /**
      * Page of a chapter.
      */
-    var page: Page? = null
-        private set
+    lateinit var page: Page
+
+    /**
+     * Subscription for status changes of the page.
+     */
+    private var statusSubscription: Subscription? = null
 
     /**
      * Subscription for progress changes of the page.
@@ -42,11 +43,11 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private var progressSubscription: Subscription? = null
 
     /**
-     * Subscription for status changes of the page.
+     * Layout of decode error.
      */
-    private var statusSubscription: Subscription? = null
+    private var decodeErrorLayout: PageDecodeErrorLayout? = null
 
-    fun initialize(reader: PagerReader, page: Page?) {
+    fun initialize(reader: PagerReader, page: Page) {
         val activity = reader.activity as ReaderActivity
 
         when (activity.readerTheme) {
@@ -71,19 +72,11 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             setOnTouchListener { v, motionEvent -> reader.gestureDetector.onTouchEvent(motionEvent) }
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
-                    when (reader.zoomType) {
-                        ALIGN_LEFT -> setScaleAndCenter(scale, PointF(0f, 0f))
-                        ALIGN_RIGHT -> setScaleAndCenter(scale, PointF(sWidth.toFloat(), 0f))
-                        ALIGN_CENTER -> {
-                            val newCenter = center
-                            newCenter.y = 0f
-                            setScaleAndCenter(scale, newCenter)
-                        }
-                    }
+                    onImageDecoded(reader)
                 }
 
                 override fun onImageLoadError(e: Exception) {
-                    onImageDecodeError(activity)
+                    onImageDecodeError(reader)
                 }
             })
         }
@@ -95,21 +88,15 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             true
         }
 
-        if (page != null) {
-            this.page = page
-            observeStatus()
-        }
+        this.page = page
+        observeStatus()
     }
 
-    fun cleanup() {
+    override fun onDetachedFromWindow() {
         unsubscribeProgress()
         unsubscribeStatus()
         image_view.setOnTouchListener(null)
         image_view.setOnImageEventListener(null)
-    }
-
-    override fun onDetachedFromWindow() {
-        cleanup()
         super.onDetachedFromWindow()
     }
 
@@ -120,7 +107,6 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      */
     private fun observeStatus() {
         statusSubscription?.unsubscribe()
-        val page = page ?: return
 
         val statusSubject = SerializedSubject(PublishSubject.create<Int>())
         page.setStatusSubject(statusSubject)
@@ -135,7 +121,6 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      */
     private fun observeProgress() {
         progressSubscription?.unsubscribe()
-        val page = page ?: return
 
         progressSubscription = Observable.interval(100, TimeUnit.MILLISECONDS)
                 .map { page.progress }
@@ -154,18 +139,18 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      */
     private fun processStatus(status: Int) {
         when (status) {
-            Page.QUEUE -> hideError()
-            Page.LOAD_PAGE -> onLoading()
+            Page.QUEUE -> setQueued()
+            Page.LOAD_PAGE -> setLoading()
             Page.DOWNLOAD_IMAGE -> {
                 observeProgress()
-                onDownloading()
+                setDownloading()
             }
             Page.READY -> {
-                onReady()
+                setImage()
                 unsubscribeProgress()
             }
             Page.ERROR -> {
-                onError()
+                setError()
                 unsubscribeProgress()
             }
         }
@@ -175,7 +160,7 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      * Unsubscribes from the status subscription.
      */
     private fun unsubscribeStatus() {
-        page?.setStatusSubject(null)
+        page.setStatusSubject(null)
         statusSubscription?.unsubscribe()
         statusSubscription = null
     }
@@ -189,9 +174,22 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     /**
+     * Called when the page is queued.
+     */
+    private fun setQueued() {
+        progress_container.visibility = View.VISIBLE
+        progress_text.visibility = View.INVISIBLE
+        retry_button.visibility = View.GONE
+        decodeErrorLayout?.let {
+            removeView(it)
+            decodeErrorLayout = null
+        }
+    }
+
+    /**
      * Called when the page is loading.
      */
-    private fun onLoading() {
+    private fun setLoading() {
         progress_container.visibility = View.VISIBLE
         progress_text.visibility = View.VISIBLE
         progress_text.setText(R.string.downloading)
@@ -200,7 +198,7 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     /**
      * Called when the page is downloading.
      */
-    private fun onDownloading() {
+    private fun setDownloading() {
         progress_container.visibility = View.VISIBLE
         progress_text.visibility = View.VISIBLE
     }
@@ -208,42 +206,51 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     /**
      * Called when the page is ready.
      */
-    private fun onReady() {
-        page?.imagePath?.let { path ->
-            if (File(path).exists()) {
-                image_view.setImage(ImageSource.uri(path))
-                progress_container.visibility = View.GONE
-            } else {
-                page?.status = Page.ERROR
-            }
+    private fun setImage() {
+        val path = page.imagePath
+        if (path != null && File(path).exists()) {
+            progress_text.visibility = View.INVISIBLE
+            image_view.setImage(ImageSource.uri(path))
+        } else {
+            page.status = Page.ERROR
         }
     }
 
     /**
      * Called when the page has an error.
      */
-    private fun onError() {
+    private fun setError() {
         progress_container.visibility = View.GONE
         retry_button.visibility = View.VISIBLE
     }
 
     /**
-     * Hides the error layout.
+     * Called when the image is decoded and going to be displayed.
      */
-    private fun hideError() {
-        retry_button.visibility = View.GONE
+    private fun onImageDecoded(reader: PagerReader) {
+        progress_container.visibility = View.GONE
+
+        with(image_view) {
+            when (reader.zoomType) {
+                PagerReader.ALIGN_LEFT -> setScaleAndCenter(scale, PointF(0f, 0f))
+                PagerReader.ALIGN_RIGHT -> setScaleAndCenter(scale, PointF(sWidth.toFloat(), 0f))
+                PagerReader.ALIGN_CENTER -> setScaleAndCenter(scale, center.apply { y = 0f })
+            }
+        }
     }
 
     /**
      * Called when an image fails to decode.
      */
-    private fun onImageDecodeError(activity: ReaderActivity) {
-        page?.let { page ->
-            val errorLayout = PageDecodeErrorLayout(context, page, activity.readerTheme,
-                    { activity.presenter.retryPage(page) })
+    private fun onImageDecodeError(reader: PagerReader) {
+        if (decodeErrorLayout != null || !reader.isAdded) return
 
-            addView(errorLayout)
-        }
+        val activity = reader.activity as ReaderActivity
+
+        decodeErrorLayout = PageDecodeErrorLayout(context, page, activity.readerTheme,
+                { activity.presenter.retryPage(page) })
+
+        addView(decodeErrorLayout)
     }
 
 }

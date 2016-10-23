@@ -29,7 +29,7 @@ class PageDecodeErrorLayout(context: Context) : LinearLayout(context) {
 
     init {
         orientation = LinearLayout.VERTICAL
-        setGravity(Gravity.CENTER)
+        gravity = Gravity.CENTER
     }
 
     constructor(context: Context, page: Page, theme: Int, retryListener: () -> Unit) : this(context) {
@@ -47,7 +47,6 @@ class PageDecodeErrorLayout(context: Context) : LinearLayout(context) {
             layoutParams = ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
             setText(R.string.action_retry)
             setOnClickListener {
-                removeAllViews()
                 retryListener()
             }
             addView(this)
