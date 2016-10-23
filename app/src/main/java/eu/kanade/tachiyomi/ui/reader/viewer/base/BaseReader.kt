@@ -201,11 +201,8 @@ abstract class BaseReader : BaseFragment() {
     fun setDecoderClass(value: Int) {
         when (value) {
             RAPID_DECODER -> {
-                // Using Skia because Rapid isn't stable. Rapid is still used for region decoding.
-                // https://github.com/inorichi/tachiyomi/issues/97
-                //bitmapDecoderClass = RapidImageDecoder.class;
                 regionDecoderClass = RapidImageRegionDecoder::class.java
-                bitmapDecoderClass = SkiaImageDecoder::class.java
+                bitmapDecoderClass = RapidImageDecoder::class.java
             }
             SKIA_DECODER -> {
                 regionDecoderClass = SkiaImageRegionDecoder::class.java
