@@ -169,8 +169,6 @@
     <string name="clear_database_completed">Eliminar entradas</string>
     <string name="pref_show_warning_message">Mostrar avisos</string>
     <string name="pref_show_warning_message_summary">Mostrar mensagens de avisos durante a sincronização</string>
-    <string name="pref_reencode">Recodificar imagens</string>
-    <string name="pref_reencode_summary">Permitir recodificação se as imagens não puderam ser descodificadas. Para melhores resultados utilize Skia</string>
 
     <!-- About section -->
     <string name="version">Versão</string>

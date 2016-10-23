@@ -431,7 +431,7 @@ abstract class OnlineSource() : Source {
     private fun cacheImage(page: Page): Observable<Page> {
         page.status = Page.DOWNLOAD_IMAGE
         return imageResponse(page)
-                .doOnNext { chapterCache.putImageToCache(page.imageUrl!!, it, preferences.reencodeImage()) }
+                .doOnNext { chapterCache.putImageToCache(page.imageUrl!!, it) }
                 .map { page }
     }
 

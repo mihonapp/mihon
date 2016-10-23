@@ -25,12 +25,6 @@
             android:summary="@string/pref_refresh_library_metadata_summary"
             android:title="@string/pref_refresh_library_metadata"/>
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/pref_reencode_key"
-            android:summary="@string/pref_reencode_summary"
-            android:title="@string/pref_reencode"/>
-
     </PreferenceScreen>
 
 </PreferenceScreen>

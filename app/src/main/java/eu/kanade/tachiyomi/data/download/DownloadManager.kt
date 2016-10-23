@@ -264,7 +264,7 @@ class DownloadManager(
                     val file = File(directory, filename)
                     try {
                         file.parentFile.mkdirs()
-                        it.body().source().saveImageTo(file.outputStream(), preferences.reencodeImage())
+                        it.body().source().saveTo(file.outputStream())
                     } catch (e: Exception) {
                         it.close()
                         file.delete()

@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.util
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import okio.BufferedSource
 import okio.Okio
 import java.io.File
@@ -37,26 +35,5 @@ fun BufferedSource.saveTo(stream: OutputStream) {
             it.writeAll(input)
             it.flush()
         }
-    }
-}
-
-/**
- * Saves the given source to an output stream and closes both resources.
- * The source is expected to be an image, and it may reencode the image.
- *
- * @param stream the stream where the source is copied.
- * @param reencode whether to reencode the image or not.
- */
-fun BufferedSource.saveImageTo(stream: OutputStream, reencode: Boolean = false) {
-    if (reencode) {
-        use {
-            val bitmap = BitmapFactory.decodeStream(it.inputStream())
-            stream.use {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
-            }
-            bitmap.recycle()
-        }
-    } else {
-        saveTo(stream)
     }
 }

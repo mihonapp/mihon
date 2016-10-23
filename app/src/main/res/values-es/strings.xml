@@ -167,8 +167,6 @@
     <string name="clear_database_completed">Entradas borradas</string>
     <string name="pref_show_warning_message">Mostrar advertencias</string>
     <string name="pref_show_warning_message_summary">Mostrar mensajes de advertencia durante la sincronización de la librería</string>
-    <string name="pref_reencode"> Recodificar imágenes</string>
-    <string name="pref_reencode_summary">Habilitar recodificación si las imágenes no pueden ser decodificadas. Para mejores resultados, usar junto a Skia</string>
 
       <!-- About section -->
     <string name="version">Versión</string>
