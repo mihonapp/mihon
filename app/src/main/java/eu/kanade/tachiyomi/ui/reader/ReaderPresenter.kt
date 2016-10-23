@@ -332,9 +332,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     fun retryPage(page: Page?) {
         if (page != null && source is OnlineSource) {
             page.status = Page.QUEUE
-            if (page.imagePath != null) {
-                val file = File(page.imagePath)
-                chapterCache.removeFileFromCache(file.name)
+            val path = page.imagePath
+            if (!path.isNullOrEmpty() && !page.chapter.isDownloaded) {
+                chapterCache.removeFileFromCache(File(path).name)
             }
             loader.retryPage(page)
         }
