@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.PageDecodeErrorLayout
+import eu.kanade.tachiyomi.util.inflate
 import kotlinx.android.synthetic.main.chapter_image.view.*
 import kotlinx.android.synthetic.main.item_webtoon_reader.view.*
 import rx.Observable
@@ -49,7 +50,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
     /**
      * Layout of decode error.
      */
-    private var decodeErrorLayout: PageDecodeErrorLayout? = null
+    private var decodeErrorLayout: View? = null
 
     init {
         with(view.image_view) {
@@ -74,7 +75,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             })
         }
 
-        view.progress_container.minimumHeight = view.resources.displayMetrics.heightPixels
+        view.progress_container.minimumHeight = view.resources.displayMetrics.heightPixels * 2
 
         view.setOnTouchListener(adapter.touchListener)
         view.retry_button.setOnTouchListener { v, event ->
@@ -107,6 +108,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             decodeErrorLayout = null
         }
         view.image_view.recycle()
+        view.image_view.visibility = View.GONE
         view.progress_container.visibility = View.VISIBLE
     }
 
@@ -116,24 +118,25 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
      * @see processStatus
      */
     private fun observeStatus() {
+        unsubscribeStatus()
+
         val page = page ?: return
 
         val statusSubject = SerializedSubject(PublishSubject.create<Int>())
         page.setStatusSubject(statusSubject)
 
-        statusSubscription?.unsubscribe()
         statusSubscription = statusSubject.startWith(page.status)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { processStatus(it) }
 
-        webtoonReader.subscriptions.add(statusSubscription)
+        addSubscription(statusSubscription)
     }
 
     /**
      * Observes the progress of the page and updates view.
      */
     private fun observeProgress() {
-        progressSubscription?.unsubscribe()
+        unsubscribeProgress()
 
         val page = page ?: return
 
@@ -145,6 +148,8 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
                 .subscribe { progress ->
                     view.progress_text.text = view.context.getString(R.string.download_progress, progress)
                 }
+
+        addSubscription(progressSubscription)
     }
 
     /**
@@ -172,11 +177,26 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
     }
 
     /**
+     * Adds a subscription to a list of subscriptions that will automatically unsubscribe when the
+     * activity or the reader is destroyed.
+     */
+    private fun addSubscription(subscription: Subscription?) {
+        webtoonReader.subscriptions.add(subscription)
+    }
+
+    /**
+     * Removes a subscription from the list of subscriptions.
+     */
+    private fun removeSubscription(subscription: Subscription?) {
+        subscription?.let { webtoonReader.subscriptions.remove(it) }
+    }
+
+    /**
      * Unsubscribes from the status subscription.
      */
     private fun unsubscribeStatus() {
         page?.setStatusSubject(null)
-        statusSubscription?.unsubscribe()
+        removeSubscription(statusSubscription)
         statusSubscription = null
     }
 
@@ -184,7 +204,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
      * Unsubscribes from the progress subscription.
      */
     private fun unsubscribeProgress() {
-        progressSubscription?.unsubscribe()
+        removeSubscription(progressSubscription)
         progressSubscription = null
     }
 
@@ -194,7 +214,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
     private fun setQueued() = with(view) {
         progress_container.visibility = View.VISIBLE
         progress_text.visibility = View.INVISIBLE
-        retry_button.visibility = View.GONE
+        retry_container.visibility = View.GONE
         decodeErrorLayout?.let {
             (view as ViewGroup).removeView(it)
             decodeErrorLayout = null
@@ -225,6 +245,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
         val path = page?.imagePath
         if (path != null && File(path).exists()) {
             progress_text.visibility = View.INVISIBLE
+            image_view.visibility = View.VISIBLE
             image_view.setImage(ImageSource.uri(path))
         } else {
             page?.status = Page.ERROR
@@ -236,7 +257,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
      */
     private fun setError() = with(view) {
         progress_container.visibility = View.GONE
-        retry_button.visibility = View.VISIBLE
+        retry_container.visibility = View.VISIBLE
     }
 
     /**
@@ -250,13 +271,19 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
      * Called when the image fails to decode.
      */
     private fun onImageDecodeError() {
+        view.progress_container.visibility = View.GONE
+
         val page = page ?: return
         if (decodeErrorLayout != null || !webtoonReader.isAdded) return
 
-        decodeErrorLayout = PageDecodeErrorLayout(view.context, page, readerActivity.readerTheme,
-                { readerActivity.presenter.retryPage(page) })
-
-        (view as ViewGroup).addView(decodeErrorLayout)
+        val layout = (view as ViewGroup).inflate(R.layout.page_decode_error)
+        PageDecodeErrorLayout(layout, page, readerActivity.readerTheme, {
+            if (webtoonReader.isAdded) {
+                readerActivity.presenter.retryPage(page)
+            }
+        })
+        decodeErrorLayout = layout
+        view.addView(layout)
     }
 
     /**

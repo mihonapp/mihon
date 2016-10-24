@@ -32,12 +32,20 @@
 
     <include layout="@layout/chapter_image"/>
 
-    <Button
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/retry_button"
-        android:text="@string/action_retry"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:layout_height="192dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/retry_container"
+        android:visibility="gone">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/retry_button"
+            android:text="@string/action_retry"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
 
 </FrameLayout>

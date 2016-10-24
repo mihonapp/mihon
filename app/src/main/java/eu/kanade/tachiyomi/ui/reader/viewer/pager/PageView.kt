@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.PageDecodeErrorLayout
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader
+import eu.kanade.tachiyomi.util.inflate
 import kotlinx.android.synthetic.main.chapter_image.view.*
 import kotlinx.android.synthetic.main.item_pager_reader.view.*
 import rx.Observable
@@ -45,7 +46,7 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     /**
      * Layout of decode error.
      */
-    private var decodeErrorLayout: PageDecodeErrorLayout? = null
+    private var decodeErrorLayout: View? = null
 
     fun initialize(reader: PagerReader, page: Page) {
         val activity = reader.activity as ReaderActivity
@@ -243,14 +244,20 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      * Called when an image fails to decode.
      */
     private fun onImageDecodeError(reader: PagerReader) {
+        progress_container.visibility = View.GONE
+
         if (decodeErrorLayout != null || !reader.isAdded) return
 
         val activity = reader.activity as ReaderActivity
 
-        decodeErrorLayout = PageDecodeErrorLayout(context, page, activity.readerTheme,
-                { activity.presenter.retryPage(page) })
-
-        addView(decodeErrorLayout)
+        val layout = inflate(R.layout.page_decode_error)
+        PageDecodeErrorLayout(layout, page, activity.readerTheme, {
+            if (reader.isAdded) {
+                activity.presenter.retryPage(page)
+            }
+        })
+        decodeErrorLayout = layout
+        addView(layout)
     }
 
 }
