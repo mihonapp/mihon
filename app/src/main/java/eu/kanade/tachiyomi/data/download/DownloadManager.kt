@@ -188,7 +188,7 @@ class DownloadManager(
         DiskUtils.createDirectory(download.directory)
 
         val pageListObservable: Observable<List<Page>> = if (download.pages == null)
-        // Pull page list from network and add them to download object
+            // Pull page list from network and add them to download object
             download.source.fetchPageListFromNetwork(download.chapter)
                     .doOnNext { pages ->
                         download.pages = pages

@@ -384,9 +384,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 val removeAfterReadSlots = prefs.removeAfterReadSlots()
                 when (removeAfterReadSlots) {
                     // Setting disabled
-                    -1 -> {
-                        /**Empty function**/
-                    }
+                    -1 -> { /**Empty function**/ }
                     // Remove current read chapter
                     0 -> deleteChapter(chapter, manga)
                     // Remove previous chapter specified by user in settings.
