@@ -114,8 +114,6 @@
     <string name="vertical_viewer">Vertical</string>
     <string name="webtoon_viewer">Webtoon</string>
     <string name="pref_image_decoder">Decodificador de imagen</string>
-    <string name="rapid_decoder">Rapid</string>
-    <string name="skia_decoder">Skia</string>
     <string name="pref_image_scale_type">Tipo de escalado</string>
     <string name="scale_type_fit_screen">Ajustar a la pantalla</string>
     <string name="scale_type_stretch">Estirado</string>

@@ -24,6 +24,11 @@ abstract class BaseReader : BaseFragment() {
          * Skia decoder.
          */
         const val SKIA_DECODER = 1
+
+        /**
+         * Image decoder.
+         */
+        const val IMAGE_DECODER = 2
     }
 
     /**
@@ -201,12 +206,16 @@ abstract class BaseReader : BaseFragment() {
     fun setDecoderClass(value: Int) {
         when (value) {
             RAPID_DECODER -> {
-                regionDecoderClass = RapidImageRegionDecoder::class.java
                 bitmapDecoderClass = RapidImageDecoder::class.java
+                regionDecoderClass = RapidImageRegionDecoder::class.java
             }
             SKIA_DECODER -> {
-                regionDecoderClass = SkiaImageRegionDecoder::class.java
                 bitmapDecoderClass = SkiaImageDecoder::class.java
+                regionDecoderClass = SkiaImageRegionDecoder::class.java
+            }
+            IMAGE_DECODER -> {
+                bitmapDecoderClass = IImageDecoder::class.java
+                regionDecoderClass = IImageRegionDecoder::class.java
             }
         }
     }

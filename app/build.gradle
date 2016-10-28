@@ -93,7 +93,7 @@ android {
 dependencies {
 
     // Modified dependencies
-    compile 'com.github.inorichi:subsampling-scale-image-view:a2a14ef'
+    compile 'com.github.inorichi:subsampling-scale-image-view:96d2c7f'
     compile 'com.github.inorichi:ReactiveNetwork:69092ed'
 
     // Android support library
@@ -108,7 +108,7 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.google.android.gms:play-services-gcm:9.6.1'
+    compile 'com.google.android.gms:play-services-gcm:9.8.0'
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
