@@ -2,6 +2,9 @@
 
 -keep class eu.kanade.tachiyomi.**
 
+-keep class com.hippo.image.** { *; }
+-keep interface com.hippo.image.** { *; }
+
 # OkHttp
 -keepattributes Signature
 -keepattributes *Annotation*

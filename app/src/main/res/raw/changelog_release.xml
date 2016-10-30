@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v0.3.2" changeDate="">
+        <changelogtext>Added a new image decoder. It should be faster than Rapid and more reliable than Skia.</changelogtext>
+
+        <changelogtext>Removed the advanced setting reencode images. Use the new image decoder instead.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.3.1" changeDate="">
         <changelogtext>Fixed a crash when opening latest updates. ([a href="https://github.com/inorichi/tachiyomi/issues/495"]#495[/a])</changelogtext>
     </changelogversion>
