@@ -6,6 +6,10 @@ import android.support.v7.widget.RecyclerView
 
 class PreCachingLayoutManager(context: Context) : LinearLayoutManager(context) {
 
+    init {
+        isItemPrefetchEnabled = false
+    }
+
     companion object {
         const val DEFAULT_EXTRA_LAYOUT_SPACE = 600
     }
