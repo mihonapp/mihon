@@ -2,10 +2,10 @@ package eu.kanade.tachiyomi.data.backup.serializer
 
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
-import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.MangaSync
+import eu.kanade.tachiyomi.data.database.models.CategoryImpl
+import eu.kanade.tachiyomi.data.database.models.ChapterImpl
+import eu.kanade.tachiyomi.data.database.models.MangaImpl
+import eu.kanade.tachiyomi.data.database.models.MangaSyncImpl
 
 class IdExclusion : ExclusionStrategy {
 
@@ -15,10 +15,10 @@ class IdExclusion : ExclusionStrategy {
     private val syncExclusions = listOf("id", "manga_id", "update")
 
     override fun shouldSkipField(f: FieldAttributes) = when (f.declaringClass) {
-        Manga::class.java -> mangaExclusions.contains(f.name)
-        Chapter::class.java -> chapterExclusions.contains(f.name)
-        MangaSync::class.java -> syncExclusions.contains(f.name)
-        Category::class.java -> categoryExclusions.contains(f.name)
+        MangaImpl::class.java -> mangaExclusions.contains(f.name)
+        ChapterImpl::class.java -> chapterExclusions.contains(f.name)
+        MangaSyncImpl::class.java -> syncExclusions.contains(f.name)
+        CategoryImpl::class.java -> categoryExclusions.contains(f.name)
         else -> false
     }
 

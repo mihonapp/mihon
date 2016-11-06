@@ -3,8 +3,10 @@ package eu.kanade.tachiyomi.data.backup
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.*
 import com.google.gson.stream.JsonReader
+import eu.kanade.tachiyomi.data.backup.serializer.BooleanSerializer
 import eu.kanade.tachiyomi.data.backup.serializer.IdExclusion
 import eu.kanade.tachiyomi.data.backup.serializer.IntegerSerializer
+import eu.kanade.tachiyomi.data.backup.serializer.LongSerializer
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.*
 import java.io.*
@@ -42,7 +44,9 @@ class BackupManager(private val db: DatabaseHelper) {
 
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     private val gson = GsonBuilder()
-            .registerTypeAdapter(Integer::class.java, IntegerSerializer())
+            .registerTypeAdapter(java.lang.Integer::class.java, IntegerSerializer())
+            .registerTypeAdapter(java.lang.Boolean::class.java, BooleanSerializer())
+            .registerTypeAdapter(java.lang.Long::class.java, LongSerializer())
             .setExclusionStrategies(IdExclusion())
             .create()
 
