@@ -18,7 +18,7 @@ jdk:
 before_script:
     - chmod +x gradlew
 #Build, and run tests
-script: "./gradlew clean buildDebug"
+script: "./gradlew clean buildStandardDebug"
 sudo: false
 
 before_cache:
