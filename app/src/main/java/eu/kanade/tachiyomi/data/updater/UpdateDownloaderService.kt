@@ -106,15 +106,18 @@ class UpdateDownloaderService : IntentService(UpdateDownloaderService::class.jav
                 throw Exception("Unsuccessful response")
             }
 
+            val installIntent = UpdateNotificationReceiver.installApkIntent(ctx, apkFile.absolutePath)
+
             // Prompt the user to install the new update.
             NotificationCompat.Builder(this).update {
                 setContentTitle(getString(R.string.app_name))
                 setContentText(getString(R.string.update_check_notification_download_complete))
                 setSmallIcon(android.R.drawable.stat_sys_download_done)
                 // Install action
+                setContentIntent(installIntent)
                 addAction(R.drawable.ic_system_update_grey_24dp_img,
                         getString(R.string.action_install),
-                        UpdateNotificationReceiver.installApkIntent(ctx, apkFile.absolutePath))
+                        installIntent)
                 // Cancel action
                 addAction(R.drawable.ic_clear_grey_24dp_img,
                         getString(R.string.action_cancel),
