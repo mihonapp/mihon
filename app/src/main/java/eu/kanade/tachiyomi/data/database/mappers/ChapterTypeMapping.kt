@@ -11,7 +11,7 @@ import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
-import eu.kanade.tachiyomi.data.database.tables.ChapterTable.COL_BOOKMARKED
+import eu.kanade.tachiyomi.data.database.tables.ChapterTable.COL_BOOKMARK
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable.COL_CHAPTER_NUMBER
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable.COL_DATE_FETCH
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable.COL_DATE_UPLOAD
@@ -48,7 +48,7 @@ class ChapterPutResolver : DefaultPutResolver<Chapter>() {
         put(COL_URL, obj.url)
         put(COL_NAME, obj.name)
         put(COL_READ, obj.read)
-        put(COL_BOOKMARKED, obj.bookmark)
+        put(COL_BOOKMARK, obj.bookmark)
         put(COL_DATE_FETCH, obj.date_fetch)
         put(COL_DATE_UPLOAD, obj.date_upload)
         put(COL_LAST_PAGE_READ, obj.last_page_read)
@@ -65,7 +65,7 @@ class ChapterGetResolver : DefaultGetResolver<Chapter>() {
         url = cursor.getString(cursor.getColumnIndex(COL_URL))
         name = cursor.getString(cursor.getColumnIndex(COL_NAME))
         read = cursor.getInt(cursor.getColumnIndex(COL_READ)) == 1
-        bookmark = cursor.getInt(cursor.getColumnIndex(COL_BOOKMARKED)) == 1
+        bookmark = cursor.getInt(cursor.getColumnIndex(COL_BOOKMARK)) == 1
         date_fetch = cursor.getLong(cursor.getColumnIndex(COL_DATE_FETCH))
         date_upload = cursor.getLong(cursor.getColumnIndex(COL_DATE_UPLOAD))
         last_page_read = cursor.getInt(cursor.getColumnIndex(COL_LAST_PAGE_READ))
