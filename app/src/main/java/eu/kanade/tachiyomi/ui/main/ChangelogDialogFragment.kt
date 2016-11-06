@@ -11,15 +11,22 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView
 
 class ChangelogDialogFragment : DialogFragment() {
 
     companion object {
         fun show(preferences: PreferencesHelper, fragmentManager: FragmentManager) {
-            if (preferences.lastVersionCode().getOrDefault() < BuildConfig.VERSION_CODE) {
+            val oldVersion = preferences.lastVersionCode().getOrDefault()
+            if (oldVersion < BuildConfig.VERSION_CODE) {
                 preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
                 ChangelogDialogFragment().show(fragmentManager, "changelog")
+
+                // FIXME Ugly check to restore auto updates setting. Remove me in a few months :D
+                if (oldVersion < 14 && BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
+                    UpdateCheckerJob.setupTask()
+                }
             }
         }
     }

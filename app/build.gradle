@@ -28,10 +28,6 @@ ext {
     }
 }
 
-def includeUpdater() {
-    return hasProperty("include_updater")
-}
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
@@ -48,7 +44,6 @@ android {
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
         buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
-        buildConfigField "boolean", "INCLUDE_UPDATER", "${includeUpdater()}"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -68,6 +63,16 @@ android {
             shrinkResources true
             multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        standard {
+            buildConfigField "boolean", "INCLUDE_UPDATER", "true"
+        }
+
+        fdroid {
+            buildConfigField "boolean", "INCLUDE_UPDATER", "false"
         }
     }
 
@@ -108,6 +113,8 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
 
+    // Job scheduling
+    compile 'com.evernote:android-job:1.1.2'
     compile 'com.google.android.gms:play-services-gcm:9.8.0'
 
     // ReactiveX
@@ -117,15 +124,13 @@ dependencies {
 
     // Network client
     compile "com.squareup.okhttp3:okhttp:3.4.2"
+    compile 'com.squareup.okio:okio:1.11.0'
 
     // REST
     final retrofit_version = '2.1.0'
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
-
-    // IO
-    compile 'com.squareup.okio:okio:1.11.0'
 
     // JSON
     compile 'com.google.code.gson:gson:2.8.0'
@@ -140,7 +145,7 @@ dependencies {
     // Disk cache
     compile 'com.jakewharton:disklrucache:2.0.2'
 
-    // Parse HTML
+    // HTML parser
     compile 'org.jsoup:jsoup:1.10.1'
 
     // Changelog

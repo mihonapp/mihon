@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.GithubUpdateChecker
 import eu.kanade.tachiyomi.data.updater.GithubUpdateResult
-import eu.kanade.tachiyomi.data.updater.UpdateCheckerService
+import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
 import eu.kanade.tachiyomi.data.updater.UpdateDownloaderService
 import eu.kanade.tachiyomi.util.toast
 import net.xpece.android.support.preference.SwitchPreference
@@ -64,9 +64,9 @@ class SettingsAboutFragment : SettingsFragment() {
             automaticUpdates.setOnPreferenceChangeListener { preference, any ->
                 val checked = any as Boolean
                 if (checked) {
-                    UpdateCheckerService.setupTask(context)
+                    UpdateCheckerJob.setupTask()
                 } else {
-                    UpdateCheckerService.cancelTask(context)
+                    UpdateCheckerJob.cancelTask()
                 }
                 true
             }

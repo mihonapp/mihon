@@ -267,7 +267,7 @@ class LibraryUpdateService : Service() {
                     } else {
                         showResultNotification(newUpdates, failedUpdates)
                     }
-                    LibraryUpdateTrigger.setupTask(this)
+                    LibraryUpdateJob.setupTask()
                 }
     }
 

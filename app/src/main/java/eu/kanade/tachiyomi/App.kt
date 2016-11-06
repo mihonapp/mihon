@@ -3,6 +3,9 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
+import com.evernote.android.job.JobManager
+import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
 import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
 import timber.log.Timber
@@ -27,6 +30,7 @@ open class App : Application() {
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         setupAcra()
+        setupJobManager()
     }
 
     override fun attachBaseContext(base: Context) {
@@ -38,6 +42,16 @@ open class App : Application() {
 
     protected open fun setupAcra() {
         ACRA.init(this)
+    }
+
+    protected open fun setupJobManager() {
+        JobManager.create(this).addJobCreator { tag ->
+            when (tag) {
+                LibraryUpdateJob.TAG -> LibraryUpdateJob()
+                UpdateCheckerJob.TAG -> UpdateCheckerJob()
+                else -> null
+            }
+        }
     }
 
 }

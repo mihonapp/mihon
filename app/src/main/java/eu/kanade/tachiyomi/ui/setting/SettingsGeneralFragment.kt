@@ -7,7 +7,7 @@ import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.library.LibraryUpdateTrigger
+import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
@@ -59,9 +59,9 @@ class SettingsGeneralFragment : SettingsFragment(),
         updateInterval.setOnPreferenceChangeListener { preference, newValue ->
             val interval = (newValue as String).toInt()
             if (interval > 0)
-                LibraryUpdateTrigger.setupTask(context, interval)
+                LibraryUpdateJob.setupTask(interval)
             else
-                LibraryUpdateTrigger.cancelTask(context)
+                LibraryUpdateJob.cancelTask()
 
             true
         }
@@ -69,7 +69,7 @@ class SettingsGeneralFragment : SettingsFragment(),
         updateRestriction.setOnPreferenceChangeListener { preference, newValue ->
             // Post to event looper to allow the preference to be updated.
             subscriptions += Observable.fromCallable {
-                LibraryUpdateTrigger.setupTask(context)
+                LibraryUpdateJob.setupTask()
             }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()
 
             true
