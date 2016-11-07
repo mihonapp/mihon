@@ -45,8 +45,9 @@ class UpdateCheckerJob : Job() {
 
         fun setupTask() {
             JobRequest.Builder(TAG)
-                    .setPeriodic(24 * 60 * 60 * 1000)
+                    .setPeriodic(24 * 60 * 60 * 1000, 60 * 60 * 1000)
                     .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                    .setRequirementsEnforced(true)
                     .setPersisted(true)
                     .setUpdateCurrent(true)
                     .build()

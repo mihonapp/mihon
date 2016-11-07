@@ -30,9 +30,10 @@ class LibraryUpdateJob : Job() {
                     JobRequest.NetworkType.CONNECTED
 
                 JobRequest.Builder(TAG)
-                        .setPeriodic(interval * 60 * 60 * 1000L)
+                        .setPeriodic(interval * 60 * 60 * 1000L, 10 * 60 * 1000)
                         .setRequiredNetworkType(wifiRestriction)
                         .setRequiresCharging(acRestriction)
+                        .setRequirementsEnforced(true)
                         .setPersisted(true)
                         .setUpdateCurrent(true)
                         .build()
