@@ -225,22 +225,22 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         toast(error.message)
     }
 
-    fun onChapterAppendError() {
-        // Ignore
-    }
-
     fun onLongPress(page: Page) {
         MaterialDialog.Builder(this)
-            .title(getString(R.string.options))
-            .items(R.array.reader_image_options)
-                    .itemsIds(R.array.reader_image_options_values)
-            .itemsCallback { materialDialog, view, i, charSequence ->
-                when (i) {
-                    0 -> presenter.setCover(page)
-                    1 -> shareImage(page)
-                    2 -> presenter.savePage(page)
-                }
-            }.show()
+                .title(getString(R.string.options))
+                .items(R.array.reader_image_options)
+                .itemsIds(R.array.reader_image_options_values)
+                .itemsCallback { materialDialog, view, i, charSequence ->
+                    when (i) {
+                        0 -> presenter.setCover(page)
+                        1 -> shareImage(page)
+                        2 -> presenter.savePage(page)
+                    }
+                }.show()
+    }
+
+    fun onChapterAppendError() {
+        // Ignore
     }
 
     /**
@@ -408,16 +408,16 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private fun setRotation(rotation: Int) {
         when (rotation) {
-            // Rotation free
+        // Rotation free
             1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            // Lock in current rotation
+        // Lock in current rotation
             2 -> {
                 val currentOrientation = resources.configuration.orientation
                 setRotation(if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) 3 else 4)
             }
-            // Lock in portrait
+        // Lock in portrait
             3 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            // Lock in landscape
+        // Lock in landscape
             4 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         }
     }
@@ -476,6 +476,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      * @param page page object containing image information.
      */
     fun shareImage(page: Page) {
+        if (page.status != Page.READY)
+            return
+
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, Uri.parse(page.imagePath))

@@ -383,11 +383,13 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             if (chapter.read) {
                 val removeAfterReadSlots = prefs.removeAfterReadSlots()
                 when (removeAfterReadSlots) {
-                    // Setting disabled
-                    -1 -> { /**Empty function**/ }
-                    // Remove current read chapter
+                // Setting disabled
+                    -1 -> {
+                        /**Empty function**/
+                    }
+                // Remove current read chapter
                     0 -> deleteChapter(chapter, manga)
-                    // Remove previous chapter specified by user in settings.
+                // Remove previous chapter specified by user in settings.
                     else -> getAdjacentChaptersStrategy(chapter, removeAfterReadSlots)
                             .first?.let { deleteChapter(it, manga) }
                 }
@@ -531,6 +533,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * Update cover with page file.
      */
     internal fun setCover(page: Page) {
+        if (page.status != Page.READY)
+            return
+
         try {
             if (manga.favorite) {
                 if (manga.thumbnail_url != null) {
@@ -554,6 +559,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      */
     @Throws(IOException::class)
     internal fun savePage(page: Page) {
+        if (page.status != Page.READY)
+            return
+
         // Used to show image notification
         val imageNotifier = ImageNotifier(context)
 
