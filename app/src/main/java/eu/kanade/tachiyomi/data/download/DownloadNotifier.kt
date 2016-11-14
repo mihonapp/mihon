@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.util.notificationManager
+import eu.kanade.tachiyomi.util.toast
 
 /**
  * DownloadNotifier is used to show notifications when downloading one or multiple chapters.
@@ -47,9 +48,8 @@ class DownloadNotifier(private val context: Context) {
      * @param queue the queue containing downloads.
      */
     internal fun onProgressChange(queue: DownloadQueue) {
-        if (multipleDownloadThreads) {
+        if (multipleDownloadThreads)
             doOnProgressChange(null, queue)
-        }
     }
 
     /**
@@ -60,9 +60,8 @@ class DownloadNotifier(private val context: Context) {
      * @param queue the queue containing downloads
      */
     internal fun onProgressChange(download: Download, queue: DownloadQueue) {
-        if (!multipleDownloadThreads) {
+        if (!multipleDownloadThreads)
             doOnProgressChange(download, queue)
-        }
     }
 
     /**
@@ -86,7 +85,7 @@ class DownloadNotifier(private val context: Context) {
         }
 
         // Create notification
-        with (notificationBuilder) {
+        with(notificationBuilder) {
             // Check if icon needs refresh
             if (!isDownloading) {
                 setSmallIcon(android.R.drawable.stat_sys_download)
@@ -165,7 +164,6 @@ class DownloadNotifier(private val context: Context) {
             setProgress(0, 0, false)
         }
         context.notificationManager.notify(Constants.NOTIFICATION_DOWNLOAD_CHAPTER_ERROR_ID, notificationBuilder.build())
-
         // Reset download information
         onClear()
         isDownloading = false

@@ -1,7 +1,10 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.os.Bundle
+import android.os.Environment
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.History
@@ -15,8 +18,10 @@ import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.ui.reader.notification.ImageNotifier
 import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.toast
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -24,13 +29,13 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
+import java.io.IOException
 import java.util.*
 
 /**
  * Presenter of [ReaderActivity].
  */
 class ReaderPresenter : BasePresenter<ReaderActivity>() {
-
     /**
      * Preferences.
      */
@@ -62,6 +67,11 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     val chapterCache: ChapterCache by injectLazy()
 
     /**
+     * Cover cache.
+     */
+    val coverCache: CoverCache by injectLazy()
+
+    /**
      * Manga being read.
      */
     lateinit var manga: Manga
@@ -87,6 +97,15 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * Source of the manga.
      */
     private val source by lazy { sourceManager.get(manga.source)!! }
+
+    /**
+     * Directory of pictures
+     */
+    private val pictureDirectory: String by lazy {
+        Environment.getExternalStorageDirectory().absolutePath + File.separator +
+                Environment.DIRECTORY_PICTURES + File.separator +
+                context.getString(R.string.app_name) + File.separator
+    }
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
@@ -364,11 +383,11 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             if (chapter.read) {
                 val removeAfterReadSlots = prefs.removeAfterReadSlots()
                 when (removeAfterReadSlots) {
-                // Setting disabled
+                    // Setting disabled
                     -1 -> { /**Empty function**/ }
-                // Remove current read chapter
+                    // Remove current read chapter
                     0 -> deleteChapter(chapter, manga)
-                // Remove previous chapter specified by user in settings.
+                    // Remove previous chapter specified by user in settings.
                     else -> getAdjacentChaptersStrategy(chapter, removeAfterReadSlots)
                             .first?.let { deleteChapter(it, manga) }
                 }
@@ -384,8 +403,8 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                 Timber.e(error)
             }
         }
-        .subscribeOn(Schedulers.io())
-        .subscribe()
+                .subscribeOn(Schedulers.io())
+                .subscribe()
     }
 
     /**
@@ -508,4 +527,65 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         db.insertManga(manga).executeAsBlocking()
     }
 
+    /**
+     * Update cover with page file.
+     */
+    internal fun setCover(page: Page) {
+        if (page.status != Page.READY)
+            return
+
+        try {
+            if (manga.favorite) {
+                if (manga.thumbnail_url != null) {
+                    coverCache.copyToCache(manga.thumbnail_url!!, File(page.imagePath).inputStream())
+                    context.toast(R.string.cover_updated)
+                } else {
+                    throw Exception("Image url not found")
+                }
+            } else {
+                context.toast(R.string.notification_first_add_to_library)
+            }
+        } catch (error: Exception) {
+            context.toast(R.string.notification_cover_update_failed)
+            Timber.e(error)
+        }
+    }
+
+    /**
+     * Save page to local storage
+     * @throws IOException
+     */
+    @Throws(IOException::class)
+    internal fun savePage(page: Page) {
+        if (page.status != Page.READY)
+            return
+
+        // Used to show image notification
+        val imageNotifier = ImageNotifier(context)
+
+        // Location of image file.
+        val inputFile = File(page.imagePath)
+
+        // File where the image will be saved.
+        val destFile = File(pictureDirectory, manga.title + " - " + chapter.name +
+                " - " + downloadManager.getImageFilename(page))
+
+        //Remove the notification if already exist (user feedback)
+        imageNotifier.onClear()
+        if (inputFile.exists()) {
+            // Copy file
+            Observable.fromCallable { inputFile.copyTo(destFile, true) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            {
+                                // Show notification
+                                imageNotifier.onComplete(it)
+                            },
+                            { error ->
+                                Timber.e(error)
+                                imageNotifier.onError(error.message)
+                            })
+        }
+    }
 }
