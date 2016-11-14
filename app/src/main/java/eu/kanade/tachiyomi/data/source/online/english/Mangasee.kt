@@ -30,6 +30,8 @@ class Mangasee(override val id: Int) : ParsedOnlineSource() {
 
     private val recentUpdatesPattern = Pattern.compile("(.*?)\\s(\\d+)")
 
+    private val indexPattern = Pattern.compile("-index-(.*?)-")
+
     override fun popularMangaInitialUrl() = "$baseUrl/search/request.php?sortBy=popularity&sortOrder=descending"
 
     override fun popularMangaSelector() = "div.requested > div.row"
@@ -141,13 +143,21 @@ class Mangasee(override val id: Int) : ParsedOnlineSource() {
 
     override fun pageListParse(response: Response, pages: MutableList<Page>) {
         val document = response.asJsoup()
-        val url = response.request().url().toString().substringBeforeLast('/')
+        val fullUrl = response.request().url().toString()
+        val url = fullUrl.substringBeforeLast('/')
 
         val series = document.select("input.IndexName").first().attr("value")
         val chapter = document.select("span.CurChapter").first().text()
+        var index = ""
+
+        val m = indexPattern.matcher(fullUrl)
+        if (m.find()) {
+            val indexNumber = m.group(1)
+            index = "-index-$indexNumber"
+        }
 
         document.select("div.ContainerNav").first().select("select.PageSelect > option").forEach {
-            pages.add(Page(pages.size, "$url/$series-chapter-$chapter-page-${pages.size + 1}.html"))
+            pages.add(Page(pages.size, "$url/$series-chapter-$chapter$index-page-${pages.size + 1}.html"))
         }
         pages.getOrNull(0)?.imageUrl = imageUrlParse(document)
     }
