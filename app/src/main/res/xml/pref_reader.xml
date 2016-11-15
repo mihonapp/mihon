@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen
         android:key="reader_screen"
@@ -57,22 +58,26 @@
         <SwitchPreference
             android:title="@string/pref_fullscreen"
             android:key="@string/pref_fullscreen_key"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:showText="false"/>
 
         <SwitchPreference
             android:title="@string/pref_enable_transitions"
             android:key="@string/pref_enable_transitions_key"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:showText="false"/>
 
         <SwitchPreference
             android:title="@string/pref_show_page_number"
             android:key="@string/pref_show_page_number_key"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:showText="false"/>
 
         <SwitchPreference
             android:title="@string/pref_keep_screen_on"
             android:key="@string/pref_keep_screen_on_key"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:showText="false"/>
 
         <PreferenceCategory
             android:title="@string/pref_reader_navigation">
@@ -80,12 +85,14 @@
             <SwitchPreference
                 android:title="@string/pref_read_with_tapping"
                 android:key="@string/pref_read_with_tapping_key"
-                android:defaultValue="true" />
+                android:defaultValue="true"
+                app:showText="false"/>
 
             <SwitchPreference
                 android:title="@string/pref_read_with_volume_keys"
                 android:key="@string/pref_read_with_volume_keys_key"
-                android:defaultValue="false" />
+                android:defaultValue="false"
+                app:showText="false"/>
 
         </PreferenceCategory>
 

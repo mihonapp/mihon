@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen
         android:key="general_screen"
@@ -50,7 +51,8 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_update_only_non_completed_key"
-            android:title="@string/pref_update_only_non_completed"/>
+            android:title="@string/pref_update_only_non_completed"
+            app:showText="false"/>
 
     </PreferenceScreen>
 
