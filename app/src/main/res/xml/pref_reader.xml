@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceScreen
         android:key="reader_screen"
@@ -56,43 +55,49 @@
             android:summary="%s" />
 
         <SwitchPreference
+            android:textOff="@string/pref_fullscreen"
+            android:textOn="@string/pref_fullscreen"
             android:title="@string/pref_fullscreen"
             android:key="@string/pref_fullscreen_key"
-            android:defaultValue="true"
-            app:showText="false"/>
+            android:defaultValue="true" />
 
         <SwitchPreference
+            android:textOff="@string/pref_enable_transitions"
+            android:textOn="@string/pref_enable_transitions"
             android:title="@string/pref_enable_transitions"
             android:key="@string/pref_enable_transitions_key"
-            android:defaultValue="true"
-            app:showText="false"/>
+            android:defaultValue="true" />
 
         <SwitchPreference
+            android:textOff="@string/pref_show_page_number"
+            android:textOn="@string/pref_show_page_number"
             android:title="@string/pref_show_page_number"
             android:key="@string/pref_show_page_number_key"
-            android:defaultValue="true"
-            app:showText="false"/>
+            android:defaultValue="true" />
 
         <SwitchPreference
+            android:textOff="@string/pref_keep_screen_on"
+            android:textOn="@string/pref_keep_screen_on"
             android:title="@string/pref_keep_screen_on"
             android:key="@string/pref_keep_screen_on_key"
-            android:defaultValue="true"
-            app:showText="false"/>
+            android:defaultValue="true" />
 
         <PreferenceCategory
             android:title="@string/pref_reader_navigation">
 
             <SwitchPreference
+                android:textOff="@string/pref_read_with_tapping"
+                android:textOn="@string/pref_read_with_tapping"
                 android:title="@string/pref_read_with_tapping"
                 android:key="@string/pref_read_with_tapping_key"
-                android:defaultValue="true"
-                app:showText="false"/>
+                android:defaultValue="true" />
 
             <SwitchPreference
+                android:textOff="@string/pref_read_with_volume_keys"
+                android:textOn="@string/pref_read_with_volume_keys"
                 android:title="@string/pref_read_with_volume_keys"
                 android:key="@string/pref_read_with_volume_keys_key"
-                android:defaultValue="false"
-                app:showText="false"/>
+                android:defaultValue="false" />
 
         </PreferenceCategory>
 

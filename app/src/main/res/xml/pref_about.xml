@@ -11,13 +11,16 @@
             android:defaultValue="true"
             android:key="acra.enable"
             android:summary="@string/pref_acra_summary"
-            android:title="@string/pref_enable_acra"
-            app:showText="false"/>
+            android:textOff="@string/pref_enable_acra"
+            android:textOn="@string/pref_enable_acra"
+            android:title="@string/pref_enable_acra" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_enable_automatic_updates_key"
             android:summary="@string/pref_enable_automatic_updates_summary"
+            android:textOff="@string/pref_enable_automatic_updates"
+            android:textOn="@string/pref_enable_automatic_updates"
             android:title="@string/pref_enable_automatic_updates"
             app:showText="false"/>
 

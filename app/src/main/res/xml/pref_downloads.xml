@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceScreen
         android:key="downloads_screen"
@@ -14,8 +13,9 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_download_only_over_wifi_key"
-            android:title="@string/pref_download_only_over_wifi"
-            app:showText="false"/>
+            android:textOff="@string/pref_download_only_over_wifi"
+            android:textOn="@string/pref_download_only_over_wifi"
+            android:title="@string/pref_download_only_over_wifi" />
 
         <eu.kanade.tachiyomi.widget.preference.IntListPreference
             android:defaultValue="1"
@@ -32,8 +32,9 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_remove_after_marked_as_read_key"
-            android:title="@string/pref_remove_after_marked_as_read"
-            app:showText="false"/>
+            android:textOff="@string/pref_remove_after_marked_as_read"
+            android:textOn="@string/pref_remove_after_marked_as_read"
+            android:title="@string/pref_remove_after_marked_as_read" />
 
         <eu.kanade.tachiyomi.widget.preference.IntListPreference
             android:defaultValue="-1"
