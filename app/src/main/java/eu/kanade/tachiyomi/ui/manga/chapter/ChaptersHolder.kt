@@ -21,7 +21,7 @@ class ChaptersHolder(
 
     private val readColor = view.context.theme.getResourceColor(android.R.attr.textColorHint)
     private val unreadColor = view.context.theme.getResourceColor(android.R.attr.textColorPrimary)
-    private val bookmarkedColor = view.context.theme.getResourceColor(android.R.attr.colorAccent)
+    private val bookmarkedColor = view.context.theme.getResourceColor(R.attr.colorAccent)
     private val decimalFormat = DecimalFormat("#.###", DecimalFormatSymbols().apply { decimalSeparator = '.' })
     private val df = DateFormat.getDateInstance(DateFormat.SHORT)
 
