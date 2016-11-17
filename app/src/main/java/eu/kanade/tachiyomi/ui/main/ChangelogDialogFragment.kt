@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
@@ -23,9 +24,10 @@ class ChangelogDialogFragment : DialogFragment() {
                 preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
                 ChangelogDialogFragment().show(fragmentManager, "changelog")
 
-                // FIXME Ugly check to restore auto updates setting. Remove me in a few months :D
+                // FIXME Ugly check to restore jobs. Remove me in a few months :D
                 if (oldVersion < 14 && BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
                     UpdateCheckerJob.setupTask()
+                    LibraryUpdateJob.setupTask()
                 }
             }
         }

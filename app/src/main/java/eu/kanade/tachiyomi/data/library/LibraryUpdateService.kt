@@ -5,7 +5,6 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.IBinder
 import android.os.PowerManager
@@ -73,7 +72,9 @@ class LibraryUpdateService : Service() {
     private val notificationId: Int
         get() = Constants.NOTIFICATION_LIBRARY_ID
 
-    private var notificationBitmap: Bitmap? = null
+    private val notificationBitmap by lazy {
+        BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+    }
 
     companion object {
 
@@ -141,8 +142,6 @@ class LibraryUpdateService : Service() {
      */
     override fun onDestroy() {
         subscription?.unsubscribe()
-        notificationBitmap?.recycle()
-        notificationBitmap = null
         destroyWakeLock()
         super.onDestroy()
     }
@@ -171,10 +170,6 @@ class LibraryUpdateService : Service() {
         // Update favorite manga. Destroy service when completed or in case of an error.
         subscription = Observable
                 .defer {
-                    if (notificationBitmap == null) {
-                        notificationBitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-                    }
-
                     val mangaList = getMangaToUpdate(intent)
 
                     // Update either chapter list or manga details.
@@ -267,7 +262,6 @@ class LibraryUpdateService : Service() {
                     } else {
                         showResultNotification(newUpdates, failedUpdates)
                     }
-                    LibraryUpdateJob.setupTask()
                 }
     }
 

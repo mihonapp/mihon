@@ -71,7 +71,7 @@ class SettingsAdvancedFragment : SettingsFragment() {
     private fun clearChapterCache() {
         val deletedFiles = AtomicInteger()
 
-        val files = chapterCache.cacheDir.listFiles()
+        val files = chapterCache.cacheDir.listFiles() ?: return
 
         val dialog = MaterialDialog.Builder(activity)
                 .title(R.string.deleting)
