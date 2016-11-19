@@ -20,10 +20,7 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.util.AndroidComponentUtil
-import eu.kanade.tachiyomi.util.notification
-import eu.kanade.tachiyomi.util.notificationManager
-import eu.kanade.tachiyomi.util.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.*
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers
@@ -330,7 +327,7 @@ class LibraryUpdateService : Service() {
                 append(getString(R.string.notification_new_chapters))
                 for (manga in updates) {
                     append("\n")
-                    append(manga.title)
+                    append(manga.title.chop(30))
                 }
             }
             if (!failedUpdates.isEmpty()) {
@@ -338,7 +335,7 @@ class LibraryUpdateService : Service() {
                 append(getString(R.string.notification_manga_update_failed))
                 for (manga in failedUpdates) {
                     append("\n")
-                    append(manga.title)
+                    append(manga.title.chop(30))
                 }
             }
             toString()
@@ -370,7 +367,7 @@ class LibraryUpdateService : Service() {
      * @param body the body of the notification.
      */
     private fun showNotification(title: String, body: String) {
-        notificationManager.notify(notificationId, notification() {
+        notificationManager.notify(notificationId, notification {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setLargeIcon(notificationBitmap)
             setContentTitle(title)
@@ -386,7 +383,7 @@ class LibraryUpdateService : Service() {
      * @param total the total progress.
      */
     private fun showProgressNotification(manga: Manga, current: Int, total: Int, cancelIntent: PendingIntent) {
-        notificationManager.notify(notificationId, notification() {
+        notificationManager.notify(notificationId, notification {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setLargeIcon(notificationBitmap)
             setContentTitle(manga.title)
@@ -407,7 +404,7 @@ class LibraryUpdateService : Service() {
         val title = getString(R.string.notification_update_completed)
         val body = getUpdatedMangasBody(updates, failed)
 
-        notificationManager.notify(notificationId, notification() {
+        notificationManager.notify(notificationId, notification {
             setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             setLargeIcon(notificationBitmap)
             setContentTitle(title)

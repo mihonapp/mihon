@@ -114,7 +114,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
     // Job scheduling
-    compile 'com.evernote:android-job:1.1.2'
+    compile 'com.evernote:android-job:1.1.3'
     compile 'com.google.android.gms:play-services-gcm:9.8.0'
 
     // ReactiveX
@@ -140,7 +140,7 @@ dependencies {
     compile 'com.github.bmoliveira:snake-yaml:v1.18-android'
 
     // JavaScript engine
-    compile 'com.squareup.duktape:duktape-android:1.0.0'
+    compile 'com.squareup.duktape:duktape-android:1.1.0'
 
     // Disk cache
     compile 'com.jakewharton:disklrucache:2.0.2'
@@ -200,7 +200,7 @@ dependencies {
 }
 
 buildscript {
-    ext.kotlin_version = '1.0.5'
+    ext.kotlin_version = '1.0.5-2'
     repositories {
         mavenCentral()
     }
