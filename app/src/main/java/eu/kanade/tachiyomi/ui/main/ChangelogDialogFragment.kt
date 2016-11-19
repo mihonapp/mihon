@@ -25,8 +25,10 @@ class ChangelogDialogFragment : DialogFragment() {
                 ChangelogDialogFragment().show(fragmentManager, "changelog")
 
                 // FIXME Ugly check to restore jobs. Remove me in a few months :D
-                if (oldVersion < 14 && BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
-                    UpdateCheckerJob.setupTask()
+                if (oldVersion < 14) {
+                    if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
+                        UpdateCheckerJob.setupTask()
+                    }
                     LibraryUpdateJob.setupTask()
                 }
             }
