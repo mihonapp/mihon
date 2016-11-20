@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.KITKAT
 import android.os.Bundle
@@ -265,7 +264,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         val activePage = pages.getOrElse(chapter.requestedPage) { pages.first() }
 
         viewer?.onPageListReady(chapter, activePage)
-        setActiveChapter(chapter, activePage.pageNumber)
+        setActiveChapter(chapter, activePage.index)
     }
 
     fun onEnterChapter(chapter: ReaderChapter, currentPage: Int) {
@@ -332,7 +331,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     fun onPageChanged(page: Page) {
         presenter.onPageChanged(page)
 
-        val pageNumber = page.pageNumber + 1
+        val pageNumber = page.index + 1
         val pageCount = page.chapter.pages!!.size
         page_number.text = "$pageNumber/$pageCount"
         if (page_seekbar.rotation != 180f) {
@@ -340,7 +339,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         } else {
             right_page_text.text = "$pageNumber"
         }
-        page_seekbar.progress = page.pageNumber
+        page_seekbar.progress = page.index
     }
 
     fun gotoPageInCurrentChapter(pageIndex: Int) {
@@ -481,7 +480,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, Uri.parse(page.imagePath))
+            putExtra(Intent.EXTRA_STREAM, page.uri)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
             type = "image/jpeg"
         }

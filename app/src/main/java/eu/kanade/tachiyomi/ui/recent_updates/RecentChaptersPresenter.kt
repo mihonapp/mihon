@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.recent_updates
 
 import android.os.Bundle
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -97,7 +98,10 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
                 .map { mangaChapters ->
                     mangaChapters.map { it.toModel() }
                 }
-                .doOnNext { chapters = it }
+                .doOnNext {
+                    setDownloadedChapters(it)
+                    chapters = it
+                }
                 // Group chapters by the date they were fetched on a ordered map.
                 .flatMap { recentItems ->
                     Observable.from(recentItems)
@@ -142,16 +146,27 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
         // downloaded and assign it to the status.
         if (download != null) {
             model.download = download
-        } else {
-            // Get source of chapter.
-            val source = sourceManager.get(manga.source)!!
-
-            model.status = if (downloadManager.isChapterDownloaded(source, manga, chapter))
-                Download.DOWNLOADED
-            else
-                Download.NOT_DOWNLOADED
         }
         return model
+    }
+
+    /**
+     * Finds and assigns the list of downloaded chapters.
+     *
+     * @param chapters the list of chapter from the database.
+     */
+    private fun setDownloadedChapters(chapters: List<RecentChapter>) {
+        val cachedDirs = mutableMapOf<Long, UniFile?>()
+
+        chapters.forEach { chapter ->
+            val manga = chapter.manga
+            val mangaDir = cachedDirs.getOrPut(manga.id!!)
+                    { downloadManager.findMangaDir(sourceManager.get(manga.source)!!, manga) }
+
+            if (mangaDir?.findFile(downloadManager.getChapterDirName(chapter)) != null) {
+                chapter.status = Download.DOWNLOADED
+            }
+        }
     }
 
     /**
@@ -207,10 +222,6 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * @param chapters list of chapters
      */
     fun deleteChapters(chapters: List<RecentChapter>) {
-        val wasRunning = downloadManager.isRunning
-        if (wasRunning) {
-            DownloadService.stop(context)
-        }
         Observable.from(chapters)
                 .doOnNext { deleteChapter(it) }
                 .toList()
@@ -218,9 +229,6 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeFirst({ view, result ->
                     view.onChaptersDeleted()
-                    if (wasRunning) {
-                        DownloadService.start(context)
-                    }
                 }, { view, error ->
                     view.onChaptersDeletedError(error)
                 })
@@ -253,7 +261,7 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      */
     private fun deleteChapter(chapter: RecentChapter) {
         val source = sourceManager.get(chapter.manga.source) ?: return
-        downloadManager.queue.del(chapter)
+        downloadManager.queue.remove(chapter)
         downloadManager.deleteChapter(source, chapter.manga, chapter)
         chapter.status = Download.NOT_DOWNLOADED
         chapter.download = null

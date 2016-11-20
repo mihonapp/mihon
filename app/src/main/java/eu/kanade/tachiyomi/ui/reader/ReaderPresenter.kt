@@ -29,7 +29,6 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
-import java.io.IOException
 import java.util.*
 
 /**
@@ -97,15 +96,6 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * Source of the manga.
      */
     private val source by lazy { sourceManager.get(manga.source)!! }
-
-    /**
-     * Directory of pictures
-     */
-    private val pictureDirectory: String by lazy {
-        Environment.getExternalStorageDirectory().absolutePath + File.separator +
-                Environment.DIRECTORY_PICTURES + File.separator +
-                context.getString(R.string.app_name) + File.separator
-    }
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
@@ -351,9 +341,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     fun retryPage(page: Page?) {
         if (page != null && source is OnlineSource) {
             page.status = Page.QUEUE
-            val path = page.imagePath
-            if (!path.isNullOrEmpty() && !page.chapter.isDownloaded) {
-                chapterCache.removeFileFromCache(File(path).name)
+            val uri = page.uri
+            if (uri != null && !page.chapter.isDownloaded) {
+                chapterCache.removeFileFromCache(uri.encodedPath.substringAfterLast('/'))
             }
             loader.retryPage(page)
         }
@@ -370,27 +360,27 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         val pages = chapter.pages ?: return
 
         Observable.fromCallable {
-            // Chapters with 1 page don't trigger page changes, so mark them as read.
-            if (pages.size == 1) {
-                chapter.read = true
-            }
-
             // Cache current page list progress for online chapters to allow a faster reopen
             if (!chapter.isDownloaded) {
                 source.let { if (it is OnlineSource) it.savePageList(chapter, pages) }
             }
 
-            if (chapter.read) {
-                val removeAfterReadSlots = prefs.removeAfterReadSlots()
-                when (removeAfterReadSlots) {
-                    // Setting disabled
-                    -1 -> { /**Empty function**/ }
-                    // Remove current read chapter
-                    0 -> deleteChapter(chapter, manga)
-                    // Remove previous chapter specified by user in settings.
-                    else -> getAdjacentChaptersStrategy(chapter, removeAfterReadSlots)
-                            .first?.let { deleteChapter(it, manga) }
+            try {
+                if (chapter.read) {
+                    val removeAfterReadSlots = prefs.removeAfterReadSlots()
+                    when (removeAfterReadSlots) {
+                        // Setting disabled
+                        -1 -> { /* Empty function */ }
+                        // Remove current read chapter
+                        0 -> deleteChapter(chapter, manga)
+                        // Remove previous chapter specified by user in settings.
+                        else -> getAdjacentChaptersStrategy(chapter, removeAfterReadSlots)
+                                .first?.let { deleteChapter(it, manga) }
+                    }
                 }
+            } catch (error: Exception) {
+                // TODO find out why it crashes
+                Timber.e(error)
             }
 
             db.updateChapterProgress(chapter).executeAsBlocking()
@@ -414,7 +404,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      */
     fun onPageChanged(page: Page) {
         val chapter = page.chapter
-        chapter.last_page_read = page.pageNumber
+        chapter.last_page_read = page.index
         if (chapter.pages!!.last() === page) {
             chapter.read = true
         }
@@ -537,7 +527,8 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         try {
             if (manga.favorite) {
                 if (manga.thumbnail_url != null) {
-                    coverCache.copyToCache(manga.thumbnail_url!!, File(page.imagePath).inputStream())
+                    val input = context.contentResolver.openInputStream(page.uri)
+                    coverCache.copyToCache(manga.thumbnail_url!!, input)
                     context.toast(R.string.cover_updated)
                 } else {
                     throw Exception("Image url not found")
@@ -552,40 +543,47 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     }
 
     /**
-     * Save page to local storage
-     * @throws IOException
+     * Save page to local storage.
      */
-    @Throws(IOException::class)
     internal fun savePage(page: Page) {
         if (page.status != Page.READY)
             return
 
-        // Used to show image notification
+        // Used to show image notification.
         val imageNotifier = ImageNotifier(context)
 
-        // Location of image file.
-        val inputFile = File(page.imagePath)
-
-        // File where the image will be saved.
-        val destFile = File(pictureDirectory, manga.title + " - " + chapter.name +
-                " - " + downloadManager.getImageFilename(page))
-
-        //Remove the notification if already exist (user feedback)
+        // Remove the notification if it already exists (user feedback).
         imageNotifier.onClear()
-        if (inputFile.exists()) {
-            // Copy file
-            Observable.fromCallable { inputFile.copyTo(destFile, true) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            {
-                                // Show notification
-                                imageNotifier.onComplete(it)
-                            },
-                            { error ->
-                                Timber.e(error)
-                                imageNotifier.onError(error.message)
-                            })
-        }
+
+        // Pictures directory.
+        val pictureDirectory = Environment.getExternalStorageDirectory().absolutePath +
+                File.separator + Environment.DIRECTORY_PICTURES +
+                File.separator + context.getString(R.string.app_name)
+
+        // Copy file in background.
+        Observable
+                .fromCallable {
+                    // File where the image will be saved.
+                    val destDir = File(pictureDirectory)
+                    destDir.mkdirs()
+
+                    val destFile = File(destDir, manga.title + " - " + chapter.name +
+                            " - " + (page.index + 1))
+
+                    // Location of image file.
+                    context.contentResolver.openInputStream(page.uri).use { input ->
+                        destFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+
+                    imageNotifier.onComplete(destFile)
+                }
+                .subscribeOn(Schedulers.io())
+                .subscribe({},
+                        { error ->
+                            Timber.e(error)
+                            imageNotifier.onError(error.message)
+                        })
     }
 }

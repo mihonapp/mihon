@@ -185,15 +185,10 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
             }
 
             if (prefFilterDownloaded) {
-                val mangaDir = downloadManager.getAbsoluteMangaDirectory(source, manga)
+                val mangaDir = downloadManager.findMangaDir(source, manga)
 
-                if (mangaDir.exists()) {
-                    for (file in mangaDir.listFiles()) {
-                        if (file.isDirectory && file.listFiles().isNotEmpty()) {
-                            hasDownloaded = true
-                            break
-                        }
-                    }
+                if (mangaDir != null) {
+                    hasDownloaded = mangaDir.listFiles()?.any { it.isDirectory } ?: false
                 }
             }
 

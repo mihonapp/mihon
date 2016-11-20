@@ -2,12 +2,14 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.content.Context
 import android.graphics.PointF
+import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -208,13 +210,25 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
      * Called when the page is ready.
      */
     private fun setImage() {
-        val path = page.imagePath
-        if (path != null && File(path).exists()) {
-            progress_text.visibility = View.INVISIBLE
-            image_view.setImage(ImageSource.uri(path))
-        } else {
+        val uri = page.uri
+        if (uri == null) {
             page.status = Page.ERROR
+            return
         }
+
+        val file = if (Build.VERSION.SDK_INT < 21 || UniFile.isFileUri(uri)) {
+            UniFile.fromFile(File(uri.path))
+        } else {
+            // Tree uri returns the root folder
+            UniFile.fromSingleUri(context, uri)
+        }!!
+        if (!file.exists()) {
+            page.status = Page.ERROR
+            return
+        }
+
+        progress_text.visibility = View.INVISIBLE
+        image_view.setImage(ImageSource.uri(file.uri))
     }
 
     /**

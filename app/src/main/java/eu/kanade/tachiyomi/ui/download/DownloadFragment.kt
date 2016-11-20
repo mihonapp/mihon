@@ -6,6 +6,7 @@ import android.view.*
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.plusAssign
@@ -29,21 +30,6 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      * Adapter containing the active downloads.
      */
     private lateinit var adapter: DownloadAdapter
-
-    /**
-     * Menu item to start the queue.
-     */
-    private var startButton: MenuItem? = null
-
-    /**
-     * Menu item to pause the queue.
-     */
-    private var pauseButton: MenuItem? = null
-
-    /**
-     * Menu item to clear the queue.
-     */
-    private var clearButton: MenuItem? = null
 
     /**
      * Subscription list to be cleared during [onDestroyView].
@@ -95,15 +81,15 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
         recycler.setHasFixedSize(true)
 
         // Suscribe to changes
-        subscriptions += presenter.downloadManager.runningSubject
+        subscriptions += DownloadService.runningRelay
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { onQueueStatusChange(it) }
 
-        subscriptions += presenter.getStatusObservable()
+        subscriptions += presenter.getDownloadStatusObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { onStatusChange(it) }
 
-        subscriptions += presenter.getProgressObservable()
+        subscriptions += presenter.getDownloadProgressObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { onUpdateDownloadedPages(it) }
     }
@@ -119,23 +105,17 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.download_queue, menu)
+    }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
         // Set start button visibility.
-        startButton = menu.findItem(R.id.start_queue).apply {
-            isVisible = !isRunning && !presenter.downloadQueue.isEmpty()
-        }
+        menu.findItem(R.id.start_queue).isVisible = !isRunning && !presenter.downloadQueue.isEmpty()
 
         // Set pause button visibility.
-        pauseButton = menu.findItem(R.id.pause_queue).apply {
-            isVisible = isRunning
-        }
+        menu.findItem(R.id.pause_queue).isVisible = isRunning
 
         // Set clear button visibility.
-        clearButton = menu.findItem(R.id.clear_queue).apply {
-            if (!presenter.downloadQueue.isEmpty()) {
-                isVisible = true
-            }
-        }
+        menu.findItem(R.id.clear_queue).isVisible = !presenter.downloadQueue.isEmpty()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -182,7 +162,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
                 // Get the sum of percentages for all the pages.
                 .flatMap {
                     Observable.from(download.pages)
-                            .map { it.progress }
+                            .map(Page::progress)
                             .reduce { x, y -> x + y }
                 }
                 // Keep only the latest emission to avoid backpressure.
@@ -218,9 +198,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      */
     private fun onQueueStatusChange(running: Boolean) {
         isRunning = running
-        startButton?.isVisible = !running && !presenter.downloadQueue.isEmpty()
-        pauseButton?.isVisible = running
-        clearButton?.isVisible = !presenter.downloadQueue.isEmpty()
+        activity.supportInvalidateOptionsMenu()
 
         // Check if download queue is empty and update information accordingly.
         setInformationView()
@@ -232,11 +210,9 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      * @param downloads the downloads from the queue.
      */
     fun onNextDownloads(downloads: List<Download>) {
+        activity.supportInvalidateOptionsMenu()
+        setInformationView()
         adapter.setItems(downloads)
-    }
-
-    fun onDownloadRemoved(position: Int) {
-        adapter.notifyItemRemoved(position)
     }
 
     /**
