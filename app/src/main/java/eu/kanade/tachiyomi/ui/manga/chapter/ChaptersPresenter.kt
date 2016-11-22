@@ -289,19 +289,6 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     }
 
     /**
-     * Mark the previous chapters to the selected one as read.
-     * @param chapter the selected chapter.
-     */
-    fun markPreviousChaptersAsRead(chapter: ChapterModel) {
-        Observable.from(chapters)
-                .filter { it.isRecognizedNumber && it.chapter_number < chapter.chapter_number }
-                .doOnNext { it.read = true }
-                .toList()
-                .flatMap { db.updateChaptersProgress(it).asRxObservable() }
-                .subscribe()
-    }
-
-    /**
      * Downloads the given list of chapters with the manager.
      * @param chapters the list of chapters to download.
      */

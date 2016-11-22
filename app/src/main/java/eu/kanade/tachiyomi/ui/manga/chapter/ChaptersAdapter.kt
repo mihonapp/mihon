@@ -11,6 +11,13 @@ class ChaptersAdapter(val fragment: ChaptersFragment) : FlexibleAdapter<Chapters
         setHasStableIds(true)
     }
 
+    var items: List<ChapterModel>
+        get() = mItems
+        set(value) {
+            mItems = value
+            notifyDataSetChanged()
+        }
+
     override fun updateDataSet(param: String) {
     }
 
@@ -32,8 +39,4 @@ class ChaptersAdapter(val fragment: ChaptersFragment) : FlexibleAdapter<Chapters
         return mItems[position].id!!
     }
 
-    fun setItems(chapters: List<ChapterModel>) {
-        mItems = chapters
-        notifyDataSetChanged()
-    }
 }
