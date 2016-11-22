@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.os.Bundle
 import android.os.Environment
+import android.webkit.MimeTypeMap
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -29,6 +30,7 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
+import java.net.URLConnection
 import java.util.*
 
 /**
@@ -563,14 +565,21 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         // Copy file in background.
         Observable
                 .fromCallable {
-                    // File where the image will be saved.
+                    // Folder where the image will be saved.
                     val destDir = File(pictureDirectory)
                     destDir.mkdirs()
 
-                    val destFile = File(destDir, manga.title + " - " + chapter.name +
-                            " - " + (page.index + 1))
+                    // Find out file extension.
+                    val mime = context.contentResolver.getType(page.uri)
+                    ?: context.contentResolver.openInputStream(page.uri).buffered().use {
+                        URLConnection.guessContentTypeFromStream(it)
+                    }
+                    val ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "jpg"
 
-                    // Location of image file.
+                    // Destination file.
+                    val destFile = File(destDir, manga.title + " - " + chapter.name +
+                            " - " + (page.index + 1) + ".$ext")
+
                     context.contentResolver.openInputStream(page.uri).use { input ->
                         destFile.outputStream().use { output ->
                             input.copyTo(output)

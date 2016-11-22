@@ -25,6 +25,7 @@ import rx.subjects.BehaviorSubject
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
+import java.net.URLConnection
 
 /**
  * This class is the one in charge of downloading chapters.
@@ -366,19 +367,22 @@ class Downloader(private val context: Context, private val provider: DownloadPro
 
     /**
      * Returns the extension of the downloaded image from the network response, or if it's null,
-     * analyze the file. If both fail, assume it's a jpg.
+     * analyze the file. If everything fails, assume it's a jpg.
      *
      * @param response the network response of the image.
      * @param file the file where the image is already downloaded.
      */
     private fun getImageExtension(response: Response, file: UniFile): String {
-        val contentType = response.body().contentType()
-        val mimeStr = if (contentType != null) {
-            "${contentType.type()}/${contentType.subtype()}"
-        } else {
-            context.contentResolver.getType(file.uri)
+        // Read content type if available.
+        val mime = response.body().contentType()?.let { ct -> "${ct.type()}/${ct.subtype()}" }
+        // Else guess from the uri.
+        ?: context.contentResolver.getType(file.uri)
+        // Else read magic numbers.
+        ?: file.openInputStream().buffered().use {
+            URLConnection.guessContentTypeFromStream(it)
         }
-        return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeStr) ?: "jpg"
+
+        return MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "jpg"
     }
 
     /**
