@@ -30,7 +30,7 @@ ext {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
     publishNonDefault true
 
     defaultConfig {
@@ -101,7 +101,7 @@ dependencies {
     compile 'com.github.inorichi:subsampling-scale-image-view:96d2c7f'
 
     // Android support library
-    final support_library_version = '25.0.0'
+    final support_library_version = '25.0.1'
     compile "com.android.support:support-v4:$support_library_version"
     compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:cardview-v7:$support_library_version"
@@ -120,14 +120,14 @@ dependencies {
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.2'
+    compile 'io.reactivex:rxjava:1.2.3'
     compile 'com.jakewharton.rxrelay:rxrelay:1.2.0'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
+    compile 'com.github.pwittchen:reactivenetwork:0.6.0'
 
     // Network client
     compile "com.squareup.okhttp3:okhttp:3.4.2"
     compile 'com.squareup.okio:okio:1.11.0'
-    compile 'com.github.pwittchen:reactivenetwork:0.6.0'
 
     // REST
     final retrofit_version = '2.1.0'

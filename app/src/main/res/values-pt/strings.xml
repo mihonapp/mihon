@@ -165,8 +165,6 @@
     <string name="pref_clear_database_summary">Eliminar manga não presente na biblioteca</string>
     <string name="clear_database_confirmation">Capítulos lidos e progresso em manga que não está na biblioteca será perdido. Deseja continuar?</string>
     <string name="clear_database_completed">Eliminar entradas</string>
-    <string name="pref_show_warning_message">Mostrar avisos</string>
-    <string name="pref_show_warning_message_summary">Mostrar mensagens de avisos durante a sincronização</string>
 
     <!-- About section -->
     <string name="version">Versão</string>

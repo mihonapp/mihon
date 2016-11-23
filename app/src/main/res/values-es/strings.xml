@@ -138,16 +138,10 @@
     <string name="pref_download_only_over_wifi">Descargar solo a través de Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Eliminar al marcar como leído</string>
     <string name="pref_remove_after_read">Eliminar después de leer</string>
-    <string name="cat_remove_after_read">Eliminar después de leer</string>
-    <string name="current_chapter">Capítulo actual</string>
-    <string name="previous_chapter">Capítulo anterior</string>
     <string name="custom_dir">Directorio personalizado</string>
 
 
       <!-- Sources section -->
-    <string name="languages">Idiomas</string>
-    <string name="languages_summary">Selecciona los idiomas en los que mostrar las fuentes</string>
-    <string name="accounts">Cuentas</string>
 
       <!-- Sync section -->
     <string name="services">Servicios</string>
@@ -163,8 +157,6 @@
     <string name="pref_clear_database_summary">Eliminar solo manga y capítulos que no están en tu librería</string>
     <string name="clear_database_confirmation">¿Estás seguro? Los capítulos leídos y el progreso de manga que no esté en la librería se perderá</string>
     <string name="clear_database_completed">Entradas borradas</string>
-    <string name="pref_show_warning_message">Mostrar advertencias</string>
-    <string name="pref_show_warning_message_summary">Mostrar mensajes de advertencia durante la sincronización de la librería</string>
 
       <!-- About section -->
     <string name="version">Versión</string>
