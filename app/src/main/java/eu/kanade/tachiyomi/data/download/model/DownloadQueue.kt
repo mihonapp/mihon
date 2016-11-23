@@ -45,6 +45,7 @@ class DownloadQueue(
             download.setStatusSubject(null)
         }
         queue.clear()
+        store.clear()
         updatedRelay.call(Unit)
     }
 

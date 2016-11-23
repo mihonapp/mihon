@@ -62,6 +62,13 @@ class DownloadStore(context: Context) {
     }
 
     /**
+     * Removes all the downloads from the store.
+     */
+    fun clear() {
+        preferences.edit().clear().apply()
+    }
+
+    /**
      * Returns the preference's key for the given download.
      *
      * @param download the download.
@@ -93,7 +100,7 @@ class DownloadStore(context: Context) {
         }
 
         // Clear the store, downloads will be added again immediately.
-        preferences.edit().clear().apply()
+        clear()
         return downloads
     }
 
