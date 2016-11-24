@@ -83,7 +83,7 @@ class DownloadProvider(private val context: Context) {
      * @param manga the manga to query.
      */
     fun getMangaDirName(manga: Manga): String {
-        return DiskUtil.buildValidFatFilename(manga.title)
+        return DiskUtil.buildValidFilename(manga.title)
     }
 
     /**
@@ -92,7 +92,7 @@ class DownloadProvider(private val context: Context) {
      * @param chapter the chapter to query.
      */
     fun getChapterDirName(chapter: Chapter): String {
-        return DiskUtil.buildValidFatFilename(chapter.name)
+        return DiskUtil.buildValidFilename(chapter.name)
     }
 
 }

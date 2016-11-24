@@ -36,7 +36,7 @@ object DiskUtil {
      * replacing any invalid characters with "_". This method doesn't allow private files (starting
      * with a dot), but you can manually add it later.
      */
-    fun buildValidFatFilename(origName: String): String {
+    fun buildValidFilename(origName: String): String {
         val name = origName.trim('.', ' ')
         if (name.isNullOrEmpty()) {
             return "(invalid)"

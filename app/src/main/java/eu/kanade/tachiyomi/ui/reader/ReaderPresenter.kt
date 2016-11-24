@@ -570,17 +570,16 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                     val destDir = File(pictureDirectory)
                     destDir.mkdirs()
 
-                    // Find out file extension.
+                    // Find out file mime type.
                     val mime = context.contentResolver.getType(page.uri)
                     ?: context.contentResolver.openInputStream(page.uri).buffered().use {
                         URLConnection.guessContentTypeFromStream(it)
                     }
+
+                    // Build destination file.
                     val ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "jpg"
-
-                    // Destination file.
-
-                    val filename = "${manga.title} - ${chapter.name} - ${page.index + 1}.$ext"
-                    val destFile = File(destDir, DiskUtil.buildValidFatFilename(filename))
+                    val filename = "${manga.title} - ${chapter.name} - ${page.index + 1}"
+                    val destFile = File(destDir, DiskUtil.buildValidFilename(filename) + ".$ext")
 
                     context.contentResolver.openInputStream(page.uri).use { input ->
                         destFile.outputStream().use { output ->
