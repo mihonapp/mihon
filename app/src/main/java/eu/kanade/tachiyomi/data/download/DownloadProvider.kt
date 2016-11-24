@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.Source
+import eu.kanade.tachiyomi.util.DiskUtil
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -82,7 +83,7 @@ class DownloadProvider(private val context: Context) {
      * @param manga the manga to query.
      */
     fun getMangaDirName(manga: Manga): String {
-        return buildValidFatFilename(manga.title.trim('.', ' '))
+        return DiskUtil.buildValidFatFilename(manga.title)
     }
 
     /**
@@ -91,40 +92,7 @@ class DownloadProvider(private val context: Context) {
      * @param chapter the chapter to query.
      */
     fun getChapterDirName(chapter: Chapter): String {
-        return buildValidFatFilename(chapter.name.trim('.', ' '))
+        return DiskUtil.buildValidFatFilename(chapter.name)
     }
 
-    /**
-     * Mutate the given filename to make it valid for a FAT filesystem,
-     * replacing any invalid characters with "_".
-     */
-    private fun buildValidFatFilename(name: String): String {
-        if (name.isNullOrEmpty()) {
-            return "(invalid)"
-        }
-        val res = StringBuilder(name.length)
-        name.forEach { c ->
-            if (isValidFatFilenameChar(c)) {
-                res.append(c)
-            } else {
-                res.append('_')
-            }
-        }
-        // Even though vfat allows 255 UCS-2 chars, we might eventually write to
-        // ext4 through a FUSE layer, so use that limit minus 5 reserved characters.
-        return res.toString().take(250)
-    }
-
-    /**
-     * Returns true if the given character is a valid filename character, false otherwise.
-     */
-    private fun isValidFatFilenameChar(c: Char): Boolean {
-        if (0x00.toChar() <= c && c <= 0x1f.toChar()) {
-            return false
-        }
-        when (c) {
-            '"', '*', '/', ':', '<', '>', '?', '\\', '|', 0x7f.toChar() -> return false
-            else -> return true
-        }
-    }
 }

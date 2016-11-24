@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jakewharton.disklrucache.DiskLruCache
 import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.util.DiskUtils
+import eu.kanade.tachiyomi.util.DiskUtil
 import eu.kanade.tachiyomi.util.saveTo
 import okhttp3.Response
 import okio.Okio
@@ -70,7 +70,7 @@ class ChapterCache(private val context: Context) {
      * @return real size of directory.
      */
     private val realSize: Long
-        get() = DiskUtils.getDirectorySize(cacheDir)
+        get() = DiskUtil.getDirectorySize(cacheDir)
 
     /**
      * Returns real size of directory in human readable format.
@@ -107,7 +107,7 @@ class ChapterCache(private val context: Context) {
     fun getPageListFromCache(chapterUrl: String): Observable<List<Page>> {
         return Observable.fromCallable<List<Page>> {
             // Get the key for the chapter.
-            val key = DiskUtils.hashKeyForDisk(chapterUrl)
+            val key = DiskUtil.hashKeyForDisk(chapterUrl)
 
             // Convert JSON string to list of objects. Throws an exception if snapshot is null
             diskCache.get(key).use {
@@ -130,7 +130,7 @@ class ChapterCache(private val context: Context) {
 
         try {
             // Get editor from md5 key.
-            val key = DiskUtils.hashKeyForDisk(chapterUrl)
+            val key = DiskUtil.hashKeyForDisk(chapterUrl)
             editor = diskCache.edit(key) ?: return
 
             // Write chapter urls to cache.
@@ -157,7 +157,7 @@ class ChapterCache(private val context: Context) {
      */
     fun isImageInCache(imageUrl: String): Boolean {
         try {
-            return diskCache.get(DiskUtils.hashKeyForDisk(imageUrl)) != null
+            return diskCache.get(DiskUtil.hashKeyForDisk(imageUrl)) != null
         } catch (e: IOException) {
             return false
         }
@@ -171,7 +171,7 @@ class ChapterCache(private val context: Context) {
     fun getImagePath(imageUrl: String): File? {
         try {
             // Get file from md5 key.
-            val imageName = DiskUtils.hashKeyForDisk(imageUrl) + ".0"
+            val imageName = DiskUtil.hashKeyForDisk(imageUrl) + ".0"
             return File(diskCache.directory, imageName)
         } catch (e: IOException) {
             return null
@@ -191,7 +191,7 @@ class ChapterCache(private val context: Context) {
 
         try {
             // Get editor from md5 key.
-            val key = DiskUtils.hashKeyForDisk(imageUrl)
+            val key = DiskUtil.hashKeyForDisk(imageUrl)
             editor = diskCache.edit(key) ?: throw IOException("Unable to edit key")
 
             // Get OutputStream and write image with Okio.

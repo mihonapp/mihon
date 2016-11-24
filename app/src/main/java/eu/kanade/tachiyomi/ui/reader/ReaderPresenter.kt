@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.reader.notification.ImageNotifier
+import eu.kanade.tachiyomi.util.DiskUtil
 import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.toast
@@ -577,8 +578,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                     val ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "jpg"
 
                     // Destination file.
-                    val destFile = File(destDir, manga.title + " - " + chapter.name +
-                            " - " + (page.index + 1) + ".$ext")
+
+                    val filename = "${manga.title} - ${chapter.name} - ${page.index + 1}.$ext"
+                    val destFile = File(destDir, DiskUtil.buildValidFatFilename(filename))
 
                     context.contentResolver.openInputStream(page.uri).use { input ->
                         destFile.outputStream().use { output ->

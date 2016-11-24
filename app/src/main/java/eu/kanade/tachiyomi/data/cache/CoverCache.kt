@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.cache
 
 import android.content.Context
-import eu.kanade.tachiyomi.util.DiskUtils
+import eu.kanade.tachiyomi.util.DiskUtil
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -29,7 +29,7 @@ class CoverCache(private val context: Context) {
      * @return cover image.
      */
     fun getCoverFile(thumbnailUrl: String): File {
-        return File(cacheDir, DiskUtils.hashKeyForDisk(thumbnailUrl))
+        return File(cacheDir, DiskUtil.hashKeyForDisk(thumbnailUrl))
     }
 
     /**
