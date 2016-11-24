@@ -99,6 +99,7 @@ class DownloadManager(context: Context) {
             val pages = mutableListOf<Page>()
             chapterDir?.listFiles()
                     ?.filter { it.type?.startsWith("image") ?: false }
+                    ?.sortedBy { it.name }
                     ?.forEach { file ->
                         val page = Page(pages.size, uri = file.uri)
                         pages.add(page)
