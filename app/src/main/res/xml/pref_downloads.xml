@@ -13,8 +13,6 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_download_only_over_wifi_key"
-            android:textOff="@string/pref_download_only_over_wifi"
-            android:textOn="@string/pref_download_only_over_wifi"
             android:title="@string/pref_download_only_over_wifi" />
 
         <eu.kanade.tachiyomi.widget.preference.IntListPreference
@@ -32,8 +30,6 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_remove_after_marked_as_read_key"
-            android:textOff="@string/pref_remove_after_marked_as_read"
-            android:textOn="@string/pref_remove_after_marked_as_read"
             android:title="@string/pref_remove_after_marked_as_read" />
 
         <eu.kanade.tachiyomi.widget.preference.IntListPreference

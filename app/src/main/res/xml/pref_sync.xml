@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceScreen
         android:key="sync_screen"
@@ -10,21 +9,18 @@
         <SwitchPreference
             android:key="@string/pref_auto_update_manga_sync_key"
             android:title="@string/pref_auto_update_manga_sync"
-            android:defaultValue="true"
-            app:showText="false"/>
+            android:defaultValue="true" />
 
         <SwitchPreference
             android:key="@string/pref_ask_update_manga_sync_key"
             android:title="@string/pref_ask_update_manga_sync"
             android:defaultValue="false"
-            android:dependency="@string/pref_auto_update_manga_sync_key"
-            app:showText="false"/>
+            android:dependency="@string/pref_auto_update_manga_sync_key" />
 
         <PreferenceCategory
             android:key="@string/pref_category_manga_sync_accounts_key"
             android:title="@string/services"
-            android:persistent="false"
-            app:showText="false"/>
+            android:persistent="false" />
 
     </PreferenceScreen>
 
