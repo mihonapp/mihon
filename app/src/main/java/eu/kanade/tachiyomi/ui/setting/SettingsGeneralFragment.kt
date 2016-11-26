@@ -57,12 +57,13 @@ class SettingsGeneralFragment : SettingsFragment(),
                 .subscribe { updateColumnsSummary(it.first, it.second) }
 
         updateInterval.setOnPreferenceChangeListener { preference, newValue ->
-            val interval = (newValue as String).toInt()
-            if (interval > 0)
-                LibraryUpdateJob.setupTask(interval)
-            else
-                LibraryUpdateJob.cancelTask()
+            // Always cancel the previous task, it seems that sometimes they are not updated.
+            LibraryUpdateJob.cancelTask()
 
+            val interval = (newValue as String).toInt()
+            if (interval > 0) {
+                LibraryUpdateJob.setupTask(interval)
+            }
             true
         }
 
