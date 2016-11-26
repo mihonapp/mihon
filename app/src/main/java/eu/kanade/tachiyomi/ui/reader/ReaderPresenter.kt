@@ -578,8 +578,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
 
                     // Build destination file.
                     val ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "jpg"
-                    val filename = "${manga.title} - ${chapter.name} - ${page.index + 1}"
-                    val destFile = File(destDir, DiskUtil.buildValidFilename(filename) + ".$ext")
+                    val filename = DiskUtil.buildValidFilename(
+                            "${manga.title} - ${chapter.name}") + " - ${page.index + 1}.$ext"
+                    val destFile = File(destDir, filename)
 
                     context.contentResolver.openInputStream(page.uri).use { input ->
                         destFile.outputStream().use { output ->
