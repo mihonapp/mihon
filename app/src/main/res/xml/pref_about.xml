@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen
+        android:icon="@drawable/ic_help_black_24dp"
         android:key="about_screen"
+        android:persistent="false"
         android:title="@string/pref_category_about"
-        android:persistent="false">
+        app:asp_tintEnabled="true">
 
         <SwitchPreference
             android:defaultValue="true"

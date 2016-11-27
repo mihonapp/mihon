@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen
+        android:icon="@drawable/ic_chrome_reader_mode_black_24dp"
         android:key="reader_screen"
         android:persistent="false"
-        android:title="@string/pref_category_reader">
+        android:title="@string/pref_category_reader"
+        app:asp_tintEnabled="true">
 
         <eu.kanade.tachiyomi.widget.preference.IntListPreference
             android:title="@string/pref_viewer_type"

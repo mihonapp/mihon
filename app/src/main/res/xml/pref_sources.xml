@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen
+        android:icon="@drawable/ic_language_black_24dp"
         android:key="sources_screen"
         android:persistent="false"
-        android:title="@string/pref_category_sources">
+        android:title="@string/pref_category_sources"
+        app:asp_tintEnabled="true">
 
         <!-- Dummy preference, it's needed at least one  -->
         <Preference/>

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen
+        android:icon="@drawable/ic_file_download_black_24dp"
         android:key="downloads_screen"
         android:persistent="false"
-        android:title="@string/pref_category_downloads">
+        android:title="@string/pref_category_downloads"
+        app:asp_tintEnabled="true">
 
         <Preference
             android:key="@string/pref_download_directory_key"

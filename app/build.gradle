@@ -185,7 +185,7 @@ dependencies {
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
     compile 'com.afollestad.material-dialogs:core:0.9.1.0'
-    compile 'net.xpece.android:support-preference:1.0.3'
+    compile 'net.xpece.android:support-preference:1.2.0'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
