@@ -478,13 +478,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         if (page.status != Page.READY)
             return
 
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
+        val intent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_STREAM, page.uri)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            type = "image/jpeg"
+            type = "image/*"
         }
-        startActivity(Intent.createChooser(shareIntent, resources.getText(R.string.action_share)))
+        startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
     }
 
     /**
