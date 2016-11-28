@@ -98,7 +98,7 @@ android {
 dependencies {
 
     // Modified dependencies
-    compile 'com.github.inorichi:subsampling-scale-image-view:96d2c7f'
+    compile 'com.github.inorichi:subsampling-scale-image-view:f687b74'
 
     // Android support library
     final support_library_version = '25.0.1'
