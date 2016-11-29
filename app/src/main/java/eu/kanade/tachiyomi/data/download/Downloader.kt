@@ -247,7 +247,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
     private fun downloadChapter(download: Download): Observable<Download> {
         val chapterDirname = provider.getChapterDirName(download.chapter)
         val mangaDir = provider.getMangaDir(download.source, download.manga)
-        val tmpDir = mangaDir.subFile("${chapterDirname}_tmp")!!
+        val tmpDir = mangaDir.createDirectory("${chapterDirname}_tmp")
 
         val pageListObservable = if (download.pages == null) {
             // Pull page list from network and add them to download object
@@ -262,8 +262,6 @@ class Downloader(private val context: Context, private val provider: DownloadPro
 
         return pageListObservable
                 .doOnNext { pages ->
-                    tmpDir.ensureDir()
-
                     // Delete all temporary (unfinished) files
                     tmpDir.listFiles()
                             ?.filter { it.name!!.endsWith(".tmp") }

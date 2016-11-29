@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
-import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
@@ -20,7 +19,6 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
 import rx.subjects.SerializedSubject
-import java.io.File
 import java.util.concurrent.TimeUnit
 
 /**
@@ -250,12 +248,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             return
         }
 
-        val file = if (Build.VERSION.SDK_INT < 21 || UniFile.isFileUri(uri)) {
-            UniFile.fromFile(File(uri.path))
-        } else {
-            // Tree uri returns the root folder
-            UniFile.fromSingleUri(context, uri)
-        }!!
+        val file = UniFile.fromUri(context, uri)
         if (!file.exists()) {
             page?.status = Page.ERROR
             return

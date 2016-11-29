@@ -116,7 +116,7 @@ class SettingsDownloadsFragment : SettingsFragment() {
                 @Suppress("NewApi")
                 context.contentResolver.takePersistableUriPermission(uri, flags)
 
-                val file = UniFile.fromTreeUri(context, uri)
+                val file = UniFile.fromUri(context, uri)
                 preferences.downloadsDirectory().set(file.uri.toString())
             }
         }

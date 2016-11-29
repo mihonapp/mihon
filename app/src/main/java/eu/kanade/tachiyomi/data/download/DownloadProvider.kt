@@ -41,8 +41,8 @@ class DownloadProvider(private val context: Context) {
      */
     internal fun getMangaDir(source: Source, manga: Manga): UniFile {
         return downloadsDir
-                .subFile(getSourceDirName(source))!!
-                .subFile(getMangaDirName(manga))!!
+                .createDirectory(getSourceDirName(source))
+                .createDirectory(getMangaDirName(manga))
     }
 
     /**

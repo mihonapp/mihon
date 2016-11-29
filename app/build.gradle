@@ -38,7 +38,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 14
+        versionCode 15
         versionName "0.3.2"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
@@ -112,12 +112,6 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
 
-    // Job scheduling
-    compile 'com.evernote:android-job:1.1.3'
-    compile 'com.google.android.gms:play-services-gcm:9.8.0'
-
-    compile 'com.github.seven332:unifile:0.2.0'
-
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.2.3'
@@ -145,11 +139,16 @@ dependencies {
     // JavaScript engine
     compile 'com.squareup.duktape:duktape-android:1.1.0'
 
-    // Disk cache
+    // Disk
     compile 'com.jakewharton:disklrucache:2.0.2'
+    compile 'com.github.seven332:unifile:1.0.0'
 
     // HTML parser
     compile 'org.jsoup:jsoup:1.10.1'
+
+    // Job scheduling
+    compile 'com.evernote:android-job:1.1.3'
+    compile 'com.google.android.gms:play-services-gcm:10.0.0'
 
     // Changelog
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'

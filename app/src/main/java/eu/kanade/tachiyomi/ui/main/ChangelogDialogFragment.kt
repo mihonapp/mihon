@@ -14,22 +14,28 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView
+import java.io.File
 
 class ChangelogDialogFragment : DialogFragment() {
 
     companion object {
-        fun show(preferences: PreferencesHelper, fragmentManager: FragmentManager) {
+        fun show(context: Context, preferences: PreferencesHelper, fm: FragmentManager) {
             val oldVersion = preferences.lastVersionCode().getOrDefault()
             if (oldVersion < BuildConfig.VERSION_CODE) {
                 preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
-                ChangelogDialogFragment().show(fragmentManager, "changelog")
+                ChangelogDialogFragment().show(fm, "changelog")
 
-                // FIXME Ugly check to restore jobs. Remove me in a few months :D
+                // TODO better upgrades management
                 if (oldVersion < 14) {
+                    // Restore jobs after upgrading to evernote's job scheduler.
                     if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
                         UpdateCheckerJob.setupTask()
                     }
                     LibraryUpdateJob.setupTask()
+                }
+                if (oldVersion < 15) {
+                    // Delete internal chapter cache dir.
+                    File(context.cacheDir, "chapter_disk_cache").deleteRecursively()
                 }
             }
         }

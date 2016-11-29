@@ -480,7 +480,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         val intent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_STREAM, page.uri)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
             type = "image/*"
         }
         startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
