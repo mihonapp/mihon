@@ -12,6 +12,9 @@ class Page(
         @Transient var uri: Uri? = null
 ) : ProgressListener {
 
+    val number: Int
+        get() = index + 1
+
     @Transient lateinit var chapter: ReaderChapter
 
     @Transient @Volatile var status: Int = 0

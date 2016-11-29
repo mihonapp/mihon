@@ -331,7 +331,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     fun onPageChanged(page: Page) {
         presenter.onPageChanged(page)
 
-        val pageNumber = page.index + 1
+        val pageNumber = page.number
         val pageCount = page.chapter.pages!!.size
         page_number.text = "$pageNumber/$pageCount"
         if (page_seekbar.rotation != 180f) {
