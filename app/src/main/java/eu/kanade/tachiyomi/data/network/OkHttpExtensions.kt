@@ -12,12 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 fun Call.asObservable(): Observable<Response> {
     return Observable.create { subscriber ->
         // Since Call is a one-shot type, clone it for each new subscriber.
-        val call = if (!isExecuted) this else {
-            // TODO use clone method in OkHttp 3.5
-            val field = javaClass.getDeclaredField("client").apply { isAccessible = true }
-            val client = field.get(this) as OkHttpClient
-            client.newCall(request())
-        }
+        val call = clone()
 
         // Wrap the call in a helper which handles both unsubscription and backpressure.
         val requestArbiter = object : AtomicBoolean(), Producer, Subscription {
