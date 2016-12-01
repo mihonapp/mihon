@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.ui.category
 
 import android.os.Bundle
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.toast
 import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
 
@@ -15,37 +17,23 @@ import uy.kohesive.injekt.injectLazy
 class CategoryPresenter : BasePresenter<CategoryActivity>() {
 
     /**
-     * Used to connect to database
+     * Used to connect to database.
      */
-    val db: DatabaseHelper by injectLazy()
+    private val db: DatabaseHelper by injectLazy()
 
     /**
-     * List containing categories
+     * List containing categories.
      */
-    private var categories: List<Category>? = null
-
-    companion object {
-        /**
-         * The id of the restartable.
-         */
-        final private val GET_CATEGORIES = 1
-    }
+    private var categories: List<Category> = emptyList()
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        // Get categories as list
-        restartableLatestCache(GET_CATEGORIES,
-                {
-                    db.getCategories().asRxObservable()
-                            .doOnNext { categories -> this.categories = categories }
-                            .observeOn(AndroidSchedulers.mainThread())
-                }, CategoryActivity::setCategories)
-
-        // Start get categories as list task
-        start(GET_CATEGORIES)
+        db.getCategories().asRxObservable()
+                .doOnNext { categories = it }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeLatestCache(CategoryActivity::setCategories)
     }
-
 
     /**
      * Create category and add it to database
@@ -53,19 +41,17 @@ class CategoryPresenter : BasePresenter<CategoryActivity>() {
      * @param name name of category
      */
     fun createCategory(name: String) {
+        // Do not allow duplicate categories.
+        if (categories.any { it.name.equals(name, true) }) {
+            context.toast(R.string.error_category_exists)
+            return
+        }
+
         // Create category.
         val cat = Category.create(name)
 
         // Set the new item in the last position.
-        var max = 0
-        if (categories != null) {
-            for (cat2 in categories!!) {
-                if (cat2.order > max) {
-                    max = cat2.order + 1
-                }
-            }
-        }
-        cat.order = max
+        cat.order = categories.map { it.order + 1 }.max() ?: 0
 
         // Insert into database.
         db.insertCategory(cat).asRxObservable().subscribe()
@@ -86,8 +72,8 @@ class CategoryPresenter : BasePresenter<CategoryActivity>() {
      * @param categories list of categories
      */
     fun reorderCategories(categories: List<Category>) {
-        for (i in categories.indices) {
-            categories[i].order = i
+        categories.forEachIndexed { i, category ->
+            category.order = i
         }
 
         db.insertCategories(categories).asRxObservable().subscribe()
@@ -100,6 +86,12 @@ class CategoryPresenter : BasePresenter<CategoryActivity>() {
      * @param name new name of category
      */
     fun renameCategory(category: Category, name: String) {
+        // Do not allow duplicate categories.
+        if (categories.any { it.name.equals(name, true) }) {
+            context.toast(R.string.error_category_exists)
+            return
+        }
+
         category.name = name
         db.insertCategory(category).asRxObservable().subscribe()
     }
