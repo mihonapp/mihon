@@ -64,7 +64,10 @@
     public <init>(android.content.Context);
 }
 
-## GSON 2.2.4 specific rules ##
+# ReactiveNetwork
+-dontwarn com.github.pwittchen.reactivenetwork.**
+
+## GSON ##
 
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
@@ -73,55 +76,18 @@
 # For using GSON @Expose annotation
 -keepattributes *Annotation*
 
--keepattributes EnclosingMethod
-
 # Gson specific classes
 -keep class sun.misc.Unsafe { *; }
--keep class com.google.gson.stream.** { *; }
+#-keep class com.google.gson.stream.** { *; }
 
-## ACRA 4.5.0 specific rules ##
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { *; }
 
-# we need line numbers in our stack traces otherwise they are pretty useless
--renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
-
-# ACRA needs "annotations" so add this...
--keepattributes *Annotation*
-
-# keep this class so that logging will show 'ACRA' and not a obfuscated name like 'a'.
-# Note: if you are removing log messages elsewhere in this file then this isn't necessary
--keep class org.acra.ACRA {
-	*;
-}
-
-# keep this around for some enums that ACRA needs
--keep class org.acra.ReportingInteractionMode {
-    *;
-}
-
--keepnames class org.acra.sender.HttpSender$** {
-    *;
-}
-
--keepnames class org.acra.ReportField {
-    *;
-}
-
-# keep this otherwise it is removed by ProGuard
--keep public class org.acra.ErrorReporter {
-    public void addCustomData(java.lang.String,java.lang.String);
-    public void putCustomData(java.lang.String,java.lang.String);
-    public void removeCustomData(java.lang.String);
-}
-
-# keep this otherwise it is removed by ProGuard
--keep public class org.acra.ErrorReporter {
-    public void handleSilentException(java.lang.Throwable);
-}
-
-# Keep the support library
--keep class org.acra.** { *; }
--keep interface org.acra.** { *; }
+# Prevent proguard from stripping interface information from TypeAdapterFactory,
+# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
 
 # SnakeYaml
 -keep class org.yaml.snakeyaml.** { public protected private *; }
