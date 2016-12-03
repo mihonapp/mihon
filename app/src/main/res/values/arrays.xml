@@ -67,9 +67,9 @@
     </string-array>
 
     <string-array name="image_decoders">
+        <item>Image</item>
         <item>Rapid</item>
         <item>Skia</item>
-        <item>Image</item>
     </string-array>
 
     <string-array name="image_decoders_values">

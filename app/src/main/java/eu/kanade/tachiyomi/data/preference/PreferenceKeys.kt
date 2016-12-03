@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.R
  * in the file "keys.xml". By using this class we can define preferences in one place and get them
  * referenced here.
  */
+@Suppress("HasPlatformType")
 class PreferenceKeys(context: Context) {
 
     val theme = context.getString(R.string.pref_theme_key)
@@ -94,6 +95,6 @@ class PreferenceKeys(context: Context) {
 
     fun syncPassword(syncId: Int) = "pref_mangasync_password_$syncId"
 
-    val  libraryAsList = context.getString(R.string.pref_display_library_as_list)
+    val libraryAsList = context.getString(R.string.pref_display_library_as_list)
 
 }

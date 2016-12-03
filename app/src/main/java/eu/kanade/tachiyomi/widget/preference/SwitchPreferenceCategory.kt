@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.widget.preference
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.TypedArray
-import android.os.Build
 import android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH
 import android.support.v7.preference.PreferenceViewHolder
 import android.support.v7.widget.SwitchCompat
@@ -11,7 +10,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.Checkable
 import android.widget.CompoundButton
-import android.widget.Switch
 import eu.kanade.tachiyomi.util.getResourceColor
 import net.xpece.android.support.preference.PreferenceCategory
 import net.xpece.android.support.preference.R
@@ -52,15 +50,11 @@ CompoundButton.OnCheckedChangeListener {
 
             if (view is SwitchCompat) {
                 view.setOnCheckedChangeListener(null)
-            } else if (NATIVE_SWITCH_CAPABLE && view is Switch) {
-                view.setOnCheckedChangeListener(null)
             }
 
             view.toggle()
 
             if (view is SwitchCompat) {
-                view.setOnCheckedChangeListener(this)
-            } else if (NATIVE_SWITCH_CAPABLE && view is Switch) {
                 view.setOnCheckedChangeListener(this)
             }
         }
@@ -128,10 +122,6 @@ CompoundButton.OnCheckedChangeListener {
             getPersistedBoolean(mChecked)
         else
             defaultValue as Boolean)
-    }
-
-    companion object {
-        private val NATIVE_SWITCH_CAPABLE = Build.VERSION.SDK_INT >= ICE_CREAM_SANDWICH
     }
 
 }
