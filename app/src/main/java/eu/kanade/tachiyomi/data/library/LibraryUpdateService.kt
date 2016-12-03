@@ -319,7 +319,7 @@ class LibraryUpdateService : Service() {
      * @return the body of the notification to display.
      */
     private fun getUpdatedMangasBody(updates: List<Manga>, failedUpdates: List<Manga>): String {
-        return with(StringBuilder()) {
+        return buildString {
             if (updates.isEmpty()) {
                 append(getString(R.string.notification_no_new_chapters))
                 append("\n")
@@ -327,7 +327,7 @@ class LibraryUpdateService : Service() {
                 append(getString(R.string.notification_new_chapters))
                 for (manga in updates) {
                     append("\n")
-                    append(manga.title.chop(30))
+                    append(manga.title.chop(45))
                 }
             }
             if (!failedUpdates.isEmpty()) {
@@ -335,10 +335,9 @@ class LibraryUpdateService : Service() {
                 append(getString(R.string.notification_manga_update_failed))
                 for (manga in failedUpdates) {
                     append("\n")
-                    append(manga.title.chop(30))
+                    append(manga.title.chop(45))
                 }
             }
-            toString()
         }
     }
 

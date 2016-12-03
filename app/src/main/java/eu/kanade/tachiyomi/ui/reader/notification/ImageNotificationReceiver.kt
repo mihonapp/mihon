@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.content.FileProvider
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.notificationManager
 import java.io.File
@@ -61,7 +62,7 @@ class ImageNotificationReceiver : BroadcastReceiver() {
     private fun showImage(context: Context, path: String) {
         val intent = Intent(Intent.ACTION_VIEW).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-            val uri = FileProvider.getUriForFile(context, "eu.kanade.tachiyomi.provider", File(path))
+            val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", File(path))
             setDataAndType(uri, "image/*")
         }
         context.startActivity(intent)

@@ -26,6 +26,8 @@ class ChangelogDialogFragment : DialogFragment() {
                 ChangelogDialogFragment().show(fm, "changelog")
 
                 // TODO better upgrades management
+                if (oldVersion == 0) return
+
                 if (oldVersion < 14) {
                     // Restore jobs after upgrading to evernote's job scheduler.
                     if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {

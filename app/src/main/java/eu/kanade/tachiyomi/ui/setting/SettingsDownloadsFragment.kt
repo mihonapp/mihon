@@ -83,10 +83,11 @@ class SettingsDownloadsFragment : SettingsFragment() {
 
         subscriptions += preferences.downloadsDirectory().asObservable()
                 .subscribe { path ->
-                    downloadDirPref.summary = path
+                    val dir = UniFile.fromUri(context, Uri.parse(path))
+
+                    downloadDirPref.summary = dir.filePath ?: path
 
                     // Don't display downloaded chapters in gallery apps creating a ".nomedia" file.
-                    val dir = UniFile.fromUri(context, Uri.parse(path))
                     if (dir != null && dir.exists()) {
                         dir.createFile(".nomedia")
                     }
