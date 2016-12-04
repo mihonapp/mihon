@@ -21,7 +21,7 @@ import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.util.NoSuchElementException
+import java.util.*
 
 /**
  * Presenter of [CatalogueFragment].

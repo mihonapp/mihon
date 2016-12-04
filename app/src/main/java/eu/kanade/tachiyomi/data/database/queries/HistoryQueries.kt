@@ -40,6 +40,15 @@ interface HistoryQueries : DbProvider {
                     .build())
             .prepare()
 
+    fun getLastHistoryByMangaId(mangaId: Long) = db.get()
+            .`object`(History::class.java)
+            .withQuery(RawQuery.builder()
+                    .query(getLastHistoryByMangaId())
+                    .args(mangaId)
+                    .observesTables(HistoryTable.TABLE)
+                    .build())
+            .prepare()
+
 
     /**
      * Updates the history last read.

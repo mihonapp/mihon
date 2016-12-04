@@ -251,7 +251,13 @@ class LibraryUpdateService : Service() {
                             .map { manga }
                 }
                 // Add manga with new chapters to the list.
-                .doOnNext { newUpdates.add(it) }
+                .doOnNext { manga ->
+                    // Set last updated time
+                    manga.last_update = Date().time
+                    db.updateLastUpdated(manga).executeAsBlocking()
+                    // Add to the list
+                    newUpdates.add(manga)
+                }
                 // Notify result of the overall update.
                 .doOnCompleted {
                     if (newUpdates.isEmpty()) {
