@@ -23,7 +23,7 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
     /**
      * The list of manga in this category.
      */
-    private var mangas: List<Manga>? = null
+    private var mangas: List<Manga> = emptyList()
 
     init {
         setHasStableIds(true)
@@ -37,7 +37,7 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
     fun setItems(list: List<Manga>) {
         mItems = list
 
-        // A copy of manga that it's always unfiltered
+        // A copy of manga always unfiltered.
         mangas = ArrayList(list)
         updateDataSet(null)
     }
@@ -58,10 +58,8 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
      * @param param the filter. Not used.
      */
     override fun updateDataSet(param: String?) {
-        mangas?.let {
-            filterItems(it)
-            notifyDataSetChanged()
-        }
+        filterItems(mangas)
+        notifyDataSetChanged()
     }
 
     /**

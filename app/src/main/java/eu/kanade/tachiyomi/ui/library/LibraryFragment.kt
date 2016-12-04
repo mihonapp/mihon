@@ -153,7 +153,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         if (savedState != null) {
             activeCategory = savedState.getInt(CATEGORY_KEY)
             query = savedState.getString(QUERY_KEY)
-            presenter.searchSubject.onNext(query)
+            presenter.searchSubject.call(query)
             if (presenter.selectedMangas.isNotEmpty()) {
                 createActionModeIfNeeded()
             }
@@ -301,7 +301,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Applies filter change
      */
     private fun onFilterOrSortChanged() {
-        presenter.resubscribeLibrary()
+        presenter.requestLibraryUpdate()
         activity.supportInvalidateOptionsMenu()
     }
 
@@ -346,7 +346,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
         // Notify the subject the query has changed.
         if (isResumed) {
-            presenter.searchSubject.onNext(query)
+            presenter.searchSubject.call(query)
         }
     }
 
@@ -374,7 +374,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         view_pager.post { if (isAdded) tabs.setScrollPosition(view_pager.currentItem, 0f, true) }
 
         // Send the manga map to child fragments after the adapter is updated.
-        presenter.libraryMangaSubject.onNext(LibraryMangaEvent(mangaMap))
+        presenter.libraryMangaSubject.call(LibraryMangaEvent(mangaMap))
     }
 
     /**

@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.library
 
 import android.os.Bundle
 import android.util.Pair
+import com.jakewharton.rxrelay.BehaviorRelay
+import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -13,11 +15,11 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import rx.Observable
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
-import rx.subjects.PublishSubject
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import java.io.InputStream
@@ -27,6 +29,31 @@ import java.util.*
  * Presenter of [LibraryFragment].
  */
 class LibraryPresenter : BasePresenter<LibraryFragment>() {
+
+    /**
+     * Database.
+     */
+    private val db: DatabaseHelper by injectLazy()
+
+    /**
+     * Preferences.
+     */
+    private val preferences: PreferencesHelper by injectLazy()
+
+    /**
+     * Cover cache.
+     */
+    private val coverCache: CoverCache by injectLazy()
+
+    /**
+     * Source manager.
+     */
+    private val sourceManager: SourceManager by injectLazy()
+
+    /**
+     * Download manager.
+     */
+    private val downloadManager: DownloadManager by injectLazy()
 
     /**
      * Categories of the library.
@@ -41,61 +68,52 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Search query of the library.
      */
-    val searchSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    val searchSubject: BehaviorRelay<String> = BehaviorRelay.create()
 
     /**
      * Subject to notify the library's viewpager for updates.
      */
-    val libraryMangaSubject: BehaviorSubject<LibraryMangaEvent> = BehaviorSubject.create()
+    val libraryMangaSubject: BehaviorRelay<LibraryMangaEvent> = BehaviorRelay.create()
 
     /**
      * Subject to notify the UI of selection updates.
      */
-    val selectionSubject: PublishSubject<LibrarySelectionEvent> = PublishSubject.create()
+    val selectionSubject: PublishRelay<LibrarySelectionEvent> = PublishRelay.create()
 
     /**
-     * Database.
+     * Relay used to apply the UI filters to the last emission of the library.
      */
-    val db: DatabaseHelper by injectLazy()
+    private val updateTriggerRelay = BehaviorRelay.create(Unit)
 
     /**
-     * Preferences.
+     * Library subscription.
      */
-    val preferences: PreferencesHelper by injectLazy()
-
-    /**
-     * Cover cache.
-     */
-    val coverCache: CoverCache by injectLazy()
-
-    /**
-     * Source manager.
-     */
-    val sourceManager: SourceManager by injectLazy()
-
-    /**
-     * Download manager.
-     */
-    val downloadManager: DownloadManager by injectLazy()
-
-    companion object {
-        /**
-         * Id of the restartable that listens for library updates.
-         */
-        const val GET_LIBRARY = 1
-    }
+    private var librarySubscription: Subscription? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
+        subscribeLibrary()
+    }
 
-        restartableLatestCache(GET_LIBRARY,
-                { getLibraryObservable() },
-                { view, pair -> view.onNextLibraryUpdate(pair.first, pair.second) })
-
-        if (savedState == null) {
-            start(GET_LIBRARY)
+    /**
+     * Subscribes to library if needed.
+     */
+    fun subscribeLibrary() {
+        if (librarySubscription.isNullOrUnsubscribed()) {
+            librarySubscription = Observable.combineLatest(getLibraryObservable(),
+                    updateTriggerRelay.observeOn(Schedulers.io()),
+                    { library, updateTrigger -> library })
+                    .map { Pair(it.first, applyFilters(it.second)) }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeLatestCache({ view, pair -> view.onNextLibraryUpdate(pair.first, pair.second) })
         }
+    }
 
+    private fun applyFilters(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
+        return map.mapValues { entry -> entry.value
+                .filter { filterManga(it) }
+                .sortedWith(Comparator<Manga> { m1, m2 -> sortManga(m1, m2) })
+        }
     }
 
     /**
@@ -103,7 +121,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      *
      * @return an observable of the categories and its manga.
      */
-    fun getLibraryObservable(): Observable<Pair<List<Category>, Map<Int, List<Manga>>>> {
+    private fun getLibraryObservable(): Observable<Pair<List<Category>, Map<Int, List<Manga>>>> {
         return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable(),
                 { dbCategories, libraryManga ->
                     val categories = if (libraryManga.containsKey(0))
@@ -114,7 +132,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
                     this.categories = categories
                     Pair(categories, libraryManga)
                 })
-                .observeOn(AndroidSchedulers.mainThread())
     }
 
     /**
@@ -122,7 +139,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      *
      * @return an observable of the categories.
      */
-    fun getCategoriesObservable(): Observable<List<Category>> {
+    private fun getCategoriesObservable(): Observable<List<Category>> {
         return db.getCategories().asRxObservable()
     }
 
@@ -132,34 +149,16 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * @return an observable containing a map with the category id as key and a list of manga as the
      * value.
      */
-    fun getLibraryMangasObservable(): Observable<Map<Int, List<Manga>>> {
+    private fun getLibraryMangasObservable(): Observable<Map<Int, List<Manga>>> {
         return db.getLibraryMangas().asRxObservable()
-                .flatMap {
-                    Observable.from(it)
-                            // Filter library by options
-                            .filter { filterManga(it) }
-                            .toSortedList { manga1, manga2 -> sortManga(manga1, manga2) }
-                            .flatMap { Observable.from(it) }
-                            .groupBy { it.category }
-                            .flatMap { group -> group.toList().map { Pair(group.key, it) } }
-                            .toMap({ it.first }, { it.second })
-                }
+                .map { list -> list.groupBy { it.category } }
     }
 
     /**
-     * Resubscribes to library if needed.
+     * Requests the library to be filtered.
      */
-    fun subscribeLibrary() {
-        if (isUnsubscribed(GET_LIBRARY)) {
-            start(GET_LIBRARY)
-        }
-    }
-
-    /**
-     * Resubscribes to library.
-     */
-    fun resubscribeLibrary() {
-        start(GET_LIBRARY)
+    fun requestLibraryUpdate() {
+        updateTriggerRelay.call(Unit)
     }
 
     /**
@@ -238,7 +237,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     fun onOpenManga() {
         // Avoid further db updates for the library when it's not needed
-        stop(GET_LIBRARY)
+        librarySubscription?.let { remove(it) }
     }
 
     /**
@@ -250,10 +249,10 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     fun setSelection(manga: Manga, selected: Boolean) {
         if (selected) {
             selectedMangas.add(manga)
-            selectionSubject.onNext(LibrarySelectionEvent.Selected(manga))
+            selectionSubject.call(LibrarySelectionEvent.Selected(manga))
         } else {
             selectedMangas.remove(manga)
-            selectionSubject.onNext(LibrarySelectionEvent.Unselected(manga))
+            selectionSubject.call(LibrarySelectionEvent.Unselected(manga))
         }
     }
 
@@ -262,7 +261,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     fun clearSelections() {
         selectedMangas.clear()
-        selectionSubject.onNext(LibrarySelectionEvent.Cleared())
+        selectionSubject.call(LibrarySelectionEvent.Cleared())
     }
 
     /**
