@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.preference.invert
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -75,21 +76,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     private var selectedCoverManga: Manga? = null
 
     /**
-     * Status of isFilterDownloaded
-     */
-    var isFilterDownloaded = false
-
-    /**
-     * Status of isFilterUnread
-     */
-    var isFilterUnread = false
-
-    /**
-     * Sorting mode for library
-     */
-    var sortingMode = 0
-
-    /**
      * Number of manga per row in grid mode.
      */
     var mangaPerRow = 0
@@ -129,9 +115,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         setHasOptionsMenu(true)
-        isFilterDownloaded = preferences.filterDownloaded().getOrDefault()
-        isFilterUnread = preferences.filterUnread().getOrDefault()
-        sortingMode = preferences.librarySortingMode().getOrDefault()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
@@ -203,11 +186,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         val sortModeLastUpdated = menu.findItem(R.id.action_sort_last_updated)
 
         // Set correct checkbox filter
-        filterDownloadedItem.isChecked = isFilterDownloaded
-        filterUnreadItem.isChecked = isFilterUnread
+        filterDownloadedItem.isChecked = preferences.filterDownloaded().getOrDefault()
+        filterUnreadItem.isChecked = preferences.filterUnread().getOrDefault()
 
         // Set correct radio button sort
-        when (sortingMode) {
+        when (preferences.librarySortingMode().getOrDefault()) {
             Constants.SORT_LIBRARY_ALPHA -> sortModeAlpha.isChecked = true
             Constants.SORT_LIBRARY_LAST_READ -> sortModeLastRead.isChecked = true
             Constants.SORT_LIBRARY_LAST_UPDATED -> sortModeLastUpdated.isChecked = true
@@ -243,44 +226,34 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter_unread -> {
-                // Change unread filter status.
-                isFilterUnread = !isFilterUnread
                 // Update settings.
-                preferences.filterUnread().set(isFilterUnread)
+                preferences.filterUnread().invert()
                 // Apply filter.
                 onFilterOrSortChanged()
             }
             R.id.action_filter_downloaded -> {
-                // Change downloaded filter status.
-                isFilterDownloaded = !isFilterDownloaded
                 // Update settings.
-                preferences.filterDownloaded().set(isFilterDownloaded)
+                preferences.filterDownloaded().invert()
                 // Apply filter.
                 onFilterOrSortChanged()
             }
             R.id.action_filter_empty -> {
-                // Remove filter status.
-                isFilterUnread = false
-                isFilterDownloaded = false
                 // Update settings.
-                preferences.filterUnread().set(isFilterUnread)
-                preferences.filterDownloaded().set(isFilterDownloaded)
+                preferences.filterUnread().set(false)
+                preferences.filterDownloaded().set(false)
                 // Apply filter
                 onFilterOrSortChanged()
             }
             R.id.action_sort_alpha -> {
-                sortingMode = Constants.SORT_LIBRARY_ALPHA
-                preferences.librarySortingMode().set(sortingMode)
+                preferences.librarySortingMode().set(Constants.SORT_LIBRARY_ALPHA)
                 onFilterOrSortChanged()
             }
             R.id.action_sort_last_read -> {
-                sortingMode = Constants.SORT_LIBRARY_LAST_READ
-                preferences.librarySortingMode().set(sortingMode)
+                preferences.librarySortingMode().set(Constants.SORT_LIBRARY_LAST_READ)
                 onFilterOrSortChanged()
             }
             R.id.action_sort_last_updated -> {
-                sortingMode = Constants.SORT_LIBRARY_LAST_UPDATED
-                preferences.librarySortingMode().set(sortingMode)
+                preferences.librarySortingMode().set(Constants.SORT_LIBRARY_LAST_UPDATED)
                 onFilterOrSortChanged()
             }
             R.id.action_library_display_mode -> swapDisplayMode()

@@ -105,7 +105,8 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
                     { library, updateTrigger -> library })
                     .map { Pair(it.first, applyFilters(it.second)) }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeLatestCache({ view, pair -> view.onNextLibraryUpdate(pair.first, pair.second) })
+                    .subscribeLatestCache(
+                            { view, pair -> view.onNextLibraryUpdate(pair.first, pair.second) })
         }
     }
 
