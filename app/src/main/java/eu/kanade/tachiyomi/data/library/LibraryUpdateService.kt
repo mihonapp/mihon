@@ -13,7 +13,10 @@ import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Companion.start
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -52,6 +55,8 @@ class LibraryUpdateService : Service() {
      * Preferences.
      */
     val preferences: PreferencesHelper by injectLazy()
+
+    val downloadManager: DownloadManager by injectLazy()
 
     /**
      * Wake lock that will be held until the service is destroyed.
@@ -243,10 +248,15 @@ class LibraryUpdateService : Service() {
                             // If there's any error, return empty update and continue.
                             .onErrorReturn {
                                 failedUpdates.add(manga)
-                                Pair(0, 0)
+                                Pair(emptyList<Chapter>(), emptyList<Chapter>())
                             }
                             // Filter out mangas without new chapters (or failed).
-                            .filter { pair -> pair.first > 0 }
+                            .filter { pair -> pair.first.size > 0 }
+                            .doOnNext {
+                                if (preferences.downloadNew()) {
+                                    downloadChapters(manga, it.first)
+                                }
+                            }
                             // Convert to the manga that contains new chapters.
                             .map { manga }
                 }
@@ -263,9 +273,21 @@ class LibraryUpdateService : Service() {
                     if (newUpdates.isEmpty()) {
                         cancelNotification()
                     } else {
+                        if (preferences.downloadNew()) {
+                            DownloadService.start(this)
+                        }
                         showResultNotification(newUpdates, failedUpdates)
                     }
                 }
+    }
+
+    fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
+        // we need to get the chapters from the db so we have chapter ids
+        val mangaChapters = db.getChapters(manga).executeAsBlocking()
+        val dbChapters = chapters.map {
+            mangaChapters.find { mangaChapter -> mangaChapter.url == it.url }!!
+        }
+        downloadManager.downloadChapters(manga, dbChapters)
     }
 
     /**
@@ -274,7 +296,7 @@ class LibraryUpdateService : Service() {
      * @param manga the manga to update.
      * @return a pair of the inserted and removed chapters.
      */
-    fun updateManga(manga: Manga): Observable<Pair<Int, Int>> {
+    fun updateManga(manga: Manga): Observable<Pair<List<Chapter>, List<Chapter>>> {
         val source = sourceManager.get(manga.source) as? OnlineSource ?: return Observable.empty()
         return source.fetchChapterList(manga)
                 .map { syncChaptersWithSource(db, it, manga, source) }
