@@ -46,13 +46,22 @@ class DownloadProvider(private val context: Context) {
     }
 
     /**
+     * Returns the download directory for a source if it exists.
+     *
+     * @param source the source to query.
+     */
+    fun findSourceDir(source: Source): UniFile? {
+        return downloadsDir.findFile(getSourceDirName(source))
+    }
+
+    /**
      * Returns the download directory for a manga if it exists.
      *
      * @param source the source of the manga.
      * @param manga the manga to query.
      */
     fun findMangaDir(source: Source, manga: Manga): UniFile? {
-        val sourceDir = downloadsDir.findFile(getSourceDirName(source))
+        val sourceDir = findSourceDir(source)
         return sourceDir?.findFile(getMangaDirName(manga))
     }
 

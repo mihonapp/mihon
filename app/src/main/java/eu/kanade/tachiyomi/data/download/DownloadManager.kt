@@ -111,12 +111,30 @@ class DownloadManager(context: Context) {
     }
 
     /**
+     * Returns the directory name for a manga.
+     *
+     * @param manga the manga to query.
+     */
+    fun getMangaDirName(manga: Manga): String {
+        return provider.getMangaDirName(manga)
+    }
+
+    /**
      * Returns the directory name for the given chapter.
      *
      * @param chapter the chapter to query.
      */
     fun getChapterDirName(chapter: Chapter): String {
         return provider.getChapterDirName(chapter)
+    }
+
+    /**
+     * Returns the download directory for a source if it exists.
+     *
+     * @param source the source to query.
+     */
+    fun findSourceDir(source: Source): UniFile? {
+        return provider.findSourceDir(source)
     }
 
     /**

@@ -156,14 +156,29 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * @param chapters the list of chapter from the database.
      */
     private fun setDownloadedChapters(chapters: List<RecentChapter>) {
-        val cachedDirs = mutableMapOf<Long, UniFile?>()
+        // Cached list of downloaded manga directories.
+        val mangaDirectories = mutableMapOf<Int, Array<UniFile>?>()
 
-        chapters.forEach { chapter ->
+        // Cached list of downloaded chapter directories for a manga.
+        val chapterDirectories = mutableMapOf<Long, Array<UniFile>?>()
+
+        for (chapter in chapters) {
             val manga = chapter.manga
-            val mangaDir = cachedDirs.getOrPut(manga.id!!)
-                    { downloadManager.findMangaDir(sourceManager.get(manga.source)!!, manga) }
+            val source = sourceManager.get(manga.source) ?: continue
 
-            if (mangaDir?.findFile(downloadManager.getChapterDirName(chapter)) != null) {
+            val mangaDirs = mangaDirectories.getOrPut(source.id) {
+                downloadManager.findSourceDir(source)?.listFiles()
+            } ?: continue
+
+            val mangaDirName = downloadManager.getMangaDirName(manga)
+            val mangaDir = mangaDirs.find { it.name == mangaDirName } ?: continue
+
+            val chapterDirs = chapterDirectories.getOrPut(manga.id!!) {
+                mangaDir.listFiles()
+            } ?: continue
+
+            val chapterDirName = downloadManager.getChapterDirName(chapter)
+            if (chapterDirs.any { it.name == chapterDirName }) {
                 chapter.status = Download.DOWNLOADED
             }
         }
