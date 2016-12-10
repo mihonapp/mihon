@@ -234,7 +234,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 .itemsIds(R.array.reader_image_options_values)
                 .itemsCallback { materialDialog, view, i, charSequence ->
                     when (i) {
-                        0 -> presenter.setCover(page)
+                        0 -> setImageAsCover(page)
                         1 -> shareImage(page)
                         2 -> presenter.savePage(page)
                     }
@@ -316,14 +316,14 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         val mangaViewer = if (manga.viewer == 0) preferences.defaultViewer() else manga.viewer
 
         // Try to reuse the viewer using its tag
-        var fragment: BaseReader? = supportFragmentManager.findFragmentByTag(manga.viewer.toString()) as? BaseReader
+        var fragment = supportFragmentManager.findFragmentByTag(manga.viewer.toString()) as? BaseReader
         if (fragment == null) {
             // Create a new viewer
-            when (mangaViewer) {
-                RIGHT_TO_LEFT -> fragment = RightToLeftReader()
-                VERTICAL -> fragment = VerticalReader()
-                WEBTOON -> fragment = WebtoonReader()
-                else -> fragment = LeftToRightReader()
+            fragment = when (mangaViewer) {
+                RIGHT_TO_LEFT -> RightToLeftReader()
+                VERTICAL -> VerticalReader()
+                WEBTOON -> WebtoonReader()
+                else -> LeftToRightReader()
             }
 
             supportFragmentManager.beginTransaction().replace(R.id.reader, fragment, manga.viewer.toString()).commit()
@@ -473,23 +473,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     /**
-     * Start a share intent that lets user share image
-     *
-     * @param page page object containing image information.
-     */
-    fun shareImage(page: Page) {
-        if (page.status != Page.READY)
-            return
-
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            putExtra(Intent.EXTRA_STREAM, page.uri)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-            type = "image/*"
-        }
-        startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
-    }
-
-    /**
      * Sets the brightness of the screen. Range is [-75, 100].
      * From -75 to -1 a semi-transparent black view is shown at the top with the minimum brightness.
      * From 1 to 100 it sets that value as brightness.
@@ -571,6 +554,41 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 reader_menu_bottom.startAnimation(bottomMenuAnimation)
             }
         }
+    }
+
+    /**
+     * Start a share intent that lets user share image
+     *
+     * @param page page object containing image information.
+     */
+    private fun shareImage(page: Page) {
+        if (page.status != Page.READY)
+            return
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_STREAM, page.uri)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            type = "image/*"
+        }
+        startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
+    }
+
+    /**
+     * Sets the given page as the cover of the manga.
+     *
+     * @param page the page containing the image to set as cover.
+     */
+    private fun setImageAsCover(page: Page) {
+        if (page.status != Page.READY)
+            return
+
+        MaterialDialog.Builder(this)
+                .content(getString(R.string.confirm_set_image_as_cover))
+                .positiveText(android.R.string.yes)
+                .negativeText(android.R.string.no)
+                .onPositive { dialog, which -> presenter.setImageAsCover(page) }
+                .show()
+
     }
 
 }

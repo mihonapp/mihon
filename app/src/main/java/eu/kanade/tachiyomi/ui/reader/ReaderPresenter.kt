@@ -523,19 +523,13 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
     /**
      * Update cover with page file.
      */
-    internal fun setCover(page: Page) {
-        if (page.status != Page.READY)
-            return
-
+    internal fun setImageAsCover(page: Page) {
         try {
+            val thumbUrl = manga.thumbnail_url ?: throw Exception("Image url not found")
             if (manga.favorite) {
-                if (manga.thumbnail_url != null) {
-                    val input = context.contentResolver.openInputStream(page.uri)
-                    coverCache.copyToCache(manga.thumbnail_url!!, input)
-                    context.toast(R.string.cover_updated)
-                } else {
-                    throw Exception("Image url not found")
-                }
+                val input = context.contentResolver.openInputStream(page.uri)
+                coverCache.copyToCache(thumbUrl, input)
+                context.toast(R.string.cover_updated)
             } else {
                 context.toast(R.string.notification_first_add_to_library)
             }

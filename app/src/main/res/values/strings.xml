@@ -297,6 +297,7 @@
     <string name="no_previous_chapter">Previous chapter not found</string>
     <string name="decode_image_error">Image could not be loaded.\nTry changing the image decoder or with one of the options below</string>
     <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
+    <string name="confirm_set_image_as_cover">Do you want to set this image as the cover?</string>
     <string name="viewer_for_this_series">Viewer for this series</string>
 
     <!-- Backup fragment -->
