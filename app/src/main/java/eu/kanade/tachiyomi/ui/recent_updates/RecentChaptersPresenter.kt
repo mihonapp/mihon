@@ -43,43 +43,17 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      */
     private var chapters: List<RecentChapter>? = null
 
-    /**
-     * The id of the restartable.
-     */
-    val GET_RECENT_CHAPTERS = 1
-
-    /**
-     * The id of the restartable.
-     */
-    val CHAPTER_STATUS_CHANGES = 2
-
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        // Used to get recent chapters
-        restartableLatestCache(GET_RECENT_CHAPTERS,
-                { getRecentChaptersObservable() },
-                { view, chapters ->
-                    // Update adapter to show recent manga's
-                    view.onNextRecentChapters(chapters)
-                }
-        )
+        getRecentChaptersObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeLatestCache(RecentChaptersFragment::onNextRecentChapters)
 
-        // Used to update download status
-        restartableLatestCache(CHAPTER_STATUS_CHANGES,
-                { getChapterStatusObservable() },
-                { view, download ->
-                    // Set chapter status
-                    view.onChapterStatusChange(download)
-                },
-                { view, error -> Timber.e(error) }
-        )
+        getChapterStatusObservable()
+                .subscribeLatestCache(RecentChaptersFragment::onChapterStatusChange,
+                        { view, error -> Timber.e(error) })
 
-        if (savedState == null) {
-            // Start fetching recent chapters
-            start(GET_RECENT_CHAPTERS)
-            start(CHAPTER_STATUS_CHANGES)
-        }
     }
 
     /**
@@ -119,7 +93,6 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
                         }
                     }
                 }
-                .observeOn(AndroidSchedulers.mainThread())
     }
 
     /**
@@ -157,25 +130,25 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      */
     private fun setDownloadedChapters(chapters: List<RecentChapter>) {
         // Cached list of downloaded manga directories.
-        val mangaDirectories = mutableMapOf<Int, Array<UniFile>?>()
+        val mangaDirectories = mutableMapOf<Int, Array<UniFile>>()
 
         // Cached list of downloaded chapter directories for a manga.
-        val chapterDirectories = mutableMapOf<Long, Array<UniFile>?>()
+        val chapterDirectories = mutableMapOf<Long, Array<UniFile>>()
 
         for (chapter in chapters) {
             val manga = chapter.manga
             val source = sourceManager.get(manga.source) ?: continue
 
             val mangaDirs = mangaDirectories.getOrPut(source.id) {
-                downloadManager.findSourceDir(source)?.listFiles()
-            } ?: continue
+                downloadManager.findSourceDir(source)?.listFiles() ?: emptyArray()
+            }
 
             val mangaDirName = downloadManager.getMangaDirName(manga)
             val mangaDir = mangaDirs.find { it.name == mangaDirName } ?: continue
 
             val chapterDirs = chapterDirectories.getOrPut(manga.id!!) {
-                mangaDir.listFiles()
-            } ?: continue
+                mangaDir.listFiles() ?: emptyArray()
+            }
 
             val chapterDirName = downloadManager.getChapterDirName(chapter)
             if (chapterDirs.any { it.name == chapterDirName }) {
