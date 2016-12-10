@@ -19,11 +19,31 @@ class RightToLeftReader : PagerReader() {
         }
     }
 
-    override fun onLeftSideTap() {
+    /**
+     * Moves a page to the right.
+     */
+    override fun moveRight() {
+        moveToPrevious()
+    }
+
+    /**
+     * Moves a page to the left.
+     */
+    override fun moveLeft() {
         moveToNext()
     }
 
-    override fun onRightSideTap() {
+    /**
+     * Moves a page down.
+     */
+    override fun moveDown() {
+        moveToNext()
+    }
+
+    /**
+     * Moves a page up.
+     */
+    override fun moveUp() {
         moveToPrevious()
     }
 

@@ -57,7 +57,9 @@
             android:layout_gravity="bottom"
             android:gravity="center"
             android:background="?colorPrimary"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="false"
+            android:descendantFocusability="blocksDescendants">
 
             <ImageButton
                 android:id="@+id/left_chapter"

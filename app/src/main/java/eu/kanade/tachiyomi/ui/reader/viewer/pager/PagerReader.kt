@@ -177,9 +177,9 @@ abstract class PagerReader : BaseReader() {
                     val positionX = e.x
 
                     if (positionX < pager.width * LEFT_REGION) {
-                        if (tappingEnabled) onLeftSideTap()
+                        if (tappingEnabled) moveLeft()
                     } else if (positionX > pager.width * RIGHT_REGION) {
-                        if (tappingEnabled) onRightSideTap()
+                        if (tappingEnabled) moveRight()
                     } else {
                         readerActivity.toggleMenu()
                     }
@@ -258,23 +258,23 @@ abstract class PagerReader : BaseReader() {
     }
 
     /**
-     * Called when the left side of the screen was clicked.
+     * Moves a page to the right.
      */
-    protected open fun onLeftSideTap() {
-        moveToPrevious()
+    override fun moveRight() {
+        moveToNext()
     }
 
     /**
-     * Called when the right side of the screen was clicked.
+     * Moves a page to the left.
      */
-    protected open fun onRightSideTap() {
-        moveToNext()
+    override fun moveLeft() {
+        moveToPrevious()
     }
 
     /**
      * Moves to the next page or requests the next chapter if it's the last one.
      */
-    override fun moveToNext() {
+    protected fun moveToNext() {
         if (pager.currentItem != pager.adapter.count - 1) {
             pager.setCurrentItem(pager.currentItem + 1, transitions)
         } else {
@@ -285,7 +285,7 @@ abstract class PagerReader : BaseReader() {
     /**
      * Moves to the previous page or requests the previous chapter if it's the first one.
      */
-    override fun moveToPrevious() {
+    protected fun moveToPrevious() {
         if (pager.currentItem != 0) {
             pager.setCurrentItem(pager.currentItem - 1, transitions)
         } else {

@@ -189,7 +189,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 KeyEvent.KEYCODE_VOLUME_DOWN -> {
                     if (volumeKeysEnabled) {
                         if (event.action == KeyEvent.ACTION_UP) {
-                            viewer?.moveToNext()
+                            viewer?.moveDown()
                         }
                         return true
                     }
@@ -197,7 +197,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 KeyEvent.KEYCODE_VOLUME_UP -> {
                     if (volumeKeysEnabled) {
                         if (event.action == KeyEvent.ACTION_UP) {
-                            viewer?.moveToPrevious()
+                            viewer?.moveUp()
                         }
                         return true
                     }
@@ -210,12 +210,15 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
         if (!isFinishing) {
             when (keyCode) {
-                KeyEvent.KEYCODE_DPAD_RIGHT -> viewer?.moveToNext()
-                KeyEvent.KEYCODE_DPAD_LEFT -> viewer?.moveToPrevious()
+                KeyEvent.KEYCODE_DPAD_RIGHT -> viewer?.moveRight()
+                KeyEvent.KEYCODE_DPAD_LEFT -> viewer?.moveLeft()
+                KeyEvent.KEYCODE_DPAD_DOWN -> viewer?.moveDown()
+                KeyEvent.KEYCODE_DPAD_UP -> viewer?.moveUp()
                 KeyEvent.KEYCODE_MENU -> toggleMenu()
+                else -> return super.onKeyUp(keyCode, event)
             }
         }
-        return super.onKeyUp(keyCode, event)
+        return true
     }
 
     fun onChapterError(error: Throwable) {

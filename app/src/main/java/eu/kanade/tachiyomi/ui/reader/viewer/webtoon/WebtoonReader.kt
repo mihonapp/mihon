@@ -141,9 +141,9 @@ class WebtoonReader : BaseReader() {
                 val positionX = e.x
 
                 if (positionX < recycler.width * LEFT_REGION) {
-                    if (tappingEnabled) moveToPrevious()
+                    if (tappingEnabled) moveLeft()
                 } else if (positionX > recycler.width * RIGHT_REGION) {
-                    if (tappingEnabled) moveToNext()
+                    if (tappingEnabled) moveRight()
                 } else {
                     readerActivity.toggleMenu()
                 }
@@ -223,14 +223,14 @@ class WebtoonReader : BaseReader() {
     /**
      * Moves to the next page or requests the next chapter if it's the last one.
      */
-    override fun moveToNext() {
+    override fun moveRight() {
         recycler.smoothScrollBy(0, scrollDistance)
     }
 
     /**
      * Moves to the previous page or requests the previous chapter if it's the first one.
      */
-    override fun moveToPrevious() {
+    override fun moveLeft() {
         recycler.smoothScrollBy(0, -scrollDistance)
     }
 

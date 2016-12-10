@@ -189,14 +189,28 @@ abstract class BaseReader : BaseFragment() {
     abstract fun onChapterAppended(chapter: ReaderChapter)
 
     /**
-     * Moves pages forward. Implementations decide how to move (by a page, by some distance...).
+     * Moves pages to right. Implementations decide how to move (by a page, by some distance...).
      */
-    abstract fun moveToNext()
+    abstract fun moveRight()
 
     /**
-     * Moves pages backward. Implementations decide how to move (by a page, by some distance...).
+     * Moves pages to left. Implementations decide how to move (by a page, by some distance...).
      */
-    abstract fun moveToPrevious()
+    abstract fun moveLeft()
+
+    /**
+     * Moves pages down. Implementations decide how to move (by a page, by some distance...).
+     */
+    open fun moveDown() {
+        moveRight()
+    }
+
+    /**
+     * Moves pages up. Implementations decide how to move (by a page, by some distance...).
+     */
+    open fun moveUp() {
+        moveLeft()
+    }
 
     /**
      * Sets the active decoder class.
