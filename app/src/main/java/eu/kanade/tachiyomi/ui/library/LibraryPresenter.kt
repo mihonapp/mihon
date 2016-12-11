@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.library
 
 import android.os.Bundle
 import android.util.Pair
+import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -110,12 +111,52 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     }
 
     private fun applyFilters(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
-        val isAscending = preferences.librarySortingAscending().getOrDefault()
-        val comparator = Comparator<Manga> { m1, m2 -> sortManga(m1, m2) }
+        // Cached list of downloaded manga directories given a source id.
+        val mangaDirectories = mutableMapOf<Int, Array<UniFile>>()
+
+        // Cached list of downloaded chapter directories for a manga.
+        val chapterDirectories = mutableMapOf<Long, Boolean>()
+
+        val filterDownloaded = preferences.filterDownloaded().getOrDefault()
+
+        val filterUnread = preferences.filterUnread().getOrDefault()
+
+        val filterFn: (Manga) -> Boolean = f@ { manga: Manga ->
+            // Filter out manga without source
+            val source = sourceManager.get(manga.source) ?: return@f false
+
+            if (filterUnread && manga.unread == 0) {
+                return@f false
+            }
+
+            if (filterDownloaded) {
+                val mangaDirs = mangaDirectories.getOrPut(source.id) {
+                    downloadManager.findSourceDir(source)?.listFiles() ?: emptyArray()
+                }
+
+                val mangaDirName = downloadManager.getMangaDirName(manga)
+                val mangaDir = mangaDirs.find { it.name == mangaDirName }
+                
+                return@f if (mangaDir == null) {
+                    false
+                } else {
+                    chapterDirectories.getOrPut(manga.id!!) {
+                        (mangaDir.listFiles() ?: emptyArray()).isNotEmpty()
+                    }
+                }
+            }
+            true
+        }
+
+        // Sorting
+        val comparator: Comparator<Manga> = if (preferences.librarySortingAscending().getOrDefault())
+            Comparator { m1, m2 -> sortManga(m1, m2) }
+        else
+            Comparator { m1, m2 -> sortManga(m2, m1) }
 
         return map.mapValues { entry -> entry.value
-                .filter { filterManga(it) }
-                .sortedWith(if (isAscending) comparator else Collections.reverseOrder(comparator))
+                .filter(filterFn)
+                .sortedWith(comparator)
         }
     }
 
@@ -184,50 +225,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
             }
             LibrarySort.LAST_UPDATED -> return manga2.last_update.compareTo(manga1.last_update)
             else -> return manga1.title.compareTo(manga2.title)
-        }
-    }
-
-    /**
-     * Filters an entry of the library.
-     *
-     * @param manga a favorite manga from the database.
-     * @return true if the entry is included, false otherwise.
-     */
-    fun filterManga(manga: Manga): Boolean {
-        // Filter out manga without source
-        val source = sourceManager.get(manga.source) ?: return false
-
-        val prefFilterDownloaded = preferences.filterDownloaded().getOrDefault()
-        val prefFilterUnread = preferences.filterUnread().getOrDefault()
-
-        // Check if filter option is selected
-        if (prefFilterDownloaded || prefFilterUnread) {
-
-            // Does it have downloaded chapters.
-            var hasDownloaded = false
-            var hasUnread = false
-
-            if (prefFilterUnread) {
-                // Does it have unread chapters.
-                hasUnread = manga.unread > 0
-            }
-
-            if (prefFilterDownloaded) {
-                val mangaDir = downloadManager.findMangaDir(source, manga)
-
-                if (mangaDir != null) {
-                    hasDownloaded = mangaDir.listFiles()?.any { it.isDirectory } ?: false
-                }
-            }
-
-            // Return correct filter status
-            if (prefFilterDownloaded && prefFilterUnread) {
-                return (hasDownloaded && hasUnread)
-            } else {
-                return (hasDownloaded || hasUnread)
-            }
-        } else {
-            return true
         }
     }
 
