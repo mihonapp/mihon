@@ -3,25 +3,27 @@ package eu.kanade.tachiyomi.ui.library
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.ViewPager
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.SearchView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.f2prateek.rx.preferences.Preference
-import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.data.preference.invert
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.category.CategoryActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
@@ -80,6 +82,30 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     var mangaPerRow = 0
         private set
+
+    /**
+     * Navigation view containing filter/sort/display items.
+     */
+    private lateinit var navView: LibraryNavigationView
+
+    /**
+     * Drawer listener to allow swipe only for closing the drawer.
+     */
+    private val drawerListener by lazy {
+        object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerClosed(drawerView: View) {
+                if (drawerView == navView) {
+                    activity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, navView)
+                }
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                if (drawerView == navView) {
+                    activity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, navView)
+                }
+            }
+        }
+    }
 
     /**
      * Subscription for the number of manga per row.
@@ -149,6 +175,25 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                 .skip(1)
                 // Set again the adapter to recalculate the covers height
                 .subscribe { reattachAdapter() }
+
+
+        // Inflate and prepare drawer
+        navView = activity.drawer.inflate(R.layout.library_drawer) as LibraryNavigationView
+        activity.drawer.addView(navView)
+        activity.drawer.addDrawerListener(drawerListener)
+
+        navView.post {
+            if (isAdded && !activity.drawer.isDrawerOpen(navView))
+                activity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, navView)
+        }
+
+        navView.onGroupClicked = { group ->
+            when (group) {
+                is LibraryNavigationView.FilterGroup -> onFilterChanged()
+                is LibraryNavigationView.SortGroup -> onSortChanged()
+                is LibraryNavigationView.DisplayGroup -> reattachAdapter()
+            }
+        }
     }
 
     override fun onResume() {
@@ -157,6 +202,8 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     override fun onDestroyView() {
+        activity.drawer.removeDrawerListener(drawerListener)
+        activity.drawer.removeView(navView)
         numColumnsSubscription?.unsubscribe()
         tabs.setupWithViewPager(null)
         tabs.visibility = View.GONE
@@ -167,34 +214,6 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
         outState.putInt(CATEGORY_KEY, view_pager.currentItem)
         outState.putString(QUERY_KEY, query)
         super.onSaveInstanceState(outState)
-    }
-
-    /**
-     * Prepare the Fragment host's standard options menu to be displayed.  This is
-     * called right before the menu is shown, every time it is shown.  You can
-     * use this method to efficiently enable/disable items or otherwise
-     * dynamically modify the contents.
-     *
-     * @param menu The options menu as last shown or first initialized by
-     */
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        // Initialize search menu
-        val filterDownloadedItem = menu.findItem(R.id.action_filter_downloaded)
-        val filterUnreadItem = menu.findItem(R.id.action_filter_unread)
-        val sortModeAlpha = menu.findItem(R.id.action_sort_alpha)
-        val sortModeLastRead = menu.findItem(R.id.action_sort_last_read)
-        val sortModeLastUpdated = menu.findItem(R.id.action_sort_last_updated)
-
-        // Set correct checkbox filter
-        filterDownloadedItem.isChecked = preferences.filterDownloaded().getOrDefault()
-        filterUnreadItem.isChecked = preferences.filterUnread().getOrDefault()
-
-        // Set correct radio button sort
-        when (preferences.librarySortingMode().getOrDefault()) {
-            Constants.SORT_LIBRARY_ALPHA -> sortModeAlpha.isChecked = true
-            Constants.SORT_LIBRARY_LAST_READ -> sortModeLastRead.isChecked = true
-            Constants.SORT_LIBRARY_LAST_UPDATED -> sortModeLastUpdated.isChecked = true
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -208,6 +227,9 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
             searchView.setQuery(query, true)
             searchView.clearFocus()
         }
+
+        // Mutate the filter icon because it needs to be tinted and the resource is shared.
+        menu.findItem(R.id.action_filter).icon.mutate()
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -223,40 +245,19 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
 
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val filterItem = menu.findItem(R.id.action_filter)
+
+        // Tint icon if there's a filter active
+        val filterColor = if (navView.hasActiveFilters()) Color.rgb(255, 238, 7) else Color.WHITE
+        DrawableCompat.setTint(filterItem.icon, filterColor)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_filter_unread -> {
-                // Update settings.
-                preferences.filterUnread().invert()
-                // Apply filter.
-                onFilterOrSortChanged()
+            R.id.action_filter -> {
+                activity.drawer.openDrawer(Gravity.END)
             }
-            R.id.action_filter_downloaded -> {
-                // Update settings.
-                preferences.filterDownloaded().invert()
-                // Apply filter.
-                onFilterOrSortChanged()
-            }
-            R.id.action_filter_empty -> {
-                // Update settings.
-                preferences.filterUnread().set(false)
-                preferences.filterDownloaded().set(false)
-                // Apply filter
-                onFilterOrSortChanged()
-            }
-            R.id.action_sort_alpha -> {
-                preferences.librarySortingMode().set(Constants.SORT_LIBRARY_ALPHA)
-                onFilterOrSortChanged()
-            }
-            R.id.action_sort_last_read -> {
-                preferences.librarySortingMode().set(Constants.SORT_LIBRARY_LAST_READ)
-                onFilterOrSortChanged()
-            }
-            R.id.action_sort_last_updated -> {
-                preferences.librarySortingMode().set(Constants.SORT_LIBRARY_LAST_UPDATED)
-                onFilterOrSortChanged()
-            }
-            R.id.action_library_display_mode -> swapDisplayMode()
             R.id.action_update_library -> {
                 LibraryUpdateService.start(activity)
             }
@@ -271,19 +272,18 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
     }
 
     /**
-     * Applies filter change
+     * Called when a filter is changed.
      */
-    private fun onFilterOrSortChanged() {
+    private fun onFilterChanged() {
         presenter.requestLibraryUpdate()
         activity.supportInvalidateOptionsMenu()
     }
 
     /**
-     * Swap display mode
+     * Called when the sorting mode is changed.
      */
-    private fun swapDisplayMode() {
-        presenter.swapDisplayMode()
-        reattachAdapter()
+    private fun onSortChanged() {
+        presenter.requestLibraryUpdate()
     }
 
     /**
