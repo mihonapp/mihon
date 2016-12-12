@@ -46,6 +46,15 @@ fun Call.asObservable(): Observable<Response> {
     }
 }
 
+fun Call.asObservableSuccess(): Observable<Response> {
+    return asObservable().doOnNext { response ->
+        if (!response.isSuccessful) {
+            response.close()
+            throw Exception("Unsuccessful code ${response.code()}")
+        }
+    }
+}
+
 fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListener): Call {
     val progressClient = newBuilder()
             .cache(null)

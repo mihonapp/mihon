@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.NetworkHelper
-import eu.kanade.tachiyomi.data.network.asObservable
+import eu.kanade.tachiyomi.data.network.asObservableSuccess
 import eu.kanade.tachiyomi.data.network.newCallWithProgress
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.source.Language
@@ -93,7 +93,7 @@ abstract class OnlineSource() : Source {
      */
     open fun fetchPopularManga(page: MangasPage): Observable<MangasPage> = client
             .newCall(popularMangaRequest(page))
-            .asObservable()
+            .asObservableSuccess()
             .map { response ->
                 popularMangaParse(response, page)
                 page
@@ -136,7 +136,7 @@ abstract class OnlineSource() : Source {
      */
     open fun fetchSearchManga(page: MangasPage, query: String, filters: List<Filter>): Observable<MangasPage> = client
             .newCall(searchMangaRequest(page, query, filters))
-            .asObservable()
+            .asObservableSuccess()
             .map { response ->
                 searchMangaParse(response, page, query, filters)
                 page
@@ -178,7 +178,7 @@ abstract class OnlineSource() : Source {
      */
     open fun fetchLatestUpdates(page: MangasPage): Observable<MangasPage> = client
             .newCall(latestUpdatesRequest(page))
-            .asObservable()
+            .asObservableSuccess()
             .map { response ->
                 latestUpdatesParse(response, page)
                 page
@@ -212,7 +212,7 @@ abstract class OnlineSource() : Source {
      */
     override fun fetchMangaDetails(manga: Manga): Observable<Manga> = client
             .newCall(mangaDetailsRequest(manga))
-            .asObservable()
+            .asObservableSuccess()
             .map { response ->
                 Manga.create(manga.url, id).apply {
                     mangaDetailsParse(response, this)
@@ -246,7 +246,7 @@ abstract class OnlineSource() : Source {
      */
     override fun fetchChapterList(manga: Manga): Observable<List<Chapter>> = client
             .newCall(chapterListRequest(manga))
-            .asObservable()
+            .asObservableSuccess()
             .map { response ->
                 mutableListOf<Chapter>().apply {
                     chapterListParse(response, this)
@@ -292,11 +292,8 @@ abstract class OnlineSource() : Source {
      */
     open fun fetchPageListFromNetwork(chapter: Chapter): Observable<List<Page>> = client
             .newCall(pageListRequest(chapter))
-            .asObservable()
+            .asObservableSuccess()
             .map { response ->
-                if (!response.isSuccessful) {
-                    throw Exception("Webpage sent ${response.code()} code")
-                }
                 mutableListOf<Page>().apply {
                     pageListParse(response, this)
                     if (isEmpty()) {
@@ -338,7 +335,7 @@ abstract class OnlineSource() : Source {
         page.status = Page.LOAD_PAGE
         return client
                 .newCall(imageUrlRequest(page))
-                .asObservable()
+                .asObservableSuccess()
                 .map { imageUrlParse(it) }
                 .doOnError { page.status = Page.ERROR }
                 .onErrorReturn { null }
@@ -381,13 +378,7 @@ abstract class OnlineSource() : Source {
      */
     fun imageResponse(page: Page): Observable<Response> = client
             .newCallWithProgress(imageRequest(page), page)
-            .asObservable()
-            .doOnNext {
-                if (!it.isSuccessful) {
-                    it.close()
-                    throw RuntimeException("Not a valid response")
-                }
-            }
+            .asObservableSuccess()
 
     /**
      * Returns the request for getting the source image. Override only if it's needed to override
