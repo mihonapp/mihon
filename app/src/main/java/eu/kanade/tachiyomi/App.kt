@@ -2,10 +2,12 @@ package eu.kanade.tachiyomi
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import android.support.multidex.MultiDex
 import com.evernote.android.job.JobManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
+import eu.kanade.tachiyomi.util.LocaleHelper
 import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
 import timber.log.Timber
@@ -31,6 +33,8 @@ open class App : Application() {
 
         setupAcra()
         setupJobManager()
+
+        LocaleHelper.updateCfg(this, baseContext.resources.configuration)
     }
 
     override fun attachBaseContext(base: Context) {
@@ -38,6 +42,11 @@ open class App : Application() {
         if (BuildConfig.DEBUG) {
             MultiDex.install(this)
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        LocaleHelper.updateCfg(this, newConfig)
     }
 
     protected open fun setupAcra() {
