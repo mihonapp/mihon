@@ -5,9 +5,10 @@ import eu.kanade.tachiyomi.util.LocaleHelper
 
 abstract class BaseActivity : AppCompatActivity(), ActivityMixin {
 
-    override fun getActivity() = this
     init {
         LocaleHelper.updateCfg(this)
     }
+
+    override fun getActivity() = this
 
 }
