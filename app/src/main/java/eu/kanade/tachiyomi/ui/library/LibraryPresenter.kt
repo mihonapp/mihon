@@ -127,27 +127,28 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
         val filterUnread = preferences.filterUnread().getOrDefault()
 
         val filterFn: (Manga) -> Boolean = f@ { manga: Manga ->
-            // Filter out manga without source
+            // Filter out manga without source.
             val source = sourceManager.get(manga.source) ?: return@f false
 
+            // Filter when there isn't unread chapters.
             if (filterUnread && manga.unread == 0) {
                 return@f false
             }
 
+            // Filter when the download directory doesn't exist or is null.
             if (filterDownloaded) {
                 val mangaDirs = mangaDirectories.getOrPut(source.id) {
                     downloadManager.findSourceDir(source)?.listFiles() ?: emptyArray()
                 }
 
                 val mangaDirName = downloadManager.getMangaDirName(manga)
-                val mangaDir = mangaDirs.find { it.name == mangaDirName }
+                val mangaDir = mangaDirs.find { it.name == mangaDirName } ?: return@f false
 
-                return@f if (mangaDir == null) {
-                    false
-                } else {
-                    chapterDirectories.getOrPut(manga.id!!) {
-                        (mangaDir.listFiles() ?: emptyArray()).isNotEmpty()
-                    }
+                val hasDirs = chapterDirectories.getOrPut(manga.id!!) {
+                    (mangaDir.listFiles() ?: emptyArray()).isNotEmpty()
+                }
+                if (!hasDirs) {
+                    return@f false
                 }
             }
             true
@@ -228,16 +229,17 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      * @param manga2 second manga to compare
      */
     fun sortManga(sortingMode: Int, manga1: Manga, manga2: Manga): Int {
-        when (sortingMode) {
-            LibrarySort.ALPHA -> return manga1.title.compareTo(manga2.title)
+        return when (sortingMode) {
+            LibrarySort.ALPHA -> manga1.title.compareTo(manga2.title)
             LibrarySort.LAST_READ -> {
                 // Get index of manga, set equal to list if size unknown.
                 val manga1LastRead = lastReadManga.getOrElse(manga1.id!!, { lastReadManga.size })
                 val manga2LastRead = lastReadManga.getOrElse(manga2.id!!, { lastReadManga.size })
-                return manga1LastRead.compareTo(manga2LastRead)
+                manga1LastRead.compareTo(manga2LastRead)
             }
-            LibrarySort.LAST_UPDATED -> return manga2.last_update.compareTo(manga1.last_update)
-            else -> return manga1.title.compareTo(manga2.title)
+            LibrarySort.LAST_UPDATED -> manga2.last_update.compareTo(manga1.last_update)
+            LibrarySort.UNREAD -> manga1.unread.compareTo(manga2.unread)
+            else -> throw Exception("Unknown sorting mode")
         }
     }
 
