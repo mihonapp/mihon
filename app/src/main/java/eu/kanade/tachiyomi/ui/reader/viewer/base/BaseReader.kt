@@ -213,6 +213,16 @@ abstract class BaseReader : BaseFragment() {
     }
 
     /**
+     * Method the implementations can call to show a menu with options for the given page.
+     */
+    fun onLongClick(page: Page?): Boolean {
+        if (isAdded && page != null) {
+            readerActivity.onLongClick(page)
+        }
+        return true
+    }
+
+    /**
      * Sets the active decoder class.
      *
      * @param value the decoder class to use.

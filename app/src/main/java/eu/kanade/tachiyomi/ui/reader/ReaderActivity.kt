@@ -227,7 +227,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         toast(error.message)
     }
 
-    fun onLongPress(page: Page) {
+    fun onLongClick(page: Page) {
         MaterialDialog.Builder(this)
                 .title(getString(R.string.options))
                 .items(R.array.reader_image_options)

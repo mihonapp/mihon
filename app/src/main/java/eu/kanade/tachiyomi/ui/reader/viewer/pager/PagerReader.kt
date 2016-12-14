@@ -66,7 +66,7 @@ abstract class PagerReader : BaseReader() {
     /**
      * Gesture detector for touch events.
      */
-    val gestureDetector by lazy { createGestureDetector() }
+    val gestureDetector by lazy { GestureDetector(context, ImageGestureListener()) }
 
     /**
      * Subscriptions for reader settings.
@@ -166,37 +166,24 @@ abstract class PagerReader : BaseReader() {
     }
 
     /**
-     * Creates the gesture detector for the pager.
-     *
-     * @return a gesture detector.
+     * Gesture detector for Subsampling Scale Image View.
      */
-    protected fun createGestureDetector(): GestureDetector {
-        return GestureDetector(activity, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                if (isAdded) {
-                    val positionX = e.x
+    inner class ImageGestureListener : GestureDetector.SimpleOnGestureListener() {
 
-                    if (positionX < pager.width * LEFT_REGION) {
-                        if (tappingEnabled) moveLeft()
-                    } else if (positionX > pager.width * RIGHT_REGION) {
-                        if (tappingEnabled) moveRight()
-                    } else {
-                        readerActivity.toggleMenu()
-                    }
-                }
-                return true
-            }
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            if (isAdded) {
+                val positionX = e.x
 
-            override fun onLongPress(e: MotionEvent?) {
-                if (isAdded) {
-                    val page = adapter.pages.getOrNull(pager.currentItem)
-                    if (page != null)
-                        readerActivity.onLongPress(page)
-                    else
-                        context.toast(getString(R.string.unknown_error))
+                if (positionX < pager.width * LEFT_REGION) {
+                    if (tappingEnabled) moveLeft()
+                } else if (positionX > pager.width * RIGHT_REGION) {
+                    if (tappingEnabled) moveRight()
+                } else {
+                    readerActivity.toggleMenu()
                 }
             }
-        })
+            return true
+        }
     }
 
     /**

@@ -3,14 +3,11 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
-import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.PreCachingLayoutManager
 import rx.subscriptions.CompositeSubscription
 
@@ -58,11 +55,6 @@ class WebtoonReader : BaseReader() {
      * Gesture detector for image touch events.
      */
     val imageGestureDetector by lazy { GestureDetector(context, ImageGestureListener()) }
-
-    /**
-     * Gesture detector for other views touch events.
-     */
-    val viewGestureDetector by lazy { GestureDetector(context, ViewGestureListener()) }
 
     /**
      * Subscriptions used while the view exists.
@@ -127,14 +119,9 @@ class WebtoonReader : BaseReader() {
     }
 
     /**
-     * Gesture detector for Subsampling Scale Image View. [onDown] needs to be false or else
-     * double tap to zoom doesn't work.
+     * Gesture detector for Subsampling Scale Image View.
      */
-    inner open class ImageGestureListener : SimpleOnGestureListener() {
-
-        override fun onDown(e: MotionEvent): Boolean {
-            return false
-        }
+    inner class ImageGestureListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
             if (isAdded) {
@@ -148,29 +135,6 @@ class WebtoonReader : BaseReader() {
                     readerActivity.toggleMenu()
                 }
             }
-            return true
-        }
-
-        override fun onLongPress(e: MotionEvent) {
-            if (isAdded) {
-                val child = recycler.findChildViewUnder(e.rawX, e.rawY)
-                val position = recycler.getChildAdapterPosition(child)
-                val page = adapter.pages?.getOrNull(position)
-                if (page != null)
-                    readerActivity.onLongPress(page)
-                else
-                    context.toast(getString(R.string.unknown_error))
-            }
-        }
-    }
-
-    /**
-     * Gesture detector for other views. [onDown] needs to be true here or it will incorrectly
-     * detect events.
-     */
-    inner class ViewGestureListener : ImageGestureListener() {
-
-        override fun onDown(e: MotionEvent): Boolean {
             return true
         }
     }

@@ -71,6 +71,7 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             setBitmapDecoderClass(reader.bitmapDecoderClass)
             setVerticalScrollingParent(reader is VerticalReader)
             setOnTouchListener { v, motionEvent -> reader.gestureDetector.onTouchEvent(motionEvent) }
+            setOnLongClickListener { reader.onLongClick(page) }
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
                     onImageDecoded(reader)

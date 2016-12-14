@@ -63,7 +63,8 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             setRegionDecoderClass(webtoonReader.regionDecoderClass)
             setBitmapDecoderClass(webtoonReader.bitmapDecoderClass)
             setVerticalScrollingParent(true)
-            setOnTouchListener(adapter.imageTouchListener)
+            setOnTouchListener(adapter.touchListener)
+            setOnLongClickListener { webtoonReader.onLongClick(page) }
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
                     onImageDecoded()
@@ -77,7 +78,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
 
         view.progress_container.minimumHeight = view.resources.displayMetrics.heightPixels * 2
 
-        view.setOnTouchListener(adapter.viewTouchListener)
+        view.setOnTouchListener(adapter.touchListener)
         view.retry_button.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 readerActivity.presenter.retryPage(page)
