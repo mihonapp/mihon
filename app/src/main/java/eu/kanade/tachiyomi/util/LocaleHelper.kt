@@ -27,7 +27,7 @@ object LocaleHelper {
         }
     }
 
-    fun updateCfg(app: Application, config: Configuration){
+    fun updateCfg(app: Application, config: Configuration) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             config.locale = pLocale
             app.baseContext.resources.updateConfiguration(config, app.baseContext.resources.displayMetrics)

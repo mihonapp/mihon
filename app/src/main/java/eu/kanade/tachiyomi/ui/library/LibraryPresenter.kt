@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.combineLatest
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import rx.Observable
 import rx.Subscription
@@ -83,12 +84,12 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Relay used to apply the UI filters to the last emission of the library.
      */
-    private val updateTriggerRelay = BehaviorRelay.create(Unit)
+    private val filterTriggerRelay = BehaviorRelay.create(Unit)
 
     /**
-     * Value that contains library sorted by last read
+     * Relay used to apply the selected sorting method to the last emission of the library.
      */
-    private lateinit var lastReadManga: Map<Long, Int>
+    private val sortTriggerRelay = BehaviorRelay.create(Unit)
 
     /**
      * Library subscription.
@@ -105,16 +106,23 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     fun subscribeLibrary() {
         if (librarySubscription.isNullOrUnsubscribed()) {
-            librarySubscription = Observable.combineLatest(getLibraryObservable(),
-                    updateTriggerRelay.observeOn(Schedulers.io()),
-                    { library, updateTrigger -> library })
-                    .map { Pair(it.first, applyFilters(it.second)) }
+            librarySubscription = getLibraryObservable()
+                    .combineLatest(filterTriggerRelay.observeOn(Schedulers.io()),
+                            { lib, tick -> Pair(lib.first, applyFilters(lib.second)) })
+                    .combineLatest(sortTriggerRelay.observeOn(Schedulers.io()),
+                            { lib, tick -> Pair(lib.first, applySort(lib.second)) })
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeLatestCache(
-                            { view, pair -> view.onNextLibraryUpdate(pair.first, pair.second) })
+                    .subscribeLatestCache({ view, pair ->
+                        view.onNextLibraryUpdate(pair.first, pair.second)
+                    })
         }
     }
 
+    /**
+     * Applies library filters to the given map of manga.
+     *
+     * @param map the map to filter.
+     */
     private fun applyFilters(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
         // Cached list of downloaded manga directories given a source id.
         val mangaDirectories = mutableMapOf<Int, Array<UniFile>>()
@@ -126,7 +134,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
 
         val filterUnread = preferences.filterUnread().getOrDefault()
 
-        val filterFn: (Manga) -> Boolean = f@ { manga: Manga ->
+        val filterFn: (Manga) -> Boolean = f@ { manga ->
             // Filter out manga without source.
             val source = sourceManager.get(manga.source) ?: return@f false
 
@@ -154,24 +162,46 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
             true
         }
 
-        // Sorting
+        return map.mapValues { entry -> entry.value.filter(filterFn) }
+    }
+
+    /**
+     * Applies library sorting to the given map of manga.
+     *
+     * @param map the map to sort.
+     */
+    private fun applySort(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
         val sortingMode = preferences.librarySortingMode().getOrDefault()
+
+        // TODO lazy initialization in kotlin 1.1
+        var lastReadManga: Map<Long, Int>? = null
         if (sortingMode == LibrarySort.LAST_READ) {
             var counter = 0
             lastReadManga = db.getLastReadManga().executeAsBlocking()
                     .associate { it.id!! to counter++ }
         }
 
-        val comparator: Comparator<Manga> = if (preferences.librarySortingAscending().getOrDefault())
-            Comparator { m1, m2 -> sortManga(sortingMode, m1, m2) }
-        else
-            Comparator { m1, m2 -> sortManga(sortingMode, m2, m1) }
-
-        return map.mapValues { entry ->
-            entry.value
-                    .filter(filterFn)
-                    .sortedWith(comparator)
+        val sortFn: (Manga, Manga) -> Int = { manga1, manga2 ->
+            when (sortingMode) {
+                LibrarySort.ALPHA -> manga1.title.compareTo(manga2.title)
+                LibrarySort.LAST_READ -> {
+                    // Get index of manga, set equal to list if size unknown.
+                    val manga1LastRead = lastReadManga!![manga1.id!!] ?: lastReadManga!!.size
+                    val manga2LastRead = lastReadManga!![manga2.id!!] ?: lastReadManga!!.size
+                    manga1LastRead.compareTo(manga2LastRead)
+                }
+                LibrarySort.LAST_UPDATED -> manga2.last_update.compareTo(manga1.last_update)
+                LibrarySort.UNREAD -> manga1.unread.compareTo(manga2.unread)
+                else -> throw Exception("Unknown sorting mode")
+            }
         }
+
+        val comparator = if (preferences.librarySortingAscending().getOrDefault())
+            Comparator(sortFn)
+        else
+            Collections.reverseOrder(sortFn)
+
+        return map.mapValues { entry -> entry.value.sortedWith(comparator) }
     }
 
     /**
@@ -215,32 +245,15 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Requests the library to be filtered.
      */
-    fun requestLibraryUpdate() {
-        updateTriggerRelay.call(Unit)
+    fun requestFilterUpdate() {
+        filterTriggerRelay.call(Unit)
     }
 
     /**
-     * Compares the two manga determined by sorting mode.
-     * Returns zero if this object is equal to the specified other object,
-     * a negative number if it's less than other, or a positive number if it's greater than other.
-     *
-     * @param sortingMode current sorting mode
-     * @param manga1 first manga to compare
-     * @param manga2 second manga to compare
+     * Requests the library to be sorted.
      */
-    fun sortManga(sortingMode: Int, manga1: Manga, manga2: Manga): Int {
-        return when (sortingMode) {
-            LibrarySort.ALPHA -> manga1.title.compareTo(manga2.title)
-            LibrarySort.LAST_READ -> {
-                // Get index of manga, set equal to list if size unknown.
-                val manga1LastRead = lastReadManga.getOrElse(manga1.id!!, { lastReadManga.size })
-                val manga2LastRead = lastReadManga.getOrElse(manga2.id!!, { lastReadManga.size })
-                manga1LastRead.compareTo(manga2LastRead)
-            }
-            LibrarySort.LAST_UPDATED -> manga2.last_update.compareTo(manga1.last_update)
-            LibrarySort.UNREAD -> manga1.unread.compareTo(manga2.unread)
-            else -> throw Exception("Unknown sorting mode")
-        }
+    fun requestSortUpdate() {
+        sortTriggerRelay.call(Unit)
     }
 
     /**

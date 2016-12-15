@@ -275,7 +275,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Called when a filter is changed.
      */
     private fun onFilterChanged() {
-        presenter.requestLibraryUpdate()
+        presenter.requestFilterUpdate()
         activity.supportInvalidateOptionsMenu()
     }
 
@@ -283,7 +283,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      * Called when the sorting mode is changed.
      */
     private fun onSortChanged() {
-        presenter.requestLibraryUpdate()
+        presenter.requestSortUpdate()
     }
 
     /**
