@@ -25,15 +25,15 @@ abstract class BaseRxActivity<P : BasePresenter<*>> : NucleusAppCompatActivity<P
 
     override fun getActivity() = this
 
-    var isResumed = false
+    var resumed = false
 
     override fun onResume() {
         super.onResume()
-        isResumed = true
+        resumed = true
     }
 
     override fun onPause() {
-        isResumed = false
+        resumed = false
         super.onPause()
     }
 
