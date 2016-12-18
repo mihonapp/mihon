@@ -12,6 +12,7 @@ abstract class BaseActivity : AppCompatActivity(), ActivityMixin {
     override fun getActivity() = this
 
     var resumed = false
+        private set
 
     override fun onResume() {
         super.onResume()
