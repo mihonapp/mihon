@@ -15,7 +15,7 @@ fun <T> Preference<T>.getOrDefault(): T = get() ?: defaultValue()!!
 
 fun Preference<Boolean>.invert(): Boolean = getOrDefault().let { set(!it); !it }
 
-class PreferencesHelper(context: Context) {
+class PreferencesHelper(val context: Context) {
 
     val keys = PreferenceKeys(context)
 

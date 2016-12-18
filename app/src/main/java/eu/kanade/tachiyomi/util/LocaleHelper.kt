@@ -21,7 +21,7 @@ object LocaleHelper {
 
     fun updateCfg(wrapper: ContextThemeWrapper) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            val config = Configuration()
+            val config = Configuration(preferences.context.resources.configuration)
             config.setLocale(pLocale)
             wrapper.applyOverrideConfiguration(config)
         }
