@@ -11,4 +11,16 @@ abstract class BaseActivity : AppCompatActivity(), ActivityMixin {
 
     override fun getActivity() = this
 
+    var isResumed = false
+
+    override fun onResume() {
+        super.onResume()
+        isResumed = true
+    }
+
+    override fun onPause() {
+        isResumed = false
+        super.onPause()
+    }
+
 }

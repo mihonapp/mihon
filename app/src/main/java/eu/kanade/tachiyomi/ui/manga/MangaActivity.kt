@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersFragment
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoFragment
 import eu.kanade.tachiyomi.ui.manga.myanimelist.MyAnimeListFragment
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.activity_manga.*
 import kotlinx.android.synthetic.main.toolbar.*
 import nucleus.factory.RequiresPresenter
@@ -50,12 +51,19 @@ class MangaActivity : BaseRxActivity<MangaPresenter>() {
 
         val fromLauncher = intent.getBooleanExtra(FROM_LAUNCHER_EXTRA, false)
 
-        //Remove any current manga if we are launching from launcher
-        if(fromLauncher) SharedData.remove(MangaEvent::class.java)
+        // Remove any current manga if we are launching from launcher
+        if (fromLauncher) SharedData.remove(MangaEvent::class.java)
 
         presenter.setMangaEvent(SharedData.getOrPut(MangaEvent::class.java) {
             val id = intent.getLongExtra(MANGA_EXTRA, 0)
-            MangaEvent(presenter.db.getManga(id).executeAsBlocking()!!)
+            val dbManga = presenter.db.getManga(id).executeAsBlocking()
+            if (dbManga != null) {
+                MangaEvent(dbManga)
+            } else {
+                toast(R.string.manga_not_in_db)
+                finish()
+                return
+            }
         })
 
         setupToolbar(toolbar)
