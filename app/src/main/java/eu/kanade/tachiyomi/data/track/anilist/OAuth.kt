@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.track.anilist.model
+package eu.kanade.tachiyomi.data.track.anilist
 
 data class OAuth(
         val access_token: String,

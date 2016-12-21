@@ -21,6 +21,23 @@ abstract class TrackService(val id: Int) {
     // Name of the manga sync service to display
     abstract val name: String
 
+    @DrawableRes
+    abstract fun getLogo(): Int
+
+    abstract fun getLogoColor(): Int
+
+    abstract fun getStatusList(): List<Int>
+
+    abstract fun getStatus(status: Int): String
+
+    abstract fun getScoreList(): List<String>
+
+    open fun indexToScore(index: Int): Float {
+        return index.toFloat()
+    }
+
+    abstract fun displayScore(track: Track): String
+
     abstract fun login(username: String, password: String): Completable
 
     open val isLogged: Boolean
@@ -36,20 +53,6 @@ abstract class TrackService(val id: Int) {
     abstract fun search(query: String): Observable<List<Track>>
 
     abstract fun refresh(track: Track): Observable<Track>
-
-    abstract fun getStatus(status: Int): String
-
-    abstract fun getStatusList(): List<Int>
-
-    @DrawableRes
-    abstract fun getLogo(): Int
-
-    abstract fun getLogoColor(): Int
-
-    // TODO better support (decimals)
-    abstract fun maxScore(): Int
-
-    abstract fun formatScore(track: Track): String
 
     fun saveCredentials(username: String, password: String) {
         preferences.setTrackCredentials(this, username, password)

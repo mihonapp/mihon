@@ -62,9 +62,26 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
 
     override fun getLogoColor() = Color.rgb(46, 81, 162)
 
-    override fun maxScore() = 10
+    override fun getStatus(status: Int): String = with(context) {
+        when (status) {
+            READING -> getString(R.string.reading)
+            COMPLETED -> getString(R.string.completed)
+            ON_HOLD -> getString(R.string.on_hold)
+            DROPPED -> getString(R.string.dropped)
+            PLAN_TO_READ -> getString(R.string.plan_to_read)
+            else -> ""
+        }
+    }
 
-    override fun formatScore(track: Track): String {
+    override fun getStatusList(): List<Int> {
+        return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
+    }
+
+    override fun getScoreList(): List<String> {
+        return IntRange(0, 10).map(Int::toString)
+    }
+
+    override fun displayScore(track: Track): String {
         return track.score.toInt().toString()
     }
 
@@ -236,21 +253,6 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
                         add(track)
                     }
                 }
-    }
-
-    override fun getStatus(status: Int): String = with(context) {
-        when (status) {
-            READING -> getString(R.string.reading)
-            COMPLETED -> getString(R.string.completed)
-            ON_HOLD -> getString(R.string.on_hold)
-            DROPPED -> getString(R.string.dropped)
-            PLAN_TO_READ -> getString(R.string.plan_to_read)
-            else -> ""
-        }
-    }
-
-    override fun getStatusList(): List<Int> {
-        return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
     }
 
     fun createHeaders(username: String, password: String) {

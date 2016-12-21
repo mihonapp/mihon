@@ -2,15 +2,12 @@ package eu.kanade.tachiyomi.data.track.anilist
 
 import android.content.Context
 import android.graphics.Color
-import com.github.salomonbrys.kotson.int
-import com.github.salomonbrys.kotson.string
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.track.TrackService
 import rx.Completable
 import rx.Observable
-import timber.log.Timber
 
 class Anilist(private val context: Context, id: Int) : TrackService(id) {
 
@@ -29,109 +26,11 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
 
     private val interceptor by lazy { AnilistInterceptor(getPassword()) }
 
-    private val api by lazy {
-        AnilistApi.createService(networkService.client.newBuilder()
-                .addInterceptor(interceptor)
-                .build())
-    }
+    private val api by lazy { AnilistApi(client, interceptor) }
 
     override fun getLogo() = R.drawable.al
 
     override fun getLogoColor() = Color.rgb(18, 25, 35)
-
-    override fun maxScore() = 100
-
-    override fun login(username: String, password: String) = login(password)
-
-    fun login(authCode: String): Completable {
-        // Create a new api with the default client to avoid request interceptions.
-        return AnilistApi.createService(client)
-                // Request the access token from the API with the authorization code.
-                .requestAccessToken(authCode)
-                // Save the token in the interceptor.
-                .doOnNext { interceptor.setAuth(it) }
-                // Obtain the authenticated user from the API.
-                .zipWith(api.getCurrentUser().map {
-                    preferences.anilistScoreType().set(it["score_type"].int)
-                    it["id"].string
-                }, { oauth, user -> Pair(user, oauth.refresh_token!!) })
-                // Save service credentials (username and refresh token).
-                .doOnNext { saveCredentials(it.first, it.second) }
-                // Logout on any error.
-                .doOnError { logout() }
-                .toCompletable()
-    }
-
-    override fun logout() {
-        super.logout()
-        interceptor.setAuth(null)
-    }
-
-    override fun search(query: String): Observable<List<Track>> {
-        return api.search(query, 1)
-                .flatMap { Observable.from(it) }
-                .filter { it.type != "Novel" }
-                .map { it.toTrack() }
-                .toList()
-    }
-
-    fun getList(): Observable<List<Track>> {
-        return api.getList(getUsername())
-                .flatMap { Observable.from(it.flatten()) }
-                .map { it.toTrack() }
-                .toList()
-    }
-
-    override fun add(track: Track): Observable<Track> {
-        return api.addManga(track.remote_id, track.last_chapter_read, track.getAnilistStatus())
-                .doOnNext { it.body().close() }
-                .doOnNext { if (!it.isSuccessful) throw Exception("Could not add manga") }
-                .doOnError { Timber.e(it) }
-                .map { track }
-    }
-
-    override fun update(track: Track): Observable<Track> {
-        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
-            track.status = COMPLETED
-        }
-        return api.updateManga(track.remote_id, track.last_chapter_read, track.getAnilistStatus(),
-                track.getAnilistScore())
-                .doOnNext { it.body().close() }
-                .doOnNext { if (!it.isSuccessful) throw Exception("Could not update manga") }
-                .doOnError { Timber.e(it) }
-                .map { track }
-    }
-
-    override fun bind(track: Track): Observable<Track> {
-        return getList()
-                .flatMap { userlist ->
-                    track.sync_id = id
-                    val remoteTrack = userlist.find { it.remote_id == track.remote_id }
-                    if (remoteTrack != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        update(track)
-                    } else {
-                        // Set default fields if it's not found in the list
-                        track.score = DEFAULT_SCORE.toFloat()
-                        track.status = DEFAULT_STATUS
-                        add(track)
-                    }
-                }
-    }
-
-    override fun refresh(track: Track): Observable<Track> {
-        return getList()
-                .map { myList ->
-                    val remoteTrack = myList.find { it.remote_id == track.remote_id }
-                    if (remoteTrack != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        track.total_chapters = remoteTrack.total_chapters
-                        track
-                    } else {
-                        throw Exception("Could not find manga")
-                    }
-                }
-    }
 
     override fun getStatusList(): List<Int> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
@@ -148,43 +47,118 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
         }
     }
 
-    private fun Track.getAnilistStatus() = when (status) {
-        READING -> "reading"
-        COMPLETED -> "completed"
-        ON_HOLD -> "on-hold"
-        DROPPED -> "dropped"
-        PLAN_TO_READ -> "plan to read"
-        else -> throw NotImplementedError("Unknown status")
+    override fun getScoreList(): List<String> {
+        return when (preferences.anilistScoreType().getOrDefault()) {
+            // 10 point
+            0 -> IntRange(0, 10).map(Int::toString)
+            // 100 point
+            1 -> IntRange(0, 100).map(Int::toString)
+            // 5 stars
+            2 -> IntRange(0, 5).map { "$it ★" }
+            // Smiley
+            3 -> listOf("-", "😦", "😐", "😊")
+            // 10 point decimal
+            4 -> IntRange(0, 100).map { (it / 10f).toString() }
+            else -> throw Exception("Unknown score type")
+        }
     }
 
-    fun Track.getAnilistScore(): String = when (preferences.anilistScoreType().getOrDefault()) {
-        // 10 point
-        0 -> Math.floor(score.toDouble() / 10).toInt().toString()
-        // 100 point
-        1 -> score.toInt().toString()
-        // 5 stars
-        2 -> when {
-            score == 0f -> "0"
-            score < 30 -> "1"
-            score < 50 -> "2"
-            score < 70 -> "3"
-            score < 90 -> "4"
-            else -> "5"
+    override fun indexToScore(index: Int): Float {
+        return when (preferences.anilistScoreType().getOrDefault()) {
+            // 10 point
+            0 -> index * 10f
+            // 100 point
+            1 -> index.toFloat()
+            // 5 stars
+            2 -> index * 20f
+            // Smiley
+            3 -> index * 30f
+            // 10 point decimal
+            4 -> index / 10f
+            else -> throw Exception("Unknown score type")
         }
-        // Smiley
-        3 -> when {
-            score == 0f -> "0"
-            score <= 30 -> ":("
-            score <= 60 -> ":|"
-            else -> ":)"
-        }
-        // 10 point decimal
-        4 -> (score / 10).toString()
-        else -> throw Exception("Unknown score type")
     }
 
-    override fun formatScore(track: Track): String {
-        return track.getAnilistScore()
+    override fun displayScore(track: Track): String {
+        val score = track.score
+        return when (preferences.anilistScoreType().getOrDefault()) {
+            2 -> "${(score / 20).toInt()} ★"
+            3 -> when {
+                score == 0f -> "0"
+                score <= 30 -> "😦"
+                score <= 60 -> "😐"
+                else -> "😊"
+            }
+            else -> track.toAnilistScore()
+        }
+    }
+
+    override fun login(username: String, password: String) = login(password)
+
+    fun login(authCode: String): Completable {
+        return api.login(authCode)
+                // Save the token in the interceptor.
+                .doOnNext { interceptor.setAuth(it) }
+                // Obtain the authenticated user from the API.
+                .zipWith(api.getCurrentUser().map { pair ->
+                    preferences.anilistScoreType().set(pair.second)
+                    pair.first
+                }, { oauth, user -> Pair(user, oauth.refresh_token!!) })
+                // Save service credentials (username and refresh token).
+                .doOnNext { saveCredentials(it.first, it.second) }
+                // Logout on any error.
+                .doOnError { logout() }
+                .toCompletable()
+    }
+
+    override fun logout() {
+        super.logout()
+        interceptor.setAuth(null)
+    }
+
+    override fun search(query: String): Observable<List<Track>> {
+        return api.search(query)
+    }
+
+    override fun add(track: Track): Observable<Track> {
+        return api.addLibManga(track)
+    }
+
+    override fun update(track: Track): Observable<Track> {
+        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
+            track.status = COMPLETED
+        }
+
+        return api.updateLibManga(track)
+    }
+
+    override fun bind(track: Track): Observable<Track> {
+        return api.findLibManga(getUsername(), track)
+                .flatMap { remoteTrack ->
+                    if (remoteTrack != null) {
+                        track.copyPersonalFrom(remoteTrack)
+                        update(track)
+                    } else {
+                        // Set default fields if it's not found in the list
+                        track.score = DEFAULT_SCORE.toFloat()
+                        track.status = DEFAULT_STATUS
+                        add(track)
+                    }
+                }
+    }
+
+    override fun refresh(track: Track): Observable<Track> {
+        // TODO getLibManga method?
+        return api.findLibManga(getUsername(), track)
+                .map { remoteTrack ->
+                    if (remoteTrack != null) {
+                        track.copyPersonalFrom(remoteTrack)
+                        track.total_chapters = remoteTrack.total_chapters
+                        track
+                    } else {
+                        throw Exception("Could not find manga")
+                    }
+                }
     }
 
 }

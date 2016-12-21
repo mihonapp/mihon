@@ -30,7 +30,7 @@ class TrackHolder(private val view: View, private val fragment: TrackFragment)
             track_chapters.text = "${track.last_chapter_read}/" +
                     if (track.total_chapters > 0) track.total_chapters else "-"
             track_status.text = item.service.getStatus(track.status)
-            track_score.text = if (track.score == 0f) "-" else item.service.formatScore(track)
+            track_score.text = if (track.score == 0f) "-" else item.service.displayScore(track)
         } else {
             track_title.setTextAppearance(context, R.style.TextAppearance_Medium_Button)
             track_title.setText(R.string.action_edit)

@@ -122,9 +122,9 @@ class TrackPresenter : BasePresenter<TrackFragment>() {
         updateRemote(track, item.service)
     }
 
-    fun setScore(item: TrackItem, score: Int) {
+    fun setScore(item: TrackItem, index: Int) {
         val track = item.track!!
-        track.score = score.toFloat()
+        track.score = item.service.indexToScore(index)
         updateRemote(track, item.service)
     }
 

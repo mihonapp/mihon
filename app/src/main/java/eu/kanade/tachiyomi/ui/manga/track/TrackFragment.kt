@@ -157,9 +157,16 @@ class TrackFragment : BaseRxFragment<TrackPresenter>() {
         val view = dialog.customView
         if (view != null) {
             val np = view.findViewById(R.id.score_picker) as NumberPicker
-            np.maxValue = item.service.maxScore()
+            val scores = item.service.getScoreList().toTypedArray()
+            np.maxValue = scores.size - 1
+            np.displayedValues = scores
+
             // Set initial value
-            np.value = item.track.score.toInt()
+            val displayedScore = item.service.displayScore(item.track)
+            if (displayedScore != "-") {
+                val index = scores.indexOf(displayedScore)
+                np.value = if (index != -1) index else 0
+            }
         }
     }
 

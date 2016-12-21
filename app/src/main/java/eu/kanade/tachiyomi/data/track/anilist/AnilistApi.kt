@@ -1,11 +1,11 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
 import android.net.Uri
+import com.github.salomonbrys.kotson.int
+import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonObject
+import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.network.POST
-import eu.kanade.tachiyomi.data.track.anilist.model.ALManga
-import eu.kanade.tachiyomi.data.track.anilist.model.ALUserLists
-import eu.kanade.tachiyomi.data.track.anilist.model.OAuth
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -16,7 +16,110 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import rx.Observable
 
-interface AnilistApi {
+class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
+
+    private val rest = restBuilder()
+            .client(client.newBuilder().addInterceptor(interceptor).build())
+            .build()
+            .create(Rest::class.java)
+
+    private fun restBuilder() = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+
+    fun login(authCode: String): Observable<OAuth> {
+        return restBuilder()
+                .client(client)
+                .build()
+                .create(Rest::class.java)
+                .requestAccessToken(authCode)
+    }
+
+    fun getCurrentUser(): Observable<Pair<String, Int>> {
+        return rest.getCurrentUser()
+                .map { it["id"].string to it["score_type"].int }
+    }
+
+    fun search(query: String): Observable<List<Track>> {
+        return rest.search(query, 1)
+                .map { list ->
+                    list.filter { it.type != "Novel" }.map { it.toTrack() }
+                }
+    }
+
+    fun getList(username: String): Observable<List<Track>> {
+        return rest.getLib(username)
+                .map { lib ->
+                    lib.flatten().map { it.toTrack() }
+                }
+    }
+
+    fun addLibManga(track: Track): Observable<Track> {
+        return rest.addLibManga(track.remote_id, track.last_chapter_read, track.toAnilistStatus())
+                .doOnNext { it.body().close() }
+                .doOnNext { if (!it.isSuccessful) throw Exception("Could not add manga") }
+                .map { track }
+    }
+
+    fun updateLibManga(track: Track): Observable<Track> {
+        return rest.updateLibManga(track.remote_id, track.last_chapter_read, track.toAnilistStatus(),
+                track.toAnilistScore())
+                .doOnNext { it.body().close() }
+                .doOnNext { if (!it.isSuccessful) throw Exception("Could not update manga") }
+                .map { track }
+    }
+
+    fun findLibManga(username: String, track: Track) : Observable<Track?> {
+        // TODO avoid getting the entire list
+        return getList(username)
+                .map { list -> list.find { it.remote_id == track.remote_id } }
+    }
+
+    private interface Rest {
+
+        @FormUrlEncoded
+        @POST("auth/access_token")
+        fun requestAccessToken(
+                @Field("code") code: String,
+                @Field("grant_type") grant_type: String = "authorization_code",
+                @Field("client_id") client_id: String = clientId,
+                @Field("client_secret") client_secret: String = clientSecret,
+                @Field("redirect_uri") redirect_uri: String = clientUrl
+        ) : Observable<OAuth>
+
+        @GET("user")
+        fun getCurrentUser(): Observable<JsonObject>
+
+        @GET("manga/search/{query}")
+        fun search(
+                @Path("query") query: String,
+                @Query("page") page: Int
+        ): Observable<List<ALManga>>
+
+        @GET("user/{username}/mangalist")
+        fun getLib(
+                @Path("username") username: String
+        ): Observable<ALUserLists>
+
+        @FormUrlEncoded
+        @PUT("mangalist")
+        fun addLibManga(
+                @Field("id") id: Int,
+                @Field("chapters_read") chapters_read: Int,
+                @Field("list_status") list_status: String
+        ) : Observable<Response<ResponseBody>>
+
+        @FormUrlEncoded
+        @PUT("mangalist")
+        fun updateLibManga(
+                @Field("id") id: Int,
+                @Field("chapters_read") chapters_read: Int,
+                @Field("list_status") list_status: String,
+                @Field("score") score_raw: String
+        ) : Observable<Response<ResponseBody>>
+
+    }
 
     companion object {
         private const val clientId = "tachiyomi-hrtje"
@@ -39,50 +142,6 @@ interface AnilistApi {
                         .add("refresh_token", token)
                         .build())
 
-        fun createService(client: OkHttpClient) = Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build()
-                .create(AnilistApi::class.java)
-
     }
-
-    @FormUrlEncoded
-    @POST("auth/access_token")
-    fun requestAccessToken(
-            @Field("code") code: String,
-            @Field("grant_type") grant_type: String = "authorization_code",
-            @Field("client_id") client_id: String = clientId,
-            @Field("client_secret") client_secret: String = clientSecret,
-            @Field("redirect_uri") redirect_uri: String = clientUrl)
-            : Observable<OAuth>
-
-    @GET("user")
-    fun getCurrentUser(): Observable<JsonObject>
-
-    @GET("manga/search/{query}")
-    fun search(@Path("query") query: String, @Query("page") page: Int): Observable<List<ALManga>>
-
-    @GET("user/{username}/mangalist")
-    fun getList(@Path("username") username: String): Observable<ALUserLists>
-
-    @FormUrlEncoded
-    @PUT("mangalist")
-    fun addManga(
-            @Field("id") id: Int,
-            @Field("chapters_read") chapters_read: Int,
-            @Field("list_status") list_status: String)
-            : Observable<Response<ResponseBody>>
-
-    @FormUrlEncoded
-    @PUT("mangalist")
-    fun updateManga(
-            @Field("id") id: Int,
-            @Field("chapters_read") chapters_read: Int,
-            @Field("list_status") list_status: String,
-            @Field("score") score_raw: String)
-            : Observable<Response<ResponseBody>>
 
 }
