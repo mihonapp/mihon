@@ -46,7 +46,7 @@ class SourceLoginDialog : LoginDialogPreference() {
         requestSubscription?.unsubscribe()
 
         v?.apply {
-            if (username.text.length == 0 || password.text.length == 0)
+            if (username.text.isEmpty() || password.text.isEmpty())
                 return
 
             login.progress = 1
@@ -69,6 +69,7 @@ class SourceLoginDialog : LoginDialogPreference() {
                     }, { error ->
                         login.progress = -1
                         login.setText(R.string.unknown_error)
+                        error.message?.let { context.toast(it) }
                     })
         }
     }
