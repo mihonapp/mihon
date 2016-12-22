@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.POST
 import eu.kanade.tachiyomi.data.network.asObservable
+import eu.kanade.tachiyomi.data.network.asObservableSuccess
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.util.selectInt
 import eu.kanade.tachiyomi.util.selectText
@@ -22,28 +23,16 @@ class MyanimelistApi(private val client: OkHttpClient, username: String, passwor
     fun addLibManga(track: Track): Observable<Track> {
         return Observable.defer {
             client.newCall(POST(getAddUrl(track), headers, getMangaPostPayload(track)))
-                    .asObservable()
-                    .map { response ->
-                        response.body().close()
-                        if (!response.isSuccessful) {
-                            throw Exception("Could not add manga")
-                        }
-                        track
-                    }
+                    .asObservableSuccess()
+                    .map { track }
         }
     }
 
     fun updateLibManga(track: Track): Observable<Track> {
         return Observable.defer {
             client.newCall(POST(getUpdateUrl(track), headers, getMangaPostPayload(track)))
-                    .asObservable()
-                    .map { response ->
-                        response.body().close()
-                        if (!response.isSuccessful) {
-                            throw Exception("Could not update manga")
-                        }
-                        track
-                    }
+                    .asObservableSuccess()
+                    .map { track }
         }
     }
 
@@ -111,37 +100,45 @@ class MyanimelistApi(private val client: OkHttpClient, username: String, passwor
     }
 
     private fun getMangaPostPayload(track: Track): RequestBody {
-        val xml = Xml.newSerializer()
+        val data = xml {
+            element(ENTRY_TAG) {
+                if (track.last_chapter_read != 0) {
+                    text(CHAPTER_TAG, track.last_chapter_read.toString())
+                }
+                text(STATUS_TAG, track.status.toString())
+                text(SCORE_TAG, track.score.toString())
+            }
+        }
+
+        return FormBody.Builder()
+                .add("data", data)
+                .build()
+    }
+
+    private inline fun xml(block: XmlSerializer.() -> Unit): String {
+        val x = Xml.newSerializer()
         val writer = StringWriter()
 
-        with(xml) {
+        with(x) {
             setOutput(writer)
             startDocument("UTF-8", false)
-            startTag("", ENTRY_TAG)
-
-            // Last chapter read
-            if (track.last_chapter_read != 0) {
-                inTag(CHAPTER_TAG, track.last_chapter_read.toString())
-            }
-            // Manga status in the list
-            inTag(STATUS_TAG, track.status.toString())
-
-            // Manga score
-            inTag(SCORE_TAG, track.score.toString())
-
-            endTag("", ENTRY_TAG)
+            block()
             endDocument()
         }
 
-        val form = FormBody.Builder()
-        form.add("data", writer.toString())
-        return form.build()
+        return writer.toString()
     }
 
-    fun XmlSerializer.inTag(tag: String, body: String, namespace: String = "") {
-        startTag(namespace, tag)
+    private inline fun XmlSerializer.element(tag: String, block: XmlSerializer.() -> Unit) {
+        startTag("", tag)
+        block()
+        endTag("", tag)
+    }
+
+    private fun XmlSerializer.text(tag: String, body: String) {
+        startTag("", tag)
         text(body)
-        endTag(namespace, tag)
+        endTag("", tag)
     }
 
     fun getLoginUrl() = Uri.parse(baseUrl).buildUpon()
