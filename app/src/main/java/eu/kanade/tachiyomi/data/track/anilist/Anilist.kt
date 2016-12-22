@@ -74,7 +74,7 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
             // Smiley
             3 -> index * 30f
             // 10 point decimal
-            4 -> index / 10f
+            4 -> index.toFloat()
             else -> throw Exception("Unknown score type")
         }
     }

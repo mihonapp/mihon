@@ -61,7 +61,7 @@ private val preferences: PreferencesHelper by injectLazy()
 
 fun Track.toAnilistScore(): String = when (preferences.anilistScoreType().getOrDefault()) {
     // 10 point
-    0 -> Math.floor(score.toDouble() / 10).toInt().toString()
+    0 -> (score.toInt() / 10).toString()
     // 100 point
     1 -> score.toInt().toString()
     // 5 stars
