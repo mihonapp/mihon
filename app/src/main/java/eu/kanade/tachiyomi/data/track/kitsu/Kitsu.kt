@@ -130,9 +130,10 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
 
     override fun refresh(track: Track): Observable<Track> {
         return api.getLibManga(track)
-                .doOnNext { remoteTrack ->
+                .map { remoteTrack ->
                     track.copyPersonalFrom(remoteTrack)
                     track.total_chapters = remoteTrack.total_chapters
+                    track
                 }
     }
 
