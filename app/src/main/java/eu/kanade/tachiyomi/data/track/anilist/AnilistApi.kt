@@ -23,22 +23,27 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
             .build()
             .create(Rest::class.java)
 
-    private fun restBuilder() = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-
-    fun login(authCode: String): Observable<OAuth> {
-        return restBuilder()
-                .client(client)
-                .build()
-                .create(Rest::class.java)
-                .requestAccessToken(authCode)
+    fun addLibManga(track: Track): Observable<Track> {
+        return rest.addLibManga(track.remote_id, track.last_chapter_read, track.toAnilistStatus())
+                .map { response ->
+                    response.body().close()
+                    if (!response.isSuccessful) {
+                        throw Exception("Could not add manga")
+                    }
+                    track
+                }
     }
 
-    fun getCurrentUser(): Observable<Pair<String, Int>> {
-        return rest.getCurrentUser()
-                .map { it["id"].string to it["score_type"].int }
+    fun updateLibManga(track: Track): Observable<Track> {
+        return rest.updateLibManga(track.remote_id, track.last_chapter_read, track.toAnilistStatus(),
+                track.toAnilistScore())
+                .map { response ->
+                    response.body().close()
+                    if (!response.isSuccessful) {
+                        throw Exception("Could not update manga")
+                    }
+                    track
+                }
     }
 
     fun search(query: String): Observable<List<Track>> {
@@ -55,26 +60,34 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 }
     }
 
-    fun addLibManga(track: Track): Observable<Track> {
-        return rest.addLibManga(track.remote_id, track.last_chapter_read, track.toAnilistStatus())
-                .doOnNext { it.body().close() }
-                .doOnNext { if (!it.isSuccessful) throw Exception("Could not add manga") }
-                .map { track }
-    }
-
-    fun updateLibManga(track: Track): Observable<Track> {
-        return rest.updateLibManga(track.remote_id, track.last_chapter_read, track.toAnilistStatus(),
-                track.toAnilistScore())
-                .doOnNext { it.body().close() }
-                .doOnNext { if (!it.isSuccessful) throw Exception("Could not update manga") }
-                .map { track }
-    }
-
-    fun findLibManga(username: String, track: Track) : Observable<Track?> {
+    fun findLibManga(track: Track, username: String) : Observable<Track?> {
         // TODO avoid getting the entire list
         return getList(username)
                 .map { list -> list.find { it.remote_id == track.remote_id } }
     }
+
+    fun getLibManga(track: Track, username: String): Observable<Track> {
+        return findLibManga(track, username)
+                .map { it ?: throw Exception("Could not find manga") }
+    }
+
+    fun login(authCode: String): Observable<OAuth> {
+        return restBuilder()
+                .client(client)
+                .build()
+                .create(Rest::class.java)
+                .requestAccessToken(authCode)
+    }
+
+    fun getCurrentUser(): Observable<Pair<String, Int>> {
+        return rest.getCurrentUser()
+                .map { it["id"].string to it["score_type"].int }
+    }
+
+    private fun restBuilder() = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
 
     private interface Rest {
 

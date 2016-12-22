@@ -22,41 +22,6 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
             .build()
             .create(KitsuApi.Rest::class.java)
 
-    fun login(username: String, password: String): Observable<OAuth> {
-        return Retrofit.Builder()
-                .baseUrl(loginUrl)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build()
-                .create(KitsuApi.LoginRest::class.java)
-                .requestAccessToken(username, password)
-    }
-
-    fun getCurrentUser(): Observable<String> {
-        return rest.getCurrentUser().map { it["data"].array[0]["id"].string }
-    }
-
-    fun search(query: String): Observable<List<Track>> {
-        return rest.search(query)
-                .map { json ->
-                    val data = json["data"].array
-                    data.map { KitsuManga(it.obj).toTrack() }
-                }
-    }
-
-    fun findLibManga(userId: String, remoteId: Int): Observable<Track?> {
-        return rest.findLibManga(userId, remoteId)
-                .map { json ->
-                    val data = json["data"].array
-                    if (data.size() > 0) {
-                        KitsuLibManga(data[0].obj, json["included"].array[0].obj).toTrack()
-                    } else {
-                        null
-                    }
-                }
-    }
-
     fun addLibManga(track: Track, userId: String): Observable<Track> {
         return Observable.defer {
             // @formatter:off
@@ -110,6 +75,26 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         }
     }
 
+    fun search(query: String): Observable<List<Track>> {
+        return rest.search(query)
+                .map { json ->
+                    val data = json["data"].array
+                    data.map { KitsuManga(it.obj).toTrack() }
+                }
+    }
+
+    fun findLibManga(track: Track, userId: String): Observable<Track?> {
+        return rest.findLibManga(track.remote_id, userId)
+                .map { json ->
+                    val data = json["data"].array
+                    if (data.size() > 0) {
+                        KitsuLibManga(data[0].obj, json["included"].array[0].obj).toTrack()
+                    } else {
+                        null
+                    }
+                }
+    }
+
     fun getLibManga(track: Track): Observable<Track> {
         return rest.getLibManga(track.remote_id)
                 .map { json ->
@@ -123,31 +108,22 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                 }
     }
 
+    fun login(username: String, password: String): Observable<OAuth> {
+        return Retrofit.Builder()
+                .baseUrl(loginUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build()
+                .create(KitsuApi.LoginRest::class.java)
+                .requestAccessToken(username, password)
+    }
+
+    fun getCurrentUser(): Observable<String> {
+        return rest.getCurrentUser().map { it["data"].array[0]["id"].string }
+    }
+
     private interface Rest {
-
-        @GET("users")
-        fun getCurrentUser(
-                @Query("filter[self]", encoded = true) self: Boolean = true
-        ): Observable<JsonObject>
-
-        @GET("manga")
-        fun search(
-                @Query("filter[text]", encoded = true) query: String
-        ): Observable<JsonObject>
-
-        @GET("library-entries")
-        fun getLibManga(
-                @Query("filter[id]", encoded = true) remoteId: Int,
-                @Query("include") includes: String = "media"
-        ): Observable<JsonObject>
-
-        @GET("library-entries")
-        fun findLibManga(
-                @Query("filter[user_id]", encoded = true) userId: String,
-                @Query("filter[media_id]", encoded = true) remoteId: Int,
-                @Query("page[limit]", encoded = true) limit: Int = 10000,
-                @Query("include") includes: String = "media"
-        ): Observable<JsonObject>
 
         @Headers("Content-Type: application/vnd.api+json")
         @POST("library-entries")
@@ -160,6 +136,30 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         fun updateLibManga(
                 @Path("id") remoteId: Int,
                 @Body data: JsonObject
+        ): Observable<JsonObject>
+
+        @GET("manga")
+        fun search(
+                @Query("filter[text]", encoded = true) query: String
+        ): Observable<JsonObject>
+
+        @GET("library-entries")
+        fun findLibManga(
+                @Query("filter[media_id]", encoded = true) remoteId: Int,
+                @Query("filter[user_id]", encoded = true) userId: String,
+                @Query("page[limit]", encoded = true) limit: Int = 10000,
+                @Query("include") includes: String = "media"
+        ): Observable<JsonObject>
+
+        @GET("library-entries")
+        fun getLibManga(
+                @Query("filter[id]", encoded = true) remoteId: Int,
+                @Query("include") includes: String = "media"
+        ): Observable<JsonObject>
+
+        @GET("users")
+        fun getCurrentUser(
+                @Query("filter[self]", encoded = true) self: Boolean = true
         ): Observable<JsonObject>
 
     }

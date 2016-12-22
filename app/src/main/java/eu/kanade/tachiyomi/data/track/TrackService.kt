@@ -38,12 +38,6 @@ abstract class TrackService(val id: Int) {
 
     abstract fun displayScore(track: Track): String
 
-    abstract fun login(username: String, password: String): Completable
-
-    open val isLogged: Boolean
-        get() = !getUsername().isEmpty() &&
-                !getPassword().isEmpty()
-
     abstract fun add(track: Track): Observable<Track>
 
     abstract fun update(track: Track): Observable<Track>
@@ -54,17 +48,23 @@ abstract class TrackService(val id: Int) {
 
     abstract fun refresh(track: Track): Observable<Track>
 
-    fun saveCredentials(username: String, password: String) {
-        preferences.setTrackCredentials(this, username, password)
-    }
+    abstract fun login(username: String, password: String): Completable
 
     @CallSuper
     open fun logout() {
         preferences.setTrackCredentials(this, "", "")
     }
 
+    open val isLogged: Boolean
+        get() = !getUsername().isEmpty() &&
+                !getPassword().isEmpty()
+
     fun getUsername() = preferences.trackUsername(this)
 
     fun getPassword() = preferences.trackPassword(this)
+
+    fun saveCredentials(username: String, password: String) {
+        preferences.setTrackCredentials(this, username, password)
+    }
 
 }

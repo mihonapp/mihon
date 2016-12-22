@@ -93,6 +93,46 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
         }
     }
 
+    override fun add(track: Track): Observable<Track> {
+        return api.addLibManga(track)
+    }
+
+    override fun update(track: Track): Observable<Track> {
+        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
+            track.status = COMPLETED
+        }
+
+        return api.updateLibManga(track)
+    }
+
+    override fun bind(track: Track): Observable<Track> {
+        return api.findLibManga(track, getUsername())
+                .flatMap { remoteTrack ->
+                    if (remoteTrack != null) {
+                        track.copyPersonalFrom(remoteTrack)
+                        update(track)
+                    } else {
+                        // Set default fields if it's not found in the list
+                        track.score = DEFAULT_SCORE.toFloat()
+                        track.status = DEFAULT_STATUS
+                        add(track)
+                    }
+                }
+    }
+
+    override fun search(query: String): Observable<List<Track>> {
+        return api.search(query)
+    }
+
+    override fun refresh(track: Track): Observable<Track> {
+        return api.getLibManga(track, getUsername())
+                .map { remoteTrack ->
+                    track.copyPersonalFrom(remoteTrack)
+                    track.total_chapters = remoteTrack.total_chapters
+                    track
+                }
+    }
+
     override fun login(username: String, password: String) = login(password)
 
     fun login(authCode: String): Completable {
@@ -114,51 +154,6 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
     override fun logout() {
         super.logout()
         interceptor.setAuth(null)
-    }
-
-    override fun search(query: String): Observable<List<Track>> {
-        return api.search(query)
-    }
-
-    override fun add(track: Track): Observable<Track> {
-        return api.addLibManga(track)
-    }
-
-    override fun update(track: Track): Observable<Track> {
-        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
-            track.status = COMPLETED
-        }
-
-        return api.updateLibManga(track)
-    }
-
-    override fun bind(track: Track): Observable<Track> {
-        return api.findLibManga(getUsername(), track)
-                .flatMap { remoteTrack ->
-                    if (remoteTrack != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        update(track)
-                    } else {
-                        // Set default fields if it's not found in the list
-                        track.score = DEFAULT_SCORE.toFloat()
-                        track.status = DEFAULT_STATUS
-                        add(track)
-                    }
-                }
-    }
-
-    override fun refresh(track: Track): Observable<Track> {
-        // TODO getLibManga method?
-        return api.findLibManga(getUsername(), track)
-                .map { remoteTrack ->
-                    if (remoteTrack != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        track.total_chapters = remoteTrack.total_chapters
-                        track
-                    } else {
-                        throw Exception("Could not find manga")
-                    }
-                }
     }
 
 }

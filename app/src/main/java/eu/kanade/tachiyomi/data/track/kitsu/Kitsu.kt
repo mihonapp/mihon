@@ -62,21 +62,44 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
         return track.toKitsuScore()
     }
 
-    private fun getUserId(): String {
-        return getPassword()
+    override fun add(track: Track): Observable<Track> {
+        return api.addLibManga(track, getUserId())
     }
 
-    fun saveToken(oauth: OAuth?) {
-        val json = gson.toJson(oauth)
-        preferences.trackToken(this).set(json)
-    }
-
-    fun restoreToken(): OAuth? {
-        return try {
-            gson.fromJson(preferences.trackToken(this).get(), OAuth::class.java)
-        } catch (e: Exception) {
-            null
+    override fun update(track: Track): Observable<Track> {
+        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
+            track.status = COMPLETED
         }
+
+        return api.updateLibManga(track)
+    }
+
+    override fun bind(track: Track): Observable<Track> {
+        return api.findLibManga(track, getUserId())
+                .flatMap { remoteTrack ->
+                    if (remoteTrack != null) {
+                        track.copyPersonalFrom(remoteTrack)
+                        track.remote_id = remoteTrack.remote_id
+                        update(track)
+                    } else {
+                        track.score = DEFAULT_SCORE
+                        track.status = DEFAULT_STATUS
+                        add(track)
+                    }
+                }
+    }
+
+    override fun search(query: String): Observable<List<Track>> {
+        return api.search(query)
+    }
+
+    override fun refresh(track: Track): Observable<Track> {
+        return api.getLibManga(track)
+                .map { remoteTrack ->
+                    track.copyPersonalFrom(remoteTrack)
+                    track.total_chapters = remoteTrack.total_chapters
+                    track
+                }
     }
 
     override fun login(username: String, password: String): Completable {
@@ -93,48 +116,21 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
         interceptor.newAuth(null)
     }
 
-    override fun search(query: String): Observable<List<Track>> {
-        return api.search(query)
+    private fun getUserId(): String {
+        return getPassword()
     }
 
-    override fun bind(track: Track): Observable<Track> {
-        return find(track)
-                .flatMap { remoteTrack ->
-                    if (remoteTrack != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        track.remote_id = remoteTrack.remote_id
-                        update(track)
-                    } else {
-                        track.score = DEFAULT_SCORE
-                        track.status = DEFAULT_STATUS
-                        add(track)
-                    }
-                }
+    fun saveToken(oauth: OAuth?) {
+        val json = gson.toJson(oauth)
+        preferences.trackToken(this).set(json)
     }
 
-    private fun find(track: Track): Observable<Track?> {
-        return api.findLibManga(getUserId(), track.remote_id)
-    }
-
-    override fun add(track: Track): Observable<Track> {
-        return api.addLibManga(track, getUserId())
-    }
-
-    override fun update(track: Track): Observable<Track> {
-        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
-            track.status = COMPLETED
+    fun restoreToken(): OAuth? {
+        return try {
+            gson.fromJson(preferences.trackToken(this).get(), OAuth::class.java)
+        } catch (e: Exception) {
+            null
         }
-
-        return api.updateLibManga(track)
-    }
-
-    override fun refresh(track: Track): Observable<Track> {
-        return api.getLibManga(track)
-                .map { remoteTrack ->
-                    track.copyPersonalFrom(remoteTrack)
-                    track.total_chapters = remoteTrack.total_chapters
-                    track
-                }
     }
 
 }

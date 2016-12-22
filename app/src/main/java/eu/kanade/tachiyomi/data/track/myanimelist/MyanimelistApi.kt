@@ -1,0 +1,190 @@
+package eu.kanade.tachiyomi.data.track.myanimelist
+
+import android.net.Uri
+import android.util.Xml
+import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.network.GET
+import eu.kanade.tachiyomi.data.network.POST
+import eu.kanade.tachiyomi.data.network.asObservable
+import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.util.selectInt
+import eu.kanade.tachiyomi.util.selectText
+import okhttp3.*
+import org.jsoup.Jsoup
+import org.xmlpull.v1.XmlSerializer
+import rx.Observable
+import java.io.StringWriter
+
+class MyanimelistApi(private val client: OkHttpClient, username: String, password: String) {
+
+    private var headers = createHeaders(username, password)
+
+    fun addLibManga(track: Track): Observable<Track> {
+        return Observable.defer {
+            client.newCall(POST(getAddUrl(track), headers, getMangaPostPayload(track)))
+                    .asObservable()
+                    .map { response ->
+                        response.body().close()
+                        if (!response.isSuccessful) {
+                            throw Exception("Could not add manga")
+                        }
+                        track
+                    }
+        }
+    }
+
+    fun updateLibManga(track: Track): Observable<Track> {
+        return Observable.defer {
+            client.newCall(POST(getUpdateUrl(track), headers, getMangaPostPayload(track)))
+                    .asObservable()
+                    .map { response ->
+                        response.body().close()
+                        if (!response.isSuccessful) {
+                            throw Exception("Could not update manga")
+                        }
+                        track
+                    }
+        }
+    }
+
+    fun search(query: String, username: String): Observable<List<Track>> {
+        return if (query.startsWith(PREFIX_MY)) {
+            val realQuery = query.substring(PREFIX_MY.length).toLowerCase().trim()
+            getList(username)
+                    .flatMap { Observable.from(it) }
+                    .filter { realQuery in it.title.toLowerCase() }
+                    .toList()
+        } else {
+            client.newCall(GET(getSearchUrl(query), headers))
+                    .asObservable()
+                    .map { Jsoup.parse(it.body().string()) }
+                    .flatMap { Observable.from(it.select("entry")) }
+                    .filter { it.select("type").text() != "Novel" }
+                    .map {
+                        Track.create(TrackManager.MYANIMELIST).apply {
+                            title = it.selectText("title")!!
+                            remote_id = it.selectInt("id")
+                            total_chapters = it.selectInt("chapters")
+                        }
+                    }
+                    .toList()
+        }
+    }
+
+    fun getList(username: String): Observable<List<Track>> {
+        return client
+                .newCall(GET(getListUrl(username), headers))
+                .asObservable()
+                .map { Jsoup.parse(it.body().string()) }
+                .flatMap { Observable.from(it.select("manga")) }
+                .map {
+                    Track.create(TrackManager.MYANIMELIST).apply {
+                        title = it.selectText("series_title")!!
+                        remote_id = it.selectInt("series_mangadb_id")
+                        last_chapter_read = it.selectInt("my_read_chapters")
+                        status = it.selectInt("my_status")
+                        score = it.selectInt("my_score").toFloat()
+                        total_chapters = it.selectInt("series_chapters")
+                    }
+                }
+                .toList()
+    }
+
+    fun findLibManga(track: Track, username: String): Observable<Track?> {
+        return getList(username)
+                .map { list -> list.find { it.remote_id == track.remote_id } }
+    }
+
+    fun getLibManga(track: Track, username: String): Observable<Track> {
+        return findLibManga(track, username)
+                .map { it ?: throw Exception("Could not find manga") }
+    }
+
+    fun login(username: String, password: String): Observable<Response> {
+        headers = createHeaders(username, password)
+        return client.newCall(GET(getLoginUrl(), headers))
+                .asObservable()
+                .doOnNext { response ->
+                    response.close()
+                    if (response.code() != 200) throw Exception("Login error")
+                }
+    }
+
+    private fun getMangaPostPayload(track: Track): RequestBody {
+        val xml = Xml.newSerializer()
+        val writer = StringWriter()
+
+        with(xml) {
+            setOutput(writer)
+            startDocument("UTF-8", false)
+            startTag("", ENTRY_TAG)
+
+            // Last chapter read
+            if (track.last_chapter_read != 0) {
+                inTag(CHAPTER_TAG, track.last_chapter_read.toString())
+            }
+            // Manga status in the list
+            inTag(STATUS_TAG, track.status.toString())
+
+            // Manga score
+            inTag(SCORE_TAG, track.score.toString())
+
+            endTag("", ENTRY_TAG)
+            endDocument()
+        }
+
+        val form = FormBody.Builder()
+        form.add("data", writer.toString())
+        return form.build()
+    }
+
+    fun XmlSerializer.inTag(tag: String, body: String, namespace: String = "") {
+        startTag(namespace, tag)
+        text(body)
+        endTag(namespace, tag)
+    }
+
+    fun getLoginUrl() = Uri.parse(baseUrl).buildUpon()
+            .appendEncodedPath("api/account/verify_credentials.xml")
+            .toString()
+
+    fun getSearchUrl(query: String) = Uri.parse(baseUrl).buildUpon()
+            .appendEncodedPath("api/manga/search.xml")
+            .appendQueryParameter("q", query)
+            .toString()
+
+    fun getListUrl(username: String) = Uri.parse(baseUrl).buildUpon()
+            .appendPath("malappinfo.php")
+            .appendQueryParameter("u", username)
+            .appendQueryParameter("status", "all")
+            .appendQueryParameter("type", "manga")
+            .toString()
+
+    fun getUpdateUrl(track: Track) = Uri.parse(baseUrl).buildUpon()
+            .appendEncodedPath("api/mangalist/update")
+            .appendPath("${track.remote_id}.xml")
+            .toString()
+
+    fun getAddUrl(track: Track) = Uri.parse(baseUrl).buildUpon()
+            .appendEncodedPath("api/mangalist/add")
+            .appendPath("${track.remote_id}.xml")
+            .toString()
+
+    fun createHeaders(username: String, password: String): Headers {
+        return Headers.Builder()
+                .add("Authorization", Credentials.basic(username, password))
+                .add("User-Agent", "api-indiv-9F93C52A963974CF674325391990191C")
+                .build()
+    }
+
+    companion object {
+        const val baseUrl = "https://myanimelist.net"
+
+        private val ENTRY_TAG = "entry"
+        private val CHAPTER_TAG = "chapter"
+        private val SCORE_TAG = "score"
+        private val STATUS_TAG = "status"
+
+        const val PREFIX_MY = "my:"
+    }
+}

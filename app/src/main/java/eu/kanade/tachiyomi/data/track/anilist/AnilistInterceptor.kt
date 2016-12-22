@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
 import com.google.gson.Gson
-import eu.kanade.tachiyomi.data.track.anilist.OAuth
 import okhttp3.Interceptor
 import okhttp3.Response
 

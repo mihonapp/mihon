@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.track
 import android.content.Context
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import eu.kanade.tachiyomi.data.track.kitsu.Kitsu
-import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeList
+import eu.kanade.tachiyomi.data.track.myanimelist.Myanimelist
 
 class TrackManager(private val context: Context) {
 
@@ -13,7 +13,7 @@ class TrackManager(private val context: Context) {
         const val KITSU = 3
     }
 
-    val myAnimeList = MyAnimeList(context, MYANIMELIST)
+    val myAnimeList = Myanimelist(context, MYANIMELIST)
 
     val aniList = Anilist(context, ANILIST)
 
