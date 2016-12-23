@@ -66,8 +66,16 @@ class Mangasee(override val id: Int) : ParsedOnlineSource() {
     // Not used, overrides parent.
     override fun popularMangaNextPageSelector() = ""
 
-    override fun searchMangaInitialUrl(query: String, filters: List<Filter>) =
-            "$baseUrl/search/request.php?sortBy=popularity&sortOrder=descending&keyword=$query&genre=${filters.map { it.id }.joinToString(",")}"
+    override fun searchMangaInitialUrl(query: String, filters: List<Filter>): String {
+        var url = "$baseUrl/search/request.php?sortBy=popularity&sortOrder=descending&keyword=$query"
+        var genres: String? = null
+        for (filter in filters) {
+            if (filter.equals(completedFilter)) url += "&status=Complete"
+            else if (genres == null) genres = filter.id
+            else genres += "," + filter.id
+        }
+        return if (genres == null) url else url + "&genre=$genres"
+    }
 
     override fun searchMangaSelector() = "div.searchResults > div.requested > div.row"
 
@@ -168,9 +176,11 @@ class Mangasee(override val id: Int) : ParsedOnlineSource() {
 
     override fun imageUrlParse(document: Document): String = document.select("img.CurImage").attr("src")
 
+    private val completedFilter = Filter("Complete", "Completed")
     // [...document.querySelectorAll("label.triStateCheckBox input")].map(el => `Filter("${el.getAttribute('name')}", "${el.nextSibling.textContent.trim()}")`).join(',\n')
     // http://mangasee.co/advanced-search/
     override fun getFilterList(): List<Filter> = listOf(
+            completedFilter,
             Filter("Action", "Action"),
             Filter("Adult", "Adult"),
             Filter("Adventure", "Adventure"),
