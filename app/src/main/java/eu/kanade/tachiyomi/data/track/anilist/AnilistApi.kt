@@ -51,6 +51,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 .map { list ->
                     list.filter { it.type != "Novel" }.map { it.toTrack() }
                 }
+                .onErrorReturn { emptyList() }
     }
 
     fun getList(username: String): Observable<List<Track>> {

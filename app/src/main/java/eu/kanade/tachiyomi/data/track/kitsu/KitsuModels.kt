@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 open class KitsuManga(obj: JsonObject) {
     val id by obj.byInt
     val canonicalTitle by obj["attributes"].byString
-    val chapterCount = obj["attributes"]["chapterCount"].nullInt
+    val chapterCount = obj["attributes"].obj.get("chapterCount").nullInt
 
     @CallSuper
     open fun toTrack() = Track.create(TrackManager.KITSU).apply {
@@ -22,7 +22,7 @@ open class KitsuManga(obj: JsonObject) {
 class KitsuLibManga(obj: JsonObject, manga: JsonObject) : KitsuManga(manga) {
     val remoteId by obj.byInt("id")
     val status by obj["attributes"].byString
-    val rating = obj["attributes"]["rating"].nullString
+    val rating = obj["attributes"].obj.get("rating").nullString
     val progress by obj["attributes"].byInt
 
     override fun toTrack() = super.toTrack().apply {
