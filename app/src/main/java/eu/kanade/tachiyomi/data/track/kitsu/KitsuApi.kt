@@ -79,7 +79,9 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         return rest.search(query)
                 .map { json ->
                     val data = json["data"].array
-                    data.map { KitsuManga(it.obj).toTrack() }
+                    data.map { KitsuManga(it.obj) }
+                            .filter { it.type != "novel" }
+                            .map { it.toTrack() }
                 }
     }
 
