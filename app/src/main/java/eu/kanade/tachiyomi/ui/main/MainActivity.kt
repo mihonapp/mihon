@@ -93,7 +93,9 @@ class MainActivity : BaseActivity() {
 
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(R.id.frame_container)
-        if (fragment != null && fragment.tag.toInt() != startScreenId) {
+        if (drawer.isDrawerOpen(GravityCompat.START) || drawer.isDrawerOpen(GravityCompat.END)) {
+            drawer.closeDrawers()
+        } else if (fragment != null && fragment.tag.toInt() != startScreenId) {
             if (resumed) {
                 setSelectedDrawerItem(startScreenId)
             }
