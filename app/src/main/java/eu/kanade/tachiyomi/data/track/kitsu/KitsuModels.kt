@@ -10,7 +10,7 @@ open class KitsuManga(obj: JsonObject) {
     val id by obj.byInt
     val canonicalTitle by obj["attributes"].byString
     val chapterCount = obj["attributes"].obj.get("chapterCount").nullInt
-    val type = obj["attributes"]["mangaType"].string
+    val type = obj["attributes"].obj.get("mangaType").nullString
 
     @CallSuper
     open fun toTrack() = Track.create(TrackManager.KITSU).apply {
