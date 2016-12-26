@@ -30,24 +30,21 @@ object LocaleHelper {
     /**
      * The application's locale. When it's null, the system locale is used.
      */
-    private var appLocale = getLocaleFromCode(preferences.lang())
+    private var appLocale = getLocaleFromString(preferences.lang())
 
     /**
-     * Returns the locale for the value stored in preferences, or null if system language or unknown
-     * value is selected.
+     * Returns the locale for the value stored in preferences, or null if it's system language.
      *
-     * @param pref the int value stored in preferences.
+     * @param pref the string value stored in preferences.
      */
-    private fun getLocaleFromCode(pref: Int): Locale? {
-        val code = when(pref) {
-            1 -> "en"
-            2 -> "es"
-            3 -> "it"
-            4 -> "pt"
-            else -> return null
+    fun getLocaleFromString(pref: String): Locale? {
+        if (pref.isNullOrEmpty()) {
+            return null
         }
-
-        return Locale(code)
+        val parts = pref.split("_", "-")
+        val lang = parts[0]
+        val country = parts.getOrNull(1) ?: ""
+        return Locale(lang, country)
     }
 
     /**
@@ -55,8 +52,8 @@ object LocaleHelper {
      *
      * @param pref the new value stored in preferences.
      */
-    fun changeLocale(pref: Int) {
-        appLocale = getLocaleFromCode(pref)
+    fun changeLocale(pref: String) {
+        appLocale = getLocaleFromString(pref)
     }
 
     /**
