@@ -115,7 +115,8 @@ class SettingsGeneralFragment : SettingsFragment(),
         langPreference.setOnPreferenceChangeListener { preference, newValue ->
             (activity as SettingsActivity).parentFlags = SettingsActivity.FLAG_LANG_CHANGED
             LocaleHelper.changeLocale(newValue.toString())
-            LocaleHelper.updateCfg(activity.application, activity.baseContext.resources.configuration)
+            val app = activity.application
+            LocaleHelper.updateConfiguration(app, app.resources.configuration)
             activity.recreate()
             true
         }

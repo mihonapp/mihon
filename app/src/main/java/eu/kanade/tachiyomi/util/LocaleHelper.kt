@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.util
 import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
+import android.os.LocaleList
 import android.view.ContextThemeWrapper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import uy.kohesive.injekt.injectLazy
@@ -20,12 +21,9 @@ object LocaleHelper {
     private val preferences: PreferencesHelper by injectLazy()
 
     /**
-     * In API 16 and below the application's configuration has to be changed, so we need a copy of
-     * the initial locale. The only problem is that if the system locale changes while the app is
-     * running, it won't change until an application restart.
+     * The system's locale.
      */
-    private var v16SystemLocale = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1)
-        preferences.context.resources.configuration.locale else null
+    private var systemLocale: Locale? = null
 
     /**
      * The application's locale. When it's null, the system locale is used.
@@ -57,9 +55,9 @@ object LocaleHelper {
     }
 
     /**
-     * Updates the app's language from API 17.
+     * Updates the app's language to an activity.
      */
-    fun updateCfg(wrapper: ContextThemeWrapper) {
+    fun updateConfiguration(wrapper: ContextThemeWrapper) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && appLocale != null) {
             val config = Configuration(preferences.context.resources.configuration)
             config.setLocale(appLocale)
@@ -68,16 +66,36 @@ object LocaleHelper {
     }
 
     /**
-     * Updates the app's language for API 16 and lower.
+     * Updates the app's language to the application.
      */
-    fun updateCfg(app: Application, config: Configuration) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            val configCopy = Configuration(config)
-            val displayMetrics = app.baseContext.resources.displayMetrics
-            configCopy.locale = appLocale ?: v16SystemLocale
-            app.baseContext.resources.updateConfiguration(configCopy, displayMetrics)
+    fun updateConfiguration(app: Application, config: Configuration, configChange: Boolean = false) {
+        if (systemLocale == null) {
+            systemLocale = getConfigLocale(config)
         }
+        // In API 16 and lower the system locale can't be changed.
+        if (configChange && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            val newLocale = getConfigLocale(config)
+            if (systemLocale == newLocale) {
+                return
+            }
+            systemLocale = newLocale
+        }
+        val newConfig = Configuration(config)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            newConfig.locale = appLocale ?: systemLocale
+        } else {
+            newConfig.locales = LocaleList(appLocale ?: systemLocale)
+        }
+        val resources = app.resources
+        resources.updateConfiguration(newConfig, resources.displayMetrics)
     }
 
+    private fun getConfigLocale(config: Configuration): Locale {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            config.locale
+        } else {
+            config.locales[0]
+        }
+    }
 
 }
