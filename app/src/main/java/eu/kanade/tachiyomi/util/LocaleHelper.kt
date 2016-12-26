@@ -80,22 +80,33 @@ object LocaleHelper {
             }
             systemLocale = newLocale
         }
-        val newConfig = Configuration(config)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            newConfig.locale = appLocale ?: systemLocale
-        } else {
-            newConfig.locales = LocaleList(appLocale ?: systemLocale)
-        }
+        val newConfig = updateConfigLocale(config, appLocale ?: systemLocale ?: Locale.getDefault())
         val resources = app.resources
         resources.updateConfiguration(newConfig, resources.displayMetrics)
     }
 
+    /**
+     * Returns the locale applied in the given configuration.
+     */
     private fun getConfigLocale(config: Configuration): Locale {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             config.locale
         } else {
             config.locales[0]
         }
+    }
+
+    /**
+     * Returns a new configuration with the given locale applied.
+     */
+    private fun updateConfigLocale(config: Configuration, locale: Locale): Configuration {
+        val newConfig = Configuration(config)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            newConfig.locale = locale
+        } else {
+            newConfig.locales = LocaleList(locale)
+        }
+        return newConfig
     }
 
 }
