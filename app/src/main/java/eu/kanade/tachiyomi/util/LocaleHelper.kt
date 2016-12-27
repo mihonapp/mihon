@@ -31,6 +31,12 @@ object LocaleHelper {
     private var appLocale = getLocaleFromString(preferences.lang())
 
     /**
+     * The currently applied locale. Used to avoid losing the selected language after a non locale
+     * configuration change to the application.
+     */
+    private var currentLocale: Locale? = null
+
+    /**
      * Returns the locale for the value stored in preferences, or null if it's system language.
      *
      * @param pref the string value stored in preferences.
@@ -72,15 +78,16 @@ object LocaleHelper {
         if (systemLocale == null) {
             systemLocale = getConfigLocale(config)
         }
-        // In API 16 and lower the system locale can't be changed.
+        // In API 16 and lower [systemLocale] can't be changed.
         if (configChange && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            val newLocale = getConfigLocale(config)
-            if (systemLocale == newLocale) {
+            val configLocale = getConfigLocale(config)
+            if (currentLocale == configLocale) {
                 return
             }
-            systemLocale = newLocale
+            systemLocale = configLocale
         }
-        val newConfig = updateConfigLocale(config, appLocale ?: systemLocale ?: Locale.getDefault())
+        currentLocale = appLocale ?: systemLocale ?: Locale.getDefault()
+        val newConfig = updateConfigLocale(config, currentLocale!!)
         val resources = app.resources
         resources.updateConfiguration(newConfig, resources.displayMetrics)
     }
