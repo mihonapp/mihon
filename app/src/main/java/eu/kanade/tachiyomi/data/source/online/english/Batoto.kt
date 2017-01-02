@@ -343,7 +343,6 @@ class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
             ListField("Type", "type", arrayOf(ListValue("Any", ""), ListValue("Manga (Jp)", "jp"), ListValue("Manhwa (Kr)", "kr"), ListValue("Manhua (Cn)", "cn"), ListValue("Artbook", "ar"), ListValue("Other", "ot"))),
             Status(),
             Flag("Exclude mature", "mature", "m", ""),
-            Filter.Header(""),
             ListField("Order by", "order_cond", arrayOf(ListValue("Title", "title"), ListValue("Author", "author"), ListValue("Artist", "artist"), ListValue("Rating", "rating"), ListValue("Views", "views"), ListValue("Last Update", "update")), 4),
             Flag("Ascending order", "order", "asc", "desc"),
             Filter.Header("Genres"),

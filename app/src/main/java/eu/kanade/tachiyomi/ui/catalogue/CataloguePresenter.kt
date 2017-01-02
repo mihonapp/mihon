@@ -65,9 +65,14 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         private set
 
     /**
-     * Filters states.
+     * Modifiable list of filters.
      */
-    var filters: List<Filter<*>> = emptyList()
+    var sourceFilters: List<Filter<*>> = emptyList()
+
+    /**
+     * List of filters used by the [Pager]. If empty alongside [query], the popular query is used.
+     */
+    var appliedFilters: List<Filter<*>> = emptyList()
 
     /**
      * Pager containing a list of manga results.
@@ -105,6 +110,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
 
         try {
             source = getLastUsedSource()
+            sourceFilters = source.getFilterList()
         } catch (error: NoSuchElementException) {
             return
         }
@@ -130,9 +136,9 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * @param query the query.
      * @param filters the current state of the filters (for search mode).
      */
-    fun restartPager(query: String = this.query, filters: List<Filter<*>> = this.filters) {
+    fun restartPager(query: String = this.query, filters: List<Filter<*>> = this.appliedFilters) {
         this.query = query
-        this.filters = filters
+        this.appliedFilters = filters
 
         if (!isListMode) {
             subscribeToMangaInitializer()
@@ -182,6 +188,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     fun setActiveSource(source: OnlineSource) {
         prefs.lastUsedCatalogueSource().set(source.id)
         this.source = source
+        sourceFilters = source.getFilterList()
 
         restartPager(query = "", filters = emptyList())
     }

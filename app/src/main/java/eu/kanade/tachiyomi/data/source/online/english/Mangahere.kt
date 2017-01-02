@@ -162,7 +162,6 @@ class Mangahere(override val id: Int) : ParsedOnlineSource() {
             TextField("Artist", "artist"),
             ListField("Type", "direction", arrayOf(ListValue("Any", ""), ListValue("Japanese Manga (read from right to left)", "rl"), ListValue("Korean Manhwa (read from left to right)", "lr"))),
             Status(),
-            Filter.Header(""),
             ListField("Order by", "sort", arrayOf(ListValue("Series name", "name"), ListValue("Rating", "rating"), ListValue("Views", "views"), ListValue("Total chapters", "total_chapters"), ListValue("Last chapter", "last_chapter_time")), 2),
             Order(),
             Filter.Header("Genres"),

@@ -155,7 +155,6 @@ class Mangafox(override val id: Int) : ParsedOnlineSource() {
             TextField("Artist", "artist"),
             ListField("Type", "type", arrayOf(ListValue("Any", ""), ListValue("Japanese Manga", "1"), ListValue("Korean Manhwa", "2"), ListValue("Chinese Manhua", "3"))),
             Genre("Completed", "is_completed"),
-            Filter.Header(""),
             ListField("Order by", "sort", arrayOf(ListValue("Series name", "name"), ListValue("Rating", "rating"), ListValue("Views", "views"), ListValue("Total chapters", "total_chapters"), ListValue("Last chapter", "last_chapter_time")), 2),
             Order(),
             Filter.Header("Genres"),
