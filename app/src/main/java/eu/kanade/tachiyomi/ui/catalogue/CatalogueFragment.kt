@@ -452,19 +452,21 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      * Show the filter dialog for the source.
      */
     private fun showFiltersDialog() {
-        val allFilters = presenter.source.filters
-        val selectedFilters = presenter.filters
-                .map { filter -> allFilters.indexOf(filter) }
-                .toTypedArray()
-
+        val adapter = FilterAdapter(if (presenter.filters.isEmpty()) presenter.source.getFilterList() // make a copy
+        else presenter.filters)
         MaterialDialog.Builder(context)
                 .title(R.string.action_set_filter)
-                .items(allFilters.map { it.name })
-                .itemsCallbackMultiChoice(selectedFilters) { dialog, positions, text ->
-                    val newFilters = positions.map { allFilters[it] }
+                .adapter(adapter, null)
+                .onPositive() { dialog, which ->
                     showProgressBar()
-                    presenter.setSourceFilter(newFilters)
-                    true
+                    var allDefault = true
+                    for (i in 0..adapter.filters.lastIndex) {
+                        if (adapter.filters[i].state != presenter.source.filters[i].state) {
+                            allDefault = false
+                            break
+                        }
+                    }
+                    presenter.setSourceFilter(if (allDefault) emptyList() else adapter.filters)
                 }
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)

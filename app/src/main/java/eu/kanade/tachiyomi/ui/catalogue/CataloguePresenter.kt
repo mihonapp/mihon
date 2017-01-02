@@ -65,9 +65,9 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         private set
 
     /**
-     * Active filters.
+     * Filters states.
      */
-    var filters: List<Filter> = emptyList()
+    var filters: List<Filter<*>> = emptyList()
 
     /**
      * Pager containing a list of manga results.
@@ -128,9 +128,9 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * Restarts the pager for the active source with the provided query and filters.
      *
      * @param query the query.
-     * @param filters the list of active filters (for search mode).
+     * @param filters the current state of the filters (for search mode).
      */
-    fun restartPager(query: String = this.query, filters: List<Filter> = this.filters) {
+    fun restartPager(query: String = this.query, filters: List<Filter<*>> = this.filters) {
         this.query = query
         this.filters = filters
 
@@ -362,15 +362,15 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     }
 
     /**
-     * Set the active filters for the current source.
+     * Set the filter states for the current source.
      *
-     * @param selectedFilters a list of active filters.
+     * @param filterStates a list of active filters.
      */
-    fun setSourceFilter(selectedFilters: List<Filter>) {
-        restartPager(filters = selectedFilters)
+    fun setSourceFilter(filters: List<Filter<*>>) {
+        restartPager(filters = filters)
     }
 
-    open fun createPager(query: String, filters: List<Filter>): Pager {
+    open fun createPager(query: String, filters: List<Filter<*>>): Pager {
         return CataloguePager(source, query, filters)
     }
 
