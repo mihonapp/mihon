@@ -66,6 +66,7 @@ class SettingsActivity : BaseActivity(),
             "tracking_screen" -> SettingsTrackingFragment.newInstance(key)
             "advanced_screen" -> SettingsAdvancedFragment.newInstance(key)
             "about_screen" -> SettingsAboutFragment.newInstance(key)
+            "eh_screen" -> SettingsEhFragment.newInstance(key) //EH
             else -> SettingsFragment.newInstance(key)
         }
     }

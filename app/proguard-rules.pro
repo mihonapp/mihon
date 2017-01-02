@@ -96,3 +96,6 @@
 
 # Duktape
 -keep class com.squareup.duktape.** { *; }
+
+# [EH]
+-keep class exh.** { *; }

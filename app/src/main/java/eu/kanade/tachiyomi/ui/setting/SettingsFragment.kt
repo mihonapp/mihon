@@ -29,6 +29,7 @@ open class SettingsFragment : XpPreferenceFragment() {
         addPreferencesFromResource(R.xml.pref_downloads)
         addPreferencesFromResource(R.xml.pref_sources)
         addPreferencesFromResource(R.xml.pref_tracking)
+        addPreferencesFromResource(R.xml.eh_pref_eh) //EH
         addPreferencesFromResource(R.xml.pref_advanced)
         addPreferencesFromResource(R.xml.pref_about)
 

@@ -4,8 +4,12 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Context
 import android.os.Environment
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.data.source.online.YamlOnlineSource
+import eu.kanade.tachiyomi.data.source.online.all.EHentai
+import eu.kanade.tachiyomi.data.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.data.source.online.english.*
 import eu.kanade.tachiyomi.data.source.online.german.WieManga
 import eu.kanade.tachiyomi.data.source.online.russian.Mangachan
@@ -14,11 +18,14 @@ import eu.kanade.tachiyomi.data.source.online.russian.Readmanga
 import eu.kanade.tachiyomi.util.hasPermission
 import org.yaml.snakeyaml.Yaml
 import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 import java.io.File
 
 open class SourceManager(private val context: Context) {
 
-    private val sourcesMap = createSources()
+    private val prefs: PreferencesHelper by injectLazy()
+
+    private var sourcesMap = createSources()
 
     open fun get(sourceKey: Int): Source? {
         return sourcesMap[sourceKey]
@@ -27,19 +34,39 @@ open class SourceManager(private val context: Context) {
     fun getOnlineSources() = sourcesMap.values.filterIsInstance(OnlineSource::class.java)
 
     private fun createOnlineSourceList(): List<Source> = listOf(
-            Batoto(1),
-            Mangahere(2),
-            Mangafox(3),
-            Kissmanga(4),
-            Readmanga(5),
-            Mintmanga(6),
-            Mangachan(7),
-            Readmangatoday(8),
-            Mangasee(9),
-            WieManga(10)
+            Batoto(101),
+            Mangahere(102),
+            Mangafox(103),
+            Kissmanga(104),
+            Readmanga(105),
+            Mintmanga(106),
+            Mangachan(107),
+            Readmangatoday(108),
+            Mangasee(109),
+            WieManga(110)
     )
 
+    private fun createEHSources(): List<Source> {
+        val exSrcs = mutableListOf(
+                EHentai(1, false, context),
+                EHentaiMetadata(3, false, context)
+        )
+        if(prefs.enableExhentai().getOrDefault()) {
+            exSrcs += EHentai(2, true, context)
+            exSrcs += EHentaiMetadata(4, true, context)
+        }
+        return exSrcs
+    }
+
+    init {
+        prefs.enableExhentai().asObservable().subscribe {
+            //Refresh sources when ExHentai enabled/disabled change
+            sourcesMap = createSources()
+        }
+    }
+
     private fun createSources(): Map<Int, Source> = hashMapOf<Int, Source>().apply {
+        createEHSources().forEach { put(it.id, it) }
         createOnlineSourceList().forEach { put(it.id, it) }
 
         val parsersDir = File(Environment.getExternalStorageDirectory().absolutePath +

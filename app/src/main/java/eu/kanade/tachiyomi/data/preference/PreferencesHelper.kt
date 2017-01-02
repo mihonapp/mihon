@@ -144,4 +144,13 @@ class PreferencesHelper(val context: Context) {
 
     fun lang() = prefs.getString(keys.lang, "")
 
+    //EH
+    fun enableExhentai() = rxPrefs.getBoolean("enable_exhentai", false)
+
+    fun secureEXH() = rxPrefs.getBoolean("secure_exh", true)
+
+    //EH Cookies
+    fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
+    fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)
+    fun igneousVal() = rxPrefs.getString("eh_igneous", null)
 }

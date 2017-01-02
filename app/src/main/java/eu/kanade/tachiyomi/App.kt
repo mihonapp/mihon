@@ -8,6 +8,7 @@ import com.evernote.android.job.JobManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
 import eu.kanade.tachiyomi.util.LocaleHelper
+import io.paperdb.Paper
 import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
 import timber.log.Timber
@@ -33,6 +34,7 @@ open class App : Application() {
 
         setupAcra()
         setupJobManager()
+        Paper.init(this) //Setup metadata DB (EH)
 
         LocaleHelper.updateConfiguration(this, resources.configuration)
     }

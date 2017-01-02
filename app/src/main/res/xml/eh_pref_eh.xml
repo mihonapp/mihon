@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceScreen
+        android:icon="@drawable/eh_ic_ehlogo_red_24dp"
+        android:key="eh_screen"
+        android:persistent="false"
+        android:title="@string/pref_category_eh"
+        app:asp_tintEnabled="true">
+
+        <SwitchPreference
+            android:persistent="false"
+            android:title="Enable ExHentai"
+            android:summaryOff="Requires login"
+            android:key="enable_exhentai"
+            android:defaultValue="false" />
+
+        <SwitchPreference
+            android:dependency="enable_exhentai"
+            android:defaultValue="true"
+            android:key="secure_exh"
+            android:title="Secure ExHentai"
+            android:summary="Use the HTTPS version of ExHentai. Uncheck if ExHentai is not working." />
+
+    </PreferenceScreen>
+
+</PreferenceScreen>

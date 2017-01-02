@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tachiyomi</string>
+    <string name="app_name">TachiyomiEH</string>
 
     <string name="name">Name</string>
 
@@ -375,4 +375,7 @@
     <string name="download_notifier_text_only_wifi">No wifi connection available</string>
     <string name="download_notifier_no_network">No network connection available</string>
 
+    <!-- EH -->
+    <string name="label_login">Login</string>
+    <string name="pref_category_eh">E-Hentai</string>
 </resources>
