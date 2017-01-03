@@ -200,6 +200,9 @@ dependencies {
     //SnappyDB (EH)
     compile 'io.paperdb:paperdb:2.0'
 
+    //JVE (Regex) (EH)
+    compile 'ru.lanwen.verbalregex:java-verbal-expressions:1.4'
+
     // Tests
     //Paper DB screws up tests
     /*testCompile 'junit:junit:4.12'

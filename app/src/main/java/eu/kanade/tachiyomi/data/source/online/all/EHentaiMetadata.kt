@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
 import exh.metadata.models.ExGalleryMetadata
+import exh.search.SearchEngine
 import okhttp3.Response
 import rx.Observable
 
@@ -23,6 +24,8 @@ class EHentaiMetadata(override val id: Int,
     val metadataHelper = MetadataHelper()
 
     val internalEx = EHentai(id - 2, exh, context)
+
+    val searchEngine = SearchEngine()
 
     override val baseUrl: String
         get() = throw UnsupportedOperationException()
@@ -105,8 +108,11 @@ class EHentaiMetadata(override val id: Int,
 
     override fun fetchSearchManga(page: MangasPage, query: String, filters: List<Filter>)
     = Observable.fromCallable {
+        val parsed = searchEngine.parseQuery(query)
         page.mangas.addAll(sortedByTimeGalleries().filter { manga ->
             filters.isEmpty() || filters.filter { it.id == manga.genre }.isNotEmpty()
+        }.filter {
+            searchEngine.matches(it, parsed)
         }.mapToManga())
         page
     }!!
