@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.data.source.online.russian.Mintmanga
 import eu.kanade.tachiyomi.data.source.online.russian.Readmanga
 import eu.kanade.tachiyomi.util.hasPermission
 import org.yaml.snakeyaml.Yaml
+import rx.functions.Action1
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
@@ -59,10 +60,17 @@ open class SourceManager(private val context: Context) {
     }
 
     init {
-        prefs.enableExhentai().asObservable().subscribe {
-            //Refresh sources when ExHentai enabled/disabled change
-            sourcesMap = createSources()
+        //Rebuild EH when settings change
+        val action: Action1<Any> = Action1 { sourcesMap = createSources() }
+
+        prefs.enableExhentai().asObservable().subscribe(action)
+        prefs.imageQuality().asObservable().subscribe (action)
+        prefs.useHentaiAtHome().asObservable().subscribe(action)
+        prefs.useJapaneseTitle().asObservable().subscribe {
+            action.call(null)
         }
+        prefs.ehSearchSize().asObservable().subscribe (action)
+        prefs.thumbnailRows().asObservable().subscribe(action)
     }
 
     private fun createSources(): Map<Int, Source> = hashMapOf<Int, Source>().apply {

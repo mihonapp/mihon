@@ -28,7 +28,6 @@ class EHentai(override val id: Int,
               val exh: Boolean,
               val context: Context) : OnlineSource() {
 
-
     val schema: String
         get() = if(prefs.secureEXH().getOrDefault())
             "https"
@@ -291,18 +290,56 @@ class EHentai(override val id: Int,
     }
 
     val cookiesHeader by lazy {
-        val cookies: MutableMap<String, String> = HashMap()
+        val cookies: MutableMap<String, String> = mutableMapOf()
         if(prefs.enableExhentai().getOrDefault()) {
             cookies.put(LoginActivity.MEMBER_ID_COOKIE, prefs.memberIdVal().getOrDefault())
             cookies.put(LoginActivity.PASS_HASH_COOKIE, prefs.passHashVal().getOrDefault())
             cookies.put(LoginActivity.IGNEOUS_COOKIE, prefs.igneousVal().getOrDefault())
         }
+
+        //Setup settings
+        val settings = mutableListOf<String?>()
+        //Image quality
+        settings.add(when(prefs.imageQuality()
+                .getOrDefault()
+                .toLowerCase()) {
+            "ovrs_2400" -> "xr_2400"
+            "ovrs_1600" -> "xr_1600"
+            "high" -> "xr_1280"
+            "med" -> "xr_980"
+            "low" -> "xr_780"
+            "auto" -> null
+            else -> null
+        })
+        //Use Hentai@Home
+        settings.add(if(prefs.useHentaiAtHome().getOrDefault())
+            null
+        else
+            "uh_n")
+        //Japanese titles
+        settings.add(if(prefs.useJapaneseTitle().getOrDefault())
+            "tl_j"
+        else
+            null)
+        //Do not show popular right now pane as we can't parse it
+        settings.add("prn_n")
+        //Paging size
+        settings.add(prefs.ehSearchSize().getOrDefault())
+        //Thumbnail rows
+        settings.add(prefs.thumbnailRows().getOrDefault())
+
+        cookies.put("uconfig", buildSettings(settings))
+
         buildCookies(cookies)
     }
 
     //Headers
     override fun headersBuilder()
-        = super.headersBuilder().add("Cookie", cookiesHeader)!!
+            = super.headersBuilder().add("Cookie", cookiesHeader)!!
+
+    fun buildSettings(settings: List<String?>): String {
+        return settings.filterNotNull().joinToString(separator = "-")
+    }
 
     fun buildCookies(cookies: Map<String, String>)
             = cookies.entries.map {

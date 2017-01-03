@@ -196,4 +196,48 @@
         <item>pt</item>
     </string-array>
 
+    <!-- EH -->
+    <string-array name="ehentai_quality">
+        <item>Auto</item>
+        <item>2400x</item>
+        <item>1600x</item>
+        <item>1280x</item>
+        <item>980x</item>
+        <item>780x</item>
+    </string-array>
+    <string-array name="ehentai_quality_values">
+        <item>auto</item>
+        <item>ovrs_2400</item>
+        <item>ovrs_1600</item>
+        <item>high</item>
+        <item>med</item>
+        <item>low</item>
+    </string-array>
+
+    <string-array name="ehentai_search_result_count">
+        <item>25 results</item>
+        <item>50 results</item>
+        <item>100 results</item>
+        <item>200 results</item>
+    </string-array>
+    <string-array name="ehentai_search_result_count_values">
+        <item>rc_0</item>
+        <item>rc_1</item>
+        <item>rc_2</item>
+        <item>rc_3</item>
+    </string-array>
+
+    <string-array name="ehentai_thumbnail_rows">
+        <item>4</item>
+        <item>10 (requires \'More Thumbs\' hath perk)</item>
+        <item>20 (requires \'Thumbs Up\' hath perk)</item>
+        <item>40 (requires \'All Thumbs\' hath perk)</item>
+    </string-array>
+    <string-array name="ehentai_thumbnail_rows_values">
+        <item>tr_2</item>
+        <item>tr_5</item>
+        <item>tr_10</item>
+        <item>tr_20</item>
+    </string-array>
+
 </resources>

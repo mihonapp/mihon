@@ -149,6 +149,16 @@ class PreferencesHelper(val context: Context) {
 
     fun secureEXH() = rxPrefs.getBoolean("secure_exh", true)
 
+    fun imageQuality() = rxPrefs.getString("ehentai_quality", "auto")
+
+    fun useHentaiAtHome() = rxPrefs.getBoolean("enable_hah", true)
+
+    fun useJapaneseTitle() = rxPrefs.getBoolean("use_jp_title", false)
+
+    fun ehSearchSize() = rxPrefs.getString("ex_search_size", "rc_0")
+
+    fun thumbnailRows() = rxPrefs.getString("ex_thumb_rows", "tr_2")
+
     //EH Cookies
     fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
     fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)
