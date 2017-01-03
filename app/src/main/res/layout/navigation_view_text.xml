@@ -20,10 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
+            android:imeOptions="actionDone"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     </android.support.design.widget.TextInputLayout>
-
-
 
 </LinearLayout>
