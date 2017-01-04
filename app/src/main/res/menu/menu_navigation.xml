@@ -18,7 +18,7 @@
         <item
             android:id="@+id/nav_drawer_catalogues"
             android:icon="@drawable/ic_explore_black_24dp"
-            android:title="@string/label_catalogues" />
+            android:title="Galleries" />
         <item
             android:id="@+id/nav_drawer_latest_updates"
             android:icon="@drawable/ic_watch_later_black_24dp"

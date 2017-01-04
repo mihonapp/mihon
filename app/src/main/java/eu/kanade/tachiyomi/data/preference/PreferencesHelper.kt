@@ -82,7 +82,7 @@ class PreferencesHelper(val context: Context) {
 
     fun catalogueAsList() = rxPrefs.getBoolean(keys.catalogueAsList, false)
 
-    fun enabledLanguages() = rxPrefs.getStringSet(keys.enabledLanguages, setOf("en"))
+    fun enabledLanguages() = rxPrefs.getStringSet(keys.enabledLanguages, setOf("all"))
 
     fun sourceUsername(source: Source) = prefs.getString(keys.sourceUsername(source.id), "")
 

@@ -23,6 +23,7 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
 import exh.ui.login.LoginActivity
+import timber.log.Timber
 
 class EHentai(override val id: Int,
               val exh: Boolean,
@@ -100,19 +101,21 @@ class EHentai(override val id: Int,
     }))
 
     override fun fetchPageListFromNetwork(chapter: Chapter)
-            = fetchChapterPage(chapter, 0).map {
+            = fetchChapterPage(chapter, "$baseUrl${chapter.url}").map {
         it.mapIndexed { i, s ->
             Page(i, s)
         }
     }!!
 
-    private fun fetchChapterPage(chapter: Chapter, id: Int): Observable<List<String>> {
-        val urls = mutableListOf<String>()
-        return chapterPageCall(chapter, id).flatMap {
+    private fun fetchChapterPage(chapter: Chapter, np: String,
+                                 pastUrls: List<String> = emptyList()): Observable<List<String>> {
+        val urls = ArrayList(pastUrls)
+        return chapterPageCall(chapter, np).flatMap {
             val jsoup = it.asJsoup()
             urls += parseChapterPage(jsoup)
-            if(nextPageUrl(jsoup) != null) {
-                fetchChapterPage(chapter, id + 1)
+            val nextUrl = nextPageUrl(jsoup)
+            if(nextUrl != null) {
+                fetchChapterPage(chapter, nextUrl, urls)
             } else {
                 Observable.just(urls)
             }
@@ -124,8 +127,8 @@ class EHentai(override val id: Int,
             Pair(it.child(0).attr("alt").toInt(), it.attr("href"))
         }.sortedBy(Pair<Int, String>::first).map { it.second }
     }
-    private fun chapterPageCall(chapter: Chapter, pn: Int) = client.newCall(chapterPageRequest(chapter, pn)).asObservableSuccess()
-    private fun chapterPageRequest(chapter: Chapter, pn: Int) = GET("$baseUrl${chapter.url}?p=$pn", headers)
+    private fun chapterPageCall(chapter: Chapter, np: String) = client.newCall(chapterPageRequest(chapter, np)).asObservableSuccess()
+    private fun chapterPageRequest(chapter: Chapter, np: String) = GET(np, headers)
 
     private fun nextPageUrl(element: Element): String?
             = element.select("a[onclick=return false]").last()?.let {
