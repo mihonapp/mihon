@@ -12,7 +12,7 @@ class Text: QueryComponent() {
             when(component) {
                 is StringTextComponent -> builder.then(component.value)
                 is SingleWildcard -> builder.anyChar()
-                is MultiWildcard -> builder.zeroOrMore()
+                is MultiWildcard -> builder.anything()
             }
         }
         return builder
@@ -20,5 +20,7 @@ class Text: QueryComponent() {
 
     fun rawTextOnly() = components
             .filter { it is StringTextComponent }
-            .joinToString(separator = "")
+            .joinToString(separator = "", transform = {
+                (it as StringTextComponent).value
+            })
 }
