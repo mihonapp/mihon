@@ -4,7 +4,6 @@ import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.Tag
 
 class SearchEngine {
-    //TODO Namespace alias
     fun matches(metadata: ExGalleryMetadata, query: List<QueryComponent>): Boolean {
 
         fun matchTagList(tags: List<Tag>,
@@ -37,13 +36,21 @@ class SearchEngine {
                 if(!matchTagList(metadata.tags.entries.flatMap { it.value },
                         component)) return false
             } else if(component is Namespace) {
-                //Match namespace
-                val ns = metadata.tags.entries.filter {
-                    it.key == component.namespace
-                }.flatMap { it.value }
-                //Match tags
-                if(!matchTagList(ns, component.tag!!))
-                    return false
+                if(component.namespace == "uploader") {
+                    //Match uploader
+                    if(!component.tag?.rawTextOnly().equals(metadata.uploader,
+                            ignoreCase = true)) {
+                        return false
+                    }
+                } else {
+                    //Match namespace
+                    val ns = metadata.tags.entries.filter {
+                        it.key == component.namespace
+                    }.flatMap { it.value }
+                    //Match tags
+                    if (!matchTagList(ns, component.tag!!))
+                        return false
+                }
             }
         }
         return true

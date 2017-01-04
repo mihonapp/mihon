@@ -180,14 +180,14 @@ class EHentai(override val id: Int,
         with(metdata) {
             url = manga.url
             exh = this@EHentai.exh
-            title = select("#gn").text().nullIfBlank()
-            altTitle = select("#gj").text().nullIfBlank()
+            title = select("#gn").text().nullIfBlank()?.trim()
+            altTitle = select("#gj").text().nullIfBlank()?.trim()
 
-            thumbnailUrl = select("#gd1 img").attr("src").nullIfBlank()
+            thumbnailUrl = select("#gd1 img").attr("src").nullIfBlank()?.trim()
 
-            genre = select(".ic").attr("alt").nullIfBlank()
+            genre = select(".ic").attr("alt").nullIfBlank()?.trim()
 
-            uploader = select("#gdn").text().nullIfBlank()
+            uploader = select("#gdn").text().nullIfBlank()?.trim()
 
             //Parse the table
             select("#gdd tr").forEach {
