@@ -4,6 +4,9 @@ import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.Tag
 
 class SearchEngine {
+
+    private val queryCache = mutableMapOf<String, List<QueryComponent>>()
+
     fun matches(metadata: ExGalleryMetadata, query: List<QueryComponent>): Boolean {
 
         fun matchTagList(tags: List<Tag>,
@@ -56,7 +59,7 @@ class SearchEngine {
         return true
     }
 
-    fun parseQuery(query: String): List<QueryComponent> {
+    fun parseQuery(query: String) = queryCache.getOrPut(query, {
         val res = mutableListOf<QueryComponent>()
 
         var inQuotes = false
@@ -128,6 +131,6 @@ class SearchEngine {
         }
         flushAll()
 
-        return res
-    }
+        res
+    })
 }

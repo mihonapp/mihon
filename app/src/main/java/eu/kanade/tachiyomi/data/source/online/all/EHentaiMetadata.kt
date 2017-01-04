@@ -125,7 +125,7 @@ class EHentaiMetadata(override val id: Int,
 
     override fun fetchMangaDetails(manga: Manga) = Observable.fromCallable {
         //Hack to convert the gallery into an online gallery when favoriting it or reading it
-        metadataHelper.fetchMetadata(manga.url, exh).copyTo(manga)
+        metadataHelper.fetchMetadata(manga.url, exh)?.copyTo(manga)
         manga
     }!!
 

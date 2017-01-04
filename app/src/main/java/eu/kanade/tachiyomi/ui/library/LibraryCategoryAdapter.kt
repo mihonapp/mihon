@@ -7,9 +7,15 @@ import android.widget.FrameLayout
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.source.SourceManager
+import eu.kanade.tachiyomi.data.source.online.all.EHentai
+import eu.kanade.tachiyomi.data.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
+import exh.metadata.MetadataHelper
+import exh.search.SearchEngine
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
+import uy.kohesive.injekt.injectLazy
 import java.util.*
 
 /**
@@ -24,6 +30,11 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
      * The list of manga in this category.
      */
     private var mangas: List<Manga> = emptyList()
+
+    private val sourceManager: SourceManager by injectLazy()
+
+    private val searchEngine = SearchEngine()
+    private val metadataHelper = MetadataHelper()
 
     init {
         setHasStableIds(true)
@@ -70,8 +81,28 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
      * @return true if the manga should be included, false otherwise.
      */
     override fun filterObject(manga: Manga, query: String): Boolean = with(manga) {
-        title.toLowerCase().contains(query) ||
-                author != null && author!!.toLowerCase().contains(query)
+        if(manga.source > 100) {
+            //Regular searching for normal manga
+            title.toLowerCase().contains(query) ||
+                    author != null && author!!.toLowerCase().contains(query)
+        } else {
+            //Use gallery search engine for EH manga
+            val source = sourceManager.get(manga.source)
+            source?.let {
+                val exh: Boolean
+                if(source is EHentai)
+                    exh = source.exh
+                else if(source is EHentaiMetadata)
+                    exh = source.exh
+                else
+                    return@with false
+
+                val metadata = metadataHelper.fetchMetadata(manga.url, exh)
+                metadata?.let {
+                    searchEngine.matches(metadata, searchEngine.parseQuery(query))
+                } ?: title.toLowerCase().contains(query) //Use regular searching when the metadata is not set up for this gallery
+            } ?: false
+        }
     }
 
     /**

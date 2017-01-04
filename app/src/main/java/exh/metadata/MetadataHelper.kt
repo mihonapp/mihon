@@ -8,7 +8,8 @@ class MetadataHelper {
     fun writeGallery(galleryMetadata: ExGalleryMetadata)
             = exGalleryBook().write(galleryMetadata.galleryUniqueIdentifier(), galleryMetadata)
 
-    fun fetchMetadata(url: String, exh: Boolean) = ExGalleryMetadata().apply {
+    fun fetchMetadata(url: String, exh: Boolean): ExGalleryMetadata?
+            = ExGalleryMetadata().apply {
         this.url = url
         this.exh = exh
         return exGalleryBook().read<ExGalleryMetadata>(galleryUniqueIdentifier())
