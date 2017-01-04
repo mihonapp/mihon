@@ -24,6 +24,10 @@
             android:icon="@drawable/ic_watch_later_black_24dp"
             android:title="@string/label_latest_updates" />
         <item
+            android:id="@+id/nav_drawer_batch_add"
+            android:icon="@drawable/ic_playlist_add_black_24dp"
+            android:title="Batch Add" />
+        <item
             android:id="@+id/nav_drawer_downloads"
             android:icon="@drawable/ic_file_download_black_24dp"
             android:title="@string/label_download_queue" />

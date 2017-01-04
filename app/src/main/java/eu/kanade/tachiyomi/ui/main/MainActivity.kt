@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.ui.library.LibraryFragment
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
+import exh.ui.batchadd.BatchAddFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import uy.kohesive.injekt.injectLazy
@@ -63,6 +64,7 @@ class MainActivity : BaseActivity() {
                 R.id.nav_drawer_recently_read -> setFragment(RecentlyReadFragment.newInstance(), id)
                 R.id.nav_drawer_catalogues -> setFragment(CatalogueFragment.newInstance(), id)
                 R.id.nav_drawer_latest_updates -> setFragment(LatestUpdatesFragment.newInstance(), id)
+                R.id.nav_drawer_batch_add -> setFragment(BatchAddFragment.newInstance(), id)
                 R.id.nav_drawer_downloads -> setFragment(DownloadFragment.newInstance(), id)
                 R.id.nav_drawer_settings -> {
                     val intent = Intent(this, SettingsActivity::class.java)
