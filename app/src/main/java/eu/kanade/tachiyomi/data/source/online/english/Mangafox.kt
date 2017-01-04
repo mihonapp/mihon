@@ -137,7 +137,14 @@ class Mangafox(override val id: Int) : ParsedOnlineSource() {
     override fun pageListParse(document: Document, pages: MutableList<Page>) {
     }
 
-    override fun imageUrlParse(document: Document) = document.getElementById("image").attr("src")
+    override fun imageUrlParse(document: Document): String {
+        val url = document.getElementById("image").attr("src")
+        return if ("compressed?token=" !in url) {
+            url
+        } else {
+            "http://mangafox.me/media/logo.png"
+        }
+    }
 
     private data class ListValue(val name: String, val value: String) {
         override fun toString(): String = name
