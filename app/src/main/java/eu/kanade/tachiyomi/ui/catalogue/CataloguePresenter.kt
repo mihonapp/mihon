@@ -140,9 +140,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         this.query = query
         this.appliedFilters = filters
 
-        if (!isListMode) {
-            subscribeToMangaInitializer()
-        }
+        subscribeToMangaInitializer()
 
         // Create a new pager.
         pager = createPager(query, filters)
@@ -200,11 +198,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      */
     private fun setDisplayMode(asList: Boolean) {
         isListMode = asList
-        if (asList) {
-            initializerSubscription?.let { remove(it) }
-        } else {
-            subscribeToMangaInitializer()
-        }
+        subscribeToMangaInitializer()
     }
 
     /**

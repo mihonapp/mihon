@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
+import eu.kanade.tachiyomi.util.connectivityManager
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
@@ -420,8 +421,8 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         val isListMode = presenter.isListMode
         activity.invalidateOptionsMenu()
         switcher.showNext()
-        if (!isListMode) {
-            // Initialize mangas if going to grid view
+        if (!isListMode || !context.connectivityManager.isActiveNetworkMetered) {
+            // Initialize mangas if going to grid view or if over wifi when going to list view
             presenter.initializeMangas(adapter.items)
         }
     }
@@ -444,8 +445,10 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      * @param manga the manga to find.
      * @return the holder of the manga or null if it's not bound.
      */
-    private fun getHolder(manga: Manga): CatalogueGridHolder? {
-        return catalogue_grid.findViewHolderForItemId(manga.id!!) as? CatalogueGridHolder
+    private fun getHolder(manga: Manga): CatalogueHolder? {
+        return (catalogue_grid.findViewHolderForItemId(manga.id!!) ?:
+                catalogue_list.findViewHolderForItemId(manga.id!!))
+                as? CatalogueHolder
     }
 
     /**
