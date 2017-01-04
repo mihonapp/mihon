@@ -6,7 +6,24 @@ import ru.lanwen.verbalregex.VerbalExpression
 class Text: QueryComponent() {
     val components = mutableListOf<TextComponent>()
 
-    fun asRegex(): VerbalExpression.Builder {
+    private var regex: VerbalExpression? = null
+    private var lenientRegex: VerbalExpression? = null
+
+    fun asRegex(): VerbalExpression {
+        if(regex == null) {
+            regex = baseBuilder().build()
+        }
+        return regex!!
+    }
+
+    fun asLenientRegex(): VerbalExpression {
+        if(lenientRegex == null) {
+            lenientRegex = baseBuilder().anything().build()
+        }
+        return lenientRegex!!
+    }
+
+    fun baseBuilder(): VerbalExpression.Builder {
         val builder = VerbalExpression.regex()
         for(component in components) {
             when(component) {

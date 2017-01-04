@@ -2,22 +2,18 @@ package exh.search
 
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.Tag
-import ru.lanwen.verbalregex.VerbalExpression
-import java.util.*
 
 class SearchEngine {
     //TODO Namespace alias
     fun matches(metadata: ExGalleryMetadata, query: List<QueryComponent>): Boolean {
 
         fun matchTagList(tags: List<Tag>,
-                         component: Text,
-                         builder: VerbalExpression.Builder,
-                         built: VerbalExpression): Boolean {
+                         component: Text): Boolean {
             //Match tags
             val tagMatcher = if(!component.exact)
-                builder.anything().build()
+                component.asLenientRegex()
             else
-                built
+                component.asRegex()
             //Match beginning of tag
             if (tags.find {
                 tagMatcher.testExact(it.name)
@@ -32,28 +28,21 @@ class SearchEngine {
 
         for(component in query) {
             if(component is Text) {
-                val builder = component.asRegex()
-                val built = builder.build()
                 //Match title
-                if (built.test(metadata.title?.toLowerCase())
-                        || built.test(metadata.altTitle?.toLowerCase())) {
+                if (component.asRegex().test(metadata.title?.toLowerCase())
+                        || component.asRegex().test(metadata.altTitle?.toLowerCase())) {
                     continue
                 }
                 //Match tags
-                if(!matchTagList(metadata.tags.entries.flatMap(MutableMap.MutableEntry<String, ArrayList<Tag>>::value),
-                        component,
-                        builder,
-                        built))
-                    return false
+                if(!matchTagList(metadata.tags.entries.flatMap { it.value },
+                        component)) return false
             } else if(component is Namespace) {
                 //Match namespace
                 val ns = metadata.tags.entries.filter {
-                    it.key == component.namespace.rawTextOnly()
+                    it.key == component.namespace
                 }.flatMap { it.value }
                 //Match tags
-                val builder = component.tag!!.asRegex()
-                val built = builder.build()
-                if(!matchTagList(ns, component.tag!!, builder, built))
+                if(!matchTagList(ns, component.tag!!))
                     return false
             }
         }
@@ -110,7 +99,20 @@ class SearchEngine {
                 nextIsExact = true
             } else if(char == ':') {
                 flushText()
-                namespace = Namespace(flushToText(), null)
+                var flushed = flushToText().rawTextOnly()
+                //Map tag aliases
+                flushed = when(flushed) {
+                    "a" -> "artist"
+                    "c", "char" -> "character"
+                    "f" -> "female"
+                    "g", "creator", "circle" -> "group"
+                    "l", "lang" -> "language"
+                    "m" -> "male"
+                    "p", "series" -> "parody"
+                    "r" -> "reclass"
+                    else -> flushed
+                }
+                namespace = Namespace(flushed, null)
             } else if(char == ' ' && !inQuotes) {
                 flushAll()
             } else {
