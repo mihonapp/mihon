@@ -63,6 +63,16 @@
             android:entries="@array/ehentai_thumbnail_rows"
             android:entryValues="@array/ehentai_thumbnail_rows_values" />
 
+        <PreferenceCategory
+            android:title="Advanced"
+            android:persistent="false">
+            <Preference
+                android:title="Migrate library"
+                android:persistent="false"
+                android:key="ex_migrate_library"
+                android:summary="Migrate your library to enable tag searching in the library. This button will be visible even if you have already migrated your library" />
+        </PreferenceCategory>
+
     </PreferenceScreen>
 
 </PreferenceScreen>

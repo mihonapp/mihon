@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.library
 
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -17,6 +19,7 @@ import exh.search.SearchEngine
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
 import uy.kohesive.injekt.injectLazy
 import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * Adapter storing a list of manga in a certain category.
@@ -35,6 +38,8 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
 
     private val searchEngine = SearchEngine()
     private val metadataHelper = MetadataHelper()
+
+    var asyncSearchText: String? = null
 
     init {
         setHasStableIds(true)
@@ -69,8 +74,17 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
      * @param param the filter. Not used.
      */
     override fun updateDataSet(param: String?) {
-        filterItems(mangas)
-        notifyDataSetChanged()
+        //Async search filter (EH)
+        val filtered = asyncSearchText?.let { search ->
+            mangas.filter {
+                filterObject(it, search)
+            }
+        } ?: mangas
+        //The rest of the filters run on the main loop
+        Handler(Looper.getMainLooper()).post {
+            filterItems(filtered)
+            notifyDataSetChanged()
+        }
     }
 
     /**
@@ -100,7 +114,7 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
                 val metadata = metadataHelper.fetchMetadata(manga.url, exh)
                 metadata?.let {
                     searchEngine.matches(metadata, searchEngine.parseQuery(query))
-                } ?: title.toLowerCase().contains(query) //Use regular searching when the metadata is not set up for this gallery
+                } ?: title.contains(query, ignoreCase = true) //Use regular searching when the metadata is not set up for this gallery
             } ?: false
         }
     }

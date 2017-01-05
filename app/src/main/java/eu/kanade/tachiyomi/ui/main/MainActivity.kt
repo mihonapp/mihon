@@ -7,6 +7,7 @@ import android.support.v4.app.TaskStackBuilder
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.backup.BackupFragment
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -17,9 +18,12 @@ import eu.kanade.tachiyomi.ui.library.LibraryFragment
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
+import exh.ui.MetadataFetchDialog
 import exh.ui.batchadd.BatchAddFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 class MainActivity : BaseActivity() {
@@ -82,6 +86,14 @@ class MainActivity : BaseActivity() {
 
             // Show changelog if needed
             ChangelogDialogFragment.show(this, preferences, supportFragmentManager)
+
+            // Migrate library if needed
+            Injekt.get<DatabaseHelper>().getLibraryMangas().asRxSingle().subscribe {
+                if(it.size > 0)
+                    runOnUiThread {
+                        MetadataFetchDialog().tryAskMigration(this)
+                    }
+            }
         }
     }
 

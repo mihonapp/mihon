@@ -9,7 +9,7 @@ class SearchEngine {
 
     fun matches(metadata: ExGalleryMetadata, query: List<QueryComponent>): Boolean {
 
-        fun matchTagList(tags: List<Tag>,
+        fun matchTagList(tags: Sequence<Tag>,
                          component: Text): Boolean {
             //Match tags
             val tagMatcher = if(!component.exact)
@@ -28,15 +28,18 @@ class SearchEngine {
             return true
         }
 
+        val cachedLowercaseTitle = metadata.title?.toLowerCase()
+        val cachedLowercaseAltTitle = metadata.altTitle?.toLowerCase()
+
         for(component in query) {
             if(component is Text) {
                 //Match title
-                if (component.asRegex().test(metadata.title?.toLowerCase())
-                        || component.asRegex().test(metadata.altTitle?.toLowerCase())) {
+                if (component.asRegex().test(cachedLowercaseTitle)
+                        || component.asRegex().test(cachedLowercaseAltTitle)) {
                     continue
                 }
                 //Match tags
-                if(!matchTagList(metadata.tags.entries.flatMap { it.value },
+                if(!matchTagList(metadata.tags.entries.asSequence().flatMap { it.value.asSequence() },
                         component)) return false
             } else if(component is Namespace) {
                 if(component.namespace == "uploader") {
@@ -47,9 +50,9 @@ class SearchEngine {
                     }
                 } else {
                     //Match namespace
-                    val ns = metadata.tags.entries.filter {
+                    val ns = metadata.tags.entries.asSequence().filter {
                         it.key == component.namespace
-                    }.flatMap { it.value }
+                    }.flatMap { it.value.asSequence() }
                     //Match tags
                     if (!matchTagList(ns, component.tag!!))
                         return false

@@ -6,7 +6,9 @@ import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.plusAssign
+import exh.ui.MetadataFetchDialog
 import exh.ui.login.LoginActivity
+import net.xpece.android.support.preference.Preference
 import net.xpece.android.support.preference.SwitchPreference
 import uy.kohesive.injekt.injectLazy
 
@@ -29,6 +31,10 @@ class SettingsEhFragment : SettingsFragment() {
         findPreference("enable_exhentai") as SwitchPreference
     }
 
+    val migrateLibraryPref by lazy {
+        findPreference("ex_migrate_library") as Preference
+    }
+
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
 
@@ -47,6 +53,11 @@ class SettingsEhFragment : SettingsFragment() {
                 startActivity(Intent(context, LoginActivity::class.java))
                 false
             }
+        }
+
+        migrateLibraryPref.setOnPreferenceClickListener {
+            MetadataFetchDialog().askMigration(activity)
+            true
         }
     }
 }

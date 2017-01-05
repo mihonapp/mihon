@@ -159,6 +159,8 @@ class PreferencesHelper(val context: Context) {
 
     fun thumbnailRows() = rxPrefs.getString("ex_thumb_rows", "tr_2")
 
+    fun migrateLibraryAsked() = rxPrefs.getBoolean("ex_migrate_library", false)
+
     //EH Cookies
     fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
     fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)

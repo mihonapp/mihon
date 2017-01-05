@@ -19,7 +19,9 @@ import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.item_library_category.view.*
 import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
+import java.util.concurrent.TimeUnit
 
 /**
  * Fragment containing the library manga for a certain category.
@@ -114,8 +116,11 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
 
         val presenter = fragment.presenter
 
-        searchSubscription = presenter.searchSubject.subscribe { text ->
-            adapter.searchText = text
+        searchSubscription = presenter
+                .searchSubject
+                .debounce(100L, TimeUnit.MILLISECONDS)
+                .subscribe { text -> //Debounce search (EH)
+            adapter.asyncSearchText = text.trim().toLowerCase()
             adapter.updateDataSet()
         }
 
