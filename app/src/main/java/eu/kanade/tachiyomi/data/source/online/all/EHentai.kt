@@ -23,7 +23,6 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
 import exh.ui.login.LoginActivity
-import timber.log.Timber
 
 class EHentai(override val id: Int,
               val exh: Boolean,
@@ -37,9 +36,9 @@ class EHentai(override val id: Int,
 
     override val baseUrl: String
         get() = if(exh)
-            "$schema://exhentai.org"
+            "$schema://exhentai.org/"
         else
-            "http://g.e-hentai.org"
+            "http://g.e-hentai.org/"
 
     override val lang = "all"
     override val supportsLatest = true
@@ -110,7 +109,7 @@ class EHentai(override val id: Int,
     private fun fetchChapterPage(chapter: Chapter, np: String,
                                  pastUrls: List<String> = emptyList()): Observable<List<String>> {
         val urls = ArrayList(pastUrls)
-        return chapterPageCall(chapter, np).flatMap {
+        return chapterPageCall(np).flatMap {
             val jsoup = it.asJsoup()
             urls += parseChapterPage(jsoup)
             val nextUrl = nextPageUrl(jsoup)
@@ -127,8 +126,8 @@ class EHentai(override val id: Int,
             Pair(it.child(0).attr("alt").toInt(), it.attr("href"))
         }.sortedBy(Pair<Int, String>::first).map { it.second }
     }
-    private fun chapterPageCall(chapter: Chapter, np: String) = client.newCall(chapterPageRequest(chapter, np)).asObservableSuccess()
-    private fun chapterPageRequest(chapter: Chapter, np: String) = GET(np, headers)
+    private fun chapterPageCall(np: String) = client.newCall(chapterPageRequest(np)).asObservableSuccess()
+    private fun chapterPageRequest(np: String) = GET(np, headers)
 
     private fun nextPageUrl(element: Element): String?
             = element.select("a[onclick=return false]").last()?.let {
