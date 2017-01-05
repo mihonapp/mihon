@@ -26,7 +26,7 @@ class BatchAddFragment : BaseFragment() {
         = inflater.inflate(R.layout.eh_fragment_batch_add, container, false)!!
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        setToolbarTitle("Batch Add")
+        setToolbarTitle("Batch add")
 
         setup()
     }
@@ -35,8 +35,10 @@ class BatchAddFragment : BaseFragment() {
         btn_add_galleries.setOnClickListener {
             val galleries = galleries_box.text.toString()
             //Check text box has content
-            if(galleries.isNullOrBlank())
+            if(galleries.isNullOrBlank()) {
                 noGalleriesSpecified()
+                return@setOnClickListener
+            }
 
             //Too lazy to actually deal with orientation changes
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
@@ -71,12 +73,15 @@ class BatchAddFragment : BaseFragment() {
                 }
 
                 //Show report
+                val succeededCount = succeeded.size
+                val failedCount = failed.size
+
                 if(succeeded.isEmpty()) succeeded += "None"
                 if(failed.isEmpty()) failed += "None"
                 val succeededReport = succeeded.joinToString(separator = "\n", prefix = "Added:\n")
                 val failedReport = failed.joinToString(separator = "\n", prefix = "Failed:\n")
 
-                val summary = "Summary:\nAdded: ${succeeded.size} gallerie(s)\nFailed: ${failed.size} gallerie(s)"
+                val summary = "Summary:\nAdded: $succeededCount gallerie(s)\nFailed: $failedCount gallerie(s)"
 
                 val report = listOf(succeededReport, failedReport, summary).joinToString(separator = "\n\n")
 
