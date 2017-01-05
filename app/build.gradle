@@ -35,7 +35,7 @@ android {
     publishNonDefault true
 
     defaultConfig {
-        applicationId "eu.kanade.tachiyomi.eh"
+        applicationId "eu.kanade.tachiyomi.eh2"
         minSdkVersion 16
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

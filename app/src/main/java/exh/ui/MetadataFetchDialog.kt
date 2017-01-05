@@ -83,20 +83,7 @@ class MetadataFetchDialog {
     fun tryAskMigration(activity: Activity) {
         if(preferenceHelper.migrateLibraryAsked().getOrDefault()) return
 
-        MaterialDialog.Builder(activity)
-                .title("Migrate library")
-                .content("You need to migrate your library before tag searching in the library will function.\n\n" +
-                        "This migration may take a long time depending on your library size and will also use up a significant amount of internet bandwidth.\n\n" +
-                        "This process can be done later if required.")
-                .positiveText("Migrate")
-                .negativeText("Later")
-                .onPositive { materialDialog, dialogAction -> show(activity) }
-                .onNegative { materialDialog, dialogAction -> adviseMigrationLater(activity) }
-                .cancelable(false)
-                .canceledOnTouchOutside(false)
-                .dismissListener {
-                    preferenceHelper.migrateLibraryAsked().set(true)
-                }.show()
+        askMigration(activity)
     }
 
     fun askMigration(activity: Activity) {
