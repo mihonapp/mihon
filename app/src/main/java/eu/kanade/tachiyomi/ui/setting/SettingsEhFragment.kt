@@ -6,7 +6,7 @@ import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.plusAssign
-import exh.ui.MetadataFetchDialog
+import exh.ui.migration.MetadataFetchDialog
 import exh.ui.login.LoginActivity
 import net.xpece.android.support.preference.Preference
 import net.xpece.android.support.preference.SwitchPreference

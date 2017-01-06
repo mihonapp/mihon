@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.main
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,7 +8,6 @@ import android.support.v4.app.TaskStackBuilder
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.backup.BackupFragment
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -18,17 +18,20 @@ import eu.kanade.tachiyomi.ui.library.LibraryFragment
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
-import exh.ui.MetadataFetchDialog
 import exh.ui.batchadd.BatchAddFragment
+import exh.ui.migration.LibraryMigrationManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import rx.Subscription
 import uy.kohesive.injekt.injectLazy
 
 class MainActivity : BaseActivity() {
 
     val preferences: PreferencesHelper by injectLazy()
+
+    var finishSubscription: Subscription? = null
+
+    var dismissQueue = mutableListOf<DialogInterface>()
 
     private val startScreenId by lazy {
         when (preferences.startScreen()) {
@@ -88,13 +91,23 @@ class MainActivity : BaseActivity() {
             ChangelogDialogFragment.show(this, preferences, supportFragmentManager)
 
             // Migrate library if needed
-            Injekt.get<DatabaseHelper>().getLibraryMangas().asRxSingle().subscribe {
-                if(it.size > 0)
-                    runOnUiThread {
-                        MetadataFetchDialog().tryAskMigration(this)
-                    }
+            LibraryMigrationManager(this, dismissQueue).askMigrationIfNecessary()
+
+            //Last part of migration requires finishing this activity
+            finishSubscription?.unsubscribe()
+            preferences.finishMainActivity().set(false)
+            finishSubscription = preferences.finishMainActivity().asObservable().subscribe {
+                if(it)
+                    finish()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        finishSubscription?.unsubscribe()
+        preferences.finishMainActivity().set(false)
+        dismissQueue.forEach { it.dismiss() }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -155,5 +168,6 @@ class MainActivity : BaseActivity() {
 
     companion object {
         private const val REQUEST_OPEN_SETTINGS = 200
+        const val FINALIZE_MIGRATION = "finalize_migration"
     }
 }

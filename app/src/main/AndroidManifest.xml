@@ -132,6 +132,15 @@
                     android:scheme="https"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name="exh.ui.migration.MigrationCompletionActivity"
+            android:label="Complete migration">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/json"/>
+            </intent-filter>
+        </activity>
 
     </application>
 

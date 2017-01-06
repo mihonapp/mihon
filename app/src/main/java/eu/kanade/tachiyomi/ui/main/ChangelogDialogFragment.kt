@@ -25,7 +25,6 @@ class ChangelogDialogFragment : DialogFragment() {
                 preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
                 ChangelogDialogFragment().show(fm, "changelog")
 
-                // TODO better upgrades management
                 if (oldVersion == 0) return
 
                 if (oldVersion < 14) {
@@ -39,6 +38,7 @@ class ChangelogDialogFragment : DialogFragment() {
                     // Delete internal chapter cache dir.
                     File(context.cacheDir, "chapter_disk_cache").deleteRecursively()
                 }
+                //TODO Review any other changes below
             }
         }
     }

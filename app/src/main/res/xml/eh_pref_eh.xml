@@ -25,8 +25,8 @@
 
         <SwitchPreference
             android:title="Show Japanese titles in search results"
-            android:summaryOn="Currently showing Japanese titles in search results"
-            android:summaryOff="Currently showing English/Romanized titles in search results"
+            android:summaryOn="Currently showing Japanese titles in search results. Clear the chapter cache after changing this (in the Advanced section)"
+            android:summaryOff="Currently showing English/Romanized titles in search results. Clear the chapter cache after changing this (in the Advanced section)"
             android:key="use_jp_title"
             android:defaultValue="false" />
 
@@ -46,7 +46,7 @@
             android:entryValues="@array/ehentai_quality_values" />
 
         <ListPreference
-            android:title="Search result count"
+            android:title="Search result count per page"
             android:summary="Requires the \'Paging Enlargement\' hath perk"
             android:defaultValue="rc_0"
             android:key="ex_search_size"
@@ -57,7 +57,7 @@
         <ListPreference
             android:defaultValue="tr_2"
             android:title="Thumbnail rows"
-            android:summary="It is recommended to set this to the maximum size your hath perks allow"
+            android:summary="Affects loading speeds. It is recommended to set this to the maximum size your hath perks allow"
             android:key="ex_thumb_rows"
             android:dependency="enable_exhentai"
             android:entries="@array/ehentai_thumbnail_rows"
@@ -67,10 +67,10 @@
             android:title="Advanced"
             android:persistent="false">
             <Preference
-                android:title="Migrate library"
+                android:title="Migrate library metadata"
                 android:persistent="false"
                 android:key="ex_migrate_library"
-                android:summary="Migrate your library to enable tag searching in the library. This button will be visible even if you have already migrated your library" />
+                android:summary="Fetch the library metadata to enable tag searching in the library. This button will be visible even if you have already fetched the metadata" />
         </PreferenceCategory>
 
     </PreferenceScreen>

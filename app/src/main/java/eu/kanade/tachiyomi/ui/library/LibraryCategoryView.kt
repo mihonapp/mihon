@@ -120,7 +120,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
                 .searchSubject
                 .debounce(100L, TimeUnit.MILLISECONDS)
                 .subscribe { text -> //Debounce search (EH)
-            adapter.asyncSearchText = text.trim().toLowerCase()
+            adapter.asyncSearchText = text?.trim()?.toLowerCase()
             adapter.updateDataSet()
         }
 

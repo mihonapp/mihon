@@ -9,6 +9,7 @@ import com.f2prateek.rx.preferences.RxSharedPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.Source
 import eu.kanade.tachiyomi.data.track.TrackService
+import exh.ui.migration.MigrationStatus
 import java.io.File
 
 fun <T> Preference<T>.getOrDefault(): T = get() ?: defaultValue()!!
@@ -160,6 +161,10 @@ class PreferencesHelper(val context: Context) {
     fun thumbnailRows() = rxPrefs.getString("ex_thumb_rows", "tr_2")
 
     fun migrateLibraryAsked() = rxPrefs.getBoolean("ex_migrate_library", false)
+
+    fun migrationStatus() = rxPrefs.getInteger("migration_status", MigrationStatus.NOT_INITIALIZED)
+
+    fun finishMainActivity() = rxPrefs.getBoolean("finish_main_activity", false)
 
     //EH Cookies
     fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)

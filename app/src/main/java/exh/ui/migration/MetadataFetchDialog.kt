@@ -1,4 +1,4 @@
-package exh.ui
+package exh.ui.migration
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -30,7 +30,7 @@ class MetadataFetchDialog {
         context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
 
         val progressDialog = MaterialDialog.Builder(context)
-                .title("Migrating library")
+                .title("Fetching library metadata")
                 .content("Preparing library")
                 .progress(false, 0, true)
                 .cancelable(false)
@@ -87,27 +87,40 @@ class MetadataFetchDialog {
     }
 
     fun askMigration(activity: Activity) {
-        MaterialDialog.Builder(activity)
-                .title("Migrate library")
-                .content("You need to migrate your library before tag searching in the library will function.\n\n" +
-                        "This migration may take a long time depending on your library size and will also use up a significant amount of internet bandwidth.\n\n" +
-                        "This process can be done later if required.")
-                .positiveText("Migrate")
-                .negativeText("Later")
-                .onPositive { materialDialog, dialogAction -> show(activity) }
-                .onNegative { materialDialog, dialogAction -> adviseMigrationLater(activity) }
-                .cancelable(false)
-                .canceledOnTouchOutside(false)
-                .dismissListener {
-                    preferenceHelper.migrateLibraryAsked().set(true)
-                }.show()
+        var extra = ""
+        db.getLibraryMangas().asRxSingle().subscribe {
+            //Not logged in but have ExHentai galleries
+            if(!preferenceHelper.enableExhentai().getOrDefault()) {
+                it.find { it.source == 2 }?.let {
+                    extra = "<b><font color='red'>If you use ExHentai, please log in first before fetching your library metadata!</font></b><br><br>"
+                }
+            }
+            activity.runOnUiThread {
+                MaterialDialog.Builder(activity)
+                        .title("Fetch library metadata")
+                        .content(LibraryMigrationManager.fromHtmlCompat("You need to fetch your library's metadata before tag searching in the library will function.<br><br>" +
+                                "This process may take a long time depending on your library size and will also use up a significant amount of internet bandwidth.<br><br>" +
+                                extra +
+                                "This process can be done later if required."))
+                        .positiveText("Migrate")
+                        .negativeText("Later")
+                        .onPositive { materialDialog, dialogAction -> show(activity) }
+                        .onNegative { materialDialog, dialogAction -> adviseMigrationLater(activity) }
+                        .cancelable(false)
+                        .canceledOnTouchOutside(false)
+                        .dismissListener {
+                            preferenceHelper.migrateLibraryAsked().set(true)
+                        }.show()
+            }
+        }
+
     }
 
     fun adviseMigrationLater(activity: Activity) {
         MaterialDialog.Builder(activity)
-                .title("Migration canceled")
-                .content("Library migration has been canceled.\n\n" +
-                        "You can run this operation later by going to: Settings > EHentai > Migrate Library")
+                .title("Metadata fetch canceled")
+                .content("Library metadata fetch has been canceled.\n\n" +
+                        "You can run this operation later by going to: Settings > E-Hentai > Migrate library metadata")
                 .positiveText("Ok")
                 .cancelable(true)
                 .canceledOnTouchOutside(true)
