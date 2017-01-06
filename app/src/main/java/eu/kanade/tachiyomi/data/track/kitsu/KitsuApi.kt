@@ -88,8 +88,10 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     fun findLibManga(track: Track, userId: String): Observable<Track?> {
         return rest.findLibManga(track.remote_id, userId)
                 .map { json ->
-                    val data = json["data"].array
-                    if (data.size() > 0) {
+                    val data = json["data"].array.filter {
+                        it["relationships"]["media"]["data"]["type"].string == "manga"
+                    }
+                    if (data.isNotEmpty()) {
                         KitsuLibManga(data[0].obj, json["included"].array[0].obj).toTrack()
                     } else {
                         null
