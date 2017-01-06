@@ -92,7 +92,8 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                         it["relationships"]["media"]["data"]["type"].string == "manga"
                     }
                     if (data.isNotEmpty()) {
-                        KitsuLibManga(data[0].obj, json["included"].array[0].obj).toTrack()
+                        val media = json["included"].array.first { it["type"].string == "manga" }.obj
+                        KitsuLibManga(data[0].obj, media).toTrack()
                     } else {
                         null
                     }
