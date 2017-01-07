@@ -17,7 +17,7 @@
             android:title="@string/pref_enable_acra" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/pref_enable_automatic_updates_key"
             android:summary="@string/pref_enable_automatic_updates_summary"
             android:title="@string/pref_enable_automatic_updates" />

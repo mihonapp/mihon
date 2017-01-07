@@ -1,10 +1,13 @@
 package exh.metadata
 
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.UrlUtil
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.Tag
 import exh.plusAssign
+import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,6 +26,8 @@ private val ONGOING_SUFFIX = arrayOf(
 
 val EX_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
 
+private val prefs: PreferencesHelper by injectLazy()
+
 fun ExGalleryMetadata.copyTo(manga: Manga) {
     exh?.let {
         manga.source = if(it)
@@ -32,7 +37,12 @@ fun ExGalleryMetadata.copyTo(manga: Manga) {
     }
     url?.let { manga.url = it }
     thumbnailUrl?.let { manga.thumbnail_url = it }
-    title?.let { manga.title = it }
+
+    val titleObj = if(prefs.useJapaneseTitle().getOrDefault())
+        altTitle ?: title
+    else
+        title
+    titleObj?.let { manga.title = it }
 
     //Set artist (if we can find one)
     tags[ARTIST_NAMESPACE]?.let {

@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
-    <changelogversion versionName="v0.2.2" changeDate="">
-        <changelogtext>[b]Important![/b] The application is now signed with a different key, you must migrate over your previous library if you wish to keep it!
+    <changelogversion versionName="v4.0.0" changeDate="">
+        <changelogtext>
+            [b]Important![/b] The application is now signed with a different key, you must migrate over your previous library if you wish to keep it!
         </changelogtext>
 
-        <changelogtext>Bugfixes and more improvements.</changelogtext>
+        <changelogtext>
+            Upstream merge
+        </changelogtext>
+
+        <changelogtext>
+            Backend rewrite
+        </changelogtext>
+
+        <changelogtext>
+            Optimizations to cookies and ExHentai login
+        </changelogtext>
+
+        <changelogtext>
+            Add more customization to E-Hentai/ExHentai
+        </changelogtext>
+
+        <changelogtext>
+            Add offline gallery search engine
+        </changelogtext>
+
+        <changelogtext>
+            Various aesthetic improvements
+        </changelogtext>
+
+        <changelogtext>
+            Bugfixes and more improvements
+        </changelogtext>
     </changelogversion>
 
 </changelog>

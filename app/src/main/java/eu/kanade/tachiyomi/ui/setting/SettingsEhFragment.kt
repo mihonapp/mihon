@@ -35,6 +35,10 @@ class SettingsEhFragment : SettingsFragment() {
         findPreference("ex_migrate_library") as Preference
     }
 
+    val useJpTitlePref by lazy {
+        findPreference("use_jp_title") as SwitchPreference
+    }
+
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
 
@@ -46,6 +50,7 @@ class SettingsEhFragment : SettingsFragment() {
 
         enableExhentaiPref.setOnPreferenceChangeListener { preference, newVal ->
             newVal as Boolean
+            (activity as SettingsActivity).parentFlags = SettingsActivity.FLAG_EH_RECREATE
             if(!newVal) {
                 preferences.enableExhentai().set(false)
                 true
@@ -57,6 +62,11 @@ class SettingsEhFragment : SettingsFragment() {
 
         migrateLibraryPref.setOnPreferenceClickListener {
             MetadataFetchDialog().askMigration(activity)
+            true
+        }
+
+        useJpTitlePref.setOnPreferenceChangeListener { preference, any ->
+            (activity as SettingsActivity).parentFlags = SettingsActivity.FLAG_EH_RECREATE
             true
         }
     }

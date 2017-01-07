@@ -143,6 +143,10 @@ class MainActivity : BaseActivity() {
                 nav_view.post { recreate() }
             } else if (resultCode and SettingsActivity.FLAG_LANG_CHANGED != 0) {
                 nav_view.post { recreate() }
+            } else if (resultCode and SettingsActivity.FLAG_EH_RECREATE != 0) {
+                TaskStackBuilder.create(this)
+                        .addNextIntent(Intent(this, MainActivity::class.java))
+                        .startActivities()
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)

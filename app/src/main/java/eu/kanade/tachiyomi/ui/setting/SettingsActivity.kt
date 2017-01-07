@@ -80,6 +80,7 @@ class SettingsActivity : BaseActivity(),
         const val FLAG_THEME_CHANGED = 0x1
         const val FLAG_DATABASE_CLEARED = 0x2
         const val FLAG_LANG_CHANGED = 0x4
+        const val FLAG_EH_RECREATE = 0x8
     }
 
 }

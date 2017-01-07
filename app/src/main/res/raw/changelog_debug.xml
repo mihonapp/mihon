@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="false">
+    <!--
 
     <changelogversion changeDate="" versionName="r959">
         <changelogtext>The download manager has been rewritten and it's possible some of your downloads
@@ -26,6 +27,6 @@
         <changelogtext>Kissmanga covers may not load anymore. The only workaround is to update the details of the manga
             from the info tab, or clearing the database (the latter won't fix covers from library manga).
         </changelogtext>
-    </changelogversion>
+    </changelogversion>-->
 
 </changelog>
