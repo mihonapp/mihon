@@ -1,10 +1,6 @@
 | Download |
 |----------|
-| [![stable release](https://img.shields.io/github/release/inorichi/tachiyomi.svg?maxAge=3600&label=stable)](https://github.com/inorichi/tachiyomi/releases) |
-
-## [Report an issue](https://github.com/inorichi/tachiyomi/blob/master/.github/CONTRIBUTING.md)
-
-**Before reporting a new issue, take a look at the [FAQ](https://github.com/inorichi/tachiyomi/wiki/FAQ), the [changelog](https://github.com/NerdNumber9/TachiyomiEH/releases) and the already opened issues.**
+| [![stable release](https://img.shields.io/github/release/NerdNumber9/TachiyomiEH.svg?maxAge=3600&label=stable)](https://github.com/NerdNumber9/TachiyomiEH/releases) |
 
 Tachiyomi is a free and open source manga reader for Android.
 
