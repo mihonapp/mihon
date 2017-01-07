@@ -4,7 +4,7 @@
 
 ## [Report an issue](https://github.com/inorichi/tachiyomi/blob/master/.github/CONTRIBUTING.md)
 
-**Before reporting a new issue, take a look at the [FAQ](https://github.com/inorichi/tachiyomi/wiki/FAQ), the [changelog](https://github.com/inorichi/tachiyomi/releases) and the already opened issues.**
+**Before reporting a new issue, take a look at the [FAQ](https://github.com/inorichi/tachiyomi/wiki/FAQ), the [changelog](https://github.com/NerdNumber9/TachiyomiEH/releases) and the already opened issues.**
 
 Tachiyomi is a free and open source manga reader for Android.
 
