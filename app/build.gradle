@@ -177,9 +177,6 @@ dependencies {
     // Logging
     compile 'com.jakewharton.timber:timber:4.4.0'
 
-    // Crash reports
-    compile 'ch.acra:acra:4.9.1'
-
     // UI
     compile 'com.dmitrymalkovich.android:material-design-dimens:1.4'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'

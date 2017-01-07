@@ -9,20 +9,11 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
 import eu.kanade.tachiyomi.util.LocaleHelper
 import io.paperdb.Paper
-import org.acra.ACRA
-import org.acra.annotation.ReportsCrashes
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektScope
 import uy.kohesive.injekt.registry.default.DefaultRegistrar
 
-@ReportsCrashes(
-        formUri = "http://tachiyomi.kanade.eu/crash_report",
-        reportType = org.acra.sender.HttpSender.Type.JSON,
-        httpMethod = org.acra.sender.HttpSender.Method.PUT,
-        buildConfigClass = BuildConfig::class,
-        excludeMatchingSharedPreferencesKeys = arrayOf(".*username.*", ".*password.*", ".*token.*")
-)
 open class App : Application() {
 
     override fun onCreate() {
@@ -32,7 +23,6 @@ open class App : Application() {
 
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
-        setupAcra()
         setupJobManager()
         Paper.init(this) //Setup metadata DB (EH)
 
@@ -49,10 +39,6 @@ open class App : Application() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         LocaleHelper.updateConfiguration(this, newConfig, true)
-    }
-
-    protected open fun setupAcra() {
-        ACRA.init(this)
     }
 
     protected open fun setupJobManager() {
