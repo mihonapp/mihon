@@ -77,11 +77,14 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
         refreshManga()
 
         // Update chapter count
-        SharedData.get(ChapterCountEvent::class.java)?.let {
-            it.observable
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeLatestCache({ view, count -> view.setChapterCount(count) })
-        }
+        SharedData.get(ChapterCountEvent::class.java)?.observable
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribeLatestCache(MangaInfoFragment::setChapterCount)
+
+        // Update favorite status
+        SharedData.get(MangaFavoriteEvent::class.java)?.observable
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe{setFavorite(it)}
     }
 
     /**
@@ -121,6 +124,12 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
         }
         db.insertManga(manga).executeAsBlocking()
         refreshManga()
+    }
+
+    private fun setFavorite(favorite:Boolean){
+        if (manga.favorite == favorite)
+            return
+        toggleFavorite()
     }
 
     /**
