@@ -1,13 +1,10 @@
 package eu.kanade.tachiyomi.data.source.online.english
 
 import android.text.Html
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.POST
 import eu.kanade.tachiyomi.data.network.asObservable
-import eu.kanade.tachiyomi.data.source.model.MangasPage
-import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.data.source.model.*
 import eu.kanade.tachiyomi.data.source.online.LoginSource
 import eu.kanade.tachiyomi.data.source.online.ParsedOnlineSource
 import eu.kanade.tachiyomi.util.asJsoup
@@ -25,7 +22,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
-class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
+class Batoto : ParsedOnlineSource(), LoginSource {
+
+    override val id: Long = 1
 
     override val name = "Batoto"
 
@@ -56,70 +55,46 @@ class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
             .add("Referer", "http://bato.to/reader")
             .build()
 
-    override fun popularMangaInitialUrl() = "$baseUrl/search_ajax?order_cond=views&order=desc&p=1"
-
-    override fun latestUpdatesInitialUrl() = "$baseUrl/search_ajax?order_cond=update&order=desc&p=1"
-
-    override fun popularMangaParse(response: Response, page: MangasPage) {
-        val document = response.asJsoup()
-        for (element in document.select(popularMangaSelector())) {
-            Manga.create(id).apply {
-                popularMangaFromElement(element, this)
-                page.mangas.add(this)
-            }
-        }
-
-        page.nextPageUrl = document.select(popularMangaNextPageSelector()).first()?.let {
-            "$baseUrl/search_ajax?order_cond=views&order=desc&p=${page.page + 1}"
-        }
+    override fun popularMangaRequest(page: Int): Request {
+        return GET("$baseUrl/search_ajax?order_cond=views&order=desc&p=$page", headers)
     }
 
-    override fun latestUpdatesParse(response: Response, page: MangasPage) {
-        val document = response.asJsoup()
-        for (element in document.select(latestUpdatesSelector())) {
-            Manga.create(id).apply {
-                latestUpdatesFromElement(element, this)
-                page.mangas.add(this)
-            }
-        }
-
-        page.nextPageUrl = document.select(latestUpdatesNextPageSelector()).first()?.let {
-            "$baseUrl/search_ajax?order_cond=update&order=desc&p=${page.page + 1}"
-        }
+    override fun latestUpdatesRequest(page: Int): Request {
+        return GET("$baseUrl/search_ajax?order_cond=update&order=desc&p=$page", headers)
     }
 
     override fun popularMangaSelector() = "tr:has(a)"
 
     override fun latestUpdatesSelector() = "tr:has(a)"
 
-    override fun popularMangaFromElement(element: Element, manga: Manga) {
+    override fun popularMangaFromElement(element: Element): SManga {
+        val manga = SManga.create()
         element.select("a[href^=http://bato.to]").first().let {
             manga.setUrlWithoutDomain(it.attr("href"))
             manga.title = it.text().trim()
         }
+        return manga
     }
 
-    override fun latestUpdatesFromElement(element: Element, manga: Manga) {
-        popularMangaFromElement(element, manga)
+    override fun latestUpdatesFromElement(element: Element): SManga {
+        return popularMangaFromElement(element)
     }
 
     override fun popularMangaNextPageSelector() = "#show_more_row"
 
     override fun latestUpdatesNextPageSelector() = "#show_more_row"
 
-    override fun searchMangaInitialUrl(query: String, filters: List<Filter<*>>) = searchMangaUrl(query, filters, 1)
-
-    private fun searchMangaUrl(query: String, filterStates: List<Filter<*>>, page: Int): String {
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         val url = HttpUrl.parse("$baseUrl/search_ajax").newBuilder()
         if (!query.isEmpty()) url.addQueryParameter("name", query).addQueryParameter("name_cond", "c")
         var genres = ""
-        for (filter in if (filterStates.isEmpty()) filters else filterStates) {
+        filters.forEach { filter ->
             when (filter) {
-                is Status -> if (filter.state != Filter.TriState.STATE_IGNORE) {
-                    url.addQueryParameter("completed", if (filter.state == Filter.TriState.STATE_EXCLUDE) "i" else "c")
+                is Status -> if (!filter.isIgnored()) {
+                    url.addQueryParameter("completed", if (filter.isExcluded()) "i" else "c")
                 }
-                is Genre -> if (filter.state != Filter.TriState.STATE_IGNORE) {
-                    genres += (if (filter.state == Filter.TriState.STATE_EXCLUDE) ";e" else ";i") + filter.id
+                is Genre -> if (!filter.isIgnored()) {
+                    genres += (if (filter.isExcluded()) ";e" else ";i") + filter.id
                 }
                 is TextField -> {
                     if (!filter.state.isEmpty()) url.addQueryParameter(filter.key, filter.state)
@@ -136,89 +111,67 @@ class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
         }
         if (!genres.isEmpty()) url.addQueryParameter("genres", genres)
         url.addQueryParameter("p", page.toString())
-        return url.toString()
-    }
-
-    override fun searchMangaRequest(page: MangasPage, query: String, filters: List<Filter<*>>): Request {
-        if (page.page == 1) {
-            page.url = searchMangaInitialUrl(query, filters)
-        }
-        return GET(page.url, headers)
-    }
-
-    override fun searchMangaParse(response: Response, page: MangasPage, query: String, filters: List<Filter<*>>) {
-        val document = response.asJsoup()
-        for (element in document.select(searchMangaSelector())) {
-            Manga.create(id).apply {
-                searchMangaFromElement(element, this)
-                page.mangas.add(this)
-            }
-        }
-
-        page.nextPageUrl = document.select(searchMangaNextPageSelector()).first()?.let {
-            searchMangaUrl(query, filters, page.page + 1)
-        }
+        return GET(url.toString(), headers)
     }
 
     override fun searchMangaSelector() = popularMangaSelector()
 
-    override fun searchMangaFromElement(element: Element, manga: Manga) {
-        popularMangaFromElement(element, manga)
+    override fun searchMangaFromElement(element: Element): SManga {
+        return popularMangaFromElement(element)
     }
 
     override fun searchMangaNextPageSelector() = popularMangaNextPageSelector()
 
-    override fun mangaDetailsRequest(manga: Manga): Request {
+    override fun mangaDetailsRequest(manga: SManga): Request {
         val mangaId = manga.url.substringAfterLast("r")
         return GET("$baseUrl/comic_pop?id=$mangaId", headers)
     }
 
-    override fun mangaDetailsParse(document: Document, manga: Manga) {
+    override fun mangaDetailsParse(document: Document): SManga {
         val tbody = document.select("tbody").first()
         val artistElement = tbody.select("tr:contains(Author/Artist:)").first()
 
+        val manga = SManga.create()
         manga.author = artistElement.selectText("td:eq(1)")
         manga.artist = artistElement.selectText("td:eq(2)") ?: manga.author
         manga.description = tbody.selectText("tr:contains(Description:) > td:eq(1)")
         manga.thumbnail_url = document.select("img[src^=http://img.bato.to/forums/uploads/]").first()?.attr("src")
         manga.status = parseStatus(document.selectText("tr:contains(Status:) > td:eq(1)"))
         manga.genre = tbody.select("tr:contains(Genres:) img").map { it.attr("alt") }.joinToString(", ")
+        return manga
     }
 
     private fun parseStatus(status: String?) = when (status) {
-        "Ongoing" -> Manga.ONGOING
-        "Complete" -> Manga.COMPLETED
-        else -> Manga.UNKNOWN
+        "Ongoing" -> SManga.ONGOING
+        "Complete" -> SManga.COMPLETED
+        else -> SManga.UNKNOWN
     }
 
-    override fun chapterListParse(response: Response, chapters: MutableList<Chapter>) {
+    override fun chapterListParse(response: Response): List<SChapter> {
         val body = response.body().string()
         val matcher = staffNotice.matcher(body)
         if (matcher.find()) {
+            @Suppress("DEPRECATION")
             val notice = Html.fromHtml(matcher.group(1)).toString().trim()
             throw Exception(notice)
         }
 
         val document = response.asJsoup(body)
-
-        for (element in document.select(chapterListSelector())) {
-            Chapter.create().apply {
-                chapterFromElement(element, this)
-                chapters.add(this)
-            }
-        }
+        return document.select(chapterListSelector()).map { chapterFromElement(it) }
     }
 
     override fun chapterListSelector() = "tr.row.lang_English.chapter_row"
 
-    override fun chapterFromElement(element: Element, chapter: Chapter) {
+    override fun chapterFromElement(element: Element): SChapter {
         val urlElement = element.select("a[href^=http://bato.to/reader").first()
 
+        val chapter = SChapter.create()
         chapter.setUrlWithoutDomain(urlElement.attr("href"))
         chapter.name = urlElement.text()
         chapter.date_upload = element.select("td").getOrNull(4)?.let {
             parseDateFromElement(it)
         } ?: 0
+        return chapter
     }
 
     private fun parseDateFromElement(dateElement: Element): Long {
@@ -246,12 +199,13 @@ class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
         return date.time
     }
 
-    override fun pageListRequest(chapter: Chapter): Request {
+    override fun pageListRequest(chapter: SChapter): Request {
         val id = chapter.url.substringAfterLast("#")
         return GET("$baseUrl/areader?id=$id&p=1", pageHeaders)
     }
 
-    override fun pageListParse(document: Document, pages: MutableList<Page>) {
+    override fun pageListParse(document: Document): List<Page> {
+        val pages = mutableListOf<Page>()
         val selectElement = document.select("#page_select").first()
         if (selectElement != null) {
             for ((i, element) in selectElement.select("option").withIndex()) {
@@ -264,6 +218,7 @@ class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
                 pages.add(Page(i, "", element.attr("src")))
             }
         }
+        return pages
     }
 
     override fun imageUrlRequest(page: Page): Request {
@@ -308,7 +263,7 @@ class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
         return network.cookies.get(URI(baseUrl)).any { it.name() == "pass_hash" }
     }
 
-    override fun fetchChapterList(manga: Manga): Observable<List<Chapter>> {
+    override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
         if (!isLogged()) {
             val username = preferences.sourceUsername(this)
             val password = preferences.sourcePassword(this)
@@ -328,7 +283,7 @@ class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
         override fun toString(): String = name
     }
 
-    private class Status() : Filter.TriState("Completed")
+    private class Status : Filter.TriState("Completed")
     private class Genre(name: String, val id: Int) : Filter.TriState(name)
     private class TextField(name: String, val key: String) : Filter.Text(name)
     private class ListField(name: String, val key: String, values: Array<ListValue>, state: Int = 0) : Filter.List<ListValue>(name, values, state)
@@ -338,7 +293,7 @@ class Batoto(override val id: Int) : ParsedOnlineSource(), LoginSource {
     //     const onClick=el.getAttribute('onclick');const id=onClick.substr(14,onClick.length-16);return `Genre("${el.textContent.trim()}", ${id})`
     // }).join(',\n')
     // on https://bato.to/search
-    override fun getFilterList(): List<Filter<*>> = listOf(
+    override fun getFilterList() = FilterList(
             TextField("Author", "artist_name"),
             ListField("Type", "type", arrayOf(ListValue("Any", ""), ListValue("Manga (Jp)", "jp"), ListValue("Manhwa (Kr)", "kr"), ListValue("Manhua (Cn)", "cn"), ListValue("Artbook", "ar"), ListValue("Other", "ot"))),
             Status(),

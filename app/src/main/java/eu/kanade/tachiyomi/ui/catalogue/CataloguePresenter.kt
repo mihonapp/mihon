@@ -6,12 +6,12 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.source.CatalogueSource
 import eu.kanade.tachiyomi.data.source.Source
 import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.model.MangasPage
+import eu.kanade.tachiyomi.data.source.model.FilterList
+import eu.kanade.tachiyomi.data.source.model.SManga
 import eu.kanade.tachiyomi.data.source.online.LoginSource
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
-import eu.kanade.tachiyomi.data.source.online.OnlineSource.Filter
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import rx.Observable
 import rx.Subscription
@@ -55,7 +55,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     /**
      * Active source.
      */
-    lateinit var source: OnlineSource
+    lateinit var source: CatalogueSource
         private set
 
     /**
@@ -67,12 +67,12 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     /**
      * Modifiable list of filters.
      */
-    var sourceFilters: List<Filter<*>> = emptyList()
+    var sourceFilters = FilterList()
 
     /**
      * List of filters used by the [Pager]. If empty alongside [query], the popular query is used.
      */
-    var appliedFilters: List<Filter<*>> = emptyList()
+    var appliedFilters = FilterList()
 
     /**
      * Pager containing a list of manga results.
@@ -136,7 +136,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * @param query the query.
      * @param filters the current state of the filters (for search mode).
      */
-    fun restartPager(query: String = this.query, filters: List<Filter<*>> = this.appliedFilters) {
+    fun restartPager(query: String = this.query, filters: FilterList = this.appliedFilters) {
         this.query = query
         this.appliedFilters = filters
 
@@ -145,11 +145,17 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         // Create a new pager.
         pager = createPager(query, filters)
 
+        val sourceId = source.id
+
         // Prepare the pager.
         pagerSubscription?.let { remove(it) }
         pagerSubscription = pager.results()
-                .subscribeReplay({ view, page ->
-                    view.onAddPage(page.page, page.mangas)
+                .observeOn(Schedulers.io())
+                .map { it.first to it.second.map { networkToLocalManga(it, sourceId) } }
+                .doOnNext { initializeMangas(it.second) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeReplay({ view, pair ->
+                    view.onAddPage(pair.first, pair.second)
                 }, { view, error ->
                     Timber.e(error)
                 })
@@ -165,7 +171,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         if (!hasNextPage()) return
 
         pageSubscription?.let { remove(it) }
-        pageSubscription = pager.requestNext { getPageTransformer(it) }
+        pageSubscription = Observable.defer { pager.requestNext() }
                 .subscribeFirst({ view, page ->
                     // Nothing to do when onNext is emitted.
                 }, CatalogueFragment::onAddPageError)
@@ -175,7 +181,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * Returns true if the last fetched page has a next page.
      */
     fun hasNextPage(): Boolean {
-        return pager.hasNextPage()
+        return pager.hasNextPage
     }
 
     /**
@@ -183,12 +189,12 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      *
      * @param source the new active source.
      */
-    fun setActiveSource(source: OnlineSource) {
+    fun setActiveSource(source: CatalogueSource) {
         prefs.lastUsedCatalogueSource().set(source.id)
         this.source = source
         sourceFilters = source.getFilterList()
 
-        restartPager(query = "", filters = emptyList())
+        restartPager(query = "", filters = FilterList())
     }
 
     /**
@@ -208,7 +214,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         initializerSubscription?.let { remove(it) }
         initializerSubscription = mangaDetailSubject.observeOn(Schedulers.io())
                 .flatMap { Observable.from(it) }
-                .filter { !it.initialized }
+                .filter { it.thumbnail_url == null && !it.initialized }
                 .concatMap { getMangaDetailsObservable(it) }
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -222,40 +228,20 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     }
 
     /**
-     * Returns the function to apply to the observable of the list of manga from the source.
-     *
-     * @param observable the observable from the source.
-     * @return the function to apply.
-     */
-    fun getPageTransformer(observable: Observable<MangasPage>): Observable<MangasPage> {
-        return observable.subscribeOn(Schedulers.io())
-                .doOnNext { it.mangas.replace { networkToLocalManga(it) } }
-                .doOnNext { initializeMangas(it.mangas) }
-                .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    /**
-     * Replaces an object in the list with another.
-     */
-    fun <T> MutableList<T>.replace(block: (T) -> T) {
-        forEachIndexed { i, obj ->
-            set(i, block(obj))
-        }
-    }
-
-    /**
      * Returns a manga from the database for the given manga from network. It creates a new entry
      * if the manga is not yet in the database.
      *
-     * @param networkManga the manga from network.
+     * @param sManga the manga from the source.
      * @return a manga from the database.
      */
-    private fun networkToLocalManga(networkManga: Manga): Manga {
-        var localManga = db.getManga(networkManga.url, source.id).executeAsBlocking()
+    private fun networkToLocalManga(sManga: SManga, sourceId: Long): Manga {
+        var localManga = db.getManga(sManga.url, sourceId).executeAsBlocking()
         if (localManga == null) {
-            val result = db.insertManga(networkManga).executeAsBlocking()
-            networkManga.id = result.insertedId()
-            localManga = networkManga
+            val newManga = Manga.create(sManga.url, sManga.title, sourceId)
+            newManga.copyFrom(sManga)
+            val result = db.insertManga(newManga).executeAsBlocking()
+            newManga.id = result.insertedId()
+            localManga = newManga
         }
         return localManga
     }
@@ -279,6 +265,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         return source.fetchMangaDetails(manga)
                 .flatMap { networkManga ->
                     manga.copyFrom(networkManga)
+                    manga.initialized = true
                     db.insertManga(manga).executeAsBlocking()
                     Observable.just(manga)
                 }
@@ -290,13 +277,13 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      *
      * @return a source.
      */
-    fun getLastUsedSource(): OnlineSource {
+    fun getLastUsedSource(): CatalogueSource {
         val id = prefs.lastUsedCatalogueSource().get() ?: -1
         val source = sourceManager.get(id)
         if (!isValidSource(source)) {
             return findFirstValidSource()
         }
-        return source as OnlineSource
+        return source as CatalogueSource
     }
 
     /**
@@ -320,14 +307,14 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      *
      * @return the index of the first valid source.
      */
-    fun findFirstValidSource(): OnlineSource {
+    fun findFirstValidSource(): CatalogueSource {
         return sources.first { isValidSource(it) }
     }
 
     /**
      * Returns a list of enabled sources ordered by language and name.
      */
-    open protected fun getEnabledSources(): List<OnlineSource> {
+    open protected fun getEnabledSources(): List<CatalogueSource> {
         val languages = prefs.enabledLanguages().getOrDefault()
         val hiddenCatalogues = prefs.hiddenCatalogues().getOrDefault()
 
@@ -336,7 +323,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
             languages.add("en")
         }
 
-        return sourceManager.getOnlineSources()
+        return sourceManager.getCatalogueSources()
                 .filter { it.lang in languages }
                 .filterNot { it.id.toString() in hiddenCatalogues }
                 .sortedBy { "(${it.lang}) ${it.name}" }
@@ -365,13 +352,13 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     /**
      * Set the filter states for the current source.
      *
-     * @param filterStates a list of active filters.
+     * @param filters a list of active filters.
      */
-    fun setSourceFilter(filters: List<Filter<*>>) {
+    fun setSourceFilter(filters: FilterList) {
         restartPager(filters = filters)
     }
 
-    open fun createPager(query: String, filters: List<Filter<*>>): Pager {
+    open fun createPager(query: String, filters: FilterList): Pager {
         return CataloguePager(source, query, filters)
     }
 

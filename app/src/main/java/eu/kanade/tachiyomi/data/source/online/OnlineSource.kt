@@ -1,39 +1,31 @@
 package eu.kanade.tachiyomi.data.source.online
 
-import android.net.Uri
-import eu.kanade.tachiyomi.data.cache.ChapterCache
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.NetworkHelper
 import eu.kanade.tachiyomi.data.network.asObservableSuccess
 import eu.kanade.tachiyomi.data.network.newCallWithProgress
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.source.Source
-import eu.kanade.tachiyomi.data.source.model.MangasPage
-import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.util.UrlUtil
+import eu.kanade.tachiyomi.data.source.CatalogueSource
+import eu.kanade.tachiyomi.data.source.model.*
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
+import java.net.URI
+import java.net.URISyntaxException
+import java.security.MessageDigest
 
 /**
  * A simple implementation for sources from a website.
  */
-abstract class OnlineSource() : Source {
+abstract class OnlineSource : CatalogueSource {
 
     /**
      * Network service.
      */
     val network: NetworkHelper by injectLazy()
-
-    /**
-     * Chapter cache.
-     */
-    val chapterCache: ChapterCache by injectLazy()
 
     /**
      * Preferences helper.
@@ -46,24 +38,26 @@ abstract class OnlineSource() : Source {
     abstract val baseUrl: String
 
     /**
-     * An ISO 639-1 compliant language code (two characters in lower case).
+     * Version id used to generate the source id. If the site completely changes and urls are
+     * incompatible, you may increase this value and it'll be considered as a new source.
      */
-    abstract val lang: String
+    open val versionId = 1
 
     /**
-     * Whether the source has support for latest updates.
+     * Id of the source. By default it uses a generated id using the first 16 characters (64 bits)
+     * of the MD5 of the string: sourcename/language/versionId
+     * Note the generated id sets the sign bit to 0.
      */
-    abstract val supportsLatest: Boolean
+    override val id by lazy {
+        val key = "${name.toLowerCase()}/$lang/$versionId"
+        val bytes = MessageDigest.getInstance("MD5").digest(key.toByteArray())
+        (0..7).map { bytes[it].toLong() and 0xff shl 8*(7-it) }.reduce(Long::or) and Long.MAX_VALUE
+    }
 
     /**
      * Headers used for requests.
      */
-    val headers by lazy { headersBuilder().build() }
-
-    /**
-     * Genre filters.
-     */
-    val filters by lazy { getFilterList() }
+    val headers: Headers by lazy { headersBuilder().build() }
 
     /**
      * Default network client for doing requests.
@@ -87,121 +81,88 @@ abstract class OnlineSource() : Source {
      * Returns an observable containing a page with a list of manga. Normally it's not needed to
      * override this method.
      *
-     * @param page the page object where the information will be saved, like the list of manga,
-     *             the current page and the next page url.
+     * @param page the page number to retrieve.
      */
-    open fun fetchPopularManga(page: MangasPage): Observable<MangasPage> = client
-            .newCall(popularMangaRequest(page))
-            .asObservableSuccess()
-            .map { response ->
-                popularMangaParse(response, page)
-                page
-            }
-
-    /**
-     * Returns the request for the popular manga given the page. Override only if it's needed to
-     * send different headers or request method like POST.
-     *
-     * @param page the page object.
-     */
-    open protected fun popularMangaRequest(page: MangasPage): Request {
-        if (page.page == 1) {
-            page.url = popularMangaInitialUrl()
-        }
-        return GET(page.url, headers)
+    override fun fetchPopularManga(page: Int): Observable<MangasPage> {
+        return client.newCall(popularMangaRequest(page))
+                .asObservableSuccess()
+                .map { response ->
+                    popularMangaParse(response)
+                }
     }
 
     /**
-     * Returns the absolute url of the first page to popular manga.
+     * Returns the request for the popular manga given the page.
+     *
+     * @param page the page number to retrieve.
      */
-    abstract protected fun popularMangaInitialUrl(): String
+    abstract protected fun popularMangaRequest(page: Int): Request
 
     /**
-     * Parse the response from the site. It should add a list of manga and the absolute url to the
-     * next page (if it has a next one) to [page].
+     * Parses the response from the site and returns a [MangasPage] object.
      *
      * @param response the response from the site.
-     * @param page the page object to be filled.
      */
-    abstract protected fun popularMangaParse(response: Response, page: MangasPage)
+    abstract protected fun popularMangaParse(response: Response): MangasPage
 
     /**
      * Returns an observable containing a page with a list of manga. Normally it's not needed to
      * override this method.
      *
-     * @param page the page object where the information will be saved, like the list of manga,
-     *             the current page and the next page url.
+     * @param page the page number to retrieve.
      * @param query the search query.
+     * @param filters the list of filters to apply.
      */
-    open fun fetchSearchManga(page: MangasPage, query: String, filters: List<Filter<*>>): Observable<MangasPage> = client
-            .newCall(searchMangaRequest(page, query, filters))
-            .asObservableSuccess()
-            .map { response ->
-                searchMangaParse(response, page, query, filters)
-                page
-            }
-
-    /**
-     * Returns the request for the search manga given the page. Override only if it's needed to
-     * send different headers or request method like POST.
-     *
-     * @param page the page object.
-     * @param query the search query.
-     */
-    open protected fun searchMangaRequest(page: MangasPage, query: String, filters: List<Filter<*>>): Request {
-        if (page.page == 1) {
-            page.url = searchMangaInitialUrl(query, filters)
-        }
-        return GET(page.url, headers)
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
+        return client.newCall(searchMangaRequest(page, query, filters))
+                .asObservableSuccess()
+                .map { response ->
+                    searchMangaParse(response)
+                }
     }
 
     /**
-     * Returns the absolute url of the first page to popular manga.
+     * Returns the request for the search manga given the page.
      *
+     * @param page the page number to retrieve.
      * @param query the search query.
+     * @param filters the list of filters to apply.
      */
-    abstract protected fun searchMangaInitialUrl(query: String, filters: List<Filter<*>>): String
+    abstract protected fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request
 
     /**
-     * Parse the response from the site. It should add a list of manga and the absolute url to the
-     * next page (if it has a next one) to [page].
+     * Parses the response from the site and returns a [MangasPage] object.
      *
      * @param response the response from the site.
-     * @param page the page object to be filled.
-     * @param query the search query.
      */
-    abstract protected fun searchMangaParse(response: Response, page: MangasPage, query: String, filters: List<Filter<*>>)
+    abstract protected fun searchMangaParse(response: Response): MangasPage
 
     /**
-     * Returns an observable containing a page with a list of latest manga.
+     * Returns an observable containing a page with a list of latest manga updates.
+     *
+     * @param page the page number to retrieve.
      */
-    open fun fetchLatestUpdates(page: MangasPage): Observable<MangasPage> = client
-            .newCall(latestUpdatesRequest(page))
-            .asObservableSuccess()
-            .map { response ->
-                latestUpdatesParse(response, page)
-                page
-            }
+    override fun fetchLatestUpdates(page: Int): Observable<MangasPage> {
+        return client.newCall(latestUpdatesRequest(page))
+                .asObservableSuccess()
+                .map { response ->
+                    latestUpdatesParse(response)
+                }
+    }
 
     /**
      * Returns the request for latest manga given the page.
+     *
+     * @param page the page number to retrieve.
      */
-    open protected fun latestUpdatesRequest(page: MangasPage): Request {
-        if (page.page == 1) {
-            page.url = latestUpdatesInitialUrl()
-        }
-        return GET(page.url, headers)
-    }
+    abstract protected fun latestUpdatesRequest(page: Int): Request
 
     /**
-     * Returns the absolute url of the first page to latest manga.
+     * Parses the response from the site and returns a [MangasPage] object.
+     *
+     * @param response the response from the site.
      */
-    abstract protected fun latestUpdatesInitialUrl(): String
-
-    /**
-     * Same as [popularMangaParse], but for latest manga.
-     */
-    abstract protected fun latestUpdatesParse(response: Response, page: MangasPage)
+    abstract protected fun latestUpdatesParse(response: Response): MangasPage
 
     /**
      * Returns an observable with the updated details for a manga. Normally it's not needed to
@@ -209,33 +170,30 @@ abstract class OnlineSource() : Source {
      *
      * @param manga the manga to be updated.
      */
-    override fun fetchMangaDetails(manga: Manga): Observable<Manga> = client
-            .newCall(mangaDetailsRequest(manga))
-            .asObservableSuccess()
-            .map { response ->
-                Manga.create(manga.url, id).apply {
-                    mangaDetailsParse(response, this)
-                    initialized = true
+    override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
+        return client.newCall(mangaDetailsRequest(manga))
+                .asObservableSuccess()
+                .map { response ->
+                    mangaDetailsParse(response).apply { initialized = true }
                 }
-            }
+    }
 
     /**
-     * Returns the request for updating a manga. Override only if it's needed to override the url,
-     * send different headers or request method like POST.
+     * Returns the request for the details of a manga. Override only if it's needed to change the
+     * url, send different headers or request method like POST.
      *
      * @param manga the manga to be updated.
      */
-    open fun mangaDetailsRequest(manga: Manga): Request {
+    open fun mangaDetailsRequest(manga: SManga): Request {
         return GET(baseUrl + manga.url, headers)
     }
 
     /**
-     * Parse the response from the site. It should fill [manga].
+     * Parses the response from the site and returns the details of a manga.
      *
      * @param response the response from the site.
-     * @param manga the manga whose fields have to be filled.
      */
-    abstract protected fun mangaDetailsParse(response: Response, manga: Manga)
+    abstract protected fun mangaDetailsParse(response: Response): SManga
 
     /**
      * Returns an observable with the updated chapter list for a manga. Normally it's not needed to
@@ -243,17 +201,13 @@ abstract class OnlineSource() : Source {
      *
      * @param manga the manga to look for chapters.
      */
-    override fun fetchChapterList(manga: Manga): Observable<List<Chapter>> = client
-            .newCall(chapterListRequest(manga))
-            .asObservableSuccess()
-            .map { response ->
-                mutableListOf<Chapter>().apply {
-                    chapterListParse(response, this)
-                    if (isEmpty()) {
-                        throw Exception("No chapters found")
-                    }
+    override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
+        return client.newCall(chapterListRequest(manga))
+                .asObservableSuccess()
+                .map { response ->
+                    chapterListParse(response)
                 }
-            }
+    }
 
     /**
      * Returns the request for updating the chapter list. Override only if it's needed to override
@@ -261,68 +215,46 @@ abstract class OnlineSource() : Source {
      *
      * @param manga the manga to look for chapters.
      */
-    open protected fun chapterListRequest(manga: Manga): Request {
+    open protected fun chapterListRequest(manga: SManga): Request {
         return GET(baseUrl + manga.url, headers)
     }
 
     /**
-     * Parse the response from the site. It should fill [chapters].
+     * Parses the response from the site and returns a list of chapters.
      *
      * @param response the response from the site.
-     * @param chapters the chapter list to be filled.
      */
-    abstract protected fun chapterListParse(response: Response, chapters: MutableList<Chapter>)
+    abstract protected fun chapterListParse(response: Response): List<SChapter>
 
     /**
-     * Returns an observable with the page list for a chapter. It tries to return the page list from
-     * the local cache, otherwise fallbacks to network calling [fetchPageListFromNetwork].
+     * Returns an observable with the page list for a chapter.
      *
      * @param chapter the chapter whose page list has to be fetched.
      */
-    final override fun fetchPageList(chapter: Chapter): Observable<List<Page>> = chapterCache
-            .getPageListFromCache(getChapterCacheKey(chapter))
-            .onErrorResumeNext { fetchPageListFromNetwork(chapter) }
-
-    /**
-     * Returns an observable with the page list for a chapter. Normally it's not needed to override
-     * this method.
-     *
-     * @param chapter the chapter whose page list has to be fetched.
-     */
-    open fun fetchPageListFromNetwork(chapter: Chapter): Observable<List<Page>> = client
-            .newCall(pageListRequest(chapter))
-            .asObservableSuccess()
-            .map { response ->
-                mutableListOf<Page>().apply {
-                    pageListParse(response, this)
-                    if (isEmpty()) {
-                        throw Exception("Page list is empty")
-                    }
+    override fun fetchPageList(chapter: SChapter): Observable<List<Page>> {
+        return client.newCall(pageListRequest(chapter))
+                .asObservableSuccess()
+                .map { response ->
+                    pageListParse(response)
                 }
-            }
+    }
 
     /**
      * Returns the request for getting the page list. Override only if it's needed to override the
      * url, send different headers or request method like POST.
      *
-     * @param chapter the chapter whose page list has to be fetched
+     * @param chapter the chapter whose page list has to be fetched.
      */
-    open protected fun pageListRequest(chapter: Chapter): Request {
+    open protected fun pageListRequest(chapter: SChapter): Request {
         return GET(baseUrl + chapter.url, headers)
     }
 
     /**
-     * Parse the response from the site. It should fill [pages].
+     * Parses the response from the site and returns a list of pages.
      *
      * @param response the response from the site.
-     * @param pages the page list to be filled.
      */
-    abstract protected fun pageListParse(response: Response, pages: MutableList<Page>)
-
-    /**
-     * Returns the key for the page list to be stored in [ChapterCache].
-     */
-    private fun getChapterCacheKey(chapter: Chapter) = "$id${chapter.url}"
+    abstract protected fun pageListParse(response: Response): List<Page>
 
     /**
      * Returns an observable with the page containing the source url of the image. If there's any
@@ -330,16 +262,10 @@ abstract class OnlineSource() : Source {
      *
      * @param page the page whose source image has to be fetched.
      */
-    open protected fun fetchImageUrl(page: Page): Observable<Page> {
-        page.status = Page.LOAD_PAGE
-        return client
-                .newCall(imageUrlRequest(page))
+    open fun fetchImageUrl(page: Page): Observable<String> {
+        return client.newCall(imageUrlRequest(page))
                 .asObservableSuccess()
                 .map { imageUrlParse(it) }
-                .doOnError { page.status = Page.ERROR }
-                .onErrorReturn { null }
-                .doOnNext { page.imageUrl = it }
-                .map { page }
     }
 
     /**
@@ -353,31 +279,21 @@ abstract class OnlineSource() : Source {
     }
 
     /**
-     * Parse the response from the site. It should return the absolute url to the source image.
+     * Parses the response from the site and returns the absolute url to the source image.
      *
      * @param response the response from the site.
      */
     abstract protected fun imageUrlParse(response: Response): String
 
     /**
-     * Returns an observable of the page with the downloaded image.
-     *
-     * @param page the page whose source image has to be downloaded.
-     */
-    final override fun fetchImage(page: Page): Observable<Page> =
-            if (page.imageUrl.isNullOrEmpty())
-                fetchImageUrl(page).flatMap { getCachedImage(it) }
-            else
-                getCachedImage(page)
-
-    /**
      * Returns an observable with the response of the source image.
      *
      * @param page the page whose source image has to be downloaded.
      */
-    fun imageResponse(page: Page): Observable<Response> = client
-            .newCallWithProgress(imageRequest(page), page)
-            .asObservableSuccess()
+    fun fetchImage(page: Page): Observable<Response> {
+        return client.newCallWithProgress(imageRequest(page), page)
+                .asObservableSuccess()
+    }
 
     /**
      * Returns the request for getting the source image. Override only if it's needed to override
@@ -390,67 +306,43 @@ abstract class OnlineSource() : Source {
     }
 
     /**
-     * Returns an observable of the page that gets the image from the chapter or fallbacks to
-     * network and copies it to the cache calling [cacheImage].
+     * Assigns the url of the chapter without the scheme and domain. It saves some redundancy from
+     * database and the urls could still work after a domain change.
      *
-     * @param page the page.
+     * @param url the full url to the chapter.
      */
-    fun getCachedImage(page: Page): Observable<Page> {
-        val imageUrl = page.imageUrl ?: return Observable.just(page)
-
-        return Observable.just(page)
-                .flatMap {
-                    if (!chapterCache.isImageInCache(imageUrl)) {
-                        cacheImage(page)
-                    } else {
-                        Observable.just(page)
-                    }
-                }
-                .doOnNext {
-                    page.uri = Uri.fromFile(chapterCache.getImageFile(imageUrl))
-                    page.status = Page.READY
-                }
-                .doOnError { page.status = Page.ERROR }
-                .onErrorReturn { page }
+    fun SChapter.setUrlWithoutDomain(url: String) {
+        this.url = getUrlWithoutDomain(url)
     }
 
     /**
-     * Returns an observable of the page that downloads the image to [ChapterCache].
+     * Assigns the url of the manga without the scheme and domain. It saves some redundancy from
+     * database and the urls could still work after a domain change.
      *
-     * @param page the page.
+     * @param url the full url to the manga.
      */
-    private fun cacheImage(page: Page): Observable<Page> {
-        page.status = Page.DOWNLOAD_IMAGE
-        return imageResponse(page)
-                .doOnNext { chapterCache.putImageToCache(page.imageUrl!!, it) }
-                .map { page }
+    fun SManga.setUrlWithoutDomain(url: String) {
+        this.url = getUrlWithoutDomain(url)
     }
 
-
-    // Utility methods
-
-    fun fetchAllImageUrlsFromPageList(pages: List<Page>) = Observable.from(pages)
-            .filter { !it.imageUrl.isNullOrEmpty() }
-            .mergeWith(fetchRemainingImageUrlsFromPageList(pages))
-
-    fun fetchRemainingImageUrlsFromPageList(pages: List<Page>) = Observable.from(pages)
-            .filter { it.imageUrl.isNullOrEmpty() }
-            .concatMap { fetchImageUrl(it) }
-
-    fun savePageList(chapter: Chapter, pages: List<Page>?) {
-        if (pages != null) {
-            chapterCache.putPageListToCache(getChapterCacheKey(chapter), pages)
+    /**
+     * Returns the url of the given string without the scheme and domain.
+     *
+     * @param orig the full url.
+     */
+    private fun getUrlWithoutDomain(orig: String): String {
+        try {
+            val uri = URI(orig)
+            var out = uri.path
+            if (uri.query != null)
+                out += "?" + uri.query
+            if (uri.fragment != null)
+                out += "#" + uri.fragment
+            return out
+        } catch (e: URISyntaxException) {
+            return orig
         }
     }
-
-    fun Chapter.setUrlWithoutDomain(url: String) {
-        this.url = UrlUtil.getPath(url)
-    }
-
-    fun Manga.setUrlWithoutDomain(url: String) {
-        this.url = UrlUtil.getPath(url)
-    }
-
 
     /**
      * Called before inserting a new chapter into database. Use it if you need to override chapter
@@ -459,22 +351,11 @@ abstract class OnlineSource() : Source {
      * @param chapter the chapter to be added.
      * @param manga the manga of the chapter.
      */
-    open fun prepareNewChapter(chapter: Chapter, manga: Manga) {
+    open fun prepareNewChapter(chapter: SChapter, manga: SManga) {
     }
 
-    sealed class Filter<T>(val name: String, var state: T) {
-        open class Header(name: String) : Filter<Any>(name, 0)
-        abstract class List<V>(name: String, val values: Array<V>, state: Int = 0) : Filter<Int>(name, state)
-        abstract class Text(name: String, state: String = "") : Filter<String>(name, state)
-        abstract class CheckBox(name: String, state: Boolean = false) : Filter<Boolean>(name, state)
-        abstract class TriState(name: String, state: Int = STATE_IGNORE) : Filter<Int>(name, state) {
-            companion object {
-                const val STATE_IGNORE = 0
-                const val STATE_INCLUDE = 1
-                const val STATE_EXCLUDE = 2
-            }
-        }
-    }
-
-    open fun getFilterList(): List<Filter<*>> = emptyList()
+    /**
+     * Returns the list of filters for the source.
+     */
+    override fun getFilterList() = FilterList()
 }

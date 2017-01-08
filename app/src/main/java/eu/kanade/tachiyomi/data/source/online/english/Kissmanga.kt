@@ -1,11 +1,8 @@
 package eu.kanade.tachiyomi.data.source.online.english
 
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.network.GET
 import eu.kanade.tachiyomi.data.network.POST
-import eu.kanade.tachiyomi.data.source.model.MangasPage
-import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.data.source.model.*
 import eu.kanade.tachiyomi.data.source.online.ParsedOnlineSource
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -16,7 +13,9 @@ import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
-class Kissmanga(override val id: Int) : ParsedOnlineSource() {
+class Kissmanga : ParsedOnlineSource() {
+
+    override val id: Long = 4
 
     override val name = "Kissmanga"
 
@@ -28,38 +27,40 @@ class Kissmanga(override val id: Int) : ParsedOnlineSource() {
 
     override val client: OkHttpClient = network.cloudflareClient
 
-    override fun popularMangaInitialUrl() = "$baseUrl/MangaList/MostPopular"
-
-    override fun latestUpdatesInitialUrl() = "http://kissmanga.com/MangaList/LatestUpdate"
-
     override fun popularMangaSelector() = "table.listing tr:gt(1)"
 
     override fun latestUpdatesSelector() = "table.listing tr:gt(1)"
 
-    override fun popularMangaFromElement(element: Element, manga: Manga) {
+    override fun popularMangaRequest(page: Int): Request {
+        return GET("$baseUrl/MangaList/MostPopular?page=$page", headers)
+    }
+
+    override fun latestUpdatesRequest(page: Int): Request {
+        return GET("http://kissmanga.com/MangaList/LatestUpdate?page=$page", headers)
+    }
+
+    override fun popularMangaFromElement(element: Element): SManga {
+        val manga = SManga.create()
         element.select("td a:eq(0)").first().let {
             manga.setUrlWithoutDomain(it.attr("href"))
             manga.title = it.text()
         }
+        return manga
     }
 
-    override fun latestUpdatesFromElement(element: Element, manga: Manga) {
-        popularMangaFromElement(element, manga)
+    override fun latestUpdatesFromElement(element: Element): SManga {
+        return popularMangaFromElement(element)
     }
 
     override fun popularMangaNextPageSelector() = "li > a:contains(› Next)"
 
     override fun latestUpdatesNextPageSelector(): String = "ul.pager > li > a:contains(Next)"
 
-    override fun searchMangaRequest(page: MangasPage, query: String, filters: List<Filter<*>>): Request {
-        if (page.page == 1) {
-            page.url = searchMangaInitialUrl(query, filters)
-        }
-
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         val form = FormBody.Builder().apply {
             add("mangaName", query)
 
-            for (filter in if (filters.isEmpty()) this@Kissmanga.filters else filters) {
+            for (filter in if (filters.isEmpty()) getFilterList() else filters) {
                 when (filter) {
                     is Author -> add("authorArtist", filter.state)
                     is Status -> add("status", arrayOf("", "Completed", "Ongoing")[filter.state])
@@ -67,50 +68,53 @@ class Kissmanga(override val id: Int) : ParsedOnlineSource() {
                 }
             }
         }
-        return POST(page.url, headers, form.build())
+        return POST("$baseUrl/AdvanceSearch", headers, form.build())
     }
-
-    override fun searchMangaInitialUrl(query: String, filters: List<Filter<*>>) = "$baseUrl/AdvanceSearch"
 
     override fun searchMangaSelector() = popularMangaSelector()
 
-    override fun searchMangaFromElement(element: Element, manga: Manga) {
-        popularMangaFromElement(element, manga)
+    override fun searchMangaFromElement(element: Element): SManga {
+        return popularMangaFromElement(element)
     }
 
     override fun searchMangaNextPageSelector() = null
 
-    override fun mangaDetailsParse(document: Document, manga: Manga) {
+    override fun mangaDetailsParse(document: Document): SManga {
         val infoElement = document.select("div.barContent").first()
 
+        val manga = SManga.create()
         manga.author = infoElement.select("p:has(span:contains(Author:)) > a").first()?.text()
         manga.genre = infoElement.select("p:has(span:contains(Genres:)) > *:gt(0)").text()
         manga.description = infoElement.select("p:has(span:contains(Summary:)) ~ p").text()
         manga.status = infoElement.select("p:has(span:contains(Status:))").first()?.text().orEmpty().let { parseStatus(it) }
         manga.thumbnail_url = document.select(".rightBox:eq(0) img").first()?.attr("src")
+        return manga
     }
 
     fun parseStatus(status: String) = when {
-        status.contains("Ongoing") -> Manga.ONGOING
-        status.contains("Completed") -> Manga.COMPLETED
-        else -> Manga.UNKNOWN
+        status.contains("Ongoing") -> SManga.ONGOING
+        status.contains("Completed") -> SManga.COMPLETED
+        else -> SManga.UNKNOWN
     }
 
     override fun chapterListSelector() = "table.listing tr:gt(1)"
 
-    override fun chapterFromElement(element: Element, chapter: Chapter) {
+    override fun chapterFromElement(element: Element): SChapter {
         val urlElement = element.select("a").first()
 
+        val chapter = SChapter.create()
         chapter.setUrlWithoutDomain(urlElement.attr("href"))
         chapter.name = urlElement.text()
         chapter.date_upload = element.select("td:eq(1)").first()?.text()?.let {
             SimpleDateFormat("MM/dd/yyyy").parse(it).time
         } ?: 0
+        return chapter
     }
 
-    override fun pageListRequest(chapter: Chapter) = POST(baseUrl + chapter.url, headers)
+    override fun pageListRequest(chapter: SChapter) = POST(baseUrl + chapter.url, headers)
 
-    override fun pageListParse(response: Response, pages: MutableList<Page>) {
+    override fun pageListParse(response: Response): List<Page> {
+        val pages = mutableListOf<Page>()
         //language=RegExp
         val p = Pattern.compile("""lstImages.push\("(.+?)"""")
         val m = p.matcher(response.body().string())
@@ -119,10 +123,11 @@ class Kissmanga(override val id: Int) : ParsedOnlineSource() {
         while (m.find()) {
             pages.add(Page(i++, "", m.group(1)))
         }
+        return pages
     }
 
-    // Not used
-    override fun pageListParse(document: Document, pages: MutableList<Page>) {
+    override fun pageListParse(document: Document): List<Page> {
+        throw Exception("Not used")
     }
 
     override fun imageUrlRequest(page: Page) = GET(page.url)
@@ -131,57 +136,58 @@ class Kissmanga(override val id: Int) : ParsedOnlineSource() {
 
     private class Status() : Filter.TriState("Completed")
     private class Author() : Filter.Text("Author")
-    private class Genre(name: String, val id: Int) : Filter.TriState(name)
+    private class Genre(name: String) : Filter.TriState(name)
 
     // $("select[name=\"genres\"]").map((i,el) => `Genre("${$(el).next().text().trim()}", ${i})`).get().join(',\n')
     // on http://kissmanga.com/AdvanceSearch
-    override fun getFilterList(): List<Filter<*>> = listOf(
+    override fun getFilterList() = FilterList(
             Author(),
             Status(),
             Filter.Header("Genres"),
-            Genre("Action", 0),
-            Genre("Adult", 1),
-            Genre("Adventure", 2),
-            Genre("Comedy", 3),
-            Genre("Comic", 4),
-            Genre("Cooking", 5),
-            Genre("Doujinshi", 6),
-            Genre("Drama", 7),
-            Genre("Ecchi", 8),
-            Genre("Fantasy", 9),
-            Genre("Gender Bender", 10),
-            Genre("Harem", 11),
-            Genre("Historical", 12),
-            Genre("Horror", 13),
-            Genre("Josei", 14),
-            Genre("Lolicon", 15),
-            Genre("Manga", 16),
-            Genre("Manhua", 17),
-            Genre("Manhwa", 18),
-            Genre("Martial Arts", 19),
-            Genre("Mature", 20),
-            Genre("Mecha", 21),
-            Genre("Medical", 22),
-            Genre("Music", 23),
-            Genre("Mystery", 24),
-            Genre("One shot", 25),
-            Genre("Psychological", 26),
-            Genre("Romance", 27),
-            Genre("School Life", 28),
-            Genre("Sci-fi", 29),
-            Genre("Seinen", 30),
-            Genre("Shotacon", 31),
-            Genre("Shoujo", 32),
-            Genre("Shoujo Ai", 33),
-            Genre("Shounen", 34),
-            Genre("Shounen Ai", 35),
-            Genre("Slice of Life", 36),
-            Genre("Smut", 37),
-            Genre("Sports", 38),
-            Genre("Supernatural", 39),
-            Genre("Tragedy", 40),
-            Genre("Webtoon", 41),
-            Genre("Yaoi", 42),
-            Genre("Yuri", 43)
+            Genre("4-Koma"),
+            Genre("Action"),
+            Genre("Adult"),
+            Genre("Adventure"),
+            Genre("Comedy"),
+            Genre("Comic"),
+            Genre("Cooking"),
+            Genre("Doujinshi"),
+            Genre("Drama"),
+            Genre("Ecchi"),
+            Genre("Fantasy"),
+            Genre("Gender Bender"),
+            Genre("Harem"),
+            Genre("Historical"),
+            Genre("Horror"),
+            Genre("Josei"),
+            Genre("Lolicon"),
+            Genre("Manga"),
+            Genre("Manhua"),
+            Genre("Manhwa"),
+            Genre("Martial Arts"),
+            Genre("Mature"),
+            Genre("Mecha"),
+            Genre("Medical"),
+            Genre("Music"),
+            Genre("Mystery"),
+            Genre("One shot"),
+            Genre("Psychological"),
+            Genre("Romance"),
+            Genre("School Life"),
+            Genre("Sci-fi"),
+            Genre("Seinen"),
+            Genre("Shotacon"),
+            Genre("Shoujo"),
+            Genre("Shoujo Ai"),
+            Genre("Shounen"),
+            Genre("Shounen Ai"),
+            Genre("Slice of Life"),
+            Genre("Smut"),
+            Genre("Sports"),
+            Genre("Supernatural"),
+            Genre("Tragedy"),
+            Genre("Webtoon"),
+            Genre("Yaoi"),
+            Genre("Yuri")
     )
 }

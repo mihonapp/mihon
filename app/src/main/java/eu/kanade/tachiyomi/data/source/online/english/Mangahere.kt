@@ -1,17 +1,19 @@
 package eu.kanade.tachiyomi.data.source.online.english
 
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.data.network.GET
+import eu.kanade.tachiyomi.data.source.model.*
 import eu.kanade.tachiyomi.data.source.online.ParsedOnlineSource
 import okhttp3.HttpUrl
+import okhttp3.Request
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Mangahere(override val id: Int) : ParsedOnlineSource() {
+class Mangahere : ParsedOnlineSource() {
+
+    override val id: Long = 2
 
     override val name = "Mangahere"
 
@@ -21,36 +23,42 @@ class Mangahere(override val id: Int) : ParsedOnlineSource() {
 
     override val supportsLatest = true
 
-    override fun popularMangaInitialUrl() = "$baseUrl/directory/?views.za"
-
-    override fun latestUpdatesInitialUrl() = "$baseUrl/directory/?last_chapter_time.za"
-
     override fun popularMangaSelector() = "div.directory_list > ul > li"
 
     override fun latestUpdatesSelector() = "div.directory_list > ul > li"
 
-    private fun mangaFromElement(query: String, element: Element, manga: Manga) {
+    override fun popularMangaRequest(page: Int): Request {
+        return GET("$baseUrl/directory/$page.htm?views.za", headers)
+    }
+
+    override fun latestUpdatesRequest(page: Int): Request {
+        return GET("$baseUrl/directory/$page.htm?last_chapter_time.za", headers)
+    }
+
+    private fun mangaFromElement(query: String, element: Element): SManga {
+        val manga = SManga.create()
         element.select(query).first().let {
             manga.setUrlWithoutDomain(it.attr("href"))
             manga.title = if (it.hasAttr("title")) it.attr("title") else if (it.hasAttr("rel")) it.attr("rel") else it.text()
         }
+        return manga
     }
 
-    override fun popularMangaFromElement(element: Element, manga: Manga) {
-        mangaFromElement("div.title > a", element, manga)
+    override fun popularMangaFromElement(element: Element): SManga {
+        return mangaFromElement("div.title > a", element)
     }
 
-    override fun latestUpdatesFromElement(element: Element, manga: Manga) {
-        popularMangaFromElement(element, manga)
+    override fun latestUpdatesFromElement(element: Element): SManga {
+        return popularMangaFromElement(element)
     }
 
     override fun popularMangaNextPageSelector() = "div.next-page > a.next"
 
     override fun latestUpdatesNextPageSelector() = "div.next-page > a.next"
 
-    override fun searchMangaInitialUrl(query: String, filters: List<Filter<*>>): String {
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         val url = HttpUrl.parse("$baseUrl/search.php?name_method=cw&author_method=cw&artist_method=cw&advopts=1").newBuilder().addQueryParameter("name", query)
-        for (filter in if (filters.isEmpty()) this@Mangahere.filters else filters) {
+        (if (filters.isEmpty()) getFilterList() else filters).forEach { filter ->
             when (filter) {
                 is Status -> url.addQueryParameter("is_completed", arrayOf("", "1", "0")[filter.state])
                 is Genre -> url.addQueryParameter(filter.id, filter.state.toString())
@@ -59,39 +67,41 @@ class Mangahere(override val id: Int) : ParsedOnlineSource() {
                 is Order -> url.addQueryParameter("order", if (filter.state) "az" else "za")
             }
         }
-        return url.toString()
+        url.addQueryParameter("page", page.toString())
+        return GET(url.toString(), headers)
     }
-
 
     override fun searchMangaSelector() = "div.result_search > dl:has(dt)"
 
-    override fun searchMangaFromElement(element: Element, manga: Manga) {
-        mangaFromElement("a.manga_info", element, manga)
+    override fun searchMangaFromElement(element: Element): SManga {
+        return mangaFromElement("a.manga_info", element)
     }
 
     override fun searchMangaNextPageSelector() = "div.next-page > a.next"
 
-    override fun mangaDetailsParse(document: Document, manga: Manga) {
+    override fun mangaDetailsParse(document: Document): SManga {
         val detailElement = document.select(".manga_detail_top").first()
         val infoElement = detailElement.select(".detail_topText").first()
 
+        val manga = SManga.create()
         manga.author = infoElement.select("a[href^=http://www.mangahere.co/author/]").first()?.text()
         manga.artist = infoElement.select("a[href^=http://www.mangahere.co/artist/]").first()?.text()
         manga.genre = infoElement.select("li:eq(3)").first()?.text()?.substringAfter("Genre(s):")
         manga.description = infoElement.select("#show").first()?.text()?.substringBeforeLast("Show less")
         manga.status = infoElement.select("li:eq(6)").first()?.text().orEmpty().let { parseStatus(it) }
         manga.thumbnail_url = detailElement.select("img.img").first()?.attr("src")
+        return manga
     }
 
     private fun parseStatus(status: String) = when {
-        status.contains("Ongoing") -> Manga.ONGOING
-        status.contains("Completed") -> Manga.COMPLETED
-        else -> Manga.UNKNOWN
+        status.contains("Ongoing") -> SManga.ONGOING
+        status.contains("Completed") -> SManga.COMPLETED
+        else -> SManga.UNKNOWN
     }
 
     override fun chapterListSelector() = ".detail_list > ul:not([class]) > li"
 
-    override fun chapterFromElement(element: Element, chapter: Chapter) {
+    override fun chapterFromElement(element: Element): SChapter {
         val parentEl = element.select("span.left").first()
 
         val urlElement = parentEl.select("a").first()
@@ -106,9 +116,11 @@ class Mangahere(override val id: Int) : ParsedOnlineSource() {
             title = " - " + title
         }
 
+        val chapter = SChapter.create()
         chapter.setUrlWithoutDomain(urlElement.attr("href"))
         chapter.name = urlElement.text() + volume + title
         chapter.date_upload = element.select("span.right").first()?.text()?.let { parseChapterDate(it) } ?: 0
+        return chapter
     }
 
     private fun parseChapterDate(date: String): Long {
@@ -136,11 +148,13 @@ class Mangahere(override val id: Int) : ParsedOnlineSource() {
         }
     }
 
-    override fun pageListParse(document: Document, pages: MutableList<Page>) {
+    override fun pageListParse(document: Document): List<Page> {
+        val pages = mutableListOf<Page>()
         document.select("select.wid60").first()?.getElementsByTag("option")?.forEach {
             pages.add(Page(pages.size, it.attr("value")))
         }
         pages.getOrNull(0)?.imageUrl = imageUrlParse(document)
+        return pages
     }
 
     override fun imageUrlParse(document: Document) = document.getElementById("image").attr("src")
@@ -157,7 +171,7 @@ class Mangahere(override val id: Int) : ParsedOnlineSource() {
 
     // [...document.querySelectorAll("select[id^='genres'")].map((el,i) => `Genre("${el.nextSibling.nextSibling.textContent.trim()}", "${el.getAttribute('name')}")`).join(',\n')
     // http://www.mangahere.co/advsearch.htm
-    override fun getFilterList(): List<Filter<*>> = listOf(
+    override fun getFilterList() = FilterList(
             TextField("Author", "author"),
             TextField("Artist", "artist"),
             ListField("Type", "direction", arrayOf(ListValue("Any", ""), ListValue("Japanese Manga (read from right to left)", "rl"), ListValue("Korean Manhwa (read from left to right)", "lr"))),

@@ -9,12 +9,13 @@ import eu.kanade.tachiyomi.CustomRobolectricGradleTestRunner
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.SourceManager
+import eu.kanade.tachiyomi.data.source.model.SChapter
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Matchers.anyInt
+import org.mockito.Matchers.anyLong
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.robolectric.Robolectric
@@ -51,7 +52,7 @@ class LibraryUpdateServiceTest {
 
         service = Robolectric.setupService(LibraryUpdateService::class.java)
         source = mock(OnlineSource::class.java)
-        `when`(service.sourceManager.get(anyInt())).thenReturn(source)
+        `when`(service.sourceManager.get(anyLong())).thenReturn(source)
     }
 
     @Test
@@ -91,7 +92,7 @@ class LibraryUpdateServiceTest {
 
         // One of the updates will fail
         `when`(source.fetchChapterList(favManga[0])).thenReturn(Observable.just(chapters))
-        `when`(source.fetchChapterList(favManga[1])).thenReturn(Observable.error<List<Chapter>>(Exception()))
+        `when`(source.fetchChapterList(favManga[1])).thenReturn(Observable.error<List<SChapter>>(Exception()))
         `when`(source.fetchChapterList(favManga[2])).thenReturn(Observable.just(chapters3))
 
         val intent = Intent()
@@ -117,8 +118,7 @@ class LibraryUpdateServiceTest {
     private fun createManga(vararg urls: String): List<Manga> {
         val list = ArrayList<Manga>()
         for (url in urls) {
-            val m = Manga.create(url)
-            m.title = url.substring(1)
+            val m = Manga.create(url, url.substring(1))
             m.favorite = true
             list.add(m)
         }

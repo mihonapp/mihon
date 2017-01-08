@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.f2prateek.rx.preferences.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.source.model.FilterList
 import eu.kanade.tachiyomi.data.source.online.LoginSource
 import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
@@ -32,7 +33,6 @@ import nucleus.factory.RequiresPresenter
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
-import timber.log.Timber
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 /**
@@ -103,6 +103,11 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      */
     private val toolbar: Toolbar
         get() = (activity as MainActivity).toolbar
+
+    /**
+     * Snackbar containing an error message when a request fails.
+     */
+    private var snack: Snackbar? = null
 
     /**
      * Navigation view containing filter items.
@@ -201,8 +206,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
             } else if (source != presenter.source) {
                 selectedIndex = position
                 showProgressBar()
-                glm.scrollToPositionWithOffset(0, 0)
-                llm.scrollToPositionWithOffset(0, 0)
+                adapter.clear()
                 presenter.setActiveSource(source)
                 navView?.setFilters(presenter.sourceFilters)
                 activity.invalidateOptionsMenu()
@@ -233,14 +237,14 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         }
 
         navView.onSearchClicked = {
-            val allDefault = (0..navView.adapter.items.lastIndex)
-                    .none { navView.adapter.items[it].state != presenter.source.filters[it].state }
-
-            presenter.setSourceFilter(if (allDefault) emptyList() else navView.adapter.items)
+            val allDefault = navView.adapter.items.hasSameState(presenter.source.getFilterList())
+            showProgressBar()
+            adapter.clear()
+            presenter.setSourceFilter(if (allDefault) FilterList() else navView.adapter.items)
         }
 
         navView.onResetClicked = {
-            presenter.appliedFilters = emptyList()
+            presenter.appliedFilters = FilterList()
             val newFilters = presenter.source.getFilterList()
             presenter.sourceFilters = newFilters
             navView.setFilters(newFilters)
@@ -277,7 +281,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         // Setup filters button
         menu.findItem(R.id.action_set_filter).apply {
             icon.mutate()
-            if (presenter.source.filters.isEmpty()) {
+            if (presenter.sourceFilters.isEmpty()) {
                 isEnabled = false
                 icon.alpha = 128
             } else {
@@ -355,8 +359,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
             return
 
         showProgressBar()
-        catalogue_grid.layoutManager.scrollToPosition(0)
-        catalogue_list.layoutManager.scrollToPosition(0)
+        adapter.clear()
 
         presenter.restartPager(newQuery)
     }
@@ -394,9 +397,11 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      */
     fun onAddPageError(error: Throwable) {
         hideProgressBar()
-        Timber.e(error)
 
-        catalogue_view.snack(error.message ?: "", Snackbar.LENGTH_INDEFINITE) {
+        val message = if (error is NoResultsException) "No results found" else (error.message ?: "")
+
+        snack?.dismiss()
+        snack = catalogue_view.snack(message, Snackbar.LENGTH_INDEFINITE) {
             setAction(R.string.action_retry) {
                 showProgressBar()
                 presenter.requestNext()
@@ -456,6 +461,8 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      */
     private fun showProgressBar() {
         progress.visibility = ProgressBar.VISIBLE
+        snack?.dismiss()
+        snack = null
     }
 
     /**
@@ -463,6 +470,8 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      */
     private fun showGridProgressBar() {
         progress_grid.visibility = ProgressBar.VISIBLE
+        snack?.dismiss()
+        snack = null
     }
 
     /**

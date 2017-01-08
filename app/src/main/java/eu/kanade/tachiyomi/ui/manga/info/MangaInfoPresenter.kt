@@ -99,9 +99,10 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
      * @return manga information.
      */
     private fun fetchMangaObs(): Observable<Manga> {
-        return source.fetchMangaDetails(manga)
+        return Observable.defer { source.fetchMangaDetails(manga) }
                 .flatMap { networkManga ->
                     manga.copyFrom(networkManga)
+                    manga.initialized = true
                     db.insertManga(manga).executeAsBlocking()
                     Observable.just<Manga>(manga)
                 }
