@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.info.ChapterCountEvent
 import eu.kanade.tachiyomi.ui.manga.info.MangaFavoriteEvent
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import rx.Observable
 import rx.Subscription
 import uy.kohesive.injekt.injectLazy
@@ -44,10 +45,10 @@ class MangaPresenter : BasePresenter<MangaActivity>() {
     }
 
     fun setMangaEvent(event: MangaEvent) {
-        if (isUnsubscribed(mangaSubscription)) {
+        if (mangaSubscription.isNullOrUnsubscribed()) {
             manga = event.manga
             mangaSubscription = Observable.just(manga)
-                    .subscribeLatestCache({ view, manga -> view.onSetManga(manga) })
+                    .subscribeLatestCache(MangaActivity::onSetManga)
         }
     }
 

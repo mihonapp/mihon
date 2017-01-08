@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.base.presenter
 
 import android.content.Context
+import nucleus.presenter.RxPresenter
 import nucleus.view.ViewWithPresenter
 import rx.Observable
 

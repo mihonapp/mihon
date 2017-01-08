@@ -4,6 +4,7 @@ import android.os.Bundle
 import eu.kanade.tachiyomi.data.backup.BackupManager
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -48,13 +49,13 @@ class BackupPresenter : BasePresenter<BackupFragment>() {
      * @param file the path where the file will be saved.
      */
     fun createBackup(file: File) {
-        if (isUnsubscribed(backupSubscription)) {
+        if (backupSubscription.isNullOrUnsubscribed()) {
             backupSubscription = getBackupObservable(file)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeFirst(
                             { view, result -> view.onBackupCompleted(file) },
-                            { view, error -> view.onBackupError(error) })
+                            BackupFragment::onBackupError)
         }
     }
 
@@ -64,13 +65,13 @@ class BackupPresenter : BasePresenter<BackupFragment>() {
      * @param stream the input stream of the backup file.
      */
     fun restoreBackup(stream: InputStream) {
-        if (isUnsubscribed(restoreSubscription)) {
+        if (restoreSubscription.isNullOrUnsubscribed()) {
             restoreSubscription = getRestoreObservable(stream)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeFirst(
                             { view, result -> view.onRestoreCompleted() },
-                            { view, error -> view.onRestoreError(error) })
+                            BackupFragment::onRestoreError)
         }
     }
 

@@ -9,7 +9,9 @@ import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import rx.Observable
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
@@ -49,32 +51,21 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
     val coverCache: CoverCache by injectLazy()
 
     /**
-     * The id of the restartable.
+     * Subscription to send the manga to the view.
      */
-    private val GET_MANGA = 1
+    private var viewMangaSubcription: Subscription? = null
 
     /**
-     * The id of the restartable.
+     * Subscription to update the manga from the source.
      */
-    private val FETCH_MANGA_INFO = 2
+    private var fetchMangaSubscription: Subscription? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        // Notify the view a manga is available or has changed.
-        startableLatestCache(GET_MANGA,
-                { Observable.just(manga) },
-                { view, manga -> view.onNextManga(manga, source) })
-
-        // Fetch manga info from source.
-        startableFirst(FETCH_MANGA_INFO,
-                { fetchMangaObs() },
-                { view, manga -> view.onFetchMangaDone() },
-                { view, error -> view.onFetchMangaError() })
-
         manga = SharedData.get(MangaEvent::class.java)?.manga ?: return
         source = sourceManager.get(manga.source)!!
-        refreshManga()
+        sendMangaToView()
 
         // Update chapter count
         SharedData.get(ChapterCountEvent::class.java)?.observable
@@ -88,30 +79,34 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
     }
 
     /**
-     * Fetch manga information from source.
+     * Sends the active manga to the view.
      */
-    fun fetchMangaFromSource() {
-        if (isUnsubscribed(FETCH_MANGA_INFO)) {
-            start(FETCH_MANGA_INFO)
-        }
+    fun sendMangaToView() {
+        viewMangaSubcription?.let { remove(it) }
+        viewMangaSubcription = Observable.just(manga)
+                .subscribeLatestCache({ view, manga -> view.onNextManga(manga, source) })
     }
 
     /**
      * Fetch manga information from source.
-     *
-     * @return manga information.
      */
-    private fun fetchMangaObs(): Observable<Manga> {
-        return Observable.defer { source.fetchMangaDetails(manga) }
-                .flatMap { networkManga ->
+    fun fetchMangaFromSource() {
+        if (!fetchMangaSubscription.isNullOrUnsubscribed()) return
+        fetchMangaSubscription = Observable.defer { source.fetchMangaDetails(manga) }
+                .map { networkManga ->
                     manga.copyFrom(networkManga)
                     manga.initialized = true
                     db.insertManga(manga).executeAsBlocking()
-                    Observable.just<Manga>(manga)
+                    manga
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { refreshManga() }
+                .doOnNext { sendMangaToView() }
+                .subscribeFirst({ view, manga ->
+                    view.onFetchMangaDone()
+                }, { view, error ->
+                    view.onFetchMangaError()
+                })
     }
 
     /**
@@ -123,19 +118,14 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
             coverCache.deleteFromCache(manga.thumbnail_url)
         }
         db.insertManga(manga).executeAsBlocking()
-        refreshManga()
+        sendMangaToView()
     }
 
-    private fun setFavorite(favorite:Boolean){
-        if (manga.favorite == favorite)
+    private fun setFavorite(favorite: Boolean) {
+        if (manga.favorite == favorite) {
             return
+        }
         toggleFavorite()
     }
 
-    /**
-     * Refresh MangaInfo view.
-     */
-    private fun refreshManga() {
-        start(GET_MANGA)
-    }
 }
