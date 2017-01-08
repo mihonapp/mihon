@@ -19,8 +19,8 @@ import kotlinx.android.synthetic.main.item_catalogue_list.view.*
 class CatalogueListHolder(private val view: View, adapter: CatalogueAdapter, listener: OnListItemClickListener) :
         CatalogueHolder(view, adapter, listener) {
 
-    private val favoriteColor = view.context.theme.getResourceColor(android.R.attr.textColorHint)
-    private val unfavoriteColor = view.context.theme.getResourceColor(android.R.attr.textColorPrimary)
+    private val favoriteColor = view.context.getResourceColor(android.R.attr.textColorHint)
+    private val unfavoriteColor = view.context.getResourceColor(android.R.attr.textColorPrimary)
 
     /**
      * Method called from [CatalogueAdapter.onBindViewHolder]. It updates the data for this

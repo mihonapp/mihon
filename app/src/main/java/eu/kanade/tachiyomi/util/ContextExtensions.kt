@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.PowerManager
 import android.support.annotation.StringRes
@@ -13,6 +14,7 @@ import android.widget.Toast
 
 /**
  * Display a toast in this context.
+ *
  * @param resource the text resource.
  * @param duration the duration of the toast. Defaults to short.
  */
@@ -22,6 +24,7 @@ fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) 
 
 /**
  * Display a toast in this context.
+ *
  * @param text the text to display.
  * @param duration the duration of the toast. Defaults to short.
  */
@@ -31,6 +34,7 @@ fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
 
 /**
  * Helper method to create a notification.
+ *
  * @param func the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
  */
@@ -42,11 +46,36 @@ inline fun Context.notification(func: NotificationCompat.Builder.() -> Unit): No
 
 /**
  * Checks if the give permission is granted.
+ *
  * @param permission the permission to check.
  * @return true if it has permissions.
  */
 fun Context.hasPermission(permission: String)
         = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+
+/**
+ * Returns the color for the given attribute.
+ *
+ * @param resource the attribute.
+ */
+fun Context.getResourceColor(@StringRes resource: Int): Int {
+    val typedArray = obtainStyledAttributes(intArrayOf(resource))
+    val attrValue = typedArray.getColor(0, 0)
+    typedArray.recycle()
+    return attrValue
+}
+
+/**
+ * Converts to dp.
+ */
+val Int.pxToDp: Int
+    get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+/**
+ * Converts to px.
+ */
+val Int.dpToPx: Int
+    get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
 /**
  * Property to get the notification manager from the context.
@@ -65,3 +94,4 @@ val Context.connectivityManager: ConnectivityManager
  */
 val Context.powerManager: PowerManager
     get() = getSystemService(Context.POWER_SERVICE) as PowerManager
+

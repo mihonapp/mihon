@@ -109,7 +109,7 @@ class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs:
                         else
                             android.R.attr.textColorSecondary
 
-                        setTint(view.context.theme.getResourceColor(color))
+                        setTint(view.context.getResourceColor(color))
                     }
 
                     view.setCompoundDrawablesWithIntrinsicBounds(getIcon(), null, null, null)

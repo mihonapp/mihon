@@ -168,7 +168,7 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
         try {
             val url = Uri.parse(source.baseUrl + presenter.manga.url)
             val intent = CustomTabsIntent.Builder()
-                    .setToolbarColor(context.theme.getResourceColor(R.attr.colorPrimary))
+                    .setToolbarColor(context.getResourceColor(R.attr.colorPrimary))
                     .build()
             intent.launchUrl(activity, url)
         } catch (e: Exception) {

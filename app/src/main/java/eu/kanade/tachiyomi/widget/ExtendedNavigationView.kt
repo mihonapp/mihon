@@ -75,7 +75,7 @@ open class ExtendedNavigationView @JvmOverloads constructor(
              */
             fun tintVector(context: Context, resId: Int): Drawable {
                 return VectorDrawableCompat.create(context.resources, resId, context.theme)!!.apply {
-                    setTint(context.theme.getResourceColor(R.attr.colorAccent))
+                    setTint(context.getResourceColor(R.attr.colorAccent))
                 }
             }
         }

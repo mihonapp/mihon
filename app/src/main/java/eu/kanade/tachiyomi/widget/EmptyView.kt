@@ -29,7 +29,7 @@ class EmptyView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
      * @param textResource text of information view
      */
     fun show(drawable: Int, textResource: Int) {
-        image_view.setVectorCompat(drawable, context.theme.getResourceColor(android.R.attr.textColorHint))
+        image_view.setVectorCompat(drawable, context.getResourceColor(android.R.attr.textColorHint))
         text_label.text = context.getString(textResource)
         this.visibility = View.VISIBLE
     }

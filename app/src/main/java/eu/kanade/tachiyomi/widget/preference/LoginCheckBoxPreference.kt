@@ -8,6 +8,7 @@ import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.online.LoginSource
 import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.setVectorCompat
 import kotlinx.android.synthetic.main.pref_item_source.view.*
 import net.xpece.android.support.preference.CheckBoxPreference
@@ -31,7 +32,7 @@ class LoginCheckBoxPreference @JvmOverloads constructor(
             val tint = if (source.isLogged())
                 Color.argb(255, 76, 175, 80)
             else
-                Color.argb(97, 0, 0, 0)
+                context.getResourceColor(android.R.attr.textColorSecondary)
 
             holder.itemView.login.setVectorCompat(R.drawable.ic_account_circle_black_24dp, tint)
 

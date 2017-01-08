@@ -26,12 +26,12 @@ class RecentChaptersHolder(
     /**
      * Color of read chapter
      */
-    private var readColor = view.context.theme.getResourceColor(android.R.attr.textColorHint)
+    private var readColor = view.context.getResourceColor(android.R.attr.textColorHint)
 
     /**
      * Color of unread chapter
      */
-    private var unreadColor = view.context.theme.getResourceColor(android.R.attr.textColorPrimary)
+    private var unreadColor = view.context.getResourceColor(android.R.attr.textColorPrimary)
 
     /**
      * Object containing chapter information
