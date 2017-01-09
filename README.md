@@ -1,8 +1,5 @@
-| Download |
-|----------|
-| [![stable release](https://img.shields.io/github/release/NerdNumber9/TachiyomiEH.svg?maxAge=3600&label=stable)](https://github.com/NerdNumber9/TachiyomiEH/releases) |
-
 <div style="text-align:center"><img src ="https://raw.githubusercontent.com/NerdNumber9/TachiyomiEH/master/branding/teh-banner.png" /></div>
+<br>
 
 TachiyomiEH is a free and open source E-Hentai and ExHentai galleries reader for Android.
 
@@ -10,6 +7,9 @@ Keep in mind it's still a beta, so expect it to crash sometimes.
 
 ### E-Hentai Thread
 [https://forums.e-hentai.org/index.php?showtopic=185421](https://forums.e-hentai.org/index.php?showtopic=185421)
+
+# Download
+[![stable release](https://img.shields.io/github/release/NerdNumber9/TachiyomiEH.svg?maxAge=3600&label=stable)](https://github.com/NerdNumber9/TachiyomiEH/releases)
 
 # Features
 
