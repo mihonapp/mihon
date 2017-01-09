@@ -2,19 +2,28 @@
 |----------|
 | [![stable release](https://img.shields.io/github/release/NerdNumber9/TachiyomiEH.svg?maxAge=3600&label=stable)](https://github.com/NerdNumber9/TachiyomiEH/releases) |
 
-Tachiyomi is a free and open source manga reader for Android.
+<div style="text-align:center"><img src ="https://raw.githubusercontent.com/NerdNumber9/TachiyomiEH/master/branding/teh-banner.png" /></div>
+
+TachiyomiEH is a free and open source E-Hentai and ExHentai galleries reader for Android.
 
 Keep in mind it's still a beta, so expect it to crash sometimes.
+
+### E-Hentai Thread
+[https://forums.e-hentai.org/index.php?showtopic=185421](https://forums.e-hentai.org/index.php?showtopic=185421)
 
 # Features
 
 * Online and offline reading
 * Configurable reader with multiple viewers and settings
 * MyAnimeList support
-* Resume from the next unread chapter
+* Track your reading position
 * Chapter filtering
 * Schedule searching for updates
 * Categories to organize your library
+* Log into ExHentai
+* Full offline tag searching support
+* Batch import galleries
+* Automatically open E-Hentai/ExHentai links
 
 ## License
 
