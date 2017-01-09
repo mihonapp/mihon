@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+
+    <changelogversion versionName="v4.0.1" changeDate="">
+        <changelogtext>Fixed duplicate galleries bug</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v4.0.0" changeDate="">
         <changelogtext>
             [b]Important![/b] The application is now signed with a different key, you must migrate over your previous library if you wish to keep it!
