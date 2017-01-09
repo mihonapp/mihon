@@ -4,6 +4,7 @@ import android.os.Bundle
 import eu.kanade.tachiyomi.data.backup.BackupManager
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import exh.ui.migration.UrlMigrator
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -87,6 +88,7 @@ class BackupPresenter : BasePresenter<BackupFragment>() {
      */
     private fun getRestoreObservable(stream: InputStream) = Observable.fromCallable {
         backupManager.restoreFromStream(stream)
+        UrlMigrator().perform() //Clean up URLs
         true
     }
 

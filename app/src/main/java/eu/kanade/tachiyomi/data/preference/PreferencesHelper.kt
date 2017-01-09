@@ -166,6 +166,8 @@ class PreferencesHelper(val context: Context) {
 
     fun finishMainActivity() = rxPrefs.getBoolean("finish_main_activity", false)
 
+    fun hasPerformedURLMigration() = rxPrefs.getBoolean("performed_url_migration", false)
+
     //EH Cookies
     fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
     fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)

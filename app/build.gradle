@@ -34,6 +34,10 @@ android {
     buildToolsVersion "25.0.1"
     publishNonDefault true
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     defaultConfig {
         applicationId "eu.kanade.tachiyomi.eh2"
         minSdkVersion 16

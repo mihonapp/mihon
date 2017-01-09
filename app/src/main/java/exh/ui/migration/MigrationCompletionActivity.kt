@@ -40,7 +40,6 @@ class MigrationCompletionActivity : BaseActivity() {
     fun setup() {
         try {
             val sc = ShareCompat.IntentReader.from(this)
-            Timber.i("CP: " + sc.callingPackage)
             if(sc.isShareIntent) {
                 //Try to restore backup
                 thread {
@@ -53,6 +52,9 @@ class MigrationCompletionActivity : BaseActivity() {
                         migrationError("Failed to restore manga/galleries!")
                         return@thread
                     }
+
+                    //Migrate urls
+                    UrlMigrator().perform()
 
                     //Go back to MainActivity
                     //Set final steps

@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import exh.ui.batchadd.BatchAddFragment
 import exh.ui.migration.LibraryMigrationManager
+import exh.ui.migration.UrlMigrator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import rx.Subscription
@@ -100,6 +101,9 @@ class MainActivity : BaseActivity() {
                 if(it)
                     finish()
             }
+
+            //Migrate URLs if necessary
+            UrlMigrator().tryMigration()
         }
     }
 
