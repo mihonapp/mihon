@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.category
 
 import android.view.ViewGroup
-import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter4.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.adapter.ItemTouchHelperAdapter

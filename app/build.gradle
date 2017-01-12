@@ -182,7 +182,8 @@ dependencies {
     // UI
     compile 'com.dmitrymalkovich.android:material-design-dimens:1.4'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
-    compile 'eu.davidea:flexible-adapter:4.2.0'
+    compile 'eu.davidea:flexible-adapter:5.0.0-rc1'
+    compile 'com.github.inorichi:FlexibleAdapter:93985fe' // v4.2.0 to be removed
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
     compile 'com.afollestad.material-dialogs:core:0.9.1.0'

@@ -10,7 +10,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
-import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter4.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
