@@ -88,12 +88,10 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     fun findLibManga(track: Track, userId: String): Observable<Track?> {
         return rest.findLibManga(track.remote_id, userId)
                 .map { json ->
-                    val data = json["data"].array.filter {
-                        it["relationships"]["media"]["data"]["type"].string == "manga"
-                    }
-                    if (data.isNotEmpty()) {
-                        val media = json["included"].array.first { it["type"].string == "manga" }.obj
-                        KitsuLibManga(data[0].obj, media).toTrack()
+                    val data = json["data"].array
+                    if (data.size() > 0) {
+                        val manga = json["included"].array[0].obj
+                        KitsuLibManga(data[0].obj, manga).toTrack()
                     } else {
                         null
                     }
@@ -105,8 +103,8 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                 .map { json ->
                     val data = json["data"].array
                     if (data.size() > 0) {
-                        val include = json["included"].array[0].obj
-                        KitsuLibManga(data[0].obj, include).toTrack()
+                        val manga = json["included"].array[0].obj
+                        KitsuLibManga(data[0].obj, manga).toTrack()
                     } else {
                         throw Exception("Could not find manga")
                     }
@@ -153,13 +151,13 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                 @Query("filter[media_id]", encoded = true) remoteId: Int,
                 @Query("filter[user_id]", encoded = true) userId: String,
                 @Query("page[limit]", encoded = true) limit: Int = 10000,
-                @Query("include") includes: String = "media"
+                @Query("include") includes: String = "manga"
         ): Observable<JsonObject>
 
         @GET("library-entries")
         fun getLibManga(
                 @Query("filter[id]", encoded = true) remoteId: Int,
-                @Query("include") includes: String = "media"
+                @Query("include") includes: String = "manga"
         ): Observable<JsonObject>
 
         @GET("users")
