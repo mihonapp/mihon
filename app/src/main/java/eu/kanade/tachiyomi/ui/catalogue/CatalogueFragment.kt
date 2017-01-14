@@ -237,10 +237,10 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         }
 
         navView.onSearchClicked = {
-            val allDefault = navView.adapter.items.hasSameState(presenter.source.getFilterList())
+            val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
             showProgressBar()
             adapter.clear()
-            presenter.setSourceFilter(if (allDefault) FilterList() else navView.adapter.items)
+            presenter.setSourceFilter(if (allDefault) FilterList() else presenter.sourceFilters)
         }
 
         navView.onResetClicked = {

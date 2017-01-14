@@ -17,7 +17,6 @@ class CategoryAdapter(private val activity: CategoryActivity) :
      * Called when item is released.
      */
     fun onItemReleased() {
-        // Update database
         activity.onItemReleased()
     }
 

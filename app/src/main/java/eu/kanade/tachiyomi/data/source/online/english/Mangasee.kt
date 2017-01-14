@@ -60,7 +60,7 @@ class Mangasee : ParsedOnlineSource() {
                     if (filter.state?.ascending != true)
                         url.addQueryParameter("sortOrder", "descending")
                 }
-                is ListField -> if (filter.state != 0) url.addQueryParameter(filter.key, filter.values[filter.state])
+                is SelectField -> if (filter.state != 0) url.addQueryParameter(filter.key, filter.values[filter.state])
                 is TextField -> if (!filter.state.isEmpty()) url.addQueryParameter(filter.key, filter.state)
                 is Genre -> when (filter.state) {
                     Filter.TriState.STATE_INCLUDE -> genres = if (genres == null) filter.name else genres + "," + filter.name
@@ -155,23 +155,19 @@ class Mangasee : ParsedOnlineSource() {
 
     override fun imageUrlParse(document: Document): String = document.select("img.CurImage").attr("src")
 
-    private data class SortOption(val name: String, val keys: Array<String>, val values: Array<String>) {
-        override fun toString(): String = name
-    }
-
-    private class Sort() : Filter.Sort<String>("Sort", arrayOf("Alphabetically", "Date updated", "Popularity"), Filter.Sort.Selection(2, false))
+    private class Sort : Filter.Sort("Sort", arrayOf("Alphabetically", "Date updated", "Popularity"), Filter.Sort.Selection(2, false))
     private class Genre(name: String) : Filter.TriState(name)
     private class TextField(name: String, val key: String) : Filter.Text(name)
-    private class ListField(name: String, val key: String, values: Array<String>, state: Int = 0) : Filter.List<String>(name, values, state)
+    private class SelectField(name: String, val key: String, values: Array<String>, state: Int = 0) : Filter.Select<String>(name, values, state)
 
     // [...document.querySelectorAll("label.triStateCheckBox input")].map(el => `Filter("${el.getAttribute('name')}", "${el.nextSibling.textContent.trim()}")`).join(',\n')
     // http://mangasee.co/advanced-search/
     override fun getFilterList() = FilterList(
             TextField("Years", "year"),
             TextField("Author", "author"),
-            ListField("Scan Status", "status", arrayOf("Any", "Complete", "Discontinued", "Hiatus", "Incomplete", "Ongoing")),
-            ListField("Publish Status", "pstatus", arrayOf("Any", "Cancelled", "Complete", "Discontinued", "Hiatus", "Incomplete", "Ongoing", "Unfinished")),
-            ListField("Type", "type", arrayOf("Any", "Doujinshi", "Manga", "Manhua", "Manhwa", "OEL", "One-shot")),
+            SelectField("Scan Status", "status", arrayOf("Any", "Complete", "Discontinued", "Hiatus", "Incomplete", "Ongoing")),
+            SelectField("Publish Status", "pstatus", arrayOf("Any", "Cancelled", "Complete", "Discontinued", "Hiatus", "Incomplete", "Ongoing", "Unfinished")),
+            SelectField("Type", "type", arrayOf("Any", "Doujinshi", "Manga", "Manhua", "Manhwa", "OEL", "One-shot")),
             Filter.Separator(),
             Sort(),
             Filter.Separator(),

@@ -162,15 +162,11 @@ class Mangahere : ParsedOnlineSource() {
 
     override fun imageUrlParse(document: Document) = document.getElementById("image").attr("src")
 
-    private data class ListValue(val name: String, val value: String) {
-        override fun toString(): String = name
-    }
-
-    private class Status() : Filter.TriState("Completed")
+    private class Status : Filter.TriState("Completed")
     private class Genre(name: String, val id: String = "genres[$name]") : Filter.TriState(name)
     private class TextField(name: String, val key: String) : Filter.Text(name)
-    private class Type() : Filter.List<String>("Type", arrayOf("Any", "Japanese Manga (read from right to left)", "Korean Manhwa (read from left to right)"))
-    private class OrderBy() : Filter.Sort<String>("Order by",
+    private class Type : Filter.Select<String>("Type", arrayOf("Any", "Japanese Manga (read from right to left)", "Korean Manhwa (read from left to right)"))
+    private class OrderBy : Filter.Sort("Order by",
             arrayOf("Series name", "Rating", "Views", "Total chapters", "Last chapter"),
             Filter.Sort.Selection(2, false))
 
