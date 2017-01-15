@@ -37,5 +37,5 @@ class SeparatorItem(val filter: Filter.Separator) : AbstractHeaderItem<Separator
         return filter.hashCode()
     }
 
-    class Holder(view: View, val adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter)
+    class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter)
 }

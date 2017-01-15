@@ -61,7 +61,7 @@ open class TriStateItem(val filter: Filter.TriState) : AbstractFlexibleItem<TriS
         return filter.hashCode()
     }
 
-    class Holder(view: View, val adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
+    class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
 
         val text = itemView.findViewById(TR.id.nav_view_item) as CheckedTextView
 

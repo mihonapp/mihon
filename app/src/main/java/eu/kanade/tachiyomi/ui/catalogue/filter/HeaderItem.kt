@@ -24,7 +24,6 @@ class HeaderItem(val filter: Filter.Header) : AbstractHeaderItem<HeaderItem.Hold
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {
         val view = holder.itemView as TextView
-        view.visibility = if (filter.name.isEmpty()) View.GONE else View.VISIBLE
         view.text = filter.name
     }
 
@@ -40,5 +39,5 @@ class HeaderItem(val filter: Filter.Header) : AbstractHeaderItem<HeaderItem.Hold
         return filter.hashCode()
     }
 
-    class Holder(view: View, val adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter)
+    class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter)
 }
