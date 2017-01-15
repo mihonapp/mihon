@@ -208,7 +208,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
                 showProgressBar()
                 adapter.clear()
                 presenter.setActiveSource(source)
-                navView?.setFilters(presenter.sourceFilters)
+                navView?.setFilters(presenter.filterItems)
                 activity.invalidateOptionsMenu()
             }
         }
@@ -229,7 +229,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         this.navView = navView
         activity.drawer.addView(navView)
         activity.drawer.addDrawerListener(drawerListener)
-        navView.setFilters(presenter.sourceFilters)
+        navView.setFilters(presenter.filterItems)
 
         navView.post {
             if (isAdded && !activity.drawer.isDrawerOpen(navView))
@@ -247,7 +247,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
             presenter.appliedFilters = FilterList()
             val newFilters = presenter.source.getFilterList()
             presenter.sourceFilters = newFilters
-            navView.setFilters(newFilters)
+            navView.setFilters(presenter.filterItems)
         }
 
         showProgressBar()

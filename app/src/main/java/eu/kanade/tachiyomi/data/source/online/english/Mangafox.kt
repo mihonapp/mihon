@@ -59,11 +59,7 @@ class Mangafox : ParsedOnlineSource() {
         (if (filters.isEmpty()) getFilterList() else filters).forEach { filter ->
             when (filter) {
                 is Status -> url.addQueryParameter(filter.id, filter.state.toString())
-                is GenreList -> {
-                    filter.state.forEach { genre ->
-                        url.addQueryParameter(genre.id, genre.state.toString())
-                    }
-                }
+                is GenreList -> filter.state.forEach { genre -> url.addQueryParameter(genre.id, genre.state.toString()) }
                 is TextField -> url.addQueryParameter(filter.key, filter.state)
                 is Type -> url.addQueryParameter("type", if(filter.state == 0) "" else filter.state.toString())
                 is OrderBy -> {
@@ -180,9 +176,7 @@ class Mangafox : ParsedOnlineSource() {
             TextField("Artist", "artist"),
             Type(),
             Status(),
-            Filter.Separator(),
             OrderBy(),
-            Filter.Separator(),
             GenreList(getGenreList())
     )
 

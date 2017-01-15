@@ -61,7 +61,7 @@ class Mangahere : ParsedOnlineSource() {
         (if (filters.isEmpty()) getFilterList() else filters).forEach { filter ->
             when (filter) {
                 is Status -> url.addQueryParameter("is_completed", arrayOf("", "1", "0")[filter.state])
-                is Genre -> url.addQueryParameter(filter.id, filter.state.toString())
+                is GenreList -> filter.state.forEach { genre -> url.addQueryParameter(genre.id, genre.state.toString()) }
                 is TextField -> url.addQueryParameter(filter.key, filter.state)
                 is Type -> url.addQueryParameter("direction", arrayOf("", "rl", "lr")[filter.state])
                 is OrderBy -> {
@@ -169,18 +169,20 @@ class Mangahere : ParsedOnlineSource() {
     private class OrderBy : Filter.Sort("Order by",
             arrayOf("Series name", "Rating", "Views", "Total chapters", "Last chapter"),
             Filter.Sort.Selection(2, false))
+    private class GenreList(genres: List<Genre>) : Filter.Group<Genre>("Genres", genres)
 
-    // [...document.querySelectorAll("select[id^='genres'")].map((el,i) => `Genre("${el.nextSibling.nextSibling.textContent.trim()}", "${el.getAttribute('name')}")`).join(',\n')
-    // http://www.mangahere.co/advsearch.htm
     override fun getFilterList() = FilterList(
             TextField("Author", "author"),
             TextField("Artist", "artist"),
             Type(),
             Status(),
-            Filter.Separator(),
             OrderBy(),
-            Filter.Separator(),
-            Filter.Header("Genres"),
+            GenreList(getGenreList())
+    )
+
+    // [...document.querySelectorAll("select[id^='genres'")].map((el,i) => `Genre("${el.nextSibling.nextSibling.textContent.trim()}", "${el.getAttribute('name')}")`).join(',\n')
+    // http://www.mangahere.co/advsearch.htm
+    private fun getGenreList() = listOf(
             Genre("Action"),
             Genre("Adventure"),
             Genre("Comedy"),

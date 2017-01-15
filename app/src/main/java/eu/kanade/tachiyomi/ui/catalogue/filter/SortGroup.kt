@@ -3,24 +3,22 @@ package eu.kanade.tachiyomi.ui.catalogue.filter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractExpandableHeaderItem
 import eu.davidea.flexibleadapter.items.ISectionable
-import eu.davidea.viewholders.ExpandableViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.source.model.Filter
 import eu.kanade.tachiyomi.util.setVectorCompat
 
 class SortGroup(val filter: Filter.Sort) : AbstractExpandableHeaderItem<SortGroup.Holder, ISectionable<*, *>>() {
 
+    // Use an id instead of the layout res to allow to reuse the layout.
     override fun getLayoutRes(): Int {
-        return R.layout.navigation_view_sort
+        return R.id.catalogue_filter_sort_group
     }
 
     override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): Holder {
-        return Holder(inflater.inflate(layoutRes, parent, false), adapter)
+        return Holder(inflater.inflate(R.layout.navigation_view_group, parent, false), adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {
@@ -44,14 +42,5 @@ class SortGroup(val filter: Filter.Sort) : AbstractExpandableHeaderItem<SortGrou
         return filter.hashCode()
     }
 
-    class Holder(view: View, adapter: FlexibleAdapter<*>) : ExpandableViewHolder(view, adapter, true) {
-
-        val title = itemView.findViewById(R.id.title) as TextView
-        val icon = itemView.findViewById(R.id.expand_icon) as ImageView
-
-        override fun shouldNotifyParentOnClick(): Boolean {
-            return true
-        }
-    }
-
+    class Holder(view: View, adapter: FlexibleAdapter<*>) : GroupItem.Holder(view, adapter)
 }

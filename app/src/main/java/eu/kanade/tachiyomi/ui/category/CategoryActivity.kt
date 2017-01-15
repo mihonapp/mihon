@@ -92,7 +92,7 @@ class CategoryActivity :
      */
     fun setCategories(categories: List<CategoryItem>) {
         actionMode?.finish()
-        adapter.updateDataSet(categories)
+        adapter.updateDataSet(categories.toMutableList())
         val selected = categories.filter { it.isSelected }
         if (selected.isNotEmpty()) {
             selected.forEach { onItemLongClick(categories.indexOf(it)) }

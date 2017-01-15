@@ -15,12 +15,13 @@ import eu.kanade.tachiyomi.util.getResourceColor
 
 class SortItem(val name: String, val group: SortGroup) : AbstractSectionableItem<SortItem.Holder, SortGroup>(group) {
 
+    // Use an id instead of the layout res to allow to reuse the layout.
     override fun getLayoutRes(): Int {
-        return R.layout.navigation_view_sort_item
+        return R.id.catalogue_filter_sort_item
     }
 
     override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): Holder {
-        return Holder(inflater.inflate(layoutRes, parent, false), adapter)
+        return Holder(inflater.inflate(R.layout.navigation_view_checkedtext, parent, false), adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {

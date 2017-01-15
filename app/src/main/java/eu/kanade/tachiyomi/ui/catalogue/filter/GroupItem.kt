@@ -44,7 +44,7 @@ class GroupItem(val filter: Filter.Group<*>) : AbstractExpandableHeaderItem<Grou
         return filter.hashCode()
     }
 
-    class Holder(view: View, adapter: FlexibleAdapter<*>) : ExpandableViewHolder(view, adapter, true) {
+    open class Holder(view: View, adapter: FlexibleAdapter<*>) : ExpandableViewHolder(view, adapter, true) {
 
         val title = itemView.findViewById(R.id.title) as TextView
         val icon = itemView.findViewById(R.id.expand_icon) as ImageView

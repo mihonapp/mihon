@@ -93,8 +93,18 @@ class Batoto : ParsedOnlineSource(), LoginSource {
                 is Status -> if (!filter.isIgnored()) {
                     url.addQueryParameter("completed", if (filter.isExcluded()) "i" else "c")
                 }
-                is Genre -> if (!filter.isIgnored()) {
-                    genres += (if (filter.isExcluded()) ";e" else ";i") + filter.id
+                is GenreList -> {
+                    filter.state.forEach { filter ->
+                        when (filter) {
+                            is Genre -> if (!filter.isIgnored()) {
+                                genres += (if (filter.isExcluded()) ";e" else ";i") + filter.id
+                            }
+                            is SelectField -> {
+                                val sel = filter.values[filter.state].value
+                                if (!sel.isEmpty()) url.addQueryParameter(filter.key, sel)
+                            }
+                        }
+                    }
                 }
                 is TextField -> {
                     if (!filter.state.isEmpty()) url.addQueryParameter(filter.key, filter.state)
@@ -292,23 +302,25 @@ class Batoto : ParsedOnlineSource(), LoginSource {
     private class TextField(name: String, val key: String) : Filter.Text(name)
     private class SelectField(name: String, val key: String, values: Array<ListValue>, state: Int = 0) : Filter.Select<ListValue>(name, values, state)
     private class Flag(name: String, val key: String, val valTrue: String, val valFalse: String) : Filter.CheckBox(name)
-    private class OrderBy() : Filter.Sort("Order by",
+    private class GenreList(genres: List<Filter<*>>) : Filter.Group<Filter<*>>("Genres", genres)
+    private class OrderBy : Filter.Sort("Order by",
             arrayOf("Title", "Author", "Artist", "Rating", "Views", "Last Update"),
             Filter.Sort.Selection(4, false))
 
-    // [...document.querySelectorAll("#advanced_options div.genre_buttons")].map((el,i) => {
-    //     const onClick=el.getAttribute('onclick');const id=onClick.substr(14,onClick.length-16);return `Genre("${el.textContent.trim()}", ${id})`
-    // }).join(',\n')
-    // on https://bato.to/search
     override fun getFilterList() = FilterList(
             TextField("Author", "artist_name"),
             SelectField("Type", "type", arrayOf(ListValue("Any", ""), ListValue("Manga (Jp)", "jp"), ListValue("Manhwa (Kr)", "kr"), ListValue("Manhua (Cn)", "cn"), ListValue("Artbook", "ar"), ListValue("Other", "ot"))),
             Status(),
             Flag("Exclude mature", "mature", "m", ""),
-            Filter.Separator(),
             OrderBy(),
-            Filter.Separator(),
-            Filter.Header("Genres"),
+            GenreList(getGenreList())
+    )
+
+    // [...document.querySelectorAll("#advanced_options div.genre_buttons")].map((el,i) => {
+    //     const onClick=el.getAttribute('onclick');const id=onClick.substr(14,onClick.length-16);return `Genre("${el.textContent.trim()}", ${id})`
+    // }).join(',\n')
+    // on https://bato.to/search
+    private fun getGenreList() = listOf(
             SelectField("Inclusion mode", "genre_cond", arrayOf(ListValue("And (all selected genres)", "and"), ListValue("Or (any selected genres) ", "or"))),
             Genre("4-Koma", 40),
             Genre("Action", 1),
