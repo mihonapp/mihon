@@ -8,7 +8,7 @@ import eu.davidea.flexibleadapter4.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.inflate
-import kotlinx.android.synthetic.main.fragment_catalogue.*
+import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
 import java.util.*
 
@@ -102,6 +102,6 @@ class CatalogueAdapter(val fragment: CatalogueFragment) : FlexibleAdapter<Catalo
      * Property to return the height for the covers based on the width to keep an aspect ratio.
      */
     val coverHeight: Int
-        get() = fragment.catalogue_grid.itemWidth / 3 * 4
+        get() = (fragment.recycler as AutofitRecyclerView).itemWidth / 3 * 4
 
 }

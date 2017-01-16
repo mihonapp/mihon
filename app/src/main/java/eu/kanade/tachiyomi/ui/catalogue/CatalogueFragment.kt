@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.*
 import android.view.*
-import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.Spinner
@@ -24,6 +23,7 @@ import eu.kanade.tachiyomi.util.connectivityManager
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import eu.kanade.tachiyomi.widget.EndlessScrollListener
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -53,14 +53,9 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
     private lateinit var adapter: CatalogueAdapter
 
     /**
-     * Scroll listener for grid mode. It loads next pages when the end of the list is reached.
+     * Scroll listener. It loads next pages when the end of the list is reached.
      */
-    private lateinit var gridScrollListener: EndlessScrollListener
-
-    /**
-     * Scroll listener for list mode. It loads next pages when the end of the list is reached.
-     */
-    private lateinit var listScrollListener: EndlessScrollListener
+    private var scrollListener: EndlessScrollListener? = null
 
     /**
      * Query of the search box.
@@ -133,6 +128,8 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         }
     }
 
+    lateinit var recycler: RecyclerView
+
     companion object {
         /**
          * Creates a new instance of this fragment.
@@ -164,32 +161,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
 
         // Initialize adapter, scroll listener and recycler views
         adapter = CatalogueAdapter(this)
-
-        val glm = catalogue_grid.layoutManager as GridLayoutManager
-        gridScrollListener = EndlessScrollListener(glm, { requestNextPage() })
-        catalogue_grid.setHasFixedSize(true)
-        catalogue_grid.adapter = adapter
-        catalogue_grid.addOnScrollListener(gridScrollListener)
-
-        val llm = LinearLayoutManager(activity)
-        listScrollListener = EndlessScrollListener(llm, { requestNextPage() })
-        catalogue_list.setHasFixedSize(true)
-        catalogue_list.adapter = adapter
-        catalogue_list.layoutManager = llm
-        catalogue_list.addOnScrollListener(listScrollListener)
-        catalogue_list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        if (presenter.isListMode) {
-            switcher.showNext()
-        }
-
-        numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
-                .doOnNext { catalogue_grid.spanCount = it }
-                .skip(1)
-                // Set again the adapter to recalculate the covers height
-                .subscribe { catalogue_grid.adapter = adapter }
-
-        switcher.inAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)
-        switcher.outAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_out)
+        setupRecycler()
 
         // Create toolbar spinner
         val themedContext = activity.supportActionBar?.themedContext ?: activity
@@ -251,6 +223,46 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         }
 
         showProgressBar()
+    }
+
+    private fun setupRecycler() {
+        if (!isAdded) return
+
+        numColumnsSubscription?.unsubscribe()
+
+        val oldRecycler = catalogue_view.getChildAt(1)
+        var oldPosition = RecyclerView.NO_POSITION
+        if (oldRecycler is RecyclerView) {
+            oldPosition = (oldRecycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+            oldRecycler.adapter = null
+
+            catalogue_view.removeView(oldRecycler)
+        }
+
+        recycler = if (presenter.isListMode) {
+            RecyclerView(context).apply {
+                layoutManager = LinearLayoutManager(context)
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            }
+        } else {
+            (catalogue_view.inflate(R.layout.recycler_autofit) as AutofitRecyclerView).apply {
+                numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
+                        .doOnNext { spanCount = it }
+                        .skip(1)
+                        // Set again the adapter to recalculate the covers height
+                        .subscribe { adapter = this@CatalogueFragment.adapter }
+            }
+        }
+        scrollListener = EndlessScrollListener(recycler.layoutManager as LinearLayoutManager, { requestNextPage() })
+        recycler.setHasFixedSize(true)
+        recycler.addOnScrollListener(scrollListener)
+        recycler.adapter = adapter
+
+        catalogue_view.addView(recycler, 1)
+
+        if (oldPosition != RecyclerView.NO_POSITION) {
+            recycler.layoutManager.scrollToPosition(oldPosition)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -384,8 +396,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         hideProgressBar()
         if (page == 1) {
             adapter.clear()
-            gridScrollListener.resetScroll()
-            listScrollListener.resetScroll()
+            scrollListener?.resetScroll()
         }
         adapter.addItems(mangas)
     }
@@ -425,7 +436,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         presenter.swapDisplayMode()
         val isListMode = presenter.isListMode
         activity.invalidateOptionsMenu()
-        switcher.showNext()
+        setupRecycler()
         if (!isListMode || !context.connectivityManager.isActiveNetworkMetered) {
             // Initialize mangas if going to grid view or if over wifi when going to list view
             presenter.initializeMangas(adapter.items)
@@ -451,9 +462,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      * @return the holder of the manga or null if it's not bound.
      */
     private fun getHolder(manga: Manga): CatalogueHolder? {
-        return (catalogue_grid.findViewHolderForItemId(manga.id!!) ?:
-                catalogue_list.findViewHolderForItemId(manga.id!!))
-                as? CatalogueHolder
+        return recycler.findViewHolderForItemId(manga.id!!) as? CatalogueHolder
     }
 
     /**
