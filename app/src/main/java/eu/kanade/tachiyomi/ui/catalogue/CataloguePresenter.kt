@@ -163,6 +163,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
                 .observeOn(Schedulers.io())
                 .map { it.first to it.second.map { networkToLocalManga(it, sourceId) } }
                 .doOnNext { initializeMangas(it.second) }
+                .map { it.first to it.second.map(::CatalogueItem) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeReplay({ view, pair ->
                     view.onAddPage(pair.first, pair.second)

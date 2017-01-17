@@ -11,11 +11,12 @@ import android.widget.ProgressBar
 import android.widget.Spinner
 import com.afollestad.materialdialogs.MaterialDialog
 import com.f2prateek.rx.preferences.Preference
+import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.model.FilterList
 import eu.kanade.tachiyomi.data.source.online.LoginSource
-import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
@@ -24,7 +25,6 @@ import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import eu.kanade.tachiyomi.widget.EndlessScrollListener
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_catalogue.*
@@ -40,7 +40,10 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
  * Uses R.layout.fragment_catalogue.
  */
 @RequiresPresenter(CataloguePresenter::class)
-open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleViewHolder.OnListItemClickListener {
+open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(),
+        FlexibleAdapter.OnItemClickListener,
+        FlexibleAdapter.OnItemLongClickListener,
+        FlexibleAdapter.EndlessScrollListener<ProgressItem> {
 
     /**
      * Spinner shown in the toolbar to change the selected source.
@@ -50,12 +53,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
     /**
      * Adapter containing the list of manga from the catalogue.
      */
-    private lateinit var adapter: CatalogueAdapter
-
-    /**
-     * Scroll listener. It loads next pages when the end of the list is reached.
-     */
-    private var scrollListener: EndlessScrollListener? = null
+    private lateinit var adapter: FlexibleAdapter<IFlexible<*>>
 
     /**
      * Query of the search box.
@@ -130,6 +128,8 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
 
     lateinit var recycler: RecyclerView
 
+    private var progressItem: ProgressItem? = null
+
     companion object {
         /**
          * Creates a new instance of this fragment.
@@ -160,7 +160,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         }
 
         // Initialize adapter, scroll listener and recycler views
-        adapter = CatalogueAdapter(this)
+        adapter = FlexibleAdapter(null, this)
         setupRecycler()
 
         // Create toolbar spinner
@@ -251,11 +251,18 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
                         .skip(1)
                         // Set again the adapter to recalculate the covers height
                         .subscribe { adapter = this@CatalogueFragment.adapter }
+
+                (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when (adapter.getItemViewType(position)) {
+                            R.layout.item_catalogue_grid -> 1
+                            else -> spanCount
+                        }
+                    }
+                }
             }
         }
-        scrollListener = EndlessScrollListener(recycler.layoutManager as LinearLayoutManager, { requestNextPage() })
         recycler.setHasFixedSize(true)
-        recycler.addOnScrollListener(scrollListener)
         recycler.adapter = adapter
 
         catalogue_view.addView(recycler, 1)
@@ -377,28 +384,18 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
     }
 
     /**
-     * Requests the next page (if available). Called from scroll listeners when they reach the end.
-     */
-    private fun requestNextPage() {
-        if (presenter.hasNextPage()) {
-            showGridProgressBar()
-            presenter.requestNext()
-        }
-    }
-
-    /**
      * Called from the presenter when the network request is received.
      *
      * @param page the current page.
      * @param mangas the list of manga of the page.
      */
-    fun onAddPage(page: Int, mangas: List<Manga>) {
+    fun onAddPage(page: Int, mangas: List<CatalogueItem>) {
         hideProgressBar()
         if (page == 1) {
             adapter.clear()
-            scrollListener?.resetScroll()
+            resetProgressItem()
         }
-        adapter.addItems(mangas)
+        adapter.onLoadMoreComplete(mangas)
     }
 
     /**
@@ -407,6 +404,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      * @param error the error received.
      */
     fun onAddPageError(error: Throwable) {
+        adapter.onLoadMoreComplete(null)
         hideProgressBar()
 
         val message = if (error is NoResultsException) "No results found" else (error.message ?: "")
@@ -414,10 +412,40 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
         snack?.dismiss()
         snack = catalogue_view.snack(message, Snackbar.LENGTH_INDEFINITE) {
             setAction(R.string.action_retry) {
-                showProgressBar()
+                // If not the first page, show bottom progress bar.
+                if (adapter.mainItemCount > 0) {
+                    val item = progressItem ?: return@setAction
+                    adapter.addScrollableFooterWithDelay(item, 0, true)
+                } else {
+                    showProgressBar()
+                }
                 presenter.requestNext()
             }
         }
+    }
+
+    /**
+     * Sets a new progress item and reenables the scroll listener.
+     */
+    private fun resetProgressItem() {
+        progressItem = ProgressItem()
+        adapter.endlessTargetCount = 0
+        adapter.setEndlessScrollListener(this, progressItem!!)
+    }
+
+    /**
+     * Called by the adapter when scrolled near the bottom.
+     */
+    override fun onLoadMore(lastPosition: Int, currentPage: Int) {
+        if (presenter.hasNextPage()) {
+            presenter.requestNext()
+        } else {
+            adapter.onLoadMoreComplete(null)
+            adapter.endlessTargetCount = 1
+        }
+    }
+
+    override fun noMoreLoad(newItemsSize: Int) {
     }
 
     /**
@@ -433,13 +461,18 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      * Swaps the current display mode.
      */
     fun swapDisplayMode() {
+        if (!isAdded) return
+
         presenter.swapDisplayMode()
         val isListMode = presenter.isListMode
         activity.invalidateOptionsMenu()
         setupRecycler()
         if (!isListMode || !context.connectivityManager.isActiveNetworkMetered) {
             // Initialize mangas if going to grid view or if over wifi when going to list view
-            presenter.initializeMangas(adapter.items)
+            val mangas = (0..adapter.itemCount-1).mapNotNull {
+                (adapter.getItem(it) as? CatalogueItem)?.manga
+            }
+            presenter.initializeMangas(mangas)
         }
     }
 
@@ -475,20 +508,10 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
     }
 
     /**
-     * Shows the progress bar at the end of the screen.
-     */
-    private fun showGridProgressBar() {
-        progress_grid.visibility = ProgressBar.VISIBLE
-        snack?.dismiss()
-        snack = null
-    }
-
-    /**
      * Hides active progress bars.
      */
     private fun hideProgressBar() {
         progress.visibility = ProgressBar.GONE
-        progress_grid.visibility = ProgressBar.GONE
     }
 
     /**
@@ -497,10 +520,10 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      * @param position the position of the element clicked.
      * @return true if the item should be selected, false otherwise.
      */
-    override fun onListItemClick(position: Int): Boolean {
-        val item = adapter.getItem(position) ?: return false
+    override fun onItemClick(position: Int): Boolean {
+        val item = adapter.getItem(position) as? CatalogueItem ?: return false
 
-        val intent = MangaActivity.newIntent(activity, item, true)
+        val intent = MangaActivity.newIntent(activity, item.manga, true)
         startActivity(intent)
         return false
     }
@@ -510,8 +533,8 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(), FlexibleVie
      *
      * @param position the position of the element clicked.
      */
-    override fun onListItemLongClick(position: Int) {
-        val manga = adapter.getItem(position) ?: return
+    override fun onItemLongClick(position: Int) {
+        val manga = (adapter.getItem(position) as? CatalogueItem?)?.manga ?: return
 
         val textRes = if (manga.favorite) R.string.remove_from_library else R.string.add_to_library
 

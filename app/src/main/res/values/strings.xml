@@ -223,6 +223,7 @@
     <string name="source_requires_login">This source requires you to log in</string>
     <string name="select_source">Select a source</string>
     <string name="no_valid_sources">Please enable at least one valid source</string>
+    <string name="no_more_results">No more results</string>
 
     <!-- Manga activity -->
     <string name="manga_not_in_db">This manga was removed from the database!</string>
