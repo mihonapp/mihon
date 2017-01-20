@@ -12,7 +12,7 @@ import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 import java.util.*
 
-class YamlOnlineSource(mappings: Map<*, *>) : OnlineSource() {
+class YamlHttpSource(mappings: Map<*, *>) : HttpSource() {
 
     val map = YamlSourceNode(mappings)
 

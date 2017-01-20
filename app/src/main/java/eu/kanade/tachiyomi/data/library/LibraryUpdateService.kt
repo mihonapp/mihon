@@ -22,7 +22,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.*
 import rx.Observable
@@ -300,7 +300,7 @@ class LibraryUpdateService : Service() {
      * @return a pair of the inserted and removed chapters.
      */
     fun updateManga(manga: Manga): Observable<Pair<List<Chapter>, List<Chapter>>> {
-        val source = sourceManager.get(manga.source) as? OnlineSource ?: return Observable.empty()
+        val source = sourceManager.get(manga.source) as? HttpSource ?: return Observable.empty()
         return source.fetchChapterList(manga)
                 .map { syncChaptersWithSource(db, it, manga, source) }
     }
@@ -324,7 +324,7 @@ class LibraryUpdateService : Service() {
                 .doOnNext { showProgressNotification(it, count.andIncrement, mangaToUpdate.size, cancelPendingIntent) }
                 // Update the details of the manga.
                 .concatMap { manga ->
-                    val source = sourceManager.get(manga.source) as? OnlineSource
+                    val source = sourceManager.get(manga.source) as? HttpSource
                             ?: return@concatMap Observable.empty<Manga>()
 
                     source.fetchMangaDetails(manga)

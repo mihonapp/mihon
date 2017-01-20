@@ -8,7 +8,7 @@ import android.view.View
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.widget.preference.LoginCheckBoxPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
 import eu.kanade.tachiyomi.widget.preference.SwitchPreferenceCategory
@@ -87,7 +87,7 @@ class SettingsSourcesFragment : SettingsFragment() {
      *
      * @param group the language category.
      */
-    private fun addLanguageSources(group: SwitchPreferenceCategory, sources: List<OnlineSource>) {
+    private fun addLanguageSources(group: SwitchPreferenceCategory, sources: List<HttpSource>) {
         val hiddenCatalogues = preferences.hiddenCatalogues().getOrDefault()
 
         sources.forEach { source ->

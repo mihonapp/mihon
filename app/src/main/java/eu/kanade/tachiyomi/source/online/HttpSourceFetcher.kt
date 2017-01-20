@@ -21,7 +21,7 @@ private val chapterCache: ChapterCache by injectLazy()
  *
  * @param chapter the chapter whose page list has to be fetched.
  */
-fun OnlineSource.fetchPageListFromCacheThenNet(chapter: Chapter): Observable<List<Page>> {
+fun HttpSource.fetchPageListFromCacheThenNet(chapter: Chapter): Observable<List<Page>> {
     return chapterCache
             .getPageListFromCache(chapter)
             .onErrorResumeNext { fetchPageList(chapter) }
@@ -32,14 +32,14 @@ fun OnlineSource.fetchPageListFromCacheThenNet(chapter: Chapter): Observable<Lis
  *
  * @param page the page whose source image has to be downloaded.
  */
-fun OnlineSource.fetchImageFromCacheThenNet(page: Page): Observable<Page> {
+fun HttpSource.fetchImageFromCacheThenNet(page: Page): Observable<Page> {
     return if (page.imageUrl.isNullOrEmpty())
         getImageUrl(page).flatMap { getCachedImage(it) }
     else
         getCachedImage(page)
 }
 
-fun OnlineSource.getImageUrl(page: Page): Observable<Page> {
+fun HttpSource.getImageUrl(page: Page): Observable<Page> {
     page.status = Page.LOAD_PAGE
     return fetchImageUrl(page)
             .doOnError { page.status = Page.ERROR }
@@ -54,7 +54,7 @@ fun OnlineSource.getImageUrl(page: Page): Observable<Page> {
  *
  * @param page the page.
  */
-fun OnlineSource.getCachedImage(page: Page): Observable<Page> {
+fun HttpSource.getCachedImage(page: Page): Observable<Page> {
     val imageUrl = page.imageUrl ?: return Observable.just(page)
 
     return Observable.just(page)
@@ -78,20 +78,20 @@ fun OnlineSource.getCachedImage(page: Page): Observable<Page> {
  *
  * @param page the page.
  */
-private fun OnlineSource.cacheImage(page: Page): Observable<Page> {
+private fun HttpSource.cacheImage(page: Page): Observable<Page> {
     page.status = Page.DOWNLOAD_IMAGE
     return fetchImage(page)
             .doOnNext { chapterCache.putImageToCache(page.imageUrl!!, it) }
             .map { page }
 }
 
-fun OnlineSource.fetchAllImageUrlsFromPageList(pages: List<Page>): Observable<Page> {
+fun HttpSource.fetchAllImageUrlsFromPageList(pages: List<Page>): Observable<Page> {
     return Observable.from(pages)
             .filter { !it.imageUrl.isNullOrEmpty() }
             .mergeWith(fetchRemainingImageUrlsFromPageList(pages))
 }
 
-fun OnlineSource.fetchRemainingImageUrlsFromPageList(pages: List<Page>): Observable<Page> {
+fun HttpSource.fetchRemainingImageUrlsFromPageList(pages: List<Page>): Observable<Page> {
     return Observable.from(pages)
             .filter { it.imageUrl.isNullOrEmpty() }
             .concatMap { getImageUrl(it) }

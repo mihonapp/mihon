@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackUpdateService
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
@@ -348,7 +348,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * @param page the page that failed.
      */
     fun retryPage(page: Page?) {
-        if (page != null && source is OnlineSource) {
+        if (page != null && source is HttpSource) {
             page.status = Page.QUEUE
             val uri = page.uri
             if (uri != null && !page.chapter.isDownloaded) {
@@ -372,7 +372,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             // Cache current page list progress for online chapters to allow a faster reopen
             if (!chapter.isDownloaded) {
                 source.let {
-                    if (it is OnlineSource) chapterCache.putPageListToCache(chapter, pages)
+                    if (it is HttpSource) chapterCache.putPageListToCache(chapter, pages)
                 }
             }
 

@@ -12,7 +12,7 @@ import org.jsoup.nodes.Element
 /**
  * A simple implementation for sources from a website using Jsoup, an HTML parser.
  */
-abstract class ParsedOnlineSource : OnlineSource() {
+abstract class ParsedHttpSource : HttpSource() {
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.

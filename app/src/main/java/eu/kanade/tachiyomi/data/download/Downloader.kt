@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.fetchAllImageUrlsFromPageList
 import eu.kanade.tachiyomi.util.DynamicConcurrentMergeOperator
 import eu.kanade.tachiyomi.util.RetryWithDelay
@@ -220,7 +220,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
      * @param chapters the list of chapters to download.
      */
     fun queueChapters(manga: Manga, chapters: List<Chapter>) {
-        val source = sourceManager.get(manga.source) as? OnlineSource ?: return
+        val source = sourceManager.get(manga.source) as? HttpSource ?: return
 
         val chaptersToQueue = chapters
                 // Avoid downloading chapters with the same name.
@@ -373,7 +373,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
      * @param tmpDir the temporary directory of the download.
      * @param filename the filename of the image.
      */
-    private fun downloadImage(page: Page, source: OnlineSource, tmpDir: UniFile, filename: String): Observable<UniFile> {
+    private fun downloadImage(page: Page, source: HttpSource, tmpDir: UniFile, filename: String): Observable<UniFile> {
         page.status = Page.DOWNLOAD_IMAGE
         page.progress = 0
         return source.fetchImage(page)

@@ -7,8 +7,8 @@ import android.content.pm.PackageManager
 import android.os.Environment
 import dalvik.system.PathClassLoader
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.source.online.OnlineSource
-import eu.kanade.tachiyomi.source.online.YamlOnlineSource
+import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.YamlHttpSource
 import eu.kanade.tachiyomi.source.online.english.*
 import eu.kanade.tachiyomi.source.online.german.WieManga
 import eu.kanade.tachiyomi.source.online.russian.Mangachan
@@ -31,7 +31,7 @@ open class SourceManager(private val context: Context) {
         return sourcesMap[sourceKey]
     }
 
-    fun getOnlineSources() = sourcesMap.values.filterIsInstance<OnlineSource>()
+    fun getOnlineSources() = sourcesMap.values.filterIsInstance<HttpSource>()
 
     fun getCatalogueSources() = sourcesMap.values.filterIsInstance<CatalogueSource>()
 
@@ -71,7 +71,7 @@ open class SourceManager(private val context: Context) {
             for (file in parsersDir.listFiles().filter { it.extension == "yml" }) {
                 try {
                     val map = file.inputStream().use { yaml.loadAs(it, Map::class.java) }
-                    sources.add(YamlOnlineSource(map))
+                    sources.add(YamlHttpSource(map))
                 } catch (e: Exception) {
                     Timber.e("Error loading source from file. Bad format?")
                 }
@@ -80,13 +80,13 @@ open class SourceManager(private val context: Context) {
         return sources
     }
 
-    private fun createExtensionSources(): List<OnlineSource> {
+    private fun createExtensionSources(): List<HttpSource> {
         val pkgManager = context.packageManager
         val flags = PackageManager.GET_CONFIGURATIONS or PackageManager.GET_SIGNATURES
         val installedPkgs = pkgManager.getInstalledPackages(flags)
         val extPkgs = installedPkgs.filter { it.reqFeatures.orEmpty().any { it.name == FEATURE } }
 
-        val sources = mutableListOf<OnlineSource>()
+        val sources = mutableListOf<HttpSource>()
         for (pkgInfo in extPkgs) {
             val appInfo = pkgManager.getApplicationInfo(pkgInfo.packageName,
                     PackageManager.GET_META_DATA) ?: continue
@@ -121,12 +121,12 @@ open class SourceManager(private val context: Context) {
         return true
     }
 
-    private fun loadExtension(ext: Extension, pkgManager: PackageManager): OnlineSource? {
+    private fun loadExtension(ext: Extension, pkgManager: PackageManager): HttpSource? {
         return try {
             val classLoader = PathClassLoader(ext.appInfo.sourceDir, null, context.classLoader)
             val resources = pkgManager.getResourcesForApplication(ext.appInfo)
 
-            Class.forName(ext.sourceClass, false, classLoader).newInstance() as? OnlineSource
+            Class.forName(ext.sourceClass, false, classLoader).newInstance() as? HttpSource
         } catch (e: Exception) {
             null
         } catch (e: LinkageError) {

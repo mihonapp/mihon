@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.asObservable
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.LoginSource
-import eu.kanade.tachiyomi.source.online.ParsedOnlineSource
+import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.selectText
 import okhttp3.FormBody
@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
-class Batoto : ParsedOnlineSource(), LoginSource {
+class Batoto : ParsedHttpSource(), LoginSource {
 
     override val id: Long = 1
 

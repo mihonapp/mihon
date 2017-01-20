@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.source.online.english
 
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.source.model.*
-import eu.kanade.tachiyomi.source.online.ParsedOnlineSource
+import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import okhttp3.HttpUrl
 import okhttp3.Request
 import org.jsoup.nodes.Document
@@ -11,7 +11,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Mangahere : ParsedOnlineSource() {
+class Mangahere : ParsedHttpSource() {
 
     override val id: Long = 2
 

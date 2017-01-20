@@ -1,10 +1,10 @@
 package eu.kanade.tachiyomi.source.online
 
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.network.newCallWithProgress
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.*
 import okhttp3.Headers
@@ -20,7 +20,7 @@ import java.security.MessageDigest
 /**
  * A simple implementation for sources from a website.
  */
-abstract class OnlineSource : CatalogueSource {
+abstract class HttpSource : CatalogueSource {
 
     /**
      * Network service.

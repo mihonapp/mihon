@@ -4,7 +4,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.fetchImageFromCacheThenNet
 import eu.kanade.tachiyomi.source.online.fetchPageListFromCacheThenNet
 import eu.kanade.tachiyomi.util.plusAssign
@@ -39,7 +39,7 @@ class ChapterLoader(
     }
 
     private fun prepareOnlineReading() {
-        if (source !is OnlineSource) return
+        if (source !is HttpSource) return
 
         subscriptions += Observable.defer { Observable.just(queue.take().page) }
                 .filter { it.status == Page.QUEUE }
@@ -85,7 +85,7 @@ class ChapterLoader(
                     // Fetch the page list from disk.
                     downloadManager.buildPageList(source, manga, chapter)
                 } else {
-                    (source as? OnlineSource)?.fetchPageListFromCacheThenNet(chapter)
+                    (source as? HttpSource)?.fetchPageListFromCacheThenNet(chapter)
                             ?: source.fetchPageList(chapter)
                 }
             }

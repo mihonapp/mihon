@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.source.online.russian
 
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.source.model.*
-import eu.kanade.tachiyomi.source.online.ParsedOnlineSource
+import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
-class Readmanga : ParsedOnlineSource() {
+class Readmanga : ParsedHttpSource() {
 
     override val id: Long = 5
 
