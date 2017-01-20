@@ -19,7 +19,6 @@ import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackUpdateService
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.ui.reader.SaveImageNotifier
 import eu.kanade.tachiyomi.util.DiskUtil
 import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.SharedData
