@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractHeaderItem
 import eu.davidea.viewholders.FlexibleViewHolder
-import eu.kanade.tachiyomi.data.source.model.Filter
+import eu.kanade.tachiyomi.source.model.Filter
 
 class SeparatorItem(val filter: Filter.Separator) : AbstractHeaderItem<SeparatorItem.Holder>() {
 

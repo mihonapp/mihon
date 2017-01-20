@@ -7,7 +7,7 @@ import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences.Preference
 import com.f2prateek.rx.preferences.RxSharedPreferences
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.source.Source
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.data.track.TrackService
 import java.io.File
 

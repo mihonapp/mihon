@@ -7,7 +7,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractExpandableHeaderItem
 import eu.davidea.flexibleadapter.items.ISectionable
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.source.model.Filter
+import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.util.setVectorCompat
 
 class SortGroup(val filter: Filter.Sort) : AbstractExpandableHeaderItem<SortGroup.Holder, ISectionable<*, *>>() {

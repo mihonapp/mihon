@@ -10,7 +10,7 @@ import eu.davidea.flexibleadapter.items.AbstractExpandableHeaderItem
 import eu.davidea.flexibleadapter.items.ISectionable
 import eu.davidea.viewholders.ExpandableViewHolder
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.source.model.Filter
+import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.util.setVectorCompat
 
 class GroupItem(val filter: Filter.Group<*>) : AbstractExpandableHeaderItem<GroupItem.Holder, ISectionable<*, *>>() {

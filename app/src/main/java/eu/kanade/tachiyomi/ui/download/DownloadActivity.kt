@@ -7,7 +7,7 @@ import android.view.MenuItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.util.plusAssign
 import kotlinx.android.synthetic.main.activity_main.*

@@ -9,7 +9,7 @@ import android.widget.TextView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractHeaderItem
 import eu.davidea.viewholders.FlexibleViewHolder
-import eu.kanade.tachiyomi.data.source.model.Filter
+import eu.kanade.tachiyomi.source.model.Filter
 
 class HeaderItem(val filter: Filter.Header) : AbstractHeaderItem<HeaderItem.Holder>() {
 

@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.data.download.model
 
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.online.OnlineSource
 import rx.subjects.PublishSubject
 
 class Download(val source: OnlineSource, val manga: Manga, val chapter: Chapter) {

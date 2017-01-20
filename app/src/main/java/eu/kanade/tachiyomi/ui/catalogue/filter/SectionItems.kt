@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.catalogue.filter
 
 import eu.davidea.flexibleadapter.items.ISectionable
-import eu.kanade.tachiyomi.data.source.model.Filter
+import eu.kanade.tachiyomi.source.model.Filter
 
 class TriStateSectionItem(filter: Filter.TriState) : TriStateItem(filter), ISectionable<TriStateItem.Holder, GroupItem> {
 

@@ -10,10 +10,10 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
-import eu.kanade.tachiyomi.data.source.online.fetchAllImageUrlsFromPageList
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.online.fetchAllImageUrlsFromPageList
 import eu.kanade.tachiyomi.util.DynamicConcurrentMergeOperator
 import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.plusAssign

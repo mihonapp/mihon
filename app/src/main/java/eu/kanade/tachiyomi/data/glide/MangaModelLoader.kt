@@ -8,8 +8,8 @@ import com.bumptech.glide.load.model.*
 import com.bumptech.glide.load.model.stream.StreamModelLoader
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.OnlineSource
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.InputStream

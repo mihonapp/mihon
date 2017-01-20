@@ -8,10 +8,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import eu.kanade.tachiyomi.BuildConfig
-import eu.kanade.tachiyomi.data.network.GET
-import eu.kanade.tachiyomi.data.network.NetworkHelper
-import eu.kanade.tachiyomi.data.network.ProgressListener
-import eu.kanade.tachiyomi.data.network.newCallWithProgress
+import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.ProgressListener
+import eu.kanade.tachiyomi.network.newCallWithProgress
 import eu.kanade.tachiyomi.util.registerLocalReceiver
 import eu.kanade.tachiyomi.util.saveTo
 import eu.kanade.tachiyomi.util.sendLocalBroadcastSync

@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.track.kitsu
 import com.github.salomonbrys.kotson.*
 import com.google.gson.JsonObject
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.network.POST
+import eu.kanade.tachiyomi.network.POST
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
