@@ -2,15 +2,17 @@ package eu.kanade.tachiyomi.ui.download
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
-import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.util.plusAssign
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_download_queue.*
+import kotlinx.android.synthetic.main.toolbar.*
 import nucleus.factory.RequiresPresenter
 import rx.Observable
 import rx.Subscription
@@ -20,19 +22,18 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
- * Fragment that shows the currently active downloads.
+ * Activity that shows the currently active downloads.
  * Uses R.layout.fragment_download_queue.
  */
 @RequiresPresenter(DownloadPresenter::class)
-class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
-
+class DownloadActivity : BaseRxActivity<DownloadPresenter>() {
     /**
      * Adapter containing the active downloads.
      */
     private lateinit var adapter: DownloadAdapter
 
     /**
-     * Subscription list to be cleared during [onDestroyView].
+     * Subscription list to be cleared during [onDestroy].
      */
     private val subscriptions by lazy { CompositeSubscription() }
 
@@ -46,38 +47,22 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      */
     private var isRunning: Boolean = false
 
-    companion object {
-        /**
-         * Creates a new instance of this fragment.
-         *
-         * @return a new instance of [DownloadFragment].
-         */
-        fun newInstance(): DownloadFragment {
-            return DownloadFragment()
-        }
-    }
-
     override fun onCreate(savedState: Bundle?) {
+        setAppTheme()
         super.onCreate(savedState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_download_queue, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedState: Bundle?) {
+        setContentView(R.layout.activity_download_manager)
+        setupToolbar(toolbar)
         setToolbarTitle(R.string.label_download_queue)
 
         // Check if download queue is empty and update information accordingly.
         setInformationView()
 
         // Initialize adapter.
-        adapter = DownloadAdapter(activity)
+        adapter = DownloadAdapter(this)
         recycler.adapter = adapter
 
         // Set the layout manager for the recycler and fixed size.
-        recycler.layoutManager = LinearLayoutManager(activity)
+        recycler.layoutManager = LinearLayoutManager(this)
         recycler.setHasFixedSize(true)
 
         // Suscribe to changes
@@ -94,20 +79,21 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
                 .subscribe { onUpdateDownloadedPages(it) }
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
         for (subscription in progressSubscriptions.values) {
             subscription.unsubscribe()
         }
         progressSubscriptions.clear()
         subscriptions.clear()
-        super.onDestroyView()
+        super.onDestroy()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.download_queue, menu)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.download_queue, menu)
+        return true
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         // Set start button visibility.
         menu.findItem(R.id.start_queue).isVisible = !isRunning && !presenter.downloadQueue.isEmpty()
 
@@ -116,14 +102,18 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
 
         // Set clear button visibility.
         menu.findItem(R.id.clear_queue).isVisible = !presenter.downloadQueue.isEmpty()
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.start_queue -> DownloadService.start(activity)
-            R.id.pause_queue -> DownloadService.stop(activity)
+            R.id.start_queue -> DownloadService.start(this)
+            R.id.pause_queue -> {
+                DownloadService.stop(this)
+                presenter.pauseDownloads()
+            }
             R.id.clear_queue -> {
-                DownloadService.stop(activity)
+                DownloadService.stop(this)
                 presenter.clearQueue()
             }
             else -> return super.onOptionsItemSelected(item)
@@ -198,7 +188,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      */
     private fun onQueueStatusChange(running: Boolean) {
         isRunning = running
-        activity.supportInvalidateOptionsMenu()
+        supportInvalidateOptionsMenu()
 
         // Check if download queue is empty and update information accordingly.
         setInformationView()
@@ -210,7 +200,7 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      * @param downloads the downloads from the queue.
      */
     fun onNextDownloads(downloads: List<Download>) {
-        activity.supportInvalidateOptionsMenu()
+        supportInvalidateOptionsMenu()
         setInformationView()
         adapter.setItems(downloads)
     }
@@ -247,8 +237,11 @@ class DownloadFragment : BaseRxFragment<DownloadPresenter>() {
      * Set information view when queue is empty
      */
     private fun setInformationView() {
-        (activity as MainActivity).updateEmptyView(presenter.downloadQueue.isEmpty(),
+        updateEmptyView(presenter.downloadQueue.isEmpty(),
                 R.string.information_no_downloads, R.drawable.ic_file_download_black_128dp)
     }
 
+    fun updateEmptyView(show: Boolean, textResource: Int, drawable: Int) {
+        if (show) empty_view.show(drawable, textResource) else empty_view.hide()
+    }
 }
