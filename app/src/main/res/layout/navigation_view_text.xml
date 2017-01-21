@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
+            android:inputType="text"
             android:imeOptions="actionDone"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 

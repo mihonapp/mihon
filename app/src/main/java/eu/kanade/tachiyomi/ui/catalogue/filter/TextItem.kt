@@ -23,7 +23,6 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {
-        holder.wrapper.visibility = if (filter.name.isEmpty()) View.GONE else View.VISIBLE
         holder.wrapper.hint = filter.name
         holder.edit.setText(filter.state)
         holder.edit.addTextChangedListener(object : SimpleTextWatcher() {
