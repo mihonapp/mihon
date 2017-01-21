@@ -254,8 +254,8 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(),
 
                 (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
-                        return when (adapter.getItemViewType(position)) {
-                            R.layout.item_catalogue_grid -> 1
+                        return when (adapter?.getItemViewType(position)) {
+                            R.layout.item_catalogue_grid, null -> 1
                             else -> spanCount
                         }
                     }
@@ -495,7 +495,18 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(),
      * @return the holder of the manga or null if it's not bound.
      */
     private fun getHolder(manga: Manga): CatalogueHolder? {
-        return recycler.findViewHolderForItemId(manga.id!!) as? CatalogueHolder
+        val layoutManager = recycler.layoutManager as LinearLayoutManager
+        val firstVisiblePos = layoutManager.findFirstVisibleItemPosition()
+        val lastVisiblePos = layoutManager.findLastVisibleItemPosition()
+
+        (firstVisiblePos..lastVisiblePos-1).forEach { i ->
+            val item = adapter.getItem(i) as? CatalogueItem
+            if (item != null && item.manga.id!! == manga.id!!) {
+                return recycler.findViewHolderForLayoutPosition(i) as? CatalogueHolder
+            }
+        }
+
+        return null
     }
 
     /**
