@@ -80,78 +80,58 @@ open class SourceManager(private val context: Context) {
         return sources
     }
 
-    private fun createExtensionSources(): List<HttpSource> {
+    private fun createExtensionSources(): List<Source> {
         val pkgManager = context.packageManager
         val flags = PackageManager.GET_CONFIGURATIONS or PackageManager.GET_SIGNATURES
         val installedPkgs = pkgManager.getInstalledPackages(flags)
-        val extPkgs = installedPkgs.filter { it.reqFeatures.orEmpty().any { it.name == FEATURE } }
+        val extPkgs = installedPkgs.filter { it.reqFeatures.orEmpty().any { it.name == EXTENSION_FEATURE } }
 
-        val sources = mutableListOf<HttpSource>()
+        val sources = mutableListOf<Source>()
         for (pkgInfo in extPkgs) {
             val appInfo = pkgManager.getApplicationInfo(pkgInfo.packageName,
                     PackageManager.GET_META_DATA) ?: continue
 
-
-            val data = appInfo.metaData
-            val extName = data.getString(NAME)
-            val version = data.getInt(VERSION)
-            val sourceClass = extendClassName(data.getString(SOURCE), pkgInfo.packageName)
-
-            val ext = Extension(extName, appInfo, version, sourceClass)
-            if (!validateExtension(ext)) {
-                continue
+            val extName = pkgManager.getApplicationLabel(appInfo).toString()
+                    .substringAfter("Tachiyomi: ")
+            val version = pkgInfo.versionName
+            var sourceClass = appInfo.metaData.getString(METADATA_SOURCE_CLASS)
+            if (sourceClass.startsWith(".")) {
+                sourceClass = pkgInfo.packageName + sourceClass
             }
 
-            val instance = loadExtension(ext, pkgManager)
-            if (instance == null) {
-                Timber.e("Extension error: failed to instance $extName")
-                continue
+            val extension = Extension(extName, appInfo, version, sourceClass)
+            try {
+                val instance = loadExtension(extension)
+                sources.add(instance)
+            } catch (e: Exception) {
+                Timber.e("Extension load error: $extName. Reason: ${e.message}")
+            } catch (e: LinkageError) {
+                Timber.e("Extension load error: $extName. Reason: ${e.message}")
             }
-            sources.add(instance)
         }
         return sources
     }
 
-    private fun validateExtension(ext: Extension): Boolean {
-        if (ext.version < LIB_VERSION_MIN || ext.version > LIB_VERSION_MAX) {
-            Timber.e("Extension error: ${ext.name} has version ${ext.version}, while only versions "
+    private fun loadExtension(ext: Extension): Source {
+        // Validate lib version
+        val majorLibVersion = ext.version.substringBefore('.').toInt()
+        if (majorLibVersion < LIB_VERSION_MIN || majorLibVersion > LIB_VERSION_MAX) {
+            throw Exception("Lib version is $majorLibVersion, while only versions "
                     + "$LIB_VERSION_MIN to $LIB_VERSION_MAX are allowed")
-            return false
         }
-        return true
-    }
 
-    private fun loadExtension(ext: Extension, pkgManager: PackageManager): HttpSource? {
-        return try {
-            val classLoader = PathClassLoader(ext.appInfo.sourceDir, null, context.classLoader)
-            val resources = pkgManager.getResourcesForApplication(ext.appInfo)
-
-            Class.forName(ext.sourceClass, false, classLoader).newInstance() as? HttpSource
-        } catch (e: Exception) {
-            null
-        } catch (e: LinkageError) {
-            null
-        }
-    }
-
-    private fun extendClassName(className: String, packageName: String): String {
-        return if (className.startsWith(".")) {
-            packageName + className
-        } else {
-            className
-        }
+        val classLoader = PathClassLoader(ext.appInfo.sourceDir, null, context.classLoader)
+        return Class.forName(ext.sourceClass, false, classLoader).newInstance() as Source
     }
 
     class Extension(val name: String,
                     val appInfo: ApplicationInfo,
-                    val version: Int,
+                    val version: String,
                     val sourceClass: String)
 
     private companion object {
-        const val FEATURE = "tachiyomi.extension"
-        const val NAME = "tachiyomi.extension.name"
-        const val VERSION = "tachiyomi.extension.version"
-        const val SOURCE = "tachiyomi.extension.source"
+        const val EXTENSION_FEATURE = "tachiyomi.extension"
+        const val METADATA_SOURCE_CLASS = "tachiyomi.extension.class"
         const val LIB_VERSION_MIN = 1
         const val LIB_VERSION_MAX = 1
     }

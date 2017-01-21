@@ -25,12 +25,12 @@ abstract class HttpSource : CatalogueSource {
     /**
      * Network service.
      */
-    val network: NetworkHelper by injectLazy()
+    protected val network: NetworkHelper by injectLazy()
 
     /**
      * Preferences helper.
      */
-    val preferences: PreferencesHelper by injectLazy()
+    protected val preferences: PreferencesHelper by injectLazy()
 
     /**
      * Base url of the website without the trailing slash, like: http://mysite.com
