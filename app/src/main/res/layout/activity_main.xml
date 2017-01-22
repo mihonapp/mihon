@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <eu.kanade.tachiyomi.widget.ElevationAppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -30,7 +30,7 @@
                 app:tabMode="scrollable"
                 app:tabMinWidth="75dp"/>
 
-        </android.support.design.widget.AppBarLayout>
+        </eu.kanade.tachiyomi.widget.ElevationAppBarLayout>
 
 
         <FrameLayout

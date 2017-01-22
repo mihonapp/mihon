@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DeletingChaptersDialog
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_recent_chapters.*
 import nucleus.factory.RequiresPresenter
 import timber.log.Timber
@@ -101,13 +102,14 @@ class RecentChaptersFragment:
         setToolbarTitle(R.string.label_recent_updates)
 
         // Disable toolbar elevation, it looks better with sticky headers.
-//        ViewCompat.setElevation(activity.appbar, 0f)
+        activity.appbar.disableElevation()
     }
 
-//    override fun onDestroyView() {
-//        ViewCompat.setElevation(activity.appbar, 4.dpToPx.toFloat())
-//        super.onDestroyView()
-//    }
+    override fun onDestroyView() {
+        // Restore toolbar elevation.
+        activity.appbar.enableElevation()
+        super.onDestroyView()
+    }
 
     /**
      * Returns selected chapters

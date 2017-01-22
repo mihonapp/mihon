@@ -82,8 +82,8 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
                         // Find an active download for this chapter.
                         val download = downloadManager.queue.find { it.chapter.id == item.chapter.id }
 
-                        // If there's an active download, assign it, otherwise ask the manager if the chapter is
-                        // downloaded and assign it to the status.
+                        // If there's an active download, assign it, otherwise ask the manager if
+                        // the chapter is downloaded and assign it to the status.
                         if (download != null) {
                             item.download = download
                         }
@@ -126,30 +126,36 @@ class RecentChaptersPresenter : BasePresenter<RecentChaptersFragment>() {
      * @param items the list of chapter from the database.
      */
     private fun setDownloadedChapters(items: List<RecentChapterItem>) {
-        // Cached list of downloaded manga directories.
-        val mangaDirectories = mutableMapOf<Long, Array<UniFile>>()
+        // Cached list of downloaded manga directories. Directory name is also cached because
+        // it's slow when using SAF.
+        val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
 
         // Cached list of downloaded chapter directories for a manga.
-        val chapterDirectories = mutableMapOf<Long, Array<UniFile>>()
+        val chapterDirsForManga = mutableMapOf<Long, Map<String?, UniFile>>()
 
         for (item in items) {
             val manga = item.manga
             val chapter = item.chapter
             val source = sourceManager.get(manga.source) ?: continue
 
-            val mangaDirs = mangaDirectories.getOrPut(source.id) {
-                downloadManager.findSourceDir(source)?.listFiles() ?: emptyArray()
+            // Get the directories for the source of the manga.
+            val dirsForSource = mangaDirsForSource.getOrPut(source.id) {
+                val sourceDir = downloadManager.findSourceDir(source)
+                sourceDir?.listFiles()?.associateBy { it.name }.orEmpty()
             }
 
+            // Get the manga directory in the source or continue.
             val mangaDirName = downloadManager.getMangaDirName(manga)
-            val mangaDir = mangaDirs.find { it.name == mangaDirName } ?: continue
+            val mangaDir = dirsForSource[mangaDirName] ?: continue
 
-            val chapterDirs = chapterDirectories.getOrPut(manga.id!!) {
-                mangaDir.listFiles() ?: emptyArray()
+            // Get the directories for the manga.
+            val chapterDirs = chapterDirsForManga.getOrPut(manga.id!!) {
+                mangaDir.listFiles()?.associateBy { it.name }.orEmpty()
             }
 
+            // Assign the download if the directory exists.
             val chapterDirName = downloadManager.getChapterDirName(chapter)
-            if (chapterDirs.any { it.name == chapterDirName }) {
+            if (chapterDirName in chapterDirs) {
                 item.status = Download.DOWNLOADED
             }
         }
