@@ -2,9 +2,9 @@ package eu.kanade.tachiyomi.ui.recent_updates
 
 import android.view.View
 import android.widget.PopupMenu
+import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.util.getResourceColor
 import kotlinx.android.synthetic.main.item_recent_chapters.view.*
 
@@ -18,11 +18,9 @@ import kotlinx.android.synthetic.main.item_recent_chapters.view.*
  * @param listener a listener to react to single tap and long tap events.
  * @constructor creates a new recent chapter holder.
  */
-class RecentChaptersHolder(
-        private val view: View,
-        private val adapter: RecentChaptersAdapter,
-        listener: OnListItemClickListener)
-: FlexibleViewHolder(view, adapter, listener) {
+class RecentChapterHolder(private val view: View, private val adapter: RecentChaptersAdapter) :
+        FlexibleViewHolder(view, adapter) {
+
     /**
      * Color of read chapter
      */
@@ -34,33 +32,33 @@ class RecentChaptersHolder(
     private var unreadColor = view.context.getResourceColor(android.R.attr.textColorPrimary)
 
     /**
-     * Object containing chapter information
+     * Currently bound item.
      */
-    private var chapter: RecentChapter? = null
+    private var item: RecentChapterItem? = null
 
     init {
         // We need to post a Runnable to show the popup to make sure that the PopupMenu is
         // correctly positioned. The reason being that the view may change position before the
         // PopupMenu is shown.
-        view.chapter_menu.setOnClickListener { it.post({ showPopupMenu(it) }) }
+        view.chapter_menu.setOnClickListener { it.post { showPopupMenu(it) } }
     }
 
     /**
      * Set values of view
      *
-     * @param chapter item containing chapter information
+     * @param item item containing chapter information
      */
-    fun onSetValues(chapter: RecentChapter) {
-        this.chapter = chapter
+    fun bind(item: RecentChapterItem) {
+        this.item = item
 
         // Set chapter title
-        view.chapter_title.text = chapter.name
+        view.chapter_title.text = item.chapter.name
 
         // Set manga title
-        view.manga_title.text = chapter.manga.title
+        view.manga_title.text = item.manga.title
 
         // Check if chapter is read and set correct color
-        if (chapter.read) {
+        if (item.chapter.read) {
             view.chapter_title.setTextColor(readColor)
             view.manga_title.setTextColor(readColor)
         } else {
@@ -69,7 +67,7 @@ class RecentChaptersHolder(
         }
 
         // Set chapter status
-        notifyStatus(chapter.status)
+        notifyStatus(item.status)
     }
 
     /**
@@ -92,7 +90,7 @@ class RecentChaptersHolder(
      *
      * @param view view containing popup menu.
      */
-    private fun showPopupMenu(view: View) = chapter?.let { chapter ->
+    private fun showPopupMenu(view: View) = item?.let { item ->
         // Create a PopupMenu, giving it the clicked view for an anchor
         val popup = PopupMenu(view.context, view)
 
@@ -100,18 +98,18 @@ class RecentChaptersHolder(
         popup.menuInflater.inflate(R.menu.chapter_recent, popup.menu)
 
         // Hide download and show delete if the chapter is downloaded and
-        if (chapter.isDownloaded) {
+        if (item.isDownloaded) {
             popup.menu.findItem(R.id.action_download).isVisible = false
             popup.menu.findItem(R.id.action_delete).isVisible = true
         }
 
         // Hide mark as unread when the chapter is unread
-        if (!chapter.read /*&& mangaChapter.chapter.last_page_read == 0*/) {
+        if (!item.chapter.read /*&& mangaChapter.chapter.last_page_read == 0*/) {
             popup.menu.findItem(R.id.action_mark_as_unread).isVisible = false
         }
 
         // Hide mark as read when the chapter is read
-        if (chapter.read) {
+        if (item.chapter.read) {
             popup.menu.findItem(R.id.action_mark_as_read).isVisible = false
         }
 
@@ -119,10 +117,10 @@ class RecentChaptersHolder(
         popup.setOnMenuItemClickListener { menuItem ->
             with(adapter.fragment) {
                 when (menuItem.itemId) {
-                    R.id.action_download -> downloadChapter(chapter)
-                    R.id.action_delete -> deleteChapter(chapter)
-                    R.id.action_mark_as_read -> markAsRead(listOf(chapter))
-                    R.id.action_mark_as_unread -> markAsUnread(listOf(chapter))
+                    R.id.action_download -> downloadChapter(item)
+                    R.id.action_delete -> deleteChapter(item)
+                    R.id.action_mark_as_read -> markAsRead(listOf(item))
+                    R.id.action_mark_as_unread -> markAsUnread(listOf(item))
                 }
             }
 

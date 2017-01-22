@@ -57,18 +57,22 @@ class MainActivity : BaseActivity() {
             empty_view.hide()
 
             val id = item.itemId
-            when (id) {
-                R.id.nav_drawer_library -> setFragment(LibraryFragment.newInstance(), id)
-                R.id.nav_drawer_recent_updates -> setFragment(RecentChaptersFragment.newInstance(), id)
-                R.id.nav_drawer_recently_read -> setFragment(RecentlyReadFragment.newInstance(), id)
-                R.id.nav_drawer_catalogues -> setFragment(CatalogueFragment.newInstance(), id)
-                R.id.nav_drawer_latest_updates -> setFragment(LatestUpdatesFragment.newInstance(), id)
-                R.id.nav_drawer_downloads -> startActivity(Intent(this, DownloadActivity::class.java))
-                R.id.nav_drawer_settings -> {
-                    val intent = Intent(this, SettingsActivity::class.java)
-                    startActivityForResult(intent, REQUEST_OPEN_SETTINGS)
+
+            val oldFragment = supportFragmentManager.findFragmentById(R.id.frame_container)
+            if (oldFragment == null || oldFragment.tag.toInt() != id) {
+                when (id) {
+                    R.id.nav_drawer_library -> setFragment(LibraryFragment.newInstance(), id)
+                    R.id.nav_drawer_recent_updates -> setFragment(RecentChaptersFragment.newInstance(), id)
+                    R.id.nav_drawer_recently_read -> setFragment(RecentlyReadFragment.newInstance(), id)
+                    R.id.nav_drawer_catalogues -> setFragment(CatalogueFragment.newInstance(), id)
+                    R.id.nav_drawer_latest_updates -> setFragment(LatestUpdatesFragment.newInstance(), id)
+                    R.id.nav_drawer_downloads -> startActivity(Intent(this, DownloadActivity::class.java))
+                    R.id.nav_drawer_settings -> {
+                        val intent = Intent(this, SettingsActivity::class.java)
+                        startActivityForResult(intent, REQUEST_OPEN_SETTINGS)
+                    }
+                    R.id.nav_drawer_backup -> setFragment(BackupFragment.newInstance(), id)
                 }
-                R.id.nav_drawer_backup -> setFragment(BackupFragment.newInstance(), id)
             }
             drawer.closeDrawer(GravityCompat.START)
             true

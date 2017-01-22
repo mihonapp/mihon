@@ -8,11 +8,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
-import eu.davidea.flexibleadapter4.FlexibleAdapter
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
-import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -28,8 +27,11 @@ import timber.log.Timber
  * UI related actions should be called from here.
  */
 @RequiresPresenter(RecentChaptersPresenter::class)
-class RecentChaptersFragment
-: BaseRxFragment<RecentChaptersPresenter>(), ActionMode.Callback, FlexibleViewHolder.OnListItemClickListener {
+class RecentChaptersFragment:
+        BaseRxFragment<RecentChaptersPresenter>(),
+        ActionMode.Callback,
+        FlexibleAdapter.OnItemClickListener,
+        FlexibleAdapter.OnItemLongClickListener{
 
     companion object {
         /**
@@ -97,40 +99,45 @@ class RecentChaptersFragment
 
         // Update toolbar text
         setToolbarTitle(R.string.label_recent_updates)
+
+        // Disable toolbar elevation, it looks better with sticky headers.
+//        ViewCompat.setElevation(activity.appbar, 0f)
     }
+
+//    override fun onDestroyView() {
+//        ViewCompat.setElevation(activity.appbar, 4.dpToPx.toFloat())
+//        super.onDestroyView()
+//    }
 
     /**
      * Returns selected chapters
      * @return list of selected chapters
      */
-    fun getSelectedChapters(): List<RecentChapter> {
-        return adapter.selectedItems.map { adapter.getItem(it) as? RecentChapter }.filterNotNull()
+    fun getSelectedChapters(): List<RecentChapterItem> {
+        return adapter.selectedPositions.mapNotNull { adapter.getItem(it) }
     }
 
     /**
      * Called when item in list is clicked
      * @param position position of clicked item
      */
-    override fun onListItemClick(position: Int): Boolean {
+    override fun onItemClick(position: Int): Boolean {
         // Get item from position
         val item = adapter.getItem(position)
-        if (item is RecentChapter) {
-            if (actionMode != null && adapter.mode == FlexibleAdapter.MODE_MULTI) {
-                toggleSelection(position)
-                return true
-            } else {
-                openChapter(item)
-                return false
-            }
+        if (actionMode != null && adapter.mode == FlexibleAdapter.MODE_MULTI) {
+            toggleSelection(position)
+            return true
+        } else {
+            openChapter(item)
+            return false
         }
-        return false
     }
 
     /**
      * Called when item in list is long clicked
      * @param position position of clicked item
      */
-    override fun onListItemLongClick(position: Int) {
+    override fun onItemLongClick(position: Int) {
         if (actionMode == null)
             actionMode = activity.startSupportActionMode(this)
 
@@ -142,31 +149,22 @@ class RecentChaptersFragment
      * @param position position of selected item
      */
     private fun toggleSelection(position: Int) {
-        adapter.toggleSelection(position, false)
+        adapter.toggleSelection(position)
 
         val count = adapter.selectedItemCount
         if (count == 0) {
             actionMode?.finish()
         } else {
-            setContextTitle(count)
-            actionMode?.invalidate()
+            actionMode?.title = getString(R.string.label_selected, count)
         }
-    }
-
-    /**
-     * Set the context title
-     * @param count count of selected items
-     */
-    private fun setContextTitle(count: Int) {
-        actionMode?.title = getString(R.string.label_selected, count)
     }
 
     /**
      * Open chapter in reader
      * @param chapter selected chapter
      */
-    private fun openChapter(chapter: RecentChapter) {
-        val intent = ReaderActivity.newIntent(activity, chapter.manga, chapter)
+    private fun openChapter(item: RecentChapterItem) {
+        val intent = ReaderActivity.newIntent(activity, item.manga, item.chapter)
         startActivity(intent)
     }
 
@@ -174,7 +172,7 @@ class RecentChaptersFragment
      * Download selected items
      * @param chapters list of selected [RecentChapter]s
      */
-    fun downloadChapters(chapters: List<RecentChapter>) {
+    fun downloadChapters(chapters: List<RecentChapterItem>) {
         destroyActionModeIfNeeded()
         presenter.downloadChapters(chapters)
     }
@@ -183,12 +181,12 @@ class RecentChaptersFragment
      * Populate adapter with chapters
      * @param chapters list of [Any]
      */
-    fun onNextRecentChapters(chapters: List<Any>) {
+    fun onNextRecentChapters(chapters: List<RecentChapterItem>) {
         (activity as MainActivity).updateEmptyView(chapters.isEmpty(),
                 R.string.information_no_recent, R.drawable.ic_update_black_128dp)
 
         destroyActionModeIfNeeded()
-        adapter.setItems(chapters)
+        adapter.updateDataSet(chapters.toMutableList(), true)
     }
 
     /**
@@ -203,15 +201,15 @@ class RecentChaptersFragment
      * Returns holder belonging to chapter
      * @param download [Download] object containing download progress.
      */
-    private fun getHolder(download: Download): RecentChaptersHolder? {
-        return recycler.findViewHolderForItemId(download.chapter.id!!) as? RecentChaptersHolder
+    private fun getHolder(download: Download): RecentChapterHolder? {
+        return recycler.findViewHolderForItemId(download.chapter.id!!) as? RecentChapterHolder
     }
 
     /**
      * Mark chapter as read
      * @param chapters list of chapters
      */
-    fun markAsRead(chapters: List<RecentChapter>) {
+    fun markAsRead(chapters: List<RecentChapterItem>) {
         presenter.markChapterRead(chapters, true)
         if (presenter.preferences.removeAfterMarkedAsRead()) {
             deleteChapters(chapters)
@@ -222,7 +220,7 @@ class RecentChaptersFragment
      * Delete selected chapters
      * @param chapters list of [RecentChapter] objects
      */
-    fun deleteChapters(chapters: List<RecentChapter>) {
+    fun deleteChapters(chapters: List<RecentChapterItem>) {
         destroyActionModeIfNeeded()
         DeletingChaptersDialog().show(childFragmentManager, DeletingChaptersDialog.TAG)
         presenter.deleteChapters(chapters)
@@ -239,7 +237,7 @@ class RecentChaptersFragment
      * Mark chapter as unread
      * @param chapters list of selected [RecentChapter]
      */
-    fun markAsUnread(chapters: List<RecentChapter>) {
+    fun markAsUnread(chapters: List<RecentChapterItem>) {
         presenter.markChapterRead(chapters, false)
     }
 
@@ -247,15 +245,15 @@ class RecentChaptersFragment
      * Start downloading chapter
      * @param chapter selected chapter with manga
      */
-    fun downloadChapter(chapter: RecentChapter) {
-        presenter.downloadChapter(chapter)
+    fun downloadChapter(chapter: RecentChapterItem) {
+        presenter.downloadChapters(listOf(chapter))
     }
 
     /**
      * Start deleting chapter
      * @param chapter selected chapter with manga
      */
-    fun deleteChapter(chapter: RecentChapter) {
+    fun deleteChapter(chapter: RecentChapterItem) {
         DeletingChaptersDialog().show(childFragmentManager, DeletingChaptersDialog.TAG)
         presenter.deleteChapters(listOf(chapter))
     }
@@ -281,11 +279,8 @@ class RecentChaptersFragment
      * Called to dismiss deleting dialog
      */
     fun dismissDeletingDialog() {
-        (childFragmentManager.findFragmentByTag(DeletingChaptersDialog.TAG) as? DialogFragment)?.dismiss()
-    }
-
-    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        return false
+        (childFragmentManager.findFragmentByTag(DeletingChaptersDialog.TAG) as? DialogFragment)
+                ?.dismissAllowingStateLoss()
     }
 
     /**
@@ -322,12 +317,16 @@ class RecentChaptersFragment
         return true
     }
 
+    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+        return false
+    }
+
     /**
      * Called when ActionMode destroyed
      * @param mode the ActionMode object
      */
     override fun onDestroyActionMode(mode: ActionMode?) {
-        adapter.mode = FlexibleAdapter.MODE_SINGLE
+        adapter.mode = FlexibleAdapter.MODE_IDLE
         adapter.clearSelection()
         actionMode = null
     }
