@@ -188,7 +188,7 @@ class RecentChaptersFragment:
                 R.string.information_no_recent, R.drawable.ic_update_black_128dp)
 
         destroyActionModeIfNeeded()
-        adapter.updateDataSet(chapters.toMutableList(), true)
+        adapter.updateDataSet(chapters.toMutableList())
     }
 
     /**
