@@ -39,6 +39,18 @@ class ChangelogDialogFragment : DialogFragment() {
                     // Delete internal chapter cache dir.
                     File(context.cacheDir, "chapter_disk_cache").deleteRecursively()
                 }
+                if (oldVersion < 19) {
+                    // Move covers to external files dir.
+                    val oldDir = File(context.externalCacheDir, "cover_disk_cache")
+                    if (oldDir.exists()) {
+                        val destDir = context.getExternalFilesDir("covers")
+                        if (destDir != null) {
+                            oldDir.listFiles().forEach {
+                                it.renameTo(File(destDir, it.name))
+                            }
+                        }
+                    }
+                }
             }
         }
     }
