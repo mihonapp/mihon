@@ -1,8 +1,10 @@
 package eu.kanade.tachiyomi.data.glide
 
 import android.content.Context
+import android.net.Uri
 import android.util.LruCache
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.*
 import com.bumptech.glide.load.model.stream.StreamModelLoader
@@ -44,6 +46,12 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
             InputStream::class.java, context)
 
     /**
+     * Base file loader.
+     */
+    private val baseFileLoader = Glide.buildModelLoader(Uri::class.java,
+            InputStream::class.java, context)
+
+    /**
      * LRU cache whose key is the thumbnail url of the manga, and the value contains the request url
      * and the file where it should be stored in case the manga is a favorite.
      */
@@ -80,6 +88,18 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
         val url = manga.thumbnail_url
         if (url.isNullOrEmpty()) {
             return null
+        }
+
+        if (url!!.startsWith("file://")) {
+            val cover = File(url.substring(7))
+            val id = url + File.separator + cover.lastModified()
+            val rf = baseFileLoader.getResourceFetcher(Uri.fromFile(cover), width, height)
+            return object : DataFetcher<InputStream> {
+                override fun cleanup() = rf.cleanup()
+                override fun loadData(priority: Priority?): InputStream = rf.loadData(priority)
+                override fun cancel() = rf.cancel()
+                override fun getId() = id
+            }
         }
 
         // Obtain the request url and the file for this url from the LRU cache, or calculate it
