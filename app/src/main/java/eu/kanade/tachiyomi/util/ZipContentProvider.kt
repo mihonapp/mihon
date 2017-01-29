@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import eu.kanade.tachiyomi.BuildConfig
-import timber.log.Timber
 import java.io.IOException
 import java.net.URL
 import java.net.URLConnection
@@ -40,11 +39,10 @@ class ZipContentProvider : ContentProvider() {
                     input.use {
                         output.use {
                             input.copyTo(output)
-                            output.flush()
                         }
                     }
                 } catch (e: IOException) {
-                    Timber.e(e)
+                    // Ignore
                 }
             }
             return AssetFileDescriptor(pipe[0], 0, -1)

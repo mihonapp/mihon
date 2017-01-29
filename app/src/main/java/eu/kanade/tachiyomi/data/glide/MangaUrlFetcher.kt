@@ -18,9 +18,9 @@ import java.io.InputStream
  * @param file the file where this cover should be. It may exists or not.
  * @param manga the manga of the cover to load.
  */
-class MangaDataFetcher(private val networkFetcher: DataFetcher<InputStream>,
-                       private val file: File,
-                       private val manga: Manga)
+class MangaUrlFetcher(private val networkFetcher: DataFetcher<InputStream>,
+                      private val file: File,
+                      private val manga: Manga)
 : DataFetcher<InputStream> {
 
     @Throws(Exception::class)

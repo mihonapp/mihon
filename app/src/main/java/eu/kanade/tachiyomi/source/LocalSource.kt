@@ -20,7 +20,6 @@ import java.util.zip.ZipFile
 
 class LocalSource(private val context: Context) : CatalogueSource {
     companion object {
-        private val FILE_PROTOCOL = "file://"
         private val COVER_NAME = "cover.jpg"
         private val POPULAR_FILTERS = FilterList(OrderBy())
         private val LATEST_FILTERS = FilterList(OrderBy().apply { state = Filter.Sort.Selection(1, false) })
@@ -46,8 +45,8 @@ class LocalSource(private val context: Context) : CatalogueSource {
         }
 
         private fun getBaseDirectories(context: Context): List<File> {
-            val c = File.separator + context.getString(R.string.app_name) + File.separator + "local"
-            return DiskUtil.getExternalStorages(context).map { File(it.absolutePath + c) }
+            val c = context.getString(R.string.app_name) + File.separator + "local"
+            return DiskUtil.getExternalStorages(context).map { File(it.absolutePath, c) }
         }
     }
 
@@ -67,7 +66,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
                 .filter { it.isDirectory || isSupportedFormat(it.extension) }
                 .map { chapterFile ->
                     SChapter.create().apply {
-                        url = chapterFile.absolutePath
+                        url = "${manga.url}/${chapterFile.name}"
                         val chapName = if (chapterFile.isDirectory) {
                             chapterFile.name
                         } else {
@@ -79,27 +78,37 @@ class LocalSource(private val context: Context) : CatalogueSource {
                         ChapterRecognition.parseChapterNumber(this, manga)
                     }
                 }
+                .sortedByDescending { it.chapter_number }
 
-        return Observable.just(chapters.sortedByDescending { it.chapter_number })
+        return Observable.just(chapters)
     }
 
     override fun fetchPageList(chapter: SChapter): Observable<List<Page>> {
-        val chapFile = File(chapter.url)
-        if (chapFile.isDirectory) {
-            return Observable.just(chapFile.listFiles()
-                    .filter { !it.isDirectory && DiskUtil.isImage(it.name, { FileInputStream(it) }) }
-                    .sortedWith(Comparator<File> { t1, t2 -> CaseInsensitiveSimpleNaturalComparator.getInstance<String>().compare(t1.name, t2.name) })
-                    .mapIndexed { i, v -> Page(i, FILE_PROTOCOL + v.absolutePath, FILE_PROTOCOL + v.absolutePath, Uri.fromFile(v)).apply { status = Page.READY } })
-        } else {
-            val zip = ZipFile(chapFile)
-            return Observable.just(ZipFile(chapFile).entries().toList()
-                    .filter { !it.isDirectory && DiskUtil.isImage(it.name, { zip.getInputStream(it) }) }
-                    .sortedWith(Comparator<ZipEntry> { t1, t2 -> CaseInsensitiveSimpleNaturalComparator.getInstance<String>().compare(t1.name, t2.name) })
-                    .mapIndexed { i, v ->
-                        val path = "content://${ZipContentProvider.PROVIDER}${chapFile.absolutePath}!/${v.name}"
-                        Page(i, path, path, Uri.parse(path)).apply { status = Page.READY }
-                    })
+        val baseDirs = getBaseDirectories(context)
+
+        for (dir in baseDirs) {
+            val chapFile = File(dir, chapter.url)
+            if (!chapFile.exists()) continue
+
+            val comparator = CaseInsensitiveSimpleNaturalComparator.getInstance<String>()
+
+            val pageList = if (chapFile.isDirectory) {
+                chapFile.listFiles()
+                        .filter { !it.isDirectory && DiskUtil.isImage(it.name, { FileInputStream(it) }) }
+                        .sortedWith(Comparator<File> { f1, f2 -> comparator.compare(f1.name, f2.name) })
+                        .map { Uri.fromFile(it) }
+            } else {
+                val zip = ZipFile(chapFile)
+                zip.entries().toList()
+                        .filter { !it.isDirectory && DiskUtil.isImage(it.name, { zip.getInputStream(it) }) }
+                        .sortedWith(Comparator<ZipEntry> { f1, f2 -> comparator.compare(f1.name, f2.name) })
+                        .map { Uri.parse("content://${ZipContentProvider.PROVIDER}${chapFile.absolutePath}!/${it.name}") }
+            }.mapIndexed { i, uri -> Page(i, uri = uri).apply { status = Page.READY } }
+
+            return Observable.just(pageList)
         }
+
+        return Observable.error(Exception("Chapter not found"))
     }
 
     override fun fetchPopularManga(page: Int) = fetchSearchManga(page, "", POPULAR_FILTERS)
@@ -138,7 +147,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
                 for (dir in baseDirs) {
                     val cover = File("${dir.absolutePath}/$url", COVER_NAME)
                     if (cover.exists()) {
-                        thumbnail_url = FILE_PROTOCOL + cover.absolutePath
+                        thumbnail_url = cover.absolutePath
                         break
                     }
                 }
@@ -152,7 +161,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
                             val input = context.contentResolver.openInputStream(Uri.parse(url))
                             try {
                                 val dest = updateCover(context, this, input)
-                                thumbnail_url = dest?.let { FILE_PROTOCOL + it.absolutePath }
+                                thumbnail_url = dest?.absolutePath
                             } catch (e: Exception) {
                                 Timber.e(e)
                             }
