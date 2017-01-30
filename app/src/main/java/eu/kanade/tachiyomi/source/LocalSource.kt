@@ -156,9 +156,9 @@ class LocalSource(private val context: Context) : CatalogueSource {
                 if (thumbnail_url == null) {
                     val chapters = fetchChapterList(this).toBlocking().first()
                     if (chapters.isNotEmpty()) {
-                        val url = fetchPageList(chapters.last()).toBlocking().first().firstOrNull()?.url
-                        if (url != null) {
-                            val input = context.contentResolver.openInputStream(Uri.parse(url))
+                        val uri = fetchPageList(chapters.last()).toBlocking().first().firstOrNull()?.uri
+                        if (uri != null) {
+                            val input = context.contentResolver.openInputStream(uri)
                             try {
                                 val dest = updateCover(context, this, input)
                                 thumbnail_url = dest?.absolutePath
