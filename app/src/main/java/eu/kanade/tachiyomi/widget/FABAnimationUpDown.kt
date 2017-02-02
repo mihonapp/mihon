@@ -34,7 +34,7 @@ class FABAnimationUpDown @JvmOverloads constructor(ctx: Context, attrs: Attribut
 
             override fun onAnimationEnd(animation: Animation) {
                 isAnimatingOut = false
-                button.visibility = View.GONE
+                button.visibility = View.INVISIBLE
             }
 
             override fun onAnimationRepeat(animation: Animation) {
