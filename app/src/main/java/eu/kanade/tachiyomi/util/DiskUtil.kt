@@ -14,38 +14,41 @@ object DiskUtil {
 
     fun isImage(name: String, openStream: (() -> InputStream)? = null): Boolean {
         val contentType = URLConnection.guessContentTypeFromName(name)
-        if (contentType != null)
-            return contentType.startsWith("image/")
+                ?: openStream?.let { findImageMime(it) }
 
-        if (openStream != null) try {
-            openStream.invoke().buffered().use {
-                var bytes = ByteArray(11)
+        return contentType?.startsWith("image/") ?: false
+    }
+
+    fun findImageMime(openStream: (() -> InputStream)): String? {
+        try {
+            openStream().buffered().use {
+                val bytes = ByteArray(11)
                 it.mark(bytes.size)
-                var length = it.read(bytes, 0, bytes.size)
+                val length = it.read(bytes, 0, bytes.size)
                 it.reset()
                 if (length == -1)
-                    return false
+                    return null
                 if (bytes[0] == 'G'.toByte() && bytes[1] == 'I'.toByte() && bytes[2] == 'F'.toByte() && bytes[3] == '8'.toByte()) {
-                    return true // image/gif
+                    return "image/gif"
                 } else if (bytes[0] == 0x89.toByte() && bytes[1] == 0x50.toByte() && bytes[2] == 0x4E.toByte()
                         && bytes[3] == 0x47.toByte() && bytes[4] == 0x0D.toByte() && bytes[5] == 0x0A.toByte()
                         && bytes[6] == 0x1A.toByte() && bytes[7] == 0x0A.toByte()) {
-                    return true // image/png
+                    return "image/png"
                 } else if (bytes[0] == 0xFF.toByte() && bytes[1] == 0xD8.toByte() && bytes[2] == 0xFF.toByte()) {
                     if (bytes[3] == 0xE0.toByte() || bytes[3] == 0xE1.toByte() && bytes[6] == 'E'.toByte()
                             && bytes[7] == 'x'.toByte() && bytes[8] == 'i'.toByte()
                             && bytes[9] == 'f'.toByte() && bytes[10] == 0.toByte()) {
-                        return true // image/jpeg
+                        return "image/jpeg"
                     } else if (bytes[3] == 0xEE.toByte()) {
-                        return true // image/jpg
+                        return "image/jpg"
                     }
                 } else if (bytes[0] == 'W'.toByte() && bytes[1] == 'E'.toByte() && bytes[2] == 'B'.toByte() && bytes[3] == 'P'.toByte()) {
-                    return true // image/webp
+                    return "image/webp"
                 }
             }
         } catch(e: Exception) {
         }
-        return false
+        return null
     }
 
     fun hashKeyForDisk(key: String): String {
