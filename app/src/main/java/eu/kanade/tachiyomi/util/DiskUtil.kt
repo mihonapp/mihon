@@ -19,10 +19,10 @@ object DiskUtil {
         return contentType?.startsWith("image/") ?: false
     }
 
-    fun findImageMime(openStream: (() -> InputStream)): String? {
+    fun findImageMime(openStream: () -> InputStream): String? {
         try {
             openStream().buffered().use {
-                val bytes = ByteArray(11)
+                val bytes = ByteArray(8)
                 it.mark(bytes.size)
                 val length = it.read(bytes, 0, bytes.size)
                 it.reset()
@@ -35,13 +35,7 @@ object DiskUtil {
                         && bytes[6] == 0x1A.toByte() && bytes[7] == 0x0A.toByte()) {
                     return "image/png"
                 } else if (bytes[0] == 0xFF.toByte() && bytes[1] == 0xD8.toByte() && bytes[2] == 0xFF.toByte()) {
-                    if (bytes[3] == 0xE0.toByte() || bytes[3] == 0xE1.toByte() && bytes[6] == 'E'.toByte()
-                            && bytes[7] == 'x'.toByte() && bytes[8] == 'i'.toByte()
-                            && bytes[9] == 'f'.toByte() && bytes[10] == 0.toByte()) {
-                        return "image/jpeg"
-                    } else if (bytes[3] == 0xEE.toByte()) {
-                        return "image/jpg"
-                    }
+                    return "image/jpeg"
                 } else if (bytes[0] == 'W'.toByte() && bytes[1] == 'E'.toByte() && bytes[2] == 'B'.toByte() && bytes[3] == 'P'.toByte()) {
                     return "image/webp"
                 }
