@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.util.getResourceColor
+import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import jp.wasabeef.glide.transformations.CropCircleTransformation
 import jp.wasabeef.glide.transformations.CropSquareTransformation
@@ -62,7 +63,7 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
 
     override fun onViewCreated(view: View?, savedState: Bundle?) {
         // Set onclickListener to toggle favorite when FAB clicked.
-        fab_favorite.setOnClickListener { presenter.toggleFavorite() }
+        fab_favorite.setOnClickListener { toggleFavorite() }
 
         // Set SwipeRefresh to refresh manga data.
         swipe_refresh.setOnRefreshListener { fetchMangaFromSource() }
@@ -161,12 +162,30 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
     }
 
     /**
+     * Toggles the favorite status and asks for confirmation to delete downloaded chapters.
+     */
+    fun toggleFavorite() {
+        if (!isAdded) return
+
+        val isNowFavorite = presenter.toggleFavorite()
+        if (!isNowFavorite && presenter.hasDownloads()) {
+            view!!.snack(getString(R.string.delete_downloads_for_manga)) {
+                setAction(R.string.action_delete) {
+                    presenter.deleteDownloads()
+                }
+            }
+        }
+    }
+
+    /**
      * Open the manga in browser.
      */
     fun openInBrowser() {
+        if (!isAdded) return
+
         val source = presenter.source as? HttpSource ?: return
         try {
-            val url = Uri.parse(source.baseUrl + presenter.manga.url)
+            val url = Uri.parse(source.mangaDetailsRequest(presenter.manga).url().toString())
             val intent = CustomTabsIntent.Builder()
                     .setToolbarColor(context.getResourceColor(R.attr.colorPrimary))
                     .build()
@@ -180,14 +199,16 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
      * Called to run Intent with [Intent.ACTION_SEND], which show share dialog.
      */
     private fun shareManga() {
+        if (!isAdded) return
+
         val source = presenter.source as? HttpSource ?: return
         try {
             val url = source.mangaDetailsRequest(presenter.manga).url().toString()
             val sharingIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(android.content.Intent.EXTRA_TEXT, resources.getString(R.string.share_text, presenter.manga.title, url))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text, presenter.manga.title, url))
             }
-            startActivity(Intent.createChooser(sharingIntent, resources.getText(R.string.action_share)))
+            startActivity(Intent.createChooser(sharingIntent, getString(R.string.action_share)))
         } catch (e: Exception) {
             context.toast(e.message)
         }
@@ -197,6 +218,8 @@ class MangaInfoFragment : BaseRxFragment<MangaInfoPresenter>() {
      * Add the manga to the home screen
      */
     fun addToHomeScreen() {
+        if (!isAdded) return
+
         val shortcutIntent = activity.intent
         shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 .putExtra(MangaActivity.FROM_LAUNCHER_EXTRA, true)

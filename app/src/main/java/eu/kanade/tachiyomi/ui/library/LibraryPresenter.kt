@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.combineLatest
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
@@ -303,19 +304,31 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
 
     /**
      * Remove the selected manga from the library.
+     *
+     * @param deleteChapters whether to also delete downloaded chapters.
      */
-    fun removeMangaFromLibrary() {
+    fun removeMangaFromLibrary(deleteChapters: Boolean) {
         // Create a set of the list
-        val mangaToDelete = selectedMangas.toSet()
+        val mangaToDelete = selectedMangas.distinctBy { it.id }
+        mangaToDelete.forEach { it.favorite = false }
 
-        Observable.from(mangaToDelete)
+        Observable.fromCallable { db.insertMangas(mangaToDelete).executeAsBlocking() }
+                .onErrorResumeNext { Observable.empty() }
                 .subscribeOn(Schedulers.io())
-                .doOnNext {
-                    it.favorite = false
-                    coverCache.deleteFromCache(it.thumbnail_url)
+                .subscribe()
+
+        Observable.fromCallable {
+            mangaToDelete.forEach { manga ->
+                coverCache.deleteFromCache(manga.thumbnail_url)
+                if (deleteChapters) {
+                    val source = sourceManager.get(manga.source) as? HttpSource
+                    if (source != null) {
+                        downloadManager.findMangaDir(source, manga)?.delete()
+                    }
                 }
-                .toList()
-                .flatMap { db.insertMangas(it).asRxObservable() }
+            }
+        }
+                .subscribeOn(Schedulers.io())
                 .subscribe()
     }
 

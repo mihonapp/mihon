@@ -4,6 +4,7 @@ import android.os.Bundle
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
@@ -50,6 +51,8 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
      */
     val coverCache: CoverCache by injectLazy()
 
+    private val downloadManager: DownloadManager by injectLazy()
+
     /**
      * Subscription to send the manga to the view.
      */
@@ -75,7 +78,7 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
         // Update favorite status
         SharedData.get(MangaFavoriteEvent::class.java)?.observable
                 ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe{setFavorite(it)}
+                ?.subscribe { setFavorite(it) }
     }
 
     /**
@@ -111,14 +114,17 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
 
     /**
      * Update favorite status of manga, (removes / adds) manga (to / from) library.
+     *
+     * @return the new status of the manga.
      */
-    fun toggleFavorite() {
+    fun toggleFavorite(): Boolean {
         manga.favorite = !manga.favorite
         if (!manga.favorite) {
             coverCache.deleteFromCache(manga.thumbnail_url)
         }
         db.insertManga(manga).executeAsBlocking()
         sendMangaToView()
+        return manga.favorite
     }
 
     private fun setFavorite(favorite: Boolean) {
@@ -126,6 +132,20 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
             return
         }
         toggleFavorite()
+    }
+
+    /**
+     * Returns true if the manga has any downloads.
+     */
+    fun hasDownloads(): Boolean {
+        return downloadManager.findMangaDir(source, manga) != null
+    }
+
+    /**
+     * Deletes all the downloads for the manga.
+     */
+    fun deleteDownloads() {
+        downloadManager.findMangaDir(source, manga)?.delete()
     }
 
 }

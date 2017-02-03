@@ -4,14 +4,15 @@ import android.content.Context
 import android.support.annotation.StringRes
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.inflate
 import kotlinx.android.synthetic.main.dialog_with_checkbox.view.*
 
 class DialogCheckboxView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
         LinearLayout(context, attrs) {
+
     init {
-        RelativeLayout.inflate(context, R.layout.dialog_with_checkbox, this)
+        addView(inflate(R.layout.dialog_with_checkbox))
     }
 
     fun setDescription(@StringRes id: Int){

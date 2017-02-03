@@ -218,6 +218,7 @@
     <string name="library_search_hint">Title or author…</string>
     <string name="updating_category">Updating category</string>
     <string name="confirm_delete_manga">Are you sure you want to remove selected manga?</string>
+    <string name="also_delete_chapters">Also delete downloaded chapters</string>
 
     <!-- Catalogue fragment -->
     <string name="source_requires_login">This source requires you to log in</string>
@@ -251,6 +252,7 @@
     <string name="shortcut_title">Shortcut title</string>
     <string name="icon_shape">Icon shape</string>
     <string name="icon_creation_fail">Failed to create shortcut!</string>
+    <string name="delete_downloads_for_manga">Delete downloaded chapters?</string>
 
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Chapters</string>
