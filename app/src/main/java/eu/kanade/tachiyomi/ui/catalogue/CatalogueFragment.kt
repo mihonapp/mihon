@@ -486,14 +486,10 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(),
      * @return the holder of the manga or null if it's not bound.
      */
     private fun getHolder(manga: Manga): CatalogueHolder? {
-        val layoutManager = recycler.layoutManager as LinearLayoutManager
-        val firstVisiblePos = layoutManager.findFirstVisibleItemPosition()
-        val lastVisiblePos = layoutManager.findLastVisibleItemPosition()
-
-        (firstVisiblePos..lastVisiblePos-1).forEach { i ->
-            val item = adapter.getItem(i) as? CatalogueItem
+        adapter.allBoundViewHolders.forEach { holder ->
+            val item = adapter.getItem(holder.adapterPosition) as? CatalogueItem
             if (item != null && item.manga.id!! == manga.id!!) {
-                return recycler.findViewHolderForLayoutPosition(i) as? CatalogueHolder
+                return holder as CatalogueHolder
             }
         }
 

@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package eu.kanade.tachiyomi.util
 
 import android.graphics.Color
@@ -28,4 +30,16 @@ inline fun View.snack(message: String, length: Int = Snackbar.LENGTH_LONG, f: Sn
     snack.f()
     snack.show()
     return snack
+}
+
+inline fun View.visible() {
+    visibility = View.VISIBLE
+}
+
+inline fun View.invisible() {
+    visibility = View.INVISIBLE
+}
+
+inline fun View.gone() {
+    visibility = View.GONE
 }

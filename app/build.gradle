@@ -101,7 +101,7 @@ dependencies {
     compile 'com.github.inorichi:subsampling-scale-image-view:44aa442'
 
     // Android support library
-    final support_library_version = '25.1.0'
+    final support_library_version = '25.1.1'
     compile "com.android.support:support-v4:$support_library_version"
     compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:cardview-v7:$support_library_version"

@@ -4,7 +4,9 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.widget.StateImageViewTarget
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
 
 /**
@@ -42,8 +44,9 @@ class CatalogueGridHolder(private val view: View, private val adapter: FlexibleA
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .centerCrop()
                     .skipMemoryCache(true)
+                    .error(R.drawable.ic_broken_image_grey_24dp)
                     .placeholder(android.R.color.transparent)
-                    .into(view.thumbnail)
+                    .into(StateImageViewTarget(view.thumbnail, view.progress))
 
         }
     }
