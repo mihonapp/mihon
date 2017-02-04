@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.glide
 import android.content.Context
 import android.util.LruCache
 import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.*
 import com.bumptech.glide.load.model.stream.StreamModelLoader
@@ -89,15 +90,18 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
         }
 
         if (url.startsWith("http")) {
+            val source = sourceManager.get(manga.source) as? HttpSource
+
             // Obtain the request url and the file for this url from the LRU cache, or calculate it
             // and add them to the cache.
             val (glideUrl, file) = lruCache.get(url) ?:
-                    Pair(GlideUrl(url, getHeaders(manga)), coverCache.getCoverFile(url)).apply {
+                    Pair(GlideUrl(url, getHeaders(manga, source)), coverCache.getCoverFile(url)).apply {
                         lruCache.put(url, this)
                     }
 
             // Get the resource fetcher for this request url.
-            val networkFetcher = baseUrlLoader.getResourceFetcher(glideUrl, width, height)
+            val networkFetcher = source?.let { OkHttpStreamFetcher(it.client, glideUrl) }
+                ?: baseUrlLoader.getResourceFetcher(glideUrl, width, height)
 
             // Return an instance of the fetcher providing the needed elements.
             return MangaUrlFetcher(networkFetcher, file, manga)
@@ -118,8 +122,9 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
      *
      * @param manga the model.
      */
-    fun getHeaders(manga: Manga): Headers {
-        val source = sourceManager.get(manga.source) as? HttpSource ?: return LazyHeaders.DEFAULT
+    fun getHeaders(manga: Manga, source: HttpSource?): Headers {
+        if (source == null) return LazyHeaders.DEFAULT
+
         return cachedHeaders.getOrPut(manga.source) {
             LazyHeaders.Builder().apply {
                 val nullStr: String? = null

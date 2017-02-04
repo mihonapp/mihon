@@ -24,7 +24,6 @@ import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.util.*
 
 /**
  * Presenter of [CatalogueFragment].
@@ -118,12 +117,8 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        try {
-            source = getLastUsedSource()
-            sourceFilters = source.getFilterList()
-        } catch (error: NoSuchElementException) {
-            return
-        }
+        source = getLastUsedSource()
+        sourceFilters = source.getFilterList()
 
         if (savedState != null) {
             query = savedState.getString(CataloguePresenter::query.name, "")
@@ -291,8 +286,8 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
     fun getLastUsedSource(): CatalogueSource {
         val id = prefs.lastUsedCatalogueSource().get() ?: -1
         val source = sourceManager.get(id)
-        if (!isValidSource(source)) {
-            return findFirstValidSource()
+        if (!isValidSource(source) || source !in sources) {
+            return sources.first { isValidSource(it) }
         }
         return source as CatalogueSource
     }
@@ -311,15 +306,6 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
                     (prefs.sourceUsername(source) != "" && prefs.sourcePassword(source) != "")
         }
         return true
-    }
-
-    /**
-     * Finds the first valid source.
-     *
-     * @return the index of the first valid source.
-     */
-    fun findFirstValidSource(): CatalogueSource {
-        return sources.first { isValidSource(it) }
     }
 
     /**

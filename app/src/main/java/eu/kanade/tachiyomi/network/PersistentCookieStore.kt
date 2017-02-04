@@ -28,38 +28,36 @@ class PersistentCookieStore(context: Context) {
         }
     }
 
+    @Synchronized
     fun addAll(url: HttpUrl, cookies: List<Cookie>) {
-        synchronized(this) {
-            val key = url.uri().host
+        val key = url.uri().host
 
-            // Append or replace the cookies for this domain.
-            val cookiesForDomain = cookieMap[key].orEmpty().toMutableList()
-            for (cookie in cookies) {
-                // Find a cookie with the same name. Replace it if found, otherwise add a new one.
-                val pos = cookiesForDomain.indexOfFirst { it.name() == cookie.name() }
-                if (pos == -1) {
-                    cookiesForDomain.add(cookie)
-                } else {
-                    cookiesForDomain[pos] = cookie
-                }
+        // Append or replace the cookies for this domain.
+        val cookiesForDomain = cookieMap[key].orEmpty().toMutableList()
+        for (cookie in cookies) {
+            // Find a cookie with the same name. Replace it if found, otherwise add a new one.
+            val pos = cookiesForDomain.indexOfFirst { it.name() == cookie.name() }
+            if (pos == -1) {
+                cookiesForDomain.add(cookie)
+            } else {
+                cookiesForDomain[pos] = cookie
             }
-            cookieMap.put(key, cookiesForDomain)
-
-            // Get cookies to be stored in disk
-            val newValues = cookiesForDomain.asSequence()
-                    .filter { it.persistent() && !it.hasExpired() }
-                    .map { it.toString() }
-                    .toSet()
-
-            prefs.edit().putStringSet(key, newValues).apply()
         }
+        cookieMap.put(key, cookiesForDomain)
+
+        // Get cookies to be stored in disk
+        val newValues = cookiesForDomain.asSequence()
+                .filter { it.persistent() && !it.hasExpired() }
+                .map(Cookie::toString)
+                .toSet()
+
+        prefs.edit().putStringSet(key, newValues).apply()
     }
 
+    @Synchronized
     fun removeAll() {
-        synchronized(this) {
-            prefs.edit().clear().apply()
-            cookieMap.clear()
-        }
+        prefs.edit().clear().apply()
+        cookieMap.clear()
     }
 
     fun get(url: HttpUrl) = get(url.uri().host)

@@ -6,7 +6,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 
-class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interceptor {
+class CloudflareInterceptor : Interceptor {
 
     //language=RegExp
     private val operationPattern = Regex("""setTimeout\(function\(\)\{\s+(var (?:\w,)+f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n""")
@@ -17,18 +17,12 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
     //language=RegExp
     private val challengePattern = Regex("""name="jschl_vc" value="(\w+)"""")
 
+    @Synchronized
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
 
-        // Check if we already solved a challenge
-        if (response.code() != 503 &&
-                cookies.get(response.request().url()).any { it.name() == "cf_clearance" }) {
-            return response
-        }
-
         // Check if Cloudflare anti-bot is on
-        if ("URL=/cdn-cgi/" in response.header("Refresh", "")
-                && response.header("Server", "") == "cloudflare-nginx") {
+        if (response.code() == 503 && "cloudflare-nginx" == response.header("Server")) {
             return chain.proceed(resolveChallenge(response))
         }
 
@@ -36,10 +30,10 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
     }
 
     private fun resolveChallenge(response: Response): Request {
-        val duktape = Duktape.create()
-        try {
+        Duktape.create().use { duktape ->
             val originalRequest = response.request()
-            val domain = originalRequest.url().host()
+            val url = originalRequest.url()
+            val domain = url.host()
             val content = response.body().string()
 
             // CloudFlare requires waiting 4 seconds before resolving the challenge
@@ -64,16 +58,19 @@ class CloudflareInterceptor(private val cookies: PersistentCookieStore) : Interc
 
             val answer = "${result + domain.length}"
 
-            val url = HttpUrl.parse("http://$domain/cdn-cgi/l/chk_jschl").newBuilder()
+            val cloudflareUrl = HttpUrl.parse("${url.scheme()}://$domain/cdn-cgi/l/chk_jschl")
+                    .newBuilder()
                     .addQueryParameter("jschl_vc", challenge)
                     .addQueryParameter("pass", pass)
                     .addQueryParameter("jschl_answer", answer)
                     .toString()
 
-            val referer = originalRequest.url().toString()
-            return GET(url, originalRequest.headers().newBuilder().add("Referer", referer).build())
-        } finally {
-            duktape.close()
+            val cloudflareHeaders = originalRequest.headers()
+                    .newBuilder()
+                    .add("Referer", url.toString())
+                    .build()
+
+            return GET(cloudflareUrl, cloudflareHeaders)
         }
     }
 
