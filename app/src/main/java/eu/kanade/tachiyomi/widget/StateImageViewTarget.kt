@@ -1,25 +1,30 @@
 package eu.kanade.tachiyomi.widget
 
 import android.graphics.drawable.Drawable
+import android.support.graphics.drawable.VectorDrawableCompat
+import android.view.View
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import android.widget.ProgressBar
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
+import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.gone
 import eu.kanade.tachiyomi.util.visible
 
 /**
- * A glide target to display an image with an optional progress bar and a configurable scale type
- * for the error drawable.
+ * A glide target to display an image with an optional view to show while loading and a configurable
+ * error drawable.
  *
  * @param view the view where the image will be loaded
- * @param progress an optional progress bar to show when the image is loading.
+ * @param progress an optional view to show when the image is loading.
+ * @param errorDrawableRes the error drawable resource to show.
  * @param errorScaleType the scale type for the error drawable, [ScaleType.CENTER] by default.
  */
 class StateImageViewTarget(view: ImageView,
-                           val progress: ProgressBar? = null,
+                           val progress: View? = null,
+                           val errorDrawableRes: Int = R.drawable.ic_broken_image_grey_24dp,
                            val errorScaleType: ScaleType = ScaleType.CENTER) :
         GlideDrawableImageViewTarget(view) {
 
@@ -33,7 +38,10 @@ class StateImageViewTarget(view: ImageView,
     override fun onLoadFailed(e: Exception?, errorDrawable: Drawable?) {
         progress?.gone()
         view.scaleType = errorScaleType
-        super.onLoadFailed(e, errorDrawable)
+
+        val vector = VectorDrawableCompat.create(view.context.resources, errorDrawableRes, null)
+        vector?.setTint(view.context.getResourceColor(android.R.attr.textColorSecondary))
+        view.setImageDrawable(vector)
     }
 
     override fun onLoadCleared(placeholder: Drawable?) {
