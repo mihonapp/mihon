@@ -6,7 +6,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.util.ChapterRecognition
 import eu.kanade.tachiyomi.util.DiskUtil
+import eu.kanade.tachiyomi.util.RarContentProvider
 import eu.kanade.tachiyomi.util.ZipContentProvider
+import junrar.Archive
+import junrar.rarfile.FileHeader
 import net.greypanther.natsort.CaseInsensitiveSimpleNaturalComparator
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -169,7 +172,9 @@ class LocalSource(private val context: Context) : CatalogueSource {
     }
 
     private fun isSupportedFormat(extension: String): Boolean {
-        return extension.equals("zip", true) || extension.equals("cbz", true) || extension.equals("epub", true)
+        return extension.equals("zip", true) || extension.equals("cbz", true)
+                || extension.equals("rar", true) || extension.equals("cbr", true)
+                || extension.equals("epub", true)
     }
 
     private fun getLoader(file: File): Loader {
@@ -180,6 +185,8 @@ class LocalSource(private val context: Context) : CatalogueSource {
             ZipLoader(file)
         } else if (extension.equals("epub", true)) {
             EpubLoader(file)
+        } else if (extension.equals("rar", true) || extension.equals("cbr", true)) {
+            RarLoader(file)
         } else {
             throw Exception("Invalid chapter format")
         }
@@ -207,11 +214,24 @@ class LocalSource(private val context: Context) : CatalogueSource {
     class ZipLoader(val file: File) : Loader {
         override fun load(): List<Page> {
             val comparator = CaseInsensitiveSimpleNaturalComparator.getInstance<String>()
-            ZipFile(file).use { zip ->
-                return zip.entries().toList()
+            return ZipFile(file).use { zip ->
+                zip.entries().toList()
                         .filter { !it.isDirectory && DiskUtil.isImage(it.name, { zip.getInputStream(it) }) }
                         .sortedWith(Comparator<ZipEntry> { f1, f2 -> comparator.compare(f1.name, f2.name) })
                         .map { Uri.parse("content://${ZipContentProvider.PROVIDER}${file.absolutePath}!/${it.name}") }
+                        .mapIndexed { i, uri -> Page(i, uri = uri).apply { status = Page.READY } }
+            }
+        }
+    }
+
+    class RarLoader(val file: File) : Loader {
+        override fun load(): List<Page> {
+            val comparator = CaseInsensitiveSimpleNaturalComparator.getInstance<String>()
+            return Archive(file).use { archive ->
+                archive.fileHeaders
+                        .filter { !it.isDirectory && DiskUtil.isImage(it.fileNameString, { archive.getInputStream(it) }) }
+                        .sortedWith(Comparator<FileHeader> { f1, f2 -> comparator.compare(f1.fileNameString, f2.fileNameString) })
+                        .map { Uri.parse("content://${RarContentProvider.PROVIDER}${file.absolutePath}!-/${it.fileNameString}") }
                         .mapIndexed { i, uri -> Page(i, uri = uri).apply { status = Page.READY } }
             }
         }

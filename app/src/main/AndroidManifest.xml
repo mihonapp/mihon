@@ -81,6 +81,11 @@
             android:authorities="${applicationId}.zip-provider"
             android:exported="false" />
 
+        <provider
+            android:name="eu.kanade.tachiyomi.util.RarContentProvider"
+            android:authorities="${applicationId}.rar-provider"
+            android:exported="false" />
+
         <receiver
             android:name=".data.notification.NotificationReceiver"
             android:exported="false" />
