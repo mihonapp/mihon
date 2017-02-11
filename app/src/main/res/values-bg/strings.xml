@@ -118,7 +118,7 @@
       <!-- Reader section -->
     <string name="pref_fullscreen">Цял екран</string>
     <string name="pref_lock_orientation">Заключи ориентацията</string>
-    <string name="pref_enable_transitions">Преходи</string>
+    <string name="pref_page_transitions">Преходи</string>
     <string name="pref_show_page_number">Номер на страница</string>
     <string name="pref_custom_brightness">Персонализирана яркост</string>
     <string name="pref_custom_color_filter">Персонализиран цветен филтър</string>

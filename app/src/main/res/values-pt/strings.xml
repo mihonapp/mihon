@@ -100,7 +100,7 @@
     <!-- Reader section -->
     <string name="pref_fullscreen">Ocultar barra de estado</string>
     <string name="pref_lock_orientation">Bloquear orientação</string>
-    <string name="pref_enable_transitions">Permitir transições</string>
+    <string name="pref_page_transitions">Permitir transições</string>
     <string name="pref_show_page_number">Mostrar número de página</string>
     <string name="pref_custom_brightness">Usar brilho personalizado</string>
     <string name="pref_keep_screen_on">Manter ecrã ligado</string>

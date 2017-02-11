@@ -64,7 +64,7 @@
             android:defaultValue="true" />
 
         <SwitchPreference
-            android:title="@string/pref_enable_transitions"
+            android:title="@string/pref_page_transitions"
             android:key="@string/pref_enable_transitions_key"
             android:defaultValue="true" />
 
@@ -72,6 +72,11 @@
             android:title="@string/pref_show_page_number"
             android:key="@string/pref_show_page_number_key"
             android:defaultValue="true" />
+
+        <SwitchPreference
+            android:title="@string/pref_crop_borders"
+            android:key="@string/pref_crop_borders_key"
+            android:defaultValue="false" />
 
         <SwitchPreference
             android:title="@string/pref_keep_screen_on"

@@ -41,6 +41,8 @@ class PreferenceKeys(context: Context) {
 
     val readerTheme = context.getString(R.string.pref_reader_theme_key)
 
+    val cropBorders = context.getString(R.string.pref_crop_borders_key)
+
     val readWithTapping = context.getString(R.string.pref_read_with_tapping_key)
 
     val readWithVolumeKeys = context.getString(R.string.pref_read_with_volume_keys_key)

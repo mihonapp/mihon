@@ -80,6 +80,12 @@ abstract class PagerReader : BaseReader() {
         private set
 
     /**
+     * Whether to crop image borders.
+     */
+    var cropBorders: Boolean = false
+        private set
+
+    /**
      * Scale type (fit width, fit screen, etc).
      */
     var scaleType = 1
@@ -150,9 +156,16 @@ abstract class PagerReader : BaseReader() {
                     .distinctUntilChanged()
                     .subscribe { refreshAdapter() })
 
-            add(preferences.enableTransitions()
+            add(preferences.pageTransitions()
                     .asObservable()
                     .subscribe { transitions = it })
+
+            add(preferences.cropBorders()
+                    .asObservable()
+                    .doOnNext { cropBorders = it }
+                    .skip(1)
+                    .distinctUntilChanged()
+                    .subscribe { refreshAdapter() })
         }
 
         setPagesOnAdapter()

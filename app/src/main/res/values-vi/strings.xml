@@ -118,7 +118,7 @@
     <!-- Reader section -->
     <string name="pref_fullscreen">Đầy màn hình</string>
     <string name="pref_lock_orientation">Khóa xoay</string>
-    <string name="pref_enable_transitions">Bật hiệu ứng chuyển trang</string>
+    <string name="pref_page_transitions">Bật hiệu ứng chuyển trang</string>
     <string name="pref_show_page_number">Hiện số trang</string>
     <string name="pref_custom_brightness">Dùng độ sáng tùy chỉnh</string>
     <string name="pref_custom_color_filter">Dùng bộ lọc màu tùy chỉnh</string>
