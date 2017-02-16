@@ -127,7 +127,7 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
      */
     private fun applyFilters(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
         // Cached list of downloaded manga directories given a source id.
-        val mangaDirectories = mutableMapOf<Long, Array<UniFile>>()
+        val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
 
         // Cached list of downloaded chapter directories for a manga.
         val chapterDirectories = mutableMapOf<Long, Boolean>()
@@ -147,15 +147,17 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
 
             // Filter when the download directory doesn't exist or is null.
             if (filterDownloaded) {
-                val mangaDirs = mangaDirectories.getOrPut(source.id) {
-                    downloadManager.findSourceDir(source)?.listFiles() ?: emptyArray()
+                // Get the directories for the source of the manga.
+                val dirsForSource = mangaDirsForSource.getOrPut(source.id) {
+                    val sourceDir = downloadManager.findSourceDir(source)
+                    sourceDir?.listFiles()?.associateBy { it.name }.orEmpty()
                 }
 
                 val mangaDirName = downloadManager.getMangaDirName(manga)
-                val mangaDir = mangaDirs.find { it.name == mangaDirName } ?: return@f false
+                val mangaDir = dirsForSource[mangaDirName] ?: return@f false
 
                 val hasDirs = chapterDirectories.getOrPut(manga.id!!) {
-                    (mangaDir.listFiles() ?: emptyArray()).isNotEmpty()
+                    mangaDir.listFiles()?.isNotEmpty() ?: false
                 }
                 if (!hasDirs) {
                     return@f false

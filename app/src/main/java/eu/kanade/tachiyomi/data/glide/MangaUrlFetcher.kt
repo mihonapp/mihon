@@ -21,10 +21,9 @@ import java.io.InputStream
 class MangaUrlFetcher(private val networkFetcher: DataFetcher<InputStream>,
                       private val file: File,
                       private val manga: Manga)
-: DataFetcher<InputStream> {
+: MangaFileFetcher(file, manga) {
 
-    @Throws(Exception::class)
-    override fun loadData(priority: Priority): InputStream? {
+    override fun loadData(priority: Priority): InputStream {
         if (manga.favorite) {
             synchronized(file) {
                 if (!file.exists()) {
@@ -51,7 +50,7 @@ class MangaUrlFetcher(private val networkFetcher: DataFetcher<InputStream>,
                     }
                 }
             }
-            return file.inputStream()
+            return super.loadData(priority)
         } else {
             if (file.exists()) {
                 file.delete()
@@ -60,22 +59,12 @@ class MangaUrlFetcher(private val networkFetcher: DataFetcher<InputStream>,
         }
     }
 
-    /**
-     * Returns the id for this manga's cover.
-     *
-     * Appending the file's modified date to the url, we can force Glide to skip its memory and disk
-     * lookup step and fetch from our custom cache. This allows us to invalidate Glide's cache when
-     * the file has changed. If the file doesn't exist it will append a 0.
-     */
-    override fun getId(): String {
-        return manga.thumbnail_url + file.lastModified()
-    }
-
     override fun cancel() {
         networkFetcher.cancel()
     }
 
     override fun cleanup() {
+        super.cleanup()
         networkFetcher.cleanup()
     }
 

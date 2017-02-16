@@ -45,12 +45,6 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
             InputStream::class.java, context)
 
     /**
-     * Base file loader.
-     */
-    private val baseFileLoader = Glide.buildModelLoader(File::class.java,
-            InputStream::class.java, context)
-
-    /**
      * LRU cache whose key is the thumbnail url of the manga, and the value contains the request url
      * and the file where it should be stored in case the manga is a favorite.
      */
@@ -109,11 +103,8 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
             // Get the file from the url, removing the scheme if present.
             val file = File(url.substringAfter("file://"))
 
-            // Get the resource fetcher for the given file.
-            val fileFetcher = baseFileLoader.getResourceFetcher(file, width, height)
-
             // Return an instance of the fetcher providing the needed elements.
-            return MangaFileFetcher(fileFetcher, file, manga)
+            return MangaFileFetcher(file, manga)
         }
     }
 

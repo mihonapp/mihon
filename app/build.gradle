@@ -30,7 +30,7 @@ ext {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
     publishNonDefault true
 
     defaultConfig {
@@ -48,7 +48,7 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         ndk {
-            abiFilters "armeabi", "armeabi-v7a", "x86"
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86"
         }
     }
 
@@ -98,7 +98,7 @@ android {
 dependencies {
 
     // Modified dependencies
-    compile 'com.github.inorichi:subsampling-scale-image-view:41e76b5'
+    compile 'com.github.inorichi:subsampling-scale-image-view:8a22092'
     compile 'com.github.inorichi:junrar-android:634c1f5'
 
     // Android support library
@@ -117,13 +117,13 @@ dependencies {
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.5'
+    compile 'io.reactivex:rxjava:1.2.6'
     compile 'com.jakewharton.rxrelay:rxrelay:1.2.0'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
     compile 'com.github.pwittchen:reactivenetwork:0.7.0'
 
     // Network client
-    compile "com.squareup.okhttp3:okhttp:3.5.0"
+    compile "com.squareup.okhttp3:okhttp:3.6.0"
     compile 'com.squareup.okio:okio:1.11.0'
 
     // REST
@@ -150,14 +150,14 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.2'
 
     // Job scheduling
-    compile 'com.evernote:android-job:1.1.4'
+    compile 'com.evernote:android-job:1.1.6'
     compile 'com.google.android.gms:play-services-gcm:10.0.1'
 
     // Changelog
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
-    compile "com.pushtorefresh.storio:sqlite:1.12.1"
+    compile "com.pushtorefresh.storio:sqlite:1.12.2"
 
     // Model View Presenter
     final nucleus_version = '3.0.0'
@@ -175,7 +175,7 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
 
     // Logging
-    compile 'com.jakewharton.timber:timber:4.5.0'
+    compile 'com.jakewharton.timber:timber:4.5.1'
 
     // Crash reports
     compile 'ch.acra:acra:4.9.2'
@@ -190,8 +190,8 @@ dependencies {
     compile 'com.github.inorichi:FlexibleAdapter:93985fe' // v4.2.0 to be removed
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-    compile 'com.afollestad.material-dialogs:core:0.9.2.3'
-    compile 'net.xpece.android:support-preference:1.2.2'
+    compile 'com.afollestad.material-dialogs:core:0.9.3.0'
+    compile 'net.xpece.android:support-preference:1.2.5'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
