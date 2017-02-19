@@ -96,6 +96,7 @@ class ReaderCustomFilterDialog : DialogFragment() {
 
         // Set brightness value
         txt_brightness_seekbar_value.text = brightness.toString()
+        brightness_seekbar.progress = brightness
 
         // Initialize seekBar progress
         seekbar_color_filter_alpha.progress = argb[0]
@@ -145,7 +146,7 @@ class ReaderCustomFilterDialog : DialogFragment() {
                 }
             }
         })
-        brightness_seekbar.progress = preferences.customBrightnessValue().getOrDefault()
+
         brightness_seekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
             override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
                 if (fromUser) {

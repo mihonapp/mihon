@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.widget
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.SeekBar
 import eu.kanade.tachiyomi.R
@@ -56,6 +57,13 @@ class NegativeSeekBar @JvmOverloads constructor(context: Context, attrs: Attribu
 
     override fun setOnSeekBarChangeListener(listener: OnSeekBarChangeListener?) {
         this.listener = listener
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        // We can't restore the progress from the saved state because it gets shifted.
+        val origProgress = progress
+        super.onRestoreInstanceState(state)
+        super.setProgress(origProgress)
     }
 
 }
