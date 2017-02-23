@@ -28,7 +28,7 @@
 
         </FrameLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/title_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -43,19 +43,21 @@
                 style="@style/TextAppearance.Regular.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/title" />
+                android:text="@string/title"/>
 
             <TextView
                 android:id="@+id/track_title"
                 style="@style/TextAppearance.Medium.Button"
-                android:textColor="?colorAccent"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:maxLines="1"
+                android:ellipsize="middle"
                 android:text="@string/action_edit" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <View
             android:id="@+id/divider1"
@@ -70,7 +72,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/status_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -90,13 +92,14 @@
             <TextView
                 android:id="@+id/track_status"
                 style="@style/TextAppearance.Regular.Body1.Secondary"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
                 tools:text="Reading" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <View
             android:id="@+id/divider2"
@@ -111,7 +114,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/chapters_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -131,13 +134,14 @@
             <TextView
                 android:id="@+id/track_chapters"
                 style="@style/TextAppearance.Regular.Body1.Secondary"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
                 tools:text="12/24" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <View
             android:id="@+id/divider3"
@@ -152,7 +156,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/score_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -172,13 +176,14 @@
             <TextView
                 android:id="@+id/track_score"
                 style="@style/TextAppearance.Regular.Body1.Secondary"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
                 tools:text="10" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 

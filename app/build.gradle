@@ -102,7 +102,7 @@ dependencies {
     compile 'com.github.inorichi:junrar-android:634c1f5'
 
     // Android support library
-    final support_library_version = '25.1.1'
+    final support_library_version = '25.2.0'
     compile "com.android.support:support-v4:$support_library_version"
     compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:cardview-v7:$support_library_version"
@@ -111,7 +111,7 @@ dependencies {
     compile "com.android.support:support-annotations:$support_library_version"
     compile "com.android.support:customtabs:$support_library_version"
 
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0'
 
     compile 'com.android.support:multidex:1.0.1'
 
@@ -127,7 +127,7 @@ dependencies {
     compile 'com.squareup.okio:okio:1.11.0'
 
     // REST
-    final retrofit_version = '2.1.0'
+    final retrofit_version = '2.2.0'
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
@@ -151,13 +151,13 @@ dependencies {
 
     // Job scheduling
     compile 'com.evernote:android-job:1.1.6'
-    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+    compile 'com.google.android.gms:play-services-gcm:10.2.0'
 
     // Changelog
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
-    compile "com.pushtorefresh.storio:sqlite:1.12.2"
+    compile "com.pushtorefresh.storio:sqlite:1.12.3"
 
     // Model View Presenter
     final nucleus_version = '3.0.0'

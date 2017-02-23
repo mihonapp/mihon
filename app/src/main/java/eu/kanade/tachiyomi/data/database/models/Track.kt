@@ -22,8 +22,6 @@ interface Track : Serializable {
 
     var status: Int
 
-    var update: Boolean
-
     fun copyPersonalFrom(other: Track) {
         last_chapter_read = other.last_chapter_read
         score = other.score

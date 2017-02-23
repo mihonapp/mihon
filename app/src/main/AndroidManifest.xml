@@ -99,9 +99,6 @@
             android:exported="false" />
 
         <service
-            android:name=".data.track.TrackUpdateService"
-            android:exported="false" />
-        <service
             android:name=".data.updater.UpdateDownloaderService"
             android:exported="false" />
 

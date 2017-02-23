@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
@@ -116,7 +117,7 @@ class RecentChaptersFragment:
      * @return list of selected chapters
      */
     fun getSelectedChapters(): List<RecentChapterItem> {
-        return adapter.selectedPositions.mapNotNull { adapter.getItem(it) }
+        return adapter.selectedPositions.mapNotNull { adapter.getItem(it) as? RecentChapterItem }
     }
 
     /**
@@ -125,7 +126,7 @@ class RecentChaptersFragment:
      */
     override fun onItemClick(position: Int): Boolean {
         // Get item from position
-        val item = adapter.getItem(position)
+        val item = adapter.getItem(position) as? RecentChapterItem ?: return false
         if (actionMode != null && adapter.mode == FlexibleAdapter.MODE_MULTI) {
             toggleSelection(position)
             return true
@@ -183,7 +184,7 @@ class RecentChaptersFragment:
      * Populate adapter with chapters
      * @param chapters list of [Any]
      */
-    fun onNextRecentChapters(chapters: List<RecentChapterItem>) {
+    fun onNextRecentChapters(chapters: List<IFlexible<*>>) {
         (activity as MainActivity).updateEmptyView(chapters.isEmpty(),
                 R.string.information_no_recent, R.drawable.ic_update_black_128dp)
 
@@ -291,6 +292,8 @@ class RecentChaptersFragment:
      * @param item item from ActionMode.
      */
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        if (!isAdded) return true
+
         when (item.itemId) {
             R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
             R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())

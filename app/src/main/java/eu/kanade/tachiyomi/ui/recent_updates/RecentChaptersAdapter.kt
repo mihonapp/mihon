@@ -1,9 +1,10 @@
 package eu.kanade.tachiyomi.ui.recent_updates
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
 
 class RecentChaptersAdapter(val fragment: RecentChaptersFragment) :
-        FlexibleAdapter<RecentChapterItem>(null, fragment, true) {
+        FlexibleAdapter<IFlexible<*>>(null, fragment, true) {
 
     init {
         setDisplayHeadersAtStartUp(true)
