@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v0.5.0" changeDate="">
+        <changelogtext>Support for local manga. Head to the [a href="https://github.com/inorichi/tachiyomi/wiki/Local-manga"]wiki page[/a] for instructions.</changelogtext>
+
+        <changelogtext>Added an option to detect and remove the white borders of the images.</changelogtext>
+
+        <changelogtext>Added advanced search for catalogues.</changelogtext>
+
+        <changelogtext>Russian, french, bulgarian and vietnamese translations.</changelogtext>
+
+        <changelogtext>Fixed a bug when changing chapters inside the reader with the buttons.</changelogtext>
+
+        <changelogtext>Fixed certain downloaded chapters not working with any decoder.</changelogtext>
+
+        <changelogtext>Fixed lost covers on some devices.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.4.2" changeDate="">
         <changelogtext>Added support for Anilist and Kitsu.</changelogtext>
 
