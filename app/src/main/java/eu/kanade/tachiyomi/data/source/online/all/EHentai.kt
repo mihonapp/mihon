@@ -36,9 +36,9 @@ class EHentai(override val id: Int,
 
     override val baseUrl: String
         get() = if(exh)
-            "$schema://exhentai.org/"
+            "$schema://exhentai.org"
         else
-            "http://g.e-hentai.org/"
+            "http://g.e-hentai.org"
 
     override val lang = "all"
     override val supportsLatest = true
