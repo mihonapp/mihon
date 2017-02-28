@@ -38,7 +38,7 @@
             app:layout_constraintRight_toRightOf="@+id/textView"
             app:layout_constraintBottom_toTopOf="@+id/btn_add_galleries"
             android:layout_marginBottom="8dp"
-            android:hint="Example:\n\nhttp://e-hentai.org/g/12345/1a2b3c4e\nhttp://e-hentai.org/g/67890/6f7g8h9i\nhttp://exhentai.org/g/13579/1a3b5c7e\nhttp://exhentai.org/g/24680/2f4g6h8i\n" />
+            android:hint="Example:\n\nhttp://e-hentai.org/g/12345/1a2b3c4e\nhttp://g.e-hentai.org/g/67890/6f7g8h9i\nhttp://exhentai.org/g/13579/1a3b5c7e\nhttps://exhentai.org/g/24680/2f4g6h8i\n" />
 
         <Button
             android:text="Add Galleries"

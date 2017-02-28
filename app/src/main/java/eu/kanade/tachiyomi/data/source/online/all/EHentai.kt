@@ -38,7 +38,7 @@ class EHentai(override val id: Int,
         get() = if(exh)
             "$schema://exhentai.org"
         else
-            "http://g.e-hentai.org"
+            "http://e-hentai.org"
 
     override val lang = "all"
     override val supportsLatest = true

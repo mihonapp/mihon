@@ -20,7 +20,7 @@ class GalleryAdder {
 
     fun addGallery(url: String, fav: Boolean = false): Manga {
         val source = when(URL(url).host) {
-            "g.e-hentai.org" -> 1
+            "g.e-hentai.org", "e-hentai.org" -> 1
             "exhentai.org" -> 2
             else -> throw MalformedURLException("Not a valid gallery URL!")
         }
