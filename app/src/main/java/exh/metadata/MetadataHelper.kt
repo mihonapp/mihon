@@ -6,7 +6,7 @@ import io.paperdb.Paper
 class MetadataHelper {
 
     fun writeGallery(galleryMetadata: ExGalleryMetadata)
-            = exGalleryBook().write(galleryMetadata.galleryUniqueIdentifier(), galleryMetadata)
+            = exGalleryBook().write(galleryMetadata.galleryUniqueIdentifier(), galleryMetadata)!!
 
     fun fetchMetadata(url: String, exh: Boolean): ExGalleryMetadata?
             = ExGalleryMetadata().let {

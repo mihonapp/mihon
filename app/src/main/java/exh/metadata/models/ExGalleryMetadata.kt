@@ -22,7 +22,7 @@ class ExGalleryMetadata {
     var uploader: String? = null
     var datePosted: Long? = null
     var parent: String? = null
-    var visible: String? = null
+    var visible: String? = null //Not a boolean
     var language: String? = null
     var translated: Boolean? = null
     var size: Long? = null
