@@ -4,8 +4,10 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.source.SourceManager
 import eu.kanade.tachiyomi.util.UrlUtil
+import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.net.MalformedURLException
 import java.net.URL
@@ -26,6 +28,7 @@ class GalleryAdder {
         }
 
         val sourceObj = sourceManager.get(source)
+                ?: throw IllegalStateException("Could not find EH source!")
 
         val pathOnlyUrl = UrlUtil.getPath(url)
 
@@ -35,18 +38,25 @@ class GalleryAdder {
             title = url
         }
 
-        sourceObj?.let {
-            //Copy basics
-            manga.copyFrom(sourceObj.fetchMangaDetails(manga).toBlocking().first())
+        //Copy basics
+        manga.copyFrom(sourceObj.fetchMangaDetails(manga).toBlocking().first())
 
-            //Apply metadata
-            metadataHelper.fetchMetadata(url, source == 2)?.copyTo(manga)
-        }
+        //Apply metadata
+        metadataHelper.fetchMetadata(url, source == 2)?.copyTo(manga)
 
         if(fav) manga.favorite = true
 
         db.insertManga(manga).executeAsBlocking().insertedId()?.let {
             manga.id = it
+        }
+
+        //Fetch and copy chapters
+        try {
+            sourceObj.fetchChapterList(manga).map {
+                syncChaptersWithSource(db, it, manga, sourceObj)
+            }.toBlocking().first()
+        } catch (e: Exception) {
+            Timber.w(e, "Failed to update chapters for gallery: ${manga.title}!")
         }
 
         return manga
