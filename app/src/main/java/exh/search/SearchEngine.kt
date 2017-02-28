@@ -49,13 +49,25 @@ class SearchEngine {
                         return false
                     }
                 } else {
-                    //Match namespace
-                    val ns = metadata.tags.entries.asSequence().filter {
-                        it.key == component.namespace
-                    }.flatMap { it.value.asSequence() }
-                    //Match tags
-                    if (!matchTagList(ns, component.tag!!))
-                        return false
+                    if(component.tag!!.components.size > 0) {
+                        //Match namespace
+                        val ns = metadata.tags.entries.asSequence().filter {
+                            it.key == component.namespace
+                        }.flatMap { it.value.asSequence() }
+                        //Match tags
+                        if (!matchTagList(ns, component.tag!!))
+                            return false
+                    } else {
+                        //Perform namespace search
+                        val hasNs = metadata.tags.entries.find {
+                            it.key == component.namespace
+                        } != null
+
+                        if(hasNs && component.excluded)
+                            return false
+                        else if(!hasNs && !component.excluded)
+                            return false
+                    }
                 }
             }
         }
@@ -87,9 +99,10 @@ class SearchEngine {
 
         fun flushAll() {
             flushText()
-            if (queuedText.isNotEmpty()) {
+            if (queuedText.isNotEmpty() || namespace != null) {
                 val component = namespace?.apply {
                     tag = flushToText()
+                    namespace = null
                 } ?: flushToText()
                 component.excluded = nextIsExcluded
                 component.exact = nextIsExact
