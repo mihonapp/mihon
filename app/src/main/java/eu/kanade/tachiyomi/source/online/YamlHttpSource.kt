@@ -176,8 +176,7 @@ class YamlHttpSource(mappings: Map<*, *>) : HttpSource() {
 
         val pages = mutableListOf<Page>()
 
-        // TODO lazy initialization in Kotlin 1.1
-        val document = Jsoup.parse(body, url)
+        val document by lazy { Jsoup.parse(body, url) }
 
         with(map.pages) {
             // Capture a list of values where page urls will be resolved.

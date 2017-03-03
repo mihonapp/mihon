@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.base.fragment
 
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.FragmentActivity
 import eu.kanade.tachiyomi.ui.base.activity.ActivityMixin
 
 interface FragmentMixin {
@@ -13,7 +13,7 @@ interface FragmentMixin {
         (getActivity() as ActivityMixin).setToolbarTitle(getString(resourceId))
     }
 
-    fun getActivity(): AppCompatActivity
+    fun getActivity(): FragmentActivity
     
     fun getString(resource: Int): String
 }
