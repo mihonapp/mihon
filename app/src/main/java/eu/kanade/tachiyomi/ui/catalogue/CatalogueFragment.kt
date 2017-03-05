@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.*
 import android.view.*
 import android.widget.ArrayAdapter
@@ -155,7 +156,7 @@ open class CatalogueFragment : BaseRxFragment<CataloguePresenter>(),
         setupRecycler()
 
         // Create toolbar spinner
-        val themedContext = activity.supportActionBar?.themedContext ?: activity
+        val themedContext = (activity as AppCompatActivity).supportActionBar?.themedContext ?: activity
 
         val spinnerAdapter = ArrayAdapter(themedContext,
                 android.R.layout.simple_spinner_item, presenter.sources)

@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.SearchView
 import android.view.*
@@ -356,7 +357,7 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
      */
     fun createActionModeIfNeeded() {
         if (actionMode == null) {
-            actionMode = activity.startSupportActionMode(this)
+            actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
         }
     }
 

@@ -177,12 +177,9 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     private fun applySort(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
         val sortingMode = preferences.librarySortingMode().getOrDefault()
 
-        // TODO lazy initialization in kotlin 1.1
-        var lastReadManga: Map<Long, Int>? = null
-        if (sortingMode == LibrarySort.LAST_READ) {
+        val lastReadManga by lazy {
             var counter = 0
-            lastReadManga = db.getLastReadManga().executeAsBlocking()
-                    .associate { it.id!! to counter++ }
+            db.getLastReadManga().executeAsBlocking().associate { it.id!! to counter++ }
         }
 
         val sortFn: (Manga, Manga) -> Int = { manga1, manga2 ->
@@ -190,8 +187,8 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
                 LibrarySort.ALPHA -> manga1.title.compareTo(manga2.title)
                 LibrarySort.LAST_READ -> {
                     // Get index of manga, set equal to list if size unknown.
-                    val manga1LastRead = lastReadManga!![manga1.id!!] ?: lastReadManga!!.size
-                    val manga2LastRead = lastReadManga!![manga2.id!!] ?: lastReadManga!!.size
+                    val manga1LastRead = lastReadManga[manga1.id!!] ?: lastReadManga.size
+                    val manga2LastRead = lastReadManga[manga2.id!!] ?: lastReadManga.size
                     manga1LastRead.compareTo(manga2LastRead)
                 }
                 LibrarySort.LAST_UPDATED -> manga2.last_update.compareTo(manga1.last_update)

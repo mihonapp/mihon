@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.util
 
 import android.content.Context
+import android.os.Build
 import android.os.Environment
 import android.support.v4.content.ContextCompat
 import android.support.v4.os.EnvironmentCompat
@@ -73,8 +74,9 @@ object DiskUtil {
     /**
      * Returns the root folders of all the available external storages.
      */
-    fun getExternalStorages(context: Context): List<File> {
-        return ContextCompat.getExternalFilesDirs(context, null)
+    fun getExternalStorages(context: Context): Collection<File> {
+        val directories = mutableSetOf<File>()
+        directories += ContextCompat.getExternalFilesDirs(context, null)
                 .filterNotNull()
                 .mapNotNull {
                     val file = File(it.absolutePath.substringBefore("/Android/"))
@@ -85,6 +87,15 @@ object DiskUtil {
                         null
                     }
                 }
+
+        if (Build.VERSION.SDK_INT < 21) {
+            val extStorages = System.getenv("SECONDARY_STORAGE")
+            if (extStorages != null) {
+                directories += extStorages.split(":").map(::File)
+            }
+        }
+
+        return directories
     }
 
     /**

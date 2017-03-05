@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.recent_updates
 
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -142,7 +143,7 @@ class RecentChaptersFragment:
      */
     override fun onItemLongClick(position: Int) {
         if (actionMode == null)
-            actionMode = activity.startSupportActionMode(this)
+            actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
 
         toggleSelection(position)
     }
