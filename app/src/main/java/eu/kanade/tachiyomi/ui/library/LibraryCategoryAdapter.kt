@@ -9,17 +9,17 @@ import android.widget.FrameLayout
 import eu.davidea.flexibleadapter4.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.online.all.EHentai
-import eu.kanade.tachiyomi.data.source.online.all.EHentaiMetadata
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.EHentai
+import eu.kanade.tachiyomi.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
+import exh.isLewdSource
 import exh.metadata.MetadataHelper
 import exh.search.SearchEngine
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
 import uy.kohesive.injekt.injectLazy
 import java.util.*
-import kotlin.concurrent.thread
 
 /**
  * Adapter storing a list of manga in a certain category.
@@ -95,7 +95,7 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
      * @return true if the manga should be included, false otherwise.
      */
     override fun filterObject(manga: Manga, query: String): Boolean = with(manga) {
-        if(manga.source > 100) {
+        if(!isLewdSource(manga.source)) {
             //Regular searching for normal manga
             title.toLowerCase().contains(query) ||
                     author != null && author!!.toLowerCase().contains(query)

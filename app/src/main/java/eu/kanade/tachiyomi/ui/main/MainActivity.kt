@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import exh.ui.batchadd.BatchAddFragment
 import exh.ui.migration.LibraryMigrationManager
+import exh.ui.migration.SourceMigrator
 import exh.ui.migration.UrlMigrator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -89,25 +90,31 @@ class MainActivity : BaseActivity() {
         }
 
         if (savedState == null) {
-            // Set start screen
-            setSelectedDrawerItem(startScreenId)
+            //Perform source migration
+            SourceMigrator().tryMigrationWithDialog(this, {
 
-            // Show changelog if needed
-            ChangelogDialogFragment.show(this, preferences, supportFragmentManager)
+                // Set start screen
+                try {
+                    setSelectedDrawerItem(startScreenId)
+                } catch(e: Exception) {}
 
-            // Migrate library if needed
-            LibraryMigrationManager(this, dismissQueue).askMigrationIfNecessary()
+                // Show changelog if needed
+                ChangelogDialogFragment.show(this, preferences, supportFragmentManager)
 
-            //Last part of migration requires finishing this activity
-            finishSubscription?.unsubscribe()
-            preferences.finishMainActivity().set(false)
-            finishSubscription = preferences.finishMainActivity().asObservable().subscribe {
-                if(it)
-                    finish()
-            }
+                // Migrate library if needed
+                LibraryMigrationManager(this, dismissQueue).askMigrationIfNecessary()
 
-            //Migrate URLs if necessary
-            UrlMigrator().tryMigration()
+                //Last part of migration requires finishing this activity
+                finishSubscription?.unsubscribe()
+                preferences.finishMainActivity().set(false)
+                finishSubscription = preferences.finishMainActivity().asObservable().subscribe {
+                    if (it)
+                        finish()
+                }
+
+                //Migrate URLs if necessary
+                UrlMigrator().tryMigration()
+            })
         }
     }
 

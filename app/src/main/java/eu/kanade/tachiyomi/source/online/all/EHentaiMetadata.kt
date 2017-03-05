@@ -3,9 +3,8 @@ package eu.kanade.tachiyomi.source.online.all
 import android.content.Context
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.source.model.MangasPage
-import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.online.HttpSource
 import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
 import exh.metadata.models.ExGalleryMetadata
@@ -15,11 +14,35 @@ import rx.Observable
 
 /**
  * Offline metadata store source
+ *
+ * TODO This no longer fakes an online source because of technical reasons.
+ * If we still want offline search, we must find out a way to rearchitecture the source system so it supports
+ * online source faking again.
  */
 
-class EHentaiMetadata(override val id: Int,
+class EHentaiMetadata(override val id: Long,
                       val exh: Boolean,
-                      val context: Context) : OnlineSource() {
+                      val context: Context) : HttpSource() {
+    override fun popularMangaRequest(page: Int)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun popularMangaParse(response: Response)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun searchMangaParse(response: Response)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun latestUpdatesRequest(page: Int)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun latestUpdatesParse(response: Response)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun mangaDetailsParse(response: Response)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun chapterListParse(response: Response)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun pageListParse(response: Response)
+            = throw UnsupportedOperationException("Unused method called!")
+    override fun imageUrlParse(response: Response)
+            = throw UnsupportedOperationException("Unused method called!")
 
     val metadataHelper = MetadataHelper()
 
@@ -34,55 +57,14 @@ class EHentaiMetadata(override val id: Int,
     override val supportsLatest: Boolean
         get() = true
 
-    override fun popularMangaInitialUrl(): String {
-        throw UnsupportedOperationException()
-    }
-
-    override fun popularMangaParse(response: Response, page: MangasPage) {
-        throw UnsupportedOperationException()
-    }
-
-    override fun searchMangaInitialUrl(query: String, filters: List<Filter>): String {
-        throw UnsupportedOperationException()
-    }
-
-    override fun searchMangaParse(response: Response, page: MangasPage, query: String, filters: List<Filter>) {
-        throw UnsupportedOperationException()
-    }
-
-    override fun latestUpdatesInitialUrl(): String {
-        throw UnsupportedOperationException()
-    }
-
-    override fun latestUpdatesParse(response: Response, page: MangasPage) {
-        throw UnsupportedOperationException()
-    }
-
-    override fun mangaDetailsParse(response: Response, manga: Manga) {
-        throw UnsupportedOperationException()
-    }
-
-    override fun chapterListParse(response: Response, chapters: MutableList<Chapter>) {
-        throw UnsupportedOperationException()
-    }
-
-    override fun pageListParse(response: Response, pages: MutableList<Page>) {
-        throw UnsupportedOperationException()
-    }
-
-    override fun imageUrlParse(response: Response): String {
-        throw UnsupportedOperationException()
-    }
-
-    override fun fetchChapterList(manga: Manga): Observable<List<Chapter>>
+    override fun fetchChapterList(manga: SManga): Observable<List<SChapter>>
             = Observable.just(listOf(Chapter.create().apply {
-        manga_id = manga.id
         url = manga.url
         name = "ONLINE - Chapter"
         chapter_number = 1f
     }))
 
-    override fun fetchPageListFromNetwork(chapter: Chapter) = internalEx.fetchPageListFromNetwork(chapter)
+    override fun fetchPageList(chapter: SChapter) = internalEx.fetchPageList(chapter)
 
     override fun fetchImageUrl(page: Page) = internalEx.fetchImageUrl(page)
 
@@ -98,38 +80,42 @@ class EHentaiMetadata(override val id: Int,
         it.datePosted ?: 0
     }
 
-    override fun fetchPopularManga(page: MangasPage)
+    override fun fetchPopularManga(page: Int)
         = Observable.fromCallable {
-            page.mangas.addAll(metadataHelper.getAllGalleries().sortedByDescending {
+            MangasPage(metadataHelper.getAllGalleries().sortedByDescending {
                 it.ratingCount ?: 0
-            }.mapToManga())
-            page
+            }.mapToManga(), false)
         }!!
 
-    override fun fetchSearchManga(page: MangasPage, query: String, filters: List<Filter>)
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList)
     = Observable.fromCallable {
+        val genreGroup = filters.find {
+            it is EHentai.GenreGroup
+        }!! as EHentai.GenreGroup
+        val disableGenreFilter = genreGroup.state.find(EHentai.GenreOption::state) == null
+
         val parsed = searchEngine.parseQuery(query)
-        page.mangas.addAll(sortedByTimeGalleries().filter { manga ->
-            filters.isEmpty() || filters.filter { it.id == manga.genre }.isNotEmpty()
+        MangasPage(sortedByTimeGalleries().filter { manga ->
+            disableGenreFilter || genreGroup.state.find {
+                it.state && it.genreId == manga.genre
+            } != null
         }.filter {
             searchEngine.matches(it, parsed)
-        }.mapToManga())
-        page
+        }.mapToManga(), false)
     }!!
 
-    override fun fetchLatestUpdates(page: MangasPage)
+    override fun fetchLatestUpdates(page: Int)
     = Observable.fromCallable {
-        page.mangas.addAll(sortedByTimeGalleries().mapToManga())
-        page
+        MangasPage(sortedByTimeGalleries().mapToManga(), false)
     }!!
 
-    override fun fetchMangaDetails(manga: Manga) = Observable.fromCallable {
+    override fun fetchMangaDetails(manga: SManga) = Observable.fromCallable {
         //Hack to convert the gallery into an online gallery when favoriting it or reading it
         metadataHelper.fetchMetadata(manga.url, exh)?.copyTo(manga)
         manga
     }!!
 
-    override fun getFilterList() = internalEx.getFilterList()
+    override fun getFilterList() = FilterList(EHentai.GenreGroup())
 
     override val name: String
         get() = if(exh) {

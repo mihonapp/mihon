@@ -7,8 +7,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.online.all.EHentai
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.EHentai
+import exh.isExSource
 import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
 import timber.log.Timber
@@ -44,7 +45,7 @@ class MetadataFetchDialog {
                     .executeAsBlocking()
                     .filter {
                         it.source <= 2
-                        && !metadataHelper.hasMetadata(it.url, it.source == 2)
+                        && !metadataHelper.hasMetadata(it.url, isExSource(it.source))
                     }
 
             context.runOnUiThread {
@@ -91,7 +92,7 @@ class MetadataFetchDialog {
         db.getLibraryMangas().asRxSingle().subscribe {
             //Not logged in but have ExHentai galleries
             if(!preferenceHelper.enableExhentai().getOrDefault()) {
-                it.find { it.source == 2 }?.let {
+                it.find { isExSource(it.source) }?.let {
                     extra = "<b><font color='red'>If you use ExHentai, please log in first before fetching your library metadata!</font></b><br><br>"
                 }
             }

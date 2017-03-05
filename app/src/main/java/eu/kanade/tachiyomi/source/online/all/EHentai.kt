@@ -2,20 +2,17 @@ package eu.kanade.tachiyomi.source.online.all
 
 import android.content.Context
 import android.net.Uri
-import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.network.GET
-import eu.kanade.tachiyomi.data.network.asObservableSuccess
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.data.source.model.MangasPage
-import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.asObservableSuccess
+import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.metadata.*
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.Tag
-import exh.plusAssign
 import okhttp3.Response
 import org.jsoup.nodes.Element
 import rx.Observable
@@ -23,10 +20,11 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
 import exh.ui.login.LoginActivity
+import okhttp3.Request
 
-class EHentai(override val id: Int,
+class EHentai(override val id: Long,
               val exh: Boolean,
-              val context: Context) : OnlineSource() {
+              val context: Context) : HttpSource() {
 
     val schema: String
         get() = if(prefs.secureEXH().getOrDefault())
@@ -55,7 +53,7 @@ class EHentai(override val id: Int,
     /**
      * Parse a list of galleries
      */
-    fun genericMangaParse(response: Response, page: MangasPage? = null)
+    fun genericMangaParse(response: Response)
             = with(response.asJsoup()) {
         //Parse mangas
         val parsedMangas = select(".gtr0,.gtr1").map {
@@ -81,32 +79,27 @@ class EHentai(override val id: Int,
 
         }
         //Add to page if required
-            page?.let { page ->
-                page.mangas += parsedMangas.map { it.manga }
-                select("a[onclick=return false]").last()?.let {
-                    if(it.text() == ">") page.nextPageUrl = it.attr("href")
-                }
-            }
-        //Return parsed mangas anyways
-        parsedMangas
+        val hasNextPage = select("a[onclick=return false]").last()?.let {
+            it.text() == ">"
+        } ?: false
+        MangasPage(parsedMangas.map { it.manga }, hasNextPage)
     }
 
-    override fun fetchChapterList(manga: Manga): Observable<List<Chapter>>
-            = Observable.just(listOf(Chapter.create().apply {
-        manga_id = manga.id
+    override fun fetchChapterList(manga: SManga): Observable<List<SChapter>>
+            = Observable.just(listOf(SChapter.create().apply {
         url = manga.url
         name = "Chapter"
         chapter_number = 1f
     }))
 
-    override fun fetchPageListFromNetwork(chapter: Chapter)
-            = fetchChapterPage(chapter, "$baseUrl${chapter.url}").map {
+    override fun fetchPageList(chapter: SChapter)
+            = fetchChapterPage(chapter, "$baseUrl/${chapter.url}").map {
         it.mapIndexed { i, s ->
             Page(i, s)
         }
     }!!
 
-    private fun fetchChapterPage(chapter: Chapter, np: String,
+    private fun fetchChapterPage(chapter: SChapter, np: String,
                                  pastUrls: List<String> = emptyList()): Observable<List<String>> {
         val urls = ArrayList(pastUrls)
         return chapterPageCall(np).flatMap {
@@ -134,60 +127,46 @@ class EHentai(override val id: Int,
         return if (it.text() == ">") it.attr("href") else null
     }
 
-    private fun buildGenreString(filters: List<OnlineSource.Filter>): String {
-        val genreString = StringBuilder()
-        for (genre in GENRE_LIST) {
-            genreString += "&f_"
-            genreString += genre
-            genreString += "="
-            genreString += if (filters.isEmpty()
-                    || !filters
-                    .map { it.id }
-                    .find { it == genre }
-                    .isNullOrEmpty())
-                "1"
-            else
-                "0"
-        }
-        return genreString.toString()
-    }
-
-    override fun popularMangaInitialUrl() = if(exh)
-        latestUpdatesInitialUrl()
+    override fun popularMangaRequest(page: Int) = if(exh)
+        latestUpdatesRequest(page)
     else
-        "$baseUrl/toplist.php?tl=15"
+        exGet("$baseUrl/toplist.php?tl=15", page)
 
-    override fun popularMangaParse(response: Response, page: MangasPage) {
-        genericMangaParse(response, page)
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
+        val uri = Uri.parse("$baseUrl$QUERY_PREFIX").buildUpon()
+        uri.appendQueryParameter("f_search", query)
+        filters.forEach {
+            if(it is UriFilter) it.addToUri(uri)
+        }
+        return exGet(uri.toString(), page)
     }
 
-    override fun searchMangaInitialUrl(query: String, filters: List<Filter>)
-            = "$baseUrl$QUERY_PREFIX${buildGenreString(filters)}&f_search=${URLEncoder.encode(query, "UTF-8")}"
+    override fun latestUpdatesRequest(page: Int) = exGet(baseUrl, page)
 
-    override fun searchMangaParse(response: Response, page: MangasPage, query: String, filters: List<Filter>) {
-        genericMangaParse(response, page)
-    }
+    override fun popularMangaParse(response: Response) = genericMangaParse(response)
+    override fun searchMangaParse(response: Response) = genericMangaParse(response)
+    override fun latestUpdatesParse(response: Response) = genericMangaParse(response)
 
-    override fun latestUpdatesInitialUrl() = baseUrl
-
-    override fun latestUpdatesParse(response: Response, page: MangasPage) {
-        genericMangaParse(response, page)
-    }
+    fun exGet(url: String, page: Int? = null)
+        = GET(page?.let {
+            addParam(url, "page", Integer.toString(page - 1))
+        } ?: url, headers)
 
     /**
      * Parse gallery page to metadata model
      */
-    override fun mangaDetailsParse(response: Response, manga: Manga) = with(response.asJsoup()) {
+    override fun mangaDetailsParse(response: Response) = with(response.asJsoup()) {
         val metdata = ExGalleryMetadata()
         with(metdata) {
-            url = manga.url
+            val manga = SManga.create()
+            url = response.request().url().toString()
             exh = this@EHentai.exh
             title = select("#gn").text().nullIfBlank()?.trim()
             altTitle = select("#gj").text().nullIfBlank()?.trim()
 
             thumbnailUrl = select("#gd1 img").attr("src").nullIfBlank()?.trim()
 
-            genre = select(".ic").attr("alt").nullIfBlank()?.trim()
+            genre = select(".ic").parents().attr("href").nullIfBlank()?.trim()?.substringAfterLast('/')
 
             uploader = select("#gdn").text().nullIfBlank()?.trim()
 
@@ -252,41 +231,25 @@ class EHentai(override val id: Int,
 
             //Copy metadata to manga
             copyTo(manga)
+
+            manga
         }
     }
 
-    override fun chapterListParse(response: Response, chapters: MutableList<Chapter>) {
-        throw UnsupportedOperationException()
-    }
+    override fun chapterListParse(response: Response)
+            = throw UnsupportedOperationException("Unused method was called somehow!")
 
-    override fun pageListParse(response: Response, pages: MutableList<Page>) {
-        throw UnsupportedOperationException()
-    }
+    override fun pageListParse(response: Response)
+            = throw UnsupportedOperationException("Unused method was called somehow!")
 
     override fun imageUrlParse(response: Response): String {
-        throw UnsupportedOperationException()
-    }
-
-    //Copy and paste from OnlineSource as we need the page argument
-    override public fun fetchImageUrl(page: Page): Observable<Page> {
-        page.status = Page.LOAD_PAGE
-        return client
-                .newCall(imageUrlRequest(page))
-                .asObservableSuccess()
-                .map { imageUrlParse(it, page) }
-                .doOnError { page.status = Page.ERROR }
-                .onErrorReturn { null }
-                .doOnNext { page.imageUrl = it }
-                .map { page }
-    }
-
-    fun imageUrlParse(response: Response, page: Page): String {
         with(response.asJsoup()) {
             val currentImage = select("img[onerror]").attr("src")
+            //TODO This doesn't work currently. Find a better way to do this
             //Each press of the retry button will choose another server
-            select("#loadfail").attr("onclick").nullIfBlank()?.let {
-                page.url = addParam(page.url, "nl", it.substring(it.indexOf('\'') + 1 .. it.lastIndexOf('\'') - 1))
-            }
+//            select("#loadfail").attr("onclick").nullIfBlank()?.let {
+//                page.url = addParam(page.url, "nl", it.substring(it.indexOf('\'') + 1 .. it.lastIndexOf('\'') - 1))
+//            }
             return currentImage
         }
     }
@@ -366,8 +329,70 @@ class EHentai(override val id: Int,
             }.build()!!
 
     //Filters
-    val generatedFilters = GENRE_LIST.map { Filter(it, it) }
-    override fun getFilterList() = generatedFilters
+    override fun getFilterList() = FilterList(
+            GenreGroup(),
+            AdvancedGroup()
+    )
+    private interface UriFilter {
+        fun addToUri(builder: Uri.Builder)
+    }
+
+    class GenreOption(name: String, val genreId: String): Filter.CheckBox(name, false), UriFilter {
+        override fun addToUri(builder: Uri.Builder) {
+            builder.appendQueryParameter("f_" + genreId, if(state) "1" else "0")
+        }
+    }
+    class GenreGroup : UriGroup<GenreOption>("Genres", listOf(
+            GenreOption("Dōjinshi", "doujinshi"),
+            GenreOption("Manga", "manga"),
+            GenreOption("Artist CG", "artistcg"),
+            GenreOption("Game CG", "gamecg"),
+            GenreOption("Western", "western"),
+            GenreOption("Non-H", "non-h"),
+            GenreOption("Image Set", "imageset"),
+            GenreOption("Cosplay", "cosplay"),
+            GenreOption("Asian Porn", "asianporn"),
+            GenreOption("Misc", "misc")
+    ))
+
+    class AdvancedOption(name: String, val param: String, defValue: Boolean = false): Filter.CheckBox(name, defValue), UriFilter {
+        override fun addToUri(builder: Uri.Builder) {
+            if(state)
+                builder.appendQueryParameter(param, "on")
+        }
+    }
+    class RatingOption : Filter.Select<String>("Minimum Rating", arrayOf(
+            "Any",
+            "2 stars",
+            "3 stars",
+            "4 stars",
+            "5 stars"
+    )), UriFilter {
+        override fun addToUri(builder: Uri.Builder) {
+            if(state > 0) builder.appendQueryParameter("f_srdd", Integer.toString(state + 1))
+        }
+    }
+
+    //Explicit type arg for listOf() to workaround this: KT-16570
+    class AdvancedGroup : UriGroup<Filter<*>>("Advanced Options", listOf<Filter<*>>(
+            AdvancedOption("Search Gallery Name", "f_sname", true),
+            AdvancedOption("Search Gallery Tags", "f_stags", true),
+            AdvancedOption("Search Gallery Description", "f_sdesc"),
+            AdvancedOption("Search Torrent Filenames", "f_storr"),
+            AdvancedOption("Only Show Galleries With Torrents", "f_sto"),
+            AdvancedOption("Search Low-Power Tags", "f_sdt1"),
+            AdvancedOption("Search Downvoted Tags", "f_sdt2"),
+            AdvancedOption("Show Expunged Galleries", "f_sh"),
+            RatingOption()
+    ))
+
+    open class UriGroup<V>(name: String, state: List<V>) : Filter.Group<V>(name, state), UriFilter {
+        override fun addToUri(builder: Uri.Builder) {
+            state.forEach {
+                if(it is UriFilter) it.addToUri(builder)
+            }
+        }
+    }
 
     override val name = if(exh)
         "ExHentai"
@@ -376,7 +401,6 @@ class EHentai(override val id: Int,
 
     companion object {
         val QUERY_PREFIX = "?f_apply=Apply+Filter"
-        val GENRE_LIST = arrayOf("doujinshi", "manga", "artistcg", "gamecg", "western", "non-h", "imageset", "cosplay", "asianporn", "misc")
         val TR_SUFFIX = "TR"
     }
 }

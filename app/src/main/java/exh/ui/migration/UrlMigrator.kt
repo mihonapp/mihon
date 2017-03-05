@@ -4,6 +4,8 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import exh.isExSource
+import exh.isLewdSource
 import exh.metadata.MetadataHelper
 import uy.kohesive.injekt.injectLazy
 
@@ -21,8 +23,7 @@ class UrlMigrator {
 
             //Find all EX mangas
             val qualifyingMangas = dbMangas.asSequence().filter {
-                it.source > 0
-                        && it.source <= 4
+                isLewdSource(it.source)
             }
 
             val possibleDups = mutableListOf<Manga>()
@@ -42,8 +43,7 @@ class UrlMigrator {
                 //Build fixed URL
                 val urlWithSlash = "/" + it.url
                 //Fix metadata if required
-                val metadata = metadataHelper.fetchMetadata(it.url, it.source == 2
-                        || it.source == 4)
+                val metadata = metadataHelper.fetchMetadata(it.url, isExSource(it.source))
                 metadata?.url?.let {
                     if(it.startsWith("g/")) { //Check if metadata URL has no slash
                         metadata.url = urlWithSlash //Fix it

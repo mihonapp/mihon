@@ -1,9 +1,8 @@
 package exh.metadata
 
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.util.UrlUtil
+import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.Tag
 import exh.plusAssign
@@ -28,16 +27,18 @@ val EX_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
 
 private val prefs: PreferencesHelper by injectLazy()
 
-fun ExGalleryMetadata.copyTo(manga: Manga) {
-    exh?.let {
+fun ExGalleryMetadata.copyTo(manga: SManga) {
+    //TODO Find some way to do this with SManga
+    /*exh?.let {
         manga.source = if(it)
             2
         else
             1
-    }
+    }*/
     url?.let { manga.url = it }
     thumbnailUrl?.let { manga.thumbnail_url = it }
 
+    //No title bug?
     val titleObj = if(prefs.useJapaneseTitle().getOrDefault())
         altTitle ?: title
     else
@@ -57,12 +58,12 @@ fun ExGalleryMetadata.copyTo(manga: Manga) {
 
     //Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
     //We default to completed
-    manga.status = Manga.COMPLETED
+    manga.status = SManga.COMPLETED
     title?.let { t ->
         ONGOING_SUFFIX.find {
             t.endsWith(it, ignoreCase = true)
         }?.let {
-            manga.status = Manga.ONGOING
+            manga.status = SManga.ONGOING
         }
     }
 

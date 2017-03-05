@@ -56,6 +56,9 @@ class MigrationCompletionActivity : BaseActivity() {
                     //Migrate urls
                     UrlMigrator().perform()
 
+                    //Migrate source IDs
+                    SourceMigrator().perform()
+
                     //Go back to MainActivity
                     //Set final steps
                     preferenceManager.migrationStatus().set(MigrationStatus.FINALIZE_MIGRATION)

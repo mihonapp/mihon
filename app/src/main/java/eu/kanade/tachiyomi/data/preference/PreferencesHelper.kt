@@ -170,6 +170,8 @@ class PreferencesHelper(val context: Context) {
 
     fun hasPerformedURLMigration() = rxPrefs.getBoolean("performed_url_migration", false)
 
+    fun hasPerformedSourceMigration() = rxPrefs.getBoolean("performed_source_migration", false)
+
     //EH Cookies
     fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
     fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)
