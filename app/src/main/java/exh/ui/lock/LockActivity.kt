@@ -5,7 +5,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.andrognito.pinlockview.PinLockListener
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.nullGetOrDefault
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_lock.*
 import uy.kohesive.injekt.injectLazy
@@ -29,12 +29,12 @@ class LockActivity : BaseActivity() {
 
         pin_lock_view.attachIndicatorDots(indicator_dots)
 
-        pin_lock_view.pinLength = prefs.lockLength().nullGetOrDefault()!!
+        pin_lock_view.pinLength = prefs.lockLength().getOrDefault()
         pin_lock_view.setPinLockListener(object : PinLockListener {
             override fun onEmpty() {}
 
             override fun onComplete(pin: String) {
-                if(sha512(pin, prefs.lockSalt().nullGetOrDefault()!!) == prefs.lockHash().nullGetOrDefault()) {
+                if(sha512(pin, prefs.lockSalt().get()!!) == prefs.lockHash().get()) {
                     //Yay!
                     finish()
                 } else {

@@ -14,8 +14,6 @@ import java.io.File
 
 fun <T> Preference<T>.getOrDefault(): T = get() ?: defaultValue()!!
 
-fun <T> Preference<T>.nullGetOrDefault(): T? = get() ?: defaultValue()
-
 fun Preference<Boolean>.invert(): Boolean = getOrDefault().let { set(!it); !it }
 
 class PreferencesHelper(val context: Context) {

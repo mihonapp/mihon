@@ -11,7 +11,7 @@ import android.provider.Settings
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.nullGetOrDefault
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.security.MessageDigest
@@ -40,9 +40,9 @@ fun sha512(passwordToHash: String, salt: String): String {
  * Check if lock is enabled
  */
 fun lockEnabled(prefs: PreferencesHelper = Injekt.get())
-    = prefs.lockHash().nullGetOrDefault() != null
-            && prefs.lockSalt().nullGetOrDefault() != null
-            && prefs.lockLength().nullGetOrDefault() != -1
+    = prefs.lockHash().get() != null
+            && prefs.lockSalt().get() != null
+            && prefs.lockLength().getOrDefault() != -1
 
 /**
  * Lock the screen
