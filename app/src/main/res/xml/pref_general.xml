@@ -63,6 +63,11 @@
             android:key="@string/pref_update_only_non_completed_key"
             android:title="@string/pref_update_only_non_completed" />
 
+        <exh.ui.lock.LockPreference
+            android:title="Application lock"
+            android:key="pref_app_lock"
+            android:persistent="false"/>
+
     </PreferenceScreen>
 
 </PreferenceScreen>

@@ -13,6 +13,9 @@
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".App"
@@ -157,6 +160,9 @@
                 <data android:mimeType="application/json"/>
             </intent-filter>
         </activity>
+
+        <activity android:name="exh.ui.lock.LockActivity"
+            android:label="Application locked"/>
 
     </application>
 

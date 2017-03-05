@@ -19,6 +19,9 @@ import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
 import exh.ui.batchadd.BatchAddFragment
+import exh.ui.lock.lockEnabled
+import exh.ui.lock.notifyLockSecurity
+import exh.ui.lock.showLockActivity
 import exh.ui.migration.LibraryMigrationManager
 import exh.ui.migration.SourceMigrator
 import exh.ui.migration.UrlMigrator
@@ -90,9 +93,12 @@ class MainActivity : BaseActivity() {
         }
 
         if (savedState == null) {
+            //Show lock
+            if(lockEnabled(preferences)) {
+                showLockActivity(this)
+            }
             //Perform source migration
             SourceMigrator().tryMigrationWithDialog(this, {
-
                 // Set start screen
                 try {
                     setSelectedDrawerItem(startScreenId)
@@ -114,6 +120,9 @@ class MainActivity : BaseActivity() {
 
                 //Migrate URLs if necessary
                 UrlMigrator().tryMigration()
+
+                //Check lock security
+                notifyLockSecurity(this)
             })
         }
     }

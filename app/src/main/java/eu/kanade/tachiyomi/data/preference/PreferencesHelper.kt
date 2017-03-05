@@ -14,6 +14,8 @@ import java.io.File
 
 fun <T> Preference<T>.getOrDefault(): T = get() ?: defaultValue()!!
 
+fun <T> Preference<T>.nullGetOrDefault(): T? = get() ?: defaultValue()
+
 fun Preference<Boolean>.invert(): Boolean = getOrDefault().let { set(!it); !it }
 
 class PreferencesHelper(val context: Context) {
@@ -176,4 +178,11 @@ class PreferencesHelper(val context: Context) {
     fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
     fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)
     fun igneousVal() = rxPrefs.getString("eh_igneous", null)
+
+    //Lock
+    fun lockHash() = rxPrefs.getString("lock_hash", null)
+
+    fun lockSalt() = rxPrefs.getString("lock_salt", null)
+
+    fun lockLength() = rxPrefs.getInteger("lock_length", -1)
 }

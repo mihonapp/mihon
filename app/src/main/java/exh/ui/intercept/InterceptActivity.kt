@@ -43,7 +43,7 @@ class InterceptActivity : BaseActivity() {
                             .canceledOnTouchOutside(true)
                             .cancelListener { onBackPressed() }
                             .positiveText("Ok")
-                            .onPositive { materialDialog, dialogAction -> onBackPressed() }
+                            .onPositive { _, _ -> onBackPressed() }
                             .dismissListener { onBackPressed() }
                             .show()
                 }
