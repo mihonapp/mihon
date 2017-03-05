@@ -57,6 +57,7 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
                                     updateSummary()
                                 }
                     })
+                    .negativeText("Cancel")
                     .autoDismiss(true)
                     .cancelable(true)
                     .canceledOnTouchOutside(true)
