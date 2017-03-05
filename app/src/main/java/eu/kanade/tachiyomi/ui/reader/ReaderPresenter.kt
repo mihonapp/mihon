@@ -13,13 +13,12 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
 import eu.kanade.tachiyomi.data.track.TrackManager
-import eu.kanade.tachiyomi.data.track.TrackUpdateService
+import eu.kanade.tachiyomi.source.LocalSource
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.ui.reader.notification.ImageNotifier
 import eu.kanade.tachiyomi.util.DiskUtil
 import eu.kanade.tachiyomi.util.RetryWithDelay
 import eu.kanade.tachiyomi.util.SharedData
@@ -141,6 +140,11 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      */
     private var adjacentChaptersSubscription: Subscription? = null
 
+    /**
+     * Whether the active chapter has been loaded.
+     */
+    private var chapterLoaded = false
+
     companion object {
         /**
          * Id of the restartable that loads the active chapter.
@@ -211,6 +215,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         return loader.loadChapter(chapter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { chapterLoaded = true }
     }
 
     /**
@@ -298,6 +303,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         nextChapter = null
         prevChapter = null
 
+        chapterLoaded = false
         start(LOAD_ACTIVE_CHAPTER)
         getAdjacentChapters(chapter)
     }
@@ -342,7 +348,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * @param page the page that failed.
      */
     fun retryPage(page: Page?) {
-        if (page != null && source is OnlineSource) {
+        if (page != null && source is HttpSource) {
             page.status = Page.QUEUE
             val uri = page.uri
             if (uri != null && !page.chapter.isDownloaded) {
@@ -365,7 +371,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         Observable.fromCallable {
             // Cache current page list progress for online chapters to allow a faster reopen
             if (!chapter.isDownloaded) {
-                source.let { if (it is OnlineSource) it.savePageList(chapter, pages) }
+                source.let {
+                    if (it is HttpSource) chapterCache.putPageListToCache(chapter, pages)
+                }
             }
 
             try {
@@ -444,26 +452,30 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
         else if (prevChapter != null && prevChapter.read)
             Math.floor(prevChapter.chapter_number.toDouble()).toInt()
         else
+            return 0
+
+        return if (trackList.any { lastChapterRead > it.last_chapter_read })
+            lastChapterRead
+        else
             0
-
-        trackList.forEach { sync ->
-            if (lastChapterRead > sync.last_chapter_read) {
-                sync.last_chapter_read = lastChapterRead
-                sync.update = true
-            }
-        }
-
-        return if (trackList.any { it.update }) lastChapterRead else 0
     }
 
     /**
      * Starts the service that updates the last chapter read in sync services
      */
-    fun updateTrackLastChapterRead() {
-        trackList?.forEach { sync ->
-            val service = trackManager.getService(sync.sync_id)
-            if (service != null && service.isLogged && sync.update) {
-                TrackUpdateService.start(context, sync)
+    fun updateTrackLastChapterRead(lastChapterRead: Int) {
+        trackList?.forEach { track ->
+            val service = trackManager.getService(track.sync_id)
+            if (service != null && service.isLogged && lastChapterRead > track.last_chapter_read) {
+                track.last_chapter_read = lastChapterRead
+
+                // We wan't these to execute even if the presenter is destroyed and leaks for a
+                // while. The view can still be garbage collected.
+                Observable.defer { service.update(track) }
+                        .map { db.insertTrack(track).executeAsBlocking() }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({}, { Timber.e(it) })
             }
         }
     }
@@ -474,6 +486,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * @return true if the next chapter is being loaded, false if there is no next chapter.
      */
     fun loadNextChapter(): Boolean {
+        // Avoid skipping chapters.
+        if (!chapterLoaded) return true
+
         nextChapter?.let {
             onChapterLeft()
             loadChapter(it, 0)
@@ -488,6 +503,9 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      * @return true if the previous chapter is being loaded, false if there is no previous chapter.
      */
     fun loadPreviousChapter(): Boolean {
+        // Avoid skipping chapters.
+        if (!chapterLoaded) return true
+
         prevChapter?.let {
             onChapterLeft()
             loadChapter(it, if (it.read) -1 else 0)
@@ -525,6 +543,13 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
      */
     internal fun setImageAsCover(page: Page) {
         try {
+            if (manga.source == LocalSource.ID) {
+                val input = context.contentResolver.openInputStream(page.uri)
+                LocalSource.updateCover(context, manga, input)
+                context.toast(R.string.cover_updated)
+                return
+            }
+
             val thumbUrl = manga.thumbnail_url ?: throw Exception("Image url not found")
             if (manga.favorite) {
                 val input = context.contentResolver.openInputStream(page.uri)
@@ -547,7 +572,7 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             return
 
         // Used to show image notification.
-        val imageNotifier = ImageNotifier(context)
+        val imageNotifier = SaveImageNotifier(context)
 
         // Remove the notification if it already exists (user feedback).
         imageNotifier.onClear()

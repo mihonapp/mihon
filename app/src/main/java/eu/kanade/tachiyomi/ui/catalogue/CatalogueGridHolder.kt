@@ -3,7 +3,9 @@ package eu.kanade.tachiyomi.ui.catalogue
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.widget.StateImageViewTarget
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
 
 /**
@@ -12,11 +14,10 @@ import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
  *
  * @param view the inflated view for this holder.
  * @param adapter the adapter handling this holder.
- * @param listener a listener to react to single tap and long tap events.
  * @constructor creates a new catalogue holder.
  */
-class CatalogueGridHolder(private val view: View, private val adapter: CatalogueAdapter, listener: OnListItemClickListener) :
-        CatalogueHolder(view, adapter, listener) {
+class CatalogueGridHolder(private val view: View, private val adapter: FlexibleAdapter<*>) :
+        CatalogueHolder(view, adapter) {
 
     /**
      * Method called from [CatalogueAdapter.onBindViewHolder]. It updates the data for this
@@ -34,13 +35,7 @@ class CatalogueGridHolder(private val view: View, private val adapter: Catalogue
         setImage(manga)
     }
 
-    /**
-     * Updates the image for this holder. Useful to update the image when the manga is initialized
-     * and the url is now known.
-     *
-     * @param manga the manga to bind.
-     */
-    fun setImage(manga: Manga) {
+    override fun setImage(manga: Manga) {
         Glide.clear(view.thumbnail)
         if (!manga.thumbnail_url.isNullOrEmpty()) {
             Glide.with(view.context)
@@ -49,7 +44,7 @@ class CatalogueGridHolder(private val view: View, private val adapter: Catalogue
                     .centerCrop()
                     .skipMemoryCache(true)
                     .placeholder(android.R.color.transparent)
-                    .into(view.thumbnail)
+                    .into(StateImageViewTarget(view.thumbnail, view.progress))
 
         }
     }

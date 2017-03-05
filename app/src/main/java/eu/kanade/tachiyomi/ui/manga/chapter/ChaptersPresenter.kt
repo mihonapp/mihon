@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.os.Bundle
+import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -8,17 +9,19 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.source.Source
-import eu.kanade.tachiyomi.data.source.SourceManager
+import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.ui.manga.info.ChapterCountEvent
+import eu.kanade.tachiyomi.ui.manga.info.MangaFavoriteEvent
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import rx.Observable
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import rx.subjects.PublishSubject
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
@@ -68,7 +71,8 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     /**
      * Subject of list of chapters to allow updating the view without going to DB.
      */
-    val chaptersSubject by lazy { PublishSubject.create<List<ChapterModel>>() }
+    val chaptersRelay: PublishRelay<List<ChapterModel>>
+            by lazy { PublishRelay.create<List<ChapterModel>>() }
 
     /**
      * Whether the chapter list has been requested to the source.
@@ -76,56 +80,33 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     var hasRequested = false
         private set
 
-    companion object {
-        /**
-         * Id of the restartable which sends a filtered and ordered list of chapters to the view.
-         */
-        private const val GET_CHAPTERS = 1
+    /**
+     * Subscription to retrieve the new list of chapters from the source.
+     */
+    private var fetchChaptersSubscription: Subscription? = null
 
-        /**
-         * Id of the restartable which requests an updated list of chapters to the source.
-         */
-        private const val FETCH_CHAPTERS = 2
-
-        /**
-         * Id of the restartable which listens for download status changes.
-         */
-        private const val CHAPTER_STATUS_CHANGES = 3
-    }
+    /**
+     * Subscription to observe download status changes.
+     */
+    private var observeDownloadsSubscription: Subscription? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        startableLatestCache(GET_CHAPTERS,
-                // On each subject emission, apply filters and sort then update the view.
-                { chaptersSubject
-                        .flatMap { applyChapterFilters(it) }
-                        .observeOn(AndroidSchedulers.mainThread()) },
-                { view, chapters -> view.onNextChapters(chapters) })
-
-        startableFirst(FETCH_CHAPTERS,
-                { getRemoteChaptersObservable() },
-                { view, result -> view.onFetchChaptersDone() },
-                { view, error -> view.onFetchChaptersError(error) })
-
-        startableLatestCache(CHAPTER_STATUS_CHANGES,
-                { getChapterStatusObservable() },
-                { view, download -> view.onChapterStatusChange(download) },
-                { view, error -> Timber.e(error) })
-
         // Find the active manga from the shared data or return.
         manga = SharedData.get(MangaEvent::class.java)?.manga ?: return
-        Observable.just(manga)
-                .subscribeLatestCache({ view, manga -> view.onNextManga(manga) })
-
-        // Find the source for this manga.
         source = sourceManager.get(manga.source)!!
+        Observable.just(manga)
+                .subscribeLatestCache(ChaptersFragment::onNextManga)
 
-        // Prepare the publish subject.
-        start(GET_CHAPTERS)
+        // Prepare the relay.
+        chaptersRelay.flatMap { applyChapterFilters(it) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeLatestCache(ChaptersFragment::onNextChapters,
+                        { view, error -> Timber.e(error) })
 
         // Add the subscription that retrieves the chapters from the database, keeps subscribed to
-        // changes, and sends the list of chapters to the publish subject.
+        // changes, and sends the list of chapters to the relay.
         add(db.getChapters(manga).asRxObservable()
                 .map { chapters ->
                     // Convert every chapter to a model.
@@ -139,12 +120,22 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                     this.chapters = chapters
 
                     // Listen for download status changes
-                    start(CHAPTER_STATUS_CHANGES)
+                    observeDownloads()
 
                     // Emit the number of chapters to the info tab.
                     SharedData.get(ChapterCountEvent::class.java)?.emit(chapters.size)
                 }
-                .subscribe { chaptersSubject.onNext(it) })
+                .subscribe { chaptersRelay.call(it) })
+    }
+
+    private fun observeDownloads() {
+        observeDownloadsSubscription?.let { remove(it) }
+        observeDownloadsSubscription = downloadManager.queue.getStatusObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter { download -> download.manga.id == manga.id }
+                .doOnNext { onDownloadStatusChange(it) }
+                .subscribeLatestCache(ChaptersFragment::onChapterStatusChange,
+                        { view, error -> Timber.e(error) })
     }
 
     /**
@@ -184,31 +175,23 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      */
     fun fetchChaptersFromSource() {
         hasRequested = true
-        start(FETCH_CHAPTERS)
+
+        if (!fetchChaptersSubscription.isNullOrUnsubscribed()) return
+        fetchChaptersSubscription = Observable.defer { source.fetchChapterList(manga) }
+                .subscribeOn(Schedulers.io())
+                .map { syncChaptersWithSource(db, it, manga, source) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeFirst({ view, chapters ->
+                    view.onFetchChaptersDone()
+                }, ChaptersFragment::onFetchChaptersError)
     }
 
     /**
      * Updates the UI after applying the filters.
      */
     private fun refreshChapters() {
-        chaptersSubject.onNext(chapters)
+        chaptersRelay.call(chapters)
     }
-
-    /**
-     * Returns an observable that updates the chapter list with the latest from the source.
-     */
-    fun getRemoteChaptersObservable() = source.fetchChapterList(manga)
-            .subscribeOn(Schedulers.io())
-            .map { syncChaptersWithSource(db, it, manga, source) }
-            .observeOn(AndroidSchedulers.mainThread())
-
-    /**
-     * Returns an observable that listens to download queue status changes.
-     */
-    fun getChapterStatusObservable() = downloadManager.queue.getStatusObservable()
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter { download -> download.manga.id == manga.id }
-            .doOnNext { onDownloadStatusChange(it) }
 
     /**
      * Applies the view filters to the list of chapters obtained from the database.
@@ -220,7 +203,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         if (onlyUnread()) {
             observable = observable.filter { !it.read }
         }
-        if (onlyRead()) {
+        else if (onlyRead()) {
             observable = observable.filter { it.read }
         }
         if (onlyDownloaded()) {
@@ -231,11 +214,11 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         }
         val sortFunction: (Chapter, Chapter) -> Int = when (manga.sorting) {
             Manga.SORTING_SOURCE -> when (sortDescending()) {
-                true  -> { c1, c2 -> c1.source_order.compareTo(c2.source_order) }
+                true -> { c1, c2 -> c1.source_order.compareTo(c2.source_order) }
                 false -> { c1, c2 -> c2.source_order.compareTo(c1.source_order) }
             }
             Manga.SORTING_NUMBER -> when (sortDescending()) {
-                true  -> { c1, c2 -> c2.chapter_number.compareTo(c1.chapter_number) }
+                true -> { c1, c2 -> c2.chapter_number.compareTo(c1.chapter_number) }
                 false -> { c1, c2 -> c1.chapter_number.compareTo(c2.chapter_number) }
             }
             else -> throw NotImplementedError("Unimplemented sorting method")
@@ -325,9 +308,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeFirst({ view, result ->
                     view.onChaptersDeleted()
-                }, { view, error ->
-                    view.onChaptersDeletedError(error)
-                })
+                }, ChaptersFragment::onChaptersDeletedError)
     }
 
     /**
@@ -399,6 +380,13 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         manga.bookmarkedFilter = Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
+    }
+
+    /**
+     * Adds manga to library
+     */
+    fun addToLibrary() {
+        SharedData.get(MangaFavoriteEvent::class.java)?.call(true)
     }
 
     /**

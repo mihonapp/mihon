@@ -4,13 +4,14 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
-import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter4.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -20,6 +21,7 @@ import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.getCoordinates
+import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DeletingChaptersDialog
 import kotlinx.android.synthetic.main.fragment_manga_chapters.*
@@ -118,7 +120,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         // Initialize menu items.
-        val menuFilterRead = menu.findItem(R.id.action_filter_read)
+        val menuFilterRead = menu.findItem(R.id.action_filter_read) ?: return
         val menuFilterUnread = menu.findItem(R.id.action_filter_unread)
         val menuFilterDownloaded = menu.findItem(R.id.action_filter_downloaded)
         val menuFilterBookmarked = menu.findItem(R.id.action_filter_bookmarked)
@@ -370,6 +372,13 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
     fun downloadChapters(chapters: List<ChapterModel>) {
         destroyActionModeIfNeeded()
         presenter.downloadChapters(chapters)
+        if (!presenter.manga.favorite){
+            recycler.snack(getString(R.string.snack_add_to_library), Snackbar.LENGTH_INDEFINITE) {
+                setAction(R.string.action_add) {
+                    presenter.addToLibrary()
+                }
+            }
+        }
     }
 
     fun bookmarkChapters(chapters: List<ChapterModel>, bookmarked: Boolean) {

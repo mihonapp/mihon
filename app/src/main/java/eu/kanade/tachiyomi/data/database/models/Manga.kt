@@ -1,34 +1,16 @@
 package eu.kanade.tachiyomi.data.database.models
 
-import java.io.Serializable
+import eu.kanade.tachiyomi.source.model.SManga
 
-interface Manga : Serializable {
+interface Manga : SManga {
 
     var id: Long?
 
-    var source: Int
-
-    var url: String
-
-    var title: String
-
-    var artist: String?
-
-    var author: String?
-
-    var description: String?
-
-    var genre: String?
-
-    var status: Int
-
-    var thumbnail_url: String?
+    var source: Long
 
     var favorite: Boolean
 
     var last_update: Long
-
-    var initialized: Boolean
 
     var viewer: Int
 
@@ -37,27 +19,6 @@ interface Manga : Serializable {
     var unread: Int
 
     var category: Int
-
-    fun copyFrom(other: Manga) {
-        if (other.author != null)
-            author = other.author
-
-        if (other.artist != null)
-            artist = other.artist
-
-        if (other.description != null)
-            description = other.description
-
-        if (other.genre != null)
-            genre = other.genre
-
-        if (other.thumbnail_url != null)
-            thumbnail_url = other.thumbnail_url
-
-        status = other.status
-
-        initialized = true
-    }
 
     fun setChapterOrder(order: Int) {
         setFlags(order, SORT_MASK)
@@ -94,11 +55,6 @@ interface Manga : Serializable {
 
     companion object {
 
-        const val UNKNOWN = 0
-        const val ONGOING = 1
-        const val COMPLETED = 2
-        const val LICENSED = 3
-
         const val SORT_DESC = 0x00000000
         const val SORT_ASC = 0x00000001
         const val SORT_MASK = 0x00000001
@@ -126,12 +82,13 @@ interface Manga : Serializable {
         const val DISPLAY_NUMBER = 0x00100000
         const val DISPLAY_MASK = 0x00100000
 
-        fun create(source: Int): Manga = MangaImpl().apply {
+        fun create(source: Long): Manga = MangaImpl().apply {
             this.source = source
         }
 
-        fun create(pathUrl: String, source: Int = 0): Manga = MangaImpl().apply {
+        fun create(pathUrl: String, title: String, source: Long = 0): Manga = MangaImpl().apply {
             url = pathUrl
+            this.title = title
             this.source = source
         }
     }

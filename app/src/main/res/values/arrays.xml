@@ -189,11 +189,15 @@
     </string-array>
 
     <string-array name="languages_values">
-        <item></item>
+        <item/> <!-- system language -->
+        <item>bg</item>
         <item>en</item>
         <item>es</item>
+        <item>fr</item>
         <item>it</item>
         <item>pt</item>
+        <item>ru</item>
+        <item>vi</item>
     </string-array>
 
     <!-- EH -->
@@ -239,5 +243,4 @@
         <item>tr_10</item>
         <item>tr_20</item>
     </string-array>
-
 </resources>

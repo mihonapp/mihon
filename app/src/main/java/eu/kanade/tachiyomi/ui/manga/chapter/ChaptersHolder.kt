@@ -19,9 +19,9 @@ class ChaptersHolder(
         listener: FlexibleViewHolder.OnListItemClickListener)
 : FlexibleViewHolder(view, adapter, listener) {
 
-    private val readColor = view.context.theme.getResourceColor(android.R.attr.textColorHint)
-    private val unreadColor = view.context.theme.getResourceColor(android.R.attr.textColorPrimary)
-    private val bookmarkedColor = view.context.theme.getResourceColor(R.attr.colorAccent)
+    private val readColor = view.context.getResourceColor(android.R.attr.textColorHint)
+    private val unreadColor = view.context.getResourceColor(android.R.attr.textColorPrimary)
+    private val bookmarkedColor = view.context.getResourceColor(R.attr.colorAccent)
     private val decimalFormat = DecimalFormat("#.###", DecimalFormatSymbols().apply { decimalSeparator = '.' })
     private val df = DateFormat.getDateInstance(DateFormat.SHORT)
 

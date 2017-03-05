@@ -8,7 +8,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.PageDecodeErrorLayout
 import eu.kanade.tachiyomi.util.inflate
@@ -54,7 +54,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
 
     init {
         with(view.image_view) {
-            setMaxBitmapDimensions(readerActivity.maxBitmapSize)
+            setMaxTileSize(readerActivity.maxBitmapSize)
             setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED)
             setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
             setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH)

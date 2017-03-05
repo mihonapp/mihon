@@ -1,16 +1,13 @@
 package eu.kanade.tachiyomi.data.database.models
 
+import eu.kanade.tachiyomi.source.model.SChapter
 import java.io.Serializable
 
-interface Chapter : Serializable {
+interface Chapter : SChapter, Serializable {
 
     var id: Long?
 
     var manga_id: Long?
-
-    var url: String
-
-    var name: String
 
     var read: Boolean
 
@@ -19,10 +16,6 @@ interface Chapter : Serializable {
     var last_page_read: Int
 
     var date_fetch: Long
-
-    var date_upload: Long
-
-    var chapter_number: Float
 
     var source_order: Int
 

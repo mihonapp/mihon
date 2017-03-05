@@ -25,7 +25,7 @@ class SwitchPreferenceCategory @JvmOverloads constructor(
 CompoundButton.OnCheckedChangeListener {
 
     init {
-        setTitleTextColor(context.theme.getResourceColor(R.attr.colorAccent))
+        setTitleTextColor(context.getResourceColor(R.attr.colorAccent))
     }
 
     private var mChecked = false

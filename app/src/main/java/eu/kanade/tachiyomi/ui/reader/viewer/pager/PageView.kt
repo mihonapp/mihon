@@ -10,7 +10,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.PageDecodeErrorLayout
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
@@ -61,7 +61,7 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
 
         with(image_view) {
-            setMaxBitmapDimensions((reader.activity as ReaderActivity).maxBitmapSize)
+            setMaxTileSize((reader.activity as ReaderActivity).maxBitmapSize)
             setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED)
             setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
             setMinimumScaleType(reader.scaleType)
@@ -70,6 +70,7 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             setRegionDecoderClass(reader.regionDecoderClass)
             setBitmapDecoderClass(reader.bitmapDecoderClass)
             setVerticalScrollingParent(reader is VerticalReader)
+            setCropBorders(reader.cropBorders)
             setOnTouchListener { v, motionEvent -> reader.gestureDetector.onTouchEvent(motionEvent) }
             setOnLongClickListener { reader.onLongClick(page) }
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {

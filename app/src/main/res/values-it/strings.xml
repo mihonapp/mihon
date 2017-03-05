@@ -115,7 +115,7 @@
     <!-- Reader section -->
     <string name="pref_fullscreen">Schermo intero</string>
     <string name="pref_lock_orientation">Blocca orientamento</string>
-    <string name="pref_enable_transitions">Abilita transizioni</string>
+    <string name="pref_page_transitions">Abilita transizioni</string>
     <string name="pref_show_page_number">Mostra numero di pagina</string>
     <string name="pref_custom_brightness">Usa luminosità personalizzata</string>
     <string name="pref_custom_color_filter">Usa filtro colore personalizzato</string>
@@ -202,7 +202,7 @@
     <string name="login_title">Credenziali per %1$s</string>
     <string name="username">Nome utente</string>
     <string name="password">Password</string>
-    <string name="show_password">Mastra password</string>
+    <string name="show_password">Mostra password</string>
     <string name="login">Accedi</string>
     <string name="login_success">Accesso riuscito</string>
     <string name="invalid_login">Credenziali non valide</string>
@@ -283,8 +283,8 @@
     <string name="error_category_exists">Esiste già una categoria con questo nome</string>
 
     <!-- Dialog remove recently view -->
-    <string name="dialog_remove_recently_description">Questo rimuoverà la data lettura di questo capitolo. Sei sicuro?</string>
-    <string name="dialog_remove_recently_reset">Rimuovi per tutti i capitoli di questo manga</string>
+    <string name="dialog_with_checkbox_remove_description">Questo rimuoverà la data lettura di questo capitolo. Sei sicuro?</string>
+    <string name="dialog_with_checkbox_reset">Rimuovi per tutti i capitoli di questo manga</string>
 
     <!-- Image notifier -->
     <string name="picture_saved">Immagine salvata</string>

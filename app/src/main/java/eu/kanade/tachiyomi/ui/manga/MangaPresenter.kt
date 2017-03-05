@@ -6,7 +6,9 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.info.ChapterCountEvent
+import eu.kanade.tachiyomi.ui.manga.info.MangaFavoriteEvent
 import eu.kanade.tachiyomi.util.SharedData
+import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import rx.Observable
 import rx.Subscription
 import uy.kohesive.injekt.injectLazy
@@ -38,13 +40,15 @@ class MangaPresenter : BasePresenter<MangaActivity>() {
 
         // Prepare a subject to communicate the chapters and info presenters for the chapter count.
         SharedData.put(ChapterCountEvent())
+        // Prepare a subject to communicate the chapters and info presenters for the chapter favorite.
+        SharedData.put(MangaFavoriteEvent())
     }
 
     fun setMangaEvent(event: MangaEvent) {
-        if (isUnsubscribed(mangaSubscription)) {
+        if (mangaSubscription.isNullOrUnsubscribed()) {
             manga = event.manga
             mangaSubscription = Observable.just(manga)
-                    .subscribeLatestCache({ view, manga -> view.onSetManga(manga) })
+                    .subscribeLatestCache(MangaActivity::onSetManga)
         }
     }
 

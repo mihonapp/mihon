@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TachiyomiEH</string>
+    <string name="app_name" translatable="false">TachiyomiEH</string>
 
     <string name="name">Name</string>
 
@@ -38,6 +38,7 @@
     <string name="action_update">Update</string>
     <string name="action_update_library">Update library</string>
     <string name="action_edit">Edit</string>
+    <string name="action_add">Add</string>
     <string name="action_add_category">Add category</string>
     <string name="action_edit_categories">Edit categories</string>
     <string name="action_rename_category">Rename category</string>
@@ -69,6 +70,8 @@
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_undo">Undo</string>
 
     <!-- Operations -->
     <string name="deleting">Deleting…</string>
@@ -117,8 +120,9 @@
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
     <string name="pref_lock_orientation">Lock orientation</string>
-    <string name="pref_enable_transitions">Enable transitions</string>
+    <string name="pref_page_transitions">Page transitions</string>
     <string name="pref_show_page_number">Show page number</string>
+    <string name="pref_crop_borders">Crop borders</string>
     <string name="pref_custom_brightness">Use custom brightness</string>
     <string name="pref_custom_color_filter">Use custom color filter</string>
     <string name="pref_keep_screen_on">Keep screen on</string>
@@ -183,6 +187,7 @@
     <string name="cache_delete_error">An error occurred while clearing cache</string>
     <string name="pref_clear_cookies">Clear cookies</string>
     <string name="cookies_cleared">Cookies cleared</string>
+    <string name="choices_reset">Dialog choices reset</string>
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete manga and chapters that are not in your library</string>
     <string name="clear_database_confirmation">Are you sure? Read chapters and progress of non-library manga will be lost</string>
@@ -214,11 +219,14 @@
     <string name="library_search_hint">Title or author…</string>
     <string name="updating_category">Updating category</string>
     <string name="confirm_delete_manga">Are you sure you want to remove selected manga?</string>
+    <string name="also_delete_chapters">Also delete downloaded chapters</string>
 
     <!-- Catalogue fragment -->
     <string name="source_requires_login">This source requires you to log in</string>
     <string name="select_source">Select a source</string>
     <string name="no_valid_sources">Please enable at least one valid source</string>
+    <string name="no_more_results">No more results</string>
+    <string name="local_source">Local manga</string>
 
     <!-- Manga activity -->
     <string name="manga_not_in_db">This manga was removed from the database!</string>
@@ -245,6 +253,7 @@
     <string name="shortcut_title">Shortcut title</string>
     <string name="icon_shape">Icon shape</string>
     <string name="icon_creation_fail">Failed to create shortcut!</string>
+    <string name="delete_downloads_for_manga">Delete downloaded chapters?</string>
 
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Chapters</string>
@@ -255,6 +264,7 @@
     <string name="chapter_downloading">Downloading</string>
     <string name="chapter_downloading_progress">Downloading (%1$d/%2$d)</string>
     <string name="chapter_error">Error</string>
+    <string name="chapter_paused">Paused</string>
     <string name="fetch_chapters_error">Error while fetching chapters</string>
     <string name="show_title">Show title</string>
     <string name="show_chapter_number">Show chapter number</string>
@@ -283,10 +293,14 @@
 
     <!-- Category activity -->
     <string name="error_category_exists">A category with this name already exists!</string>
+    <string name="snack_categories_deleted">Categories deleted</string>
 
-    <!-- Dialog remove recently view -->
-    <string name="dialog_remove_recently_description">This will remove the read date of this chapter. Are you sure?</string>
-    <string name="dialog_remove_recently_reset">Reset all chapters for this manga</string>
+    <!-- Dialog option with checkbox view -->
+    <string name="dialog_with_checkbox_remove_description">This will remove the read date of this chapter. Are you sure?</string>
+    <string name="dialog_with_checkbox_reset">Reset all chapters for this manga</string>
+
+    <!-- SnackBar -->
+    <string name="snack_add_to_library">Add manga to library?</string>
 
     <!-- Image notifier -->
     <string name="picture_saved">Picture saved</string>
@@ -374,6 +388,7 @@
     <string name="download_notifier_page_ready_error">A page is not loaded</string>
     <string name="download_notifier_text_only_wifi">No wifi connection available</string>
     <string name="download_notifier_no_network">No network connection available</string>
+    <string name="download_notifier_download_paused">Download paused</string>
 
     <!-- EH -->
     <string name="label_login">Login</string>

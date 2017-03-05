@@ -3,20 +3,21 @@ package eu.kanade.tachiyomi.data.glide
 import android.content.Context
 import android.util.LruCache
 import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.*
 import com.bumptech.glide.load.model.stream.StreamModelLoader
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.HttpSource
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.InputStream
 
 /**
  * A class for loading a cover associated with a [Manga] that can be present in our own cache.
- * Coupled with [MangaDataFetcher], this class allows to implement the following flow:
+ * Coupled with [MangaUrlFetcher], this class allows to implement the following flow:
  *
  * - Check in RAM LRU.
  * - Check in disk LRU.
@@ -30,17 +31,17 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
     /**
      * Cover cache where persistent covers are stored.
      */
-    val coverCache: CoverCache by injectLazy()
+    private val coverCache: CoverCache by injectLazy()
 
     /**
      * Source manager.
      */
-    val sourceManager: SourceManager by injectLazy()
+    private val sourceManager: SourceManager by injectLazy()
 
     /**
      * Base network loader.
      */
-    private val baseLoader = Glide.buildModelLoader(GlideUrl::class.java,
+    private val baseUrlLoader = Glide.buildModelLoader(GlideUrl::class.java,
             InputStream::class.java, context)
 
     /**
@@ -52,7 +53,7 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
     /**
      * Map where request headers are stored for a source.
      */
-    private val cachedHeaders = hashMapOf<Int, LazyHeaders>()
+    private val cachedHeaders = hashMapOf<Long, LazyHeaders>()
 
     /**
      * Factory class for creating [MangaModelLoader] instances.
@@ -66,7 +67,7 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
     }
 
     /**
-     * Returns a [MangaDataFetcher] for the given manga or null if the url is empty.
+     * Returns a fetcher for the given manga or null if the url is empty.
      *
      * @param manga the model.
      * @param width the width of the view where the resource will be loaded.
@@ -78,22 +79,33 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
 
         // Check thumbnail is not null or empty
         val url = manga.thumbnail_url
-        if (url.isNullOrEmpty()) {
+        if (url == null || url.isEmpty()) {
             return null
         }
 
-        // Obtain the request url and the file for this url from the LRU cache, or calculate it
-        // and add them to the cache.
-        val (glideUrl, file) = lruCache.get(url) ?:
-            Pair(GlideUrl(url, getHeaders(manga)), coverCache.getCoverFile(url!!)).apply {
-                lruCache.put(url, this)
-            }
+        if (url.startsWith("http")) {
+            val source = sourceManager.get(manga.source) as? HttpSource
 
-        // Get the network fetcher for this request url.
-        val networkFetcher = baseLoader.getResourceFetcher(glideUrl, width, height)
+            // Obtain the request url and the file for this url from the LRU cache, or calculate it
+            // and add them to the cache.
+            val (glideUrl, file) = lruCache.get(url) ?:
+                    Pair(GlideUrl(url, getHeaders(manga, source)), coverCache.getCoverFile(url)).apply {
+                        lruCache.put(url, this)
+                    }
 
-        // Return an instance of our fetcher providing the needed elements.
-        return MangaDataFetcher(networkFetcher, file, manga)
+            // Get the resource fetcher for this request url.
+            val networkFetcher = source?.let { OkHttpStreamFetcher(it.client, glideUrl) }
+                ?: baseUrlLoader.getResourceFetcher(glideUrl, width, height)
+
+            // Return an instance of the fetcher providing the needed elements.
+            return MangaUrlFetcher(networkFetcher, file, manga)
+        } else {
+            // Get the file from the url, removing the scheme if present.
+            val file = File(url.substringAfter("file://"))
+
+            // Return an instance of the fetcher providing the needed elements.
+            return MangaFileFetcher(file, manga)
+        }
     }
 
     /**
@@ -101,8 +113,9 @@ class MangaModelLoader(context: Context) : StreamModelLoader<Manga> {
      *
      * @param manga the model.
      */
-    fun getHeaders(manga: Manga): Headers {
-        val source = sourceManager.get(manga.source) as? OnlineSource ?: return LazyHeaders.DEFAULT
+    fun getHeaders(manga: Manga, source: HttpSource?): Headers {
+        if (source == null) return LazyHeaders.DEFAULT
+
         return cachedHeaders.getOrPut(manga.source) {
             LazyHeaders.Builder().apply {
                 val nullStr: String? = null

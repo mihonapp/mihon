@@ -7,8 +7,8 @@ import android.support.v7.preference.XpPreferenceFragment
 import android.view.View
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.widget.preference.LoginCheckBoxPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
 import eu.kanade.tachiyomi.widget.preference.SwitchPreferenceCategory
@@ -87,7 +87,7 @@ class SettingsSourcesFragment : SettingsFragment() {
      *
      * @param group the language category.
      */
-    private fun addLanguageSources(group: SwitchPreferenceCategory, sources: List<OnlineSource>) {
+    private fun addLanguageSources(group: SwitchPreferenceCategory, sources: List<HttpSource>) {
         val hiddenCatalogues = preferences.hiddenCatalogues().getOrDefault()
 
         sources.forEach { source ->
@@ -123,13 +123,14 @@ class SettingsSourcesFragment : SettingsFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SOURCE_CHANGE_REQUEST) {
-            val pref = findPreference(getSourceKey(resultCode)) as? LoginCheckBoxPreference
+        if (requestCode == SOURCE_CHANGE_REQUEST && data != null) {
+            val sourceId = data.getLongExtra("key", -1L)
+            val pref = findPreference(getSourceKey(sourceId)) as? LoginCheckBoxPreference
             pref?.notifyChanged()
         }
     }
 
-    private fun getSourceKey(sourceId: Int): String {
+    private fun getSourceKey(sourceId: Long): String {
         return "source_$sourceId"
     }
 

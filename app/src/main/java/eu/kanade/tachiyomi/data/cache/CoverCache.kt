@@ -20,7 +20,7 @@ class CoverCache(private val context: Context) {
     /**
      * Cache directory used for cache management.
      */
-    private val cacheDir: File = File(context.externalCacheDir, "cover_disk_cache")
+    private val cacheDir = context.getExternalFilesDir("covers")
 
     /**
      * Returns the cover from cache.

@@ -95,7 +95,7 @@
       <!-- Reader section -->
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="pref_lock_orientation">Bloquear orientación</string>
-    <string name="pref_enable_transitions">Habilitar transiciones</string>
+    <string name="pref_page_transitions">Habilitar transiciones</string>
     <string name="pref_show_page_number">Mostrar el número de página</string>
     <string name="pref_custom_brightness">Utilizar brillo personalizado</string>
     <string name="pref_keep_screen_on">Mantener la pantalla encendida</string>
@@ -235,8 +235,8 @@
     <string name="chapters">Capítulos</string>
 
     <!-- Dialog remove recently view -->
-    <string name="dialog_remove_recently_description">Esto eliminará la fecha de lectura de este capítulo. ¿Estás seguro?</string>
-    <string name="dialog_remove_recently_reset">Reiniciar todas los capítulos de este manga</string>
+    <string name="dialog_with_checkbox_remove_description">Esto eliminará la fecha de lectura de este capítulo. ¿Estás seguro?</string>
+    <string name="dialog_with_checkbox_reset">Reiniciar todas los capítulos de este manga</string>
 
 
     <!-- Reader activity -->

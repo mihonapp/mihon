@@ -20,7 +20,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
@@ -171,11 +171,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         .content(getString(R.string.confirm_update_manga_sync, chapterToUpdate))
                         .positiveText(android.R.string.yes)
                         .negativeText(android.R.string.no)
-                        .onPositive { dialog, which -> presenter.updateTrackLastChapterRead() }
+                        .onPositive { dialog, which -> presenter.updateTrackLastChapterRead(chapterToUpdate) }
                         .onAny { dialog1, which1 -> super.onBackPressed() }
                         .show()
             } else {
-                presenter.updateTrackLastChapterRead()
+                presenter.updateTrackLastChapterRead(chapterToUpdate)
                 super.onBackPressed()
             }
         } else {

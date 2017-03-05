@@ -5,7 +5,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
 import android.view.View
 
-abstract class FABAnimationBase() : FloatingActionButton.Behavior() {
+abstract class FABAnimationBase : FloatingActionButton.Behavior() {
 
     var isAnimatingOut = false
 

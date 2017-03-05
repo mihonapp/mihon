@@ -45,7 +45,7 @@ class TrackFragment : BaseRxFragment<TrackPresenter>() {
 
     private fun findSearchFragmentIfNeeded() {
         if (dialog == null) {
-            dialog = childFragmentManager.findFragmentByTag(searchFragmentTag) as TrackSearchDialog
+            dialog = childFragmentManager.findFragmentByTag(searchFragmentTag) as? TrackSearchDialog
         }
     }
 

@@ -83,6 +83,11 @@ class ReaderSettingsDialog : DialogFragment() {
         fullscreen.setOnCheckedChangeListener { v, isChecked ->
             preferences.fullscreen().set(isChecked)
         }
+
+        crop_borders.isChecked = preferences.cropBorders().getOrDefault()
+        crop_borders.setOnCheckedChangeListener { v, isChecked ->
+            preferences.cropBorders().set(isChecked)
+        }
     }
 
     override fun onDestroyView() {

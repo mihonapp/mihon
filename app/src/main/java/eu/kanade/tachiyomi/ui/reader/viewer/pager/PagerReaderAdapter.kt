@@ -1,9 +1,10 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
+import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.source.model.Page
+import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 
@@ -32,6 +33,15 @@ class PagerReaderAdapter(private val reader: PagerReader) : ViewPagerAdapter() {
      */
     override fun getCount(): Int {
         return pages.size
+    }
+
+    override fun getItemPosition(obj: Any): Int {
+        val view = obj as PageView
+        return if (view.page in pages) {
+            PagerAdapter.POSITION_UNCHANGED
+        } else {
+            PagerAdapter.POSITION_NONE
+        }
     }
 
 }

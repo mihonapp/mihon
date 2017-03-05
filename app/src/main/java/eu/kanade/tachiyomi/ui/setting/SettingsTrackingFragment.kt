@@ -41,7 +41,7 @@ class SettingsTrackingFragment : SettingsFragment() {
 
         registerService(trackManager.aniList) {
             val intent = CustomTabsIntent.Builder()
-                    .setToolbarColor(activity.theme.getResourceColor(R.attr.colorPrimary))
+                    .setToolbarColor(activity.getResourceColor(R.attr.colorPrimary))
                     .build()
             intent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             intent.launchUrl(activity, AnilistApi.authUrl())
@@ -81,8 +81,9 @@ class SettingsTrackingFragment : SettingsFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SYNC_CHANGE_REQUEST) {
-            updatePreference(resultCode)
+        if (requestCode == SYNC_CHANGE_REQUEST && data != null) {
+            val serviceId = data.getIntExtra("key", -1)
+            updatePreference(serviceId)
         }
     }
 

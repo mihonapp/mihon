@@ -3,9 +3,9 @@ package eu.kanade.tachiyomi.widget.preference
 import android.os.Bundle
 import android.view.View
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.source.Source
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.online.LoginSource
+import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.pref_account_login.view.*
 import rx.android.schedulers.AndroidSchedulers
@@ -19,7 +19,7 @@ class SourceLoginDialog : LoginDialogPreference() {
         fun newInstance(source: Source): LoginDialogPreference {
             val fragment = SourceLoginDialog()
             val bundle = Bundle(1)
-            bundle.putInt("key", source.id)
+            bundle.putLong("key", source.id)
             fragment.arguments = bundle
             return fragment
         }
@@ -32,7 +32,7 @@ class SourceLoginDialog : LoginDialogPreference() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sourceId = arguments.getInt("key")
+        val sourceId = arguments.getLong("key")
         source = sourceManager.get(sourceId) as LoginSource
     }
 

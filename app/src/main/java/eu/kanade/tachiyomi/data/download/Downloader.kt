@@ -10,13 +10,12 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.source.SourceManager
-import eu.kanade.tachiyomi.data.source.model.Page
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
-import eu.kanade.tachiyomi.util.DynamicConcurrentMergeOperator
-import eu.kanade.tachiyomi.util.RetryWithDelay
-import eu.kanade.tachiyomi.util.plusAssign
-import eu.kanade.tachiyomi.util.saveTo
+import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.fetchAllImageUrlsFromPageList
+import eu.kanade.tachiyomi.util.*
 import okhttp3.Response
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -25,7 +24,6 @@ import rx.subjects.BehaviorSubject
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.net.URLConnection
 
 /**
  * This class is the one in charge of downloading chapters.
@@ -132,15 +130,42 @@ class Downloader(private val context: Context, private val provider: DownloadPro
         if (reason != null) {
             notifier.onWarning(reason)
         } else {
-            notifier.dismiss()
+            if (notifier.paused) {
+                notifier.paused = false
+                notifier.onDownloadPaused()
+            } else if (notifier.isSingleChapter && !notifier.errorThrown) {
+                notifier.isSingleChapter = false
+            } else {
+                notifier.dismiss()
+            }
         }
     }
 
     /**
-     * Removes everything from the queue.
+     * Pauses the downloader
      */
-    fun clearQueue() {
+    fun pause() {
         destroySubscriptions()
+        queue
+                .filter { it.status == Download.DOWNLOADING }
+                .forEach { it.status = Download.QUEUE }
+        notifier.paused = true
+    }
+
+    /**
+     * Removes everything from the queue.
+     *
+     * @param isNotification value that determines if status is set (needed for view updates)
+     */
+    fun clearQueue(isNotification: Boolean = false) {
+        destroySubscriptions()
+
+        //Needed to update the chapter view
+        if (isNotification) {
+            queue
+                    .filter { it.status == Download.QUEUE }
+                    .forEach { it.status = Download.NOT_DOWNLOADED }
+        }
         queue.clear()
         notifier.dismiss()
     }
@@ -192,7 +217,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
      * @param chapters the list of chapters to download.
      */
     fun queueChapters(manga: Manga, chapters: List<Chapter>) {
-        val source = sourceManager.get(manga.source) as? OnlineSource ?: return
+        val source = sourceManager.get(manga.source) as? HttpSource ?: return
 
         val chaptersToQueue = chapters
                 // Avoid downloading chapters with the same name.
@@ -212,6 +237,9 @@ class Downloader(private val context: Context, private val provider: DownloadPro
 
         // Initialize queue size.
         notifier.initialQueueSize = queue.size
+
+        // Initial multi-thread
+        notifier.multipleDownloadThreads = preferences.downloadThreads().getOrDefault() > 1
 
         if (isRunning) {
             // Send the list of downloads to the downloader.
@@ -251,8 +279,11 @@ class Downloader(private val context: Context, private val provider: DownloadPro
 
         val pageListObservable = if (download.pages == null) {
             // Pull page list from network and add them to download object
-            download.source.fetchPageListFromNetwork(download.chapter)
+            download.source.fetchPageList(download.chapter)
                     .doOnNext { pages ->
+                        if (pages.isEmpty()) {
+                            throw Exception("Page list is empty")
+                        }
                         download.pages = pages
                     }
         } else {
@@ -309,7 +340,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
         tmpFile?.delete()
 
         // Try to find the image file.
-        val imageFile = tmpDir.listFiles()!!.find { it.name!!.startsWith("$filename.")}
+        val imageFile = tmpDir.listFiles()!!.find { it.name!!.startsWith("$filename.") }
 
         // If the image is already downloaded, do nothing. Otherwise download from network
         val pageObservable = if (imageFile != null)
@@ -342,10 +373,10 @@ class Downloader(private val context: Context, private val provider: DownloadPro
      * @param tmpDir the temporary directory of the download.
      * @param filename the filename of the image.
      */
-    private fun downloadImage(page: Page, source: OnlineSource, tmpDir: UniFile, filename: String): Observable<UniFile> {
+    private fun downloadImage(page: Page, source: HttpSource, tmpDir: UniFile, filename: String): Observable<UniFile> {
         page.status = Page.DOWNLOAD_IMAGE
         page.progress = 0
-        return source.imageResponse(page)
+        return source.fetchImage(page)
                 .map { response ->
                     val file = tmpDir.createFile("$filename.tmp")
                     try {
@@ -373,12 +404,10 @@ class Downloader(private val context: Context, private val provider: DownloadPro
     private fun getImageExtension(response: Response, file: UniFile): String {
         // Read content type if available.
         val mime = response.body().contentType()?.let { ct -> "${ct.type()}/${ct.subtype()}" }
-        // Else guess from the uri.
-        ?: context.contentResolver.getType(file.uri)
-        // Else read magic numbers.
-        ?: file.openInputStream().buffered().use {
-            URLConnection.guessContentTypeFromStream(it)
-        }
+            // Else guess from the uri.
+            ?: context.contentResolver.getType(file.uri)
+            // Else read magic numbers.
+            ?: DiskUtil.findImageMime { file.openInputStream() }
 
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "jpg"
     }
@@ -417,6 +446,9 @@ class Downloader(private val context: Context, private val provider: DownloadPro
             notifier.onProgressChange(queue)
         }
         if (areAllDownloadsFinished()) {
+            if (notifier.isSingleChapter && !notifier.errorThrown) {
+                notifier.onDownloadCompleted(download, queue)
+            }
             DownloadService.stop(context)
         }
     }

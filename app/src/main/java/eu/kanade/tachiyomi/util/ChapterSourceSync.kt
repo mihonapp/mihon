@@ -3,31 +3,38 @@ package eu.kanade.tachiyomi.util
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.source.Source
-import eu.kanade.tachiyomi.data.source.online.OnlineSource
+import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.online.HttpSource
 import java.util.*
 
 /**
  * Helper method for syncing the list of chapters from the source with the ones from the database.
  *
  * @param db the database.
- * @param sourceChapters a list of chapters from the source.
+ * @param rawSourceChapters a list of chapters from the source.
  * @param manga the manga of the chapters.
  * @param source the source of the chapters.
  * @return a pair of new insertions and deletions.
  */
 fun syncChaptersWithSource(db: DatabaseHelper,
-                           sourceChapters: List<Chapter>,
+                           rawSourceChapters: List<SChapter>,
                            manga: Manga,
                            source: Source) : Pair<List<Chapter>, List<Chapter>> {
+
+    if (rawSourceChapters.isEmpty()) {
+        throw Exception("No chapters found")
+    }
 
     // Chapters from db.
     val dbChapters = db.getChapters(manga).executeAsBlocking()
 
-    // Fix manga id and order in source.
-    sourceChapters.forEachIndexed { i, chapter ->
-        chapter.manga_id = manga.id
-        chapter.source_order = i
+    val sourceChapters = rawSourceChapters.mapIndexed { i, sChapter ->
+        Chapter.create().apply {
+            copyFrom(sChapter)
+            manga_id = manga.id
+            source_order = i
+        }
     }
 
     // Chapters from the source not in db.
@@ -35,7 +42,7 @@ fun syncChaptersWithSource(db: DatabaseHelper,
 
     // Recognize number for new chapters.
     toAdd.forEach {
-        if (source is OnlineSource) {
+        if (source is HttpSource) {
             source.prepareNewChapter(it, manga)
         }
         ChapterRecognition.parseChapterNumber(it, manga)
@@ -43,6 +50,11 @@ fun syncChaptersWithSource(db: DatabaseHelper,
 
     // Chapters from the db not in the source.
     val toDelete = dbChapters.filterNot { it in sourceChapters }
+
+    // Return if there's nothing to add or delete, avoiding unnecessary db transactions.
+    if (toAdd.isEmpty() && toDelete.isEmpty()) {
+        return Pair(emptyList(), emptyList())
+    }
 
     val readded = mutableListOf<Chapter>()
 
