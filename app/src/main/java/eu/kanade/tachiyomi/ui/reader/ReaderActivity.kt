@@ -264,6 +264,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     fun onChapterReady(chapter: ReaderChapter) {
         please_wait.visibility = View.GONE
         val pages = chapter.pages ?: run { onChapterError(Exception("Null pages")); return }
+        if(pages.isEmpty()) {
+            onChapterError(Exception("Page list empty!"))
+            return
+        }
         val activePage = pages.getOrElse(chapter.requestedPage) { pages.first() }
 
         viewer?.onPageListReady(chapter, activePage)
