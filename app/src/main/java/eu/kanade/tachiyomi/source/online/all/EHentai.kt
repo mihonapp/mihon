@@ -20,6 +20,8 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
 import exh.ui.login.LoginActivity
+import exh.util.UriFilter
+import exh.util.UriGroup
 import okhttp3.Request
 
 class EHentai(override val id: Long,
@@ -158,11 +160,14 @@ class EHentai(override val id: Long,
     override fun mangaDetailsParse(response: Response) = with(response.asJsoup()) {
         val metdata = ExGalleryMetadata()
         with(metdata) {
-            val manga = SManga.create()
             url = response.request().url().toString()
             exh = this@EHentai.exh
             title = select("#gn").text().nullIfBlank()?.trim()
-            altTitle = select("#gj").text().nullIfBlank()?.trim()
+
+            altTitles.clear()
+            select("#gj").text().nullIfBlank()?.trim()?.let { newAltTitle ->
+                altTitles.add(newAltTitle)
+            }
 
             thumbnailUrl = select("#gd1 img").attr("src").nullIfBlank()?.trim()
 
@@ -227,12 +232,13 @@ class EHentai(override val id: Long,
             }
 
             //Save metadata
-            metadataHelper.writeGallery(this)
+            metadataHelper.writeGallery(this, id)
 
             //Copy metadata to manga
-            copyTo(manga)
-
-            manga
+            SManga.create().let {
+                copyTo(it)
+                it
+            }
         }
     }
 
@@ -333,9 +339,6 @@ class EHentai(override val id: Long,
             GenreGroup(),
             AdvancedGroup()
     )
-    private interface UriFilter {
-        fun addToUri(builder: Uri.Builder)
-    }
 
     class GenreOption(name: String, val genreId: String): Filter.CheckBox(name, false), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
@@ -385,14 +388,6 @@ class EHentai(override val id: Long,
             AdvancedOption("Show Expunged Galleries", "f_sh"),
             RatingOption()
     ))
-
-    open class UriGroup<V>(name: String, state: List<V>) : Filter.Group<V>(name, state), UriFilter {
-        override fun addToUri(builder: Uri.Builder) {
-            state.forEach {
-                if(it is UriFilter) it.addToUri(builder)
-            }
-        }
-    }
 
     override val name = if(exh)
         "ExHentai"

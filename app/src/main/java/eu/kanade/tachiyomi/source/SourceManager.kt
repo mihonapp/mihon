@@ -13,16 +13,14 @@ import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.YamlHttpSource
+import eu.kanade.tachiyomi.source.online.all.PervEden
 import eu.kanade.tachiyomi.source.online.english.*
 import eu.kanade.tachiyomi.source.online.german.WieManga
 import eu.kanade.tachiyomi.source.online.russian.Mangachan
 import eu.kanade.tachiyomi.source.online.russian.Mintmanga
 import eu.kanade.tachiyomi.source.online.russian.Readmanga
 import eu.kanade.tachiyomi.util.hasPermission
-import exh.EH_METADATA_SOURCE_ID
-import exh.EH_SOURCE_ID
-import exh.EXH_METADATA_SOURCE_ID
-import exh.EXH_SOURCE_ID
+import exh.*
 import org.yaml.snakeyaml.Yaml
 import rx.functions.Action1
 import timber.log.Timber
@@ -99,6 +97,8 @@ open class SourceManager(private val context: Context) {
             exSrcs += EHentai(EXH_SOURCE_ID, true, context)
             exSrcs += EHentaiMetadata(EXH_METADATA_SOURCE_ID, true, context)
         }
+        exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, "en")
+        exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, "it")
         return exSrcs
     }
 

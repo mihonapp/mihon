@@ -101,21 +101,10 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
                     author != null && author!!.toLowerCase().contains(query)
         } else {
             //Use gallery search engine for EH manga
-            val source = sourceManager.get(manga.source)
-            source?.let {
-                val exh: Boolean
-                if(source is EHentai)
-                    exh = source.exh
-                else if(source is EHentaiMetadata)
-                    exh = source.exh
-                else
-                    return@with false
-
-                val metadata = metadataHelper.fetchMetadata(manga.url, exh)
-                metadata?.let {
-                    searchEngine.matches(metadata, searchEngine.parseQuery(query))
-                } ?: title.contains(query, ignoreCase = true) //Use regular searching when the metadata is not set up for this gallery
-            } ?: false
+            val metadata = metadataHelper.fetchMetadata(manga.url, manga.source)
+            metadata?.let {
+                searchEngine.matches(it, searchEngine.parseQuery(query))
+            } ?: title.contains(query, ignoreCase = true) //Use regular searching when the metadata is not set up for this gallery
         }
     }
 

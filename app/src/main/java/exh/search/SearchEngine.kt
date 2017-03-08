@@ -1,13 +1,13 @@
 package exh.search
 
-import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.models.SearchableGalleryMetadata
 import exh.metadata.models.Tag
 
 class SearchEngine {
 
     private val queryCache = mutableMapOf<String, List<QueryComponent>>()
 
-    fun matches(metadata: ExGalleryMetadata, query: List<QueryComponent>): Boolean {
+    fun matches(metadata: SearchableGalleryMetadata, query: List<QueryComponent>): Boolean {
 
         fun matchTagList(tags: Sequence<Tag>,
                          component: Text): Boolean {
@@ -29,13 +29,13 @@ class SearchEngine {
         }
 
         val cachedLowercaseTitle = metadata.title?.toLowerCase()
-        val cachedLowercaseAltTitle = metadata.altTitle?.toLowerCase()
+        val cachedLowercaseAltTitles = metadata.altTitles.map(String::toLowerCase)
 
         for(component in query) {
             if(component is Text) {
                 //Match title
                 if (component.asRegex().test(cachedLowercaseTitle)
-                        || component.asRegex().test(cachedLowercaseAltTitle)) {
+                    || cachedLowercaseAltTitles.find { component.asRegex().test(it) } != null) {
                     continue
                 }
                 //Match tags

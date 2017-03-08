@@ -63,7 +63,7 @@ class MetadataFetchDialog {
                     source?.let {
                         it as EHentai
                         manga.copyFrom(it.fetchMangaDetails(manga).toBlocking().first())
-                        metadataHelper.fetchMetadata(manga.url, it.exh)?.copyTo(manga)
+                        metadataHelper.fetchEhMetadata(manga.url, it.exh)?.copyTo(manga)
                     }
                 } catch(t: Throwable) {
                     Timber.e(t, "Could not migrate manga!")

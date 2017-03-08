@@ -7,19 +7,15 @@ import java.util.*
  * Gallery metadata storage model
  */
 
-class ExGalleryMetadata {
+class ExGalleryMetadata : SearchableGalleryMetadata() {
     var url: String? = null
 
     var exh: Boolean? = null
-
-    var title: String? = null
-    var altTitle: String? = null
 
     var thumbnailUrl: String? = null
 
     var genre: String? = null
 
-    var uploader: String? = null
     var datePosted: Long? = null
     var parent: String? = null
     var visible: String? = null //Not a boolean
@@ -31,8 +27,6 @@ class ExGalleryMetadata {
     var ratingCount: Int? = null
     var averageRating: Double? = null
 
-    //Being specific about which classes are used in generics to make deserialization easier
-    var tags: HashMap<String, ArrayList<Tag>> = HashMap()
 
     private fun splitGalleryUrl()
             = url?.let {
@@ -44,8 +38,10 @@ class ExGalleryMetadata {
     fun galleryToken() =
         splitGalleryUrl()?.last()
 
-    fun galleryUniqueIdentifier() = exh?.let { exh ->
+    override fun galleryUniqueIdentifier() = exh?.let { exh ->
         url?.let {
+            //Fuck, this should be EXH and EH but it's too late to change it now...
+            //TODO Change this during migration
             "${if(exh) "EXH" else "EX"}-${galleryId()}-${galleryToken()}"
         }
     }

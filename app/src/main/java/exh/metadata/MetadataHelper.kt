@@ -1,18 +1,44 @@
 package exh.metadata
 
+import exh.*
 import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.models.PervEdenGalleryMetadata
+import exh.metadata.models.SearchableGalleryMetadata
 import io.paperdb.Paper
 
 class MetadataHelper {
 
-    fun writeGallery(galleryMetadata: ExGalleryMetadata)
-            = exGalleryBook().write(galleryMetadata.galleryUniqueIdentifier(), galleryMetadata)!!
+    fun writeGallery(galleryMetadata: SearchableGalleryMetadata, source: Long)
+            = (if(isExSource(source) || isEhSource(source)) exGalleryBook()
+    else if(isPervEdenSource(source)) pervEdenGalleryBook()
+    else null)?.write(galleryMetadata.galleryUniqueIdentifier(), galleryMetadata)!!
 
-    fun fetchMetadata(url: String, exh: Boolean): ExGalleryMetadata?
+    fun fetchEhMetadata(url: String, exh: Boolean): ExGalleryMetadata?
             = ExGalleryMetadata().let {
         it.url = url
         it.exh = exh
         return exGalleryBook().read<ExGalleryMetadata>(it.galleryUniqueIdentifier())
+    }
+
+    fun fetchPervEdenMetadata(url: String, source: Long): PervEdenGalleryMetadata?
+            = PervEdenGalleryMetadata().let {
+        it.url = url
+        if(source == PERV_EDEN_EN_SOURCE_ID)
+            it.lang = "en"
+        else if(source == PERV_EDEN_IT_SOURCE_ID)
+            it.lang = "it"
+        else throw IllegalArgumentException("Invalid source id!")
+        return pervEdenGalleryBook().read<PervEdenGalleryMetadata>(it.galleryUniqueIdentifier())
+    }
+
+    fun fetchMetadata(url: String, source: Long): SearchableGalleryMetadata? {
+        if(isExSource(source) || isEhSource(source)) {
+            return fetchEhMetadata(url, isExSource(source))
+        } else if(isPervEdenSource(source)) {
+            return fetchPervEdenMetadata(url, source)
+        } else {
+            return null
+        }
     }
 
     fun getAllGalleries() = exGalleryBook().allKeys.map {
@@ -26,5 +52,9 @@ class MetadataHelper {
         return exGalleryBook().exist(it.galleryUniqueIdentifier())
     }
 
+    //TODO Problem, our new metadata structures are incompatible.
+    //TODO We will probably just delete the old metadata structures
     fun exGalleryBook() = Paper.book("gallery-ex")!!
+
+    fun pervEdenGalleryBook() = Paper.book("gallery-perveden")!!
 }

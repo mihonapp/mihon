@@ -3,7 +3,10 @@ package exh.metadata
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.online.all.PervEden
 import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.models.PervEdenGalleryMetadata
+import exh.metadata.models.SearchableGalleryMetadata
 import exh.metadata.models.Tag
 import exh.plusAssign
 import uy.kohesive.injekt.injectLazy
@@ -40,7 +43,7 @@ fun ExGalleryMetadata.copyTo(manga: SManga) {
 
     //No title bug?
     val titleObj = if(prefs.useJapaneseTitle().getOrDefault())
-        altTitle ?: title
+        altTitles.firstOrNull() ?: title
     else
         title
     titleObj?.let { manga.title = it }
@@ -70,7 +73,7 @@ fun ExGalleryMetadata.copyTo(manga: SManga) {
     //Build a nice looking description out of what we know
     val titleDesc = StringBuilder()
     title?.let { titleDesc += "Title: $it\n" }
-    altTitle?.let { titleDesc += "Japanese Title: $it\n" }
+    altTitles.firstOrNull()?.let { titleDesc += "Alternate Title: $it\n" }
 
     val detailsDesc = StringBuilder()
     uploader?.let { detailsDesc += "Uploader: $it\n" }
@@ -90,16 +93,66 @@ fun ExGalleryMetadata.copyTo(manga: SManga) {
         detailsDesc += "\n"
     }
 
-    val tagsDesc = StringBuilder("Tags:\n")
-    //BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
-    tags.entries.forEach { namespace, tags ->
-        if(tags.isNotEmpty()) {
-            val joinedTags = tags.joinToString(separator = " ", transform = { "<${it.name}>" })
-            tagsDesc += "▪ $namespace: $joinedTags\n"
-        }
-    }
 
-    manga.description = listOf(titleDesc, detailsDesc, tagsDesc)
-            .filter { it.isNotBlank() }
+    val tagsDesc = buildTagsDescription(this)
+
+    manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
+            .filter(String::isNotBlank)
             .joinToString(separator = "\n")
 }
+
+fun PervEdenGalleryMetadata.copyTo(manga: SManga) {
+    url?.let { manga.url = it }
+    thumbnailUrl?.let { manga.thumbnail_url = it }
+
+    val titleDesc = StringBuilder()
+    title?.let {
+        manga.title = it
+        titleDesc += "Title: $it\n"
+    }
+    if(altTitles.isNotEmpty())
+        titleDesc += "Alternate Titles: \n" + altTitles.map {
+            "▪ $it"
+        }.joinToString(separator = "\n", postfix = "\n")
+
+    val detailsDesc = StringBuilder()
+    artist?.let {
+        manga.artist = it
+        detailsDesc += "Artist: $it\n"
+    }
+
+    type?.let {
+        manga.genre = it
+        detailsDesc += "Type: $it\n"
+    }
+
+    status?.let {
+        manga.status = when(it) {
+            "Ongoing" -> SManga.ONGOING
+            "Completed", "Suspended" -> SManga.COMPLETED
+            else -> SManga.UNKNOWN
+        }
+        detailsDesc += "Status: $it\n"
+    }
+
+    rating?.let {
+        detailsDesc += "Rating: %.2\n".format(it)
+    }
+
+    val tagsDesc = buildTagsDescription(this)
+
+    manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
+            .filter(String::isNotBlank)
+            .joinToString(separator = "\n")
+}
+
+private fun buildTagsDescription(metadata: SearchableGalleryMetadata)
+        = StringBuilder("Tags:\n").apply {
+        //BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
+        metadata.tags.entries.forEach { namespace, tags ->
+            if (tags.isNotEmpty()) {
+                val joinedTags = tags.joinToString(separator = " ", transform = { "<${it.name}>" })
+                this += "▪ $namespace: $joinedTags\n"
+            }
+        }
+    }

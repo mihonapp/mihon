@@ -44,7 +44,7 @@ class GalleryAdder {
         manga.copyFrom(sourceObj.fetchMangaDetails(manga).toBlocking().first())
 
         //Apply metadata
-        metadataHelper.fetchMetadata(url, isExSource(source))?.copyTo(manga)
+        metadataHelper.fetchEhMetadata(url, isExSource(source))?.copyTo(manga)
 
         if(fav) manga.favorite = true
 

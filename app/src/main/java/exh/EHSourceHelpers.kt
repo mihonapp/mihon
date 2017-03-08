@@ -10,8 +10,16 @@ val EXH_SOURCE_ID = LEWD_SOURCE_SERIES + 2
 val EH_METADATA_SOURCE_ID = LEWD_SOURCE_SERIES + 3
 val EXH_METADATA_SOURCE_ID = LEWD_SOURCE_SERIES + 4
 
-fun isLewdSource(source: Long) = source >= 6900
-        && source <= 6999
+val PERV_EDEN_EN_SOURCE_ID = LEWD_SOURCE_SERIES + 5
+val PERV_EDEN_IT_SOURCE_ID = LEWD_SOURCE_SERIES + 6
+
+fun isLewdSource(source: Long) = source in 6900..6999
+
+fun isEhSource(source: Long) = source == EH_SOURCE_ID
+    || source == EH_METADATA_SOURCE_ID
 
 fun isExSource(source: Long) = source == EXH_SOURCE_ID
         || source == EXH_METADATA_SOURCE_ID
+
+fun isPervEdenSource(source: Long) = source == PERV_EDEN_IT_SOURCE_ID
+|| source == PERV_EDEN_EN_SOURCE_ID
