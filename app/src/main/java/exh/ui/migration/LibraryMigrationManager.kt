@@ -67,8 +67,8 @@ class LibraryMigrationManager(val context: MainActivity,
                         "This migration process is not automatic, tap 'CONTINUE' to be guided through it.")
                 .positiveText("Continue")
                 .negativeText("Cancel")
-                .onPositive { materialDialog, dialogAction -> jumpToMigrationStep(MigrationStatus.OPEN_BACKUP_MENU) }
-                .onNegative { materialDialog, dialogAction -> warnUserMigration() }
+                .onPositive { _, _ -> jumpToMigrationStep(MigrationStatus.OPEN_BACKUP_MENU) }
+                .onNegative { _, _ -> warnUserMigration() }
                 .show()
     }
 
@@ -79,8 +79,8 @@ class LibraryMigrationManager(val context: MainActivity,
                         "Press 'MIGRATE' to restart the migration process, press 'OK' if you still wish to cancel the migration process.")
                 .positiveText("Ok")
                 .negativeText("Migrate")
-                .onPositive { materialDialog, dialogAction -> completeMigration() }
-                .onNegative { materialDialog, dialogAction -> notifyUserMigration() }
+                .onPositive { _, _ -> completeMigration() }
+                .onNegative { _, _ -> notifyUserMigration() }
                 .show()
     }
 
@@ -98,7 +98,7 @@ class LibraryMigrationManager(val context: MainActivity,
         migrationStepDialog(1, null, MigrationStatus.PERFORM_BACKUP)
                 .customView(view, true)
                 .neutralText("Launch Old App")
-                .onNeutral { materialDialog, dialogAction ->
+                .onNeutral { _, _ ->
                     //Auto dismiss messes this up so we have to reopen the dialog manually
                     val ma = mainTachiyomiEHActivity()
                     if(ma != null) {
@@ -134,7 +134,7 @@ class LibraryMigrationManager(val context: MainActivity,
                         "Then tap 'OK' to exit the migration process!"))
                 .positiveText("Ok")
                 .neutralText("Uninstall Old App")
-                .onPositive { materialDialog, dialogAction ->
+                .onPositive { _, _ ->
                         completeMigration()
                         //Check if the metadata needs to be updated
                         databaseHelper.getLibraryMangas().asRxSingle().subscribe {
@@ -144,7 +144,7 @@ class LibraryMigrationManager(val context: MainActivity,
                                 }
                         }
                     }
-                .onNeutral { materialDialog, dialogAction ->
+                .onNeutral { _, _ ->
                     val packageUri = Uri.parse("package:$TACHIYOMI_EH_PACKAGE")
                     val uninstallIntent = Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri)
                     context.startActivity(uninstallIntent)
@@ -164,11 +164,11 @@ class LibraryMigrationManager(val context: MainActivity,
             .apply {
                 if(previousStep != null) {
                     negativeText("Back")
-                    onNegative { materialDialog, dialogAction -> jumpToMigrationStep(previousStep) }
+                    onNegative { _, _ -> jumpToMigrationStep(previousStep) }
                 }
                 if(nextStep != null) {
                     positiveText("Continue")
-                    onPositive { materialDialog, dialogAction -> jumpToMigrationStep(nextStep) }
+                    onPositive { _, _ -> jumpToMigrationStep(nextStep) }
                 }
             }!!
 

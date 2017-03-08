@@ -119,7 +119,7 @@ class BatchAddFragment : BaseFragment() {
                 .title("No galleries to add!")
                 .content("You must specify at least one gallery to add!")
                 .positiveText("Ok")
-                .onPositive { materialDialog, dialogAction -> materialDialog.dismiss() }
+                .onPositive { materialDialog, _ -> materialDialog.dismiss() }
                 .cancelable(true)
                 .canceledOnTouchOutside(true)
                 .show()

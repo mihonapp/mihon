@@ -105,8 +105,8 @@ class MetadataFetchDialog {
                                 "This process can be done later if required."))
                         .positiveText("Migrate")
                         .negativeText("Later")
-                        .onPositive { materialDialog, dialogAction -> show(activity) }
-                        .onNegative { materialDialog, dialogAction -> adviseMigrationLater(activity) }
+                        .onPositive { _, _ -> show(activity) }
+                        .onNegative({ _, _ -> adviseMigrationLater(activity) })
                         .cancelable(false)
                         .canceledOnTouchOutside(false)
                         .dismissListener {
