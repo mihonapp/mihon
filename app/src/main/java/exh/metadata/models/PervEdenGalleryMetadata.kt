@@ -1,9 +1,7 @@
 package exh.metadata.models
 
 import android.net.Uri
-import timber.log.Timber
 
-//TODO Add artificial artist tag
 class PervEdenGalleryMetadata : SearchableGalleryMetadata() {
     var url: String? = null
     var thumbnailUrl: String? = null
@@ -24,9 +22,6 @@ class PervEdenGalleryMetadata : SearchableGalleryMetadata() {
     }
 
     override fun galleryUniqueIdentifier() = splitGalleryUrl()?.let {
-        Timber.d(
-                "PERVEDEN-${lang?.toUpperCase()}-${it.last()}"
-        )
         "PERVEDEN-${lang?.toUpperCase()}-${it.last()}"
     }
 }
