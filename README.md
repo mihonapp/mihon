@@ -1,10 +1,9 @@
 <div style="text-align:center"><img src ="https://raw.githubusercontent.com/NerdNumber9/TachiyomiEH/master/branding/teh-banner.png" /></div>
 <br>
 
-TachiyomiEH is a free and open source E-Hentai and ExHentai galleries reader for Android.
+TachiyomiEH is a free and open source E-Hentai, ExHentai and PervEden galleries reader for Android.
 
-Keep in mind it's still a beta, so expect it to crash sometimes.
-
+TachiyomiEH is a fork of the [original Tachiyomi app](https://github.com/inorichi/tachiyomi).
 ### E-Hentai Thread
 [https://forums.e-hentai.org/index.php?showtopic=185421](https://forums.e-hentai.org/index.php?showtopic=185421)
 
@@ -21,9 +20,30 @@ Keep in mind it's still a beta, so expect it to crash sometimes.
 * Schedule searching for updates
 * Categories to organize your library
 * Log into ExHentai
-* Full offline tag searching support
+* Read both NSFW and SFW manga/doujinshi
+* Full offline tag/namespace searching support
 * Batch import galleries
 * Automatically open E-Hentai/ExHentai links
+
+### Built-in manga sources
+##### SFW
+* Batoto
+* Mangahere
+* Mangafox
+* Kissmanga
+* Readmanga
+* Mintmanga
+* Mangachan
+* Readmangatoday
+* Mangasee
+* Wiemanga
+##### NSFW
+* E-Hentai
+* ExHentai
+* PervEden
+
+TachiyomiEH is fully compatible with Tachiyomi source extensions.
+Backups from Tachiyomi are also compatible with TachiyomiEH (and vice versa).
 
 ## License
 
