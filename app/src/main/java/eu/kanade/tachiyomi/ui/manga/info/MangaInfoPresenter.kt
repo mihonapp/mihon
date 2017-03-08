@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.MangaEvent
 import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
+import eu.kanade.tachiyomi.util.toast
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -67,7 +68,10 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
         super.onCreate(savedState)
 
         manga = SharedData.get(MangaEvent::class.java)?.manga ?: return
-        source = sourceManager.get(manga.source)!!
+        source = sourceManager.get(manga.source) ?: run {
+            context.toast("Could not find manga source!")
+            return
+        }
         sendMangaToView()
 
         // Update chapter count
