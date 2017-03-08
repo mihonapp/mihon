@@ -230,7 +230,10 @@ abstract class PagerReader : BaseReader() {
      */
     protected fun setPagesOnAdapter() {
         if (pages.isNotEmpty()) {
+            // Prevent a wrong active page when changing chapters with the navigation buttons.
+            val currPage = currentPage
             adapter.pages = pages
+            currentPage = currPage
             if (currentPage == pager.currentItem) {
                 onPageChanged(currentPage)
             } else {

@@ -44,6 +44,7 @@ android {
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
         buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
+        buildConfigField "boolean", "INCLUDE_UPDATER", "false"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -70,9 +71,11 @@ android {
         standard {
             buildConfigField "boolean", "INCLUDE_UPDATER", "true"
         }
-
         fdroid {
-            buildConfigField "boolean", "INCLUDE_UPDATER", "false"
+        }
+        dev {
+            minSdkVersion 21
+            resConfigs "en", "xxhdpi"
         }
     }
 
