@@ -24,6 +24,7 @@ TachiyomiEH is a fork of the [original Tachiyomi app](https://github.com/inorich
 * Full offline tag/namespace searching support
 * Batch import galleries
 * Automatically open E-Hentai/ExHentai links
+* Lock the app with a PIN code
 
 ### Built-in manga sources
 ##### SFW

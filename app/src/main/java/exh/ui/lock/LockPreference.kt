@@ -42,7 +42,7 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
                     .content("Enter a pin to lock the application. Enter nothing to disable the pin lock.")
                     .inputRangeRes(0, 10, R.color.material_red_500)
                     .inputType(InputType.TYPE_CLASS_NUMBER)
-                    .input("Password", "", { _, c ->
+                    .input("", "", { _, c ->
                         val progressDialog = MaterialDialog.Builder(context)
                                 .title("Saving password")
                                 .progress(true, 0)
