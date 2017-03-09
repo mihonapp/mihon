@@ -14,6 +14,9 @@ class ExGalleryMetadata : SearchableGalleryMetadata() {
 
     var thumbnailUrl: String? = null
 
+    var title: String? = null
+    var altTitle: String? = null
+
     var genre: String? = null
 
     var datePosted: Long? = null
@@ -27,6 +30,7 @@ class ExGalleryMetadata : SearchableGalleryMetadata() {
     var ratingCount: Int? = null
     var averageRating: Double? = null
 
+    override fun getTitles() = listOf(title, altTitle).filterNotNull()
 
     private fun splitGalleryUrl()
             = url?.let {

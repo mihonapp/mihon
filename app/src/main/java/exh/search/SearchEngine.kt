@@ -28,14 +28,12 @@ class SearchEngine {
             return true
         }
 
-        val cachedLowercaseTitle = metadata.title?.toLowerCase()
-        val cachedLowercaseAltTitles = metadata.altTitles.map(String::toLowerCase)
+        val cachedTitles = metadata.getTitles().map(String::toLowerCase)
 
         for(component in query) {
             if(component is Text) {
                 //Match title
-                if (component.asRegex().test(cachedLowercaseTitle)
-                    || cachedLowercaseAltTitles.find { component.asRegex().test(it) } != null) {
+                if (cachedTitles.find { component.asRegex().test(it) } != null) {
                     continue
                 }
                 //Match tags

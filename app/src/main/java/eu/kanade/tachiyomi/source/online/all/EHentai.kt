@@ -164,10 +164,7 @@ class EHentai(override val id: Long,
             exh = this@EHentai.exh
             title = select("#gn").text().nullIfBlank()?.trim()
 
-            altTitles.clear()
-            select("#gj").text().nullIfBlank()?.trim()?.let { newAltTitle ->
-                altTitles.add(newAltTitle)
-            }
+            altTitle = select("#gj").text().nullIfBlank()?.trim()
 
             thumbnailUrl = select("#gd1 img").attr("src").nullIfBlank()?.trim()
 

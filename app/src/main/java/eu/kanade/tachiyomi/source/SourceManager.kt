@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.YamlHttpSource
+import eu.kanade.tachiyomi.source.online.all.NHentai
 import eu.kanade.tachiyomi.source.online.all.PervEden
 import eu.kanade.tachiyomi.source.online.english.*
 import eu.kanade.tachiyomi.source.online.german.WieManga
@@ -99,6 +100,7 @@ open class SourceManager(private val context: Context) {
         }
         exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, "en")
         exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, "it")
+        exSrcs += NHentai(context)
         return exSrcs
     }
 

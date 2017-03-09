@@ -9,11 +9,10 @@ import java.util.HashMap
 abstract class SearchableGalleryMetadata {
     var uploader: String? = null
 
-    var title: String? = null
-    val altTitles: MutableList<String> = mutableListOf()
-
     //Being specific about which classes are used in generics to make deserialization easier
     val tags: HashMap<String, ArrayList<Tag>> = HashMap()
 
     abstract fun galleryUniqueIdentifier(): String?
+
+    abstract fun getTitles(): List<String>
 }

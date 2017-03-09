@@ -2,6 +2,7 @@ package exh.metadata
 
 import exh.*
 import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.models.NHentaiMetadata
 import exh.metadata.models.PervEdenGalleryMetadata
 import exh.metadata.models.SearchableGalleryMetadata
 import io.paperdb.Paper
@@ -11,6 +12,7 @@ class MetadataHelper {
     fun writeGallery(galleryMetadata: SearchableGalleryMetadata, source: Long)
             = (if(isExSource(source) || isEhSource(source)) exGalleryBook()
     else if(isPervEdenSource(source)) pervEdenGalleryBook()
+        else if(isNhentaiSource(source)) nhentaiGalleryBook()
     else null)?.write(galleryMetadata.galleryUniqueIdentifier(), galleryMetadata)!!
 
     fun fetchEhMetadata(url: String, exh: Boolean): ExGalleryMetadata?
@@ -31,11 +33,18 @@ class MetadataHelper {
         return pervEdenGalleryBook().read<PervEdenGalleryMetadata>(it.galleryUniqueIdentifier())
     }
 
+    fun fetchNhentaiMetadata(url: String) = NHentaiMetadata().let {
+        it.url = url
+        nhentaiGalleryBook().read<NHentaiMetadata>(it.galleryUniqueIdentifier())
+    }
+
     fun fetchMetadata(url: String, source: Long): SearchableGalleryMetadata? {
         if(isExSource(source) || isEhSource(source)) {
             return fetchEhMetadata(url, isExSource(source))
         } else if(isPervEdenSource(source)) {
             return fetchPervEdenMetadata(url, source)
+        } else if(isNhentaiSource(source)) {
+            return fetchNhentaiMetadata(url)
         } else {
             return null
         }
@@ -57,4 +66,6 @@ class MetadataHelper {
     fun exGalleryBook() = Paper.book("gallery-ex")!!
 
     fun pervEdenGalleryBook() = Paper.book("gallery-perveden")!!
+
+    fun nhentaiGalleryBook() = Paper.book("gallery-nhentai")!!
 }

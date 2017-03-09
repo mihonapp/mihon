@@ -6,6 +6,9 @@ class PervEdenGalleryMetadata : SearchableGalleryMetadata() {
     var url: String? = null
     var thumbnailUrl: String? = null
 
+    var title: String? = null
+    var altTitles: MutableList<String> = mutableListOf()
+
     var artist: String? = null
 
     var type: String? = null
@@ -15,6 +18,8 @@ class PervEdenGalleryMetadata : SearchableGalleryMetadata() {
     var status: String? = null
 
     var lang: String? = null
+
+    override fun getTitles() = listOf(title).plus(altTitles).filterNotNull()
 
     private fun splitGalleryUrl()
             = url?.let {
