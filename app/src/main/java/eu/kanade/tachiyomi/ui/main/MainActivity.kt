@@ -94,9 +94,10 @@ class MainActivity : BaseActivity() {
 
         if (savedState == null) {
             //Show lock
-            if(lockEnabled(preferences)) {
+            val lockEnabled = lockEnabled(preferences)
+            if(lockEnabled)
                 showLockActivity(this)
-            }
+
             //Perform source migration
             SourceMigrator().tryMigrationWithDialog(this, {
                 // Set start screen
@@ -122,7 +123,8 @@ class MainActivity : BaseActivity() {
                 UrlMigrator().tryMigration()
 
                 //Check lock security
-                notifyLockSecurity(this)
+                if(lockEnabled)
+                    notifyLockSecurity(this)
             })
         }
     }

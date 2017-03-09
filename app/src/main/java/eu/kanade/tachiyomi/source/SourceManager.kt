@@ -89,7 +89,6 @@ open class SourceManager(private val context: Context) {
     )
 
     private fun createEHSources(): List<Source> {
-        //TODO Fix and hook up to createSources...
         val exSrcs = mutableListOf(
                 EHentai(EH_SOURCE_ID, false, context),
                 EHentaiMetadata(EH_METADATA_SOURCE_ID, false, context)
