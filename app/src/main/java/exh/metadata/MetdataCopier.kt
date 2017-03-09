@@ -185,7 +185,7 @@ fun NHentaiMetadata.copyTo(manga: SManga) {
     uploadDate?.let { detailsDesc += "Upload Date: ${EX_DATE_FORMAT.format(Date(it))}\n" }
     pageImageTypes.size.let { detailsDesc += "Length: $it pages\n" }
     favoritesCount?.let { detailsDesc += "Favorited: $it times\n" }
-    scanlator?.nullIfBlank().let { detailsDesc += "Scanlator: $it\n" }
+    scanlator?.nullIfBlank()?.let { detailsDesc += "Scanlator: $it\n" }
 
     val tagsDesc = buildTagsDescription(this)
 
