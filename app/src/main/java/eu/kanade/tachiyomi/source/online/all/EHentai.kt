@@ -320,7 +320,7 @@ class EHentai(override val id: Long,
             .appendQueryParameter(param, value)
             .toString()
 
-    override val client = super.client.newBuilder()
+    override val client = network.client.newBuilder()
             .addInterceptor { chain ->
                 val newReq = chain
                         .request()
