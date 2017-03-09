@@ -50,8 +50,8 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
                                 .show()
                         Observable.fromCallable {
                             savePassword(c.toString())
-                        }.observeOn(Schedulers.computation())
-                                .subscribeOn(AndroidSchedulers.mainThread())
+                        }.subscribeOn(Schedulers.computation())
+                                .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe {
                                     progressDialog.dismiss()
                                     updateSummary()
