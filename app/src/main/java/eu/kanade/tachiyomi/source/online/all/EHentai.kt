@@ -245,16 +245,25 @@ class EHentai(override val id: Long,
     override fun pageListParse(response: Response)
             = throw UnsupportedOperationException("Unused method was called somehow!")
 
-    override fun imageUrlParse(response: Response): String {
+    override fun fetchImageUrl(page: Page): Observable<String> {
+        return client.newCall(imageUrlRequest(page))
+                .asObservableSuccess()
+                .map { realImageUrlParse(it, page) }
+    }
+
+    fun realImageUrlParse(response: Response, page: Page): String {
         with(response.asJsoup()) {
-            val currentImage = select("img[onerror]").attr("src")
-            //TODO This doesn't work currently. Find a better way to do this
+            val currentImage = getElementById("img").attr("src")
             //Each press of the retry button will choose another server
-//            select("#loadfail").attr("onclick").nullIfBlank()?.let {
-//                page.url = addParam(page.url, "nl", it.substring(it.indexOf('\'') + 1 .. it.lastIndexOf('\'') - 1))
-//            }
+            select("#loadfail").attr("onclick").nullIfBlank()?.let {
+                page.url = addParam(page.url, "nl", it.substring(it.indexOf('\'') + 1 .. it.lastIndexOf('\'') - 1))
+            }
             return currentImage
         }
+    }
+
+    override fun imageUrlParse(response: Response): String {
+        throw UnsupportedOperationException("Unused method was called somehow!")
     }
 
     val cookiesHeader by lazy {

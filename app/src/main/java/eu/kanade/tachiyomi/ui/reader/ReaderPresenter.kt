@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.DiskUtil
 import eu.kanade.tachiyomi.util.RetryWithDelay
@@ -354,6 +355,11 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
             if (uri != null && !page.chapter.isDownloaded) {
                 chapterCache.removeFileFromCache(uri.encodedPath.substringAfterLast('/'))
             }
+
+            //If we are using EHentai/ExHentai, get a new image URL
+            if(source is EHentai)
+                page.imageUrl = null
+
             loader.retryPage(page)
         }
     }
