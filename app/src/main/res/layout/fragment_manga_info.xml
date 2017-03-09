@@ -275,7 +275,9 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="false"
-                        android:textIsSelectable="false"
+                        android:textIsSelectable="true"
+                        android:focusable="true"
+                        android:longClickable="true"
                         />
                 </LinearLayout>
 
