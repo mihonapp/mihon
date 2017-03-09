@@ -23,7 +23,7 @@ import eu.kanade.tachiyomi.source.online.russian.Readmanga
 import eu.kanade.tachiyomi.util.hasPermission
 import exh.*
 import org.yaml.snakeyaml.Yaml
-import rx.functions.Action1
+import rx.Observable
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
@@ -35,21 +35,20 @@ open class SourceManager(private val context: Context) {
     private val sourcesMap = mutableMapOf<Long, Source>()
 
     init {
-        createSources()
+        //Recreate sources when they change
+        val prefEntries = arrayOf(
+                prefs.enableExhentai(),
+                prefs.imageQuality(),
+                prefs.useHentaiAtHome(),
+                prefs.useJapaneseTitle(),
+                prefs.ehSearchSize(),
+                prefs.thumbnailRows()
+        ).map { it.asObservable() }
 
-        //Rebuild sources when settings change
-        val action: Action1<Any> = Action1 {
+        Observable.merge(prefEntries).skip(prefEntries.size - 1).subscribe {
             sourcesMap.clear()
             createSources()
         }
-        prefs.enableExhentai().asObservable().subscribe(action)
-        prefs.imageQuality().asObservable().subscribe (action)
-        prefs.useHentaiAtHome().asObservable().subscribe(action)
-        prefs.useJapaneseTitle().asObservable().subscribe {
-            action.call(null)
-        }
-        prefs.ehSearchSize().asObservable().subscribe (action)
-        prefs.thumbnailRows().asObservable().subscribe(action)
     }
 
     open fun get(sourceKey: Long): Source? {
