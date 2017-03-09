@@ -101,5 +101,5 @@
 -keep class exh.** { *; }
 
 # Keep google stuff
--keep com.google.android.gms.** { *; }
--keep com.google.firebase.** { *; }
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.firebase.** { *; }
