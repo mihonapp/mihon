@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -59,14 +58,21 @@ class UpdateDownloaderService : IntentService(UpdateDownloaderService::class.jav
     fun downloadApk(url: String) {
         // Show notification download starting.
         sendInitialBroadcast()
-        // Progress of the download
-        var savedProgress = 0
 
         val progressListener = object : ProgressListener {
+
+            // Progress of the download
+            var savedProgress = 0
+
+            // Keep track of the last notification sent to avoid posting too many.
+            var lastTick = 0L
+
             override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
                 val progress = (100 * bytesRead / contentLength).toInt()
-                if (progress > savedProgress) {
+                val currentTime = System.currentTimeMillis()
+                if (progress > savedProgress && currentTime - 200 > lastTick) {
                     savedProgress = progress
+                    lastTick = currentTime
                     sendProgressBroadcast(progress)
                 }
             }
@@ -112,11 +118,7 @@ class UpdateDownloaderService : IntentService(UpdateDownloaderService::class.jav
             putExtra(UpdateDownloaderReceiver.EXTRA_ACTION, UpdateDownloaderReceiver.NOTIFICATION_UPDATER_PROGRESS)
             putExtra(UpdateDownloaderReceiver.EXTRA_PROGRESS, progress)
         }
-        // Prevents not showing of install notification TODO weird Android N bug. Find out what goes wrong
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || progress <= 95) {
-            // Show download progress notification.
-            sendLocalBroadcastSync(intent)
-        }
+        sendLocalBroadcastSync(intent)
     }
 
     /**
