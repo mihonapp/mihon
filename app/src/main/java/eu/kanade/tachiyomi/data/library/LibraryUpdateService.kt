@@ -276,10 +276,10 @@ class LibraryUpdateService : Service() {
                     if (newUpdates.isEmpty()) {
                         cancelNotification()
                     } else {
+                        showResultNotification(newUpdates, failedUpdates)
                         if (preferences.downloadNew()) {
                             DownloadService.start(this)
                         }
-                        showResultNotification(newUpdates, failedUpdates)
                     }
                 }
     }
