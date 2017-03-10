@@ -2,7 +2,20 @@
 <changelog bulletedList="true">
 
     <changelogversion versionName="v0.5.0" changeDate="">
-        <!-- TODO Add EH changes -->
+        <changelogtext>EH: Add namespace existence searching.</changelogtext>
+
+        <changelogtext>EH: Added advanced search options.</changelogtext>
+
+        <changelogtext>EH: Pressing retry on an E-Hentai/ExHentai image that failed to download will now properly download the image from a different server.</changelogtext>
+
+        <changelogtext>EH: Gallery info screen is now selectable.</changelogtext>
+
+        <changelogtext>EH: Add app lock feature.</changelogtext>
+
+        <changelogtext>EH: Added PervEden and nhentai sources.</changelogtext>
+
+        <changelogtext>EH: Various bug fixes.</changelogtext>
+
         <changelogtext>Support for local manga. Head to the [a href="https://github.com/inorichi/tachiyomi/wiki/Local-manga"]wiki page[/a] for instructions.</changelogtext>
 
         <changelogtext>Added an option to detect and remove the white borders of the images.</changelogtext>
