@@ -54,8 +54,6 @@ class MetadataHelper {
         exGalleryBook().read<ExGalleryMetadata>(it)
     }
 
-    //TODO Problem, our new metadata structures are incompatible.
-    //TODO We will probably just delete the old metadata structures
     fun exGalleryBook() = Paper.book("gallery-ex")!!
 
     fun pervEdenGalleryBook() = Paper.book("gallery-perveden")!!

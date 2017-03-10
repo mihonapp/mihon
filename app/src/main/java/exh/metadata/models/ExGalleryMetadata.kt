@@ -45,7 +45,6 @@ class ExGalleryMetadata : SearchableGalleryMetadata() {
     override fun galleryUniqueIdentifier() = exh?.let { exh ->
         url?.let {
             //Fuck, this should be EXH and EH but it's too late to change it now...
-            //TODO Change this during migration
             "${if(exh) "EXH" else "EX"}-${galleryId()}-${galleryToken()}"
         }
     }
