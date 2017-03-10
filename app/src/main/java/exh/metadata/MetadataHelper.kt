@@ -54,13 +54,6 @@ class MetadataHelper {
         exGalleryBook().read<ExGalleryMetadata>(it)
     }
 
-    fun hasMetadata(url: String, exh: Boolean): Boolean
-            = ExGalleryMetadata().let {
-        it.url = url
-        it.exh = exh
-        return exGalleryBook().exist(it.galleryUniqueIdentifier())
-    }
-
     //TODO Problem, our new metadata structures are incompatible.
     //TODO We will probably just delete the old metadata structures
     fun exGalleryBook() = Paper.book("gallery-ex")!!

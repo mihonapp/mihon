@@ -10,8 +10,10 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
 import exh.isExSource
+import exh.isLewdSource
 import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
+import exh.metadata.genericCopyTo
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import kotlin.concurrent.thread
@@ -44,8 +46,8 @@ class MetadataFetchDialog {
             val libraryMangas = db.getLibraryMangas()
                     .executeAsBlocking()
                     .filter {
-                        it.source <= 2
-                        && !metadataHelper.hasMetadata(it.url, isExSource(it.source))
+                        isLewdSource(it.source)
+                        && metadataHelper.fetchMetadata(it.url, it.source) == null
                     }
 
             context.runOnUiThread {
@@ -61,9 +63,8 @@ class MetadataFetchDialog {
                 try {
                     val source = sourceManager.get(manga.source)
                     source?.let {
-                        it as EHentai
                         manga.copyFrom(it.fetchMangaDetails(manga).toBlocking().first())
-                        metadataHelper.fetchEhMetadata(manga.url, it.exh)?.copyTo(manga)
+                        metadataHelper.fetchMetadata(manga.url, manga.source)?.genericCopyTo(manga)
                     }
                 } catch(t: Throwable) {
                     Timber.e(t, "Could not migrate manga!")

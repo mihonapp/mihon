@@ -163,7 +163,8 @@ class NHentai(context: Context) : HttpSource() {
         listOf(SChapter.create().apply {
             url = manga.url
             name = "Chapter"
-            date_upload = it.uploadDate ?: 0
+            //TODO Get this working later
+//            date_upload = it.uploadDate ?: 0
             chapter_number = 1f
         })
     }!!

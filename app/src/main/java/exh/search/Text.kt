@@ -8,6 +8,7 @@ class Text: QueryComponent() {
 
     private var regex: VerbalExpression? = null
     private var lenientRegex: VerbalExpression? = null
+    private var rawText: String? = null
 
     fun asRegex(): VerbalExpression {
         if(regex == null) {
@@ -35,9 +36,14 @@ class Text: QueryComponent() {
         return builder
     }
 
-    fun rawTextOnly() = components
-            .filter { it is StringTextComponent }
-            .joinToString(separator = "", transform = {
-                (it as StringTextComponent).value
-            })
+    fun rawTextOnly() = if(rawText != null)
+        rawText!!
+    else {
+        rawText = components
+                .filter { it is StringTextComponent }
+                .joinToString(separator = "", transform = {
+                    (it as StringTextComponent).value
+                })
+        rawText!!
+    }
 }

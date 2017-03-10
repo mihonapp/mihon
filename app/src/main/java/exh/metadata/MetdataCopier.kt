@@ -3,6 +3,8 @@ package exh.metadata
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.source.online.all.EHentai
+import eu.kanade.tachiyomi.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.source.online.all.PervEden
 import exh.metadata.models.*
 import exh.plusAssign
@@ -192,6 +194,16 @@ fun NHentaiMetadata.copyTo(manga: SManga) {
     manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
             .filter(String::isNotBlank)
             .joinToString(separator = "\n")
+}
+
+fun SearchableGalleryMetadata.genericCopyTo(manga: SManga): Boolean {
+    when(this) {
+        is ExGalleryMetadata -> this.copyTo(manga)
+        is PervEdenGalleryMetadata -> this.copyTo(manga)
+        is NHentaiMetadata -> this.copyTo(manga)
+        else -> return false
+    }
+    return true
 }
 
 private fun buildTagsDescription(metadata: SearchableGalleryMetadata)
