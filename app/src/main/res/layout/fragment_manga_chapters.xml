@@ -13,8 +13,7 @@
         android:layout_height="match_parent"
         android:background="?attr/colorAccent"
         android:elevation="5dp"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -35,6 +34,17 @@
         </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <eu.davidea.fastscroller.FastScroller
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fast_scroller"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="end"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

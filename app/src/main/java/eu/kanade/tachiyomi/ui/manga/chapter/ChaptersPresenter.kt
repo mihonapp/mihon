@@ -65,14 +65,14 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     /**
      * List of chapters of the manga. It's always unfiltered and unsorted.
      */
-    var chapters: List<ChapterModel> = emptyList()
+    var chapters: List<ChapterItem> = emptyList()
         private set
 
     /**
      * Subject of list of chapters to allow updating the view without going to DB.
      */
-    val chaptersRelay: PublishRelay<List<ChapterModel>>
-            by lazy { PublishRelay.create<List<ChapterModel>>() }
+    val chaptersRelay: PublishRelay<List<ChapterItem>>
+            by lazy { PublishRelay.create<List<ChapterItem>>() }
 
     /**
      * Whether the chapter list has been requested to the source.
@@ -103,7 +103,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
         chaptersRelay.flatMap { applyChapterFilters(it) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeLatestCache(ChaptersFragment::onNextChapters,
-                        { view, error -> Timber.e(error) })
+                        { _, error -> Timber.e(error) })
 
         // Add the subscription that retrieves the chapters from the database, keeps subscribed to
         // changes, and sends the list of chapters to the relay.
@@ -135,15 +135,15 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .filter { download -> download.manga.id == manga.id }
                 .doOnNext { onDownloadStatusChange(it) }
                 .subscribeLatestCache(ChaptersFragment::onChapterStatusChange,
-                        { view, error -> Timber.e(error) })
+                        { _, error -> Timber.e(error) })
     }
 
     /**
      * Converts a chapter from the database to an extended model, allowing to store new fields.
      */
-    private fun Chapter.toModel(): ChapterModel {
+    private fun Chapter.toModel(): ChapterItem {
         // Create the model object.
-        val model = ChapterModel(this)
+        val model = ChapterItem(this, manga)
 
         // Find an active download for this chapter.
         val download = downloadManager.queue.find { it.chapter.id == id }
@@ -160,7 +160,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      *
      * @param chapters the list of chapter from the database.
      */
-    private fun setDownloadedChapters(chapters: List<ChapterModel>) {
+    private fun setDownloadedChapters(chapters: List<ChapterItem>) {
         val files = downloadManager.findMangaDir(source, manga)?.listFiles() ?: return
         val cached = mutableMapOf<Chapter, String>()
         files.mapNotNull { it.name }
@@ -181,7 +181,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .subscribeOn(Schedulers.io())
                 .map { syncChaptersWithSource(db, it, manga, source) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeFirst({ view, chapters ->
+                .subscribeFirst({ view, _ ->
                     view.onFetchChaptersDone()
                 }, ChaptersFragment::onFetchChaptersError)
     }
@@ -198,7 +198,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      * @param chapters the list of chapters from the database
      * @return an observable of the list of chapters filtered and sorted.
      */
-    private fun applyChapterFilters(chapters: List<ChapterModel>): Observable<List<ChapterModel>> {
+    private fun applyChapterFilters(chapters: List<ChapterItem>): Observable<List<ChapterItem>> {
         var observable = Observable.from(chapters).subscribeOn(Schedulers.io())
         if (onlyUnread()) {
             observable = observable.filter { !it.read }
@@ -248,7 +248,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     /**
      * Returns the next unread chapter or null if everything is read.
      */
-    fun getNextUnreadChapter(): ChapterModel? {
+    fun getNextUnreadChapter(): ChapterItem? {
         return chapters.sortedByDescending { it.source_order }.find { !it.read }
     }
 
@@ -257,7 +257,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      * @param selectedChapters the list of selected chapters.
      * @param read whether to mark chapters as read or unread.
      */
-    fun markChaptersRead(selectedChapters: List<ChapterModel>, read: Boolean) {
+    fun markChaptersRead(selectedChapters: List<ChapterItem>, read: Boolean) {
         Observable.from(selectedChapters)
                 .doOnNext { chapter ->
                     chapter.read = read
@@ -275,7 +275,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      * Downloads the given list of chapters with the manager.
      * @param chapters the list of chapters to download.
      */
-    fun downloadChapters(chapters: List<ChapterModel>) {
+    fun downloadChapters(chapters: List<ChapterItem>) {
         DownloadService.start(context)
         downloadManager.downloadChapters(manga, chapters)
     }
@@ -284,7 +284,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      * Bookmarks the given list of chapters.
      * @param selectedChapters the list of chapters to bookmark.
      */
-    fun bookmarkChapters(selectedChapters: List<ChapterModel>, bookmarked: Boolean) {
+    fun bookmarkChapters(selectedChapters: List<ChapterItem>, bookmarked: Boolean) {
         Observable.from(selectedChapters)
                 .doOnNext { chapter ->
                     chapter.bookmark = bookmarked
@@ -299,14 +299,14 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      * Deletes the given list of chapter.
      * @param chapters the list of chapters to delete.
      */
-    fun deleteChapters(chapters: List<ChapterModel>) {
+    fun deleteChapters(chapters: List<ChapterItem>) {
         Observable.from(chapters)
                 .doOnNext { deleteChapter(it) }
                 .toList()
                 .doOnNext { if (onlyDownloaded()) refreshChapters() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeFirst({ view, result ->
+                .subscribeFirst({ view, _ ->
                     view.onChaptersDeleted()
                 }, ChaptersFragment::onChaptersDeletedError)
     }
@@ -315,7 +315,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      * Deletes a chapter from disk. This method is called in a background thread.
      * @param chapter the chapter to delete.
      */
-    private fun deleteChapter(chapter: ChapterModel) {
+    private fun deleteChapter(chapter: ChapterItem) {
         downloadManager.queue.remove(chapter)
         downloadManager.deleteChapter(source, manga, chapter)
         chapter.status = Download.NOT_DOWNLOADED

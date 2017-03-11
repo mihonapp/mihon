@@ -12,12 +12,11 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
-import eu.davidea.flexibleadapter4.FlexibleAdapter
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.fragment.BaseRxFragment
 import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -30,7 +29,10 @@ import nucleus.factory.RequiresPresenter
 import timber.log.Timber
 
 @RequiresPresenter(ChaptersPresenter::class)
-class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callback, FlexibleViewHolder.OnListItemClickListener {
+class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(),
+        ActionMode.Callback,
+        FlexibleAdapter.OnItemClickListener,
+        FlexibleAdapter.OnItemLongClickListener {
 
     companion object {
         /**
@@ -71,38 +73,31 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         recycler.setHasFixedSize(true)
+//        TODO enable in a future commit
+//        adapter.setFastScroller(fast_scroller, context.getResourceColor(R.attr.colorAccent))
+//        adapter.toggleFastScroller()
 
         swipe_refresh.setOnRefreshListener { fetchChapters() }
 
         fab.setOnClickListener {
-            val chapter = presenter.getNextUnreadChapter()
-            if (chapter != null) {
+            val item = presenter.getNextUnreadChapter()
+            if (item != null) {
                 // Create animation listener
                 val revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
                     override fun onAnimationStart(animation: Animator?) {
-                        openChapter(chapter, true)
+                        openChapter(item.chapter, true)
                     }
                 }
 
                 // Get coordinates and start animation
                 val coordinates = fab.getCoordinates()
                 if (!reveal_view.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
-                    openChapter(chapter)
+                    openChapter(item.chapter)
                 }
             } else {
                 context.toast(R.string.no_next_chapter)
             }
         }
-
-    }
-
-    override fun onPause() {
-        // Stop recycler's scrolling when onPause is called. If the activity is finishing
-        // the presenter will be destroyed, and it could cause NPE
-        // https://github.com/inorichi/tachiyomi/issues/159
-        recycler.stopScroll()
-
-        super.onPause()
     }
 
     override fun onResume() {
@@ -173,19 +168,20 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         return true
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onNextManga(manga: Manga) {
         // Set initial values
         activity.supportInvalidateOptionsMenu()
     }
 
-    fun onNextChapters(chapters: List<ChapterModel>) {
+    fun onNextChapters(chapters: List<ChapterItem>) {
         // If the list is empty, fetch chapters from source if the conditions are met
         // We use presenter chapters instead because they are always unfiltered
         if (presenter.chapters.isEmpty())
             initialFetchChapters()
 
         destroyActionModeIfNeeded()
-        adapter.items = chapters
+        adapter.updateDataSet(chapters)
     }
 
     private fun initialFetchChapters() {
@@ -230,7 +226,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                 .title(R.string.action_display_mode)
                 .items(modes.map { getString(it) })
                 .itemsIds(ids)
-                .itemsCallbackSingleChoice(selectedIndex) { dialog, itemView, which, text ->
+                .itemsCallbackSingleChoice(selectedIndex) { _, itemView, _, _ ->
                     // Save the new display mode
                     presenter.setDisplayMode(itemView.id)
                     // Refresh ui
@@ -250,7 +246,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                 .title(R.string.sorting_mode)
                 .items(modes.map { getString(it) })
                 .itemsIds(ids)
-                .itemsCallbackSingleChoice(selectedIndex) { dialog, itemView, which, text ->
+                .itemsCallbackSingleChoice(selectedIndex) { _, itemView, _, _ ->
                     // Save the new sorting mode
                     presenter.setSorting(itemView.id)
                     true
@@ -267,7 +263,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                 .title(R.string.manga_download)
                 .negativeText(android.R.string.cancel)
                 .items(modes.map { getString(it) })
-                .itemsCallback { dialog, view, i, charSequence ->
+                .itemsCallback { _, _, i, _ ->
 
                     fun getUnreadChaptersSorted() = presenter.chapters
                             .filter { !it.read && it.status == Download.NOT_DOWNLOADED }
@@ -299,8 +295,8 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         getHolder(download.chapter)?.notifyStatus(download.status)
     }
 
-    private fun getHolder(chapter: Chapter): ChaptersHolder? {
-        return recycler.findViewHolderForItemId(chapter.id!!) as? ChaptersHolder
+    private fun getHolder(chapter: Chapter): ChapterHolder? {
+        return recycler.findViewHolderForItemId(chapter.id!!) as? ChapterHolder
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
@@ -324,7 +320,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                         .content(R.string.confirm_delete_chapters)
                         .positiveText(android.R.string.yes)
                         .negativeText(android.R.string.no)
-                        .onPositive { dialog, action -> deleteChapters(getSelectedChapters()) }
+                        .onPositive { _, _ -> deleteChapters(getSelectedChapters()) }
                         .show()
             }
             else -> return false
@@ -338,8 +334,8 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         actionMode = null
     }
 
-    fun getSelectedChapters(): List<ChapterModel> {
-        return adapter.selectedItems.map { adapter.getItem(it) }
+    fun getSelectedChapters(): List<ChapterItem> {
+        return adapter.selectedPositions.map { adapter.getItem(it) }
     }
 
     fun destroyActionModeIfNeeded() {
@@ -351,18 +347,18 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         setContextTitle(adapter.selectedItemCount)
     }
 
-    fun markAsRead(chapters: List<ChapterModel>) {
+    fun markAsRead(chapters: List<ChapterItem>) {
         presenter.markChaptersRead(chapters, true)
         if (presenter.preferences.removeAfterMarkedAsRead()) {
             deleteChapters(chapters)
         }
     }
 
-    fun markAsUnread(chapters: List<ChapterModel>) {
+    fun markAsUnread(chapters: List<ChapterItem>) {
         presenter.markChaptersRead(chapters, false)
     }
 
-    fun markPreviousAsRead(chapter: ChapterModel) {
+    fun markPreviousAsRead(chapter: ChapterItem) {
         val chapters = if (presenter.sortDescending()) adapter.items.reversed() else adapter.items
         val chapterPos = chapters.indexOf(chapter)
         if (chapterPos != -1) {
@@ -370,7 +366,7 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         }
     }
 
-    fun downloadChapters(chapters: List<ChapterModel>) {
+    fun downloadChapters(chapters: List<ChapterItem>) {
         destroyActionModeIfNeeded()
         presenter.downloadChapters(chapters)
         if (!presenter.manga.favorite){
@@ -382,12 +378,12 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
         }
     }
 
-    fun bookmarkChapters(chapters: List<ChapterModel>, bookmarked: Boolean) {
+    fun bookmarkChapters(chapters: List<ChapterItem>, bookmarked: Boolean) {
         destroyActionModeIfNeeded()
         presenter.bookmarkChapters(chapters, bookmarked)
     }
 
-    fun deleteChapters(chapters: List<ChapterModel>) {
+    fun deleteChapters(chapters: List<ChapterItem>) {
         destroyActionModeIfNeeded()
         DeletingChaptersDialog().show(childFragmentManager, DeletingChaptersDialog.TAG)
         presenter.deleteChapters(chapters)
@@ -408,26 +404,40 @@ class ChaptersFragment : BaseRxFragment<ChaptersPresenter>(), ActionMode.Callbac
                 ?.dismissAllowingStateLoss()
     }
 
-    override fun onListItemClick(position: Int): Boolean {
+    override fun onItemClick(position: Int): Boolean {
         val item = adapter.getItem(position) ?: return false
         if (actionMode != null && adapter.mode == FlexibleAdapter.MODE_MULTI) {
             toggleSelection(position)
             return true
         } else {
-            openChapter(item)
+            openChapter(item.chapter)
             return false
         }
     }
 
-    override fun onListItemLongClick(position: Int) {
+    override fun onItemLongClick(position: Int) {
         if (actionMode == null)
             actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
 
         toggleSelection(position)
     }
 
+    fun onItemMenuClick(position: Int, item: MenuItem) {
+        val chapter = adapter.getItem(position)?.let { listOf(it) } ?: return
+
+        when (item.itemId) {
+            R.id.action_download -> downloadChapters(chapter)
+            R.id.action_bookmark -> bookmarkChapters(chapter, true)
+            R.id.action_remove_bookmark -> bookmarkChapters(chapter, false)
+            R.id.action_delete -> deleteChapters(chapter)
+            R.id.action_mark_as_read -> markAsRead(chapter)
+            R.id.action_mark_as_unread -> markAsUnread(chapter)
+            R.id.action_mark_previous_as_read -> markPreviousAsRead(chapter[0])
+        }
+    }
+
     private fun toggleSelection(position: Int) {
-        adapter.toggleSelection(position, false)
+        adapter.toggleSelection(position)
 
         val count = adapter.selectedItemCount
         if (count == 0) {
