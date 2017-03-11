@@ -10,7 +10,7 @@ import rx.Subscription
 import java.util.concurrent.atomic.AtomicBoolean
 
 fun Call.asObservable(): Observable<Response> {
-    return Observable.create { subscriber ->
+    return Observable.unsafeCreate { subscriber ->
         // Since Call is a one-shot type, clone it for each new subscriber.
         val call = clone()
 

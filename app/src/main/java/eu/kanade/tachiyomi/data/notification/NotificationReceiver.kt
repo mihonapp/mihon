@@ -14,10 +14,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.deleteIfExists
-import eu.kanade.tachiyomi.util.getUriCompat
-import eu.kanade.tachiyomi.util.notificationManager
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.*
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
@@ -120,7 +117,10 @@ class NotificationReceiver : BroadcastReceiver() {
         dismissNotification(context, notificationId)
 
         // Delete file
-        File(path).deleteIfExists()
+        val file = File(path)
+        file.deleteIfExists()
+
+        DiskUtil.scanMedia(context, file)
     }
 
     /**
@@ -180,7 +180,7 @@ class NotificationReceiver : BroadcastReceiver() {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_RESUME_DOWNLOADS
             }
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         /**
@@ -193,7 +193,7 @@ class NotificationReceiver : BroadcastReceiver() {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_CLEAR_DOWNLOADS
             }
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         /**
@@ -208,7 +208,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 action = ACTION_DISMISS_NOTIFICATION
                 putExtra(EXTRA_NOTIFICATION_ID, notificationId)
             }
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         /**
@@ -225,7 +225,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 putExtra(EXTRA_FILE_LOCATION, path)
                 putExtra(EXTRA_NOTIFICATION_ID, notificationId)
             }
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         /**
@@ -242,7 +242,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 putExtra(EXTRA_FILE_LOCATION, path)
                 putExtra(EXTRA_NOTIFICATION_ID, notificationId)
             }
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         /**
@@ -258,7 +258,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 putExtra(EXTRA_MANGA_ID, manga.id)
                 putExtra(EXTRA_CHAPTER_ID, chapter.id)
             }
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         /**
@@ -271,7 +271,7 @@ class NotificationReceiver : BroadcastReceiver() {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_CANCEL_LIBRARY_UPDATE
             }
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
     }
 }

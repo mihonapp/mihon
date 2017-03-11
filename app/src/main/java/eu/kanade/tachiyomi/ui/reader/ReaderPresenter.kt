@@ -607,13 +607,17 @@ class ReaderPresenter : BasePresenter<ReaderActivity>() {
                         }
                     }
 
+                    DiskUtil.scanMedia(context, destFile)
+
                     imageNotifier.onComplete(destFile)
                 }
                 .subscribeOn(Schedulers.io())
-                .subscribe({},
-                        { error ->
-                            Timber.e(error)
-                            imageNotifier.onError(error.message)
-                        })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    context.toast(R.string.picture_saved)
+                }, { error ->
+                    Timber.e(error)
+                    imageNotifier.onError(error.message)
+                })
     }
 }

@@ -114,13 +114,13 @@ dependencies {
     compile "com.android.support:support-annotations:$support_library_version"
     compile "com.android.support:customtabs:$support_library_version"
 
-    compile 'com.android.support.constraint:constraint-layout:1.0.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     compile 'com.android.support:multidex:1.0.1'
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.6'
+    compile 'io.reactivex:rxjava:1.2.7'
     compile 'com.jakewharton.rxrelay:rxrelay:1.2.0'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
     compile 'com.github.pwittchen:reactivenetwork:0.7.0'
@@ -153,7 +153,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.2'
 
     // Job scheduling
-    compile 'com.evernote:android-job:1.1.6'
+    compile 'com.evernote:android-job:1.1.7'
     compile 'com.google.android.gms:play-services-gcm:10.2.0'
 
     // Changelog
@@ -193,7 +193,7 @@ dependencies {
     compile 'com.github.inorichi:FlexibleAdapter:93985fe' // v4.2.0 to be removed
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-    compile 'com.afollestad.material-dialogs:core:0.9.3.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.1'
     compile 'net.xpece.android:support-preference:1.2.5'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
