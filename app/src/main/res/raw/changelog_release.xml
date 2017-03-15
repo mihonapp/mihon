@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="v0.5.0" changeDate="">
+    <changelogversion versionName="v5.0.1" changeDate="">
+        <changelogtext>EH: Add the ability to download favorites from your E-Hentai/ExHentai account.</changelogtext>
+
+        <changelogtext>Fix downloader breaking on some manga.</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="v5.0.0" changeDate="">
         <changelogtext>EH: Add namespace existence searching.</changelogtext>
 
         <changelogtext>EH: Added advanced search options.</changelogtext>
