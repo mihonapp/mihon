@@ -22,7 +22,10 @@ import java.util.*
 import exh.ui.login.LoginActivity
 import exh.util.UriFilter
 import exh.util.UriGroup
+import okhttp3.CacheControl
+import okhttp3.Headers
 import okhttp3.Request
+import org.jsoup.nodes.Document
 
 class EHentai(override val id: Long,
               val exh: Boolean,
@@ -38,7 +41,7 @@ class EHentai(override val id: Long,
         get() = if(exh)
             "$schema://exhentai.org"
         else
-            "http://e-hentai.org"
+            "$schema://e-hentai.org"
 
     override val lang = "all"
     override val supportsLatest = true
@@ -52,11 +55,8 @@ class EHentai(override val id: Long,
      */
     data class ParsedManga(val fav: String?, val manga: Manga)
 
-    /**
-     * Parse a list of galleries
-     */
-    fun genericMangaParse(response: Response)
-            = with(response.asJsoup()) {
+    fun extendedGenericMangaParse(doc: Document)
+            = with(doc) {
         //Parse mangas
         val parsedMangas = select(".gtr0,.gtr1").map {
             ParsedManga(
@@ -84,7 +84,15 @@ class EHentai(override val id: Long,
         val hasNextPage = select("a[onclick=return false]").last()?.let {
             it.text() == ">"
         } ?: false
-        MangasPage(parsedMangas.map { it.manga }, hasNextPage)
+        Pair(parsedMangas, hasNextPage)
+    }
+
+    /**
+     * Parse a list of galleries
+     */
+    fun genericMangaParse(response: Response)
+            = extendedGenericMangaParse(response.asJsoup()).let {
+        MangasPage(it.first.map { it.manga }, it.second)
     }
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>>
@@ -143,16 +151,29 @@ class EHentai(override val id: Long,
         return exGet(uri.toString(), page)
     }
 
-    override fun latestUpdatesRequest(page: Int) = exGet(baseUrl, page)
+    override fun latestUpdatesRequest(page: Int) = exGet(baseUrl, page)!!
 
     override fun popularMangaParse(response: Response) = genericMangaParse(response)
     override fun searchMangaParse(response: Response) = genericMangaParse(response)
     override fun latestUpdatesParse(response: Response) = genericMangaParse(response)
 
-    fun exGet(url: String, page: Int? = null)
+    fun exGet(url: String, page: Int? = null, additionalHeaders: Headers? = null, cache: Boolean = true)
         = GET(page?.let {
             addParam(url, "page", Integer.toString(page - 1))
-        } ?: url, headers)
+        } ?: url, additionalHeaders?.let {
+            val headers = headers.newBuilder()
+        it.toMultimap().forEach { t, u ->
+            u.forEach {
+                headers.add(t, it)
+            }
+        }
+        headers.build()
+    } ?: headers).let {
+        if(!cache)
+            it.newBuilder().cacheControl(CacheControl.FORCE_NETWORK).build()
+        else
+            it
+    }!!
 
     /**
      * Parse gallery page to metadata model
@@ -265,6 +286,37 @@ class EHentai(override val id: Long,
     override fun imageUrlParse(response: Response): String {
         throw UnsupportedOperationException("Unused method was called somehow!")
     }
+
+    //Too lazy to write return type
+    fun fetchFavorites() = {
+        //Used to get "s" cookie
+        val favoriteUrl = "$baseUrl/favorites.php"
+        val result = mutableListOf<ParsedManga>()
+        var page = 1
+
+        var favNames: List<String>? = null
+
+        do {
+            val response2 = client.newCall(exGet(favoriteUrl,
+                    page = page,
+                    cache = false)).execute()
+            val doc = response2.asJsoup()
+
+            //Parse favorites
+            val parsed = extendedGenericMangaParse(doc)
+            result += parsed.first
+
+            //Parse fav names
+            if (favNames == null)
+                favNames = doc.getElementsByClass("nosel").first().children().filter {
+                    it.children().size >= 3
+                }.map { it.child(2).text() }.filterNotNull()
+
+            //Next page
+            page++
+        } while (parsed.second)
+        Pair(result as List<ParsedManga>, favNames!!)
+    }()
 
     val cookiesHeader by lazy {
         val cookies: MutableMap<String, String> = mutableMapOf()
@@ -403,5 +455,20 @@ class EHentai(override val id: Long,
     companion object {
         val QUERY_PREFIX = "?f_apply=Apply+Filter"
         val TR_SUFFIX = "TR"
+
+        fun getCookies(cookies: String): Map<String, String>? {
+            val foundCookies = HashMap<String, String>()
+            for (cookie in cookies.split(";".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()) {
+                val splitCookie = cookie.split("=".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()
+                if (splitCookie.size < 2) {
+                    return null
+                }
+                val trimmedKey = splitCookie[0].trim { it <= ' ' }
+                if (!foundCookies.containsKey(trimmedKey)) {
+                    foundCookies.put(trimmedKey, splitCookie[1].trim { it <= ' ' })
+                }
+            }
+            return foundCookies
+        }
     }
 }

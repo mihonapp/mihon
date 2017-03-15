@@ -31,11 +31,10 @@
             android:defaultValue="false" />
 
         <SwitchPreference
-            android:dependency="enable_exhentai"
             android:defaultValue="true"
             android:key="secure_exh"
-            android:title="Secure ExHentai"
-            android:summary="Use the HTTPS version of ExHentai. Uncheck if ExHentai is not working" />
+            android:title="Secure ExHentai/E-Hentai"
+            android:summary="Use the HTTPS version of ExHentai/E-Hentai." />
 
         <ListPreference
             android:defaultValue="auto"

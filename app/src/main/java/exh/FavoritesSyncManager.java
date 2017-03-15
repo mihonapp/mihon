@@ -20,11 +20,12 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper;
 import eu.kanade.tachiyomi.data.database.models.Category;
 import eu.kanade.tachiyomi.data.database.models.Manga;
 import eu.kanade.tachiyomi.data.database.models.MangaCategory;
+import eu.kanade.tachiyomi.source.online.all.EHentai;
+import kotlin.Pair;
 //import eu.kanade.tachiyomi.data.source.online.english.EHentai;
 
 public class FavoritesSyncManager {
-    /*
-    Context context;
+    /*Context context;
     DatabaseHelper db;
 
     public FavoritesSyncManager(Context context, DatabaseHelper db) {
@@ -72,10 +73,10 @@ public class FavoritesSyncManager {
                 mainLooper.post(onComplete);
             }
         }).start();
-    }
-
+    }*/
+/*
     public void syncFavorites() throws IOException {
-        EHentai.FavoritesResponse favResponse = EHentai.fetchFavorites(context);
+        Pair favResponse = EHentai.fetchFavorites(context);
         Map<String, List<Manga>> favorites = favResponse.favs;
         List<Category> ourCategories = new ArrayList<>(db.getCategories().executeAsBlocking());
         List<Manga> ourMangas = new ArrayList<>(db.getMangas().executeAsBlocking());
@@ -136,7 +137,7 @@ public class FavoritesSyncManager {
         for(Map.Entry<Manga, Category> entry : mangaToSetCategories.entrySet()) {
             db.setMangaCategories(Collections.singletonList(MangaCategory.Companion.create(entry.getKey(), entry.getValue())),
                     Collections.singletonList(entry.getKey()));
-        }
+        }*/
         //Determines what
         /*Map<Integer, List<Manga>> toUpload = new HashMap<>();
         for (Manga manga : ourMangas) {

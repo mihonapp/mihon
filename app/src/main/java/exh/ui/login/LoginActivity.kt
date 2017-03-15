@@ -7,11 +7,18 @@ import android.view.MenuItem
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import exh.EXH_SOURCE_ID
 import kotlinx.android.synthetic.main.eh_activity_login.*
 import kotlinx.android.synthetic.main.toolbar.*
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.net.HttpCookie
@@ -23,6 +30,8 @@ import java.net.HttpCookie
 class LoginActivity : BaseActivity() {
 
     val preferenceManager: PreferencesHelper by injectLazy()
+
+    val sourceManager: SourceManager by injectLazy()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setAppTheme()
@@ -73,11 +82,38 @@ class LoginActivity : BaseActivity() {
                     //At ExHentai, check that everything worked out...
                     if(applyExHentaiCookies(url)) {
                         preferenceManager.enableExhentai().set(true)
-                        onBackPressed()
+                        finishLogin()
                     }
                 }
             }
         })
+    }
+
+    fun finishLogin() {
+        val progressDialog = MaterialDialog.Builder(this)
+                .title("Finalizing login")
+                .progress(true, 0)
+                .content("Please wait...")
+                .cancelable(false)
+                .show()
+
+        val eh = sourceManager
+                .getOnlineSources()
+                .find { it.id == EXH_SOURCE_ID } as EHentai
+        Observable.fromCallable {
+            //I honestly have no idea why we need to call this twice, but it works, so whatever
+            try {
+                eh.fetchFavorites()
+            } catch(ignored: Exception) {}
+            try {
+                eh.fetchFavorites()
+            } catch(ignored: Exception) {}
+        }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    progressDialog.dismiss()
+                    onBackPressed()
+                }
     }
 
     /**
@@ -127,7 +163,7 @@ class LoginActivity : BaseActivity() {
 
     fun getCookies(url: String): List<HttpCookie>?
             = CookieManager.getInstance().getCookie(url)?.let {
-        it.split("; ").flatMap { 
+        it.split("; ").flatMap {
             HttpCookie.parse(it)
         }
     }
