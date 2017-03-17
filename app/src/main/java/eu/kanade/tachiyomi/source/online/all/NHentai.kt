@@ -94,7 +94,7 @@ class NHentai(context: Context) : HttpSource() {
             }
             val numPages = res.get("num_pages")?.int
             if(results != null && numPages != null)
-                return MangasPage(results, numPages < response.request().tag() as Int)
+                return MangasPage(results, numPages > response.request().tag() as Int)
         } else {
             Timber.w("An error occurred while performing the search: $error")
         }
