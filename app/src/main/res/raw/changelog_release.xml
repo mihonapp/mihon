@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v5.0.2" changeDate="">
+        <changelogtext>EH: Fix nhentai source only showing first page.</changelogtext>
+    </changelogversion>
 
     <changelogversion versionName="v5.0.1" changeDate="">
         <changelogtext>EH: Add the ability to download favorites from your E-Hentai/ExHentai account.</changelogtext>
