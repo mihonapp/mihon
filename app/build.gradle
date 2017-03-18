@@ -101,7 +101,7 @@ android {
 dependencies {
 
     // Modified dependencies
-    compile 'com.github.inorichi:subsampling-scale-image-view:4255750'
+    compile 'com.github.inorichi:subsampling-scale-image-view:01e5385'
     compile 'com.github.inorichi:junrar-android:634c1f5'
 
     // Android support library
@@ -212,7 +212,7 @@ dependencies {
 }
 
 buildscript {
-    ext.kotlin_version = '1.1.0'
+    ext.kotlin_version = '1.1.1'
     repositories {
         mavenCentral()
     }

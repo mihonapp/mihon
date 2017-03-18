@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.source.online.english
 
+import com.squareup.duktape.Duktape
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.source.model.*
@@ -114,15 +115,37 @@ class Kissmanga : ParsedHttpSource() {
     override fun pageListRequest(chapter: SChapter) = POST(baseUrl + chapter.url, headers)
 
     override fun pageListParse(response: Response): List<Page> {
-        val pages = mutableListOf<Page>()
-        //language=RegExp
-        val p = Pattern.compile("""lstImages.push\("(.+?)"""")
-        val m = p.matcher(response.body().string())
+        val body = response.body().string()
 
-        var i = 0
-        while (m.find()) {
-            pages.add(Page(i++, "", m.group(1)))
+        val ca = client.newCall(GET("$baseUrl/Scripts/ca.js", headers)).execute()
+        val lo = client.newCall(GET("$baseUrl/Scripts/lo.js", headers)).execute()
+
+        val caBody = ca.body().string()
+        val loBody = lo.body().string()
+
+        val pages = mutableListOf<Page>()
+
+        Duktape.create().use {
+
+            it.evaluate(caBody)
+            it.evaluate(loBody)
+
+            var p = Pattern.compile("(.*CryptoJS.*)")
+            var m = p.matcher(body)
+            while (m.find()) {
+                it.evaluate(m.group(1))
+            }
+
+            p = Pattern.compile("""lstImages.push\((.*)\);""")
+            m = p.matcher(body)
+
+            var i = 0
+            while (m.find()) {
+                val url = it.evaluate(m.group(1)) as String
+                pages.add(Page(i++, "", url))
+            }
         }
+
         return pages
     }
 
