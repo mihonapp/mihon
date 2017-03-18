@@ -57,6 +57,9 @@ class LibraryUpdateService : Service() {
      */
     val preferences: PreferencesHelper by injectLazy()
 
+    /**
+     * Download Manager
+     */
     val downloadManager: DownloadManager by injectLazy()
 
     /**
@@ -216,7 +219,7 @@ class LibraryUpdateService : Service() {
                         .filter { it.category in categoriesToUpdate }
                         .distinctBy { it.id }
             else
-                db.getFavoriteMangas().executeAsBlocking().distinctBy { it.id }
+                db.getLibraryMangas().executeAsBlocking().distinctBy { it.id }
         }
 
         if (!intent.getBooleanExtra(UPDATE_DETAILS, false) && preferences.updateOnlyNonCompleted()) {
@@ -238,8 +241,16 @@ class LibraryUpdateService : Service() {
     fun updateChapterList(mangaToUpdate: List<Manga>): Observable<Manga> {
         // Initialize the variables holding the progress of the updates.
         val count = AtomicInteger(0)
+        // List containing new updates
         val newUpdates = ArrayList<Manga>()
+        // list containing failed updates
         val failedUpdates = ArrayList<Manga>()
+        // List containing categories that get included in downloads.
+        val categoriesToDownload = preferences.downloadNewCategories().getOrDefault().map(String::toInt)
+        // Boolean to determine if user wants to automatically download new chapters.
+        val downloadNew = preferences.downloadNew().getOrDefault()
+        // Boolean to determine if DownloadManager has downloads
+        var hasDownloads = false
 
         // Emit each manga and update it sequentially.
         return Observable.from(mangaToUpdate)
@@ -254,10 +265,13 @@ class LibraryUpdateService : Service() {
                                 Pair(emptyList<Chapter>(), emptyList<Chapter>())
                             }
                             // Filter out mangas without new chapters (or failed).
-                            .filter { pair -> pair.first.size > 0 }
+                            .filter { pair -> pair.first.isNotEmpty() }
                             .doOnNext {
-                                if (preferences.downloadNew()) {
-                                    downloadChapters(manga, it.first)
+                                if (downloadNew) {
+                                    if (categoriesToDownload.isEmpty() || manga.category in categoriesToDownload) {
+                                        downloadChapters(manga, it.first)
+                                        hasDownloads = true
+                                    }
                                 }
                             }
                             // Convert to the manga that contains new chapters.
@@ -277,8 +291,10 @@ class LibraryUpdateService : Service() {
                         cancelNotification()
                     } else {
                         showResultNotification(newUpdates, failedUpdates)
-                        if (preferences.downloadNew()) {
-                            DownloadService.start(this)
+                        if (downloadNew) {
+                            if (hasDownloads) {
+                                DownloadService.start(this)
+                            }
                         }
                     }
                 }
