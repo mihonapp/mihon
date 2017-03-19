@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v0.5.1" changeDate="">
+        <changelogtext>Added an option to auto download from selected categories.</changelogtext>
+
+        <changelogtext>Handle a few more directories for local manga.</changelogtext>
+
+        <changelogtext>Update Kissmanga parser.</changelogtext>
+
+        <changelogtext>Fixed downloader errors with some manga titles.</changelogtext>
+
+        <changelogtext>Fixed gallery not showing saved images.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.5.0" changeDate="">
         <changelogtext>Support for local manga. Head to the [a href="https://github.com/inorichi/tachiyomi/wiki/Local-manga"]wiki page[/a] for instructions.</changelogtext>
 
