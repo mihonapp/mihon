@@ -265,11 +265,7 @@
 
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Progreso de actualización: %1$d/%2$d</string>
-    <string name="notification_update_completed">Actualización completa</string>
-    <string name="notification_update_error">Se ha producido un error inesperado al actualizar la librería</string>
-    <string name="notification_no_new_chapters">No se encontraron nuevos capítulos</string>
-    <string name="notification_new_chapters">Capítulos nuevos encontrados para:</string>
-    <string name="notification_manga_update_failed">Fallaron al actualizar:</string>
+    <string name="notification_new_chapters">Nuevos capítulos encontrados</string>
     <string name="notification_first_add_to_library">Por favor añada el manga a la librería antes de hacer esto</string>
     <string name="notification_not_connected_to_ac_title">Sincronización cancelada</string>
     <string name="notification_not_connected_to_ac_body">El dispositivo no está cargando</string>

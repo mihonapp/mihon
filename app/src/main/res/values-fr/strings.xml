@@ -313,9 +313,7 @@
 
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Progression mise à jour: %1$d/%2$d</string>
-    <string name="notification_update_completed">Mise à jour terminée</string>
-    <string name="notification_no_new_chapters">Aucun nouveau chapitre trouvé</string>
-    <string name="notification_new_chapters">Des nouveaux chapitres ont été trouvés pour :</string>
+    <string name="notification_new_chapters">Des nouveaux chapitres ont été trouvés</string>
     <string name="notification_cover_update_failed">La mise à jour de la couverture a échoué</string>
     <string name="notification_first_add_to_library">Veuillez ajouter le manga dans votre bibliothèque avant de faire cela</string>
     <string name="notification_not_connected_to_ac_body">Non branché</string>
@@ -368,9 +366,7 @@
     <string name="fifth_to_last">Du cinquième au dernier chapitre</string>
     <string name="login_success">Connexion réussie</string>
     <string name="manga_chapter_no_title">Pas de titre</string>
-    <string name="notification_manga_update_failed">Impossible de mettre à jour le manga:</string>
     <string name="notification_not_connected_to_ac_title">Synchronisation annulée</string>
-    <string name="notification_update_error">Une erreur inattendue s\'est produite lors de la mise à jour de la bibliothèque</string>
     <string name="pref_clear_chapter_cache">Effacer le cache des chapitres</string>
     <string name="pref_remove_after_marked_as_read">Supprimer quand marqué comme lu</string>
     <string name="restore_please_wait">Restauration de la sauvegarde. Veuillez patienter…</string>

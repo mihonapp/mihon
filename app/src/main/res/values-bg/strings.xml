@@ -331,11 +331,7 @@
 
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Напредък: %1$d/%2$d</string>
-    <string name="notification_update_completed">Обновяването завършено.</string>
-    <string name="notification_update_error">Възникна неочаквана грешка при обновяването на библиотеката.</string>
-    <string name="notification_no_new_chapters">Не бяха открити нови глави.</string>
     <string name="notification_new_chapters">Открити нови глави за:</string>
-    <string name="notification_manga_update_failed">Не успяха да се обновят:</string>
     <string name="notification_cover_update_failed">Грешка при обновяването на корицата.</string>
     <string name="notification_first_add_to_library">Моля, добавете мангата в библиотеката си, преди да направите това.</string>
     <string name="notification_not_connected_to_ac_title">Синхронизиране отказано</string>

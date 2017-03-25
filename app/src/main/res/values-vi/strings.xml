@@ -332,11 +332,7 @@
 
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Tiến độ cập nhật: %1$d/%2$d</string>
-    <string name="notification_update_completed">Cập nhật đã hoàn thành</string>
-    <string name="notification_update_error">Một lỗi không mong đợi đã xảy ra khi cập nhật thư viện</string>
-    <string name="notification_no_new_chapters">Không tìm thấy chương mới</string>
     <string name="notification_new_chapters">Đã tìm thấy các chương mới cho:</string>
-    <string name="notification_manga_update_failed">Cập nhật thất bại:</string>
     <string name="notification_cover_update_failed">Cập nhật ảnh bìa thất bại</string>
     <string name="notification_first_add_to_library">Hãy thêm truyện vào thư viện trước khi thực hiện</string>
     <string name="notification_not_connected_to_ac_title">Đã hủy đồng bộ</string>

@@ -171,15 +171,11 @@
     <string name="no_valid_sources">Пожалуйста включите хотя бы один источник</string>
     <string name="notification_cover_update_failed">Не удалось обновить обложку</string>
     <string name="notification_first_add_to_library">Пожалуйста добавьте мангу в свою библиотеку, перед тем как делать это</string>
-    <string name="notification_manga_update_failed">Не удалось обновить мангу:</string>
     <string name="notification_new_chapters">Новые главы найдены для:</string>
     <string name="notification_no_connection_body">Соединение не доступно</string>
     <string name="notification_no_connection_title">Синхронизация отменена</string>
-    <string name="notification_no_new_chapters">Новые главы не найдены</string>
     <string name="notification_not_connected_to_ac_body">Не заряжается</string>
     <string name="notification_not_connected_to_ac_title">Синхронизация отменена</string>
-    <string name="notification_update_completed">Обновление завершено</string>
-    <string name="notification_update_error">Неожиданная ошибка случилась пока обновлялась библиотека</string>
     <string name="notification_update_progress">Статус обновления: %1$d/%2$d</string>
     <string name="on_hold">Заморожено</string>
     <string name="ongoing">Выпускается</string>

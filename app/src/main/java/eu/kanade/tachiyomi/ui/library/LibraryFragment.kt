@@ -441,11 +441,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
                         if (presenter.editCoverWithStream(it, manga)) {
                             // TODO refresh cover
                         } else {
-                            context.toast(R.string.notification_manga_update_failed)
+                            context.toast(R.string.notification_cover_update_failed)
                         }
                     }
                 } catch (error: IOException) {
-                    context.toast(R.string.notification_manga_update_failed)
+                    context.toast(R.string.notification_cover_update_failed)
                     Timber.e(error)
                 }
             }

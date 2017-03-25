@@ -45,7 +45,7 @@ class NotificationReceiver : BroadcastReceiver() {
             ACTION_DELETE_IMAGE -> deleteImage(context, intent.getStringExtra(EXTRA_FILE_LOCATION),
                     intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1))
             // Cancel library update and dismiss notification
-            ACTION_CANCEL_LIBRARY_UPDATE -> cancelLibraryUpdate(context, Constants.NOTIFICATION_LIBRARY_ID)
+            ACTION_CANCEL_LIBRARY_UPDATE -> cancelLibraryUpdate(context, Constants.NOTIFICATION_LIBRARY_PROGRESS_ID)
             // Open reader activity
             ACTION_OPEN_CHAPTER -> {
                 openChapter(context, intent.getLongExtra(EXTRA_MANGA_ID, -1),
