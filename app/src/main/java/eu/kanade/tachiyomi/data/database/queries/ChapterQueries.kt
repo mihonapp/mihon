@@ -42,6 +42,16 @@ interface ChapterQueries : DbProvider {
                     .build())
             .prepare()
 
+    fun getChapter(url: String) = db.get()
+            .`object`(Chapter::class.java)
+            .withQuery(Query.builder()
+                    .table(ChapterTable.TABLE)
+                    .where("${ChapterTable.COL_URL} = ?")
+                    .whereArgs(url)
+                    .build())
+            .prepare()
+
+
     fun insertChapter(chapter: Chapter) = db.put().`object`(chapter).prepare()
 
     fun insertChapters(chapters: List<Chapter>) = db.put().objects(chapters).prepare()

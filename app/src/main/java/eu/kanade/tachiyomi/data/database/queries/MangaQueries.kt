@@ -84,6 +84,12 @@ interface MangaQueries : DbProvider {
                     .build())
             .prepare()
 
+    fun deleteMangas() = db.delete()
+            .byQuery(DeleteQuery.builder()
+                    .table(MangaTable.TABLE)
+                    .build())
+            .prepare()
+
     fun getLastReadManga() = db.get()
             .listOfObjects(Manga::class.java)
             .withQuery(RawQuery.builder()

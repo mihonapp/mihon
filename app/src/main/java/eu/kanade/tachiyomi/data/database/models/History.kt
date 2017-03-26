@@ -5,27 +5,27 @@ import java.io.Serializable
 /**
  * Object containing the history statistics of a chapter
  */
-class History : Serializable {
+interface History : Serializable {
 
     /**
      * Id of history object.
      */
-    var id: Long? = null
+    var id: Long?
 
     /**
      * Chapter id of history object.
      */
-    var chapter_id: Long = 0
+    var chapter_id: Long
 
     /**
      * Last time chapter was read in time long format
      */
-    var last_read: Long = 0
+    var last_read: Long
 
     /**
      * Total time chapter was read - todo not yet implemented
      */
-    var time_read: Long = 0
+    var time_read: Long
 
     companion object {
 
@@ -35,10 +35,8 @@ class History : Serializable {
          * @param chapter chapter object
          * @return history object
          */
-        fun create(chapter: Chapter): History {
-            val history = History()
-            history.chapter_id = chapter.id!!
-            return history
+        fun create(chapter: Chapter): History =  HistoryImpl().apply {
+            this.chapter_id = chapter.id!!
         }
     }
 }

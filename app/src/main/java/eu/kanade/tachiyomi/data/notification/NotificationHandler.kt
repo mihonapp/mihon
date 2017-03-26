@@ -3,8 +3,6 @@ package eu.kanade.tachiyomi.data.notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.FileProvider
-import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.ui.download.DownloadActivity
 import eu.kanade.tachiyomi.util.getUriCompat
 import java.io.File
@@ -33,7 +31,7 @@ object NotificationHandler {
      */
     internal fun openImagePendingActivity(context: Context, file: File): PendingIntent {
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+            val uri = file.getUriCompat(context)
             setDataAndType(uri, "image/*")
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
         }

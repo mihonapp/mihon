@@ -10,6 +10,7 @@ import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
 import eu.kanade.tachiyomi.data.database.models.History
+import eu.kanade.tachiyomi.data.database.models.HistoryImpl
 import eu.kanade.tachiyomi.data.database.tables.HistoryTable.COL_CHAPTER_ID
 import eu.kanade.tachiyomi.data.database.tables.HistoryTable.COL_ID
 import eu.kanade.tachiyomi.data.database.tables.HistoryTable.COL_LAST_READ
@@ -44,7 +45,7 @@ open class HistoryPutResolver : DefaultPutResolver<History>() {
 
 class HistoryGetResolver : DefaultGetResolver<History>() {
 
-    override fun mapFromCursor(cursor: Cursor): History = History().apply {
+    override fun mapFromCursor(cursor: Cursor): History = HistoryImpl().apply {
         id = cursor.getLong(cursor.getColumnIndex(COL_ID))
         chapter_id = cursor.getLong(cursor.getColumnIndex(COL_CHAPTER_ID))
         last_read = cursor.getLong(cursor.getColumnIndex(COL_LAST_READ))

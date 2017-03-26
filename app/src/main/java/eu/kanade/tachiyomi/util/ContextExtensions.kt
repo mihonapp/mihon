@@ -122,7 +122,7 @@ fun Context.sendLocalBroadcastSync(intent: Intent) {
  *
  * @param receiver receiver that gets registered.
  */
-fun Context.registerLocalReceiver(receiver: BroadcastReceiver, filter: IntentFilter ){
+fun Context.registerLocalReceiver(receiver: BroadcastReceiver, filter: IntentFilter) {
     LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter)
 }
 
@@ -131,7 +131,7 @@ fun Context.registerLocalReceiver(receiver: BroadcastReceiver, filter: IntentFil
  *
  * @param receiver receiver that gets unregistered.
  */
-fun Context.unregisterLocalReceiver(receiver: BroadcastReceiver){
+fun Context.unregisterLocalReceiver(receiver: BroadcastReceiver) {
     LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
 }
 
