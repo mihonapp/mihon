@@ -289,7 +289,6 @@ class LibraryUpdateService(
                 }
                 // Notify result of the overall update.
                 .doOnCompleted {
-                    cancelProgressNotification()
                     if (newUpdates.isNotEmpty()) {
                         showResultNotification(newUpdates)
                         if (downloadNew && hasDownloads) {
@@ -300,6 +299,8 @@ class LibraryUpdateService(
                     if (failedUpdates.isNotEmpty()) {
                         Timber.e("Failed updating: ${failedUpdates.map { it.title }}")
                     }
+
+                    cancelProgressNotification()
                 }
     }
 
@@ -389,10 +390,11 @@ class LibraryUpdateService(
 
             if (previousNotification != null) {
                 val oldUpdates = previousNotification.notification.extras
-                        .getString(Notification.EXTRA_BIG_TEXT, "")
-                        .split("\n")
+                        .getString(Notification.EXTRA_BIG_TEXT)
 
-                newUpdates += oldUpdates
+                if (!oldUpdates.isNullOrEmpty()) {
+                    newUpdates += oldUpdates.split("\n")
+                }
             }
         }
 
