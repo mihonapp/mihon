@@ -380,7 +380,6 @@ class LibraryUpdateService(
      * @param updates a list of manga with new updates.
      */
     private fun showResultNotification(updates: List<Manga>) {
-        val title = getString(R.string.notification_new_chapters)
         val newUpdates = updates.map { it.title.chop(45) }.toMutableSet()
 
         // Append new chapters from a previous, existing notification
@@ -398,10 +397,14 @@ class LibraryUpdateService(
             }
         }
 
+        val title = getString(R.string.notification_new_chapters)
+        val text = getString(R.string.notification_new_chapters_text, newUpdates.size)
+
         notificationManager.notify(Constants.NOTIFICATION_LIBRARY_RESULT_ID, notification {
             setSmallIcon(R.drawable.ic_book_white_24dp)
             setLargeIcon(notificationBitmap)
             setContentTitle(title)
+            setContentText(text)
             setStyle(NotificationCompat.BigTextStyle().bigText(newUpdates.joinToString("\n")))
             setContentIntent(getNotificationIntent())
             setAutoCancel(true)
