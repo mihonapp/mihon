@@ -397,15 +397,17 @@ class LibraryUpdateService(
             }
         }
 
-        val title = getString(R.string.notification_new_chapters)
-        val text = getString(R.string.notification_new_chapters_text, newUpdates.size)
-
         notificationManager.notify(Constants.NOTIFICATION_LIBRARY_RESULT_ID, notification {
             setSmallIcon(R.drawable.ic_book_white_24dp)
             setLargeIcon(notificationBitmap)
-            setContentTitle(title)
-            setContentText(text)
-            setStyle(NotificationCompat.BigTextStyle().bigText(newUpdates.joinToString("\n")))
+            setContentTitle(getString(R.string.notification_new_chapters))
+            if (newUpdates.size > 1) {
+                setContentText(getString(R.string.notification_new_chapters_text, newUpdates.size))
+                setStyle(NotificationCompat.BigTextStyle().bigText(newUpdates.joinToString("\n")))
+            } else {
+                setContentText(newUpdates.first())
+            }
+            priority = NotificationCompat.PRIORITY_HIGH
             setContentIntent(getNotificationIntent())
             setAutoCancel(true)
         })
