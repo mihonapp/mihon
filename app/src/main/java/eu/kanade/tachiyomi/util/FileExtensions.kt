@@ -19,15 +19,3 @@ fun File.getUriCompat(context: Context): Uri {
     return uri
 }
 
-/**
- * Deletes file if exists
- *
- * @return success of file deletion
- */
-fun File.deleteIfExists(): Boolean {
-    if (this.exists()) {
-        this.delete()
-        return true
-    }
-    return false
-}
