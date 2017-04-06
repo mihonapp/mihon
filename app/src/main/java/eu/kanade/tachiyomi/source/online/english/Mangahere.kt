@@ -152,6 +152,11 @@ class Mangahere : ParsedHttpSource() {
     }
 
     override fun pageListParse(document: Document): List<Page> {
+        val licensedError = document.select(".mangaread_error > .mt10").first()
+        if (licensedError != null) {
+            throw Exception(licensedError.text())
+        }
+
         val pages = mutableListOf<Page>()
         document.select("select.wid60").first()?.getElementsByTag("option")?.forEach {
             pages.add(Page(pages.size, it.attr("value")))
