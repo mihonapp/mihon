@@ -35,6 +35,8 @@ import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
 
 /**
@@ -119,6 +121,8 @@ class BackupRestoreService : Service() {
      */
     private val db: DatabaseHelper by injectLazy()
 
+    lateinit var executor: ExecutorService
+
     /**
      * Method called when the service is created. It injects dependencies and acquire the wake lock.
      */
@@ -127,6 +131,7 @@ class BackupRestoreService : Service() {
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
                 PowerManager.PARTIAL_WAKE_LOCK, "BackupRestoreService:WakeLock")
         wakeLock.acquire()
+        executor = Executors.newSingleThreadExecutor()
     }
 
     /**
@@ -135,6 +140,7 @@ class BackupRestoreService : Service() {
      */
     override fun onDestroy() {
         subscription?.unsubscribe()
+        executor.shutdown() // must be called after unsubscribe
         if (wakeLock.isHeld) {
             wakeLock.release()
         }
@@ -159,53 +165,19 @@ class BackupRestoreService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return Service.START_NOT_STICKY
 
+        val file = UniFile.fromUri(this, Uri.parse(intent.getStringExtra(EXTRA_URI)))
+
         // Unsubscribe from any previous subscription if needed.
         subscription?.unsubscribe()
 
-        val startTime = System.currentTimeMillis()
-        subscription = Observable.defer {
-            // Get URI
-            val uri = Uri.parse(intent.getStringExtra(EXTRA_URI))
-            // Get file from Uri
-            val file = UniFile.fromUri(this, uri)
+        subscription = Observable.using(
+                { db.lowLevel().beginTransaction() },
+                { getRestoreObservable(file).doOnNext{ db.lowLevel().setTransactionSuccessful() } },
+                { executor.execute { db.lowLevel().endTransaction() } })
+                .doAfterTerminate { stopSelf(startId) }
+                .subscribeOn(Schedulers.from(executor))
+                .subscribe()
 
-            // Clear errors
-            errors.clear()
-
-            // Reset progress
-            restoreProgress = 0
-
-            db.lowLevel().beginTransaction()
-            getRestoreObservable(file)
-        }
-        .subscribeOn(Schedulers.io())
-        .subscribe({
-        }, { error ->
-            db.lowLevel().endTransaction()
-            Timber.e(error)
-            writeErrorLog()
-            val errorIntent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
-                putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_ERROR_RESTORE_DIALOG)
-                putExtra(SettingsBackupFragment.EXTRA_ERROR_MESSAGE, error.message)
-            }
-            sendLocalBroadcast(errorIntent)
-            stopSelf(startId)
-        }, {
-            db.lowLevel().setTransactionSuccessful()
-            db.lowLevel().endTransaction()
-            val endTime = System.currentTimeMillis()
-            val time = endTime - startTime
-            val file = writeErrorLog()
-            val completeIntent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
-                putExtra(SettingsBackupFragment.EXTRA_TIME, time)
-                putExtra(SettingsBackupFragment.EXTRA_ERRORS, errors.size)
-                putExtra(SettingsBackupFragment.EXTRA_ERROR_FILE_PATH, file.parent)
-                putExtra(SettingsBackupFragment.EXTRA_ERROR_FILE, file.name)
-                putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_RESTORE_COMPLETED_DIALOG)
-            }
-            sendLocalBroadcast(completeIntent)
-            stopSelf(startId)
-        })
         return Service.START_NOT_STICKY
     }
 
@@ -215,7 +187,9 @@ class BackupRestoreService : Service() {
      * @param file restore file
      * @return [Observable<Manga>]
      */
-    private fun getRestoreObservable(file: UniFile): Observable<Manga> {
+    private fun getRestoreObservable(file: UniFile): Observable<List<Manga>> {
+        val startTime = System.currentTimeMillis()
+
         val reader = JsonReader(file.openInputStream().bufferedReader())
         val json = JsonParser().parse(reader).asJsonObject
 
@@ -228,6 +202,8 @@ class BackupRestoreService : Service() {
         val mangasJson = json.get(MANGAS).asJsonArray
 
         restoreAmount = mangasJson.size() + 1 // +1 for categories
+        restoreProgress = 0
+        errors.clear()
 
         // Restore categories
         json.get(CATEGORIES)?.let {
@@ -256,6 +232,31 @@ class BackupRestoreService : Service() {
                         Observable.just(manga)
                     }
                 }
+                .toList()
+                .doOnNext {
+                    val endTime = System.currentTimeMillis()
+                    val time = endTime - startTime
+                    val logFile = writeErrorLog()
+                    val completeIntent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
+                        putExtra(SettingsBackupFragment.EXTRA_TIME, time)
+                        putExtra(SettingsBackupFragment.EXTRA_ERRORS, errors.size)
+                        putExtra(SettingsBackupFragment.EXTRA_ERROR_FILE_PATH, logFile.parent)
+                        putExtra(SettingsBackupFragment.EXTRA_ERROR_FILE, logFile.name)
+                        putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_RESTORE_COMPLETED_DIALOG)
+                    }
+                    sendLocalBroadcast(completeIntent)
+
+                }
+                .doOnError { error ->
+                    Timber.e(error)
+                    writeErrorLog()
+                    val errorIntent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
+                        putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_ERROR_RESTORE_DIALOG)
+                        putExtra(SettingsBackupFragment.EXTRA_ERROR_MESSAGE, error.message)
+                    }
+                    sendLocalBroadcast(errorIntent)
+                }
+                .onErrorReturn { emptyList() }
     }
 
     /**

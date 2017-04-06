@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -25,6 +26,7 @@ import eu.kanade.tachiyomi.util.*
 import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
 import net.xpece.android.support.preference.Preference
+import rx.subscriptions.Subscriptions
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -149,7 +151,7 @@ class SettingsBackupFragment : SettingsFragment() {
                                 sendIntent.putExtra(Intent.EXTRA_STREAM, file.uri)
                                 startActivity(Intent.createChooser(sendIntent, ""))
                             }
-                            .show()
+                            .safeShow()
 
                 }
                 ACTION_SET_PROGRESS_DIALOG -> {
@@ -194,7 +196,7 @@ class SettingsBackupFragment : SettingsFragment() {
                                     }
                                     materialDialog.dismiss()
                                 }
-                                .show()
+                                .safeShow()
                     }
                 }
                 ACTION_ERROR_BACKUP_DIALOG -> {
@@ -210,18 +212,27 @@ class SettingsBackupFragment : SettingsFragment() {
 
     }
 
-    override fun onPause() {
-        context.unregisterLocalReceiver(receiver)
-        super.onPause()
-    }
-
     override fun onStart() {
         super.onStart()
         context.registerLocalReceiver(receiver, IntentFilter(INTENT_FILTER))
     }
 
+    override fun onPause() {
+        context.unregisterLocalReceiver(receiver)
+        super.onPause()
+    }
+
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
+
+        if (savedState != null) {
+            if (BackupRestoreService.isRunning(context)) {
+                restoreDialog.safeShow()
+            }
+            else if (BackupCreateService.isRunning(context)) {
+                backupDialog.safeShow()
+            }
+        }
 
         (activity as BaseActivity).requestPermissionsOnMarshmallow()
 
@@ -268,7 +279,7 @@ class SettingsBackupFragment : SettingsFragment() {
                     .itemsDisabledIndices(0)
                     .positiveText(getString(R.string.action_create))
                     .negativeText(android.R.string.cancel)
-                    .show()
+                    .safeShow()
             true
         }
 
@@ -359,7 +370,7 @@ class SettingsBackupFragment : SettingsFragment() {
                     val dir = data.data.path
                     val file = File(dir, Backup.getDefaultFilename())
 
-                    backupDialog.show()
+                    backupDialog.safeShow()
                     BackupCreateService.makeBackup(context, file.toURI().toString(), backup_flags)
                 } else {
                     val uri = data.data
@@ -369,45 +380,43 @@ class SettingsBackupFragment : SettingsFragment() {
                     context.contentResolver.takePersistableUriPermission(uri, flags)
                     val file = UniFile.fromUri(context, uri)
 
-                    backupDialog.show()
+                    backupDialog.safeShow()
                     BackupCreateService.makeBackup(context, file.uri.toString(), backup_flags)
                 }
             }
             BACKUP_RESTORE -> if (data != null && resultCode == Activity.RESULT_OK) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                    val uri = Uri.fromFile(File(data.data.path))
-
-                    MaterialDialog.Builder(context)
-                            .title(getString(R.string.pref_restore_backup))
-                            .content(getString(R.string.backup_restore_content))
-                            .positiveText(getString(R.string.action_restore))
-                            .onPositive { materialDialog, _ ->
-                                materialDialog.dismiss()
-                                restoreDialog.show()
-                                BackupRestoreService.start(context, uri.toString())
-                            }
-                            .show()
+                val uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    Uri.fromFile(File(data.data.path))
                 } else {
                     val uri = data.data
                     val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
                     context.contentResolver.takePersistableUriPermission(uri, flags)
-                    val file = UniFile.fromUri(context, uri)
-
-                    MaterialDialog.Builder(context)
-                            .title(getString(R.string.pref_restore_backup))
-                            .content(getString(R.string.backup_restore_content))
-                            .positiveText(getString(R.string.action_restore))
-                            .onPositive { materialDialog, _ ->
-                                materialDialog.dismiss()
-                                restoreDialog.show()
-                                BackupRestoreService.start(context, file.uri.toString())
-                            }
-                            .show()
+                    UniFile.fromUri(context, uri).uri
                 }
+
+                MaterialDialog.Builder(context)
+                        .title(getString(R.string.pref_restore_backup))
+                        .content(getString(R.string.backup_restore_content))
+                        .positiveText(getString(R.string.action_restore))
+                        .onPositive { _, _ ->
+                            restoreDialog.safeShow()
+                            BackupRestoreService.start(context, uri.toString())
+                        }
+                        .safeShow()
             }
         }
+    }
+
+    fun MaterialDialog.Builder.safeShow(): Dialog {
+        return build().safeShow()
+    }
+
+    fun Dialog.safeShow(): Dialog {
+        subscriptions += Subscriptions.create { dismiss() }
+        show()
+        return this
     }
 
 }
