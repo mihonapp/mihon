@@ -158,4 +158,6 @@ class PreferencesHelper(val context: Context) {
 
     fun lang() = prefs.getString(keys.lang, "")
 
+    fun defaultCategory() = prefs.getInt(keys.defaultCategory, -1)
+
 }
