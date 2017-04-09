@@ -23,13 +23,13 @@ open class KitsuManga(obj: JsonObject) {
 class KitsuLibManga(obj: JsonObject, manga: JsonObject) : KitsuManga(manga) {
     val remoteId by obj.byInt("id")
     val status by obj["attributes"].byString
-    val rating = obj["attributes"].obj.get("rating").nullString
+    val ratingTwenty = obj["attributes"].obj.get("ratingTwenty").nullString
     val progress by obj["attributes"].byInt
 
     override fun toTrack() = super.toTrack().apply {
         remote_id = remoteId
         status = toTrackStatus()
-        score = rating?.let { it.toFloat() * 2 } ?: 0f
+        score = ratingTwenty?.let { it.toInt() / 2f } ?: 0f
         last_chapter_read = progress
     }
 
@@ -53,6 +53,6 @@ fun Track.toKitsuStatus() = when (status) {
     else -> throw Exception("Unknown status")
 }
 
-fun Track.toKitsuScore(): String {
-    return if (score > 0) (score / 2).toString() else ""
+fun Track.toKitsuScore(): String? {
+    return if (score > 0) (score * 2).toInt().toString() else null
 }

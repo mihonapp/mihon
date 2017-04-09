@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import rx.Completable
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
+import java.text.DecimalFormat
 
 class Kitsu(private val context: Context, id: Int) : TrackService(id) {
 
@@ -55,11 +56,17 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun getScoreList(): List<String> {
-        return IntRange(0, 10).map { (it.toFloat() / 2).toString() }
+        val df = DecimalFormat("0.#")
+        return listOf("0") + IntRange(2, 20).map { df.format(it / 2f) }
+    }
+
+    override fun indexToScore(index: Int): Float {
+        return if (index > 0) (index + 1) / 2f else 0f
     }
 
     override fun displayScore(track: Track): String {
-        return track.toKitsuScore()
+        val df = DecimalFormat("0.#")
+        return df.format(track.score)
     }
 
     override fun add(track: Track): Observable<Track> {

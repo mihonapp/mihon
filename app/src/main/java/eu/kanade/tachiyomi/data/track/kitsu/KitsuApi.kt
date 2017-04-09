@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track.kitsu
 
 import com.github.salomonbrys.kotson.*
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.network.POST
@@ -17,7 +18,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     private val rest = Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(client.newBuilder().addInterceptor(interceptor).build())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .build()
             .create(KitsuApi.Rest::class.java)
@@ -65,7 +66,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                 "attributes" to jsonObject(
                     "status" to track.toKitsuStatus(),
                     "progress" to track.last_chapter_read,
-                    "rating" to track.toKitsuScore()
+                    "ratingTwenty" to track.toKitsuScore()
                 )
             )
             // @formatter:on
