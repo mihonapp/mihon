@@ -76,10 +76,10 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             })
         }
 
-        view.progress_container.minimumHeight = view.resources.displayMetrics.heightPixels * 2
+        view.progress_container.minimumHeight = webtoonReader.screenHeight
 
         view.setOnTouchListener(adapter.touchListener)
-        view.retry_button.setOnTouchListener { v, event ->
+        view.retry_button.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 readerActivity.presenter.retryPage(page)
             }

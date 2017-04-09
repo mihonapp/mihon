@@ -1,7 +1,9 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
+import android.util.DisplayMetrics
 import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -64,6 +66,19 @@ class WebtoonReader : BaseReader() {
 
     private var scrollDistance: Int = 0
 
+    val screenHeight by lazy {
+        val display = activity.windowManager.defaultDisplay
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            val metrics = DisplayMetrics()
+            display.getRealMetrics(metrics)
+            metrics.heightPixels
+        } else {
+            val field = Display::class.java.getMethod("getRawHeight")
+            field.invoke(display) as Int
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
         adapter = WebtoonAdapter(this)
 
@@ -108,12 +123,12 @@ class WebtoonReader : BaseReader() {
     /**
      * Uses two ways to scroll to the last page read.
      */
-    private fun scrollToLastPageRead(last_page_read: Int) {
+    private fun scrollToLastPageRead(page: Int) {
         // Scrolls to the correct page initially, but isn't reliable beyond that.
         recycler.addOnLayoutChangeListener(object: View.OnLayoutChangeListener {
             override fun onLayoutChange(p0: View?, p1: Int, p2: Int, p3: Int, p4: Int, p5: Int, p6: Int, p7: Int, p8: Int) {
                 if(pages.isEmpty()) {
-                    setActivePage(last_page_read)
+                    setActivePage(page)
                 } else {
                     recycler.removeOnLayoutChangeListener(this)
                 }
@@ -121,7 +136,7 @@ class WebtoonReader : BaseReader() {
         })
 
         // Scrolls to the correct page after app has been in use, but can't do it the very first time.
-        recycler.post { setActivePage(last_page_read) }
+        recycler.post { setActivePage(page) }
     }
 
     override fun onDestroyView() {
