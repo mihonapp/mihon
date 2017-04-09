@@ -105,7 +105,7 @@ dependencies {
     compile 'com.github.inorichi:junrar-android:634c1f5'
 
     // Android support library
-    final support_library_version = '25.2.0'
+    final support_library_version = '25.3.1'
     compile "com.android.support:support-v4:$support_library_version"
     compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:cardview-v7:$support_library_version"
@@ -120,7 +120,7 @@ dependencies {
 
     // ReactiveX
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.7'
+    compile 'io.reactivex:rxjava:1.2.9'
     compile 'com.jakewharton.rxrelay:rxrelay:1.2.0'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
     compile 'com.github.pwittchen:reactivenetwork:0.7.0'
@@ -153,7 +153,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.2'
 
     // Job scheduling
-    compile 'com.evernote:android-job:1.1.7'
+    compile 'com.evernote:android-job:1.1.8'
     compile 'com.google.android.gms:play-services-gcm:10.2.0'
 
     // Changelog
@@ -175,7 +175,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     // Transformations
-    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'jp.wasabeef:glide-transformations:2.0.2'
 
     // Logging
     compile 'com.jakewharton.timber:timber:4.5.1'
@@ -193,7 +193,7 @@ dependencies {
     compile 'com.github.inorichi:FlexibleAdapter:93985fe' // v4.2.0 to be removed
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
-    compile 'com.afollestad.material-dialogs:core:0.9.4.1'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.2'
     compile 'net.xpece.android:support-preference:1.2.5'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
@@ -223,6 +223,18 @@ buildscript {
 
 repositories {
     mavenCentral()
+}
+
+// Workaround to force a support lib version
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '25.3.1'
+            }
+        }
+    }
 }
 
 // add support for placeholders in resource files

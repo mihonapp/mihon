@@ -78,7 +78,7 @@ class MainActivity : BaseActivity() {
 
         if (savedState == null) {
             // Set start screen
-            when(intent.action){
+            when (intent.action) {
                 SHORTCUT_LIBRARY -> setSelectedDrawerItem(R.id.nav_drawer_library)
                 SHORTCUT_RECENTLY_UPDATED -> setSelectedDrawerItem(R.id.nav_drawer_recent_updates)
                 SHORTCUT_RECENTLY_READ -> setSelectedDrawerItem(R.id.nav_drawer_recently_read)
