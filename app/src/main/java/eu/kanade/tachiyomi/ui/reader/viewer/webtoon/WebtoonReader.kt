@@ -72,9 +72,6 @@ class WebtoonReader : BaseReader() {
 
         layoutManager = PreCachingLayoutManager(activity)
         layoutManager.extraLayoutSpace = screenHeight / 2
-        if (savedState != null) {
-            layoutManager.scrollToPositionWithOffset(savedState.getInt(SAVED_POSITION), 0)
-        }
 
         recycler = RecyclerView(activity).apply {
             layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -105,6 +102,26 @@ class WebtoonReader : BaseReader() {
 
         setPagesOnAdapter()
         return recycler
+    }
+
+
+    /**
+     * Uses two ways to scroll to the last page read.
+     */
+    private fun scrollToLastPageRead(last_page_read: Int) {
+        // Scrolls to the correct page initially, but isn't reliable beyond that.
+        recycler.addOnLayoutChangeListener(object: View.OnLayoutChangeListener {
+            override fun onLayoutChange(p0: View?, p1: Int, p2: Int, p3: Int, p4: Int, p5: Int, p6: Int, p7: Int, p8: Int) {
+                if(pages.isEmpty()) {
+                    setActivePage(last_page_read)
+                } else {
+                    recycler.removeOnLayoutChangeListener(this)
+                }
+            }
+        })
+
+        // Scrolls to the correct page after app has been in use, but can't do it the very first time.
+        recycler.post { setActivePage(last_page_read) }
     }
 
     override fun onDestroyView() {
@@ -150,6 +167,7 @@ class WebtoonReader : BaseReader() {
         // Make sure the view is already initialized.
         if (view != null) {
             setPagesOnAdapter()
+            scrollToLastPageRead(this.currentPage)
         }
     }
 
