@@ -37,8 +37,8 @@ class MainActivity : BaseActivity() {
         setAppTheme()
         super.onCreate(savedState)
 
-        // Do not let the launcher create a new activity
-        if (intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT != 0) {
+        // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079
+        if (!isTaskRoot) {
             finish()
             return
         }
@@ -154,7 +154,7 @@ class MainActivity : BaseActivity() {
         // Shortcut actions
         private const val SHORTCUT_LIBRARY = "eu.kanade.tachiyomi.SHOW_LIBRARY"
         private const val SHORTCUT_RECENTLY_UPDATED = "eu.kanade.tachiyomi.SHOW_RECENTLY_UPDATED"
-        private const val SHORTCUT_RECENTLY_READ = "eu.kanade.tachiyomi.RECENTLY_READ"
+        private const val SHORTCUT_RECENTLY_READ = "eu.kanade.tachiyomi.SHOW_RECENTLY_READ"
         private const val SHORTCUT_CATALOGUES = "eu.kanade.tachiyomi.SHOW_CATALOGUES"
     }
 }

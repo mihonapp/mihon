@@ -18,7 +18,6 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
-import java.util.ArrayList
 
 /**
  * Presenter of MangaInfoFragment.
@@ -79,9 +78,12 @@ class MangaInfoPresenter : BasePresenter<MangaInfoFragment>() {
                 ?.subscribeLatestCache(MangaInfoFragment::setChapterCount)
 
         // Update favorite status
-        SharedData.get(MangaFavoriteEvent::class.java)?.observable
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe { setFavorite(it) }
+        SharedData.get(MangaFavoriteEvent::class.java)?.let {
+            it.observable
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { setFavorite(it) }
+                    .apply { add(this) }
+        }
     }
 
     /**
