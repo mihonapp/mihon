@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v0.5.2" changeDate="">
+        <changelogtext>New backup system. Smaller file size but requires a network connection to restore.</changelogtext>
+
+        <changelogtext>Fixed descriptions showing a single line.</changelogtext>
+
+        <changelogtext>Added Nougat shortcuts and round icon.</changelogtext>
+
+        <changelogtext>Added an option to add a manga to a specific category.</changelogtext>
+
+        <changelogtext>Improved new chapters notification.</changelogtext>
+
+        <changelogtext>Support Kitsu new rating system.</changelogtext>
+
+        <changelogtext>Last read page is now retained in webtoon reader.</changelogtext>
+
+    </changelogversion>
+
     <changelogversion versionName="v0.5.1" changeDate="">
         <changelogtext>Added an option to auto download from selected categories.</changelogtext>
 
