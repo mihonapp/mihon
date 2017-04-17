@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.FrameLayout
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.hippo.unifile.UniFile
@@ -76,7 +78,8 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             })
         }
 
-        view.progress_container.minimumHeight = webtoonReader.screenHeight
+        view.progress_container.layoutParams = FrameLayout.LayoutParams(
+                MATCH_PARENT, webtoonReader.screenHeight)
 
         view.setOnTouchListener(adapter.touchListener)
         view.retry_button.setOnTouchListener { _, event ->
