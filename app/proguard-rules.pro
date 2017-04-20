@@ -1,6 +1,7 @@
 -dontobfuscate
 
 -keep class eu.kanade.tachiyomi.**
+-keep class eu.kanade.tachiyomi.source.model.** { *; }
 
 -keep class com.hippo.image.** { *; }
 -keep interface com.hippo.image.** { *; }
