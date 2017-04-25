@@ -10,7 +10,6 @@ import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import com.google.gson.stream.JsonReader
-import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.Backup.CATEGORIES
 import eu.kanade.tachiyomi.data.backup.models.Backup.CHAPTERS
@@ -67,7 +66,7 @@ class BackupRestoreService : Service() {
          * @param context context of application
          * @param uri path of Uri
          */
-        fun start(context: Context, uri: String) {
+        fun start(context: Context, uri: Uri) {
             if (!isRunning(context)) {
                 val intent = Intent(context, BackupRestoreService::class.java).apply {
                     putExtra(EXTRA_URI, uri)
@@ -165,14 +164,14 @@ class BackupRestoreService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return Service.START_NOT_STICKY
 
-        val file = UniFile.fromUri(this, Uri.parse(intent.getStringExtra(EXTRA_URI)))
+        val uri = intent.getParcelableExtra<Uri>(EXTRA_URI)
 
         // Unsubscribe from any previous subscription if needed.
         subscription?.unsubscribe()
 
         subscription = Observable.using(
                 { db.lowLevel().beginTransaction() },
-                { getRestoreObservable(file).doOnNext{ db.lowLevel().setTransactionSuccessful() } },
+                { getRestoreObservable(uri).doOnNext{ db.lowLevel().setTransactionSuccessful() } },
                 { executor.execute { db.lowLevel().endTransaction() } })
                 .doAfterTerminate { stopSelf(startId) }
                 .subscribeOn(Schedulers.from(executor))
@@ -184,13 +183,13 @@ class BackupRestoreService : Service() {
     /**
      * Returns an [Observable] containing restore process.
      *
-     * @param file restore file
+     * @param uri restore file
      * @return [Observable<Manga>]
      */
-    private fun getRestoreObservable(file: UniFile): Observable<List<Manga>> {
+    private fun getRestoreObservable(uri: Uri): Observable<List<Manga>> {
         val startTime = System.currentTimeMillis()
 
-        val reader = JsonReader(file.openInputStream().bufferedReader())
+        val reader = JsonReader(contentResolver.openInputStream(uri).bufferedReader())
         val json = JsonParser().parse(reader).asJsonObject
 
         // Get parser version

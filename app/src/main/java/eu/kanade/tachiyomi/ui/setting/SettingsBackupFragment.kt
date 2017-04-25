@@ -284,17 +284,11 @@ class SettingsBackupFragment : SettingsFragment() {
         }
 
         restoreBackup.setOnPreferenceClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                val intent = Intent()
-                intent.type = "application/*"
-                intent.action = Intent.ACTION_GET_CONTENT
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.file_select_backup)), BACKUP_RESTORE)
-            } else {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                intent.type = "application/*"
-                startActivityForResult(intent, BACKUP_RESTORE)
-            }
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.type = "application/*"
+            val chooser = Intent.createChooser(intent, getString(R.string.file_select_backup))
+            startActivityForResult(chooser, BACKUP_RESTORE)
             true
         }
 
@@ -385,16 +379,7 @@ class SettingsBackupFragment : SettingsFragment() {
                 }
             }
             BACKUP_RESTORE -> if (data != null && resultCode == Activity.RESULT_OK) {
-                val uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                    Uri.fromFile(File(data.data.path))
-                } else {
-                    val uri = data.data
-                    val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-
-                    context.contentResolver.takePersistableUriPermission(uri, flags)
-                    UniFile.fromUri(context, uri).uri
-                }
+                val uri = data.data
 
                 MaterialDialog.Builder(context)
                         .title(getString(R.string.pref_restore_backup))
@@ -402,7 +387,7 @@ class SettingsBackupFragment : SettingsFragment() {
                         .positiveText(getString(R.string.action_restore))
                         .onPositive { _, _ ->
                             restoreDialog.safeShow()
-                            BackupRestoreService.start(context, uri.toString())
+                            BackupRestoreService.start(context, uri)
                         }
                         .safeShow()
             }
