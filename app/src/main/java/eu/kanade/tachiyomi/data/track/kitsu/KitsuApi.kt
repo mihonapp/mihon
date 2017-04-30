@@ -149,7 +149,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
 
         @GET("library-entries")
         fun findLibManga(
-                @Query("filter[media_id]", encoded = true) remoteId: Int,
+                @Query("filter[manga_id]", encoded = true) remoteId: Int,
                 @Query("filter[user_id]", encoded = true) userId: String,
                 @Query("page[limit]", encoded = true) limit: Int = 10000,
                 @Query("include") includes: String = "manga"
