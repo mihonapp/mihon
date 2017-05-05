@@ -162,7 +162,7 @@ class EHentai(override val id: Long,
             addParam(url, "page", Integer.toString(page - 1))
         } ?: url, additionalHeaders?.let {
             val headers = headers.newBuilder()
-        it.toMultimap().forEach { t, u ->
+        it.toMultimap().forEach { (t, u) ->
             u.forEach {
                 headers.add(t, it)
             }
