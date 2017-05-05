@@ -27,6 +27,7 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DialogCheckboxView
+import exh.FavoritesSyncHelper
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_library.*
 import nucleus.factory.RequiresPresenter
@@ -266,6 +267,11 @@ class LibraryFragment : BaseRxFragment<LibraryPresenter>(), ActionMode.Callback 
             R.id.action_edit_categories -> {
                 val intent = CategoryActivity.newIntent(activity)
                 startActivity(intent)
+            }
+            R.id.action_sync -> {
+                FavoritesSyncHelper(this.activity).guiSyncFavorites({
+                    //Do we even need stuff in here?
+                })
             }
             else -> return super.onOptionsItemSelected(item)
         }

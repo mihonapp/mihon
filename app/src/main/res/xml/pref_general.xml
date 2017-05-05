@@ -71,6 +71,11 @@
             android:title="@string/default_category"
             android:summary="@string/default_category_summary"/>
 
+        <exh.ui.lock.LockPreference
+            android:title="Application lock"
+            android:key="pref_app_lock"
+            android:persistent="false"/>
+
     </PreferenceScreen>
 
 </PreferenceScreen>

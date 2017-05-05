@@ -33,18 +33,22 @@ android {
     buildToolsVersion "25.0.2"
     publishNonDefault true
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     defaultConfig {
-        applicationId "eu.kanade.tachiyomi"
+        applicationId "eu.kanade.tachiyomi.eh2"
         minSdkVersion 16
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 22
-        versionName "0.5.2"
+        versionCode 5003
+        versionName "v5.0.3-EH"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
         buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
-        buildConfigField "boolean", "INCLUDE_UPDATER", "false"
+        buildConfigField "boolean", "INCLUDE_UPDATER", "true"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -198,15 +202,31 @@ dependencies {
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
+    //Firebase (EH)
+    final firebase_version = '10.0.1'
+    releaseCompile "com.google.firebase:firebase-core:$firebase_version"
+    releaseCompile "com.google.firebase:firebase-messaging:$firebase_version"
+    releaseCompile "com.google.firebase:firebase-crash:$firebase_version"
+
+    //SnappyDB (EH)
+    compile 'io.paperdb:paperdb:2.0'
+
+    //JVE (Regex) (EH)
+    compile 'ru.lanwen.verbalregex:java-verbal-expressions:1.4'
+
+    //Pin lock view
+    compile 'com.andrognito.pinlockview:pinlockview:1.0.1'
+
     // Tests
-    testCompile 'junit:junit:4.12'
+    //Paper DB screws up tests
+    /*testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.1'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
     final robolectric_version = '3.1.4'
     testCompile "org.robolectric:robolectric:$robolectric_version"
     testCompile "org.robolectric:shadows-multidex:$robolectric_version"
-    testCompile "org.robolectric:shadows-play-services:$robolectric_version"
+    testCompile "org.robolectric:shadows-play-services:$robolectric_version"*/
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
@@ -271,3 +291,5 @@ afterEvaluate {
         }
     }
 }
+//Firebase (EH)
+apply plugin: 'com.google.gms.google-services'

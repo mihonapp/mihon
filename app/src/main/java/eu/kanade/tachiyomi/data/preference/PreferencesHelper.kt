@@ -9,6 +9,7 @@ import com.f2prateek.rx.preferences.RxSharedPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.Source
+import exh.ui.migration.MigrationStatus
 import java.io.File
 
 fun <T> Preference<T>.getOrDefault(): T = get() ?: defaultValue()!!
@@ -88,7 +89,7 @@ class PreferencesHelper(val context: Context) {
 
     fun catalogueAsList() = rxPrefs.getBoolean(keys.catalogueAsList, false)
 
-    fun enabledLanguages() = rxPrefs.getStringSet(keys.enabledLanguages, setOf("en"))
+    fun enabledLanguages() = rxPrefs.getStringSet(keys.enabledLanguages, setOf("all"))
 
     fun sourceUsername(source: Source) = prefs.getString(keys.sourceUsername(source.id), "")
 
@@ -160,4 +161,38 @@ class PreferencesHelper(val context: Context) {
 
     fun defaultCategory() = prefs.getInt(keys.defaultCategory, -1)
 
+    //EH
+    fun enableExhentai() = rxPrefs.getBoolean("enable_exhentai", false)
+
+    fun secureEXH() = rxPrefs.getBoolean("secure_exh", true)
+
+    fun imageQuality() = rxPrefs.getString("ehentai_quality", "auto")
+
+    fun useHentaiAtHome() = rxPrefs.getBoolean("enable_hah", true)
+
+    fun useJapaneseTitle() = rxPrefs.getBoolean("use_jp_title", false)
+
+    fun ehSearchSize() = rxPrefs.getString("ex_search_size", "rc_0")
+
+    fun thumbnailRows() = rxPrefs.getString("ex_thumb_rows", "tr_2")
+
+    fun migrateLibraryAsked() = rxPrefs.getBoolean("ex_migrate_library", false)
+
+    fun migrationStatus() = rxPrefs.getInteger("migration_status", MigrationStatus.NOT_INITIALIZED)
+
+    fun hasPerformedURLMigration() = rxPrefs.getBoolean("performed_url_migration", false)
+
+    fun hasPerformedSourceMigration() = rxPrefs.getBoolean("performed_source_migration", false)
+
+    //EH Cookies
+    fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
+    fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)
+    fun igneousVal() = rxPrefs.getString("eh_igneous", null)
+
+    //Lock
+    fun lockHash() = rxPrefs.getString("lock_hash", null)
+
+    fun lockSalt() = rxPrefs.getString("lock_salt", null)
+
+    fun lockLength() = rxPrefs.getInteger("lock_length", -1)
 }

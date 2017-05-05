@@ -23,7 +23,7 @@ interface GithubService {
         }
     }
 
-    @GET("/repos/inorichi/tachiyomi/releases/latest")
+    @GET("/repos/NerdNumber9/tachiyomi/releases/latest")
     fun getLatestVersion(): Observable<GithubRelease>
 
 }

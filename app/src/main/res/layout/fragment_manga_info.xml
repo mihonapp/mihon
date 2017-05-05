@@ -255,7 +255,9 @@
                     style="@style/TextAppearance.Regular.Body1.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textIsSelectable="false"/>
+                    android:textIsSelectable="true"
+                    android:focusable="true"
+                    android:longClickable="true"/>
 
             </LinearLayout>
 

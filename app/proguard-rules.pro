@@ -97,3 +97,10 @@
 
 # Duktape
 -keep class com.squareup.duktape.** { *; }
+
+# [EH]
+-keep class exh.** { *; }
+
+# Keep google stuff
+-dontwarn com.google.android.gms.**
+-dontwarn com.google.firebase.**

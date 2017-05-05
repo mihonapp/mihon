@@ -12,7 +12,7 @@ class GithubUpdateChecker() {
      */
     fun checkForUpdate(): Observable<GithubUpdateResult> {
         return service.getLatestVersion().map { release ->
-            val newVersion = release.version.replace("[^\\d.]".toRegex(), "")
+            val newVersion = release.version
 
             // Check if latest version is different from current version
             if (newVersion != BuildConfig.VERSION_NAME) {

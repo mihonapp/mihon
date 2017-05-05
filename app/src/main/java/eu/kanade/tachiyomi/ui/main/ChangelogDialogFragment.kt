@@ -25,7 +25,6 @@ class ChangelogDialogFragment : DialogFragment() {
                 preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
                 ChangelogDialogFragment().show(fm, "changelog")
 
-                // TODO better upgrades management
                 if (oldVersion == 0) return
 
                 if (oldVersion < 14) {
@@ -51,6 +50,7 @@ class ChangelogDialogFragment : DialogFragment() {
                         }
                     }
                 }
+                //TODO Review any other changes below
             }
         }
     }

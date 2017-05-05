@@ -68,6 +68,7 @@ class SettingsActivity : BaseActivity(),
             "backup_screen" -> SettingsBackupFragment.newInstance(key)
             "advanced_screen" -> SettingsAdvancedFragment.newInstance(key)
             "about_screen" -> SettingsAboutFragment.newInstance(key)
+            "eh_screen" -> SettingsEhFragment.newInstance(key) //EH
             else -> SettingsFragment.newInstance(key)
         }
     }
@@ -81,6 +82,7 @@ class SettingsActivity : BaseActivity(),
         const val FLAG_THEME_CHANGED = 0x1
         const val FLAG_DATABASE_CLEARED = 0x2
         const val FLAG_LANG_CHANGED = 0x4
+        const val FLAG_EH_RECREATE = 0x8
     }
 
 }

@@ -16,6 +16,10 @@ import eu.kanade.tachiyomi.ui.library.LibraryFragment
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersFragment
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadFragment
 import eu.kanade.tachiyomi.ui.setting.SettingsActivity
+import exh.ui.batchadd.BatchAddFragment
+import exh.ui.lock.lockEnabled
+import exh.ui.lock.notifyLockSecurity
+import exh.ui.lock.showLockActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import uy.kohesive.injekt.injectLazy
@@ -65,6 +69,7 @@ class MainActivity : BaseActivity() {
                     R.id.nav_drawer_recently_read -> setFragment(RecentlyReadFragment.newInstance(), id)
                     R.id.nav_drawer_catalogues -> setFragment(CatalogueFragment.newInstance(), id)
                     R.id.nav_drawer_latest_updates -> setFragment(LatestUpdatesFragment.newInstance(), id)
+                    R.id.nav_drawer_batch_add -> setFragment(BatchAddFragment.newInstance(), id)
                     R.id.nav_drawer_downloads -> startActivity(Intent(this, DownloadActivity::class.java))
                     R.id.nav_drawer_settings -> {
                         val intent = Intent(this, SettingsActivity::class.java)
@@ -88,6 +93,16 @@ class MainActivity : BaseActivity() {
 
             // Show changelog if needed
             ChangelogDialogFragment.show(this, preferences, supportFragmentManager)
+
+            //Show lock
+            val lockEnabled = lockEnabled(preferences)
+            if(lockEnabled) {
+                showLockActivity(this)
+
+                //Check lock security
+                notifyLockSecurity(this)
+            }
+
         }
 
 
@@ -126,6 +141,10 @@ class MainActivity : BaseActivity() {
                 nav_view.post { recreate() }
             } else if (resultCode and SettingsActivity.FLAG_LANG_CHANGED != 0) {
                 nav_view.post { recreate() }
+            } else if (resultCode and SettingsActivity.FLAG_EH_RECREATE != 0) {
+                TaskStackBuilder.create(this)
+                        .addNextIntent(Intent(this, MainActivity::class.java))
+                        .startActivities()
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -156,5 +175,6 @@ class MainActivity : BaseActivity() {
         private const val SHORTCUT_RECENTLY_UPDATED = "eu.kanade.tachiyomi.SHOW_RECENTLY_UPDATED"
         private const val SHORTCUT_RECENTLY_READ = "eu.kanade.tachiyomi.SHOW_RECENTLY_READ"
         private const val SHORTCUT_CATALOGUES = "eu.kanade.tachiyomi.SHOW_CATALOGUES"
+        const val FINALIZE_MIGRATION = "finalize_migration"
     }
 }

@@ -23,8 +23,13 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/action_sync"
+        android:icon="@drawable/ic_cloud_download_white_24dp"
+        android:title="Download favorites"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_edit_categories"
         android:title="@string/action_edit_categories"
         app:showAsAction="never"/>
-
 </menu>

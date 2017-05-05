@@ -7,24 +7,48 @@ import android.content.pm.PackageManager
 import android.os.Environment
 import dalvik.system.PathClassLoader
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.source.online.all.EHentai
+import eu.kanade.tachiyomi.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.YamlHttpSource
+import eu.kanade.tachiyomi.source.online.all.NHentai
+import eu.kanade.tachiyomi.source.online.all.PervEden
 import eu.kanade.tachiyomi.source.online.english.*
 import eu.kanade.tachiyomi.source.online.german.WieManga
 import eu.kanade.tachiyomi.source.online.russian.Mangachan
 import eu.kanade.tachiyomi.source.online.russian.Mintmanga
 import eu.kanade.tachiyomi.source.online.russian.Readmanga
 import eu.kanade.tachiyomi.util.hasPermission
+import exh.*
 import org.yaml.snakeyaml.Yaml
+import rx.Observable
 import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 import java.io.File
 
 open class SourceManager(private val context: Context) {
 
+    private val prefs: PreferencesHelper by injectLazy()
+
     private val sourcesMap = mutableMapOf<Long, Source>()
 
     init {
-        createSources()
+        //Recreate sources when they change
+        val prefEntries = arrayOf(
+                prefs.enableExhentai(),
+                prefs.imageQuality(),
+                prefs.useHentaiAtHome(),
+                prefs.useJapaneseTitle(),
+                prefs.ehSearchSize(),
+                prefs.thumbnailRows()
+        ).map { it.asObservable() }
+
+        Observable.merge(prefEntries).skip(prefEntries.size - 1).subscribe {
+            sourcesMap.clear()
+            createSources()
+        }
     }
 
     open fun get(sourceKey: Long): Source? {
@@ -39,6 +63,8 @@ open class SourceManager(private val context: Context) {
         createExtensionSources().forEach { registerSource(it) }
         createYamlSources().forEach { registerSource(it) }
         createInternalSources().forEach { registerSource(it) }
+        //EH
+        createEHSources().forEach { registerSource(it) }
     }
 
     private fun registerSource(source: Source, overwrite: Boolean = false) {
@@ -60,6 +86,21 @@ open class SourceManager(private val context: Context) {
             Mangasee(),
             WieManga()
     )
+
+    private fun createEHSources(): List<Source> {
+        val exSrcs = mutableListOf(
+                EHentai(EH_SOURCE_ID, false, context),
+                EHentaiMetadata(EH_METADATA_SOURCE_ID, false, context)
+        )
+        if(prefs.enableExhentai().getOrDefault()) {
+            exSrcs += EHentai(EXH_SOURCE_ID, true, context)
+            exSrcs += EHentaiMetadata(EXH_METADATA_SOURCE_ID, true, context)
+        }
+        exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, "en")
+        exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, "it")
+        exSrcs += NHentai(context)
+        return exSrcs
+    }
 
     private fun createYamlSources(): List<Source> {
         val sources = mutableListOf<Source>()

@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.library
 
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -7,9 +9,16 @@ import android.widget.FrameLayout
 import eu.davidea.flexibleadapter4.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.EHentai
+import eu.kanade.tachiyomi.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
+import exh.isLewdSource
+import exh.metadata.MetadataHelper
+import exh.search.SearchEngine
 import kotlinx.android.synthetic.main.item_catalogue_grid.view.*
+import uy.kohesive.injekt.injectLazy
 import java.util.*
 
 /**
@@ -24,6 +33,13 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
      * The list of manga in this category.
      */
     private var mangas: List<Manga> = emptyList()
+
+    private val sourceManager: SourceManager by injectLazy()
+
+    private val searchEngine = SearchEngine()
+    private val metadataHelper = MetadataHelper()
+
+    var asyncSearchText: String? = null
 
     init {
         setHasStableIds(true)
@@ -58,8 +74,17 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
      * @param param the filter. Not used.
      */
     override fun updateDataSet(param: String?) {
-        filterItems(mangas)
-        notifyDataSetChanged()
+        //Async search filter (EH)
+        val filtered = asyncSearchText?.let { search ->
+            mangas.filter {
+                filterObject(it, search)
+            }
+        } ?: mangas
+        //The rest of the filters run on the main loop
+        Handler(Looper.getMainLooper()).post {
+            filterItems(filtered)
+            notifyDataSetChanged()
+        }
     }
 
     /**
@@ -70,8 +95,17 @@ class LibraryCategoryAdapter(val fragment: LibraryCategoryView) :
      * @return true if the manga should be included, false otherwise.
      */
     override fun filterObject(manga: Manga, query: String): Boolean = with(manga) {
-        title.toLowerCase().contains(query) ||
-                author != null && author!!.toLowerCase().contains(query)
+        if(!isLewdSource(manga.source)) {
+            //Regular searching for normal manga
+            title.toLowerCase().contains(query) ||
+                    author != null && author!!.toLowerCase().contains(query)
+        } else {
+            //Use gallery search engine for EH manga
+            val metadata = metadataHelper.fetchMetadata(manga.url, manga.source)
+            metadata?.let {
+                searchEngine.matches(it, searchEngine.parseQuery(query))
+            } ?: title.contains(query, ignoreCase = true) //Use regular searching when the metadata is not set up for this gallery
+        }
     }
 
     /**
