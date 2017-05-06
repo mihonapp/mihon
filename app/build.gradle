@@ -100,6 +100,16 @@ android {
 
 dependencies {
 
+    compile "com.bluelinelabs:conductor:2.1.3"
+
+    final rxbindings_version = '1.0.1'
+    compile "com.jakewharton.rxbinding:rxbinding-kotlin:$rxbindings_version"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7-kotlin:$rxbindings_version"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4-kotlin:$rxbindings_version"
+    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7-kotlin:$rxbindings_version"
+
+    compile 'com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.0.4'
+
     // Modified dependencies
     compile 'com.github.inorichi:subsampling-scale-image-view:01e5385'
     compile 'com.github.inorichi:junrar-android:634c1f5'
@@ -212,7 +222,7 @@ dependencies {
 }
 
 buildscript {
-    ext.kotlin_version = '1.1.1'
+    ext.kotlin_version = '1.1.2'
     repositories {
         mavenCentral()
     }

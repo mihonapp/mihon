@@ -5,28 +5,29 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import eu.davidea.flexibleadapter4.FlexibleAdapter
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
-import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.item_library_category.view.*
-import rx.Subscription
+import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
 
 /**
  * Fragment containing the library manga for a certain category.
  * Uses R.layout.fragment_library_category.
  */
-class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-: FrameLayout(context, attrs), FlexibleViewHolder.OnListItemClickListener {
+class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+        FrameLayout(context, attrs),
+        FlexibleAdapter.OnItemClickListener,
+        FlexibleAdapter.OnItemLongClickListener {
 
     /**
      * Preferences.
@@ -36,7 +37,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     /**
      * The fragment containing this view.
      */
-    private lateinit var fragment: LibraryFragment
+    private lateinit var controller: LibraryController
 
     /**
      * Category for this view.
@@ -55,22 +56,12 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     private lateinit var adapter: LibraryCategoryAdapter
 
     /**
-     * Subscription for the library manga.
+     * Subscriptions while the view is bound.
      */
-    private var libraryMangaSubscription: Subscription? = null
+    private var subscriptions = CompositeSubscription()
 
-    /**
-     * Subscription of the library search.
-     */
-    private var searchSubscription: Subscription? = null
-
-    /**
-     * Subscription of the library selections.
-     */
-    private var selectionSubscription: Subscription? = null
-
-    fun onCreate(fragment: LibraryFragment) {
-        this.fragment = fragment
+    fun onCreate(controller: LibraryController) {
+        this.controller = controller
 
         recycler = if (preferences.libraryAsList().getOrDefault()) {
             (swipe_refresh.inflate(R.layout.library_list_recycler) as RecyclerView).apply {
@@ -78,7 +69,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
             }
         } else {
             (swipe_refresh.inflate(R.layout.library_grid_recycler) as AutofitRecyclerView).apply {
-                spanCount = fragment.mangaPerRow
+                spanCount = controller.mangaPerRow
             }
         }
 
@@ -112,35 +103,32 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     fun onBind(category: Category) {
         this.category = category
 
-        val presenter = fragment.presenter
-
-        searchSubscription = presenter.searchSubject.subscribe { text ->
-            adapter.searchText = text
-            adapter.updateDataSet()
-        }
-
-        adapter.mode = if (presenter.selectedMangas.isNotEmpty()) {
+        adapter.mode = if (controller.selectedMangas.isNotEmpty()) {
             FlexibleAdapter.MODE_MULTI
         } else {
             FlexibleAdapter.MODE_SINGLE
         }
 
-        libraryMangaSubscription = presenter.libraryMangaSubject
+        subscriptions += controller.searchRelay
+                .doOnNext { adapter.searchText = it }
+                .skip(1)
+                .subscribe { adapter.performFilter() }
+
+        subscriptions += controller.libraryMangaRelay
                 .subscribe { onNextLibraryManga(it) }
 
-        selectionSubscription = presenter.selectionSubject
+        subscriptions += controller.selectionRelay
                 .subscribe { onSelectionChanged(it) }
     }
 
     fun onRecycle() {
         adapter.setItems(emptyList())
         adapter.clearSelection()
+        subscriptions.clear()
     }
 
     override fun onDetachedFromWindow() {
-        searchSubscription?.unsubscribe()
-        libraryMangaSubscription?.unsubscribe()
-        selectionSubscription?.unsubscribe()
+        subscriptions.clear()
         super.onDetachedFromWindow()
     }
 
@@ -158,7 +146,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         adapter.setItems(mangaForCategory)
 
         if (adapter.mode == FlexibleAdapter.MODE_MULTI) {
-            fragment.presenter.selectedMangas.forEach { manga ->
+            controller.selectedMangas.forEach { manga ->
                 val position = adapter.indexOf(manga)
                 if (position != -1 && !adapter.isSelected(position)) {
                     adapter.toggleSelection(position)
@@ -184,7 +172,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
             }
             is LibrarySelectionEvent.Unselected -> {
                 findAndToggleSelection(event.manga)
-                if (fragment.presenter.selectedMangas.isEmpty()) {
+                if (controller.selectedMangas.isEmpty()) {
                     adapter.mode = FlexibleAdapter.MODE_SINGLE
                 }
             }
@@ -214,14 +202,14 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
      * @param position the position of the element clicked.
      * @return true if the item should be selected, false otherwise.
      */
-    override fun onListItemClick(position: Int): Boolean {
+    override fun onItemClick(position: Int): Boolean {
         // If the action mode is created and the position is valid, toggle the selection.
         val item = adapter.getItem(position) ?: return false
         if (adapter.mode == FlexibleAdapter.MODE_MULTI) {
             toggleSelection(position)
             return true
         } else {
-            openManga(item)
+            openManga(item.manga)
             return false
         }
     }
@@ -231,8 +219,8 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
      *
      * @param position the position of the element clicked.
      */
-    override fun onListItemLongClick(position: Int) {
-        fragment.createActionModeIfNeeded()
+    override fun onItemLongClick(position: Int) {
+        controller.createActionModeIfNeeded()
         toggleSelection(position)
     }
 
@@ -242,14 +230,8 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
      * @param manga the manga to open.
      */
     private fun openManga(manga: Manga) {
-        // Notify the presenter a manga is being opened.
-        fragment.presenter.onOpenManga()
-
-        // Create a new activity with the manga.
-        val intent = MangaActivity.newIntent(context, manga)
-        fragment.startActivity(intent)
+        controller.openManga(manga)
     }
-
 
     /**
      * Tells the presenter to toggle the selection for the given position.
@@ -257,10 +239,10 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
      * @param position the position to toggle.
      */
     private fun toggleSelection(position: Int) {
-        val manga = adapter.getItem(position) ?: return
+        val item = adapter.getItem(position) ?: return
 
-        fragment.presenter.setSelection(manga, !adapter.isSelected(position))
-        fragment.invalidateActionMode()
+        controller.setSelection(item.manga, !adapter.isSelected(position))
+        controller.invalidateActionMode()
     }
 
 }

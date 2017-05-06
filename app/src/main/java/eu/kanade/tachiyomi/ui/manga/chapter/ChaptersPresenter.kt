@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.os.Bundle
+import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -10,12 +11,7 @@ import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.ui.manga.MangaEvent
-import eu.kanade.tachiyomi.ui.manga.info.ChapterCountEvent
-import eu.kanade.tachiyomi.ui.manga.info.MangaFavoriteEvent
-import eu.kanade.tachiyomi.util.SharedData
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import rx.Observable
@@ -23,44 +19,23 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import timber.log.Timber
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
- * Presenter of [ChaptersFragment].
+ * Presenter of [ChaptersController].
  */
-class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
+class ChaptersPresenter(
+        val manga: Manga,
+        val source: Source,
+        private val chapterCountRelay: BehaviorRelay<Int>,
+        private val mangaFavoriteRelay: PublishRelay<Boolean>,
+        val preferences: PreferencesHelper = Injekt.get(),
+        private val db: DatabaseHelper = Injekt.get(),
+        private val downloadManager: DownloadManager = Injekt.get()
+) : BasePresenter<ChaptersController>() {
 
-    /**
-     * Database helper.
-     */
-    val db: DatabaseHelper by injectLazy()
-
-    /**
-     * Source manager.
-     */
-    val sourceManager: SourceManager by injectLazy()
-
-    /**
-     * Preferences.
-     */
-    val preferences: PreferencesHelper by injectLazy()
-
-    /**
-     * Downloads manager.
-     */
-    val downloadManager: DownloadManager by injectLazy()
-
-    /**
-     * Active manga.
-     */
-    lateinit var manga: Manga
-        private set
-
-    /**
-     * Source of the manga.
-     */
-    lateinit var source: Source
-        private set
+    private val context = preferences.context
 
     /**
      * List of chapters of the manga. It's always unfiltered and unsorted.
@@ -93,16 +68,10 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        // Find the active manga from the shared data or return.
-        manga = SharedData.get(MangaEvent::class.java)?.manga ?: return
-        source = sourceManager.get(manga.source)!!
-        Observable.just(manga)
-                .subscribeLatestCache(ChaptersFragment::onNextManga)
-
         // Prepare the relay.
         chaptersRelay.flatMap { applyChapterFilters(it) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeLatestCache(ChaptersFragment::onNextChapters,
+                .subscribeLatestCache(ChaptersController::onNextChapters,
                         { _, error -> Timber.e(error) })
 
         // Add the subscription that retrieves the chapters from the database, keeps subscribed to
@@ -123,7 +92,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                     observeDownloads()
 
                     // Emit the number of chapters to the info tab.
-                    SharedData.get(ChapterCountEvent::class.java)?.emit(chapters.size)
+                    chapterCountRelay.call(chapters.size)
                 }
                 .subscribe { chaptersRelay.call(it) })
     }
@@ -134,7 +103,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter { download -> download.manga.id == manga.id }
                 .doOnNext { onDownloadStatusChange(it) }
-                .subscribeLatestCache(ChaptersFragment::onChapterStatusChange,
+                .subscribeLatestCache(ChaptersController::onChapterStatusChange,
                         { _, error -> Timber.e(error) })
     }
 
@@ -183,7 +152,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeFirst({ view, _ ->
                     view.onFetchChaptersDone()
-                }, ChaptersFragment::onFetchChaptersError)
+                }, ChaptersController::onFetchChaptersError)
     }
 
     /**
@@ -308,7 +277,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeFirst({ view, _ ->
                     view.onChaptersDeleted()
-                }, ChaptersFragment::onChaptersDeletedError)
+                }, ChaptersController::onChaptersDeletedError)
     }
 
     /**
@@ -386,7 +355,7 @@ class ChaptersPresenter : BasePresenter<ChaptersFragment>() {
      * Adds manga to library
      */
     fun addToLibrary() {
-        SharedData.get(MangaFavoriteEvent::class.java)?.call(true)
+        mangaFavoriteRelay.call(true)
     }
 
     /**
