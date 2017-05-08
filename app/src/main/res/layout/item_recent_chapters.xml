@@ -13,7 +13,9 @@
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
         android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart">
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/manga_cover">
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
@@ -90,5 +92,17 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/manga_cover"
+        android:layout_width="@dimen/material_component_lists_single_line_with_avatar_height"
+        android:layout_height="@dimen/material_component_lists_single_line_with_avatar_height"
+        android:layout_centerVertical="true"
+        android:src="@drawable/branded_logo_icon"
+        android:clickable="true"
+        android:paddingLeft="@dimen/material_component_lists_icon_left_padding"
+        android:paddingStart="@dimen/material_component_lists_icon_left_padding"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:contentDescription="@string/description_cover"/>
 
 </RelativeLayout>
