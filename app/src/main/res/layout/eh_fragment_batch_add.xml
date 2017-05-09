@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:text="Enter the galleries to add (separated by a new line):"
+            android:text="Enter the galleries to add (E-Hentai/ExHentai only, separated by a new line):"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/textView"
