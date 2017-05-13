@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RestoreViewOnCreateController
-import com.bluelinelabs.conductor.Router
 
 abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateController(bundle) {
 
@@ -43,15 +42,6 @@ abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateContr
         }
 
         (activity as? AppCompatActivity)?.supportActionBar?.title = getTitle()
-    }
-
-    fun Router.popControllerWithTag(tag: String): Boolean {
-        val controller = getControllerWithTag(tag)
-        if (controller != null) {
-            popController(controller)
-            return true
-        }
-        return false
     }
 
 }

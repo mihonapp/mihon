@@ -1,105 +1,105 @@
 package eu.kanade.tachiyomi.data.preference
 
-import android.content.Context
-import eu.kanade.tachiyomi.R
-
 /**
- * This class stores the keys for the preferences in the application. Most of them are defined
- * in the file "keys.xml". By using this class we can define preferences in one place and get them
- * referenced here.
+ * This class stores the keys for the preferences in the application.
  */
-@Suppress("HasPlatformType")
-class PreferenceKeys(context: Context) {
+object PreferenceKeys {
 
-    val theme = context.getString(R.string.pref_theme_key)
+    const val theme = "pref_theme_key"
 
-    val rotation = context.getString(R.string.pref_rotation_type_key)
+    const val rotation = "pref_rotation_type_key"
 
-    val enableTransitions = context.getString(R.string.pref_enable_transitions_key)
+    const val enableTransitions = "pref_enable_transitions_key"
 
-    val showPageNumber = context.getString(R.string.pref_show_page_number_key)
+    const val showPageNumber = "pref_show_page_number_key"
 
-    val fullscreen = context.getString(R.string.pref_fullscreen_key)
+    const val fullscreen = "fullscreen"
 
-    val keepScreenOn = context.getString(R.string.pref_keep_screen_on_key)
+    const val keepScreenOn = "pref_keep_screen_on_key"
 
-    val customBrightness = context.getString(R.string.pref_custom_brightness_key)
+    const val customBrightness = "pref_custom_brightness_key"
 
-    val customBrightnessValue = context.getString(R.string.pref_custom_brightness_value_key)
+    const val customBrightnessValue = "custom_brightness_value"
 
-    val colorFilter = context.getString(R.string.pref_color_filter_key)
+    const val colorFilter = "pref_color_filter_key"
 
-    val colorFilterValue = context.getString(R.string.pref_color_filter_value_key)
+    const val colorFilterValue = "color_filter_value"
 
-    val defaultViewer = context.getString(R.string.pref_default_viewer_key)
+    const val defaultViewer = "pref_default_viewer_key"
 
-    val imageScaleType = context.getString(R.string.pref_image_scale_type_key)
+    const val imageScaleType = "pref_image_scale_type_key"
 
-    val imageDecoder = context.getString(R.string.pref_image_decoder_key)
+    const val imageDecoder = "image_decoder"
 
-    val zoomStart = context.getString(R.string.pref_zoom_start_key)
+    const val zoomStart = "pref_zoom_start_key"
 
-    val readerTheme = context.getString(R.string.pref_reader_theme_key)
+    const val readerTheme = "pref_reader_theme_key"
 
-    val cropBorders = context.getString(R.string.pref_crop_borders_key)
+    const val cropBorders = "crop_borders"
 
-    val readWithTapping = context.getString(R.string.pref_read_with_tapping_key)
+    const val readWithTapping = "reader_tap"
 
-    val readWithVolumeKeys = context.getString(R.string.pref_read_with_volume_keys_key)
+    const val readWithVolumeKeys = "reader_volume_keys"
 
-    val portraitColumns = context.getString(R.string.pref_library_columns_portrait_key)
+    const val portraitColumns = "pref_library_columns_portrait_key"
 
-    val landscapeColumns = context.getString(R.string.pref_library_columns_landscape_key)
+    const val landscapeColumns = "pref_library_columns_landscape_key"
 
-    val updateOnlyNonCompleted = context.getString(R.string.pref_update_only_non_completed_key)
+    const val updateOnlyNonCompleted = "pref_update_only_non_completed_key"
 
-    val autoUpdateTrack = context.getString(R.string.pref_auto_update_manga_sync_key)
+    const val autoUpdateTrack = "pref_auto_update_manga_sync_key"
 
-    val askUpdateTrack = context.getString(R.string.pref_ask_update_manga_sync_key)
+    const val askUpdateTrack = "pref_ask_update_manga_sync_key"
 
-    val lastUsedCatalogueSource = context.getString(R.string.pref_last_catalogue_source_key)
+    const val lastUsedCatalogueSource = "last_catalogue_source"
 
-    val lastUsedCategory = context.getString(R.string.pref_last_used_category_key)
+    const val lastUsedCategory = "last_used_category"
 
-    val catalogueAsList = context.getString(R.string.pref_display_catalogue_as_list)
+    const val catalogueAsList = "pref_display_catalogue_as_list"
 
-    val enabledLanguages = context.getString(R.string.pref_source_languages)
+    const val enabledLanguages = "source_languages"
 
-    val backupDirectory = context.getString(R.string.pref_backup_directory_key)
+    const val backupDirectory = "backup_directory"
 
-    val downloadsDirectory = context.getString(R.string.pref_download_directory_key)
+    const val downloadsDirectory = "download_directory"
 
-    val downloadThreads = context.getString(R.string.pref_download_slots_key)
+    const val downloadThreads = "pref_download_slots_key"
 
-    val downloadOnlyOverWifi = context.getString(R.string.pref_download_only_over_wifi_key)
+    const val downloadOnlyOverWifi = "pref_download_only_over_wifi_key"
 
-    val numberOfBackups = context.getString(R.string.pref_backup_slots_key)
+    const val numberOfBackups = "backup_slots"
 
-    val backupInterval = context.getString(R.string.pref_backup_interval_key)
+    const val backupInterval = "backup_interval"
 
-    val removeAfterReadSlots = context.getString(R.string.pref_remove_after_read_slots_key)
+    const val removeAfterReadSlots = "remove_after_read_slots"
 
-    val removeAfterMarkedAsRead = context.getString(R.string.pref_remove_after_marked_as_read_key)
+    const val removeAfterMarkedAsRead = "pref_remove_after_marked_as_read_key"
 
-    val libraryUpdateInterval = context.getString(R.string.pref_library_update_interval_key)
+    const val libraryUpdateInterval = "pref_library_update_interval_key"
 
-    val libraryUpdateRestriction = context.getString(R.string.pref_library_update_restriction_key)
+    const val libraryUpdateRestriction = "library_update_restriction"
 
-    val libraryUpdateCategories = context.getString(R.string.pref_library_update_categories_key)
+    const val libraryUpdateCategories = "library_update_categories"
 
-    val filterDownloaded = context.getString(R.string.pref_filter_downloaded_key)
+    const val filterDownloaded = "pref_filter_downloaded_key"
 
-    val filterUnread = context.getString(R.string.pref_filter_unread_key)
+    const val filterUnread = "pref_filter_unread_key"
 
-    val librarySortingMode = context.getString(R.string.pref_library_sorting_mode_key)
+    const val librarySortingMode = "library_sorting_mode"
 
-    val automaticUpdates = context.getString(R.string.pref_enable_automatic_updates_key)
+    const val automaticUpdates = "automatic_updates"
 
-    val startScreen = context.getString(R.string.pref_start_screen_key)
+    const val startScreen = "start_screen"
 
-    val downloadNew = context.getString(R.string.pref_download_new_key)
+    const val downloadNew = "download_new"
 
-    val downloadNewCategories = context.getString(R.string.pref_download_new_categories_key)
+    const val downloadNewCategories = "download_new_categories"
+
+    const val libraryAsList = "pref_display_library_as_list"
+
+    const val lang = "app_language"
+
+    const val defaultCategory = "default_category"
 
     fun sourceUsername(sourceId: Long) = "pref_source_username_$sourceId"
 
@@ -110,11 +110,5 @@ class PreferenceKeys(context: Context) {
     fun trackPassword(syncId: Int) = "pref_mangasync_password_$syncId"
 
     fun trackToken(syncId: Int) = "track_token_$syncId"
-
-    val libraryAsList = context.getString(R.string.pref_display_library_as_list)
-
-    val lang = context.getString(R.string.pref_language_key)
-
-    val defaultCategory = context.getString(R.string.default_category_key)
 
 }

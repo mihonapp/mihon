@@ -8,6 +8,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.ui.main.MainActivity
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
@@ -41,7 +42,7 @@ class AnilistLoginActivity : AppCompatActivity() {
     private fun returnToSettings() {
         finish()
 
-        val intent = Intent(this, SettingsActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         startActivity(intent)
     }

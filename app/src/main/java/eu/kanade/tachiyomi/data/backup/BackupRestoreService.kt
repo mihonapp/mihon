@@ -22,7 +22,6 @@ import eu.kanade.tachiyomi.data.backup.models.DHistory
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.*
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.ui.setting.SettingsBackupFragment
 import eu.kanade.tachiyomi.util.AndroidComponentUtil
 import eu.kanade.tachiyomi.util.chop
 import eu.kanade.tachiyomi.util.sendLocalBroadcast
@@ -36,7 +35,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
 
 /**
  * Restores backup from json file
@@ -44,11 +42,6 @@ import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
 class BackupRestoreService : Service() {
 
     companion object {
-        // Name of service
-        private const val NAME = "BackupRestoreService"
-
-        // Uri as string
-        private const val EXTRA_URI = "$ID.$NAME.EXTRA_URI"
 
         /**
          * Returns the status of the service.
@@ -69,7 +62,7 @@ class BackupRestoreService : Service() {
         fun start(context: Context, uri: Uri) {
             if (!isRunning(context)) {
                 val intent = Intent(context, BackupRestoreService::class.java).apply {
-                    putExtra(EXTRA_URI, uri)
+                    putExtra(BackupConst.EXTRA_URI, uri)
                 }
                 context.startService(intent)
             }
@@ -164,7 +157,7 @@ class BackupRestoreService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return Service.START_NOT_STICKY
 
-        val uri = intent.getParcelableExtra<Uri>(EXTRA_URI)
+        val uri = intent.getParcelableExtra<Uri>(BackupConst.EXTRA_URI)
 
         // Unsubscribe from any previous subscription if needed.
         subscription?.unsubscribe()
@@ -236,12 +229,12 @@ class BackupRestoreService : Service() {
                     val endTime = System.currentTimeMillis()
                     val time = endTime - startTime
                     val logFile = writeErrorLog()
-                    val completeIntent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
-                        putExtra(SettingsBackupFragment.EXTRA_TIME, time)
-                        putExtra(SettingsBackupFragment.EXTRA_ERRORS, errors.size)
-                        putExtra(SettingsBackupFragment.EXTRA_ERROR_FILE_PATH, logFile.parent)
-                        putExtra(SettingsBackupFragment.EXTRA_ERROR_FILE, logFile.name)
-                        putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_RESTORE_COMPLETED_DIALOG)
+                    val completeIntent = Intent(BackupConst.INTENT_FILTER).apply {
+                        putExtra(BackupConst.EXTRA_TIME, time)
+                        putExtra(BackupConst.EXTRA_ERRORS, errors.size)
+                        putExtra(BackupConst.EXTRA_ERROR_FILE_PATH, logFile.parent)
+                        putExtra(BackupConst.EXTRA_ERROR_FILE, logFile.name)
+                        putExtra(BackupConst.ACTION, BackupConst.ACTION_RESTORE_COMPLETED_DIALOG)
                     }
                     sendLocalBroadcast(completeIntent)
 
@@ -249,9 +242,9 @@ class BackupRestoreService : Service() {
                 .doOnError { error ->
                     Timber.e(error)
                     writeErrorLog()
-                    val errorIntent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
-                        putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_ERROR_RESTORE_DIALOG)
-                        putExtra(SettingsBackupFragment.EXTRA_ERROR_MESSAGE, error.message)
+                    val errorIntent = Intent(BackupConst.INTENT_FILTER).apply {
+                        putExtra(BackupConst.ACTION, BackupConst.ACTION_ERROR_RESTORE_DIALOG)
+                        putExtra(BackupConst.EXTRA_ERROR_MESSAGE, error.message)
                     }
                     sendLocalBroadcast(errorIntent)
                 }
@@ -392,7 +385,7 @@ class BackupRestoreService : Service() {
 
 
     /**
-     * Called to update dialog in [SettingsBackupFragment]
+     * Called to update dialog in [BackupConst]
      *
      * @param progress restore progress
      * @param amount total restoreAmount of manga
@@ -400,12 +393,12 @@ class BackupRestoreService : Service() {
      */
     private fun showRestoreProgress(progress: Int, amount: Int, title: String, errors: Int,
                                     content: String = getString(R.string.dialog_restoring_backup, title.chop(15))) {
-        val intent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
-            putExtra(SettingsBackupFragment.EXTRA_PROGRESS, progress)
-            putExtra(SettingsBackupFragment.EXTRA_AMOUNT, amount)
-            putExtra(SettingsBackupFragment.EXTRA_CONTENT, content)
-            putExtra(SettingsBackupFragment.EXTRA_ERRORS, errors)
-            putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_SET_PROGRESS_DIALOG)
+        val intent = Intent(BackupConst.INTENT_FILTER).apply {
+            putExtra(BackupConst.EXTRA_PROGRESS, progress)
+            putExtra(BackupConst.EXTRA_AMOUNT, amount)
+            putExtra(BackupConst.EXTRA_CONTENT, content)
+            putExtra(BackupConst.EXTRA_ERRORS, errors)
+            putExtra(BackupConst.ACTION, BackupConst.ACTION_SET_PROGRESS_DIALOG)
         }
         sendLocalBroadcast(intent)
     }

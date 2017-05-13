@@ -1,47 +1,27 @@
 package eu.kanade.tachiyomi.ui.setting
 
-import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.support.v7.preference.XpPreferenceFragment
-import android.view.View
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import android.support.v7.preference.PreferenceGroup
+import android.support.v7.preference.PreferenceScreen
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.widget.preference.LoginCheckBoxPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
 import eu.kanade.tachiyomi.widget.preference.SwitchPreferenceCategory
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 import java.util.*
 
-class SettingsSourcesFragment : SettingsFragment() {
-
-    companion object {
-        const val SOURCE_CHANGE_REQUEST = 120
-
-        fun newInstance(rootKey: String?): SettingsSourcesFragment {
-            val args = Bundle()
-            args.putString(XpPreferenceFragment.ARG_PREFERENCE_ROOT, rootKey)
-            return SettingsSourcesFragment().apply { arguments = args }
-        }
-    }
-
-    private val preferences: PreferencesHelper by injectLazy()
+class SettingsSourcesController : SettingsController(),
+        SourceLoginDialog.Listener {
 
     private val onlineSources by lazy { Injekt.get<SourceManager>().getOnlineSources() }
 
-    override fun setDivider(divider: Drawable?) {
-        super.setDivider(null)
-    }
-
-    override fun onViewCreated(view: View, savedState: Bundle?) {
-        super.onViewCreated(view, savedState)
-
-        // Remove dummy preference
-        preferenceScreen.removeAll()
+    override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
+        titleRes = R.string.pref_category_sources
 
         // Get the list of active language codes.
         val activeLangsCodes = preferences.enabledLanguages().getOrDefault()
@@ -66,8 +46,8 @@ class SettingsSourcesFragment : SettingsFragment() {
                     addLanguageSources(this, sources)
                 }
 
-                setOnPreferenceChangeListener { preference, any ->
-                    val checked = any as Boolean
+                onChange { newValue ->
+                    val checked = newValue as Boolean
                     val current = preferences.enabledLanguages().getOrDefault()
                     if (!checked) {
                         preferences.enabledLanguages().set(current - lang)
@@ -82,24 +62,28 @@ class SettingsSourcesFragment : SettingsFragment() {
         }
     }
 
+    override fun setDivider(divider: Drawable?) {
+        super.setDivider(null)
+    }
+
     /**
      * Adds the source list for the given group (language).
      *
      * @param group the language category.
      */
-    private fun addLanguageSources(group: SwitchPreferenceCategory, sources: List<HttpSource>) {
+    private fun addLanguageSources(group: PreferenceGroup, sources: List<HttpSource>) {
         val hiddenCatalogues = preferences.hiddenCatalogues().getOrDefault()
 
         sources.forEach { source ->
-            val sourcePreference = LoginCheckBoxPreference(context, source).apply {
+            val sourcePreference = LoginCheckBoxPreference(group.context, source).apply {
                 val id = source.id.toString()
                 title = source.name
                 key = getSourceKey(source.id)
                 isPersistent = false
                 isChecked = id !in hiddenCatalogues
 
-                setOnPreferenceChangeListener { preference, any ->
-                    val checked = any as Boolean
+                onChange { newValue ->
+                    val checked = newValue as Boolean
                     val current = preferences.hiddenCatalogues().getOrDefault()
 
                     preferences.hiddenCatalogues().set(if (checked)
@@ -111,23 +95,19 @@ class SettingsSourcesFragment : SettingsFragment() {
                 }
 
                 setOnLoginClickListener {
-                    val fragment = SourceLoginDialog.newInstance(source)
-                    fragment.setTargetFragment(this@SettingsSourcesFragment, SOURCE_CHANGE_REQUEST)
-                    fragment.show(fragmentManager, null)
+                    val dialog = SourceLoginDialog(source)
+                    dialog.targetController = this@SettingsSourcesController
+                    dialog.showDialog(router)
                 }
-
             }
 
             group.addPreference(sourcePreference)
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SOURCE_CHANGE_REQUEST && data != null) {
-            val sourceId = data.getLongExtra("key", -1L)
-            val pref = findPreference(getSourceKey(sourceId)) as? LoginCheckBoxPreference
-            pref?.notifyChanged()
-        }
+    override fun loginDialogClosed(source: LoginSource) {
+        val pref = findPreference(getSourceKey(source.id)) as? LoginCheckBoxPreference
+        pref?.notifyChanged()
     }
 
     private fun getSourceKey(sourceId: Long): String {

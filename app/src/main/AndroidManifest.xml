@@ -36,10 +36,6 @@
             android:name=".ui.reader.ReaderActivity"
             android:theme="@style/Theme.Reader" />
         <activity
-            android:name=".ui.setting.SettingsActivity"
-            android:label="@string/label_settings"
-            android:parentActivityName=".ui.main.MainActivity" />
-        <activity
             android:name=".widget.CustomLayoutPickerActivity"
             android:label="@string/app_name"
             android:theme="@style/FilePickerTheme" />

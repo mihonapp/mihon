@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ObjectAnimator
-import android.app.TaskStackBuilder
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -25,7 +24,7 @@ import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
-import eu.kanade.tachiyomi.ui.setting.SettingsActivity
+import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import uy.kohesive.injekt.injectLazy
@@ -85,10 +84,10 @@ class MainActivity : BaseActivity() {
                     R.id.nav_drawer_downloads -> {
                         startActivity(Intent(this, DownloadActivity::class.java))
                     }
-                    R.id.nav_drawer_settings -> {
-                        val intent = Intent(this, SettingsActivity::class.java)
-                        startActivityForResult(intent, REQUEST_OPEN_SETTINGS)
-                    }
+                    R.id.nav_drawer_settings ->
+                        router.pushController(RouterTransaction.with(SettingsMainController())
+                                .pushChangeHandler(FadeChangeHandler())
+                                .popChangeHandler(FadeChangeHandler()))
                 }
             }
             drawer.closeDrawer(GravityCompat.START)
@@ -216,26 +215,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_OPEN_SETTINGS && resultCode != 0) {
-            if (resultCode and SettingsActivity.FLAG_DATABASE_CLEARED != 0) {
-                // If database is cleared avoid undefined behavior by recreating the stack.
-                TaskStackBuilder.create(this)
-                        .addNextIntent(Intent(this, MainActivity::class.java))
-                        .startActivities()
-            } else if (resultCode and SettingsActivity.FLAG_THEME_CHANGED != 0) {
-                // Delay activity recreation to avoid fragment leaks.
-                nav_view.post { recreate() }
-            } else if (resultCode and SettingsActivity.FLAG_LANG_CHANGED != 0) {
-                nav_view.post { recreate() }
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
     companion object {
-        private const val REQUEST_OPEN_SETTINGS = 200
         // Shortcut actions
         private const val SHORTCUT_LIBRARY = "eu.kanade.tachiyomi.SHOW_LIBRARY"
         private const val SHORTCUT_RECENTLY_UPDATED = "eu.kanade.tachiyomi.SHOW_RECENTLY_UPDATED"

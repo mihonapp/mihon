@@ -14,7 +14,7 @@ class BackupCreatorJob : Job() {
         val preferences = Injekt.get<PreferencesHelper>()
         val path = preferences.backupsDirectory().getOrDefault()
         val flags = BackupCreateService.BACKUP_ALL
-        BackupCreateService.makeBackup(context,path,flags,true)
+        BackupCreateService.makeBackup(context, path, flags, true)
         return Result.SUCCESS
     }
 

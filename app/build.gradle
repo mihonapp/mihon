@@ -101,6 +101,7 @@ android {
 dependencies {
 
     compile "com.bluelinelabs:conductor:2.1.3"
+    compile 'com.github.inorichi:conductor-support-preference:master-SNAPSHOT'
 
     final rxbindings_version = '1.0.1'
     compile "com.jakewharton.rxbinding:rxbinding-kotlin:$rxbindings_version"
@@ -204,7 +205,6 @@ dependencies {
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
     compile 'com.afollestad.material-dialogs:core:0.9.4.2'
-    compile 'net.xpece.android:support-preference:1.2.5'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
