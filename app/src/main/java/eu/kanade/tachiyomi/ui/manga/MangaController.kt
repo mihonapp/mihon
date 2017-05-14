@@ -63,7 +63,7 @@ class MangaController : RxController, TabbedController {
 
     val fromCatalogue = args.getBoolean(FROM_CATALOGUE_EXTRA, false)
 
-    val chapterCountRelay: BehaviorRelay<Int> = BehaviorRelay.create()
+    val chapterCountRelay: BehaviorRelay<Float> = BehaviorRelay.create()
 
     val mangaFavoriteRelay: PublishRelay<Boolean> = PublishRelay.create()
 

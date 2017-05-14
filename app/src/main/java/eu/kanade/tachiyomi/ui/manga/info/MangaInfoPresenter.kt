@@ -27,7 +27,7 @@ import uy.kohesive.injekt.api.get
 class MangaInfoPresenter(
         val manga: Manga,
         val source: Source,
-        private val chapterCountRelay: BehaviorRelay<Int>,
+        private val chapterCountRelay: BehaviorRelay<Float>,
         private val mangaFavoriteRelay: PublishRelay<Boolean>,
         private val db: DatabaseHelper = Injekt.get(),
         private val downloadManager: DownloadManager = Injekt.get(),

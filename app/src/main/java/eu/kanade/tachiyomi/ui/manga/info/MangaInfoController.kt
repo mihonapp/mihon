@@ -38,6 +38,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.Subscriptions
 import uy.kohesive.injekt.injectLazy
+import java.text.DecimalFormat
 
 /**
  * Fragment that shows manga information.
@@ -171,8 +172,8 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      *
      * @param count number of chapters.
      */
-    fun setChapterCount(count: Int) {
-        view?.manga_chapters?.text = count.toString()
+    fun setChapterCount(count: Float) {
+        view?.manga_chapters?.text = DecimalFormat("#.#").format(count)
     }
 
     /**
