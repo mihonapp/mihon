@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.content.Context
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.preference.*
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
@@ -83,7 +84,7 @@ var Preference.titleRes: Int
 
 var Preference.iconRes: Int
     get() = 0 // set only
-    set(value) { setIcon(value) }
+    set(value) { icon = VectorDrawableCompat.create(context.resources, value, context.theme) }
 
 var Preference.summaryRes: Int
     get() = 0 // set only
