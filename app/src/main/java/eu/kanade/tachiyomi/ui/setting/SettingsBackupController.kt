@@ -229,10 +229,15 @@ class SettingsBackupController : SettingsController() {
 
     class CreateBackupDialog : DialogController() {
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-            return MaterialDialog.Builder(activity!!)
+            val activity = activity!!
+            val options = arrayOf(R.string.manga, R.string.categories, R.string.chapters,
+                    R.string.track, R.string.history)
+                    .map { activity.getString(it) }
+
+            return MaterialDialog.Builder(activity)
                     .title(R.string.pref_create_backup)
                     .content(R.string.backup_choice)
-                    .items(R.array.backup_options)
+                    .items(options)
                     .itemsDisabledIndices(0)
                     .itemsCallbackMultiChoice(arrayOf(0, 1, 2, 3, 4), { _, positions, _ ->
                         var flags = 0

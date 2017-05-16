@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.ContextCompat
 import android.support.v7.preference.PreferenceScreen
@@ -12,9 +14,13 @@ import com.hippo.unifile.UniFile
 import com.nononsenseapps.filepicker.FilePickerActivity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.DiskUtil
 import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
@@ -30,7 +36,9 @@ class SettingsDownloadController : SettingsController() {
             key = Keys.downloadsDirectory
             titleRes = R.string.pref_download_directory
             onClick {
-                showDownloadDirectoriesDialog()
+                val ctrl = DownloadDirectoriesDialog()
+                ctrl.targetController = this@SettingsDownloadController
+                ctrl.showDialog(router)
             }
 
             preferences.downloadsDirectory().asObservable()
@@ -115,49 +123,6 @@ class SettingsDownloadController : SettingsController() {
         }
     }
 
-    private fun showDownloadDirectoriesDialog() {
-        val activity = activity ?: return
-
-        val currentDir = preferences.downloadsDirectory().getOrDefault()
-        val externalDirs = getExternalFilesDirs() + File(activity.getString(R.string.custom_dir))
-        val selectedIndex = externalDirs.map(File::toString).indexOfFirst { it in currentDir }
-
-        MaterialDialog.Builder(activity)
-                .items(externalDirs)
-                .itemsCallbackSingleChoice(selectedIndex, { _, _, which, text ->
-                    if (which == externalDirs.lastIndex) {
-                        if (Build.VERSION.SDK_INT < 21) {
-                            // Custom dir selected, open directory selector
-                            val i = Intent(activity, CustomLayoutPickerActivity::class.java)
-                            i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
-                            i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true)
-                            i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR)
-                            i.putExtra(FilePickerActivity.EXTRA_START_PATH, currentDir)
-
-                            startActivityForResult(i, DOWNLOAD_DIR_PRE_L)
-                        } else {
-                            val i = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                            startActivityForResult(i, DOWNLOAD_DIR_L)
-                        }
-                    } else {
-                        // One of the predefined folders was selected
-                        val path = Uri.fromFile(File(text.toString()))
-                        preferences.downloadsDirectory().set(path.toString())
-                    }
-                    true
-                })
-                .show()
-    }
-
-    private fun getExternalFilesDirs(): List<File> {
-        val defaultDir = Environment.getExternalStorageDirectory().absolutePath +
-                File.separator + resources?.getString(R.string.app_name) +
-                File.separator + "downloads"
-
-        return mutableListOf(File(defaultDir)) +
-                ContextCompat.getExternalFilesDirs(activity, "").filterNotNull()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             DOWNLOAD_DIR_PRE_L -> if (data != null && resultCode == Activity.RESULT_OK) {
@@ -176,6 +141,60 @@ class SettingsDownloadController : SettingsController() {
                 val file = UniFile.fromUri(context, uri)
                 preferences.downloadsDirectory().set(file.uri.toString())
             }
+        }
+    }
+
+    fun predefinedDirectorySelected(selectedDir: String) {
+        val path = Uri.fromFile(File(selectedDir))
+        preferences.downloadsDirectory().set(path.toString())
+    }
+
+    fun customDirectorySelected(currentDir: String) {
+        if (Build.VERSION.SDK_INT < 21) {
+            val i = Intent(activity, CustomLayoutPickerActivity::class.java)
+            i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
+            i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true)
+            i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR)
+            i.putExtra(FilePickerActivity.EXTRA_START_PATH, currentDir)
+
+            startActivityForResult(i, DOWNLOAD_DIR_PRE_L)
+        } else {
+            val i = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            startActivityForResult(i, DOWNLOAD_DIR_L)
+        }
+    }
+
+    class DownloadDirectoriesDialog : DialogController() {
+
+        private val preferences: PreferencesHelper = Injekt.get()
+
+        override fun onCreateDialog(savedViewState: Bundle?): Dialog {
+            val activity = activity!!
+            val currentDir = preferences.downloadsDirectory().getOrDefault()
+            val externalDirs = getExternalDirs() + File(activity.getString(R.string.custom_dir))
+            val selectedIndex = externalDirs.map(File::toString).indexOfFirst { it in currentDir }
+
+            return MaterialDialog.Builder(activity)
+                    .items(externalDirs)
+                    .itemsCallbackSingleChoice(selectedIndex, { _, _, which, text ->
+                        val target = targetController as? SettingsDownloadController
+                        if (which == externalDirs.lastIndex) {
+                            target?.customDirectorySelected(currentDir)
+                        } else {
+                            target?.predefinedDirectorySelected(text.toString())
+                        }
+                        true
+                    })
+                    .build()
+        }
+
+        private fun getExternalDirs(): List<File> {
+            val defaultDir = Environment.getExternalStorageDirectory().absolutePath +
+                    File.separator + resources?.getString(R.string.app_name) +
+                    File.separator + "downloads"
+
+            return mutableListOf(File(defaultDir)) +
+                    ContextCompat.getExternalFilesDirs(activity, "").filterNotNull()
         }
     }
 
