@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.data.backup.models.Backup.CATEGORIES
 import eu.kanade.tachiyomi.data.backup.models.Backup.MANGAS
 import eu.kanade.tachiyomi.data.backup.models.Backup.VERSION
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.util.AndroidComponentUtil
 import eu.kanade.tachiyomi.util.sendLocalBroadcast
 import timber.log.Timber
 import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
@@ -60,9 +59,6 @@ class BackupCreateService : IntentService(NAME) {
             context.startService(intent)
         }
 
-        fun isRunning(context: Context): Boolean {
-            return AndroidComponentUtil.isServiceRunning(context, BackupCreateService::class.java)
-        }
     }
 
     private val backupManager by lazy { BackupManager(this) }

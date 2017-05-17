@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.util
 
+import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -135,4 +136,12 @@ fun Context.unregisterLocalReceiver(receiver: BroadcastReceiver) {
     LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
 }
 
-
+/**
+ * Returns true if the given service class is running.
+ */
+fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
+    val className = serviceClass.name
+    val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    return manager.getRunningServices(Integer.MAX_VALUE)
+            .any { className == it.service.className }
+}

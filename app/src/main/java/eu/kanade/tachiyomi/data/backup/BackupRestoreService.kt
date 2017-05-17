@@ -22,8 +22,8 @@ import eu.kanade.tachiyomi.data.backup.models.DHistory
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.*
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.util.AndroidComponentUtil
 import eu.kanade.tachiyomi.util.chop
+import eu.kanade.tachiyomi.util.isServiceRunning
 import eu.kanade.tachiyomi.util.sendLocalBroadcast
 import rx.Observable
 import rx.Subscription
@@ -50,7 +50,7 @@ class BackupRestoreService : Service() {
          * @return true if the service is running, false otherwise.
          */
         fun isRunning(context: Context): Boolean {
-            return AndroidComponentUtil.isServiceRunning(context, BackupRestoreService::class.java)
+            return context.isServiceRunning(BackupRestoreService::class.java)
         }
 
         /**

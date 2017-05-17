@@ -239,6 +239,8 @@
     <string name="clear_database_completed">Entries deleted</string>
     <string name="pref_refresh_library_metadata">Refresh library metadata</string>
     <string name="pref_refresh_library_metadata_summary">Updates covers, genres, description and manga status information</string>
+    <string name="pref_refresh_library_tracking">Refresh tracking metadata</string>
+    <string name="pref_refresh_library_tracking_summary">Updates status, score and last chapter read from the tracking services</string>
 
       <!-- About section -->
     <string name="version">Version</string>
