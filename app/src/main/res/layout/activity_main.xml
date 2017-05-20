@@ -24,7 +24,6 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:theme="@style/Theme.ActionBar.Tab"
                 app:tabIndicatorColor="@android:color/white"
                 app:tabGravity="center"

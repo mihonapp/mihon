@@ -49,7 +49,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private val tabAnimator by lazy { TabsAnimator(tabs) }
+    lateinit var tabAnimator: TabsAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setAppTheme()
@@ -68,6 +68,8 @@ class MainActivity : BaseActivity() {
         drawerArrow = DrawerArrowDrawable(this)
         drawerArrow?.color = Color.WHITE
         toolbar.navigationIcon = drawerArrow
+
+        tabAnimator = TabsAnimator(tabs)
 
         // Set behavior of Navigation drawer
         nav_view.setNavigationItemSelectedListener { item ->
@@ -190,8 +192,8 @@ class MainActivity : BaseActivity() {
             from.cleanupTabs(tabs)
         }
         if (to is TabbedController) {
-            to.configureTabs(tabs)
             tabAnimator.expand()
+            to.configureTabs(tabs)
         } else {
             tabAnimator.collapse()
             tabs.setupWithViewPager(null)
