@@ -158,11 +158,13 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                         .centerCrop()
                         .into(manga_cover)
 
-                Glide.with(context)
-                        .load(manga)
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                        .centerCrop()
-                        .into(backdrop)
+                if (backdrop != null) {
+                    Glide.with(context)
+                            .load(manga)
+                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .centerCrop()
+                            .into(backdrop)
+                }
             }
         }
     }
