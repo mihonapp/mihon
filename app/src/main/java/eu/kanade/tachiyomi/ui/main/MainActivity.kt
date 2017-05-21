@@ -10,6 +10,7 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.*
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
+import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -136,10 +137,11 @@ class MainActivity : BaseActivity() {
 
         syncActivityViewWithController(router.backstack.lastOrNull()?.controller())
 
-        // TODO changelog controller
         if (savedInstanceState == null) {
             // Show changelog if needed
-            ChangelogDialogFragment.show(this, preferences, supportFragmentManager)
+            if (Migrations.upgrade(preferences)) {
+                ChangelogDialogController().showDialog(router)
+            }
         }
     }
 
