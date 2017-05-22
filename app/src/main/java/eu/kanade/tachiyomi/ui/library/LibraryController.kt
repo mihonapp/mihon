@@ -120,7 +120,7 @@ class LibraryController(
      */
     private var drawerListener: DrawerLayout.DrawerListener? = null
 
-    private var tabsVisibilityRelay: BehaviorRelay<Boolean> = BehaviorRelay.create()
+    private var tabsVisibilityRelay: BehaviorRelay<Boolean> = BehaviorRelay.create(false)
 
     private var tabsVisibilitySubscription: Subscription? = null
 
