@@ -100,17 +100,6 @@ android {
 
 dependencies {
 
-    compile "com.bluelinelabs:conductor:2.1.3"
-    compile 'com.github.inorichi:conductor-support-preference:master-SNAPSHOT'
-
-    final rxbindings_version = '1.0.1'
-    compile "com.jakewharton.rxbinding:rxbinding-kotlin:$rxbindings_version"
-    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7-kotlin:$rxbindings_version"
-    compile "com.jakewharton.rxbinding:rxbinding-support-v4-kotlin:$rxbindings_version"
-    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7-kotlin:$rxbindings_version"
-
-    compile 'com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.0.4'
-
     // Modified dependencies
     compile 'com.github.inorichi:subsampling-scale-image-view:01e5385'
     compile 'com.github.inorichi:junrar-android:634c1f5'
@@ -201,12 +190,23 @@ dependencies {
     compile 'com.dmitrymalkovich.android:material-design-dimens:1.4'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'eu.davidea:flexible-adapter:5.0.0-rc1'
-    compile 'com.github.inorichi:FlexibleAdapter:93985fe' // v4.2.0 to be removed
     compile 'com.nononsenseapps:filepicker:2.5.2'
     compile 'com.github.amulyakhare:TextDrawable:558677e'
     compile 'com.afollestad.material-dialogs:core:0.9.4.2'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.0.4'
+
+    // Conductor
+    compile "com.bluelinelabs:conductor:2.1.3"
+    compile 'com.github.inorichi:conductor-support-preference:9e36460'
+
+    // RxBindings
+    final rxbindings_version = '1.0.1'
+    compile "com.jakewharton.rxbinding:rxbinding-kotlin:$rxbindings_version"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7-kotlin:$rxbindings_version"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4-kotlin:$rxbindings_version"
+    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7-kotlin:$rxbindings_version"
 
     // Tests
     testCompile 'junit:junit:4.12'

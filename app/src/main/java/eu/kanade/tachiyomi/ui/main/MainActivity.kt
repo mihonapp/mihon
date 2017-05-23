@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ObjectAnimator
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
@@ -19,7 +18,7 @@ import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
-import eu.kanade.tachiyomi.ui.download.DownloadActivity
+import eu.kanade.tachiyomi.ui.download.DownloadController
 import eu.kanade.tachiyomi.ui.latest_updates.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -85,7 +84,9 @@ class MainActivity : BaseActivity() {
                     R.id.nav_drawer_catalogues -> setRoot(CatalogueController(), id)
                     R.id.nav_drawer_latest_updates -> setRoot(LatestUpdatesController(), id)
                     R.id.nav_drawer_downloads -> {
-                        startActivity(Intent(this, DownloadActivity::class.java))
+                        router.pushController(RouterTransaction.with(DownloadController())
+                                .pushChangeHandler(FadeChangeHandler())
+                                .popChangeHandler(FadeChangeHandler()))
                     }
                     R.id.nav_drawer_settings ->
                         router.pushController(RouterTransaction.with(SettingsMainController())
@@ -109,6 +110,7 @@ class MainActivity : BaseActivity() {
                 SHORTCUT_CATALOGUES -> setSelectedDrawerItem(R.id.nav_drawer_catalogues)
                 SHORTCUT_MANGA -> router.setRoot(
                         RouterTransaction.with(MangaController(intent.extras)))
+                SHORTCUT_DOWNLOADS -> setSelectedDrawerItem(R.id.nav_drawer_downloads)
                 else -> setSelectedDrawerItem(startScreenId)
             }
         }
@@ -225,6 +227,7 @@ class MainActivity : BaseActivity() {
         private const val SHORTCUT_RECENTLY_UPDATED = "eu.kanade.tachiyomi.SHOW_RECENTLY_UPDATED"
         private const val SHORTCUT_RECENTLY_READ = "eu.kanade.tachiyomi.SHOW_RECENTLY_READ"
         private const val SHORTCUT_CATALOGUES = "eu.kanade.tachiyomi.SHOW_CATALOGUES"
+        const val SHORTCUT_DOWNLOADS = "eu.kanade.tachiyomi.SHOW_DOWNLOADS"
         const val SHORTCUT_MANGA = "eu.kanade.tachiyomi.SHOW_MANGA"
     }
 
