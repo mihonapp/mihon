@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ObjectAnimator
 import android.support.design.widget.TabLayout
-import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.DecelerateInterpolator
 
@@ -29,7 +28,6 @@ class TabsAnimator(val tabs: TabLayout) {
     }
 
     init {
-        isLastStateShown = tabs.visibility == View.VISIBLE
         tabs.viewTreeObserver.addOnGlobalLayoutListener(
             object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
@@ -39,7 +37,7 @@ class TabsAnimator(val tabs: TabLayout) {
                         // Save the tabs default height.
                         tabsHeight = tabs.height
 
-                        // Now that we know the height, set the initial height and visibility.
+                        // Now that we know the height, set the initial height.
                         if (isLastStateShown) {
                             setHeight(tabsHeight)
                         } else {
@@ -73,9 +71,13 @@ class TabsAnimator(val tabs: TabLayout) {
      * Expands the tab layout with an animation.
      */
     fun expand() {
-        if (isMeasured && (!isLastStateShown || getHeight() != tabsHeight)) {
-            animation.setIntValues(tabsHeight)
-            animation.start()
+        if (isMeasured) {
+            if (getHeight() != tabsHeight) {
+                animation.setIntValues(tabsHeight)
+                animation.start()
+            } else {
+                animation.cancel()
+            }
         }
         isLastStateShown = true
     }
@@ -84,9 +86,13 @@ class TabsAnimator(val tabs: TabLayout) {
      * Collapse the tab layout with an animation.
      */
     fun collapse() {
-        if (isMeasured && (isLastStateShown || getHeight() != 0)) {
-            animation.setIntValues(0)
-            animation.start()
+        if (isMeasured) {
+            if (getHeight() != 0) {
+                animation.setIntValues(0)
+                animation.start()
+            } else {
+                animation.cancel()
+            }
         }
         isLastStateShown = false
     }
