@@ -42,7 +42,6 @@ class MainActivity : BaseActivity() {
 
     private val startScreenId by lazy {
         when (preferences.startScreen()) {
-            1 -> R.id.nav_drawer_library
             2 -> R.id.nav_drawer_recently_read
             3 -> R.id.nav_drawer_recent_updates
             else -> R.id.nav_drawer_library
@@ -52,7 +51,11 @@ class MainActivity : BaseActivity() {
     lateinit var tabAnimator: TabsAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setAppTheme()
+        setTheme(when (preferences.theme()) {
+            2 -> R.style.Theme_Tachiyomi_Dark
+            3 -> R.style.Theme_Tachiyomi_Amoled
+            else -> R.style.Theme_Tachiyomi
+        })
         super.onCreate(savedInstanceState)
 
         // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079

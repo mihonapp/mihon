@@ -21,9 +21,9 @@ class TabsAnimator(val tabs: TabLayout) {
      * Animation used to expand and collapse the tab layout.
      */
     private val animation by lazy {
-        ObjectAnimator.ofInt(this, "height", tabsHeight).also {
-            it.duration = 300L
-            it.interpolator = DecelerateInterpolator()
+        ObjectAnimator.ofInt(this, "height", tabsHeight).apply {
+            duration = 300L
+            interpolator = DecelerateInterpolator()
         }
     }
 
