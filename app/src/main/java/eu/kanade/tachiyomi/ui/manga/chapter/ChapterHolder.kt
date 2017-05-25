@@ -6,7 +6,7 @@ import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
-import kotlinx.android.synthetic.main.item_chapter.view.*
+import kotlinx.android.synthetic.main.chapters_item.view.*
 import java.util.*
 
 class ChapterHolder(

@@ -54,7 +54,7 @@ class DownloadAdapter : RecyclerView.Adapter<DownloadHolder>() {
      * @return a new view holder for a manga.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadHolder {
-        val view = parent.inflate(R.layout.item_download)
+        val view = parent.inflate(R.layout.download_item)
         return DownloadHolder(view)
     }
 

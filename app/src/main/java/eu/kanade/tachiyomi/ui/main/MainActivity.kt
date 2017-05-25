@@ -25,8 +25,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.main_activity.*
 import uy.kohesive.injekt.injectLazy
 
 
@@ -64,7 +63,7 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.main_activity)
 
         setSupportActionBar(toolbar)
 

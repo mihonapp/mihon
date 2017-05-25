@@ -36,7 +36,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.library_controller.view.*
 import rx.Subscription
 import timber.log.Timber

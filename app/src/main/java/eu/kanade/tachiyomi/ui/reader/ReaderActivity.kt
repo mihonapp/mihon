@@ -33,7 +33,7 @@ import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
-import kotlinx.android.synthetic.main.activity_reader.*
+import kotlinx.android.synthetic.main.reader_activity.*
 import me.zhanghai.android.systemuihelper.SystemUiHelper
 import me.zhanghai.android.systemuihelper.SystemUiHelper.*
 import nucleus.factory.RequiresPresenter
@@ -92,7 +92,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        setContentView(R.layout.activity_reader)
+        setContentView(R.layout.reader_activity)
 
         if (savedState == null && SharedData.get(ReaderEvent::class.java) == null) {
             finish()

@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import kotlinx.android.synthetic.main.activity_download_manager.view.*
+import kotlinx.android.synthetic.main.download_controller.view.*
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -41,7 +41,7 @@ class DownloadController : NucleusController<DownloadPresenter>() {
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.activity_download_manager, container, false)
+        return inflater.inflate(R.layout.download_controller, container, false)
     }
 
     override fun createPresenter(): DownloadPresenter {
