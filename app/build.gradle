@@ -105,7 +105,7 @@ dependencies {
     compile 'com.github.inorichi:junrar-android:634c1f5'
 
     // Android support library
-    final support_library_version = '25.3.1'
+    final support_library_version = '25.4.0'
     compile "com.android.support:support-v4:$support_library_version"
     compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:cardview-v7:$support_library_version"
