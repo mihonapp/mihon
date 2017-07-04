@@ -161,6 +161,18 @@ class Batoto : ParsedHttpSource(), LoginSource {
         else -> SManga.UNKNOWN
     }
 
+    override fun chapterListRequest(manga: SManga): Request {
+        // Https is currently very slow. The replace also saves a redirection.
+        var newUrl = "http://bato.to" + manga.url
+        if ("/comic/_/comics/" !in newUrl) {
+            newUrl = newUrl.replace("/comic/_/", "/comic/_/comics/")
+        }
+
+        return super.chapterListRequest(manga).newBuilder()
+                .url(newUrl)
+                .build()
+    }
+
     override fun chapterListParse(response: Response): List<SChapter> {
         val body = response.body()!!.string()
         val matcher = staffNotice.matcher(body)
