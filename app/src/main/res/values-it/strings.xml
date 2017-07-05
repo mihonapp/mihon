@@ -79,7 +79,6 @@
     <string name="pref_category_reader">Lettore</string>
     <string name="pref_category_downloads">Download</string>
     <string name="pref_category_sources">Fonti</string>
-    <string name="pref_category_sync">Sincronizzazione</string>
     <string name="pref_category_advanced">Avanzate</string>
     <string name="pref_category_about">Informazioni</string>
 
@@ -276,7 +275,6 @@
     <string name="plan_to_read">Lettura pianificata</string>
     <string name="score">Punteggio</string>
     <string name="title">Titolo</string>
-    <string name="title_hint">Titolo…</string>
     <string name="status">Stato</string>
     <string name="chapters">Capitoli</string>
 
@@ -310,10 +308,6 @@
 
     <!-- Backup fragment -->
     <string name="backup">Backup</string>
-    <string name="restore">Ripristina</string>
-    <string name="backup_please_wait">Backup in corso. Attendere prego…</string>
-    <string name="backup_completed">Backup ripristinato con successo</string>
-    <string name="restore_please_wait">Ripristino backup in corso. Attendere prego…</string>
 
     <!-- Recent manga fragment -->
     <string name="recent_manga_source">%1$s - Cap.%2$s</string>

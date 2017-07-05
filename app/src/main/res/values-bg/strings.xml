@@ -320,10 +320,6 @@
 
     <!-- Backup fragment -->
     <string name="backup">Резервно копие</string>
-    <string name="restore">Възстановяване</string>
-    <string name="backup_please_wait">Създаване на резервно копие. Моля изчакайте…</string>
-    <string name="backup_completed">Резервното копие бе успешно възстановено.</string>
-    <string name="restore_please_wait">Възстановяване на резервно копие. Моля изчакайте...</string>
 
     <!-- Recent manga fragment -->
     <string name="recent_manga_source">%1$s - Гл.%2$s</string>

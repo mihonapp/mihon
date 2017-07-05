@@ -253,10 +253,6 @@
 
     <!-- Backup fragment -->
     <string name="backup">Copia de seguridad</string>
-    <string name="restore">Restaurar</string>
-    <string name="backup_please_wait">Copia de seguridad en curso. Por favor espere…</string>
-    <string name="backup_completed">Copia de seguridad restaurada con éxito</string>
-    <string name="restore_please_wait">Restaurando copia de seguridad. Por favor espere…</string>
 
     <!-- Recent manga fragment -->
     <string name="recent_manga_source">%1$s - Ch.%2$s</string>
