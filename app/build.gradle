@@ -194,7 +194,7 @@ dependencies {
     compile 'com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.0.4'
 
     // Conductor
-    compile "com.bluelinelabs:conductor:2.1.3"
+    compile "com.bluelinelabs:conductor:2.1.2"
     compile 'com.github.inorichi:conductor-support-preference:9e36460'
 
     // RxBindings
