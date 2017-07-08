@@ -146,7 +146,7 @@ dependencies {
     compile 'com.github.seven332:unifile:1.0.0'
 
     // HTML parser
-    compile 'org.jsoup:jsoup:1.10.3'
+    compile 'org.jsoup:jsoup:1.10.2'
 
     // Job scheduling
     compile 'com.evernote:android-job:1.1.11'
