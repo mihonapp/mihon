@@ -38,8 +38,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 22
-        versionName "0.5.2"
+        versionCode 23
+        versionName "0.6.0"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
