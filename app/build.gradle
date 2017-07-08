@@ -122,7 +122,7 @@ dependencies {
     compile 'com.github.pwittchen:reactivenetwork:0.7.0'
 
     // Network client
-    compile "com.squareup.okhttp3:okhttp:3.8.0"
+    compile "com.squareup.okhttp3:okhttp:3.8.1"
     compile 'com.squareup.okio:okio:1.13.0'
 
     // REST
@@ -132,7 +132,7 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
     // JSON
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
 
     // YAML
@@ -146,11 +146,11 @@ dependencies {
     compile 'com.github.seven332:unifile:1.0.0'
 
     // HTML parser
-    compile 'org.jsoup:jsoup:1.10.2'
+    compile 'org.jsoup:jsoup:1.10.3'
 
     // Job scheduling
-    compile 'com.evernote:android-job:1.1.8'
-    compile 'com.google.android.gms:play-services-gcm:10.2.0'
+    compile 'com.evernote:android-job:1.1.11'
+    compile 'com.google.android.gms:play-services-gcm:11.0.1'
 
     // Changelog
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
@@ -161,7 +161,6 @@ dependencies {
     // Model View Presenter
     final nucleus_version = '3.0.0'
     compile "info.android15.nucleus:nucleus:$nucleus_version"
-    compile "info.android15.nucleus:nucleus-support-v4:$nucleus_version"
     compile "info.android15.nucleus:nucleus-support-v7:$nucleus_version"
 
     // Dependency injection
@@ -194,7 +193,7 @@ dependencies {
     compile 'com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.0.4'
 
     // Conductor
-    compile "com.bluelinelabs:conductor:2.1.2"
+    compile "com.bluelinelabs:conductor:2.1.4"
     compile 'com.github.inorichi:conductor-support-preference:9e36460'
 
     // RxBindings
