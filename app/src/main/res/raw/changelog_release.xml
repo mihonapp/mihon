@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v0.6.1" changeDate="">
+        <changelogtext>Bugfix release.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.6.0" changeDate="">
         <changelogtext>Added sorting by total chapters.</changelogtext>
 
