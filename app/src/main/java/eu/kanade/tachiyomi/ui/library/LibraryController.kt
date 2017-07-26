@@ -346,6 +346,8 @@ class LibraryController(
             query = it.toString()
             searchRelay.call(query)
         }
+
+        searchItem.fixExpand()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
