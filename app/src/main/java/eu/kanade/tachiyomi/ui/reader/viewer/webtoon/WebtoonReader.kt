@@ -54,6 +54,12 @@ class WebtoonReader : BaseReader() {
         private set
 
     /**
+     * Whether to crop image borders.
+     */
+    var cropBorders: Boolean = false
+        private set
+
+    /**
      * Gesture detector for image touch events.
      */
     val imageGestureDetector by lazy { GestureDetector(context, ImageGestureListener()) }
@@ -109,16 +115,24 @@ class WebtoonReader : BaseReader() {
                 .doOnNext { setDecoderClass(it) }
                 .skip(1)
                 .distinctUntilChanged()
-                .subscribe {
-                    val activePage = layoutManager.findFirstVisibleItemPosition()
-                    recycler.adapter = adapter
-                    setActivePage(activePage)
-                })
+                .subscribe { refreshAdapter() })
+
+        subscriptions.add(readerActivity.preferences.cropBorders()
+                .asObservable()
+                .doOnNext { cropBorders = it }
+                .skip(1)
+                .distinctUntilChanged()
+                .subscribe { refreshAdapter() })
 
         setPagesOnAdapter()
         return recycler
     }
 
+    fun refreshAdapter() {
+        val activePage = layoutManager.findFirstVisibleItemPosition()
+        recycler.adapter = adapter
+        setActivePage(activePage)
+    }
 
     /**
      * Uses two ways to scroll to the last page read.

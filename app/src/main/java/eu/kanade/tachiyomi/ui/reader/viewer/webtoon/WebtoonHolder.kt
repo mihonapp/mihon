@@ -63,6 +63,7 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
             setMinimumTileDpi(180)
             setRegionDecoderClass(webtoonReader.regionDecoderClass)
             setBitmapDecoderClass(webtoonReader.bitmapDecoderClass)
+            setCropBorders(webtoonReader.cropBorders)
             setVerticalScrollingParent(true)
             setOnTouchListener(adapter.touchListener)
             setOnLongClickListener { webtoonReader.onLongClick(page) }
