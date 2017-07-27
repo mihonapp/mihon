@@ -81,7 +81,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
             recycler.scrollStateChanges().subscribeUntilDestroy {
                 // Disable swipe refresh when view is not at the top
                 val firstPos = layoutManager.findFirstCompletelyVisibleItemPosition()
-                swipe_refresh.isEnabled = firstPos == 0
+                swipe_refresh.isEnabled = firstPos <= 0
             }
 
             swipe_refresh.setDistanceToTriggerSync((2 * 64 * resources.displayMetrics.density).toInt())

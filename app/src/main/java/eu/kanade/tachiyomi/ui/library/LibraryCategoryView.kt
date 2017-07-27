@@ -83,7 +83,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
                 // Disable swipe refresh when view is not at the top
                 val firstPos = (recycler.layoutManager as LinearLayoutManager)
                         .findFirstCompletelyVisibleItemPosition()
-                swipe_refresh.isEnabled = firstPos == 0
+                swipe_refresh.isEnabled = firstPos <= 0
             }
         })
 
