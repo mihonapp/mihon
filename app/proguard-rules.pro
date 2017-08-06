@@ -7,6 +7,10 @@
 -keep class com.hippo.image.** { *; }
 -keep interface com.hippo.image.** { *; }
 
+# Extensions may require methods unused in the core app
+-keep class org.jsoup.** { *; }
+-keep class kotlin.** { *; }
+
 # OkHttp
 -dontwarn okhttp3.**
 -dontwarn okio.**

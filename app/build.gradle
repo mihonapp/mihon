@@ -98,6 +98,7 @@ dependencies {
 
     // Modified dependencies
     compile 'com.github.inorichi:subsampling-scale-image-view:01e5385'
+    compile 'com.github.inorichi:tachimage:68cd311'
     compile 'com.github.inorichi:junrar-android:634c1f5'
 
     // Android support library
