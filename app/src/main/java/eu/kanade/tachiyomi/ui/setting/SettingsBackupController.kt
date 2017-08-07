@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
+import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.util.getUriCompat
 import eu.kanade.tachiyomi.util.registerLocalReceiver
 import eu.kanade.tachiyomi.util.toast
@@ -52,9 +53,7 @@ class SettingsBackupController : SettingsController() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE), 500)
-        }
+        requestPermissionsSafe(arrayOf(WRITE_EXTERNAL_STORAGE), 500)
     }
 
     override fun onDestroy() {
