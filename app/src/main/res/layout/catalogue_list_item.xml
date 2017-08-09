@@ -6,7 +6,7 @@
     android:layout_height="@dimen/material_component_lists_single_line_with_avatar_height"
     android:background="?attr/selectable_list_drawable">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="@dimen/material_component_lists_single_line_with_avatar_height"
         android:layout_height="@dimen/material_component_lists_single_line_with_avatar_height"

@@ -5,6 +5,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import jp.wasabeef.glide.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.catalogue_list_item.view.*
 
 /**
@@ -50,6 +51,7 @@ class LibraryListHolder(
                 .load(manga)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
+                .bitmapTransform(CropCircleTransformation(itemView.context))
                 .dontAnimate()
                 .into(itemView.thumbnail)
     }

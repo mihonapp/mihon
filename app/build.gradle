@@ -190,7 +190,6 @@ dependencies {
     compile 'com.github.amulyakhare:TextDrawable:558677e'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     compile 'me.zhanghai.android.systemuihelper:library:1.0.0'
-    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.0.4'
 
     // Conductor
