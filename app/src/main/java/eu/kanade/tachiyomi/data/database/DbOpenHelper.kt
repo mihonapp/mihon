@@ -51,7 +51,7 @@ class DbOpenHelper(context: Context)
         if (oldVersion < 4) {
             db.execSQL(ChapterTable.bookmarkUpdateQuery)
         }
-        if (oldVersion < 5){
+        if (oldVersion < 5) {
             db.execSQL(ChapterTable.addScanlator)
         }
     }

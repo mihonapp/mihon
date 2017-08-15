@@ -14,7 +14,7 @@ object ChapterTable {
 
     const val COL_READ = "read"
 
-    const val COL_SCANLATOR ="scanlator"
+    const val COL_SCANLATOR = "scanlator"
 
     const val COL_BOOKMARK = "bookmark"
 
@@ -55,7 +55,7 @@ object ChapterTable {
     val bookmarkUpdateQuery: String
         get() = "ALTER TABLE $TABLE ADD COLUMN $COL_BOOKMARK BOOLEAN DEFAULT FALSE"
 
-    val addScanlator:String
-        get ()= "ALTER TABLE $TABLE ADD COLUMN $COL_SCANLATOR  TEXT DEFAULT"
+    val addScanlator: String
+        get() = "ALTER TABLE $TABLE ADD COLUMN $COL_SCANLATOR TEXT DEFAULT NULL"
 
 }
