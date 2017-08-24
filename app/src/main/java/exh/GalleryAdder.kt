@@ -149,19 +149,17 @@ sealed class GalleryAddEvent {
 
     class Success(override val galleryUrl: String,
                   val manga: Manga): GalleryAddEvent() {
-        override val logMessage = "[OK] Added gallery: $galleryTitle"
+        override val logMessage = "Added gallery: $galleryTitle"
         override val galleryTitle: String
             get() = manga.title
     }
 
     sealed class Fail: GalleryAddEvent() {
         class UnknownType(override val galleryUrl: String): Fail() {
-            override val logMessage = "[ERROR] Unknown gallery type for gallery: $galleryUrl"
+            override val logMessage = "Unknown gallery type for gallery: $galleryUrl"
         }
 
         class Error(override val galleryUrl: String,
-                    val message: String): Fail() {
-            override val logMessage = "[ERROR] $message"
-        }
+                    override val logMessage: String): Fail()
     }
 }

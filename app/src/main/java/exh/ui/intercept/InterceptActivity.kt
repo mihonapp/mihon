@@ -5,54 +5,68 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.ui.manga.MangaController
+import exh.GalleryAddEvent
 import exh.GalleryAdder
-import timber.log.Timber
+import kotlinx.android.synthetic.main.eh_activity_intercept.*
+import uy.kohesive.injekt.injectLazy
 import kotlin.concurrent.thread
 
-//TODO :(
 class InterceptActivity : BaseActivity() {
+
+    private val preferences: PreferencesHelper by injectLazy()
 
     private val galleryAdder = GalleryAdder()
 
     var finished = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //Set theme
+        setTheme(when (preferences.theme()) {
+            2 -> R.style.Theme_Tachiyomi_Dark
+            3 -> R.style.Theme_Tachiyomi_Amoled
+            else -> R.style.Theme_Tachiyomi
+        })
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.eh_activity_intercept)
 
+        //Show back button
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         if(savedInstanceState == null)
-            thread { setup() }
+            thread { processLink() }
     }
 
-    fun setup() {
-        try {
-            processLink()
-        } catch(t: Throwable) {
-            Timber.e(t, "Could not intercept link!")
-            if(!finished)
-                runOnUiThread {
-                    MaterialDialog.Builder(this)
-                            .title("Error")
-                            .content("Could not load this gallery!")
-                            .cancelable(true)
-                            .canceledOnTouchOutside(true)
-                            .cancelListener { onBackPressed() }
-                            .positiveText("Ok")
-                            .onPositive { _, _ -> onBackPressed() }
-                            .dismissListener { onBackPressed() }
-                            .show()
-                }
-        }
-    }
-
-    fun processLink() {
+    private fun processLink() {
         if(Intent.ACTION_VIEW == intent.action) {
-            val manga = galleryAdder.addGallery(intent.dataString)
+            val result = galleryAdder.addGallery(intent.dataString)
 
-            //TODO
-//            if(!finished)
-//                startActivity(MangaActivity.newIntent(this, manga, true))
+            when(result) {
+                is GalleryAddEvent.Success ->
+                    if(!finished)
+                        startActivity(Intent(this, MainActivity::class.java)
+                                .setAction(MainActivity.SHORTCUT_MANGA)
+                                .putExtra(MangaController.MANGA_EXTRA, result.manga.id))
+                is GalleryAddEvent.Fail ->
+                    if(!finished)
+                        runOnUiThread {
+                            MaterialDialog.Builder(this)
+                                    .title("Error")
+                                    .content("Could not open this gallery:\n\n${result.logMessage}")
+                                    .cancelable(true)
+                                    .canceledOnTouchOutside(true)
+                                    .cancelListener { onBackPressed() }
+                                    .positiveText("Ok")
+                                    .onPositive { _, _ -> onBackPressed() }
+                                    .dismissListener { onBackPressed() }
+                                    .show()
+                        }
+            }
             onBackPressed()
         }
     }
