@@ -45,7 +45,7 @@ class MainActivity : BaseActivity() {
 
     val preferences: PreferencesHelper by injectLazy()
 
-    var drawerArrow: DrawerArrowDrawable? = null
+    private var drawerArrow: DrawerArrowDrawable? = null
 
     private var secondaryDrawer: ViewGroup? = null
 
