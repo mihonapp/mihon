@@ -2,34 +2,12 @@ package eu.kanade.tachiyomi.ui.base.activity
 
 import android.support.v7.app.AppCompatActivity
 import eu.kanade.tachiyomi.util.LocaleHelper
-import exh.ui.lock.lockEnabled
-import exh.ui.lock.showLockActivity
-import android.app.ActivityManager
-import android.app.Service
-import android.app.usage.UsageStats
-import android.app.usage.UsageStatsManager
-import android.os.Build
-import java.util.*
 
-
-abstract class BaseActivity : AppCompatActivity(), ActivityMixin {
-
-    override var resumed = false
+abstract class BaseActivity : AppCompatActivity() {
 
     init {
+        @Suppress("LeakingThis")
         LocaleHelper.updateConfiguration(this)
-    }
-
-    override fun getActivity() = this
-
-    override fun onResume() {
-        super.onResume()
-        resumed = true
-    }
-
-    override fun onPause() {
-        resumed = false
-        super.onPause()
     }
 
     var willLock = false

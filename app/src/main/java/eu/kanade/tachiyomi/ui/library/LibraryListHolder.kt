@@ -3,9 +3,10 @@ package eu.kanade.tachiyomi.ui.library
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.ui.base.adapter.FlexibleViewHolder
-import kotlinx.android.synthetic.main.item_catalogue_list.view.*
+import jp.wasabeef.glide.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.catalogue_list_item.view.*
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
@@ -17,10 +18,10 @@ import kotlinx.android.synthetic.main.item_catalogue_list.view.*
  * @constructor creates a new library holder.
  */
 
-class LibraryListHolder(private val view: View,
-                        private val adapter: LibraryCategoryAdapter,
-                        listener: FlexibleViewHolder.OnListItemClickListener)
-: LibraryHolder(view, adapter, listener) {
+class LibraryListHolder(
+        private val view: View,
+        private val adapter: FlexibleAdapter<*>
+) : LibraryHolder(view, adapter) {
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this
@@ -50,6 +51,7 @@ class LibraryListHolder(private val view: View,
                 .load(manga)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
+                .bitmapTransform(CropCircleTransformation(itemView.context))
                 .dontAnimate()
                 .into(itemView.thumbnail)
     }

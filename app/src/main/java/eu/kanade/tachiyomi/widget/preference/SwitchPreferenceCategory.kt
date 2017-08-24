@@ -4,15 +4,16 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.TypedArray
 import android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH
+import android.support.v7.preference.PreferenceCategory
 import android.support.v7.preference.PreferenceViewHolder
 import android.support.v7.widget.SwitchCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Checkable
 import android.widget.CompoundButton
+import android.widget.TextView
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.getResourceColor
-import net.xpece.android.support.preference.PreferenceCategory
-import net.xpece.android.support.preference.R
 
 class SwitchPreferenceCategory @JvmOverloads constructor(
         context: Context,
@@ -20,13 +21,8 @@ class SwitchPreferenceCategory @JvmOverloads constructor(
 : PreferenceCategory(
         context,
         attrs,
-        R.attr.switchPreferenceCompatStyle,
-        R.style.Preference_Material_SwitchPreferenceCompat),
+        R.attr.switchPreferenceCompatStyle),
 CompoundButton.OnCheckedChangeListener {
-
-    init {
-        setTitleTextColor(context.getResourceColor(R.attr.colorAccent))
-    }
 
     private var mChecked = false
 
@@ -34,6 +30,8 @@ CompoundButton.OnCheckedChangeListener {
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
+        val titleView = holder.findViewById(android.R.id.title) as TextView
+        titleView.setTextColor(context.getResourceColor(R.attr.colorAccent))
         syncSwitchView(holder)
     }
 

@@ -36,8 +36,6 @@
         <item name="selectable_library_drawable">@drawable/library_item_selector_light</item>
         <item name="text_color_primary">@color/textColorPrimaryLight</item>
         <item name="background_card">@color/dialogLight</item>
-        <item name="asp_preferenceIconTint">?colorAccent</item>
-        <item name="asp_preferenceDialogIconTint">?colorAccent</item>
     </style>
 
     <style name="Theme.Tachiyomi" parent="Theme.Base">
@@ -76,11 +74,25 @@
         <item name="selectable_library_drawable">@drawable/library_item_selector_dark</item>
         <item name="text_color_primary">@color/textColorPrimaryDark</item>
         <item name="background_card">@color/dialogDark</item>
-        <item name="asp_preferenceIconTint">?colorAccent</item>
-        <item name="asp_preferenceDialogIconTint">?colorAccent</item>
     </style>
 
     <style name="Theme.Tachiyomi.Dark" parent="Theme.Base.Dark">
+        <!-- Attributes specific for SDK 16 to SDK 20 -->
+    </style>
+
+    <!--==============-->
+    <!-- Amoled Theme -->
+    <!--==============-->
+    <style name="Theme.Base.Amoled" parent="Theme.Base.Dark">
+        <item name="android:colorBackground">@color/md_black_1000</item>
+
+        <!-- Custom Attributes-->
+        <item name="selectable_list_drawable">@drawable/list_item_selector_amoled</item>
+        <item name="selectable_library_drawable">@drawable/library_item_selector_amoled</item>
+        <item name="background_card">@color/md_black_1000</item>
+    </style>
+
+    <style name="Theme.Tachiyomi.Amoled" parent="Theme.Base.Amoled">
         <!-- Attributes specific for SDK 16 to SDK 20 -->
     </style>
 

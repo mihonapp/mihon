@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.widget.RecyclerViewPagerAdapter
  *
  * @constructor creates an instance of the adapter.
  */
-class LibraryAdapter(private val fragment: LibraryFragment) : RecyclerViewPagerAdapter() {
+class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPagerAdapter() {
 
     /**
      * The categories to bind in the adapter.
@@ -32,8 +32,8 @@ class LibraryAdapter(private val fragment: LibraryFragment) : RecyclerViewPagerA
      * @return a new view.
      */
     override fun createView(container: ViewGroup): View {
-        val view = container.inflate(R.layout.item_library_category) as LibraryCategoryView
-        view.onCreate(fragment)
+        val view = container.inflate(R.layout.library_category) as LibraryCategoryView
+        view.onCreate(controller)
         return view
     }
 

@@ -2,11 +2,14 @@ package eu.kanade.tachiyomi.ui.recent_updates
 
 import android.view.View
 import android.widget.PopupMenu
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.util.getResourceColor
-import kotlinx.android.synthetic.main.item_recent_chapters.view.*
+import jp.wasabeef.glide.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.recent_chapters_item.view.*
 
 /**
  * Holder that contains chapter item
@@ -41,6 +44,9 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
         // correctly positioned. The reason being that the view may change position before the
         // PopupMenu is shown.
         view.chapter_menu.setOnClickListener { it.post { showPopupMenu(it) } }
+        view.manga_cover.setOnClickListener {
+            adapter.coverClickListener.onCoverClick(adapterPosition)
+        }
     }
 
     /**
@@ -56,6 +62,16 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
 
         // Set manga title
         view.manga_title.text = item.manga.title
+
+        // Set cover
+        Glide.clear(itemView.manga_cover)
+        if (!item.manga.thumbnail_url.isNullOrEmpty()) {
+            Glide.with(itemView.context)
+                    .load(item.manga)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .bitmapTransform(CropCircleTransformation(view.context))
+                    .into(itemView.manga_cover)
+        }
 
         // Check if chapter is read and set correct color
         if (item.chapter.read) {
@@ -115,7 +131,7 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
 
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
-            with(adapter.fragment) {
+            with(adapter.controller) {
                 when (menuItem.itemId) {
                     R.id.action_download -> downloadChapter(item)
                     R.id.action_delete -> deleteChapter(item)

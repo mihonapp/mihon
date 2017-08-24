@@ -6,7 +6,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.getResourceColor
-import kotlinx.android.synthetic.main.item_catalogue_list.view.*
+import jp.wasabeef.glide.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.catalogue_list_item.view.*
 
 /**
  * Class used to hold the displayed data of a manga in the catalogue, like the cover or the title.
@@ -42,6 +43,7 @@ class CatalogueListHolder(private val view: View, adapter: FlexibleAdapter<*>) :
                     .load(manga)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .centerCrop()
+                    .bitmapTransform(CropCircleTransformation(view.context))
                     .dontAnimate()
                     .skipMemoryCache(true)
                     .placeholder(android.R.color.transparent)

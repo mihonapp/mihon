@@ -22,16 +22,6 @@
         <item>@string/webtoon_viewer</item>
     </string-array>
 
-    <string-array name="themes_values">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
-    <string-array name="themes">
-        <item>@string/light_theme</item>
-        <item>@string/dark_theme</item>
-    </string-array>
-
     <string-array name="reader_themes">
         <item>@string/white_background</item>
         <item>@string/black_background</item>
@@ -40,38 +30,6 @@
     <string-array name="reader_themes_values">
         <item>0</item>
         <item>1</item>
-    </string-array>
-
-    <string-array name="download_slots">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="backup_slots">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-    </string-array>
-
-    <string-array name="remove_after_read_slots">
-        <item>@string/disabled</item>
-        <item>@string/last_read_chapter</item>
-        <item>@string/second_to_last</item>
-        <item>@string/third_to_last</item>
-        <item>@string/fourth_to_last</item>
-        <item>@string/fifth_to_last</item>
-    </string-array>
-
-    <string-array name="remove_after_read_slots_values">
-        <item>-1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
     </string-array>
 
     <string-array name="image_decoders">
@@ -132,76 +90,6 @@
         <item>4</item>
     </string-array>
 
-    <string-array name="library_update_interval">
-        <item>@string/update_never</item>
-        <item>@string/update_1hour</item>
-        <item>@string/update_2hour</item>
-        <item>@string/update_3hour</item>
-        <item>@string/update_6hour</item>
-        <item>@string/update_12hour</item>
-        <item>@string/update_24hour</item>
-        <item>@string/update_48hour</item>
-    </string-array>
-
-    <string-array name="library_update_interval_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>6</item>
-        <item>12</item>
-        <item>24</item>
-        <item>48</item>
-    </string-array>
-
-    <string-array name="backup_update_interval">
-        <item>@string/update_never</item>
-        <item>@string/update_6hour</item>
-        <item>@string/update_12hour</item>
-        <item>@string/update_24hour</item>
-        <item>@string/update_48hour</item>
-        <item>@string/update_weekly</item>
-    </string-array>
-
-    <string-array name="backup_update_interval_values">
-        <item>0</item>
-        <item>6</item>
-        <item>12</item>
-        <item>24</item>
-        <item>48</item>
-        <item>168</item>
-    </string-array>
-
-    <string-array name="library_update_restrictions">
-        <item>@string/wifi</item>
-        <item>@string/charging</item>
-    </string-array>
-
-    <string-array name="library_update_restrictions_values">
-        <item>wifi</item>
-        <item>ac</item>
-    </string-array>
-
-    <string-array name="remove_recently_read">
-        <item>@string/scale_type_fit_screen</item>
-    </string-array>
-
-    <string-array name="remove_recently_read_values">
-        <item>remove</item>
-    </string-array>
-
-    <string-array name="start_screen_selection">
-        <item>@string/label_library</item>
-        <item>@string/label_recent_manga</item>
-        <item>@string/label_recent_updates</item>
-    </string-array>
-
-    <string-array name="start_screen_selection_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
     <string-array name="reader_image_options">
         <item>@string/set_as_cover</item>
         <item>@string/action_share</item>
@@ -212,42 +100,6 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </string-array>
-
-    <string-array name="backup_options">
-        <item>@string/manga</item>
-        <item>@string/categories</item>
-        <item>@string/chapters</item>
-        <item>@string/track</item>
-        <item>@string/history</item>
-    </string-array>
-
-    <string-array name="backup_options_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
-    <string-array name="languages_values">
-        <item/> <!-- system language -->
-        <item>bg</item>
-        <item>en</item>
-        <item>es</item>
-        <item>fr</item>
-        <item>it</item>
-        <item>pt</item>
-        <item>ru</item>
-        <item>vi</item>
-    </string-array>
-
-    <string-array name="default_category_entry">
-        <item>@string/default_category_summary</item>
-    </string-array>
-
-    <string-array name="default_category_entry_value">
-        <item>-1</item>
     </string-array>
 
     <!-- EH -->

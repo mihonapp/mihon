@@ -30,6 +30,7 @@
     <string name="action_filter_read">Read</string>
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
+    <string name="action_sort_total">Total chapters</string>
     <string name="action_sort_last_read">Last read</string>
     <string name="action_sort_last_updated">Last updated</string>
     <string name="action_search">Search</string>
@@ -131,6 +132,7 @@
     <string name="pref_theme">Application theme</string>
     <string name="light_theme">Main theme</string>
     <string name="dark_theme">Dark theme</string>
+    <string name="amoled_theme">AMOLED theme</string>
     <string name="pref_start_screen">Start screen</string>
     <string name="pref_language">Language</string>
     <string name="system_default">System default</string>
@@ -148,6 +150,7 @@
     <string name="pref_keep_screen_on">Keep screen on</string>
     <string name="pref_reader_navigation">Navigation</string>
     <string name="pref_read_with_volume_keys">Volume keys</string>
+    <string name="pref_read_with_volume_keys_inverted">Invert volume keys</string>
     <string name="pref_read_with_tapping">Tapping</string>
     <string name="pref_reader_theme">Background color</string>
     <string name="white_background">White</string>
@@ -238,6 +241,8 @@
     <string name="clear_database_completed">Entries deleted</string>
     <string name="pref_refresh_library_metadata">Refresh library metadata</string>
     <string name="pref_refresh_library_metadata_summary">Updates covers, genres, description and manga status information</string>
+    <string name="pref_refresh_library_tracking">Refresh tracking metadata</string>
+    <string name="pref_refresh_library_tracking_summary">Updates status, score and last chapter read from the tracking services</string>
 
       <!-- About section -->
     <string name="version">Version</string>
@@ -288,6 +293,7 @@
     <string name="manga_info_author_label">Author</string>
     <string name="manga_info_artist_label">Artist</string>
     <string name="manga_info_chapters_label">Chapters</string>
+    <string name="manga_info_last_chapter_label">Last chapter</string>
     <string name="manga_info_status_label">Status</string>
     <string name="manga_info_source_label">Source</string>
     <string name="manga_info_genres_label">Genres</string>

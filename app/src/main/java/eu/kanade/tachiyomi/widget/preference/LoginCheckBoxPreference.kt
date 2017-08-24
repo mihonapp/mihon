@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.widget.preference
 
 import android.content.Context
 import android.graphics.Color
+import android.support.v7.preference.CheckBoxPreference
 import android.support.v7.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.view.View
@@ -11,7 +12,6 @@ import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.setVectorCompat
 import kotlinx.android.synthetic.main.pref_item_source.view.*
-import net.xpece.android.support.preference.CheckBoxPreference
 
 class LoginCheckBoxPreference @JvmOverloads constructor(
         context: Context,

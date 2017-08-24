@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Pair
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
-import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -15,6 +14,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.combineLatest
@@ -23,65 +23,30 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
 
 /**
- * Presenter of [LibraryFragment].
+ * Presenter of [LibraryController].
  */
-class LibraryPresenter : BasePresenter<LibraryFragment>() {
+class LibraryPresenter(
+        private val db: DatabaseHelper = Injekt.get(),
+        private val preferences: PreferencesHelper = Injekt.get(),
+        private val coverCache: CoverCache = Injekt.get(),
+        private val sourceManager: SourceManager = Injekt.get(),
+        private val downloadManager: DownloadManager = Injekt.get()
+) : BasePresenter<LibraryController>() {
 
-    /**
-     * Database.
-     */
-    private val db: DatabaseHelper by injectLazy()
-
-    /**
-     * Preferences.
-     */
-    private val preferences: PreferencesHelper by injectLazy()
-
-    /**
-     * Cover cache.
-     */
-    private val coverCache: CoverCache by injectLazy()
-
-    /**
-     * Source manager.
-     */
-    private val sourceManager: SourceManager by injectLazy()
-
-    /**
-     * Download manager.
-     */
-    private val downloadManager: DownloadManager by injectLazy()
+    private val context = preferences.context
 
     /**
      * Categories of the library.
      */
     var categories: List<Category> = emptyList()
-
-    /**
-     * Currently selected manga.
-     */
-    val selectedMangas = mutableListOf<Manga>()
-
-    /**
-     * Search query of the library.
-     */
-    val searchSubject: BehaviorRelay<String> = BehaviorRelay.create()
-
-    /**
-     * Subject to notify the library's viewpager for updates.
-     */
-    val libraryMangaSubject: BehaviorRelay<LibraryMangaEvent> = BehaviorRelay.create()
-
-    /**
-     * Subject to notify the UI of selection updates.
-     */
-    val selectionSubject: PublishRelay<LibrarySelectionEvent> = PublishRelay.create()
+        private set
 
     /**
      * Relay used to apply the UI filters to the last emission of the library.
@@ -110,9 +75,10 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
         if (librarySubscription.isNullOrUnsubscribed()) {
             librarySubscription = getLibraryObservable()
                     .combineLatest(filterTriggerRelay.observeOn(Schedulers.io()),
-                            { lib, tick -> Pair(lib.first, applyFilters(lib.second)) })
+                            { lib, _ -> Pair(lib.first, applyFilters(lib.second)) })
                     .combineLatest(sortTriggerRelay.observeOn(Schedulers.io()),
-                            { lib, tick -> Pair(lib.first, applySort(lib.second)) })
+                            { lib, _ -> Pair(lib.first, applySort(lib.second)) })
+                    .map { Pair(it.first, it.second.mapValues { it.value.map(::LibraryItem) }) }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeLatestCache({ view, pair ->
                         view.onNextLibraryUpdate(pair.first, pair.second)
@@ -136,12 +102,18 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
 
         val filterUnread = preferences.filterUnread().getOrDefault()
 
+        val filterCompleted = preferences.filterCompleted().getOrDefault()
+
         val filterFn: (Manga) -> Boolean = f@ { manga ->
             // Filter out manga without source.
             val source = sourceManager.get(manga.source) ?: return@f false
 
             // Filter when there isn't unread chapters.
             if (filterUnread && manga.unread == 0) {
+                return@f false
+            }
+
+            if (filterCompleted && manga.status != SManga.COMPLETED) {
                 return@f false
             }
 
@@ -181,6 +153,10 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
             var counter = 0
             db.getLastReadManga().executeAsBlocking().associate { it.id!! to counter++ }
         }
+        val totalChapterManga by lazy {
+            var counter = 0
+            db.getTotalChapterManga().executeAsBlocking().associate { it.id!! to counter++ }
+        }
 
         val sortFn: (Manga, Manga) -> Int = { manga1, manga2 ->
             when (sortingMode) {
@@ -193,6 +169,11 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
                 }
                 LibrarySort.LAST_UPDATED -> manga2.last_update.compareTo(manga1.last_update)
                 LibrarySort.UNREAD -> manga1.unread.compareTo(manga2.unread)
+                LibrarySort.TOTAL -> {
+                    val manga1TotalChapter = totalChapterManga[manga1.id!!] ?: 0
+                    val mange2TotalChapter = totalChapterManga[manga2.id!!] ?: 0
+                    manga1TotalChapter.compareTo(mange2TotalChapter)
+                }
                 else -> throw Exception("Unknown sorting mode")
             }
         }
@@ -266,30 +247,6 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     }
 
     /**
-     * Sets the selection for a given manga.
-     *
-     * @param manga the manga whose selection has changed.
-     * @param selected whether it's now selected or not.
-     */
-    fun setSelection(manga: Manga, selected: Boolean) {
-        if (selected) {
-            selectedMangas.add(manga)
-            selectionSubject.call(LibrarySelectionEvent.Selected(manga))
-        } else {
-            selectedMangas.remove(manga)
-            selectionSubject.call(LibrarySelectionEvent.Unselected(manga))
-        }
-    }
-
-    /**
-     * Clears all the manga selections and notifies the UI.
-     */
-    fun clearSelections() {
-        selectedMangas.clear()
-        selectionSubject.call(LibrarySelectionEvent.Cleared())
-    }
-
-    /**
      * Returns the common categories for the given list of manga.
      *
      * @param mangas the list of manga.
@@ -304,11 +261,12 @@ class LibraryPresenter : BasePresenter<LibraryFragment>() {
     /**
      * Remove the selected manga from the library.
      *
+     * @param mangas the list of manga to delete.
      * @param deleteChapters whether to also delete downloaded chapters.
      */
-    fun removeMangaFromLibrary(deleteChapters: Boolean) {
+    fun removeMangaFromLibrary(mangas: List<Manga>, deleteChapters: Boolean) {
         // Create a set of the list
-        val mangaToDelete = selectedMangas.distinctBy { it.id }
+        val mangaToDelete = mangas.distinctBy { it.id }
         mangaToDelete.forEach { it.favorite = false }
 
         Observable.fromCallable { db.insertMangas(mangaToDelete).executeAsBlocking() }

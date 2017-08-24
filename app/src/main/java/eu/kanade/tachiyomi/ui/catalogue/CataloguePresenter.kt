@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.CatalogueSource
+import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Filter
@@ -25,32 +26,18 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import timber.log.Timber
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
- * Presenter of [CatalogueFragment].
+ * Presenter of [CatalogueController].
  */
-open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
-
-    /**
-     * Source manager.
-     */
-    val sourceManager: SourceManager by injectLazy()
-
-    /**
-     * Database.
-     */
-    val db: DatabaseHelper by injectLazy()
-
-    /**
-     * Preferences.
-     */
-    val prefs: PreferencesHelper by injectLazy()
-
-    /**
-     * Cover cache.
-     */
-    val coverCache: CoverCache by injectLazy()
+open class CataloguePresenter(
+        val sourceManager: SourceManager = Injekt.get(),
+        val db: DatabaseHelper = Injekt.get(),
+        val prefs: PreferencesHelper = Injekt.get(),
+        val coverCache: CoverCache = Injekt.get()
+) : BasePresenter<CatalogueController>() {
 
     /**
      * Enabled sources.
@@ -182,7 +169,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         pageSubscription = Observable.defer { pager.requestNext() }
                 .subscribeFirst({ view, page ->
                     // Nothing to do when onNext is emitted.
-                }, CatalogueFragment::onAddPageError)
+                }, CatalogueController::onAddPageError)
     }
 
     /**
@@ -317,15 +304,11 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
         val languages = prefs.enabledLanguages().getOrDefault()
         val hiddenCatalogues = prefs.hiddenCatalogues().getOrDefault()
 
-        // Ensure at least one language
-        if (languages.isEmpty()) {
-            languages.add("en")
-        }
-
         return sourceManager.getCatalogueSources()
                 .filter { it.lang in languages }
                 .filterNot { it.id.toString() in hiddenCatalogues }
-                .sortedBy { "(${it.lang}) ${it.name}" }
+                .sortedBy { "(${it.lang}) ${it.name}" } +
+                sourceManager.get(LocalSource.ID) as LocalSource
     }
 
     /**
@@ -404,7 +387,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * @return List of categories, default plus user categories
      */
     fun getCategories(): List<Category> {
-        return arrayListOf(Category.createDefault()) + db.getCategories().executeAsBlocking()
+        return db.getCategories().executeAsBlocking()
     }
 
     /**
@@ -415,10 +398,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      */
     fun getMangaCategoryIds(manga: Manga): Array<Int?> {
         val categories = db.getCategoriesForManga(manga).executeAsBlocking()
-        if (categories.isEmpty()) {
-            return arrayListOf(Category.createDefault().id).toTypedArray()
-        }
-        return categories.map { it.id }.toTypedArray()
+        return categories.mapNotNull { it.id }.toTypedArray()
     }
 
     /**
@@ -427,10 +407,9 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * @param categories the selected categories.
      * @param manga the manga to move.
      */
-    fun moveMangaToCategories(categories: List<Category>, manga: Manga) {
-        val mc = categories.map { MangaCategory.create(manga, it) }
-
-        db.setMangaCategories(mc, arrayListOf(manga))
+    fun moveMangaToCategories(manga: Manga, categories: List<Category>) {
+        val mc = categories.filter { it.id != 0 }.map { MangaCategory.create(manga, it) }
+        db.setMangaCategories(mc, listOf(manga))
     }
 
     /**
@@ -439,8 +418,8 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
      * @param category the selected category.
      * @param manga the manga to move.
      */
-    fun moveMangaToCategory(category: Category, manga: Manga) {
-        moveMangaToCategories(arrayListOf(category), manga)
+    fun moveMangaToCategory(manga: Manga, category: Category?) {
+        moveMangaToCategories(manga, listOfNotNull(category))
     }
 
     /**
@@ -454,7 +433,7 @@ open class CataloguePresenter : BasePresenter<CatalogueFragment>() {
             if (!manga.favorite)
                 changeMangaFavorite(manga)
 
-            moveMangaToCategories(selectedCategories.filter { it.id != 0 }, manga)
+            moveMangaToCategories(manga, selectedCategories.filter { it.id != 0 })
         } else {
             changeMangaFavorite(manga)
         }

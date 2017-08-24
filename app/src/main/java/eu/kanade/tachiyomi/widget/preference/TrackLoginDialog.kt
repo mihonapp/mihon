@@ -9,36 +9,19 @@ import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.pref_account_login.view.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-class TrackLoginDialog : LoginDialogPreference() {
+class TrackLoginDialog(bundle: Bundle? = null) : LoginDialogPreference(bundle) {
 
-    companion object {
+    private val service = Injekt.get<TrackManager>().getService(args.getInt("key"))!!
 
-        fun newInstance(sync: TrackService): LoginDialogPreference {
-            val fragment = TrackLoginDialog()
-            val bundle = Bundle(1)
-            bundle.putInt("key", sync.id)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
-    val trackManager: TrackManager by injectLazy()
-
-    lateinit var sync: TrackService
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val syncId = arguments.getInt("key")
-        sync = trackManager.getService(syncId)!!
-    }
+    constructor(service: TrackService) : this(Bundle().apply { putInt("key", service.id) })
 
     override fun setCredentialsOnView(view: View) = with(view) {
-        dialog_title.text = getString(R.string.login_title, sync.name)
-        username.setText(sync.getUsername())
-        password.setText(sync.getPassword())
+        dialog_title.text = context.getString(R.string.login_title, service.name)
+        username.setText(service.getUsername())
+        password.setText(service.getPassword())
     }
 
     override fun checkLogin() {
@@ -52,11 +35,11 @@ class TrackLoginDialog : LoginDialogPreference() {
             val user = username.text.toString()
             val pass = password.text.toString()
 
-            requestSubscription = sync.login(user, pass)
+            requestSubscription = service.login(user, pass)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        dialog.dismiss()
+                        dialog?.dismiss()
                         context.toast(R.string.login_success)
                     }, { error ->
                         login.progress = -1
@@ -65,6 +48,15 @@ class TrackLoginDialog : LoginDialogPreference() {
                     })
 
         }
+    }
+
+    override fun onDialogClosed() {
+        super.onDialogClosed()
+        (targetController as? Listener)?.trackDialogClosed(service)
+    }
+
+    interface Listener {
+        fun trackDialogClosed(service: TrackService)
     }
 
 }

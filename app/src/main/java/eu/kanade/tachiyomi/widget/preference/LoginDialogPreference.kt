@@ -1,23 +1,22 @@
 package eu.kanade.tachiyomi.widget.preference
 
-import android.app.Activity
 import android.app.Dialog
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
+import com.bluelinelabs.conductor.ControllerChangeHandler
+import com.bluelinelabs.conductor.ControllerChangeType
 import com.dd.processbutton.iml.ActionProcessButton
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.widget.SimpleTextWatcher
 import kotlinx.android.synthetic.main.pref_account_login.view.*
 import rx.Subscription
 import uy.kohesive.injekt.injectLazy
 
-abstract class LoginDialogPreference : DialogFragment() {
+abstract class LoginDialogPreference(bundle: Bundle? = null) : DialogController(bundle) {
 
     var v: View? = null
         private set
@@ -27,7 +26,7 @@ abstract class LoginDialogPreference : DialogFragment() {
     var requestSubscription: Subscription? = null
 
     override fun onCreateDialog(savedState: Bundle?): Dialog {
-        val dialog = MaterialDialog.Builder(activity)
+        val dialog = MaterialDialog.Builder(activity!!)
                 .customView(R.layout.pref_account_login, false)
                 .negativeText(android.R.string.cancel)
                 .build()
@@ -37,7 +36,7 @@ abstract class LoginDialogPreference : DialogFragment() {
         return dialog
     }
 
-    override fun onViewCreated(view: View, savedState: Bundle?) {
+    fun onViewCreated(view: View, savedState: Bundle?) {
         v = view.apply {
             show_password.setOnCheckedChangeListener { v, isChecked ->
                 if (isChecked)
@@ -55,7 +54,7 @@ abstract class LoginDialogPreference : DialogFragment() {
 
             password.addTextChangedListener(object : SimpleTextWatcher() {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (s.length == 0) {
+                    if (s.isEmpty()) {
                         show_password.isEnabled = true
                     }
                 }
@@ -64,15 +63,15 @@ abstract class LoginDialogPreference : DialogFragment() {
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        requestSubscription?.unsubscribe()
+    override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
+        super.onChangeStarted(handler, type)
+        if (!type.isEnter) {
+            onDialogClosed()
+        }
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        val intent = Intent().putExtras(arguments)
-        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
+    open fun onDialogClosed() {
+        requestSubscription?.unsubscribe()
     }
 
     protected abstract fun checkLogin()

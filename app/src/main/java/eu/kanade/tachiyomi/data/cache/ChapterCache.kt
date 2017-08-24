@@ -44,9 +44,13 @@ class ChapterCache(private val context: Context) {
     /** Google Json class used for parsing JSON files.  */
     private val gson: Gson by injectLazy()
 
+    /** Parent directory of the cache. Ensure not null and not root directory or fallback
+     * to internal cache directory. **/
+    private val basePath = context.externalCacheDir?.takeIf { it.absolutePath.length > 1 }
+            ?: context.cacheDir
+
     /** Cache class used for cache management.  */
-    private val diskCache = DiskLruCache.open(
-            File(context.externalCacheDir, PARAMETER_CACHE_DIRECTORY),
+    private val diskCache = DiskLruCache.open(File(basePath, PARAMETER_CACHE_DIRECTORY),
             PARAMETER_APP_VERSION,
             PARAMETER_VALUE_COUNT,
             PARAMETER_CACHE_SIZE)
@@ -187,12 +191,12 @@ class ChapterCache(private val context: Context) {
             editor = diskCache.edit(key) ?: throw IOException("Unable to edit key")
 
             // Get OutputStream and write image with Okio.
-            response.body().source().saveTo(editor.newOutputStream(0))
+            response.body()!!.source().saveTo(editor.newOutputStream(0))
 
             diskCache.flush()
             editor.commit()
         } finally {
-            response.body().close()
+            response.body()?.close()
             editor?.abortUnlessCommitted()
         }
     }

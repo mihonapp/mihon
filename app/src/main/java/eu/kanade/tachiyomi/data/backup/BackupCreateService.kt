@@ -13,8 +13,6 @@ import eu.kanade.tachiyomi.data.backup.models.Backup.CATEGORIES
 import eu.kanade.tachiyomi.data.backup.models.Backup.MANGAS
 import eu.kanade.tachiyomi.data.backup.models.Backup.VERSION
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.ui.setting.SettingsBackupFragment
-import eu.kanade.tachiyomi.util.AndroidComponentUtil
 import eu.kanade.tachiyomi.util.sendLocalBroadcast
 import timber.log.Timber
 import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
@@ -28,8 +26,6 @@ class BackupCreateService : IntentService(NAME) {
         // Name of class
         private const val NAME = "BackupCreateService"
 
-        // Uri as string
-        private const val EXTRA_URI = "$ID.$NAME.EXTRA_URI"
         // Backup called from job
         private const val EXTRA_IS_JOB = "$ID.$NAME.EXTRA_IS_JOB"
         // Options for backup
@@ -54,18 +50,15 @@ class BackupCreateService : IntentService(NAME) {
          * @param flags determines what to backup
          * @param isJob backup called from job
          */
-        fun makeBackup(context: Context, path: String, flags: Int, isJob: Boolean = false) {
+        fun makeBackup(context: Context, uri: Uri, flags: Int, isJob: Boolean = false) {
             val intent = Intent(context, BackupCreateService::class.java).apply {
-                putExtra(EXTRA_URI, path)
+                putExtra(BackupConst.EXTRA_URI, uri)
                 putExtra(EXTRA_IS_JOB, isJob)
                 putExtra(EXTRA_FLAGS, flags)
             }
             context.startService(intent)
         }
 
-        fun isRunning(context: Context): Boolean {
-            return AndroidComponentUtil.isServiceRunning(context, BackupCreateService::class.java)
-        }
     }
 
     private val backupManager by lazy { BackupManager(this) }
@@ -74,11 +67,11 @@ class BackupCreateService : IntentService(NAME) {
         if (intent == null) return
 
         // Get values
-        val uri = intent.getStringExtra(EXTRA_URI)
+        val uri = intent.getParcelableExtra<Uri>(BackupConst.EXTRA_URI)
         val isJob = intent.getBooleanExtra(EXTRA_IS_JOB, false)
         val flags = intent.getIntExtra(EXTRA_FLAGS, 0)
         // Create backup
-        createBackupFromApp(Uri.parse(uri), flags, isJob)
+        createBackupFromApp(uri, flags, isJob)
     }
 
     /**
@@ -150,9 +143,9 @@ class BackupCreateService : IntentService(NAME) {
                 }
 
                 // Show completed dialog
-                val intent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
-                    putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_BACKUP_COMPLETED_DIALOG)
-                    putExtra(SettingsBackupFragment.EXTRA_URI, file.uri.toString())
+                val intent = Intent(BackupConst.INTENT_FILTER).apply {
+                    putExtra(BackupConst.ACTION, BackupConst.ACTION_BACKUP_COMPLETED_DIALOG)
+                    putExtra(BackupConst.EXTRA_URI, file.uri.toString())
                 }
                 sendLocalBroadcast(intent)
             }
@@ -160,9 +153,9 @@ class BackupCreateService : IntentService(NAME) {
             Timber.e(e)
             if (!isJob) {
                 // Show error dialog
-                val intent = Intent(SettingsBackupFragment.INTENT_FILTER).apply {
-                    putExtra(SettingsBackupFragment.ACTION, SettingsBackupFragment.ACTION_ERROR_BACKUP_DIALOG)
-                    putExtra(SettingsBackupFragment.EXTRA_ERROR_MESSAGE, e.message)
+                val intent = Intent(BackupConst.INTENT_FILTER).apply {
+                    putExtra(BackupConst.ACTION, BackupConst.ACTION_ERROR_BACKUP_DIALOG)
+                    putExtra(BackupConst.EXTRA_ERROR_MESSAGE, e.message)
                 }
                 sendLocalBroadcast(intent)
             }

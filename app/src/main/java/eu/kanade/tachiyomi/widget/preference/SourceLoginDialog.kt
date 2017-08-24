@@ -10,34 +10,17 @@ import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.pref_account_login.view.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-class SourceLoginDialog : LoginDialogPreference() {
+class SourceLoginDialog(bundle: Bundle? = null) : LoginDialogPreference(bundle) {
 
-    companion object {
+    private val source = Injekt.get<SourceManager>().get(args.getLong("key")) as LoginSource
 
-        fun newInstance(source: Source): LoginDialogPreference {
-            val fragment = SourceLoginDialog()
-            val bundle = Bundle(1)
-            bundle.putLong("key", source.id)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
-    val sourceManager: SourceManager by injectLazy()
-
-    lateinit var source: LoginSource
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val sourceId = arguments.getLong("key")
-        source = sourceManager.get(sourceId) as LoginSource
-    }
+    constructor(source: Source) : this(Bundle().apply { putLong("key", source.id) })
 
     override fun setCredentialsOnView(view: View) = with(view) {
-        dialog_title.text = getString(R.string.login_title, source.toString())
+        dialog_title.text = context.getString(R.string.login_title, source.toString())
         username.setText(preferences.sourceUsername(source))
         password.setText(preferences.sourcePassword(source))
     }
@@ -60,7 +43,7 @@ class SourceLoginDialog : LoginDialogPreference() {
                                     username.text.toString(),
                                     password.text.toString())
 
-                            dialog.dismiss()
+                            dialog?.dismiss()
                             context.toast(R.string.login_success)
                         } else {
                             preferences.setSourceCredentials(source, "", "")
@@ -72,6 +55,15 @@ class SourceLoginDialog : LoginDialogPreference() {
                         error.message?.let { context.toast(it) }
                     })
         }
+    }
+
+    override fun onDialogClosed() {
+        super.onDialogClosed()
+        (targetController as? Listener)?.loginDialogClosed(source)
+    }
+
+    interface Listener {
+        fun loginDialogClosed(source: LoginSource)
     }
 
 }

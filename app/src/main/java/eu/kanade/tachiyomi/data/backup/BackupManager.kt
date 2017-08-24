@@ -28,7 +28,6 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
-import java.util.*
 
 class BackupManager(val context: Context, version: Int = CURRENT_VERSION) {
 

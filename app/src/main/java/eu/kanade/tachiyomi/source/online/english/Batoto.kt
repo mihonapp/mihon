@@ -28,7 +28,7 @@ class Batoto : ParsedHttpSource(), LoginSource {
 
     override val name = "Batoto"
 
-    override val baseUrl = "http://bato.to"
+    override val baseUrl = "https://bato.to"
 
     override val lang = "en"
 
@@ -52,7 +52,7 @@ class Batoto : ParsedHttpSource(), LoginSource {
             .add("Cookie", "lang_option=English")
 
     private val pageHeaders = super.headersBuilder()
-            .add("Referer", "http://bato.to/reader")
+            .add("Referer", "$baseUrl/reader")
             .build()
 
     override fun popularMangaRequest(page: Int): Request {
@@ -69,7 +69,7 @@ class Batoto : ParsedHttpSource(), LoginSource {
 
     override fun popularMangaFromElement(element: Element): SManga {
         val manga = SManga.create()
-        element.select("a[href^=http://bato.to]").first().let {
+        element.select("a[href^=$baseUrl]").first().let {
             manga.setUrlWithoutDomain(it.attr("href"))
             manga.title = it.text().trim()
         }
@@ -85,7 +85,7 @@ class Batoto : ParsedHttpSource(), LoginSource {
     override fun latestUpdatesNextPageSelector() = "#show_more_row"
 
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
-        val url = HttpUrl.parse("$baseUrl/search_ajax").newBuilder()
+        val url = HttpUrl.parse("$baseUrl/search_ajax")!!.newBuilder()
         if (!query.isEmpty()) url.addQueryParameter("name", query).addQueryParameter("name_cond", "c")
         var genres = ""
         filters.forEach { filter ->
@@ -161,8 +161,20 @@ class Batoto : ParsedHttpSource(), LoginSource {
         else -> SManga.UNKNOWN
     }
 
+    override fun chapterListRequest(manga: SManga): Request {
+        // Https is currently very slow. The replace also saves a redirection.
+        var newUrl = "http://bato.to" + manga.url
+        if ("/comic/_/comics/" !in newUrl) {
+            newUrl = newUrl.replace("/comic/_/", "/comic/_/comics/")
+        }
+
+        return super.chapterListRequest(manga).newBuilder()
+                .url(newUrl)
+                .build()
+    }
+
     override fun chapterListParse(response: Response): List<SChapter> {
-        val body = response.body().string()
+        val body = response.body()!!.string()
         val matcher = staffNotice.matcher(body)
         if (matcher.find()) {
             @Suppress("DEPRECATION")
@@ -177,7 +189,7 @@ class Batoto : ParsedHttpSource(), LoginSource {
     override fun chapterListSelector() = "tr.row.lang_English.chapter_row"
 
     override fun chapterFromElement(element: Element): SChapter {
-        val urlElement = element.select("a[href^=http://bato.to/reader").first()
+        val urlElement = element.select("a[href^=$baseUrl/reader").first()
 
         val chapter = SChapter.create()
         chapter.setUrlWithoutDomain(urlElement.attr("href"))
@@ -185,6 +197,7 @@ class Batoto : ParsedHttpSource(), LoginSource {
         chapter.date_upload = element.select("td").getOrNull(4)?.let {
             parseDateFromElement(it)
         } ?: 0
+        chapter.scanlator = element.select("td").getOrNull(2)?.text()
         return chapter
     }
 
@@ -271,7 +284,7 @@ class Batoto : ParsedHttpSource(), LoginSource {
     }
 
     override fun isAuthenticationSuccessful(response: Response) =
-            response.priorResponse() != null && response.priorResponse().code() == 302
+            response.priorResponse() != null && response.priorResponse()!!.code() == 302
 
     override fun isLogged(): Boolean {
         return network.cookies.get(URI(baseUrl)).any { it.name() == "pass_hash" }
