@@ -45,13 +45,6 @@ fun lockEnabled(prefs: PreferencesHelper = Injekt.get())
             && prefs.lockLength().getOrDefault() != -1
 
 /**
- * Lock the screen
- */
-fun showLockActivity(activity: Activity) {
-    activity.startActivity(Intent(activity, LockActivity::class.java))
-}
-
-/**
  * Check if the lock will function properly
  *
  * @return true if action is required, false if lock is working properly

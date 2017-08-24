@@ -17,7 +17,7 @@ import java.security.SecureRandom
 class LockPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
         Preference(context, attrs) {
 
-    val secureRandom by lazy { SecureRandom() }
+    private val secureRandom by lazy { SecureRandom() }
 
     val prefs: PreferencesHelper by injectLazy()
 
@@ -26,12 +26,11 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
         updateSummary()
     }
 
-    fun updateSummary() {
-        if(lockEnabled(prefs)) {
-            summary = "Application is locked"
-        } else {
-            summary = "Application is not locked, tap to lock"
-        }
+    private fun updateSummary() {
+        summary = if(lockEnabled(prefs))
+            "Application is locked"
+        else
+            "Application is not locked, tap to lock"
     }
 
     override fun onClick() {
@@ -65,7 +64,7 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
-    fun savePassword(password: String) {
+    private fun savePassword(password: String) {
         val salt: String?
         val hash: String?
         val length: Int

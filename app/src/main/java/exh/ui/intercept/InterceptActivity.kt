@@ -6,12 +6,11 @@ import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.ui.manga.MangaActivity
 import exh.GalleryAdder
-import kotlinx.android.synthetic.main.toolbar.*
 import timber.log.Timber
 import kotlin.concurrent.thread
 
+//TODO :(
 class InterceptActivity : BaseActivity() {
 
     private val galleryAdder = GalleryAdder()
@@ -19,11 +18,8 @@ class InterceptActivity : BaseActivity() {
     var finished = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setAppTheme()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.eh_activity_intercept)
-
-        setupToolbar(toolbar, backNavigation = false)
 
         if(savedInstanceState == null)
             thread { setup() }
@@ -54,8 +50,9 @@ class InterceptActivity : BaseActivity() {
         if(Intent.ACTION_VIEW == intent.action) {
             val manga = galleryAdder.addGallery(intent.dataString)
 
-            if(!finished)
-                startActivity(MangaActivity.newIntent(this, manga, true))
+            //TODO
+//            if(!finished)
+//                startActivity(MangaActivity.newIntent(this, manga, true))
             onBackPressed()
         }
     }

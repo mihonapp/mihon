@@ -1,8 +1,13 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ObjectAnimator
+import android.app.ActivityManager
+import android.app.Service
+import android.app.usage.UsageStats
+import android.app.usage.UsageStatsManager
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -10,6 +15,8 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.*
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
+import com.bluelinelabs.conductor.changehandler.SimpleSwapChangeHandler
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -26,8 +33,14 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
+import exh.ui.batchadd.BatchAddController
+import exh.ui.lock.LockChangeHandler
+import exh.ui.lock.LockController
+import exh.ui.lock.lockEnabled
+import exh.ui.lock.notifyLockSecurity
 import kotlinx.android.synthetic.main.main_activity.*
 import uy.kohesive.injekt.injectLazy
+import java.util.*
 
 
 class MainActivity : BaseActivity() {
@@ -86,9 +99,8 @@ class MainActivity : BaseActivity() {
                     R.id.nav_drawer_recently_read -> setRoot(RecentlyReadController(), id)
                     R.id.nav_drawer_catalogues -> setRoot(CatalogueController(), id)
                     R.id.nav_drawer_latest_updates -> setRoot(LatestUpdatesController(), id)
-                    //TODO
                     // --> EH
-                    R.id.nav_drawer_batch_add -> setFragment(BatchAddFragment.newInstance(), id)
+                    R.id.nav_drawer_batch_add -> setRoot(BatchAddController(), id)
                     // <-- EH
                     R.id.nav_drawer_downloads -> {
                         router.pushController(RouterTransaction.with(DownloadController())
@@ -137,21 +149,23 @@ class MainActivity : BaseActivity() {
 
         })
 
+        //Show lock
+        if (savedInstanceState == null) {
+            val lockEnabled = lockEnabled(preferences)
+            if (lockEnabled) {
+                doLock()
+
+                //Check lock security
+                notifyLockSecurity(this)
+            }
+        }
+
         syncActivityViewWithController(router.backstack.lastOrNull()?.controller())
 
         if (savedInstanceState == null) {
             // Show changelog if needed
             if (Migrations.upgrade(preferences)) {
                 ChangelogDialogController().showDialog(router)
-            }
-
-            //Show lock
-            val lockEnabled = lockEnabled(preferences)
-            if(lockEnabled) {
-                showLockActivity(this)
-
-                //Check lock security
-                notifyLockSecurity(this)
             }
         }
     }
@@ -252,6 +266,54 @@ class MainActivity : BaseActivity() {
             appbar.enableElevation()
         }
     }
+
+    // --> EH
+    //Lock code
+    var willLock = false
+    var disableLock = false
+    override fun onRestart() {
+        super.onRestart()
+        if(willLock && lockEnabled() && !disableLock) {
+            doLock()
+        }
+
+        willLock = false
+    }
+
+    override fun onStop() {
+        super.onStop()
+        tryLock()
+    }
+
+    fun tryLock() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val mUsageStatsManager = getSystemService("usagestats") as UsageStatsManager
+            val time = System.currentTimeMillis()
+            // We get usage stats for the last 20 seconds
+            val sortedStats =
+                    mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
+                            time - 1000 * 20,
+                            time)
+                            ?.associateBy {
+                                it.lastTimeUsed
+                            }?.toSortedMap()
+            if(sortedStats != null && sortedStats.isNotEmpty())
+                if(sortedStats[sortedStats.lastKey()]?.packageName != packageName)
+                    willLock = true
+        } else {
+            val am = getSystemService(Service.ACTIVITY_SERVICE) as ActivityManager
+            val running = am.getRunningTasks(1)[0]
+            if (running.topActivity.packageName != packageName) {
+                willLock = true
+            }
+        }
+    }
+
+    fun doLock() {
+        router.pushController(RouterTransaction.with(LockController())
+                .popChangeHandler(LockChangeHandler()))
+    }
+    // <-- EH
 
     companion object {
         // Shortcut actions

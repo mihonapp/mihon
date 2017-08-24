@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import exh.EXH_SOURCE_ID
 import kotlinx.android.synthetic.main.eh_activity_login.*
-import kotlinx.android.synthetic.main.toolbar.*
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -34,13 +33,10 @@ class LoginActivity : BaseActivity() {
     val sourceManager: SourceManager by injectLazy()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setAppTheme()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.eh_activity_login)
 
         setup()
-
-        setupToolbar(toolbar, backNavigation = false)
     }
 
     fun setup() {
@@ -187,7 +183,7 @@ class LoginActivity : BaseActivity() {
                         document.getElementsByName('submit')[0].style.visibility = 'visible';
                         document.querySelector('td[width="60%"][valign="top"]').style.visibility = 'visible';
 
-                        function hide(e) {if(e !== null && e !== undefined) e.style.display = 'none';}
+                        function hide(e) {if(e != null) e.style.display = 'none';}
 
                         hide(document.querySelector(".errorwrap"));
                         hide(document.querySelector('td[width="40%"][valign="top"]'));
@@ -202,7 +198,7 @@ class LoginActivity : BaseActivity() {
                         hide(fd[2]);
                         hide(child.querySelector('br'));
                         var error = document.querySelector(".page > div > .borderwrap");
-                        if(error !== null) error.style.visibility = 'visible';
+                        if(error != null) error.style.visibility = 'visible';
                         hide(fh[0]);
                         hide(fh[1]);
                         hide(document.querySelector("#gfooter"));
@@ -211,7 +207,7 @@ class LoginActivity : BaseActivity() {
                             e.style.color = "white";
                         });
                         var pc = document.querySelector(".postcolor");
-                        if(pc !== null) pc.style.color = "#26353F";
+                        if(pc != null) pc.style.color = "#26353F";
                     })()
                     """
     }

@@ -49,6 +49,12 @@ class SettingsMainController : SettingsController() {
             onClick { navigateTo(SettingsBackupController()) }
         }
         preference {
+            iconRes = R.drawable.eh_ic_ehlogo_red_24dp
+            iconTint = tintColor
+            titleRes = R.string.pref_category_eh
+            onClick { navigateTo(SettingsEhController()) }
+        }
+        preference {
             iconRes = R.drawable.ic_code_black_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_advanced

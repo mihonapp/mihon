@@ -102,19 +102,6 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     fun onBind(category: Category) {
         this.category = category
 
-        //TODO Fix
-        // --> EH
-        val presenter = fragment.presenter
-
-        searchSubscription = presenter
-                .searchSubject
-                .debounce(10L, TimeUnit.MILLISECONDS)
-                .subscribe { text -> //Debounce search (EH)
-                    adapter.asyncSearchText = text?.trim()?.toLowerCase()
-                    adapter.updateDataSet()
-                }
-        // <-- EH
-
         adapter.mode = if (controller.selectedMangas.isNotEmpty()) {
             FlexibleAdapter.MODE_MULTI
         } else {

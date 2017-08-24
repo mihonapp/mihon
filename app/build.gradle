@@ -42,8 +42,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 5003
-        versionName "v5.0.3-EH"
+        versionCode 6101
+        versionName "v6.1.1-EH"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
@@ -214,7 +214,7 @@ dependencies {
     releaseCompile "com.google.firebase:firebase-crash:$firebase_version"
 
     //SnappyDB (EH)
-    compile 'io.paperdb:paperdb:2.0'
+    compile 'io.paperdb:paperdb:2.1'
 
     //JVE (Regex) (EH)
     compile 'ru.lanwen.verbalregex:java-verbal-expressions:1.4'

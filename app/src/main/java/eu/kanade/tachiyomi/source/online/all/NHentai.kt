@@ -67,7 +67,7 @@ class NHentai(context: Context) : HttpSource() {
             = parseResultPage(response)
 
     override fun mangaDetailsParse(response: Response)
-            = parseGallery(jsonParser.parse(response.body().string()).asJsonObject)
+            = parseGallery(jsonParser.parse(response.body()!!.string()).asJsonObject)
 
     //Used so we can use a different URL for fetching manga details and opening the details in the browser
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
@@ -85,7 +85,7 @@ class NHentai(context: Context) : HttpSource() {
             = nhGet(baseUrl + "/api/gallery/" + url.split("/").last())
 
     fun parseResultPage(response: Response): MangasPage {
-        val res = jsonParser.parse(response.body().string()).asJsonObject
+        val res = jsonParser.parse(response.body()!!.string()).asJsonObject
 
         val error = res.get("error")
         if(error == null) {
@@ -154,7 +154,7 @@ class NHentai(context: Context) : HttpSource() {
                         ?: client.newCall(urlToDetailsRequest(url))
                         .asObservableSuccess()
                         .map {
-                            rawParseGallery(jsonParser.parse(it.body().string()).asJsonObject)
+                            rawParseGallery(jsonParser.parse(it.body()!!.string()).asJsonObject)
                         }.toBlocking().first()
             }!!
 

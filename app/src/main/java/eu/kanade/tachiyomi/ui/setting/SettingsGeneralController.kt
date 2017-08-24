@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.LocaleHelper
+import exh.ui.lock.LockPreference
 import kotlinx.android.synthetic.main.pref_library_columns.view.*
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -174,6 +175,13 @@ class SettingsGeneralController : SettingsController() {
                 }?.name ?: context.getString(R.string.default_category_summary)
                 true
             }
+        }
+        LockPreference(context).apply {
+            key = "pref_app_lock"
+            title = "Application lock"
+            isPersistent = false
+
+            addPreference(this)
         }
     }
 
