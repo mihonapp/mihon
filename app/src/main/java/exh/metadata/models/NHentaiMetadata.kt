@@ -11,7 +11,7 @@ class NHentaiMetadata : SearchableGalleryMetadata() {
     var url get() = id?.let { "$BASE_URL/g/$it" }
     set(a) {
         a?.let {
-            id = a.split("/").last().toLong()
+            id = a.split("/").last { it.isNotBlank() }.toLong()
         }
     }
 

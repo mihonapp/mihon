@@ -21,6 +21,7 @@ import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
 import exh.metadata.models.NHentaiMetadata
 import exh.metadata.models.Tag
+import exh.util.urlImportFetchSearchManga
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
@@ -44,6 +45,12 @@ class NHentai(context: Context) : HttpSource() {
     override fun popularMangaParse(response: Response): MangasPage {
         TODO("Currently unavailable!")
     }
+
+    //Support direct URL importing
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
+            urlImportFetchSearchManga(query, {
+                super.fetchSearchManga(page, query, filters)
+            })
 
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         //Currently we have no filters
@@ -82,7 +89,7 @@ class NHentai(context: Context) : HttpSource() {
             = nhGet(manga.url)
 
     fun urlToDetailsRequest(url: String)
-            = nhGet(baseUrl + "/api/gallery/" + url.split("/").last())
+            = nhGet(baseUrl + "/api/gallery/" + url.split("/").last { it.isNotBlank() })
 
     fun parseResultPage(response: Response): MangasPage {
         val res = jsonParser.parse(response.body()!!.string()).asJsonObject

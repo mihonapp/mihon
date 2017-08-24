@@ -26,6 +26,8 @@ import okhttp3.CacheControl
 import okhttp3.Headers
 import okhttp3.Request
 import org.jsoup.nodes.Document
+import exh.GalleryAdder
+import exh.util.urlImportFetchSearchManga
 
 class EHentai(override val id: Long,
               val exh: Boolean,
@@ -49,6 +51,8 @@ class EHentai(override val id: Long,
     val prefs: PreferencesHelper by injectLazy()
 
     val metadataHelper = MetadataHelper()
+
+    val galleryAdder = GalleryAdder()
 
     /**
      * Gallery list entry
@@ -141,6 +145,12 @@ class EHentai(override val id: Long,
         latestUpdatesRequest(page)
     else
         exGet("$baseUrl/toplist.php?tl=15", page)
+
+    //Support direct URL importing
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
+            urlImportFetchSearchManga(query, {
+                super.fetchSearchManga(page, query, filters)
+            })
 
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         val uri = Uri.parse("$baseUrl$QUERY_PREFIX").buildUpon()

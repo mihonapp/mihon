@@ -62,38 +62,56 @@ class GalleryAdder {
         return "${uri.scheme}://${uri.host}/g/${obj["gid"].int}/${obj["token"].string}/"
     }
 
-    fun addGallery(url: String, fav: Boolean = false): GalleryAddEvent {
+    fun addGallery(url: String,
+                   fav: Boolean = false,
+                   forceSource: Long? = null): GalleryAddEvent {
         try {
             val urlObj = Uri.parse(url)
             val source = when (urlObj.host) {
                 "g.e-hentai.org", "e-hentai.org" -> EH_SOURCE_ID
                 "exhentai.org" -> EXH_SOURCE_ID
+                "nhentai.net" -> NHENTAI_SOURCE_ID
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
-            val realUrl = when (urlObj.pathSegments.first().toLowerCase()) {
-                "g" -> {
-                    //Is already gallery page, do nothing
-                    url
+            if(forceSource != null && source != forceSource) {
+                return GalleryAddEvent.Fail.UnknownType(url)
+            }
+
+            val firstPathSegment = urlObj.pathSegments.firstOrNull()?.toLowerCase()
+            val realUrl = when(source) {
+                EH_SOURCE_ID, EXH_SOURCE_ID -> when (firstPathSegment) {
+                    "g" -> {
+                        //Is already gallery page, do nothing
+                        url
+                    }
+                    "s" -> {
+                        //Is page, fetch gallery token and use that
+                        getGalleryUrlFromPage(url)
+                    }
+                    else -> return GalleryAddEvent.Fail.UnknownType(url)
                 }
-                "s" -> {
-                    //Is page, fetch gallery token and use that
-                    getGalleryUrlFromPage(url)
+                NHENTAI_SOURCE_ID -> when {
+                    firstPathSegment == "g" -> url
+                    urlObj.pathSegments.size >= 3 -> "https://nhentai.net/g/${urlObj.pathSegments[1]}/"
+                    else -> return GalleryAddEvent.Fail.UnknownType(url)
                 }
-                else -> {
-                    return GalleryAddEvent.Fail.UnknownType(url)
-                }
+                else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
             val sourceObj = sourceManager.get(source)
                     ?: return GalleryAddEvent.Fail.Error(url, "Could not find EH source!")
 
-            val pathOnlyUrl = getUrlWithoutDomain(realUrl)
+            val cleanedUrl = when(source) {
+                EH_SOURCE_ID, EXH_SOURCE_ID -> getUrlWithoutDomain(realUrl)
+                NHENTAI_SOURCE_ID -> realUrl //nhentai uses URLs directly (oops, my bad when implementing this source)
+                else -> return GalleryAddEvent.Fail.UnknownType(url)
+            }
 
             //Use manga in DB if possible, otherwise, make a new manga
-            val manga = db.getManga(pathOnlyUrl, source).executeAsBlocking()
+            val manga = db.getManga(cleanedUrl, source).executeAsBlocking()
                     ?: Manga.create(source).apply {
-                this.url = pathOnlyUrl
+                this.url = cleanedUrl
                 title = realUrl
             }
 
@@ -101,7 +119,12 @@ class GalleryAdder {
             manga.copyFrom(sourceObj.fetchMangaDetails(manga).toBlocking().first())
 
             //Apply metadata
-            metadataHelper.fetchEhMetadata(realUrl, isExSource(source))?.copyTo(manga)
+            when(source) {
+                EH_SOURCE_ID, EXH_SOURCE_ID ->
+                    metadataHelper.fetchEhMetadata(realUrl, isExSource(source))?.copyTo(manga)
+                NHENTAI_SOURCE_ID ->
+                    metadataHelper.fetchNhentaiMetadata(realUrl)?.copyTo(manga)
+            }
 
             if (fav) manga.favorite = true
 
