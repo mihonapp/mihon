@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.ui.setting
 
-import android.content.Intent
 import android.support.v7.preference.PreferenceScreen
+import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import exh.ui.migration.MetadataFetchDialog
-import exh.ui.login.LoginActivity
+import exh.ui.login.LoginController
+import rx.android.schedulers.AndroidSchedulers
 
 /**
  * EH Settings fragment
@@ -20,9 +22,11 @@ class SettingsEhController : SettingsController() {
             isPersistent = false
             defaultValue = false
             preferences.enableExhentai()
-                    .asObservable().subscribeUntilDestroy {
+                    .asObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeUntilDestroy {
                 isChecked = it
-            }
+           }
 
             onChange { newVal ->
                 newVal as Boolean
@@ -30,7 +34,9 @@ class SettingsEhController : SettingsController() {
                     preferences.enableExhentai().set(false)
                     true
                 } else {
-                    startActivity(Intent(context, LoginActivity::class.java))
+                    router.pushController(RouterTransaction.with(LoginController())
+                            .pushChangeHandler(FadeChangeHandler())
+                            .popChangeHandler(FadeChangeHandler()))
                     false
                 }
             }

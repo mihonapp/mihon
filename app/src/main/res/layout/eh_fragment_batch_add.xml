@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        android:padding="16dp ">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/input_title_view"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="Enter the galleries to add (separated by a new line):"
             android:textAppearance="@style/TextAppearance.Medium.Title"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,7 +31,7 @@
             android:ems="10"
             android:hint="Example:\n\nhttp://e-hentai.org/g/12345/1a2b3c4e\nhttp://g.e-hentai.org/g/67890/6f7g8h9i\nhttp://exhentai.org/g/13579/1a3b5c7e\nhttps://exhentai.org/g/24680/2f4g6h8i\n"
             android:inputType="textMultiLine"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/btn_add_galleries"
             app:layout_constraintLeft_toLeftOf="@+id/input_title_view"
             app:layout_constraintRight_toRightOf="@+id/input_title_view"
@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Add Galleries"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/galleries_box"
             app:layout_constraintRight_toRightOf="@+id/galleries_box" />
@@ -58,7 +58,7 @@
             android:layout_marginTop="0dp"
             android:text="Adding galleries..."
             android:textAppearance="@style/TextAppearance.Medium.Title"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -71,7 +71,7 @@
             android:layout_marginBottom="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/progress_dismiss_btn"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="@+id/progress_log_wrapper"
@@ -85,7 +85,7 @@
             android:singleLine="true"
             android:text=""
             android:textAlignment="textEnd"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintRight_toRightOf="@+id/progress_log_wrapper"
             app:layout_constraintTop_toTopOf="@+id/progress_bar" />
 
@@ -93,15 +93,15 @@
             android:id="@+id/progress_dismiss_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:text="Finish"
-            android:visibility="visible"
-            app:layout_constraintLeft_toLeftOf="@+id/progress_log_wrapper"
-            app:layout_constraintRight_toRightOf="@+id/progress_log_wrapper"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/btn_add_galleries"
-            android:layout_marginBottom="0dp" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="@+id/progress_log_wrapper"
+            app:layout_constraintRight_toRightOf="@+id/progress_log_wrapper" />
 
         <ScrollView
             android:id="@+id/progress_log_wrapper"
@@ -109,7 +109,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/progress_bar"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="@+id/progress_title_view"

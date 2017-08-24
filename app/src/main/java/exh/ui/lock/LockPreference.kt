@@ -2,11 +2,14 @@ package exh.ui.lock
 
 import android.content.Context
 import android.support.v7.preference.Preference
+import android.support.v7.preference.SwitchPreference
+import android.support.v7.preference.SwitchPreferenceCompat
 import android.text.InputType
 import android.util.AttributeSet
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.setting.onChange
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -15,7 +18,7 @@ import java.math.BigInteger
 import java.security.SecureRandom
 
 class LockPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        Preference(context, attrs) {
+        SwitchPreferenceCompat(context, attrs) {
 
     private val secureRandom by lazy { SecureRandom() }
 
@@ -24,17 +27,24 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
     override fun onAttached() {
         super.onAttached()
         updateSummary()
+        onChange {
+            tryChange()
+            false
+        }
     }
 
     private fun updateSummary() {
-        summary = if(lockEnabled(prefs))
-            "Application is locked"
-        else
-            "Application is not locked, tap to lock"
+        isChecked = lockEnabled(prefs)
+        if(isChecked) {
+            title = "Lock enabled"
+            summary = "Tap to disable or change pin code"
+        } else {
+            title = "Lock disabled"
+            summary = "Tap to enable"
+        }
     }
 
-    override fun onClick() {
-        super.onClick()
+    fun tryChange() {
         if(!notifyLockSecurity(context)) {
             MaterialDialog.Builder(context)
                     .title("Lock application")

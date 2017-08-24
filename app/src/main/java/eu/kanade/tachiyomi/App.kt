@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.support.multidex.MultiDex
 import com.evernote.android.job.JobManager
+import com.github.ajalt.reprint.core.Reprint
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
@@ -26,6 +27,7 @@ open class App : Application() {
 
         setupJobManager()
         Paper.init(this) //Setup metadata DB (EH)
+        Reprint.initialize(this) //Setup fingerprint (EH)
 
         LocaleHelper.updateConfiguration(this, resources.configuration)
     }

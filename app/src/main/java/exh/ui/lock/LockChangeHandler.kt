@@ -23,8 +23,8 @@ class LockChangeHandler : AnimatorChangeHandler {
         val viewAnimators = ArrayList<Animator>()
 
         if (!isPush && from != null) {
-            viewAnimators.add(ObjectAnimator.ofFloat(from, View.SCALE_X, 5f))
-            viewAnimators.add(ObjectAnimator.ofFloat(from, View.SCALE_Y, 5f))
+            viewAnimators.add(ObjectAnimator.ofFloat(from, View.SCALE_X, 3f))
+            viewAnimators.add(ObjectAnimator.ofFloat(from, View.SCALE_Y, 3f))
             viewAnimators.add(ObjectAnimator.ofFloat(from, View.ALPHA, 0f))
         }
 

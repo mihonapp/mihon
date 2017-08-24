@@ -35,7 +35,7 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
             }
 
             progress_dismiss_btn.clicks().subscribeUntilDestroy {
-                presenter.currentlyAddingRelay.call(false)
+                presenter.currentlyAddingRelay.call(BatchAddPresenter.STATE_PROGRESS_TO_INPUT)
             }
 
             val progressSubscriptions = CompositeSubscription()
@@ -44,7 +44,7 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeUntilDestroy {
                         progressSubscriptions.clear()
-                        if(it) {
+                        if(it == BatchAddPresenter.STATE_INPUT_TO_PROGRESS) {
                             showProgress(this)
                             progressSubscriptions += presenter.progressRelay
                                     .observeOn(AndroidSchedulers.mainThread())
@@ -79,7 +79,10 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
                                     }?.let {
                                 progressSubscriptions += it
                             }
-                        } else hideProgress(this)
+                        } else if(it == BatchAddPresenter.STATE_PROGRESS_TO_INPUT) {
+                            hideProgress(this)
+                            presenter.currentlyAddingRelay.call(BatchAddPresenter.STATE_IDLE)
+                        }
                     }
         }
     }

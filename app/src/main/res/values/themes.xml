@@ -24,6 +24,10 @@
         <item name="android:divider">@color/dividerLight</item>
         <item name="android:listDivider">@drawable/line_divider_light</item>
 
+        <!-- Swirl (EH) -->
+        <item name="swirl_ridgeColor">?android:attr/textColorSecondary</item>
+        <item name="swirl_errorColor">?android:attr/colorAccent</item>
+
         <!-- Themes -->
         <item name="windowActionModeOverlay">true</item>
         <item name="actionBarTheme">@style/Theme.ActionBar.Light</item>

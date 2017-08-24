@@ -219,8 +219,15 @@ dependencies {
     //JVE (Regex) (EH)
     compile 'ru.lanwen.verbalregex:java-verbal-expressions:1.4'
 
-    //Pin lock view
+    //Pin lock view (EXH)
     compile 'com.andrognito.pinlockview:pinlockview:1.0.1'
+
+    //Reprint (EXH)
+    compile 'com.github.ajalt.reprint:core:3.1.0@aar' // required: supports marshmallow devices
+    compile 'com.github.ajalt.reprint:rxjava:3.1.0@aar' // optional: the RxJava 1 interface
+
+    //Swirl (EXH)
+    compile 'com.mattprecious.swirl:swirl:1.0.0'
 
     // Tests
     //Paper DB screws up tests

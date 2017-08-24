@@ -15,18 +15,18 @@ class BatchAddPresenter: BasePresenter<BatchAddController>() {
     val progressTotalRelay = BehaviorRelay.create(0)!!
     val progressRelay = BehaviorRelay.create(0)!!
     var eventRelay: ReplayRelay<String>? = null
-    val currentlyAddingRelay = BehaviorRelay.create(false)!!
+    val currentlyAddingRelay = BehaviorRelay.create(STATE_IDLE)!!
 
     fun addGalleries(galleries: String) {
         eventRelay = ReplayRelay.create()
-        val splitGalleries = galleries.split("\n").map {
+        val splitGalleries = galleries.split("\n").mapNotNull {
             it.trim().nullIfBlank()
-        }.filterNotNull()
+        }
 
         progressRelay.call(0)
         progressTotalRelay.call(splitGalleries.size)
 
-        currentlyAddingRelay.call(true)
+        currentlyAddingRelay.call(STATE_INPUT_TO_PROGRESS)
 
         thread {
             val succeeded = mutableListOf<String>()
@@ -47,5 +47,11 @@ class BatchAddPresenter: BasePresenter<BatchAddController>() {
             val summary = "\nSummary:\nAdded: ${succeeded.size} gallerie(s)\nFailed: ${failed.size} gallerie(s)"
             eventRelay?.call(summary)
         }
+    }
+
+    companion object {
+        const val STATE_IDLE = 0
+        const val STATE_INPUT_TO_PROGRESS = 1
+        const val STATE_PROGRESS_TO_INPUT = 2
     }
 }

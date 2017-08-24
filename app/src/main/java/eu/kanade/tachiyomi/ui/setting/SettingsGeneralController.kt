@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.preference.PreferenceScreen
+import android.support.v7.preference.SwitchPreference
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
@@ -13,6 +14,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.LocaleHelper
+import exh.ui.lock.FingerLockPreference
 import exh.ui.lock.LockPreference
 import kotlinx.android.synthetic.main.pref_library_columns.view.*
 import rx.Observable
@@ -176,12 +178,25 @@ class SettingsGeneralController : SettingsController() {
                 true
             }
         }
-        LockPreference(context).apply {
-            key = "pref_app_lock"
+        preferenceCategory {
             title = "Application lock"
-            isPersistent = false
 
-            addPreference(this)
+            LockPreference(context).apply {
+                key = "pref_app_lock"
+                isPersistent = false
+
+                addPreference(this)
+            }
+
+            FingerLockPreference(context).apply {
+                key = "pref_lock_finger"
+                isPersistent = false
+
+                addPreference(this)
+
+                //Call after addPreference
+                dependency = "pref_app_lock"
+            }
         }
     }
 

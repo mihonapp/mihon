@@ -3,7 +3,9 @@ package exh.ui.login
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -12,9 +14,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
-import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import exh.EXH_SOURCE_ID
-import kotlinx.android.synthetic.main.eh_activity_login.*
+import kotlinx.android.synthetic.main.eh_activity_login.view.*
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -23,70 +25,75 @@ import uy.kohesive.injekt.injectLazy
 import java.net.HttpCookie
 
 /**
- * LoginActivity
+ * LoginController
  */
 
-class LoginActivity : BaseActivity() {
-
+class LoginController : NucleusController<LoginPresenter>() {
     val preferenceManager: PreferencesHelper by injectLazy()
 
     val sourceManager: SourceManager by injectLazy()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.eh_activity_login)
+    override fun getTitle() = "ExHentai login"
 
-        setup()
-    }
+    override fun createPresenter() = LoginPresenter()
 
-    fun setup() {
-        btn_cancel.setOnClickListener { onBackPressed() }
-        btn_recheck.setOnClickListener { webview.loadUrl("http://exhentai.org/") }
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
+            inflater.inflate(R.layout.eh_activity_login, container, false)!!
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().removeAllCookies {
-                runOnUiThread {
-                    startWebview()
+    override fun onViewCreated(view: View, savedViewState: Bundle?) {
+        super.onViewCreated(view, savedViewState)
+
+        with(view) {
+            btn_cancel.setOnClickListener { router.popCurrentController() }
+            btn_recheck.setOnClickListener { webview.loadUrl("http://exhentai.org/") }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                CookieManager.getInstance().removeAllCookies {
+                    Observable.fromCallable {
+                        startWebview(view)
+                    }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()
                 }
+            } else {
+                CookieManager.getInstance().removeAllCookie()
+                startWebview(view)
             }
-        } else {
-            CookieManager.getInstance().removeAllCookie()
-            startWebview()
         }
     }
 
-    fun startWebview() {
-        webview.settings.javaScriptEnabled = true
-        webview.settings.domStorageEnabled = true
+    fun startWebview(view: View) {
+        with(view) {
+            webview.settings.javaScriptEnabled = true
+            webview.settings.domStorageEnabled = true
 
-        webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login")
+            webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login")
 
-        webview.setWebViewClient(object : WebViewClient() {
-            override fun onPageFinished(view: WebView, url: String) {
-                super.onPageFinished(view, url)
-                Timber.d(url)
-                val parsedUrl = Uri.parse(url)
-                if(parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
-                    //Hide distracting content
-                    view.loadUrl(HIDE_JS)
+            webview.setWebViewClient(object : WebViewClient() {
+                override fun onPageFinished(view: WebView, url: String) {
+                    super.onPageFinished(view, url)
+                    Timber.d(url)
+                    val parsedUrl = Uri.parse(url)
+                    if (parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
+                        //Hide distracting content
+                        view.loadUrl(HIDE_JS)
 
-                    //Check login result
-                    if(parsedUrl.getQueryParameter("code")?.toInt() != 0) {
-                        if(checkLoginCookies(url)) view.loadUrl("http://exhentai.org/")
-                    }
-                } else if(parsedUrl.host.equals("exhentai.org", ignoreCase = true)) {
-                    //At ExHentai, check that everything worked out...
-                    if(applyExHentaiCookies(url)) {
-                        preferenceManager.enableExhentai().set(true)
-                        finishLogin()
+                        //Check login result
+                        if (parsedUrl.getQueryParameter("code")?.toInt() != 0) {
+                            if (checkLoginCookies(url)) view.loadUrl("http://exhentai.org/")
+                        }
+                    } else if (parsedUrl.host.equals("exhentai.org", ignoreCase = true)) {
+                        //At ExHentai, check that everything worked out...
+                        if (applyExHentaiCookies(url)) {
+                            preferenceManager.enableExhentai().set(true)
+                            finishLogin(view)
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
     }
 
-    fun finishLogin() {
-        val progressDialog = MaterialDialog.Builder(this)
+    fun finishLogin(view: View) {
+        val progressDialog = MaterialDialog.Builder(view.context)
                 .title("Finalizing login")
                 .progress(true, 0)
                 .content("Please wait...")
@@ -108,7 +115,7 @@ class LoginActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     progressDialog.dismiss()
-                    onBackPressed()
+                    router.popCurrentController()
                 }
     }
 
@@ -162,14 +169,6 @@ class LoginActivity : BaseActivity() {
         it.split("; ").flatMap {
             HttpCookie.parse(it)
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> onBackPressed()
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
     }
 
     companion object {

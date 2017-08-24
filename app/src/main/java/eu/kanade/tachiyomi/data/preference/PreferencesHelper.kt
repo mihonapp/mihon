@@ -199,5 +199,7 @@ class PreferencesHelper(val context: Context) {
     fun lockSalt() = rxPrefs.getString("lock_salt", null)
 
     fun lockLength() = rxPrefs.getInteger("lock_length", -1)
+
+    fun lockUseFingerprint() = rxPrefs.getBoolean("lock_finger", false)
     // <-- EH
 }

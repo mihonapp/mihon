@@ -19,7 +19,7 @@ import rx.Observable
 import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
-import exh.ui.login.LoginActivity
+import exh.ui.login.LoginController
 import exh.util.UriFilter
 import exh.util.UriGroup
 import okhttp3.CacheControl
@@ -323,9 +323,9 @@ class EHentai(override val id: Long,
     val cookiesHeader by lazy {
         val cookies: MutableMap<String, String> = mutableMapOf()
         if(prefs.enableExhentai().getOrDefault()) {
-            cookies.put(LoginActivity.MEMBER_ID_COOKIE, prefs.memberIdVal().get()!!)
-            cookies.put(LoginActivity.PASS_HASH_COOKIE, prefs.passHashVal().get()!!)
-            cookies.put(LoginActivity.IGNEOUS_COOKIE, prefs.igneousVal().get()!!)
+            cookies.put(LoginController.MEMBER_ID_COOKIE, prefs.memberIdVal().get()!!)
+            cookies.put(LoginController.PASS_HASH_COOKIE, prefs.passHashVal().get()!!)
+            cookies.put(LoginController.IGNEOUS_COOKIE, prefs.igneousVal().get()!!)
         }
 
         //Setup settings

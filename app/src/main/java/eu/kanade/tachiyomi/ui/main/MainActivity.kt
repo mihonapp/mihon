@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.main
 import android.animation.ObjectAnimator
 import android.app.ActivityManager
 import android.app.Service
-import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Intent
 import android.graphics.Color
@@ -15,8 +14,6 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.*
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
-import com.bluelinelabs.conductor.changehandler.SimpleSwapChangeHandler
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -40,7 +37,6 @@ import exh.ui.lock.lockEnabled
 import exh.ui.lock.notifyLockSecurity
 import kotlinx.android.synthetic.main.main_activity.*
 import uy.kohesive.injekt.injectLazy
-import java.util.*
 
 
 class MainActivity : BaseActivity() {
@@ -49,7 +45,7 @@ class MainActivity : BaseActivity() {
 
     val preferences: PreferencesHelper by injectLazy()
 
-    private var drawerArrow: DrawerArrowDrawable? = null
+    var drawerArrow: DrawerArrowDrawable? = null
 
     private var secondaryDrawer: ViewGroup? = null
 
@@ -153,6 +149,8 @@ class MainActivity : BaseActivity() {
         if (savedInstanceState == null) {
             val lockEnabled = lockEnabled(preferences)
             if (lockEnabled) {
+                //Special case first lock
+                toolbar.navigationIcon = null
                 doLock()
 
                 //Check lock security
@@ -236,6 +234,16 @@ class MainActivity : BaseActivity() {
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
 
+        // --> EH
+        //Special case and hide drawer arrow for lock controller
+        if(to is LockController) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        } else {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            toolbar.navigationIcon = drawerArrow
+        }
+        // <-- EH
+
         ObjectAnimator.ofFloat(drawerArrow, "progress", if (showHamburger) 0f else 1f).start()
 
         if (from is TabbedController) {
@@ -270,10 +278,9 @@ class MainActivity : BaseActivity() {
     // --> EH
     //Lock code
     var willLock = false
-    var disableLock = false
     override fun onRestart() {
         super.onRestart()
-        if(willLock && lockEnabled() && !disableLock) {
+        if(willLock && lockEnabled()) {
             doLock()
         }
 
@@ -286,6 +293,10 @@ class MainActivity : BaseActivity() {
     }
 
     fun tryLock() {
+        //Do not double-lock
+        if(router.backstack.lastOrNull()?.controller() is LockController)
+            return
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val mUsageStatsManager = getSystemService("usagestats") as UsageStatsManager
             val time = System.currentTimeMillis()
