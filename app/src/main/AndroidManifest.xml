@@ -107,12 +107,6 @@
 
         <!-- EH -->
         <activity
-            android:name="exh.ui.login.LoginController"
-            android:label="@string/label_login">
-            <!-- TODO parent activity -->
-        </activity>
-
-        <activity
             android:name="exh.ui.intercept.InterceptActivity"
             android:label="TachiyomiEH">
             <intent-filter>
@@ -147,9 +141,6 @@
                     android:scheme="https"/>
             </intent-filter>
         </activity>
-
-        <activity android:name="exh.ui.lock.LockController"
-            android:label="Application locked"/>
 
     </application>
 
