@@ -112,7 +112,7 @@ fun PervEdenGalleryMetadata.copyTo(manga: SManga) {
     }
     if(altTitles.isNotEmpty())
         titleDesc += "Alternate Titles: \n" + altTitles.map {
-            "▪ $it"
+            "▪ ${it.title}"
         }.joinToString(separator = "\n", postfix = "\n")
 
     val detailsDesc = StringBuilder()

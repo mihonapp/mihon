@@ -116,7 +116,7 @@ class NHentai(context: Context) : HttpSource() {
     fun rawParseGallery(obj: JsonObject) = realmTrans { realm ->
         val nhId = obj.get("id").asLong
 
-        (realm.loadNhentai(nhId)
+        realm.copyFromRealm((realm.loadNhentai(nhId)
                 ?: realm.createUUIDObj(NHentaiMetadata::class.java)).apply {
             this.nhId = nhId
 
@@ -156,7 +156,7 @@ class NHentai(context: Context) : HttpSource() {
                 if(it.first != null && it.second != null)
                     tags.add(Tag(it.first!!, it.second!!, false))
             }
-        }
+        })
     }
 
     fun parseGallery(obj: JsonObject) = rawParseGallery(obj).let {
@@ -167,18 +167,16 @@ class NHentai(context: Context) : HttpSource() {
 
     fun lazyLoadMetadata(url: String) =
             defRealm { realm ->
-                realm.loadNhentaiAsync(NHentaiMetadata.nhIdFromUrl(url))
-                        .flatMap {
-                            if(it == null)
-                                client.newCall(urlToDetailsRequest(url))
-                                        .asObservableSuccess()
-                                        .map {
-                                            rawParseGallery(jsonParser.parse(it.body()!!.string())
-                                                    .asJsonObject)
-                                        }.first()
-                            else
-                                Observable.just(it)
-                        }.map { realm.copyFromRealm(it) }
+                val meta = realm.loadNhentai(NHentaiMetadata.nhIdFromUrl(url))
+                if(meta == null)
+                    client.newCall(urlToDetailsRequest(url))
+                            .asObservableSuccess()
+                            .map {
+                                rawParseGallery(jsonParser.parse(it.body()!!.string())
+                                        .asJsonObject)
+                            }.first()
+                else
+                    Observable.just(realm.copyFromRealm(meta))
             }
 
     override fun fetchChapterList(manga: SManga)
