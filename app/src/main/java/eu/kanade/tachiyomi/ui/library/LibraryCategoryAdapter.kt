@@ -63,25 +63,27 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
                 mangas.filter { manga ->
                     // --> EH
                     if (isLewdSource(manga.manga.source)) {
-                        metadata.any {
-                            when (manga.manga.source) {
-                                EH_SOURCE_ID,
-                                EXH_SOURCE_ID ->
-                                    if (it.first != ExGalleryMetadata::class)
-                                        return@any false
-                                PERV_EDEN_IT_SOURCE_ID,
-                                PERV_EDEN_EN_SOURCE_ID ->
-                                    if (it.first != PervEdenGalleryMetadata::class)
-                                        return@any false
-                                NHENTAI_SOURCE_ID ->
-                                    if (it.first != NHentaiMetadata::class)
-                                        return@any false
+                        val hasMeta
+                                = realm.queryMetadataFromManga(manga.manga).count() > 0
+                        if(hasMeta)
+                            metadata.any {
+                                when (manga.manga.source) {
+                                    EH_SOURCE_ID,
+                                    EXH_SOURCE_ID ->
+                                        if (it.first != ExGalleryMetadata::class)
+                                            return@any false
+                                    PERV_EDEN_IT_SOURCE_ID,
+                                    PERV_EDEN_EN_SOURCE_ID ->
+                                        if (it.first != PervEdenGalleryMetadata::class)
+                                            return@any false
+                                    NHENTAI_SOURCE_ID ->
+                                        if (it.first != NHentaiMetadata::class)
+                                            return@any false
+                                }
+                                return@filter realm.queryMetadataFromManga(manga.manga, it.second.where()).count() > 0
                             }
-                            realm.queryMetadataFromManga(manga.manga, it.second.where()).count() > 0
-                        }
-                    } else {
-                        manga.filter(searchText)
                     }
+                    manga.filter(searchText)
                     // <-- EH
                 }
             }
