@@ -189,7 +189,7 @@ class Batoto : ParsedHttpSource(), LoginSource {
     override fun chapterListSelector() = "tr.row.lang_English.chapter_row"
 
     override fun chapterFromElement(element: Element): SChapter {
-        val urlElement = element.select("a[href^=$baseUrl/reader").first()
+        val urlElement = element.select("a[href*=bato.to/reader").first()
 
         val chapter = SChapter.create()
         chapter.setUrlWithoutDomain(urlElement.attr("href"))
