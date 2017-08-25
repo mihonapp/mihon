@@ -13,6 +13,10 @@
         <changelogtext>EH - Rewrite app lock UI</changelogtext>
 
         <changelogtext>EH - Add fingerprint support to app lock</changelogtext>
+
+        <changelogtext>EH - Many bug fixes</changelogtext>
+
+        <changelogtext>EH - Various performance improvements</changelogtext>
     </changelogversion>
 
     <changelogversion versionName="v0.6.1" changeDate="">
