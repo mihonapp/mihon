@@ -91,8 +91,8 @@
 
 # Realm
 -dontnote rx.internal.util.PlatformDependent
--keep * public class * extends io.realm.RealmObject
--keep * public class * implements io.realm.RealmModel
+-keep public class * extends io.realm.RealmObject
+-keep public class * implements io.realm.RealmModel
 -keep class io.realm.annotations.RealmModule
 -keep @io.realm.annotations.RealmModule class *
 -keep class io.realm.internal.Keep
