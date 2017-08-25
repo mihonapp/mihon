@@ -3,6 +3,8 @@ import java.text.SimpleDateFormat
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+//Realm (EH)
+apply plugin: 'realm-android'
 
 if (file("custom.gradle").exists()) {
     apply from: "custom.gradle"
@@ -207,18 +209,6 @@ dependencies {
     compile "com.jakewharton.rxbinding:rxbinding-support-v4-kotlin:$rxbindings_version"
     compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7-kotlin:$rxbindings_version"
 
-    //Firebase (EH)
-    final firebase_version = '10.0.1'
-    releaseCompile "com.google.firebase:firebase-core:$firebase_version"
-    releaseCompile "com.google.firebase:firebase-messaging:$firebase_version"
-    releaseCompile "com.google.firebase:firebase-crash:$firebase_version"
-
-    //SnappyDB (EH)
-    compile 'io.paperdb:paperdb:2.1'
-
-    //JVE (Regex) (EH)
-    compile 'ru.lanwen.verbalregex:java-verbal-expressions:1.4'
-
     //Pin lock view (EXH)
     compile 'com.andrognito.pinlockview:pinlockview:1.0.1'
 
@@ -303,5 +293,3 @@ afterEvaluate {
         }
     }
 }
-//Firebase (EH)
-apply plugin: 'com.google.gms.google-services'

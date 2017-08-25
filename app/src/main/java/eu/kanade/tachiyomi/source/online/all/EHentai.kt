@@ -20,14 +20,13 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
 import exh.ui.login.LoginController
-import exh.util.UriFilter
-import exh.util.UriGroup
 import okhttp3.CacheControl
 import okhttp3.Headers
 import okhttp3.Request
 import org.jsoup.nodes.Document
 import exh.GalleryAdder
-import exh.util.urlImportFetchSearchManga
+import exh.util.*
+import io.realm.Realm
 
 class EHentai(override val id: Long,
               val exh: Boolean,
@@ -49,8 +48,6 @@ class EHentai(override val id: Long,
     override val supportsLatest = true
 
     val prefs: PreferencesHelper by injectLazy()
-
-    val metadataHelper = MetadataHelper()
 
     val galleryAdder = GalleryAdder()
 
@@ -168,10 +165,10 @@ class EHentai(override val id: Long,
     override fun latestUpdatesParse(response: Response) = genericMangaParse(response)
 
     fun exGet(url: String, page: Int? = null, additionalHeaders: Headers? = null, cache: Boolean = true)
-        = GET(page?.let {
-            addParam(url, "page", Integer.toString(page - 1))
-        } ?: url, additionalHeaders?.let {
-            val headers = headers.newBuilder()
+            = GET(page?.let {
+        addParam(url, "page", Integer.toString(page - 1))
+    } ?: url, additionalHeaders?.let {
+        val headers = headers.newBuilder()
         it.toMultimap().forEach { (t, u) ->
             u.forEach {
                 headers.add(t, it)
@@ -188,86 +185,90 @@ class EHentai(override val id: Long,
     /**
      * Parse gallery page to metadata model
      */
-    override fun mangaDetailsParse(response: Response) = with(response.asJsoup()) {
-        val metdata = ExGalleryMetadata()
-        with(metdata) {
-            url = response.request().url().encodedPath()
-            exh = this@EHentai.exh
-            title = select("#gn").text().nullIfBlank()?.trim()
+    override fun mangaDetailsParse(response: Response)
+            = with(response.asJsoup()) {
+        realmTrans { realm ->
+            val url = response.request().url().encodedPath()!!
+            val gId = ExGalleryMetadata.galleryId(url)
+            val gToken = ExGalleryMetadata.galleryToken(url)
 
-            altTitle = select("#gj").text().nullIfBlank()?.trim()
+            val metdata = (realm.loadEh(gId, gToken, exh)
+                    ?: realm.createUUIDObj(ExGalleryMetadata::class.java))
+            with(metdata) {
+                this.url = url
+                this.gId = gId
+                this.gToken = gToken
 
-            thumbnailUrl = select("#gd1 div").attr("style").nullIfBlank()?.let {
-                it.substring(it.indexOf('(') + 1 until it.lastIndexOf(')'))
-            }
+                exh = this@EHentai.exh
+                title = select("#gn").text().nullIfBlank()?.trim()
 
-            genre = select(".ic").parents().attr("href").nullIfBlank()?.trim()?.substringAfterLast('/')
+                altTitle = select("#gj").text().nullIfBlank()?.trim()
 
-            uploader = select("#gdn").text().nullIfBlank()?.trim()
+                thumbnailUrl = select("#gd1 div").attr("style").nullIfBlank()?.let {
+                    it.substring(it.indexOf('(') + 1 until it.lastIndexOf(')'))
+                }
+                genre = select(".ic").parents().attr("href").nullIfBlank()?.trim()?.substringAfterLast('/')
 
-            //Parse the table
-            select("#gdd tr").forEach {
-                it.select(".gdt1")
-                        .text()
-                        .nullIfBlank()
-                        ?.trim()
-                        ?.let { left ->
-                            it.select(".gdt2")
-                                    .text()
-                                    .nullIfBlank()
-                                    ?.trim()
-                                    ?.let { right ->
-                                        ignore {
-                                            when (left.removeSuffix(":")
-                                                    .toLowerCase()) {
-                                                "posted" -> datePosted = EX_DATE_FORMAT.parse(right).time
-                                                "visible" -> visible = right.nullIfBlank()
-                                                "language" -> {
-                                                    language = right.removeSuffix(TR_SUFFIX).trim().nullIfBlank()
-                                                    translated = right.endsWith(TR_SUFFIX, true)
+                uploader = select("#gdn").text().nullIfBlank()?.trim()
+
+                //Parse the table
+                select("#gdd tr").forEach {
+                    it.select(".gdt1")
+                            .text()
+                            .nullIfBlank()
+                            ?.trim()
+                            ?.let { left ->
+                                it.select(".gdt2")
+                                        .text()
+                                        .nullIfBlank()
+                                        ?.trim()
+                                        ?.let { right ->
+                                            ignore {
+                                                when (left.removeSuffix(":")
+                                                        .toLowerCase()) {
+                                                    "posted" -> datePosted = EX_DATE_FORMAT.parse(right).time
+                                                    "visible" -> visible = right.nullIfBlank()
+                                                    "language" -> {
+                                                        language = right.removeSuffix(TR_SUFFIX).trim().nullIfBlank()
+                                                        translated = right.endsWith(TR_SUFFIX, true)
+                                                    }
+                                                    "file size" -> size = parseHumanReadableByteCount(right)?.toLong()
+                                                    "length" -> length = right.removeSuffix("pages").trim().nullIfBlank()?.toInt()
+                                                    "favorited" -> favorites = right.removeSuffix("times").trim().nullIfBlank()?.toInt()
                                                 }
-                                                "file size" -> size = parseHumanReadableByteCount(right)?.toLong()
-                                                "length" -> length = right.removeSuffix("pages").trim().nullIfBlank()?.toInt()
-                                                "favorited" -> favorites = right.removeSuffix("times").trim().nullIfBlank()?.toInt()
                                             }
                                         }
-                                    }
-                        }
-            }
-
-            //Parse ratings
-            ignore {
-                averageRating = select("#rating_label")
-                        .text()
-                        .removePrefix("Average:")
-                        .trim()
-                        .nullIfBlank()
-                        ?.toDouble()
-                ratingCount = select("#rating_count")
-                        .text()
-                        .trim()
-                        .nullIfBlank()
-                        ?.toInt()
-            }
-
-            //Parse tags
-            tags.clear()
-            select("#taglist tr").forEach {
-                val namespace = it.select(".tc").text().removeSuffix(":")
-                val currentTags = it.select("div").map {
-                    Tag(it.text().trim(),
-                            it.hasClass("gtl"))
+                            }
                 }
-                tags.put(namespace, ArrayList(currentTags))
-            }
 
-            //Save metadata
-            metadataHelper.writeGallery(this, id)
+                //Parse ratings
+                ignore {
+                    averageRating = select("#rating_label")
+                            .text()
+                            .removePrefix("Average:")
+                            .trim()
+                            .nullIfBlank()
+                            ?.toDouble()
+                    ratingCount = select("#rating_count")
+                            .text()
+                            .trim()
+                            .nullIfBlank()
+                            ?.toInt()
+                }
 
-            //Copy metadata to manga
-            SManga.create().let {
-                copyTo(it)
-                it
+                //Parse tags
+                tags.clear()
+                select("#taglist tr").forEach {
+                    val namespace = it.select(".tc").text().removeSuffix(":")
+                    tags.addAll(it.select("div").map {
+                        Tag(namespace, it.text().trim(), it.hasClass("gtl"))
+                    })
+                }
+
+                //Copy metadata to manga
+                SManga.create().apply {
+                    copyTo(this)
+                }
             }
         }
     }

@@ -6,12 +6,15 @@ import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.ChapterRecognition
 import eu.kanade.tachiyomi.util.asJsoup
-import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
+import exh.metadata.loadPervEden
 import exh.metadata.models.PervEdenGalleryMetadata
+import exh.metadata.models.PervEdenTitle
 import exh.metadata.models.Tag
 import exh.util.UriFilter
 import exh.util.UriGroup
+import exh.util.createUUIDObj
+import exh.util.realmTrans
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
@@ -26,8 +29,6 @@ class PervEden(override val id: Long, override val lang: String) : ParsedHttpSou
     override val supportsLatest = true
     override val name = "Perv Eden"
     override val baseUrl = "http://www.perveden.com"
-
-    val metadataHelper by lazy { MetadataHelper() }
 
     override fun popularMangaSelector() = "#topManga > ul > li"
 
@@ -99,72 +100,68 @@ class PervEden(override val id: Long, override val lang: String) : ParsedHttpSou
     }
 
     override fun mangaDetailsParse(document: Document): SManga {
-        val metadata = PervEdenGalleryMetadata()
-        with(metadata) {
-            url = document.location()
+        realmTrans { realm ->
+            val url = document.location()
+            val metadata = (realm.loadPervEden(PervEdenGalleryMetadata.pvIdFromUrl(url), id)
+                    ?: realm.createUUIDObj(PervEdenGalleryMetadata::class.java))
+            with(metadata) {
+                this.url = url
 
-            lang = this@PervEden.lang
+                lang = this@PervEden.lang
 
-            title = document.getElementsByClass("manga-title").first()?.text()
+                title = document.getElementsByClass("manga-title").first()?.text()
 
-            thumbnailUrl = "http:" + document.getElementsByClass("mangaImage2").first()?.child(0)?.attr("src")
+                thumbnailUrl = "http:" + document.getElementsByClass("mangaImage2").first()?.child(0)?.attr("src")
 
-            val rightBoxElement = document.select(".rightBox:not(.info)").first()
+                val rightBoxElement = document.select(".rightBox:not(.info)").first()
 
-            tags.clear()
-            var inStatus: String? = null
-            rightBoxElement.childNodes().forEach {
-                if(it is Element && it.tagName().toLowerCase() == "h4") {
-                    inStatus = it.text().trim()
-                } else {
-                    when(inStatus) {
-                        "Alternative name(s)" -> {
-                            if(it is TextNode) {
-                                val text = it.text().trim()
-                                if(!text.isBlank())
-                                    altTitles.add(text)
+                tags.clear()
+                var inStatus: String? = null
+                rightBoxElement.childNodes().forEach {
+                    if(it is Element && it.tagName().toLowerCase() == "h4") {
+                        inStatus = it.text().trim()
+                    } else {
+                        when(inStatus) {
+                            "Alternative name(s)" -> {
+                                if(it is TextNode) {
+                                    val text = it.text().trim()
+                                    if(!text.isBlank())
+                                        altTitles.add(PervEdenTitle(this, text))
+                                }
                             }
-                        }
-                        "Artist" -> {
-                            if(it is Element && it.tagName() == "a") {
-                                artist = it.text()
-                                tags.getOrPut("artist", {
-                                    ArrayList()
-                                }).add(Tag(it.text().toLowerCase(), false))
+                            "Artist" -> {
+                                if(it is Element && it.tagName() == "a") {
+                                    artist = it.text()
+                                    tags.add(Tag("artist", it.text().toLowerCase(), false))
+                                }
                             }
-                        }
-                        "Genres" -> {
-                            if(it is Element && it.tagName() == "a")
-                                tags.getOrPut("genre", {
-                                    ArrayList()
-                                }).add(Tag(it.text().toLowerCase(), false))
-                        }
-                        "Type" -> {
-                            if(it is TextNode) {
-                                val text = it.text().trim()
-                                if(!text.isBlank())
-                                    type = text
+                            "Genres" -> {
+                                if(it is Element && it.tagName() == "a")
+                                    tags.add(Tag("genre", it.text().toLowerCase(), false))
                             }
-                        }
-                        "Status" -> {
-                            if(it is TextNode) {
-                                val text = it.text().trim()
-                                if(!text.isBlank())
-                                    status = text
+                            "Type" -> {
+                                if(it is TextNode) {
+                                    val text = it.text().trim()
+                                    if(!text.isBlank())
+                                        type = text
+                                }
+                            }
+                            "Status" -> {
+                                if(it is TextNode) {
+                                    val text = it.text().trim()
+                                    if(!text.isBlank())
+                                        status = text
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            rating = document.getElementById("rating-score")?.attr("value")?.toFloat()
+                rating = document.getElementById("rating-score")?.attr("value")?.toFloat()
 
-            //Save metadata
-            Timber.d("LNG: " + metadata.lang)
-            metadataHelper.writeGallery(this, id)
-
-            return SManga.create().apply {
-                copyTo(this)
+                return SManga.create().apply {
+                    copyTo(this)
+                }
             }
         }
     }
@@ -197,12 +194,12 @@ class PervEden(override val id: Long, override val lang: String) : ParsedHttpSou
     }
 
     override fun pageListParse(document: Document)
-        = document.getElementById("pageSelect").getElementsByTag("option").map {
-            Page(it.attr("data-page").toInt() - 1, baseUrl + it.attr("value"))
-        }
+            = document.getElementById("pageSelect").getElementsByTag("option").map {
+        Page(it.attr("data-page").toInt() - 1, baseUrl + it.attr("value"))
+    }
 
     override fun imageUrlParse(document: Document)
-        = "http:" + document.getElementById("mainImg").attr("src")!!
+            = "http:" + document.getElementById("mainImg").attr("src")!!
 
     override fun getFilterList() = FilterList (
             AuthorFilter(),

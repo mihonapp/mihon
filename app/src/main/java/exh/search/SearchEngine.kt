@@ -2,74 +2,94 @@ package exh.search
 
 import exh.metadata.models.SearchableGalleryMetadata
 import exh.metadata.models.Tag
+import exh.util.beginLog
+import io.realm.Case
+import io.realm.RealmResults
 
 class SearchEngine {
 
     private val queryCache = mutableMapOf<String, List<QueryComponent>>()
 
-    fun matches(metadata: SearchableGalleryMetadata, query: List<QueryComponent>): Boolean {
+    fun filterResults(metadata: RealmResults<out SearchableGalleryMetadata>, query: List<QueryComponent>):
+            RealmResults<out SearchableGalleryMetadata> {
+        val first = metadata.firstOrNull() ?: return metadata
+        val rQuery = metadata.where()//.beginLog(SearchableGalleryMetadata::class.java)
+        var queryEmpty = true
 
-        fun matchTagList(tags: Sequence<Tag>,
-                         component: Text): Boolean {
-            //Match tags
-            val tagMatcher = if(!component.exact)
-                component.asLenientRegex()
+        fun matchTagList(namespace: String?,
+                         component: Text?,
+                         excluded: Boolean) {
+            if(excluded)
+                rQuery.not()
+            else if (queryEmpty)
+                queryEmpty = false
             else
-                component.asRegex()
-            //Match beginning of tag
-            if (tags.find {
-                tagMatcher.testExact(it.name)
-            } != null) {
-                if(component.excluded) return false
-            } else {
-                //No tag matched for this component
-                return false
-            }
-            return true
-        }
+                rQuery.or()
 
-        val cachedTitles = metadata.getTitles().map(String::toLowerCase)
+            rQuery.beginGroup()
+            //Match namespace if specified
+            namespace?.let {
+                rQuery.equalTo("${SearchableGalleryMetadata::tags.name}.${Tag::namespace.name}",
+                        it,
+                        Case.INSENSITIVE)
+            }
+            //Match tag name if specified
+            component?.let {
+                rQuery.beginGroup()
+                val q = if (!it.exact)
+                    it.asLenientTagQueries()
+                else
+                    listOf(it.asQuery())
+                q.forEachIndexed { index, s ->
+                    if(index > 0)
+                        rQuery.or()
+
+                    rQuery.like("${SearchableGalleryMetadata::tags.name}.${Tag::name.name}", s, Case.INSENSITIVE)
+                }
+                rQuery.endGroup()
+            }
+            rQuery.endGroup()
+        }
 
         for(component in query) {
             if(component is Text) {
+                if(component.excluded)
+                    rQuery.not()
+
+                rQuery.beginGroup()
+
                 //Match title
-                if (cachedTitles.find { component.asRegex().test(it) } != null) {
-                    continue
-                }
+                first.titleFields
+                        .forEachIndexed { index, s ->
+                            queryEmpty = false
+                            if(index > 0)
+                                rQuery.or()
+
+                            rQuery.like(s, component.asLenientTitleQuery(), Case.INSENSITIVE)
+                        }
+
                 //Match tags
-                if(!matchTagList(metadata.tags.entries.asSequence().flatMap { it.value.asSequence() },
-                        component)) return false
+                matchTagList(null, component, false) //We already deal with exclusions here
+                rQuery.endGroup()
             } else if(component is Namespace) {
                 if(component.namespace == "uploader") {
+                    queryEmpty = false
                     //Match uploader
-                    if(!component.tag?.rawTextOnly().equals(metadata.uploader,
-                            ignoreCase = true)) {
-                        return false
-                    }
+                    rQuery.equalTo(SearchableGalleryMetadata::uploader.name,
+                            component.tag!!.rawTextOnly(),
+                            Case.INSENSITIVE)
                 } else {
                     if(component.tag!!.components.size > 0) {
-                        //Match namespace
-                        val ns = metadata.tags.entries.asSequence().filter {
-                            it.key == component.namespace
-                        }.flatMap { it.value.asSequence() }
-                        //Match tags
-                        if (!matchTagList(ns, component.tag!!))
-                            return false
+                        //Match namespace + tags
+                        matchTagList(component.namespace, component.tag!!, component.tag!!.excluded)
                     } else {
                         //Perform namespace search
-                        val hasNs = metadata.tags.entries.find {
-                            it.key == component.namespace
-                        } != null
-
-                        if(hasNs && component.excluded)
-                            return false
-                        else if(!hasNs && !component.excluded)
-                            return false
+                        matchTagList(component.namespace, null, component.excluded)
                     }
                 }
             }
         }
-        return true
+        return rQuery.findAll()
     }
 
     fun parseQuery(query: String) = queryCache.getOrPut(query, {

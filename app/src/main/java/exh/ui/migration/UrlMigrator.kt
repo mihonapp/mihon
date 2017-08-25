@@ -6,15 +6,14 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import exh.isExSource
 import exh.isLewdSource
-import exh.metadata.MetadataHelper
+import exh.metadata.ehMetaQueryFromUrl
+import exh.util.realmTrans
 import uy.kohesive.injekt.injectLazy
 
 class UrlMigrator {
     private val db: DatabaseHelper by injectLazy()
 
     private val prefs: PreferencesHelper by injectLazy()
-
-    private val metadataHelper: MetadataHelper by lazy { MetadataHelper() }
 
     fun perform() {
         db.inTransaction {
@@ -39,33 +38,34 @@ class UrlMigrator {
             //Sort possible dups so we can use binary search on it
             possibleDups.sortBy { it.url }
 
-            badMangas.forEach { manga ->
-                //Build fixed URL
-                val urlWithSlash = "/" + manga.url
-                //Fix metadata if required
-                val metadata = metadataHelper.fetchEhMetadata(manga.url, isExSource(manga.source))
-                metadata?.url?.let {
-                    if(it.startsWith("g/")) { //Check if metadata URL has no slash
-                        metadata.url = urlWithSlash //Fix it
-                        metadataHelper.writeGallery(metadata, manga.source) //Write new metadata to disk
+            realmTrans { realm ->
+                badMangas.forEach { manga ->
+                    //Build fixed URL
+                    val urlWithSlash = "/" + manga.url
+                    //Fix metadata if required
+                    val metadata = realm.ehMetaQueryFromUrl(manga.url, isExSource(manga.source)).findFirst()
+                    metadata?.url?.let {
+                        if (it.startsWith("g/")) { //Check if metadata URL has no slash
+                            metadata.url = urlWithSlash //Fix it
+                        }
                     }
-                }
-                //If we have a dup (with the fixed url), use the dup instead
-                val possibleDup = possibleDups.binarySearchBy(urlWithSlash, selector = { it.url })
-                if(possibleDup >= 0) {
-                    //Make sure it is favorited if we are
-                    if(manga.favorite) {
-                        val dup = possibleDups[possibleDup]
-                        dup.favorite = true
-                        db.insertManga(dup).executeAsBlocking() //Update DB with changes
+                    //If we have a dup (with the fixed url), use the dup instead
+                    val possibleDup = possibleDups.binarySearchBy(urlWithSlash, selector = { it.url })
+                    if (possibleDup >= 0) {
+                        //Make sure it is favorited if we are
+                        if (manga.favorite) {
+                            val dup = possibleDups[possibleDup]
+                            dup.favorite = true
+                            db.insertManga(dup).executeAsBlocking() //Update DB with changes
+                        }
+                        //Delete ourself (but the dup is still there)
+                        db.deleteManga(manga).executeAsBlocking()
+                        return@forEach
                     }
-                    //Delete ourself (but the dup is still there)
-                    db.deleteManga(manga).executeAsBlocking()
-                    return@forEach
+                    //No dup, correct URL and reinsert ourselves
+                    manga.url = urlWithSlash
+                    db.insertManga(manga).executeAsBlocking()
                 }
-                //No dup, correct URL and reinsert ourselves
-                manga.url = urlWithSlash
-                db.insertManga(manga).executeAsBlocking()
             }
         }
     }

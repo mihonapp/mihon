@@ -9,19 +9,17 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.online.all.EHentai
 import exh.isExSource
 import exh.isLewdSource
-import exh.metadata.MetadataHelper
-import exh.metadata.copyTo
 import exh.metadata.genericCopyTo
+import exh.metadata.queryMetadataFromManga
+import exh.util.defRealm
+import exh.util.realmTrans
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import kotlin.concurrent.thread
 
 class MetadataFetchDialog {
-
-    val metadataHelper by lazy { MetadataHelper() }
 
     val db: DatabaseHelper by injectLazy()
 
@@ -42,43 +40,45 @@ class MetadataFetchDialog {
                 .show()
 
         thread {
-            db.deleteMangasNotInLibrary().executeAsBlocking()
+            defRealm { realm ->
+                db.deleteMangasNotInLibrary().executeAsBlocking()
 
-            val libraryMangas = db.getLibraryMangas()
-                    .executeAsBlocking()
-                    .filter {
-                        isLewdSource(it.source)
-                        && metadataHelper.fetchMetadata(it.url, it.source) == null
-                    }
+                val libraryMangas = db.getLibraryMangas()
+                        .executeAsBlocking()
+                        .filter {
+                            isLewdSource(it.source)
+                                    && realm.queryMetadataFromManga(it).findFirst() == null
+                        }
 
-            context.runOnUiThread {
-                progressDialog.maxProgress = libraryMangas.size
-            }
-
-            //Actual metadata fetch code
-            libraryMangas.forEachIndexed { i, manga ->
                 context.runOnUiThread {
-                    progressDialog.setContent("Processing: ${manga.title}")
-                    progressDialog.setProgress(i + 1)
+                    progressDialog.maxProgress = libraryMangas.size
                 }
-                try {
-                    val source = sourceManager.get(manga.source)
-                    source?.let {
-                        manga.copyFrom(it.fetchMangaDetails(manga).toBlocking().first())
-                        metadataHelper.fetchMetadata(manga.url, manga.source)?.genericCopyTo(manga)
+
+                //Actual metadata fetch code
+                libraryMangas.forEachIndexed { i, manga ->
+                    context.runOnUiThread {
+                        progressDialog.setContent("Processing: ${manga.title}")
+                        progressDialog.setProgress(i + 1)
                     }
-                } catch(t: Throwable) {
-                    Timber.e(t, "Could not migrate manga!")
+                    try {
+                        val source = sourceManager.get(manga.source)
+                        source?.let {
+                            manga.copyFrom(it.fetchMangaDetails(manga).toBlocking().first())
+                            realm.queryMetadataFromManga(manga).findFirst()?.genericCopyTo(manga)
+                        }
+                    } catch (t: Throwable) {
+                        Timber.e(t, "Could not migrate manga!")
+                    }
                 }
-            }
 
-            context.runOnUiThread {
-                progressDialog.dismiss()
+                context.runOnUiThread {
+                    progressDialog.dismiss()
 
-                //Enable orientation changes again
-                context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+                    //Enable orientation changes again
+                    context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
 
-                displayMigrationComplete(context)
+                    displayMigrationComplete(context)
+                }
             }
         }
     }
@@ -106,7 +106,7 @@ class MetadataFetchDialog {
                         .cancelable(false)
                         .canceledOnTouchOutside(false)
                         .dismissListener {
-                            preferenceHelper.migrateLibraryAsked().set(true)
+                            preferenceHelper.migrateLibraryAsked2().set(true)
                         }.show()
             }
         }

@@ -1,19 +1,33 @@
 package exh.metadata.models
 
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.Index
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
+import java.util.*
+
 /**
  * NHentai metadata
  */
 
-class NHentaiMetadata : SearchableGalleryMetadata() {
+@RealmClass
+open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
+    @PrimaryKey
+    override var uuid: String = UUID.randomUUID().toString()
 
-    var id: Long? = null
+    var nhId: Long? = null
 
-    var url get() = id?.let { "$BASE_URL/g/$it" }
+    var url get() = nhId?.let { "$BASE_URL/g/$it" }
     set(a) {
         a?.let {
-            id = a.split("/").last { it.isNotBlank() }.toLong()
+            nhId = nhIdFromUrl(a)
         }
     }
+
+    @Index
+    override var uploader: String? = null
 
     var uploadDate: Long? = null
 
@@ -21,19 +35,29 @@ class NHentaiMetadata : SearchableGalleryMetadata() {
 
     var mediaId: String? = null
 
+    @Index
     var japaneseTitle: String? = null
+    @Index
     var englishTitle: String? = null
+    @Index
     var shortTitle: String? = null
 
     var coverImageType: String? = null
-    var pageImageTypes: MutableList<String> = mutableListOf()
+    var pageImageTypes: RealmList<PageImageType> = RealmList()
     var thumbnailImageType: String? = null
 
     var scanlator: String? = null
 
-    override fun galleryUniqueIdentifier(): String? = "NHENTAI-$id"
+    override var tags: RealmList<Tag> = RealmList()
 
     override fun getTitles() = listOf(japaneseTitle, englishTitle, shortTitle).filterNotNull()
+
+    @Ignore
+    override val titleFields = listOf(
+            NHentaiMetadata::japaneseTitle.name,
+            NHentaiMetadata::englishTitle.name,
+            NHentaiMetadata::shortTitle.name
+    )
 
     companion object {
         val BASE_URL = "https://nhentai.net"
@@ -44,5 +68,27 @@ class NHentaiMetadata : SearchableGalleryMetadata() {
                 "j" -> "jpg"
                 else -> null
             }
+
+        fun nhIdFromUrl(url: String)
+            = url.split("/").last { it.isNotBlank() }.toLong()
     }
+}
+
+@RealmClass
+open class PageImageType(var type: String? = null): RealmObject() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as PageImageType
+
+        if (type != other.type) return false
+
+        return true
+    }
+
+
+    override fun hashCode() = type?.hashCode() ?: 0
+
+    override fun toString() = "PageImageType(type=$type)"
 }

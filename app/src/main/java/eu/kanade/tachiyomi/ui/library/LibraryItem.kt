@@ -12,17 +12,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import exh.isLewdSource
-import exh.metadata.MetadataHelper
-import exh.search.SearchEngine
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
 class LibraryItem(val manga: Manga) : AbstractFlexibleItem<LibraryHolder>(), IFilterable {
-
-    // --> EH
-    private val searchEngine = SearchEngine()
-    private val metadataHelper = MetadataHelper()
-    // <-- EH
 
     override fun getLayoutRes(): Int {
         return R.layout.catalogue_grid_item
@@ -61,15 +53,6 @@ class LibraryItem(val manga: Manga) : AbstractFlexibleItem<LibraryHolder>(), IFi
      * @return true if the manga should be included, false otherwise.
      */
     override fun filter(constraint: String): Boolean {
-        // --> EH
-        if(!isLewdSource(manga.source)) {
-            //Use gallery search engine for EH manga
-            metadataHelper.fetchMetadata(manga.url, manga.source)?.let {
-                return searchEngine.matches(it, searchEngine.parseQuery(constraint))
-            }
-        }
-        // <-- EH
-
         return manga.title.contains(constraint, true) ||
                 (manga.author?.contains(constraint, true) ?: false)
     }

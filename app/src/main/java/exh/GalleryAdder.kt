@@ -10,8 +10,13 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
-import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
+import exh.metadata.loadEh
+import exh.metadata.loadNhentai
+import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.models.NHentaiMetadata
+import exh.util.defRealm
+import io.realm.Realm
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -26,8 +31,6 @@ class GalleryAdder {
     private val db: DatabaseHelper by injectLazy()
 
     private val sourceManager: SourceManager by injectLazy()
-
-    private val metadataHelper = MetadataHelper()
 
     private val networkHelper: NetworkHelper by injectLazy()
 
@@ -119,11 +122,17 @@ class GalleryAdder {
             manga.copyFrom(sourceObj.fetchMangaDetails(manga).toBlocking().first())
 
             //Apply metadata
-            when(source) {
-                EH_SOURCE_ID, EXH_SOURCE_ID ->
-                    metadataHelper.fetchEhMetadata(realUrl, isExSource(source))?.copyTo(manga)
-                NHENTAI_SOURCE_ID ->
-                    metadataHelper.fetchNhentaiMetadata(realUrl)?.copyTo(manga)
+            defRealm { realm ->
+                when (source) {
+                    EH_SOURCE_ID, EXH_SOURCE_ID ->
+                        realm.loadEh(ExGalleryMetadata.galleryId(realUrl),
+                                ExGalleryMetadata.galleryToken(realUrl),
+                                isExSource(source))?.copyTo(manga)
+                    NHENTAI_SOURCE_ID ->
+                        realm.loadNhentai(NHentaiMetadata.nhIdFromUrl(realUrl))
+                                ?.copyTo(manga)
+                    else -> return GalleryAddEvent.Fail.UnknownType(url)
+                }
             }
 
             if (fav) manga.favorite = true

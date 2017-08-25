@@ -1,36 +1,51 @@
 package exh.search
 
-import exh.anyChar
-import ru.lanwen.verbalregex.VerbalExpression
+import exh.plusAssign
 
 class Text: QueryComponent() {
     val components = mutableListOf<TextComponent>()
 
-    private var regex: VerbalExpression? = null
-    private var lenientRegex: VerbalExpression? = null
+    private var query: String? = null
+    private var lenientTitleQuery: String? = null
+    private var lenientTagQueries: List<String>? = null
     private var rawText: String? = null
 
-    fun asRegex(): VerbalExpression {
-        if(regex == null) {
-            regex = baseBuilder().build()
+    fun asQuery(): String {
+        if(query == null) {
+            query = rBaseBuilder().toString()
         }
-        return regex!!
+        return query!!
     }
 
-    fun asLenientRegex(): VerbalExpression {
-        if(lenientRegex == null) {
-            lenientRegex = baseBuilder().anything().build()
+    fun asLenientTitleQuery(): String {
+        if(lenientTitleQuery == null) {
+            lenientTitleQuery = StringBuilder("*").append(rBaseBuilder()).append("*").toString()
         }
-        return lenientRegex!!
+        return lenientTitleQuery!!
     }
 
-    fun baseBuilder(): VerbalExpression.Builder {
-        val builder = VerbalExpression.regex()
+    fun asLenientTagQueries(): List<String> {
+        if(lenientTagQueries == null) {
+            lenientTagQueries = listOf(
+                    //Match beginning of tag
+                    rBaseBuilder().append("*").toString(),
+                    //Tag word matcher (that matches multiple words)
+                    //Can't make it match a single word in Realm :(
+                    StringBuilder(" ").append(rBaseBuilder()).append(" ").toString(),
+                    StringBuilder(" ").append(rBaseBuilder()).toString(),
+                    rBaseBuilder().append(" ").toString()
+            )
+        }
+        return lenientTagQueries!!
+    }
+
+    fun rBaseBuilder(): StringBuilder {
+        val builder = StringBuilder()
         for(component in components) {
             when(component) {
-                is StringTextComponent -> builder.then(component.value)
-                is SingleWildcard -> builder.anyChar()
-                is MultiWildcard -> builder.anything()
+                is StringTextComponent -> builder += component.value
+                is SingleWildcard -> builder += "?"
+                is MultiWildcard -> builder += "*"
             }
         }
         return builder

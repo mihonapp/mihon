@@ -4,7 +4,6 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.all.EHentai
-import eu.kanade.tachiyomi.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.source.online.all.PervEden
 import exh.metadata.models.*
 import exh.plusAssign
@@ -51,12 +50,12 @@ fun ExGalleryMetadata.copyTo(manga: SManga) {
     titleObj?.let { manga.title = it }
 
     //Set artist (if we can find one)
-    tags[EH_ARTIST_NAMESPACE]?.let {
-        if(it.isNotEmpty()) manga.artist = it.joinToString(transform = Tag::name)
+    tags.filter { it.namespace == EH_ARTIST_NAMESPACE }.let {
+        if(it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name!! })
     }
     //Set author (if we can find one)
-    tags[EH_AUTHOR_NAMESPACE]?.let {
-        if(it.isNotEmpty()) manga.author = it.joinToString(transform = Tag::name)
+    tags.filter { it.namespace == EH_AUTHOR_NAMESPACE }.let {
+        if(it.isNotEmpty()) manga.author = it.joinToString(transform = { it.name!! })
     }
     //Set genre
     genre?.let { manga.genre = it }
@@ -159,12 +158,12 @@ fun NHentaiMetadata.copyTo(manga: SManga) {
     manga.title = englishTitle ?: japaneseTitle ?: shortTitle!!
 
     //Set artist (if we can find one)
-    tags[NHENTAI_ARTIST_NAMESPACE]?.let {
-        if(it.isNotEmpty()) manga.artist = it.joinToString(transform = Tag::name)
+    tags.filter { it.namespace == NHENTAI_ARTIST_NAMESPACE }.let {
+        if(it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name!! })
     }
 
-    tags[NHENTAI_CATEGORIES_NAMESPACE]?.let {
-        if(it.isNotEmpty()) manga.genre = it.joinToString(transform = Tag::name)
+    tags.filter { it.namespace == NHENTAI_CATEGORIES_NAMESPACE }.let {
+        if(it.isNotEmpty()) manga.genre = it.joinToString(transform = { it.name!! })
     }
 
     //Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
@@ -209,7 +208,9 @@ fun SearchableGalleryMetadata.genericCopyTo(manga: SManga): Boolean {
 private fun buildTagsDescription(metadata: SearchableGalleryMetadata)
         = StringBuilder("Tags:\n").apply {
         //BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
-        metadata.tags.entries.forEach { namespace, tags ->
+        metadata.tags.groupBy {
+            it.namespace
+        }.entries.forEach { namespace, tags ->
             if (tags.isNotEmpty()) {
                 val joinedTags = tags.joinToString(separator = " ", transform = { "<${it.name}>" })
                 this += "▪ $namespace: $joinedTags\n"

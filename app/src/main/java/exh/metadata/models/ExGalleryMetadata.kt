@@ -1,21 +1,42 @@
 package exh.metadata.models
 
 import android.net.Uri
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.Index
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import java.util.*
 
 /**
  * Gallery metadata storage model
  */
 
-class ExGalleryMetadata : SearchableGalleryMetadata() {
+@RealmClass
+open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
+    @PrimaryKey
+    override var uuid: String = UUID.randomUUID().toString()
+
     var url: String? = null
 
+    @Index
+    var gId: String? = null
+    @Index
+    var gToken: String? = null
+
+    @Index
     var exh: Boolean? = null
 
     var thumbnailUrl: String? = null
 
+    @Index
     var title: String? = null
+    @Index
     var altTitle: String? = null
+
+    @Index
+    override var uploader: String? = null
 
     var genre: String? = null
 
@@ -30,22 +51,26 @@ class ExGalleryMetadata : SearchableGalleryMetadata() {
     var ratingCount: Int? = null
     var averageRating: Double? = null
 
+    override var tags: RealmList<Tag> = RealmList()
+
     override fun getTitles() = listOf(title, altTitle).filterNotNull()
 
-    private fun splitGalleryUrl()
-            = url?.let {
-        Uri.parse(it).pathSegments.filterNot(String::isNullOrBlank)
-    }
+    @Ignore
+    override val titleFields = listOf(
+            ExGalleryMetadata::title.name,
+            ExGalleryMetadata::altTitle.name
+    )
 
-    fun galleryId() = splitGalleryUrl()?.let { it[it.size - 2] }
+    companion object {
+        private fun splitGalleryUrl(url: String)
+                = url.let {
+                    Uri.parse(it).pathSegments
+                            .filterNot(String::isNullOrBlank)
+                }
 
-    fun galleryToken() =
-        splitGalleryUrl()?.last()
+        fun galleryId(url: String) = splitGalleryUrl(url).let { it[it.size - 2] }
 
-    override fun galleryUniqueIdentifier() = exh?.let { exh ->
-        url?.let {
-            //Fuck, this should be EXH and EH but it's too late to change it now...
-            "${if(exh) "EXH" else "EX"}-${galleryId()}-${galleryToken()}"
-        }
+        fun galleryToken(url: String) =
+                splitGalleryUrl(url).last()
     }
 }

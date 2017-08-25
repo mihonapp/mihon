@@ -180,13 +180,11 @@ class PreferencesHelper(val context: Context) {
 
     fun thumbnailRows() = rxPrefs.getString("ex_thumb_rows", "tr_2")
 
-    fun migrateLibraryAsked() = rxPrefs.getBoolean("ex_migrate_library", false)
+    fun migrateLibraryAsked2() = rxPrefs.getBoolean("ex_migrate_library2", false)
 
     fun migrationStatus() = rxPrefs.getInteger("migration_status", MigrationStatus.NOT_INITIALIZED)
 
     fun hasPerformedURLMigration() = rxPrefs.getBoolean("performed_url_migration", false)
-
-    fun hasPerformedSourceMigration() = rxPrefs.getBoolean("performed_source_migration", false)
 
     //EH Cookies
     fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)

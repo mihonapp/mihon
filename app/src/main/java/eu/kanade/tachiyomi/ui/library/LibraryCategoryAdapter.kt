@@ -2,6 +2,18 @@ package eu.kanade.tachiyomi.ui.library
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import exh.*
+import exh.metadata.loadAllMetadata
+import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.models.NHentaiMetadata
+import exh.metadata.models.PervEdenGalleryMetadata
+import exh.metadata.queryMetadataFromManga
+import exh.search.SearchEngine
+import exh.util.defRealm
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import kotlin.concurrent.thread
 
 /**
  * Adapter storing a list of manga in a certain category.
@@ -16,7 +28,9 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
      */
     private var mangas: List<LibraryItem> = emptyList()
 
-    var asyncSearchText: String? = null
+    // --> EH
+    private val searchEngine = SearchEngine()
+    // <-- EH
 
     /**
      * Sets a list of manga in the adapter.
@@ -40,9 +54,42 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
     }
 
     fun performFilter() {
-        updateDataSet(mangas.filter {
-            it.filter(searchText)
-        })
+        Observable.fromCallable {
+            defRealm { realm ->
+                val parsedQuery = searchEngine.parseQuery(searchText)
+                val metadata = realm.loadAllMetadata().map {
+                    Pair(it.key, searchEngine.filterResults(it.value, parsedQuery))
+                }
+                mangas.filter { manga ->
+                    // --> EH
+                    if (isLewdSource(manga.manga.source)) {
+                        metadata.any {
+                            when (manga.manga.source) {
+                                EH_SOURCE_ID,
+                                EXH_SOURCE_ID ->
+                                    if (it.first != ExGalleryMetadata::class)
+                                        return@any false
+                                PERV_EDEN_IT_SOURCE_ID,
+                                PERV_EDEN_EN_SOURCE_ID ->
+                                    if (it.first != PervEdenGalleryMetadata::class)
+                                        return@any false
+                                NHENTAI_SOURCE_ID ->
+                                    if (it.first != NHentaiMetadata::class)
+                                        return@any false
+                            }
+                            realm.queryMetadataFromManga(manga.manga, it.second.where()).count() > 0
+                        }
+                    } else {
+                        manga.filter(searchText)
+                    }
+                    // <-- EH
+                }
+            }
+        }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    updateDataSet(it)
+                }
     }
 
 }

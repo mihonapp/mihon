@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="v6.1.1-EH" changeDate="">
+        <changelogtext>EH - Rewrite batch add screen</changelogtext>
+
+        <changelogtext>EH - Add nhentai link import support</changelogtext>
+
+        <changelogtext>EH - Add the ability to import links by searching them in the catalogues</changelogtext>
+
+        <changelogtext>EH - Increase library tag search speed</changelogtext>
+
+        <changelogtext>EH - Rewrite app lock UI</changelogtext>
+
+        <changelogtext>EH - Add fingerprint support to app lock</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.6.1" changeDate="">
         <changelogtext>Bugfix release.</changelogtext>
     </changelogversion>

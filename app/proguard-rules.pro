@@ -89,6 +89,16 @@
 # [EH]
 -keep class exh.** { *; }
 
+# Realm
+-dontnote rx.internal.util.PlatformDependent
+-keep * public class * extends io.realm.RealmObject
+-keep * public class * implements io.realm.RealmModel
+-keep class io.realm.annotations.RealmModule
+-keep @io.realm.annotations.RealmModule class *
+-keep class io.realm.internal.Keep
+-keep @io.realm.internal.Keep class *
+-dontwarn io.realm.**
+
 # Keep google stuff
 -dontwarn com.google.android.gms.**
 -dontwarn com.google.firebase.**

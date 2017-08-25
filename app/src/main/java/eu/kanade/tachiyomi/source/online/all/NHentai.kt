@@ -17,10 +17,15 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import exh.NHENTAI_SOURCE_ID
-import exh.metadata.MetadataHelper
 import exh.metadata.copyTo
+import exh.metadata.loadNhentai
+import exh.metadata.loadNhentaiAsync
 import exh.metadata.models.NHentaiMetadata
+import exh.metadata.models.PageImageType
 import exh.metadata.models.Tag
+import exh.util.createUUIDObj
+import exh.util.defRealm
+import exh.util.realmTrans
 import exh.util.urlImportFetchSearchManga
 import okhttp3.Request
 import okhttp3.Response
@@ -108,62 +113,73 @@ class NHentai(context: Context) : HttpSource() {
         return MangasPage(emptyList(), false)
     }
 
-    fun rawParseGallery(obj: JsonObject) = NHentaiMetadata().apply {
-        uploadDate = obj.get("upload_date")?.notNull()?.long
+    fun rawParseGallery(obj: JsonObject) = realmTrans { realm ->
+        val nhId = obj.get("id").asLong
 
-        favoritesCount = obj.get("num_favorites")?.notNull()?.long
+        (realm.loadNhentai(nhId)
+                ?: realm.createUUIDObj(NHentaiMetadata::class.java)).apply {
+            this.nhId = nhId
 
-        mediaId = obj.get("media_id")?.notNull()?.string
+            uploadDate = obj.get("upload_date")?.notNull()?.long
 
-        obj.get("title")?.asJsonObject?.let {
-            japaneseTitle = it.get("japanese")?.notNull()?.string
-            shortTitle = it.get("pretty")?.notNull()?.string
-            englishTitle = it.get("english")?.notNull()?.string
-        }
+            favoritesCount = obj.get("num_favorites")?.notNull()?.long
 
-        obj.get("images")?.asJsonObject?.let {
-            coverImageType = it.get("cover")?.get("t")?.notNull()?.asString
-            it.get("pages")?.asJsonArray?.map {
-                it?.asJsonObject?.get("t")?.notNull()?.asString
-            }?.filterNotNull()?.let {
-                pageImageTypes.clear()
-                pageImageTypes.addAll(it)
+            mediaId = obj.get("media_id")?.notNull()?.string
+
+            obj.get("title")?.asJsonObject?.let {
+                japaneseTitle = it.get("japanese")?.notNull()?.string
+                shortTitle = it.get("pretty")?.notNull()?.string
+                englishTitle = it.get("english")?.notNull()?.string
             }
-            thumbnailImageType = it.get("thumbnail")?.get("t")?.notNull()?.asString
-        }
 
-        scanlator = obj.get("scanlator")?.notNull()?.asString
+            obj.get("images")?.asJsonObject?.let {
+                coverImageType = it.get("cover")?.get("t")?.notNull()?.asString
+                it.get("pages")?.asJsonArray?.map {
+                    it?.asJsonObject?.get("t")?.notNull()?.asString
+                }?.filterNotNull()?.map {
+                    PageImageType(it)
+                }?.let {
+                    pageImageTypes.clear()
+                    pageImageTypes.addAll(it)
+                }
+                thumbnailImageType = it.get("thumbnail")?.get("t")?.notNull()?.asString
+            }
 
-        id = obj.get("id")?.asLong
+            scanlator = obj.get("scanlator")?.notNull()?.asString
 
-        obj.get("tags")?.asJsonArray?.map {
-            val asObj = it.asJsonObject
-            Pair(asObj.get("type")?.string, asObj.get("name")?.string)
-        }?.apply {
-            tags.clear()
-        }?.forEach {
-            if(it.first != null && it.second != null)
-                tags.getOrPut(it.first!!, { ArrayList() }).add(Tag(it.second!!, false))
+            obj.get("tags")?.asJsonArray?.map {
+                val asObj = it.asJsonObject
+                Pair(asObj.get("type")?.string, asObj.get("name")?.string)
+            }?.apply {
+                tags.clear()
+            }?.forEach {
+                if(it.first != null && it.second != null)
+                    tags.add(Tag(it.first!!, it.second!!, false))
+            }
         }
     }
 
     fun parseGallery(obj: JsonObject) = rawParseGallery(obj).let {
-        metadataHelper.writeGallery(it, id)
-
         SManga.create().apply {
             it.copyTo(this)
         }
     }
 
     fun lazyLoadMetadata(url: String) =
-            Observable.fromCallable {
-                metadataHelper.fetchNhentaiMetadata(url)
-                        ?: client.newCall(urlToDetailsRequest(url))
-                        .asObservableSuccess()
-                        .map {
-                            rawParseGallery(jsonParser.parse(it.body()!!.string()).asJsonObject)
-                        }.toBlocking().first()
-            }!!
+            defRealm { realm ->
+                realm.loadNhentaiAsync(NHentaiMetadata.nhIdFromUrl(url))
+                        .flatMap {
+                            if(it == null)
+                                client.newCall(urlToDetailsRequest(url))
+                                        .asObservableSuccess()
+                                        .map {
+                                            rawParseGallery(jsonParser.parse(it.body()!!.string())
+                                                    .asJsonObject)
+                                        }.first()
+                            else
+                                Observable.just(it)
+                        }.map { realm.copyFromRealm(it) }
+            }
 
     override fun fetchChapterList(manga: SManga)
             = lazyLoadMetadata(manga.url).map {
@@ -181,7 +197,7 @@ class NHentai(context: Context) : HttpSource() {
         if(metadata.mediaId == null) emptyList()
         else
             metadata.pageImageTypes.mapIndexed { index, s ->
-                val imageUrl = imageUrlFromType(metadata.mediaId!!, index + 1, s)
+                val imageUrl = imageUrlFromType(metadata.mediaId!!, index + 1, s.type!!)
                 Page(index, imageUrl!!, imageUrl)
             }
     }!!
@@ -231,14 +247,10 @@ class NHentai(context: Context) : HttpSource() {
         val jsonParser by lazy {
             JsonParser()
         }
-
-        val metadataHelper by lazy {
-            MetadataHelper()
-        }
     }
 
     fun JsonElement.notNull() =
-        if(this is JsonNull)
-            null
-        else this
+            if(this is JsonNull)
+                null
+            else this
 }

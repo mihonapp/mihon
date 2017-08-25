@@ -39,10 +39,12 @@ import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.library_controller.view.*
 import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 class LibraryController(
@@ -342,7 +344,11 @@ class LibraryController(
         // Mutate the filter icon because it needs to be tinted and the resource is shared.
         menu.findItem(R.id.action_filter).icon.mutate()
 
-        searchView.queryTextChanges().subscribeUntilDestroy {
+        // Debounce search (EH)
+        searchView.queryTextChanges()
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeUntilDestroy {
             query = it.toString()
             searchRelay.call(query)
         }

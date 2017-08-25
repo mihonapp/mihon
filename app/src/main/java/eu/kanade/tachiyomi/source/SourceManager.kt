@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.online.all.EHentai
-import eu.kanade.tachiyomi.source.online.all.EHentaiMetadata
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.YamlHttpSource
 import eu.kanade.tachiyomi.source.online.all.NHentai
@@ -88,13 +87,11 @@ open class SourceManager(private val context: Context) {
     )
 
     private fun createEHSources(): List<Source> {
-        val exSrcs = mutableListOf(
-                EHentai(EH_SOURCE_ID, false, context),
-                EHentaiMetadata(EH_METADATA_SOURCE_ID, false, context)
+        val exSrcs = mutableListOf<HttpSource>(
+                EHentai(EH_SOURCE_ID, false, context)
         )
         if(prefs.enableExhentai().getOrDefault()) {
             exSrcs += EHentai(EXH_SOURCE_ID, true, context)
-            exSrcs += EHentaiMetadata(EXH_METADATA_SOURCE_ID, true, context)
         }
         exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, "en")
         exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, "it")
