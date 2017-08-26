@@ -11,6 +11,7 @@ import io.realm.Realm
 import io.realm.RealmQuery
 import io.realm.RealmResults
 import rx.Observable
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 fun Realm.ehMetaQueryFromUrl(url: String,
@@ -50,7 +51,7 @@ private fun pervEdenSourceToLang(source: Long)
 
 fun Realm.pervEdenMetaQueryFromUrl(url: String,
                                    source: Long,
-                                   meta: RealmQuery<PervEdenGalleryMetadata>?) =
+                                   meta: RealmQuery<PervEdenGalleryMetadata>? = null) =
         pervEdenMetadataQuery(
                 PervEdenGalleryMetadata.pvIdFromUrl(url),
                 source,
@@ -74,7 +75,7 @@ fun Realm.loadPervEdenAsync(pvId: String, source: Long): Observable<PervEdenGall
         .asObservable()
 
 fun Realm.nhentaiMetaQueryFromUrl(url: String,
-                                  meta: RealmQuery<NHentaiMetadata>?) =
+                                  meta: RealmQuery<NHentaiMetadata>? = null) =
         nhentaiMetadataQuery(
                 NHentaiMetadata.nhIdFromUrl(url),
                 meta
@@ -95,11 +96,13 @@ fun Realm.loadNhentaiAsync(nhId: Long): Observable<NHentaiMetadata?>
         .asObservable()
 
 fun Realm.loadAllMetadata(): Map<KClass<out SearchableGalleryMetadata>, RealmResults<out SearchableGalleryMetadata>> =
-        mapOf(
-                Pair(ExGalleryMetadata::class, where(ExGalleryMetadata::class.java).findAll()),
-                Pair(NHentaiMetadata::class, where(NHentaiMetadata::class.java).findAll()),
-                Pair(PervEdenGalleryMetadata::class, where(PervEdenGalleryMetadata::class.java).findAll())
-        )
+        listOf<Pair<KClass<out SearchableGalleryMetadata>, RealmQuery<out SearchableGalleryMetadata>>>(
+                Pair(ExGalleryMetadata::class, where(ExGalleryMetadata::class.java)),
+                Pair(NHentaiMetadata::class, where(NHentaiMetadata::class.java)),
+                Pair(PervEdenGalleryMetadata::class, where(PervEdenGalleryMetadata::class.java))
+        ).map {
+            Pair(it.first, it.second.findAllSorted(SearchableGalleryMetadata::mangaId.name))
+        }.toMap()
 
 fun Realm.queryMetadataFromManga(manga: Manga,
                                  meta: RealmQuery<out SearchableGalleryMetadata>? = null): RealmQuery<out SearchableGalleryMetadata> =
@@ -112,3 +115,21 @@ fun Realm.queryMetadataFromManga(manga: Manga,
         NHENTAI_SOURCE_ID -> nhentaiMetaQueryFromUrl(manga.url, meta as? RealmQuery<NHentaiMetadata>)
         else -> throw IllegalArgumentException("Unknown source type!")
     }
+
+fun Realm.syncMangaIds(mangas: List<Manga>) {
+    Timber.d("--> EH: Begin syncing ${mangas.size} manga IDs...")
+    executeTransaction {
+        mangas.filter {
+            isLewdSource(it.source)
+        }.forEach { manga ->
+            try {
+                queryMetadataFromManga(manga).findFirst()?.let { meta ->
+                    meta.mangaId = manga.id
+                }
+            } catch(e: Exception) {
+                Timber.w(e, "Error syncing manga IDs! Ignoring...")
+            }
+        }
+    }
+    Timber.d("--> EH: Finish syncing ${mangas.size} manga IDs!")
+}

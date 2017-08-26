@@ -45,10 +45,10 @@ open class PervEdenGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
     }).filterNotNull()
 
     @Ignore
-    override val titleFields = listOf(
-            //TODO Somehow include altTitles
-            PervEdenGalleryMetadata::title.name
-    )
+    override val titleFields = TITLE_FIELDS
+
+    @Index
+    override var mangaId: Long? = null
 
     companion object {
         private fun splitGalleryUrl(url: String)
@@ -57,6 +57,11 @@ open class PervEdenGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
                 }
 
         fun pvIdFromUrl(url: String) = splitGalleryUrl(url).last()
+
+        val TITLE_FIELDS = listOf(
+                //TODO Somehow include altTitles
+                PervEdenGalleryMetadata::title.name
+        )
     }
 }
 

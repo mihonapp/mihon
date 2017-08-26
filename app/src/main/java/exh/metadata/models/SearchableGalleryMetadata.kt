@@ -21,4 +21,6 @@ interface SearchableGalleryMetadata: RealmModel {
     fun getTitles(): List<String>
 
     val titleFields: List<String>
+
+    var mangaId: Long?
 }

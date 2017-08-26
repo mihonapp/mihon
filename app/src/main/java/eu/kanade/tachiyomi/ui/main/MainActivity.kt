@@ -31,12 +31,14 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
+import exh.metadata.loadAllMetadata
 import exh.ui.batchadd.BatchAddController
 import exh.ui.lock.LockChangeHandler
 import exh.ui.lock.LockController
 import exh.ui.lock.lockEnabled
 import exh.ui.lock.notifyLockSecurity
 import exh.ui.migration.MetadataFetchDialog
+import exh.util.defRealm
 import kotlinx.android.synthetic.main.main_activity.*
 import uy.kohesive.injekt.injectLazy
 
@@ -168,9 +170,12 @@ class MainActivity : BaseActivity() {
                 ChangelogDialogController().showDialog(router)
             }
 
-            // Migrate metadata to Realm (EH)
-            if(!preferences.migrateLibraryAsked2().getOrDefault())
-                MetadataFetchDialog().askMigration(this, false)
+            // Migrate metadata if empty (EH)
+            if(!defRealm {
+                it.loadAllMetadata().any {
+                    it.value.isNotEmpty()
+                }
+            }) MetadataFetchDialog().askMigration(this, false)
         }
     }
 

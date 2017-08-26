@@ -53,11 +53,10 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
     override fun getTitles() = listOf(japaneseTitle, englishTitle, shortTitle).filterNotNull()
 
     @Ignore
-    override val titleFields = listOf(
-            NHentaiMetadata::japaneseTitle.name,
-            NHentaiMetadata::englishTitle.name,
-            NHentaiMetadata::shortTitle.name
-    )
+    override val titleFields = TITLE_FIELDS
+
+    @Index
+    override var mangaId: Long? = null
 
     companion object {
         val BASE_URL = "https://nhentai.net"
@@ -71,6 +70,12 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
 
         fun nhIdFromUrl(url: String)
             = url.split("/").last { it.isNotBlank() }.toLong()
+
+        val TITLE_FIELDS = listOf(
+                NHentaiMetadata::japaneseTitle.name,
+                NHentaiMetadata::englishTitle.name,
+                NHentaiMetadata::shortTitle.name
+        )
     }
 }
 

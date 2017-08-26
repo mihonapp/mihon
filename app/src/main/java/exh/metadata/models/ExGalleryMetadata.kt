@@ -56,10 +56,10 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
     override fun getTitles() = listOf(title, altTitle).filterNotNull()
 
     @Ignore
-    override val titleFields = listOf(
-            ExGalleryMetadata::title.name,
-            ExGalleryMetadata::altTitle.name
-    )
+    override val titleFields = TITLE_FIELDS
+
+    @Index
+    override var mangaId: Long? = null
 
     companion object {
         private fun splitGalleryUrl(url: String)
@@ -72,5 +72,10 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
 
         fun galleryToken(url: String) =
                 splitGalleryUrl(url).last()
+
+        val TITLE_FIELDS = listOf(
+                ExGalleryMetadata::title.name,
+                ExGalleryMetadata::altTitle.name
+        )
     }
 }

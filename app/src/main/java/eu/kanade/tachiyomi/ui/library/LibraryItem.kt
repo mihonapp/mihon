@@ -12,9 +12,23 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
+import exh.*
+import exh.metadata.ehMetaQueryFromUrl
+import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.models.NHentaiMetadata
+import exh.metadata.models.PervEdenGalleryMetadata
+import exh.metadata.models.SearchableGalleryMetadata
+import exh.metadata.nhentaiMetaQueryFromUrl
+import exh.metadata.pervEdenMetaQueryFromUrl
+import exh.search.SearchEngine
+import exh.util.defRealm
+import io.realm.RealmQuery
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
 class LibraryItem(val manga: Manga) : AbstractFlexibleItem<LibraryHolder>(), IFilterable {
+    // --> EH
+    private val searchEngine = SearchEngine()
+    // <-- EH
 
     override fun getLayoutRes(): Int {
         return R.layout.catalogue_grid_item
@@ -53,6 +67,38 @@ class LibraryItem(val manga: Manga) : AbstractFlexibleItem<LibraryHolder>(), IFi
      * @return true if the manga should be included, false otherwise.
      */
     override fun filter(constraint: String): Boolean {
+        defRealm { realm ->
+            if (isLewdSource(manga.source)) {
+                val titleFields: List<String>?
+                var query: RealmQuery<out SearchableGalleryMetadata>?
+                when (manga.source) {
+                    EH_SOURCE_ID -> {
+                        titleFields = ExGalleryMetadata.TITLE_FIELDS
+                        query = realm.ehMetaQueryFromUrl(manga.url, false)
+                    }
+                    EXH_SOURCE_ID -> {
+                        titleFields = ExGalleryMetadata.TITLE_FIELDS
+                        query = realm.ehMetaQueryFromUrl(manga.url, true)
+                    }
+                    PERV_EDEN_IT_SOURCE_ID,
+                    PERV_EDEN_EN_SOURCE_ID -> {
+                        titleFields = PervEdenGalleryMetadata.TITLE_FIELDS
+                        query = realm.pervEdenMetaQueryFromUrl(manga.url, manga.source)
+                    }
+                    NHENTAI_SOURCE_ID -> {
+                        titleFields = NHentaiMetadata.TITLE_FIELDS
+                        query = realm.nhentaiMetaQueryFromUrl(manga.url)
+                    }
+                    else -> return@defRealm
+                }
+                val hasMeta = query!!.count() > 0
+                if(hasMeta) {
+                    val parsedQuery = searchEngine.parseQuery(constraint)
+                    query = searchEngine.filterResults(query, parsedQuery, titleFields)
+                    return@filter query.count() > 0
+                }
+            }
+        }
         return manga.title.contains(constraint, true) ||
                 (manga.author?.contains(constraint, true) ?: false)
     }

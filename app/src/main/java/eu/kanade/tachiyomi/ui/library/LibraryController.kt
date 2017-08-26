@@ -346,7 +346,7 @@ class LibraryController(
 
         // Debounce search (EH)
         searchView.queryTextChanges()
-                .debounce(200, TimeUnit.MILLISECONDS)
+                .debounce(350, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeUntilDestroy {
             query = it.toString()

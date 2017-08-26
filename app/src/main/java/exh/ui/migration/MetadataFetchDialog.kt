@@ -88,7 +88,6 @@ class MetadataFetchDialog {
         db.getLibraryMangas().asRxSingle().subscribe {
             if(!explicit && it.isEmpty()) {
                 //Do not open dialog on startup if no manga
-                preferenceHelper.migrateLibraryAsked2().set(true)
             } else {
                 //Not logged in but have ExHentai galleries
                 if (!preferenceHelper.enableExhentai().getOrDefault()) {
@@ -109,9 +108,7 @@ class MetadataFetchDialog {
                             .onNegative({ _, _ -> adviseMigrationLater(activity) })
                             .cancelable(false)
                             .canceledOnTouchOutside(false)
-                            .dismissListener {
-                                preferenceHelper.migrateLibraryAsked2().set(true)
-                            }.show()
+                            .show()
                 }
             }
         }

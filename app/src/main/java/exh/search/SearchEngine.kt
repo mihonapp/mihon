@@ -2,18 +2,17 @@ package exh.search
 
 import exh.metadata.models.SearchableGalleryMetadata
 import exh.metadata.models.Tag
-import exh.util.beginLog
 import io.realm.Case
-import io.realm.RealmResults
+import io.realm.RealmQuery
 
 class SearchEngine {
 
     private val queryCache = mutableMapOf<String, List<QueryComponent>>()
 
-    fun filterResults(metadata: RealmResults<out SearchableGalleryMetadata>, query: List<QueryComponent>):
-            RealmResults<out SearchableGalleryMetadata> {
-        val first = metadata.firstOrNull() ?: return metadata
-        val rQuery = metadata.where()//.beginLog(SearchableGalleryMetadata::class.java)
+    fun <T : SearchableGalleryMetadata> filterResults(rQuery: RealmQuery<T>,
+                                                      query: List<QueryComponent>,
+                                                      titleFields: List<String>):
+            RealmQuery<T> {
         var queryEmpty = true
 
         fun matchTagList(namespace: String?,
@@ -59,14 +58,13 @@ class SearchEngine {
                 rQuery.beginGroup()
 
                 //Match title
-                first.titleFields
-                        .forEachIndexed { index, s ->
-                            queryEmpty = false
-                            if(index > 0)
-                                rQuery.or()
+                titleFields.forEachIndexed { index, s ->
+                    queryEmpty = false
+                    if(index > 0)
+                        rQuery.or()
 
-                            rQuery.like(s, component.asLenientTitleQuery(), Case.INSENSITIVE)
-                        }
+                    rQuery.like(s, component.asLenientTitleQuery(), Case.INSENSITIVE)
+                }
 
                 //Match tags
                 matchTagList(null, component, false) //We already deal with exclusions here
@@ -89,7 +87,7 @@ class SearchEngine {
                 }
             }
         }
-        return rQuery.findAll()
+        return rQuery
     }
 
     fun parseQuery(query: String) = queryCache.getOrPut(query, {
