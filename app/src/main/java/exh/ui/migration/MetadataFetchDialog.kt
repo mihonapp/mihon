@@ -83,31 +83,36 @@ class MetadataFetchDialog {
         }
     }
 
-    fun askMigration(activity: Activity) {
+    fun askMigration(activity: Activity, explicit: Boolean) {
         var extra = ""
         db.getLibraryMangas().asRxSingle().subscribe {
-            //Not logged in but have ExHentai galleries
-            if(!preferenceHelper.enableExhentai().getOrDefault()) {
-                it.find { isExSource(it.source) }?.let {
-                    extra = "<b><font color='red'>If you use ExHentai, please log in first before fetching your library metadata!</font></b><br><br>"
+            if(!explicit && it.isEmpty()) {
+                //Do not open dialog on startup if no manga
+                preferenceHelper.migrateLibraryAsked2().set(true)
+            } else {
+                //Not logged in but have ExHentai galleries
+                if (!preferenceHelper.enableExhentai().getOrDefault()) {
+                    it.find { isExSource(it.source) }?.let {
+                        extra = "<b><font color='red'>If you use ExHentai, please log in first before fetching your library metadata!</font></b><br><br>"
+                    }
                 }
-            }
-            activity.runOnUiThread {
-                MaterialDialog.Builder(activity)
-                        .title("Fetch library metadata")
-                        .content(Html.fromHtml("You need to fetch your library's metadata before tag searching in the library will function.<br><br>" +
-                                "This process may take a long time depending on your library size and will also use up a significant amount of internet bandwidth.<br><br>" +
-                                extra +
-                                "This process can be done later if required."))
-                        .positiveText("Migrate")
-                        .negativeText("Later")
-                        .onPositive { _, _ -> show(activity) }
-                        .onNegative({ _, _ -> adviseMigrationLater(activity) })
-                        .cancelable(false)
-                        .canceledOnTouchOutside(false)
-                        .dismissListener {
-                            preferenceHelper.migrateLibraryAsked2().set(true)
-                        }.show()
+                activity.runOnUiThread {
+                    MaterialDialog.Builder(activity)
+                            .title("Fetch library metadata")
+                            .content(Html.fromHtml("You need to fetch your library's metadata before tag searching in the library will function.<br><br>" +
+                                    "This process may take a long time depending on your library size and will also use up a significant amount of internet bandwidth.<br><br>" +
+                                    extra +
+                                    "This process can be done later if required."))
+                            .positiveText("Migrate")
+                            .negativeText("Later")
+                            .onPositive { _, _ -> show(activity) }
+                            .onNegative({ _, _ -> adviseMigrationLater(activity) })
+                            .cancelable(false)
+                            .canceledOnTouchOutside(false)
+                            .dismissListener {
+                                preferenceHelper.migrateLibraryAsked2().set(true)
+                            }.show()
+                }
             }
         }
 

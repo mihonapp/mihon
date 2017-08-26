@@ -170,7 +170,7 @@ class MainActivity : BaseActivity() {
 
             // Migrate metadata to Realm (EH)
             if(!preferences.migrateLibraryAsked2().getOrDefault())
-                MetadataFetchDialog().askMigration(this)
+                MetadataFetchDialog().askMigration(this, false)
         }
     }
 

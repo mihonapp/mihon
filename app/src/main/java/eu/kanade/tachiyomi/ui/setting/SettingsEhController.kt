@@ -137,7 +137,7 @@ class SettingsEhController : SettingsController() {
 
                 onClick {
                     activity?.let {
-                        MetadataFetchDialog().askMigration(it)
+                        MetadataFetchDialog().askMigration(it, true)
                     }
                 }
             }
