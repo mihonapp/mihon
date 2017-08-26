@@ -7,7 +7,6 @@ import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.NHentaiMetadata
 import exh.metadata.models.PervEdenGalleryMetadata
 import exh.metadata.models.SearchableGalleryMetadata
-import exh.metadata.queryMetadataFromManga
 import exh.metadata.syncMangaIds
 import exh.search.SearchEngine
 import exh.util.defRealm

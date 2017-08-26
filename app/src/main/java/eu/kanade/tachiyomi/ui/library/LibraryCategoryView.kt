@@ -115,12 +115,6 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     fun onBind(category: Category) {
         this.category = category
 
-        // Cache Realm (EH)
-        realm?.close()
-        realm = Realm.getDefaultInstance()?.apply {
-            meta = loadAllMetadata()
-        }
-
         adapter.mode = if (controller.selectedMangas.isNotEmpty()) {
             FlexibleAdapter.MODE_MULTI
         } else {
