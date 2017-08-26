@@ -64,7 +64,6 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
     }
 
     fun performFilter() {
-        //TODO Wrap in try catch
         if(searchText.isNotBlank()) {
             try {
                 val parsedQuery = searchEngine.parseQuery(searchText)
