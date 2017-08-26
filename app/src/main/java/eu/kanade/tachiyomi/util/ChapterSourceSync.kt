@@ -37,7 +37,7 @@ fun syncChaptersWithSource(db: DatabaseHelper,
         }
     }
 
-    // Chapters from the db not in the source.
+    // Chapters from the source not in db.
     val toAdd = mutableListOf<Chapter>()
 
     // Chapters whose metadata have changed.
