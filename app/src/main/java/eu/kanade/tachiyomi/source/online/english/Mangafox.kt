@@ -61,7 +61,7 @@ class Mangafox : ParsedHttpSource() {
                 is Status -> url.addQueryParameter(filter.id, filter.state.toString())
                 is GenreList -> filter.state.forEach { genre -> url.addQueryParameter(genre.id, genre.state.toString()) }
                 is TextField -> url.addQueryParameter(filter.key, filter.state)
-                is Type -> url.addQueryParameter("type", if(filter.state == 0) "" else filter.state.toString())
+                is Type -> url.addQueryParameter("type", if (filter.state == 0) "" else filter.state.toString())
                 is OrderBy -> {
                     url.addQueryParameter("sort", arrayOf("name", "rating", "views", "total_chapters", "last_chapter_time")[filter.state!!.index])
                     url.addQueryParameter("order", if (filter.state?.ascending == true) "az" else "za")
@@ -89,13 +89,14 @@ class Mangafox : ParsedHttpSource() {
         val infoElement = document.select("div#title").first()
         val rowElement = infoElement.select("table > tbody > tr:eq(1)").first()
         val sideInfoElement = document.select("#series_info").first()
+        val licensedElement = document.select("div.warning").first()
 
         val manga = SManga.create()
         manga.author = rowElement.select("td:eq(1)").first()?.text()
         manga.artist = rowElement.select("td:eq(2)").first()?.text()
         manga.genre = rowElement.select("td:eq(3)").first()?.text()
         manga.description = infoElement.select("p.summary").first()?.text()
-        manga.status = sideInfoElement.select(".data").first()?.text().orEmpty().let { parseStatus(it) }
+        manga.status = licensedElement?.let { SManga.LICENSED } ?: sideInfoElement.select(".data").first()?.text().orEmpty().let { parseStatus(it) }
         manga.thumbnail_url = sideInfoElement.select("div.cover > img").first()?.attr("src")
         return manga
     }
@@ -113,7 +114,7 @@ class Mangafox : ParsedHttpSource() {
 
         val chapter = SChapter.create()
         chapter.setUrlWithoutDomain(urlElement.attr("href"))
-        chapter.name = urlElement.text()
+        chapter.name = element.select("span.title.nowrap").first()?.text()?.let { urlElement.text() + " - " + it } ?: urlElement.text()
         chapter.date_upload = element.select("span.date").first()?.text()?.let { parseChapterDate(it) } ?: 0
         return chapter
     }
@@ -169,6 +170,7 @@ class Mangafox : ParsedHttpSource() {
     private class OrderBy : Filter.Sort("Order by",
             arrayOf("Series name", "Rating", "Views", "Total chapters", "Last chapter"),
             Filter.Sort.Selection(2, false))
+
     private class GenreList(genres: List<Genre>) : Filter.Group<Genre>("Genres", genres)
 
     override fun getFilterList() = FilterList(

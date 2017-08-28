@@ -20,7 +20,7 @@ import java.util.*
 fun syncChaptersWithSource(db: DatabaseHelper,
                            rawSourceChapters: List<SChapter>,
                            manga: Manga,
-                           source: Source) : Pair<List<Chapter>, List<Chapter>> {
+                           source: Source): Pair<List<Chapter>, List<Chapter>> {
 
     if (rawSourceChapters.isEmpty()) {
         throw Exception("No chapters found")
@@ -121,4 +121,5 @@ fun syncChaptersWithSource(db: DatabaseHelper,
         db.fixChaptersSourceOrder(sourceChapters).executeAsBlocking()
     }
     return Pair(toAdd.subtract(readded).toList(), toDelete.subtract(readded).toList())
+
 }
