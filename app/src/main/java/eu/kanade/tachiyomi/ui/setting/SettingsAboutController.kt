@@ -22,6 +22,9 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import android.content.Intent
+import android.net.Uri
+
 
 class SettingsAboutController : SettingsController() {
 
@@ -64,6 +67,15 @@ class SettingsAboutController : SettingsController() {
                 }
             } else {
                 isVisible = false
+            }
+        }
+        preference {
+            title = "Discord"
+            val url = "https://discord.gg/WrBkRk4"
+            summary = url
+            onClick {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
             }
         }
         preference {
