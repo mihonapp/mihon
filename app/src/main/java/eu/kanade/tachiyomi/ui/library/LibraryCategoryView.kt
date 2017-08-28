@@ -16,14 +16,9 @@ import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import exh.metadata.loadAllMetadata
-import exh.metadata.models.SearchableGalleryMetadata
-import io.realm.Realm
-import io.realm.RealmResults
 import kotlinx.android.synthetic.main.library_category.view.*
 import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
-import kotlin.reflect.KClass
 
 /**
  * Fragment containing the library manga for a certain category.
@@ -41,7 +36,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     /**
      * The fragment containing this view.
      */
-    private lateinit var controller: LibraryController
+    lateinit var controller: LibraryController
 
     /**
      * Category for this view.
@@ -63,14 +58,6 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
      * Subscriptions while the view is bound.
      */
     private var subscriptions = CompositeSubscription()
-
-    // --> EH
-    // Cached Realm instance
-    var realm: Realm? = null
-
-    // Cached metadata (auto-updating)
-    var meta: Map<KClass<out SearchableGalleryMetadata>, RealmResults<out SearchableGalleryMetadata>>? = null
-    // <-- EH
 
     fun onCreate(controller: LibraryController) {
         this.controller = controller
@@ -139,22 +126,9 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         subscriptions.clear()
     }
 
-    override fun onAttachedToWindow() {
-        // --> EH
-        realm?.close()
-        realm = Realm.getDefaultInstance()?.apply {
-            meta = loadAllMetadata()
-        }
-        // <-- EH
-        super.onAttachedToWindow()
-    }
 
     override fun onDetachedFromWindow() {
         subscriptions.clear()
-        // --> EH
-        meta = null
-        realm?.close()
-        // <-- EH
         super.onDetachedFromWindow()
     }
 
@@ -270,5 +244,4 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         controller.setSelection(item.manga, !adapter.isSelected(position))
         controller.invalidateActionMode()
     }
-
 }

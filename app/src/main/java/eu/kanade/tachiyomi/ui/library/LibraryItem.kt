@@ -15,6 +15,10 @@ import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
 class LibraryItem(val manga: Manga) : AbstractFlexibleItem<LibraryHolder>(), IFilterable {
+    // Temp metadata holder EH
+    @Volatile
+    var hasMetadata: Boolean? = null
+
     override fun getLayoutRes(): Int {
         return R.layout.catalogue_grid_item
     }

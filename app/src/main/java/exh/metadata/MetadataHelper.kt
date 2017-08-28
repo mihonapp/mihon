@@ -2,6 +2,7 @@ package exh.metadata
 
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.ui.library.LibraryItem
 import exh.*
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.NHentaiMetadata
@@ -116,16 +117,18 @@ fun Realm.queryMetadataFromManga(manga: Manga,
         else -> throw IllegalArgumentException("Unknown source type!")
     }
 
-fun Realm.syncMangaIds(mangas: List<Manga>) {
+fun Realm.syncMangaIds(mangas: List<LibraryItem>) {
     Timber.d("--> EH: Begin syncing ${mangas.size} manga IDs...")
     executeTransaction {
         mangas.filter {
-            isLewdSource(it.source)
+            isLewdSource(it.manga.source)
         }.forEach { manga ->
             try {
-                queryMetadataFromManga(manga).findFirst()?.let { meta ->
-                    meta.mangaId = manga.id
-                }
+                manga.hasMetadata =
+                        queryMetadataFromManga(manga.manga).findFirst()?.let { meta ->
+                            meta.mangaId = manga.manga.id
+                            true
+                        } ?: false
             } catch(e: Exception) {
                 Timber.w(e, "Error syncing manga IDs! Ignoring...")
             }
@@ -133,3 +136,13 @@ fun Realm.syncMangaIds(mangas: List<Manga>) {
     }
     Timber.d("--> EH: Finish syncing ${mangas.size} manga IDs!")
 }
+
+val Manga.metadataClass
+    get() = when (source) {
+        EH_SOURCE_ID,
+        EXH_SOURCE_ID -> ExGalleryMetadata::class
+        PERV_EDEN_IT_SOURCE_ID,
+        PERV_EDEN_EN_SOURCE_ID -> PervEdenGalleryMetadata::class
+        NHENTAI_SOURCE_ID -> NHentaiMetadata::class
+        else -> null
+    }

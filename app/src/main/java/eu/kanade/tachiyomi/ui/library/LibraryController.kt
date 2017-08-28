@@ -36,6 +36,10 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
+import exh.metadata.loadAllMetadata
+import exh.metadata.models.SearchableGalleryMetadata
+import io.realm.Realm
+import io.realm.RealmResults
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.library_controller.view.*
 import rx.Subscription
@@ -45,6 +49,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KClass
 
 
 class LibraryController(
@@ -126,6 +131,13 @@ class LibraryController(
 
     private var tabsVisibilitySubscription: Subscription? = null
 
+    // --> EH
+    //Cached realm
+    var realm: Realm? = null
+    //Cached metadata
+    var meta: Map<KClass<out SearchableGalleryMetadata>, RealmResults<out SearchableGalleryMetadata>>? = null
+    // <-- EH
+
     init {
         setHasOptionsMenu(true)
     }
@@ -141,6 +153,16 @@ class LibraryController(
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         return inflater.inflate(R.layout.library_controller, container, false)
     }
+
+    // --> EH
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedViewState: Bundle?): View {
+        //Load realm
+        realm = Realm.getDefaultInstance()?.apply {
+            meta = loadAllMetadata()
+        }
+        return super.onCreateView(inflater, container, savedViewState)
+    }
+    // <-- EH
 
     override fun onViewCreated(view: View, savedViewState: Bundle?) {
         super.onViewCreated(view, savedViewState)
@@ -183,6 +205,12 @@ class LibraryController(
         actionMode = null
         tabsVisibilitySubscription?.unsubscribe()
         tabsVisibilitySubscription = null
+
+        // --> EH
+        //Clean up realm
+        realm?.close()
+        meta = null
+        // <-- EH
     }
 
     override fun createSecondaryDrawer(drawer: DrawerLayout): ViewGroup {

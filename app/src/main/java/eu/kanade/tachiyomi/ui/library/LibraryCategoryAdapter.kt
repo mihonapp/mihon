@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.library
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import exh.*
+import exh.metadata.metadataClass
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.NHentaiMetadata
 import exh.metadata.models.PervEdenGalleryMetadata
@@ -12,6 +13,7 @@ import exh.search.SearchEngine
 import exh.util.defRealm
 import io.realm.RealmResults
 import timber.log.Timber
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.concurrent.thread
 
 /**
@@ -42,11 +44,9 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
         // Sync manga IDs in background (EH)
         thread {
             //Wait 1s to reduce UI stutter during animations
-            Thread.sleep(1000)
+            Thread.sleep(2000)
             defRealm {
-                it.syncMangaIds(list.map {
-                    it.manga
-                })
+                it.syncMangaIds(mangas)
             }
         }
 
@@ -64,93 +64,103 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
 
     fun performFilter() {
         if(searchText.isNotBlank()) {
+            if(cacheText != searchText) {
+                globalSearchCache.clear()
+                cacheText = searchText
+            }
+
             try {
-                val parsedQuery = searchEngine.parseQuery(searchText)
-                val metadata = view.meta!!.map {
-                    val meta: RealmResults<out SearchableGalleryMetadata> = if (it.value.isNotEmpty())
-                        searchEngine.filterResults(it.value.where(),
-                                parsedQuery,
-                                it.value.first().titleFields)
-                                .findAllSorted(SearchableGalleryMetadata::mangaId.name)
-                    else
-                        it.value
-                    Pair(it.key, meta)
-                }.toMap()
-                // --> Possible data set compare algorithm?
-//            var curUnfilteredMetaIndex = 0
-//            var curFilteredMetaIndex = 0
-//            val res = mangas.sortedBy { it.manga.id }.filter { manga ->
-                val res = mangas.filter { manga ->
-                    // --> EH
-                    try {
-                        if (isLewdSource(manga.manga.source)) {
-                            val unfilteredMeta: RealmResults<out SearchableGalleryMetadata>?
-                            val filteredMeta: RealmResults<out SearchableGalleryMetadata>?
-                            when (manga.manga.source) {
-                                EH_SOURCE_ID,
-                                EXH_SOURCE_ID -> {
-                                    unfilteredMeta = view.meta!![ExGalleryMetadata::class]
-                                    filteredMeta = metadata[ExGalleryMetadata::class]
-                                }
-                                PERV_EDEN_IT_SOURCE_ID,
-                                PERV_EDEN_EN_SOURCE_ID -> {
-                                    unfilteredMeta = view.meta!![PervEdenGalleryMetadata::class]
-                                    filteredMeta = metadata[PervEdenGalleryMetadata::class]
-                                }
-                                NHENTAI_SOURCE_ID -> {
-                                    unfilteredMeta = view.meta!![NHentaiMetadata::class]
-                                    filteredMeta = metadata[NHentaiMetadata::class]
-                                }
-                                else -> {
-                                    unfilteredMeta = null
-                                    filteredMeta = null
+                val thisCache = globalSearchCache.getOrPut(view.category.name, {
+                    SearchCache(mangas.size)
+                })
+
+                if(thisCache.ready) {
+                    //Skip everything if cache matches our query exactly
+                    updateDataSet(mangas.filter {
+                        thisCache.cache[it.manga.id] ?: false
+                    })
+                } else {
+                    thisCache.cache.clear()
+
+                    val parsedQuery = searchEngine.parseQuery(searchText)
+                    var totalFilteredSize = 0
+
+                    val metadata = view.controller.meta!!.map {
+                        val meta: RealmResults<out SearchableGalleryMetadata> = if (it.value.isNotEmpty())
+                            searchEngine.filterResults(it.value.where(),
+                                    parsedQuery,
+                                    it.value.first().titleFields)
+                                    .findAllSorted(SearchableGalleryMetadata::mangaId.name).apply {
+                                totalFilteredSize += size
+                            }
+                        else
+                            it.value
+                        Pair(it.key, meta)
+                    }.toMap()
+
+                    val out = ArrayList<LibraryItem>(mangas.size)
+
+                    var lewdMatches = 0
+
+                    for(manga in mangas) {
+                        // --> EH
+                        try {
+                            if (isLewdSource(manga.manga.source)) {
+                                //Stop matching lewd manga if we have matched them all already!
+                                if (lewdMatches >= totalFilteredSize)
+                                    continue
+
+                                val metaClass = manga.manga.metadataClass
+                                val unfilteredMeta = view.controller.meta!![metaClass]
+                                val filteredMeta = metadata[metaClass]
+
+                                val hasMeta = manga.hasMetadata ?: (unfilteredMeta
+                                        ?.where()
+                                        ?.equalTo(SearchableGalleryMetadata::mangaId.name, manga.manga.id)
+                                        ?.count() ?: 0 > 0)
+
+                                if (hasMeta) {
+                                    if (filteredMeta!!.where()
+                                            .equalTo(SearchableGalleryMetadata::mangaId.name, manga.manga.id)
+                                            .count() > 0) {
+                                        //Metadata match!
+                                        lewdMatches++
+                                        thisCache.cache[manga.manga.id!!] = true
+                                        out += manga
+                                        continue
+                                    }
                                 }
                             }
-
-                            /*
-                    --> Possible data set compare algorithm?
-
-                    var atUnfilteredMeta = unfilteredMeta?.getOrNull(curUnfilteredMetaIndex)
-
-                    while(atUnfilteredMeta?.mangaId != null
-                            && atUnfilteredMeta.mangaId!! < manga.manga.id!!) {
-                        curUnfilteredMetaIndex++
-                        atUnfilteredMeta = unfilteredMeta?.getOrNull(curUnfilteredMetaIndex)
-                    }
-
-                    if(atUnfilteredMeta?.mangaId == manga.manga.id) {
-                        var atFilteredMeta = filteredMeta?.getOrNull(curFilteredMetaIndex)
-                        while(atFilteredMeta?.mangaId != null
-                                && atFilteredMeta.mangaId!! < manga.manga.id!!) {
-                            curFilteredMetaIndex++
-                            atFilteredMeta = filteredMeta?.getOrNull(curFilteredMetaIndex)
+                        } catch (e: Exception) {
+                            Timber.w(e, "Could not filter manga!", manga.manga)
                         }
 
-                        return@filter atFilteredMeta?.mangaId == manga.manga.id
-                    }*/
-                            val hasMeta = unfilteredMeta
-                                    ?.where()
-                                    ?.equalTo(SearchableGalleryMetadata::mangaId.name, manga.manga.id)
-                                    ?.count() ?: 0 > 0
-                            if (hasMeta)
-                                return@filter filteredMeta!!.where()
-                                        .equalTo(SearchableGalleryMetadata::mangaId.name, manga.manga.id)
-                                        .count() > 0
-                        }
-                    } catch(e: Exception) {
-                        Timber.w(e, "Could not filter manga!", manga.manga)
+                        //Fallback to regular filter
+                        val filterRes = manga.filter(searchText)
+                        thisCache.cache[manga.manga.id!!] = filterRes
+                        if(filterRes) out += manga
+                        // <-- EH
                     }
-                    manga.filter(searchText)
-                    // <-- EH
+                    thisCache.ready = true
+                    updateDataSet(out)
                 }
-                updateDataSet(res)
             } catch(e: Exception) {
                 Timber.w(e, "Could not filter mangas!")
                 updateDataSet(mangas)
             }
         } else {
+            globalSearchCache.clear()
             updateDataSet(mangas)
         }
     }
 
+    class SearchCache(size: Int) {
+        var ready = false
+        var cache = HashMap<Long, Boolean>(size)
+    }
+
+    companion object {
+        var cacheText: String? = null
+        val globalSearchCache = ConcurrentHashMap<String, SearchCache>()
+    }
 }
