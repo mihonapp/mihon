@@ -228,6 +228,7 @@ open class CatalogueController(bundle: Bundle? = null) :
 
         val recycler = if (presenter.isListMode) {
             RecyclerView(view.context).apply {
+                id = R.id.recycler
                 layoutManager = LinearLayoutManager(context)
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             }
