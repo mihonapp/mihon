@@ -61,7 +61,6 @@ public class NucleusConductorDelegate<P extends Presenter> {
     void onDestroy() {
         if (presenter != null) {
             presenter.destroy();
-            presenter = null;
         }
     }
 }
