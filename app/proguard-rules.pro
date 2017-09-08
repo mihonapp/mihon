@@ -10,6 +10,9 @@
 # Extensions may require methods unused in the core app
 -keep class org.jsoup.** { *; }
 -keep class kotlin.** { *; }
+-keep class okhttp3.** { *; }
+-keep class com.google.gson.** { *; }
+-keep class com.github.salomonbrys.kotson.** { *; }
 
 # OkHttp
 -dontwarn okhttp3.**
