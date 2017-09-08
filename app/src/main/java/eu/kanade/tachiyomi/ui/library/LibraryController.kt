@@ -36,8 +36,8 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.library_controller.view.*
+import kotlinx.android.synthetic.main.main_activity.*
 import rx.Subscription
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
@@ -189,11 +189,7 @@ class LibraryController(
             drawer.addDrawerListener(it)
         }
         navView = view
-
-        navView?.post {
-            if (isAttached && drawer.isDrawerOpen(navView))
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, navView)
-        }
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
 
         navView?.onGroupClicked = { group ->
             when (group) {

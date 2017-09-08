@@ -187,10 +187,7 @@ open class CatalogueController(bundle: Bundle? = null) :
         }
         navView.setFilters(presenter.filterItems)
 
-        navView.post {
-            if (isAttached && !drawer.isDrawerOpen(navView))
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, navView)
-        }
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
 
         navView.onSearchClicked = {
             val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
