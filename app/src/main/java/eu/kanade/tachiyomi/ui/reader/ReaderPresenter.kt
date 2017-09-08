@@ -327,9 +327,10 @@ class ReaderPresenter(
     fun retryPage(page: Page?) {
         if (page != null && source is HttpSource) {
             page.status = Page.QUEUE
-            val uri = page.uri
-            if (uri != null && !page.chapter.isDownloaded) {
-                chapterCache.removeFileFromCache(uri.encodedPath.substringAfterLast('/'))
+            val imageUrl = page.imageUrl
+            if (imageUrl != null && !page.chapter.isDownloaded) {
+                val key = DiskUtil.hashKeyForDisk(page.url)
+                chapterCache.removeFileFromCache(key)
             }
             loader.retryPage(page)
         }
