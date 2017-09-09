@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.6.2" changeDate="">
+        <changelogtext>Added a new completed manga filter for the library.</changelogtext>
+
+        <changelogtext>Added scanlator to chapters (if supported by source).</changelogtext>
+
+        <changelogtext>Added Discord server link.</changelogtext>
+
+        <changelogtext>Added new translations.</changelogtext>
+
+        <changelogtext>Extensions shouldn't crash the app anymore.</changelogtext>
+
+        <changelogtext>Crop borders is supported in webtoon reader and fixed in Android O.</changelogtext>
+
+        <changelogtext>Fixed a bug where storage permissions were always requested.</changelogtext>
+
+        <changelogtext>Minor UI and crash fixes.</changelogtext>
+    </changelogversion>
 
     <changelogversion versionName="v0.6.1" changeDate="">
         <changelogtext>Bugfix release.</changelogtext>
