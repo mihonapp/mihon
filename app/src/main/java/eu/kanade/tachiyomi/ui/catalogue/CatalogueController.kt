@@ -331,6 +331,11 @@ open class CatalogueController(bundle: Bundle? = null) :
         if (query == newQuery)
             return
 
+        // FIXME dirty fix to restore the toolbar buttons after closing search mode.
+        if (newQuery == "") {
+            activity?.invalidateOptionsMenu()
+        }
+
         showProgressBar()
         adapter?.clear()
 
