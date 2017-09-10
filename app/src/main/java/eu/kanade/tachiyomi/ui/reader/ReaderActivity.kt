@@ -27,10 +27,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonReader
-import eu.kanade.tachiyomi.util.GLUtil
-import eu.kanade.tachiyomi.util.SharedData
-import eu.kanade.tachiyomi.util.plusAssign
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.*
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import kotlinx.android.synthetic.main.reader_activity.*
@@ -42,6 +39,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
+import java.io.File
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
@@ -572,8 +570,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         if (page.status != Page.READY)
             return
 
+        var uri = page.uri ?: return
+        if (uri.toString().startsWith("file://")) {
+            uri = File(uri.toString().substringAfter("file://")).getUriCompat(this)
+        }
         val intent = Intent(Intent.ACTION_SEND).apply {
-            putExtra(Intent.EXTRA_STREAM, page.uri)
+            putExtra(Intent.EXTRA_STREAM, uri)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
             type = "image/*"
         }

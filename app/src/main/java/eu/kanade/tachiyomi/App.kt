@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
-import android.os.StrictMode
 import android.support.multidex.MultiDex
 import com.evernote.android.job.JobManager
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
@@ -32,9 +31,6 @@ open class App : Application() {
         Injekt.importModule(AppModule(this))
 
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-
-        // Disable file uri exposure detection
-        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().build())
 
         setupAcra()
         setupJobManager()
