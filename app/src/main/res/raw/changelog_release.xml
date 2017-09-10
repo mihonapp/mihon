@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.6.3" changeDate="">
+        <changelogtext>Fixed a crash when retrying a page.</changelogtext>
+
+        <changelogtext>Fixed a crash when sharing an image.</changelogtext>
+
+        <changelogtext>Fixed disappearing toolbar buttons in the catalog after a search.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.6.2" changeDate="">
         <changelogtext>Added a new completed manga filter for the library.</changelogtext>
 
