@@ -4,24 +4,20 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.*
 import android.view.*
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.f2prateek.rx.preferences.Preference
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
-import com.jakewharton.rxbinding.widget.itemSelections
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
@@ -43,13 +39,17 @@ import java.util.concurrent.TimeUnit
 /**
  * Controller to manage the catalogues available in the app.
  */
-open class CatalogueController(bundle: Bundle? = null) :
+open class CatalogueController(bundle: Bundle) :
         NucleusController<CataloguePresenter>(bundle),
         SecondaryDrawerController,
         FlexibleAdapter.OnItemClickListener,
         FlexibleAdapter.OnItemLongClickListener,
         FlexibleAdapter.EndlessScrollListener<ProgressItem>,
         ChangeMangaCategoriesDialog.Listener {
+
+    constructor(source: CatalogueSource) : this(Bundle().apply {
+        putLong(SOURCE_ID_KEY, source.id)
+    })
 
     /**
      * Preferences helper.
@@ -60,11 +60,6 @@ open class CatalogueController(bundle: Bundle? = null) :
      * Adapter containing the list of manga from the catalogue.
      */
     private var adapter: FlexibleAdapter<IFlexible<*>>? = null
-
-    /**
-     * Spinner shown in the toolbar to change the selected source.
-     */
-    private var spinner: Spinner? = null
 
     /**
      * Snackbar containing an error message when a request fails.
@@ -81,26 +76,24 @@ open class CatalogueController(bundle: Bundle? = null) :
      */
     private var recycler: RecyclerView? = null
 
+    /**
+     * Drawer listener to allow swipe only for closing the drawer.
+     */
     private var drawerListener: DrawerLayout.DrawerListener? = null
-
-    /**
-     * Query of the search box.
-     */
-    private val query: String
-        get() = presenter.query
-
-    /**
-     * Selected index of the spinner (selected source).
-     */
-    private var selectedIndex: Int = 0
 
     /**
      * Subscription for the search view.
      */
     private var searchViewSubscription: Subscription? = null
 
+    /**
+     * Subscription for the number of manga per row.
+     */
     private var numColumnsSubscription: Subscription? = null
 
+    /**
+     * Endless loading item.
+     */
     private var progressItem: ProgressItem? = null
 
     init {
@@ -108,11 +101,11 @@ open class CatalogueController(bundle: Bundle? = null) :
     }
 
     override fun getTitle(): String? {
-        return ""
+        return presenter.source.toString()
     }
 
     override fun createPresenter(): CataloguePresenter {
-        return CataloguePresenter()
+        return CataloguePresenter(args.getLong(SOURCE_ID_KEY))
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -126,54 +119,18 @@ open class CatalogueController(bundle: Bundle? = null) :
         adapter = FlexibleAdapter(null, this)
         setupRecycler(view)
 
-        // Create toolbar spinner
-        val themedContext = (activity as AppCompatActivity).supportActionBar?.themedContext
-                ?: activity
-
-        val spinnerAdapter = ArrayAdapter(themedContext,
-                android.R.layout.simple_spinner_item, presenter.sources)
-        spinnerAdapter.setDropDownViewResource(R.layout.common_spinner_item)
-
-        val onItemSelected: (Int) -> Unit = { position ->
-            val source = spinnerAdapter.getItem(position)
-            if (!presenter.isValidSource(source)) {
-                spinner?.setSelection(selectedIndex)
-                activity?.toast(R.string.source_requires_login)
-            } else if (source != presenter.source) {
-                selectedIndex = position
-                showProgressBar()
-                adapter?.clear()
-                presenter.setActiveSource(source)
-                navView?.setFilters(presenter.filterItems)
-                activity?.invalidateOptionsMenu()
-            }
-        }
-
-        selectedIndex = presenter.sources.indexOf(presenter.source)
-
-        spinner = Spinner(themedContext).apply {
-            adapter = spinnerAdapter
-            setSelection(selectedIndex)
-            itemSelections()
-                    .skip(1)
-                    .filter { it != AdapterView.INVALID_POSITION }
-                    .subscribeUntilDestroy { onItemSelected(it) }
-        }
-
-        activity?.toolbar?.addView(spinner)
+        navView?.setFilters(presenter.filterItems)
 
         view.progress?.visible()
     }
 
     override fun onDestroyView(view: View) {
         super.onDestroyView(view)
-        activity?.toolbar?.removeView(spinner)
         numColumnsSubscription?.unsubscribe()
         numColumnsSubscription = null
         searchViewSubscription?.unsubscribe()
         searchViewSubscription = null
         adapter = null
-        spinner = null
         snack = null
         recycler = null
     }
@@ -265,6 +222,7 @@ open class CatalogueController(bundle: Bundle? = null) :
         menu.findItem(R.id.action_search).apply {
             val searchView = actionView as SearchView
 
+            val query = presenter.query
             if (!query.isBlank()) {
                 expandActionView()
                 searchView.setQuery(query, true)
@@ -328,7 +286,7 @@ open class CatalogueController(bundle: Bundle? = null) :
      */
     private fun searchWithQuery(newQuery: String) {
         // If text didn't change, do nothing
-        if (query == newQuery)
+        if (presenter.query == newQuery)
             return
 
         // FIXME dirty fix to restore the toolbar buttons after closing search mode.
@@ -447,9 +405,9 @@ open class CatalogueController(bundle: Bundle? = null) :
      */
     fun getColumnsPreferenceForCurrentOrientation(): Preference<Int> {
         return if (resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT)
-            presenter.prefs.portraitColumns()
+            preferences.portraitColumns()
         else
-            presenter.prefs.landscapeColumns()
+            preferences.landscapeColumns()
     }
 
     /**
@@ -556,6 +514,10 @@ open class CatalogueController(bundle: Bundle? = null) :
     override fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>) {
         val manga = mangas.firstOrNull() ?: return
         presenter.updateMangaCategories(manga, categories)
+    }
+
+    protected companion object {
+        const val SOURCE_ID_KEY = "sourceId"
     }
 
 }

@@ -105,7 +105,7 @@ val Context.powerManager: PowerManager
  *
  * @param intent intent that contains broadcast information
  */
-fun Context.sendLocalBroadcast(intent:Intent){
+fun Context.sendLocalBroadcast(intent: Intent) {
     LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 }
 

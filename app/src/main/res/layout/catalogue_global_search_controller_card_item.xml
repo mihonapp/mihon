@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectable_list_drawable"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingEnd="4dp"
+    android:paddingStart="4dp"
+    android:paddingTop="8dp">
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/itemImage"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
+        android:paddingBottom="8dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        tools:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TextAppearance.Regular.Caption"
+        android:layout_width="104dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemImage"
+        tools:text="Sample title" />
+
+</android.support.constraint.ConstraintLayout>

@@ -5,6 +5,6 @@
     <item android:drawable="@color/rippleColorLight" android:state_focused="true"/>
     <item android:drawable="@color/rippleColorLight" android:state_pressed="true"/>
     <item android:drawable="@color/rippleColorLight" android:state_activated="true"/>
-    <item android:drawable="@color/dialogLight"/>
+    <item android:drawable="@android:color/transparent"/>
 
 </selector>
