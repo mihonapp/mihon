@@ -34,10 +34,8 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is TextItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as TextItem).filter
     }
 
     override fun hashCode(): Int {
@@ -46,7 +44,7 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
 
-        val wrapper  = itemView.findViewById(R.id.nav_view_item_wrapper) as TextInputLayout
-        val edit = itemView.findViewById(R.id.nav_view_item) as EditText
+        val wrapper: TextInputLayout = itemView.findViewById(R.id.nav_view_item_wrapper)
+        val edit: EditText = itemView.findViewById(R.id.nav_view_item)
     }
 }

@@ -51,10 +51,8 @@ open class TriStateItem(val filter: Filter.TriState) : AbstractFlexibleItem<TriS
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is TriStateItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as TriStateItem).filter
     }
 
     override fun hashCode(): Int {
@@ -63,7 +61,7 @@ open class TriStateItem(val filter: Filter.TriState) : AbstractFlexibleItem<TriS
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
 
-        val text = itemView.findViewById(TR.id.nav_view_item) as CheckedTextView
+        val text: CheckedTextView = itemView.findViewById(TR.id.nav_view_item)
 
         init {
             // Align with native checkbox

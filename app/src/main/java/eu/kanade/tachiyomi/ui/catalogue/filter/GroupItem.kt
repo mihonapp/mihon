@@ -34,10 +34,8 @@ class GroupItem(val filter: Filter.Group<*>) : AbstractExpandableHeaderItem<Grou
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is GroupItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as GroupItem).filter
     }
 
     override fun hashCode(): Int {
@@ -46,8 +44,8 @@ class GroupItem(val filter: Filter.Group<*>) : AbstractExpandableHeaderItem<Grou
 
     open class Holder(view: View, adapter: FlexibleAdapter<*>) : ExpandableViewHolder(view, adapter, true) {
 
-        val title = itemView.findViewById(R.id.title) as TextView
-        val icon = itemView.findViewById(R.id.expand_icon) as ImageView
+        val title: TextView = itemView.findViewById(R.id.title)
+        val icon: ImageView = itemView.findViewById(R.id.expand_icon)
 
         override fun shouldNotifyParentOnClick(): Boolean {
             return true

@@ -40,10 +40,8 @@ open class SelectItem(val filter: Filter.Select<*>) : AbstractFlexibleItem<Selec
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is SelectItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as SelectItem).filter
     }
 
     override fun hashCode(): Int {
@@ -52,7 +50,7 @@ open class SelectItem(val filter: Filter.Select<*>) : AbstractFlexibleItem<Selec
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
 
-        val text = itemView.findViewById(R.id.nav_view_item_text) as TextView
-        val spinner = itemView.findViewById(R.id.nav_view_item) as Spinner
+        val text: TextView = itemView.findViewById(R.id.nav_view_item_text)
+        val spinner: Spinner = itemView.findViewById(R.id.nav_view_item)
     }
 }

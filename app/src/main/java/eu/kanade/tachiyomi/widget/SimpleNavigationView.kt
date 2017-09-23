@@ -104,7 +104,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
     class RadioHolder(parent: ViewGroup, listener: View.OnClickListener?)
         : ClickableHolder(parent.inflate(TR.layout.navigation_view_radio), listener) {
 
-        val radio = itemView.findViewById(TR.id.nav_view_item) as RadioButton
+        val radio: RadioButton = itemView.findViewById(TR.id.nav_view_item)
     }
 
     /**
@@ -113,7 +113,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
     class CheckboxHolder(parent: ViewGroup, listener: View.OnClickListener?)
         : ClickableHolder(parent.inflate(TR.layout.navigation_view_checkbox), listener) {
 
-        val check = itemView.findViewById(TR.id.nav_view_item) as CheckBox
+        val check: CheckBox = itemView.findViewById(TR.id.nav_view_item)
     }
 
     /**
@@ -122,21 +122,21 @@ open class SimpleNavigationView @JvmOverloads constructor(
     class MultiStateHolder(parent: ViewGroup, listener: View.OnClickListener?)
         : ClickableHolder(parent.inflate(TR.layout.navigation_view_checkedtext), listener) {
 
-        val text = itemView.findViewById(TR.id.nav_view_item) as CheckedTextView
+        val text: CheckedTextView = itemView.findViewById(TR.id.nav_view_item)
     }
 
     class SpinnerHolder(parent: ViewGroup, listener: OnClickListener? = null)
         : ClickableHolder(parent.inflate(TR.layout.navigation_view_spinner), listener) {
 
-        val text = itemView.findViewById(TR.id.nav_view_item_text) as TextView
-        val spinner = itemView.findViewById(TR.id.nav_view_item) as Spinner
+        val text: TextView = itemView.findViewById(TR.id.nav_view_item_text)
+        val spinner: Spinner = itemView.findViewById(TR.id.nav_view_item)
     }
 
     class EditTextHolder(parent: ViewGroup)
         : Holder(parent.inflate(TR.layout.navigation_view_text)) {
 
-        val wrapper  = itemView.findViewById(TR.id.nav_view_item_wrapper) as TextInputLayout
-        val edit = itemView.findViewById(TR.id.nav_view_item) as EditText
+        val wrapper: TextInputLayout = itemView.findViewById(TR.id.nav_view_item_wrapper)
+        val edit: EditText = itemView.findViewById(TR.id.nav_view_item)
     }
 
     protected companion object {

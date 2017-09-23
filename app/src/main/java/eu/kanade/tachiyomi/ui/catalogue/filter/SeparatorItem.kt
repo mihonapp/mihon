@@ -27,10 +27,8 @@ class SeparatorItem(val filter: Filter.Separator) : AbstractHeaderItem<Separator
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is SeparatorItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as SeparatorItem).filter
     }
 
     override fun hashCode(): Int {

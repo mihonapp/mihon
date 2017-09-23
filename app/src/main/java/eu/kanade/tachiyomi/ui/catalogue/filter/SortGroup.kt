@@ -32,10 +32,8 @@ class SortGroup(val filter: Filter.Sort) : AbstractExpandableHeaderItem<SortGrou
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is SortGroup) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as SortGroup).filter
     }
 
     override fun hashCode(): Int {

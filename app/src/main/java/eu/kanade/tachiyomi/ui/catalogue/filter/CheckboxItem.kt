@@ -32,10 +32,8 @@ open class CheckboxItem(val filter: Filter.CheckBox) : AbstractFlexibleItem<Chec
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is CheckboxItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as CheckboxItem).filter
     }
 
     override fun hashCode(): Int {
@@ -44,6 +42,6 @@ open class CheckboxItem(val filter: Filter.CheckBox) : AbstractFlexibleItem<Chec
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
 
-        val check = itemView.findViewById(R.id.nav_view_item) as CheckBox
+        val check: CheckBox = itemView.findViewById(R.id.nav_view_item)
     }
 }

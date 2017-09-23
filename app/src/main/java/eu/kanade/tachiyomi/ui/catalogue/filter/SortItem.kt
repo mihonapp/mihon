@@ -54,10 +54,9 @@ class SortItem(val name: String, val group: SortGroup) : AbstractSectionableItem
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is SortItem) {
-            return name == other.name && group == other.group
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        other as SortItem
+        return name == other.name && group == other.group
     }
 
     override fun hashCode(): Int {
@@ -68,7 +67,7 @@ class SortItem(val name: String, val group: SortGroup) : AbstractSectionableItem
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
 
-        val text = itemView.findViewById(R.id.nav_view_item) as CheckedTextView
+        val text: CheckedTextView = itemView.findViewById(R.id.nav_view_item)
     }
 
 }

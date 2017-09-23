@@ -29,10 +29,8 @@ class HeaderItem(val filter: Filter.Header) : AbstractHeaderItem<HeaderItem.Hold
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is HeaderItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as HeaderItem).filter
     }
 
     override fun hashCode(): Int {

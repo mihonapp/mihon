@@ -41,7 +41,7 @@ class DateItem(val date: Date) : AbstractHeaderItem<DateItem.Holder>() {
 
         private val now = Date().time
 
-        val section_text = view.findViewById(R.id.section_text) as TextView
+        val section_text: TextView = view.findViewById(R.id.section_text)
 
         fun bind(item: DateItem) {
             section_text.text = DateUtils.getRelativeTimeSpanString(item.date.time, now, DateUtils.DAY_IN_MILLIS)
