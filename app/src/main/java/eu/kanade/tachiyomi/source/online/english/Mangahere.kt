@@ -7,9 +7,13 @@ import okhttp3.HttpUrl
 import okhttp3.Request
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
 
 class Mangahere : ParsedHttpSource() {
 
@@ -22,6 +26,26 @@ class Mangahere : ParsedHttpSource() {
     override val lang = "en"
 
     override val supportsLatest = true
+
+    private val trustManager = object : X509TrustManager {
+        override fun getAcceptedIssuers(): Array<X509Certificate> {
+            return emptyArray()
+        }
+
+        override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+        }
+
+        override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+        }
+    }
+
+    private val sslContext = SSLContext.getInstance("SSL").apply {
+        init(null, arrayOf(trustManager), SecureRandom())
+    }
+
+    override val client = super.client.newBuilder()
+            .sslSocketFactory(sslContext.socketFactory, trustManager)
+            .build()
 
     override fun popularMangaSelector() = "div.directory_list > ul > li"
 
