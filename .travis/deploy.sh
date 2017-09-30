@@ -12,4 +12,4 @@ fi
 export SSHOPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${DEPLOY_KEY}"
 
 scp $SSHOPTIONS $ARTIFACT $DEPLOY_USER@$DEPLOY_HOST:builds/
-ssh $SSHOPTIONS $DEPLOY_USER@$DEPLOY_HOST ln -sf builds/$ARTIFACT builds/latest
+ssh $SSHOPTIONS $DEPLOY_USER@$DEPLOY_HOST ln -sf $ARTIFACT builds/latest
