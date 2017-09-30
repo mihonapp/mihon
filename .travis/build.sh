@@ -1,9 +1,10 @@
 #!/bin/bash
 
+git fetch --unshallow #required for commit count
+
 if [ -z "$TRAVIS_TAG" ]; then
     ./gradlew clean buildStandardDebug
 
-    git fetch --unshallow #required for commit count
     COMMIT_COUNT=$(git rev-list --count HEAD)
     export ARTIFACT="tachiyomi-r${COMMIT_COUNT}.apk"
 
