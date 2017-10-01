@@ -11,9 +11,9 @@ android:
   - android-sdk-license-.+
 before_install:
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-    openssl aes-256-cbc -K $encrypted_e56be693d4fd_key -iv $encrypted_e56be693d4fd_iv -in "$PWD/.travis/secrets.tar.enc" -out secrets.tar -d
-    tar xf secrets.tar
-    mv debug.keystore "$HOME/.android"
+    openssl aes-256-cbc -K $encrypted_e56be693d4fd_key -iv $encrypted_e56be693d4fd_iv -in "$PWD/.travis/secrets.tar.enc" -out secrets.tar -d;
+    tar xf secrets.tar;
+    mv debug.keystore "$HOME/.android";
   fi
 - git clone https://github.com/urho3d/android-ndk.git $HOME/android-ndk-root
 - export ANDROID_NDK_HOME=$HOME/android-ndk-root
