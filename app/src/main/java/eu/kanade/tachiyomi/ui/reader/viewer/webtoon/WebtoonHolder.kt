@@ -150,7 +150,11 @@ class WebtoonHolder(private val view: View, private val adapter: WebtoonAdapter)
                 .onBackpressureLatest()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { progress ->
-                    view.progress_text.text = view.context.getString(R.string.download_progress, progress)
+                    view.progress_text.text = if (progress > 0) {
+                        view.context.getString(R.string.download_progress, progress)
+                    } else {
+                        view.context.getString(R.string.downloading)
+                    }
                 }
 
         addSubscription(progressSubscription)

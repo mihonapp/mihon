@@ -130,7 +130,11 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 .onBackpressureLatest()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { progress ->
-                    progress_text.text = context.getString(R.string.download_progress, progress)
+                    progress_text.text = if (progress > 0) {
+                        context.getString(R.string.download_progress, progress)
+                    } else {
+                        context.getString(R.string.downloading)
+                    }
                 }
     }
 
