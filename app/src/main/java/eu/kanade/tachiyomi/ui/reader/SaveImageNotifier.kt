@@ -5,10 +5,10 @@ import android.graphics.Bitmap
 import android.support.v4.app.NotificationCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.notificationManager
 import java.io.File
 
@@ -19,13 +19,13 @@ class SaveImageNotifier(private val context: Context) {
     /**
      * Notification builder.
      */
-    private val notificationBuilder = NotificationCompat.Builder(context)
+    private val notificationBuilder = NotificationCompat.Builder(context, Notifications.CHANNEL_COMMON)
 
     /**
      * Id of the notification.
      */
     private val notificationId: Int
-        get() = Constants.NOTIFICATION_DOWNLOAD_IMAGE_ID
+        get() = Notifications.ID_DOWNLOAD_IMAGE
 
     /**
      * Called when image download/copy is complete. This method must be called in a background

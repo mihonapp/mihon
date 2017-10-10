@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.support.v4.app.NotificationCompat
-import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -20,6 +19,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Companion.start
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -80,7 +80,7 @@ class LibraryUpdateService(
     /**
      * Cached progress notification to avoid creating a lot.
      */
-    private val progressNotification by lazy { NotificationCompat.Builder(this)
+    private val progressNotification by lazy { NotificationCompat.Builder(this, Notifications.CHANNEL_LIBRARY)
             .setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             .setLargeIcon(notificationBitmap)
             .setOngoing(true)
@@ -417,7 +417,7 @@ class LibraryUpdateService(
      * @param total the total progress.
      */
     private fun showProgressNotification(manga: Manga, current: Int, total: Int) {
-        notificationManager.notify(Constants.NOTIFICATION_LIBRARY_PROGRESS_ID, progressNotification
+        notificationManager.notify(Notifications.ID_LIBRARY_PROGRESS, progressNotification
                 .setContentTitle(manga.title)
                 .setProgress(total, current, false)
                 .build())
@@ -434,7 +434,7 @@ class LibraryUpdateService(
         // Append new chapters from a previous, existing notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val previousNotification = notificationManager.activeNotifications
-                    .find { it.id == Constants.NOTIFICATION_LIBRARY_RESULT_ID }
+                    .find { it.id == Notifications.ID_LIBRARY_RESULT }
 
             if (previousNotification != null) {
                 val oldUpdates = previousNotification.notification.extras
@@ -446,7 +446,7 @@ class LibraryUpdateService(
             }
         }
 
-        notificationManager.notify(Constants.NOTIFICATION_LIBRARY_RESULT_ID, notification {
+        notificationManager.notify(Notifications.ID_LIBRARY_RESULT, notification(Notifications.CHANNEL_LIBRARY) {
             setSmallIcon(R.drawable.ic_book_white_24dp)
             setLargeIcon(notificationBitmap)
             setContentTitle(getString(R.string.notification_new_chapters))
@@ -466,7 +466,7 @@ class LibraryUpdateService(
      * Cancels the progress notification.
      */
     private fun cancelProgressNotification() {
-        notificationManager.cancel(Constants.NOTIFICATION_LIBRARY_PROGRESS_ID)
+        notificationManager.cancel(Notifications.ID_LIBRARY_PROGRESS)
     }
 
     /**

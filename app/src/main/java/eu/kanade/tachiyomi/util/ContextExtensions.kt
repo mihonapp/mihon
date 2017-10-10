@@ -40,11 +40,12 @@ fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
 /**
  * Helper method to create a notification.
  *
+ * @param id the channel id.
  * @param func the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
  */
-inline fun Context.notification(func: NotificationCompat.Builder.() -> Unit): Notification {
-    val builder = NotificationCompat.Builder(this)
+inline fun Context.notification(channelId: String, func: NotificationCompat.Builder.() -> Unit): Notification {
+    val builder = NotificationCompat.Builder(this, channelId)
     builder.func()
     return builder.build()
 }

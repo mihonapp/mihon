@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex
 import com.evernote.android.job.JobManager
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
 import eu.kanade.tachiyomi.util.LocaleHelper
 import org.acra.ACRA
@@ -34,6 +35,7 @@ open class App : Application() {
 
         setupAcra()
         setupJobManager()
+        setupNotificationChannels()
 
         LocaleHelper.updateConfiguration(this, resources.configuration)
     }
@@ -63,6 +65,10 @@ open class App : Application() {
                 else -> null
             }
         }
+    }
+
+    protected open fun setupNotificationChannels() {
+        Notifications.createChannels(this)
     }
 
 }
