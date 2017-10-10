@@ -1,14 +1,18 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
+import android.support.v4.content.pm.ShortcutInfoCompat
+import android.support.v4.content.pm.ShortcutManagerCompat
+import android.support.v4.graphics.drawable.IconCompat
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.BitmapRequestBuilder
-import com.bumptech.glide.BitmapTypeRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -17,6 +21,7 @@ import com.jakewharton.rxbinding.view.clicks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
@@ -181,7 +186,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     /**
      * Toggles the favorite status and asks for confirmation to delete downloaded chapters.
      */
-    fun toggleFavorite() {
+    private fun toggleFavorite() {
         val view = view
 
         val isNowFavorite = presenter.toggleFavorite()
@@ -197,7 +202,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     /**
      * Open the manga in browser.
      */
-    fun openInBrowser() {
+    private fun openInBrowser() {
         val context = view?.context ?: return
         val source = presenter.source as? HttpSource ?: return
 
@@ -288,18 +293,19 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         if (manga.favorite) {
             val categories = presenter.getCategories()
             val defaultCategory = categories.find { it.id == preferences.defaultCategory() }
-            if (defaultCategory != null) {
-                presenter.moveMangaToCategory(manga, defaultCategory)
-            } else if (categories.size <= 1) { // default or the one from the user
-                presenter.moveMangaToCategory(manga, categories.firstOrNull())
-            } else {
-                val ids = presenter.getMangaCategoryIds(manga)
-                val preselected = ids.mapNotNull { id ->
-                    categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
-                }.toTypedArray()
+            when {
+                defaultCategory != null -> presenter.moveMangaToCategory(manga, defaultCategory)
+                categories.size <= 1 -> // default or the one from the user
+                    presenter.moveMangaToCategory(manga, categories.firstOrNull())
+                else -> {
+                    val ids = presenter.getMangaCategoryIds(manga)
+                    val preselected = ids.mapNotNull { id ->
+                        categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
+                    }.toTypedArray()
 
-                ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
-                        .showDialog(router)
+                    ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
+                            .showDialog(router)
+                }
             }
         }
     }
@@ -310,38 +316,10 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     }
 
     /**
-     * Add the manga to the home screen
+     * Choose the shape of the icon
+     * Only use for pre Oreo devices.
      */
-    fun addToHomeScreen() {
-        val activity = activity ?: return
-        val mangaControllerArgs = parentController?.args ?: return
-
-        val shortcutIntent = activity.intent
-                .setAction(MainActivity.SHORTCUT_MANGA)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                .putExtra(MangaController.MANGA_EXTRA,
-                        mangaControllerArgs.getLong(MangaController.MANGA_EXTRA))
-
-        val addIntent = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
-                .putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
-
-        //Set shortcut title
-        val dialog = MaterialDialog.Builder(activity)
-                .title(R.string.shortcut_title)
-                .input("", presenter.manga.title, { _, text ->
-                    //Set shortcut title
-                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, text.toString())
-
-                    reshapeIconBitmap(addIntent,
-                            Glide.with(activity).load(presenter.manga).asBitmap())
-                })
-                .negativeText(android.R.string.cancel)
-                .show()
-
-        untilDestroySubscriptions.add(Subscriptions.create { dialog.dismiss() })
-    }
-
-    fun reshapeIconBitmap(addIntent: Intent, request: BitmapTypeRequest<out Any>) {
+    private fun chooseIconDialog() {
         val activity = activity ?: return
 
         val modes = intArrayOf(R.string.circular_icon,
@@ -349,23 +327,15 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                 R.string.square_icon,
                 R.string.star_icon)
 
-        fun BitmapRequestBuilder<out Any, Bitmap>.toIcon(): Bitmap {
-            return this.into(96, 96).get()
-        }
+        val request = Glide.with(activity).load(presenter.manga).asBitmap()
 
-        // i = 0: Circular icon
-        // i = 1: Rounded icon
-        // i = 2: Square icon
-        // i = 3: Star icon (because boredom)
-        fun getIcon(i: Int): Bitmap? {
-            return when (i) {
-                0 -> request.transform(CropCircleTransformation(activity)).toIcon()
-                1 -> request.transform(RoundedCornersTransformation(activity, 5, 0)).toIcon()
-                2 -> request.transform(CropSquareTransformation(activity)).toIcon()
-                3 -> request.transform(CenterCrop(activity),
-                        MaskTransformation(activity, R.drawable.mask_star)).toIcon()
-                else -> null
-            }
+        fun getIcon(i: Int): Bitmap? = when (i) {
+            0 -> request.transform(CropCircleTransformation(activity)).toIcon()
+            1 -> request.transform(RoundedCornersTransformation(activity, 5, 0)).toIcon()
+            2 -> request.transform(CropSquareTransformation(activity)).toIcon()
+            3 -> request.transform(CenterCrop(activity),
+                    MaskTransformation(activity, R.drawable.mask_star)).toIcon()
+            else -> null
         }
 
         val dialog = MaterialDialog.Builder(activity)
@@ -377,7 +347,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ icon ->
-                                if (icon != null) createShortcut(addIntent, icon)
+                                if (icon != null) createShortcut(icon)
                             }, {
                                 activity.toast(R.string.icon_creation_fail)
                             })
@@ -387,16 +357,67 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         untilDestroySubscriptions.add(Subscriptions.create { dialog.dismiss() })
     }
 
-    fun createShortcut(addIntent: Intent, icon: Bitmap) {
-        val activity = activity ?: return
+    private fun BitmapRequestBuilder<out Any, Bitmap>.toIcon() = this.into(96,96).get()
 
-        //Send shortcut intent
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
-        activity.sendBroadcast(addIntent)
-        //Go to launcher to show this shiny new shortcut!
-        val startMain = Intent(Intent.ACTION_MAIN)
-        startMain.addCategory(Intent.CATEGORY_HOME).flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(startMain)
+    /**
+     * Create shortcut using ShortcutManager.
+     */
+    private fun createShortcut(icon: Bitmap) {
+        val activity = activity ?: return
+        val mangaControllerArgs = parentController?.args ?: return
+
+        // Create the shortcut intent.
+        val shortcutIntent = activity.intent
+                .setAction(MainActivity.SHORTCUT_MANGA)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra(MangaController.MANGA_EXTRA,
+                        mangaControllerArgs.getLong(MangaController.MANGA_EXTRA))
+
+        // Check if shortcut placement is supported
+        if (ShortcutManagerCompat.isRequestPinShortcutSupported(activity)) {
+
+            // Create shortcut info
+            val pinShortcutInfo = ShortcutInfoCompat.Builder(activity, "manga-shortcut-${presenter.manga.title}-${presenter.source.name}")
+                    .setShortLabel(presenter.manga.title)
+                    .setIcon(IconCompat.createWithBitmap(icon))
+                    .setIntent(shortcutIntent).build()
+
+            val successCallback: PendingIntent
+
+            successCallback = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Create the CallbackIntent.
+                val pinnedShortcutCallbackIntent = ShortcutManagerCompat.createShortcutResultIntent(activity, pinShortcutInfo)
+
+                // Configure the intent so that the broadcast receiver gets the callback successfully.
+                PendingIntent.getBroadcast(activity, 0, pinnedShortcutCallbackIntent, 0)
+            } else{
+                NotificationReceiver.shortcutCreatedBroadcast(activity)
+            }
+
+            // Request shortcut.
+            ShortcutManagerCompat.requestPinShortcut(activity, pinShortcutInfo,
+                    successCallback.intentSender)
+        }
     }
 
+    /**
+     * Add a shortcut of the manga to the home screen
+     */
+    private fun addToHomeScreen() {
+        // Get bitmap icon
+        val bitmap = Glide.with(activity).load(presenter.manga).asBitmap()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            Observable.fromCallable {
+                bitmap.toIcon()
+            }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({icon ->
+                        createShortcut(icon)
+                    })
+        }else{
+            chooseIconDialog()
+        }
+    }
 }
