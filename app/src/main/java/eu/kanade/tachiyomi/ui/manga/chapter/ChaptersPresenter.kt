@@ -7,7 +7,6 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
@@ -34,8 +33,6 @@ class ChaptersPresenter(
         private val db: DatabaseHelper = Injekt.get(),
         private val downloadManager: DownloadManager = Injekt.get()
 ) : BasePresenter<ChaptersController>() {
-
-    private val context = preferences.context
 
     /**
      * List of chapters of the manga. It's always unfiltered and unsorted.
@@ -246,7 +243,6 @@ class ChaptersPresenter(
      * @param chapters the list of chapters to download.
      */
     fun downloadChapters(chapters: List<ChapterItem>) {
-        DownloadService.start(context)
         downloadManager.downloadChapters(manga, chapters)
     }
 

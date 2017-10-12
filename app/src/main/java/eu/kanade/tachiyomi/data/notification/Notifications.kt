@@ -43,11 +43,11 @@ object Notifications {
 
         val channels = listOf(
                 NotificationChannel(CHANNEL_COMMON, context.getString(R.string.channel_common),
-                        NotificationManager.IMPORTANCE_DEFAULT),
+                        NotificationManager.IMPORTANCE_LOW),
                 NotificationChannel(CHANNEL_LIBRARY, context.getString(R.string.channel_library),
-                        NotificationManager.IMPORTANCE_DEFAULT),
+                        NotificationManager.IMPORTANCE_LOW),
                 NotificationChannel(CHANNEL_DOWNLOADER, context.getString(R.string.channel_downloader),
-                        NotificationManager.IMPORTANCE_DEFAULT)
+                        NotificationManager.IMPORTANCE_LOW)
         )
         context.notificationManager.createNotificationChannels(channels)
     }

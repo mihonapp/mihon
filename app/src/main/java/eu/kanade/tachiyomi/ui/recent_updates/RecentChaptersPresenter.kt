@@ -25,8 +25,6 @@ class RecentChaptersPresenter(
         private val sourceManager: SourceManager = Injekt.get()
 ) : BasePresenter<RecentChaptersController>() {
 
-    private val context = preferences.context
-
     /**
      * List containing chapter and manga information
      */
@@ -207,7 +205,6 @@ class RecentChaptersPresenter(
      */
     fun downloadChapters(items: List<RecentChapterItem>) {
         items.forEach { downloadManager.downloadChapters(it.manga, listOf(it.chapter)) }
-        DownloadService.start(context)
     }
 
     /**

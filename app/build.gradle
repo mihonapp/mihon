@@ -218,10 +218,14 @@ dependencies {
     testCompile "org.robolectric:shadows-play-services:$robolectric_version"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    final coroutines_version = '0.19.1'
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 }
 
 buildscript {
-    ext.kotlin_version = '1.1.50'
+    ext.kotlin_version = '1.1.51'
     repositories {
         mavenCentral()
     }
@@ -232,6 +236,12 @@ buildscript {
 
 repositories {
     mavenCentral()
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
 }
 
 // add support for placeholders in resource files

@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.fetchAllImageUrlsFromPageList
 import eu.kanade.tachiyomi.util.*
+import kotlinx.coroutines.experimental.async
 import okhttp3.Response
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -90,11 +91,10 @@ class Downloader(private val context: Context, private val provider: DownloadPro
     @Volatile private var isRunning: Boolean = false
 
     init {
-        Observable.fromCallable { store.restore() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ downloads -> queue.addAll(downloads)
-                }, { error -> Timber.e(error) })
+        launchNow {
+            val chapters = async { store.restore() }
+            queue.addAll(chapters.await())
+        }
     }
 
     /**
@@ -217,51 +217,49 @@ class Downloader(private val context: Context, private val provider: DownloadPro
      * @param manga the manga of the chapters to download.
      * @param chapters the list of chapters to download.
      */
-    fun queueChapters(manga: Manga, chapters: List<Chapter>) {
-        val source = sourceManager.get(manga.source) as? HttpSource ?: return
+    fun queueChapters(manga: Manga, chapters: List<Chapter>) = launchUI {
+        val source = sourceManager.get(manga.source) as? HttpSource ?: return@launchUI
 
-        Observable
-                // Background, long running checks
-                .fromCallable {
-                    val mangaDir = provider.findMangaDir(source, manga)
+        // Called in background thread, the operation can be slow with SAF.
+        val chaptersWithoutDir = async {
+            val mangaDir = provider.findMangaDir(source, manga)
 
-                    chapters
-                            // Avoid downloading chapters with the same name.
-                            .distinctBy { it.name }
-                            // Filter out those already downloaded.
-                            .filter { mangaDir?.findFile(provider.getChapterDirName(it)) == null }
-                            // Add chapters to queue from the start.
-                            .sortedByDescending { it.source_order }
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                // Main thread, quick checks
-                .map { chaptersToQueue ->
-                    chaptersToQueue
-                            // Filter out those already enqueued.
-                            .filter { chapter -> queue.none { it.chapter.id == chapter.id } }
-                            // Create a download for each one.
-                            .map { Download(source, manga, it) }
-                }
-                .subscribe { chaptersToQueue ->
-                    if (chaptersToQueue.isNotEmpty()) {
-                        queue.addAll(chaptersToQueue)
+            chapters
+                    // Avoid downloading chapters with the same name.
+                    .distinctBy { it.name }
+                    // Filter out those already downloaded.
+                    .filter { mangaDir?.findFile(provider.getChapterDirName(it)) == null }
+                    // Add chapters to queue from the start.
+                    .sortedByDescending { it.source_order }
+        }
 
-                        // Initialize queue size.
-                        notifier.initialQueueSize = queue.size
+        // Runs in main thread (synchronization needed).
+        val chaptersToQueue = chaptersWithoutDir.await()
+                // Filter out those already enqueued.
+                .filter { chapter -> queue.none { it.chapter.id == chapter.id } }
+                // Create a download for each one.
+                .map { Download(source, manga, it) }
 
-                        // Initial multi-thread
-                        notifier.multipleDownloadThreads = preferences.downloadThreads().getOrDefault() > 1
+        if (chaptersToQueue.isNotEmpty()) {
+            queue.addAll(chaptersToQueue)
 
-                        if (isRunning) {
-                            // Send the list of downloads to the downloader.
-                            downloadsRelay.call(chaptersToQueue)
-                        } else {
-                            // Show initial notification.
-                            notifier.onProgressChange(queue)
-                        }
-                    }
-                }
+            // Initialize queue size.
+            notifier.initialQueueSize = queue.size
+
+            // Initial multi-thread
+            notifier.multipleDownloadThreads = preferences.downloadThreads().getOrDefault() > 1
+
+            if (isRunning) {
+                // Send the list of downloads to the downloader.
+                downloadsRelay.call(chaptersToQueue)
+            } else {
+                // Show initial notification.
+                notifier.onProgressChange(queue)
+            }
+
+            // Start downloader if needed
+            DownloadService.start(this@Downloader.context)
+        }
     }
 
     /**
