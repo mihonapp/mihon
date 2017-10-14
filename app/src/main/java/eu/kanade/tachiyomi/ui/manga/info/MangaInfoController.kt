@@ -355,8 +355,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      * Retrieves the bitmap of the shortcut with the requested shape and calls [createShortcut] when
      * the resource is available.
      *
-     * @param i The shape index to apply. No transformation is performed if the parameter is not
-     *          provided.
+     * @param i The shape index to apply. Defaults to circle crop transformation.
      */
     private fun createShortcutForShape(i: Int = 0) {
         GlideApp.with(activity)
