@@ -81,9 +81,11 @@ class LibraryUpdateService(
      * Cached progress notification to avoid creating a lot.
      */
     private val progressNotification by lazy { NotificationCompat.Builder(this, Notifications.CHANNEL_LIBRARY)
+            .setContentTitle(getString(R.string.app_name))
             .setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
             .setLargeIcon(notificationBitmap)
             .setOngoing(true)
+            .setOnlyAlertOnce(true)
             .addAction(R.drawable.ic_clear_grey_24dp_img, getString(android.R.string.cancel), cancelIntent)
     }
 
@@ -132,7 +134,11 @@ class LibraryUpdateService(
                     putExtra(KEY_TARGET, target)
                     category?.let { putExtra(KEY_CATEGORY, it.id) }
                 }
-                context.startService(intent)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    context.startService(intent)
+                } else {
+                    context.startForegroundService(intent)
+                }
             }
         }
 
@@ -153,6 +159,7 @@ class LibraryUpdateService(
      */
     override fun onCreate() {
         super.onCreate()
+        startForeground(Notifications.ID_LIBRARY_PROGRESS, progressNotification.build())
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
                 PowerManager.PARTIAL_WAKE_LOCK, "LibraryUpdateService:WakeLock")
         wakeLock.acquire()

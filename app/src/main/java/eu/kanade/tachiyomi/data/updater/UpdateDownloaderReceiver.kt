@@ -82,6 +82,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
     private fun updateProgress(progress: Int) {
         with(notification) {
             setProgress(100, progress, false)
+            setOnlyAlertOnce(true)
         }
         notification.show()
     }
@@ -96,6 +97,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
         with(notification) {
             setContentText(context.getString(R.string.update_check_notification_download_complete))
             setSmallIcon(android.R.drawable.stat_sys_download_done)
+            setOnlyAlertOnce(false)
             setProgress(0, 0, false)
             // Install action
             setContentIntent(NotificationHandler.installApkPendingActivity(context, File(path)))
@@ -120,6 +122,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
         with(notification) {
             setContentText(context.getString(R.string.update_check_notification_download_error))
             setSmallIcon(android.R.drawable.stat_sys_warning)
+            setOnlyAlertOnce(false)
             setProgress(0, 0, false)
             // Retry action
             addAction(R.drawable.ic_refresh_grey_24dp_img,
