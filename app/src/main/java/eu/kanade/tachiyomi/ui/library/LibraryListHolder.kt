@@ -1,11 +1,10 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.view.View
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import jp.wasabeef.glide.transformations.CropCircleTransformation
+import eu.kanade.tachiyomi.data.glide.GlideApp
 import kotlinx.android.synthetic.main.catalogue_list_item.view.*
 
 /**
@@ -46,12 +45,12 @@ class LibraryListHolder(
         }
 
         // Update the cover.
-        Glide.clear(itemView.thumbnail)
-        Glide.with(itemView.context)
+        GlideApp.with(itemView.context).clear(itemView.thumbnail)
+        GlideApp.with(itemView.context)
                 .load(manga)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .centerCrop()
-                .bitmapTransform(CropCircleTransformation(itemView.context))
+                .circleCrop()
                 .dontAnimate()
                 .into(itemView.thumbnail)
     }

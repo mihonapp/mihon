@@ -95,10 +95,6 @@
             android:name=".data.backup.BackupRestoreService"
             android:exported="false"/>
 
-        <meta-data
-            android:name="eu.kanade.tachiyomi.data.glide.AppGlideModule"
-            android:value="GlideModule" />
-
     </application>
 
 </manifest>

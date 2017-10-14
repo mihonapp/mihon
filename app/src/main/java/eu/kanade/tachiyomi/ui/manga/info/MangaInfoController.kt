@@ -1,8 +1,10 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
+import android.app.Dialog
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -12,20 +14,22 @@ import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.graphics.drawable.IconCompat
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
-import com.bumptech.glide.BitmapRequestBuilder
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -33,15 +37,9 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
-import jp.wasabeef.glide.transformations.CropCircleTransformation
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import jp.wasabeef.glide.transformations.MaskTransformation
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.manga_info_controller.view.*
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.Subscriptions
 import uy.kohesive.injekt.injectLazy
 import java.text.DecimalFormat
 
@@ -157,16 +155,16 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
 
             // Set cover if it wasn't already.
             if (manga_cover.drawable == null && !manga.thumbnail_url.isNullOrEmpty()) {
-                Glide.with(context)
+                GlideApp.with(context)
                         .load(manga)
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .centerCrop()
                         .into(manga_cover)
 
                 if (backdrop != null) {
-                    Glide.with(context)
+                    GlideApp.with(context)
                             .load(manga)
-                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                             .centerCrop()
                             .into(backdrop)
                 }
@@ -316,51 +314,78 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     }
 
     /**
-     * Choose the shape of the icon
-     * Only use for pre Oreo devices.
+     * Add a shortcut of the manga to the home screen
      */
-    private fun chooseIconDialog() {
-        val activity = activity ?: return
-
-        val modes = intArrayOf(R.string.circular_icon,
-                R.string.rounded_icon,
-                R.string.square_icon,
-                R.string.star_icon)
-
-        val request = Glide.with(activity).load(presenter.manga).asBitmap()
-
-        fun getIcon(i: Int): Bitmap? = when (i) {
-            0 -> request.transform(CropCircleTransformation(activity)).toIcon()
-            1 -> request.transform(RoundedCornersTransformation(activity, 5, 0)).toIcon()
-            2 -> request.transform(CropSquareTransformation(activity)).toIcon()
-            3 -> request.transform(CenterCrop(activity),
-                    MaskTransformation(activity, R.drawable.mask_star)).toIcon()
-            else -> null
+    private fun addToHomeScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // TODO are transformations really unsupported or is it just the Pixel Launcher?
+            createShortcutForShape()
+        } else {
+            ChooseShapeDialog(this).showDialog(router)
         }
-
-        val dialog = MaterialDialog.Builder(activity)
-                .title(R.string.icon_shape)
-                .negativeText(android.R.string.cancel)
-                .items(modes.map { activity.getString(it) })
-                .itemsCallback { _, _, i, _ ->
-                    Observable.fromCallable { getIcon(i) }
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ icon ->
-                                if (icon != null) createShortcut(icon)
-                            }, {
-                                activity.toast(R.string.icon_creation_fail)
-                            })
-                }
-                .show()
-
-        untilDestroySubscriptions.add(Subscriptions.create { dialog.dismiss() })
     }
 
-    private fun BitmapRequestBuilder<out Any, Bitmap>.toIcon() = this.into(96,96).get()
+    /**
+     * Dialog to choose a shape for the icon.
+     */
+    private class ChooseShapeDialog(bundle: Bundle? = null) : DialogController(bundle) {
+
+        constructor(target: MangaInfoController) : this() {
+            targetController = target
+        }
+
+        override fun onCreateDialog(savedViewState: Bundle?): Dialog {
+            val modes = intArrayOf(R.string.circular_icon,
+                    R.string.rounded_icon,
+                    R.string.square_icon,
+                    R.string.star_icon)
+
+            return MaterialDialog.Builder(activity!!)
+                    .title(R.string.icon_shape)
+                    .negativeText(android.R.string.cancel)
+                    .items(modes.map { activity?.getString(it) })
+                    .itemsCallback { _, _, i, _ ->
+                        (targetController as? MangaInfoController)?.createShortcutForShape(i)
+                    }
+                    .build()
+        }
+    }
+
+    /**
+     * Retrieves the bitmap of the shortcut with the requested shape and calls [createShortcut] when
+     * the resource is available.
+     *
+     * @param i The shape index to apply. No transformation is performed if the parameter is not
+     *          provided.
+     */
+    private fun createShortcutForShape(i: Int = 0) {
+        GlideApp.with(activity)
+                .asBitmap()
+                .load(presenter.manga)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .apply {
+                    when (i) {
+                        0 -> circleCrop()
+                        1 -> transform(RoundedCorners(5))
+                        2 -> transform(CropSquareTransformation())
+                        3 -> centerCrop().transform(MaskTransformation(R.drawable.mask_star))
+                    }
+                }
+                .into(object : SimpleTarget<Bitmap>(96, 96) {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        createShortcut(resource)
+                    }
+
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        activity?.toast(R.string.icon_creation_fail)
+                    }
+                })
+    }
 
     /**
      * Create shortcut using ShortcutManager.
+     *
+     * @param icon The image of the shortcut.
      */
     private fun createShortcut(icon: Bitmap) {
         val activity = activity ?: return
@@ -375,49 +400,29 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
 
         // Check if shortcut placement is supported
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(activity)) {
+            val shortcutId = "manga-shortcut-${presenter.manga.title}-${presenter.source.name}"
 
             // Create shortcut info
-            val pinShortcutInfo = ShortcutInfoCompat.Builder(activity, "manga-shortcut-${presenter.manga.title}-${presenter.source.name}")
+            val shortcutInfo = ShortcutInfoCompat.Builder(activity, shortcutId)
                     .setShortLabel(presenter.manga.title)
                     .setIcon(IconCompat.createWithBitmap(icon))
-                    .setIntent(shortcutIntent).build()
+                    .setIntent(shortcutIntent)
+                    .build()
 
-            val successCallback: PendingIntent
-
-            successCallback = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val successCallback = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // Create the CallbackIntent.
-                val pinnedShortcutCallbackIntent = ShortcutManagerCompat.createShortcutResultIntent(activity, pinShortcutInfo)
+                val intent = ShortcutManagerCompat.createShortcutResultIntent(activity, shortcutInfo)
 
                 // Configure the intent so that the broadcast receiver gets the callback successfully.
-                PendingIntent.getBroadcast(activity, 0, pinnedShortcutCallbackIntent, 0)
-            } else{
+                PendingIntent.getBroadcast(activity, 0, intent, 0)
+            } else {
                 NotificationReceiver.shortcutCreatedBroadcast(activity)
             }
 
             // Request shortcut.
-            ShortcutManagerCompat.requestPinShortcut(activity, pinShortcutInfo,
+            ShortcutManagerCompat.requestPinShortcut(activity, shortcutInfo,
                     successCallback.intentSender)
         }
     }
 
-    /**
-     * Add a shortcut of the manga to the home screen
-     */
-    private fun addToHomeScreen() {
-        // Get bitmap icon
-        val bitmap = Glide.with(activity).load(presenter.manga).asBitmap()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            Observable.fromCallable {
-                bitmap.toIcon()
-            }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({icon ->
-                        createShortcut(icon)
-                    })
-        }else{
-            chooseIconDialog()
-        }
-    }
 }

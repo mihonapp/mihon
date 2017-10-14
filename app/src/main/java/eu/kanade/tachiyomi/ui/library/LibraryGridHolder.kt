@@ -1,10 +1,10 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.view.View
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.glide.GlideApp
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
 /**
@@ -38,10 +38,10 @@ class LibraryGridHolder(
         }
 
         // Update the cover.
-        Glide.clear(view.thumbnail)
-        Glide.with(view.context)
+        GlideApp.with(view.context).clear(view.thumbnail)
+        GlideApp.with(view.context)
                 .load(manga)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .centerCrop()
                 .into(view.thumbnail)
     }
