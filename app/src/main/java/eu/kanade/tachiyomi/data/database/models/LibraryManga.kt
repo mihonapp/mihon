@@ -6,6 +6,4 @@ class LibraryManga : MangaImpl() {
 
     var category: Int = 0
 
-    var downloadTotal: Int = 0
-
 }

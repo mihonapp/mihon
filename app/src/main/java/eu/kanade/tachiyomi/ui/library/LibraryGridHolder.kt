@@ -3,15 +3,9 @@ package eu.kanade.tachiyomi.ui.library
 import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.kanade.tachiyomi.data.database.models.LibraryManga
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.LocalSource
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
@@ -27,37 +21,36 @@ class LibraryGridHolder(
         private val adapter: FlexibleAdapter<*>
 
 ) : LibraryHolder(view, adapter) {
-    private val preferences: PreferencesHelper = Injekt.get()
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this
      * holder with the given manga.
      *
-     * @param manga the manga to bind.
+     * @param item the manga item to bind.
      */
-    override fun onSetValues(manga: LibraryManga) {
+    override fun onSetValues(item: LibraryItem) {
         // Update the title of the manga.
-        view.title.text = manga.title
+        view.title.text = item.manga.title
 
         // Update the unread count and its visibility.
         with(view.unread_text) {
-            visibility = if (manga.unread > 0) View.VISIBLE else View.GONE
-            text = manga.unread.toString()
+            visibility = if (item.manga.unread > 0) View.VISIBLE else View.GONE
+            text = item.manga.unread.toString()
         }
         // Update the download count and its visibility.
         with(view.download_text) {
-            visibility = if (manga.downloadTotal > 0 && preferences.downloadBadge().getOrDefault()) View.VISIBLE else View.GONE
-            text = manga.downloadTotal.toString()
+            visibility = if (item.downloadCount > 0) View.VISIBLE else View.GONE
+            text = item.downloadCount.toString()
         }
         //set local visibility if its local manga
-        with(view.local_text){
-            visibility = if(manga.source == LocalSource.ID) View.VISIBLE else View.GONE
+        with(view.local_text) {
+            visibility = if(item.manga.source == LocalSource.ID) View.VISIBLE else View.GONE
         }
 
         // Update the cover.
         GlideApp.with(view.context).clear(view.thumbnail)
         GlideApp.with(view.context)
-                .load(manga)
+                .load(item.manga)
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .centerCrop()
                 .into(view.thumbnail)

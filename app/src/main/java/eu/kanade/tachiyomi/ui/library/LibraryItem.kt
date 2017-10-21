@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
 class LibraryItem(val manga: LibraryManga) : AbstractFlexibleItem<LibraryHolder>(), IFilterable {
 
+    var downloadCount = -1
+
     override fun getLayoutRes(): Int {
         return R.layout.catalogue_grid_item
     }
@@ -43,7 +45,7 @@ class LibraryItem(val manga: LibraryManga) : AbstractFlexibleItem<LibraryHolder>
                                 position: Int,
                                 payloads: List<Any?>?) {
 
-        holder.onSetValues(manga)
+        holder.onSetValues(this)
     }
 
     /**

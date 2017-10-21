@@ -1,13 +1,11 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.os.Bundle
-import android.util.Pair
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -29,6 +27,16 @@ import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
+
+/**
+ * Class containing library information.
+ */
+private data class Library(val categories: List<Category>, val mangaMap: LibraryMap)
+
+/**
+ * Typealias for the library manga, using the category as keys, and list of manga as values.
+ */
+private typealias LibraryMap = Map<Int, List<LibraryItem>>
 
 /**
  * Presenter of [LibraryController].
@@ -80,16 +88,15 @@ class LibraryPresenter(
     fun subscribeLibrary() {
         if (librarySubscription.isNullOrUnsubscribed()) {
             librarySubscription = getLibraryObservable()
-                    .combineLatest(filterTriggerRelay.observeOn(Schedulers.io()),
-                            { lib, _ -> Pair(lib.first, applyFilters(lib.second)) })
                     .combineLatest(downloadTriggerRelay.observeOn(Schedulers.io()),
-                            { lib, _ -> Pair(lib.first, addDownloadTotal(lib.second)) })
+                            { lib, _ -> lib.apply { setDownloadCount(mangaMap) } })
+                    .combineLatest(filterTriggerRelay.observeOn(Schedulers.io()),
+                            { lib, _ -> lib.copy(mangaMap = applyFilters(lib.mangaMap)) })
                     .combineLatest(sortTriggerRelay.observeOn(Schedulers.io()),
-                            { lib, _ -> Pair(lib.first, applySort(lib.second)) })
-                    .map { Pair(it.first, it.second.mapValues { it.value.map(::LibraryItem) }) }
+                            { lib, _ -> lib.copy(mangaMap = applySort(lib.mangaMap)) })
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeLatestCache({ view, pair ->
-                        view.onNextLibraryUpdate(pair.first, pair.second)
+                    .subscribeLatestCache({ view, (categories, mangaMap) ->
+                        view.onNextLibraryUpdate(categories, mangaMap)
                     })
         }
     }
@@ -99,7 +106,7 @@ class LibraryPresenter(
      *
      * @param map the map to filter.
      */
-    private fun applyFilters(map: Map<Int, List<LibraryManga>>): Map<Int, List<LibraryManga>> {
+    private fun applyFilters(map: LibraryMap): LibraryMap {
         // Cached list of downloaded manga directories given a source id.
         val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
 
@@ -112,31 +119,36 @@ class LibraryPresenter(
 
         val filterCompleted = preferences.filterCompleted().getOrDefault()
 
-        val filterFn: (LibraryManga) -> Boolean = f@ { manga ->
+        val filterFn: (LibraryItem) -> Boolean = f@ { item ->
             // Filter out manga without source.
-            val source = sourceManager.get(manga.source) ?: return@f false
+            val source = sourceManager.get(item.manga.source) ?: return@f false
 
             // Filter when there isn't unread chapters.
-            if (filterUnread && manga.unread == 0) {
+            if (filterUnread && item.manga.unread == 0) {
                 return@f false
             }
 
-            if (filterCompleted && manga.status != SManga.COMPLETED) {
+            if (filterCompleted && item.manga.status != SManga.COMPLETED) {
                 return@f false
             }
 
             // Filter when the download directory doesn't exist or is null.
             if (filterDownloaded) {
+                // Don't bother with directory checking if download count has been set.
+                if (item.downloadCount != -1) {
+                    return@f item.downloadCount > 0
+                }
+
                 // Get the directories for the source of the manga.
                 val dirsForSource = mangaDirsForSource.getOrPut(source.id) {
                     val sourceDir = downloadManager.findSourceDir(source)
                     sourceDir?.listFiles()?.associateBy { it.name }.orEmpty()
                 }
 
-                val mangaDirName = downloadManager.getMangaDirName(manga)
+                val mangaDirName = downloadManager.getMangaDirName(item.manga)
                 val mangaDir = dirsForSource[mangaDirName] ?: return@f false
 
-                val hasDirs = chapterDirectories.getOrPut(manga.id!!) {
+                val hasDirs = chapterDirectories.getOrPut(item.manga.id!!) {
                     mangaDir.listFiles()?.isNotEmpty() ?: false
                 }
                 if (!hasDirs) {
@@ -150,45 +162,48 @@ class LibraryPresenter(
     }
 
     /**
-     * Adds Downloaded chapter count to manga
+     * Sets downloaded chapter count to each manga.
      *
-     * @param map the map to filter.
+     * @param map the map of manga.
      */
-    private fun addDownloadTotal(map: Map<Int, List<LibraryManga>>): Map<Int, List<LibraryManga>> {
-        // Cached list of downloaded manga directories given a source id.
-        if (preferences.downloadBadge().getOrDefault()) {
-            val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
-
-            // Cached list of downloaded chapter directories for a manga.
-            val chapterDirectories = mutableMapOf<Long, Int>()
-
-            for ((key, mangaList) in map) {
-                for (manga in mangaList) {
-                    manga.downloadTotal = getDownloadedCountFromDirectory(manga, mangaDirsForSource, chapterDirectories)
+    private fun setDownloadCount(map: LibraryMap) {
+        if (!preferences.downloadBadge().getOrDefault()) {
+            // Unset download count if the preference is not enabled.
+            for ((_, itemList) in map) {
+                for (item in itemList) {
+                    item.downloadCount = -1
                 }
             }
+            return
         }
-        return map;
-    }
 
-    //Get count of downloaded chapters for a manga
-    fun getDownloadedCountFromDirectory(manga: Manga, mangaDirsForSource: MutableMap<Long, Map<String?, UniFile>>, chapterDirectories: MutableMap<Long, Int>): Int {
-        val source = sourceManager.get(manga.source) ?: return 0;
-        // Get the directories for the source of the manga.
-        val dirsForSource = mangaDirsForSource.getOrPut(source.id) {
-            val sourceDir = downloadManager.findSourceDir(source)
-            sourceDir?.listFiles()?.associateBy { it.name }.orEmpty()
-        }
-        val mangaDirName = downloadManager.getMangaDirName(manga)
-        val mangaDir = dirsForSource[mangaDirName] ?: return 0
+        // Cached list of downloaded manga directories given a source id.
+        val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
 
-        chapterDirectories.getOrPut(manga.id!!) {
-            if (mangaDir.listFiles()?.isNotEmpty() ?: false) {
-                return mangaDir.listFiles()!!.size
+        // Cached list of downloaded chapter directories for a manga.
+        val chapterDirectories = mutableMapOf<Long, Int>()
+
+        val downloadCountFn: (LibraryItem) -> Int = f@ { item ->
+            val source = sourceManager.get(item.manga.source) ?: return@f 0
+
+            // Get the directories for the source of the manga.
+            val dirsForSource = mangaDirsForSource.getOrPut(source.id) {
+                val sourceDir = downloadManager.findSourceDir(source)
+                sourceDir?.listFiles()?.associateBy { it.name }.orEmpty()
             }
-            return 0;
+            val mangaDirName = downloadManager.getMangaDirName(item.manga)
+            val mangaDir = dirsForSource[mangaDirName] ?: return@f 0
+
+            chapterDirectories.getOrPut(item.manga.id!!) {
+                mangaDir.listFiles()?.size ?: 0
+            }
         }
-        return 0;
+
+        for ((_, itemList) in map) {
+            for (item in itemList) {
+                item.downloadCount = downloadCountFn(item)
+            }
+        }
     }
 
     /**
@@ -196,7 +211,7 @@ class LibraryPresenter(
      *
      * @param map the map to sort.
      */
-    private fun applySort(map: Map<Int, List<LibraryManga>>): Map<Int, List<LibraryManga>> {
+    private fun applySort(map: LibraryMap): LibraryMap {
         val sortingMode = preferences.librarySortingMode().getOrDefault()
 
         val lastReadManga by lazy {
@@ -208,25 +223,25 @@ class LibraryPresenter(
             db.getTotalChapterManga().executeAsBlocking().associate { it.id!! to counter++ }
         }
 
-        val sortFn: (LibraryManga, LibraryManga) -> Int = { manga1, manga2 ->
+        val sortFn: (LibraryItem, LibraryItem) -> Int = { i1, i2 ->
             when (sortingMode) {
-                LibrarySort.ALPHA -> manga1.title.compareTo(manga2.title)
+                LibrarySort.ALPHA -> i1.manga.title.compareTo(i2.manga.title)
                 LibrarySort.LAST_READ -> {
                     // Get index of manga, set equal to list if size unknown.
-                    val manga1LastRead = lastReadManga[manga1.id!!] ?: lastReadManga.size
-                    val manga2LastRead = lastReadManga[manga2.id!!] ?: lastReadManga.size
+                    val manga1LastRead = lastReadManga[i1.manga.id!!] ?: lastReadManga.size
+                    val manga2LastRead = lastReadManga[i2.manga.id!!] ?: lastReadManga.size
                     manga1LastRead.compareTo(manga2LastRead)
                 }
-                LibrarySort.LAST_UPDATED -> manga2.last_update.compareTo(manga1.last_update)
-                LibrarySort.UNREAD -> manga1.unread.compareTo(manga2.unread)
+                LibrarySort.LAST_UPDATED -> i2.manga.last_update.compareTo(i1.manga.last_update)
+                LibrarySort.UNREAD -> i1.manga.unread.compareTo(i2.manga.unread)
                 LibrarySort.TOTAL -> {
-                    val manga1TotalChapter = totalChapterManga[manga1.id!!] ?: 0
-                    val mange2TotalChapter = totalChapterManga[manga2.id!!] ?: 0
+                    val manga1TotalChapter = totalChapterManga[i1.manga.id!!] ?: 0
+                    val mange2TotalChapter = totalChapterManga[i2.manga.id!!] ?: 0
                     manga1TotalChapter.compareTo(mange2TotalChapter)
                 }
                 LibrarySort.SOURCE -> {
-                    val source1Name = sourceManager.get(manga1.source)?.name ?: ""
-                    val source2Name = sourceManager.get(manga2.source)?.name ?: ""
+                    val source1Name = sourceManager.get(i1.manga.source)?.name ?: ""
+                    val source2Name = sourceManager.get(i2.manga.source)?.name ?: ""
                     source1Name.compareTo(source2Name)
                 }
                 else -> throw Exception("Unknown sorting mode")
@@ -246,7 +261,7 @@ class LibraryPresenter(
      *
      * @return an observable of the categories and its manga.
      */
-    private fun getLibraryObservable(): Observable<Pair<List<Category>, Map<Int, List<LibraryManga>>>> {
+    private fun getLibraryObservable(): Observable<Library> {
         return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable(),
                 { dbCategories, libraryManga ->
                     val categories = if (libraryManga.containsKey(0))
@@ -255,7 +270,7 @@ class LibraryPresenter(
                         dbCategories
 
                     this.categories = categories
-                    Pair(categories, libraryManga)
+                    Library(categories, libraryManga)
                 })
     }
 
@@ -274,9 +289,9 @@ class LibraryPresenter(
      * @return an observable containing a map with the category id as key and a list of manga as the
      * value.
      */
-    private fun getLibraryMangasObservable(): Observable<Map<Int, List<LibraryManga>>> {
+    private fun getLibraryMangasObservable(): Observable<LibraryMap> {
         return db.getLibraryMangas().asRxObservable()
-                .map { list -> list.groupBy { it.category } }
+                .map { list -> list.map(::LibraryItem).groupBy { it.manga.category } }
     }
 
     /**
