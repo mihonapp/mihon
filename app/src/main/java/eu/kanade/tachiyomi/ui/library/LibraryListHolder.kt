@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.library
 import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -34,7 +34,7 @@ class LibraryListHolder(
      *
      * @param manga the manga to bind.
      */
-    override fun onSetValues(manga: Manga) {
+    override fun onSetValues(manga: LibraryManga) {
         // Update the title of the manga.
         itemView.title.text = manga.title
 

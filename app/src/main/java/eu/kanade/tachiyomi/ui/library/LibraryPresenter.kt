@@ -7,6 +7,7 @@ import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -98,7 +99,7 @@ class LibraryPresenter(
      *
      * @param map the map to filter.
      */
-    private fun applyFilters(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
+    private fun applyFilters(map: Map<Int, List<LibraryManga>>): Map<Int, List<LibraryManga>> {
         // Cached list of downloaded manga directories given a source id.
         val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
 
@@ -111,7 +112,7 @@ class LibraryPresenter(
 
         val filterCompleted = preferences.filterCompleted().getOrDefault()
 
-        val filterFn: (Manga) -> Boolean = f@ { manga ->
+        val filterFn: (LibraryManga) -> Boolean = f@ { manga ->
             // Filter out manga without source.
             val source = sourceManager.get(manga.source) ?: return@f false
 
@@ -153,7 +154,7 @@ class LibraryPresenter(
      *
      * @param map the map to filter.
      */
-    private fun addDownloadTotal(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
+    private fun addDownloadTotal(map: Map<Int, List<LibraryManga>>): Map<Int, List<LibraryManga>> {
         // Cached list of downloaded manga directories given a source id.
         if (preferences.downloadBadge().getOrDefault()) {
             val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
@@ -195,7 +196,7 @@ class LibraryPresenter(
      *
      * @param map the map to sort.
      */
-    private fun applySort(map: Map<Int, List<Manga>>): Map<Int, List<Manga>> {
+    private fun applySort(map: Map<Int, List<LibraryManga>>): Map<Int, List<LibraryManga>> {
         val sortingMode = preferences.librarySortingMode().getOrDefault()
 
         val lastReadManga by lazy {
@@ -207,7 +208,7 @@ class LibraryPresenter(
             db.getTotalChapterManga().executeAsBlocking().associate { it.id!! to counter++ }
         }
 
-        val sortFn: (Manga, Manga) -> Int = { manga1, manga2 ->
+        val sortFn: (LibraryManga, LibraryManga) -> Int = { manga1, manga2 ->
             when (sortingMode) {
                 LibrarySort.ALPHA -> manga1.title.compareTo(manga2.title)
                 LibrarySort.LAST_READ -> {
@@ -245,7 +246,7 @@ class LibraryPresenter(
      *
      * @return an observable of the categories and its manga.
      */
-    private fun getLibraryObservable(): Observable<Pair<List<Category>, Map<Int, List<Manga>>>> {
+    private fun getLibraryObservable(): Observable<Pair<List<Category>, Map<Int, List<LibraryManga>>>> {
         return Observable.combineLatest(getCategoriesObservable(), getLibraryMangasObservable(),
                 { dbCategories, libraryManga ->
                     val categories = if (libraryManga.containsKey(0))
@@ -273,7 +274,7 @@ class LibraryPresenter(
      * @return an observable containing a map with the category id as key and a list of manga as the
      * value.
      */
-    private fun getLibraryMangasObservable(): Observable<Map<Int, List<Manga>>> {
+    private fun getLibraryMangasObservable(): Observable<Map<Int, List<LibraryManga>>> {
         return db.getLibraryMangas().asRxObservable()
                 .map { list -> list.groupBy { it.category } }
     }
