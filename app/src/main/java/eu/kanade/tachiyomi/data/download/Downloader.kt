@@ -287,7 +287,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
         }
 
         return pageListObservable
-                .doOnNext { pages ->
+                .doOnNext { _ ->
                     // Delete all temporary (unfinished) files
                     tmpDir.listFiles()
                             ?.filter { it.name!!.endsWith(".tmp") }
@@ -303,7 +303,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
                 // Do when page is downloaded.
                 .doOnNext { notifier.onProgressChange(download, queue) }
                 .toList()
-                .map { pages -> download }
+                .map { _ -> download }
                 // Do after download completes
                 .doOnNext { ensureSuccessfulDownload(download, tmpDir, chapterDirname) }
                 // If the page list threw, it will resume here

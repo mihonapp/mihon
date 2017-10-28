@@ -70,7 +70,7 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             setBitmapDecoderClass(reader.bitmapDecoderClass)
             setVerticalScrollingParent(reader is VerticalReader)
             setCropBorders(reader.cropBorders)
-            setOnTouchListener { v, motionEvent -> reader.gestureDetector.onTouchEvent(motionEvent) }
+            setOnTouchListener { _, motionEvent -> reader.gestureDetector.onTouchEvent(motionEvent) }
             setOnLongClickListener { reader.onLongClick(page) }
             setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
                 override fun onReady() {
@@ -83,7 +83,7 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             })
         }
 
-        retry_button.setOnTouchListener { v, event ->
+        retry_button.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 activity.presenter.retryPage(page)
             }

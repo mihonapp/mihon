@@ -143,6 +143,7 @@ fun Context.unregisterLocalReceiver(receiver: BroadcastReceiver) {
 fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
     val className = serviceClass.name
     val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    @Suppress("DEPRECATION")
     return manager.getRunningServices(Integer.MAX_VALUE)
             .any { className == it.service.className }
 }

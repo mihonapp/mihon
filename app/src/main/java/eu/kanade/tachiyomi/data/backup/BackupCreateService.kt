@@ -84,9 +84,6 @@ class BackupCreateService : IntentService(NAME) {
         // Create root object
         val root = JsonObject()
 
-        // Create information object
-        val information = JsonObject()
-
         // Create manga array
         val mangaEntries = JsonArray()
 

@@ -317,8 +317,8 @@ class BackupRestoreService : Service() {
                     manga
                 }
                 .filter { it.id != null }
-                .flatMap { manga ->
-                    chapterFetchObservable(source, manga, chapters)
+                .flatMap {
+                    chapterFetchObservable(source, it, chapters)
                             // Convert to the manga that contains new chapters.
                             .map { manga }
                 }

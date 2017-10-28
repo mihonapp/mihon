@@ -48,6 +48,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
                     R.styleable.NavigationView_elevation, 0).toFloat())
         }
 
+        @Suppress("DEPRECATION")
         ViewCompat.setFitsSystemWindows(this,
                 a.getBoolean(R.styleable.NavigationView_android_fitsSystemWindows, false))
 
@@ -61,6 +62,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
     /**
      * Overriden to measure the width of the navigation view.
      */
+    @SuppressLint("SwitchIntDef")
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         val width = when (MeasureSpec.getMode(widthSpec)) {
             MeasureSpec.AT_MOST -> MeasureSpec.makeMeasureSpec(

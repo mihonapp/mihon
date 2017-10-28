@@ -176,8 +176,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         .content(getString(R.string.confirm_update_manga_sync, chapterToUpdate))
                         .positiveText(android.R.string.yes)
                         .negativeText(android.R.string.no)
-                        .onPositive { dialog, which -> presenter.updateTrackLastChapterRead(chapterToUpdate) }
-                        .onAny { dialog1, which1 -> super.onBackPressed() }
+                        .onPositive { _, _ -> presenter.updateTrackLastChapterRead(chapterToUpdate) }
+                        .onAny { _, _ -> super.onBackPressed() }
                         .show()
             } else {
                 presenter.updateTrackLastChapterRead(chapterToUpdate)
@@ -237,7 +237,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 .title(getString(R.string.options))
                 .items(R.array.reader_image_options)
                 .itemsIds(R.array.reader_image_options_values)
-                .itemsCallback { materialDialog, view, i, charSequence ->
+                .itemsCallback { _, _, i, _ ->
                     when (i) {
                         0 -> setImageAsCover(page)
                         1 -> shareImage(page)
@@ -378,7 +378,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private fun initializeBottomMenu() {
         // Intercept all events in this layout
-        reader_menu_bottom.setOnTouchListener { v, event -> true }
+        reader_menu_bottom.setOnTouchListener { _, _ -> true }
 
         page_seekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
             override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
@@ -595,7 +595,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 .content(getString(R.string.confirm_set_image_as_cover))
                 .positiveText(android.R.string.yes)
                 .negativeText(android.R.string.no)
-                .onPositive { dialog, which -> presenter.setImageAsCover(page) }
+                .onPositive { _, _ -> presenter.setImageAsCover(page) }
                 .show()
 
     }

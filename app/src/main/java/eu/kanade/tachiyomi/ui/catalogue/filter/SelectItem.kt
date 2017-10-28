@@ -32,8 +32,8 @@ open class SelectItem(val filter: Filter.Select<*>) : AbstractFlexibleItem<Selec
                 android.R.layout.simple_spinner_item, filter.values).apply {
             setDropDownViewResource(R.layout.common_spinner_item)
         }
-        spinner.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
-            filter.state = position
+        spinner.onItemSelectedListener = IgnoreFirstSpinnerListener { pos ->
+            filter.state = pos
         }
         spinner.setSelection(filter.state)
     }

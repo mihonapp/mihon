@@ -30,7 +30,7 @@ class AnilistLoginActivity : AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         returnToSettings()
-                    }, { error ->
+                    }, { _ ->
                         returnToSettings()
                     })
         } else {

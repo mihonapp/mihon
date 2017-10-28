@@ -153,7 +153,7 @@ class ReaderPresenter(
 
         restartableLatestCache(LOAD_ACTIVE_CHAPTER,
                 { loadChapterObservable(chapter) },
-                { view, chapter -> view.onChapterReady(this.chapter) },
+                { view, _ -> view.onChapterReady(this.chapter) },
                 { view, error -> view.onChapterError(error) })
 
         if (savedState == null) {
@@ -314,7 +314,7 @@ class ReaderPresenter(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeLatestCache({ view, chapter ->
                     view.onAppendChapter(chapter)
-                }, { view, error ->
+                }, { view, _ ->
                     view.onChapterAppendError()
                 })
     }
