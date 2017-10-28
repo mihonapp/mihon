@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.base.controller
 
 import android.os.Bundle
-import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -52,7 +51,7 @@ abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateContr
      * Issue link: https://issuetracker.google.com/issues/37657375
      */
     fun MenuItem.fixExpand() {
-        val expandListener = object : MenuItemCompat.OnActionExpandListener {
+        setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 return true
             }
@@ -61,8 +60,7 @@ abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateContr
                 activity?.invalidateOptionsMenu()
                 return true
             }
-        }
-        MenuItemCompat.setOnActionExpandListener(this, expandListener)
+        })
     }
 
 }

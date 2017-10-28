@@ -283,7 +283,7 @@ class LibraryController(
      */
     private fun onFilterChanged() {
         presenter.requestFilterUpdate()
-        (activity as? AppCompatActivity)?.supportInvalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
     }
 
     private fun onDownloadBadgeChanged(){
