@@ -54,7 +54,6 @@ class UpdateCheckerJob : Job() {
                     .setPeriodic(24 * 60 * 60 * 1000, 60 * 60 * 1000)
                     .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                     .setRequirementsEnforced(true)
-                    .setPersisted(true)
                     .setUpdateCurrent(true)
                     .build()
                     .schedule()

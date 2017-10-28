@@ -29,7 +29,6 @@ class BackupCreatorJob : Job() {
             if (interval > 0) {
                 JobRequest.Builder(TAG)
                         .setPeriodic(interval * 60 * 60 * 1000L, 10 * 60 * 1000)
-                        .setPersisted(true)
                         .setUpdateCurrent(true)
                         .build()
                         .schedule()
