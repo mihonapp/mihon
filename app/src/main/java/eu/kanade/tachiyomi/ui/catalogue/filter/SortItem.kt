@@ -2,9 +2,7 @@ package eu.kanade.tachiyomi.ui.catalogue.filter
 
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.CheckedTextView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractSectionableItem
@@ -15,13 +13,16 @@ import eu.kanade.tachiyomi.util.getResourceColor
 
 class SortItem(val name: String, val group: SortGroup) : AbstractSectionableItem<SortItem.Holder, SortGroup>(group) {
 
-    // Use an id instead of the layout res to allow to reuse the layout.
     override fun getLayoutRes(): Int {
-        return R.id.catalogue_filter_sort_item
+        return R.layout.navigation_view_checkedtext
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): Holder {
-        return Holder(inflater.inflate(R.layout.navigation_view_checkedtext, parent, false), adapter)
+    override fun getItemViewType(): Int {
+        return 102
+    }
+
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): Holder {
+        return Holder(view, adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {

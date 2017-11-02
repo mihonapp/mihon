@@ -2,9 +2,7 @@ package eu.kanade.tachiyomi.ui.catalogue.filter
 
 import android.annotation.SuppressLint
 import android.support.design.R
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractHeaderItem
 import eu.davidea.viewholders.FlexibleViewHolder
@@ -17,8 +15,8 @@ class SeparatorItem(val filter: Filter.Separator) : AbstractHeaderItem<Separator
         return R.layout.design_navigation_item_separator
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): Holder {
-        return Holder(inflater.inflate(layoutRes, parent, false), adapter)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): Holder {
+        return Holder(view, adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {

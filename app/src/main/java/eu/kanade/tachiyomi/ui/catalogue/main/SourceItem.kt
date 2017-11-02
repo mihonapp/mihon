@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.catalogue.main
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractSectionableItem
 import eu.kanade.tachiyomi.R
@@ -26,10 +25,7 @@ data class SourceItem(val source: CatalogueSource, val header: LangItem? = null)
     /**
      * Creates a new view holder for this item.
      */
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater,
-                                  parent: ViewGroup): SourceHolder {
-
-        val view = inflater.inflate(layoutRes, parent, false)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): SourceHolder {
         return SourceHolder(view, adapter as CatalogueMainAdapter)
     }
 

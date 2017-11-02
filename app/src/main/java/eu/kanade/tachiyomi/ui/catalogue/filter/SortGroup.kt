@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.ui.catalogue.filter
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractExpandableHeaderItem
 import eu.davidea.flexibleadapter.items.ISectionable
@@ -12,13 +10,16 @@ import eu.kanade.tachiyomi.util.setVectorCompat
 
 class SortGroup(val filter: Filter.Sort) : AbstractExpandableHeaderItem<SortGroup.Holder, ISectionable<*, *>>() {
 
-    // Use an id instead of the layout res to allow to reuse the layout.
     override fun getLayoutRes(): Int {
-        return R.id.catalogue_filter_sort_group
+        return R.layout.navigation_view_group
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): Holder {
-        return Holder(inflater.inflate(R.layout.navigation_view_group, parent, false), adapter)
+    override fun getItemViewType(): Int {
+        return 100
+    }
+
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): Holder {
+        return Holder(view, adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {

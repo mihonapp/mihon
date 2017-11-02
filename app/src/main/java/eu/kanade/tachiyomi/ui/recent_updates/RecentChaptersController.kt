@@ -11,6 +11,7 @@ import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.support.v7.widget.scrollStateChanges
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -120,7 +121,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
 
         // Get item from position
         val item = adapter.getItem(position) as? RecentChapterItem ?: return false
-        if (actionMode != null && adapter.mode == FlexibleAdapter.MODE_MULTI) {
+        if (actionMode != null && adapter.mode == SelectableAdapter.Mode.MULTI) {
             toggleSelection(position)
             return true
         } else {
@@ -175,7 +176,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      */
     fun onNextRecentChapters(chapters: List<IFlexible<*>>) {
         destroyActionModeIfNeeded()
-        adapter?.updateDataSet(chapters.toMutableList())
+        adapter?.updateDataSet(chapters)
     }
 
     override fun onUpdateEmptyView(size: Int) {
@@ -295,7 +296,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      */
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.chapter_recent_selection, menu)
-        adapter?.mode = FlexibleAdapter.MODE_MULTI
+        adapter?.mode = SelectableAdapter.Mode.MULTI
         return true
     }
 
@@ -332,7 +333,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      * @param mode the ActionMode object
      */
     override fun onDestroyActionMode(mode: ActionMode?) {
-        adapter?.mode = FlexibleAdapter.MODE_IDLE
+        adapter?.mode = SelectableAdapter.Mode.IDLE
         adapter?.clearSelection()
         actionMode = null
     }

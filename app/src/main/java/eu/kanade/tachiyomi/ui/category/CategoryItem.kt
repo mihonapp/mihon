@@ -1,12 +1,10 @@
 package eu.kanade.tachiyomi.ui.category
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.util.inflate
 
 /**
  * Category item for a recycler view.
@@ -28,15 +26,11 @@ class CategoryItem(val category: Category) : AbstractFlexibleItem<CategoryHolder
     /**
      * Returns a new view holder for this item.
      *
+     * @param view The view of this item.
      * @param adapter The adapter of this item.
-     * @param inflater The layout inflater for XML inflation.
-     * @param parent The container view.
      */
-    override fun createViewHolder(adapter: FlexibleAdapter<*>,
-                                  inflater: LayoutInflater,
-                                  parent: ViewGroup): CategoryHolder {
-
-        return CategoryHolder(parent.inflate(layoutRes), adapter as CategoryAdapter)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): CategoryHolder {
+        return CategoryHolder(view, adapter as CategoryAdapter)
     }
 
     /**

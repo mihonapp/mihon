@@ -1,33 +1,35 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
+import com.f2prateek.rx.preferences.Preference
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFilterable
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
-import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
-class LibraryItem(val manga: LibraryManga) : AbstractFlexibleItem<LibraryHolder>(), IFilterable {
+class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference<Boolean>) :
+        AbstractFlexibleItem<LibraryHolder>(), IFilterable {
 
     var downloadCount = -1
 
     override fun getLayoutRes(): Int {
-        return R.layout.catalogue_grid_item
+        return if (libraryAsList.getOrDefault())
+            R.layout.catalogue_list_item
+        else
+            R.layout.catalogue_grid_item
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>,
-                                  inflater: LayoutInflater,
-                                  parent: ViewGroup): LibraryHolder {
-
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): LibraryHolder {
+        val parent = adapter.recyclerView
         return if (parent is AutofitRecyclerView) {
-            val view = parent.inflate(R.layout.catalogue_grid_item).apply {
+            view.apply {
                 val coverHeight = parent.itemWidth / 3 * 4
                 card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
                 gradient.layoutParams = FrameLayout.LayoutParams(
@@ -35,7 +37,6 @@ class LibraryItem(val manga: LibraryManga) : AbstractFlexibleItem<LibraryHolder>
             }
             LibraryGridHolder(view, adapter)
         } else {
-            val view = parent.inflate(R.layout.catalogue_list_item)
             LibraryListHolder(view, adapter)
         }
     }

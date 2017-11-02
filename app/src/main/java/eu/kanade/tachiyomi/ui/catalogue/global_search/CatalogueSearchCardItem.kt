@@ -1,12 +1,10 @@
 package eu.kanade.tachiyomi.ui.catalogue.global_search
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.util.inflate
 
 class CatalogueSearchCardItem(val manga: Manga) : AbstractFlexibleItem<CatalogueSearchCardHolder>() {
 
@@ -14,9 +12,8 @@ class CatalogueSearchCardItem(val manga: Manga) : AbstractFlexibleItem<Catalogue
         return R.layout.catalogue_global_search_controller_card_item
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater,
-                                  parent: ViewGroup): CatalogueSearchCardHolder {
-        return CatalogueSearchCardHolder(parent.inflate(layoutRes), adapter as CatalogueSearchCardAdapter)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): CatalogueSearchCardHolder {
+        return CatalogueSearchCardHolder(view, adapter as CatalogueSearchCardAdapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: CatalogueSearchCardHolder,

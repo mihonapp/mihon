@@ -29,9 +29,9 @@ class ChaptersAdapter(
 
     val dateFormat: DateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
 
-    override fun updateDataSet(items: List<ChapterItem>) {
-        this.items = items
-        super.updateDataSet(items.toList())
+    override fun updateDataSet(items: List<ChapterItem>?) {
+        this.items = items ?: emptyList()
+        super.updateDataSet(items)
     }
 
     fun indexOf(item: ChapterItem): Int {

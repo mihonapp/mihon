@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.ui.catalogue.filter
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -19,8 +17,12 @@ class GroupItem(val filter: Filter.Group<*>) : AbstractExpandableHeaderItem<Grou
         return R.layout.navigation_view_group
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): Holder {
-        return Holder(inflater.inflate(layoutRes, parent, false), adapter)
+    override fun getItemViewType(): Int {
+        return 101
+    }
+
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): Holder {
+        return Holder(view, adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {

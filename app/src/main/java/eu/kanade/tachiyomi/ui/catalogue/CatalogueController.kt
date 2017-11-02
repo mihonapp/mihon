@@ -44,7 +44,7 @@ open class CatalogueController(bundle: Bundle) :
         SecondaryDrawerController,
         FlexibleAdapter.OnItemClickListener,
         FlexibleAdapter.OnItemLongClickListener,
-        FlexibleAdapter.EndlessScrollListener<ProgressItem>,
+        FlexibleAdapter.EndlessScrollListener,
         ChangeMangaCategoriesDialog.Listener {
 
     constructor(source: CatalogueSource) : this(Bundle().apply {

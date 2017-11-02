@@ -221,7 +221,7 @@ class CatalogueMainController : NucleusController<CatalogueMainPresenter>(),
      * Called to update adapter containing sources.
      */
     fun setSources(sources: List<IFlexible<*>>) {
-        adapter?.updateDataSet(sources.toMutableList())
+        adapter?.updateDataSet(sources)
     }
 
     /**

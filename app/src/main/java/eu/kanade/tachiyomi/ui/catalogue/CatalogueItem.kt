@@ -1,39 +1,40 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
+import com.f2prateek.rx.preferences.Preference
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
-class CatalogueItem(val manga: Manga) : AbstractFlexibleItem<CatalogueHolder>() {
+class CatalogueItem(val manga: Manga, private val catalogueAsList: Preference<Boolean>) :
+        AbstractFlexibleItem<CatalogueHolder>() {
 
     override fun getLayoutRes(): Int {
-        return R.layout.catalogue_grid_item
+        return if (catalogueAsList.getOrDefault())
+            R.layout.catalogue_list_item
+        else
+            R.layout.catalogue_grid_item
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>,
-                                  inflater: LayoutInflater,
-                                  parent: ViewGroup): CatalogueHolder {
-
-        if (parent is AutofitRecyclerView) {
-            val view = parent.inflate(R.layout.catalogue_grid_item).apply {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): CatalogueHolder {
+        val parent = adapter.recyclerView
+        return if (parent is AutofitRecyclerView) {
+            view.apply {
                 card.layoutParams = FrameLayout.LayoutParams(
                         MATCH_PARENT, parent.itemWidth / 3 * 4)
                 gradient.layoutParams = FrameLayout.LayoutParams(
                         MATCH_PARENT, parent.itemWidth / 3 * 4 / 2, Gravity.BOTTOM)
             }
-            return CatalogueGridHolder(view, adapter)
+            CatalogueGridHolder(view, adapter)
         } else {
-            val view = parent.inflate(R.layout.catalogue_list_item)
-            return CatalogueListHolder(view, adapter)
+            CatalogueListHolder(view, adapter)
         }
     }
 

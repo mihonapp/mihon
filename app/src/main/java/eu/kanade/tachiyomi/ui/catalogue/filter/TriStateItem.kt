@@ -2,9 +2,7 @@ package eu.kanade.tachiyomi.ui.catalogue.filter
 
 import android.support.design.R
 import android.support.graphics.drawable.VectorDrawableCompat
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.CheckedTextView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
@@ -20,8 +18,12 @@ open class TriStateItem(val filter: Filter.TriState) : AbstractFlexibleItem<TriS
         return TR.layout.navigation_view_checkedtext
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup?): Holder {
-        return Holder(inflater.inflate(layoutRes, parent, false), adapter)
+    override fun getItemViewType(): Int {
+        return 103
+    }
+
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): Holder {
+        return Holder(view, adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {

@@ -1,12 +1,10 @@
 package eu.kanade.tachiyomi.ui.catalogue.global_search
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.util.inflate
 
 /**
  * Item that contains search result information.
@@ -30,9 +28,8 @@ class CatalogueSearchItem(val source: CatalogueSource, val results: List<Catalog
      *
      * @return holder of view.
      */
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater,
-                                  parent: ViewGroup): CatalogueSearchHolder {
-        return CatalogueSearchHolder(parent.inflate(layoutRes), adapter as CatalogueSearchAdapter)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): CatalogueSearchHolder {
+        return CatalogueSearchHolder(view, adapter as CatalogueSearchAdapter)
     }
 
     /**

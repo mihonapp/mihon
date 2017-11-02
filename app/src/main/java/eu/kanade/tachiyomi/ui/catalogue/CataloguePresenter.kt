@@ -131,13 +131,15 @@ open class CataloguePresenter(
 
         val sourceId = source.id
 
+        val catalogueAsList = prefs.catalogueAsList()
+
         // Prepare the pager.
         pagerSubscription?.let { remove(it) }
         pagerSubscription = pager.results()
                 .observeOn(Schedulers.io())
                 .map { it.first to it.second.map { networkToLocalManga(it, sourceId) } }
                 .doOnNext { initializeMangas(it.second) }
-                .map { it.first to it.second.map(::CatalogueItem) }
+                .map { it.first to it.second.map { CatalogueItem(it, catalogueAsList) } }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeReplay({ view, (page, mangas) ->
                     view.onAddPage(page, mangas)

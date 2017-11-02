@@ -1,12 +1,10 @@
 package eu.kanade.tachiyomi.ui.recently_read
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
-import eu.kanade.tachiyomi.util.inflate
 
 class RecentlyReadItem(val mch: MangaChapterHistory) : AbstractFlexibleItem<RecentlyReadHolder>() {
 
@@ -14,11 +12,7 @@ class RecentlyReadItem(val mch: MangaChapterHistory) : AbstractFlexibleItem<Rece
         return R.layout.recently_read_item
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>,
-                                  inflater: LayoutInflater,
-                                  parent: ViewGroup): RecentlyReadHolder {
-
-        val view = parent.inflate(layoutRes)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): RecentlyReadHolder {
         return RecentlyReadHolder(view, adapter as RecentlyReadAdapter)
     }
 
