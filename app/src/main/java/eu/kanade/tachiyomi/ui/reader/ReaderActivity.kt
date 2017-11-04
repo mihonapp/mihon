@@ -575,9 +575,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             uri = File(uri.toString().substringAfter("file://")).getUriCompat(this)
         }
         val intent = Intent(Intent.ACTION_SEND).apply {
+            setDataAndType(uri, "image/*")
             putExtra(Intent.EXTRA_STREAM, uri)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-            type = "image/*"
         }
         startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
     }
