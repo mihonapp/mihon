@@ -118,15 +118,15 @@ class CatalogueSearchPresenter(
 
         fetchSourcesSubscription?.unsubscribe()
         fetchSourcesSubscription = Observable.from(sources)
-                .observeOn(Schedulers.io())
-                .flatMap { source ->
+                .flatMap({ source ->
                     source.fetchSearchManga(1, query, FilterList())
+                            .subscribeOn(Schedulers.io())
                             .onExceptionResumeNext(Observable.empty()) // Ignore timeouts.
                             .map { it.mangas.take(10) } // Get at most 10 manga from search result.
                             .map { it.map { networkToLocalManga(it, source.id) } } // Convert to local manga.
                             .doOnNext { fetchImage(it, source) } // Load manga covers.
                             .map { CatalogueSearchItem(source, it.map { CatalogueSearchCardItem(it) }) }
-                }
+                }, 5)
                 .observeOn(AndroidSchedulers.mainThread())
                 // Update matching source with the obtained results
                 .map { result ->
