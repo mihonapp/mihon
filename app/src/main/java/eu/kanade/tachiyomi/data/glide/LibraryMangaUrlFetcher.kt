@@ -39,11 +39,11 @@ class LibraryMangaUrlFetcher(private val networkFetcher: DataFetcher<InputStream
                             // Copy the file and rename to the original.
                             data.use { output.use { data.copyTo(output) } }
                             tmpFile.renameTo(file)
+                            loadFromFile(callback)
                         } catch (e: Exception) {
                             tmpFile.delete()
                             callback.onLoadFailed(e)
                         }
-                        loadFromFile(callback)
                     } else {
                         callback.onLoadFailed(Exception("Null data"))
                     }
