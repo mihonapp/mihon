@@ -234,5 +234,5 @@ class CatalogueMainController : NucleusController<CatalogueMainPresenter>(),
         }
     }
 
-    private class SettingsSourcesFadeChangeHandler : FadeChangeHandler()
+    class SettingsSourcesFadeChangeHandler : FadeChangeHandler()
 }

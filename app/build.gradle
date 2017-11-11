@@ -156,7 +156,7 @@ dependencies {
 
     // Job scheduling
     implementation 'com.evernote:android-job:1.2.0'
-    implementation 'com.google.android.gms:play-services-gcm:11.4.2'
+    implementation 'com.google.android.gms:play-services-gcm:11.6.0'
 
     // Changelog
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
@@ -173,7 +173,7 @@ dependencies {
     implementation "uy.kohesive.injekt:injekt-core:1.16.1"
 
     // Image library
-    final glide_version = '4.2.0'
+    final glide_version = '4.3.1'
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
@@ -182,7 +182,7 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
 
     // Logging
-    implementation 'com.jakewharton.timber:timber:4.5.1'
+    implementation 'com.jakewharton.timber:timber:4.6.0'
 
     // Crash reports
     implementation 'ch.acra:acra:4.9.2'

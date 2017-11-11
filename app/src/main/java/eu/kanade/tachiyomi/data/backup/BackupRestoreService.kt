@@ -182,29 +182,33 @@ class BackupRestoreService : Service() {
     private fun getRestoreObservable(uri: Uri): Observable<List<Manga>> {
         val startTime = System.currentTimeMillis()
 
-        val reader = JsonReader(contentResolver.openInputStream(uri).bufferedReader())
-        val json = JsonParser().parse(reader).asJsonObject
+        return Observable.just(Unit)
+                .map {
+                    val reader = JsonReader(contentResolver.openInputStream(uri).bufferedReader())
+                    val json = JsonParser().parse(reader).asJsonObject
 
-        // Get parser version
-        val version = json.get(VERSION)?.asInt ?: 1
+                    // Get parser version
+                    val version = json.get(VERSION)?.asInt ?: 1
 
-        // Initialize manager
-        backupManager = BackupManager(this, version)
+                    // Initialize manager
+                    backupManager = BackupManager(this, version)
 
-        val mangasJson = json.get(MANGAS).asJsonArray
+                    val mangasJson = json.get(MANGAS).asJsonArray
 
-        restoreAmount = mangasJson.size() + 1 // +1 for categories
-        restoreProgress = 0
-        errors.clear()
+                    restoreAmount = mangasJson.size() + 1 // +1 for categories
+                    restoreProgress = 0
+                    errors.clear()
 
-        // Restore categories
-        json.get(CATEGORIES)?.let {
-            backupManager.restoreCategories(it.asJsonArray)
-            restoreProgress += 1
-            showRestoreProgress(restoreProgress, restoreAmount, "Categories added", errors.size)
-        }
+                    // Restore categories
+                    json.get(CATEGORIES)?.let {
+                        backupManager.restoreCategories(it.asJsonArray)
+                        restoreProgress += 1
+                        showRestoreProgress(restoreProgress, restoreAmount, "Categories added", errors.size)
+                    }
 
-        return Observable.from(mangasJson)
+                    mangasJson
+                }
+                .flatMap { Observable.from(it) }
                 .concatMap {
                     val obj = it.asJsonObject
                     val manga = backupManager.parser.fromJson<MangaImpl>(obj.get(MANGA))
