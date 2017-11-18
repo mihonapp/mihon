@@ -23,14 +23,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
 
-        <TextView
+        <eu.kanade.tachiyomi.ui.reader.PageIndicatorTextView
             android:id="@+id/page_number"
             style="@style/TextAppearance.Regular.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:background="?android:attr/colorBackground"
-            android:padding="8dp"/>
+            android:layout_gravity="bottom|center_horizontal"
+            android:padding="4dp"
+            android:textColor="@color/md_white_1000"
+            android:textStyle="bold"
+            android:shadowRadius="3"
+            android:shadowDy="0"
+            android:shadowDx="0"
+            android:shadowColor="@color/md_black_1000"/>
 
     </FrameLayout>
 

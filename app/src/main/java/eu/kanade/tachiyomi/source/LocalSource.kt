@@ -56,7 +56,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
     }
 
     override val id = ID
-    override val name = "LocalSource"
+    override val name = context.getString(R.string.local_source)
     override val lang = ""
     override val supportsLatest = true
 

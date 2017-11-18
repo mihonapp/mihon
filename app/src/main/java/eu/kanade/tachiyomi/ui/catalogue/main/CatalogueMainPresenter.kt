@@ -51,7 +51,14 @@ class CatalogueMainPresenter(
     fun loadSources() {
         sourceSubscription?.unsubscribe()
 
-        val map = TreeMap<String, MutableList<CatalogueSource>> { d1, d2 -> d1.compareTo(d2) }
+        val map = TreeMap<String, MutableList<CatalogueSource>> { d1, d2 ->
+            // Catalogues without a lang defined will be placed at the end
+            when {
+                d1 == "" && d2 != "" -> 1
+                d2 == "" && d1 != "" -> -1
+                else -> d1.compareTo(d2)
+            }
+        }
         val byLang = sources.groupByTo(map, { it.lang })
         val sourceItems = byLang.flatMap {
             val langItem = LangItem(it.key)

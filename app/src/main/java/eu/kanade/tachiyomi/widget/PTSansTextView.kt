@@ -38,10 +38,10 @@ class PTSansTextView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
-    override fun draw(canvas: Canvas) {
+    override fun onDraw(canvas: Canvas) {
         // Draw two times for a more visible shadow around the text
-        super.draw(canvas)
-        super.draw(canvas)
+        super.onDraw(canvas)
+        super.onDraw(canvas)
     }
 
 }

@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Build.VERSION_CODES.KITKAT
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.view.*
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import android.view.animation.Animation
@@ -513,12 +512,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         val rootView = window.decorView.rootView
         if (theme == BLACK_THEME) {
             rootView.setBackgroundColor(Color.BLACK)
-            page_number.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimaryDark))
-            page_number.setBackgroundColor(ContextCompat.getColor(this, R.color.pageNumberBackgroundDark))
         } else {
             rootView.setBackgroundColor(Color.WHITE)
-            page_number.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimaryLight))
-            page_number.setBackgroundColor(ContextCompat.getColor(this, R.color.pageNumberBackgroundLight))
         }
     }
 
