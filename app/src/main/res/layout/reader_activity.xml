@@ -31,11 +31,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:padding="4dp"
             android:textColor="@color/md_white_1000"
-            android:textStyle="bold"
-            android:shadowRadius="3"
-            android:shadowDy="0"
-            android:shadowDx="0"
-            android:shadowColor="@color/md_black_1000"/>
+            android:textStyle="bold" />
 
     </FrameLayout>
 
