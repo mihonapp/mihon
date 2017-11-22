@@ -5,7 +5,6 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
@@ -58,7 +57,9 @@ class RecentChaptersPresenter(
                 // Convert to a list of recent chapters.
                 .map { mangaChapters ->
                     val map = TreeMap<Date, MutableList<MangaChapter>> { d1, d2 -> d2.compareTo(d1) }
-                    val byDay = mangaChapters.groupByTo(map, { getMapKey(it.chapter.date_fetch) })
+                    val byDay = mangaChapters
+                            .filter { sourceManager.get(it.manga.source) != null }
+                            .groupByTo(map, { getMapKey(it.chapter.date_fetch) })
                     byDay.flatMap {
                         val dateItem = DateItem(it.key)
                         it.value.map { RecentChapterItem(it.chapter, it.manga, dateItem) }
