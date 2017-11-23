@@ -101,7 +101,7 @@ open class CatalogueController(bundle: Bundle) :
     }
 
     override fun getTitle(): String? {
-        return presenter.source.toString()
+        return presenter.source.name
     }
 
     override fun createPresenter(): CataloguePresenter {

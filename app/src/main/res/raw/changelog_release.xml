@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.6.4" changeDate="">
+        <changelogtext>Added a global search feature with a new catalogue screen.</changelogtext>
+
+        <changelogtext>Added an option to show downloaded chapters badges in the library.</changelogtext>
+
+        <changelogtext>Added an scrollbar in the chapter list.</changelogtext>
+
+        <changelogtext>Fixed some issues with bundled catalogues.</changelogtext>
+
+        <changelogtext>Changed the page indicator in the reader to support devices with rounded corners.</changelogtext>
+
+        <changelogtext>Crash fixes.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.6.3" changeDate="">
         <changelogtext>Fixed a crash when retrying a page.</changelogtext>
 
