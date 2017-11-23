@@ -17,7 +17,7 @@ class Readmangatoday : ParsedHttpSource() {
 
     override val name = "ReadMangaToday"
 
-    override val baseUrl = "http://www.readmanga.today"
+    override val baseUrl = "http://www.readmng.com/"
 
     override val lang = "en"
 

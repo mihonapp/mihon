@@ -15,14 +15,16 @@ import android.widget.TextView
 class PageIndicatorTextView(context: Context, attrs: AttributeSet? = null) :
         AppCompatTextView(context, attrs) {
 
+    private val fillColor = Color.rgb(235, 235, 235)
+    private val strokeColor = Color.rgb(45, 45, 45)
+
     override fun onDraw(canvas: Canvas) {
-        val textColor = textColors.defaultColor
-        textColorField.set(this, Color.BLACK)
+        textColorField.set(this, strokeColor)
         paint.strokeWidth = 4f
         paint.style = Paint.Style.STROKE
         super.onDraw(canvas)
 
-        textColorField.set(this, textColor)
+        textColorField.set(this, fillColor)
         paint.strokeWidth = 0f
         paint.style = Paint.Style.FILL
         super.onDraw(canvas)

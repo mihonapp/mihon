@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:padding="4dp"
-            android:textColor="@color/md_white_1000"
             android:textStyle="bold" />
 
     </FrameLayout>
