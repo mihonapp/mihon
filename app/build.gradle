@@ -210,14 +210,17 @@ dependencies {
     compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7-kotlin:$rxbindings_version"
 
     //Pin lock view (EXH)
-    compile 'com.andrognito.pinlockview:pinlockview:1.0.1'
+    compile 'com.andrognito.pinlockview:pinlockview:2.1.0'
 
     //Reprint (EXH)
-    compile 'com.github.ajalt.reprint:core:3.1.0@aar' // required: supports marshmallow devices
-    compile 'com.github.ajalt.reprint:rxjava:3.1.0@aar' // optional: the RxJava 1 interface
+    compile 'com.github.ajalt.reprint:core:3.2.0@aar' // required: supports marshmallow devices
+    compile 'com.github.ajalt.reprint:rxjava:3.2.0@aar' // optional: the RxJava 1 interface
 
     //Swirl (EXH)
     compile 'com.mattprecious.swirl:swirl:1.0.0'
+
+    //RxJava 2 interop for Realm (EXH)
+    compile 'com.lvla.android:rxjava2-interop-kt:0.2.1'
 
     // Tests
     //Paper DB screws up tests
