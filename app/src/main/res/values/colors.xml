@@ -20,6 +20,7 @@
     <color name="dialogLight">@color/md_white_1000</color>
 
     <color name="selectorColorLight">@color/md_blue_A400_38</color>
+    <color name="iconColorLight">@color/md_black_1000</color>
 
     <!-- Dark Theme -->
     <color name="colorAccentDark">#3399ff</color>
@@ -33,8 +34,10 @@
     <color name="appBarDark">@color/md_grey_900</color>
     <color name="backgroundDark">#303030</color>
     <color name="dialogDark">@color/md_grey_800</color>
+    <color name="dialog_amoled">#141414</color>
 
     <color name="selectorColorDark">@color/md_blue_A200_50</color>
+    <color name="iconColorDark">@color/md_white_1000_54</color>
 
     <!-- Reader Theme -->
     <color name="pageNumberBackgroundLight">@color/md_grey_50_75</color>
@@ -48,6 +51,7 @@
 
     <color name="md_white_1000">#FFFFFFFF</color>
     <color name="md_white_1000_70">#B3FFFFFF</color>
+    <color name="md_white_1000_54">#8AFFFFFF</color>
     <color name="md_white_1000_50">#80FFFFFF</color>
     <color name="md_white_1000_20">#33FFFFFF</color>
     <color name="md_white_1000_12">#1FFFFFFF</color>
@@ -70,7 +74,10 @@
     <color name="md_blue_A400_38">#612979FF</color>
 
     <color name="md_blue_grey_900">#263238</color>
+    <color name="md_blue_grey_800">#37474F</color>
 
     <color name="md_red_500">#F44336</color>
+
+    <color name="md_teal_500">#009688</color>
 
 </resources>

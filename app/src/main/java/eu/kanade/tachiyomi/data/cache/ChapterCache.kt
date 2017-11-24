@@ -44,13 +44,8 @@ class ChapterCache(private val context: Context) {
     /** Google Json class used for parsing JSON files.  */
     private val gson: Gson by injectLazy()
 
-    /** Parent directory of the cache. Ensure not null and not root directory or fallback
-     * to internal cache directory. **/
-    private val basePath = context.externalCacheDir?.takeIf { it.absolutePath.length > 1 }
-            ?: context.cacheDir
-
     /** Cache class used for cache management.  */
-    private val diskCache = DiskLruCache.open(File(basePath, PARAMETER_CACHE_DIRECTORY),
+    private val diskCache = DiskLruCache.open(File(context.cacheDir, PARAMETER_CACHE_DIRECTORY),
             PARAMETER_APP_VERSION,
             PARAMETER_VALUE_COUNT,
             PARAMETER_CACHE_SIZE)
@@ -86,10 +81,10 @@ class ChapterCache(private val context: Context) {
 
         try {
             // Remove the extension from the file to get the key of the cache
-            val key = file.substring(0, file.lastIndexOf("."))
+            val key = file.substringBeforeLast(".")
             // Remove file from cache.
             return diskCache.remove(key)
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             return false
         }
     }

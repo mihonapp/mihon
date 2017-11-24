@@ -40,11 +40,12 @@ fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
 /**
  * Helper method to create a notification.
  *
+ * @param id the channel id.
  * @param func the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
  */
-inline fun Context.notification(func: NotificationCompat.Builder.() -> Unit): Notification {
-    val builder = NotificationCompat.Builder(this)
+inline fun Context.notification(channelId: String, func: NotificationCompat.Builder.() -> Unit): Notification {
+    val builder = NotificationCompat.Builder(this, channelId)
     builder.func()
     return builder.build()
 }
@@ -105,7 +106,7 @@ val Context.powerManager: PowerManager
  *
  * @param intent intent that contains broadcast information
  */
-fun Context.sendLocalBroadcast(intent:Intent){
+fun Context.sendLocalBroadcast(intent: Intent) {
     LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 }
 
@@ -142,6 +143,7 @@ fun Context.unregisterLocalReceiver(receiver: BroadcastReceiver) {
 fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
     val className = serviceClass.name
     val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    @Suppress("DEPRECATION")
     return manager.getRunningServices(Integer.MAX_VALUE)
             .any { className == it.service.className }
 }

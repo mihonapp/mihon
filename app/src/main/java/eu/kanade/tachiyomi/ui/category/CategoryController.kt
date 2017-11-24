@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.category
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
@@ -8,11 +9,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.jakewharton.rxbinding.view.clicks
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.SelectableAdapter
+import eu.davidea.flexibleadapter.helpers.UndoHelper
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.toast
-import eu.kanade.tachiyomi.widget.UndoHelper
 import kotlinx.android.synthetic.main.categories_controller.view.*
 
 /**
@@ -38,7 +40,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
     private var adapter: CategoryAdapter? = null
 
     /**
-     * Undo helper for deleting categories.
+     * Undo helper used for restoring a deleted category.
      */
     private var undoHelper: UndoHelper? = null
 
@@ -79,6 +81,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
             recycler.setHasFixedSize(true)
             recycler.adapter = adapter
             adapter?.isHandleDragEnabled = true
+            adapter?.isPermanentDelete = false
 
             fab.clicks().subscribeUntilDestroy {
                 CategoryCreateDialog(this@CategoryController).showDialog(router, null)
@@ -93,7 +96,8 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      */
     override fun onDestroyView(view: View) {
         super.onDestroyView(view)
-        undoHelper?.dismissNow() // confirm categories deletion if required
+        // Manually call callback to delete categories if required
+        undoHelper?.onDeleteConfirmed(Snackbar.Callback.DISMISS_EVENT_MANUAL)
         undoHelper = null
         actionMode = null
         adapter = null
@@ -106,7 +110,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      */
     fun setCategories(categories: List<CategoryItem>) {
         actionMode?.finish()
-        adapter?.updateDataSet(categories.toMutableList())
+        adapter?.updateDataSet(categories)
         val selected = categories.filter { it.isSelected }
         if (selected.isNotEmpty()) {
             selected.forEach { onItemLongClick(categories.indexOf(it)) }
@@ -126,7 +130,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
         // Inflate menu.
         mode.menuInflater.inflate(R.menu.category_selection, menu)
         // Enable adapter multi selection.
-        adapter?.mode = FlexibleAdapter.MODE_MULTI
+        adapter?.mode = SelectableAdapter.Mode.MULTI
         return true
     }
 
@@ -161,26 +165,20 @@ class CategoryController : NucleusController<CategoryPresenter>(),
 
         when (item.itemId) {
             R.id.action_delete -> {
-                undoHelper = UndoHelper(adapter, this).apply {
-                    withAction(UndoHelper.ACTION_REMOVE, object : UndoHelper.OnActionListener {
-                        override fun onPreAction(): Boolean {
-                            adapter.clearModelSelection()
-                            return false
-                        }
+                undoHelper = UndoHelper(adapter, this)
+                undoHelper?.start(adapter.selectedPositions, view!!,
+                                R.string.snack_categories_deleted, R.string.action_undo, 3000)
 
-                        override fun onPostAction() {
-                            mode.finish()
-                        }
-                    })
-                    remove(adapter.selectedPositions, view!!,
-                            R.string.snack_categories_deleted, R.string.action_undo, 3000)
-                }
+                mode.finish()
             }
             R.id.action_edit -> {
                 // Edit selected category
                 if (adapter.selectedItemCount == 1) {
                     val position = adapter.selectedPositions.first()
-                    editCategory(adapter.getItem(position).category)
+                    val category = adapter.getItem(position)?.category
+                    if (category != null) {
+                        editCategory(category)
+                    }
                 }
             }
             else -> return false
@@ -195,7 +193,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      */
     override fun onDestroyActionMode(mode: ActionMode) {
         // Reset adapter to single selection
-        adapter?.mode = FlexibleAdapter.MODE_IDLE
+        adapter?.mode = SelectableAdapter.Mode.IDLE
         adapter?.clearSelection()
         actionMode = null
     }
@@ -260,7 +258,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      */
     override fun onItemReleased(position: Int) {
         val adapter = adapter ?: return
-        val categories = (0..adapter.itemCount-1).map { adapter.getItem(it).category }
+        val categories = (0 until adapter.itemCount).mapNotNull { adapter.getItem(it)?.category }
         presenter.reorderCategories(categories)
     }
 
@@ -269,18 +267,21 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      *
      * @param action The action performed.
      */
-    override fun onUndoConfirmed(action: Int) {
+    override fun onActionCanceled(action: Int) {
         adapter?.restoreDeletedItems()
+        undoHelper = null
     }
 
     /**
      * Called when the time to restore the items expires.
      *
      * @param action The action performed.
+     * @param event The event that triggered the action
      */
-    override fun onDeleteConfirmed(action: Int) {
+    override fun onActionConfirmed(action: Int, event: Int) {
         val adapter = adapter ?: return
         presenter.deleteCategories(adapter.deletedItems.map { it.category })
+        undoHelper = null
     }
 
     /**

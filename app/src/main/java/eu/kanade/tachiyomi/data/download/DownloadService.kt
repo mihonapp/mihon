@@ -122,7 +122,7 @@ class DownloadService : Service() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ state -> onNetworkStateChanged(state)
-                }, { error ->
+                }, { _ ->
                     toast(R.string.download_queue_error)
                     stopSelf()
                 })

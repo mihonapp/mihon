@@ -45,6 +45,16 @@ object Migrations {
                     }
                 }
             }
+            if (oldVersion < 26) {
+                // Delete external chapter cache dir.
+                val extCache = context.externalCacheDir
+                if (extCache != null) {
+                    val chapterCache = File(extCache, "chapter_disk_cache")
+                    if (chapterCache.exists()) {
+                        chapterCache.deleteRecursively()
+                    }
+                }
+            }
             return true
         }
         return false

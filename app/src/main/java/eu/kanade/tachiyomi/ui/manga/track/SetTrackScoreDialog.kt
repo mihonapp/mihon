@@ -43,7 +43,7 @@ class SetTrackScoreDialog<T> : DialogController
                     val view = dialog.customView
                     if (view != null) {
                         // Remove focus to update selected number
-                        val np = view.findViewById(R.id.score_picker) as NumberPicker
+                        val np: NumberPicker = view.findViewById(R.id.score_picker)
                         np.clearFocus()
 
                         (targetController as? Listener)?.setScore(item, np.value)
@@ -53,7 +53,7 @@ class SetTrackScoreDialog<T> : DialogController
 
         val view = dialog.customView
         if (view != null) {
-            val np = view.findViewById(R.id.score_picker) as NumberPicker
+            val np: NumberPicker = view.findViewById(R.id.score_picker)
             val scores = item.service.getScoreList().toTypedArray()
             np.maxValue = scores.size - 1
             np.displayedValues = scores

@@ -66,6 +66,7 @@ class DownloadQueue(
                         val pageStatusSubject = PublishSubject.create<Int>()
                         setPagesSubject(download.pages, pageStatusSubject)
                         return@flatMap pageStatusSubject
+                                .onBackpressureBuffer()
                                 .filter { it == Page.READY }
                                 .map { download }
 

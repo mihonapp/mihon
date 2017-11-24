@@ -34,7 +34,7 @@ class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs:
     }
 
     fun setFilters(items: List<IFlexible<*>>) {
-        adapter.updateDataSet(items.toMutableList())
+        adapter.updateDataSet(items)
     }
 
 }

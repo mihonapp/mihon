@@ -5,9 +5,8 @@ import android.support.graphics.drawable.VectorDrawableCompat
 import android.view.View
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
+import com.bumptech.glide.request.target.ImageViewTarget
+import com.bumptech.glide.request.transition.Transition
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.gone
@@ -26,16 +25,23 @@ class StateImageViewTarget(view: ImageView,
                            val progress: View? = null,
                            val errorDrawableRes: Int = R.drawable.ic_broken_image_grey_24dp,
                            val errorScaleType: ScaleType = ScaleType.CENTER) :
-        GlideDrawableImageViewTarget(view) {
+
+        ImageViewTarget<Drawable>(view) {
+
+    private var resource: Drawable? = null
 
     private val imageScaleType = view.scaleType
+
+    override fun setResource(resource: Drawable?) {
+        view.setImageDrawable(resource)
+    }
 
     override fun onLoadStarted(placeholder: Drawable?) {
         progress?.visible()
         super.onLoadStarted(placeholder)
     }
 
-    override fun onLoadFailed(e: Exception?, errorDrawable: Drawable?) {
+    override fun onLoadFailed(errorDrawable: Drawable?) {
         progress?.gone()
         view.scaleType = errorScaleType
 
@@ -49,9 +55,10 @@ class StateImageViewTarget(view: ImageView,
         super.onLoadCleared(placeholder)
     }
 
-    override fun onResourceReady(resource: GlideDrawable?, animation: GlideAnimation<in GlideDrawable>?) {
+    override fun onResourceReady(resource: Drawable?, transition: Transition<in Drawable>?) {
         progress?.gone()
         view.scaleType = imageScaleType
-        super.onResourceReady(resource, animation)
+        super.onResourceReady(resource, transition)
+        this.resource = resource
     }
 }

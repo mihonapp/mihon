@@ -4,10 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
-import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.notificationManager
 import java.io.File
 import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
@@ -49,7 +49,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
     /**
      * Notification shown to user
      */
-    private val notification = NotificationCompat.Builder(context)
+    private val notification = NotificationCompat.Builder(context, Notifications.CHANNEL_COMMON)
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.getStringExtra(EXTRA_ACTION)) {
@@ -82,6 +82,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
     private fun updateProgress(progress: Int) {
         with(notification) {
             setProgress(100, progress, false)
+            setOnlyAlertOnce(true)
         }
         notification.show()
     }
@@ -96,6 +97,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
         with(notification) {
             setContentText(context.getString(R.string.update_check_notification_download_complete))
             setSmallIcon(android.R.drawable.stat_sys_download_done)
+            setOnlyAlertOnce(false)
             setProgress(0, 0, false)
             // Install action
             setContentIntent(NotificationHandler.installApkPendingActivity(context, File(path)))
@@ -105,7 +107,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
             // Cancel action
             addAction(R.drawable.ic_clear_grey_24dp_img,
                     context.getString(R.string.action_cancel),
-                    NotificationReceiver.dismissNotificationPendingBroadcast(context, Constants.NOTIFICATION_UPDATER_ID))
+                    NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_UPDATER))
         }
         notification.show()
     }
@@ -120,6 +122,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
         with(notification) {
             setContentText(context.getString(R.string.update_check_notification_download_error))
             setSmallIcon(android.R.drawable.stat_sys_warning)
+            setOnlyAlertOnce(false)
             setProgress(0, 0, false)
             // Retry action
             addAction(R.drawable.ic_refresh_grey_24dp_img,
@@ -128,7 +131,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
             // Cancel action
             addAction(R.drawable.ic_clear_grey_24dp_img,
                     context.getString(R.string.action_cancel),
-                    NotificationReceiver.dismissNotificationPendingBroadcast(context, Constants.NOTIFICATION_UPDATER_ID))
+                    NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_UPDATER))
         }
         notification.show()
     }
@@ -138,7 +141,7 @@ internal class UpdateDownloaderReceiver(val context: Context) : BroadcastReceive
      *
      * @param id the id of the notification.
      */
-    private fun NotificationCompat.Builder.show(id: Int = Constants.NOTIFICATION_UPDATER_ID) {
+    private fun NotificationCompat.Builder.show(id: Int = Notifications.ID_UPDATER) {
         context.notificationManager.notify(id, build())
     }
 }

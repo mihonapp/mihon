@@ -42,6 +42,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.library_controller.view.*
+import kotlinx.android.synthetic.main.main_activity.*
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
@@ -219,17 +220,14 @@ class LibraryController(
             drawer.addDrawerListener(it)
         }
         navView = view
-
-        navView?.post {
-            if (isAttached && drawer.isDrawerOpen(navView))
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, navView)
-        }
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
 
         navView?.onGroupClicked = { group ->
             when (group) {
                 is LibraryNavigationView.FilterGroup -> onFilterChanged()
                 is LibraryNavigationView.SortGroup -> onSortChanged()
                 is LibraryNavigationView.DisplayGroup -> reattachAdapter()
+                is LibraryNavigationView.BadgeGroup -> onDownloadBadgeChanged()
             }
         }
 
@@ -316,7 +314,11 @@ class LibraryController(
      */
     private fun onFilterChanged() {
         presenter.requestFilterUpdate()
-        (activity as? AppCompatActivity)?.supportInvalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
+    }
+
+    private fun onDownloadBadgeChanged(){
+        presenter.requestDownloadBadgesUpdate()
     }
 
     /**

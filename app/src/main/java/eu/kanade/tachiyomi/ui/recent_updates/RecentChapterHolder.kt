@@ -2,13 +2,13 @@ package eu.kanade.tachiyomi.ui.recent_updates
 
 import android.view.View
 import android.widget.PopupMenu
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.util.getResourceColor
-import jp.wasabeef.glide.transformations.CropCircleTransformation
+import eu.kanade.tachiyomi.util.setVectorCompat
 import kotlinx.android.synthetic.main.recent_chapters_item.view.*
 
 /**
@@ -63,13 +63,16 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
         // Set manga title
         view.manga_title.text = item.manga.title
 
+        // Set the correct drawable for dropdown and update the tint to match theme.
+        view.chapter_menu_icon.setVectorCompat(R.drawable.ic_more_horiz_black_24dp, view.context.getResourceColor(R.attr.icon_color))
+
         // Set cover
-        Glide.clear(itemView.manga_cover)
+        GlideApp.with(itemView.context).clear(itemView.manga_cover)
         if (!item.manga.thumbnail_url.isNullOrEmpty()) {
-            Glide.with(itemView.context)
+            GlideApp.with(itemView.context)
                     .load(item.manga)
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .bitmapTransform(CropCircleTransformation(view.context))
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .circleCrop()
                     .into(itemView.manga_cover)
         }
 

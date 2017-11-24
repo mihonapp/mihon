@@ -3,12 +3,12 @@ package eu.kanade.tachiyomi.data.download
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
-import eu.kanade.tachiyomi.Constants
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.chop
 import eu.kanade.tachiyomi.util.notificationManager
 import java.util.regex.Pattern
@@ -23,7 +23,7 @@ internal class DownloadNotifier(private val context: Context) {
      * Notification builder.
      */
     private val notification by lazy {
-        NotificationCompat.Builder(context)
+        NotificationCompat.Builder(context, Notifications.CHANNEL_DOWNLOADER)
                 .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
     }
 
@@ -69,7 +69,7 @@ internal class DownloadNotifier(private val context: Context) {
      *
      * @param id the id of the notification.
      */
-    private fun NotificationCompat.Builder.show(id: Int = Constants.NOTIFICATION_DOWNLOAD_CHAPTER_ID) {
+    private fun NotificationCompat.Builder.show(id: Int = Notifications.ID_DOWNLOAD_CHAPTER) {
         context.notificationManager.notify(id, build())
     }
 
@@ -86,7 +86,7 @@ internal class DownloadNotifier(private val context: Context) {
      * those can only be dismissed by the user.
      */
     fun dismiss() {
-        context.notificationManager.cancel(Constants.NOTIFICATION_DOWNLOAD_CHAPTER_ID)
+        context.notificationManager.cancel(Notifications.ID_DOWNLOAD_CHAPTER)
     }
 
     /**
@@ -262,7 +262,7 @@ internal class DownloadNotifier(private val context: Context) {
             setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
             setProgress(0, 0, false)
         }
-        notification.show(Constants.NOTIFICATION_DOWNLOAD_CHAPTER_ERROR_ID)
+        notification.show(Notifications.ID_DOWNLOAD_CHAPTER_ERROR)
 
         // Reset download information
         errorThrown = true

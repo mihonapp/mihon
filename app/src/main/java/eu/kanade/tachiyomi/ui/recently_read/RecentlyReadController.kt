@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.recently_read
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,7 +76,7 @@ class RecentlyReadController : NucleusController<RecentlyReadPresenter>(),
      * @param mangaHistory list of manga history
      */
     fun onNextManga(mangaHistory: List<RecentlyReadItem>) {
-        adapter?.updateDataSet(mangaHistory.toList())
+        adapter?.updateDataSet(mangaHistory)
     }
 
     override fun onUpdateEmptyView(size: Int) {
@@ -91,10 +90,7 @@ class RecentlyReadController : NucleusController<RecentlyReadPresenter>(),
 
     override fun onResumeClick(position: Int) {
         val activity = activity ?: return
-        val adapter = adapter ?: return
-        if (position == RecyclerView.NO_POSITION) return
-
-        val (manga, chapter, _) = adapter.getItem(position).mch
+        val (manga, chapter, _) = adapter?.getItem(position)?.mch ?: return
 
         val nextChapter = presenter.getNextChapter(chapter, manga)
         if (nextChapter != null) {
@@ -106,11 +102,7 @@ class RecentlyReadController : NucleusController<RecentlyReadPresenter>(),
     }
 
     override fun onRemoveClick(position: Int) {
-        val adapter = adapter ?: return
-        if (position == RecyclerView.NO_POSITION) return
-
-        val (manga, _, history) = adapter.getItem(position).mch
-
+        val (manga, _, history) = adapter?.getItem(position)?.mch ?: return
         RemoveHistoryDialog(this, manga, history).showDialog(router)
     }
 

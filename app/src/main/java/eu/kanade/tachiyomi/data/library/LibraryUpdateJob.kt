@@ -34,7 +34,6 @@ class LibraryUpdateJob : Job() {
                         .setRequiredNetworkType(wifiRestriction)
                         .setRequiresCharging(acRestriction)
                         .setRequirementsEnforced(true)
-                        .setPersisted(true)
                         .setUpdateCurrent(true)
                         .build()
                         .schedule()

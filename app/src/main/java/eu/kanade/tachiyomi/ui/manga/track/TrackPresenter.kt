@@ -67,7 +67,7 @@ class TrackPresenter(
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeFirst({ view, result -> view.onRefreshDone() },
+                .subscribeFirst({ view, _ -> view.onRefreshDone() },
                         TrackController::onRefreshError)
     }
 
@@ -99,7 +99,7 @@ class TrackPresenter(
                 .flatMap { db.insertTrack(track).asRxObservable() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeFirst({ view, result -> view.onRefreshDone() },
+                .subscribeFirst({ view, _ -> view.onRefreshDone() },
                         { view, error ->
                             view.onRefreshError(error)
 

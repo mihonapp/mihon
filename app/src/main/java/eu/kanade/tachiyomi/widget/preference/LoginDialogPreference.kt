@@ -31,14 +31,14 @@ abstract class LoginDialogPreference(bundle: Bundle? = null) : DialogController(
                 .negativeText(android.R.string.cancel)
                 .build()
 
-        onViewCreated(dialog.view, savedState)
+        onViewCreated(dialog.view)
 
         return dialog
     }
 
-    fun onViewCreated(view: View, savedState: Bundle?) {
+    fun onViewCreated(view: View) {
         v = view.apply {
-            show_password.setOnCheckedChangeListener { v, isChecked ->
+            show_password.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked)
                     password.transformationMethod = null
                 else

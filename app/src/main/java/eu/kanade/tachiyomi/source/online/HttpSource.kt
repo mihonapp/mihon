@@ -13,6 +13,7 @@ import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
+import java.lang.Exception
 import java.net.URI
 import java.net.URISyntaxException
 import java.security.MessageDigest
@@ -51,7 +52,7 @@ abstract class HttpSource : CatalogueSource {
     override val id by lazy {
         val key = "${name.toLowerCase()}/$lang/$versionId"
         val bytes = MessageDigest.getInstance("MD5").digest(key.toByteArray())
-        (0..7).map { bytes[it].toLong() and 0xff shl 8*(7-it) }.reduce(Long::or) and Long.MAX_VALUE
+        (0..7).map { bytes[it].toLong() and 0xff shl 8 * (7 - it) }.reduce(Long::or) and Long.MAX_VALUE
     }
 
     /**
@@ -197,16 +198,20 @@ abstract class HttpSource : CatalogueSource {
 
     /**
      * Returns an observable with the updated chapter list for a manga. Normally it's not needed to
-     * override this method.
+     * override this method.  If a manga is licensed an empty chapter list observable is returned
      *
      * @param manga the manga to look for chapters.
      */
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
-        return client.newCall(chapterListRequest(manga))
-                .asObservableSuccess()
-                .map { response ->
-                    chapterListParse(response)
-                }
+        if (manga.status != SManga.LICENSED) {
+            return client.newCall(chapterListRequest(manga))
+                    .asObservableSuccess()
+                    .map { response ->
+                        chapterListParse(response)
+                    }
+        } else {
+            return Observable.error(Exception("Licensed - No chapters to show"))
+        }
     }
 
     /**

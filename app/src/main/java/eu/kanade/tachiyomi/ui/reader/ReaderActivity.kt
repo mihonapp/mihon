@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Build.VERSION_CODES.KITKAT
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.view.*
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import android.view.animation.Animation
@@ -27,10 +26,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.RightToLeftReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.vertical.VerticalReader
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonReader
-import eu.kanade.tachiyomi.util.GLUtil
-import eu.kanade.tachiyomi.util.SharedData
-import eu.kanade.tachiyomi.util.plusAssign
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.*
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import kotlinx.android.synthetic.main.reader_activity.*
@@ -42,6 +38,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
+import java.io.File
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
@@ -178,8 +175,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         .content(getString(R.string.confirm_update_manga_sync, chapterToUpdate))
                         .positiveText(android.R.string.yes)
                         .negativeText(android.R.string.no)
-                        .onPositive { dialog, which -> presenter.updateTrackLastChapterRead(chapterToUpdate) }
-                        .onAny { dialog1, which1 -> super.onBackPressed() }
+                        .onPositive { _, _ -> presenter.updateTrackLastChapterRead(chapterToUpdate) }
+                        .onAny { _, _ -> super.onBackPressed() }
                         .show()
             } else {
                 presenter.updateTrackLastChapterRead(chapterToUpdate)
@@ -239,7 +236,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 .title(getString(R.string.options))
                 .items(R.array.reader_image_options)
                 .itemsIds(R.array.reader_image_options_values)
-                .itemsCallback { materialDialog, view, i, charSequence ->
+                .itemsCallback { _, _, i, _ ->
                     when (i) {
                         0 -> setImageAsCover(page)
                         1 -> shareImage(page)
@@ -384,7 +381,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private fun initializeBottomMenu() {
         // Intercept all events in this layout
-        reader_menu_bottom.setOnTouchListener { v, event -> true }
+        reader_menu_bottom.setOnTouchListener { _, _ -> true }
 
         page_seekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
             override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
@@ -519,12 +516,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         val rootView = window.decorView.rootView
         if (theme == BLACK_THEME) {
             rootView.setBackgroundColor(Color.BLACK)
-            page_number.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimaryDark))
-            page_number.setBackgroundColor(ContextCompat.getColor(this, R.color.pageNumberBackgroundDark))
         } else {
             rootView.setBackgroundColor(Color.WHITE)
-            page_number.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimaryLight))
-            page_number.setBackgroundColor(ContextCompat.getColor(this, R.color.pageNumberBackgroundLight))
         }
     }
 
@@ -576,8 +569,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         if (page.status != Page.READY)
             return
 
+        var uri = page.uri ?: return
+        if (uri.toString().startsWith("file://")) {
+            uri = File(uri.toString().substringAfter("file://")).getUriCompat(this)
+        }
         val intent = Intent(Intent.ACTION_SEND).apply {
-            putExtra(Intent.EXTRA_STREAM, page.uri)
+            putExtra(Intent.EXTRA_STREAM, uri)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
             type = "image/*"
         }
@@ -597,7 +594,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 .content(getString(R.string.confirm_set_image_as_cover))
                 .positiveText(android.R.string.yes)
                 .negativeText(android.R.string.no)
-                .onPositive { dialog, which -> presenter.setImageAsCover(page) }
+                .onPositive { _, _ -> presenter.setImageAsCover(page) }
                 .show()
 
     }

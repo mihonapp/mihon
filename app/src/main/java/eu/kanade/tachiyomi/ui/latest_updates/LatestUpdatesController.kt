@@ -1,19 +1,25 @@
 package eu.kanade.tachiyomi.ui.latest_updates
 
+import android.os.Bundle
 import android.support.v4.widget.DrawerLayout
 import android.view.Menu
 import android.view.ViewGroup
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.ui.catalogue.CataloguePresenter
 
 /**
- * Fragment that shows the manga from the catalogue. Inherit CatalogueFragment.
+ * Controller that shows the latest manga from the catalogue. Inherit [CatalogueController].
  */
-class LatestUpdatesController : CatalogueController() {
+class LatestUpdatesController(bundle: Bundle) : CatalogueController(bundle) {
+
+    constructor(source: CatalogueSource) : this(Bundle().apply {
+        putLong(SOURCE_ID_KEY, source.id)
+    })
 
     override fun createPresenter(): CataloguePresenter {
-        return LatestUpdatesPresenter()
+        return LatestUpdatesPresenter(args.getLong(SOURCE_ID_KEY))
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

@@ -7,9 +7,13 @@ import okhttp3.HttpUrl
 import okhttp3.Request
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
 
 class Mangahere : ParsedHttpSource() {
 
@@ -22,6 +26,26 @@ class Mangahere : ParsedHttpSource() {
     override val lang = "en"
 
     override val supportsLatest = true
+
+    private val trustManager = object : X509TrustManager {
+        override fun getAcceptedIssuers(): Array<X509Certificate> {
+            return emptyArray()
+        }
+
+        override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+        }
+
+        override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+        }
+    }
+
+    private val sslContext = SSLContext.getInstance("SSL").apply {
+        init(null, arrayOf(trustManager), SecureRandom())
+    }
+
+    override val client = super.client.newBuilder()
+            .sslSocketFactory(sslContext.socketFactory, trustManager)
+            .build()
 
     override fun popularMangaSelector() = "div.directory_list > ul > li"
 
@@ -87,8 +111,8 @@ class Mangahere : ParsedHttpSource() {
         val infoElement = detailElement.select(".detail_topText").first()
 
         val manga = SManga.create()
-        manga.author = infoElement.select("a[href^=http://www.mangahere.co/author/]").first()?.text()
-        manga.artist = infoElement.select("a[href^=http://www.mangahere.co/artist/]").first()?.text()
+        manga.author = infoElement.select("a[href^=//www.mangahere.co/author/]").first()?.text()
+        manga.artist = infoElement.select("a[href^=//www.mangahere.co/artist/]").first()?.text()
         manga.genre = infoElement.select("li:eq(3)").first()?.text()?.substringAfter("Genre(s):")
         manga.description = infoElement.select("#show").first()?.text()?.substringBeforeLast("Show less")
         manga.status = infoElement.select("li:eq(6)").first()?.text().orEmpty().let { parseStatus(it) }
@@ -159,7 +183,9 @@ class Mangahere : ParsedHttpSource() {
 
         val pages = mutableListOf<Page>()
         document.select("select.wid60").first()?.getElementsByTag("option")?.forEach {
-            pages.add(Page(pages.size, it.attr("value")))
+            if (!it.attr("value").contains("featured.html")) {
+                pages.add(Page(pages.size, "http:" + it.attr("value")))
+            }
         }
         pages.getOrNull(0)?.imageUrl = imageUrlParse(document)
         return pages
@@ -174,6 +200,7 @@ class Mangahere : ParsedHttpSource() {
     private class OrderBy : Filter.Sort("Order by",
             arrayOf("Series name", "Rating", "Views", "Total chapters", "Last chapter"),
             Filter.Sort.Selection(2, false))
+
     private class GenreList(genres: List<Genre>) : Filter.Group<Genre>("Genres", genres)
 
     override fun getFilterList() = FilterList(

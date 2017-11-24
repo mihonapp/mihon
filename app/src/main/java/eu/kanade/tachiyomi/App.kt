@@ -8,6 +8,7 @@ import com.evernote.android.job.JobManager
 import com.github.ajalt.reprint.core.Reprint
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
 import eu.kanade.tachiyomi.util.LocaleHelper
 import io.realm.Realm
@@ -29,6 +30,7 @@ open class App : Application() {
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         setupJobManager()
+        setupNotificationChannels()
         setupRealm() //Setup metadata DB (EH)
         Reprint.initialize(this) //Setup fingerprint (EH)
 
@@ -58,6 +60,11 @@ open class App : Application() {
         }
     }
 
+    protected open fun setupNotificationChannels() {
+        Notifications.createChannels(this)
+    }
+
+    // EXH
     private fun setupRealm() {
         Realm.init(this)
         val config = RealmConfiguration.Builder()

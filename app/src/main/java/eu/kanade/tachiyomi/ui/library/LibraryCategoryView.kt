@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -103,9 +104,9 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         this.category = category
 
         adapter.mode = if (controller.selectedMangas.isNotEmpty()) {
-            FlexibleAdapter.MODE_MULTI
+            SelectableAdapter.Mode.MULTI
         } else {
-            FlexibleAdapter.MODE_SINGLE
+            SelectableAdapter.Mode.SINGLE
         }
 
         subscriptions += controller.searchRelay
@@ -126,7 +127,6 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         subscriptions.clear()
     }
 
-
     override fun onDetachedFromWindow() {
         subscriptions.clear()
         super.onDetachedFromWindow()
@@ -145,7 +145,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         // Update the category with its manga.
         adapter.setItems(mangaForCategory)
 
-        if (adapter.mode == FlexibleAdapter.MODE_MULTI) {
+        if (adapter.mode == SelectableAdapter.Mode.MULTI) {
             controller.selectedMangas.forEach { manga ->
                 val position = adapter.indexOf(manga)
                 if (position != -1 && !adapter.isSelected(position)) {
@@ -165,19 +165,19 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     private fun onSelectionChanged(event: LibrarySelectionEvent) {
         when (event) {
             is LibrarySelectionEvent.Selected -> {
-                if (adapter.mode != FlexibleAdapter.MODE_MULTI) {
-                    adapter.mode = FlexibleAdapter.MODE_MULTI
+                if (adapter.mode != SelectableAdapter.Mode.MULTI) {
+                    adapter.mode = SelectableAdapter.Mode.MULTI
                 }
                 findAndToggleSelection(event.manga)
             }
             is LibrarySelectionEvent.Unselected -> {
                 findAndToggleSelection(event.manga)
                 if (controller.selectedMangas.isEmpty()) {
-                    adapter.mode = FlexibleAdapter.MODE_SINGLE
+                    adapter.mode = SelectableAdapter.Mode.SINGLE
                 }
             }
             is LibrarySelectionEvent.Cleared -> {
-                adapter.mode = FlexibleAdapter.MODE_SINGLE
+                adapter.mode = SelectableAdapter.Mode.SINGLE
                 adapter.clearSelection()
             }
         }
@@ -205,7 +205,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     override fun onItemClick(position: Int): Boolean {
         // If the action mode is created and the position is valid, toggle the selection.
         val item = adapter.getItem(position) ?: return false
-        if (adapter.mode == FlexibleAdapter.MODE_MULTI) {
+        if (adapter.mode == SelectableAdapter.Mode.MULTI) {
             toggleSelection(position)
             return true
         } else {
@@ -244,4 +244,5 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         controller.setSelection(item.manga, !adapter.isSelected(position))
         controller.invalidateActionMode()
     }
+
 }

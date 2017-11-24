@@ -43,7 +43,7 @@ class SetTrackChaptersDialog<T> : DialogController
                     val view = dialog.customView
                     if (view != null) {
                         // Remove focus to update selected number
-                        val np = view.findViewById(R.id.chapters_picker) as NumberPicker
+                        val np: NumberPicker = view.findViewById(R.id.chapters_picker)
                         np.clearFocus()
 
                         (targetController as? Listener)?.setChaptersRead(item, np.value)
@@ -53,7 +53,7 @@ class SetTrackChaptersDialog<T> : DialogController
 
         val view = dialog.customView
         if (view != null) {
-            val np = view.findViewById(R.id.chapters_picker) as NumberPicker
+            val np: NumberPicker = view.findViewById(R.id.chapters_picker)
             // Set initial value
             np.value = item.track?.last_chapter_read ?: 0
             // Don't allow to go from 0 to 9999

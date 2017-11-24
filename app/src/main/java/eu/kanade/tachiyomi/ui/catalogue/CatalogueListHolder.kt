@@ -1,12 +1,11 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
 import android.view.View
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.util.getResourceColor
-import jp.wasabeef.glide.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.catalogue_list_item.view.*
 
 /**
@@ -37,13 +36,13 @@ class CatalogueListHolder(private val view: View, adapter: FlexibleAdapter<*>) :
     }
 
     override fun setImage(manga: Manga) {
-        Glide.clear(view.thumbnail)
+        GlideApp.with(view.context).clear(view.thumbnail)
         if (!manga.thumbnail_url.isNullOrEmpty()) {
-            Glide.with(view.context)
+            GlideApp.with(view.context)
                     .load(manga)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .centerCrop()
-                    .bitmapTransform(CropCircleTransformation(view.context))
+                    .circleCrop()
                     .dontAnimate()
                     .skipMemoryCache(true)
                     .placeholder(android.R.color.transparent)

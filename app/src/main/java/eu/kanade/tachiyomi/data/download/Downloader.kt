@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.fetchAllImageUrlsFromPageList
 import eu.kanade.tachiyomi.util.*
+import kotlinx.coroutines.experimental.async
 import okhttp3.Response
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -90,12 +91,10 @@ class Downloader(private val context: Context, private val provider: DownloadPro
     @Volatile private var isRunning: Boolean = false
 
     init {
-        Observable.fromCallable { store.restore() }
-                .map { downloads -> downloads.filter { isDownloadAllowed(it) } }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ downloads -> queue.addAll(downloads)
-                }, { error -> Timber.e(error) })
+        launchNow {
+            val chapters = async { store.restore() }
+            queue.addAll(chapters.await())
+        }
     }
 
     /**
@@ -213,61 +212,54 @@ class Downloader(private val context: Context, private val provider: DownloadPro
     }
 
     /**
-     * Creates a download object for every chapter and adds them to the downloads queue. This method
-     * must be called in the main thread.
+     * Creates a download object for every chapter and adds them to the downloads queue.
      *
      * @param manga the manga of the chapters to download.
      * @param chapters the list of chapters to download.
      */
-    fun queueChapters(manga: Manga, chapters: List<Chapter>) {
-        val source = sourceManager.get(manga.source) as? HttpSource ?: return
+    fun queueChapters(manga: Manga, chapters: List<Chapter>) = launchUI {
+        val source = sourceManager.get(manga.source) as? HttpSource ?: return@launchUI
 
-        val chaptersToQueue = chapters
-                // Avoid downloading chapters with the same name.
-                .distinctBy { it.name }
-                // Add chapters to queue from the start.
-                .sortedByDescending { it.source_order }
-                // Create a downloader for each one.
-                .map { Download(source, manga, it) }
-                // Filter out those already queued or downloaded.
-                .filter { isDownloadAllowed(it) }
+        // Called in background thread, the operation can be slow with SAF.
+        val chaptersWithoutDir = async {
+            val mangaDir = provider.findMangaDir(source, manga)
 
-        // Return if there's nothing to queue.
-        if (chaptersToQueue.isEmpty())
-            return
-
-        queue.addAll(chaptersToQueue)
-
-        // Initialize queue size.
-        notifier.initialQueueSize = queue.size
-
-        // Initial multi-thread
-        notifier.multipleDownloadThreads = preferences.downloadThreads().getOrDefault() > 1
-
-        if (isRunning) {
-            // Send the list of downloads to the downloader.
-            downloadsRelay.call(chaptersToQueue)
-        } else {
-            // Show initial notification.
-            notifier.onProgressChange(queue)
+            chapters
+                    // Avoid downloading chapters with the same name.
+                    .distinctBy { it.name }
+                    // Filter out those already downloaded.
+                    .filter { mangaDir?.findFile(provider.getChapterDirName(it)) == null }
+                    // Add chapters to queue from the start.
+                    .sortedByDescending { it.source_order }
         }
-    }
 
-    /**
-     * Returns true if the given download can be queued and downloaded.
-     *
-     * @param download the download to be checked.
-     */
-    private fun isDownloadAllowed(download: Download): Boolean {
-        // If the chapter is already queued, don't add it again
-        if (queue.any { it.chapter.id == download.chapter.id })
-            return false
+        // Runs in main thread (synchronization needed).
+        val chaptersToQueue = chaptersWithoutDir.await()
+                // Filter out those already enqueued.
+                .filter { chapter -> queue.none { it.chapter.id == chapter.id } }
+                // Create a download for each one.
+                .map { Download(source, manga, it) }
 
-        val dir = provider.findChapterDir(download.source, download.manga, download.chapter)
-        if (dir != null && dir.exists())
-            return false
+        if (chaptersToQueue.isNotEmpty()) {
+            queue.addAll(chaptersToQueue)
 
-        return true
+            // Initialize queue size.
+            notifier.initialQueueSize = queue.size
+
+            // Initial multi-thread
+            notifier.multipleDownloadThreads = preferences.downloadThreads().getOrDefault() > 1
+
+            if (isRunning) {
+                // Send the list of downloads to the downloader.
+                downloadsRelay.call(chaptersToQueue)
+            } else {
+                // Show initial notification.
+                notifier.onProgressChange(queue)
+            }
+
+            // Start downloader if needed
+            DownloadService.start(this@Downloader.context)
+        }
     }
 
     /**
@@ -295,7 +287,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
         }
 
         return pageListObservable
-                .doOnNext { pages ->
+                .doOnNext { _ ->
                     // Delete all temporary (unfinished) files
                     tmpDir.listFiles()
                             ?.filter { it.name!!.endsWith(".tmp") }
@@ -311,7 +303,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
                 // Do when page is downloaded.
                 .doOnNext { notifier.onProgressChange(download, queue) }
                 .toList()
-                .map { pages -> download }
+                .map { _ -> download }
                 // Do after download completes
                 .doOnNext { ensureSuccessfulDownload(download, tmpDir, chapterDirname) }
                 // If the page list threw, it will resume here

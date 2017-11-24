@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.ui.catalogue.filter
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
@@ -19,8 +17,8 @@ open class SelectItem(val filter: Filter.Select<*>) : AbstractFlexibleItem<Selec
         return R.layout.navigation_view_spinner
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): Holder {
-        return Holder(inflater.inflate(layoutRes, parent, false), adapter)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): Holder {
+        return Holder(view, adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {
@@ -32,18 +30,16 @@ open class SelectItem(val filter: Filter.Select<*>) : AbstractFlexibleItem<Selec
                 android.R.layout.simple_spinner_item, filter.values).apply {
             setDropDownViewResource(R.layout.common_spinner_item)
         }
-        spinner.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
-            filter.state = position
+        spinner.onItemSelectedListener = IgnoreFirstSpinnerListener { pos ->
+            filter.state = pos
         }
         spinner.setSelection(filter.state)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is SelectItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as SelectItem).filter
     }
 
     override fun hashCode(): Int {
@@ -52,7 +48,7 @@ open class SelectItem(val filter: Filter.Select<*>) : AbstractFlexibleItem<Selec
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
 
-        val text = itemView.findViewById(R.id.nav_view_item_text) as TextView
-        val spinner = itemView.findViewById(R.id.nav_view_item) as Spinner
+        val text: TextView = itemView.findViewById(R.id.nav_view_item_text)
+        val spinner: Spinner = itemView.findViewById(R.id.nav_view_item)
     }
 }

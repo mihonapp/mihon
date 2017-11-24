@@ -1,9 +1,7 @@
 package eu.kanade.tachiyomi.ui.catalogue.filter
 
 import android.support.design.widget.TextInputLayout
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
@@ -18,8 +16,8 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
         return R.layout.navigation_view_text
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): Holder {
-        return Holder(inflater.inflate(layoutRes, parent, false), adapter)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): Holder {
+        return Holder(view, adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>, holder: Holder, position: Int, payloads: List<Any?>?) {
@@ -34,10 +32,8 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is TextItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as TextItem).filter
     }
 
     override fun hashCode(): Int {
@@ -46,7 +42,7 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
 
-        val wrapper  = itemView.findViewById(R.id.nav_view_item_wrapper) as TextInputLayout
-        val edit = itemView.findViewById(R.id.nav_view_item) as EditText
+        val wrapper: TextInputLayout = itemView.findViewById(R.id.nav_view_item_wrapper)
+        val edit: EditText = itemView.findViewById(R.id.nav_view_item)
     }
 }

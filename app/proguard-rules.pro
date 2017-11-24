@@ -6,10 +6,14 @@
 
 -keep class com.hippo.image.** { *; }
 -keep interface com.hippo.image.** { *; }
+-dontwarn nucleus.view.NucleusActionBarActivity
 
 # Extensions may require methods unused in the core app
 -keep class org.jsoup.** { *; }
 -keep class kotlin.** { *; }
+-keep class okhttp3.** { *; }
+-keep class com.google.gson.** { *; }
+-keep class com.github.salomonbrys.kotson.** { *; }
 
 # OkHttp
 -dontwarn okhttp3.**
@@ -20,6 +24,7 @@
 # Glide specific rules #
 # https://github.com/bumptech/glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.AppGlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
     **[] $VALUES;
     public *;

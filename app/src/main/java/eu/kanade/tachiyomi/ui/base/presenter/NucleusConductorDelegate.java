@@ -10,7 +10,6 @@ public class NucleusConductorDelegate<P extends Presenter> {
 
     @Nullable private P presenter;
     @Nullable private Bundle bundle;
-    private boolean presenterHasView = false;
 
     private PresenterFactory<P> factory;
 
@@ -22,8 +21,8 @@ public class NucleusConductorDelegate<P extends Presenter> {
         if (presenter == null) {
             presenter = factory.createPresenter();
             presenter.create(bundle);
+            bundle = null;
         }
-        bundle = null;
         return presenter;
     }
 
@@ -37,31 +36,26 @@ public class NucleusConductorDelegate<P extends Presenter> {
     }
 
     void onRestoreInstanceState(Bundle presenterState) {
-        if (presenter != null)
-            throw new IllegalArgumentException("onRestoreInstanceState() should be called before onResume()");
         bundle = presenterState;
     }
 
     void onTakeView(Object view) {
         getPresenter();
-        if (presenter != null && !presenterHasView) {
+        if (presenter != null) {
             //noinspection unchecked
             presenter.takeView(view);
-            presenterHasView = true;
         }
     }
 
     void onDropView() {
-        if (presenter != null && presenterHasView) {
+        if (presenter != null) {
             presenter.dropView();
-            presenterHasView = false;
         }
     }
 
     void onDestroy() {
         if (presenter != null) {
             presenter.destroy();
-            presenter = null;
         }
     }
 }

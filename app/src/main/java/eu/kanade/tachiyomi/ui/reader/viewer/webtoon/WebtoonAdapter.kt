@@ -22,7 +22,7 @@ class WebtoonAdapter(val fragment: WebtoonReader) : RecyclerView.Adapter<Webtoon
     /**
      * Touch listener for images in holders.
      */
-    val touchListener = View.OnTouchListener { v, ev -> fragment.imageGestureDetector.onTouchEvent(ev) }
+    val touchListener = View.OnTouchListener { _, ev -> fragment.imageGestureDetector.onTouchEvent(ev) }
 
     /**
      * Returns the number of pages.

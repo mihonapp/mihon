@@ -75,17 +75,17 @@ class ReaderSettingsDialog : DialogFragment() {
         background_color.setSelection(preferences.readerTheme().getOrDefault(), false)
 
         show_page_number.isChecked = preferences.showPageNumber().getOrDefault()
-        show_page_number.setOnCheckedChangeListener { v, isChecked ->
+        show_page_number.setOnCheckedChangeListener { _, isChecked ->
             preferences.showPageNumber().set(isChecked)
         }
 
         fullscreen.isChecked = preferences.fullscreen().getOrDefault()
-        fullscreen.setOnCheckedChangeListener { v, isChecked ->
+        fullscreen.setOnCheckedChangeListener { _, isChecked ->
             preferences.fullscreen().set(isChecked)
         }
 
         crop_borders.isChecked = preferences.cropBorders().getOrDefault()
-        crop_borders.setOnCheckedChangeListener { v, isChecked ->
+        crop_borders.setOnCheckedChangeListener { _, isChecked ->
             preferences.cropBorders().set(isChecked)
         }
     }

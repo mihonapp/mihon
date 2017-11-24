@@ -106,12 +106,12 @@ class ReaderCustomFilterDialog : DialogFragment() {
 
         // Set listeners
         switch_color_filter.isChecked = preferences.colorFilter().getOrDefault()
-        switch_color_filter.setOnCheckedChangeListener { v, isChecked ->
+        switch_color_filter.setOnCheckedChangeListener { _, isChecked ->
             preferences.colorFilter().set(isChecked)
         }
 
         custom_brightness.isChecked = preferences.customBrightness().getOrDefault()
-        custom_brightness.setOnCheckedChangeListener { v, isChecked ->
+        custom_brightness.setOnCheckedChangeListener { _, isChecked ->
             preferences.customBrightness().set(isChecked)
         }
 

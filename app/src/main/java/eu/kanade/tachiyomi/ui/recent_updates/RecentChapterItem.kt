@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.recent_updates
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractSectionableItem
 import eu.kanade.tachiyomi.R
@@ -27,11 +26,7 @@ class RecentChapterItem(val chapter: Chapter, val manga: Manga, header: DateItem
         return R.layout.recent_chapters_item
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<*>,
-                                  inflater: LayoutInflater,
-                                  parent: ViewGroup): RecentChapterHolder {
-
-        val view = inflater.inflate(layoutRes, parent, false)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): RecentChapterHolder {
         return RecentChapterHolder(view , adapter as RecentChaptersAdapter)
     }
 

@@ -9,6 +9,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import eu.kanade.tachiyomi.R
 
+@Suppress("unused", "UNUSED_PARAMETER")
 class FABAnimationUpDown @JvmOverloads constructor(ctx: Context, attrs: AttributeSet? = null) : FABAnimationBase() {
 
     private val INTERPOLATOR = FastOutSlowInInterpolator()

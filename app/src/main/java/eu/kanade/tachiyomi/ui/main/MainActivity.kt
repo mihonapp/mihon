@@ -23,9 +23,8 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
-import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
+import eu.kanade.tachiyomi.ui.catalogue.main.CatalogueMainController
 import eu.kanade.tachiyomi.ui.download.DownloadController
-import eu.kanade.tachiyomi.ui.latest_updates.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
@@ -97,11 +96,10 @@ class MainActivity : BaseActivity() {
                     R.id.nav_drawer_library -> setRoot(LibraryController(), id)
                     R.id.nav_drawer_recent_updates -> setRoot(RecentChaptersController(), id)
                     R.id.nav_drawer_recently_read -> setRoot(RecentlyReadController(), id)
-                    R.id.nav_drawer_catalogues -> setRoot(CatalogueController(), id)
-                    R.id.nav_drawer_latest_updates -> setRoot(LatestUpdatesController(), id)
-                    // --> EH
+                    R.id.nav_drawer_catalogues -> setRoot(CatalogueMainController(), id)
+                    // --> EXH
                     R.id.nav_drawer_batch_add -> setRoot(BatchAddController(), id)
-                    // <-- EH
+                    // <-- EHX
                     R.id.nav_drawer_downloads -> {
                         router.pushController(RouterTransaction.with(DownloadController())
                                 .pushChangeHandler(FadeChangeHandler())
@@ -117,7 +115,7 @@ class MainActivity : BaseActivity() {
             true
         }
 
-        val container = findViewById(R.id.controller_container) as ViewGroup
+        val container: ViewGroup = findViewById(R.id.controller_container)
 
         router = Conductor.attachRouter(this, container, savedInstanceState)
         if (!router.hasRootController()) {

@@ -28,7 +28,11 @@ class Page(
     @Transient private var statusSubject: Subject<Int, Int>? = null
 
     override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
-        progress = (100 * bytesRead / contentLength).toInt()
+        progress = if (contentLength > 0) {
+            (100 * bytesRead / contentLength).toInt()
+        } else {
+            -1
+        }
     }
 
     fun setStatusSubject(subject: Subject<Int, Int>?) {

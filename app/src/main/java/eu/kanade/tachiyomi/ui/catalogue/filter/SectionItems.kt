@@ -15,10 +15,8 @@ class TriStateSectionItem(filter: Filter.TriState) : TriStateItem(filter), ISect
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is TriStateSectionItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as TriStateSectionItem).filter
     }
 
     override fun hashCode(): Int {
@@ -38,10 +36,8 @@ class TextSectionItem(filter: Filter.Text) : TextItem(filter), ISectionable<Text
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is TextSectionItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as TextSectionItem).filter
     }
 
     override fun hashCode(): Int {
@@ -61,10 +57,8 @@ class CheckboxSectionItem(filter: Filter.CheckBox) : CheckboxItem(filter), ISect
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is CheckboxSectionItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as CheckboxSectionItem).filter
     }
 
     override fun hashCode(): Int {
@@ -84,10 +78,8 @@ class SelectSectionItem(filter: Filter.Select<*>) : SelectItem(filter), ISection
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is SelectSectionItem) {
-            return filter == other.filter
-        }
-        return false
+        if (javaClass != other?.javaClass) return false
+        return filter == (other as SelectSectionItem).filter
     }
 
     override fun hashCode(): Int {

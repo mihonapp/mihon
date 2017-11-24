@@ -43,7 +43,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_gravity="end"
-        android:visibility="gone"
+        app:fastScrollerBubbleEnabled="false"
         tools:visibility="visible"/>
 
     <android.support.design.widget.FloatingActionButton

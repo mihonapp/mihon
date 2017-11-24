@@ -14,6 +14,7 @@ import android.view.*
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -79,9 +80,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
             recycler.layoutManager = LinearLayoutManager(context)
             recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             recycler.setHasFixedSize(true)
-            // TODO enable in a future commit
-//             adapter.setFastScroller(fast_scroller, context.getResourceColor(R.attr.colorAccent))
-//             adapter.toggleFastScroller()
+            adapter?.fastScroller = view.fast_scroller
 
             swipe_refresh.refreshes().subscribeUntilDestroy { fetchChaptersFromSource() }
 
@@ -247,7 +246,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     override fun onItemClick(position: Int): Boolean {
         val adapter = adapter ?: return false
         val item = adapter.getItem(position) ?: return false
-        if (actionMode != null && adapter.mode == FlexibleAdapter.MODE_MULTI) {
+        if (actionMode != null && adapter.mode == SelectableAdapter.Mode.MULTI) {
             toggleSelection(position)
             return true
         } else {
@@ -277,7 +276,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     fun getSelectedChapters(): List<ChapterItem> {
         val adapter = adapter ?: return emptyList()
-        return adapter.selectedPositions.map { adapter.getItem(it) }
+        return adapter.selectedPositions.mapNotNull { adapter.getItem(it) }
     }
 
     fun createActionModeIfNeeded() {
@@ -292,7 +291,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.chapter_selection, menu)
-        adapter?.mode = FlexibleAdapter.MODE_MULTI
+        adapter?.mode = SelectableAdapter.Mode.MULTI
         return true
     }
 
@@ -320,7 +319,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        adapter?.mode = FlexibleAdapter.MODE_SINGLE
+        adapter?.mode = SelectableAdapter.Mode.SINGLE
         adapter?.clearSelection()
         selectedItems.clear()
         actionMode = null

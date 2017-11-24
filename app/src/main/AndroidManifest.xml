@@ -26,14 +26,14 @@
         android:theme="@style/Theme.Tachiyomi">
         <activity
             android:name=".ui.main.MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts"/>
+
+            <!--suppress AndroidDomInspection -->
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts"/>
         </activity>
         <activity
             android:name=".ui.reader.ReaderActivity"
@@ -100,10 +100,6 @@
         <service
             android:name=".data.backup.BackupRestoreService"
             android:exported="false"/>
-
-        <meta-data
-            android:name="eu.kanade.tachiyomi.data.glide.AppGlideModule"
-            android:value="GlideModule" />
 
         <!-- EH -->
         <activity
