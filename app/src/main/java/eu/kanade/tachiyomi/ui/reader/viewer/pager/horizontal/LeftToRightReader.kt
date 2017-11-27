@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader
 class LeftToRightReader : PagerReader() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
-        return HorizontalPager(activity).apply { initializePager(this) }
+        return HorizontalPager(activity!!).apply { initializePager(this) }
     }
 
 }

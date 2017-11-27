@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader
 class RightToLeftReader : PagerReader() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
-        return HorizontalPager(activity).apply {
+        return HorizontalPager(activity!!).apply {
             rotation = 180f
             initializePager(this)
         }

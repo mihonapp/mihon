@@ -194,7 +194,7 @@ class SettingsDownloadController : SettingsController() {
                     File.separator + "downloads"
 
             return mutableListOf(File(defaultDir)) +
-                    ContextCompat.getExternalFilesDirs(activity, "").filterNotNull()
+                    ContextCompat.getExternalFilesDirs(activity!!, "").filterNotNull()
         }
     }
 

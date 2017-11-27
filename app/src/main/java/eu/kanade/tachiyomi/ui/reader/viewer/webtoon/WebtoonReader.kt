@@ -73,7 +73,7 @@ class WebtoonReader : BaseReader() {
     private var scrollDistance: Int = 0
 
     val screenHeight by lazy {
-        val display = activity.windowManager.defaultDisplay
+        val display = activity!!.windowManager.defaultDisplay
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             val metrics = DisplayMetrics()
@@ -91,7 +91,7 @@ class WebtoonReader : BaseReader() {
         val screenHeight = resources.displayMetrics.heightPixels
         scrollDistance = screenHeight * 3 / 4
 
-        layoutManager = PreCachingLayoutManager(activity)
+        layoutManager = PreCachingLayoutManager(activity!!)
         layoutManager.extraLayoutSpace = screenHeight / 2
 
         recycler = RecyclerView(activity).apply {
