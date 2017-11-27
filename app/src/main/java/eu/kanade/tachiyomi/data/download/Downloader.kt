@@ -37,8 +37,11 @@ import uy.kohesive.injekt.injectLazy
  *
  * @param context the application context.
  * @param provider the downloads directory provider.
+ * @param cache the downloads cache, used to add the downloads to the cache after their completion.
  */
-class Downloader(private val context: Context, private val provider: DownloadProvider) {
+class Downloader(private val context: Context,
+                 private val provider: DownloadProvider,
+                 private val cache: DownloadCache) {
 
     /**
      * Store for persisting downloads across restarts.
@@ -222,7 +225,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
 
         // Called in background thread, the operation can be slow with SAF.
         val chaptersWithoutDir = async {
-            val mangaDir = provider.findMangaDir(source, manga)
+            val mangaDir = provider.findMangaDir(manga, source)
 
             chapters
                     // Avoid downloading chapters with the same name.
@@ -269,7 +272,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
      */
     private fun downloadChapter(download: Download): Observable<Download> {
         val chapterDirname = provider.getChapterDirName(download.chapter)
-        val mangaDir = provider.getMangaDir(download.source, download.manga)
+        val mangaDir = provider.getMangaDir(download.manga, download.source)
         val tmpDir = mangaDir.createDirectory("${chapterDirname}_tmp")
 
         val pageListObservable = if (download.pages == null) {
@@ -305,7 +308,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
                 .toList()
                 .map { _ -> download }
                 // Do after download completes
-                .doOnNext { ensureSuccessfulDownload(download, tmpDir, chapterDirname) }
+                .doOnNext { ensureSuccessfulDownload(download, mangaDir, tmpDir, chapterDirname) }
                 // If the page list threw, it will resume here
                 .onErrorReturn { error ->
                     download.status = Download.ERROR
@@ -411,10 +414,13 @@ class Downloader(private val context: Context, private val provider: DownloadPro
      * Checks if the download was successful.
      *
      * @param download the download to check.
+     * @param mangaDir the manga directory of the download.
      * @param tmpDir the directory where the download is currently stored.
      * @param dirname the real (non temporary) directory name of the download.
      */
-    private fun ensureSuccessfulDownload(download: Download, tmpDir: UniFile, dirname: String) {
+    private fun ensureSuccessfulDownload(download: Download, mangaDir: UniFile,
+                                         tmpDir: UniFile, dirname: String) {
+
         // Ensure that the chapter folder has all the images.
         val downloadedImages = tmpDir.listFiles().orEmpty().filterNot { it.name!!.endsWith(".tmp") }
 
@@ -427,6 +433,7 @@ class Downloader(private val context: Context, private val provider: DownloadPro
         // Only rename the directory if it's downloaded.
         if (download.status == Download.DOWNLOADED) {
             tmpDir.renameTo(dirname)
+            cache.addChapter(dirname, mangaDir, download.manga)
         }
     }
 

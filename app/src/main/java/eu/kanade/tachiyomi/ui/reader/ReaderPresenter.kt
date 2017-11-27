@@ -411,7 +411,7 @@ class ReaderPresenter(
     fun deleteChapter(chapter: ReaderChapter, manga: Manga) {
         chapter.isDownloaded = false
         chapter.pages?.forEach { it.status == Page.QUEUE }
-        downloadManager.deleteChapter(source, manga, chapter)
+        downloadManager.deleteChapter(chapter, manga, source)
     }
 
     /**

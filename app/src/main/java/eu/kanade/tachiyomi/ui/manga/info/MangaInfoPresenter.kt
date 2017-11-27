@@ -115,14 +115,14 @@ class MangaInfoPresenter(
      * Returns true if the manga has any downloads.
      */
     fun hasDownloads(): Boolean {
-        return downloadManager.findMangaDir(source, manga) != null
+        return downloadManager.getDownloadCount(manga) > 0
     }
 
     /**
      * Deletes all the downloads for the manga.
      */
     fun deleteDownloads() {
-        downloadManager.findMangaDir(source, manga)?.delete()
+        downloadManager.deleteManga(manga, source)
     }
 
     /**
