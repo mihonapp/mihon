@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.setting
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.Dialog
@@ -135,7 +134,7 @@ class SettingsBackupController : SettingsController() {
                 preferences.backupsDirectory().asObservable()
                         .subscribeUntilDestroy { path ->
                             val dir = UniFile.fromUri(context, Uri.parse(path))
-                            summary = dir.filePath ?: path
+                            summary = dir.filePath + "/automatic"
                         }
             }
             val backupNumber = intListPreference {
@@ -160,19 +159,19 @@ class SettingsBackupController : SettingsController() {
         when (requestCode) {
             CODE_BACKUP_DIR -> if (data != null && resultCode == Activity.RESULT_OK) {
                 val activity = activity ?: return
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    val uri = Uri.fromFile(File(data.data.path))
-                    preferences.backupsDirectory().set(uri.toString())
-                } else {
-                    val uri = data.data
+                // Get uri of backup folder.
+                val uri = data.data
+
+                // Get UriPermission so it's possible to write files post kitkat.
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
                     val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
                     activity.contentResolver.takePersistableUriPermission(uri, flags)
-
-                    val file = UniFile.fromUri(activity, uri)
-                    preferences.backupsDirectory().set(file.uri.toString())
                 }
+
+                // Set backup Uri.
+                preferences.backupsDirectory().set(uri.toString())
             }
             CODE_BACKUP_CREATE -> if (data != null && resultCode == Activity.RESULT_OK) {
                 val activity = activity ?: return
@@ -240,7 +239,7 @@ class SettingsBackupController : SettingsController() {
                     .itemsDisabledIndices(0)
                     .itemsCallbackMultiChoice(arrayOf(0, 1, 2, 3, 4), { _, positions, _ ->
                         var flags = 0
-                        for (i in 1..positions.size - 1) {
+                        for (i in 1 until positions.size) {
                             when (positions[i]) {
                                 1 -> flags = flags or BackupCreateService.BACKUP_CATEGORY
                                 2 -> flags = flags or BackupCreateService.BACKUP_CHAPTER
@@ -281,7 +280,7 @@ class SettingsBackupController : SettingsController() {
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             val activity = activity!!
-            val unifile = UniFile.fromUri(activity, args.getParcelable<Uri>(KEY_URI))
+            val unifile = UniFile.fromUri(activity, args.getParcelable(KEY_URI))
             return MaterialDialog.Builder(activity)
                     .title(R.string.backup_created)
                     .content(activity.getString(R.string.file_saved, unifile.filePath))
@@ -315,7 +314,7 @@ class SettingsBackupController : SettingsController() {
                         val context = applicationContext
                         if (context != null) {
                             RestoringBackupDialog().showDialog(router, TAG_RESTORING_BACKUP_DIALOG)
-                            BackupRestoreService.start(context, args.getParcelable<Uri>(KEY_URI))
+                            BackupRestoreService.start(context, args.getParcelable(KEY_URI))
                         }
                     }
                     .build()
