@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 class DownloadCache(private val context: Context,
                     private val provider: DownloadProvider,
                     private val sourceManager: SourceManager = Injekt.get(),
-                    preferences: PreferencesHelper = Injekt.get()) {
+                    private val preferences: PreferencesHelper = Injekt.get()) {
 
     /**
      * The interval after which this cache should be invalidated. 1 hour shouldn't cause major
@@ -42,24 +42,23 @@ class DownloadCache(private val context: Context,
     /**
      * The root directory for downloads.
      */
-    private var rootDir = setRootDir(preferences.downloadsDirectory().getOrDefault())
+    private var rootDir = RootDirectory(getDirectoryFromPreference())
 
     init {
-        setRootDir(preferences.downloadsDirectory().getOrDefault())
         preferences.downloadsDirectory().asObservable()
                 .skip(1)
-                .subscribe { setRootDir(it) }
+                .subscribe {
+                    lastRenew = 0L // invalidate cache
+                    rootDir = RootDirectory(getDirectoryFromPreference())
+                }
     }
 
     /**
-     * Sets the root downloads directory and invalidates the cache.
-     *
-     * @param directory the downloads directory in [Uri] format.
+     * Returns the downloads directory from the user's preferences.
      */
-    private fun setRootDir(directory: String): RootDirectory {
-        rootDir = RootDirectory(UniFile.fromUri(context, Uri.parse(directory)))
-        lastRenew = 0L
-        return rootDir
+    private fun getDirectoryFromPreference(): UniFile {
+        val dir = preferences.downloadsDirectory().getOrDefault()
+        return UniFile.fromUri(context, Uri.parse(dir))
     }
 
     /**

@@ -429,7 +429,7 @@ class LibraryController(
         presenter.onOpenManga()
 
         router.pushController(RouterTransaction.with(MangaController(manga))
-                .pushChangeHandler(FadeChangeHandler())
+                .pushChangeHandler(FadeChangeHandler(false))
                 .popChangeHandler(FadeChangeHandler()))
     }
 
