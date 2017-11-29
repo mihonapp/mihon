@@ -167,12 +167,8 @@ class LibraryController(
         super.onChangeStarted(handler, type)
         if (type.isEnter) {
             activity?.tabs?.setupWithViewPager(view?.view_pager)
+            presenter.subscribeLibrary()
         }
-    }
-
-    override fun onAttach(view: View) {
-        super.onAttach(view)
-        presenter.subscribeLibrary()
     }
 
     override fun onDestroyView(view: View) {
