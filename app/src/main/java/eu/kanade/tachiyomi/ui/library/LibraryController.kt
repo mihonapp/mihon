@@ -126,6 +126,7 @@ class LibraryController(
 
     init {
         setHasOptionsMenu(true)
+        retainViewMode = RetainViewMode.RETAIN_DETACH
     }
 
     override fun getTitle(): String? {
@@ -425,7 +426,7 @@ class LibraryController(
         presenter.onOpenManga()
 
         router.pushController(RouterTransaction.with(MangaController(manga))
-                .pushChangeHandler(FadeChangeHandler(false))
+                .pushChangeHandler(FadeChangeHandler())
                 .popChangeHandler(FadeChangeHandler()))
     }
 
