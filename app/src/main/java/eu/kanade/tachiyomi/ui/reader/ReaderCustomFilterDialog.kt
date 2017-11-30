@@ -64,7 +64,7 @@ class ReaderCustomFilterDialog : DialogFragment() {
      * @param savedState The last saved instance state of the Fragment.
      */
     override fun onCreateDialog(savedState: Bundle?): Dialog {
-        val dialog = MaterialDialog.Builder(activity)
+        val dialog = MaterialDialog.Builder(activity!!)
                 .customView(R.layout.reader_custom_filter_dialog, false)
                 .positiveText(android.R.string.ok)
                 .build()

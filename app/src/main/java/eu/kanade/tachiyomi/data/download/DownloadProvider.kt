@@ -40,10 +40,10 @@ class DownloadProvider(private val context: Context) {
     /**
      * Returns the download directory for a manga. For internal use only.
      *
-     * @param source the source of the manga.
      * @param manga the manga to query.
+     * @param source the source of the manga.
      */
-    internal fun getMangaDir(source: Source, manga: Manga): UniFile {
+    internal fun getMangaDir(manga: Manga, source: Source): UniFile {
         return downloadsDir
                 .createDirectory(getSourceDirName(source))
                 .createDirectory(getMangaDirName(manga))
@@ -61,10 +61,10 @@ class DownloadProvider(private val context: Context) {
     /**
      * Returns the download directory for a manga if it exists.
      *
-     * @param source the source of the manga.
      * @param manga the manga to query.
+     * @param source the source of the manga.
      */
-    fun findMangaDir(source: Source, manga: Manga): UniFile? {
+    fun findMangaDir(manga: Manga, source: Source): UniFile? {
         val sourceDir = findSourceDir(source)
         return sourceDir?.findFile(getMangaDirName(manga))
     }
@@ -72,12 +72,12 @@ class DownloadProvider(private val context: Context) {
     /**
      * Returns the download directory for a chapter if it exists.
      *
-     * @param source the source of the chapter.
-     * @param manga the manga of the chapter.
      * @param chapter the chapter to query.
+     * @param manga the manga of the chapter.
+     * @param source the source of the chapter.
      */
-    fun findChapterDir(source: Source, manga: Manga, chapter: Chapter): UniFile? {
-        val mangaDir = findMangaDir(source, manga)
+    fun findChapterDir(chapter: Chapter, manga: Manga, source: Source): UniFile? {
+        val mangaDir = findMangaDir(manga, source)
         return mangaDir?.findFile(getChapterDirName(chapter))
     }
 

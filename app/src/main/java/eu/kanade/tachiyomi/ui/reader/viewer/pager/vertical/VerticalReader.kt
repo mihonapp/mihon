@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerReader
 class VerticalReader : PagerReader() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
-        return VerticalPager(activity).apply { initializePager(this) }
+        return VerticalPager(activity!!).apply { initializePager(this) }
     }
 
 }

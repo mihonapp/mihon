@@ -24,7 +24,7 @@ class ReaderSettingsDialog : DialogFragment() {
     private lateinit var subscriptions: CompositeSubscription
 
     override fun onCreateDialog(savedState: Bundle?): Dialog {
-        val dialog = MaterialDialog.Builder(activity)
+        val dialog = MaterialDialog.Builder(activity!!)
                 .title(R.string.label_settings)
                 .customView(R.layout.reader_settings_dialog, true)
                 .positiveText(android.R.string.ok)
@@ -40,8 +40,11 @@ class ReaderSettingsDialog : DialogFragment() {
         viewer.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             subscriptions += Observable.timer(250, MILLISECONDS, AndroidSchedulers.mainThread())
                     .subscribe {
-                        (activity as ReaderActivity).presenter.updateMangaViewer(position)
-                        activity.recreate()
+                        val readerActivity = activity as? ReaderActivity
+                        if (readerActivity != null) {
+                            readerActivity.presenter.updateMangaViewer(position)
+                            readerActivity.recreate()
+                        }
                     }
         }
         viewer.setSelection((activity as ReaderActivity).presenter.manga.viewer, false)

@@ -46,7 +46,7 @@ class BackupCreateService : IntentService(NAME) {
          * Make a backup from library
          *
          * @param context context of application
-         * @param path path of Uri
+         * @param uri path of Uri
          * @param flags determines what to backup
          * @param isJob backup called from job
          */
@@ -80,7 +80,7 @@ class BackupCreateService : IntentService(NAME) {
      * @param uri path of Uri
      * @param isJob backup called from job
      */
-    fun createBackupFromApp(uri: Uri, flags: Int, isJob: Boolean) {
+    private fun createBackupFromApp(uri: Uri, flags: Int, isJob: Boolean) {
         // Create root object
         val root = JsonObject()
 
@@ -113,8 +113,9 @@ class BackupCreateService : IntentService(NAME) {
         try {
             // When BackupCreatorJob
             if (isJob) {
-                // Get dir of file
-                val dir = UniFile.fromUri(this, uri)
+                // Get dir of file and create
+                var dir = UniFile.fromUri(this, uri)
+                dir = dir.createDirectory("automatic")
 
                 // Delete older backups
                 val numberOfBackups = backupManager.numberOfBackups()

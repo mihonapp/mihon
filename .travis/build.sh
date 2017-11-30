@@ -12,7 +12,7 @@ if [ -z "$TRAVIS_TAG" ]; then
 else
     ./gradlew clean assembleStandardRelease
 
-    TOOLS="${ANDROID_HOME}/build-tools/26.0.1"
+    TOOLS="$(ls -d ${ANDROID_HOME}/build-tools/* | tail -1)"
     export ARTIFACT="tachiyomi-${TRAVIS_TAG}.apk"
 
     ${TOOLS}/zipalign -v -p 4 app/build/outputs/apk/standard/release/app-standard-release-unsigned.apk app-aligned.apk

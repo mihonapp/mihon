@@ -24,7 +24,7 @@ class HorizontalPager(context: Context) : ViewPager(context), Pager {
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         try {
             if (ev.action and MotionEvent.ACTION_MASK == MotionEvent.ACTION_DOWN) {
-                if (currentItem == 0 || currentItem == adapter.count - 1) {
+                if (currentItem == 0 || currentItem == adapter!!.count - 1) {
                     startDragX = ev.x
                 }
             }
@@ -50,7 +50,7 @@ class HorizontalPager(context: Context) : ViewPager(context), Pager {
 
                         startDragX = 0f
                     }
-                } else if (currentItem == adapter.count - 1) {
+                } else if (currentItem == adapter!!.count - 1) {
                     if (ev.action and MotionEvent.ACTION_MASK == MotionEvent.ACTION_UP) {
                         val displacement = startDragX - ev.x
 

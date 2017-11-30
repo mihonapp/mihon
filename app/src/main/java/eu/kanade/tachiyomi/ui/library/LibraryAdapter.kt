@@ -79,7 +79,7 @@ class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPa
     /**
      * Returns the position of the view.
      */
-    override fun getItemPosition(obj: Any?): Int {
+    override fun getItemPosition(obj: Any): Int {
         val view = obj as? LibraryCategoryView ?: return POSITION_NONE
         val index = categories.indexOfFirst { it.id == view.category.id }
         return if (index == -1) POSITION_NONE else index

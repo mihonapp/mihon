@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.recent_updates
 
 import android.os.Bundle
-import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.MangaChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -114,36 +113,11 @@ class RecentChaptersPresenter(
      * @param items the list of chapter from the database.
      */
     private fun setDownloadedChapters(items: List<RecentChapterItem>) {
-        // Cached list of downloaded manga directories. Directory name is also cached because
-        // it's slow when using SAF.
-        val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
-
-        // Cached list of downloaded chapter directories for a manga.
-        val chapterDirsForManga = mutableMapOf<Long, Map<String?, UniFile>>()
-
         for (item in items) {
             val manga = item.manga
             val chapter = item.chapter
-            val source = sourceManager.get(manga.source) ?: continue
 
-            // Get the directories for the source of the manga.
-            val dirsForSource = mangaDirsForSource.getOrPut(source.id) {
-                val sourceDir = downloadManager.findSourceDir(source)
-                sourceDir?.listFiles()?.associateBy { it.name }.orEmpty()
-            }
-
-            // Get the manga directory in the source or continue.
-            val mangaDirName = downloadManager.getMangaDirName(manga)
-            val mangaDir = dirsForSource[mangaDirName] ?: continue
-
-            // Get the directories for the manga.
-            val chapterDirs = chapterDirsForManga.getOrPut(manga.id!!) {
-                mangaDir.listFiles()?.associateBy { it.name }.orEmpty()
-            }
-
-            // Assign the download if the directory exists.
-            val chapterDirName = downloadManager.getChapterDirName(chapter)
-            if (chapterDirName in chapterDirs) {
+            if (downloadManager.isChapterDownloaded(chapter, manga)) {
                 item.status = Download.DOWNLOADED
             }
         }
@@ -216,7 +190,7 @@ class RecentChaptersPresenter(
     private fun deleteChapter(item: RecentChapterItem) {
         val source = sourceManager.get(item.manga.source) ?: return
         downloadManager.queue.remove(item.chapter)
-        downloadManager.deleteChapter(source, item.manga, item.chapter)
+        downloadManager.deleteChapter(item.chapter, item.manga, source)
         item.status = Download.NOT_DOWNLOADED
         item.download = null
     }

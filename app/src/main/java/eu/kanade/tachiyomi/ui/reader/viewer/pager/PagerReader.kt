@@ -100,12 +100,12 @@ abstract class PagerReader : BaseReader() {
     /**
      * Text color for black theme.
      */
-    val whiteColor by lazy { ContextCompat.getColor(context, R.color.textColorSecondaryDark) }
+    val whiteColor by lazy { ContextCompat.getColor(context!!, R.color.textColorSecondaryDark) }
 
     /**
      * Text color for white theme.
      */
-    val blackColor by lazy { ContextCompat.getColor(context, R.color.textColorSecondaryLight) }
+    val blackColor by lazy { ContextCompat.getColor(context!!, R.color.textColorSecondaryLight) }
 
     /**
      * Initializes the pager.

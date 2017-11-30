@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.os.Bundle
-import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -107,12 +106,6 @@ class LibraryPresenter(
      * @param map the map to filter.
      */
     private fun applyFilters(map: LibraryMap): LibraryMap {
-        // Cached list of downloaded manga directories given a source id.
-        val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
-
-        // Cached list of downloaded chapter directories for a manga.
-        val chapterDirectories = mutableMapOf<Long, Boolean>()
-
         val filterDownloaded = preferences.filterDownloaded().getOrDefault()
 
         val filterUnread = preferences.filterUnread().getOrDefault()
@@ -121,7 +114,7 @@ class LibraryPresenter(
 
         val filterFn: (LibraryItem) -> Boolean = f@ { item ->
             // Filter out manga without source.
-            val source = sourceManager.get(item.manga.source) ?: return@f false
+            sourceManager.get(item.manga.source) ?: return@f false
 
             // Filter when there isn't unread chapters.
             if (filterUnread && item.manga.unread == 0) {
@@ -132,28 +125,14 @@ class LibraryPresenter(
                 return@f false
             }
 
-            // Filter when the download directory doesn't exist or is null.
+            // Filter when there are no downloads.
             if (filterDownloaded) {
                 // Don't bother with directory checking if download count has been set.
                 if (item.downloadCount != -1) {
                     return@f item.downloadCount > 0
                 }
 
-                // Get the directories for the source of the manga.
-                val dirsForSource = mangaDirsForSource.getOrPut(source.id) {
-                    val sourceDir = downloadManager.findSourceDir(source)
-                    sourceDir?.listFiles()?.associateBy { it.name }.orEmpty()
-                }
-
-                val mangaDirName = downloadManager.getMangaDirName(item.manga)
-                val mangaDir = dirsForSource[mangaDirName] ?: return@f false
-
-                val hasDirs = chapterDirectories.getOrPut(item.manga.id!!) {
-                    mangaDir.listFiles()?.isNotEmpty() ?: false
-                }
-                if (!hasDirs) {
-                    return@f false
-                }
+                return@f downloadManager.getDownloadCount(item.manga) > 0
             }
             true
         }
@@ -177,31 +156,9 @@ class LibraryPresenter(
             return
         }
 
-        // Cached list of downloaded manga directories given a source id.
-        val mangaDirsForSource = mutableMapOf<Long, Map<String?, UniFile>>()
-
-        // Cached list of downloaded chapter directories for a manga.
-        val chapterDirectories = mutableMapOf<Long, Int>()
-
-        val downloadCountFn: (LibraryItem) -> Int = f@ { item ->
-            val source = sourceManager.get(item.manga.source) ?: return@f 0
-
-            // Get the directories for the source of the manga.
-            val dirsForSource = mangaDirsForSource.getOrPut(source.id) {
-                val sourceDir = downloadManager.findSourceDir(source)
-                sourceDir?.listFiles()?.associateBy { it.name }.orEmpty()
-            }
-            val mangaDirName = downloadManager.getMangaDirName(item.manga)
-            val mangaDir = dirsForSource[mangaDirName] ?: return@f 0
-
-            chapterDirectories.getOrPut(item.manga.id!!) {
-                mangaDir.listFiles()?.size ?: 0
-            }
-        }
-
         for ((_, itemList) in map) {
             for (item in itemList) {
-                item.downloadCount = downloadCountFn(item)
+                item.downloadCount = downloadManager.getDownloadCount(item.manga)
             }
         }
     }
@@ -360,7 +317,7 @@ class LibraryPresenter(
                 if (deleteChapters) {
                     val source = sourceManager.get(manga.source) as? HttpSource
                     if (source != null) {
-                        downloadManager.findMangaDir(source, manga)?.delete()
+                        downloadManager.deleteManga(manga, source)
                     }
                 }
             }

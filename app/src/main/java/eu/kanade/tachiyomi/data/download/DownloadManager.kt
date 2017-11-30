@@ -25,9 +25,14 @@ class DownloadManager(context: Context) {
     private val provider = DownloadProvider(context)
 
     /**
+     * Cache of downloaded chapters.
+     */
+    private val cache = DownloadCache(context, provider)
+
+    /**
      * Downloader whose only task is to download chapters.
      */
-    private val downloader = Downloader(context, provider)
+    private val downloader = Downloader(context, provider, cache)
 
     /**
      * Downloads queue, where the pending chapters are stored.
@@ -94,7 +99,7 @@ class DownloadManager(context: Context) {
      * @return an observable containing the list of pages from the chapter.
      */
     fun buildPageList(source: Source, manga: Manga, chapter: Chapter): Observable<List<Page>> {
-        return buildPageList(provider.findChapterDir(source, manga, chapter))
+        return buildPageList(provider.findChapterDir(chapter, manga, source))
     }
 
     /**
@@ -120,61 +125,45 @@ class DownloadManager(context: Context) {
     }
 
     /**
-     * Returns the directory name for a manga.
+     * Returns true if the chapter is downloaded.
      *
-     * @param manga the manga to query.
-     */
-    fun getMangaDirName(manga: Manga): String {
-        return provider.getMangaDirName(manga)
-    }
-
-    /**
-     * Returns the directory name for the given chapter.
-     *
-     * @param chapter the chapter to query.
-     */
-    fun getChapterDirName(chapter: Chapter): String {
-        return provider.getChapterDirName(chapter)
-    }
-
-    /**
-     * Returns the download directory for a source if it exists.
-     *
-     * @param source the source to query.
-     */
-    fun findSourceDir(source: Source): UniFile? {
-        return provider.findSourceDir(source)
-    }
-
-    /**
-     * Returns the directory for the given manga, if it exists.
-     *
-     * @param source the source of the manga.
-     * @param manga the manga to query.
-     */
-    fun findMangaDir(source: Source, manga: Manga): UniFile? {
-        return provider.findMangaDir(source, manga)
-    }
-
-    /**
-     * Returns the directory for the given chapter, if it exists.
-     *
-     * @param source the source of the chapter.
+     * @param chapter the chapter to check.
      * @param manga the manga of the chapter.
-     * @param chapter the chapter to query.
+     * @param skipCache whether to skip the directory cache and check in the filesystem.
      */
-    fun findChapterDir(source: Source, manga: Manga, chapter: Chapter): UniFile? {
-        return provider.findChapterDir(source, manga, chapter)
+    fun isChapterDownloaded(chapter: Chapter, manga: Manga, skipCache: Boolean = false): Boolean {
+        return cache.isChapterDownloaded(chapter, manga, skipCache)
+    }
+
+    /**
+     * Returns the amount of downloaded chapters for a manga.
+     *
+     * @param manga the manga to check.
+     */
+    fun getDownloadCount(manga: Manga): Int {
+        return cache.getDownloadCount(manga)
     }
 
     /**
      * Deletes the directory of a downloaded chapter.
      *
-     * @param source the source of the chapter.
-     * @param manga the manga of the chapter.
      * @param chapter the chapter to delete.
+     * @param manga the manga of the chapter.
+     * @param source the source of the chapter.
      */
-    fun deleteChapter(source: Source, manga: Manga, chapter: Chapter) {
-        provider.findChapterDir(source, manga, chapter)?.delete()
+    fun deleteChapter(chapter: Chapter, manga: Manga, source: Source) {
+        provider.findChapterDir(chapter, manga, source)?.delete()
+        cache.removeChapter(chapter, manga)
+    }
+
+    /**
+     * Deletes the directory of a downloaded manga.
+     *
+     * @param manga the manga to delete.
+     * @param source the source of the manga.
+     */
+    fun deleteManga(manga: Manga, source: Source) {
+        provider.findMangaDir(manga, source)?.delete()
+        cache.removeManga(manga)
     }
 }

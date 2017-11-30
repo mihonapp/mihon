@@ -128,13 +128,11 @@ class ChaptersPresenter(
      * @param chapters the list of chapter from the database.
      */
     private fun setDownloadedChapters(chapters: List<ChapterItem>) {
-        val files = downloadManager.findMangaDir(source, manga)?.listFiles() ?: return
-        val cached = mutableMapOf<Chapter, String>()
-        files.mapNotNull { it.name }
-                .mapNotNull { name -> chapters.find {
-                    name == cached.getOrPut(it) { downloadManager.getChapterDirName(it) }
-                } }
-                .forEach { it.status = Download.DOWNLOADED }
+        for (chapter in chapters) {
+            if (downloadManager.isChapterDownloaded(chapter, manga)) {
+                chapter.status = Download.DOWNLOADED
+            }
+        }
     }
 
     /**
@@ -283,7 +281,7 @@ class ChaptersPresenter(
      */
     private fun deleteChapter(chapter: ChapterItem) {
         downloadManager.queue.remove(chapter)
-        downloadManager.deleteChapter(source, manga, chapter)
+        downloadManager.deleteChapter(chapter, manga, source)
         chapter.status = Download.NOT_DOWNLOADED
         chapter.download = null
     }
