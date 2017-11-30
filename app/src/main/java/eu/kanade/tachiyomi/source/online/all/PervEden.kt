@@ -3,32 +3,29 @@ package eu.kanade.tachiyomi.source.online.all
 import android.net.Uri
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.ChapterRecognition
 import eu.kanade.tachiyomi.util.asJsoup
-import exh.metadata.copyTo
-import exh.metadata.loadPervEden
-import exh.metadata.models.PervEdenGalleryMetadata
-import exh.metadata.models.PervEdenTitle
-import exh.metadata.models.Tag
+import exh.metadata.models.*
 import exh.util.UriFilter
 import exh.util.UriGroup
-import exh.util.createUUIDObj
-import exh.util.realmTrans
+import exh.util.urlImportFetchSearchManga
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PervEden(override val id: Long, override val lang: String) : ParsedHttpSource() {
+class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSource(),
+        LewdSource<PervEdenGalleryMetadata, Document> {
 
     override val supportsLatest = true
     override val name = "Perv Eden"
     override val baseUrl = "http://www.perveden.com"
+    override val lang = pvLang.name
 
     override fun popularMangaSelector() = "#topManga > ul > li"
 
@@ -44,6 +41,12 @@ class PervEden(override val id: Long, override val lang: String) : ParsedHttpSou
     }
 
     override fun popularMangaNextPageSelector(): String? = null
+
+    //Support direct URL importing
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
+            urlImportFetchSearchManga(query, {
+                super.fetchSearchManga(page, query, filters)
+            })
 
     override fun searchMangaSelector() = "#mangaList > tbody > tr"
 
@@ -89,6 +92,7 @@ class PervEden(override val id: Long, override val lang: String) : ParsedHttpSou
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         val uri = Uri.parse("$baseUrl/$lang/$lang-directory/").buildUpon()
         uri.appendQueryParameter("page", page.toString())
+        uri.appendQueryParameter("title", query)
         filters.forEach {
             if(it is UriFilter) it.addToUri(uri)
         }
@@ -99,77 +103,74 @@ class PervEden(override val id: Long, override val lang: String) : ParsedHttpSou
         throw NotImplementedError("Unused method called!")
     }
 
-    override fun mangaDetailsParse(document: Document): SManga {
-        realmTrans { realm ->
-            val url = document.location()
-            val metadata = (realm.loadPervEden(PervEdenGalleryMetadata.pvIdFromUrl(url), id)
-                    ?: realm.createUUIDObj(PervEdenGalleryMetadata::class.java))
-            with(metadata) {
-                this.url = url
+    override val metaParser: PervEdenGalleryMetadata.(Document) -> Unit = { document ->
+        url = Uri.parse(document.location()).path
 
-                lang = this@PervEden.lang
+        pvId = PervEdenGalleryMetadata.pvIdFromUrl(url!!)
 
-                title = document.getElementsByClass("manga-title").first()?.text()
+        lang = this@PervEden.lang
 
-                thumbnailUrl = "http:" + document.getElementsByClass("mangaImage2").first()?.child(0)?.attr("src")
+        title = document.getElementsByClass("manga-title").first()?.text()
 
-                val rightBoxElement = document.select(".rightBox:not(.info)").first()
+        thumbnailUrl = "http:" + document.getElementsByClass("mangaImage2").first()?.child(0)?.attr("src")
 
-                tags.clear()
-                var inStatus: String? = null
-                rightBoxElement.childNodes().forEach {
-                    if(it is Element && it.tagName().toLowerCase() == "h4") {
-                        inStatus = it.text().trim()
-                    } else {
-                        when(inStatus) {
-                            "Alternative name(s)" -> {
-                                if(it is TextNode) {
-                                    val text = it.text().trim()
-                                    if(!text.isBlank())
-                                        altTitles.add(PervEdenTitle(this, text))
-                                }
-                            }
-                            "Artist" -> {
-                                if(it is Element && it.tagName() == "a") {
-                                    artist = it.text()
-                                    tags.add(Tag("artist", it.text().toLowerCase(), false))
-                                }
-                            }
-                            "Genres" -> {
-                                if(it is Element && it.tagName() == "a")
-                                    tags.add(Tag("genre", it.text().toLowerCase(), false))
-                            }
-                            "Type" -> {
-                                if(it is TextNode) {
-                                    val text = it.text().trim()
-                                    if(!text.isBlank())
-                                        type = text
-                                }
-                            }
-                            "Status" -> {
-                                if(it is TextNode) {
-                                    val text = it.text().trim()
-                                    if(!text.isBlank())
-                                        status = text
-                                }
-                            }
+        val rightBoxElement = document.select(".rightBox:not(.info)").first()
+
+        altTitles.clear()
+        tags.clear()
+        var inStatus: String? = null
+        rightBoxElement.childNodes().forEach {
+            if(it is Element && it.tagName().toLowerCase() == "h4") {
+                inStatus = it.text().trim()
+            } else {
+                when(inStatus) {
+                    "Alternative name(s)" -> {
+                        if(it is TextNode) {
+                            val text = it.text().trim()
+                            if(!text.isBlank())
+                                altTitles.add(PervEdenTitle(this, text))
+                        }
+                    }
+                    "Artist" -> {
+                        if(it is Element && it.tagName() == "a") {
+                            artist = it.text()
+                            tags.add(Tag("artist", it.text().toLowerCase(), false))
+                        }
+                    }
+                    "Genres" -> {
+                        if(it is Element && it.tagName() == "a")
+                            tags.add(Tag("genre", it.text().toLowerCase(), false))
+                    }
+                    "Type" -> {
+                        if(it is TextNode) {
+                            val text = it.text().trim()
+                            if(!text.isBlank())
+                                type = text
+                        }
+                    }
+                    "Status" -> {
+                        if(it is TextNode) {
+                            val text = it.text().trim()
+                            if(!text.isBlank())
+                                status = text
                         }
                     }
                 }
-
-                rating = document.getElementById("rating-score")?.attr("value")?.toFloat()
-
-                return SManga.create().apply {
-                    copyTo(this)
-                }
             }
         }
+
+        rating = document.getElementById("rating-score")?.attr("value")?.toFloat()
     }
 
+    override fun mangaDetailsParse(document: Document): SManga
+        = parseToManga(queryFromUrl(document.location()), document)
+
     override fun latestUpdatesRequest(page: Int): Request {
-        val num = if(lang == "en") "0"
-        else if(lang == "it") "1"
-        else throw NotImplementedError("Unimplemented language!")
+        val num = when (lang) {
+            "en" -> "0"
+            "it" -> "1"
+            else -> throw NotImplementedError("Unimplemented language!")
+        }
 
         return GET("$baseUrl/ajax/news/$page/$num/0/")
     }
@@ -201,6 +202,9 @@ class PervEden(override val id: Long, override val lang: String) : ParsedHttpSou
     override fun imageUrlParse(document: Document)
             = "http:" + document.getElementById("mainImg").attr("src")!!
 
+    override fun queryAll() = PervEdenGalleryMetadata.EmptyQuery()
+    override fun queryFromUrl(url: String) = PervEdenGalleryMetadata.UrlQuery(url, PervEdenLang.source(id))
+
     override fun getFilterList() = FilterList (
             AuthorFilter(),
             ArtistFilter(),
@@ -223,7 +227,7 @@ class PervEden(override val id: Long, override val lang: String) : ParsedHttpSou
     }
 
     //Explicit type arg for listOf() to workaround this: KT-16570
-    class ReleaseYearGroup : UriGroup<Filter<*>>("Release Year", listOf<Filter<*>>(
+    class ReleaseYearGroup : UriGroup<Filter<*>>("Release Year", listOf(
             ReleaseYearRangeFilter(),
             ReleaseYearYearFilter()
     ))

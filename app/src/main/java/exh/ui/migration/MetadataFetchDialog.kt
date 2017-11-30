@@ -11,10 +11,8 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import exh.isExSource
 import exh.isLewdSource
-import exh.metadata.genericCopyTo
 import exh.metadata.queryMetadataFromManga
 import exh.util.defRealm
-import exh.util.realmTrans
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import kotlin.concurrent.thread
@@ -64,7 +62,7 @@ class MetadataFetchDialog {
                         val source = sourceManager.get(manga.source)
                         source?.let {
                             manga.copyFrom(it.fetchMangaDetails(manga).toBlocking().first())
-                            realm.queryMetadataFromManga(manga).findFirst()?.genericCopyTo(manga)
+                            realm.queryMetadataFromManga(manga).findFirst()?.copyTo(manga)
                         }
                     } catch (t: Throwable) {
                         Timber.e(t, "Could not migrate manga!")

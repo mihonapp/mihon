@@ -7,5 +7,6 @@
 *iml
 *.iml
 */build
-/mainframer.sh
+/mainframer
+/.mainframer
 *.apk

@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.setting
 import android.support.v7.preference.PreferenceScreen
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
-import exh.ui.migration.MetadataFetchDialog
 import exh.ui.login.LoginController
 import rx.android.schedulers.AndroidSchedulers
 
@@ -124,23 +123,5 @@ class SettingsEhController : SettingsController() {
                     "tr_20"
             )
         }.dependency = "enable_exhentai"
-
-        preferenceCategory {
-            title = "Advanced"
-            isPersistent = false
-
-            preference {
-                title = "Migrate library metadata"
-                isPersistent = false
-                key = "ex_migrate_library"
-                summary = "Fetch the library metadata to enable tag searching in the library. This button will be visible even if you have already fetched the metadata"
-
-                onClick {
-                    activity?.let {
-                        MetadataFetchDialog().askMigration(it, true)
-                    }
-                }
-            }
-        }
     }
 }

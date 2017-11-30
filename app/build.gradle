@@ -35,10 +35,6 @@ android {
     buildToolsVersion "26.0.2"
     publishNonDefault true
 
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
-
     defaultConfig {
         applicationId "eu.kanade.tachiyomi.eh2"
         minSdkVersion 16
@@ -96,6 +92,9 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE'
+
+        // Compatibility for two RxJava versions (EXH)
+        exclude 'META-INF/rxjava.properties'
     }
 
     lintOptions {
@@ -237,17 +236,17 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     //Pin lock view (EXH)
-    compile 'com.andrognito.pinlockview:pinlockview:2.1.0'
+    implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
 
     //Reprint (EXH)
-    compile 'com.github.ajalt.reprint:core:3.2.0@aar' // required: supports marshmallow devices
-    compile 'com.github.ajalt.reprint:rxjava:3.2.0@aar' // optional: the RxJava 1 interface
+    implementation 'com.github.ajalt.reprint:core:3.2.0@aar' // required: supports marshmallow devices
+    implementation 'com.github.ajalt.reprint:rxjava:3.2.0@aar' // optional: the RxJava 1 interface
 
     //Swirl (EXH)
-    compile 'com.mattprecious.swirl:swirl:1.0.0'
+    implementation 'com.mattprecious.swirl:swirl:1.0.0'
 
     //RxJava 2 interop for Realm (EXH)
-    compile 'com.lvla.android:rxjava2-interop-kt:0.2.1'
+    implementation 'com.lvla.android:rxjava2-interop-kt:0.2.1'
 }
 
 buildscript {

@@ -1,5 +1,10 @@
 package exh.metadata
 
+import exh.metadata.models.SearchableGalleryMetadata
+import exh.plusAssign
+import java.text.SimpleDateFormat
+import java.util.*
+
 /**
  * Metadata utils
  */
@@ -44,4 +49,37 @@ fun <T> ignore(expr: () -> T): T? {
 
 fun <K,V> Set<Map.Entry<K,V>>.forEach(action: (K, V) -> Unit) {
     forEach { action(it.key, it.value) }
+}
+
+val ONGOING_SUFFIX = arrayOf(
+        "[ongoing]",
+        "(ongoing)",
+        "{ongoing}",
+        "<ongoing>",
+        "ongoing",
+        "[incomplete]",
+        "(incomplete)",
+        "{incomplete}",
+        "<incomplete>",
+        "incomplete",
+        "[wip]",
+        "(wip)",
+        "{wip}",
+        "<wip>",
+        "wip"
+)
+
+val EX_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
+
+fun buildTagsDescription(metadata: SearchableGalleryMetadata)
+        = StringBuilder("Tags:\n").apply {
+    //BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
+    metadata.tags.groupBy {
+        it.namespace
+    }.entries.forEach { namespace, tags ->
+        if (tags.isNotEmpty()) {
+            val joinedTags = tags.joinToString(separator = " ", transform = { "<${it.name}>" })
+            this += "▪ $namespace: $joinedTags\n"
+        }
+    }
 }

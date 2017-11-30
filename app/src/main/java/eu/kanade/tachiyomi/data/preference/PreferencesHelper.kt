@@ -201,5 +201,7 @@ class PreferencesHelper(val context: Context) {
     fun lockLength() = rxPrefs.getInteger("lock_length", -1)
 
     fun lockUseFingerprint() = rxPrefs.getBoolean("lock_finger", false)
+
+    fun eh_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_nh_useHighQualityThumbs, false)
     // <-- EH
 }

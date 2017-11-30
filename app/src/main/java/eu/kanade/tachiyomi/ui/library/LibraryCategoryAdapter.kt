@@ -4,9 +4,6 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import exh.*
 import exh.metadata.metadataClass
-import exh.metadata.models.ExGalleryMetadata
-import exh.metadata.models.NHentaiMetadata
-import exh.metadata.models.PervEdenGalleryMetadata
 import exh.metadata.models.SearchableGalleryMetadata
 import exh.metadata.syncMangaIds
 import exh.search.SearchEngine
@@ -89,7 +86,7 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
                         val meta: RealmResults<out SearchableGalleryMetadata> = if (it.value.isNotEmpty())
                             searchEngine.filterResults(it.value.where(),
                                     parsedQuery,
-                                    it.value.first().titleFields)
+                                    it.value.first()!!.titleFields)
                                     .findAllSorted(SearchableGalleryMetadata::mangaId.name).apply {
                                 totalFilteredSize += size
                             }
@@ -132,7 +129,7 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
                                 }
                             }
                         } catch (e: Exception) {
-                            Timber.w(e, "Could not filter manga!", manga.manga)
+                            Timber.w(e, "Could not filter manga! %s", manga.manga)
                         }
 
                         //Fallback to regular filter

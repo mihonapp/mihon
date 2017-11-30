@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.source.online.russian.Mintmanga
 import eu.kanade.tachiyomi.source.online.russian.Readmanga
 import eu.kanade.tachiyomi.util.hasPermission
 import exh.*
+import exh.metadata.models.PervEdenLang
 import org.yaml.snakeyaml.Yaml
 import rx.Observable
 import timber.log.Timber
@@ -93,9 +94,10 @@ open class SourceManager(private val context: Context) {
         if(prefs.enableExhentai().getOrDefault()) {
             exSrcs += EHentai(EXH_SOURCE_ID, true, context)
         }
-        exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, "en")
-        exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, "it")
+        exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, PervEdenLang.en)
+        exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, PervEdenLang.it)
         exSrcs += NHentai(context)
+        exSrcs += HentaiCafe()
         return exSrcs
     }
 

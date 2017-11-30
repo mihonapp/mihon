@@ -2,10 +2,7 @@ package eu.kanade.tachiyomi.source.online.all
 
 import android.content.Context
 import android.net.Uri
-import com.github.salomonbrys.kotson.get
-import com.github.salomonbrys.kotson.int
-import com.github.salomonbrys.kotson.long
-import com.github.salomonbrys.kotson.string
+import com.github.salomonbrys.kotson.*
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
@@ -16,17 +13,12 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.LewdSource
 import exh.NHENTAI_SOURCE_ID
-import exh.metadata.copyTo
-import exh.metadata.loadNhentai
-import exh.metadata.loadNhentaiAsync
 import exh.metadata.models.NHentaiMetadata
 import exh.metadata.models.PageImageType
 import exh.metadata.models.Tag
-import exh.util.createUUIDObj
-import exh.util.defRealm
-import exh.util.realmTrans
-import exh.util.urlImportFetchSearchManga
+import exh.util.*
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
@@ -36,7 +28,7 @@ import timber.log.Timber
  * NHentai source
  */
 
-class NHentai(context: Context) : HttpSource() {
+class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiMetadata, JsonObject> {
     override fun fetchPopularManga(page: Int): Observable<MangasPage> {
         //TODO There is currently no way to get the most popular mangas
         //TODO Instead, we delegate this to the latest updates thing to avoid confusing users with an empty screen
@@ -78,8 +70,10 @@ class NHentai(context: Context) : HttpSource() {
     override fun latestUpdatesParse(response: Response)
             = parseResultPage(response)
 
-    override fun mangaDetailsParse(response: Response)
-            = parseGallery(jsonParser.parse(response.body()!!.string()).asJsonObject)
+    override fun mangaDetailsParse(response: Response): SManga {
+        val obj = jsonParser.parse(response.body()!!.string()).asJsonObject
+        return parseToManga(NHentaiMetadata.Query(obj["id"].long), obj)
+    }
 
     //Used so we can use a different URL for fetching manga details and opening the details in the browser
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
@@ -102,7 +96,8 @@ class NHentai(context: Context) : HttpSource() {
         val error = res.get("error")
         if(error == null) {
             val results = res.getAsJsonArray("result")?.map {
-                parseGallery(it.asJsonObject)
+                val obj = it.asJsonObject
+                parseToManga(NHentaiMetadata.Query(obj["id"].long), obj)
             }
             val numPages = res.get("num_pages")?.int
             if(results != null && numPages != null)
@@ -113,70 +108,65 @@ class NHentai(context: Context) : HttpSource() {
         return MangasPage(emptyList(), false)
     }
 
-    fun rawParseGallery(obj: JsonObject) = realmTrans { realm ->
-        val nhId = obj.get("id").asLong
+    override val metaParser: NHentaiMetadata.(JsonObject) -> Unit = { obj ->
+        nhId = obj["id"].asLong
 
-        realm.copyFromRealm((realm.loadNhentai(nhId)
-                ?: realm.createUUIDObj(NHentaiMetadata::class.java)).apply {
-            this.nhId = nhId
+        uploadDate = obj["upload_date"].nullLong
 
-            uploadDate = obj.get("upload_date")?.notNull()?.long
+        favoritesCount = obj["num_favorites"].nullLong
 
-            favoritesCount = obj.get("num_favorites")?.notNull()?.long
+        mediaId = obj["media_id"].nullString
 
-            mediaId = obj.get("media_id")?.notNull()?.string
+        obj["title"].nullObj?.let { it ->
+            japaneseTitle = it["japanese"].nullString
+            shortTitle = it["pretty"].nullString
+            englishTitle = it["english"].nullString
+        }
 
-            obj.get("title")?.asJsonObject?.let {
-                japaneseTitle = it.get("japanese")?.notNull()?.string
-                shortTitle = it.get("pretty")?.notNull()?.string
-                englishTitle = it.get("english")?.notNull()?.string
+        obj["images"].nullObj?.let {
+            coverImageType = it["cover"]?.get("t").nullString
+            it["pages"].nullArray?.mapNotNull {
+                it?.asJsonObject?.get("t").nullString
+            }?.map {
+                PageImageType(it)
+            }?.let {
+                pageImageTypes.clear()
+                pageImageTypes.addAll(it)
             }
+            thumbnailImageType = it["thumbnail"]?.get("t").nullString
+        }
 
-            obj.get("images")?.asJsonObject?.let {
-                coverImageType = it.get("cover")?.get("t")?.notNull()?.asString
-                it.get("pages")?.asJsonArray?.map {
-                    it?.asJsonObject?.get("t")?.notNull()?.asString
-                }?.filterNotNull()?.map {
-                    PageImageType(it)
-                }?.let {
-                    pageImageTypes.clear()
-                    pageImageTypes.addAll(it)
-                }
-                thumbnailImageType = it.get("thumbnail")?.get("t")?.notNull()?.asString
-            }
+        scanlator = obj["scanlator"].nullString
 
-            scanlator = obj.get("scanlator")?.notNull()?.asString
-
-            obj.get("tags")?.asJsonArray?.map {
-                val asObj = it.asJsonObject
-                Pair(asObj.get("type")?.string, asObj.get("name")?.string)
-            }?.apply {
-                tags.clear()
-            }?.forEach {
-                if(it.first != null && it.second != null)
-                    tags.add(Tag(it.first!!, it.second!!, false))
-            }
-        })
-    }
-
-    fun parseGallery(obj: JsonObject) = rawParseGallery(obj).let {
-        SManga.create().apply {
-            it.copyTo(this)
+        obj["tags"]?.asJsonArray?.map {
+            val asObj = it.asJsonObject
+            Pair(asObj["type"].nullString, asObj["name"].nullString)
+        }?.apply {
+            tags.clear()
+        }?.forEach {
+            if(it.first != null && it.second != null)
+                tags.add(Tag(it.first!!, it.second!!, false))
         }
     }
 
     fun lazyLoadMetadata(url: String) =
             defRealm { realm ->
-                val meta = realm.loadNhentai(NHentaiMetadata.nhIdFromUrl(url))
-                if(meta == null)
+                val meta = NHentaiMetadata.UrlQuery(url).query(realm).findFirst()
+                if(meta == null) {
                     client.newCall(urlToDetailsRequest(url))
                             .asObservableSuccess()
                             .map {
-                                rawParseGallery(jsonParser.parse(it.body()!!.string())
-                                        .asJsonObject)
-                            }.first()
-                else
+                                realmTrans { realm ->
+                                    realm.copyFromRealm(realm.createUUIDObj(queryAll().clazz.java).apply {
+                                        metaParser(this,
+                                                jsonParser.parse(it.body()!!.string()).asJsonObject)
+                                    })
+                                }
+                            }
+                            .first()
+                } else {
                     Observable.just(realm.copyFromRealm(meta))
+                }
             }
 
     override fun fetchChapterList(manga: SManga)
@@ -184,8 +174,7 @@ class NHentai(context: Context) : HttpSource() {
         listOf(SChapter.create().apply {
             url = manga.url
             name = "Chapter"
-            //TODO Get this working later
-//            date_upload = it.uploadDate ?: 0
+            date_upload = ((it.uploadDate ?: 0) * 1000)
             chapter_number = 1f
         })
     }!!
@@ -240,6 +229,9 @@ class NHentai(context: Context) : HttpSource() {
     override val baseUrl = NHentaiMetadata.BASE_URL
 
     override val supportsLatest = true
+
+    override fun queryAll() = NHentaiMetadata.EmptyQuery()
+    override fun queryFromUrl(url: String) = NHentaiMetadata.UrlQuery(url)
 
     companion object {
         val jsonParser by lazy {

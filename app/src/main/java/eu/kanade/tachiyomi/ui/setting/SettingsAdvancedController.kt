@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.preference.PreferenceScreen
 import android.view.View
+import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
@@ -16,6 +17,9 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.util.toast
+import exh.ui.migration.MetadataFetchDialog
+import exh.util.realmTrans
+import io.realm.Realm
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -68,6 +72,38 @@ class SettingsAdvancedController : SettingsController() {
             summaryRes = R.string.pref_refresh_library_tracking_summary
 
             onClick { LibraryUpdateService.start(context, target = Target.TRACKING) }
+        }
+        preferenceCategory {
+            title = "Gallery metadata"
+            isPersistent = false
+
+            preference {
+                title = "Migrate library metadata"
+                isPersistent = false
+                key = "ex_migrate_library"
+                summary = "Fetch the library metadata to enable tag searching in the library. This button will be visible even if you have already fetched the metadata"
+
+                onClick {
+                    activity?.let {
+                        MetadataFetchDialog().askMigration(it, true)
+                    }
+                }
+            }
+
+            preference {
+                title = "Clear library metadata"
+                isPersistent = false
+                key = "ex_clear_metadata"
+                summary = "Clear all library metadata. Disables tag searching in the library"
+
+                onClick {
+                    realmTrans {
+                        it.deleteAll()
+                    }
+
+                    context.toast("Library metadata cleared!")
+                }
+            }
         }
     }
 

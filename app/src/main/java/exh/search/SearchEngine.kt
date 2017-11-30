@@ -18,12 +18,11 @@ class SearchEngine {
         fun matchTagList(namespace: String?,
                          component: Text?,
                          excluded: Boolean) {
-            if(excluded)
-                rQuery.not()
-            else if (queryEmpty)
-                queryEmpty = false
-            else
-                rQuery.or()
+            when {
+                excluded -> rQuery.not()
+                queryEmpty -> queryEmpty = false
+                else -> rQuery.or()
+            }
 
             rQuery.beginGroup()
             //Match namespace if specified

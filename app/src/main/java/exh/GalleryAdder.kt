@@ -10,19 +10,16 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
-import exh.metadata.copyTo
-import exh.metadata.loadEh
-import exh.metadata.loadNhentai
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.NHentaiMetadata
+import exh.metadata.models.PervEdenGalleryMetadata
+import exh.metadata.models.PervEdenLang
 import exh.util.defRealm
-import io.realm.Realm
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.net.MalformedURLException
 import java.net.URI
 import java.net.URISyntaxException
 
@@ -70,10 +67,19 @@ class GalleryAdder {
                    forceSource: Long? = null): GalleryAddEvent {
         try {
             val urlObj = Uri.parse(url)
-            val source = when (urlObj.host) {
+            val lowercasePs = urlObj.pathSegments.map(String::toLowerCase)
+            val firstPathSegment = lowercasePs[0]
+            val source = when (urlObj.host.toLowerCase()) {
                 "g.e-hentai.org", "e-hentai.org" -> EH_SOURCE_ID
                 "exhentai.org" -> EXH_SOURCE_ID
                 "nhentai.net" -> NHENTAI_SOURCE_ID
+                "www.perveden.com" -> {
+                    when(lowercasePs[1]) {
+                        "en-manga" -> PERV_EDEN_EN_SOURCE_ID
+                        "it-manga" -> PERV_EDEN_IT_SOURCE_ID
+                        else -> return GalleryAddEvent.Fail.UnknownType(url)
+                    }
+                }
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
@@ -81,7 +87,6 @@ class GalleryAdder {
                 return GalleryAddEvent.Fail.UnknownType(url)
             }
 
-            val firstPathSegment = urlObj.pathSegments.firstOrNull()?.toLowerCase()
             val realUrl = when(source) {
                 EH_SOURCE_ID, EXH_SOURCE_ID -> when (firstPathSegment) {
                     "g" -> {
@@ -94,10 +99,19 @@ class GalleryAdder {
                     }
                     else -> return GalleryAddEvent.Fail.UnknownType(url)
                 }
-                NHENTAI_SOURCE_ID -> when {
-                    firstPathSegment == "g" -> url
-                    urlObj.pathSegments.size >= 3 -> "https://nhentai.net/g/${urlObj.pathSegments[1]}/"
-                    else -> return GalleryAddEvent.Fail.UnknownType(url)
+                NHENTAI_SOURCE_ID -> {
+                    if(firstPathSegment != "g")
+                        return GalleryAddEvent.Fail.UnknownType(url)
+
+                    "https://nhentai.net/g/${urlObj.pathSegments[1]}/"
+                }
+                PERV_EDEN_EN_SOURCE_ID,
+                PERV_EDEN_IT_SOURCE_ID -> {
+                    val uri = Uri.parse("http://www.perveden.com/").buildUpon()
+                    urlObj.pathSegments.take(3).forEach {
+                        uri.appendPath(it)
+                    }
+                    uri.toString()
                 }
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
@@ -108,6 +122,8 @@ class GalleryAdder {
             val cleanedUrl = when(source) {
                 EH_SOURCE_ID, EXH_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 NHENTAI_SOURCE_ID -> realUrl //nhentai uses URLs directly (oops, my bad when implementing this source)
+                PERV_EDEN_EN_SOURCE_ID,
+                PERV_EDEN_IT_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
@@ -119,17 +135,27 @@ class GalleryAdder {
             }
 
             //Copy basics
-            manga.copyFrom(sourceObj.fetchMangaDetails(manga).toBlocking().first())
+            val newManga = sourceObj.fetchMangaDetails(manga).toBlocking().first()
+            manga.copyFrom(newManga)
+            manga.title = newManga.title //Forcibly copy title as copyFrom does not copy title
 
             //Apply metadata
             defRealm { realm ->
                 when (source) {
                     EH_SOURCE_ID, EXH_SOURCE_ID ->
-                        realm.loadEh(ExGalleryMetadata.galleryId(realUrl),
-                                ExGalleryMetadata.galleryToken(realUrl),
-                                isExSource(source))?.copyTo(manga)
+                        ExGalleryMetadata.UrlQuery(realUrl, isExSource(source))
+                                .query(realm)
+                                .findFirst()?.copyTo(manga)
                     NHENTAI_SOURCE_ID ->
-                        realm.loadNhentai(NHentaiMetadata.nhIdFromUrl(realUrl))
+                        NHentaiMetadata.UrlQuery(realUrl)
+                                .query(realm)
+                                .findFirst()
+                                ?.copyTo(manga)
+                    PERV_EDEN_EN_SOURCE_ID,
+                    PERV_EDEN_IT_SOURCE_ID ->
+                        PervEdenGalleryMetadata.UrlQuery(realUrl, PervEdenLang.source(source))
+                                .query(realm)
+                                .findFirst()
                                 ?.copyTo(manga)
                     else -> return GalleryAddEvent.Fail.UnknownType(url)
                 }
@@ -160,16 +186,16 @@ class GalleryAdder {
     }
 
     private fun getUrlWithoutDomain(orig: String): String {
-        try {
+        return try {
             val uri = URI(orig)
             var out = uri.path
             if (uri.query != null)
                 out += "?" + uri.query
             if (uri.fragment != null)
                 out += "#" + uri.fragment
-            return out
+            out
         } catch (e: URISyntaxException) {
-            return orig
+            orig
         }
     }
 }

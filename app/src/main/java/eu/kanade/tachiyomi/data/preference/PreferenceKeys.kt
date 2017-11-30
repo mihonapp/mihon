@@ -117,4 +117,5 @@ object PreferenceKeys {
 
     fun trackToken(syncId: Int) = "track_token_$syncId"
 
+    const val eh_nh_useHighQualityThumbs = "eh_nh_hq_thumbs"
 }

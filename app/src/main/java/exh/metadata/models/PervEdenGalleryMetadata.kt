@@ -1,8 +1,14 @@
 package exh.metadata.models
 
 import android.net.Uri
+import eu.kanade.tachiyomi.source.model.SManga
+import exh.PERV_EDEN_EN_SOURCE_ID
+import exh.PERV_EDEN_IT_SOURCE_ID
+import exh.metadata.buildTagsDescription
+import exh.plusAssign
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.RealmQuery
 import io.realm.annotations.Ignore
 import io.realm.annotations.Index
 import io.realm.annotations.PrimaryKey
@@ -50,11 +56,79 @@ open class PervEdenGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
     @Index
     override var mangaId: Long? = null
 
+    override fun copyTo(manga: SManga) {
+        url?.let { manga.url = it }
+        thumbnailUrl?.let { manga.thumbnail_url = it }
+
+        val titleDesc = StringBuilder()
+        title?.let {
+            manga.title = it
+            titleDesc += "Title: $it\n"
+        }
+        if(altTitles.isNotEmpty())
+            titleDesc += "Alternate Titles: \n" + altTitles.map {
+                "▪ ${it.title}"
+            }.joinToString(separator = "\n", postfix = "\n")
+
+        val detailsDesc = StringBuilder()
+        artist?.let {
+            manga.artist = it
+            detailsDesc += "Artist: $it\n"
+        }
+
+        type?.let {
+            manga.genre = it
+            detailsDesc += "Type: $it\n"
+        }
+
+        status?.let {
+            manga.status = when(it) {
+                "Ongoing" -> SManga.ONGOING
+                "Completed", "Suspended" -> SManga.COMPLETED
+                else -> SManga.UNKNOWN
+            }
+            detailsDesc += "Status: $it\n"
+        }
+
+        rating?.let {
+            detailsDesc += "Rating: %.2\n".format(it)
+        }
+
+        val tagsDesc = buildTagsDescription(this)
+
+        manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
+                .filter(String::isNotBlank)
+                .joinToString(separator = "\n")
+    }
+
+    class EmptyQuery : GalleryQuery<PervEdenGalleryMetadata>(PervEdenGalleryMetadata::class)
+
+    class UrlQuery(
+            val url: String,
+            val lang: PervEdenLang
+    ) : GalleryQuery<PervEdenGalleryMetadata>(PervEdenGalleryMetadata::class) {
+        override fun transform() = Query(
+                pvIdFromUrl(url),
+                lang
+        )
+    }
+
+    class Query(val pvId: String,
+                val lang: PervEdenLang
+    ) : GalleryQuery<PervEdenGalleryMetadata>(PervEdenGalleryMetadata::class) {
+        override fun map() = mapOf(
+                PervEdenGalleryMetadata::pvId to Query::pvId
+        )
+
+        override fun override(meta: RealmQuery<PervEdenGalleryMetadata>)
+            = meta.equalTo(PervEdenGalleryMetadata::lang.name, lang.name)
+    }
+
     companion object {
         private fun splitGalleryUrl(url: String)
                 = url.let {
-                    Uri.parse(it).pathSegments.filterNot(String::isNullOrBlank)
-                }
+            Uri.parse(it).pathSegments.filterNot(String::isNullOrBlank)
+        }
 
         fun pvIdFromUrl(url: String) = splitGalleryUrl(url).last()
 
@@ -87,4 +161,15 @@ open class PervEdenTitle(var metadata: PervEdenGalleryMetadata? = null,
     }
 
     override fun toString() = "PervEdenTitle(metadata=$metadata, title=$title)"
+}
+
+enum class PervEdenLang(val id: Long) {
+    en(PERV_EDEN_EN_SOURCE_ID),
+    it(PERV_EDEN_IT_SOURCE_ID);
+
+    companion object {
+        fun source(id: Long)
+                = PervEdenLang.values().find { it.id == id }
+                ?: throw IllegalArgumentException("Unknown source ID: $id!")
+    }
 }

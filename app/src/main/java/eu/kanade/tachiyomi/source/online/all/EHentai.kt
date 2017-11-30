@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.metadata.*
 import exh.metadata.models.ExGalleryMetadata
@@ -24,13 +25,11 @@ import okhttp3.CacheControl
 import okhttp3.Headers
 import okhttp3.Request
 import org.jsoup.nodes.Document
-import exh.GalleryAdder
 import exh.util.*
-import io.realm.Realm
 
 class EHentai(override val id: Long,
               val exh: Boolean,
-              val context: Context) : HttpSource() {
+              val context: Context) : HttpSource(), LewdSource<ExGalleryMetadata, Response> {
 
     val schema: String
         get() = if(prefs.secureEXH().getOrDefault())
@@ -48,8 +47,6 @@ class EHentai(override val id: Long,
     override val supportsLatest = true
 
     val prefs: PreferencesHelper by injectLazy()
-
-    val galleryAdder = GalleryAdder()
 
     /**
      * Gallery list entry
@@ -185,90 +182,80 @@ class EHentai(override val id: Long,
     /**
      * Parse gallery page to metadata model
      */
-    override fun mangaDetailsParse(response: Response)
-            = with(response.asJsoup()) {
-        realmTrans { realm ->
-            val url = response.request().url().encodedPath()!!
-            val gId = ExGalleryMetadata.galleryId(url)
-            val gToken = ExGalleryMetadata.galleryToken(url)
+    override fun mangaDetailsParse(response: Response): SManga {
+        return parseToManga(queryFromUrl(response.request().url().toString()), response)
+    }
 
-            val metdata = (realm.loadEh(gId, gToken, exh)
-                    ?: realm.createUUIDObj(ExGalleryMetadata::class.java))
-            with(metdata) {
-                this.url = url
-                this.gId = gId
-                this.gToken = gToken
+    override val metaParser: ExGalleryMetadata.(Response) -> Unit = { response ->
+        with(response.asJsoup()) {
+            url = response.request().url().encodedPath()!!
+            gId = ExGalleryMetadata.galleryId(url!!)
+            gToken = ExGalleryMetadata.galleryToken(url!!)
 
-                exh = this@EHentai.exh
-                title = select("#gn").text().nullIfBlank()?.trim()
+            exh = this@EHentai.exh
+            title = select("#gn").text().nullIfBlank()?.trim()
 
-                altTitle = select("#gj").text().nullIfBlank()?.trim()
+            altTitle = select("#gj").text().nullIfBlank()?.trim()
 
-                thumbnailUrl = select("#gd1 div").attr("style").nullIfBlank()?.let {
-                    it.substring(it.indexOf('(') + 1 until it.lastIndexOf(')'))
-                }
-                genre = select(".ic").parents().attr("href").nullIfBlank()?.trim()?.substringAfterLast('/')
+            thumbnailUrl = select("#gd1 div").attr("style").nullIfBlank()?.let {
+                it.substring(it.indexOf('(') + 1 until it.lastIndexOf(')'))
+            }
+            genre = select(".ic").parents().attr("href").nullIfBlank()?.trim()?.substringAfterLast('/')
 
-                uploader = select("#gdn").text().nullIfBlank()?.trim()
+            uploader = select("#gdn").text().nullIfBlank()?.trim()
 
-                //Parse the table
-                select("#gdd tr").forEach {
-                    it.select(".gdt1")
-                            .text()
-                            .nullIfBlank()
-                            ?.trim()
-                            ?.let { left ->
-                                it.select(".gdt2")
-                                        .text()
-                                        .nullIfBlank()
-                                        ?.trim()
-                                        ?.let { right ->
-                                            ignore {
-                                                when (left.removeSuffix(":")
-                                                        .toLowerCase()) {
-                                                    "posted" -> datePosted = EX_DATE_FORMAT.parse(right).time
-                                                    "visible" -> visible = right.nullIfBlank()
-                                                    "language" -> {
-                                                        language = right.removeSuffix(TR_SUFFIX).trim().nullIfBlank()
-                                                        translated = right.endsWith(TR_SUFFIX, true)
-                                                    }
-                                                    "file size" -> size = parseHumanReadableByteCount(right)?.toLong()
-                                                    "length" -> length = right.removeSuffix("pages").trim().nullIfBlank()?.toInt()
-                                                    "favorited" -> favorites = right.removeSuffix("times").trim().nullIfBlank()?.toInt()
+            //Parse the table
+            select("#gdd tr").forEach {
+                it.select(".gdt1")
+                        .text()
+                        .nullIfBlank()
+                        ?.trim()
+                        ?.let { left ->
+                            it.select(".gdt2")
+                                    .text()
+                                    .nullIfBlank()
+                                    ?.trim()
+                                    ?.let { right ->
+                                        ignore {
+                                            when (left.removeSuffix(":")
+                                                    .toLowerCase()) {
+                                                "posted" -> datePosted = EX_DATE_FORMAT.parse(right).time
+                                                "visible" -> visible = right.nullIfBlank()
+                                                "language" -> {
+                                                    language = right.removeSuffix(TR_SUFFIX).trim().nullIfBlank()
+                                                    translated = right.endsWith(TR_SUFFIX, true)
                                                 }
+                                                "file size" -> size = parseHumanReadableByteCount(right)?.toLong()
+                                                "length" -> length = right.removeSuffix("pages").trim().nullIfBlank()?.toInt()
+                                                "favorited" -> favorites = right.removeSuffix("times").trim().nullIfBlank()?.toInt()
                                             }
                                         }
-                            }
-                }
+                                    }
+                        }
+            }
 
-                //Parse ratings
-                ignore {
-                    averageRating = select("#rating_label")
-                            .text()
-                            .removePrefix("Average:")
-                            .trim()
-                            .nullIfBlank()
-                            ?.toDouble()
-                    ratingCount = select("#rating_count")
-                            .text()
-                            .trim()
-                            .nullIfBlank()
-                            ?.toInt()
-                }
+            //Parse ratings
+            ignore {
+                averageRating = select("#rating_label")
+                        .text()
+                        .removePrefix("Average:")
+                        .trim()
+                        .nullIfBlank()
+                        ?.toDouble()
+                ratingCount = select("#rating_count")
+                        .text()
+                        .trim()
+                        .nullIfBlank()
+                        ?.toInt()
+            }
 
-                //Parse tags
-                tags.clear()
-                select("#taglist tr").forEach {
-                    val namespace = it.select(".tc").text().removeSuffix(":")
-                    tags.addAll(it.select("div").map {
-                        Tag(namespace, it.text().trim(), it.hasClass("gtl"))
-                    })
-                }
-
-                //Copy metadata to manga
-                SManga.create().apply {
-                    copyTo(this)
-                }
+            //Parse tags
+            tags.clear()
+            select("#taglist tr").forEach {
+                val namespace = it.select(".tc").text().removeSuffix(":")
+                tags.addAll(it.select("div").map {
+                    Tag(namespace, it.text().trim(), it.hasClass("gtl"))
+                })
             }
         }
     }
@@ -323,7 +310,7 @@ class EHentai(override val id: Long,
             if (favNames == null)
                 favNames = doc.getElementsByClass("nosel").first().children().filter {
                     it.children().size >= 3
-                }.map { it.child(2).text() }.filterNotNull()
+                }.mapNotNull { it.child(2).text() }
 
             //Next page
             page++
@@ -384,9 +371,9 @@ class EHentai(override val id: Long,
     }
 
     fun buildCookies(cookies: Map<String, String>)
-            = cookies.entries.map {
+            = cookies.entries.joinToString(separator = "; ", postfix = ";") {
         "${URLEncoder.encode(it.key, "UTF-8")}=${URLEncoder.encode(it.value, "UTF-8")}"
-    }.joinToString(separator = "; ", postfix = ";")
+    }
 
     fun addParam(url: String, param: String, value: String)
             = Uri.parse(url)
@@ -464,6 +451,9 @@ class EHentai(override val id: Long,
         "ExHentai"
     else
         "E-Hentai"
+
+    override fun queryAll() = ExGalleryMetadata.EmptyQuery()
+    override fun queryFromUrl(url: String) = ExGalleryMetadata.UrlQuery(url, exh)
 
     companion object {
         val QUERY_PREFIX = "?f_apply=Apply+Filter"

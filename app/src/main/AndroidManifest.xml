@@ -143,6 +143,10 @@
                     android:host="nhentai.net"
                     android:pathPrefix="/g/"
                     android:scheme="https"/>
+                <data
+                    android:host="nhentai.net"
+                    android:pathPrefix="/g/"
+                    android:scheme="http"/>
             </intent-filter>
         </activity>
 

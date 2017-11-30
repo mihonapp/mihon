@@ -480,19 +480,19 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
         return query.average(fieldName)
     }
 
-    fun min(fieldName: String): Number {
+    fun min(fieldName: String): Number? {
         return query.min(fieldName)
     }
 
-    fun minimumDate(fieldName: String): Date {
+    fun minimumDate(fieldName: String): Date? {
         return query.minimumDate(fieldName)
     }
 
-    fun max(fieldName: String): Number {
+    fun max(fieldName: String): Number? {
         return query.max(fieldName)
     }
 
-    fun maximumDate(fieldName: String): Date {
+    fun maximumDate(fieldName: String): Date? {
         return query.maximumDate(fieldName)
     }
 
@@ -540,7 +540,7 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
         return query.findAllSortedAsync(fieldName1, sortOrder1, fieldName2, sortOrder2)
     }
 
-    fun findFirst(): E {
+    fun findFirst(): E? {
         return query.findFirst()
     }
 

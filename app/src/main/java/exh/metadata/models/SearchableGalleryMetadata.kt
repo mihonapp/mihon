@@ -1,11 +1,8 @@
 package exh.metadata.models
 
+import eu.kanade.tachiyomi.source.model.SManga
 import io.realm.RealmList
 import io.realm.RealmModel
-import io.realm.annotations.Index
-import java.util.ArrayList
-import java.util.HashMap
-import kotlin.reflect.KCallable
 
 /**
  * A gallery that can be searched using the EH search engine
@@ -23,4 +20,6 @@ interface SearchableGalleryMetadata: RealmModel {
     val titleFields: List<String>
 
     var mangaId: Long?
+
+    fun copyTo(manga: SManga)
 }

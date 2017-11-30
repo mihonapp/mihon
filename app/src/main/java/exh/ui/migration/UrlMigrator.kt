@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import exh.isExSource
 import exh.isLewdSource
-import exh.metadata.ehMetaQueryFromUrl
+import exh.metadata.models.ExGalleryMetadata
 import exh.util.realmTrans
 import uy.kohesive.injekt.injectLazy
 
@@ -43,7 +43,9 @@ class UrlMigrator {
                     //Build fixed URL
                     val urlWithSlash = "/" + manga.url
                     //Fix metadata if required
-                    val metadata = realm.ehMetaQueryFromUrl(manga.url, isExSource(manga.source)).findFirst()
+                    val metadata = ExGalleryMetadata.UrlQuery(manga.url, isExSource(manga.source))
+                            .query(realm)
+                            .findFirst()
                     metadata?.url?.let {
                         if (it.startsWith("g/")) { //Check if metadata URL has no slash
                             metadata.url = urlWithSlash //Fix it

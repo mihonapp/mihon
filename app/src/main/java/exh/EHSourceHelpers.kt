@@ -15,6 +15,8 @@ val PERV_EDEN_IT_SOURCE_ID = LEWD_SOURCE_SERIES + 6
 
 val NHENTAI_SOURCE_ID = LEWD_SOURCE_SERIES + 7
 
+val HENTAI_CAFE_SOURCE_ID = LEWD_SOURCE_SERIES + 8
+
 fun isLewdSource(source: Long) = source in 6900..6999
 
 fun isEhSource(source: Long) = source == EH_SOURCE_ID

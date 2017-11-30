@@ -1,11 +1,21 @@
 package exh.metadata.models
 
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.source.model.SManga
+import exh.metadata.EX_DATE_FORMAT
+import exh.metadata.ONGOING_SUFFIX
+import exh.metadata.buildTagsDescription
+import exh.metadata.nullIfBlank
+import exh.plusAssign
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.Ignore
 import io.realm.annotations.Index
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.util.*
 
 /**
@@ -58,18 +68,92 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
     @Index
     override var mangaId: Long? = null
 
+    class EmptyQuery : GalleryQuery<NHentaiMetadata>(NHentaiMetadata::class)
+
+    class UrlQuery(
+            val url: String
+    ) : GalleryQuery<NHentaiMetadata>(NHentaiMetadata::class) {
+        override fun transform() = Query(
+                nhIdFromUrl(url)
+        )
+    }
+
+    class Query(
+            val nhId: Long
+    ) : GalleryQuery<NHentaiMetadata>(NHentaiMetadata::class) {
+        override fun map() = mapOf(
+                NHentaiMetadata::nhId to Query::nhId
+        )
+    }
+
+    override fun copyTo(manga: SManga) {
+        url?.let { manga.url = it }
+
+        if(mediaId != null)
+            NHentaiMetadata.typeToExtension(thumbnailImageType)?.let {
+                manga.thumbnail_url = "https://t.nhentai.net/galleries/$mediaId/${
+                if(Injekt.get<PreferencesHelper>().eh_useHighQualityThumbs().getOrDefault())
+                    "cover"
+                else
+                    "thumb"
+                }.$it"
+            }
+
+        manga.title = englishTitle ?: japaneseTitle ?: shortTitle!!
+
+        //Set artist (if we can find one)
+        tags.filter { it.namespace == NHENTAI_ARTIST_NAMESPACE }.let {
+            if(it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name!! })
+        }
+
+        tags.filter { it.namespace == NHENTAI_CATEGORIES_NAMESPACE }.let {
+            if(it.isNotEmpty()) manga.genre = it.joinToString(transform = { it.name!! })
+        }
+
+        //Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
+        //We default to completed
+        manga.status = SManga.COMPLETED
+        englishTitle?.let { t ->
+            ONGOING_SUFFIX.find {
+                t.endsWith(it, ignoreCase = true)
+            }?.let {
+                manga.status = SManga.ONGOING
+            }
+        }
+
+        val titleDesc = StringBuilder()
+        englishTitle?.let { titleDesc += "English Title: $it\n" }
+        japaneseTitle?.let { titleDesc += "Japanese Title: $it\n" }
+        shortTitle?.let { titleDesc += "Short Title: $it\n" }
+
+        val detailsDesc = StringBuilder()
+        uploadDate?.let { detailsDesc += "Upload Date: ${EX_DATE_FORMAT.format(Date(it * 1000))}\n" }
+        pageImageTypes.size.let { detailsDesc += "Length: $it pages\n" }
+        favoritesCount?.let { detailsDesc += "Favorited: $it times\n" }
+        scanlator?.nullIfBlank()?.let { detailsDesc += "Scanlator: $it\n" }
+
+        val tagsDesc = buildTagsDescription(this)
+
+        manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
+                .filter(String::isNotBlank)
+                .joinToString(separator = "\n")
+    }
+
     companion object {
         val BASE_URL = "https://nhentai.net"
 
+        private const val NHENTAI_ARTIST_NAMESPACE = "artist"
+        private const val NHENTAI_CATEGORIES_NAMESPACE = "category"
+
         fun typeToExtension(t: String?) =
-            when(t) {
-                "p" -> "png"
-                "j" -> "jpg"
-                else -> null
-            }
+                when(t) {
+                    "p" -> "png"
+                    "j" -> "jpg"
+                    else -> null
+                }
 
         fun nhIdFromUrl(url: String)
-            = url.split("/").last { it.isNotBlank() }.toLong()
+                = url.split("/").last { it.isNotBlank() }.toLong()
 
         val TITLE_FIELDS = listOf(
                 NHentaiMetadata::japaneseTitle.name,
