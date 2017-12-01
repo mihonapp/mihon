@@ -117,7 +117,7 @@ class MetadataFetchDialog {
         MaterialDialog.Builder(activity)
                 .title("Metadata fetch canceled")
                 .content("Library metadata fetch has been canceled.\n\n" +
-                        "You can run this operation later by going to: Settings > E-Hentai > Migrate library metadata")
+                        "You can run this operation later by going to: Settings > Advanced > Migrate library metadata")
                 .positiveText("Ok")
                 .cancelable(true)
                 .canceledOnTouchOutside(true)
