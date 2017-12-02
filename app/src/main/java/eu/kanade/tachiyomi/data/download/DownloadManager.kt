@@ -85,9 +85,10 @@ class DownloadManager(context: Context) {
      *
      * @param manga the manga of the chapters.
      * @param chapters the list of chapters to enqueue.
+     * @param autoStart whether to start the downloader after enqueing the chapters.
      */
-    fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
-        downloader.queueChapters(manga, chapters)
+    fun downloadChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean = true) {
+        downloader.queueChapters(manga, chapters, autoStart)
     }
 
     /**
