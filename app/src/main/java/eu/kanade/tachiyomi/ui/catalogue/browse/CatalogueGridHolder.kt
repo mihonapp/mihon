@@ -6,7 +6,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.widget.StateImageViewTarget
-import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
+import kotlinx.android.synthetic.main.catalogue_grid_item.*
 
 /**
  * Class used to hold the displayed data of a manga in the catalogue, like the cover or the title.
@@ -27,16 +27,16 @@ class CatalogueGridHolder(private val view: View, private val adapter: FlexibleA
      */
     override fun onSetValues(manga: Manga) {
         // Set manga title
-        view.title.text = manga.title
+        title.text = manga.title
 
         // Set alpha of thumbnail.
-        view.thumbnail.alpha = if (manga.favorite) 0.3f else 1.0f
+        thumbnail.alpha = if (manga.favorite) 0.3f else 1.0f
 
         setImage(manga)
     }
 
     override fun setImage(manga: Manga) {
-        GlideApp.with(view.context).clear(view.thumbnail)
+        GlideApp.with(view.context).clear(thumbnail)
         if (!manga.thumbnail_url.isNullOrEmpty()) {
             GlideApp.with(view.context)
                     .load(manga)
@@ -44,7 +44,7 @@ class CatalogueGridHolder(private val view: View, private val adapter: FlexibleA
                     .centerCrop()
                     .skipMemoryCache(true)
                     .placeholder(android.R.color.transparent)
-                    .into(StateImageViewTarget(view.thumbnail, view.progress))
+                    .into(StateImageViewTarget(thumbnail, progress))
         }
     }
 }

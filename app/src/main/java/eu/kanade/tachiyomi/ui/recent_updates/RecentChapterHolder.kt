@@ -3,13 +3,13 @@ package eu.kanade.tachiyomi.ui.recent_updates
 import android.view.View
 import android.widget.PopupMenu
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.glide.GlideApp
+import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.setVectorCompat
-import kotlinx.android.synthetic.main.recent_chapters_item.view.*
+import kotlinx.android.synthetic.main.recent_chapters_item.*
 
 /**
  * Holder that contains chapter item
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.recent_chapters_item.view.*
  * @constructor creates a new recent chapter holder.
  */
 class RecentChapterHolder(private val view: View, private val adapter: RecentChaptersAdapter) :
-        FlexibleViewHolder(view, adapter) {
+        BaseFlexibleViewHolder(view, adapter) {
 
     /**
      * Color of read chapter
@@ -43,8 +43,8 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
         // We need to post a Runnable to show the popup to make sure that the PopupMenu is
         // correctly positioned. The reason being that the view may change position before the
         // PopupMenu is shown.
-        view.chapter_menu.setOnClickListener { it.post { showPopupMenu(it) } }
-        view.manga_cover.setOnClickListener {
+        chapter_menu.setOnClickListener { it.post { showPopupMenu(it) } }
+        manga_cover.setOnClickListener {
             adapter.coverClickListener.onCoverClick(adapterPosition)
         }
     }
@@ -58,31 +58,31 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
         this.item = item
 
         // Set chapter title
-        view.chapter_title.text = item.chapter.name
+        chapter_title.text = item.chapter.name
 
         // Set manga title
-        view.manga_title.text = item.manga.title
+        manga_title.text = item.manga.title
 
         // Set the correct drawable for dropdown and update the tint to match theme.
-        view.chapter_menu_icon.setVectorCompat(R.drawable.ic_more_horiz_black_24dp, view.context.getResourceColor(R.attr.icon_color))
+        chapter_menu_icon.setVectorCompat(R.drawable.ic_more_horiz_black_24dp, view.context.getResourceColor(R.attr.icon_color))
 
         // Set cover
-        GlideApp.with(itemView.context).clear(itemView.manga_cover)
+        GlideApp.with(itemView.context).clear(manga_cover)
         if (!item.manga.thumbnail_url.isNullOrEmpty()) {
             GlideApp.with(itemView.context)
                     .load(item.manga)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .circleCrop()
-                    .into(itemView.manga_cover)
+                    .into(manga_cover)
         }
 
         // Check if chapter is read and set correct color
         if (item.chapter.read) {
-            view.chapter_title.setTextColor(readColor)
-            view.manga_title.setTextColor(readColor)
+            chapter_title.setTextColor(readColor)
+            manga_title.setTextColor(readColor)
         } else {
-            view.chapter_title.setTextColor(unreadColor)
-            view.manga_title.setTextColor(unreadColor)
+            chapter_title.setTextColor(unreadColor)
+            manga_title.setTextColor(unreadColor)
         }
 
         // Set chapter status
@@ -94,7 +94,7 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
      *
      * @param status download status
      */
-    fun notifyStatus(status: Int) = with(view.download_text) {
+    fun notifyStatus(status: Int) = with(download_text) {
         when (status) {
             Download.QUEUE -> setText(R.string.chapter_queued)
             Download.DOWNLOADING -> setText(R.string.chapter_downloading)

@@ -6,7 +6,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.util.getResourceColor
-import kotlinx.android.synthetic.main.catalogue_list_item.view.*
+import kotlinx.android.synthetic.main.catalogue_list_item.*
 
 /**
  * Class used to hold the displayed data of a manga in the catalogue, like the cover or the title.
@@ -29,14 +29,14 @@ class CatalogueListHolder(private val view: View, adapter: FlexibleAdapter<*>) :
      * @param manga the manga to bind.
      */
     override fun onSetValues(manga: Manga) {
-        view.title.text = manga.title
-        view.title.setTextColor(if (manga.favorite) favoriteColor else unfavoriteColor)
+        title.text = manga.title
+        title.setTextColor(if (manga.favorite) favoriteColor else unfavoriteColor)
 
         setImage(manga)
     }
 
     override fun setImage(manga: Manga) {
-        GlideApp.with(view.context).clear(view.thumbnail)
+        GlideApp.with(view.context).clear(thumbnail)
         if (!manga.thumbnail_url.isNullOrEmpty()) {
             GlideApp.with(view.context)
                     .load(manga)
@@ -46,7 +46,7 @@ class CatalogueListHolder(private val view: View, adapter: FlexibleAdapter<*>) :
                     .dontAnimate()
                     .skipMemoryCache(true)
                     .placeholder(android.R.color.transparent)
-                    .into(view.thumbnail)
+                    .into(thumbnail)
         }
     }
 

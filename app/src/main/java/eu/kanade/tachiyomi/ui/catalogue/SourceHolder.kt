@@ -3,53 +3,51 @@ package eu.kanade.tachiyomi.ui.catalogue
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
-import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.online.LoginSource
+import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.dpToPx
 import eu.kanade.tachiyomi.util.getRound
 import eu.kanade.tachiyomi.util.gone
 import eu.kanade.tachiyomi.util.visible
 import io.github.mthli.slice.Slice
-import kotlinx.android.synthetic.main.catalogue_main_controller_card_item.view.*
+import kotlinx.android.synthetic.main.catalogue_main_controller_card_item.*
 
-class SourceHolder(view: View, adapter: CatalogueAdapter) : FlexibleViewHolder(view, adapter) {
+class SourceHolder(view: View, adapter: CatalogueAdapter) : BaseFlexibleViewHolder(view, adapter) {
 
-    private val slice = Slice(itemView.card).apply {
+    private val slice = Slice(card).apply {
         setColor(adapter.cardBackground)
     }
 
     init {
-        itemView.source_browse.setOnClickListener {
+        source_browse.setOnClickListener {
             adapter.browseClickListener.onBrowseClick(adapterPosition)
         }
 
-        itemView.source_latest.setOnClickListener {
+        source_latest.setOnClickListener {
             adapter.latestClickListener.onLatestClick(adapterPosition)
         }
     }
 
     fun bind(item: SourceItem) {
         val source = item.source
-        with(itemView) {
-            setCardEdges(item)
+        setCardEdges(item)
 
-            // Set source name
-            title.text = source.name
+        // Set source name
+        title.text = source.name
 
-            // Set circle letter image.
-            post {
-                image.setImageDrawable(image.getRound(source.name.take(1).toUpperCase(),false))
-            }
+        // Set circle letter image.
+        itemView.post {
+            image.setImageDrawable(image.getRound(source.name.take(1).toUpperCase(),false))
+        }
 
-            // If source is login, show only login option
-            if (source is LoginSource && !source.isLogged()) {
-                source_browse.setText(R.string.login)
-                source_latest.gone()
-            } else {
-                source_browse.setText(R.string.browse)
-                source_latest.visible()
-            }
+        // If source is login, show only login option
+        if (source is LoginSource && !source.isLogged()) {
+            source_browse.setText(R.string.login)
+            source_latest.gone()
+        } else {
+            source_browse.setText(R.string.browse)
+            source_latest.visible()
         }
     }
 
@@ -94,7 +92,7 @@ class SourceHolder(view: View, adapter: CatalogueAdapter) : FlexibleViewHolder(v
     }
 
     private fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
-        val v = itemView.card
+        val v = card
         if (v.layoutParams is ViewGroup.MarginLayoutParams) {
             val p = v.layoutParams as ViewGroup.MarginLayoutParams
             p.setMargins(left, top, right, bottom)
