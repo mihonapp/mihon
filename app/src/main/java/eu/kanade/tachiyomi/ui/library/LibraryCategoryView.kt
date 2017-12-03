@@ -124,12 +124,11 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     fun onRecycle() {
         adapter.setItems(emptyList())
         adapter.clearSelection()
-        subscriptions.clear()
+        unsubscribe()
     }
 
-    override fun onDetachedFromWindow() {
+    fun unsubscribe() {
         subscriptions.clear()
-        super.onDetachedFromWindow()
     }
 
     /**

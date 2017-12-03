@@ -164,6 +164,7 @@ class LibraryController(
     }
 
     override fun onDestroyView(view: View) {
+        adapter?.onDestroy()
         adapter = null
         actionMode = null
         tabsVisibilitySubscription?.unsubscribe()
