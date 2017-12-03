@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.catalogue
+package eu.kanade.tachiyomi.ui.catalogue.browse
 
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.source.model.MangasPage

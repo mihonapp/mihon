@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.catalogue.main
+package eu.kanade.tachiyomi.ui.catalogue
 
 import android.os.Build
 import android.view.View
@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.util.visible
 import io.github.mthli.slice.Slice
 import kotlinx.android.synthetic.main.catalogue_main_controller_card_item.view.*
 
-class SourceHolder(view: View, adapter: CatalogueMainAdapter) : FlexibleViewHolder(view, adapter) {
+class SourceHolder(view: View, adapter: CatalogueAdapter) : FlexibleViewHolder(view, adapter) {
 
     private val slice = Slice(itemView.card).apply {
         setColor(adapter.cardBackground)

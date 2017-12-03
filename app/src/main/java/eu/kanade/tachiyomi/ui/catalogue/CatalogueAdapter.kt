@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.catalogue.main
+package eu.kanade.tachiyomi.ui.catalogue
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -8,9 +8,9 @@ import eu.kanade.tachiyomi.util.getResourceColor
 /**
  * Adapter that holds the catalogue cards.
  *
- * @param controller instance of [CatalogueMainController].
+ * @param controller instance of [CatalogueController].
  */
-class CatalogueMainAdapter(val controller: CatalogueMainController) :
+class CatalogueAdapter(val controller: CatalogueController) :
         FlexibleAdapter<IFlexible<*>>(null, controller, true) {
 
     val cardBackground = controller.activity!!.getResourceColor(R.attr.background_card)
@@ -31,7 +31,7 @@ class CatalogueMainAdapter(val controller: CatalogueMainController) :
 
     /**
      * Listener which should be called when user clicks browse.
-     * Note: Should only be handled by [CatalogueMainController]
+     * Note: Should only be handled by [CatalogueController]
      */
     interface OnBrowseClickListener {
         fun onBrowseClick(position: Int)
@@ -39,7 +39,7 @@ class CatalogueMainAdapter(val controller: CatalogueMainController) :
 
     /**
      * Listener which should be called when user clicks latest.
-     * Note: Should only be handled by [CatalogueMainController]
+     * Note: Should only be handled by [CatalogueController]
      */
     interface OnLatestClickListener {
         fun onLatestClick(position: Int)

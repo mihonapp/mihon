@@ -1,8 +1,8 @@
-package eu.kanade.tachiyomi.ui.latest_updates
+package eu.kanade.tachiyomi.ui.catalogue.latest
 
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.MangasPage
-import eu.kanade.tachiyomi.ui.catalogue.Pager
+import eu.kanade.tachiyomi.ui.catalogue.browse.Pager
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
