@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.catalogue.main
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
@@ -16,12 +15,13 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
 import eu.kanade.tachiyomi.ui.latest_updates.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
-import kotlinx.android.synthetic.main.catalogue_main_controller.view.*
+import kotlinx.android.synthetic.main.catalogue_main_controller.*
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -89,19 +89,16 @@ class CatalogueMainController : NucleusController<CatalogueMainPresenter>(),
      * Called when the view is created
      *
      * @param view view of controller
-     * @param savedViewState information from previous state.
      */
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         adapter = CatalogueMainAdapter(this)
 
-        with(view) {
-            // Create recycler and set adapter.
-            recycler.layoutManager = LinearLayoutManager(context)
-            recycler.adapter = adapter
-            recycler.addItemDecoration(SourceDividerItemDecoration(context))
-        }
+        // Create recycler and set adapter.
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.adapter = adapter
+        recycler.addItemDecoration(SourceDividerItemDecoration(view.context))
     }
 
     override fun onDestroyView(view: View) {
@@ -165,9 +162,7 @@ class CatalogueMainController : NucleusController<CatalogueMainPresenter>(),
      */
     private fun openCatalogue(source: CatalogueSource, controller: CatalogueController) {
         preferences.lastUsedCatalogueSource().set(source.id)
-        router.pushController(RouterTransaction.with(controller)
-                .popChangeHandler(FadeChangeHandler())
-                .pushChangeHandler(FadeChangeHandler()))
+        router.pushController(controller.withFadeTransaction())
     }
 
     /**
@@ -192,9 +187,7 @@ class CatalogueMainController : NucleusController<CatalogueMainPresenter>(),
                 .filter { it.isSubmitted }
                 .subscribeUntilDestroy {
                     val query = it.queryText().toString()
-                    router.pushController((RouterTransaction.with(CatalogueSearchController(query)))
-                            .popChangeHandler(FadeChangeHandler())
-                            .pushChangeHandler(FadeChangeHandler()))
+                    router.pushController(CatalogueSearchController(query).withFadeTransaction())
                 }
     }
 

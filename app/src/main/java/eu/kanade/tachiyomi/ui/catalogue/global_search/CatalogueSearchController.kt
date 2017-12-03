@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
-import com.bluelinelabs.conductor.RouterTransaction
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import kotlinx.android.synthetic.main.catalogue_global_search_controller.view.*
+import kotlinx.android.synthetic.main.catalogue_global_search_controller.*
 
 /**
  * This controller shows and manages the different search result in global search.
@@ -71,9 +70,7 @@ class CatalogueSearchController(private val initialQuery: String? = null) :
      */
     override fun onMangaClick(manga: Manga) {
         // Open MangaController.
-        router.pushController(RouterTransaction.with(MangaController(manga, true))
-                .pushChangeHandler(FadeChangeHandler())
-                .popChangeHandler(FadeChangeHandler()))
+        router.pushController(MangaController(manga, true).withFadeTransaction())
     }
 
     /**
@@ -115,18 +112,15 @@ class CatalogueSearchController(private val initialQuery: String? = null) :
      * Called when the view is created
      *
      * @param view view of controller
-     * @param savedViewState information from previous state.
      */
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         adapter = CatalogueSearchAdapter(this)
 
-        with(view) {
-            // Create recycler and set adapter.
-            recycler.layoutManager = LinearLayoutManager(context)
-            recycler.adapter = adapter
-        }
+        // Create recycler and set adapter.
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.adapter = adapter
     }
 
     override fun onDestroyView(view: View) {

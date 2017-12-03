@@ -7,8 +7,6 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.*
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
-import com.bluelinelabs.conductor.RouterTransaction
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.f2prateek.rx.preferences.Preference
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -21,12 +19,13 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.*
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
-import kotlinx.android.synthetic.main.catalogue_controller.view.*
+import kotlinx.android.synthetic.main.catalogue_controller.*
 import kotlinx.android.synthetic.main.main_activity.*
 import rx.Observable
 import rx.Subscription
@@ -112,8 +111,8 @@ open class CatalogueController(bundle: Bundle) :
         return inflater.inflate(R.layout.catalogue_controller, container, false)
     }
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         // Initialize adapter, scroll listener and recycler views
         adapter = FlexibleAdapter(null, this)
@@ -121,11 +120,10 @@ open class CatalogueController(bundle: Bundle) :
 
         navView?.setFilters(presenter.filterItems)
 
-        view.progress?.visible()
+        progress?.visible()
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
         numColumnsSubscription?.unsubscribe()
         numColumnsSubscription = null
         searchViewSubscription?.unsubscribe()
@@ -133,6 +131,7 @@ open class CatalogueController(bundle: Bundle) :
         adapter = null
         snack = null
         recycler = null
+        super.onDestroyView(view)
     }
 
     override fun createSecondaryDrawer(drawer: DrawerLayout): ViewGroup? {
@@ -172,12 +171,12 @@ open class CatalogueController(bundle: Bundle) :
         numColumnsSubscription?.unsubscribe()
 
         var oldPosition = RecyclerView.NO_POSITION
-            val oldRecycler = view.catalogue_view?.getChildAt(1)
+            val oldRecycler = catalogue_view?.getChildAt(1)
             if (oldRecycler is RecyclerView) {
                 oldPosition = (oldRecycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                 oldRecycler.adapter = null
 
-                view.catalogue_view?.removeView(oldRecycler)
+                catalogue_view?.removeView(oldRecycler)
             }
 
         val recycler = if (presenter.isListMode) {
@@ -187,7 +186,7 @@ open class CatalogueController(bundle: Bundle) :
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             }
         } else {
-            (view.catalogue_view.inflate(R.layout.catalogue_recycler_autofit) as AutofitRecyclerView).apply {
+            (catalogue_view.inflate(R.layout.catalogue_recycler_autofit) as AutofitRecyclerView).apply {
                 numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
                         .doOnNext { spanCount = it }
                         .skip(1)
@@ -207,7 +206,7 @@ open class CatalogueController(bundle: Bundle) :
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
 
-        view.catalogue_view.addView(recycler, 1)
+        catalogue_view.addView(recycler, 1)
 
         if (oldPosition != RecyclerView.NO_POSITION) {
             recycler.layoutManager.scrollToPosition(oldPosition)
@@ -330,7 +329,7 @@ open class CatalogueController(bundle: Bundle) :
         val message = if (error is NoResultsException) "No results found" else (error.message ?: "")
 
         snack?.dismiss()
-        snack = view?.catalogue_view?.snack(message, Snackbar.LENGTH_INDEFINITE) {
+        snack = catalogue_view?.snack(message, Snackbar.LENGTH_INDEFINITE) {
             setAction(R.string.action_retry) {
                 // If not the first page, show bottom progress bar.
                 if (adapter.mainItemCount > 0) {
@@ -357,7 +356,6 @@ open class CatalogueController(bundle: Bundle) :
      * Called by the adapter when scrolled near the bottom.
      */
     override fun onLoadMore(lastPosition: Int, currentPage: Int) {
-        Timber.e("onLoadMore")
         if (presenter.hasNextPage()) {
             presenter.requestNext()
         } else {
@@ -391,7 +389,7 @@ open class CatalogueController(bundle: Bundle) :
         setupRecycler(view)
         if (!isListMode || !view.context.connectivityManager.isActiveNetworkMetered) {
             // Initialize mangas if going to grid view or if over wifi when going to list view
-            val mangas = (0..adapter.itemCount-1).mapNotNull {
+            val mangas = (0 until adapter.itemCount).mapNotNull {
                 (adapter.getItem(it) as? CatalogueItem)?.manga
             }
             presenter.initializeMangas(mangas)
@@ -433,7 +431,7 @@ open class CatalogueController(bundle: Bundle) :
      * Shows the progress bar.
      */
     private fun showProgressBar() {
-        view?.progress?.visible()
+        progress?.visible()
         snack?.dismiss()
         snack = null
     }
@@ -442,7 +440,7 @@ open class CatalogueController(bundle: Bundle) :
      * Hides active progress bars.
      */
     private fun hideProgressBar() {
-        view?.progress?.gone()
+        progress?.gone()
     }
 
     /**
@@ -453,9 +451,7 @@ open class CatalogueController(bundle: Bundle) :
      */
     override fun onItemClick(position: Int): Boolean {
         val item = adapter?.getItem(position) as? CatalogueItem ?: return false
-        router.pushController(RouterTransaction.with(MangaController(item.manga, true))
-                .pushChangeHandler(FadeChangeHandler())
-                .popChangeHandler(FadeChangeHandler()))
+        router.pushController(MangaController(item.manga, true).withFadeTransaction())
 
         return false
     }
@@ -470,10 +466,11 @@ open class CatalogueController(bundle: Bundle) :
      * @param position the position of the element clicked.
      */
     override fun onItemLongClick(position: Int) {
+        val activity = activity ?: return
         val manga = (adapter?.getItem(position) as? CatalogueItem?)?.manga ?: return
         if (manga.favorite) {
-            MaterialDialog.Builder(activity!!)
-                    .items(resources?.getString(R.string.remove_from_library))
+            MaterialDialog.Builder(activity)
+                    .items(activity.getString(R.string.remove_from_library))
                     .itemsCallback { _, _, which, _ ->
                         when (which) {
                             0 -> {

@@ -39,7 +39,7 @@ import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import jp.wasabeef.glide.transformations.MaskTransformation
-import kotlinx.android.synthetic.main.manga_info_controller.view.*
+import kotlinx.android.synthetic.main.manga_info_controller.*
 import uy.kohesive.injekt.injectLazy
 import java.text.DecimalFormat
 
@@ -71,17 +71,14 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         return inflater.inflate(R.layout.manga_info_controller, container, false)
     }
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
-        with(view) {
-            // Set onclickListener to toggle favorite when FAB clicked.
-            fab_favorite.clicks().subscribeUntilDestroy { onFabClick() }
+        // Set onclickListener to toggle favorite when FAB clicked.
+        fab_favorite.clicks().subscribeUntilDestroy { onFabClick() }
 
-            // Set SwipeRefresh to refresh manga data.
-            swipe_refresh.refreshes().subscribeUntilDestroy { fetchMangaFromSource() }
-        }
-
+        // Set SwipeRefresh to refresh manga data.
+        swipe_refresh.refreshes().subscribeUntilDestroy { fetchMangaFromSource() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -124,50 +121,49 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      */
     private fun setMangaInfo(manga: Manga, source: Source?) {
         val view = view ?: return
-        with(view) {
-            // Update artist TextView.
-            manga_artist.text = manga.artist
 
-            // Update author TextView.
-            manga_author.text = manga.author
+        // Update artist TextView.
+        manga_artist.text = manga.artist
 
-            // If manga source is known update source TextView.
-            if (source != null) {
-                manga_source.text = source.toString()
-            }
+        // Update author TextView.
+        manga_author.text = manga.author
 
-            // Update genres TextView.
-            manga_genres.text = manga.genre
+        // If manga source is known update source TextView.
+        if (source != null) {
+            manga_source.text = source.toString()
+        }
 
-            // Update status TextView.
-            manga_status.setText(when (manga.status) {
-                SManga.ONGOING -> R.string.ongoing
-                SManga.COMPLETED -> R.string.completed
-                SManga.LICENSED -> R.string.licensed
-                else -> R.string.unknown
-            })
+        // Update genres TextView.
+        manga_genres.text = manga.genre
 
-            // Update description TextView.
-            manga_summary.text = manga.description
+        // Update status TextView.
+        manga_status.setText(when (manga.status) {
+            SManga.ONGOING -> R.string.ongoing
+            SManga.COMPLETED -> R.string.completed
+            SManga.LICENSED -> R.string.licensed
+            else -> R.string.unknown
+        })
 
-            // Set the favorite drawable to the correct one.
-            setFavoriteDrawable(manga.favorite)
+        // Update description TextView.
+        manga_summary.text = manga.description
 
-            // Set cover if it wasn't already.
-            if (manga_cover.drawable == null && !manga.thumbnail_url.isNullOrEmpty()) {
-                GlideApp.with(context)
+        // Set the favorite drawable to the correct one.
+        setFavoriteDrawable(manga.favorite)
+
+        // Set cover if it wasn't already.
+        if (manga_cover.drawable == null && !manga.thumbnail_url.isNullOrEmpty()) {
+            GlideApp.with(view.context)
+                    .load(manga)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .centerCrop()
+                    .into(manga_cover)
+
+            if (backdrop != null) {
+                GlideApp.with(view.context)
                         .load(manga)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .centerCrop()
-                        .into(manga_cover)
-
-                if (backdrop != null) {
-                    GlideApp.with(context)
-                            .load(manga)
-                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                            .centerCrop()
-                            .into(backdrop)
-                }
+                        .into(backdrop)
             }
         }
     }
@@ -178,7 +174,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      * @param count number of chapters.
      */
     fun setChapterCount(count: Float) {
-        view?.manga_chapters?.text = DecimalFormat("#.#").format(count)
+        manga_chapters?.text = DecimalFormat("#.#").format(count)
     }
 
     /**
@@ -243,7 +239,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     private fun setFavoriteDrawable(isFavorite: Boolean) {
         // Set the Favorite drawable to the correct one.
         // Border drawable if false, filled drawable if true.
-        view?.fab_favorite?.setImageResource(if (isFavorite)
+        fab_favorite?.setImageResource(if (isFavorite)
             R.drawable.ic_bookmark_white_24dp
         else
             R.drawable.ic_bookmark_border_white_24dp)
@@ -279,7 +275,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      * @param value whether it should be refreshing or not.
      */
     private fun setRefreshing(value: Boolean) {
-        view?.swipe_refresh?.isRefreshing = value
+        swipe_refresh?.isRefreshing = value
     }
 
     /**

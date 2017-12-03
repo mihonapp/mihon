@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Intent
-import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
@@ -26,7 +25,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.getCoordinates
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.chapters_controller.view.*
+import kotlinx.android.synthetic.main.chapters_controller.*
 import timber.log.Timber
 
 class ChaptersController : NucleusController<ChaptersPresenter>(),
@@ -69,57 +68,55 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         return inflater.inflate(R.layout.chapters_controller, container, false)
     }
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         // Init RecyclerView and adapter
         adapter = ChaptersAdapter(this, view.context)
 
-        with(view) {
-            recycler.adapter = adapter
-            recycler.layoutManager = LinearLayoutManager(context)
-            recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            recycler.setHasFixedSize(true)
-            adapter?.fastScroller = view.fast_scroller
+        recycler.adapter = adapter
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.addItemDecoration(DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL))
+        recycler.setHasFixedSize(true)
+        adapter?.fastScroller = fast_scroller
 
-            swipe_refresh.refreshes().subscribeUntilDestroy { fetchChaptersFromSource() }
+        swipe_refresh.refreshes().subscribeUntilDestroy { fetchChaptersFromSource() }
 
-            fab.clicks().subscribeUntilDestroy {
-                val item = presenter.getNextUnreadChapter()
-                if (item != null) {
-                    // Create animation listener
-                    val revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
-                        override fun onAnimationStart(animation: Animator?) {
-                            openChapter(item.chapter, true)
-                        }
+        fab.clicks().subscribeUntilDestroy {
+            val item = presenter.getNextUnreadChapter()
+            if (item != null) {
+                // Create animation listener
+                val revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator?) {
+                        openChapter(item.chapter, true)
                     }
-
-                    // Get coordinates and start animation
-                    val coordinates = fab.getCoordinates()
-                    if (!reveal_view.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
-                        openChapter(item.chapter)
-                    }
-                } else {
-                    context.toast(R.string.no_next_chapter)
                 }
+
+                // Get coordinates and start animation
+                val coordinates = fab.getCoordinates()
+                if (!reveal_view.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
+                    openChapter(item.chapter)
+                }
+            } else {
+                view.context.toast(R.string.no_next_chapter)
             }
         }
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
         adapter = null
         actionMode = null
+        super.onDestroyView(view)
     }
 
     override fun onActivityResumed(activity: Activity) {
-        val view = view ?: return
+        if (view == null) return
 
         // Check if animation view is visible
-        if (view.reveal_view.visibility == View.VISIBLE) {
+        if (reveal_view.visibility == View.VISIBLE) {
             // Show the unReveal effect
-            val coordinates = view.fab.getCoordinates()
-            view.reveal_view.hideRevealEffect(coordinates.x, coordinates.y, 1920)
+            val coordinates = fab.getCoordinates()
+            reveal_view.hideRevealEffect(coordinates.x, coordinates.y, 1920)
         }
         super.onActivityResumed(activity)
     }
@@ -213,16 +210,16 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     }
 
     fun fetchChaptersFromSource() {
-        view?.swipe_refresh?.isRefreshing = true
+        swipe_refresh?.isRefreshing = true
         presenter.fetchChaptersFromSource()
     }
 
     fun onFetchChaptersDone() {
-        view?.swipe_refresh?.isRefreshing = false
+        swipe_refresh?.isRefreshing = false
     }
 
     fun onFetchChaptersError(error: Throwable) {
-        view?.swipe_refresh?.isRefreshing = false
+        swipe_refresh?.isRefreshing = false
         activity?.toast(error.message)
     }
 
@@ -231,7 +228,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     }
 
     private fun getHolder(chapter: Chapter): ChapterHolder? {
-        return view?.recycler?.findViewHolderForItemId(chapter.id!!) as? ChapterHolder
+        return recycler?.findViewHolderForItemId(chapter.id!!) as? ChapterHolder
     }
 
     fun openChapter(chapter: Chapter, hasAnimation: Boolean = false) {
@@ -365,7 +362,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         destroyActionModeIfNeeded()
         presenter.downloadChapters(chapters)
         if (view != null && !presenter.manga.favorite) {
-            view.recycler?.snack(view.context.getString(R.string.snack_add_to_library), Snackbar.LENGTH_INDEFINITE) {
+            recycler?.snack(view.context.getString(R.string.snack_add_to_library), Snackbar.LENGTH_INDEFINITE) {
                 setAction(R.string.action_add) {
                     presenter.addToLibrary()
                 }

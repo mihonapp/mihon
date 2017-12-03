@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.download
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import eu.kanade.tachiyomi.R
@@ -8,7 +7,7 @@ import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import kotlinx.android.synthetic.main.download_controller.view.*
+import kotlinx.android.synthetic.main.download_controller.*
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -52,21 +51,19 @@ class DownloadController : NucleusController<DownloadPresenter>() {
         return resources?.getString(R.string.label_download_queue)
     }
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         // Check if download queue is empty and update information accordingly.
         setInformationView()
 
         // Initialize adapter.
         adapter = DownloadAdapter()
-        with(view) {
-            recycler.adapter = adapter
+        recycler.adapter = adapter
 
-            // Set the layout manager for the recycler and fixed size.
-            recycler.layoutManager = LinearLayoutManager(context)
-            recycler.setHasFixedSize(true)
-        }
+        // Set the layout manager for the recycler and fixed size.
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.setHasFixedSize(true)
 
         // Suscribe to changes
         DownloadService.runningRelay
@@ -83,12 +80,12 @@ class DownloadController : NucleusController<DownloadPresenter>() {
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
         for (subscription in progressSubscriptions.values) {
             subscription.unsubscribe()
         }
         progressSubscriptions.clear()
         adapter = null
+        super.onDestroyView(view)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -232,20 +229,18 @@ class DownloadController : NucleusController<DownloadPresenter>() {
      * @return the holder of the download or null if it's not bound.
      */
     private fun getHolder(download: Download): DownloadHolder? {
-        val recycler = view?.recycler ?: return null
-        return recycler.findViewHolderForItemId(download.chapter.id!!) as? DownloadHolder
+        return recycler?.findViewHolderForItemId(download.chapter.id!!) as? DownloadHolder
     }
 
     /**
      * Set information view when queue is empty
      */
     private fun setInformationView() {
-        val emptyView = view?.empty_view ?: return
         if (presenter.downloadQueue.isEmpty()) {
-            emptyView.show(R.drawable.ic_file_download_black_128dp,
+            empty_view?.show(R.drawable.ic_file_download_black_128dp,
                     R.string.information_no_downloads)
         } else {
-            emptyView.hide()
+            empty_view?.hide()
         }
     }
 

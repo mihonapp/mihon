@@ -14,10 +14,7 @@ import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
-import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
-import eu.kanade.tachiyomi.ui.base.controller.TabbedController
+import eu.kanade.tachiyomi.ui.base.controller.*
 import eu.kanade.tachiyomi.ui.catalogue.main.CatalogueMainController
 import eu.kanade.tachiyomi.ui.download.DownloadController
 import eu.kanade.tachiyomi.ui.library.LibraryController
@@ -85,14 +82,11 @@ class MainActivity : BaseActivity() {
                     R.id.nav_drawer_recently_read -> setRoot(RecentlyReadController(), id)
                     R.id.nav_drawer_catalogues -> setRoot(CatalogueMainController(), id)
                     R.id.nav_drawer_downloads -> {
-                        router.pushController(RouterTransaction.with(DownloadController())
-                                .pushChangeHandler(FadeChangeHandler())
-                                .popChangeHandler(FadeChangeHandler()))
+                        router.pushController(DownloadController().withFadeTransaction())
                     }
-                    R.id.nav_drawer_settings ->
-                        router.pushController(RouterTransaction.with(SettingsMainController())
-                                .pushChangeHandler(FadeChangeHandler())
-                                .popChangeHandler(FadeChangeHandler()))
+                    R.id.nav_drawer_settings -> {
+                        router.pushController(SettingsMainController().withFadeTransaction())
+                    }
                 }
             }
             drawer.closeDrawer(GravityCompat.START)
@@ -189,10 +183,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setRoot(controller: Controller, id: Int) {
-        router.setRoot(RouterTransaction.with(controller)
-                .popChangeHandler(FadeChangeHandler())
-                .pushChangeHandler(FadeChangeHandler())
-                .tag(id.toString()))
+        router.setRoot(controller.withFadeTransaction().tag(id.toString()))
     }
 
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
