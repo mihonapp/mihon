@@ -87,11 +87,11 @@ class MangaController : RxController, TabbedController {
         requestPermissionsSafe(arrayOf(WRITE_EXTERNAL_STORAGE), 301)
 
         adapter = MangaDetailAdapter()
-        view_pager.offscreenPageLimit = 3
-        view_pager.adapter = adapter
+        manga_pager.offscreenPageLimit = 3
+        manga_pager.adapter = adapter
 
         if (!fromCatalogue)
-            view_pager.currentItem = CHAPTERS_CONTROLLER
+            manga_pager.currentItem = CHAPTERS_CONTROLLER
     }
 
     override fun onDestroyView(view: View) {
@@ -102,7 +102,7 @@ class MangaController : RxController, TabbedController {
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
         super.onChangeStarted(handler, type)
         if (type.isEnter) {
-            activity?.tabs?.setupWithViewPager(view_pager)
+            activity?.tabs?.setupWithViewPager(manga_pager)
             trackingIconSubscription = trackingIconRelay.subscribe { setTrackingIconInternal(it) }
         }
     }

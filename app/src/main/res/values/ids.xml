@@ -3,4 +3,6 @@
 
     <item name="catalogue_filter_sort_group" type="id"/>
     <item name="catalogue_filter_sort_item" type="id"/>
+
+    <item name="reader_pager" type="id"/>
 </resources>

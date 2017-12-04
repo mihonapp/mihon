@@ -138,8 +138,8 @@ class LibraryController(
         super.onViewCreated(view)
 
         adapter = LibraryAdapter(this)
-        view_pager.adapter = adapter
-        view_pager.pageSelections().skip(1).subscribeUntilDestroy {
+        library_pager.adapter = adapter
+        library_pager.pageSelections().skip(1).subscribeUntilDestroy {
             preferences.lastUsedCategory().set(it)
             activeCategory = it
         }
@@ -158,7 +158,7 @@ class LibraryController(
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
         super.onChangeStarted(handler, type)
         if (type.isEnter) {
-            activity?.tabs?.setupWithViewPager(view_pager)
+            activity?.tabs?.setupWithViewPager(library_pager)
             presenter.subscribeLibrary()
         }
     }
@@ -232,7 +232,7 @@ class LibraryController(
 
         // Get the current active category.
         val activeCat = if (adapter.categories.isNotEmpty())
-            view_pager.currentItem
+            library_pager.currentItem
         else
             activeCategory
 
@@ -240,14 +240,14 @@ class LibraryController(
         adapter.categories = categories
 
         // Restore active category.
-        view_pager.setCurrentItem(activeCat, false)
+        library_pager.setCurrentItem(activeCat, false)
 
         tabsVisibilityRelay.call(categories.size > 1)
 
         // Delay the scroll position to allow the view to be properly measured.
         view.post {
             if (isAttached) {
-                activity?.tabs?.setScrollPosition(view_pager.currentItem, 0f, true)
+                activity?.tabs?.setScrollPosition(library_pager.currentItem, 0f, true)
             }
         }
 
@@ -292,11 +292,11 @@ class LibraryController(
     private fun reattachAdapter() {
         val adapter = adapter ?: return
 
-        val position = view_pager.currentItem
+        val position = library_pager.currentItem
 
         adapter.recycle = false
-        view_pager.adapter = adapter
-        view_pager.currentItem = position
+        library_pager.adapter = adapter
+        library_pager.currentItem = position
         adapter.recycle = true
     }
 
