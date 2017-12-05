@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.6.6" changeDate="">
+        <changelogtext>Backups now properly restore tracking information.</changelogtext>
+
+        <changelogtext>Fixed library view and its overflow menu visible in other screens.</changelogtext>
+
+        <changelogtext>Fixed updater's notification in Android O.</changelogtext>
+
+        <changelogtext>Fixed a crash when rotating the screen in the chapters view.</changelogtext>
+
+        <changelogtext>Improved peformance of the app when using a custom downloads directory.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.6.5" changeDate="">
         <changelogtext>Added a download cache for faster navigation.</changelogtext>
 
