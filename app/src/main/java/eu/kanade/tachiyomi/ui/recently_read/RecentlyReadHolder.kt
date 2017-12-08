@@ -2,11 +2,11 @@ package eu.kanade.tachiyomi.ui.recently_read
 
 import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
 import eu.kanade.tachiyomi.data.glide.GlideApp
-import kotlinx.android.synthetic.main.recently_read_item.view.*
+import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
+import kotlinx.android.synthetic.main.recently_read_item.*
 import java.util.*
 
 /**
@@ -21,18 +21,18 @@ import java.util.*
 class RecentlyReadHolder(
         view: View,
         val adapter: RecentlyReadAdapter
-) : FlexibleViewHolder(view, adapter) {
+) : BaseFlexibleViewHolder(view, adapter) {
 
     init {
-        itemView.remove.setOnClickListener {
+        remove.setOnClickListener {
             adapter.removeClickListener.onRemoveClick(adapterPosition)
         }
 
-        itemView.resume.setOnClickListener {
+        resume.setOnClickListener {
             adapter.resumeClickListener.onResumeClick(adapterPosition)
         }
 
-        itemView.cover.setOnClickListener {
+        cover.setOnClickListener {
             adapter.coverClickListener.onCoverClick(adapterPosition)
         }
     }
@@ -47,24 +47,24 @@ class RecentlyReadHolder(
         val (manga, chapter, history) = item
 
         // Set manga title
-        itemView.manga_title.text = manga.title
+        manga_title.text = manga.title
 
         // Set source + chapter title
         val formattedNumber = adapter.decimalFormat.format(chapter.chapter_number.toDouble())
-        itemView.manga_source.text = itemView.context.getString(R.string.recent_manga_source)
+        manga_source.text = itemView.context.getString(R.string.recent_manga_source)
                 .format(adapter.sourceManager.get(manga.source)?.toString(), formattedNumber)
 
         // Set last read timestamp title
-        itemView.last_read.text = adapter.dateFormat.format(Date(history.last_read))
+        last_read.text = adapter.dateFormat.format(Date(history.last_read))
 
         // Set cover
-        GlideApp.with(itemView.context).clear(itemView.cover)
+        GlideApp.with(itemView.context).clear(cover)
         if (!manga.thumbnail_url.isNullOrEmpty()) {
             GlideApp.with(itemView.context)
                     .load(manga)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .centerCrop()
-                    .into(itemView.cover)
+                    .into(cover)
         }
     }
 

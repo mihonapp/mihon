@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.download
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.ui.base.holder.BaseViewHolder
 import kotlinx.android.synthetic.main.download_item.view.*
 
 /**
@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.download_item.view.*
  * @param view the inflated view for this holder.
  * @constructor creates a new download holder.
  */
-class DownloadHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class DownloadHolder(private val view: View) : BaseViewHolder(view) {
 
     private lateinit var download: Download
 

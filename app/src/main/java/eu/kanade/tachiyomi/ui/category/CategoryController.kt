@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.category
 
-import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
@@ -15,7 +14,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.categories_controller.view.*
+import kotlinx.android.synthetic.main.categories_controller.*
 
 /**
  * Controller to manage the categories for the users' library.
@@ -70,22 +69,19 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      * Called after view inflation. Used to initialize the view.
      *
      * @param view The view of this controller.
-     * @param savedViewState The saved state of the view.
      */
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
-        with(view) {
-            adapter = CategoryAdapter(this@CategoryController)
-            recycler.layoutManager = LinearLayoutManager(context)
-            recycler.setHasFixedSize(true)
-            recycler.adapter = adapter
-            adapter?.isHandleDragEnabled = true
-            adapter?.isPermanentDelete = false
+        adapter = CategoryAdapter(this@CategoryController)
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.setHasFixedSize(true)
+        recycler.adapter = adapter
+        adapter?.isHandleDragEnabled = true
+        adapter?.isPermanentDelete = false
 
-            fab.clicks().subscribeUntilDestroy {
-                CategoryCreateDialog(this@CategoryController).showDialog(router, null)
-            }
+        fab.clicks().subscribeUntilDestroy {
+            CategoryCreateDialog(this@CategoryController).showDialog(router, null)
         }
     }
 
@@ -95,12 +91,12 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      * @param view The view of this controller.
      */
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
         // Manually call callback to delete categories if required
         undoHelper?.onDeleteConfirmed(Snackbar.Callback.DISMISS_EVENT_MANUAL)
         undoHelper = null
         actionMode = null
         adapter = null
+        super.onDestroyView(view)
     }
 
     /**

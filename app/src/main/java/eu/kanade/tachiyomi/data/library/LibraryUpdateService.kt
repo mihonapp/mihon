@@ -333,7 +333,9 @@ class LibraryUpdateService(
         val dbChapters = chapters.map {
             mangaChapters.find { mangaChapter -> mangaChapter.url == it.url }!!
         }
-        downloadManager.downloadChapters(manga, dbChapters)
+        // We don't want to start downloading while the library is updating, because websites
+        // may don't like it and they could ban the user.
+        downloadManager.downloadChapters(manga, dbChapters, false)
     }
 
     /**

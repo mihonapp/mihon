@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.manga.track
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.track_controller.view.*
+import kotlinx.android.synthetic.main.track_controller.*
 
 class TrackController : NucleusController<TrackPresenter>(),
         TrackAdapter.OnRowClickListener,
@@ -35,8 +34,8 @@ class TrackController : NucleusController<TrackPresenter>(),
         return inflater.inflate(R.layout.track_controller, container, false)
     }
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         adapter = TrackAdapter(this)
         with(view) {
@@ -48,14 +47,14 @@ class TrackController : NucleusController<TrackPresenter>(),
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
         adapter = null
+        super.onDestroyView(view)
     }
 
     fun onNextTrackings(trackings: List<TrackItem>) {
         val atLeastOneLink = trackings.any { it.track != null }
         adapter?.items = trackings
-        view?.swipe_refresh?.isEnabled = atLeastOneLink
+        swipe_refresh?.isEnabled = atLeastOneLink
         (parentController as? MangaController)?.setTrackingIcon(atLeastOneLink)
     }
 
@@ -73,11 +72,11 @@ class TrackController : NucleusController<TrackPresenter>(),
     }
 
     fun onRefreshDone() {
-        view?.swipe_refresh?.isRefreshing = false
+        swipe_refresh?.isRefreshing = false
     }
 
     fun onRefreshError(error: Throwable) {
-        view?.swipe_refresh?.isRefreshing = false
+        swipe_refresh?.isRefreshing = false
         activity?.toast(error.message)
     }
 
@@ -109,17 +108,17 @@ class TrackController : NucleusController<TrackPresenter>(),
 
     override fun setStatus(item: TrackItem, selection: Int) {
         presenter.setStatus(item, selection)
-        view?.swipe_refresh?.isRefreshing = true
+        swipe_refresh?.isRefreshing = true
     }
 
     override fun setScore(item: TrackItem, score: Int) {
         presenter.setScore(item, score)
-        view?.swipe_refresh?.isRefreshing = true
+        swipe_refresh?.isRefreshing = true
     }
 
     override fun setChaptersRead(item: TrackItem, chaptersRead: Int) {
         presenter.setLastChapterRead(item, chaptersRead)
-        view?.swipe_refresh?.isRefreshing = true
+        swipe_refresh?.isRefreshing = true
     }
 
     private companion object {

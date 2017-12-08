@@ -1,9 +1,8 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.support.v7.preference.PreferenceScreen
-import com.bluelinelabs.conductor.RouterTransaction
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.util.getResourceColor
 
 class SettingsMainController : SettingsController() {
@@ -69,8 +68,6 @@ class SettingsMainController : SettingsController() {
     }
 
     private fun navigateTo(controller: SettingsController) {
-        router.pushController(RouterTransaction.with(controller)
-                .pushChangeHandler(FadeChangeHandler())
-                .popChangeHandler(FadeChangeHandler()))
+        router.pushController(controller.withFadeTransaction())
     }
 }

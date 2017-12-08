@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.ui.manga
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.graphics.drawable.VectorDrawableCompat
@@ -32,7 +30,7 @@ import eu.kanade.tachiyomi.ui.manga.info.MangaInfoController
 import eu.kanade.tachiyomi.ui.manga.track.TrackController
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.android.synthetic.main.manga_controller.view.*
+import kotlinx.android.synthetic.main.manga_controller.*
 import rx.Subscription
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -81,21 +79,19 @@ class MangaController : RxController, TabbedController {
         return inflater.inflate(R.layout.manga_controller, container, false)
     }
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         if (manga == null || source == null) return
 
         requestPermissionsSafe(arrayOf(WRITE_EXTERNAL_STORAGE), 301)
 
-        with(view) {
-            adapter = MangaDetailAdapter()
-            view_pager.offscreenPageLimit = 3
-            view_pager.adapter = adapter
+        adapter = MangaDetailAdapter()
+        manga_pager.offscreenPageLimit = 3
+        manga_pager.adapter = adapter
 
-            if (!fromCatalogue)
-                view_pager.currentItem = CHAPTERS_CONTROLLER
-        }
+        if (!fromCatalogue)
+            manga_pager.currentItem = CHAPTERS_CONTROLLER
     }
 
     override fun onDestroyView(view: View) {
@@ -106,7 +102,7 @@ class MangaController : RxController, TabbedController {
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
         super.onChangeStarted(handler, type)
         if (type.isEnter) {
-            activity?.tabs?.setupWithViewPager(view?.view_pager)
+            activity?.tabs?.setupWithViewPager(manga_pager)
             trackingIconSubscription = trackingIconRelay.subscribe { setTrackingIconInternal(it) }
         }
     }

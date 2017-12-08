@@ -14,8 +14,6 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
-import com.bluelinelabs.conductor.RouterTransaction
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.f2prateek.rx.preferences.Preference
 import com.jakewharton.rxbinding.support.v4.view.pageSelections
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChanges
@@ -30,6 +28,7 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -41,7 +40,7 @@ import exh.metadata.models.SearchableGalleryMetadata
 import io.realm.Realm
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.android.synthetic.main.library_controller.view.*
+import kotlinx.android.synthetic.main.library_controller.*
 import kotlinx.android.synthetic.main.main_activity.*
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -108,14 +107,8 @@ class LibraryController(
         private set
 
     /**
-     * TabLayout of the categories.
+     * Adapter of the view pager.
      */
-    private val tabs: TabLayout?
-        get() = activity?.tabs
-
-    private val drawer: DrawerLayout?
-        get() = activity?.drawer
-
     private var adapter: LibraryAdapter? = null
 
     /**
@@ -141,6 +134,7 @@ class LibraryController(
 
     init {
         setHasOptionsMenu(true)
+        retainViewMode = RetainViewMode.RETAIN_DETACH
     }
 
     override fun getTitle(): String? {
@@ -165,43 +159,42 @@ class LibraryController(
     }
     // <-- EH
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         adapter = LibraryAdapter(this)
-        with(view) {
-            view_pager.adapter = adapter
-            view_pager.pageSelections().skip(1).subscribeUntilDestroy {
-                preferences.lastUsedCategory().set(it)
-                activeCategory = it
-            }
+        library_pager.adapter = adapter
+        library_pager.pageSelections().skip(1).subscribeUntilDestroy {
+            preferences.lastUsedCategory().set(it)
+            activeCategory = it
+        }
 
-            getColumnsPreferenceForCurrentOrientation().asObservable()
-                    .doOnNext { mangaPerRow = it }
-                    .skip(1)
-                    // Set again the adapter to recalculate the covers height
-                    .subscribeUntilDestroy { reattachAdapter() }
+        getColumnsPreferenceForCurrentOrientation().asObservable()
+                .doOnNext { mangaPerRow = it }
+                .skip(1)
+                // Set again the adapter to recalculate the covers height
+                .subscribeUntilDestroy { reattachAdapter() }
 
-            if (selectedMangas.isNotEmpty()) {
-                createActionModeIfNeeded()
-            }
+        if (selectedMangas.isNotEmpty()) {
+            createActionModeIfNeeded()
         }
     }
 
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
         super.onChangeStarted(handler, type)
         if (type.isEnter) {
-            activity?.tabs?.setupWithViewPager(view?.view_pager)
+            activity?.tabs?.setupWithViewPager(library_pager)
             presenter.subscribeLibrary()
         }
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
+        adapter?.onDestroy()
         adapter = null
         actionMode = null
         tabsVisibilitySubscription?.unsubscribe()
         tabsVisibilitySubscription = null
+        super.onDestroyView(view)
 
         // --> EH
         //Clean up realm
@@ -263,14 +256,14 @@ class LibraryController(
 
         // Show empty view if needed
         if (mangaMap.isNotEmpty()) {
-            view.empty_view.hide()
+            empty_view.hide()
         } else {
-            view.empty_view.show(R.drawable.ic_book_black_128dp, R.string.information_empty_library)
+            empty_view.show(R.drawable.ic_book_black_128dp, R.string.information_empty_library)
         }
 
         // Get the current active category.
         val activeCat = if (adapter.categories.isNotEmpty())
-            view.view_pager.currentItem
+            library_pager.currentItem
         else
             activeCategory
 
@@ -278,14 +271,14 @@ class LibraryController(
         adapter.categories = categories
 
         // Restore active category.
-        view.view_pager.setCurrentItem(activeCat, false)
+        library_pager.setCurrentItem(activeCat, false)
 
         tabsVisibilityRelay.call(categories.size > 1)
 
         // Delay the scroll position to allow the view to be properly measured.
         view.post {
             if (isAttached) {
-                tabs?.setScrollPosition(view.view_pager.currentItem, 0f, true)
+                activity?.tabs?.setScrollPosition(library_pager.currentItem, 0f, true)
             }
         }
 
@@ -328,14 +321,13 @@ class LibraryController(
      * Reattaches the adapter to the view pager to recreate fragments
      */
     private fun reattachAdapter() {
-        val pager = view?.view_pager ?: return
         val adapter = adapter ?: return
 
-        val position = pager.currentItem
+        val position = library_pager.currentItem
 
         adapter.recycle = false
-        pager.adapter = adapter
-        pager.currentItem = position
+        library_pager.adapter = adapter
+        library_pager.currentItem = position
         adapter.recycle = true
     }
 
@@ -361,7 +353,7 @@ class LibraryController(
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
 
-        if (!query.isNullOrEmpty()) {
+        if (!query.isEmpty()) {
             searchItem.expandActionView()
             searchView.setQuery(query, true)
             searchView.clearFocus()
@@ -395,15 +387,13 @@ class LibraryController(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter -> {
-                navView?.let { drawer?.openDrawer(Gravity.END) }
+                navView?.let { activity?.drawer?.openDrawer(Gravity.END) }
             }
             R.id.action_update_library -> {
                 activity?.let { LibraryUpdateService.start(it) }
             }
             R.id.action_edit_categories -> {
-                router.pushController(RouterTransaction.with(CategoryController())
-                        .pushChangeHandler(FadeChangeHandler())
-                        .popChangeHandler(FadeChangeHandler()))
+                router.pushController(CategoryController().withFadeTransaction())
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -459,9 +449,7 @@ class LibraryController(
         // Notify the presenter a manga is being opened.
         presenter.onOpenManga()
 
-        router.pushController(RouterTransaction.with(MangaController(manga))
-                .pushChangeHandler(FadeChangeHandler(false))
-                .popChangeHandler(FadeChangeHandler()))
+        router.pushController(MangaController(manga).withFadeTransaction())
     }
 
     /**
@@ -496,11 +484,11 @@ class LibraryController(
                 .toTypedArray()
 
         ChangeMangaCategoriesDialog(this, mangas, categories, commonCategoriesIndexes)
-                .showDialog(router, null)
+                .showDialog(router)
     }
 
     private fun showDeleteMangaDialog() {
-        DeleteLibraryMangasDialog(this, selectedMangas.toList()).showDialog(router, null)
+        DeleteLibraryMangasDialog(this, selectedMangas.toList()).showDialog(router)
     }
 
     override fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>) {
@@ -515,8 +503,6 @@ class LibraryController(
 
     /**
      * Changes the cover for the selected manga.
-     *
-     * @param mangas a list of selected manga.
      */
     private fun changeSelectedCover() {
         val manga = selectedMangas.firstOrNull() ?: return

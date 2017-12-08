@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.catalogue.main
+package eu.kanade.tachiyomi.ui.catalogue
 
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -26,7 +26,7 @@ data class SourceItem(val source: CatalogueSource, val header: LangItem? = null)
      * Creates a new view holder for this item.
      */
     override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): SourceHolder {
-        return SourceHolder(view, adapter as CatalogueMainAdapter)
+        return SourceHolder(view, adapter as CatalogueAdapter)
     }
 
     /**

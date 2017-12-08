@@ -118,7 +118,7 @@ abstract class PagerReader : BaseReader() {
         this.pager = pager.apply {
             setLayoutParams(ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT))
             setOffscreenPageLimit(1)
-            setId(R.id.view_pager)
+            setId(R.id.reader_pager)
             setOnChapterBoundariesOutListener(object : OnChapterBoundariesOutListener {
                 override fun onFirstPageOutEvent() {
                     readerActivity.requestPreviousChapter()

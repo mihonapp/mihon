@@ -219,8 +219,9 @@ class Downloader(private val context: Context,
      *
      * @param manga the manga of the chapters to download.
      * @param chapters the list of chapters to download.
+     * @param autoStart whether to start the downloader after enqueing the chapters.
      */
-    fun queueChapters(manga: Manga, chapters: List<Chapter>) = launchUI {
+    fun queueChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean) = launchUI {
         val source = sourceManager.get(manga.source) as? HttpSource ?: return@launchUI
 
         // Called in background thread, the operation can be slow with SAF.
@@ -261,7 +262,9 @@ class Downloader(private val context: Context,
             }
 
             // Start downloader if needed
-            DownloadService.start(this@Downloader.context)
+            if (autoStart) {
+                DownloadService.start(this@Downloader.context)
+            }
         }
     }
 

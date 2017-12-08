@@ -1,13 +1,10 @@
 package eu.kanade.tachiyomi.ui.recent_updates
 
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import com.bluelinelabs.conductor.RouterTransaction
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.support.v7.widget.scrollStateChanges
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -19,10 +16,11 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.recent_chapters_controller.view.*
+import kotlinx.android.synthetic.main.recent_chapters_controller.*
 import timber.log.Timber
 
 /**
@@ -65,42 +63,39 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
     /**
      * Called when view is created
      * @param view created view
-     * @param savedViewState status of saved sate
      */
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
-        with(view) {
-            // Init RecyclerView and adapter
-            val layoutManager = LinearLayoutManager(context)
-            recycler.layoutManager = layoutManager
-            recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            recycler.setHasFixedSize(true)
-            adapter = RecentChaptersAdapter(this@RecentChaptersController)
-            recycler.adapter = adapter
+        // Init RecyclerView and adapter
+        val layoutManager = LinearLayoutManager(view.context)
+        recycler.layoutManager = layoutManager
+        recycler.addItemDecoration(DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL))
+        recycler.setHasFixedSize(true)
+        adapter = RecentChaptersAdapter(this@RecentChaptersController)
+        recycler.adapter = adapter
 
-            recycler.scrollStateChanges().subscribeUntilDestroy {
-                // Disable swipe refresh when view is not at the top
-                val firstPos = layoutManager.findFirstCompletelyVisibleItemPosition()
-                swipe_refresh.isEnabled = firstPos <= 0
+        recycler.scrollStateChanges().subscribeUntilDestroy {
+            // Disable swipe refresh when view is not at the top
+            val firstPos = layoutManager.findFirstCompletelyVisibleItemPosition()
+            swipe_refresh.isEnabled = firstPos <= 0
+        }
+
+        swipe_refresh.setDistanceToTriggerSync((2 * 64 * view.resources.displayMetrics.density).toInt())
+        swipe_refresh.refreshes().subscribeUntilDestroy {
+            if (!LibraryUpdateService.isRunning(view.context)) {
+                LibraryUpdateService.start(view.context)
+                view.context.toast(R.string.action_update_library)
             }
-
-            swipe_refresh.setDistanceToTriggerSync((2 * 64 * resources.displayMetrics.density).toInt())
-            swipe_refresh.refreshes().subscribeUntilDestroy {
-                if (!LibraryUpdateService.isRunning(context)) {
-                    LibraryUpdateService.start(context)
-                    context.toast(R.string.action_update_library)
-                }
-                // It can be a very long operation, so we disable swipe refresh and show a toast.
-                swipe_refresh.isRefreshing = false
-            }
+            // It can be a very long operation, so we disable swipe refresh and show a toast.
+            swipe_refresh.isRefreshing = false
         }
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
         adapter = null
         actionMode = null
+        super.onDestroyView(view)
     }
 
     /**
@@ -180,11 +175,10 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
     }
 
     override fun onUpdateEmptyView(size: Int) {
-        val emptyView = view?.empty_view ?: return
         if (size > 0) {
-            emptyView.hide()
+            empty_view?.hide()
         } else {
-            emptyView.show(R.drawable.ic_update_black_128dp, R.string.information_no_recent)
+            empty_view?.show(R.drawable.ic_update_black_128dp, R.string.information_no_recent)
         }
     }
 
@@ -201,7 +195,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      * @param download [Download] object containing download progress.
      */
     private fun getHolder(download: Download): RecentChapterHolder? {
-        return view?.recycler?.findViewHolderForItemId(download.chapter.id!!) as? RecentChapterHolder
+        return recycler?.findViewHolderForItemId(download.chapter.id!!) as? RecentChapterHolder
     }
 
     /**
@@ -260,9 +254,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
     }
 
     fun openManga(chapter: RecentChapterItem) {
-        router.pushController(RouterTransaction.with(MangaController(chapter.manga))
-                .pushChangeHandler(FadeChangeHandler())
-                .popChangeHandler(FadeChangeHandler()))
+        router.pushController(MangaController(chapter.manga).withFadeTransaction())
     }
 
     /**

@@ -5,7 +5,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.source.LocalSource
-import kotlinx.android.synthetic.main.catalogue_list_item.view.*
+import kotlinx.android.synthetic.main.catalogue_list_item.*
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
@@ -30,38 +30,36 @@ class LibraryListHolder(
      */
     override fun onSetValues(item: LibraryItem) {
         // Update the title of the manga.
-        itemView.title.text = item.manga.title
+        title.text = item.manga.title
 
         // Update the unread count and its visibility.
-        with(itemView.unread_text) {
+        with(unread_text) {
             visibility = if (item.manga.unread > 0) View.VISIBLE else View.GONE
             text = item.manga.unread.toString()
         }
         // Update the download count and its visibility.
-        with(itemView.download_text) {
+        with(download_text) {
             visibility = if (item.downloadCount > 0) View.VISIBLE else View.GONE
             text = "${item.downloadCount}"
         }
         //show local text badge if local manga
-        with(itemView.local_text) {
-            visibility = if (item.manga.source == LocalSource.ID) View.VISIBLE else View.GONE
-        }
+        local_text.visibility = if (item.manga.source == LocalSource.ID) View.VISIBLE else View.GONE
 
         // Create thumbnail onclick to simulate long click
-        itemView.thumbnail.setOnClickListener {
+        thumbnail.setOnClickListener {
             // Simulate long click on this view to enter selection mode
             onLongClick(itemView)
         }
 
         // Update the cover.
-        GlideApp.with(itemView.context).clear(itemView.thumbnail)
+        GlideApp.with(itemView.context).clear(thumbnail)
         GlideApp.with(itemView.context)
                 .load(item.manga)
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .centerCrop()
                 .circleCrop()
                 .dontAnimate()
-                .into(itemView.thumbnail)
+                .into(thumbnail)
     }
 
 }

@@ -8,7 +8,7 @@
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/view_pager"/>
+        android:id="@+id/library_pager"/>
 
     <eu.kanade.tachiyomi.widget.EmptyView
         android:id="@+id/empty_view"

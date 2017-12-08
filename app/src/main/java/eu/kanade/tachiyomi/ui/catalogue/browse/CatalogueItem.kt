@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.catalogue
+package eu.kanade.tachiyomi.ui.catalogue.browse
 
 import android.view.Gravity
 import android.view.View

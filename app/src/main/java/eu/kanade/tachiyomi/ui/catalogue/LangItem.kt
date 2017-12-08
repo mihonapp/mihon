@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.catalogue.main
+package eu.kanade.tachiyomi.ui.catalogue
 
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter

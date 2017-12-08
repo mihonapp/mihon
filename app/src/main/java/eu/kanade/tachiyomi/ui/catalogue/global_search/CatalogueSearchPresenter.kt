@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.ui.catalogue.CataloguePresenter
+import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCataloguePresenter
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -67,7 +67,7 @@ class CatalogueSearchPresenter(
         super.onCreate(savedState)
 
         // Perform a search with previous or initial state
-        search(savedState?.getString(CataloguePresenter::query.name) ?: initialQuery.orEmpty())
+        search(savedState?.getString(BrowseCataloguePresenter::query.name) ?: initialQuery.orEmpty())
     }
 
     override fun onDestroy() {
@@ -77,7 +77,7 @@ class CatalogueSearchPresenter(
     }
 
     override fun onSave(state: Bundle) {
-        state.putString(CataloguePresenter::query.name, query)
+        state.putString(BrowseCataloguePresenter::query.name, query)
         super.onSave(state)
     }
 

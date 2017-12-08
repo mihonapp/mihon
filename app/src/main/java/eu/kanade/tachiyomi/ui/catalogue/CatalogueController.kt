@@ -1,523 +1,231 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
-import android.content.res.Configuration
-import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.widget.*
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
 import android.view.*
-import com.afollestad.materialdialogs.MaterialDialog
+import com.bluelinelabs.conductor.ControllerChangeHandler
+import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
-import com.f2prateek.rx.preferences.Preference
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
-import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
-import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.util.*
-import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
-import kotlinx.android.synthetic.main.catalogue_controller.view.*
-import kotlinx.android.synthetic.main.main_activity.*
-import rx.Observable
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.Subscriptions
-import timber.log.Timber
-import uy.kohesive.injekt.injectLazy
-import java.util.concurrent.TimeUnit
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCatalogueController
+import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
+import eu.kanade.tachiyomi.ui.catalogue.latest.LatestUpdatesController
+import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
+import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
+import kotlinx.android.synthetic.main.catalogue_main_controller.*
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
- * Controller to manage the catalogues available in the app.
+ * This controller shows and manages the different catalogues enabled by the user.
+ * This controller should only handle UI actions, IO actions should be done by [CataloguePresenter]
+ * [SourceLoginDialog.Listener] refreshes the adapter on successful login of catalogues.
+ * [CatalogueAdapter.OnBrowseClickListener] call function data on browse item click.
+ * [CatalogueAdapter.OnLatestClickListener] call function data on latest item click
  */
-open class CatalogueController(bundle: Bundle) :
-        NucleusController<CataloguePresenter>(bundle),
-        SecondaryDrawerController,
+class CatalogueController : NucleusController<CataloguePresenter>(),
+        SourceLoginDialog.Listener,
         FlexibleAdapter.OnItemClickListener,
-        FlexibleAdapter.OnItemLongClickListener,
-        FlexibleAdapter.EndlessScrollListener,
-        ChangeMangaCategoriesDialog.Listener {
-
-    constructor(source: CatalogueSource) : this(Bundle().apply {
-        putLong(SOURCE_ID_KEY, source.id)
-    })
+        CatalogueAdapter.OnBrowseClickListener,
+        CatalogueAdapter.OnLatestClickListener {
 
     /**
-     * Preferences helper.
+     * Application preferences.
      */
-    private val preferences: PreferencesHelper by injectLazy()
+    private val preferences: PreferencesHelper = Injekt.get()
 
     /**
-     * Adapter containing the list of manga from the catalogue.
+     * Adapter containing sources.
      */
-    private var adapter: FlexibleAdapter<IFlexible<*>>? = null
+    private var adapter : CatalogueAdapter? = null
 
     /**
-     * Snackbar containing an error message when a request fails.
+     * Called when controller is initialized.
      */
-    private var snack: Snackbar? = null
-
-    /**
-     * Navigation view containing filter items.
-     */
-    private var navView: CatalogueNavigationView? = null
-
-    /**
-     * Recycler view with the list of results.
-     */
-    private var recycler: RecyclerView? = null
-
-    /**
-     * Drawer listener to allow swipe only for closing the drawer.
-     */
-    private var drawerListener: DrawerLayout.DrawerListener? = null
-
-    /**
-     * Subscription for the search view.
-     */
-    private var searchViewSubscription: Subscription? = null
-
-    /**
-     * Subscription for the number of manga per row.
-     */
-    private var numColumnsSubscription: Subscription? = null
-
-    /**
-     * Endless loading item.
-     */
-    private var progressItem: ProgressItem? = null
-
     init {
+        // Enable the option menu
         setHasOptionsMenu(true)
     }
 
+    /**
+     * Set the title of controller.
+     *
+     * @return title.
+     */
     override fun getTitle(): String? {
-        return presenter.source.name
+        return applicationContext?.getString(R.string.label_catalogues)
     }
 
+    /**
+     * Create the [CataloguePresenter] used in controller.
+     *
+     * @return instance of [CataloguePresenter]
+     */
     override fun createPresenter(): CataloguePresenter {
-        return CataloguePresenter(args.getLong(SOURCE_ID_KEY))
+        return CataloguePresenter()
     }
 
+    /**
+     * Initiate the view with [R.layout.catalogue_main_controller].
+     *
+     * @param inflater used to load the layout xml.
+     * @param container containing parent views.
+     * @return inflated view.
+     */
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.catalogue_controller, container, false)
+        return inflater.inflate(R.layout.catalogue_main_controller, container, false)
     }
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    /**
+     * Called when the view is created
+     *
+     * @param view view of controller
+     */
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
-        // Initialize adapter, scroll listener and recycler views
-        adapter = FlexibleAdapter(null, this)
-        setupRecycler(view)
+        adapter = CatalogueAdapter(this)
 
-        navView?.setFilters(presenter.filterItems)
-
-        view.progress?.visible()
+        // Create recycler and set adapter.
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.adapter = adapter
+        recycler.addItemDecoration(SourceDividerItemDecoration(view.context))
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
-        numColumnsSubscription?.unsubscribe()
-        numColumnsSubscription = null
-        searchViewSubscription?.unsubscribe()
-        searchViewSubscription = null
         adapter = null
-        snack = null
-        recycler = null
+        super.onDestroyView(view)
     }
 
-    override fun createSecondaryDrawer(drawer: DrawerLayout): ViewGroup? {
-        // Inflate and prepare drawer
-        val navView = drawer.inflate(R.layout.catalogue_drawer) as CatalogueNavigationView
-        this.navView = navView
-        drawerListener = DrawerSwipeCloseListener(drawer, navView).also {
-            drawer.addDrawerListener(it)
+    override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
+        super.onChangeStarted(handler, type)
+        if (!type.isPush && handler is SettingsSourcesFadeChangeHandler) {
+            presenter.updateSources()
         }
-        navView.setFilters(presenter.filterItems)
+    }
 
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
-
-        navView.onSearchClicked = {
-            val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
-            showProgressBar()
+    /**
+     * Called when login dialog is closed, refreshes the adapter.
+     *
+     * @param source clicked item containing source information.
+     */
+    override fun loginDialogClosed(source: LoginSource) {
+        if (source.isLogged()) {
             adapter?.clear()
-            presenter.setSourceFilter(if (allDefault) FilterList() else presenter.sourceFilters)
+            presenter.loadSources()
         }
-
-        navView.onResetClicked = {
-            presenter.appliedFilters = FilterList()
-            val newFilters = presenter.source.getFilterList()
-            presenter.sourceFilters = newFilters
-            navView.setFilters(presenter.filterItems)
-        }
-        return navView
     }
 
-    override fun cleanupSecondaryDrawer(drawer: DrawerLayout) {
-        drawerListener?.let { drawer.removeDrawerListener(it) }
-        drawerListener = null
-        navView = null
-    }
-
-    private fun setupRecycler(view: View) {
-        numColumnsSubscription?.unsubscribe()
-
-        var oldPosition = RecyclerView.NO_POSITION
-            val oldRecycler = view.catalogue_view?.getChildAt(1)
-            if (oldRecycler is RecyclerView) {
-                oldPosition = (oldRecycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                oldRecycler.adapter = null
-
-                view.catalogue_view?.removeView(oldRecycler)
-            }
-
-        val recycler = if (presenter.isListMode) {
-            RecyclerView(view.context).apply {
-                id = R.id.recycler
-                layoutManager = LinearLayoutManager(context)
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            }
+    /**
+     * Called when item is clicked
+     */
+    override fun onItemClick(position: Int): Boolean {
+        val item = adapter?.getItem(position) as? SourceItem ?: return false
+        val source = item.source
+        if (source is LoginSource && !source.isLogged()) {
+            val dialog = SourceLoginDialog(source)
+            dialog.targetController = this
+            dialog.showDialog(router)
         } else {
-            (view.catalogue_view.inflate(R.layout.catalogue_recycler_autofit) as AutofitRecyclerView).apply {
-                numColumnsSubscription = getColumnsPreferenceForCurrentOrientation().asObservable()
-                        .doOnNext { spanCount = it }
-                        .skip(1)
-                        // Set again the adapter to recalculate the covers height
-                        .subscribe { adapter = this@CatalogueController.adapter }
-
-                (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        return when (adapter?.getItemViewType(position)) {
-                            R.layout.catalogue_grid_item, null -> 1
-                            else -> spanCount
-                        }
-                    }
-                }
-            }
+            // Open the catalogue view.
+            openCatalogue(source, BrowseCatalogueController(source))
         }
-        recycler.setHasFixedSize(true)
-        recycler.adapter = adapter
-
-        view.catalogue_view.addView(recycler, 1)
-
-        if (oldPosition != RecyclerView.NO_POSITION) {
-            recycler.layoutManager.scrollToPosition(oldPosition)
-        }
-        this.recycler = recycler
+        return false
     }
 
+    /**
+     * Called when browse is clicked in [CatalogueAdapter]
+     */
+    override fun onBrowseClick(position: Int) {
+        onItemClick(position)
+    }
+
+    /**
+     * Called when latest is clicked in [CatalogueAdapter]
+     */
+    override fun onLatestClick(position: Int) {
+        val item = adapter?.getItem(position) as? SourceItem ?: return
+        openCatalogue(item.source, LatestUpdatesController(item.source))
+    }
+
+    /**
+     * Opens a catalogue with the given controller.
+     */
+    private fun openCatalogue(source: CatalogueSource, controller: BrowseCatalogueController) {
+        preferences.lastUsedCatalogueSource().set(source.id)
+        router.pushController(controller.withFadeTransaction())
+    }
+
+    /**
+     * Adds items to the options menu.
+     *
+     * @param menu menu containing options.
+     * @param inflater used to load the menu xml.
+     */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.catalogue_list, menu)
+        // Inflate menu
+        inflater.inflate(R.menu.catalogue_main, menu)
 
-        // Initialize search menu
-        menu.findItem(R.id.action_search).apply {
-            val searchView = actionView as SearchView
+        // Initialize search option.
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
 
-            val query = presenter.query
-            if (!query.isBlank()) {
-                expandActionView()
-                searchView.setQuery(query, true)
-                searchView.clearFocus()
-            }
+        // Change hint to show global search.
+        searchView.queryHint = applicationContext?.getString(R.string.action_global_search_hint)
 
-            val searchEventsObservable = searchView.queryTextChangeEvents()
-                    .skip(1)
-                    .share()
-            val writingObservable = searchEventsObservable
-                    .filter { !it.isSubmitted }
-                    .debounce(1250, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-            val submitObservable = searchEventsObservable
-                    .filter { it.isSubmitted }
-
-            searchViewSubscription?.unsubscribe()
-            searchViewSubscription = Observable.merge(writingObservable, submitObservable)
-                    .map { it.queryText().toString() }
-                    .distinctUntilChanged()
-                    .subscribeUntilDestroy { searchWithQuery(it) }
-
-            untilDestroySubscriptions.add(
-                    Subscriptions.create { if (isActionViewExpanded) collapseActionView() })
-        }
-
-        // Setup filters button
-        menu.findItem(R.id.action_set_filter).apply {
-            icon.mutate()
-            if (presenter.sourceFilters.isEmpty()) {
-                isEnabled = false
-                icon.alpha = 128
-            } else {
-                isEnabled = true
-                icon.alpha = 255
-            }
-        }
-
-        // Show next display mode
-        menu.findItem(R.id.action_display_mode).apply {
-            val icon = if (presenter.isListMode)
-                R.drawable.ic_view_module_white_24dp
-            else
-                R.drawable.ic_view_list_white_24dp
-            setIcon(icon)
-        }
+        // Create query listener which opens the global search view.
+        searchView.queryTextChangeEvents()
+                .filter { it.isSubmitted }
+                .subscribeUntilDestroy {
+                    val query = it.queryText().toString()
+                    router.pushController(CatalogueSearchController(query).withFadeTransaction())
+                }
     }
 
+    /**
+     * Called when an option menu item has been selected by the user.
+     *
+     * @param item The selected item.
+     * @return True if this event has been consumed, false if it has not.
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_display_mode -> swapDisplayMode()
-            R.id.action_set_filter -> navView?.let { activity?.drawer?.openDrawer(Gravity.END) }
+            // Initialize option to open catalogue settings.
+            R.id.action_settings -> {
+                router.pushController((RouterTransaction.with(SettingsSourcesController()))
+                        .popChangeHandler(SettingsSourcesFadeChangeHandler())
+                        .pushChangeHandler(FadeChangeHandler()))
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
     }
 
     /**
-     * Restarts the request with a new query.
-     *
-     * @param newQuery the new query.
+     * Called to update adapter containing sources.
      */
-    private fun searchWithQuery(newQuery: String) {
-        // If text didn't change, do nothing
-        if (presenter.query == newQuery)
-            return
-
-        // FIXME dirty fix to restore the toolbar buttons after closing search mode.
-        if (newQuery == "") {
-            activity?.invalidateOptionsMenu()
-        }
-
-        showProgressBar()
-        adapter?.clear()
-
-        presenter.restartPager(newQuery)
+    fun setSources(sources: List<IFlexible<*>>) {
+        adapter?.updateDataSet(sources)
     }
 
     /**
-     * Called from the presenter when the network request is received.
-     *
-     * @param page the current page.
-     * @param mangas the list of manga of the page.
+     * Called to set the last used catalogue at the top of the view.
      */
-    fun onAddPage(page: Int, mangas: List<CatalogueItem>) {
-        val adapter = adapter ?: return
-        hideProgressBar()
-        if (page == 1) {
-            adapter.clear()
-            resetProgressItem()
-        }
-        adapter.onLoadMoreComplete(mangas)
-    }
-
-    /**
-     * Called from the presenter when the network request fails.
-     *
-     * @param error the error received.
-     */
-    fun onAddPageError(error: Throwable) {
-        Timber.e(error)
-        val adapter = adapter ?: return
-        adapter.onLoadMoreComplete(null)
-        hideProgressBar()
-
-        val message = if (error is NoResultsException) "No results found" else (error.message ?: "")
-
-        snack?.dismiss()
-        snack = view?.catalogue_view?.snack(message, Snackbar.LENGTH_INDEFINITE) {
-            setAction(R.string.action_retry) {
-                // If not the first page, show bottom progress bar.
-                if (adapter.mainItemCount > 0) {
-                    val item = progressItem ?: return@setAction
-                    adapter.addScrollableFooterWithDelay(item, 0, true)
-                } else {
-                    showProgressBar()
-                }
-                presenter.requestNext()
-            }
+    fun setLastUsedSource(item: SourceItem?) {
+        adapter?.removeAllScrollableHeaders()
+        if (item != null) {
+            adapter?.addScrollableHeader(item)
         }
     }
 
-    /**
-     * Sets a new progress item and reenables the scroll listener.
-     */
-    private fun resetProgressItem() {
-        progressItem = ProgressItem()
-        adapter?.endlessTargetCount = 0
-        adapter?.setEndlessScrollListener(this, progressItem!!)
-    }
-
-    /**
-     * Called by the adapter when scrolled near the bottom.
-     */
-    override fun onLoadMore(lastPosition: Int, currentPage: Int) {
-        Timber.e("onLoadMore")
-        if (presenter.hasNextPage()) {
-            presenter.requestNext()
-        } else {
-            adapter?.onLoadMoreComplete(null)
-            adapter?.endlessTargetCount = 1
-        }
-    }
-
-    override fun noMoreLoad(newItemsSize: Int) {
-    }
-
-    /**
-     * Called from the presenter when a manga is initialized.
-     *
-     * @param manga the manga initialized
-     */
-    fun onMangaInitialized(manga: Manga) {
-        getHolder(manga)?.setImage(manga)
-    }
-
-    /**
-     * Swaps the current display mode.
-     */
-    fun swapDisplayMode() {
-        val view = view ?: return
-        val adapter = adapter ?: return
-
-        presenter.swapDisplayMode()
-        val isListMode = presenter.isListMode
-        activity?.invalidateOptionsMenu()
-        setupRecycler(view)
-        if (!isListMode || !view.context.connectivityManager.isActiveNetworkMetered) {
-            // Initialize mangas if going to grid view or if over wifi when going to list view
-            val mangas = (0..adapter.itemCount-1).mapNotNull {
-                (adapter.getItem(it) as? CatalogueItem)?.manga
-            }
-            presenter.initializeMangas(mangas)
-        }
-    }
-
-    /**
-     * Returns a preference for the number of manga per row based on the current orientation.
-     *
-     * @return the preference.
-     */
-    fun getColumnsPreferenceForCurrentOrientation(): Preference<Int> {
-        return if (resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT)
-            preferences.portraitColumns()
-        else
-            preferences.landscapeColumns()
-    }
-
-    /**
-     * Returns the view holder for the given manga.
-     *
-     * @param manga the manga to find.
-     * @return the holder of the manga or null if it's not bound.
-     */
-    private fun getHolder(manga: Manga): CatalogueHolder? {
-        val adapter = adapter ?: return null
-
-        adapter.allBoundViewHolders.forEach { holder ->
-            val item = adapter.getItem(holder.adapterPosition) as? CatalogueItem
-            if (item != null && item.manga.id!! == manga.id!!) {
-                return holder as CatalogueHolder
-            }
-        }
-
-        return null
-    }
-
-    /**
-     * Shows the progress bar.
-     */
-    private fun showProgressBar() {
-        view?.progress?.visible()
-        snack?.dismiss()
-        snack = null
-    }
-
-    /**
-     * Hides active progress bars.
-     */
-    private fun hideProgressBar() {
-        view?.progress?.gone()
-    }
-
-    /**
-     * Called when a manga is clicked.
-     *
-     * @param position the position of the element clicked.
-     * @return true if the item should be selected, false otherwise.
-     */
-    override fun onItemClick(position: Int): Boolean {
-        val item = adapter?.getItem(position) as? CatalogueItem ?: return false
-        router.pushController(RouterTransaction.with(MangaController(item.manga, true))
-                .pushChangeHandler(FadeChangeHandler())
-                .popChangeHandler(FadeChangeHandler()))
-
-        return false
-    }
-
-    /**
-     * Called when a manga is long clicked.
-     *
-     * Adds the manga to the default category if none is set it shows a list of categories for the user to put the manga
-     * in, the list consists of the default category plus the user's categories. The default category is preselected on
-     * new manga, and on already favorited manga the manga's categories are preselected.
-     *
-     * @param position the position of the element clicked.
-     */
-    override fun onItemLongClick(position: Int) {
-        val manga = (adapter?.getItem(position) as? CatalogueItem?)?.manga ?: return
-        if (manga.favorite) {
-            MaterialDialog.Builder(activity!!)
-                    .items(resources?.getString(R.string.remove_from_library))
-                    .itemsCallback { _, _, which, _ ->
-                        when (which) {
-                            0 -> {
-                                presenter.changeMangaFavorite(manga)
-                                adapter?.notifyItemChanged(position)
-                            }
-                        }
-                    }.show()
-        } else {
-            presenter.changeMangaFavorite(manga)
-            adapter?.notifyItemChanged(position)
-
-            val categories = presenter.getCategories()
-            val defaultCategory = categories.find { it.id == preferences.defaultCategory() }
-            if (defaultCategory != null) {
-                presenter.moveMangaToCategory(manga, defaultCategory)
-            } else if (categories.size <= 1) { // default or the one from the user
-                presenter.moveMangaToCategory(manga, categories.firstOrNull())
-            } else {
-                val ids = presenter.getMangaCategoryIds(manga)
-                val preselected = ids.mapNotNull { id ->
-                    categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
-                }.toTypedArray()
-
-                ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
-                        .showDialog(router)
-            }
-        }
-
-    }
-
-    /**
-     * Update manga to use selected categories.
-     *
-     * @param mangas The list of manga to move to categories.
-     * @param categories The list of categories where manga will be placed.
-     */
-    override fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>) {
-        val manga = mangas.firstOrNull() ?: return
-        presenter.updateMangaCategories(manga, categories)
-    }
-
-    protected companion object {
-        const val SOURCE_ID_KEY = "sourceId"
-    }
-
+    class SettingsSourcesFadeChangeHandler : FadeChangeHandler()
 }

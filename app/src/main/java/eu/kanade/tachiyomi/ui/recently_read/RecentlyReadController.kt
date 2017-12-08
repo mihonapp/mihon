@@ -1,21 +1,19 @@
 package eu.kanade.tachiyomi.ui.recently_read
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bluelinelabs.conductor.RouterTransaction
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.History
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.recently_read_controller.view.*
+import kotlinx.android.synthetic.main.recently_read_controller.*
 
 /**
  * Fragment that shows recently read manga.
@@ -51,23 +49,20 @@ class RecentlyReadController : NucleusController<RecentlyReadPresenter>(),
      * Called when view is created
      *
      * @param view created view
-     * @param savedViewState saved state of the view
      */
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
-        with(view) {
-            // Initialize adapter
-            recycler.layoutManager = LinearLayoutManager(context)
-            adapter = RecentlyReadAdapter(this@RecentlyReadController)
-            recycler.setHasFixedSize(true)
-            recycler.adapter = adapter
-        }
+        // Initialize adapter
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        adapter = RecentlyReadAdapter(this@RecentlyReadController)
+        recycler.setHasFixedSize(true)
+        recycler.adapter = adapter
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
         adapter = null
+        super.onDestroyView(view)
     }
 
     /**
@@ -80,11 +75,10 @@ class RecentlyReadController : NucleusController<RecentlyReadPresenter>(),
     }
 
     override fun onUpdateEmptyView(size: Int) {
-        val emptyView = view?.empty_view ?: return
         if (size > 0) {
-            emptyView.hide()
+            empty_view.hide()
         } else {
-            emptyView.show(R.drawable.ic_glasses_black_128dp, R.string.information_no_recent_manga)
+            empty_view.show(R.drawable.ic_glasses_black_128dp, R.string.information_no_recent_manga)
         }
     }
 
@@ -108,9 +102,7 @@ class RecentlyReadController : NucleusController<RecentlyReadPresenter>(),
 
     override fun onCoverClick(position: Int) {
         val manga = adapter?.getItem(position)?.mch?.manga ?: return
-        router.pushController(RouterTransaction.with(MangaController(manga))
-                .pushChangeHandler(FadeChangeHandler())
-                .popChangeHandler(FadeChangeHandler()))
+        router.pushController(MangaController(manga).withFadeTransaction())
     }
 
     override fun removeHistory(manga: Manga, history: History, all: Boolean) {

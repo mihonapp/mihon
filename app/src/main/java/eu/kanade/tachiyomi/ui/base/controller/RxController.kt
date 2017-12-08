@@ -30,7 +30,7 @@ abstract class RxController(bundle: Bundle? = null) : BaseController(bundle) {
     }
 
     @CallSuper
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
+    override fun onViewCreated(view: View) {
         if (untilDestroySubscriptions.isUnsubscribed) {
             untilDestroySubscriptions = CompositeSubscription()
         }
