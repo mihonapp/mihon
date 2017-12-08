@@ -10,10 +10,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
-import exh.metadata.models.ExGalleryMetadata
-import exh.metadata.models.NHentaiMetadata
-import exh.metadata.models.PervEdenGalleryMetadata
-import exh.metadata.models.PervEdenLang
+import exh.metadata.models.*
 import exh.util.defRealm
 import okhttp3.MediaType
 import okhttp3.Request
@@ -68,7 +65,7 @@ class GalleryAdder {
         try {
             val urlObj = Uri.parse(url)
             val lowercasePs = urlObj.pathSegments.map(String::toLowerCase)
-            val firstPathSegment = lowercasePs[0]
+            val lcFirstPathSegment = lowercasePs[0]
             val source = when (urlObj.host.toLowerCase()) {
                 "g.e-hentai.org", "e-hentai.org" -> EH_SOURCE_ID
                 "exhentai.org" -> EXH_SOURCE_ID
@@ -80,6 +77,8 @@ class GalleryAdder {
                         else -> return GalleryAddEvent.Fail.UnknownType(url)
                     }
                 }
+                "hentai.cafe" -> HENTAI_CAFE_SOURCE_ID
+                "www.tsumino.com" -> TSUMINO_SOURCE_ID
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
@@ -88,7 +87,7 @@ class GalleryAdder {
             }
 
             val realUrl = when(source) {
-                EH_SOURCE_ID, EXH_SOURCE_ID -> when (firstPathSegment) {
+                EH_SOURCE_ID, EXH_SOURCE_ID -> when (lcFirstPathSegment) {
                     "g" -> {
                         //Is already gallery page, do nothing
                         url
@@ -100,7 +99,7 @@ class GalleryAdder {
                     else -> return GalleryAddEvent.Fail.UnknownType(url)
                 }
                 NHENTAI_SOURCE_ID -> {
-                    if(firstPathSegment != "g")
+                    if(lcFirstPathSegment != "g")
                         return GalleryAddEvent.Fail.UnknownType(url)
 
                     "https://nhentai.net/g/${urlObj.pathSegments[1]}/"
@@ -113,6 +112,18 @@ class GalleryAdder {
                     }
                     uri.toString()
                 }
+                HENTAI_CAFE_SOURCE_ID -> {
+                    if(lcFirstPathSegment == "manga")
+                        "https://hentai.cafe/${urlObj.pathSegments[2]}"
+                    
+                    "https://hentai.cafe/$lcFirstPathSegment"
+                }
+                TSUMINO_SOURCE_ID -> {
+                    if(lcFirstPathSegment != "read" && lcFirstPathSegment != "book")
+                        return GalleryAddEvent.Fail.UnknownType(url)
+                        
+                    "https://tsumino.com/Book/Info/${urlObj.pathSegments[2]}"
+                }
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
@@ -124,6 +135,8 @@ class GalleryAdder {
                 NHENTAI_SOURCE_ID -> realUrl //nhentai uses URLs directly (oops, my bad when implementing this source)
                 PERV_EDEN_EN_SOURCE_ID,
                 PERV_EDEN_IT_SOURCE_ID -> getUrlWithoutDomain(realUrl)
+                HENTAI_CAFE_SOURCE_ID -> getUrlWithoutDomain(realUrl)
+                TSUMINO_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
@@ -142,23 +155,14 @@ class GalleryAdder {
             //Apply metadata
             defRealm { realm ->
                 when (source) {
-                    EH_SOURCE_ID, EXH_SOURCE_ID ->
-                        ExGalleryMetadata.UrlQuery(realUrl, isExSource(source))
-                                .query(realm)
-                                .findFirst()?.copyTo(manga)
-                    NHENTAI_SOURCE_ID ->
-                        NHentaiMetadata.UrlQuery(realUrl)
-                                .query(realm)
-                                .findFirst()
-                                ?.copyTo(manga)
+                    EH_SOURCE_ID, EXH_SOURCE_ID -> ExGalleryMetadata.UrlQuery(realUrl, isExSource(source))
+                    NHENTAI_SOURCE_ID -> NHentaiMetadata.UrlQuery(realUrl)
                     PERV_EDEN_EN_SOURCE_ID,
-                    PERV_EDEN_IT_SOURCE_ID ->
-                        PervEdenGalleryMetadata.UrlQuery(realUrl, PervEdenLang.source(source))
-                                .query(realm)
-                                .findFirst()
-                                ?.copyTo(manga)
+                    PERV_EDEN_IT_SOURCE_ID -> PervEdenGalleryMetadata.UrlQuery(realUrl, PervEdenLang.source(source))
+                    HENTAI_CAFE_SOURCE_ID -> HentaiCafeMetadata.UrlQuery(realUrl)
+                    TSUMINO_SOURCE_ID -> TsuminoMetadata.UrlQuery(realUrl)
                     else -> return GalleryAddEvent.Fail.UnknownType(url)
-                }
+                }.query(realm).findFirst()
             }
 
             if (fav) manga.favorite = true

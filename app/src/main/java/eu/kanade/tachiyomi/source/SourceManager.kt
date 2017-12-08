@@ -9,9 +9,9 @@ import dalvik.system.PathClassLoader
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.YamlHttpSource
+import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.source.online.all.NHentai
 import eu.kanade.tachiyomi.source.online.all.PervEden
 import eu.kanade.tachiyomi.source.online.english.*
@@ -20,7 +20,10 @@ import eu.kanade.tachiyomi.source.online.russian.Mangachan
 import eu.kanade.tachiyomi.source.online.russian.Mintmanga
 import eu.kanade.tachiyomi.source.online.russian.Readmanga
 import eu.kanade.tachiyomi.util.hasPermission
-import exh.*
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
+import exh.PERV_EDEN_EN_SOURCE_ID
+import exh.PERV_EDEN_IT_SOURCE_ID
 import exh.metadata.models.PervEdenLang
 import org.yaml.snakeyaml.Yaml
 import rx.Observable
@@ -98,6 +101,7 @@ open class SourceManager(private val context: Context) {
         exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, PervEdenLang.it)
         exSrcs += NHentai(context)
         exSrcs += HentaiCafe()
+        exSrcs += Tsumino()
         return exSrcs
     }
 

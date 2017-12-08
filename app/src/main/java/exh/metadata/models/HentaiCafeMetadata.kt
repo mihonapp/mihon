@@ -25,16 +25,18 @@ open class HentaiCafeMetadata : RealmObject(), SearchableGalleryMetadata {
                 hcId = hcIdFromUrl(a)
             }
         }
+    
+    var thumbnailUrl: String? = null
 
     var title: String? = null
 
     var artist: String? = null
 
-    override var uploader: String? = null
+    override var uploader: String? = null //Always will be null as this is unknown
 
     override var tags: RealmList<Tag> = RealmList()
 
-    override fun getTitles() = listOf(title).filterNotNull()
+    override fun getTitles() = listOfNotNull(title)
 
     @Ignore
     override val titleFields = listOf(
@@ -45,6 +47,8 @@ open class HentaiCafeMetadata : RealmObject(), SearchableGalleryMetadata {
     override var mangaId: Long? = null
 
     override fun copyTo(manga: SManga) {
+        thumbnailUrl?.let { manga.thumbnail_url = it }
+        
         manga.title = title!!
         manga.artist = artist
         manga.author = artist

@@ -144,9 +144,23 @@
                     android:pathPrefix="/g/"
                     android:scheme="https"/>
                 <data
-                    android:host="nhentai.net"
-                    android:pathPrefix="/g/"
+                    android:host="www.perveden.com"
                     android:scheme="http"/>
+                <data
+                    android:host="www.perveden.com"
+                    android:scheme="https"/>
+                <data
+                    android:host="hentai.cafe"
+                    android:scheme="http"/>
+                <data
+                    android:host="hentai.cafe"
+                    android:scheme="https"/>
+                <data
+                    android:host="www.tsumino.com"
+                    android:scheme="http"/>
+                <data
+                    android:host="www.tsumino.com"
+                    android:scheme="https"/>
             </intent-filter>
         </activity>
 

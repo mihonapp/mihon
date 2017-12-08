@@ -11,6 +11,7 @@ import exh.HENTAI_CAFE_SOURCE_ID
 import exh.metadata.models.HentaiCafeMetadata
 import exh.metadata.models.HentaiCafeMetadata.Companion.BASE_URL
 import exh.metadata.models.Tag
+import exh.util.urlImportFetchSearchManga
 import okhttp3.Request
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -34,8 +35,13 @@ class HentaiCafe : ParsedHttpSource(), LewdSource<HentaiCafeMetadata, Document> 
     override fun popularMangaNextPageSelector() = throw UnsupportedOperationException("Unused method called!")
     override fun popularMangaRequest(page: Int) = throw UnsupportedOperationException("Unused method called!")
     override fun fetchPopularManga(page: Int) = fetchLatestUpdates(page)
-
-    override fun searchMangaSelector() = "article.post"
+    
+    //Support direct URL importing
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
+            urlImportFetchSearchManga(query, {
+                super.fetchSearchManga(page, query, filters)
+            })
+    override fun searchMangaSelector() = "article.post:not(#post-0)"
     override fun searchMangaFromElement(element: Element): SManga {
         val thumb = element.select(".entry-thumb > img")
         val title = element.select(".entry-title > a")
@@ -111,6 +117,8 @@ class HentaiCafe : ParsedHttpSource(), LewdSource<HentaiCafeMetadata, Document> 
 
         url = Uri.decode(it.location())
         title = eTitle.text()
+        
+        thumbnailUrl = content.select("img").attr("src")
 
         tags.clear()
         val eDetails = content.select("p > a[rel=tag]")
