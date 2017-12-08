@@ -26,8 +26,8 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
 
     override fun createPresenter() = BatchAddPresenter()
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         with(view) {
             btn_add_galleries.clicks().subscribeUntilDestroy {

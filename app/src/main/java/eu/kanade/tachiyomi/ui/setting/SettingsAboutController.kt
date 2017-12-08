@@ -1,8 +1,6 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.preference.PreferenceScreen
 import android.view.View
@@ -44,12 +42,6 @@ class SettingsAboutController : SettingsController() {
         titleRes = R.string.pref_category_about
 
         switchPreference {
-            key = "acra.enable"
-            titleRes = R.string.pref_enable_acra
-            summaryRes = R.string.pref_acra_summary
-            defaultValue = true
-        }
-        switchPreference {
             key = Keys.automaticUpdates
             titleRes = R.string.pref_enable_automatic_updates
             summaryRes = R.string.pref_enable_automatic_updates_summary
@@ -67,15 +59,6 @@ class SettingsAboutController : SettingsController() {
                 }
             } else {
                 isVisible = false
-            }
-        }
-        preference {
-            title = "Discord"
-            val url = "https://discord.gg/2dDQBv2"
-            summary = url
-            onClick {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(intent)
             }
         }
         preference {

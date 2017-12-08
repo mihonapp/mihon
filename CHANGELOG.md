@@ -1,3 +1,4 @@
+### 6.6.0
 - Many performance improvements
 - Stability improvements and bug fixes
 - Upstream merge

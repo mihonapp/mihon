@@ -37,8 +37,8 @@ class LockController : NucleusController<LockPresenter>() {
 
     override fun getTitle() = "Application locked"
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         if(!lockEnabled(prefs)) {
             closeLock()

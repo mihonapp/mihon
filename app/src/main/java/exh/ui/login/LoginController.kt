@@ -2,7 +2,6 @@ package exh.ui.login
 
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,8 +39,8 @@ class LoginController : NucleusController<LoginPresenter>() {
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
             inflater.inflate(R.layout.eh_activity_login, container, false)!!
 
-    override fun onViewCreated(view: View, savedViewState: Bundle?) {
-        super.onViewCreated(view, savedViewState)
+    override fun onViewCreated(view: View) {
+        super.onViewCreated(view)
 
         with(view) {
             btn_cancel.setOnClickListener { router.popCurrentController() }
