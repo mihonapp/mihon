@@ -20,7 +20,7 @@
     <string name="label_categories">Categories</string>
     <string name="label_selected">Selected: %1$d</string>
     <string name="label_backup">Backup</string>
-
+    <string name="label_migration">Source migration</string>
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
@@ -389,6 +389,14 @@
 
     <!-- Recent manga fragment -->
     <string name="recent_manga_source">%1$s - Ch.%2$s</string>
+
+    <!-- Source migration screen -->
+    <string name="migration_info">Tap to select the source to migrate from</string>
+    <string name="migration_dialog_what_to_include">Select data to include</string>
+    <string name="select">Select</string>
+    <string name="migrate">Migrate</string>
+    <string name="copy">Copy</string>
+    <string name="migrating">Migrating…</string>
 
     <!-- Downloads activity and service -->
     <string name="download_queue_error">An error occurred while downloading chapters. You can try again in the downloads section</string>

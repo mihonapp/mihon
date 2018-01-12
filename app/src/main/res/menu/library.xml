@@ -27,4 +27,9 @@
         android:title="@string/action_edit_categories"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_source_migration"
+        android:title="Source migration"
+        app:showAsAction="never"/>
+
 </menu>

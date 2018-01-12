@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.catalogue_global_search_controller.*
  * This controller should only handle UI actions, IO actions should be done by [CatalogueSearchPresenter]
  * [CatalogueSearchCardAdapter.OnMangaClickListener] called when manga is clicked in global search
  */
-class CatalogueSearchController(private val initialQuery: String? = null) :
+open class CatalogueSearchController(protected val initialQuery: String? = null) :
         NucleusController<CatalogueSearchPresenter>(),
         CatalogueSearchCardAdapter.OnMangaClickListener {
 
