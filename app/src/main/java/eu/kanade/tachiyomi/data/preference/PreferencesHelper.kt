@@ -165,10 +165,6 @@ class PreferencesHelper(val context: Context) {
 
     fun defaultCategory() = prefs.getInt(Keys.defaultCategory, -1)
 
-    fun migrateChapters() = rxPrefs.getBoolean("migrate_chapters", true)
-
-    fun migrateTracks() = rxPrefs.getBoolean("migrate_tracks", true)
-
-    fun migrateCategories() = rxPrefs.getBoolean("migrate_categories", true)
+    fun migrateFlags() = rxPrefs.getInteger("migrate_flags", Int.MAX_VALUE)
 
 }

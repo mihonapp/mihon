@@ -97,9 +97,14 @@ class MigrationPresenter(
     private fun migrateMangaInternal(source: Source, sourceChapters: List<SChapter>,
                                      prevManga: Manga, manga: Manga, replace: Boolean) {
 
+        val flags = preferences.migrateFlags().getOrDefault()
+        val migrateChapters = MigrationFlags.hasChapters(flags)
+        val migrateCategories = MigrationFlags.hasCategories(flags)
+        val migrateTracks = MigrationFlags.hasTracks(flags)
+
         db.inTransaction {
             // Update chapters read
-            if (preferences.migrateChapters().getOrDefault()) {
+            if (migrateChapters) {
                 try {
                     syncChaptersWithSource(db, sourceChapters, manga, source)
                 } catch (e: Exception) {
@@ -120,13 +125,13 @@ class MigrationPresenter(
                 }
             }
             // Update categories
-            if (preferences.migrateCategories().getOrDefault()) {
+            if (migrateCategories) {
                 val categories = db.getCategoriesForManga(prevManga).executeAsBlocking()
                 val mangaCategories = categories.map { MangaCategory.create(manga, it) }
                 db.setMangaCategories(mangaCategories, listOf(manga))
             }
             // Update track
-            if (preferences.migrateTracks().getOrDefault()) {
+            if (migrateTracks) {
                 val tracks = db.getTracks(prevManga).executeAsBlocking()
                 for (track in tracks) {
                     track.id = null

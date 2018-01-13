@@ -64,31 +64,19 @@ class SearchController(
         private val preferences: PreferencesHelper by injectLazy()
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-            val optionTitles = arrayOf(
-                    R.string.chapters,
-                    R.string.categories,
-                    R.string.track
-            )
+            val prefValue = preferences.migrateFlags().getOrDefault()
 
-            val optionPrefs = arrayOf(
-                    preferences.migrateChapters(),
-                    preferences.migrateCategories(),
-                    preferences.migrateTracks()
-            )
-
-            val preselected = optionPrefs.mapIndexedNotNull { index, preference ->
-                if (preference.getOrDefault()) index else null
-            }
+            val preselected = MigrationFlags.getEnabledFlagsPositions(prefValue)
 
             return MaterialDialog.Builder(activity!!)
                     .content(R.string.migration_dialog_what_to_include)
-                    .items(optionTitles.map { resources?.getString(it) })
+                    .items(MigrationFlags.titles.map { resources?.getString(it) })
                     .alwaysCallMultiChoiceCallback()
                     .itemsCallbackMultiChoice(preselected.toTypedArray(), { _, positions, _ ->
                         // Save current settings for the next time
-                        optionPrefs.forEachIndexed { index, preference ->
-                            preference.set(index in positions)
-                        }
+                        val newValue = MigrationFlags.getFlagsFromPositions(positions)
+                        preferences.migrateFlags().set(newValue)
+
                         true
                     })
                     .positiveText(R.string.migrate)
