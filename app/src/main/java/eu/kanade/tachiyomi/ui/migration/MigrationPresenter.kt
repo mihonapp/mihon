@@ -85,7 +85,9 @@ class MigrationPresenter(
         state = state.copy(isReplacingManga = true)
 
         Observable.defer { source.fetchChapterList(manga) }
+                .onErrorReturn { emptyList() }
                 .doOnNext { migrateMangaInternal(source, it, prevManga, manga, replace) }
+                .onErrorReturn { emptyList() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnUnsubscribe { state = state.copy(isReplacingManga = false) }
@@ -98,7 +100,11 @@ class MigrationPresenter(
         db.inTransaction {
             // Update chapters read
             if (preferences.migrateChapters().getOrDefault()) {
-                syncChaptersWithSource(db, sourceChapters, manga, source)
+                try {
+                    syncChaptersWithSource(db, sourceChapters, manga, source)
+                } catch (e: Exception) {
+                    // Worst case, chapters won't be synced
+                }
 
                 val prevMangaChapters = db.getChapters(prevManga).executeAsBlocking()
                 val maxChapterRead = prevMangaChapters.filter { it.read }
