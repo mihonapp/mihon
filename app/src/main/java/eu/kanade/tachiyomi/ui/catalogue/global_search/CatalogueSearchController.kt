@@ -25,7 +25,7 @@ open class CatalogueSearchController(protected val initialQuery: String? = null)
     /**
      * Adapter containing search results grouped by lang.
      */
-    private var adapter: CatalogueSearchAdapter? = null
+    protected var adapter: CatalogueSearchAdapter? = null
 
     /**
      * Called when controller is initialized.
@@ -71,6 +71,16 @@ open class CatalogueSearchController(protected val initialQuery: String? = null)
     override fun onMangaClick(manga: Manga) {
         // Open MangaController.
         router.pushController(MangaController(manga, true).withFadeTransaction())
+    }
+
+    /**
+     * Called when manga in global search is long clicked.
+     *
+     * @param manga clicked item containing manga information.
+     */
+    override fun onMangaLongClick(manga: Manga) {
+        // Delegate to single click by default.
+        onMangaClick(manga)
     }
 
     /**

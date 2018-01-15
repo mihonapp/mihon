@@ -19,6 +19,13 @@ class CatalogueSearchCardHolder(view: View, adapter: CatalogueSearchCardAdapter)
                 adapter.mangaClickListener.onMangaClick(item.manga)
             }
         }
+        itemView.setOnLongClickListener {
+            val item = adapter.getItem(adapterPosition)
+            if (item != null) {
+                adapter.mangaClickListener.onMangaLongClick(item.manga)
+            }
+            true
+        }
     }
 
     fun bind(manga: Manga) {

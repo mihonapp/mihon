@@ -59,6 +59,11 @@ class SearchController(
         dialog.showDialog(router)
     }
 
+    override fun onMangaLongClick(manga: Manga) {
+        // Call parent's default click listener
+        super.onMangaClick(manga)
+    }
+
     class MigrationDialog : DialogController() {
 
         private val preferences: PreferencesHelper by injectLazy()
