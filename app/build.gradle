@@ -202,6 +202,7 @@ dependencies {
     implementation 'me.zhanghai.android.systemuihelper:library:1.0.0'
     implementation 'com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.0.4'
     implementation 'com.github.mthli:Slice:v1.2'
+    implementation 'me.gujun.android.taggroup:library:1.4@aar'
 
     // Conductor
     implementation "com.bluelinelabs:conductor:2.1.4"

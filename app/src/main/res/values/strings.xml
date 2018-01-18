@@ -300,12 +300,14 @@
     <string name="unknown">Unknown</string>
     <string name="licensed">Licensed</string>
     <string name="remove_from_library">Remove from library</string>
+    <string name="manga_info_full_title_label">Title</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_author_label">Author</string>
     <string name="manga_info_artist_label">Artist</string>
     <string name="manga_info_chapters_label">Chapters</string>
     <string name="manga_info_last_chapter_label">Last chapter</string>
+    <string name="manga_info_latest_data_label">Updated</string>
     <string name="manga_info_status_label">Status</string>
     <string name="manga_info_source_label">Source</string>
     <string name="manga_info_genres_label">Genres</string>
@@ -319,6 +321,7 @@
     <string name="icon_shape">Icon shape</string>
     <string name="icon_creation_fail">Failed to create shortcut!</string>
     <string name="delete_downloads_for_manga">Delete downloaded chapters?</string>
+    <string name="copied_to_clipboard">%1$s copied to clipboard</string>
 
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Chapters</string>
@@ -457,4 +460,5 @@
     <string name="channel_common">Common</string>
     <string name="channel_library">Library</string>
     <string name="channel_downloader">Downloader</string>
+
 </resources>

@@ -185,10 +185,11 @@ class CatalogueController : NucleusController<CataloguePresenter>(),
         // Create query listener which opens the global search view.
         searchView.queryTextChangeEvents()
                 .filter { it.isSubmitted }
-                .subscribeUntilDestroy {
-                    val query = it.queryText().toString()
-                    router.pushController(CatalogueSearchController(query).withFadeTransaction())
-                }
+                .subscribeUntilDestroy { performGlobalSearch(it.queryText().toString()) }
+    }
+
+    fun performGlobalSearch(query: String){
+        router.pushController(CatalogueSearchController(query).withFadeTransaction())
     }
 
     /**

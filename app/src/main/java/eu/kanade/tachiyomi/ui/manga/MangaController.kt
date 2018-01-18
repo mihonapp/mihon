@@ -21,10 +21,8 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.ui.base.controller.RouterPagerAdapter
-import eu.kanade.tachiyomi.ui.base.controller.RxController
-import eu.kanade.tachiyomi.ui.base.controller.TabbedController
-import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
+import eu.kanade.tachiyomi.ui.base.controller.*
+import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersController
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoController
 import eu.kanade.tachiyomi.ui.manga.track.TrackController
@@ -34,6 +32,7 @@ import kotlinx.android.synthetic.main.manga_controller.*
 import rx.Subscription
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.*
 
 class MangaController : RxController, TabbedController {
 
@@ -62,6 +61,8 @@ class MangaController : RxController, TabbedController {
     private var adapter: MangaDetailAdapter? = null
 
     val fromCatalogue = args.getBoolean(FROM_CATALOGUE_EXTRA, false)
+
+    val lastUpdateRelay: BehaviorRelay<Date> = BehaviorRelay.create()
 
     val chapterCountRelay: BehaviorRelay<Float> = BehaviorRelay.create()
 
@@ -187,5 +188,6 @@ class MangaController : RxController, TabbedController {
         private val tabField = TabLayout.Tab::class.java.getDeclaredField("mView")
                 .apply { isAccessible = true }
     }
+
 
 }
