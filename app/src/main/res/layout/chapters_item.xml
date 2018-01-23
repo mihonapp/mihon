@@ -70,7 +70,6 @@
         android:layout_marginEnd="8dp"
         android:paddingBottom="24dp"
         android:paddingTop="12dp"
-        android:background="@color/md_teal_500"
         android:contentDescription="@string/description_cover"/>
 
     <TextView
