@@ -4,10 +4,7 @@ import android.net.Uri
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
-import exh.metadata.EX_DATE_FORMAT
-import exh.metadata.ONGOING_SUFFIX
-import exh.metadata.buildTagsDescription
-import exh.metadata.humanReadableByteCount
+import exh.metadata.*
 import exh.plusAssign
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -110,12 +107,9 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
         tags.filter { it.namespace == EH_ARTIST_NAMESPACE }.let {
             if(it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name!! })
         }
-        //Set author (if we can find one)
-        tags.filter { it.namespace == EH_AUTHOR_NAMESPACE }.let {
-            if(it.isNotEmpty()) manga.author = it.joinToString(transform = { it.name!! })
-        }
-        //Set genre
-        genre?.let { manga.genre = it }
+
+        //Copy tags -> genres
+        manga.genre = joinTagsToGenreString(this)
 
         //Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
         //We default to completed
@@ -134,6 +128,7 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
         altTitle?.let { titleDesc += "Alternate Title: $it\n" }
 
         val detailsDesc = StringBuilder()
+        genre?.let { detailsDesc += "Genre: $it\n" }
         uploader?.let { detailsDesc += "Uploader: $it\n" }
         datePosted?.let { detailsDesc += "Posted: ${EX_DATE_FORMAT.format(Date(it))}\n" }
         visible?.let { detailsDesc += "Visible: $it\n" }
@@ -176,7 +171,6 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
         )
 
         private const val EH_ARTIST_NAMESPACE = "artist"
-        private const val EH_AUTHOR_NAMESPACE = "author"
 
     }
 }

@@ -23,7 +23,7 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_sync"
+        android:id="@+id/action_download_favorites"
         android:icon="@drawable/ic_cloud_download_white_24dp"
         android:title="Download favorites"
         app:showAsAction="ifRoom"/>

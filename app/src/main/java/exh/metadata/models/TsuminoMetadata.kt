@@ -4,6 +4,7 @@ import android.net.Uri
 import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.EX_DATE_FORMAT
 import exh.metadata.buildTagsDescription
+import exh.metadata.joinEmulatedTagsToGenreString
 import exh.plusAssign
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -96,7 +97,6 @@ open class TsuminoMetadata : RealmObject(), SearchableGalleryMetadata {
         length?.let { detailsDesc += "Length: $it pages\n" }
         ratingString?.let { detailsDesc += "Rating: $it\n" }
         category?.let {
-            manga.genre = it
             detailsDesc += "Category: $it\n"
         }
         collection?.let { detailsDesc += "Collection: $it\n" }
@@ -109,7 +109,10 @@ open class TsuminoMetadata : RealmObject(), SearchableGalleryMetadata {
         if(charactersString.isNotEmpty()) {
             detailsDesc += "Character: $charactersString\n"
         }
-        
+
+        //Copy tags -> genres
+        manga.genre = joinEmulatedTagsToGenreString(this)
+
         val tagsDesc = buildTagsDescription(this)
         
         manga.description = listOf(titleDesc, detailsDesc.toString(), tagsDesc.toString())

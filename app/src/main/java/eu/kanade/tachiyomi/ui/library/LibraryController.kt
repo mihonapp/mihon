@@ -36,11 +36,11 @@ import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
+import exh.FavoritesSyncHelper
 import exh.metadata.loadAllMetadata
 import exh.metadata.models.SearchableGalleryMetadata
 import io.realm.Realm
 import io.realm.RealmResults
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.library_controller.*
 import kotlinx.android.synthetic.main.main_activity.*
 import rx.Subscription
@@ -133,6 +133,8 @@ class LibraryController(
     var realm: Realm? = null
     //Cached metadata
     var meta: Map<KClass<out SearchableGalleryMetadata>, RealmResults<out SearchableGalleryMetadata>>? = null
+    //Favorites
+    val favorites by lazy { FavoritesSyncHelper(activity!!) }
     // <-- EH
 
     init {
@@ -402,6 +404,9 @@ class LibraryController(
             }
             R.id.action_source_migration -> {
                 router.pushController(MigrationController().withFadeTransaction())
+            }
+            R.id.action_download_favorites -> {
+                favorites.guiSyncFavorites {  }
             }
             else -> return super.onOptionsItemSelected(item)
         }

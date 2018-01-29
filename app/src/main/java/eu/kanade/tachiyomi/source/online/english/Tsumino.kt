@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.TSUMINO_SOURCE_ID
+import exh.metadata.EMULATED_TAG_NAMESPACE
 import exh.metadata.models.Tag
 import exh.metadata.models.TsuminoMetadata
 import exh.metadata.models.TsuminoMetadata.Companion.BASE_URL
@@ -96,7 +97,7 @@ class Tsumino: ParsedHttpSource(), LewdSource<TsuminoMetadata, Document> {
         
         it.getElementById("Tag")?.children()?.let {
             tags.addAll(it.map {
-                Tag("tag", it.text().trim(), false)
+                Tag(EMULATED_TAG_NAMESPACE, it.text().trim(), false)
             })
         }
     }

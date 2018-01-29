@@ -3,10 +3,7 @@ package exh.metadata.models
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
-import exh.metadata.EX_DATE_FORMAT
-import exh.metadata.ONGOING_SUFFIX
-import exh.metadata.buildTagsDescription
-import exh.metadata.nullIfBlank
+import exh.metadata.*
 import exh.plusAssign
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -106,9 +103,13 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
             if(it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name!! })
         }
 
+        var category: String? = null
         tags.filter { it.namespace == NHENTAI_CATEGORIES_NAMESPACE }.let {
-            if(it.isNotEmpty()) manga.genre = it.joinToString(transform = { it.name!! })
+            if(it.isNotEmpty()) category = it.joinToString(transform = { it.name!! })
         }
+
+        //Copy tags -> genres
+        manga.genre = joinEmulatedTagsToGenreString(this)
 
         //Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
         //We default to completed
@@ -127,6 +128,7 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
         shortTitle?.let { titleDesc += "Short Title: $it\n" }
 
         val detailsDesc = StringBuilder()
+        category?.let { detailsDesc += "Category: $it\n" }
         uploadDate?.let { detailsDesc += "Upload Date: ${EX_DATE_FORMAT.format(Date(it * 1000))}\n" }
         pageImageTypes.size.let { detailsDesc += "Length: $it pages\n" }
         favoritesCount?.let { detailsDesc += "Favorited: $it times\n" }

@@ -105,7 +105,8 @@
         <!-- EH -->
         <activity
             android:name="exh.ui.intercept.InterceptActivity"
-            android:label="TachiyomiEH">
+            android:excludeFromRecents="true"
+            android:label="Tachiyomi">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -146,21 +147,35 @@
                     android:scheme="https"/>
                 <data
                     android:host="www.perveden.com"
+                    android:pathPattern="/.*/.*-manga/.*"
                     android:scheme="http"/>
                 <data
                     android:host="www.perveden.com"
+                    android:pathPattern="/.*/.*-manga/.*"
                     android:scheme="https"/>
                 <data
                     android:host="hentai.cafe"
+                    android:pathPattern="/.*/.*"
                     android:scheme="http"/>
                 <data
                     android:host="hentai.cafe"
+                    android:pathPattern="/.*/.*"
                     android:scheme="https"/>
                 <data
                     android:host="www.tsumino.com"
+                    android:pathPrefix="/Book/Info/"
                     android:scheme="http"/>
                 <data
                     android:host="www.tsumino.com"
+                    android:pathPrefix="/Book/Info/"
+                    android:scheme="https"/>
+                <data
+                    android:host="www.tsumino.com"
+                    android:pathPrefix="/Read/View/"
+                    android:scheme="http"/>
+                <data
+                    android:host="www.tsumino.com"
+                    android:pathPrefix="/Read/View/"
                     android:scheme="https"/>
             </intent-filter>
         </activity>

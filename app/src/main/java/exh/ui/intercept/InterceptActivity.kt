@@ -5,32 +5,19 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import exh.GalleryAddEvent
-import exh.GalleryAdder
 import kotlinx.android.synthetic.main.eh_activity_intercept.*
-import uy.kohesive.injekt.injectLazy
-import kotlin.concurrent.thread
+import nucleus.factory.RequiresPresenter
+import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 
-class InterceptActivity : BaseActivity() {
-
-    private val preferences: PreferencesHelper by injectLazy()
-
-    private val galleryAdder = GalleryAdder()
-
-    var finished = false
+@RequiresPresenter(InterceptActivityPresenter::class)
+class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
+    private var statusSubscription: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //Set theme
-        setTheme(when (preferences.theme()) {
-            2 -> R.style.Theme_Tachiyomi_Dark
-            3 -> R.style.Theme_Tachiyomi_Amoled
-            else -> R.style.Theme_Tachiyomi
-        })
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.eh_activity_intercept)
 
@@ -38,37 +25,12 @@ class InterceptActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if(savedInstanceState == null)
-            thread { processLink() }
+        processLink()
     }
 
     private fun processLink() {
-        if(Intent.ACTION_VIEW == intent.action) {
-            val result = galleryAdder.addGallery(intent.dataString)
-
-            when(result) {
-                is GalleryAddEvent.Success ->
-                    if(!finished)
-                        startActivity(Intent(this, MainActivity::class.java)
-                                .setAction(MainActivity.SHORTCUT_MANGA)
-                                .putExtra(MangaController.MANGA_EXTRA, result.manga.id))
-                is GalleryAddEvent.Fail ->
-                    if(!finished)
-                        runOnUiThread {
-                            MaterialDialog.Builder(this)
-                                    .title("Error")
-                                    .content("Could not open this gallery:\n\n${result.logMessage}")
-                                    .cancelable(true)
-                                    .canceledOnTouchOutside(true)
-                                    .cancelListener { onBackPressed() }
-                                    .positiveText("Ok")
-                                    .onPositive { _, _ -> onBackPressed() }
-                                    .dismissListener { onBackPressed() }
-                                    .show()
-                        }
-            }
-            onBackPressed()
-        }
+        if(Intent.ACTION_VIEW == intent.action)
+            presenter.loadGallery(intent.dataString)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -79,15 +41,36 @@ class InterceptActivity : BaseActivity() {
         return true
     }
 
-    override fun onBackPressed() {
-        if(!finished)
-            runOnUiThread {
-                super.onBackPressed()
-            }
+    override fun onStart() {
+        super.onStart()
+        statusSubscription?.unsubscribe()
+        statusSubscription = presenter.status
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    when(it) {
+                        is InterceptResult.Success -> {
+                            startActivity(Intent(this, MainActivity::class.java)
+                                    .setAction(MainActivity.SHORTCUT_MANGA)
+                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    .putExtra(MangaController.MANGA_EXTRA, it.mangaId))
+                            onBackPressed()
+                        }
+                        is InterceptResult.Failure ->
+                            MaterialDialog.Builder(this)
+                                    .title("Error")
+                                    .content("Could not open this gallery:\n\n${it.reason}")
+                                    .cancelable(true)
+                                    .canceledOnTouchOutside(true)
+                                    .positiveText("Ok")
+                                    .cancelListener { onBackPressed() }
+                                    .dismissListener { onBackPressed() }
+                                    .show()
+                    }
+                }
     }
 
     override fun onStop() {
         super.onStop()
-        finished = true
+        statusSubscription?.unsubscribe()
     }
 }

@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import exh.PERV_EDEN_EN_SOURCE_ID
 import exh.PERV_EDEN_IT_SOURCE_ID
 import exh.metadata.buildTagsDescription
+import exh.metadata.joinEmulatedTagsToGenreString
 import exh.plusAssign
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -77,7 +78,6 @@ open class PervEdenGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
         }
 
         type?.let {
-            manga.genre = it
             detailsDesc += "Type: $it\n"
         }
 
@@ -93,6 +93,9 @@ open class PervEdenGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
         rating?.let {
             detailsDesc += "Rating: %.2\n".format(it)
         }
+
+        //Copy tags -> genres
+        manga.genre = joinEmulatedTagsToGenreString(this)
 
         val tagsDesc = buildTagsDescription(this)
 
@@ -164,6 +167,7 @@ open class PervEdenTitle(var metadata: PervEdenGalleryMetadata? = null,
 }
 
 enum class PervEdenLang(val id: Long) {
+    //DO NOT RENAME THESE TO CAPITAL LETTERS! The enum names are used to build URLs
     en(PERV_EDEN_EN_SOURCE_ID),
     it(PERV_EDEN_IT_SOURCE_ID);
 

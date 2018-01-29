@@ -5,6 +5,7 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import exh.ui.login.LoginController
 import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 
 /**
  * EH Settings fragment
@@ -22,6 +23,7 @@ class SettingsEhController : SettingsController() {
             defaultValue = false
             preferences.enableExhentai()
                     .asObservable()
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeUntilDestroy {
                 isChecked = it

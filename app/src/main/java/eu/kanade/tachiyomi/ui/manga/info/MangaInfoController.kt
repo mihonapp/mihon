@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -45,6 +46,8 @@ import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.truncateCenter
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import jp.wasabeef.glide.transformations.MaskTransformation
 import kotlinx.android.synthetic.main.manga_info_controller.*
@@ -65,6 +68,8 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      * Preferences helper.
      */
     private val preferences: PreferencesHelper by injectLazy()
+
+    private val sourceManager: SourceManager by injectLazy()
 
     init {
         setHasOptionsMenu(true)
@@ -103,22 +108,38 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         }
 
         manga_artist.clicks().subscribeUntilDestroy {
-            performGlobalSearch(manga_artist.text.toString())
+            //EXH Special case E-Hentai/ExHentai to use tag based search
+            var text = manga_artist.text.toString()
+            if(isEHentaiBasedSource())
+                text = wrapTag("artist", text)
+            performGlobalSearch(text)
         }
 
         manga_author.longClicks().subscribeUntilDestroy {
-            copyToClipboard(manga_author.text.toString(), manga_author.text.toString())
+            //EXH Special case E-Hentai/ExHentai to ignore author field (unused)
+            if(!isEHentaiBasedSource())
+                copyToClipboard(manga_author.text.toString(), manga_author.text.toString())
         }
 
         manga_author.clicks().subscribeUntilDestroy {
-            performGlobalSearch(manga_author.text.toString())
+            //EXH Special case E-Hentai/ExHentai to ignore author field (unused)
+            if(!isEHentaiBasedSource())
+                performGlobalSearch(manga_author.text.toString())
         }
 
         manga_summary.longClicks().subscribeUntilDestroy {
             copyToClipboard(view.context.getString(R.string.description), manga_summary.text.toString())
         }
 
-        manga_genres_tags.setOnTagClickListener { tag -> performGlobalSearch(tag) }
+        manga_genres_tags.setOnTagClickListener { tag ->
+            //EXH Special case E-Hentai/ExHentai to use tag based search
+            var text = tag
+            if(isEHentaiBasedSource()) {
+                val parsed = parseTag(text)
+                text = wrapTag(parsed.first, parsed.second)
+            }
+            performGlobalSearch(text)
+        }
 
         manga_cover.longClicks().subscribeUntilDestroy {
             copyToClipboard(view.context.getString(R.string.title), presenter.manga.title)
@@ -490,6 +511,32 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         val router = parentController?.router ?: return
         router.pushController(CatalogueSearchController(query).withFadeTransaction())
     }
+
+    // --> EH
+    private fun wrapTag(namespace: String, tag: String)
+            = if(tag.contains(' '))
+        "$namespace:\"$tag$\""
+    else
+        "$namespace:$tag$"
+
+    private fun parseTag(tag: String) = tag.substringBefore(':').trim() to tag.substringAfter(':').trim()
+
+    private fun isEHentaiBasedSource(): Boolean {
+        val mangaSourceText = manga_source.text
+
+        sourceManager.get(EH_SOURCE_ID)?.let {
+            if(mangaSourceText.startsWith(it.name))
+                return true
+        }
+
+        sourceManager.get(EXH_SOURCE_ID)?.let {
+            if(mangaSourceText.startsWith(it.name))
+                return true
+        }
+
+        return false
+    }
+    // <-- EH
 
     /**
      * Create shortcut using ShortcutManager.

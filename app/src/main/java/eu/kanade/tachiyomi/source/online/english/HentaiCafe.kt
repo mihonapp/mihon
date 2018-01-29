@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.HENTAI_CAFE_SOURCE_ID
+import exh.metadata.EMULATED_TAG_NAMESPACE
 import exh.metadata.models.HentaiCafeMetadata
 import exh.metadata.models.HentaiCafeMetadata.Companion.BASE_URL
 import exh.metadata.models.Tag
@@ -128,7 +129,7 @@ class HentaiCafe : ParsedHttpSource(), LewdSource<HentaiCafeMetadata, Document> 
             val firstPath = parsed.pathSegments.first()
 
             when(firstPath) {
-                "tag" -> tags.add(Tag("tag", it.text(), false))
+                "tag" -> tags.add(Tag(EMULATED_TAG_NAMESPACE, it.text(), false))
                 "artist" -> {
                     artist = it.text()
                     tags.add(Tag("artist", it.text(), false))

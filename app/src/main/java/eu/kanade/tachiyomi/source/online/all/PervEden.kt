@@ -7,7 +7,11 @@ import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.ChapterRecognition
 import eu.kanade.tachiyomi.util.asJsoup
-import exh.metadata.models.*
+import exh.metadata.EMULATED_TAG_NAMESPACE
+import exh.metadata.models.PervEdenGalleryMetadata
+import exh.metadata.models.PervEdenLang
+import exh.metadata.models.PervEdenTitle
+import exh.metadata.models.Tag
 import exh.util.UriFilter
 import exh.util.UriGroup
 import exh.util.urlImportFetchSearchManga
@@ -139,7 +143,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
                     }
                     "Genres" -> {
                         if(it is Element && it.tagName() == "a")
-                            tags.add(Tag("genre", it.text().toLowerCase(), false))
+                            tags.add(Tag(EMULATED_TAG_NAMESPACE, it.text().toLowerCase(), false))
                     }
                     "Type" -> {
                         if(it is TextNode) {

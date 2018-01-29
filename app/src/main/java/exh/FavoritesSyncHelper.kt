@@ -74,8 +74,10 @@ class FavoritesSyncHelper(val activity: Activity) {
 
         (exSource ?: ehSource)?.let { source ->
             val favResponse = source.fetchFavorites()
-            val ourCategories = ArrayList<Category>(db.getCategories().executeAsBlocking())
-            val ourMangas = ArrayList<Manga>(db.getMangas().executeAsBlocking())
+            val ourCategories = db.getCategories().executeAsBlocking().toMutableList()
+            val ourMangas = db.getMangas().executeAsBlocking().filter {
+                it.source == EH_SOURCE_ID || it.source == EXH_SOURCE_ID
+            }.toMutableList()
             //Add required categories (categories do not sync upwards)
             favResponse.second.filter { theirCategory ->
                 ourCategories.find {
@@ -93,7 +95,7 @@ class FavoritesSyncHelper(val activity: Activity) {
                     val categoryMap = (it + ourCategories).associateBy { it.name }
 
                     //Insert new mangas
-                    val mangaToInsert = java.util.ArrayList<Manga>()
+                    val mangaToInsert = mutableListOf<Manga>()
                     favResponse.first.map {
                         val category = categoryMap[it.fav]!!
                         var manga = it.manga

@@ -1,3 +1,10 @@
+### 6.8.0
+- Various performance improvements
+- Fix library search query being lost
+- Upstream merge
+- Fix Tsumino and HentaiCafe links not triggering a link import
+- Fix many bugs in link interceptor
+
 ### 6.6.0
 - Many performance improvements
 - Stability improvements and bug fixes

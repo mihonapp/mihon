@@ -83,3 +83,11 @@ fun buildTagsDescription(metadata: SearchableGalleryMetadata)
         }
     }
 }
+
+fun joinTagsToGenreString(metadata: SearchableGalleryMetadata)
+    = metadata.tags.joinToString { "${it.namespace}: ${it.name}" }
+
+fun joinEmulatedTagsToGenreString(metadata: SearchableGalleryMetadata)
+        = metadata.tags.filter { it.namespace == EMULATED_TAG_NAMESPACE }.joinToString { it.name.toString() }
+
+val EMULATED_TAG_NAMESPACE = "tag"
