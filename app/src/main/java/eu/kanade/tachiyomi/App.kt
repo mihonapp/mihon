@@ -9,7 +9,7 @@ import com.github.ajalt.reprint.core.Reprint
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.updater.UpdateCheckerJob
+import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.util.LocaleHelper
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -24,10 +24,10 @@ open class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+
         Injekt = InjektScope(DefaultRegistrar())
         Injekt.importModule(AppModule(this))
-
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         setupJobManager()
         setupNotificationChannels()
@@ -53,7 +53,7 @@ open class App : Application() {
         JobManager.create(this).addJobCreator { tag ->
             when (tag) {
                 LibraryUpdateJob.TAG -> LibraryUpdateJob()
-                UpdateCheckerJob.TAG -> UpdateCheckerJob()
+                UpdaterJob.TAG -> UpdaterJob()
                 BackupCreatorJob.TAG -> BackupCreatorJob()
                 else -> null
             }

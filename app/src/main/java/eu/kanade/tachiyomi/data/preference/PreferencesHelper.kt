@@ -40,6 +40,8 @@ class PreferencesHelper(val context: Context) {
 
     fun pageTransitions() = rxPrefs.getBoolean(Keys.enableTransitions, true)
 
+    fun doubleTapAnimSpeed() = rxPrefs.getInteger(Keys.doubleTapAnimationSpeed, 500)
+
     fun showPageNumber() = rxPrefs.getBoolean(Keys.showPageNumber, true)
 
     fun fullscreen() = rxPrefs.getBoolean(Keys.fullscreen, true)
@@ -166,7 +168,8 @@ class PreferencesHelper(val context: Context) {
 
     fun defaultCategory() = prefs.getInt(Keys.defaultCategory, -1)
 
-    //TODO
+    fun migrateFlags() = rxPrefs.getInteger("migrate_flags", Int.MAX_VALUE)
+
     // --> EH
     fun enableExhentai() = rxPrefs.getBoolean("enable_exhentai", false)
 

@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
@@ -124,6 +125,8 @@ class LibraryController(
     private var tabsVisibilityRelay: BehaviorRelay<Boolean> = BehaviorRelay.create(false)
 
     private var tabsVisibilitySubscription: Subscription? = null
+
+    private var searchViewSubscription: Subscription? = null
 
     // --> EH
     //Cached realm
@@ -362,14 +365,16 @@ class LibraryController(
         // Mutate the filter icon because it needs to be tinted and the resource is shared.
         menu.findItem(R.id.action_filter).icon.mutate()
 
-        // Debounce search (EH)
-        searchView.queryTextChanges()
+        searchViewSubscription?.unsubscribe()
+        searchViewSubscription = searchView.queryTextChanges()
+                // Ignore events if this controller isn't at the top
+                .filter { router.backstack.lastOrNull()?.controller() == this }
                 .debounce(350, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeUntilDestroy {
-            query = it.toString()
-            searchRelay.call(query)
-        }
+                    query = it.toString()
+                    searchRelay.call(query)
+                }
 
         searchItem.fixExpand()
     }
@@ -394,6 +399,9 @@ class LibraryController(
             }
             R.id.action_edit_categories -> {
                 router.pushController(CategoryController().withFadeTransaction())
+            }
+            R.id.action_source_migration -> {
+                router.pushController(MigrationController().withFadeTransaction())
             }
             else -> return super.onOptionsItemSelected(item)
         }

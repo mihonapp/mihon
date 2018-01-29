@@ -26,7 +26,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
         CategoryAdapter.OnItemReleaseListener,
         CategoryCreateDialog.Listener,
         CategoryRenameDialog.Listener,
-        UndoHelper.OnUndoListener {
+        UndoHelper.OnActionListener {
 
     /**
      * Object used to show ActionMode toolbar.
@@ -107,9 +107,14 @@ class CategoryController : NucleusController<CategoryPresenter>(),
     fun setCategories(categories: List<CategoryItem>) {
         actionMode?.finish()
         adapter?.updateDataSet(categories)
-        val selected = categories.filter { it.isSelected }
-        if (selected.isNotEmpty()) {
-            selected.forEach { onItemLongClick(categories.indexOf(it)) }
+        if (categories.isNotEmpty()) {
+            empty_view.hide()
+            val selected = categories.filter { it.isSelected }
+            if (selected.isNotEmpty()) {
+                selected.forEach { onItemLongClick(categories.indexOf(it)) }
+            }
+        } else {
+            empty_view.show(R.drawable.ic_shape_black_128dp, R.string.information_empty_category)
         }
     }
 
@@ -163,7 +168,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
             R.id.action_delete -> {
                 undoHelper = UndoHelper(adapter, this)
                 undoHelper?.start(adapter.selectedPositions, view!!,
-                                R.string.snack_categories_deleted, R.string.action_undo, 3000)
+                        R.string.snack_categories_deleted, R.string.action_undo, 3000)
 
                 mode.finish()
             }
@@ -263,7 +268,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      *
      * @param action The action performed.
      */
-    override fun onActionCanceled(action: Int) {
+    override fun onActionCanceled(action: Int, positions: MutableList<Int>?) {
         adapter?.restoreDeletedItems()
         undoHelper = null
     }

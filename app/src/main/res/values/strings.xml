@@ -20,7 +20,7 @@
     <string name="label_categories">Categories</string>
     <string name="label_selected">Selected: %1$d</string>
     <string name="label_backup">Backup</string>
-
+    <string name="label_migration">Source migration</string>
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
@@ -148,6 +148,7 @@
     <string name="pref_fullscreen">Fullscreen</string>
     <string name="pref_lock_orientation">Lock orientation</string>
     <string name="pref_page_transitions">Page transitions</string>
+    <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_crop_borders">Crop borders</string>
     <string name="pref_custom_brightness">Use custom brightness</string>
@@ -179,6 +180,9 @@
     <string name="zoom_start_left">Left</string>
     <string name="zoom_start_right">Right</string>
     <string name="zoom_start_center">Center</string>
+    <string name="double_tap_anim_speed_0">No animation</string>
+    <string name="double_tap_anim_speed_normal">Normal</string>
+    <string name="double_tap_anim_speed_fast">Fast</string>
     <string name="pref_rotation_type">Rotation</string>
     <string name="rotation_free">Free</string>
     <string name="rotation_lock">Lock</string>
@@ -277,6 +281,7 @@
     <string name="also_delete_chapters">Also delete downloaded chapters</string>
 
     <!-- Catalogue fragment -->
+    <string name="source_search_options">Search filters</string>
     <string name="source_requires_login">This source requires you to log in</string>
     <string name="select_source">Select a source</string>
     <string name="no_valid_sources">Please enable at least one valid source</string>
@@ -299,12 +304,15 @@
     <string name="ongoing">Ongoing</string>
     <string name="unknown">Unknown</string>
     <string name="licensed">Licensed</string>
-    <string name="add_to_library">Add to library</string>
     <string name="remove_from_library">Remove from library</string>
+    <string name="manga_info_full_title_label">Title</string>
+    <string name="manga_added_library">Added to library</string>
+    <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_author_label">Author</string>
     <string name="manga_info_artist_label">Artist</string>
     <string name="manga_info_chapters_label">Chapters</string>
     <string name="manga_info_last_chapter_label">Last chapter</string>
+    <string name="manga_info_latest_data_label">Updated</string>
     <string name="manga_info_status_label">Status</string>
     <string name="manga_info_source_label">Source</string>
     <string name="manga_info_genres_label">Genres</string>
@@ -318,6 +326,7 @@
     <string name="icon_shape">Icon shape</string>
     <string name="icon_creation_fail">Failed to create shortcut!</string>
     <string name="delete_downloads_for_manga">Delete downloaded chapters?</string>
+    <string name="copied_to_clipboard">%1$s copied to clipboard</string>
 
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Chapters</string>
@@ -336,9 +345,12 @@
     <string name="sort_by_source">By source</string>
     <string name="sort_by_number">By chapter number</string>
     <string name="manga_download">Download</string>
+    <string name="custom_download">Download custom amount</string>
+    <string name="custom_hint">amount</string>
     <string name="download_1">Download next chapter</string>
     <string name="download_5">Download next 5 chapters</string>
     <string name="download_10">Download next 10 chapters</string>
+    <string name="download_custom">Download custom</string>
     <string name="download_all">Download all</string>
     <string name="download_unread">Download unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete selected chapters?</string>
@@ -389,6 +401,14 @@
     <!-- Recent manga fragment -->
     <string name="recent_manga_source">%1$s - Ch.%2$s</string>
 
+    <!-- Source migration screen -->
+    <string name="migration_info">Tap to select the source to migrate from</string>
+    <string name="migration_dialog_what_to_include">Select data to include</string>
+    <string name="select">Select</string>
+    <string name="migrate">Migrate</string>
+    <string name="copy">Copy</string>
+    <string name="migrating">Migrating…</string>
+
     <!-- Downloads activity and service -->
     <string name="download_queue_error">An error occurred while downloading chapters. You can try again in the downloads section</string>
 
@@ -431,7 +451,8 @@
     <string name="information_no_downloads">No downloads</string>
     <string name="information_no_recent">No recent chapters</string>
     <string name="information_no_recent_manga">No recently read manga</string>
-    <string name="information_empty_library">Empty library</string>
+    <string name="information_empty_library">Your library is empty, you can add series to your library from the Catalogues.</string>
+    <string name="information_empty_category">You have no categories. Hit the plus button to create one for organizing your library.</string>
 
     <!-- Download Notification -->
     <string name="download_notifier_downloader_title">Downloader</string>
@@ -452,4 +473,5 @@
     <string name="label_login">Login</string>
     <string name="pref_category_eh">E-Hentai</string>
     <string name="pref_category_nh">nhentai</string>
+
 </resources>

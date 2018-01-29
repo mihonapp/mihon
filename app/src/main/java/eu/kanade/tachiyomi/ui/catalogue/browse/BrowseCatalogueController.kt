@@ -24,7 +24,6 @@ import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.*
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
 import kotlinx.android.synthetic.main.catalogue_controller.*
 import kotlinx.android.synthetic.main.main_activity.*
 import rx.Observable
@@ -74,11 +73,6 @@ open class BrowseCatalogueController(bundle: Bundle) :
      * Recycler view with the list of results.
      */
     private var recycler: RecyclerView? = null
-
-    /**
-     * Drawer listener to allow swipe only for closing the drawer.
-     */
-    private var drawerListener: DrawerLayout.DrawerListener? = null
 
     /**
      * Subscription for the search view.
@@ -138,17 +132,15 @@ open class BrowseCatalogueController(bundle: Bundle) :
         // Inflate and prepare drawer
         val navView = drawer.inflate(R.layout.catalogue_drawer) as CatalogueNavigationView
         this.navView = navView
-        drawerListener = DrawerSwipeCloseListener(drawer, navView).also {
-            drawer.addDrawerListener(it)
-        }
         navView.setFilters(presenter.filterItems)
 
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END)
 
         navView.onSearchClicked = {
             val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
             showProgressBar()
             adapter?.clear()
+            drawer.closeDrawer(Gravity.END)
             presenter.setSourceFilter(if (allDefault) FilterList() else presenter.sourceFilters)
         }
 
@@ -162,8 +154,6 @@ open class BrowseCatalogueController(bundle: Bundle) :
     }
 
     override fun cleanupSecondaryDrawer(drawer: DrawerLayout) {
-        drawerListener?.let { drawer.removeDrawerListener(it) }
-        drawerListener = null
         navView = null
     }
 
@@ -171,13 +161,13 @@ open class BrowseCatalogueController(bundle: Bundle) :
         numColumnsSubscription?.unsubscribe()
 
         var oldPosition = RecyclerView.NO_POSITION
-            val oldRecycler = catalogue_view?.getChildAt(1)
-            if (oldRecycler is RecyclerView) {
-                oldPosition = (oldRecycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                oldRecycler.adapter = null
+        val oldRecycler = catalogue_view?.getChildAt(1)
+        if (oldRecycler is RecyclerView) {
+            oldPosition = (oldRecycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+            oldRecycler.adapter = null
 
-                catalogue_view?.removeView(oldRecycler)
-            }
+            catalogue_view?.removeView(oldRecycler)
+        }
 
         val recycler = if (presenter.isListMode) {
             RecyclerView(view.context).apply {
@@ -476,6 +466,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
                             0 -> {
                                 presenter.changeMangaFavorite(manga)
                                 adapter?.notifyItemChanged(position)
+                                activity?.toast(activity?.getString(R.string.manga_removed_library))
                             }
                         }
                     }.show()
@@ -498,6 +489,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
                 ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
                         .showDialog(router)
             }
+            activity?.toast(activity?.getString(R.string.manga_added_library))
         }
 
     }

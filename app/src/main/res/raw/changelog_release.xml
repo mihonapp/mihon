@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.6.8" changeDate="">
+        <changelogtext>Added a new feature to help migrating manga from sources. You can find it in the library's toolbar.
+            In the search results, a tap will prompt to replace (or copy) the selected manga, while a long tap will let you
+            browse the manga before doing the migration.
+        </changelogtext>
+
+    </changelogversion>
+
+    <changelogversion versionName="v0.6.7" changeDate="">
+        <changelogtext>[b]Notice to Batoto users.[/b] As you may already know, Batoto will cease to work in a few days.
+            We're working on a feature to help migrating the library to other sources and should be available shortly.
+            Please be patient.</changelogtext>
+
+        <changelogtext>Fixed http 503 errors due to Cloudflare changes.</changelogtext>
+
+        <changelogtext>Minor UI improvements.</changelogtext>
+
+    </changelogversion>
+
     <changelogversion versionName="v0.6.6" changeDate="">
         <changelogtext>Backups now properly restore tracking information.</changelogtext>
 
