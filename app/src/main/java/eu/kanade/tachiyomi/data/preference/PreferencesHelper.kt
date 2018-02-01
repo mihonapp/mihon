@@ -206,5 +206,9 @@ class PreferencesHelper(val context: Context) {
     fun lockUseFingerprint() = rxPrefs.getBoolean("lock_finger", false)
 
     fun eh_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_nh_useHighQualityThumbs, false)
+
+    fun eh_showSyncIntro() = rxPrefs.getBoolean(Keys.eh_showSyncIntro, true)
+
+    fun eh_readOnlySync() = rxPrefs.getBoolean(Keys.eh_readOnlySync, false)
     // <-- EH
 }

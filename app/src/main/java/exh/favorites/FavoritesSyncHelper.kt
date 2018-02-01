@@ -36,6 +36,9 @@ class FavoritesSyncHelper(context: Context) {
 
     private val galleryAdder = GalleryAdder()
 
+    private var lastThrottleTime: Long = 0
+    private var throttleTime: Long = 0
+
     val status = BehaviorSubject.create<FavoritesSyncStatus>(FavoritesSyncStatus.Idle())
 
     @Synchronized
@@ -70,16 +73,23 @@ class FavoritesSyncHelper(context: Context) {
 
         try {
             db.inTransaction {
+                status.onNext(FavoritesSyncStatus.Processing("Calculating remote changes"))
                 val remoteChanges = storage.getChangedRemoteEntries(favorites.first)
-                val localChanges = storage.getChangedDbEntries()
+                val localChanges = if(prefs.eh_readOnlySync().getOrDefault()) {
+                    null //Do not build local changes if they are not going to be applied
+                } else {
+                    status.onNext(FavoritesSyncStatus.Processing("Calculating local changes"))
+                    storage.getChangedDbEntries()
+                }
 
                 //Apply remote categories
                 status.onNext(FavoritesSyncStatus.Processing("Updating category names"))
                 applyRemoteCategories(favorites.second)
 
-                //Apply ChangeSets
+                //Apply change sets
                 applyChangeSetToLocal(remoteChanges, errors)
-                applyChangeSetToRemote(localChanges, errors)
+                if(localChanges != null)
+                    applyChangeSetToRemote(localChanges, errors)
 
                 status.onNext(FavoritesSyncStatus.Processing("Cleaning up"))
                 storage.snapshotEntries()
@@ -157,7 +167,7 @@ class FavoritesSyncHelper(context: Context) {
         }
     }
 
-    private fun explicitlyRetryExhRequest(retryCount: Int, request: Request): Boolean {
+    private fun explicitlyRetryExhRequest(retryCount: Int, request: Request, minDelay: Int = 0): Boolean {
         var success = false
 
         for(i in 1 .. retryCount) {
@@ -204,8 +214,12 @@ class FavoritesSyncHelper(context: Context) {
         }
 
         //Apply additions
+        resetThrottle()
         changeSet.added.forEachIndexed { index, it ->
-            status.onNext(FavoritesSyncStatus.Processing("Adding gallery ${index + 1} of ${changeSet.added.size} to remote server"))
+            status.onNext(FavoritesSyncStatus.Processing("Adding gallery ${index + 1} of ${changeSet.added.size} to remote server",
+                    needWarnThrottle()))
+
+            throttle()
 
             addGalleryRemote(it, errors)
         }
@@ -239,8 +253,12 @@ class FavoritesSyncHelper(context: Context) {
         val categories = db.getCategories().executeAsBlocking()
 
         //Apply additions
+        resetThrottle()
         changeSet.added.forEachIndexed { index, it ->
-            status.onNext(FavoritesSyncStatus.Processing("Adding gallery ${index + 1} of ${changeSet.added.size} to local library"))
+            status.onNext(FavoritesSyncStatus.Processing("Adding gallery ${index + 1} of ${changeSet.added.size} to local library",
+                    needWarnThrottle()))
+
+            throttle()
 
             //Import using gallery adder
             val result = galleryAdder.addGallery("${exh.baseUrl}${it.getUrl()}",
@@ -262,13 +280,43 @@ class FavoritesSyncHelper(context: Context) {
         db.setMangaCategories(insertedMangaCategories, insertedMangaCategoriesMangas)
     }
 
+    fun throttle() {
+        //Throttle requests if necessary
+        val now = System.currentTimeMillis()
+        val timeDiff = now - lastThrottleTime
+        if(timeDiff < throttleTime)
+            Thread.sleep(throttleTime - timeDiff)
+
+        if(throttleTime < THROTTLE_MAX)
+            throttleTime += THROTTLE_INC
+
+        lastThrottleTime = System.currentTimeMillis()
+    }
+
+    fun resetThrottle() {
+        lastThrottleTime = 0
+        throttleTime = 0
+    }
+
+    fun needWarnThrottle()
+        = throttleTime >= THROTTLE_WARN
+
     class IgnoredException : RuntimeException()
+
+    companion object {
+        private const val THROTTLE_MAX = 5000
+        private const val THROTTLE_INC = 10
+        private const val THROTTLE_WARN = 1000
+    }
 }
 
 sealed class FavoritesSyncStatus(val message: String) {
     class Error(message: String) : FavoritesSyncStatus(message)
     class Idle : FavoritesSyncStatus("Waiting for sync to start")
     class Initializing : FavoritesSyncStatus("Initializing sync")
-    class Processing(message: String) : FavoritesSyncStatus(message)
+    class Processing(message: String, isThrottle: Boolean = false) : FavoritesSyncStatus(if(isThrottle)
+        (message + "\n\nSync is currently throttling (to avoid being banned from ExHentai) and may take a long to complete.")
+    else
+        message)
     class Complete(val errors: List<String>) : FavoritesSyncStatus("Sync complete!")
 }

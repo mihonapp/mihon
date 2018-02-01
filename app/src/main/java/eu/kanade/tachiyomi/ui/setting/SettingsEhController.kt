@@ -1,8 +1,14 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.support.v7.preference.PreferenceScreen
+import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys
+import eu.kanade.tachiyomi.util.toast
+import exh.favorites.FavoritesIntroDialog
+import exh.favorites.LocalFavoritesStorage
 import exh.ui.login.LoginController
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -125,5 +131,47 @@ class SettingsEhController : SettingsController() {
                     "tr_20"
             )
         }.dependency = "enable_exhentai"
+
+        preferenceCategory {
+            title = "Favorites sync"
+
+            switchPreference {
+                title = "Disable favorites uploading"
+                summary = "Favorites are only downloaded from ExHentai. Any changes to favorites in the app will not be uploaded. Prevents accidental loss of favorites on ExHentai. Note that removals will still be downloaded (if you remove a favorites on ExHentai, it will be removed in the app as well)."
+                key = PreferenceKeys.eh_readOnlySync
+            }
+
+            preference {
+                title = "Show favorites sync notes"
+                summary = "Show some information regarding the favorites sync feature"
+
+                onClick {
+                    activity?.let {
+                        FavoritesIntroDialog().show(it)
+                    }
+                }
+            }
+
+            preference {
+                title = "Force sync state reset"
+                summary = "Performs a full resynchronization on the next sync. Removals will not be synced. All favorites in the app will be re-uploaded to ExHentai and all favorites on ExHentai will be redownloaded into the app. Useful for repairing sync after sync has been interrupted."
+
+                onClick {
+                    activity?.let {
+                        MaterialDialog.Builder(it)
+                                .title("Are you sure?")
+                                .content("Resetting the sync state can cause your next sync to be extremely slow.")
+                                .positiveText("Yes")
+                                .onPositive { _, _ ->
+                                    LocalFavoritesStorage().clearSnapshots()
+                                    it.toast("Sync state reset", Toast.LENGTH_LONG)
+                                }
+                                .negativeText("No")
+                                .cancelable(false)
+                                .show()
+                    }
+                }
+            }
+        }
     }
 }

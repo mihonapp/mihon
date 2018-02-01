@@ -4,6 +4,8 @@
 - Upstream merge
 - Fix Tsumino and HentaiCafe links not triggering a link import
 - Fix many bugs in link interceptor
+- Completely revamp favorites sync algorithm
+- Various bug fixes
 
 ### 6.6.0
 - Many performance improvements

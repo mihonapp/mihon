@@ -23,9 +23,9 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_download_favorites"
-        android:icon="@drawable/ic_cloud_download_white_24dp"
-        android:title="Download favorites"
+        android:id="@+id/action_sync_favorites"
+        android:icon="@drawable/ic_cloud_white_24dp"
+        android:title="Sync favorites"
         app:showAsAction="ifRoom"/>
 
     <item

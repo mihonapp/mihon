@@ -37,6 +37,7 @@ import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
+import exh.favorites.FavoritesIntroDialog
 import exh.favorites.FavoritesSyncStatus
 import exh.metadata.loadAllMetadata
 import exh.metadata.models.SearchableGalleryMetadata
@@ -410,9 +411,14 @@ class LibraryController(
             R.id.action_source_migration -> {
                 router.pushController(MigrationController().withFadeTransaction())
             }
-            R.id.action_download_favorites -> {
-                presenter.favoritesSync.runSync()
+            // --> EXH
+            R.id.action_sync_favorites -> {
+                if(preferences.eh_showSyncIntro().getOrDefault())
+                    activity?.let { FavoritesIntroDialog().show(it) }
+                else
+                    presenter.favoritesSync.runSync()
             }
+            // <-- EXH
             else -> return super.onOptionsItemSelected(item)
         }
 

@@ -64,6 +64,14 @@ class LocalFavoritesStorage {
         }
     }
 
+    fun clearSnapshots() {
+        realm.use {
+            it.trans {
+                it.delete(FavoriteEntry::class.java)
+            }
+        }
+    }
+
     private fun getChangedEntries(entries: Sequence<FavoriteEntry>): ChangeSet {
         return realm.use { realm ->
             val terminated = entries.toList()
