@@ -28,6 +28,8 @@ class FavoritesIntroDialog {
         <br><br>
         4. Keep the app open while favorites are syncing. Android will close apps that are in the background sometimes and that could be bad if it happens while the app is syncing.
         <br><br>
+        5. <b>Do NOT put favorites in multiple categories</b> (the app supports this). This can confuse the sync algorithm as ExHentai only allows each favorite to be in one category.
+        <br><br>
         This dialog will only popup once. You can read these notes again by going to 'Settings > E-Hentai > Show favorites sync notes'.
 """.trimIndent()
 }
