@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v6.8.0-EH" changeDate="">
+        <changelogtext>Various performance improvements</changelogtext>
+        <changelogtext>Fix library search query being lost</changelogtext>
+        <changelogtext>Upstream merge</changelogtext>
+        <changelogtext>Fix Tsumino and HentaiCafe links not triggering a link import</changelogtext>
+        <changelogtext>Fix many bugs in link interceptor</changelogtext>
+        <changelogtext>Completely revamp favorites sync algorithm</changelogtext>
+        <changelogtext>Various bug fixes</changelogtext>
+
+    </changelogversion>
     <changelogversion versionName="v0.6.8" changeDate="">
         <changelogtext>Added a new feature to help migrating manga from sources. You can find it in the library's toolbar.
             In the search results, a tap will prompt to replace (or copy) the selected manga, while a long tap will let you
