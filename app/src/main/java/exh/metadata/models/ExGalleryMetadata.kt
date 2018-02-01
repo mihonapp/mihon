@@ -26,6 +26,10 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
     override var uuid: String = UUID.randomUUID().toString()
 
     var url: String? = null
+        set(value) {
+            //Ensure that URLs are always formatted in the same way to reduce duplicate galleries
+            field = value?.let { normalizeUrl(it) }
+        }
 
     @Index
     var gId: String? = null
@@ -60,7 +64,7 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
 
     override var tags: RealmList<Tag> = RealmList()
 
-    override fun getTitles() = listOf(title, altTitle).filterNotNull()
+    override fun getTitles() = listOfNotNull(title, altTitle)
 
     @Ignore
     override val titleFields = TITLE_FIELDS
@@ -93,7 +97,7 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
     }
 
     override fun copyTo(manga: SManga) {
-        url?.let { manga.url = it }
+        url?.let { manga.url = normalizeUrl(it) }
         thumbnailUrl?.let { manga.thumbnail_url = it }
 
         //No title bug?
@@ -118,8 +122,8 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
             ONGOING_SUFFIX.find {
                 t.endsWith(it, ignoreCase = true)
             }?.let {
-                manga.status = SManga.ONGOING
-            }
+                        manga.status = SManga.ONGOING
+                    }
         }
 
         //Build a nice looking description out of what we know
@@ -164,6 +168,12 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
 
         fun galleryToken(url: String) =
                 splitGalleryUrl(url).last()
+
+        fun normalizeUrl(id: String, token: String)
+                = "/g/$id/$token/?nw=always"
+
+        fun normalizeUrl(url: String)
+                = normalizeUrl(galleryId(url), galleryToken(url))
 
         val TITLE_FIELDS = listOf(
                 ExGalleryMetadata::title.name,

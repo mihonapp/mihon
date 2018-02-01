@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.SearchView
 import android.view.*
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.f2prateek.rx.preferences.Preference
@@ -36,7 +37,7 @@ import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.DrawerSwipeCloseListener
-import exh.FavoritesSyncHelper
+import exh.favorites.FavoritesSyncStatus
 import exh.metadata.loadAllMetadata
 import exh.metadata.models.SearchableGalleryMetadata
 import io.realm.Realm
@@ -133,8 +134,12 @@ class LibraryController(
     var realm: Realm? = null
     //Cached metadata
     var meta: Map<KClass<out SearchableGalleryMetadata>, RealmResults<out SearchableGalleryMetadata>>? = null
+    //Sync dialog
+    private var favSyncDialog: MaterialDialog? = null
+    //Old sync status
+    private var oldSyncStatus: FavoritesSyncStatus? = null
     //Favorites
-    val favorites by lazy { FavoritesSyncHelper(activity!!) }
+    private var favoritesSyncSubscription: Subscription? = null
     // <-- EH
 
     init {
@@ -406,7 +411,7 @@ class LibraryController(
                 router.pushController(MigrationController().withFadeTransaction())
             }
             R.id.action_download_favorites -> {
-                favorites.guiSyncFavorites {  }
+                presenter.favoritesSync.runSync()
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -530,6 +535,100 @@ class LibraryController(
             activity?.toast(R.string.notification_first_add_to_library)
         }
     }
+
+    override fun onAttach(view: View) {
+        super.onAttach(view)
+
+        // --> EXH
+        cleanupSyncState()
+        favoritesSyncSubscription =
+                presenter.favoritesSync.status
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                    updateSyncStatus(it)
+        }
+        // <-- EXH
+    }
+
+    override fun onDetach(view: View) {
+        super.onDetach(view)
+
+        //EXH
+        cleanupSyncState()
+    }
+
+    // --> EXH
+    private fun cleanupSyncState() {
+        favoritesSyncSubscription?.unsubscribe()
+        favoritesSyncSubscription = null
+        //Close sync status
+        favSyncDialog?.dismiss()
+        favSyncDialog = null
+        oldSyncStatus = null
+    }
+
+    private fun buildDialog() = activity?.let {
+        MaterialDialog.Builder(it)
+    }
+    
+    private fun showSyncProgressDialog() {
+        favSyncDialog?.dismiss()
+        favSyncDialog = buildDialog()
+                ?.title("Favorites syncing")
+                ?.cancelable(false)
+                ?.progress(true, 0)
+                ?.show()
+    }
+
+    private fun updateSyncStatus(status: FavoritesSyncStatus) {
+        when(status) {
+            is FavoritesSyncStatus.Idle -> {
+                favSyncDialog?.dismiss()
+                favSyncDialog = null
+            }
+            is FavoritesSyncStatus.Error -> {
+                favSyncDialog?.dismiss()
+                favSyncDialog = buildDialog()
+                        ?.title("Favorites sync error")
+                        ?.content("An error occurred during the sync process: ${status.message}")
+                        ?.cancelable(false)
+                        ?.positiveText("Ok")
+                        ?.onPositive { _, _ ->
+                            presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                        }
+                        ?.show()
+            }
+            is FavoritesSyncStatus.Processing,
+            is FavoritesSyncStatus.Initializing -> {
+                if(favSyncDialog == null || (oldSyncStatus != null
+                        && oldSyncStatus !is FavoritesSyncStatus.Initializing
+                        && oldSyncStatus !is FavoritesSyncStatus.Processing))
+                    showSyncProgressDialog()
+
+                favSyncDialog?.setContent(status.message)
+            }
+            is FavoritesSyncStatus.Complete -> {
+                favSyncDialog?.dismiss()
+
+                if(status.errors.isNotEmpty()) {
+                    favSyncDialog = buildDialog()
+                            ?.title("Favorites sync complete with errors")
+                            ?.content("Some errors occurred during the sync process:\n\n"
+                                    + status.errors.joinToString("\n"))
+                            ?.cancelable(false)
+                            ?.positiveText("Ok")
+                            ?.onPositive { _, _ ->
+                                presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                            }
+                            ?.show()
+                } else {
+                    presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                }
+            }
+        }
+        oldSyncStatus = status
+    }
+    // <-- EXH
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_OPEN) {

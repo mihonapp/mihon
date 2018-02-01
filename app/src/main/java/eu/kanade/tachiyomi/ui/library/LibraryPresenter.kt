@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.combineLatest
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
+import exh.favorites.FavoritesSyncHelper
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -75,6 +76,10 @@ class LibraryPresenter(
      * Library subscription.
      */
     private var librarySubscription: Subscription? = null
+
+    // --> EXH
+    val favoritesSync = FavoritesSyncHelper(context)
+    // <-- EXH
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)

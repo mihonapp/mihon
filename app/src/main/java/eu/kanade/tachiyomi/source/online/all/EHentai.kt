@@ -11,21 +11,26 @@ import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.util.asJsoup
-import exh.metadata.*
+import exh.metadata.EX_DATE_FORMAT
+import exh.metadata.ignore
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.Tag
+import exh.metadata.nullIfBlank
+import exh.metadata.parseHumanReadableByteCount
+import exh.ui.login.LoginController
+import exh.util.UriFilter
+import exh.util.UriGroup
+import exh.util.urlImportFetchSearchManga
+import okhttp3.CacheControl
+import okhttp3.Headers
+import okhttp3.Request
 import okhttp3.Response
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
-import exh.ui.login.LoginController
-import okhttp3.CacheControl
-import okhttp3.Headers
-import okhttp3.Request
-import org.jsoup.nodes.Document
-import exh.util.*
 
 class EHentai(override val id: Long,
               val exh: Boolean,
@@ -51,14 +56,14 @@ class EHentai(override val id: Long,
     /**
      * Gallery list entry
      */
-    data class ParsedManga(val fav: String?, val manga: Manga)
+    data class ParsedManga(val fav: Int, val manga: Manga)
 
     fun extendedGenericMangaParse(doc: Document)
             = with(doc) {
         //Parse mangas
         val parsedMangas = select(".gtr0,.gtr1").map {
             ParsedManga(
-                    fav = it.select(".itd .it3 > .i[id]").first()?.attr("title"),
+                    fav = parseFavoritesStyle(it.select(".itd .it3 > .i[id]").first()?.attr("style")),
                     manga = Manga.create(id).apply {
                         //Get title
                         it.select(".itd .it5 a").first()?.apply {
@@ -83,6 +88,14 @@ class EHentai(override val id: Long,
             it.text() == ">"
         } ?: false
         Pair(parsedMangas, hasNextPage)
+    }
+
+    fun parseFavoritesStyle(style: String?): Int {
+        val offset = style?.substringAfterLast("background-position:0px ")
+                ?.removeSuffix("px; cursor:pointer")
+                ?.toIntOrNull() ?: return -1
+
+        return (offset + 2)/-19
     }
 
     /**
@@ -287,9 +300,7 @@ class EHentai(override val id: Long,
         throw UnsupportedOperationException("Unused method was called somehow!")
     }
 
-    //Too lazy to write return type
-    fun fetchFavorites() = {
-        //Used to get "s" cookie
+    fun fetchFavorites(): Pair<List<ParsedManga>, List<String>> {
         val favoriteUrl = "$baseUrl/favorites.php"
         val result = mutableListOf<ParsedManga>()
         var page = 1
@@ -308,22 +319,23 @@ class EHentai(override val id: Long,
 
             //Parse fav names
             if (favNames == null)
-                favNames = doc.getElementsByClass("nosel").first().children().filter {
-                    it.children().size >= 3
-                }.mapNotNull { it.child(2).text() }
+                favNames = doc.select(".fp:not(.fps)").mapNotNull {
+                    it.child(2).text()
+                }
 
             //Next page
             page++
         } while (parsed.second)
-        Pair(result as List<ParsedManga>, favNames!!)
-    }()
+
+        return Pair(result as List<ParsedManga>, favNames!!)
+    }
 
     val cookiesHeader by lazy {
         val cookies: MutableMap<String, String> = mutableMapOf()
         if(prefs.enableExhentai().getOrDefault()) {
-            cookies.put(LoginController.MEMBER_ID_COOKIE, prefs.memberIdVal().get()!!)
-            cookies.put(LoginController.PASS_HASH_COOKIE, prefs.passHashVal().get()!!)
-            cookies.put(LoginController.IGNEOUS_COOKIE, prefs.igneousVal().get()!!)
+            cookies[LoginController.MEMBER_ID_COOKIE] = prefs.memberIdVal().get()!!
+            cookies[LoginController.PASS_HASH_COOKIE] = prefs.passHashVal().get()!!
+            cookies[LoginController.IGNEOUS_COOKIE] = prefs.igneousVal().get()!!
         }
 
         //Setup settings
@@ -458,20 +470,5 @@ class EHentai(override val id: Long,
     companion object {
         val QUERY_PREFIX = "?f_apply=Apply+Filter"
         val TR_SUFFIX = "TR"
-
-        fun getCookies(cookies: String): Map<String, String>? {
-            val foundCookies = HashMap<String, String>()
-            for (cookie in cookies.split(";".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()) {
-                val splitCookie = cookie.split("=".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()
-                if (splitCookie.size < 2) {
-                    return null
-                }
-                val trimmedKey = splitCookie[0].trim { it <= ' ' }
-                if (!foundCookies.containsKey(trimmedKey)) {
-                    foundCookies.put(trimmedKey, splitCookie[1].trim { it <= ' ' })
-                }
-            }
-            return foundCookies
-        }
     }
 }

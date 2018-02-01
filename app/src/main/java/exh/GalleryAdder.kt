@@ -10,8 +10,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
-import exh.metadata.models.*
-import exh.util.defRealm
+import exh.metadata.models.ExGalleryMetadata
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -131,7 +130,7 @@ class GalleryAdder {
                     ?: return GalleryAddEvent.Fail.Error(url, "Could not find EH source!")
 
             val cleanedUrl = when(source) {
-                EH_SOURCE_ID, EXH_SOURCE_ID -> getUrlWithoutDomain(realUrl)
+                EH_SOURCE_ID, EXH_SOURCE_ID -> ExGalleryMetadata.normalizeUrl(getUrlWithoutDomain(realUrl))
                 NHENTAI_SOURCE_ID -> realUrl //nhentai uses URLs directly (oops, my bad when implementing this source)
                 PERV_EDEN_EN_SOURCE_ID,
                 PERV_EDEN_IT_SOURCE_ID -> getUrlWithoutDomain(realUrl)
@@ -151,19 +150,6 @@ class GalleryAdder {
             val newManga = sourceObj.fetchMangaDetails(manga).toBlocking().first()
             manga.copyFrom(newManga)
             manga.title = newManga.title //Forcibly copy title as copyFrom does not copy title
-
-            //Apply metadata
-            defRealm { realm ->
-                when (source) {
-                    EH_SOURCE_ID, EXH_SOURCE_ID -> ExGalleryMetadata.UrlQuery(realUrl, isExSource(source))
-                    NHENTAI_SOURCE_ID -> NHentaiMetadata.UrlQuery(realUrl)
-                    PERV_EDEN_EN_SOURCE_ID,
-                    PERV_EDEN_IT_SOURCE_ID -> PervEdenGalleryMetadata.UrlQuery(realUrl, PervEdenLang.source(source))
-                    HENTAI_CAFE_SOURCE_ID -> HentaiCafeMetadata.UrlQuery(realUrl)
-                    TSUMINO_SOURCE_ID -> TsuminoMetadata.UrlQuery(realUrl)
-                    else -> return GalleryAddEvent.Fail.UnknownType(url)
-                }.query(realm).findFirst()
-            }
 
             if (fav) manga.favorite = true
 

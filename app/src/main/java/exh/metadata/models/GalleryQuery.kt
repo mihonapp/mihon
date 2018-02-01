@@ -1,6 +1,8 @@
 package exh.metadata.models
 
-import io.realm.*
+import io.realm.Case
+import io.realm.Realm
+import io.realm.RealmQuery
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -58,7 +60,7 @@ abstract class GalleryQuery<T : SearchableGalleryMetadata>(val clazz: KClass<T>)
                     is Long -> newMeta.equalTo(n, v)
                     is Short -> newMeta.equalTo(n, v)
                     is String -> newMeta.equalTo(n, v, Case.INSENSITIVE)
-                    else -> throw IllegalArgumentException("Unknown type: ${v::class.qualifiedName}!")
+                    else -> throw IllegalArgumentException("Unknown type: ${v::class.java.name}!")
                 }
             }
         }
