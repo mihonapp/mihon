@@ -80,12 +80,12 @@ class FavoritesSyncHelper(val context: Context) {
 
         try {
             //Take wake + wifi locks
-            wakeLock?.release()
+            ignore { wakeLock?.release() }
             wakeLock = ignore {
                 context.powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                         "ExhFavoritesSyncWakelock")
             }
-            wifiLock?.release()
+            ignore { wifiLock?.release() }
             wifiLock = ignore {
                 context.wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL,
                         "ExhFavoritesSyncWifi")
@@ -127,8 +127,14 @@ class FavoritesSyncHelper(val context: Context) {
             return
         } finally {
             //Release wake + wifi locks
-            ignore { wakeLock?.release() }
-            ignore { wifiLock?.release() }
+            ignore {
+                wakeLock?.release()
+                wakeLock = null
+            }
+            ignore {
+                wifiLock?.release()
+                wifiLock = null
+            }
         }
 
         status.onNext(FavoritesSyncStatus.Idle())
