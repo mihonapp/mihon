@@ -12,7 +12,6 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.metadata.EX_DATE_FORMAT
-import exh.metadata.ignore
 import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.models.Tag
 import exh.metadata.nullIfBlank
@@ -20,6 +19,7 @@ import exh.metadata.parseHumanReadableByteCount
 import exh.ui.login.LoginController
 import exh.util.UriFilter
 import exh.util.UriGroup
+import exh.util.ignore
 import exh.util.urlImportFetchSearchManga
 import okhttp3.CacheControl
 import okhttp3.Headers

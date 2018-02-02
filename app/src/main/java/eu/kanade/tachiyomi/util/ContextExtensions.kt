@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.PowerManager
 import android.support.annotation.StringRes
 import android.support.v4.app.NotificationCompat
@@ -115,6 +116,12 @@ val Context.connectivityManager: ConnectivityManager
  */
 val Context.powerManager: PowerManager
     get() = getSystemService(Context.POWER_SERVICE) as PowerManager
+
+/**
+ * Property to get the wifi manager from the context.
+ */
+val Context.wifiManager: WifiManager
+    get() = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
 /**
  * Function used to send a local broadcast asynchronous

@@ -43,10 +43,6 @@ fun String?.nullIfBlank(): String? = if(isNullOrBlank())
 else
     this
 
-fun <T> ignore(expr: () -> T): T? {
-    return try { expr() } catch (t: Throwable) { null }
-}
-
 fun <K,V> Set<Map.Entry<K,V>>.forEach(action: (K, V) -> Unit) {
     forEach { action(it.key, it.value) }
 }

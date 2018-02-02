@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.util.toast
 import exh.favorites.FavoritesIntroDialog
 import exh.favorites.LocalFavoritesStorage
 import exh.ui.login.LoginController
+import exh.util.trans
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -163,7 +164,13 @@ class SettingsEhController : SettingsController() {
                                 .content("Resetting the sync state can cause your next sync to be extremely slow.")
                                 .positiveText("Yes")
                                 .onPositive { _, _ ->
-                                    LocalFavoritesStorage().clearSnapshots()
+                                    LocalFavoritesStorage().apply {
+                                        getRealm().use {
+                                            it.trans {
+                                                clearSnapshots(it)
+                                            }
+                                        }
+                                    }
                                     it.toast("Sync state reset", Toast.LENGTH_LONG)
                                 }
                                 .negativeText("No")

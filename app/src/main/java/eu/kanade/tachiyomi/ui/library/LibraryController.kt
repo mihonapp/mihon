@@ -571,6 +571,8 @@ class LibraryController(
         favSyncDialog?.dismiss()
         favSyncDialog = null
         oldSyncStatus = null
+        //Clear flags
+        releaseSyncLocks()
     }
 
     private fun buildDialog() = activity?.let {
@@ -586,13 +588,25 @@ class LibraryController(
                 ?.show()
     }
 
+    private fun takeSyncLocks() {
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    private fun releaseSyncLocks() {
+        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
     private fun updateSyncStatus(status: FavoritesSyncStatus) {
         when(status) {
             is FavoritesSyncStatus.Idle -> {
+                releaseSyncLocks()
+
                 favSyncDialog?.dismiss()
                 favSyncDialog = null
             }
             is FavoritesSyncStatus.Error -> {
+                releaseSyncLocks()
+
                 favSyncDialog?.dismiss()
                 favSyncDialog = buildDialog()
                         ?.title("Favorites sync error")
@@ -606,30 +620,14 @@ class LibraryController(
             }
             is FavoritesSyncStatus.Processing,
             is FavoritesSyncStatus.Initializing -> {
+                takeSyncLocks()
+
                 if(favSyncDialog == null || (oldSyncStatus != null
                         && oldSyncStatus !is FavoritesSyncStatus.Initializing
                         && oldSyncStatus !is FavoritesSyncStatus.Processing))
                     showSyncProgressDialog()
 
                 favSyncDialog?.setContent(status.message)
-            }
-            is FavoritesSyncStatus.Complete -> {
-                favSyncDialog?.dismiss()
-
-                if(status.errors.isNotEmpty()) {
-                    favSyncDialog = buildDialog()
-                            ?.title("Favorites sync complete with errors")
-                            ?.content("Some errors occurred during the sync process:\n\n"
-                                    + status.errors.joinToString("\n"))
-                            ?.cancelable(false)
-                            ?.positiveText("Ok")
-                            ?.onPositive { _, _ ->
-                                presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
-                            }
-                            ?.show()
-                } else {
-                    presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
-                }
             }
         }
         oldSyncStatus = status

@@ -24,7 +24,7 @@ class FavoritesIntroDialog {
         <br><br>
         2. The favorite categories on ExHentai correspond to the <b>first 10 categories in the app</b> (excluding the 'Default' category). <i>Galleries in other categories will <b>NOT</b> be synced!</i>
         <br><br>
-        3. <font color='red'><b>ENSURE YOU HAVE A STABLE INTERNET CONNECTION WHEN SYNC IS IN PROGRESS!</b></font> If the internet disconnects while the app is syncing, your favorites may be left in a <i>partially-synced state</i>. This could be disastrous and can cause you to lose favorites. Backup regularly and be aware that <i>I will not be responsible for any loss of data</i>...
+        3. <font color='red'><b>ENSURE YOU HAVE A STABLE INTERNET CONNECTION WHEN SYNC IS IN PROGRESS!</b></font> If the internet disconnects while the app is syncing, your favorites may be left in a <i>partially-synced state</i>.
         <br><br>
         4. Keep the app open while favorites are syncing. Android will close apps that are in the background sometimes and that could be bad if it happens while the app is syncing.
         <br><br>

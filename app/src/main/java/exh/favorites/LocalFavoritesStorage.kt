@@ -6,7 +6,6 @@ import eu.kanade.tachiyomi.source.online.all.EHentai
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.metadata.models.ExGalleryMetadata
-import exh.util.trans
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import uy.kohesive.injekt.injectLazy
@@ -19,11 +18,10 @@ class LocalFavoritesStorage {
             .deleteRealmIfMigrationNeeded()
             .build()
 
-    private val realm
-        get() = Realm.getInstance(realmConfig)
+    fun getRealm() = Realm.getInstance(realmConfig)
 
-    fun getChangedDbEntries()
-            = getChangedEntries(
+    fun getChangedDbEntries(realm: Realm)
+            = getChangedEntries(realm,
             parseToFavoriteEntries(
                     loadDbCategories(
                             db.getFavoriteMangas()
@@ -33,8 +31,8 @@ class LocalFavoritesStorage {
             )
     )
 
-    fun getChangedRemoteEntries(entries: List<EHentai.ParsedManga>)
-            = getChangedEntries(
+    fun getChangedRemoteEntries(realm: Realm, entries: List<EHentai.ParsedManga>)
+            = getChangedEntries(realm,
             parseToFavoriteEntries(
                     entries.asSequence().map {
                         Pair(it.fav, it.manga.apply {
@@ -44,7 +42,7 @@ class LocalFavoritesStorage {
             )
     )
 
-    fun snapshotEntries() {
+    fun snapshotEntries(realm: Realm) {
         val dbMangas = parseToFavoriteEntries(
                 loadDbCategories(
                         db.getFavoriteMangas()
@@ -53,43 +51,33 @@ class LocalFavoritesStorage {
                 )
         )
 
-        realm.use { realm ->
-            realm.trans {
-                //Delete old snapshot
-                realm.delete(FavoriteEntry::class.java)
+        //Delete old snapshot
+        realm.delete(FavoriteEntry::class.java)
 
-                //Insert new snapshots
-                realm.copyToRealm(dbMangas.toList())
-            }
-        }
+        //Insert new snapshots
+        realm.copyToRealm(dbMangas.toList())
     }
 
-    fun clearSnapshots() {
-        realm.use {
-            it.trans {
-                it.delete(FavoriteEntry::class.java)
-            }
-        }
+    fun clearSnapshots(realm: Realm) {
+        realm.delete(FavoriteEntry::class.java)
     }
 
-    private fun getChangedEntries(entries: Sequence<FavoriteEntry>): ChangeSet {
-        return realm.use { realm ->
-            val terminated = entries.toList()
+    private fun getChangedEntries(realm: Realm, entries: Sequence<FavoriteEntry>): ChangeSet {
+        val terminated = entries.toList()
 
-            val added = terminated.filter {
-                realm.queryRealmForEntry(it) == null
-            }
-
-            val removed = realm.where(FavoriteEntry::class.java)
-                    .findAll()
-                    .filter {
-                        queryListForEntry(terminated, it) == null
-                    }.map {
-                        realm.copyFromRealm(it)
-                    }
-
-            ChangeSet(added, removed)
+        val added = terminated.filter {
+            realm.queryRealmForEntry(it) == null
         }
+
+        val removed = realm.where(FavoriteEntry::class.java)
+                .findAll()
+                .filter {
+                    queryListForEntry(terminated, it) == null
+                }.map {
+                    realm.copyFromRealm(it)
+                }
+
+        return ChangeSet(added, removed)
     }
 
     private fun Realm.queryRealmForEntry(entry: FavoriteEntry)
@@ -100,7 +88,7 @@ class LocalFavoritesStorage {
             .findFirst()
 
     private fun queryListForEntry(list: List<FavoriteEntry>, entry: FavoriteEntry)
-        = list.find {
+            = list.find {
         it.gid == entry.gid
                 && it.token == entry.token
                 && it.category == entry.category
