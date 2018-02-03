@@ -350,7 +350,7 @@ sealed class FavoritesSyncStatus(val message: String) {
     class Idle : FavoritesSyncStatus("Waiting for sync to start")
     class Initializing : FavoritesSyncStatus("Initializing sync")
     class Processing(message: String, isThrottle: Boolean = false) : FavoritesSyncStatus(if(isThrottle)
-        (message + "\n\nSync is currently throttling (to avoid being banned from ExHentai) and may take a long to complete.")
+        (message + "\n\nSync is currently throttling (to avoid being banned from ExHentai) and may take a long time to complete.")
     else
         message)
 }
