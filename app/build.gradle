@@ -38,7 +38,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 31
+        versionCode 32
         versionName "0.6.8"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
