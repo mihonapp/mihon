@@ -1,17 +1,16 @@
 package eu.kanade.tachiyomi.extension.util
 
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.net.Uri
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
+import eu.kanade.tachiyomi.util.getUriCompat
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 /**
@@ -133,8 +132,10 @@ internal class ExtensionInstaller(private val context: Context) {
      */
     fun uninstallApk(pkgName: String) {
         val packageUri = Uri.parse("package:$pkgName")
-        val uninstallIntent = Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri)
-        context.startActivity(uninstallIntent)
+        val intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        context.startActivity(intent)
     }
 
     /**
@@ -204,12 +205,32 @@ internal class ExtensionInstaller(private val context: Context) {
             if (id !in activeDownloads.values) return
 
             val uri = downloadManager.getUriForDownloadedFile(id)
+
+            // Set next installation step
             if (uri != null) {
                 downloadsRelay.call(id to InstallStep.Installing)
-                installApk(uri)
             } else {
                 Timber.e("Couldn't locate downloaded APK")
                 downloadsRelay.call(id to InstallStep.Error)
+                return
+            }
+
+            // Due to a bug in older Android versions (L and M at least), the installer can't open
+            // files that do not contain the apk extension, even if you specify the correct MIME.
+            // We workaround it by querying the actual file path and using the file provider when
+            // it fails.
+            try {
+                installApk(uri)
+            } catch (e: ActivityNotFoundException) {
+                val query = DownloadManager.Query()
+                query.setFilterById(id)
+                downloadManager.query(query).use {
+                    if (it.moveToFirst()) {
+                        val uriCompat = File(it.getString(it.getColumnIndex(
+                                DownloadManager.COLUMN_LOCAL_FILENAME))).getUriCompat(context)
+                        installApk(uriCompat)
+                    }
+                }
             }
         }
     }
