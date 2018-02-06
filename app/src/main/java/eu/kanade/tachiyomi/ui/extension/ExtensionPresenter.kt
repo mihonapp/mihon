@@ -105,7 +105,7 @@ open class ExtensionPresenter(
     }
 
     private fun Observable<InstallStep>.subscribeToInstallUpdate(extension: Extension) {
-        this.doOnNext { currentDownloads.put(extension.pkgName, it) }
+        this.doOnNext { currentDownloads[extension.pkgName] = it }
                 .doOnUnsubscribe { currentDownloads.remove(extension.pkgName) }
                 .map { state -> updateInstallStep(extension, state) }
                 .subscribeWithView({ view, item ->

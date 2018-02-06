@@ -65,7 +65,7 @@ internal class ExtensionInstaller(private val context: Context) {
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
         val id = downloadManager.enqueue(request)
-        activeDownloads.put(pkgName, id)
+        activeDownloads[pkgName] = id
 
         downloadsRelay.filter { it.first == id }
                 .map { it.second }
@@ -73,6 +73,8 @@ internal class ExtensionInstaller(private val context: Context) {
                 .mergeWith(pollStatus(id))
                 // Force an error if the download takes more than 3 minutes
                 .mergeWith(Observable.timer(3, TimeUnit.MINUTES).map { InstallStep.Error })
+                // Force an error if the install process takes more than 10 seconds
+                .flatMap { timeoutWhenInstalling(it) }
                 // Stop when the application is installed or errors
                 .takeUntil { it.isCompleted() }
                 // Always notify on main thread
@@ -110,6 +112,22 @@ internal class ExtensionInstaller(private val context: Context) {
                         else -> Observable.empty()
                     }
                 }
+    }
+
+    /**
+     * Returns an observable that timeouts the installation after a specified time when the apk has
+     * been downloaded.
+     *
+     * @param currentStep The current step of the installation process.
+     */
+    private fun timeoutWhenInstalling(currentStep: InstallStep): Observable<InstallStep> {
+        return if (currentStep == InstallStep.Installing) {
+            Observable.timer(10, TimeUnit.SECONDS)
+                    .map { InstallStep.Error }
+                    .startWith(currentStep)
+        } else {
+            Observable.just(currentStep)
+        }
     }
 
     /**
@@ -221,12 +239,12 @@ internal class ExtensionInstaller(private val context: Context) {
             // it fails.
             try {
                 installApk(uri)
-            } catch (e: ActivityNotFoundException) {
-                val query = DownloadManager.Query()
-                query.setFilterById(id)
-                downloadManager.query(query).use {
-                    if (it.moveToFirst()) {
-                        val uriCompat = File(it.getString(it.getColumnIndex(
+            } catch (_: ActivityNotFoundException) {
+                val query = DownloadManager.Query().setFilterById(id)
+                downloadManager.query(query).use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        @Suppress("DEPRECATION")
+                        val uriCompat = File(cursor.getString(cursor.getColumnIndex(
                                 DownloadManager.COLUMN_LOCAL_FILENAME))).getUriCompat(context)
                         installApk(uriCompat)
                     }
