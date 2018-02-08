@@ -1,8 +1,12 @@
 package eu.kanade.tachiyomi.extension.util
 
 import android.app.DownloadManager
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
@@ -74,7 +78,7 @@ internal class ExtensionInstaller(private val context: Context) {
                 // Force an error if the download takes more than 3 minutes
                 .mergeWith(Observable.timer(3, TimeUnit.MINUTES).map { InstallStep.Error })
                 // Force an error if the install process takes more than 10 seconds
-                .flatMap { timeoutWhenInstalling(it) }
+                .flatMap { Observable.just(it).mergeWith(timeoutWhenInstalling(it)) }
                 // Stop when the application is installed or errors
                 .takeUntil { it.isCompleted() }
                 // Always notify on main thread
@@ -121,13 +125,10 @@ internal class ExtensionInstaller(private val context: Context) {
      * @param currentStep The current step of the installation process.
      */
     private fun timeoutWhenInstalling(currentStep: InstallStep): Observable<InstallStep> {
-        return if (currentStep == InstallStep.Installing) {
-            Observable.timer(10, TimeUnit.SECONDS)
-                    .map { InstallStep.Error }
-                    .startWith(currentStep)
-        } else {
-            Observable.just(currentStep)
-        }
+        return Observable.just(currentStep)
+                .filter { it == InstallStep.Installing }
+                .delay(10, TimeUnit.SECONDS)
+                .map { InstallStep.Error }
     }
 
     /**
@@ -233,13 +234,9 @@ internal class ExtensionInstaller(private val context: Context) {
                 return
             }
 
-            // Due to a bug in older Android versions (L and M at least), the installer can't open
-            // files that do not contain the apk extension, even if you specify the correct MIME.
-            // We workaround it by querying the actual file path and using the file provider when
-            // it fails.
-            try {
-                installApk(uri)
-            } catch (_: ActivityNotFoundException) {
+            // Due to a bug in Android versions prior to N, the installer can't open files that do
+            // not contain the extension in the path, even if you specify the correct MIME.
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 val query = DownloadManager.Query().setFilterById(id)
                 downloadManager.query(query).use { cursor ->
                     if (cursor.moveToFirst()) {
@@ -249,6 +246,8 @@ internal class ExtensionInstaller(private val context: Context) {
                         installApk(uriCompat)
                     }
                 }
+            } else {
+                installApk(uri)
             }
         }
     }

@@ -52,13 +52,13 @@ open class ExtensionPresenter(
 
         val items = mutableListOf<ExtensionItem>()
 
-        val installedSorted = installed.sortedWith(compareBy({ !it.hasUpdate }, { it.name }))
-        val untrustedSorted = untrusted.sortedBy { it.name }
+        val installedSorted = installed.sortedWith(compareBy({ !it.hasUpdate }, { it.pkgName }))
+        val untrustedSorted = untrusted.sortedBy { it.pkgName }
         val availableSorted = available
                 // Filter out already installed extensions
                 .filter { avail -> installed.none { it.pkgName == avail.pkgName }
                         && untrusted.none { it.pkgName == avail.pkgName } }
-                .sortedBy { it.name }
+                .sortedBy { it.pkgName }
 
         if (installedSorted.isNotEmpty() || untrustedSorted.isNotEmpty()) {
             val header = ExtensionGroupItem(true, installedSorted.size + untrustedSorted.size)
