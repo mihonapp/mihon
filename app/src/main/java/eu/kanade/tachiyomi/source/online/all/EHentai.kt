@@ -21,10 +21,7 @@ import exh.util.UriFilter
 import exh.util.UriGroup
 import exh.util.ignore
 import exh.util.urlImportFetchSearchManga
-import okhttp3.CacheControl
-import okhttp3.Headers
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import rx.Observable
@@ -42,11 +39,14 @@ class EHentai(override val id: Long,
         else
             "http"
 
-    override val baseUrl: String
+    val domain: String
         get() = if(exh)
-            "$schema://exhentai.org"
+            "exhentai.org"
         else
-            "$schema://e-hentai.org"
+            "e-hentai.org"
+
+    override val baseUrl: String
+        get() = "$schema://$domain"
 
     override val lang = "all"
     override val supportsLatest = true
@@ -68,7 +68,7 @@ class EHentai(override val id: Long,
                         //Get title
                         it.select(".itd .it5 a").first()?.apply {
                             title = text()
-                            setUrlWithoutDomain(addParam(attr("href"), "nw", "always"))
+                            setUrlWithoutDomain(ExGalleryMetadata.normalizeUrl(attr("href")))
                         }
                         //Get image
                         it.select(".itd .it2").first()?.apply {
@@ -81,7 +81,6 @@ class EHentai(override val id: Long,
                             }
                         }
                     })
-
         }
         //Add to page if required
         val hasNextPage = select("a[onclick=return false]").last()?.let {
@@ -330,62 +329,32 @@ class EHentai(override val id: Long,
         return Pair(result as List<ParsedManga>, favNames!!)
     }
 
-    val cookiesHeader by lazy {
+    fun spPref() = if(exh)
+        prefs.eh_exhSettingsProfile()
+    else
+        prefs.eh_ehSettingsProfile()
+
+    fun rawCookies(sp: Int): Map<String, String> {
         val cookies: MutableMap<String, String> = mutableMapOf()
         if(prefs.enableExhentai().getOrDefault()) {
             cookies[LoginController.MEMBER_ID_COOKIE] = prefs.memberIdVal().get()!!
             cookies[LoginController.PASS_HASH_COOKIE] = prefs.passHashVal().get()!!
             cookies[LoginController.IGNEOUS_COOKIE] = prefs.igneousVal().get()!!
+            cookies["sp"] = sp.toString()
         }
 
-        //Setup settings
-        val settings = mutableListOf<String?>()
-        //Image quality
-        settings.add(when(prefs.imageQuality()
-                .getOrDefault()
-                .toLowerCase()) {
-            "ovrs_2400" -> "xr_2400"
-            "ovrs_1600" -> "xr_1600"
-            "high" -> "xr_1280"
-            "med" -> "xr_980"
-            "low" -> "xr_780"
-            "auto" -> null
-            else -> null
-        })
-        //Use Hentai@Home
-        settings.add(if(prefs.useHentaiAtHome().getOrDefault())
-            null
-        else
-            "uh_n")
-        //Japanese titles
-        settings.add(if(prefs.useJapaneseTitle().getOrDefault())
-            "tl_j"
-        else
-            null)
-        //Do not show popular right now pane as we can't parse it
-        settings.add("prn_n")
-        //Paging size
-        settings.add(prefs.ehSearchSize().getOrDefault())
-        //Thumbnail rows
-        settings.add(prefs.thumbnailRows().getOrDefault())
+        //Session-less list display mode (for users without ExHentai)
+        cookies["sl"] = "dm_0"
 
-        cookies.put("uconfig", buildSettings(settings))
-
-        buildCookies(cookies)
+        return cookies
     }
+
+    fun cookiesHeader(sp: Int = spPref().getOrDefault())
+            = buildCookies(rawCookies(sp))
 
     //Headers
     override fun headersBuilder()
-            = super.headersBuilder().add("Cookie", cookiesHeader)!!
-
-    fun buildSettings(settings: List<String?>): String {
-        return settings.filterNotNull().joinToString(separator = "-")
-    }
-
-    fun buildCookies(cookies: Map<String, String>)
-            = cookies.entries.joinToString(separator = "; ", postfix = ";") {
-        "${URLEncoder.encode(it.key, "UTF-8")}=${URLEncoder.encode(it.value, "UTF-8")}"
-    }
+            = super.headersBuilder().add("Cookie", cookiesHeader())!!
 
     fun addParam(url: String, param: String, value: String)
             = Uri.parse(url)
@@ -394,11 +363,13 @@ class EHentai(override val id: Long,
             .toString()
 
     override val client = network.client.newBuilder()
+            .cookieJar(CookieJar.NO_COOKIES)
             .addInterceptor { chain ->
                 val newReq = chain
                         .request()
                         .newBuilder()
-                        .addHeader("Cookie", cookiesHeader)
+                        .removeHeader("Cookie")
+                        .addHeader("Cookie", cookiesHeader())
                         .build()
 
                 chain.proceed(newReq)
@@ -470,5 +441,11 @@ class EHentai(override val id: Long,
     companion object {
         val QUERY_PREFIX = "?f_apply=Apply+Filter"
         val TR_SUFFIX = "TR"
+
+        fun buildCookies(cookies: Map<String, String>)
+                = cookies.entries.joinToString(separator = "; ", postfix = ";") {
+            "${URLEncoder.encode(it.key, "UTF-8")}=${URLEncoder.encode(it.value, "UTF-8")}"
+        }
+
     }
 }

@@ -89,7 +89,7 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
         if(mediaId != null)
             NHentaiMetadata.typeToExtension(thumbnailImageType)?.let {
                 manga.thumbnail_url = "https://t.nhentai.net/galleries/$mediaId/${
-                if(Injekt.get<PreferencesHelper>().eh_useHighQualityThumbs().getOrDefault())
+                if(Injekt.get<PreferencesHelper>().eh_nh_useHighQualityThumbs().getOrDefault())
                     "cover"
                 else
                     "thumb"

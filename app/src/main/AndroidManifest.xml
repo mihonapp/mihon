@@ -106,7 +106,7 @@
         <activity
             android:name="exh.ui.intercept.InterceptActivity"
             android:excludeFromRecents="true"
-            android:label="Tachiyomi">
+            android:label="TachiyomiEH">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 

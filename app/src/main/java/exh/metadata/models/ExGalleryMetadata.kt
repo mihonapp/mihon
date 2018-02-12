@@ -160,8 +160,12 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
     companion object {
         private fun splitGalleryUrl(url: String)
                 = url.let {
-            Uri.parse(it).pathSegments
-                    .filterNot(String::isNullOrBlank)
+            //Only parse URL if is full URL
+            val pathSegments = if(it.startsWith("http"))
+                Uri.parse(it).pathSegments
+            else
+                it.split('/')
+            pathSegments.filterNot(String::isNullOrBlank)
         }
 
         fun galleryId(url: String) = splitGalleryUrl(url).let { it[it.size - 2] }

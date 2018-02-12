@@ -249,6 +249,9 @@ dependencies {
 
     //RxJava 2 interop for Realm (EXH)
     implementation 'com.lvla.android:rxjava2-interop-kt:0.2.1'
+
+    //Debug network interceptor (EXH)
+    devImplementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
 }
 
 buildscript {

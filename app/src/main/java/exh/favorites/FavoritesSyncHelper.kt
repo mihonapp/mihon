@@ -11,7 +11,9 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
+import eu.kanade.tachiyomi.util.launchUI
 import eu.kanade.tachiyomi.util.powerManager
+import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.wifiManager
 import exh.EH_METADATA_SOURCE_ID
 import exh.EXH_SOURCE_ID
@@ -116,6 +118,11 @@ class FavoritesSyncHelper(val context: Context) {
                         storage.snapshotEntries(realm)
                     }
                 }
+            }
+
+            val theContext = context
+            launchUI {
+                theContext.toast("Sync complete!")
             }
         } catch(e: IgnoredException) {
             //Do not display error as this error has already been reported

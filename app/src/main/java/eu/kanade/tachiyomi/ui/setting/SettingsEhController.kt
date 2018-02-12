@@ -5,10 +5,12 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
+import com.f2prateek.rx.preferences.Preference
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 import eu.kanade.tachiyomi.util.toast
 import exh.favorites.FavoritesIntroDialog
 import exh.favorites.LocalFavoritesStorage
+import exh.uconfig.ConfiguringDialogController
 import exh.ui.login.LoginController
 import exh.util.trans
 import rx.android.schedulers.AndroidSchedulers
@@ -19,13 +21,22 @@ import rx.schedulers.Schedulers
  */
 
 class SettingsEhController : SettingsController() {
+    private fun Preference<*>.reconfigureOnChange() {
+        asObservable()
+                .skip(1) //Skip first as it is emitted immediately
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeUntilDestroy {
+            ConfiguringDialogController().showDialog(router)
+        }
+    }
+
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         title = "E-Hentai"
 
         switchPreference {
             title = "Enable ExHentai"
             summaryOff = "Requires login"
-            key = "enable_exhentai"
+            key = PreferenceKeys.eh_enableExHentai
             isPersistent = false
             defaultValue = false
             preferences.enableExhentai()
@@ -33,8 +44,8 @@ class SettingsEhController : SettingsController() {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeUntilDestroy {
-                isChecked = it
-           }
+                        isChecked = it
+                    }
 
             onChange { newVal ->
                 newVal as Boolean
@@ -55,7 +66,9 @@ class SettingsEhController : SettingsController() {
             summary = "Do you wish to load images through the Hentai@Home Network? Disabling this option will reduce the amount of pages you are able to view"
             key = "enable_hah"
             defaultValue = true
-        }
+
+            preferences.useHentaiAtHome().reconfigureOnChange()
+        }.dependency = PreferenceKeys.eh_enableExHentai
 
         switchPreference {
             title = "Show Japanese titles in search results"
@@ -63,7 +76,19 @@ class SettingsEhController : SettingsController() {
             summaryOff = "Currently showing English/Romanized titles in search results. Clear the chapter cache after changing this (in the Advanced section)"
             key = "use_jp_title"
             defaultValue = false
-        }
+
+            preferences.useJapaneseTitle().reconfigureOnChange()
+        }.dependency = PreferenceKeys.eh_enableExHentai
+
+        switchPreference {
+            title = "Use original images"
+            summaryOn = "Currently using original images"
+            summaryOff = "Currently using resampled images"
+            key = PreferenceKeys.eh_useOrigImages
+            defaultValue = false
+
+            preferences.eh_useOriginalImages().reconfigureOnChange()
+        }.dependency = PreferenceKeys.eh_enableExHentai
 
         switchPreference {
             defaultValue = true
@@ -93,45 +118,9 @@ class SettingsEhController : SettingsController() {
                     "med",
                     "low"
             )
-        }
 
-        listPreference {
-            title = "Search result count per page"
-            summary = "Requires the 'Paging Enlargement' hath perk"
-            defaultValue = "rc_0"
-            key = "ex_search_size"
-            entries = arrayOf(
-                    "25 results",
-                    "50 results",
-                    "100 results",
-                    "200 results"
-            )
-            entryValues = arrayOf(
-                    "rc_0",
-                    "rc_1",
-                    "rc_2",
-                    "rc_3"
-            )
-        }.dependency = "enable_exhentai"
-
-        listPreference {
-            defaultValue = "tr_2"
-            title = "Thumbnail rows"
-            summary = "Affects loading speeds. It is recommended to set this to the maximum size your hath perks allow"
-            key = "ex_thumb_rows"
-            entries = arrayOf(
-                    "4",
-                    "10 (requires 'More Thumbs' hath perk)",
-                    "20 (requires 'Thumbs Up' hath perk)",
-                    "40 (requires 'All Thumbs' hath perk)"
-            )
-            entryValues = arrayOf(
-                    "tr_2",
-                    "tr_5",
-                    "tr_10",
-                    "tr_20"
-            )
-        }.dependency = "enable_exhentai"
+            preferences.imageQuality().reconfigureOnChange()
+        }.dependency = PreferenceKeys.eh_enableExHentai
 
         preferenceCategory {
             title = "Favorites sync"

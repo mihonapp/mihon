@@ -171,7 +171,7 @@ class PreferencesHelper(val context: Context) {
     fun migrateFlags() = rxPrefs.getInteger("migrate_flags", Int.MAX_VALUE)
 
     // --> EH
-    fun enableExhentai() = rxPrefs.getBoolean("enable_exhentai", false)
+    fun enableExhentai() = rxPrefs.getBoolean(Keys.eh_enableExHentai, false)
 
     fun secureEXH() = rxPrefs.getBoolean("secure_exh", true)
 
@@ -180,6 +180,8 @@ class PreferencesHelper(val context: Context) {
     fun useHentaiAtHome() = rxPrefs.getBoolean("enable_hah", true)
 
     fun useJapaneseTitle() = rxPrefs.getBoolean("use_jp_title", false)
+
+    fun eh_useOriginalImages() = rxPrefs.getBoolean(Keys.eh_useOrigImages, false)
 
     fun ehSearchSize() = rxPrefs.getString("ex_search_size", "rc_0")
 
@@ -195,6 +197,8 @@ class PreferencesHelper(val context: Context) {
     fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
     fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)
     fun igneousVal() = rxPrefs.getString("eh_igneous", null)
+    fun eh_ehSettingsProfile() = rxPrefs.getInteger(Keys.eh_ehSettingsProfile, -1)
+    fun eh_exhSettingsProfile() = rxPrefs.getInteger(Keys.eh_exhSettingsProfile, -1)
 
     //Lock
     fun lockHash() = rxPrefs.getString("lock_hash", null)
@@ -205,7 +209,7 @@ class PreferencesHelper(val context: Context) {
 
     fun lockUseFingerprint() = rxPrefs.getBoolean("lock_finger", false)
 
-    fun eh_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_nh_useHighQualityThumbs, false)
+    fun eh_nh_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_nh_useHighQualityThumbs, false)
 
     fun eh_showSyncIntro() = rxPrefs.getBoolean(Keys.eh_showSyncIntro, true)
 

@@ -124,4 +124,12 @@ object PreferenceKeys {
     const val eh_showSyncIntro = "eh_show_sync_intro"
 
     const val eh_readOnlySync = "eh_sync_read_only"
+
+    const val eh_useOrigImages = "eh_useOrigImages"
+
+    const val eh_ehSettingsProfile = "eh_ehSettingsProfile"
+
+    const val eh_exhSettingsProfile = "eh_exhSettingsProfile"
+
+    const val eh_enableExHentai = "enable_exhentai"
 }
