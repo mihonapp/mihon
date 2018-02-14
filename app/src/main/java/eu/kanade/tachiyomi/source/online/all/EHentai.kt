@@ -341,6 +341,10 @@ class EHentai(override val id: Long,
             cookies[LoginController.PASS_HASH_COOKIE] = prefs.passHashVal().get()!!
             cookies[LoginController.IGNEOUS_COOKIE] = prefs.igneousVal().get()!!
             cookies["sp"] = sp.toString()
+
+            val sessionKey = prefs.eh_settingsKey().getOrDefault()
+            if(sessionKey != null)
+                cookies["sk"] = sessionKey
         }
 
         //Session-less list display mode (for users without ExHentai)
@@ -443,7 +447,7 @@ class EHentai(override val id: Long,
         val TR_SUFFIX = "TR"
 
         fun buildCookies(cookies: Map<String, String>)
-                = cookies.entries.joinToString(separator = "; ", postfix = ";") {
+                = cookies.entries.joinToString(separator = "; ") {
             "${URLEncoder.encode(it.key, "UTF-8")}=${URLEncoder.encode(it.value, "UTF-8")}"
         }
 

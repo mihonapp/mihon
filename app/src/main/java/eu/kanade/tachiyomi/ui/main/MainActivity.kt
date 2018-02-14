@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.app.ActivityManager
 import android.app.Service
 import android.app.usage.UsageStatsManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -27,6 +28,7 @@ import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 import exh.metadata.loadAllMetadata
+import exh.uconfig.WarnConfigureDialogController
 import exh.ui.batchadd.BatchAddController
 import exh.ui.lock.LockChangeHandler
 import exh.ui.lock.LockController
@@ -167,6 +169,11 @@ class MainActivity : BaseActivity() {
                     it.value.isNotEmpty()
                 }
             }) MetadataFetchDialog().askMigration(this, false)
+
+            // Upload settings
+            if(preferences.enableExhentai().getOrDefault()
+                    && preferences.eh_showSettingsUploadWarning().getOrDefault())
+                WarnConfigureDialogController.uploadSettings(router)
         }
     }
 
@@ -297,7 +304,7 @@ class MainActivity : BaseActivity() {
             return
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val mUsageStatsManager = getSystemService("usagestats") as UsageStatsManager
+            val mUsageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
             val time = System.currentTimeMillis()
             // We get usage stats for the last 20 seconds
             val sortedStats =

@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 import eu.kanade.tachiyomi.util.toast
 import exh.favorites.FavoritesIntroDialog
 import exh.favorites.LocalFavoritesStorage
-import exh.uconfig.ConfiguringDialogController
+import exh.uconfig.WarnConfigureDialogController
 import exh.ui.login.LoginController
 import exh.util.trans
 import rx.android.schedulers.AndroidSchedulers
@@ -21,13 +21,19 @@ import rx.schedulers.Schedulers
  */
 
 class SettingsEhController : SettingsController() {
-    private fun Preference<*>.reconfigureOnChange() {
+    private fun Preference<*>.reconfigure(): Boolean {
+        //Listen for change commit
         asObservable()
                 .skip(1) //Skip first as it is emitted immediately
+                .take(1) //Only listen for first commit
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeUntilDestroy {
-            ConfiguringDialogController().showDialog(router)
-        }
+                    //Only listen for first change commit
+                    WarnConfigureDialogController.uploadSettings(router)
+                }
+
+        //Always return true to save changes
+        return true
     }
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
@@ -67,7 +73,7 @@ class SettingsEhController : SettingsController() {
             key = "enable_hah"
             defaultValue = true
 
-            preferences.useHentaiAtHome().reconfigureOnChange()
+            onChange { preferences.useHentaiAtHome().reconfigure() }
         }.dependency = PreferenceKeys.eh_enableExHentai
 
         switchPreference {
@@ -77,7 +83,7 @@ class SettingsEhController : SettingsController() {
             key = "use_jp_title"
             defaultValue = false
 
-            preferences.useJapaneseTitle().reconfigureOnChange()
+            onChange { preferences.useJapaneseTitle().reconfigure() }
         }.dependency = PreferenceKeys.eh_enableExHentai
 
         switchPreference {
@@ -87,7 +93,7 @@ class SettingsEhController : SettingsController() {
             key = PreferenceKeys.eh_useOrigImages
             defaultValue = false
 
-            preferences.eh_useOriginalImages().reconfigureOnChange()
+            onChange { preferences.eh_useOriginalImages().reconfigure() }
         }.dependency = PreferenceKeys.eh_enableExHentai
 
         switchPreference {
@@ -119,7 +125,7 @@ class SettingsEhController : SettingsController() {
                     "low"
             )
 
-            preferences.imageQuality().reconfigureOnChange()
+            onChange { preferences.imageQuality().reconfigure() }
         }.dependency = PreferenceKeys.eh_enableExHentai
 
         preferenceCategory {

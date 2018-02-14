@@ -199,6 +199,7 @@ class PreferencesHelper(val context: Context) {
     fun igneousVal() = rxPrefs.getString("eh_igneous", null)
     fun eh_ehSettingsProfile() = rxPrefs.getInteger(Keys.eh_ehSettingsProfile, -1)
     fun eh_exhSettingsProfile() = rxPrefs.getInteger(Keys.eh_exhSettingsProfile, -1)
+    fun eh_settingsKey() = rxPrefs.getString(Keys.eh_settingsKey, "")
 
     //Lock
     fun lockHash() = rxPrefs.getString("lock_hash", null)
@@ -214,5 +215,7 @@ class PreferencesHelper(val context: Context) {
     fun eh_showSyncIntro() = rxPrefs.getBoolean(Keys.eh_showSyncIntro, true)
 
     fun eh_readOnlySync() = rxPrefs.getBoolean(Keys.eh_readOnlySync, false)
+
+    fun eh_showSettingsUploadWarning() = rxPrefs.getBoolean(Keys.eh_showSettingsUploadWarning, true)
     // <-- EH
 }

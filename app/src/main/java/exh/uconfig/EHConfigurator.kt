@@ -33,7 +33,7 @@ class EHConfigurator {
                         .add("profile_set", set)
                         .build())
                 .build())
-                .execute().asJsoup()
+                .execute()
 
     private val EHentai.uconfigUrl get() = baseUrl + UCONFIG_URL
 
@@ -81,7 +81,7 @@ class EHConfigurator {
             if(it.text() == PROFILE_NAME) {
                 val id = it.attr("value")
                 //Delete old profile
-                lastDoc = source.execProfileActions("delete", "", id, id.toInt())
+                lastDoc = source.execProfileActions("delete", "", id, id.toInt()).asJsoup()
             }
         }
 
@@ -97,7 +97,7 @@ class EHConfigurator {
 
         //Create profile in available slot
         val slot = availableProfiles.first()
-        source.execProfileActions("create",
+        val response = source.execProfileActions("create",
                 PROFILE_NAME,
                 slot.toString(),
                 1)
@@ -111,8 +111,15 @@ class EHConfigurator {
                 .post(form)
                 .build()).execute()
 
-        //Persist slot
+        //Persist slot + sk
         source.spPref().set(slot)
+
+        val keyCookie = response.headers().toMultimap()["Set-Cookie"]?.find {
+            it.startsWith("sk=")
+        }?.removePrefix("sk=")?.substringBefore(';')
+
+        if(keyCookie != null)
+            prefs.eh_settingsKey().set(keyCookie)
     }
 
     companion object {

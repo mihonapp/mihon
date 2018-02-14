@@ -131,5 +131,9 @@ object PreferenceKeys {
 
     const val eh_exhSettingsProfile = "eh_exhSettingsProfile"
 
+    const val eh_settingsKey = "eh_settingsKey"
+
     const val eh_enableExHentai = "enable_exhentai"
+
+    const val eh_showSettingsUploadWarning = "eh_showSettingsUploadWarning"
 }

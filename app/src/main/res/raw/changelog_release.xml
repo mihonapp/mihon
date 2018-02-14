@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v6.8.1-EH" changeDate="">
+        <changelogtext>Various performance improvements</changelogtext>
+        <changelogtext>Fix app not working at all for some users</changelogtext>
+    </changelogversion>
     <changelogversion versionName="v6.8.0-EH" changeDate="">
         <changelogtext>Various performance improvements</changelogtext>
         <changelogtext>Fix library search query being lost</changelogtext>

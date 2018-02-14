@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import exh.EXH_SOURCE_ID
+import exh.uconfig.WarnConfigureDialogController
 import kotlinx.android.synthetic.main.eh_activity_login.view.*
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -102,6 +103,7 @@ class LoginController : NucleusController<LoginPresenter>() {
         val eh = sourceManager
                 .getOnlineSources()
                 .find { it.id == EXH_SOURCE_ID } as EHentai
+
         Observable.fromCallable {
             //I honestly have no idea why we need to call this twice, but it works, so whatever
             try {
@@ -115,6 +117,9 @@ class LoginController : NucleusController<LoginPresenter>() {
                 .subscribe {
                     progressDialog.dismiss()
                     router.popCurrentController()
+
+                    //Upload settings
+                    WarnConfigureDialogController.uploadSettings(router)
                 }
     }
 
