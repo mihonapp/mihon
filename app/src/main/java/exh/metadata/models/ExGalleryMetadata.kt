@@ -168,10 +168,10 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
             pathSegments.filterNot(String::isNullOrBlank)
         }
 
-        fun galleryId(url: String) = splitGalleryUrl(url).let { it[it.size - 2] }
+        fun galleryId(url: String) = splitGalleryUrl(url)[1]
 
         fun galleryToken(url: String) =
-                splitGalleryUrl(url).last()
+                splitGalleryUrl(url)[2]
 
         fun normalizeUrl(id: String, token: String)
                 = "/g/$id/$token/?nw=always"

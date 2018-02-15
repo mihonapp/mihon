@@ -133,7 +133,9 @@ object PreferenceKeys {
 
     const val eh_settingsKey = "eh_settingsKey"
 
+    const val eh_sessionCookie = "eh_sessionCookie"
+
     const val eh_enableExHentai = "enable_exhentai"
 
-    const val eh_showSettingsUploadWarning = "eh_showSettingsUploadWarning"
+    const val eh_showSettingsUploadWarning = "eh_showSettingsUploadWarning1"
 }

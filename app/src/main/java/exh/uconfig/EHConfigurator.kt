@@ -117,9 +117,14 @@ class EHConfigurator {
         val keyCookie = response.headers().toMultimap()["Set-Cookie"]?.find {
             it.startsWith("sk=")
         }?.removePrefix("sk=")?.substringBefore(';')
+        val sessionCookie = response.headers().toMultimap()["Set-Cookie"]?.find {
+            it.startsWith("s=")
+        }?.removePrefix("s=")?.substringBefore(';')
 
         if(keyCookie != null)
             prefs.eh_settingsKey().set(keyCookie)
+        if(sessionCookie != null)
+            prefs.eh_sessionCookie().set(sessionCookie)
     }
 
     companion object {

@@ -200,6 +200,7 @@ class PreferencesHelper(val context: Context) {
     fun eh_ehSettingsProfile() = rxPrefs.getInteger(Keys.eh_ehSettingsProfile, -1)
     fun eh_exhSettingsProfile() = rxPrefs.getInteger(Keys.eh_exhSettingsProfile, -1)
     fun eh_settingsKey() = rxPrefs.getString(Keys.eh_settingsKey, "")
+    fun eh_sessionCookie() = rxPrefs.getString(Keys.eh_sessionCookie, "")
 
     //Lock
     fun lockHash() = rxPrefs.getString("lock_hash", null)

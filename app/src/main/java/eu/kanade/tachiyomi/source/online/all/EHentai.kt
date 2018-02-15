@@ -68,7 +68,7 @@ class EHentai(override val id: Long,
                         //Get title
                         it.select(".itd .it5 a").first()?.apply {
                             title = text()
-                            setUrlWithoutDomain(ExGalleryMetadata.normalizeUrl(attr("href")))
+                            url = ExGalleryMetadata.normalizeUrl(attr("href"))
                         }
                         //Get image
                         it.select(".itd .it2").first()?.apply {
@@ -345,6 +345,10 @@ class EHentai(override val id: Long,
             val sessionKey = prefs.eh_settingsKey().getOrDefault()
             if(sessionKey != null)
                 cookies["sk"] = sessionKey
+
+            val sessionCookie = prefs.eh_sessionCookie().getOrDefault()
+            if(sessionCookie != null)
+                cookies["s"] = sessionCookie
         }
 
         //Session-less list display mode (for users without ExHentai)

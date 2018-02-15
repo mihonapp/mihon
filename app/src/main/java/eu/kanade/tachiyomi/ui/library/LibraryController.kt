@@ -549,6 +549,7 @@ class LibraryController(
         cleanupSyncState()
         favoritesSyncSubscription =
                 presenter.favoritesSync.status
+                        .sample(100, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                     updateSyncStatus(it)
