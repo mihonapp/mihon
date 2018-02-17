@@ -1,6 +1,8 @@
-package eu.kanade.tachiyomi.data.database.models
+package eu.kanade.tachiyomi.data.track.model
 
-class TrackImpl : Track {
+import eu.kanade.tachiyomi.data.database.models.Track
+
+class TrackSearch : Track {
 
     override var id: Long? = null
 
@@ -22,6 +24,16 @@ class TrackImpl : Track {
 
     override lateinit var tracking_url: String
 
+    var cover_url: String = ""
+
+    var summary: String = ""
+
+    var publishing_status: String = ""
+
+    var publishing_type: String = ""
+
+    var start_date: String = ""
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
@@ -38,6 +50,13 @@ class TrackImpl : Track {
         result = 31 * result + sync_id
         result = 31 * result + remote_id
         return result
+    }
+    companion object {
+
+        fun create(serviceId: Int): TrackSearch = TrackSearch().apply {
+            sync_id = serviceId
+        }
+
     }
 
 }
