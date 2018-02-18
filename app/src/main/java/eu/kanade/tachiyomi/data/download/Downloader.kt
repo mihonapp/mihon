@@ -248,7 +248,6 @@ class Downloader(
      * @param download the chapter to be downloaded.
      */
     private fun downloadChapter(download: Download): Observable<Download> = Observable.defer {
-        Timber.e("Thread: ${Thread.currentThread()}")
         val chapterDirname = provider.getChapterDirName(download.chapter)
         val mangaDir = provider.getMangaDir(download.manga, download.source)
         val tmpDir = mangaDir.createDirectory("${chapterDirname}_tmp")
