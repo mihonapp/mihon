@@ -13,7 +13,7 @@ class BackupCreatorJob : Job() {
 
     override fun onRunJob(params: Params): Result {
         val preferences = Injekt.get<PreferencesHelper>()
-        val backupManager = Injekt.get<BackupManager>()
+        val backupManager = BackupManager(context)
         val uri = Uri.parse(preferences.backupsDirectory().getOrDefault())
         val flags = BackupCreateService.BACKUP_ALL
         backupManager.createBackup(uri, flags, true)
