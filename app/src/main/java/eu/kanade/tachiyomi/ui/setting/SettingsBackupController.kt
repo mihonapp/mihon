@@ -3,11 +3,7 @@ package eu.kanade.tachiyomi.ui.setting
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.Dialog
-import android.content.ActivityNotFoundException
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,22 +11,17 @@ import android.support.v7.preference.PreferenceScreen
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.hippo.unifile.UniFile
-import com.nononsenseapps.filepicker.FilePickerActivity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreateService
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.backup.BackupRestoreService
 import eu.kanade.tachiyomi.data.backup.models.Backup
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.util.*
-import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.File
 import java.util.concurrent.TimeUnit
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
