@@ -67,8 +67,6 @@ object PreferenceKeys {
 
     const val downloadsDirectory = "download_directory"
 
-    const val downloadThreads = "pref_download_slots_key"
-
     const val downloadOnlyOverWifi = "pref_download_only_over_wifi_key"
 
     const val numberOfBackups = "backup_slots"
