@@ -125,6 +125,8 @@ object PreferenceKeys {
 
     const val eh_readOnlySync = "eh_sync_read_only"
 
+    const val eh_lenientSync = "eh_lenient_sync"
+
     const val eh_useOrigImages = "eh_useOrigImages"
 
     const val eh_ehSettingsProfile = "eh_ehSettingsProfile"

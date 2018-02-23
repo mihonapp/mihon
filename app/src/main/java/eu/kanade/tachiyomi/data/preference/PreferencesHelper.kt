@@ -217,6 +217,8 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_readOnlySync() = rxPrefs.getBoolean(Keys.eh_readOnlySync, false)
 
+    fun eh_lenientSync() = rxPrefs.getBoolean(Keys.eh_lenientSync, false)
+
     fun eh_showSettingsUploadWarning() = rxPrefs.getBoolean(Keys.eh_showSettingsUploadWarning, true)
     // <-- EH
 }

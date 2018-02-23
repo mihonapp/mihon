@@ -619,6 +619,20 @@ class LibraryController(
                         }
                         ?.show()
             }
+            is FavoritesSyncStatus.CompleteWithErrors -> {
+                releaseSyncLocks()
+
+                favSyncDialog?.dismiss()
+                favSyncDialog = buildDialog()
+                        ?.title("Favorites sync complete with errors")
+                        ?.content("Errors occurred during the sync process that were ignored:\n${status.message}")
+                        ?.cancelable(false)
+                        ?.positiveText("Ok")
+                        ?.onPositive { _, _ ->
+                            presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                        }
+                        ?.show()
+            }
             is FavoritesSyncStatus.Processing,
             is FavoritesSyncStatus.Initializing -> {
                 takeSyncLocks()

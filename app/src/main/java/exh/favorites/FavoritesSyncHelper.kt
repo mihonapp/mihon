@@ -80,6 +80,8 @@ class FavoritesSyncHelper(val context: Context) {
             return
         }
 
+        val errorList = mutableListOf<String>()
+
         try {
             //Take wake + wifi locks
             ignore { wakeLock?.release() }
@@ -107,12 +109,12 @@ class FavoritesSyncHelper(val context: Context) {
 
                         //Apply remote categories
                         status.onNext(FavoritesSyncStatus.Processing("Updating category names"))
-                        applyRemoteCategories(favorites.second)
+                        applyRemoteCategories(errorList, favorites.second)
 
                         //Apply change sets
-                        applyChangeSetToLocal(remoteChanges)
+                        applyChangeSetToLocal(errorList, remoteChanges)
                         if(localChanges != null)
-                            applyChangeSetToRemote(localChanges)
+                            applyChangeSetToRemote(errorList, localChanges)
 
                         status.onNext(FavoritesSyncStatus.Processing("Cleaning up"))
                         storage.snapshotEntries(realm)
@@ -144,10 +146,13 @@ class FavoritesSyncHelper(val context: Context) {
             }
         }
 
-        status.onNext(FavoritesSyncStatus.Idle())
+        if(errorList.isEmpty())
+            status.onNext(FavoritesSyncStatus.Idle())
+        else
+            status.onNext(FavoritesSyncStatus.CompleteWithErrors(errorList))
     }
 
-    private fun applyRemoteCategories(categories: List<String>) {
+    private fun applyRemoteCategories(errorList: MutableList<String>, categories: List<String>) {
         val localCategories = db.getCategories().executeAsBlocking()
 
         val newLocalCategories = localCategories.toMutableList()
@@ -189,7 +194,7 @@ class FavoritesSyncHelper(val context: Context) {
             db.insertCategories(newLocalCategories).executeAsBlocking()
     }
 
-    private fun addGalleryRemote(gallery: FavoriteEntry) {
+    private fun addGalleryRemote(errorList: MutableList<String>, gallery: FavoriteEntry) {
         val url = "${exh.baseUrl}/gallerypopups.php?gid=${gallery.gid}&t=${gallery.token}&act=addfav"
 
         val request = Request.Builder()
@@ -203,8 +208,14 @@ class FavoritesSyncHelper(val context: Context) {
                 .build()
 
         if(!explicitlyRetryExhRequest(10, request)) {
-            status.onNext(FavoritesSyncStatus.Error("Unable to add gallery to remote server: '${gallery.title}' (GID: ${gallery.gid})!"))
-            throw IgnoredException()
+            val errorString =  "Unable to add gallery to remote server: '${gallery.title}' (GID: ${gallery.gid})!"
+
+            if(prefs.eh_lenientSync().getOrDefault()) {
+                errorList += errorString
+            } else {
+                status.onNext(FavoritesSyncStatus.Error(errorString))
+                throw IgnoredException()
+            }
         }
     }
 
@@ -227,7 +238,7 @@ class FavoritesSyncHelper(val context: Context) {
         return success
     }
 
-    private fun applyChangeSetToRemote(changeSet: ChangeSet) {
+    private fun applyChangeSetToRemote(errorList: MutableList<String>, changeSet: ChangeSet) {
         //Apply removals
         if(changeSet.removed.isNotEmpty()) {
             status.onNext(FavoritesSyncStatus.Processing("Removing ${changeSet.removed.size} galleries from remote server"))
@@ -247,10 +258,14 @@ class FavoritesSyncHelper(val context: Context) {
                     .build()
 
             if(!explicitlyRetryExhRequest(10, request)) {
-                status.onNext(FavoritesSyncStatus.Error("Unable to delete galleries from the remote servers!"))
+                val errorString = "Unable to delete galleries from the remote servers!"
 
-                //It is still safe to stop here so crash
-                throw IgnoredException()
+                if(prefs.eh_lenientSync().getOrDefault()) {
+                    errorList += errorString
+                } else {
+                    status.onNext(FavoritesSyncStatus.Error(errorString))
+                    throw IgnoredException()
+                }
             }
         }
 
@@ -262,11 +277,11 @@ class FavoritesSyncHelper(val context: Context) {
 
             throttle()
 
-            addGalleryRemote(it)
+            addGalleryRemote(errorList, it)
         }
     }
 
-    private fun applyChangeSetToLocal(changeSet: ChangeSet) {
+    private fun applyChangeSetToLocal(errorList: MutableList<String>, changeSet: ChangeSet) {
         val removedManga = mutableListOf<Manga>()
 
         //Apply removals
@@ -287,10 +302,12 @@ class FavoritesSyncHelper(val context: Context) {
             }
         }
 
-        db.deleteOldMangasCategories(removedManga).executeAsBlocking()
+        // Can't do too many DB OPs in one go
+        removedManga.chunked(10).forEach {
+            db.deleteOldMangasCategories(it).executeAsBlocking()
+        }
 
-        val insertedMangaCategories = mutableListOf<MangaCategory>()
-        val insertedMangaCategoriesMangas = mutableListOf<Manga>()
+        val insertedMangaCategories = mutableListOf<Pair<MangaCategory, Manga>>()
         val categories = db.getCategories().executeAsBlocking()
 
         //Apply additions
@@ -307,19 +324,29 @@ class FavoritesSyncHelper(val context: Context) {
                     EXH_SOURCE_ID)
 
             if(result is GalleryAddEvent.Fail) {
-                status.onNext(FavoritesSyncStatus.Error("Failed to add gallery to local database: " + when (result) {
+                val errorString = "Failed to add gallery to local database: " + when (result) {
                     is GalleryAddEvent.Fail.Error -> "'${it.title}' ${result.logMessage}"
                     is GalleryAddEvent.Fail.UnknownType -> "'${it.title}' (${result.galleryUrl}) is not a valid gallery!"
-                }))
-                throw IgnoredException()
+                }
+
+                if(prefs.eh_lenientSync().getOrDefault()) {
+                    errorList += errorString
+                } else {
+                    status.onNext(FavoritesSyncStatus.Error(errorString))
+                    throw IgnoredException()
+                }
             } else if(result is GalleryAddEvent.Success) {
                 insertedMangaCategories += MangaCategory.create(result.manga,
-                        categories[it.category])
-                insertedMangaCategoriesMangas += result.manga
+                        categories[it.category]) to result.manga
             }
         }
 
-        db.setMangaCategories(insertedMangaCategories, insertedMangaCategoriesMangas)
+        // Can't do too many DB OPs in one go
+        insertedMangaCategories.chunked(10).map {
+            Pair(it.map { it.first }, it.map { it.second })
+        }.forEach {
+                    db.setMangaCategories(it.first, it.second)
+                }
     }
 
     fun throttle() {
@@ -341,7 +368,7 @@ class FavoritesSyncHelper(val context: Context) {
     }
 
     fun needWarnThrottle()
-        = throttleTime >= THROTTLE_WARN
+            = throttleTime >= THROTTLE_WARN
 
     class IgnoredException : RuntimeException()
 
@@ -360,4 +387,5 @@ sealed class FavoritesSyncStatus(val message: String) {
         (message + "\n\nSync is currently throttling (to avoid being banned from ExHentai) and may take a long time to complete.")
     else
         message)
+    class CompleteWithErrors(messages: List<String>) : FavoritesSyncStatus(messages.joinToString("\n"))
 }

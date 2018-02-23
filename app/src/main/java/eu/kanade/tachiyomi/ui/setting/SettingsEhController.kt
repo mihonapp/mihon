@@ -135,6 +135,7 @@ class SettingsEhController : SettingsController() {
                 title = "Disable favorites uploading"
                 summary = "Favorites are only downloaded from ExHentai. Any changes to favorites in the app will not be uploaded. Prevents accidental loss of favorites on ExHentai. Note that removals will still be downloaded (if you remove a favorites on ExHentai, it will be removed in the app as well)."
                 key = PreferenceKeys.eh_readOnlySync
+                defaultValue = false
             }
 
             preference {
@@ -148,9 +149,16 @@ class SettingsEhController : SettingsController() {
                 }
             }
 
+            switchPreference {
+                title = "Ignore sync errors when possible"
+                summary = "Do not abort immediately when encountering errors during the sync process. Errors will still be displayed when the sync is complete. Can cause loss of favorites in some cases. Useful when syncing large libraries."
+                key = PreferenceKeys.eh_lenientSync
+                defaultValue = false
+            }
+
             preference {
                 title = "Force sync state reset"
-                summary = "Performs a full resynchronization on the next sync. Removals will not be synced. All favorites in the app will be re-uploaded to ExHentai and all favorites on ExHentai will be redownloaded into the app. Useful for repairing sync after sync has been interrupted."
+                summary = "Performs a full resynchronization on the next sync. Removals will not be synced. All favorites in the app will be re-uploaded to ExHentai and all favorites on ExHentai will be re-downloaded into the app. Useful for repairing sync after sync has been interrupted."
 
                 onClick {
                     activity?.let {
