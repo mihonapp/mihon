@@ -37,7 +37,7 @@ class MigrationPresenter(
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        db.getLibraryMangas()
+        db.getFavoriteMangas()
                 .asRxObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext { state = state.copy(sourcesWithManga = findSourcesWithManga(it)) }

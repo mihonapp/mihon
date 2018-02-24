@@ -124,8 +124,6 @@ class PreferencesHelper(val context: Context) {
 
     fun downloadsDirectory() = rxPrefs.getString(Keys.downloadsDirectory, defaultDownloadsDir.toString())
 
-    fun downloadThreads() = rxPrefs.getInteger(Keys.downloadThreads, 1)
-
     fun downloadOnlyOverWifi() = prefs.getBoolean(Keys.downloadOnlyOverWifi, true)
 
     fun numberOfBackups() = rxPrefs.getInteger(Keys.numberOfBackups, 1)
@@ -169,6 +167,8 @@ class PreferencesHelper(val context: Context) {
     fun defaultCategory() = prefs.getInt(Keys.defaultCategory, -1)
 
     fun migrateFlags() = rxPrefs.getInteger("migrate_flags", Int.MAX_VALUE)
+
+    fun trustedSignatures() = rxPrefs.getStringSet("trusted_signatures", emptySet())
 
     // --> EH
     fun enableExhentai() = rxPrefs.getBoolean(Keys.eh_enableExHentai, false)

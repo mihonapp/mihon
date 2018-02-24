@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import com.hippo.unifile.UniFile
-import com.nononsenseapps.filepicker.FilePickerActivity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -20,7 +19,6 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.DiskUtil
 import eu.kanade.tachiyomi.util.getFilePicker
-import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -62,14 +60,6 @@ class SettingsDownloadController : SettingsController() {
             key = Keys.downloadOnlyOverWifi
             titleRes = R.string.pref_download_only_over_wifi
             defaultValue = true
-        }
-        intListPreference {
-            key = Keys.downloadThreads
-            titleRes = R.string.pref_download_slots
-            entries = arrayOf("1", "2", "3")
-            entryValues = arrayOf("1", "2", "3")
-            defaultValue = "1"
-            summary = "%s"
         }
         preferenceCategory {
             titleRes = R.string.pref_remove_after_read

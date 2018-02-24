@@ -21,6 +21,9 @@
     <string name="label_selected">Selected: %1$d</string>
     <string name="label_backup">Backup</string>
     <string name="label_migration">Source migration</string>
+    <string name="label_extensions">Extensions</string>
+    <string name="label_extension_info">Extension info</string>
+
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
@@ -144,6 +147,26 @@
     <string name="default_category">Default category</string>
     <string name="default_category_summary">Always ask</string>
 
+    <!-- Extension section -->
+    <string name="all_lang">All</string>
+    <string name="ext_details">Details</string>
+    <string name="ext_update">Update</string>
+    <string name="ext_install">Install</string>
+    <string name="ext_pending">Pending</string>
+    <string name="ext_downloading">Downloading</string>
+    <string name="ext_installing">Installing</string>
+    <string name="ext_installed">Installed</string>
+    <string name="ext_trust">Trust</string>
+    <string name="ext_untrusted">Untrusted</string>
+    <string name="ext_uninstall">Uninstall</string>
+    <string name="ext_preferences">Preferences</string>
+    <string name="ext_available">Available</string>
+    <string name="untrusted_extension">Untrusted extension</string>
+    <string name="untrusted_extension_message">This extension was signed with an untrusted certificate and it wasn\'t activated.\n\nA malicious extension could read any login credentials stored in Tachiyomi or execute arbitrary code.\n\nBy trusting this certificate you accept these risks.</string>
+    <string name="ext_version_info">Version: %1$s</string>
+    <string name="ext_language_info">Language: %1$s</string>
+    <string name="ext_empty_preferences">There are no preferences to edit for this extension</string>
+
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
     <string name="pref_lock_orientation">Lock orientation</string>
@@ -196,7 +219,6 @@
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
-    <string name="pref_download_slots">Simultaneous downloads</string>
     <string name="pref_download_only_over_wifi">Only download over Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Remove when marked as read</string>
     <string name="pref_remove_after_read">Remove after read</string>
@@ -355,7 +377,7 @@
     <string name="download_unread">Download unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete selected chapters?</string>
 
-    <!-- MyAnimeList fragment -->
+    <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
     <string name="reading">Reading</string>
     <string name="completed">Completed</string>
@@ -365,6 +387,11 @@
     <string name="score">Score</string>
     <string name="title">Title</string>
     <string name="status">Status</string>
+    <string name="track_status">Status</string>
+    <string name="track_start_date">Started</string>
+    <string name="track_type">Type</string>
+    <string name="track_author">Author</string>
+    <string name="url_not_set">Manga url is not set please click title and select manga again</string>
 
     <!-- Category activity -->
     <string name="error_category_exists">A category with this name already exists!</string>

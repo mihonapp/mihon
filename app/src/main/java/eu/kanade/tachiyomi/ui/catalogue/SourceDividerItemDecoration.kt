@@ -28,7 +28,7 @@ class SourceDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
                 val top = child.bottom + params.bottomMargin
                 val bottom = top + divider.intrinsicHeight
                 val left = parent.paddingLeft + holder.margin
-                val right = parent.paddingRight + holder.margin
+                val right = parent.width - parent.paddingRight - holder.margin
 
                 divider.setBounds(left, top, right, bottom)
                 divider.draw(c)

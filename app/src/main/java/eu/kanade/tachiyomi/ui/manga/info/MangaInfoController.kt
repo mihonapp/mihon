@@ -460,7 +460,8 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      * @param i The shape index to apply. Defaults to circle crop transformation.
      */
     private fun createShortcutForShape(i: Int = 0) {
-        GlideApp.with(activity)
+        if (activity == null) return
+        GlideApp.with(activity!!)
                 .asBitmap()
                 .load(presenter.manga)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

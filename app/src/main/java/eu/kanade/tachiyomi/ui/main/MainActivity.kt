@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.base.controller.*
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.ui.download.DownloadController
+import eu.kanade.tachiyomi.ui.extension.ExtensionController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
@@ -95,6 +96,7 @@ class MainActivity : BaseActivity() {
                     R.id.nav_drawer_recent_updates -> setRoot(RecentChaptersController(), id)
                     R.id.nav_drawer_recently_read -> setRoot(RecentlyReadController(), id)
                     R.id.nav_drawer_catalogues -> setRoot(CatalogueController(), id)
+                    R.id.nav_drawer_extensions -> setRoot(ExtensionController(), id)
                     // --> EXH
                     R.id.nav_drawer_batch_add -> setRoot(BatchAddController(), id)
                     // <-- EHX
