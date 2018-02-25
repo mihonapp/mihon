@@ -28,6 +28,7 @@ open class SourceManager(private val context: Context) {
 
     init {
         createInternalSources().forEach { registerSource(it) }
+
         //Recreate sources when they change
         val prefEntries = arrayOf(
                 prefs.enableExhentai(),
@@ -39,8 +40,7 @@ open class SourceManager(private val context: Context) {
         ).map { it.asObservable() }
 
         Observable.merge(prefEntries).skip(prefEntries.size - 1).subscribe {
-            sourcesMap.clear()
-            createSources()
+            createEHSources().forEach { registerSource(it) }
         }
     }
 
@@ -87,7 +87,7 @@ open class SourceManager(private val context: Context) {
         exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, PervEdenLang.it)
         exSrcs += NHentai(context)
         exSrcs += HentaiCafe()
-        exSrcs += Tsumino()
+        exSrcs += Tsumino(context)
         return exSrcs
     }
 }

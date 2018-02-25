@@ -121,7 +121,7 @@ open class TsuminoMetadata : RealmObject(), SearchableGalleryMetadata {
     }
     
     companion object {
-        val BASE_URL = "https://www.tsumino.com"
+        val BASE_URL = "http://www.tsumino.com"
         
         fun tmIdFromUrl(url: String)
             = Uri.parse(url).pathSegments[2]

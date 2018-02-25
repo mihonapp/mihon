@@ -141,5 +141,7 @@ object PreferenceKeys {
 
     const val eh_enableExHentai = "enable_exhentai"
 
+    const val eh_ts_aspNetCookie = "eh_ts_aspNetCookie"
+
     const val eh_showSettingsUploadWarning = "eh_showSettingsUploadWarning1"
 }

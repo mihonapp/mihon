@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.util.launchUI
 import exh.EXH_SOURCE_ID
 import exh.uconfig.WarnConfigureDialogController
 import kotlinx.android.synthetic.main.eh_activity_login.view.*
@@ -49,9 +50,9 @@ class LoginController : NucleusController<LoginPresenter>() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 CookieManager.getInstance().removeAllCookies {
-                    Observable.fromCallable {
+                    launchUI {
                         startWebview(view)
-                    }.subscribeOn(AndroidSchedulers.mainThread()).subscribe()
+                    }
                 }
             } else {
                 CookieManager.getInstance().removeAllCookie()
@@ -67,7 +68,7 @@ class LoginController : NucleusController<LoginPresenter>() {
 
             webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login")
 
-            webview.setWebViewClient(object : WebViewClient() {
+            webview.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
                     Timber.d(url)
@@ -88,7 +89,7 @@ class LoginController : NucleusController<LoginPresenter>() {
                         }
                     }
                 }
-            })
+            }
         }
     }
 

@@ -219,6 +219,8 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_lenientSync() = rxPrefs.getBoolean(Keys.eh_lenientSync, false)
 
+    fun eh_ts_aspNetCookie() = rxPrefs.getString(Keys.eh_ts_aspNetCookie, "")
+
     fun eh_showSettingsUploadWarning() = rxPrefs.getBoolean(Keys.eh_showSettingsUploadWarning, true)
     // <-- EH
 }
