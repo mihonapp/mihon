@@ -39,7 +39,7 @@ import java.util.*
 class MangaController : RxController, TabbedController {
 
     constructor(manga: Manga?, fromCatalogue: Boolean = false) : super(Bundle().apply {
-        putLong(MANGA_EXTRA, manga?.id!!)
+        putLong(MANGA_EXTRA, manga?.id ?: 0)
         putBoolean(FROM_CATALOGUE_EXTRA, fromCatalogue)
     }) {
         this.manga = manga

@@ -57,7 +57,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        val extension = presenter.extension
+        val extension = presenter.extension ?: return
         val context = view.context
 
         extension_title.text = extension.name

@@ -12,7 +12,7 @@ class ExtensionDetailsPresenter(
         private val extensionManager: ExtensionManager = Injekt.get()
 ) : BasePresenter<ExtensionDetailsController>() {
 
-    val extension = extensionManager.installedExtensions.first { it.pkgName == pkgName }
+    val extension = extensionManager.installedExtensions.find { it.pkgName == pkgName }
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -33,6 +33,7 @@ class ExtensionDetailsPresenter(
     }
 
     fun uninstallExtension() {
+        val extension = extension ?: return
         extensionManager.uninstallExtension(extension.pkgName)
     }
 }

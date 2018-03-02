@@ -202,6 +202,16 @@ class ExtensionManager(
     }
 
     /**
+     * Sets the result of the installation of an extension.
+     *
+     * @param downloadId The id of the download.
+     * @param result Whether the extension was installed or not.
+     */
+    fun setInstallationResult(downloadId: Long, result: Boolean) {
+        installer.setInstallationResult(downloadId, result)
+    }
+
+    /**
      * Uninstalls the extension that matches the given package name.
      *
      * @param pkgName The package name of the application to uninstall.
@@ -295,17 +305,14 @@ class ExtensionManager(
 
         override fun onExtensionInstalled(extension: Extension.Installed) {
             registerNewExtension(extension.withUpdateCheck())
-            installer.onApkInstalled(extension.pkgName)
         }
 
         override fun onExtensionUpdated(extension: Extension.Installed) {
             registerUpdatedExtension(extension.withUpdateCheck())
-            installer.onApkInstalled(extension.pkgName)
         }
 
         override fun onExtensionUntrusted(extension: Extension.Untrusted) {
             untrustedExtensions += extension
-            installer.onApkInstalled(extension.pkgName)
         }
 
         override fun onPackageUninstalled(pkgName: String) {
