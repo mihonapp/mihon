@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import eu.kanade.tachiyomi.extension.ExtensionManager
+import eu.kanade.tachiyomi.util.toast
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -21,7 +22,13 @@ class ExtensionInstallActivity : Activity() {
                 .putExtra(Intent.EXTRA_RETURN_RESULT, true)
                 .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-        startActivityForResult(installIntent, INSTALL_REQUEST_CODE)
+        try {
+            startActivityForResult(installIntent, INSTALL_REQUEST_CODE)
+        } catch (error: Exception) {
+            // Either install package can't be found (probably bots) or there's a security exception
+            // with the download manager. Nothing we can workaround.
+            toast(error.message)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
