@@ -15,7 +15,12 @@ import android.support.customtabs.CustomTabsIntent
 import android.support.v4.content.pm.ShortcutInfoCompat
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.graphics.drawable.IconCompat
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -51,7 +56,7 @@ import kotlinx.android.synthetic.main.manga_info_controller.*
 import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Date
 
 /**
  * Fragment that shows manga information.
@@ -118,7 +123,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
             copyToClipboard(view.context.getString(R.string.description), manga_summary.text.toString())
         }
 
-        manga_genres_tags.setOnTagClickListener { tag -> performGlobalSearch(tag) }
+        //manga_genres_tags.setOnTagClickListener { tag -> performGlobalSearch(tag) }
 
         manga_cover.longClicks().subscribeUntilDestroy {
             copyToClipboard(view.context.getString(R.string.title), presenter.manga.title)
