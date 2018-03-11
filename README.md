@@ -27,7 +27,7 @@ If you want to try new features before they get to the stable release, you can d
 
 ## Issues, Feature Requests and Contributing
 
-Please me sure to read the full guidelines. Your issue may be closed without warning if you do not.
+Please make sure to read the full guidelines. Your issue may be closed without warning if you do not.
 
 <details><summary>Issues</summary>
 
