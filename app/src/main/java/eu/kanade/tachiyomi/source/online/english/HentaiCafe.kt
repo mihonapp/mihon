@@ -31,6 +31,7 @@ class HentaiCafe : ParsedHttpSource(), LewdSource<HentaiCafeMetadata, Document> 
     override val name = "Hentai Cafe"
     override val baseUrl = "https://hentai.cafe"
 
+    // Defer popular manga -> latest updates
     override fun popularMangaSelector() = throw UnsupportedOperationException("Unused method called!")
     override fun popularMangaFromElement(element: Element) = throw UnsupportedOperationException("Unused method called!")
     override fun popularMangaNextPageSelector() = throw UnsupportedOperationException("Unused method called!")

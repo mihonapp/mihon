@@ -79,7 +79,7 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
             val nhId: Long
     ) : GalleryQuery<NHentaiMetadata>(NHentaiMetadata::class) {
         override fun map() = mapOf(
-                NHentaiMetadata::nhId to Query::nhId
+                ::nhId to Query::nhId
         )
     }
 

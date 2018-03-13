@@ -57,7 +57,7 @@ open class TsuminoMetadata : RealmObject(), SearchableGalleryMetadata {
     
     @Ignore
     override val titleFields = listOf(
-            TsuminoMetadata::title.name
+            ::title.name
     )
     
     @Index
@@ -77,7 +77,7 @@ open class TsuminoMetadata : RealmObject(), SearchableGalleryMetadata {
             val tmId: String
     ) : GalleryQuery<TsuminoMetadata>(TsuminoMetadata::class) {
         override fun map() = mapOf(
-                TsuminoMetadata::tmId to Query::tmId
+                ::tmId to Query::tmId
         )
     }
     

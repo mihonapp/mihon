@@ -40,7 +40,7 @@ open class HentaiCafeMetadata : RealmObject(), SearchableGalleryMetadata {
 
     @Ignore
     override val titleFields = listOf(
-            HentaiCafeMetadata::title.name
+            ::title.name
     )
 
     @Index

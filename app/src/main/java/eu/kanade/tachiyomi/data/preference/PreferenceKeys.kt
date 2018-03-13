@@ -144,4 +144,8 @@ object PreferenceKeys {
     const val eh_ts_aspNetCookie = "eh_ts_aspNetCookie"
 
     const val eh_showSettingsUploadWarning = "eh_showSettingsUploadWarning1"
+
+    const val eh_hl_refreshFrequency = "eh_nh_refresh_frequency"
+
+    const val eh_hl_lastRefresh = "eh_nh_last_refresh"
 }

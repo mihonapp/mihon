@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.source.online
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.models.GalleryQuery
-import exh.metadata.models.PervEdenGalleryMetadata
 import exh.metadata.models.SearchableGalleryMetadata
 import exh.util.createUUIDObj
 import exh.util.defRealm

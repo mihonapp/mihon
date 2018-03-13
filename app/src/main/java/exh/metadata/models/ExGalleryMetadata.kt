@@ -90,9 +90,9 @@ open class ExGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
                 val exh: Boolean
     ) : GalleryQuery<ExGalleryMetadata>(ExGalleryMetadata::class) {
         override fun map() = mapOf(
-                ExGalleryMetadata::gId to Query::gId,
-                ExGalleryMetadata::gToken to Query::gToken,
-                ExGalleryMetadata::exh to Query::exh
+                ::gId to Query::gId,
+                ::gToken to Query::gToken,
+                ::exh to Query::exh
         )
     }
 
