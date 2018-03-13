@@ -77,8 +77,6 @@ internal class ExtensionInstaller(private val context: Context) {
                 .mergeWith(pollStatus(id))
                 // Force an error if the download takes more than 3 minutes
                 .mergeWith(Observable.timer(3, TimeUnit.MINUTES).map { InstallStep.Error })
-                // Force an error if the install process takes more than 10 seconds
-                .flatMap { Observable.just(it).mergeWith(timeoutWhenInstalling(it)) }
                 // Stop when the application is installed or errors
                 .takeUntil { it.isCompleted() }
                 // Always notify on main thread
@@ -119,26 +117,14 @@ internal class ExtensionInstaller(private val context: Context) {
     }
 
     /**
-     * Returns an observable that timeouts the installation after a specified time when the apk has
-     * been downloaded.
-     *
-     * @param currentStep The current step of the installation process.
-     */
-    private fun timeoutWhenInstalling(currentStep: InstallStep): Observable<InstallStep> {
-        return Observable.just(currentStep)
-                .filter { it == InstallStep.Installing }
-                .delay(10, TimeUnit.SECONDS)
-                .map { InstallStep.Error }
-    }
-
-    /**
      * Starts an intent to install the extension at the given uri.
      *
      * @param uri The uri of the extension to install.
      */
-    fun installApk(uri: Uri) {
-        val intent = Intent(Intent.ACTION_VIEW)
+    fun installApk(downloadId: Long, uri: Uri) {
+        val intent = Intent(context, ExtensionInstallActivity::class.java)
                 .setDataAndType(uri, APK_MIME)
+                .putExtra(EXTRA_DOWNLOAD_ID, downloadId)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
         context.startActivity(intent)
@@ -158,13 +144,14 @@ internal class ExtensionInstaller(private val context: Context) {
     }
 
     /**
-     * Called when an extension is installed, allowing to update its installation step.
+     * Sets the result of the installation of an extension.
      *
-     * @param pkgName The package name of the installed application.
+     * @param downloadId The id of the download.
+     * @param result Whether the extension was installed or not.
      */
-    fun onApkInstalled(pkgName: String) {
-        val id = activeDownloads[pkgName] ?: return
-        downloadsRelay.call(id to InstallStep.Installed)
+    fun setInstallationResult(downloadId: Long, result: Boolean) {
+        val step = if (result) InstallStep.Installed else InstallStep.Error
+        downloadsRelay.call(downloadId to step)
     }
 
     /**
@@ -243,17 +230,18 @@ internal class ExtensionInstaller(private val context: Context) {
                         @Suppress("DEPRECATION")
                         val uriCompat = File(cursor.getString(cursor.getColumnIndex(
                                 DownloadManager.COLUMN_LOCAL_FILENAME))).getUriCompat(context)
-                        installApk(uriCompat)
+                        installApk(id, uriCompat)
                     }
                 }
             } else {
-                installApk(uri)
+                installApk(id, uri)
             }
         }
     }
 
-    private companion object {
+    companion object {
         const val APK_MIME = "application/vnd.android.package-archive"
+        const val EXTRA_DOWNLOAD_ID = "ExtensionInstaller.extra.DOWNLOAD_ID"
     }
 
 }

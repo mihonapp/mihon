@@ -66,7 +66,12 @@ internal object ExtensionLoader {
      * contains the required feature flag before trying to load it.
      */
     fun loadExtensionFromPkgName(context: Context, pkgName: String): LoadResult {
-        val pkgInfo = context.packageManager.getPackageInfo(pkgName, PACKAGE_FLAGS)
+        val pkgInfo = try {
+            context.packageManager.getPackageInfo(pkgName, PACKAGE_FLAGS)
+        } catch (error: PackageManager.NameNotFoundException) {
+            // Unlikely, but the package may have been uninstalled at this point
+            return LoadResult.Error(error)
+        }
         if (!isPackageAnExtension(pkgInfo)) {
             return LoadResult.Error("Tried to load a package that wasn't a extension")
         }
@@ -83,9 +88,15 @@ internal object ExtensionLoader {
     private fun loadExtension(context: Context, pkgName: String, pkgInfo: PackageInfo): LoadResult {
         val pkgManager = context.packageManager
 
-        val appInfo = pkgManager.getApplicationInfo(pkgName, PackageManager.GET_META_DATA)
+        val appInfo = try {
+            pkgManager.getApplicationInfo(pkgName, PackageManager.GET_META_DATA)
+        } catch (error: PackageManager.NameNotFoundException) {
+            // Unlikely, but the package may have been uninstalled at this point
+            return LoadResult.Error(error)
+        }
 
-        val extName = pkgManager.getApplicationLabel(appInfo).toString().substringAfter("Tachiyomi: ")
+        val extName = pkgManager.getApplicationLabel(appInfo)?.toString()
+            .orEmpty().substringAfter("Tachiyomi: ")
         val versionName = pkgInfo.versionName
         val versionCode = pkgInfo.versionCode
 

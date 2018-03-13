@@ -132,9 +132,6 @@ class ExtensionManager(
      * Returns the relay of the available extensions as an observable.
      */
     fun getAvailableExtensionsObservable(): Observable<List<Extension.Available>> {
-        if (!availableExtensionsRelay.hasValue()) {
-            findAvailableExtensions()
-        }
         return availableExtensionsRelay.asObservable()
     }
 
@@ -202,6 +199,16 @@ class ExtensionManager(
         val availableExt = availableExtensions.find { it.pkgName == extension.pkgName }
                 ?: return Observable.empty()
         return installExtension(availableExt)
+    }
+
+    /**
+     * Sets the result of the installation of an extension.
+     *
+     * @param downloadId The id of the download.
+     * @param result Whether the extension was installed or not.
+     */
+    fun setInstallationResult(downloadId: Long, result: Boolean) {
+        installer.setInstallationResult(downloadId, result)
     }
 
     /**
@@ -298,17 +305,14 @@ class ExtensionManager(
 
         override fun onExtensionInstalled(extension: Extension.Installed) {
             registerNewExtension(extension.withUpdateCheck())
-            installer.onApkInstalled(extension.pkgName)
         }
 
         override fun onExtensionUpdated(extension: Extension.Installed) {
             registerUpdatedExtension(extension.withUpdateCheck())
-            installer.onApkInstalled(extension.pkgName)
         }
 
         override fun onExtensionUntrusted(extension: Extension.Untrusted) {
             untrustedExtensions += extension
-            installer.onApkInstalled(extension.pkgName)
         }
 
         override fun onPackageUninstalled(pkgName: String) {
