@@ -24,4 +24,8 @@ class Batoto : Source {
         return Observable.error(Exception("RIP Batoto"))
     }
 
+    override fun toString(): String {
+        return "$name (EN)"
+    }
+
 }
