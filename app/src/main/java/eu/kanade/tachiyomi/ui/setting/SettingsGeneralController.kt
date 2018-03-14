@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.preference.PreferenceScreen
-import android.support.v7.preference.SwitchPreference
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
@@ -196,6 +195,14 @@ class SettingsGeneralController : SettingsController() {
 
                 //Call after addPreference
                 dependency = "pref_app_lock"
+            }
+
+            switchPreference {
+                key = Keys.eh_lock_manually
+
+                title = "Lock manually only"
+                summary = "Disable automatic app locking. The app can still be locked manually by long-pressing the three-lines/back button in the top left corner."
+                defaultValue = false
             }
         }
     }

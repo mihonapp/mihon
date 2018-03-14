@@ -1,8 +1,6 @@
 package exh.ui.lock
 
 import android.content.Context
-import android.support.v7.preference.Preference
-import android.support.v7.preference.SwitchPreference
 import android.support.v7.preference.SwitchPreferenceCompat
 import android.text.InputType
 import android.util.AttributeSet
@@ -87,8 +85,8 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
             hash = sha512(password, salt)
             length = password.length
         }
-        prefs.lockSalt().set(salt)
-        prefs.lockHash().set(hash)
-        prefs.lockLength().set(length)
+        prefs.eh_lockSalt().set(salt)
+        prefs.eh_lockHash().set(hash)
+        prefs.eh_lockLength().set(length)
     }
 }

@@ -203,13 +203,15 @@ class PreferencesHelper(val context: Context) {
     fun eh_sessionCookie() = rxPrefs.getString(Keys.eh_sessionCookie, "")
 
     //Lock
-    fun lockHash() = rxPrefs.getString("lock_hash", null)
+    fun eh_lockHash() = rxPrefs.getString(Keys.eh_lock_hash, null)
 
-    fun lockSalt() = rxPrefs.getString("lock_salt", null)
+    fun eh_lockSalt() = rxPrefs.getString(Keys.eh_lock_salt, null)
 
-    fun lockLength() = rxPrefs.getInteger("lock_length", -1)
+    fun eh_lockLength() = rxPrefs.getInteger(Keys.eh_lock_length, -1)
 
-    fun lockUseFingerprint() = rxPrefs.getBoolean("lock_finger", false)
+    fun eh_lockUseFingerprint() = rxPrefs.getBoolean(Keys.eh_lock_finger, false)
+
+    fun eh_lockManually() = rxPrefs.getBoolean(Keys.eh_lock_manually, false)
 
     fun eh_nh_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_nh_useHighQualityThumbs, false)
 

@@ -1,7 +1,6 @@
 package exh.ui.lock
 
 import android.annotation.TargetApi
-import android.app.Activity
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
@@ -40,17 +39,20 @@ fun sha512(passwordToHash: String, salt: String): String {
  * Check if lock is enabled
  */
 fun lockEnabled(prefs: PreferencesHelper = Injekt.get())
-    = prefs.lockHash().get() != null
-            && prefs.lockSalt().get() != null
-            && prefs.lockLength().getOrDefault() != -1
+    = prefs.eh_lockHash().get() != null
+            && prefs.eh_lockSalt().get() != null
+            && prefs.eh_lockLength().getOrDefault() != -1
 
 /**
  * Check if the lock will function properly
  *
  * @return true if action is required, false if lock is working properly
  */
-fun notifyLockSecurity(context: Context): Boolean {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !hasAccessToUsageStats(context)) {
+fun notifyLockSecurity(context: Context,
+                       prefs: PreferencesHelper = Injekt.get()): Boolean {
+    if (!prefs.eh_lockManually().getOrDefault()
+            && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+            && !hasAccessToUsageStats(context)) {
         MaterialDialog.Builder(context)
                 .title("Permission required")
                 .content("${context.getString(R.string.app_name)} requires the usage stats permission to detect when you leave the app. " +

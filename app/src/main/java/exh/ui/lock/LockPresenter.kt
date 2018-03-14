@@ -14,6 +14,6 @@ class LockPresenter: BasePresenter<LockController>() {
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && Reprint.isHardwarePresent()
                 && Reprint.hasFingerprintRegistered()
-                && prefs.lockUseFingerprint().getOrDefault()
+                && prefs.eh_lockUseFingerprint().getOrDefault()
 }
 

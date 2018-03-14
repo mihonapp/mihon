@@ -12,8 +12,10 @@ import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
+import android.support.v7.widget.Toolbar
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.*
+import com.jakewharton.rxbinding.support.v7.widget.navigationClicks
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -39,6 +41,11 @@ import exh.ui.migration.MetadataFetchDialog
 import exh.util.defRealm
 import kotlinx.android.synthetic.main.main_activity.*
 import uy.kohesive.injekt.injectLazy
+import android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION
+import android.text.TextUtils
+import android.view.View
+import com.jakewharton.rxbinding.view.longClicks
+import eu.kanade.tachiyomi.util.vibrate
 
 
 class MainActivity : BaseActivity() {
@@ -144,18 +151,26 @@ class MainActivity : BaseActivity() {
 
         })
 
+        // --> EH
+        //Hook long press hamburger menu to lock
+        getToolbarNavigationIcon(toolbar)?.setOnLongClickListener {
+            doLock(true)
+            vibrate(50) // Notify user of lock
+            true
+        }
+
         //Show lock
         if (savedInstanceState == null) {
             val lockEnabled = lockEnabled(preferences)
             if (lockEnabled) {
                 //Special case first lock
-                toolbar.navigationIcon = null
                 doLock()
 
                 //Check lock security
                 notifyLockSecurity(this)
             }
         }
+        // <-- EH
 
         syncActivityViewWithController(router.backstack.lastOrNull()?.controller())
 
@@ -233,6 +248,26 @@ class MainActivity : BaseActivity() {
         router.setRoot(controller.withFadeTransaction().tag(id.toString()))
     }
 
+    fun getToolbarNavigationIcon(toolbar: Toolbar): View? {
+        //check if contentDescription previously was set
+        val hadContentDescription = TextUtils.isEmpty(toolbar.navigationContentDescription)
+        val contentDescription = if (!hadContentDescription) toolbar.navigationContentDescription else "navigationIcon"
+        toolbar.navigationContentDescription = contentDescription
+
+        val potentialViews = ArrayList<View>()
+
+        //find the view based on it's content description, set programmatically or with android:contentDescription
+        toolbar.findViewsWithText(potentialViews, contentDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION)
+
+        //Nav icon is always instantiated at this point because calling setNavigationContentDescription ensures its existence
+        val navIcon = potentialViews.firstOrNull()
+
+        //Clear content description if not previously present
+        if (hadContentDescription)
+            toolbar.navigationContentDescription = null
+        return navIcon
+    }
+
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
         if (from is DialogController || to is DialogController) {
             return
@@ -249,6 +284,7 @@ class MainActivity : BaseActivity() {
         //Special case and hide drawer arrow for lock controller
         if(to is LockController) {
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            toolbar.navigationIcon = null
         } else {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             toolbar.navigationIcon = drawerArrow
@@ -308,6 +344,10 @@ class MainActivity : BaseActivity() {
         if(router.backstack.lastOrNull()?.controller() is LockController)
             return
 
+        //Do not lock if manual lock enabled
+        if(preferences.eh_lockManually().getOrDefault())
+            return
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val mUsageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
             val time = System.currentTimeMillis()
@@ -331,9 +371,9 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    fun doLock() {
+    fun doLock(animate: Boolean = false) {
         router.pushController(RouterTransaction.with(LockController())
-                .popChangeHandler(LockChangeHandler()))
+                .popChangeHandler(LockChangeHandler(animate)))
     }
     // <-- EH
 

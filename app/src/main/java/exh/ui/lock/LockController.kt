@@ -41,12 +41,12 @@ class LockController : NucleusController<LockPresenter>() {
             //Setup pin lock
             pin_lock_view.attachIndicatorDots(indicator_dots)
 
-            pin_lock_view.pinLength = prefs.lockLength().getOrDefault()
+            pin_lock_view.pinLength = prefs.eh_lockLength().getOrDefault()
             pin_lock_view.setPinLockListener(object : PinLockListener {
                 override fun onEmpty() {}
 
                 override fun onComplete(pin: String) {
-                    if (sha512(pin, prefs.lockSalt().get()!!) == prefs.lockHash().get()) {
+                    if (sha512(pin, prefs.eh_lockSalt().get()!!) == prefs.eh_lockHash().get()) {
                         //Yay!
                         closeLock()
                     } else {
@@ -120,7 +120,7 @@ class LockController : NucleusController<LockPresenter>() {
 
     private fun resolvColor(color: Int): Int {
         val typedVal = TypedValue()
-        activity!!.theme!!.resolveAttribute(android.R.attr.windowBackground, typedVal, true)
+        activity!!.theme!!.resolveAttribute(color, typedVal, true)
         return typedVal.data
     }
 

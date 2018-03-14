@@ -34,7 +34,7 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
 
     val useFingerprint
         get() = fingerprintSupported
-                && prefs.lockUseFingerprint().getOrDefault()
+                && prefs.eh_lockUseFingerprint().getOrDefault()
 
     @SuppressLint("NewApi")
     override fun onAttached() {
@@ -45,7 +45,7 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
                 if(it as Boolean)
                     tryChange()
                 else
-                    prefs.lockUseFingerprint().set(false)
+                    prefs.eh_lockUseFingerprint().set(false)
                 !it
             }
         } else {
@@ -121,7 +121,7 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
                     when (result.status) {
                         AuthenticationResult.Status.SUCCESS -> {
                             iconView.setState(SwirlView.State.ON)
-                            prefs.lockUseFingerprint().set(true)
+                            prefs.eh_lockUseFingerprint().set(true)
                             dialog.dismiss()
                             updateSummary()
                         }

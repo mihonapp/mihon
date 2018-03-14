@@ -121,6 +121,16 @@ object PreferenceKeys {
 
     fun trackToken(syncId: Int) = "track_token_$syncId"
 
+    const val eh_lock_hash = "lock_hash"
+
+    const val eh_lock_salt = "lock_salt"
+
+    const val eh_lock_length = "lock_length"
+
+    const val eh_lock_finger = "lock_finger"
+
+    const val eh_lock_manually = "eh_lock_manually"
+
     const val eh_nh_useHighQualityThumbs = "eh_nh_hq_thumbs"
 
     const val eh_showSyncIntro = "eh_show_sync_intro"

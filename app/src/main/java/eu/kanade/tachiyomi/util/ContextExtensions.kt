@@ -5,13 +5,17 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.VIBRATOR_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.PowerManager
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.support.annotation.StringRes
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
@@ -19,6 +23,8 @@ import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
 import com.nononsenseapps.filepicker.FilePickerActivity
 import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
+
+
 
 /**
  * Display a toast in this context.
@@ -168,4 +174,13 @@ fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
     @Suppress("DEPRECATION")
     return manager.getRunningServices(Integer.MAX_VALUE)
             .any { className == it.service.className }
+}
+
+fun Context.vibrate(time: Long) {
+    val vibeService = getSystemService(VIBRATOR_SERVICE) as Vibrator
+    if (Build.VERSION.SDK_INT >= 26) {
+        vibeService.vibrate(VibrationEffect.createOneShot(time, VibrationEffect.DEFAULT_AMPLITUDE))
+    } else {
+        vibeService.vibrate(time)
+    }
 }
