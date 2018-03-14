@@ -182,7 +182,9 @@
                     android:scheme="https"/>
             </intent-filter>
         </activity>
-        <activity android:name="exh.captcha.SolveCaptchaActivity" />
+        <activity
+            android:name="exh.captcha.SolveCaptchaActivity"
+            android:launchMode="singleInstance" />
 
     </application>
 
