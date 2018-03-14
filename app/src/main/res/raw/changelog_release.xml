@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v7.0.0-EH" changeDate="">
+        <changelogtext>More fixes to favorites sync</changelogtext>
+        <changelogtext>Added options to ignore errors in favorites sync</changelogtext>
+        <changelogtext>Add Tsumino captcha display</changelogtext>
+    </changelogversion>
     <changelogversion versionName="v6.8.2-EH" changeDate="">
         <changelogtext>Fix broken favorites sync in previous release</changelogtext>
     </changelogversion>
