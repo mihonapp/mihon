@@ -183,7 +183,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="exh.captcha.SolveCaptchaActivity"
+            android:name="exh.ui.captcha.SolveCaptchaActivity"
             android:launchMode="singleInstance" />
 
     </application>

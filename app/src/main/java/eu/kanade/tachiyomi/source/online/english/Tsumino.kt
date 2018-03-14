@@ -14,8 +14,8 @@ import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.TSUMINO_SOURCE_ID
-import exh.captcha.CaptchaCompletionVerifier
-import exh.captcha.SolveCaptchaActivity
+import exh.ui.captcha.CaptchaCompletionVerifier
+import exh.ui.captcha.SolveCaptchaActivity
 import exh.metadata.EMULATED_TAG_NAMESPACE
 import exh.metadata.models.Tag
 import exh.metadata.models.TsuminoMetadata

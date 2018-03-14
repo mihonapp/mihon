@@ -1,4 +1,4 @@
-package exh.captcha
+package exh.ui.captcha
 
 import android.content.Context
 import android.content.Intent
