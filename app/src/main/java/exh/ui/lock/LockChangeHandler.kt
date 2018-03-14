@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler
-import java.util.ArrayList
+import java.util.*
 
 class LockChangeHandler : AnimatorChangeHandler {
     constructor(): super()
