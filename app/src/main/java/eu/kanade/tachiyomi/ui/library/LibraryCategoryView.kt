@@ -18,8 +18,10 @@ import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.library_category.view.*
+import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
+import java.util.concurrent.TimeUnit
 
 /**
  * Fragment containing the library manga for a certain category.
@@ -112,6 +114,8 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         subscriptions += controller.searchRelay
                 .doOnNext { adapter.searchText = it }
                 .skip(1)
+                .debounce(350, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { adapter.performFilter() }
 
         subscriptions += controller.libraryMangaRelay

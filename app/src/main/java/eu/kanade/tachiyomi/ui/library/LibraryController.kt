@@ -371,8 +371,6 @@ class LibraryController(
         searchViewSubscription = searchView.queryTextChanges()
                 // Ignore events if this controller isn't at the top
                 .filter { router.backstack.lastOrNull()?.controller() == this }
-                .debounce(350, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeUntilDestroy {
                     query = it.toString()
                     searchRelay.call(query)
