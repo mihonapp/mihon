@@ -230,4 +230,6 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_hl_lastRefresh() = rxPrefs.getLong(Keys.eh_hl_lastRefresh, 0L)
     // <-- EH
+
+    fun eh_expandFilters() = rxPrefs.getBoolean(Keys.eh_expandFilters, false)
 }

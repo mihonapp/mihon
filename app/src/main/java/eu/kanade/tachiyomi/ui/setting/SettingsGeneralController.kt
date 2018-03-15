@@ -177,18 +177,26 @@ class SettingsGeneralController : SettingsController() {
                 true
             }
         }
+
+        // --> EH
+        switchPreference {
+            key = Keys.eh_expandFilters
+            title = "Expand all search filters by default"
+            defaultValue = false
+        }
+
         preferenceCategory {
             title = "Application lock"
 
             LockPreference(context).apply {
-                key = "pref_app_lock"
+                key = "pref_app_lock" // Not persistent so use random key
                 isPersistent = false
 
                 addPreference(this)
             }
 
             FingerLockPreference(context).apply {
-                key = "pref_lock_finger"
+                key = "pref_lock_finger" // Not persistent so use random key
                 isPersistent = false
 
                 addPreference(this)
@@ -205,6 +213,7 @@ class SettingsGeneralController : SettingsController() {
                 defaultValue = false
             }
         }
+        // <-- EH
     }
 
     class LibraryColumnsDialog : DialogController() {
