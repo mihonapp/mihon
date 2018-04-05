@@ -47,19 +47,18 @@ class CloudflareInterceptor : Interceptor {
             }
 
             val js = operation
-                    .replace(Regex("""a\.value =(.+?) \+.*"""), "$1")
+                    .replace(Regex("""a\.value = (.+ \+ t\.length).+"""), "$1")
                     .replace(Regex("""\s{3,}[a-z](?: = |\.).+"""), "")
+                    .replace("t.length", "${domain.length}")
                     .replace("\n", "")
 
-            val result = (duktape.evaluate(js) as Double).toInt()
-
-            val answer = "${result + domain.length}"
+            val result = (duktape.evaluate(js) as Double)
 
             val cloudflareUrl = HttpUrl.parse("${url.scheme()}://$domain/cdn-cgi/l/chk_jschl")!!
                     .newBuilder()
                     .addQueryParameter("jschl_vc", challenge)
                     .addQueryParameter("pass", pass)
-                    .addQueryParameter("jschl_answer", answer)
+                    .addQueryParameter("jschl_answer", "$result")
                     .toString()
 
             val cloudflareHeaders = originalRequest.headers()
