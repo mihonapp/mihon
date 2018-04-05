@@ -261,7 +261,11 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     }
 
     fun setLastUpdateDate(date: Date) {
-        manga_last_update?.text = DateFormat.getDateInstance(DateFormat.SHORT).format(date)
+        if (date.time != 0L) {
+            manga_last_update?.text = DateFormat.getDateInstance(DateFormat.SHORT).format(date)
+        } else {
+            manga_last_update?.text = resources?.getString(R.string.unknown)
+        }
     }
 
     /**
