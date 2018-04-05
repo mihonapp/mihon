@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.7.1" changeDate="">
+        <changelogtext>Updated Cloudflare bypass.</changelogtext>
+
+        <changelogtext>Enabled TLS 1.1 and TLS 1.2 on Android KitKat and lower.</changelogtext>
+
+        <changelogtext>Minor UI changes.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.7.0" changeDate="">
         <changelogtext>Added extensions support. You can now install and update extensions within the app.
             If you installed any extension previously through F-Droid, you'll have to uninstall them first.</changelogtext>
