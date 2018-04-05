@@ -65,6 +65,8 @@ class CloudflareInterceptor : Interceptor {
             val cloudflareHeaders = originalRequest.headers()
                     .newBuilder()
                     .add("Referer", url.toString())
+                    .add("Accept", "text/html,application/xhtml+xml,application/xml")
+                    .add("Accept-Language", "en")
                     .build()
 
             return GET(cloudflareUrl, cloudflareHeaders, cache = CacheControl.Builder().build())
