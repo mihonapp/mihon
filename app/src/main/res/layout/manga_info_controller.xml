@@ -260,7 +260,7 @@
             android:id="@+id/description_scrollview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constrainedWidth="true"
+            app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toTopOf="@id/manga_genres_tags"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
