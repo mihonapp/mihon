@@ -36,7 +36,7 @@ fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) 
  * @param duration the duration of the toast. Defaults to short.
  */
 fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(this, text, duration).show()
+    Toast.makeText(this, text.orEmpty(), duration).show()
 }
 
 /**
