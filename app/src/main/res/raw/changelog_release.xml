@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.7.2" changeDate="">
+        <changelogtext>Fixed missing downloaded label in chapters screen.</changelogtext>
+
+        <changelogtext>Fixed updater in KitKat and lower due to TLS.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.7.1" changeDate="">
         <changelogtext>Updated Cloudflare bypass.</changelogtext>
 
