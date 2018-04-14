@@ -155,9 +155,9 @@ object PreferenceKeys {
 
     const val eh_showSettingsUploadWarning = "eh_showSettingsUploadWarning1"
 
-    const val eh_hl_refreshFrequency = "eh_nh_refresh_frequency"
+    const val eh_hl_refreshFrequency = "eh_lh_refresh_frequency"
 
-    const val eh_hl_lastRefresh = "eh_nh_last_refresh"
+    const val eh_hl_lastRefresh = "eh_lh_last_refresh"
 
     const val eh_expandFilters = "eh_expand_filters"
 }

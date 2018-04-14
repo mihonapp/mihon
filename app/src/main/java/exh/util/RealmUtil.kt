@@ -41,5 +41,17 @@ inline fun <T> Realm.trans(block: () -> T): T {
     }
 }
 
+inline fun <T> Realm.useTrans(block: (Realm) -> T): T {
+    return use {
+        trans {
+            block(this)
+        }
+    }
+}
+
 fun <T : RealmModel> Realm.createUUIDObj(clazz: Class<T>)
     = createObject(clazz, UUID.randomUUID().toString())!!
+
+inline fun <reified T : RealmModel> Realm.createUUIDObj()
+        = createUUIDObj(T::class.java)
+
