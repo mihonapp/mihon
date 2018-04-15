@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v7.2.0-EH" changeDate="">
+        <changelogtext>Fix Tsumino search page offset</changelogtext>
+        <changelogtext>Added hitomi.la source (searching is still very slow/buggy)</changelogtext>
+        <changelogtext>Add option to expand search filter by default</changelogtext>
+        <changelogtext>Add an option to disable auto lock and add manual locking</changelogtext>
+        <changelogtext>Re-theme lock view (again)</changelogtext>
+        <changelogtext>Fix broken back button in search</changelogtext>
+        <changelogtext>Fix Tsumino captcha appearing multiple times</changelogtext>
+    </changelogversion>
     <changelogversion versionName="v7.0.0-EH" changeDate="">
         <changelogtext>More fixes to favorites sync</changelogtext>
         <changelogtext>Added options to ignore errors in favorites sync</changelogtext>

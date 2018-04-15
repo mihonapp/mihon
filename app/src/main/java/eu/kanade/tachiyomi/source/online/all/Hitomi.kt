@@ -190,27 +190,33 @@ class Hitomi(private val context: Context)
     }
 
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
-        return trySearch(page, query).map {
-            val res = it.map {
-                SManga.create().apply {
-                    setUrlWithoutDomain(it.url!!)
+        return urlImportFetchSearchManga(query, {
+            trySearch(page, query).map {
+                val res = it.map {
+                    SManga.create().apply {
+                        setUrlWithoutDomain(it.url!!)
 
-                    title = it.title!!
+                        title = it.title!!
 
-                    it.thumbnailUrl?.let {
-                        thumbnail_url = it
+                        it.thumbnailUrl?.let {
+                            thumbnail_url = it
+                        }
                     }
                 }
-            }
 
-            MangasPage(res, it.isNotEmpty())
-        }
+                MangasPage(res, it.isNotEmpty())
+            }
+        })
     }
 
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return lazyLoadMetaPages(HitomiGalleryMetadata.hlIdFromUrl(manga.url), true)
                 .map {
-                    manga.copyFrom(parseToManga(queryFromUrl(manga.url), it.first))
+                    val newManga = parseToManga(queryFromUrl(manga.url), it.first)
+                    manga.copyFrom(newManga)
+                    // Forcibly copy title as copyFrom does not
+                    manga.title = newManga.title
+
                     manga
                 }
                 .subscribeOn(parseToMangaScheduler())

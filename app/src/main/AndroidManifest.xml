@@ -182,6 +182,22 @@
                     android:host="www.tsumino.com"
                     android:pathPrefix="/Read/View/"
                     android:scheme="https"/>
+                <data
+                    android:host="hitomi.la"
+                    android:pathPrefix="/galleries/"
+                    android:scheme="http"/>
+                <data
+                    android:host="hitomi.la"
+                    android:pathPrefix="/reader/"
+                    android:scheme="http"/>
+                <data
+                    android:host="hitomi.la"
+                    android:pathPrefix="/galleries/"
+                    android:scheme="https"/>
+                <data
+                    android:host="hitomi.la"
+                    android:pathPrefix="/reader/"
+                    android:scheme="https"/>
             </intent-filter>
         </activity>
         <activity

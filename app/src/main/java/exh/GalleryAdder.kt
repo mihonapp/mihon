@@ -78,6 +78,7 @@ class GalleryAdder {
                 }
                 "hentai.cafe" -> HENTAI_CAFE_SOURCE_ID
                 "www.tsumino.com" -> TSUMINO_SOURCE_ID
+                "hitomi.la" -> HITOMI_SOURCE_ID
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
@@ -123,6 +124,12 @@ class GalleryAdder {
                         
                     "https://tsumino.com/Book/Info/${urlObj.pathSegments[2]}"
                 }
+                HITOMI_SOURCE_ID -> {
+                    if(lcFirstPathSegment != "galleries" && lcFirstPathSegment != "reader")
+                        return GalleryAddEvent.Fail.UnknownType(url)
+
+                    "https://hitomi.la/galleries/${urlObj.pathSegments[1].substringBefore('.')}.html"
+                }
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
@@ -136,6 +143,7 @@ class GalleryAdder {
                 PERV_EDEN_IT_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 HENTAI_CAFE_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 TSUMINO_SOURCE_ID -> getUrlWithoutDomain(realUrl)
+                HITOMI_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 else -> return GalleryAddEvent.Fail.UnknownType(url)
             }
 
