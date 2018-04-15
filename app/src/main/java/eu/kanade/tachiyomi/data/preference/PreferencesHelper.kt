@@ -226,6 +226,8 @@ class PreferencesHelper(val context: Context) {
     fun eh_showSettingsUploadWarning() = rxPrefs.getBoolean(Keys.eh_showSettingsUploadWarning, true)
 
     // Default is 24h, refresh daily
+    fun eh_hl_earlyRefresh() = rxPrefs.getBoolean(Keys.eh_hl_earlyRefresh, false)
+
     fun eh_hl_refreshFrequency() = rxPrefs.getString(Keys.eh_hl_refreshFrequency, "24")
 
     fun eh_hl_lastRefresh() = rxPrefs.getLong(Keys.eh_hl_lastRefresh, 0L)

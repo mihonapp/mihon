@@ -15,7 +15,6 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.Toolbar
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.*
-import com.jakewharton.rxbinding.support.v7.widget.navigationClicks
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -41,11 +40,15 @@ import exh.ui.migration.MetadataFetchDialog
 import exh.util.defRealm
 import kotlinx.android.synthetic.main.main_activity.*
 import uy.kohesive.injekt.injectLazy
-import android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION
 import android.text.TextUtils
 import android.view.View
-import com.jakewharton.rxbinding.view.longClicks
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.Hitomi
 import eu.kanade.tachiyomi.util.vibrate
+import exh.HITOMI_SOURCE_ID
+import rx.schedulers.Schedulers
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 
 class MainActivity : BaseActivity() {
@@ -169,6 +172,14 @@ class MainActivity : BaseActivity() {
                 //Check lock security
                 notifyLockSecurity(this)
             }
+        }
+
+        // Early hitomi.la refresh
+        if(preferences.eh_hl_earlyRefresh().getOrDefault()) {
+            (Injekt.get<SourceManager>().get(HITOMI_SOURCE_ID) as Hitomi)
+                    .ensureCacheLoaded(false)
+                    .subscribeOn(Schedulers.computation())
+                    .subscribe()
         }
         // <-- EH
 

@@ -249,7 +249,7 @@ class Hitomi(private val context: Context)
 
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
 
-    override val name = "hitomi.la"
+    override val name = "hitomi.la (very slow search)"
 
     override val baseUrl = BASE_URL
 
@@ -519,7 +519,7 @@ class Hitomi(private val context: Context)
                 .findFirst()?.let { realm.copyFromRealm(it) }
     }
 
-    private fun ensureCacheLoaded(blocking: Boolean = true): Observable<Any> {
+    fun ensureCacheLoaded(blocking: Boolean = true): Observable<Any> {
         return Observable.fromCallable {
             if(prefs.eh_hl_lastRealmIndex().getOrDefault() >= 0) { return@fromCallable Any() }
 
@@ -650,6 +650,29 @@ class Hitomi(private val context: Context)
             .name("hitomi-cache-$index")
             .deleteRealmIfMigrationNeeded()
             .build()
+
+    fun forceEnsureCacheLoaded(): Boolean {
+        // Lock all caches
+        if(!cacheLocks[0].tryLock() || !cacheLocks[1].tryLock()) {
+            if(cacheLocks[0].isHeldByCurrentThread)
+                cacheLocks[0].unlock()
+            if(cacheLocks[1].isHeldByCurrentThread)
+                cacheLocks[1].unlock()
+
+            return false
+        }
+
+        try {
+            prefs.eh_hl_lastRealmIndex().set(-1)
+            prefs.eh_hl_lastRefresh().set(0)
+            ensureCacheLoaded(false).subscribeOn(Schedulers.computation()).subscribe()
+        } finally {
+            cacheLocks[0].unlock()
+            cacheLocks[1].unlock()
+        }
+
+        return true
+    }
 
     companion object {
         private val PAGE_SIZE = 25

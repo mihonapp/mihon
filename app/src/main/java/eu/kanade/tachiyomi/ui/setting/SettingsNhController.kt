@@ -4,7 +4,7 @@ import android.support.v7.preference.PreferenceScreen
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 
 /**
- * EH Settings fragment
+ * nhentai Settings fragment
  */
 
 class SettingsNhController : SettingsController() {
