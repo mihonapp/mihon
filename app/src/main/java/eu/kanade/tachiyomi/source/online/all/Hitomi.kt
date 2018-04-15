@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.source.online.all
 
 import android.content.Context
+import android.os.HandlerThread
 import com.github.salomonbrys.kotson.*
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.google.gson.stream.JsonReader
 import com.squareup.duktape.Duktape
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -14,38 +16,71 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.HITOMI_SOURCE_ID
+import exh.metadata.EMULATED_TAG_NAMESPACE
 import exh.metadata.models.HitomiGalleryMetadata
 import exh.metadata.models.HitomiGalleryMetadata.Companion.BASE_URL
-import exh.metadata.models.HitomiGalleryMetadata.Companion.urlFromHlId
+import exh.metadata.models.HitomiGalleryMetadata.Companion.hlIdFromUrl
+import exh.metadata.models.HitomiPage
+import exh.metadata.models.HitomiSkeletonGalleryMetadata
 import exh.metadata.models.Tag
+import exh.metadata.nullIfBlank
+import exh.search.SearchEngine
+import exh.util.*
+import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.RealmResults
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import rx.Observable
+import rx.Scheduler
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import rx.subjects.AsyncSubject
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.thread
 
+/**
+ * WTF is going on in this class?
+ */
 class Hitomi(private val context: Context)
-    :HttpSource(), LewdSource<HitomiGalleryMetadata, HitomiGallery> {
+    :HttpSource(), LewdSource<HitomiGalleryMetadata, HitomiSkeletonGalleryMetadata> {
+    private val jsonParser by lazy(LazyThreadSafetyMode.PUBLICATION) { JsonParser() }
+    private val searchEngine by lazy { SearchEngine() }
+
+    private val queryCache = mutableMapOf<String, RealmResults<HitomiSkeletonGalleryMetadata>>()
+    private val queryWorkQueue = LinkedBlockingQueue<Triple<String, Int, AsyncSubject<List<HitomiSkeletonGalleryMetadata>>>>()
+    private var searchWorker: Thread? = null
+
+    private var parseToMangaScheduler: Scheduler? = null
+
     override fun queryAll() = HitomiGalleryMetadata.EmptyQuery()
     override fun queryFromUrl(url: String) = HitomiGalleryMetadata.UrlQuery(url)
 
-    override val metaParser: HitomiGalleryMetadata.(HitomiGallery) -> Unit = {
-        hlId = it.id.toString()
-        title = it.name
-        thumbnailUrl = resolveImage("//g.hitomi.la/galleries/$hlId/001.jpg")
-        artist = it.artists.firstOrNull()
-        group = it.groups.firstOrNull()
+    override val metaParser: HitomiGalleryMetadata.(HitomiSkeletonGalleryMetadata) -> Unit = {
+        hlId = it.hlId
+        thumbnailUrl = it.thumbnailUrl
+        artist = it.artist
+        group = it.group
         type = it.type
-        languageSimple = it.language
+        language = it.language
+        languageSimple = it.languageSimple
         series.clear()
-        series.addAll(it.parodies)
+        series.addAll(it.series)
         characters.clear()
         characters.addAll(it.characters)
-
+        buyLink = it.buyLink
+        uploadDate = it.uploadDate
         tags.clear()
-        it.tags.mapTo(tags) { Tag(it.key, it.value) }
+        tags.addAll(it.tags)
+        title = it.title
     }
 
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = throw UnsupportedOperationException("Unused method called!")
@@ -54,38 +89,160 @@ class Hitomi(private val context: Context)
 
     override fun mangaDetailsParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
 
-    override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
-        return loadGalleryMetadata(manga.url).map {
-            parseToManga(queryFromUrl(manga.url), it)
+    /** >>> PARSE TO MANGA SCHEDULER <<< **/
+    /*
+    Realm becomes very, very slow after you start opening and closing Realms rapidly.
+    By keeping a global Realm open at all times, we can migitate this.
+    Realms are per-thread so we create our own RxJava scheduler to schedule realm-heavy
+    operations on.
+     */
+    @Synchronized
+    private fun startParseToMangaScheduler() {
+        if(parseToMangaScheduler != null) return
+
+        val thread = object : HandlerThread("parse-to-manga-thread") {
+            override fun onLooperPrepared() {
+                // Open permanent Realm instance on this thread!
+                Realm.getDefaultInstance()
+            }
         }
+
+        thread.start()
+        parseToMangaScheduler = AndroidSchedulers.from(thread.looper)
+    }
+
+    private fun parseToMangaScheduler(): Scheduler {
+        startParseToMangaScheduler()
+        return parseToMangaScheduler!!
+    }
+
+    /** >>> SEARCH WORKER <<< **/
+    /*
+    Running RealmResults.size on a new RealmResults object is very, very slow.
+    By caching our RealmResults in memory, we avoid creating many new RealmResults objects,
+    thus speeding up RealmResults.size.
+
+    Realms are per-thread and RealmReults are bound to Realms. Therefore we create a
+    permanent thread that will open a permanent realm and wait for requests to load RealmResults.
+     */
+
+    @Synchronized
+    private fun startSearchWorker() {
+        if(searchWorker != null) return
+
+        searchWorker = thread {
+            ensureCacheLoaded().toBlocking().first()
+
+            getCacheRealm().use { realm ->
+                Timber.d("[SW] New search worker thread started!")
+                while (true) {
+                    Timber.d("[SW] Waiting for next query!")
+                    val next = queryWorkQueue.take()
+                    Timber.d("[SW] Found new query (page ${next.second}): ${next.first}")
+
+                    if(queryCache[next.first] == null) {
+                        val first = realm.where(HitomiSkeletonGalleryMetadata::class.java).findFirst()
+
+                        if (first == null) {
+                            next.third.onNext(emptyList())
+                            next.third.onCompleted()
+                            continue
+                        }
+
+                        val parsed = searchEngine.parseQuery(next.first)
+                        val filtered = searchEngine.filterResults(realm.where(HitomiSkeletonGalleryMetadata::class.java),
+                                parsed,
+                                first.titleFields).findAll()
+
+                        queryCache[next.first] = filtered
+                    }
+
+                    val filtered = queryCache[next.first]!!
+
+                    val beginIndex = (next.second - 1) * PAGE_SIZE
+                    if (beginIndex > filtered.lastIndex) {
+                        next.third.onNext(emptyList())
+                        next.third.onCompleted()
+                        continue
+                    }
+
+                    // Chunk into pages of 100
+                    val res = realm.copyFromRealm(filtered.subList(beginIndex,
+                            Math.min(next.second * PAGE_SIZE, filtered.size)))
+
+                    next.third.onNext(res)
+                    next.third.onCompleted()
+                }
+            }
+        }
+    }
+
+    private fun trySearch(page: Int, query: String): Observable<List<HitomiSkeletonGalleryMetadata>> {
+        startSearchWorker()
+
+        val subject = AsyncSubject.create<List<HitomiSkeletonGalleryMetadata>>()
+        queryWorkQueue.clear()
+        queryWorkQueue.add(Triple(query, page, subject))
+        return subject
+    }
+
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
+        return trySearch(page, query).map {
+            val res = it.map {
+                SManga.create().apply {
+                    setUrlWithoutDomain(it.url!!)
+
+                    title = it.title!!
+
+                    it.thumbnailUrl?.let {
+                        thumbnail_url = it
+                    }
+                }
+            }
+
+            MangasPage(res, it.isNotEmpty())
+        }
+    }
+
+    override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
+        return lazyLoadMetaPages(HitomiGalleryMetadata.hlIdFromUrl(manga.url), true)
+                .map {
+                    manga.copyFrom(parseToManga(queryFromUrl(manga.url), it.first))
+                    manga
+                }
+                .subscribeOn(parseToMangaScheduler())
     }
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
         return lazyLoadMeta(queryFromUrl(manga.url),
-            loadAllGalleryMetadata().map {
-                val mid = HitomiGalleryMetadata.hlIdFromUrl(manga.url)
-                it.find { it.id.toString() == mid }
-            }
+                lazyLoadMetaPages(hlIdFromUrl(manga.url), false).map { it.first }
         ).map {
             listOf(SChapter.create().apply {
-                url = "$BASE_URL/reader/${it.hlId}.html"
+                url = readerUrl(it.hlId!!)
 
                 name = "Chapter"
 
                 chapter_number = 1f
+
+                it.uploadDate?.let {
+                    date_upload = it
+                }
             })
+        }
+    }
+
+    override fun fetchPageList(chapter: SChapter): Observable<List<Page>> {
+        val hlId = chapter.url.substringAfterLast('/').removeSuffix(".html")
+        return lazyLoadMetaPages(hlId, false).map { (_, it) ->
+            it.mapIndexed { index, s ->
+                Page(index, s, s)
+            }
         }
     }
 
     override fun chapterListParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
 
-    override fun pageListParse(response: Response): List<Page> {
-        val doc = response.asJsoup()
-        return doc.select(".img-url").mapIndexed { index, element ->
-            val resolved = resolveImage(element.text())
-            Page(index, resolved, resolved)
-        }
-    }
+    override fun pageListParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
 
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
 
@@ -101,51 +258,235 @@ class Hitomi(private val context: Context)
 
     private val prefs: PreferencesHelper by injectLazy()
 
-    private val jsonParser by lazy(LazyThreadSafetyMode.PUBLICATION) {
-        JsonParser()
-    }
-
     private val cacheLock = ReentrantLock()
-
-    private var metaCache: List<HitomiGallery>? = null
 
     override fun popularMangaRequest(page: Int) = GET("$BASE_URL/popular-all-$page.html")
 
     override fun popularMangaParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
     override fun latestUpdatesParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
 
-    override fun latestUpdatesRequest(page: Int) = GET("$BASE_URL/index-all-2.html")
+    override fun latestUpdatesRequest(page: Int) = GET("$BASE_URL/index-all-$page.html")
 
-    private fun resolveMangaIds(doc: Document, data: List<HitomiGallery>): List<HitomiGallery> {
-        return doc.select(".gallery-content > div > a").mapNotNull {
-            val id = HitomiGalleryMetadata.hlIdFromUrl(it.attr("href"))
-            data.find { it.id.toString() == id }
+    private fun parsePage(doc: Document): List<HitomiSkeletonGalleryMetadata> {
+        return doc.select(".gallery-content > div").map {
+            HitomiSkeletonGalleryMetadata().apply {
+                it.select("h1 > a").let {
+                    url = it.attr("href")
+
+                    title = it.text()
+                }
+
+                thumbnailUrl = "https:" + it.select(".dj-img1 > img").attr("src")
+            }
+        }
+    }
+
+    fun readerUrl(hlId: String) = "$BASE_URL/reader/$hlId.html"
+
+    private fun lazyLoadMetaPages(hlId: String, forceReload: Boolean):
+            Observable<Pair<HitomiSkeletonGalleryMetadata, List<String>>> {
+        val pages = defRealm { realm ->
+            val rres = realm.where(HitomiPage::class.java)
+                    .equalTo(HitomiPage::gallery.name, hlId)
+                    .findAllSorted(HitomiPage::index.name)
+
+            if (rres.isNotEmpty())
+                rres.map(HitomiPage::url)
+            else null
+        }
+
+        val meta = getCacheRealm().use {
+            val res = it.where(HitomiSkeletonGalleryMetadata::class.java)
+                    .equalTo(HitomiSkeletonGalleryMetadata::hlId.name, hlId)
+                    .findFirst()
+
+            // Force reload if no thumbnail
+            if(res?.thumbnailUrl == null) null else res
+        }
+
+        if(pages != null && meta != null && !forceReload) {
+            return Observable.just(meta to pages)
+        }
+
+        val loc = "$BASE_URL/galleries/$hlId.html"
+        val req = GET(loc)
+
+        return client.newCall(req).asObservableSuccess().map {
+            val doc = it.asJsoup()
+
+            Duktape.create().use { duck ->
+                val thumbs = doc.getElementsByTag("script").find {
+                    it.html().startsWith("var thumbnails")
+                }
+
+                val parsedThumbs = jsonParser.parse(thumbs!!.html()
+                        .removePrefix("var thumbnails = ")
+                        .removeSuffix(";")).array
+
+                // Get pages (drop last element as its always null)
+                val newPages = parsedThumbs.take(parsedThumbs.size() - 1).mapIndexed { index, item ->
+                    val itemName = item.string
+                            .substringAfterLast('/')
+                            .removeSuffix(".jpg")
+
+                    val url = "//a.hitomi.la/galleries/$hlId/$itemName"
+
+                    val resolved = resolveImage(duck, url)
+                    HitomiPage().apply {
+                        gallery = hlId
+                        this.index = index
+                        this.url = resolved
+                    }
+                }
+
+                // Parse meta
+                val galleryParent = doc.select(".gallery")
+
+                val newMeta = HitomiSkeletonGalleryMetadata().apply {
+                    url = loc
+
+                    title = galleryParent.select("h1 > a").text()
+
+                    artist = galleryParent.select("h2 > .comma-list > li").joinToString { it.text() }.nullIfBlank()
+
+                    thumbnailUrl = "https:" + doc.select(".cover img").attr("src")
+
+                    uploadDate = DATE_FORMAT.parse(doc.select(".date").text()).time
+
+                    galleryParent.select(".gallery-info tr").forEach {
+                        val content = it.child(1)
+
+                        when(it.child(0).text().toLowerCase()) {
+                            "group" -> group = content.text().trim()
+                            "type" -> type = content.text().trim()
+                            "language" -> {
+                                language = content.text().trim()
+                                languageSimple = content.select("a")
+                                        .attr("href")
+                                        .split("-").getOrNull(1) ?: "speechless"
+                            }
+                            "series" -> {
+                                series.clear()
+                                series.addAll(content.select("li").map(Element::text))
+                            }
+                            "characters" -> {
+                                characters.clear()
+                                characters.addAll(content.select("li").map(Element::text))
+                            }
+                            "tags" -> {
+                                tags.clear()
+                                tags.addAll(content.select("li").map {
+                                    val txt = it.text()
+
+                                    val ns: String
+                                    val name: String
+
+                                    when {
+                                        txt.endsWith(CHAR_MALE) -> {
+                                            ns = "male"
+                                            name = txt.removeSuffix(CHAR_MALE).trim()
+                                        }
+                                        txt.endsWith(CHAR_FEMALE) -> {
+                                            ns = "female"
+                                            name = txt.removeSuffix(CHAR_FEMALE).trim()
+                                        }
+                                        else -> {
+                                            ns = EMULATED_TAG_NAMESPACE
+                                            name = txt.trim()
+                                        }
+                                    }
+
+                                    Tag(ns, name)
+                                })
+                            }
+                        }
+                    }
+
+                    // Inject pseudo tags
+                    fun String?.nullNaTag(name: String) {
+                        if(this == null || this == NOT_AVAILABLE) return
+
+                        tags.add(Tag(name, this))
+                    }
+
+                    group.nullNaTag("group")
+                    artist.nullNaTag("artist")
+                    languageSimple.nullNaTag("language")
+                    series.forEach {
+                        it.nullNaTag("parody")
+                    }
+                    characters.forEach {
+                        it.nullNaTag("character")
+                    }
+                    type.nullNaTag("category")
+                }
+
+                realmTrans {
+                    // Delete old pages
+                    it.where(HitomiPage::class.java)
+                            .equalTo(HitomiPage::gallery.name, hlId)
+                            .findAll().deleteAllFromRealm()
+
+                    // Add new pages
+                    it.insert(newPages)
+                }
+
+                getCacheRealm().useTrans {
+                    // Delete old meta
+                    it.where(HitomiSkeletonGalleryMetadata::class.java)
+                            .equalTo(HitomiSkeletonGalleryMetadata::hlId.name, hlId)
+                            .findAll().deleteAllFromRealm()
+
+                    // Add new meta
+                    it.insert(newMeta)
+                }
+
+                newMeta to newPages.map(HitomiPage::url)
+            }
         }
     }
 
     private fun fetchAndResolveRequest(request: Request): Observable<MangasPage> {
-        return loadAllGalleryMetadata().flatMap {
-            client.newCall(request)
-                    .asObservableSuccess()
-                    .map { response ->
-                        val doc = response.asJsoup()
-                        val res = resolveMangaIds(doc, it)
-                        val sManga = res.map {
-                            parseToManga(queryFromUrl(urlFromHlId(it.id.toString())), it)
+        //Begin pre-loading cache
+        ensureCacheLoaded(false).subscribeOn(Schedulers.computation()).subscribe()
+
+        return client.newCall(request)
+                .asObservableSuccess()
+                .map { response ->
+                    val doc = response.asJsoup()
+
+                    val res = getCacheRealm().use { realm ->
+                        parsePage(doc).map {
+                            it
                         }
-                        val hasNextPage = doc.select(".page-container > ul > li:last-child > a").isNotEmpty()
-                        MangasPage(sManga, hasNextPage)
                     }
-        }
+                    val sManga = res.map {
+                        SManga.create().apply {
+                            setUrlWithoutDomain(it.url!!)
+
+                            title = it.title!!
+
+                            it.thumbnailUrl?.let {
+                                thumbnail_url = it
+                            }
+                        }
+                    }
+                    val pagingScript = doc.getElementsByTag("script").map { it.html().trim() }.find {
+                        it.startsWith("insert_paging")
+                    } ?: ""
+
+                    val curPage = pagingScript.substringAfterLast("', ").substringBefore(',').toInt()
+                    val endPage = pagingScript.substringAfterLast(", ").removeSuffix(");").toInt()
+
+                    MangasPage(sManga, curPage < endPage)
+                }
+
     }
 
     override fun fetchPopularManga(page: Int)
             = fetchAndResolveRequest(popularMangaRequest(page))
     override fun fetchLatestUpdates(page: Int)
             = fetchAndResolveRequest(latestUpdatesRequest(page))
-
-    private fun galleryFile(index: Int)
-            = File(context.cacheDir.absoluteFile, "hitomi/galleries$index.json")
 
     private fun shouldRefreshGalleryFiles(): Boolean {
         val timeDiff = System.currentTimeMillis() - prefs.eh_hl_lastRefresh().getOrDefault()
@@ -161,82 +502,121 @@ class Hitomi(private val context: Context)
         }
     }
 
-    private fun loadGalleryMetadata(url: String): Observable<HitomiGallery> {
-        return loadAllGalleryMetadata().map {
-            val mid = HitomiGalleryMetadata.hlIdFromUrl(url)
-            it.find { it.id.toString() == mid }
+    private fun loadGalleryMetadata(url: String): Observable<HitomiSkeletonGalleryMetadata> {
+        val mid = HitomiGalleryMetadata.hlIdFromUrl(url)
+
+        return ensureCacheLoaded().map {
+            getCacheRealm().use { realm ->
+                findCacheMetadataById(realm, mid)
+            }
         }
     }
 
-    private fun loadAllGalleryMetadata(): Observable<List<HitomiGallery>> {
-        val shouldRefresh = shouldRefreshGalleryFiles()
+    private fun findCacheMetadataById(realm: Realm, hlId: String): HitomiSkeletonGalleryMetadata? {
+        return realm.where(HitomiSkeletonGalleryMetadata::class.java)
+                .equalTo(HitomiSkeletonGalleryMetadata::hlId.name, hlId)
+                .findFirst()?.let { realm.copyFromRealm(it) }
+    }
 
-        metaCache?.let {
-            if(!shouldRefresh) {
-                return Observable.just(metaCache)
-            }
-        }
+    private fun ensureCacheLoaded(blocking: Boolean = true): Observable<Any> {
+        return Observable.fromCallable {
+            if(!blocking && cacheLock.isLocked) return@fromCallable Any()
 
-        var obs: Observable<List<String>> = Observable.just(emptyList())
+            lockCache {
+                val shouldRefresh = shouldRefreshGalleryFiles()
+                getCacheRealm().useTrans { realm ->
+                    if (!realm.isEmpty && !shouldRefresh)
+                        return@fromCallable Any()
 
-        var refresh = false
+                    realm.deleteAll()
+                }
 
-        for (i in 0 until GALLERY_CHUNK_COUNT) {
-            val cacheFile = galleryFile(i)
-            val newObs = if(shouldRefresh || !cacheFile.exists()) {
-                val url = "https://ltn.hitomi.la/galleries$i.json"
+                val cores = Runtime.getRuntime().availableProcessors()
+                Timber.d("Starting $cores threads to parse hitomi.la gallery data...")
 
-                refresh = true
+                val workQueue = ConcurrentLinkedQueue<Int>((0 until GALLERY_CHUNK_COUNT).toList())
+                val threads = mutableListOf<Thread>()
 
-                client.newCall(GET(url)).asObservableSuccess().map {
-                    it.body()!!.string().apply {
-                        lockCache {
-                            cacheFile.parentFile.mkdirs()
-                            cacheFile.writeText(this)
+                for(threadIndex in 1 .. cores) {
+                    threads += thread {
+                        getCacheRealm().use { realm ->
+                            while (true) {
+                                val i = workQueue.poll() ?: break
+
+                                Timber.d("[$threadIndex] Downloading + parsing hitomi.la gallery data ${i + 1}/$GALLERY_CHUNK_COUNT...")
+
+                                val url = "https://ltn.hitomi.la/galleries$i.json"
+
+                                val resp = client.newCall(GET(url)).execute().body()!!
+
+                                val out = mutableListOf<HitomiSkeletonGalleryMetadata>()
+
+                                JsonReader(resp.charStream()).use { reader ->
+                                    reader.beginArray()
+
+                                    while (reader.hasNext()) {
+                                        val gallery = HitomiGallery.fromJson(reader.nextJsonObject())
+                                        val meta = HitomiSkeletonGalleryMetadata()
+                                        gallery.addToGalleryMeta(meta)
+
+                                        out.add(meta)
+                                    }
+                                }
+
+                                Timber.d("[$threadIndex] Saving hitomi.la gallery data ${i + 1}/$GALLERY_CHUNK_COUNT...")
+
+                                realm.trans {
+                                    realm.insert(out)
+                                }
+                            }
                         }
                     }
                 }
-            } else {
-                // Load galleries from cache
-                Observable.fromCallable {
-                    lockCache {
-                        cacheFile.readText()
-                    }
-                }
+
+                threads.forEach(Thread::join)
+
+                // Update refresh time
+                prefs.eh_hl_lastRefresh().set(System.currentTimeMillis())
             }
 
-            obs = obs.flatMap { l ->
-                newObs.map {
-                    l + it
-                }
-            }
-        }
-
-        // Update refresh time if we refreshed
-        if(refresh)
-            prefs.eh_hl_lastRefresh().set(System.currentTimeMillis())
-
-        return obs.map {
-            val res = it.flatMap {
-                jsonParser.parse(it).array.map {
-                    HitomiGallery.fromJson(it.obj)
-                }
-            }
-
-            metaCache = res
-            res
+            return@fromCallable Any()
         }
     }
 
-    private fun resolveImage(url: String): String {
-        return Duktape.create().use {
-            it.evaluate(IMAGE_RESOLVER.replace(IMAGE_RESOLVER_URL_VAR, url)) as String
+    private fun resolveImage(duktape: Duktape, url: String): String {
+        return "https:" + duktape.evaluate(IMAGE_RESOLVER.replace(IMAGE_RESOLVER_URL_VAR, url)) as String
+    }
+
+    private fun HitomiGallery.addToGalleryMeta(meta: HitomiSkeletonGalleryMetadata) {
+        with(meta) {
+            hlId = id.toString()
+            title = name
+            // Intentionally avoid setting thumbnails
+            // We need another request to get them anyways
+            artist = artists.firstOrNull()
+            group = groups.firstOrNull()
+            type = this@addToGalleryMeta.type
+            languageSimple = language
+            series.clear()
+            series.addAll(parodies)
+            characters.clear()
+            characters.addAll(this@addToGalleryMeta.characters)
+
+            tags.clear()
+            this@addToGalleryMeta.tags.mapTo(tags) { Tag(it.key, it.value) }
         }
     }
+
+    private fun getCacheRealm() = Realm.getInstance(REALM_CONFIG)
 
     companion object {
+        private val PAGE_SIZE = 25
+        private val CHAR_MALE = "♂"
+        private val CHAR_FEMALE = "♀"
         private val GALLERY_CHUNK_COUNT = 20
         private val IMAGE_RESOLVER_URL_VAR = "%IMAGE_URL%"
+        private val NOT_AVAILABLE = "N/A"
+        private val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd HH:mm:ssX", Locale.US)
         private val IMAGE_RESOLVER = """
             (function() {
 var adapose = false; // Currently not sure what this does, it switches out frontend URL when we right click???
@@ -272,6 +652,11 @@ function url_from_url(url, base) {
 return url_from_url('$IMAGE_RESOLVER_URL_VAR');
 })();
             """.trimIndent()
+
+        private val REALM_CONFIG = RealmConfiguration.Builder()
+                .name("hitomi-cache")
+                .deleteRealmIfMigrationNeeded()
+                .build()
     }
 }
 
@@ -297,7 +682,7 @@ data class HitomiGallery(val artists: List<String>,
                     if(str.contains(":"))
                         str.substringBefore(':') to str.substringAfter(':')
                     else
-                        "tag" to str
+                        EMULATED_TAG_NAMESPACE to str
                 } ?: emptyMap(),
                 obj.mapNullStringList("c"),
                 obj["type"].string,

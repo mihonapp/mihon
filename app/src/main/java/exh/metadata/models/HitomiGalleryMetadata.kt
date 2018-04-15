@@ -44,9 +44,7 @@ open class HitomiGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
     override var tags: RealmList<Tag> = RealmList()
 
     // Sites does not show uploader
-    override var uploader: String?
-        get() = "admin"
-        set(value) {}
+    override var uploader: String? = "admin"
 
     var url get() = hlId?.let { urlFromHlId(it) }
         set(a) {
@@ -148,6 +146,6 @@ open class HitomiGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
                 = url.split('/').last().substringBeforeLast('.')
 
         fun urlFromHlId(id: String)
-                = "$BASE_URL/galleries/$id"
+                = "$BASE_URL/galleries/$id.html"
     }
 }
