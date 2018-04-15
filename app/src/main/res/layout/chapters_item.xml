@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_more_vert_black_24dp"
-        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingStart="24dp"
         android:paddingEnd="16dp"
@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         tools:text="DOWNLOADED"
         android:textAllCaps="true"
-        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginRight="16dp"/>
 

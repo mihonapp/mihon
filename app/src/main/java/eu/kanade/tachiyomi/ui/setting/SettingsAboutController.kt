@@ -109,6 +109,7 @@ class SettingsAboutController : SettingsController() {
                         }
                     }
                 }, { error ->
+                    activity?.toast(error.message)
                     Timber.e(error)
                 })
     }

@@ -22,6 +22,20 @@
         <changelogtext>Various bug fixes</changelogtext>
 
     </changelogversion>
+    <changelogversion versionName="v0.7.2" changeDate="">
+        <changelogtext>Fixed missing downloaded label in chapters screen.</changelogtext>
+
+        <changelogtext>Fixed updater in KitKat and lower due to TLS.</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="v0.7.1" changeDate="">
+        <changelogtext>Updated Cloudflare bypass.</changelogtext>
+
+        <changelogtext>Enabled TLS 1.1 and TLS 1.2 on Android KitKat and lower.</changelogtext>
+
+        <changelogtext>Minor UI changes.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.7.0" changeDate="">
         <changelogtext>Added extensions support. You can now install and update extensions within the app.
             If you installed any extension previously through F-Droid, you'll have to uninstall them first.</changelogtext>
