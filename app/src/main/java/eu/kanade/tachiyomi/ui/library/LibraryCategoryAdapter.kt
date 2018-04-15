@@ -56,7 +56,7 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
      * @param manga the manga to find.
      */
     fun indexOf(manga: Manga): Int {
-        return mangas.indexOfFirst { it.manga.id == manga.id }
+        return currentItems.indexOfFirst { it.manga.id == manga.id }
     }
 
     fun performFilter() {
