@@ -159,5 +159,7 @@ object PreferenceKeys {
 
     const val eh_hl_lastRefresh = "eh_lh_last_refresh"
 
+    const val eh_hl_lastRealmIndex = "eh_hl_lastRealmIndex"
+
     const val eh_expandFilters = "eh_expand_filters"
 }

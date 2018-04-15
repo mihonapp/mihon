@@ -229,6 +229,8 @@ class PreferencesHelper(val context: Context) {
     fun eh_hl_refreshFrequency() = rxPrefs.getString(Keys.eh_hl_refreshFrequency, "24")
 
     fun eh_hl_lastRefresh() = rxPrefs.getLong(Keys.eh_hl_lastRefresh, 0L)
+
+    fun eh_hl_lastRealmIndex() = rxPrefs.getInteger(Keys.eh_hl_lastRealmIndex, -1)
     // <-- EH
 
     fun eh_expandFilters() = rxPrefs.getBoolean(Keys.eh_expandFilters, false)

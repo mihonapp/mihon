@@ -54,6 +54,7 @@ class Hitomi(private val context: Context)
     :HttpSource(), LewdSource<HitomiGalleryMetadata, HitomiSkeletonGalleryMetadata> {
     private val jsonParser by lazy(LazyThreadSafetyMode.PUBLICATION) { JsonParser() }
     private val searchEngine by lazy { SearchEngine() }
+    private val prefs: PreferencesHelper by injectLazy()
 
     private val queryCache = mutableMapOf<String, RealmResults<HitomiSkeletonGalleryMetadata>>()
     private val queryWorkQueue = LinkedBlockingQueue<Triple<String, Int, AsyncSubject<List<HitomiSkeletonGalleryMetadata>>>>()
@@ -122,7 +123,7 @@ class Hitomi(private val context: Context)
     By caching our RealmResults in memory, we avoid creating many new RealmResults objects,
     thus speeding up RealmResults.size.
 
-    Realms are per-thread and RealmReults are bound to Realms. Therefore we create a
+    Realms are per-thread and RealmResults are bound to Realms. Therefore we create a
     permanent thread that will open a permanent realm and wait for requests to load RealmResults.
      */
 
@@ -133,46 +134,48 @@ class Hitomi(private val context: Context)
         searchWorker = thread {
             ensureCacheLoaded().toBlocking().first()
 
-            getCacheRealm().use { realm ->
-                Timber.d("[SW] New search worker thread started!")
-                while (true) {
-                    Timber.d("[SW] Waiting for next query!")
-                    val next = queryWorkQueue.take()
-                    Timber.d("[SW] Found new query (page ${next.second}): ${next.first}")
+            val realms = arrayOf(getCacheRealm(0), getCacheRealm(1))
 
-                    if(queryCache[next.first] == null) {
-                        val first = realm.where(HitomiSkeletonGalleryMetadata::class.java).findFirst()
+            Timber.d("[SW] New search worker thread started!")
+            while (true) {
+                val realm = realms[prefs.eh_hl_lastRealmIndex().getOrDefault()]
 
-                        if (first == null) {
-                            next.third.onNext(emptyList())
-                            next.third.onCompleted()
-                            continue
-                        }
+                Timber.d("[SW] Waiting for next query!")
+                val next = queryWorkQueue.take()
+                Timber.d("[SW] Found new query (page ${next.second}): ${next.first}")
 
-                        val parsed = searchEngine.parseQuery(next.first)
-                        val filtered = searchEngine.filterResults(realm.where(HitomiSkeletonGalleryMetadata::class.java),
-                                parsed,
-                                first.titleFields).findAll()
+                if(queryCache[next.first] == null) {
+                    val first = realm.where(HitomiSkeletonGalleryMetadata::class.java).findFirst()
 
-                        queryCache[next.first] = filtered
-                    }
-
-                    val filtered = queryCache[next.first]!!
-
-                    val beginIndex = (next.second - 1) * PAGE_SIZE
-                    if (beginIndex > filtered.lastIndex) {
+                    if (first == null) {
                         next.third.onNext(emptyList())
                         next.third.onCompleted()
                         continue
                     }
 
-                    // Chunk into pages of 100
-                    val res = realm.copyFromRealm(filtered.subList(beginIndex,
-                            Math.min(next.second * PAGE_SIZE, filtered.size)))
+                    val parsed = searchEngine.parseQuery(next.first)
+                    val filtered = searchEngine.filterResults(realm.where(HitomiSkeletonGalleryMetadata::class.java),
+                            parsed,
+                            first.titleFields).findAll()
 
-                    next.third.onNext(res)
-                    next.third.onCompleted()
+                    queryCache[next.first] = filtered
                 }
+
+                val filtered = queryCache[next.first]!!
+
+                val beginIndex = (next.second - 1) * PAGE_SIZE
+                if (beginIndex > filtered.lastIndex) {
+                    next.third.onNext(emptyList())
+                    next.third.onCompleted()
+                    continue
+                }
+
+                // Chunk into pages of 100
+                val res = realm.copyFromRealm(filtered.subList(beginIndex,
+                        Math.min(next.second * PAGE_SIZE, filtered.size)))
+
+                next.third.onNext(res)
+                next.third.onCompleted()
             }
         }
     }
@@ -256,9 +259,7 @@ class Hitomi(private val context: Context)
 
     override val supportsLatest = true
 
-    private val prefs: PreferencesHelper by injectLazy()
-
-    private val cacheLock = ReentrantLock()
+    private val cacheLocks = arrayOf(ReentrantLock(), ReentrantLock())
 
     override fun popularMangaRequest(page: Int) = GET("$BASE_URL/popular-all-$page.html")
 
@@ -295,7 +296,7 @@ class Hitomi(private val context: Context)
             else null
         }
 
-        val meta = getCacheRealm().use {
+        val meta = getAvailableCacheRealm()?.use {
             val res = it.where(HitomiSkeletonGalleryMetadata::class.java)
                     .equalTo(HitomiSkeletonGalleryMetadata::hlId.name, hlId)
                     .findFirst()
@@ -431,14 +432,16 @@ class Hitomi(private val context: Context)
                     it.insert(newPages)
                 }
 
-                getCacheRealm().useTrans {
-                    // Delete old meta
-                    it.where(HitomiSkeletonGalleryMetadata::class.java)
-                            .equalTo(HitomiSkeletonGalleryMetadata::hlId.name, hlId)
-                            .findAll().deleteAllFromRealm()
+                (0 .. 1).map { getCacheRealm(it) }.forEach {
+                    it.useTrans {
+                        // Delete old meta
+                        it.where(HitomiSkeletonGalleryMetadata::class.java)
+                                .equalTo(HitomiSkeletonGalleryMetadata::hlId.name, hlId)
+                                .findAll().deleteAllFromRealm()
 
-                    // Add new meta
-                    it.insert(newMeta)
+                        // Add new meta
+                        it.insert(newMeta)
+                    }
                 }
 
                 newMeta to newPages.map(HitomiPage::url)
@@ -455,10 +458,8 @@ class Hitomi(private val context: Context)
                 .map { response ->
                     val doc = response.asJsoup()
 
-                    val res = getCacheRealm().use { realm ->
-                        parsePage(doc).map {
-                            it
-                        }
+                    val res = parsePage(doc).map {
+                        it
                     }
                     val sManga = res.map {
                         SManga.create().apply {
@@ -493,12 +494,12 @@ class Hitomi(private val context: Context)
         return timeDiff > prefs.eh_hl_refreshFrequency().getOrDefault().toLong() * 60L * 60L * 1000L
     }
 
-    private inline fun <T> lockCache(block: () -> T): T {
-        cacheLock.lock()
+    private inline fun <T> lockCache(index: Int, block: () -> T): T {
+        cacheLocks[index].lock()
         try {
             return block()
         } finally {
-            cacheLock.unlock()
+            cacheLocks[index].unlock()
         }
     }
 
@@ -506,7 +507,7 @@ class Hitomi(private val context: Context)
         val mid = HitomiGalleryMetadata.hlIdFromUrl(url)
 
         return ensureCacheLoaded().map {
-            getCacheRealm().use { realm ->
+            getAvailableCacheRealm()?.use { realm ->
                 findCacheMetadataById(realm, mid)
             }
         }
@@ -520,11 +521,19 @@ class Hitomi(private val context: Context)
 
     private fun ensureCacheLoaded(blocking: Boolean = true): Observable<Any> {
         return Observable.fromCallable {
-            if(!blocking && cacheLock.isLocked) return@fromCallable Any()
+            if(prefs.eh_hl_lastRealmIndex().getOrDefault() >= 0) { return@fromCallable Any() }
 
-            lockCache {
+            val nextRealmIndex = when(prefs.eh_hl_lastRealmIndex().getOrDefault()) {
+                0 -> 1
+                1 -> 0
+                else -> 0
+            }
+
+            if(!blocking && cacheLocks[nextRealmIndex].isLocked) return@fromCallable Any()
+
+            lockCache(nextRealmIndex) {
                 val shouldRefresh = shouldRefreshGalleryFiles()
-                getCacheRealm().useTrans { realm ->
+                getCacheRealm(nextRealmIndex).useTrans { realm ->
                     if (!realm.isEmpty && !shouldRefresh)
                         return@fromCallable Any()
 
@@ -539,7 +548,7 @@ class Hitomi(private val context: Context)
 
                 for(threadIndex in 1 .. cores) {
                     threads += thread {
-                        getCacheRealm().use { realm ->
+                        getCacheRealm(nextRealmIndex).use { realm ->
                             while (true) {
                                 val i = workQueue.poll() ?: break
 
@@ -577,6 +586,11 @@ class Hitomi(private val context: Context)
 
                 // Update refresh time
                 prefs.eh_hl_lastRefresh().set(System.currentTimeMillis())
+
+                // Update last refreshed realm
+                prefs.eh_hl_lastRealmIndex().set(nextRealmIndex)
+
+                Timber.d("Successfully refreshed realm #$nextRealmIndex!")
             }
 
             return@fromCallable Any()
@@ -607,7 +621,35 @@ class Hitomi(private val context: Context)
         }
     }
 
-    private fun getCacheRealm() = Realm.getInstance(REALM_CONFIG)
+    private fun <T> getAndLockAvailableCacheRealm(block: (Realm) -> T): T? {
+        val index = prefs.eh_hl_lastRealmIndex().getOrDefault()
+
+        return if(index >= 0) {
+            val cache = getCacheRealm(index)
+            lockCache(index) {
+                block(cache)
+            }
+        } else {
+            null
+        }
+    }
+
+    private fun getAvailableCacheRealm(): Realm? {
+        val index = prefs.eh_hl_lastRealmIndex().getOrDefault()
+
+        return if(index >= 0) {
+            getCacheRealm(index)
+        } else {
+            null
+        }
+    }
+
+    private fun getCacheRealm(index: Int) = Realm.getInstance(getRealmConfig(index))
+
+    private fun getRealmConfig(index: Int) = RealmConfiguration.Builder()
+            .name("hitomi-cache-$index")
+            .deleteRealmIfMigrationNeeded()
+            .build()
 
     companion object {
         private val PAGE_SIZE = 25
@@ -652,11 +694,6 @@ function url_from_url(url, base) {
 return url_from_url('$IMAGE_RESOLVER_URL_VAR');
 })();
             """.trimIndent()
-
-        private val REALM_CONFIG = RealmConfiguration.Builder()
-                .name("hitomi-cache")
-                .deleteRealmIfMigrationNeeded()
-                .build()
     }
 }
 
