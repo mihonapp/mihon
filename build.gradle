@@ -16,7 +16,7 @@ buildscript {
         //Firebase (EH)
         classpath 'com.google.gms:google-services:3.0.0'
         //Realm (EH)
-        classpath "io.realm:realm-gradle-plugin:4.2.0"
+        classpath "io.realm:realm-gradle-plugin:5.0.1"
     }
 }
 

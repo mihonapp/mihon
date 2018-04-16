@@ -1,5 +1,6 @@
 package exh.metadata
 
+import eu.kanade.tachiyomi.R.string.name
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.LewdSource
@@ -18,7 +19,7 @@ fun Realm.loadAllMetadata(): Map<KClass<out SearchableGalleryMetadata>, RealmRes
         Injekt.get<SourceManager>().getOnlineSources().filterIsInstance<LewdSource<*, *>>().map {
             it.queryAll()
         }.associate {
-            it.clazz to it.query(this@loadAllMetadata).findAllSorted(SearchableGalleryMetadata::mangaId.name)
+            it.clazz to it.query(this@loadAllMetadata).sort(SearchableGalleryMetadata::mangaId.name).findAll()
         }.toMap()
 
 fun Realm.queryMetadataFromManga(manga: Manga,

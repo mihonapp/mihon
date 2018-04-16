@@ -295,7 +295,8 @@ class Hitomi(private val context: Context)
         val pages = defRealm { realm ->
             val rres = realm.where(HitomiPage::class.java)
                     .equalTo(HitomiPage::gallery.name, hlId)
-                    .findAllSorted(HitomiPage::index.name)
+                    .sort(HitomiPage::index.name)
+                    .findAll()
 
             if (rres.isNotEmpty())
                 rres.map(HitomiPage::url)

@@ -460,18 +460,6 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
         return query.isNotEmpty(fieldName)
     }
 
-    fun distinct(fieldName: String): RealmResults<E> {
-        return query.distinct(fieldName)
-    }
-
-    fun distinctAsync(fieldName: String): RealmResults<E> {
-        return query.distinctAsync(fieldName)
-    }
-
-    fun distinct(firstFieldName: String, vararg remainingFieldNames: String): RealmResults<E> {
-        return query.distinct(firstFieldName, *remainingFieldNames)
-    }
-
     fun sum(fieldName: String): Number {
         return query.sum(fieldName)
     }
@@ -506,38 +494,6 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
 
     fun findAllAsync(): RealmResults<E> {
         return query.findAllAsync()
-    }
-
-    fun findAllSorted(fieldName: String, sortOrder: Sort): RealmResults<E> {
-        return query.findAllSorted(fieldName, sortOrder)
-    }
-
-    fun findAllSortedAsync(fieldName: String, sortOrder: Sort): RealmResults<E> {
-        return query.findAllSortedAsync(fieldName, sortOrder)
-    }
-
-    fun findAllSorted(fieldName: String): RealmResults<E> {
-        return query.findAllSorted(fieldName)
-    }
-
-    fun findAllSortedAsync(fieldName: String): RealmResults<E> {
-        return query.findAllSortedAsync(fieldName)
-    }
-
-    fun findAllSorted(fieldNames: Array<String>, sortOrders: Array<Sort>): RealmResults<E> {
-        return query.findAllSorted(fieldNames, sortOrders)
-    }
-
-    fun findAllSortedAsync(fieldNames: Array<String>, sortOrders: Array<Sort>): RealmResults<E> {
-        return query.findAllSortedAsync(fieldNames, sortOrders)
-    }
-
-    fun findAllSorted(fieldName1: String, sortOrder1: Sort, fieldName2: String, sortOrder2: Sort): RealmResults<E> {
-        return query.findAllSorted(fieldName1, sortOrder1, fieldName2, sortOrder2)
-    }
-
-    fun findAllSortedAsync(fieldName1: String, sortOrder1: Sort, fieldName2: String, sortOrder2: Sort): RealmResults<E> {
-        return query.findAllSortedAsync(fieldName1, sortOrder1, fieldName2, sortOrder2)
     }
 
     fun findFirst(): E? {

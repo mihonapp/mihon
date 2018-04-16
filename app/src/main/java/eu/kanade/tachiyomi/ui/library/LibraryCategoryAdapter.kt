@@ -87,7 +87,8 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
                             searchEngine.filterResults(it.value.where(),
                                     parsedQuery,
                                     it.value.first()!!.titleFields)
-                                    .findAllSorted(SearchableGalleryMetadata::mangaId.name).apply {
+                                    .sort(SearchableGalleryMetadata::mangaId.name)
+                                    .findAll().apply {
                                 totalFilteredSize += size
                             }
                         else
