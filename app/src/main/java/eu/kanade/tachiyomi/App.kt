@@ -69,7 +69,7 @@ open class App : Application() {
         Realm.init(this)
         val config = RealmConfiguration.Builder()
                 .name("gallery-metadata.realm")
-                .schemaVersion(2)
+                .schemaVersion(3)
                 .deleteRealmIfMigrationNeeded()
                 .build()
         Realm.setDefaultConfiguration(config)
