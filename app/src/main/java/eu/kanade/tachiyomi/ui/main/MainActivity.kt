@@ -47,6 +47,7 @@ import eu.kanade.tachiyomi.source.online.all.Hitomi
 import eu.kanade.tachiyomi.util.vibrate
 import exh.HITOMI_SOURCE_ID
 import rx.schedulers.Schedulers
+import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -260,23 +261,28 @@ class MainActivity : BaseActivity() {
     }
 
     fun getToolbarNavigationIcon(toolbar: Toolbar): View? {
-        //check if contentDescription previously was set
-        val hadContentDescription = TextUtils.isEmpty(toolbar.navigationContentDescription)
-        val contentDescription = if (!hadContentDescription) toolbar.navigationContentDescription else "navigationIcon"
-        toolbar.navigationContentDescription = contentDescription
+        try {
+            //check if contentDescription previously was set
+            val hadContentDescription = TextUtils.isEmpty(toolbar.navigationContentDescription)
+            val contentDescription = if (!hadContentDescription) toolbar.navigationContentDescription else "navigationIcon"
+            toolbar.navigationContentDescription = contentDescription
 
-        val potentialViews = ArrayList<View>()
+            val potentialViews = ArrayList<View>()
 
-        //find the view based on it's content description, set programmatically or with android:contentDescription
-        toolbar.findViewsWithText(potentialViews, contentDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION)
+            //find the view based on it's content description, set programmatically or with android:contentDescription
+            toolbar.findViewsWithText(potentialViews, contentDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION)
 
-        //Nav icon is always instantiated at this point because calling setNavigationContentDescription ensures its existence
-        val navIcon = potentialViews.firstOrNull()
+            //Nav icon is always instantiated at this point because calling setNavigationContentDescription ensures its existence
+            val navIcon = potentialViews.firstOrNull()
 
-        //Clear content description if not previously present
-        if (hadContentDescription)
-            toolbar.navigationContentDescription = null
-        return navIcon
+            //Clear content description if not previously present
+            if (hadContentDescription)
+                toolbar.navigationContentDescription = null
+            return navIcon
+        } catch(t: Throwable) {
+            Timber.w(t, "Could not find toolbar nav icon!")
+            return null
+        }
     }
 
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
