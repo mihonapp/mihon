@@ -1,6 +1,5 @@
 package exh.metadata
 
-import eu.kanade.tachiyomi.R.string.name
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.LewdSource

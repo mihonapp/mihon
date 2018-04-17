@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.source.online.all
 
 import android.content.Context
+import android.os.Build
 import android.os.HandlerThread
 import com.github.salomonbrys.kotson.*
 import com.google.gson.JsonObject
@@ -688,7 +689,12 @@ class Hitomi(private val context: Context)
         private val GALLERY_CHUNK_COUNT = 20
         private val IMAGE_RESOLVER_URL_VAR = "%IMAGE_URL%"
         private val NOT_AVAILABLE = "N/A"
-        private val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd HH:mm:ssX", Locale.US)
+        private val DATE_FORMAT by lazy {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ssX", Locale.US)
+            else
+            SimpleDateFormat("yyyy-MM-dd HH:mm:ss'-05'", Locale.US)
+        }
         private val IMAGE_RESOLVER = """
             (function() {
 var adapose = false; // Currently not sure what this does, it switches out frontend URL when we right click???
