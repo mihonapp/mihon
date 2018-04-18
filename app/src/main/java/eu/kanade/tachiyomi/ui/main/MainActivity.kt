@@ -158,15 +158,16 @@ class MainActivity : BaseActivity() {
         // --> EH
         //Hook long press hamburger menu to lock
         getToolbarNavigationIcon(toolbar)?.setOnLongClickListener {
-            doLock(true)
-            vibrate(50) // Notify user of lock
-            true
+            if(lockEnabled(preferences)) {
+                doLock(true)
+                vibrate(50) // Notify user of lock
+                true
+            } else false
         }
 
         //Show lock
         if (savedInstanceState == null) {
-            val lockEnabled = lockEnabled(preferences)
-            if (lockEnabled) {
+            if (lockEnabled(preferences)) {
                 //Special case first lock
                 doLock()
 

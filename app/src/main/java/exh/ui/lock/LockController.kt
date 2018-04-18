@@ -74,6 +74,7 @@ class LockController : NucleusController<LockPresenter>() {
         with(view) {
             //Fingerprint
             if (presenter.useFingerprint) {
+                swirl_container.visibility = View.VISIBLE
                 swirl_container.removeAllViews()
                 val icon = SwirlView(context).apply {
                     val size = dpToPx(context, 60)
@@ -114,6 +115,8 @@ class LockController : NucleusController<LockPresenter>() {
                                 }
                             }
                         }
+            } else {
+                swirl_container.visibility = View.GONE
             }
         }
     }
