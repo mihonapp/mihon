@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v7.2.3-EH" changeDate="">
+        <changelogtext>Fix app crashing on some older devices (again)</changelogtext>
+        <changelogtext>Fix app crashing sometimes when long-pressing the back/menu button in the top left</changelogtext>
+    </changelogversion>
+    <changelogversion versionName="v7.2.2-EH" changeDate="">
+        <changelogtext>Fix app crashing on some older devices</changelogtext>
+    </changelogversion>
     <changelogversion versionName="v7.2.0-EH" changeDate="">
         <changelogtext>Fix Tsumino search page offset</changelogtext>
         <changelogtext>Added hitomi.la source (searching is still very slow/buggy)</changelogtext>
