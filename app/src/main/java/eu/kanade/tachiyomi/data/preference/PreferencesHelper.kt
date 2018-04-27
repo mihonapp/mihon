@@ -67,6 +67,8 @@ class PreferencesHelper(val context: Context) {
 
     fun cropBorders() = rxPrefs.getBoolean(Keys.cropBorders, false)
 
+    fun cropBordersWebtoon() = rxPrefs.getBoolean(Keys.cropBordersWebtoon, false)
+
     fun readWithTapping() = rxPrefs.getBoolean(Keys.readWithTapping, true)
 
     fun readWithVolumeKeys() = rxPrefs.getBoolean(Keys.readWithVolumeKeys, false)

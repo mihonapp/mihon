@@ -91,6 +91,11 @@ class SettingsReaderController : SettingsController() {
             defaultValue = false
         }
         switchPreference {
+            key = Keys.cropBordersWebtoon
+            titleRes = R.string.pref_crop_borders_webtoon
+            defaultValue = false
+        }
+        switchPreference {
             key = Keys.keepScreenOn
             titleRes = R.string.pref_keep_screen_on
             defaultValue = true
