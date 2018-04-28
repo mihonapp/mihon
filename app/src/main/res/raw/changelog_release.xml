@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.7.3" changeDate="">
+        <changelogtext>Fixed the tracking search layout when there are many results.</changelogtext>
+
+        <changelogtext>Separate english language into american and british so that dates are formatted according to that locale.</changelogtext>
+
+        <changelogtext>Added Firebase analytics, for Android API distribution.</changelogtext>
+
+        <changelogtext>Crop borders for webtoons now has a separate setting.</changelogtext>
+
+        <changelogtext>The downloader now runs in a foreground service to prevent it from being killed.</changelogtext>
+
+        <changelogtext>Fixed a few weird crashes.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.7.2" changeDate="">
         <changelogtext>Fixed missing downloaded label in chapters screen.</changelogtext>
 
