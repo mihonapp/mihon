@@ -203,7 +203,7 @@ dependencies {
     implementation 'me.gujun.android.taggroup:library:1.4@aar'
 
     // Conductor
-    implementation "com.github.inorichi.Conductor:conductor:05c4d4d"
+    implementation "com.github.inorichi.Conductor:conductor:be8b3c5"
     implementation ("com.bluelinelabs:conductor-support:2.1.5-SNAPSHOT") {
         exclude group: "com.bluelinelabs", module: "conductor"
     }
