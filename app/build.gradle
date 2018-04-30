@@ -120,7 +120,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.2'
 
-    standardImplementation 'com.google.firebase:firebase-core:12.0.1'
+    standardImplementation 'com.google.firebase:firebase-core:11.8.0'
 
     // ReactiveX
     implementation 'io.reactivex:rxandroid:1.2.1'
@@ -155,7 +155,7 @@ dependencies {
 
     // Job scheduling
     implementation 'com.evernote:android-job:1.2.4'
-    implementation 'com.google.android.gms:play-services-gcm:12.0.1'
+    implementation 'com.google.android.gms:play-services-gcm:11.8.0'
 
     // Changelog
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
