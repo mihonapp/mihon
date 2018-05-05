@@ -130,7 +130,7 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork:0.7.0'
 
     // Network client
-    implementation "com.squareup.okhttp3:okhttp:3.9.1"
+    implementation "com.squareup.okhttp3:okhttp:3.10.0"
     implementation 'com.squareup.okio:okio:1.14.0'
 
     // REST
