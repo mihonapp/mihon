@@ -30,7 +30,7 @@ class SettingsGeneralController : SettingsController() {
             key = Keys.lang
             titleRes = R.string.pref_language
             entryValues = arrayOf("", "ar", "bg", "bn", "de", "en-US", "en-GB", "es", "fr", "hi",
-                    "hu", "id", "it", "ja", "ko", "lv", "ms", "nl", "pl", "pt", "pt-BR", "ro",
+                    "hu", "in", "it", "ja", "ko", "lv", "ms", "nl", "pl", "pt", "pt-BR", "ro",
                     "ru", "vi")
             entries = entryValues.map { value ->
                 val locale = LocaleHelper.getLocaleFromString(value.toString())
