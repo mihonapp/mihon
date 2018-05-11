@@ -154,7 +154,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.10.2'
 
     // Job scheduling
-    implementation 'com.evernote:android-job:1.2.4'
+    implementation 'com.evernote:android-job:1.2.5'
     implementation 'com.google.android.gms:play-services-gcm:11.8.0'
 
     // Changelog
