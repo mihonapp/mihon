@@ -22,7 +22,8 @@ import timber.log.Timber
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 
@@ -79,6 +80,15 @@ class SettingsAboutController : SettingsController() {
             }
         }
         preference {
+            title = "Github"
+            val url = "https://github.com/inorichi/tachiyomi"
+            summary = url
+            onClick {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+            }
+        }
+        preference {
             titleRes = R.string.version
             summary = if (BuildConfig.DEBUG)
                 "r" + BuildConfig.COMMIT_COUNT
@@ -92,15 +102,6 @@ class SettingsAboutController : SettingsController() {
         preference {
             titleRes = R.string.build_time
             summary = getFormattedBuildTime()
-        }
-        preference {
-            title = "Github"
-            val url = "https://github.com/inorichi/tachiyomi"
-            summary = url
-            onClick {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(intent)
-            }
         }
     }
 
