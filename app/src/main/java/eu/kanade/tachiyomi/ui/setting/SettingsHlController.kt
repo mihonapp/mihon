@@ -43,7 +43,7 @@ class SettingsHlController : SettingsController() {
 
         preference {
             title = "Force refresh search database now"
-            summary = "Delete the local copy of the hitomi.la search database and download the new database now. Hitomi.la searching will not working in the ~10mins that it takes to refresh the search database"
+            summary = "Delete the local copy of the hitomi.la search database and download the new database now. Hitomi.la search will not working in the ~10mins that it takes to refresh the search database"
             isPersistent = false
 
             onClick {
