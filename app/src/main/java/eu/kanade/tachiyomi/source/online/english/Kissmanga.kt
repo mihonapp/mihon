@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import okhttp3.FormBody
+import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -28,6 +29,11 @@ class Kissmanga : ParsedHttpSource() {
     override val supportsLatest = true
 
     override val client: OkHttpClient = network.cloudflareClient
+
+    override fun headersBuilder(): Headers.Builder {
+        return Headers.Builder()
+            .add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) Gecko/20100101 Firefox/60")
+    }
 
     override fun popularMangaSelector() = "table.listing tr:gt(1)"
 
@@ -156,7 +162,7 @@ class Kissmanga : ParsedHttpSource() {
 
             // There are two functions in an inline script needed to decrypt the urls. We find and
             // execute them.
-            var p = Pattern.compile("(.*CryptoJS.*)")
+            var p = Pattern.compile("(var.*CryptoJS.*)")
             var m = p.matcher(body)
             while (m.find()) {
                 it.evaluate(m.group(1))

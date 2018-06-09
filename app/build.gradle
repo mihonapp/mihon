@@ -40,8 +40,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 7203
-        versionName "v7.2.3-EH"
+        versionCode 7400
+        versionName "v7.4.3-EH"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
@@ -125,6 +125,8 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.2'
 
+    standardImplementation 'com.google.firebase:firebase-core:11.8.0'
+
     // ReactiveX
     implementation 'io.reactivex:rxandroid:1.2.1'
     implementation 'io.reactivex:rxjava:1.3.6'
@@ -133,7 +135,7 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork:0.7.0'
 
     // Network client
-    implementation "com.squareup.okhttp3:okhttp:3.9.1"
+    implementation "com.squareup.okhttp3:okhttp:3.10.0"
     implementation 'com.squareup.okio:okio:1.14.0'
 
     // REST
@@ -157,7 +159,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.10.2'
 
     // Job scheduling
-    implementation 'com.evernote:android-job:1.2.4'
+    implementation 'com.evernote:android-job:1.2.5'
     implementation 'com.google.android.gms:play-services-gcm:11.8.0'
 
     // Changelog
@@ -206,9 +208,10 @@ dependencies {
     implementation 'me.gujun.android.taggroup:library:1.4@aar'
 
     // Conductor
-    implementation "com.github.inorichi.Conductor:conductor:05c4d4d"
+    implementation "com.github.inorichi.Conductor:conductor:be8b3c5"
     implementation ("com.bluelinelabs:conductor-support:2.1.5-SNAPSHOT") {
         exclude group: "com.bluelinelabs", module: "conductor"
+        exclude group: "com.android.support"
     }
     implementation 'com.github.inorichi:conductor-support-preference:27.0.2'
 
@@ -274,4 +277,8 @@ kotlin {
 
 androidExtensions {
     experimental = true
+}
+
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Standard")) {
+    apply plugin: 'com.google.gms.google-services'
 }

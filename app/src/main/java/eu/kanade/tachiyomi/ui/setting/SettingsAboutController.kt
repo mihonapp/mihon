@@ -20,7 +20,8 @@ import timber.log.Timber
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 
@@ -59,6 +60,15 @@ class SettingsAboutController : SettingsController() {
                 }
             } else {
                 isVisible = false
+            }
+        }
+        preference {
+            title = "Github"
+            val url = "https://github.com/NerdNumber9/TachiyomiEH"
+            summary = url
+            onClick {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
             }
         }
         preference {
