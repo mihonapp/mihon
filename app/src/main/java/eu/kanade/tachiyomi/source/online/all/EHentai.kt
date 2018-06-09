@@ -289,7 +289,7 @@ class EHentai(override val id: Long,
             val currentImage = getElementById("img").attr("src")
             //Each press of the retry button will choose another server
             select("#loadfail").attr("onclick").nullIfBlank()?.let {
-                page.url = addParam(page.url, "nl", it.substring(it.indexOf('\'') + 1 .. it.lastIndexOf('\'') - 1))
+                page.url = addParam(page.url, "nl", it.substring(it.indexOf('\'') + 1 until it.lastIndexOf('\'')))
             }
             return currentImage
         }
@@ -425,8 +425,7 @@ class EHentai(override val id: Long,
         }
     }
 
-    //Explicit type arg for listOf() to workaround this: KT-16570
-    class AdvancedGroup : UriGroup<Filter<*>>("Advanced Options", listOf<Filter<*>>(
+    class AdvancedGroup : UriGroup<Filter<*>>("Advanced Options", listOf(
             AdvancedOption("Search Gallery Name", "f_sname", true),
             AdvancedOption("Search Gallery Tags", "f_stags", true),
             AdvancedOption("Search Gallery Description", "f_sdesc"),
