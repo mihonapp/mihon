@@ -242,17 +242,17 @@ dependencies {
     implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
 
     //Reprint (EXH)
-    implementation 'com.github.ajalt.reprint:core:3.2.0@aar' // required: supports marshmallow devices
-    implementation 'com.github.ajalt.reprint:rxjava:3.2.0@aar' // optional: the RxJava 1 interface
+    implementation 'com.github.ajalt.reprint:core:3.2.1@aar' // required: supports marshmallow devices
+    implementation 'com.github.ajalt.reprint:rxjava:3.2.1@aar' // optional: the RxJava 1 interface
 
     //Swirl (EXH)
-    implementation 'com.mattprecious.swirl:swirl:1.0.0'
+    implementation 'com.mattprecious.swirl:swirl:1.1.0'
 
     //RxJava 2 interop for Realm (EXH)
     implementation 'com.lvla.android:rxjava2-interop-kt:0.2.1'
 
     //Debug network interceptor (EXH)
-    devImplementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
+    devImplementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
 }
 
 buildscript {
