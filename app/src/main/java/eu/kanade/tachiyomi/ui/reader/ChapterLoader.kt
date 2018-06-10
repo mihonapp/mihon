@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.reader
 
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -12,6 +14,7 @@ import rx.Observable
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 import java.util.concurrent.PriorityBlockingQueue
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -20,6 +23,8 @@ class ChapterLoader(
         private val manga: Manga,
         private val source: Source
 ) {
+
+    private val prefs by injectLazy<PreferencesHelper>()
 
     private val queue = PriorityBlockingQueue<PriorityPage>()
     private val subscriptions = CompositeSubscription()
@@ -41,17 +46,18 @@ class ChapterLoader(
     private fun prepareOnlineReading() {
         if (source !is HttpSource) return
 
-        subscriptions += Observable.defer { Observable.just(queue.take().page) }
-                .filter { it.status == Page.QUEUE }
-                .concatMap { source.fetchImageFromCacheThenNet(it) }
-                .repeat()
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                }, { error ->
-                    if (error !is InterruptedException) {
-                        Timber.e(error)
-                    }
-                })
+        for(i in 1 .. prefs.eh_readerThreads().getOrDefault())
+            subscriptions += Observable.defer { Observable.just(queue.take().page) }
+                    .filter { it.status == Page.QUEUE }
+                    .concatMap { source.fetchImageFromCacheThenNet(it) }
+                    .repeat()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                    }, { error ->
+                        if (error !is InterruptedException) {
+                            Timber.e(error)
+                        }
+                    })
     }
 
     fun loadChapter(chapter: ReaderChapter) = Observable.just(chapter)
@@ -117,7 +123,18 @@ class ChapterLoader(
     }
 
     fun retryPage(page: Page) {
-        queue.offer(PriorityPage(page, 2))
+        if(source is HttpSource && prefs.eh_readerInstantRetry().getOrDefault())
+            subscriptions += Observable.just(page)
+                    .concatMap { source.fetchImageFromCacheThenNet(it) }
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                    }, { error ->
+                        if (error !is InterruptedException) {
+                            Timber.e(error)
+                        }
+                    })
+        else
+            queue.offer(PriorityPage(page, 2))
     }
 
 

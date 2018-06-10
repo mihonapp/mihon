@@ -238,4 +238,8 @@ class PreferencesHelper(val context: Context) {
     // <-- EH
 
     fun eh_expandFilters() = rxPrefs.getBoolean(Keys.eh_expandFilters, false)
+
+    fun eh_readerThreads() = rxPrefs.getInteger(Keys.eh_readerThreads, 2)
+
+    fun eh_readerInstantRetry() = rxPrefs.getBoolean(Keys.eh_readerInstantRetry, true)
 }

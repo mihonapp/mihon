@@ -166,4 +166,8 @@ object PreferenceKeys {
     const val eh_hl_lastRealmIndex = "eh_hl_lastRealmIndex"
 
     const val eh_expandFilters = "eh_expand_filters"
+
+    const val eh_readerThreads = "eh_reader_threads"
+
+    const val eh_readerInstantRetry = "eh_reader_instant_retry"
 }
