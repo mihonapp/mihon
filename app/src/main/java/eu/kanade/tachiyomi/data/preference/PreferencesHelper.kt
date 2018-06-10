@@ -243,7 +243,5 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_readerInstantRetry() = rxPrefs.getBoolean(Keys.eh_readerInstantRetry, true)
 
-    fun eh_utilAutoscrollState() = rxPrefs.getBoolean(Keys.eh_utilAutoscrollState, false)
-
     fun eh_utilAutoscrollInterval() = rxPrefs.getFloat(Keys.eh_utilAutoscrollInterval, 3f)
 }

@@ -8,6 +8,8 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Build.VERSION_CODES.KITKAT
 import android.os.Bundle
+import android.support.v4.graphics.drawable.DrawableCompat.applyTheme
+import android.support.v4.view.ViewCompat.setRotation
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -20,6 +22,7 @@ import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.widget.checkedChanges
 import com.jakewharton.rxbinding.widget.textChanges
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.R.id.*
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -164,40 +167,37 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             setEhUtilsVisibility(ehUtilsVisible)
         }
 
-        subscriptions += preferences.eh_utilAutoscrollState().asObservable()
-                .combineLatest(preferences.eh_utilAutoscrollInterval().asObservable()) { state, interval ->
-                    state to interval
-                }.observeOn(AndroidSchedulers.mainThread())
-                .subscribe { (state, interval) ->
-                    if(state && interval != -1f) {
-                        setupAutoscroll(interval)
-                    } else {
-                        autoscrollSubscription?.unsubscribe()
-                        autoscrollSubscription = null
-                    }
+        eh_autoscroll_freq.setText(preferences.eh_utilAutoscrollInterval().getOrDefault().let {
+            if(it == -1f)
+                ""
+            else it.toString()
+        })
 
-                    eh_autoscroll.isChecked = state
-                    if(interval != -1f && eh_autoscroll_freq.text?.toString()?.toFloatOrNull() != interval)
-                        eh_autoscroll_freq.setText(interval.toString())
+        subscriptions += eh_autoscroll.checkedChanges()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    setupAutoscroll(if(it)
+                        preferences.eh_utilAutoscrollInterval().getOrDefault()
+                    else -1f)
                 }
 
-        subscriptions += eh_autoscroll.checkedChanges().subscribe {
-            preferences.eh_utilAutoscrollState().set(it)
-        }
+        subscriptions += eh_autoscroll_freq.textChanges()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val parsed = it?.toString()?.toFloatOrNull()
 
-        subscriptions += eh_autoscroll_freq.textChanges().subscribe {
-            val parsed = it?.toString()?.toFloatOrNull()
-
-            if(parsed == null || parsed <= 0 || parsed > 9999) {
-                eh_autoscroll_freq.error = "Invalid frequency"
-                preferences.eh_utilAutoscrollInterval().set(-1f)
-                eh_autoscroll.isEnabled = false
-            } else {
-                eh_autoscroll_freq.error = null
-                preferences.eh_utilAutoscrollInterval().set(parsed)
-                eh_autoscroll.isEnabled = true
-            }
-        }
+                    if (parsed == null || parsed <= 0 || parsed > 9999) {
+                        eh_autoscroll_freq.error = "Invalid frequency"
+                        preferences.eh_utilAutoscrollInterval().set(-1f)
+                        eh_autoscroll.isEnabled = false
+                        setupAutoscroll(-1f)
+                    } else {
+                        eh_autoscroll_freq.error = null
+                        preferences.eh_utilAutoscrollInterval().set(parsed)
+                        eh_autoscroll.isEnabled = true
+                        setupAutoscroll(if(eh_autoscroll.isChecked) parsed else -1f)
+                    }
+                }
 
         subscriptions += eh_autoscroll_help.clicks().subscribe {
             MaterialDialog.Builder(this)
@@ -501,16 +501,16 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private fun setRotation(rotation: Int) {
         when (rotation) {
-            // Rotation free
+        // Rotation free
             1 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            // Lock in current rotation
+        // Lock in current rotation
             2 -> {
                 val currentOrientation = resources.configuration.orientation
                 setRotation(if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) 3 else 4)
             }
-            // Lock in portrait
+        // Lock in portrait
             3 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            // Lock in landscape
+        // Lock in landscape
             4 -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         }
     }
@@ -697,6 +697,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     // --> EH
     private fun setupAutoscroll(interval: Float) {
         autoscrollSubscription?.unsubscribe()
+        autoscrollSubscription = null
+
+        if(interval == -1f) return
 
         val intervalMs = (interval * 1000).roundToLong()
         val sub = Observable.interval(intervalMs, intervalMs, TimeUnit.MILLISECONDS)
