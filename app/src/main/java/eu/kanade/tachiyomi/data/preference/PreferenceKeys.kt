@@ -170,4 +170,8 @@ object PreferenceKeys {
     const val eh_readerThreads = "eh_reader_threads"
 
     const val eh_readerInstantRetry = "eh_reader_instant_retry"
+
+    const val eh_utilAutoscrollState = "eh_util_autoscroll_state"
+
+    const val eh_utilAutoscrollInterval = "eh_util_autoscroll_interval"
 }

@@ -8,12 +8,17 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Build.VERSION_CODES.KITKAT
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import com.afollestad.materialdialogs.MaterialDialog
+import com.jakewharton.rxbinding.view.clicks
+import com.jakewharton.rxbinding.widget.checkedChanges
+import com.jakewharton.rxbinding.widget.textChanges
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -33,6 +38,7 @@ import kotlinx.android.synthetic.main.reader_activity.*
 import me.zhanghai.android.systemuihelper.SystemUiHelper
 import me.zhanghai.android.systemuihelper.SystemUiHelper.*
 import nucleus.factory.RequiresPresenter
+import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
@@ -41,6 +47,7 @@ import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToLong
 
 @RequiresPresenter(ReaderPresenter::class)
 class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
@@ -56,6 +63,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         const val BLACK_THEME = 1
 
         const val MENU_VISIBLE = "menu_visible"
+        // --> EH
+        const val EH_UTILS_VISIBLE = "eh_utils_visible"
+        // <-- EH
 
         fun newIntent(context: Context, manga: Manga, chapter: Chapter): Intent {
             SharedData.put(ReaderEvent(manga, chapter))
@@ -66,6 +76,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private var viewer: BaseReader? = null
 
     val subscriptions by lazy { CompositeSubscription() }
+
+    // --> EH
+    private var autoscrollSubscription: Subscription? = null
+    // <-- EH
 
     private var customBrightnessSubscription: Subscription? = null
 
@@ -89,6 +103,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private var menuVisible = false
 
+    // --> EH
+    private var ehUtilsVisible = false
+    // <-- EH
+
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         setContentView(R.layout.reader_activity)
@@ -109,9 +127,17 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         if (savedState != null) {
             menuVisible = savedState.getBoolean(MENU_VISIBLE)
+
+            // --> EH
+            ehUtilsVisible = savedState.getBoolean(EH_UTILS_VISIBLE)
+            // <-- EH
         }
 
         setMenuVisibility(menuVisible)
+
+        // --> EH
+        setEhUtilsVisibility(ehUtilsVisible)
+        // <-- EH
 
         maxBitmapSize = GLUtil.getMaxTextureSize()
 
@@ -131,6 +157,56 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                     requestNextChapter()
             }
         }
+
+        // --> EH
+        subscriptions += expand_eh_button.clicks().subscribe {
+            ehUtilsVisible = !ehUtilsVisible
+            setEhUtilsVisibility(ehUtilsVisible)
+        }
+
+        subscriptions += preferences.eh_utilAutoscrollState().asObservable()
+                .combineLatest(preferences.eh_utilAutoscrollInterval().asObservable()) { state, interval ->
+                    state to interval
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe { (state, interval) ->
+                    if(state && interval != -1f) {
+                        setupAutoscroll(interval)
+                    } else {
+                        autoscrollSubscription?.unsubscribe()
+                        autoscrollSubscription = null
+                    }
+
+                    eh_autoscroll.isChecked = state
+                    if(interval != -1f && eh_autoscroll_freq.text?.toString()?.toFloatOrNull() != interval)
+                        eh_autoscroll_freq.setText(interval.toString())
+                }
+
+        subscriptions += eh_autoscroll.checkedChanges().subscribe {
+            preferences.eh_utilAutoscrollState().set(it)
+        }
+
+        subscriptions += eh_autoscroll_freq.textChanges().subscribe {
+            val parsed = it?.toString()?.toFloatOrNull()
+
+            if(parsed == null || parsed <= 0 || parsed > 9999) {
+                eh_autoscroll_freq.error = "Invalid frequency"
+                preferences.eh_utilAutoscrollInterval().set(-1f)
+                eh_autoscroll.isEnabled = false
+            } else {
+                eh_autoscroll_freq.error = null
+                preferences.eh_utilAutoscrollInterval().set(parsed)
+                eh_autoscroll.isEnabled = true
+            }
+        }
+
+        subscriptions += eh_autoscroll_help.clicks().subscribe {
+            MaterialDialog.Builder(this)
+                    .title("Autoscroll help")
+                    .content("Automatically scroll to the next page in the specified interval. Interval is specified in seconds.")
+                    .positiveText("Ok")
+                    .show()
+        }
+        // <-- EH
     }
 
     override fun onDestroy() {
@@ -156,6 +232,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(MENU_VISIBLE, menuVisible)
+
+        // --> EH
+        outState.putBoolean(EH_UTILS_VISIBLE, eh_utils.visibility == View.VISIBLE)
+        // <-- EH
+
         super.onSaveInstanceState(outState)
     }
 
@@ -523,6 +604,18 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
     }
 
+    // --> EH
+    private fun setEhUtilsVisibility(visible: Boolean) {
+        if(visible) {
+            eh_utils.visible()
+            expand_eh_button.setImageResource(R.drawable.ic_keyboard_arrow_up_white_32dp)
+        } else {
+            eh_utils.gone()
+            expand_eh_button.setImageResource(R.drawable.ic_keyboard_arrow_down_white_32dp)
+        }
+    }
+    // <-- EH
+
     private fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
         menuVisible = visible
         if (visible) {
@@ -539,7 +632,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         }
                     }
                 })
-                toolbar.startAnimation(toolbarAnimation)
+                header.startAnimation(toolbarAnimation)
 
                 val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
                 reader_menu_bottom.startAnimation(bottomMenuAnimation)
@@ -554,7 +647,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         reader_menu.visibility = View.GONE
                     }
                 })
-                toolbar.startAnimation(toolbarAnimation)
+                header.startAnimation(toolbarAnimation)
 
                 val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
                 reader_menu_bottom.startAnimation(bottomMenuAnimation)
@@ -601,4 +694,19 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     }
 
+    // --> EH
+    private fun setupAutoscroll(interval: Float) {
+        autoscrollSubscription?.unsubscribe()
+
+        val intervalMs = (interval * 1000).roundToLong()
+        val sub = Observable.interval(intervalMs, intervalMs, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    viewer?.moveRight()
+                }
+
+        autoscrollSubscription = sub
+        subscriptions += sub
+    }
+    // <-- EH
 }

@@ -42,13 +42,68 @@
         android:visibility="invisible"
         tools:visibility="visible">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:background="?colorPrimary"
-            android:elevation="4dp"
-            android:theme="?attr/actionBarTheme"/>
+            android:elevation="4dp">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme" />
+
+            <LinearLayout
+                android:id="@+id/eh_utils"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Switch
+                        android:id="@+id/eh_autoscroll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Autoscroll" />
+
+                    <EditText
+                        android:id="@+id/eh_autoscroll_freq"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:ems="10"
+                        android:inputType="numberDecimal"
+                        android:maxLength="10" />
+
+                    <Button
+                        android:id="@+id/eh_autoscroll_help"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="\?" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/expand_eh_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                app:srcCompat="@drawable/ic_keyboard_arrow_down_white_32dp" />
+        </android.support.design.widget.AppBarLayout>
 
         <LinearLayout
             android:id="@+id/reader_menu_bottom"
