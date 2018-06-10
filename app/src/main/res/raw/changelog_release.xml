@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v7.2.4-EH" changeDate="">
+        <changelogtext>Added autoscroll feature</changelogtext>
+        <changelogtext>Added ability to specify reader download thread count</changelogtext>
+        <changelogtext>Added ability to skip download queue upon retry</changelogtext>
+    </changelogversion>
     <changelogversion versionName="v0.7.4" changeDate="">
         <changelogtext>Updated Anilist's API to v2.</changelogtext>
 
