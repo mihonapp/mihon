@@ -46,7 +46,7 @@ class LoginController : NucleusController<LoginPresenter>() {
 
         with(view) {
             btn_cancel.setOnClickListener { router.popCurrentController() }
-            btn_recheck.setOnClickListener { webview.loadUrl("http://exhentai.org/") }
+            btn_recheck.setOnClickListener { webview.loadUrl("https://exhentai.org/") }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 CookieManager.getInstance().removeAllCookies {
@@ -79,7 +79,7 @@ class LoginController : NucleusController<LoginPresenter>() {
 
                         //Check login result
                         if (parsedUrl.getQueryParameter("code")?.toInt() != 0) {
-                            if (checkLoginCookies(url)) view.loadUrl("http://exhentai.org/")
+                            if (checkLoginCookies(url)) view.loadUrl("https://exhentai.org/")
                         }
                     } else if (parsedUrl.host.equals("exhentai.org", ignoreCase = true)) {
                         //At ExHentai, check that everything worked out...
