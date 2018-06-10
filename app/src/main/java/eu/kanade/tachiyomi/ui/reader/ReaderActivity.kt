@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.base.BaseReader
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.horizontal.LeftToRightReader
@@ -198,6 +199,63 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             MaterialDialog.Builder(this)
                     .title("Autoscroll help")
                     .content("Automatically scroll to the next page in the specified interval. Interval is specified in seconds.")
+                    .positiveText("Ok")
+                    .show()
+        }
+
+        subscriptions += eh_retry_all.clicks().subscribe {
+            viewer?.pages?.forEachIndexed { index, page ->
+                if(page.status == Page.ERROR)
+                    page.status = Page.QUEUE
+                else
+                    return@forEachIndexed
+
+                //If we are using EHentai/ExHentai, get a new image URL
+                if(presenter.source is EHentai)
+                    page.imageUrl = null
+
+                if(viewer?.currentPage == index)
+                    presenter.loader.loadPriorizedPage(page)
+                else
+                    presenter.loader.loadPage(page)
+            }
+
+            toast("Retrying all failed pages...")
+        }
+
+        subscriptions += eh_retry_all_help.clicks().subscribe {
+            MaterialDialog.Builder(this)
+                    .title("Retry all help")
+                    .content("Re-add all failed pages to the download queue.")
+                    .positiveText("Ok")
+                    .show()
+        }
+
+        subscriptions += eh_boost_page.clicks().subscribe {
+            viewer?.let { viewer ->
+                val curPage = viewer.pages.getOrNull(viewer.currentPage)
+                        ?: run {
+                            toast("Cannot find current page!")
+                            return@let
+                        }
+
+                if(curPage.status == Page.ERROR) {
+                    toast("Page failed to load, press the retry button instead!")
+                } else if(curPage.status == Page.LOAD_PAGE || curPage.status == Page.DOWNLOAD_IMAGE) {
+                    toast("This page is already downloading!")
+                } else if(curPage.status == Page.READY) {
+                    toast("This page has already been downloaded!")
+                } else {
+                    presenter.loader.boostPage(curPage)
+                    toast("Boosted current page!")
+                }
+            }
+        }
+
+        subscriptions += eh_boost_page_help.clicks().subscribe {
+            MaterialDialog.Builder(this)
+                    .title("Boost page help")
+                    .content("Normally the downloader can only download a specific amount of pages at the same time. This means you can be waiting for a page to download but the downloader will not start downloading the page until it has a free download slot. Pressing 'Boost page' will force the downloader to begin downloading the current page, regardless of whether or not there is an available slot.")
                     .positiveText("Ok")
                     .show()
         }
@@ -630,7 +688,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 header.startAnimation(toolbarAnimation)
 
                 val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
+                // --> EH
+//                toolbar.startAnimation(bottomMenuAnimation)
                 reader_menu_bottom.startAnimation(bottomMenuAnimation)
+                // <-- EH
             }
         } else {
             systemUi?.hide()
@@ -645,7 +706,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 header.startAnimation(toolbarAnimation)
 
                 val bottomMenuAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
+                // --> EH
+//                toolbar.startAnimation(bottomMenuAnimation)
                 reader_menu_bottom.startAnimation(bottomMenuAnimation)
+                // <-- EH
             }
         }
     }
@@ -691,7 +755,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     // --> EH
     private fun setupAutoscroll(interval: Float) {
-        autoscrollSubscription?.unsubscribe()
+        subscriptions.remove(autoscrollSubscription)
         autoscrollSubscription = null
 
         if(interval == -1f) return

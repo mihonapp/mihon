@@ -75,7 +75,7 @@ class ReaderPresenter(
     /**
      * Source of the manga.
      */
-    private val source by lazy { sourceManager.get(manga.source)!! }
+    /* private */ val source by lazy { sourceManager.get(manga.source)!! }
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
@@ -106,7 +106,7 @@ class ReaderPresenter(
     /**
      * Chapter loader whose job is to obtain the chapter list and initialize every page.
      */
-    private val loader by lazy { ChapterLoader(downloadManager, manga, source) }
+    /* private */ val loader by lazy { ChapterLoader(downloadManager, manga, source) }
 
     /**
      * Subscription for appending a chapter to the reader (seamless mode).
@@ -334,9 +334,11 @@ class ReaderPresenter(
                 chapterCache.removeFileFromCache(key)
             }
 
+            // --> EH
             //If we are using EHentai/ExHentai, get a new image URL
             if(source is EHentai)
                 page.imageUrl = null
+            // <-- EH
 
             loader.retryPage(page)
         }

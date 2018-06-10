@@ -118,12 +118,27 @@ class ChapterLoader(
         }
     }
 
+    fun loadPage(page: Page) {
+        queue.offer(PriorityPage(page, 0))
+    }
+
     fun loadPriorizedPage(page: Page) {
         queue.offer(PriorityPage(page, 1))
     }
 
     fun retryPage(page: Page) {
-        if(source is HttpSource && prefs.eh_readerInstantRetry().getOrDefault())
+        // --> EH
+        if(prefs.eh_readerInstantRetry().getOrDefault())
+            boostPage(page)
+        else
+        // <-- EH
+            queue.offer(PriorityPage(page, 2))
+    }
+
+
+    // --> EH
+    fun boostPage(page: Page) {
+        if(source is HttpSource && page.status == Page.QUEUE)
             subscriptions += Observable.just(page)
                     .concatMap { source.fetchImageFromCacheThenNet(it) }
                     .subscribeOn(Schedulers.io())
@@ -133,10 +148,8 @@ class ChapterLoader(
                             Timber.e(error)
                         }
                     })
-        else
-            queue.offer(PriorityPage(page, 2))
     }
-
+    // <-- EH
 
 
     private data class PriorityPage(val page: Page, val priority: Int): Comparable<PriorityPage> {
