@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
-    <changelogversion versionName="v7.2.4-EH" changeDate="">
+    <changelogversion versionName="v7.4.1-EH" changeDate="">
+        <changelogtext>Fixed autoscroll scrolling wrong direction on right-to-left readers</changelogtext>
+        <changelogtext>Added retry all button</changelogtext>
+        <changelogtext>Added boost page button</changelogtext>
+        <changelogtext>Fixed incorrect version numbers in changelog</changelogtext>
+    </changelogversion>
+    <changelogversion versionName="v7.4.0-EH" changeDate="">
         <changelogtext>Added autoscroll feature</changelogtext>
         <changelogtext>Added ability to specify reader download thread count</changelogtext>
         <changelogtext>Added ability to skip download queue upon retry</changelogtext>
