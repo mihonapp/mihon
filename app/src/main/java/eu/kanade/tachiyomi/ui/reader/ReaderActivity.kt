@@ -8,10 +8,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Build.VERSION_CODES.KITKAT
 import android.os.Bundle
-import android.support.v4.graphics.drawable.DrawableCompat.applyTheme
-import android.support.v4.view.ViewCompat.setRotation
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import android.view.animation.Animation
@@ -22,7 +18,6 @@ import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.widget.checkedChanges
 import com.jakewharton.rxbinding.widget.textChanges
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.R.id.*
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -705,7 +700,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         val sub = Observable.interval(intervalMs, intervalMs, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    viewer?.moveRight()
+                    if(viewer is RightToLeftReader)
+                        viewer?.moveLeft()
+                    else
+                        viewer?.moveRight()
                 }
 
         autoscrollSubscription = sub
