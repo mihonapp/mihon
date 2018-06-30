@@ -311,10 +311,9 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         val source = presenter.source as? HttpSource ?: return
         try {
             val url = source.mangaDetailsRequest(presenter.manga).url().toString()
-            val title = presenter.manga.title
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_text, title, url))
+                putExtra(Intent.EXTRA_TEXT, url)
             }
             startActivity(Intent.createChooser(intent, context.getString(R.string.action_share)))
         } catch (e: Exception) {

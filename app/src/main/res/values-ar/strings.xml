@@ -289,7 +289,6 @@
     <string name="manga_info_status_label">الحالة</string>
     <string name="manga_info_source_label">المصدر</string>
     <string name="manga_info_genres_label">التصنيفات</string>
-    <string name="share_text">التحقق من %1$s! خلال %2$s</string>
     <string name="circular_icon">أيقونة دائرية</string>
     <string name="rounded_icon">أيقونة مدوره</string>
     <string name="square_icon">أيقونة مربعة</string>

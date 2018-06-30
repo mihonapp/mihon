@@ -235,7 +235,6 @@
     <string name="manga_info_status_label">Stato</string>
     <string name="manga_info_source_label">Fonte</string>
     <string name="manga_info_genres_label">Generi</string>
-    <string name="share_text">Dai un\'occhiata a %1$s! %2$s</string>
     <string name="circular_icon">Icona circolare</string>
     <string name="rounded_icon">Icona arrotondata</string>
     <string name="square_icon">Icona quadrata</string>
