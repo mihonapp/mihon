@@ -14,7 +14,9 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.TreeMap
 
 class RecentChaptersPresenter(
         val preferences: PreferencesHelper = Injekt.get(),
@@ -57,7 +59,6 @@ class RecentChaptersPresenter(
                 .map { mangaChapters ->
                     val map = TreeMap<Date, MutableList<MangaChapter>> { d1, d2 -> d2.compareTo(d1) }
                     val byDay = mangaChapters
-                            .filter { sourceManager.get(it.manga.source) != null }
                             .groupByTo(map, { getMapKey(it.chapter.date_fetch) })
                     byDay.flatMap {
                         val dateItem = DateItem(it.key)

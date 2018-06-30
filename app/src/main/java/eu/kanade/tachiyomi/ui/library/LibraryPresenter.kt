@@ -25,7 +25,9 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.io.InputStream
-import java.util.*
+import java.util.ArrayList
+import java.util.Collections
+import java.util.Comparator
 
 /**
  * Class containing library information.
@@ -113,9 +115,6 @@ class LibraryPresenter(
         val filterCompleted = preferences.filterCompleted().getOrDefault()
 
         val filterFn: (LibraryItem) -> Boolean = f@ { item ->
-            // Filter out manga without source.
-            sourceManager.get(item.manga.source) ?: return@f false
-
             // Filter when there isn't unread chapters.
             if (filterUnread && item.manga.unread == 0) {
                 return@f false
@@ -197,8 +196,8 @@ class LibraryPresenter(
                     manga1TotalChapter.compareTo(mange2TotalChapter)
                 }
                 LibrarySort.SOURCE -> {
-                    val source1Name = sourceManager.get(i1.manga.source)?.name ?: ""
-                    val source2Name = sourceManager.get(i2.manga.source)?.name ?: ""
+                    val source1Name = sourceManager.getOrStub(i1.manga.source).name
+                    val source2Name = sourceManager.getOrStub(i2.manga.source).name
                     source1Name.compareTo(source2Name)
                 }
                 else -> throw Exception("Unknown sorting mode")
