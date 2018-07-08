@@ -230,7 +230,6 @@
     <string name="manga_info_status_label">Statut</string>
     <string name="manga_info_source_label">Source</string>
     <string name="manga_info_genres_label">Genres</string>
-    <string name="share_text">Regarde %1$s ! sur %2$s</string>
     <string name="circular_icon">Icône circulaire</string>
     <string name="square_icon">Icône carrée</string>
     <string name="star_icon">Icône étoile</string>

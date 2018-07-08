@@ -33,7 +33,8 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
 import java.net.URLConnection
-import java.util.*
+import java.util.Comparator
+import java.util.Date
 
 /**
  * Presenter of [ReaderActivity].
@@ -75,7 +76,7 @@ class ReaderPresenter(
     /**
      * Source of the manga.
      */
-    /* private */ val source by lazy { sourceManager.get(manga.source)!! }
+    /* private */ val source by lazy { sourceManager.getOrStub(manga.source) }
 
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first

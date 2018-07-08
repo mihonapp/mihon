@@ -240,7 +240,6 @@
     <string name="manga_info_status_label">Trạng thái</string>
     <string name="manga_info_source_label">Nguồn truyện</string>
     <string name="manga_info_genres_label">Thể loại</string>
-    <string name="share_text">Kiểm tra %1$s! tại %2$s</string>
     <string name="circular_icon">Biểu tượng tròn</string>
     <string name="rounded_icon">Biểu tượng hình chữ nhật</string>
     <string name="square_icon">Biểu tượng vuông</string>

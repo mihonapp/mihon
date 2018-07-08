@@ -394,7 +394,6 @@ Zorg ook dat je ingelogd bent voor bronnen die dit vereisen alvorens je het teru
     <string name="choices_reset">Keuzes gereset</string>
     <string name="login_success">Login geslaagd</string>
     <string name="invalid_login">Login error</string>
-    <string name="share_text">Bekijk %1$s! op %2$s</string>
     <string name="shortcut_title">Titel van de snelkoppeling</string>
     <string name="confirm_update_manga_sync">Update het laatst gelezen hoofdstuk in de ingeschakelde services op %1$d?</string>
     <string name="licensed">Gelicenseerd</string>

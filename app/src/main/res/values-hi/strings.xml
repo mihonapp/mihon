@@ -290,7 +290,6 @@
     <string name="manga_info_status_label">स्थिति</string>
     <string name="manga_info_source_label">स्रोत</string>
     <string name="manga_info_genres_label">शैलियां</string>
-    <string name="share_text">%1$s देखें! %2$s पर</string>
     <string name="circular_icon">परिपत्र आइकन</string>
     <string name="rounded_icon">गोल आइकन</string>
     <string name="square_icon">स्क्वायर आइकन</string>

@@ -289,7 +289,6 @@
     <string name="manga_info_status_label">স্ট্যাটাস</string>
     <string name="manga_info_source_label">উৎস</string>
     <string name="manga_info_genres_label">প্রকারভেদ</string>
-    <string name="share_text">দেখুন %1$s! at %2$s</string>
     <string name="circular_icon">বৃত্তাকার আইকন</string>
     <string name="rounded_icon">গোলাকার আইকন</string>
     <string name="square_icon">চতুর্ভূজ আইকন</string>

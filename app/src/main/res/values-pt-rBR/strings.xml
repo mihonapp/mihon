@@ -278,7 +278,6 @@ Além disso, verifique se as fontes que requerem uma conta foram configuradas co
     <string name="manga_info_status_label">Situação</string>
     <string name="manga_info_source_label">Fonte</string>
     <string name="manga_info_genres_label">Gêneros</string>
-    <string name="share_text">Confira %1$s! em %2$s</string>
     <string name="circular_icon">Ícone circular</string>
     <string name="rounded_icon">Ícone redondo</string>
     <string name="square_icon">Ícone quadrado</string>
