@@ -140,6 +140,7 @@ open class HitomiGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
     }
 
     companion object {
+        val LTN_BASE_URL = "https://ltn.hitomi.la"
         val BASE_URL = "https://hitomi.la"
 
         fun hlIdFromUrl(url: String)

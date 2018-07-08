@@ -20,6 +20,7 @@ import exh.HITOMI_SOURCE_ID
 import exh.metadata.EMULATED_TAG_NAMESPACE
 import exh.metadata.models.HitomiGalleryMetadata
 import exh.metadata.models.HitomiGalleryMetadata.Companion.BASE_URL
+import exh.metadata.models.HitomiGalleryMetadata.Companion.LTN_BASE_URL
 import exh.metadata.models.HitomiGalleryMetadata.Companion.hlIdFromUrl
 import exh.metadata.models.HitomiPage
 import exh.metadata.models.HitomiSkeletonGalleryMetadata
@@ -41,6 +42,8 @@ import rx.schedulers.Schedulers
 import rx.subjects.AsyncSubject
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
+import java.nio.BufferUnderflowException
+import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -268,26 +271,12 @@ class Hitomi(private val context: Context)
 
     private val cacheLocks = arrayOf(ReentrantLock(), ReentrantLock())
 
-    override fun popularMangaRequest(page: Int) = GET("$BASE_URL/popular-all-$page.html")
+    override fun popularMangaRequest(page: Int) = GET("$LTN_BASE_URL/popular-all.nozomi")
 
     override fun popularMangaParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
     override fun latestUpdatesParse(response: Response) = throw UnsupportedOperationException("Unused method called!")
 
-    override fun latestUpdatesRequest(page: Int) = GET("$BASE_URL/index-all-$page.html")
-
-    private fun parsePage(doc: Document): List<HitomiSkeletonGalleryMetadata> {
-        return doc.select(".gallery-content > div").map {
-            HitomiSkeletonGalleryMetadata().apply {
-                it.select("h1 > a").let {
-                    url = it.attr("href")
-
-                    title = it.text()
-                }
-
-                thumbnailUrl = "https:" + it.select(".dj-img1 > img").attr("src")
-            }
-        }
-    }
+    override fun latestUpdatesRequest(page: Int) = GET("$LTN_BASE_URL/index-all.nozomi")
 
     fun readerUrl(hlId: String) = "$BASE_URL/reader/$hlId.html"
 
@@ -457,43 +446,40 @@ class Hitomi(private val context: Context)
         }
     }
 
-    private fun fetchAndResolveRequest(request: Request): Observable<MangasPage> {
+    private fun fetchAndResolveRequest(page: Int, request: Request): Observable<MangasPage> {
         //Begin pre-loading cache
         ensureCacheLoaded(false).subscribeOn(Schedulers.computation()).subscribe()
 
         return client.newCall(request)
                 .asObservableSuccess()
                 .map { response ->
-                    val doc = response.asJsoup()
+                    val buffer = ByteBuffer.wrap(response.body()!!.bytes())
 
-                    val res = parsePage(doc)
-                    val sManga = res.map {
-                        SManga.create().apply {
-                            setUrlWithoutDomain(it.url!!)
+                    val out = mutableListOf<SManga>()
 
-                            title = it.title!!
+                    try {
+                        while(true) {
+                            out += SManga.create().apply {
+                                setUrlWithoutDomain("$BASE_URL/galleries/${buffer.int}.html")
 
-                            it.thumbnailUrl?.let {
-                                thumbnail_url = it
+                                title = "Loading..."
                             }
                         }
-                    }
-                    val pagingScript = doc.getElementsByTag("script").map { it.html().trim() }.find {
-                        it.startsWith("insert_paging")
-                    } ?: ""
+                    } catch(e: BufferUnderflowException) {}
 
-                    val curPage = pagingScript.substringAfterLast("', ").substringBefore(',').toInt()
-                    val endPage = pagingScript.substringAfterLast(", ").removeSuffix(");").toInt()
+                    val offset = PAGE_SIZE * (page - 1)
+                    val endIndex = Math.min(offset + PAGE_SIZE, out.size)
 
-                    MangasPage(sManga, curPage < endPage)
+                    MangasPage(out.subList(offset, endIndex),
+                            endIndex < out.size)
                 }
 
     }
 
     override fun fetchPopularManga(page: Int)
-            = fetchAndResolveRequest(popularMangaRequest(page))
+            = fetchAndResolveRequest(page, popularMangaRequest(page))
     override fun fetchLatestUpdates(page: Int)
-            = fetchAndResolveRequest(latestUpdatesRequest(page))
+            = fetchAndResolveRequest(page, latestUpdatesRequest(page))
 
     private fun shouldRefreshGalleryFiles(): Boolean {
         val timeDiff = System.currentTimeMillis() - prefs.eh_hl_lastRefresh().getOrDefault()
