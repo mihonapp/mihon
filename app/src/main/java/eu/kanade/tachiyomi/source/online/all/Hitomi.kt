@@ -466,9 +466,7 @@ class Hitomi(private val context: Context)
                 .map { response ->
                     val doc = response.asJsoup()
 
-                    val res = parsePage(doc).map {
-                        it
-                    }
+                    val res = parsePage(doc)
                     val sManga = res.map {
                         SManga.create().apply {
                             setUrlWithoutDomain(it.url!!)

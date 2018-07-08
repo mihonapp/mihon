@@ -7,11 +7,14 @@ import android.view.*
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCatalogueController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import kotlinx.android.synthetic.main.catalogue_global_search_controller.*
+import uy.kohesive.injekt.injectLazy
 
 /**
  * This controller shows and manages the different search result in global search.
@@ -20,7 +23,12 @@ import kotlinx.android.synthetic.main.catalogue_global_search_controller.*
  */
 open class CatalogueSearchController(protected val initialQuery: String? = null) :
         NucleusController<CatalogueSearchPresenter>(),
-        CatalogueSearchCardAdapter.OnMangaClickListener {
+        CatalogueSearchCardAdapter.OnMangaClickListener, CatalogueSearchAdapter.OnMoreClickListener {
+
+    /**
+     * Application preferences.
+     */
+    private val preferences: PreferencesHelper by injectLazy()
 
     /**
      * Adapter containing search results grouped by lang.
@@ -183,6 +191,18 @@ open class CatalogueSearchController(protected val initialQuery: String? = null)
      */
     fun onMangaInitialized(source: CatalogueSource, manga: Manga) {
         getHolder(source)?.setImage(manga)
+    }
+
+    override fun onMoreClick(source: CatalogueSource) {
+        openCatalogue(source, BrowseCatalogueController(source, presenter.query))
+    }
+
+    /**
+     * Opens a catalogue with the given controller.
+     */
+    private fun openCatalogue(source: CatalogueSource, controller: BrowseCatalogueController) {
+        preferences.lastUsedCatalogueSource().set(source.id)
+        router.pushController(controller.withFadeTransaction())
     }
 
 }

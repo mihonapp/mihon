@@ -30,6 +30,7 @@ import uy.kohesive.injekt.api.get
  */
 open class BrowseCataloguePresenter(
         sourceId: Long,
+        searchQuery: String? = null,
         sourceManager: SourceManager = Injekt.get(),
         private val db: DatabaseHelper = Injekt.get(),
         private val prefs: PreferencesHelper = Injekt.get(),
@@ -44,7 +45,7 @@ open class BrowseCataloguePresenter(
     /**
      * Query from the view.
      */
-    var query = ""
+    var query = searchQuery ?: ""
         private set
 
     /**

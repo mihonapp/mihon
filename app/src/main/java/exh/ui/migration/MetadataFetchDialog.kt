@@ -84,7 +84,7 @@ class MetadataFetchDialog {
     fun askMigration(activity: Activity, explicit: Boolean) {
         var extra = ""
         db.getLibraryMangas().asRxSingle().subscribe {
-            if(!explicit && it.isEmpty()) {
+            if(!explicit && it.none { isLewdSource(it.source) }) {
                 //Do not open dialog on startup if no manga
             } else {
                 //Not logged in but have ExHentai galleries

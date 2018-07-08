@@ -9,12 +9,16 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.afollestad.materialdialogs.MaterialDialog
+import com.jakewharton.rxbinding.view.clicks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.util.gone
+import eu.kanade.tachiyomi.util.invisible
 import eu.kanade.tachiyomi.util.launchUI
+import eu.kanade.tachiyomi.util.visible
 import exh.EXH_SOURCE_ID
 import exh.uconfig.WarnConfigureDialogController
 import kotlinx.android.synthetic.main.eh_activity_login.view.*
@@ -46,7 +50,33 @@ class LoginController : NucleusController<LoginPresenter>() {
 
         with(view) {
             btn_cancel.setOnClickListener { router.popCurrentController() }
-            btn_recheck.setOnClickListener { webview.loadUrl("https://exhentai.org/") }
+
+            btn_advanced.setOnClickListener {
+                advanced_options.visible()
+                adv_shim.visible()
+                webview.gone()
+                btn_advanced.isEnabled = false
+                btn_cancel.isEnabled = false
+            }
+
+            btn_close.setOnClickListener {
+                hideAdvancedOptions(this)
+            }
+
+            btn_recheck.setOnClickListener {
+                hideAdvancedOptions(this)
+                webview.loadUrl("https://exhentai.org/")
+            }
+
+            btn_alt_login.setOnClickListener {
+                hideAdvancedOptions(this)
+                webview.loadUrl("https://e-hentai.org/bounce_login.php")
+            }
+
+            btn_skip_restyle.setOnClickListener {
+                hideAdvancedOptions(this)
+                webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login&$PARAM_SKIP_INJECT=true")
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 CookieManager.getInstance().removeAllCookies {
@@ -58,6 +88,16 @@ class LoginController : NucleusController<LoginPresenter>() {
                 CookieManager.getInstance().removeAllCookie()
                 startWebview(view)
             }
+        }
+    }
+
+    private fun hideAdvancedOptions(view: View) {
+        with(view) {
+            advanced_options.gone()
+            adv_shim.gone()
+            webview.visible()
+            btn_advanced.isEnabled = true
+            btn_cancel.isEnabled = true
         }
     }
 
@@ -75,7 +115,8 @@ class LoginController : NucleusController<LoginPresenter>() {
                     val parsedUrl = Uri.parse(url)
                     if (parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
                         //Hide distracting content
-                        view.loadUrl(HIDE_JS)
+                        if(!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT))
+                            view.loadUrl(HIDE_JS)
 
                         //Check login result
                         if (parsedUrl.getQueryParameter("code")?.toInt() != 0) {
@@ -177,6 +218,8 @@ class LoginController : NucleusController<LoginPresenter>() {
     }
 
     companion object {
+        const val PARAM_SKIP_INJECT = "TEH_SKIP_INJECT"
+
         const val MEMBER_ID_COOKIE = "ipb_member_id"
         const val PASS_HASH_COOKIE = "ipb_pass_hash"
         const val IGNEOUS_COOKIE = "igneous"

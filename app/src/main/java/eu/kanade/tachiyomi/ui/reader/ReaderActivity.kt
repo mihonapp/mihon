@@ -204,6 +204,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         }
 
         subscriptions += eh_retry_all.clicks().subscribe {
+            var retried = 0
+
             viewer?.pages?.forEachIndexed { index, page ->
                 if(page.status == Page.ERROR)
                     page.status = Page.QUEUE
@@ -218,9 +220,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                     presenter.loader.loadPriorizedPage(page)
                 else
                     presenter.loader.loadPage(page)
+
+                retried++
             }
 
-            toast("Retrying all failed pages...")
+            toast("Retried $retried failed pages...")
         }
 
         subscriptions += eh_retry_all_help.clicks().subscribe {

@@ -45,8 +45,12 @@ open class BrowseCatalogueController(bundle: Bundle) :
         FlexibleAdapter.EndlessScrollListener,
         ChangeMangaCategoriesDialog.Listener {
 
-    constructor(source: CatalogueSource) : this(Bundle().apply {
+    constructor(source: CatalogueSource,
+                searchQuery: String? = null) : this(Bundle().apply {
         putLong(SOURCE_ID_KEY, source.id)
+
+        if(searchQuery != null)
+            putString(SEARCH_QUERY_KEY, searchQuery)
     })
 
     /**
@@ -98,7 +102,8 @@ open class BrowseCatalogueController(bundle: Bundle) :
     }
 
     override fun createPresenter(): BrowseCataloguePresenter {
-        return BrowseCataloguePresenter(args.getLong(SOURCE_ID_KEY))
+        return BrowseCataloguePresenter(args.getLong(SOURCE_ID_KEY),
+                args.getString(SEARCH_QUERY_KEY))
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -507,6 +512,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
 
     protected companion object {
         const val SOURCE_ID_KEY = "sourceId"
+        const val SEARCH_QUERY_KEY = "searchQuery"
     }
 
 }

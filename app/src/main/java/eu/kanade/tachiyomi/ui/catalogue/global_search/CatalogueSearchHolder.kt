@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.util.gone
 import eu.kanade.tachiyomi.util.setVectorCompat
 import eu.kanade.tachiyomi.util.visible
 import kotlinx.android.synthetic.main.catalogue_global_search_controller_card.*
+import kotlinx.android.synthetic.main.catalogue_global_search_controller_card.view.*
 
 /**
  * Holder that binds the [CatalogueSearchItem] containing catalogue cards.
@@ -34,6 +35,13 @@ class CatalogueSearchHolder(view: View, val adapter: CatalogueSearchAdapter) :
 
         nothing_found_icon.setVectorCompat(R.drawable.ic_search_black_112dp,
                 view.context.getResourceColor(android.R.attr.textColorHint))
+
+        more.setOnClickListener {
+            val item = adapter.getItem(adapterPosition)
+            if (item != null) {
+                adapter.moreClickListener.onMoreClick(item.source)
+            }
+        }
     }
 
     /**
