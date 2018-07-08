@@ -120,11 +120,16 @@ class EHConfigurator {
         val sessionCookie = response.headers().toMultimap()["Set-Cookie"]?.find {
             it.startsWith("s=")
         }?.removePrefix("s=")?.substringBefore(';')
+        val hathPerksCookie = response.headers().toMultimap()["Set-Cookie"]?.find {
+            it.startsWith("hath_perks=")
+        }?.removePrefix("hath_perks=")?.substringBefore(';')
 
         if(keyCookie != null)
             prefs.eh_settingsKey().set(keyCookie)
         if(sessionCookie != null)
             prefs.eh_sessionCookie().set(sessionCookie)
+        if(hathPerksCookie != null)
+            prefs.eh_hathPerksCookies().set(hathPerksCookie)
     }
 
     companion object {

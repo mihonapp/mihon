@@ -151,6 +151,8 @@ object PreferenceKeys {
 
     const val eh_sessionCookie = "eh_sessionCookie"
 
+    const val eh_hathPerksCookie = "eh_hathPerksCookie"
+
     const val eh_enableExHentai = "enable_exhentai"
 
     const val eh_ts_aspNetCookie = "eh_ts_aspNetCookie"

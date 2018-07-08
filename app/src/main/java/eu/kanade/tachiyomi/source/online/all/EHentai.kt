@@ -82,10 +82,18 @@ class EHentai(override val id: Long,
                         }
                     })
         }
+
+        val parsedLocation = HttpUrl.parse(doc.location())
+
         //Add to page if required
-        val hasNextPage = select("a[onclick=return false]").last()?.let {
-            it.text() == ">"
-        } ?: false
+        val hasNextPage = if(parsedLocation == null
+                || !parsedLocation.queryParameterNames().contains(REVERSE_PARAM)) {
+            select("a[onclick=return false]").last()?.let {
+                it.text() == ">"
+            } ?: false
+        } else {
+            parsedLocation.queryParameter(REVERSE_PARAM)!!.toBoolean()
+        }
         Pair(parsedMangas, hasNextPage)
     }
 
@@ -155,17 +163,46 @@ class EHentai(override val id: Long,
     //Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
             urlImportFetchSearchManga(query, {
-                super.fetchSearchManga(page, query, filters)
+                searchMangaRequestObservable(page, query, filters).flatMap {
+                    client.newCall(it).asObservableSuccess()
+                } .map { response ->
+                    searchMangaParse(response)
+                }
             })
 
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
+    private fun searchMangaRequestObservable(page: Int, query: String, filters: FilterList): Observable<Request> {
         val uri = Uri.parse("$baseUrl$QUERY_PREFIX").buildUpon()
         uri.appendQueryParameter("f_search", query)
         filters.forEach {
             if(it is UriFilter) it.addToUri(uri)
         }
-        return exGet(uri.toString(), page)
+
+        val request = exGet(uri.toString(), page)
+
+        // Reverse search results on filter
+        if(filters.any { it is ReverseFilter && it.state }) {
+            return client.newCall(request)
+                    .asObservableSuccess()
+                    .map {
+                        val doc = it.asJsoup()
+
+                        val elements = doc.select(".ptt > tbody > tr > td")
+
+                        val totalElement = elements[elements.size - 2]
+
+                        val thisPage = totalElement.text().toInt() - (page - 1)
+
+                        uri.appendQueryParameter(REVERSE_PARAM, (thisPage > 1).toString())
+
+                        exGet(uri.toString(), thisPage)
+                    }
+        } else {
+            return Observable.just(request)
+        }
     }
+
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
+            = throw UnsupportedOperationException()
 
     override fun latestUpdatesRequest(page: Int) = exGet(baseUrl, page)
 
@@ -349,6 +386,10 @@ class EHentai(override val id: Long,
             val sessionCookie = prefs.eh_sessionCookie().getOrDefault()
             if(sessionCookie != null)
                 cookies["s"] = sessionCookie
+
+            val hathPerksCookie = prefs.eh_hathPerksCookies().getOrDefault()
+            if(hathPerksCookie != null)
+                cookies["hath_perks"] = hathPerksCookie
         }
 
         //Session-less list display mode (for users without ExHentai)
@@ -386,7 +427,8 @@ class EHentai(override val id: Long,
     //Filters
     override fun getFilterList() = FilterList(
             GenreGroup(),
-            AdvancedGroup()
+            AdvancedGroup(),
+            ReverseFilter()
     )
 
     class GenreOption(name: String, val genreId: String): Filter.CheckBox(name, false), UriFilter {
@@ -437,6 +479,8 @@ class EHentai(override val id: Long,
             RatingOption()
     ))
 
+    class ReverseFilter : Filter.CheckBox("Reverse search results")
+
     override val name = if(exh)
         "ExHentai"
     else
@@ -448,6 +492,7 @@ class EHentai(override val id: Long,
     companion object {
         val QUERY_PREFIX = "?f_apply=Apply+Filter"
         val TR_SUFFIX = "TR"
+        val REVERSE_PARAM = "TEH_REVERSE"
 
         fun buildCookies(cookies: Map<String, String>)
                 = cookies.entries.joinToString(separator = "; ") {

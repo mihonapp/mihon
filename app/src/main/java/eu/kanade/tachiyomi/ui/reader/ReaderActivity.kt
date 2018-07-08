@@ -224,7 +224,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 retried++
             }
 
-            toast("Retried $retried failed pages...")
+            toast("Retrying $retried failed pages...")
         }
 
         subscriptions += eh_retry_all_help.clicks().subscribe {
