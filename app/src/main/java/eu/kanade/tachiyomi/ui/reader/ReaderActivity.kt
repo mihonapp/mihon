@@ -14,6 +14,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import com.afollestad.materialdialogs.MaterialDialog
+import com.hippo.unifile.UniFile
 import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.widget.checkedChanges
 import com.jakewharton.rxbinding.widget.textChanges
@@ -206,23 +207,35 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         subscriptions += eh_retry_all.clicks().subscribe {
             var retried = 0
 
-            viewer?.pages?.forEachIndexed { index, page ->
-                if(page.status == Page.ERROR)
-                    page.status = Page.QUEUE
-                else
-                    return@forEachIndexed
+            viewer?.chapters
+                    ?.flatMap { it.pages ?: emptyList() }
+                    ?.forEachIndexed { index, page ->
+                        var shouldQueuePage = false
+                        if(page.status == Page.ERROR) {
+                            shouldQueuePage = true
+                        } else if (page.uri == null) {
+                            shouldQueuePage = true
+                        } else if (!UniFile.fromUri(this, page.uri).exists()) {
+                            shouldQueuePage = true
+                        }
 
-                //If we are using EHentai/ExHentai, get a new image URL
-                if(presenter.source is EHentai)
-                    page.imageUrl = null
+                        if(shouldQueuePage) {
+                            page.status = Page.QUEUE
+                        } else {
+                            return@forEachIndexed
+                        }
 
-                if(viewer?.currentPage == index)
-                    presenter.loader.loadPriorizedPage(page)
-                else
-                    presenter.loader.loadPage(page)
+                        //If we are using EHentai/ExHentai, get a new image URL
+                        if(presenter.source is EHentai)
+                            page.imageUrl = null
 
-                retried++
-            }
+                        if(viewer?.currentPage == index)
+                            presenter.loader.loadPriorizedPage(page)
+                        else
+                            presenter.loader.loadPage(page)
+
+                        retried++
+                    }
 
             toast("Retrying $retried failed pages...")
         }

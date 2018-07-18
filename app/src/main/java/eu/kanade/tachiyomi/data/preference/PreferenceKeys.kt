@@ -174,4 +174,6 @@ object PreferenceKeys {
     const val eh_readerInstantRetry = "eh_reader_instant_retry"
 
     const val eh_utilAutoscrollInterval = "eh_util_autoscroll_interval"
+
+    const val eh_cacheSize = "eh_cache_size"
 }

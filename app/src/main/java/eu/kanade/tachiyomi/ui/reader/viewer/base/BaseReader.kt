@@ -34,7 +34,7 @@ abstract class BaseReader : Fragment() {
     /**
      * List of chapters added in the reader.
      */
-    private val chapters = ArrayList<ReaderChapter>()
+    val chapters = ArrayList<ReaderChapter>()
 
     /**
      * List of pages added in the reader. It can contain pages from more than one chapter.

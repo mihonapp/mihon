@@ -6,12 +6,16 @@ import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.jakewharton.disklrucache.DiskLruCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.util.DiskUtil
 import eu.kanade.tachiyomi.util.saveTo
 import okhttp3.Response
 import okio.Okio
 import rx.Observable
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.io.IOException
@@ -26,7 +30,6 @@ import java.io.IOException
  * @constructor creates an instance of the chapter cache.
  */
 class ChapterCache(private val context: Context) {
-
     companion object {
         /** Name of cache directory.  */
         const val PARAMETER_CACHE_DIRECTORY = "chapter_disk_cache"
@@ -36,19 +39,27 @@ class ChapterCache(private val context: Context) {
 
         /** The number of values per cache entry. Must be positive.  */
         const val PARAMETER_VALUE_COUNT = 1
-
-        /** The maximum number of bytes this cache should use to store.  */
-        const val PARAMETER_CACHE_SIZE = 75L * 1024 * 1024
     }
 
     /** Google Json class used for parsing JSON files.  */
     private val gson: Gson by injectLazy()
 
+    // --> EH
+    private val prefs: PreferencesHelper by injectLazy()
+    // <-- EH
+
     /** Cache class used for cache management.  */
-    private val diskCache = DiskLruCache.open(File(context.cacheDir, PARAMETER_CACHE_DIRECTORY),
-            PARAMETER_APP_VERSION,
-            PARAMETER_VALUE_COUNT,
-            PARAMETER_CACHE_SIZE)
+    // --> EH
+    private var diskCache = setupDiskCache(prefs.eh_cacheSize().getOrDefault().toLong())
+    init {
+        prefs.eh_cacheSize().asObservable().subscribe {
+            // Save old cache for destruction later
+            val oldCache = diskCache
+            diskCache = setupDiskCache(it.toLong())
+            oldCache.close()
+        }
+    }
+    // <-- EH
 
     /**
      * Returns directory of cache.
@@ -67,6 +78,16 @@ class ChapterCache(private val context: Context) {
      */
     val readableSize: String
         get() = Formatter.formatFileSize(context, realSize)
+
+    // --> EH
+    // Cache size is in MB
+    private fun setupDiskCache(cacheSize: Long): DiskLruCache {
+        return DiskLruCache.open(File(context.cacheDir, PARAMETER_CACHE_DIRECTORY),
+            PARAMETER_APP_VERSION,
+            PARAMETER_VALUE_COUNT,
+            cacheSize * 1024 * 1024)
+    }
+    // <-- EH
 
     /**
      * Remove file from cache.

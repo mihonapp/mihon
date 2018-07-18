@@ -99,6 +99,48 @@ class SettingsReaderController : SettingsController() {
             summary = "Normally, pressing the retry button on a failed download will wait until the downloader has finished downloading the last page before beginning to re-download the failed page. Enabling this will force the downloader to begin re-downloading the failed page as soon as you press the retry button."
             defaultValue = true
         }
+        listPreference {
+            key = Keys.eh_cacheSize
+            title = "Reader cache size"
+            entryValues = arrayOf(
+                    "50",
+                    "75",
+                    "100",
+                    "150",
+                    "250",
+                    "500",
+                    "750",
+                    "1000",
+                    "1500",
+                    "2000",
+                    "2500",
+                    "3000",
+                    "3500",
+                    "4000",
+                    "4500",
+                    "5000"
+            )
+            entries = arrayOf(
+                    "50 MB",
+                    "75 MB",
+                    "100 MB",
+                    "150 MB",
+                    "250 MB",
+                    "500 MB",
+                    "750 MB",
+                    "1 GB",
+                    "1.5 GB",
+                    "2 GB",
+                    "2.5 GB",
+                    "3 GB",
+                    "3.5 GB",
+                    "4 GB",
+                    "4.5 GB",
+                    "5 GB"
+            )
+            defaultValue = "75"
+            summary = "The amount of images to save on device while reading. Higher values will result in a smoother reading experience, at the cost of higher disk space usage"
+        }
         preferenceCategory {
             titleRes = R.string.pager_viewer
 
