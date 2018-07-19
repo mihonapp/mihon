@@ -213,6 +213,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         var shouldQueuePage = false
                         if(page.status == Page.ERROR) {
                             shouldQueuePage = true
+                        } else if(page.status == Page.LOAD_PAGE
+                                || page.status == Page.DOWNLOAD_IMAGE) {
+                            // Do nothing
                         } else if (page.uri == null) {
                             shouldQueuePage = true
                         } else if (!UniFile.fromUri(this, page.uri).exists()) {

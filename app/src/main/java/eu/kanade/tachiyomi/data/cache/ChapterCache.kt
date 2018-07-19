@@ -52,7 +52,7 @@ class ChapterCache(private val context: Context) {
     // --> EH
     private var diskCache = setupDiskCache(prefs.eh_cacheSize().getOrDefault().toLong())
     init {
-        prefs.eh_cacheSize().asObservable().subscribe {
+        prefs.eh_cacheSize().asObservable().skip(1).subscribe {
             // Save old cache for destruction later
             val oldCache = diskCache
             diskCache = setupDiskCache(it.toLong())
