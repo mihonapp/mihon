@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.SourceManager
@@ -276,7 +277,9 @@ class ReaderPresenter(
 
         // If the chapter is partially read, set the starting page to the last the user read
         // otherwise use the requested page.
-        chapter.requestedPage = if (!chapter.read) chapter.last_page_read else requestedPage
+        chapter.requestedPage = if (!chapter.read /* --> EH */ || prefs
+                        .eh_preserveReadingPosition()
+                        .getOrDefault() /* <-- EH */) chapter.last_page_read else requestedPage
 
         // Reset next and previous chapter. They have to be fetched again
         nextChapter = null

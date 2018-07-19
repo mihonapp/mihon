@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
@@ -233,7 +234,9 @@ class ChaptersPresenter(
         Observable.from(selectedChapters)
                 .doOnNext { chapter ->
                     chapter.read = read
-                    if (!read) {
+                    if (!read /* --> EH */ && !preferences
+                                    .eh_preserveReadingPosition()
+                                    .getOrDefault() /* <-- EH */) {
                         chapter.last_page_read = 0
                     }
                 }

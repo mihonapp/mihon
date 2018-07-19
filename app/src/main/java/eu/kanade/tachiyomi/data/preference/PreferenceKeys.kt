@@ -176,4 +176,6 @@ object PreferenceKeys {
     const val eh_utilAutoscrollInterval = "eh_util_autoscroll_interval"
 
     const val eh_cacheSize = "eh_cache_size"
+
+    const val eh_preserveReadingPosition = "eh_preserve_reading_position"
 }

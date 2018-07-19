@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.support.v7.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.SharedData.map
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsReaderController : SettingsController() {
@@ -140,6 +141,11 @@ class SettingsReaderController : SettingsController() {
             )
             defaultValue = "75"
             summary = "The amount of images to save on device while reading. Higher values will result in a smoother reading experience, at the cost of higher disk space usage"
+        }
+        switchPreference {
+            key = Keys.eh_preserveReadingPosition
+            title = "Preserve reading position on read manga"
+            defaultValue = false
         }
         preferenceCategory {
             titleRes = R.string.pager_viewer

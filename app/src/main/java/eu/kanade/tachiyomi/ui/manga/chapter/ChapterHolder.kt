@@ -5,17 +5,21 @@ import android.widget.PopupMenu
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.gone
 import eu.kanade.tachiyomi.util.setVectorCompat
 import kotlinx.android.synthetic.main.chapters_item.*
+import uy.kohesive.injekt.injectLazy
 import java.util.*
 
 class ChapterHolder(
         private val view: View,
         private val adapter: ChaptersAdapter
 ) : BaseFlexibleViewHolder(view, adapter) {
+    private val prefs: PreferencesHelper by injectLazy()
 
     init {
         // We need to post a Runnable to show the popup to make sure that the PopupMenu is
@@ -59,7 +63,8 @@ class ChapterHolder(
             chapter_title.maxLines = 1
         }
 
-        chapter_pages.text = if (!chapter.read && chapter.last_page_read > 0) {
+        chapter_pages.text = if ((!chapter.read /* --> EH */ || prefs.eh_preserveReadingPosition()
+                        .getOrDefault()) /* <-- EH */ && chapter.last_page_read > 0) {
             itemView.context.getString(R.string.chapter_progress, chapter.last_page_read + 1)
         } else {
             ""
@@ -100,7 +105,8 @@ class ChapterHolder(
         popup.menu.findItem(R.id.action_remove_bookmark).isVisible = chapter.bookmark
 
         // Hide mark as unread when the chapter is unread
-        if (!chapter.read && chapter.last_page_read == 0) {
+        if (!chapter.read && (chapter.last_page_read == 0 /* --> EH */ || prefs.eh_preserveReadingPosition()
+                        .getOrDefault()) /* <-- EH */) {
             popup.menu.findItem(R.id.action_mark_as_unread).isVisible = false
         }
 
