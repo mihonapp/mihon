@@ -110,8 +110,8 @@
         <!-- EH -->
         <activity
             android:name="exh.ui.intercept.InterceptActivity"
-            android:excludeFromRecents="true"
-            android:label="TachiyomiEH">
+            android:label="TachiyomiEH"
+            android:theme="@style/Theme.EHIntercept">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 

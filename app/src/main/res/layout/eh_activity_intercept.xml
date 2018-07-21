@@ -37,6 +37,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/intercept_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -45,6 +46,7 @@
                 android:textColor="@color/white" />
 
             <ProgressBar
+                android:id="@+id/intercept_progress"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

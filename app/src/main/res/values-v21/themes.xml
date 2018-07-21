@@ -30,6 +30,14 @@
         <item name="android:navigationBarColor">@color/colorAmoledPrimary</item>
     </style>
 
+    <!-- EH Intercept Theme-->
+    <style name="Theme.EHIntercept" parent="Theme.Tachiyomi">
+        <!-- Attributes specific for SDK 21 and up  -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+    </style>
+
     <!--==============-->
     <!-- Reader Theme -->
     <!--==============-->

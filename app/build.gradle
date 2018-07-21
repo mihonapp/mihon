@@ -1,3 +1,4 @@
+//noinspection GradleDependency
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
@@ -5,8 +6,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.zellius.shortcut-helper'
-//Realm (EH)
+// Realm (EH)
 apply plugin: 'realm-android'
+// Firebase (EH)
+apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'io.fabric'
 
 shortcutHelper.filePath = './shortcuts.xml'
 
@@ -64,7 +68,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            multiDexEnabled false
+            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -111,7 +115,7 @@ dependencies {
     implementation 'com.github.inorichi:junrar-android:634c1f5'
 
     // Android support library
-    final support_library_version = '27.0.2'
+    final support_library_version = '27.1.1'
     implementation "com.android.support:support-v4:$support_library_version"
     implementation "com.android.support:appcompat-v7:$support_library_version"
     implementation "com.android.support:cardview-v7:$support_library_version"
@@ -121,11 +125,11 @@ dependencies {
     implementation "com.android.support:support-annotations:$support_library_version"
     implementation "com.android.support:customtabs:$support_library_version"
 
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta6'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
-    implementation 'com.android.support:multidex:1.0.2'
+    implementation 'com.android.support:multidex:1.0.3'
 
-    standardImplementation 'com.google.firebase:firebase-core:11.8.0'
+    standardImplementation 'com.google.firebase:firebase-core:16.0.1'
 
     // ReactiveX
     implementation 'io.reactivex:rxandroid:1.2.1'
@@ -145,7 +149,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
     // JSON
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.github.salomonbrys.kotson:kotson:2.5.0'
 
     // JavaScript engine
@@ -156,11 +160,11 @@ dependencies {
     implementation 'com.github.inorichi:unifile:e9ee588'
 
     // HTML parser
-    implementation 'org.jsoup:jsoup:1.10.2'
+    implementation 'org.jsoup:jsoup:1.11.3'
 
     // Job scheduling
     implementation 'com.evernote:android-job:1.2.5'
-    implementation 'com.google.android.gms:play-services-gcm:11.8.0'
+    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
 
     // Changelog
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
@@ -186,7 +190,7 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:3.1.1'
 
     // Logging
-    implementation 'com.jakewharton.timber:timber:4.6.1'
+    implementation 'com.jakewharton.timber:timber:4.7.0'
 
     // Crash reports
     implementation 'ch.acra:acra:4.9.2'
@@ -238,25 +242,29 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
-    //Pin lock view (EXH)
+    // Pin lock view (EH)
     implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
 
-    //Reprint (EXH)
+    // Reprint (EH)
     implementation 'com.github.ajalt.reprint:core:3.2.1@aar' // required: supports marshmallow devices
     implementation 'com.github.ajalt.reprint:rxjava:3.2.1@aar' // optional: the RxJava 1 interface
 
-    //Swirl (EXH)
+    // Swirl (EH)
     implementation 'com.mattprecious.swirl:swirl:1.1.0'
 
-    //RxJava 2 interop for Realm (EXH)
+    // RxJava 2 interop for Realm (EH)
     implementation 'com.lvla.android:rxjava2-interop-kt:0.2.1'
 
-    //Debug network interceptor (EXH)
+    // Debug network interceptor (EH)
     devImplementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
+
+    // Firebase (EH)
+    implementation 'com.google.firebase:firebase-perf:16.0.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 }
 
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.51'
     repositories {
         mavenCentral()
     }

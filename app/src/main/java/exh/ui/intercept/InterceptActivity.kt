@@ -8,6 +8,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.util.gone
+import eu.kanade.tachiyomi.util.visible
 import kotlinx.android.synthetic.main.eh_activity_intercept.*
 import nucleus.factory.RequiresPresenter
 import rx.Subscription
@@ -29,8 +31,11 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
     }
 
     private fun processLink() {
-        if(Intent.ACTION_VIEW == intent.action)
+        if(Intent.ACTION_VIEW == intent.action) {
+            intercept_progress.visible()
+            intercept_status.text = "Loading gallery..."
             presenter.loadGallery(intent.dataString)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -49,13 +54,17 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
                 .subscribe {
                     when(it) {
                         is InterceptResult.Success -> {
+                            intercept_progress.gone()
+                            intercept_status.text = "Launching app..."
+                            onBackPressed()
                             startActivity(Intent(this, MainActivity::class.java)
                                     .setAction(MainActivity.SHORTCUT_MANGA)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                     .putExtra(MangaController.MANGA_EXTRA, it.mangaId))
-                            onBackPressed()
                         }
-                        is InterceptResult.Failure ->
+                        is InterceptResult.Failure -> {
+                            intercept_progress.gone()
+                            intercept_status.text = "Error: ${it.reason}"
                             MaterialDialog.Builder(this)
                                     .title("Error")
                                     .content("Could not open this gallery:\n\n${it.reason}")
@@ -65,6 +74,7 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
                                     .cancelListener { onBackPressed() }
                                     .dismissListener { onBackPressed() }
                                     .show()
+                        }
                     }
                 }
     }
