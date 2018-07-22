@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_refresh"
+        android:title="Refresh" />
+    <item
+        android:id="@+id/action_forward"
+        android:title="Forward" />
+    <item
+        android:id="@+id/action_desktop_site"
+        android:checkable="true"
+        android:title="Desktop site" />
+    <item
+        android:id="@+id/action_open_in_browser"
+        android:title="Open in browser" />
+</menu>

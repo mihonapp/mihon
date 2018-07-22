@@ -249,4 +249,6 @@ class PreferencesHelper(val context: Context) {
     fun eh_cacheSize() = rxPrefs.getString(Keys.eh_cacheSize, "75")
 
     fun eh_preserveReadingPosition() = rxPrefs.getBoolean(Keys.eh_preserveReadingPosition, false)
+
+    fun eh_incogWebview() = rxPrefs.getBoolean(Keys.eh_incogWebview, false)
 }

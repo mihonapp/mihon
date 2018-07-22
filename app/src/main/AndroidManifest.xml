@@ -12,31 +12,35 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
     <!-- Lock vibrate -->
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".App"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.Tachiyomi">
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!--suppress AndroidDomInspection -->
-            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts"/>
+            <!-- suppress AndroidDomInspection -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".ui.reader.ReaderActivity"
@@ -61,7 +65,7 @@
         </activity>
         <activity
             android:name=".extension.util.ExtensionInstallActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -72,14 +76,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
         <provider
-            android:name="eu.kanade.tachiyomi.util.ZipContentProvider"
+            android:name=".util.ZipContentProvider"
             android:authorities="${applicationId}.zip-provider"
             android:exported="false" />
-
         <provider
-            android:name="eu.kanade.tachiyomi.util.RarContentProvider"
+            android:name=".util.RarContentProvider"
             android:authorities="${applicationId}.rar-provider"
             android:exported="false" />
 
@@ -90,22 +92,18 @@
         <service
             android:name=".data.library.LibraryUpdateService"
             android:exported="false" />
-
         <service
             android:name=".data.download.DownloadService"
             android:exported="false" />
-
         <service
             android:name=".data.updater.UpdaterService"
             android:exported="false" />
-
         <service
             android:name=".data.backup.BackupCreateService"
-            android:exported="false"/>
-
+            android:exported="false" />
         <service
             android:name=".data.backup.BackupRestoreService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!-- EH -->
         <activity
@@ -113,97 +111,97 @@
             android:label="TachiyomiEH"
             android:theme="@style/Theme.EHIntercept">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="g.e-hentai.org"
                     android:pathPrefix="/g/"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="g.e-hentai.org"
                     android:pathPrefix="/g/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="e-hentai.org"
                     android:pathPrefix="/g/"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="e-hentai.org"
                     android:pathPrefix="/g/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="exhentai.org"
                     android:pathPrefix="/g/"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="exhentai.org"
                     android:pathPrefix="/g/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="nhentai.net"
                     android:pathPrefix="/g/"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="nhentai.net"
                     android:pathPrefix="/g/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="www.perveden.com"
                     android:pathPattern="/.*/.*-manga/.*"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="www.perveden.com"
                     android:pathPattern="/.*/.*-manga/.*"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="hentai.cafe"
                     android:pathPattern="/.*/.*"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="hentai.cafe"
                     android:pathPattern="/.*/.*"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="www.tsumino.com"
                     android:pathPrefix="/Book/Info/"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="www.tsumino.com"
                     android:pathPrefix="/Book/Info/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="www.tsumino.com"
                     android:pathPrefix="/Read/View/"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="www.tsumino.com"
                     android:pathPrefix="/Read/View/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="hitomi.la"
                     android:pathPrefix="/galleries/"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="hitomi.la"
                     android:pathPrefix="/reader/"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="hitomi.la"
                     android:pathPrefix="/galleries/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="hitomi.la"
                     android:pathPrefix="/reader/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
             android:name="exh.ui.captcha.SolveCaptchaActivity"
             android:launchMode="singleInstance" />
-
+        <activity android:name="exh.ui.webview.WebViewActivity"></activity>
     </application>
 
 </manifest>

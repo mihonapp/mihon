@@ -102,7 +102,7 @@
     <string name="short_recent_updates">Updates</string>
 
     <!-- Preferences -->
-      <!-- Subsections -->
+    <!-- Subsections -->
     <string name="pref_category_general">General</string>
     <string name="pref_category_reader">Reader</string>
     <string name="pref_category_downloads">Downloads</string>
@@ -111,7 +111,7 @@
     <string name="pref_category_advanced">Advanced</string>
     <string name="pref_category_about">About</string>
 
-      <!-- General section -->
+    <!-- General section -->
     <string name="pref_library_columns">Library manga per row</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
@@ -166,7 +166,7 @@
     <string name="ext_language_info">Language: %1$s</string>
     <string name="ext_empty_preferences">There are no preferences to edit for this extension</string>
 
-      <!-- Reader section -->
+    <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
     <string name="pref_lock_orientation">Lock orientation</string>
     <string name="pref_page_transitions">Page transitions</string>
@@ -217,7 +217,7 @@
     <string name="color_filter_a_value">A</string>
 
 
-      <!-- Downloads section -->
+    <!-- Downloads section -->
     <string name="pref_download_directory">Downloads directory</string>
     <string name="pref_download_only_over_wifi">Only download over Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Remove when marked as read</string>
@@ -232,7 +232,7 @@
     <string name="pref_download_new">Download new chapters</string>
     <string name="pref_download_new_categories">Categories to include in download</string>
 
-      <!-- Sync section -->
+    <!-- Sync section -->
     <string name="services">Services</string>
 
     <!-- Backup section -->
@@ -258,7 +258,7 @@
     <string name="restoring_backup">Restoring backup</string>
     <string name="creating_backup">Creating backup</string>
 
-      <!-- Advanced section -->
+    <!-- Advanced section -->
     <string name="pref_clear_chapter_cache">Clear chapter cache</string>
     <string name="used_cache">Used: %1$s</string>
     <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
@@ -275,7 +275,7 @@
     <string name="pref_refresh_library_tracking">Refresh tracking metadata</string>
     <string name="pref_refresh_library_tracking_summary">Updates status, score and last chapter read from the tracking services</string>
 
-      <!-- About section -->
+    <!-- About section -->
     <string name="version">Version</string>
     <string name="build_time">Build time</string>
     <string name="pref_enable_automatic_updates">Check for updates</string>

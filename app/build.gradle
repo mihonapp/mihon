@@ -213,7 +213,7 @@ dependencies {
 
     // Conductor
     implementation "com.github.inorichi.Conductor:conductor:be8b3c5"
-    implementation ("com.bluelinelabs:conductor-support:2.1.5-SNAPSHOT") {
+    implementation("com.bluelinelabs:conductor-support:2.1.5-SNAPSHOT") {
         exclude group: "com.bluelinelabs", module: "conductor"
         exclude group: "com.android.support"
     }
@@ -246,7 +246,7 @@ dependencies {
     implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
 
     // Reprint (EH)
-    implementation 'com.github.ajalt.reprint:core:3.2.1@aar' // required: supports marshmallow devices
+    implementation 'com.github.ajalt.reprint:core:3.2.1@aar'
     implementation 'com.github.ajalt.reprint:rxjava:3.2.1@aar' // optional: the RxJava 1 interface
 
     // Swirl (EH)

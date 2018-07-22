@@ -20,19 +20,18 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.view.longClicks
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.R.id.*
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
@@ -50,6 +49,7 @@ import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.truncateCenter
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.ui.webview.WebViewActivity
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import jp.wasabeef.glide.transformations.MaskTransformation
 import kotlinx.android.synthetic.main.manga_info_controller.*
@@ -310,11 +310,20 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         val source = presenter.source as? HttpSource ?: return
 
         try {
-            val url = Uri.parse(source.mangaDetailsRequest(presenter.manga).url().toString())
-            val intent = CustomTabsIntent.Builder()
-                    .setToolbarColor(context.getResourceColor(R.attr.colorPrimary))
-                    .build()
-            intent.launchUrl(activity, url)
+            // --> EH
+            val urlString = source.mangaDetailsRequest(presenter.manga).url().toString()
+            if(preferences.eh_incogWebview().getOrDefault()) {
+                activity?.startActivity(Intent(activity, WebViewActivity::class.java).apply {
+                    putExtra(WebViewActivity.KEY_URL, urlString)
+                })
+            } else {
+                val url = Uri.parse(urlString)
+                val intent = CustomTabsIntent.Builder()
+                        .setToolbarColor(context.getResourceColor(R.attr.colorPrimary))
+                        .build()
+                intent.launchUrl(activity, url)
+            }
+            // <-- EH
         } catch (e: Exception) {
             context.toast(e.message)
         }

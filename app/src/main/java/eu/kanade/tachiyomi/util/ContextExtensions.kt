@@ -3,11 +3,8 @@ package eu.kanade.tachiyomi.util
 import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationManager
-import android.content.BroadcastReceiver
-import android.content.Context
+import android.content.*
 import android.content.Context.VIBRATOR_SERVICE
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.net.ConnectivityManager
@@ -128,6 +125,14 @@ val Context.powerManager: PowerManager
  */
 val Context.wifiManager: WifiManager
     get() = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
+// --> EH
+/**
+ * Property to get the wifi manager from the context.
+ */
+val Context.clipboardManager: ClipboardManager
+    get() = applicationContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+// <-- EH
 
 /**
  * Function used to send a local broadcast asynchronous

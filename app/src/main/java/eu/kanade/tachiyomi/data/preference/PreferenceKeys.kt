@@ -178,4 +178,6 @@ object PreferenceKeys {
     const val eh_cacheSize = "eh_cache_size"
 
     const val eh_preserveReadingPosition = "eh_preserve_reading_position"
+
+    const val eh_incogWebview = "eh_incognito_webview"
 }

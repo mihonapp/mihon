@@ -186,6 +186,13 @@ class SettingsGeneralController : SettingsController() {
             defaultValue = false
         }
 
+        switchPreference {
+            key = Keys.eh_incogWebview
+            title = "Incognito 'Open in browser'"
+            summary = "Prevent pages viewed from the 'Open in browser' menu option from being placed into Chrome's browsing history. Some browser features will be unavailable."
+            defaultValue = false
+        }
+
         preferenceCategory {
             title = "Application lock"
 
