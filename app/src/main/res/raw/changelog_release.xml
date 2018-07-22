@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v7.4.4-EH" changeDate="">
+        <changelogtext>Add ability to customize reader cache size</changelogtext>
+        <changelogtext>Fix "Retry all" button not retrying all pages</changelogtext>
+        <changelogtext>Add GIF support (not available in webtoon reader)</changelogtext>
+        <changelogtext>Add ability to force saving reading position even when manga is read</changelogtext>
+        <changelogtext>Add option to prevent pages opened using the 'Open in browser' menu option from being added to Chrome's history</changelogtext>
+    </changelogversion>
+    <changelogversion versionName="v7.4.3-EH" changeDate="">
+        <changelogtext>Version skipped due to internal changes</changelogtext>
+    </changelogversion>
     <changelogversion versionName="v7.4.2-EH" changeDate="">
         <changelogtext>Performance improvements for users with E-Hentai hath perks</changelogtext>
         <changelogtext>Add additional advanced options to E-Hentai login screen</changelogtext>
