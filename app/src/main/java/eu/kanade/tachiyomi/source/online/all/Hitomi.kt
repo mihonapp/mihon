@@ -33,7 +33,6 @@ import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import okhttp3.Request
 import okhttp3.Response
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import rx.Observable
 import rx.Scheduler
@@ -194,7 +193,7 @@ class Hitomi(private val context: Context)
     }
 
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
-        return urlImportFetchSearchManga(query, {
+        return urlImportFetchSearchManga(query) {
             trySearch(page, query).map {
                 val res = it.map {
                     SManga.create().apply {
@@ -210,7 +209,7 @@ class Hitomi(private val context: Context)
 
                 MangasPage(res, it.isNotEmpty())
             }
-        })
+        }
     }
 
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
@@ -309,8 +308,8 @@ class Hitomi(private val context: Context)
         val loc = "$BASE_URL/galleries/$hlId.html"
         val req = GET(loc)
 
-        return client.newCall(req).asObservableSuccess().map {
-            val doc = it.asJsoup()
+        return client.newCall(req).asObservableSuccess().map { response ->
+            val doc = response.asJsoup()
 
             Duktape.create().use { duck ->
                 val thumbs = doc.getElementsByTag("script").find {
@@ -351,10 +350,10 @@ class Hitomi(private val context: Context)
 
                     uploadDate = DATE_FORMAT.parse(doc.select(".date").text()).time
 
-                    galleryParent.select(".gallery-info tr").forEach {
-                        val content = it.child(1)
+                    galleryParent.select(".gallery-info tr").forEach { element ->
+                        val content = element.child(1)
 
-                        when(it.child(0).text().toLowerCase()) {
+                        when(element.child(0).text().toLowerCase()) {
                             "group" -> group = content.text().trim()
                             "type" -> type = content.text().trim()
                             "language" -> {
@@ -429,8 +428,8 @@ class Hitomi(private val context: Context)
                     it.insert(newPages)
                 }
 
-                (0 .. 1).map { getCacheRealm(it) }.forEach {
-                    it.useTrans {
+                (0 .. 1).map { getCacheRealm(it) }.forEach { realm ->
+                    realm.useTrans {
                         // Delete old meta
                         it.where(HitomiSkeletonGalleryMetadata::class.java)
                                 .equalTo(HitomiSkeletonGalleryMetadata::hlId.name, hlId)
