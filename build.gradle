@@ -18,7 +18,7 @@ buildscript {
         // in the individual module build.gradle files
 
         // Realm (EH)
-        classpath "io.realm:realm-gradle-plugin:5.3.1"
+        classpath "io.realm:realm-gradle-plugin:5.4.1"
 
         // Firebase (EH)
         classpath 'com.google.firebase:firebase-plugins:1.1.5'

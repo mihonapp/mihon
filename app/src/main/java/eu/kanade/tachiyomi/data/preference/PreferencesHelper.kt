@@ -251,4 +251,6 @@ class PreferencesHelper(val context: Context) {
     fun eh_preserveReadingPosition() = rxPrefs.getBoolean(Keys.eh_preserveReadingPosition, false)
 
     fun eh_incogWebview() = rxPrefs.getBoolean(Keys.eh_incogWebview, false)
+
+    fun eh_askCategoryOnLongPress() = rxPrefs.getBoolean(Keys.eh_askCategoryOnLongPress, false)
 }

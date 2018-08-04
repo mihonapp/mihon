@@ -93,6 +93,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
 
         // Set onclickListener to toggle favorite when FAB clicked.
         fab_favorite.clicks().subscribeUntilDestroy { onFabClick() }
+        fab_favorite.longClicks().subscribeUntilDestroy { onFabLongClick() }
 
         // Set SwipeRefresh to refresh manga data.
         swipe_refresh.refreshes().subscribeUntilDestroy { fetchMangaFromSource() }
@@ -408,20 +409,33 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                 defaultCategory != null -> presenter.moveMangaToCategory(manga, defaultCategory)
                 categories.size <= 1 -> // default or the one from the user
                     presenter.moveMangaToCategory(manga, categories.firstOrNull())
-                else -> {
-                    val ids = presenter.getMangaCategoryIds(manga)
-                    val preselected = ids.mapNotNull { id ->
-                        categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
-                    }.toTypedArray()
-
-                    ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
-                            .showDialog(router)
-                }
+                else -> askCategories(manga, categories)
             }
             activity?.toast(activity?.getString(R.string.manga_added_library))
         } else {
             activity?.toast(activity?.getString(R.string.manga_removed_library))
         }
+    }
+
+    private fun onFabLongClick() {
+        if(preferences.eh_askCategoryOnLongPress().getOrDefault()) {
+            val manga = presenter.manga
+            if(!manga.favorite) toggleFavorite()
+            val categories = presenter.getCategories()
+            if(categories.size > 1) {
+                askCategories(manga, categories)
+            }
+        }
+    }
+
+    private fun askCategories(manga: Manga, categories: List<Category>) {
+        val ids = presenter.getMangaCategoryIds(manga)
+        val preselected = ids.mapNotNull { id ->
+            categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
+        }.toTypedArray()
+
+        ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
+                .showDialog(router)
     }
 
     override fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>) {

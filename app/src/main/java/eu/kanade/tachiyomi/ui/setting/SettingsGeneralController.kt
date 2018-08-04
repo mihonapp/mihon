@@ -181,6 +181,12 @@ class SettingsGeneralController : SettingsController() {
 
         // --> EH
         switchPreference {
+            key = Keys.eh_askCategoryOnLongPress
+            title = "Long-press favorite button to specify category"
+            defaultValue = false
+        }
+
+        switchPreference {
             key = Keys.eh_expandFilters
             title = "Expand all search filters by default"
             defaultValue = false
@@ -189,7 +195,7 @@ class SettingsGeneralController : SettingsController() {
         switchPreference {
             key = Keys.eh_incogWebview
             title = "Incognito 'Open in browser'"
-            summary = "Prevent pages viewed from the 'Open in browser' menu option from being placed into Chrome's browsing history. Some browser features will be unavailable."
+            summary = "Prevent pages viewed from the 'Open in browser' menu option from being placed into Chrome's browsing history. May be buggy, some browser features will be unavailable."
             defaultValue = false
         }
 
