@@ -31,17 +31,17 @@ fun Realm.queryMetadataFromManga(manga: Manga,
 fun Realm.syncMangaIds(mangas: List<LibraryItem>) {
     Timber.d("--> EH: Begin syncing ${mangas.size} manga IDs...")
     executeTransaction {
-        mangas.filter {
-            isLewdSource(it.manga.source)
-        }.forEach { manga ->
-            try {
-                manga.hasMetadata =
-                        queryMetadataFromManga(manga.manga).findFirst()?.let { meta ->
-                            meta.mangaId = manga.manga.id
-                            true
-                        } ?: false
-            } catch(e: Exception) {
-                Timber.w(e, "Error syncing manga IDs! Ignoring...")
+        mangas.forEach { manga ->
+            if(isLewdSource(manga.manga.source)) {
+                try {
+                    manga.hasMetadata =
+                            queryMetadataFromManga(manga.manga).findFirst()?.let { meta ->
+                                meta.mangaId = manga.manga.id
+                                true
+                            } ?: false
+                } catch (e: Exception) {
+                    Timber.w(e, "Error syncing manga IDs! Ignoring...")
+                }
             }
         }
     }

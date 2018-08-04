@@ -67,9 +67,9 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
             }
 
             try {
-                val thisCache = globalSearchCache.getOrPut(view.category.name, {
+                val thisCache = globalSearchCache.getOrPut(view.category.name) {
                     SearchCache(mangas.size)
-                })
+                }
 
                 if(thisCache.ready) {
                     //Skip everything if cache matches our query exactly

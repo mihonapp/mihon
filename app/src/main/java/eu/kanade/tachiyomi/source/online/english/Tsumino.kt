@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.source.online.english
 
 import android.content.Context
 import android.net.Uri
+import com.crashlytics.android.Crashlytics
 import com.github.salomonbrys.kotson.*
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -13,6 +14,7 @@ import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.asJsoup
+import eu.kanade.tachiyomi.util.toast
 import exh.TSUMINO_SOURCE_ID
 import exh.ui.captcha.CaptchaCompletionVerifier
 import exh.ui.captcha.SolveCaptchaActivity
@@ -316,19 +318,24 @@ class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<Tsum
                 Page(index, chapter.url + "#${index + 1}", newImageUrl.toString())
             }
         }.doOnError {
-                    val aspNetCookie = preferences.eh_ts_aspNetCookie().getOrDefault()
+            try {
+                val aspNetCookie = preferences.eh_ts_aspNetCookie().getOrDefault()
 
-                    val cookiesMap = if(aspNetCookie.isNotBlank())
-                        mapOf(ASP_NET_COOKIE_NAME to aspNetCookie)
-                    else
-                        emptyMap()
+                val cookiesMap = if (aspNetCookie.isNotBlank())
+                    mapOf(ASP_NET_COOKIE_NAME to aspNetCookie)
+                else
+                    emptyMap()
 
-                    SolveCaptchaActivity.launch(context,
-                            this,
-                            cookiesMap,
-                            CAPTCHA_SCRIPT,
-                            "$BASE_URL/Read/Auth/$id")
-                }
+                SolveCaptchaActivity.launch(context,
+                        this,
+                        cookiesMap,
+                        CAPTCHA_SCRIPT,
+                        "$BASE_URL/Read/Auth/$id")
+            } catch(t: Throwable) {
+                Crashlytics.logException(t)
+                context.toast("Could not launch captcha-solving activity: ${t.message}")
+            }
+        }
     }
 
     override fun verify(url: String): Boolean {
