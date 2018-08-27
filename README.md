@@ -45,6 +45,8 @@ TachiyomiEH is a fork of the [original Tachiyomi app](https://github.com/inorich
 * ExHentai
 * PervEden
 * nhentai
+* Tsumino
+* Hitomi.la
 
 TachiyomiEH is fully compatible with Tachiyomi source extensions.
 Backups from Tachiyomi are also compatible with TachiyomiEH (and vice versa).
