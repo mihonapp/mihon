@@ -32,8 +32,7 @@
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts"/>
         </activity>
         <activity
-            android:name=".ui.reader.ReaderActivity"
-            android:theme="@style/Theme.Reader" />
+            android:name=".ui.reader.ReaderActivity" />
         <activity
             android:name=".widget.CustomLayoutPickerActivity"
             android:label="@string/app_name"
@@ -65,16 +64,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <provider
-            android:name="eu.kanade.tachiyomi.util.ZipContentProvider"
-            android:authorities="${applicationId}.zip-provider"
-            android:exported="false" />
-
-        <provider
-            android:name="eu.kanade.tachiyomi.util.RarContentProvider"
-            android:authorities="${applicationId}.rar-provider"
-            android:exported="false" />
 
         <receiver
             android:name=".data.notification.NotificationReceiver"
