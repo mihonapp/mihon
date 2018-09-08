@@ -6,16 +6,12 @@ import java.net.URLConnection
 object ImageUtil {
 
     fun isImage(name: String, openStream: (() -> InputStream)? = null): Boolean {
-        try {
-            val guessedMime = URLConnection.guessContentTypeFromName(name)
-            if (guessedMime.startsWith("image/")) {
-                return true
-            }
+        val contentType = try {
+            URLConnection.guessContentTypeFromName(name)
         } catch (e: Exception) {
-            /* Ignore error */
-        }
-
-        return openStream?.let { findImageType(it) } != null
+            null
+        } ?: openStream?.let { findImageType(it)?.mime }
+        return contentType?.startsWith("image/") ?: false
     }
 
     fun findImageType(openStream: () -> InputStream): ImageType? {

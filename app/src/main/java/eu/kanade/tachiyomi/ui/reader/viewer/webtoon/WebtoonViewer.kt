@@ -68,12 +68,12 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
         recycler.adapter = adapter
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                val index = layoutManager.findLastEndVisibleItemPosition()
-                val item = adapter.items.getOrNull(index)
+                val position = layoutManager.findLastEndVisibleItemPosition()
+                val item = adapter.items.getOrNull(position)
                 if (item != null && currentPage != item) {
                     currentPage = item
                     when (item) {
-                        is ReaderPage -> onPageSelected(item)
+                        is ReaderPage -> onPageSelected(item, position)
                         is ChapterTransition -> onTransitionSelected(item)
                     }
                 }
@@ -81,8 +81,8 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
                 if (dy < 0) {
                     val firstIndex = layoutManager.findFirstVisibleItemPosition()
                     val firstItem = adapter.items.getOrNull(firstIndex)
-                    if (firstItem is ChapterTransition.Prev) {
-                        activity.requestPreloadPreviousChapter()
+                    if (firstItem is ChapterTransition.Prev && firstItem.to != null) {
+                        activity.requestPreloadChapter(firstItem.to)
                     }
                 }
             }
@@ -125,29 +125,33 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
     }
 
     /**
-     * Called from the ViewPager listener when a [page] is marked as active. It notifies the
+     * Called from the RecyclerView listener when a [page] is marked as active. It notifies the
      * activity of the change and requests the preload of the next chapter if this is the last page.
      */
-    private fun onPageSelected(page: ReaderPage) {
+    private fun onPageSelected(page: ReaderPage, position: Int) {
         val pages = page.chapter.pages!! // Won't be null because it's the loaded chapter
         Timber.d("onPageSelected: ${page.number}/${pages.size}")
         activity.onPageSelected(page)
 
         if (page === pages.last()) {
             Timber.d("Request preload next chapter because we're at the last page")
-            activity.requestPreloadNextChapter()
+            val transition = adapter.items.getOrNull(position + 1) as? ChapterTransition.Next
+            if (transition?.to != null) {
+                activity.requestPreloadChapter(transition.to)
+            }
         }
     }
 
     /**
-     * Called from the ViewPager listener when a [transition] is marked as active. It request the
+     * Called from the RecyclerView listener when a [transition] is marked as active. It request the
      * preload of the destination chapter of the transition.
      */
     private fun onTransitionSelected(transition: ChapterTransition) {
         Timber.d("onTransitionSelected: $transition")
-        if (transition is ChapterTransition.Prev) {
-            Timber.d("Request preload previous chapter because we're on the transition")
-            activity.requestPreloadPreviousChapter()
+        val toChapter = transition.to
+        if (toChapter != null) {
+            Timber.d("Request preload destination chapter because we're on the transition")
+            activity.requestPreloadChapter(toChapter)
         }
     }
 

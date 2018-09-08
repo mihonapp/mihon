@@ -74,7 +74,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
                 if (page != null && currentPage != page) {
                     currentPage = page
                     when (page) {
-                        is ReaderPage -> onPageSelected(page)
+                        is ReaderPage -> onPageSelected(page, position)
                         is ChapterTransition -> onTransitionSelected(page)
                     }
                 }
@@ -128,14 +128,17 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
      * Called from the ViewPager listener when a [page] is marked as active. It notifies the
      * activity of the change and requests the preload of the next chapter if this is the last page.
      */
-    private fun onPageSelected(page: ReaderPage) {
+    private fun onPageSelected(page: ReaderPage, position: Int) {
         val pages = page.chapter.pages!! // Won't be null because it's the loaded chapter
         Timber.d("onPageSelected: ${page.number}/${pages.size}")
         activity.onPageSelected(page)
 
         if (page === pages.last()) {
             Timber.d("Request preload next chapter because we're at the last page")
-            activity.requestPreloadNextChapter()
+            val transition = adapter.items.getOrNull(position + 1) as? ChapterTransition.Next
+            if (transition?.to != null) {
+                activity.requestPreloadChapter(transition.to)
+            }
         }
     }
 
@@ -145,15 +148,10 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
      */
     private fun onTransitionSelected(transition: ChapterTransition) {
         Timber.d("onTransitionSelected: $transition")
-        when (transition) {
-            is ChapterTransition.Prev -> {
-                Timber.d("Request preload previous chapter because we're on the transition")
-                activity.requestPreloadPreviousChapter()
-            }
-            is ChapterTransition.Next -> {
-                Timber.d("Request preload next chapter because we're on the transition")
-                activity.requestPreloadNextChapter()
-            }
+        val toChapter = transition.to
+        if (toChapter != null) {
+            Timber.d("Request preload destination chapter because we're on the transition")
+            activity.requestPreloadChapter(toChapter)
         }
     }
 

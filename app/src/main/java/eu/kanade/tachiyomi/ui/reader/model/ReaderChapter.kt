@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader.model
 
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.ui.reader.loader.DownloadPageLoader
 import eu.kanade.tachiyomi.ui.reader.loader.PageLoader
 import timber.log.Timber
 
@@ -25,10 +24,6 @@ data class ReaderChapter(val chapter: Chapter) {
     var pageLoader: PageLoader? = null
 
     var requestedPage: Int = 0
-
-    val isDownloaded
-        get() = pageLoader is DownloadPageLoader
-
 
     var references = 0
         private set

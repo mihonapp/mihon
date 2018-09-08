@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.AddToLibraryFirst
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.Error
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.Success
+import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
@@ -429,20 +430,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     /**
-     * Called from the viewer when the next chapter should be preloaded. It should be called when
-     * the viewer is reaching the end of the chapter or the transition page is active.
+     * Called from the viewer when the given [chapter] should be preloaded. It should be called when
+     * the viewer is reaching the beginning or end of a chapter or the transition page is active.
      */
-    fun requestPreloadNextChapter() {
-        presenter.preloadNextChapter()
-    }
-
-    /**
-     * Called from the viewer when the previous chapter should be preloaded. It should be called
-     * when the viewer is going backwards and reaching the beginning of the chapter or the
-     * transition page is active.
-     */
-    fun requestPreloadPreviousChapter() {
-        presenter.preloadPreviousChapter()
+    fun requestPreloadChapter(chapter: ReaderChapter) {
+        presenter.preloadChapter(chapter)
     }
 
     /**

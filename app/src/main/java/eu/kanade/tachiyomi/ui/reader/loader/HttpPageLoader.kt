@@ -62,8 +62,12 @@ class HttpPageLoader(
         // Cache current page list progress for online chapters to allow a faster reopen
         val pages = chapter.pages
         if (pages != null) {
-            // TODO check compatibility with ReaderPage
-            Completable.fromAction { chapterCache.putPageListToCache(chapter.chapter, pages) }
+            Completable
+                .fromAction {
+                    // Convert to pages without reader information
+                    val pagesToSave = pages.map { Page(it.index, it.url, it.imageUrl) }
+                    chapterCache.putPageListToCache(chapter.chapter, pagesToSave)
+                }
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe()

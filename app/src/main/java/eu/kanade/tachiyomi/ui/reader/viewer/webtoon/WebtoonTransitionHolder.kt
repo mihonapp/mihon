@@ -180,10 +180,9 @@ class WebtoonTransitionHolder(
             wrapContent()
             setText(R.string.action_retry)
             setOnClickListener {
-                if (transition is ChapterTransition.Next) {
-                    viewer.activity.requestPreloadNextChapter()
-                } else {
-                    viewer.activity.requestPreloadPreviousChapter()
+                val toChapter = transition.to
+                if (toChapter != null) {
+                    viewer.activity.requestPreloadChapter(toChapter)
                 }
             }
         }

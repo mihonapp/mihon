@@ -43,7 +43,7 @@ class ReaderPresenter(
         private val sourceManager: SourceManager = Injekt.get(),
         private val downloadManager: DownloadManager = Injekt.get(),
         private val coverCache: CoverCache = Injekt.get(),
-        val preferences: PreferencesHelper = Injekt.get()
+        private val preferences: PreferencesHelper = Injekt.get()
 ) : BasePresenter<ReaderActivity>() {
 
     /**
@@ -331,19 +331,10 @@ class ReaderPresenter(
     }
 
     /**
-     * Called from the activity to preload the next chapter.
+     * Called from the activity to preload the given [chapter].
      */
-    fun preloadNextChapter() {
-        val nextChapter = viewerChaptersRelay.value?.nextChapter ?: return
-        preload(nextChapter)
-    }
-
-    /**
-     * Called from the activity to preload the previous chapter.
-     */
-    fun preloadPreviousChapter() {
-        val prevChapter = viewerChaptersRelay.value?.prevChapter ?: return
-        preload(prevChapter)
+    fun preloadChapter(chapter: ReaderChapter) {
+        preload(chapter)
     }
 
     /**
