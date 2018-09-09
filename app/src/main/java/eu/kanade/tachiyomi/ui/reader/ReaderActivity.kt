@@ -446,6 +446,15 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     /**
+     * Called from the viewer to show the menu.
+     */
+    fun showMenu() {
+        if (!menuVisible) {
+            setMenuVisibility(true)
+        }
+    }
+
+    /**
      * Called from the page sheet. It delegates the call to the presenter to do some IO, which
      * will call [onShareImageResult] with the path the image was saved on when it's ready.
      */
