@@ -161,7 +161,6 @@
     <string name="short_recent_updates">Frissítések</string>
 
     <string name="pref_auto_update_manga_sync">Olvasás után a fejezetek szinkronizálása</string>
-    <string name="pref_ask_update_manga_sync">Megerősítést kér frissítés előtt</string>
     <string name="pref_lock_orientation">Elforgatás zárolása</string>
     <string name="pref_page_transitions">Áttűnés lapozáskor</string>
     <string name="pref_crop_borders">Szegélyek vágása</string>

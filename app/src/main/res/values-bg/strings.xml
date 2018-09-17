@@ -108,7 +108,6 @@
     <string name="charging">На зарядно устройство</string>
     <string name="pref_update_only_non_completed">Обновявай само текуща манга</string>
     <string name="pref_auto_update_manga_sync">Синхронизирай глави след прочитане</string>
-    <string name="pref_ask_update_manga_sync">Искане за потвърждение преди обновяване</string>
     <string name="pref_theme">Тема на приложението</string>
     <string name="light_theme">Основна тема</string>
     <string name="dark_theme">Тъмна тема</string>

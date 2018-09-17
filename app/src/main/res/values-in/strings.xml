@@ -118,7 +118,6 @@
     <string name="charging">Pengisian</string>
     <string name="pref_update_only_non_completed">Hanya perbaharui saja manga yang masih berlanjut</string>
     <string name="pref_auto_update_manga_sync">Sinkronkan bab setelah membaca</string>
-    <string name="pref_ask_update_manga_sync">Konfirmasikan sebelum memperbarui</string>
     <string name="pref_theme">Tema aplikasi</string>
     <string name="light_theme">Tema utama</string>
     <string name="dark_theme">Tema gelap</string>

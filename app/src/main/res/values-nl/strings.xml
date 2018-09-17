@@ -309,7 +309,6 @@
     <string name="pref_library_update_restriction_summary">Update alleen wanneer de voorwaarden zijn voldaan</string>
     <string name="wifi">Wi-Fi</string>
     <string name="charging">Aan het opladen</string>
-    <string name="pref_ask_update_manga_sync">Vraag om bevestiging alvorens te updaten</string>
     <string name="pref_theme">Thema</string>
     <string name="light_theme">Hoofdthema</string>
     <string name="pref_reader_navigation">Navigatie</string>

@@ -122,7 +122,6 @@
     <string name="charging">Se încarcă</string>
     <string name="pref_update_only_non_completed">Actualizează doar manga în curs de desfășurare</string>
     <string name="pref_auto_update_manga_sync">Sincronizează capitolele după citire</string>
-    <string name="pref_ask_update_manga_sync">Confirmă înainte de actualizare</string>
     <string name="pref_theme">Temă aplicație</string>
     <string name="light_theme">Tema principală</string>
     <string name="dark_theme">Tema întunecată</string>

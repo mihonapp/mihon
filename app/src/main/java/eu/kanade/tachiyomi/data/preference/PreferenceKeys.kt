@@ -53,8 +53,6 @@ object PreferenceKeys {
 
     const val autoUpdateTrack = "pref_auto_update_manga_sync_key"
 
-    const val askUpdateTrack = "pref_ask_update_manga_sync_key"
-
     const val lastUsedCatalogueSource = "last_catalogue_source"
 
     const val lastUsedCategory = "last_used_category"

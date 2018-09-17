@@ -91,7 +91,6 @@
     <string name="charging">A carregar</string>
     <string name="pref_update_only_non_completed">Atualizar apenas manga em curso</string>
     <string name="pref_auto_update_manga_sync">Sincronizar capítulos após leitura</string>
-    <string name="pref_ask_update_manga_sync">Confirmar antes da atualização</string>
     <string name="pref_theme">Tema da aplicação</string>
     <string name="light_theme">Tema principal</string>
     <string name="dark_theme">Tema escuro</string>

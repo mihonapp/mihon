@@ -183,7 +183,6 @@
     <string name="plan_to_read">Планирую прочитать</string>
     <string name="portrait">Вертикальная</string>
     <string name="pref_acra_summary">Помогает исправлять любые баги. Личные данные не передаются</string>
-    <string name="pref_ask_update_manga_sync">Подтвердите перед обновлением</string>
     <string name="pref_auto_update_manga_sync">Синхронизировать главы после прочтения</string>
     <string name="pref_category_about">Информация</string>
     <string name="pref_category_advanced">Дополнительно</string>

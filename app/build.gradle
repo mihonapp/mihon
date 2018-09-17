@@ -102,7 +102,7 @@ android {
 dependencies {
 
     // Modified dependencies
-    implementation('com.github.inorichi:subsampling-scale-image-view:caad3e4')
+    implementation 'com.github.inorichi:subsampling-scale-image-view:b1cfae3'
     implementation 'com.github.inorichi:junrar-android:634c1f5'
 
     // Android support library
@@ -205,9 +205,8 @@ dependencies {
     implementation 'com.github.inorichi:DirectionalViewPager:3acc51a'
 
     // Conductor
-    implementation "com.github.inorichi.Conductor:conductor:be8b3c5"
-    implementation ("com.bluelinelabs:conductor-support:2.1.5-SNAPSHOT") {
-        exclude group: "com.bluelinelabs", module: "conductor"
+    implementation 'com.bluelinelabs:conductor:2.1.5'
+    implementation ("com.bluelinelabs:conductor-support:2.1.5") {
         exclude group: "com.android.support"
     }
     implementation 'com.github.inorichi:conductor-support-preference:27.0.2'
