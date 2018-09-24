@@ -36,7 +36,6 @@
     <string name="action_edit_cover">Editar la imagen de la portada</string>
     <string name="action_sort_up">Ordenar ascendentemente</string>
     <string name="action_sort_down">Ordenar descendentemente</string>
-    <string name="action_show_unread">No leído</string>
     <string name="action_show_downloaded">Descargado</string>
     <string name="action_next_unread">Próximo sin leer</string>
     <string name="action_start">Comenzar</string>
@@ -132,7 +131,6 @@
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Directorio de descargas</string>
-    <string name="pref_download_slots">Descargas simultáneas</string>
     <string name="pref_download_only_over_wifi">Descargar solo a través de Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Eliminar al marcar como leído</string>
     <string name="pref_remove_after_read">Eliminar después de leer</string>
@@ -191,7 +189,6 @@
     <string name="ongoing">En curso</string>
     <string name="unknown">Desconocido</string>
     <string name="licensed">Licenciado</string>
-    <string name="add_to_library">Añadir a la librería</string>
     <string name="remove_from_library">Eliminar de la librería</string>
     <string name="manga_info_author_label">Autor</string>
     <string name="manga_info_artist_label">Artista</string>
@@ -460,4 +457,16 @@ También asegúrese de haber iniciado sesión en las fuentes que lo requieren an
     <string name="channel_downloader">Descargador</string>
 <string name="information_empty_category">No tienes categorías. Toca el botón más para crear una y organizar tu librería.</string>
 
+    <string name="label_migration">Migración de fuente</string>
+    <string name="label_extensions">Extensiones</string>
+    <string name="label_extension_info">"Información de extensión "</string>
+
+
+    <string name="ext_details">Detalles</string>
+    <string name="ext_update">Actualizar</string>
+    <string name="ext_install">Instalar</string>
+    <string name="ext_pending">Pendiente</string>
+    <string name="ext_downloading">Descargando</string>
+    <string name="ext_installing">Instalando</string>
+    <string name="ext_installed">Instalado</string>
     </resources>
