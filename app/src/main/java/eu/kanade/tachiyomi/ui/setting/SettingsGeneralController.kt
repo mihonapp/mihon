@@ -31,7 +31,7 @@ class SettingsGeneralController : SettingsController() {
             titleRes = R.string.pref_language
             entryValues = arrayOf("", "ar", "bg", "bn", "de", "en-US", "en-GB", "es", "fr", "hi",
                     "hu", "in", "it", "ja", "ko", "lv", "ms", "nl", "pl", "pt", "pt-BR", "ro",
-                    "ru", "vi")
+                    "ru", "tr", "vi")
             entries = entryValues.map { value ->
                 val locale = LocaleHelper.getLocaleFromString(value.toString())
                 locale?.getDisplayName(locale)?.capitalize() ?:
