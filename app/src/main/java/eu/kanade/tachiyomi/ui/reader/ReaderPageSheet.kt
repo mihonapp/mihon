@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.reader
 
+import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
+import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Page
@@ -26,6 +28,14 @@ class ReaderPageSheet(
         set_as_cover_layout.setOnClickListener { setAsCover() }
         share_layout.setOnClickListener { share() }
         save_layout.setOnClickListener { save() }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val width = context.resources.getDimensionPixelSize(R.dimen.bottom_sheet_width)
+        if (width > 0) {
+            window?.setLayout(width, ViewGroup.LayoutParams.MATCH_PARENT)
+        }
     }
 
     /**
