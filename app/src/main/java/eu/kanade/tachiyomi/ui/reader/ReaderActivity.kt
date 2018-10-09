@@ -99,7 +99,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         fun newIntent(context: Context, manga: Manga, chapter: Chapter): Intent {
             val intent = Intent(context, ReaderActivity::class.java)
-            intent.putExtra("manga", manga)
+            intent.putExtra("manga", manga.id)
             intent.putExtra("chapter", chapter.id)
             return intent
         }
@@ -117,10 +117,10 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         setContentView(R.layout.reader_activity)
 
         if (presenter.needsInit()) {
-            val manga = intent.extras.getSerializable("manga") as? Manga
+            val manga = intent.extras.getLong("manga", -1)
             val chapter = intent.extras.getLong("chapter", -1)
 
-            if (manga == null || chapter == -1L) {
+            if (manga == -1L || chapter == -1L) {
                 finish()
                 return
             }

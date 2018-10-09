@@ -158,10 +158,26 @@ class ReaderPresenter(
     }
 
     /**
+     * Initializes this presenter with the given [mangaId] and [initialChapterId]. This method will
+     * fetch the manga from the database and initialize the initial chapter.
+     */
+    fun init(mangaId: Long, initialChapterId: Long) {
+        if (!needsInit()) return
+
+        db.getManga(mangaId).asRxObservable()
+            .first()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext { init(it, initialChapterId) }
+            .subscribeFirst({ _, _ ->
+                // Ignore onNext event
+            }, ReaderActivity::setInitialChapterError)
+    }
+
+    /**
      * Initializes this presenter with the given [manga] and [initialChapterId]. This method will
      * set the chapter loader, view subscriptions and trigger an initial load.
      */
-    fun init(manga: Manga, initialChapterId: Long) {
+    private fun init(manga: Manga, initialChapterId: Long) {
         if (!needsInit()) return
 
         this.manga = manga
@@ -180,6 +196,7 @@ class ReaderPresenter(
             .fromCallable { chapterList.first { chapterId == it.chapter.id } }
             .flatMap { getLoadObservable(loader!!, it) }
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeFirst({ _, _ ->
                 // Ignore onNext event
             }, ReaderActivity::setInitialChapterError)
@@ -374,8 +391,7 @@ class ReaderPresenter(
     fun setMangaViewer(viewer: Int) {
         val manga = manga ?: return
         manga.viewer = viewer
-        // TODO custom put operation
-        db.insertManga(manga).executeAsBlocking()
+        db.updateMangaViewer(manga).executeAsBlocking()
 
         Observable.timer(250, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
             .subscribeFirst({ view, _ ->
