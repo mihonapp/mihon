@@ -30,7 +30,7 @@ ext {
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     publishNonDefault true
 
     defaultConfig {
@@ -236,7 +236,7 @@ dependencies {
 }
 
 buildscript {
-    ext.kotlin_version = '1.2.60'
+    ext.kotlin_version = '1.2.71'
     repositories {
         mavenCentral()
     }
