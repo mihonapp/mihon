@@ -52,8 +52,9 @@ class SettingsGeneralController : SettingsController() {
         intListPreference {
             key = Keys.theme
             titleRes = R.string.pref_theme
-            entriesRes = arrayOf(R.string.light_theme, R.string.dark_theme, R.string.amoled_theme)
-            entryValues = arrayOf("1", "2", "3")
+            entriesRes = arrayOf(R.string.light_theme, R.string.dark_theme,
+                    R.string.amoled_theme, R.string.darkblue_theme)
+            entryValues = arrayOf("1", "2", "3", "4")
             defaultValue = "1"
             summary = "%s"
 
