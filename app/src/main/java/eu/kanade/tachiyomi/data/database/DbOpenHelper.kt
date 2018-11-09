@@ -17,7 +17,7 @@ class DbOpenHelper(context: Context)
         /**
          * Version of the database.
          */
-        const val DATABASE_VERSION = 7
+        const val DATABASE_VERSION = 8
     }
 
     override fun onCreate(db: SQLiteDatabase) = with(db) {
@@ -30,8 +30,9 @@ class DbOpenHelper(context: Context)
 
         // DB indexes
         execSQL(MangaTable.createUrlIndexQuery)
-        execSQL(MangaTable.createFavoriteIndexQuery)
+        execSQL(MangaTable.createLibraryIndexQuery)
         execSQL(ChapterTable.createMangaIdIndexQuery)
+        execSQL(ChapterTable.createUnreadChaptersIndexQuery)
         execSQL(HistoryTable.createChapterIdIndexQuery)
     }
 
@@ -59,6 +60,11 @@ class DbOpenHelper(context: Context)
         }
         if (oldVersion < 7) {
             db.execSQL(TrackTable.addLibraryId)
+        }
+        if (oldVersion < 8) {
+            db.execSQL("DROP INDEX IF EXISTS mangas_favorite_index")
+            db.execSQL(MangaTable.createLibraryIndexQuery)
+            db.execSQL(ChapterTable.createUnreadChaptersIndexQuery)
         }
     }
 
