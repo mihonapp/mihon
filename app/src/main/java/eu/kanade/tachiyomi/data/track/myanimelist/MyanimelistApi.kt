@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.track.myanimelist
 
 import android.net.Uri
-import android.util.Xml
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
@@ -12,191 +11,266 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.util.selectInt
 import eu.kanade.tachiyomi.util.selectText
 import okhttp3.*
+import org.json.JSONObject
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
-import org.xmlpull.v1.XmlSerializer
 import rx.Observable
-import java.io.StringWriter
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.zip.GZIPInputStream
 
-class MyanimelistApi(private val client: OkHttpClient, username: String, password: String) {
 
-    private var headers = createHeaders(username, password)
+class MyanimelistApi(private val client: OkHttpClient) {
 
-    fun addLibManga(track: Track): Observable<Track> {
+    fun addLibManga(track: Track, csrf: String): Observable<Track> {
         return Observable.defer {
-            client.newCall(POST(getAddUrl(track), headers, getMangaPostPayload(track)))
+            client.newCall(POST(url = getAddUrl(), body = getMangaPostPayload(track, csrf)))
                     .asObservableSuccess()
                     .map { track }
         }
     }
 
-    fun updateLibManga(track: Track): Observable<Track> {
+    fun updateLibManga(track: Track, csrf: String): Observable<Track> {
         return Observable.defer {
-            client.newCall(POST(getUpdateUrl(track), headers, getMangaPostPayload(track)))
+            client.newCall(POST(url = getUpdateUrl(), body = getMangaPostPayload(track, csrf)))
                     .asObservableSuccess()
                     .map { track }
         }
     }
 
-    fun search(query: String, username: String): Observable<List<TrackSearch>> {
-        return if (query.startsWith(PREFIX_MY)) {
-            val realQuery = query.substring(PREFIX_MY.length).toLowerCase().trim()
-            getList(username)
-                    .flatMap { Observable.from(it) }
-                    .filter { realQuery in it.title.toLowerCase() }
-                    .toList()
-        } else {
-            client.newCall(GET(getSearchUrl(query), headers))
-                    .asObservable()
-                    .map { Jsoup.parse(Parser.unescapeEntities(it.body()!!.string(), false), "", Parser.xmlParser()) }
-                    .flatMap { Observable.from(it.select("entry")) }
-                    .filter { it.select("type").text() != "Novel" }
-                    .map {
-                        TrackSearch.create(TrackManager.MYANIMELIST).apply {
-                            title = it.selectText("title")!!
-                            media_id = it.selectInt("id")
-                            total_chapters = it.selectInt("chapters")
-                            summary = it.selectText("synopsis")!!
-                            cover_url = it.selectText("image")!!
-                            tracking_url = MyanimelistApi.mangaUrl(media_id)
-                            publishing_status = it.selectText("status")!!
-                            publishing_type = it.selectText("type")!!
-                            start_date = it.selectText("start_date")!!
-                        }
-                    }
-                    .toList()
-        }
-    }
-
-    fun getList(username: String): Observable<List<TrackSearch>> {
-        return client
-                .newCall(GET(getListUrl(username), headers))
+    fun search(query: String): Observable<List<TrackSearch>> {
+        return client.newCall(GET(getSearchUrl(query)))
                 .asObservable()
-                .map { Jsoup.parse(Parser.unescapeEntities(it.body()!!.string(), false), "", Parser.xmlParser()) }
-                .flatMap { Observable.from(it.select("manga")) }
-                .map {
+                .flatMap { response ->
+                    Observable.from(Jsoup.parse(response.consumeBody())
+                            .select("div.js-categories-seasonal.js-block-list.list")
+                            .select("table").select("tbody")
+                            .select("tr").drop(1))
+                }
+                .filter { row ->
+                    row.select(TD)[2].text() != "Novel"
+                }
+                .map { row ->
                     TrackSearch.create(TrackManager.MYANIMELIST).apply {
-                        title = it.selectText("series_title")!!
-                        media_id = it.selectInt("series_mangadb_id")
-                        last_chapter_read = it.selectInt("my_read_chapters")
-                        status = it.selectInt("my_status")
-                        score = it.selectInt("my_score").toFloat()
-                        total_chapters = it.selectInt("series_chapters")
-                        cover_url = it.selectText("series_image")!!
-                        tracking_url = MyanimelistApi.mangaUrl(media_id)
+                        title = row.searchTitle()
+                        media_id = row.searchMediaId()
+                        total_chapters = row.searchTotalChapters()
+                        summary = row.searchSummary()
+                        cover_url = row.searchCoverUrl()
+                        tracking_url = mangaUrl(media_id)
+                        publishing_status = row.searchPublishingStatus()
+                        publishing_type = row.searchPublishingType()
+                        start_date = row.searchStartDate()
                     }
                 }
                 .toList()
     }
 
-    fun findLibManga(track: Track, username: String): Observable<Track?> {
-        return getList(username)
+    private fun getList(csrf: String): Observable<List<TrackSearch>> {
+        return getListUrl(csrf)
+                .flatMap { url ->
+                    getListXml(url)
+                }
+                .flatMap { doc ->
+                    Observable.from(doc.select("manga"))
+                }
+                .map { it ->
+                    TrackSearch.create(TrackManager.MYANIMELIST).apply {
+                        title = it.selectText("manga_title")!!
+                        media_id = it.selectInt("manga_mangadb_id")
+                        last_chapter_read = it.selectInt("my_read_chapters")
+                        status = getStatus(it.selectText("my_status")!!)
+                        score = it.selectInt("my_score").toFloat()
+                        total_chapters = it.selectInt("manga_chapters")
+                        tracking_url = mangaUrl(media_id)
+                    }
+                }
+                .toList()
+    }
+
+    private fun getListXml(url: String): Observable<Document> {
+        return client.newCall(GET(url))
+                .asObservable()
+                .map { response ->
+                    Jsoup.parse(response.consumeXmlBody(), "", Parser.xmlParser())
+                }
+    }
+
+    fun findLibManga(track: Track, csrf: String): Observable<Track?> {
+        return getList(csrf)
                 .map { list -> list.find { it.media_id == track.media_id } }
     }
 
-    fun getLibManga(track: Track, username: String): Observable<Track> {
-        return findLibManga(track, username)
+    fun getLibManga(track: Track, csrf: String): Observable<Track> {
+        return findLibManga(track, csrf)
                 .map { it ?: throw Exception("Could not find manga") }
     }
 
-    fun login(username: String, password: String): Observable<Response> {
-        headers = createHeaders(username, password)
-        return client.newCall(GET(getLoginUrl(), headers))
-                .asObservable()
-                .doOnNext { response ->
-                    response.close()
-                    if (response.code() != 200) throw Exception("Login error")
+    fun login(username: String, password: String): Observable<String> {
+        return getSessionInfo()
+                .flatMap { csrf ->
+                    login(username, password, csrf)
                 }
     }
 
-    private fun getMangaPostPayload(track: Track): RequestBody {
-        val data = xml {
-            element(ENTRY_TAG) {
-                if (track.last_chapter_read != 0) {
-                    text(CHAPTER_TAG, track.last_chapter_read.toString())
+    private fun getSessionInfo(): Observable<String> {
+        return client.newCall(GET(getLoginUrl()))
+                .asObservable()
+                .map { response ->
+                    Jsoup.parse(response.consumeBody())
+                            .select("meta[name=csrf_token]")
+                            .attr("content")
                 }
-                text(STATUS_TAG, track.status.toString())
-                text(SCORE_TAG, track.score.toString())
+    }
+
+    private fun login(username: String, password: String, csrf: String): Observable<String> {
+        return client.newCall(POST(url = getLoginUrl(), body = getLoginPostBody(username, password, csrf)))
+                .asObservable()
+                .map { response ->
+                    response.use {
+                        if (response.priorResponse()?.code() != 302) throw Exception("Authentication error")
+                    }
+                    csrf
+                }
+    }
+
+    private fun getLoginPostBody(username: String, password: String, csrf: String): RequestBody {
+        return FormBody.Builder()
+                .add("user_name", username)
+                .add("password", password)
+                .add("cookie", "1")
+                .add("sublogin", "Login")
+                .add("submit", "1")
+                .add(CSRF, csrf)
+                .build()
+    }
+
+    private fun getExportPostBody(csrf: String): RequestBody {
+        return FormBody.Builder()
+                .add("type", "2")
+                .add("subexport", "Export My List")
+                .add(CSRF, csrf)
+                .build()
+    }
+
+    private fun getMangaPostPayload(track: Track, csrf: String): RequestBody {
+        val body = JSONObject()
+                .put("manga_id", track.media_id)
+                .put("status", track.status)
+                .put("score", track.score)
+                .put("num_read_chapters", track.last_chapter_read)
+                .put(CSRF, csrf)
+
+        return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body.toString())
+    }
+
+    private fun getLoginUrl() = Uri.parse(baseUrl).buildUpon()
+            .appendPath("login.php")
+            .toString()
+
+    private fun getSearchUrl(query: String): String {
+        val col = "c[]"
+        return Uri.parse(baseUrl).buildUpon()
+                .appendPath("manga.php")
+                .appendQueryParameter("q", query)
+                .appendQueryParameter(col, "a")
+                .appendQueryParameter(col, "b")
+                .appendQueryParameter(col, "c")
+                .appendQueryParameter(col, "d")
+                .appendQueryParameter(col, "e")
+                .appendQueryParameter(col, "g")
+                .toString()
+    }
+
+    private fun getExportListUrl() = Uri.parse(baseUrl).buildUpon()
+            .appendPath("panel.php")
+            .appendQueryParameter("go", "export")
+            .toString()
+
+    private fun getListUrl(csrf: String): Observable<String> {
+        return client.newCall(POST(url = getExportListUrl(), body = getExportPostBody(csrf)))
+                .asObservable()
+                .map {response ->
+                    baseUrl + Jsoup.parse(response.consumeBody())
+                            .select("div.goodresult")
+                            .select("a")
+                            .attr("href")
+                }
+    }
+
+    private fun getUpdateUrl() = Uri.parse(baseModifyListUrl).buildUpon()
+            .appendPath("edit.json")
+            .toString()
+
+    private fun getAddUrl() = Uri.parse(baseModifyListUrl).buildUpon()
+            .appendPath( "add.json")
+            .toString()
+    
+    private fun Response.consumeBody(): String? {
+        use {
+            if (it.code() != 200) throw Exception("Login error")
+            return it.body()?.string()
+        }
+    }
+
+    private fun Response.consumeXmlBody(): String? {
+        use { res ->
+            if (res.code() != 200) throw Exception("Export list error")
+            BufferedReader(InputStreamReader(GZIPInputStream(res.body()?.source()?.inputStream()))).use { reader ->
+                val sb = StringBuilder()
+                reader.forEachLine { line ->
+                    sb.append(line)
+                }
+                return sb.toString()
             }
         }
-
-        return FormBody.Builder()
-                .add("data", data)
-                .build()
-    }
-
-    private inline fun xml(block: XmlSerializer.() -> Unit): String {
-        val x = Xml.newSerializer()
-        val writer = StringWriter()
-
-        with(x) {
-            setOutput(writer)
-            startDocument("UTF-8", false)
-            block()
-            endDocument()
-        }
-
-        return writer.toString()
-    }
-
-    private inline fun XmlSerializer.element(tag: String, block: XmlSerializer.() -> Unit) {
-        startTag("", tag)
-        block()
-        endTag("", tag)
-    }
-
-    private fun XmlSerializer.text(tag: String, body: String) {
-        startTag("", tag)
-        text(body)
-        endTag("", tag)
-    }
-
-    fun getLoginUrl() = Uri.parse(baseUrl).buildUpon()
-            .appendEncodedPath("api/account/verify_credentials.xml")
-            .toString()
-
-    fun getSearchUrl(query: String) = Uri.parse(baseUrl).buildUpon()
-            .appendEncodedPath("api/manga/search.xml")
-            .appendQueryParameter("q", query)
-            .toString()
-
-    fun getListUrl(username: String) = Uri.parse(baseUrl).buildUpon()
-            .appendPath("malappinfo.php")
-            .appendQueryParameter("u", username)
-            .appendQueryParameter("status", "all")
-            .appendQueryParameter("type", "manga")
-            .toString()
-
-    fun getUpdateUrl(track: Track) = Uri.parse(baseUrl).buildUpon()
-            .appendEncodedPath("api/mangalist/update")
-            .appendPath("${track.media_id}.xml")
-            .toString()
-
-    fun getAddUrl(track: Track) = Uri.parse(baseUrl).buildUpon()
-            .appendEncodedPath("api/mangalist/add")
-            .appendPath("${track.media_id}.xml")
-            .toString()
-
-    fun createHeaders(username: String, password: String): Headers {
-        return Headers.Builder()
-                .add("Authorization", Credentials.basic(username, password))
-                .add("User-Agent", "api-indiv-9F93C52A963974CF674325391990191C")
-                .build()
     }
 
     companion object {
         const val baseUrl = "https://myanimelist.net"
-        const val baseMangaUrl = baseUrl + "/manga/"
+        private const val baseMangaUrl = "$baseUrl/manga/"
+        private const val baseModifyListUrl = "$baseUrl/ownlist/manga"
 
-        fun mangaUrl(remoteId: Int): String {
-            return baseMangaUrl + remoteId
-        }
+        fun mangaUrl(remoteId: Int) = baseMangaUrl + remoteId
 
-        private val ENTRY_TAG = "entry"
-        private val CHAPTER_TAG = "chapter"
-        private val SCORE_TAG = "score"
-        private val STATUS_TAG = "status"
+        fun Element.searchTitle() = select("strong").text()!!
 
-        const val PREFIX_MY = "my:"
+        fun Element.searchTotalChapters() = if (select(TD)[4].text() == "-") 0 else select(TD)[4].text().toInt()
+
+        fun Element.searchCoverUrl() = select("img")
+                .attr("data-src")
+                .split("\\?")[0]
+                .replace("/r/50x70/", "/")
+
+        fun Element.searchMediaId() = select("div.picSurround")
+                .select("a").attr("id")
+                .replace("sarea", "")
+                .toInt()
+
+        fun Element.searchSummary() = select("div.pt4")
+                .first()
+                .ownText()!!
+
+        fun Element.searchPublishingStatus() = if (select(TD).last().text() == "-") PUBLISHING else FINISHED
+
+        fun Element.searchPublishingType() = select(TD)[2].text()!!
+
+        fun Element.searchStartDate() = select(TD)[6].text()!!
+
+        fun getStatus(status: String) = when (status) {
+            "Reading" -> 1
+            "Completed" -> 2
+            "On-Hold" -> 3
+            "Dropped" -> 4
+            "Plan to Read" -> 6
+            else -> 1
+            }
+
+        const val CSRF = "csrf_token"
+        const val TD = "td"
+        private const val FINISHED = "Finished"
+        private const val PUBLISHING = "Publishing"
     }
 }
