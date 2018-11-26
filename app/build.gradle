@@ -118,7 +118,7 @@ dependencies {
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
-    implementation 'com.android.support:multidex:1.0.2'
+    implementation 'com.android.support:multidex:1.0.3'
 
     standardImplementation 'com.google.firebase:firebase-core:11.8.0'
 
@@ -161,7 +161,8 @@ dependencies {
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 
     // Database
-    implementation "com.pushtorefresh.storio:sqlite:1.13.0"
+    implementation 'eu.kanade.storio:storio:1.13.0'
+    implementation 'io.requery:sqlite-android:3.25.2'
 
     // Model View Presenter
     final nucleus_version = '3.0.0'

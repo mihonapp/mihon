@@ -1,12 +1,13 @@
 package eu.kanade.tachiyomi.data.database
 
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.db.SupportSQLiteOpenHelper
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import eu.kanade.tachiyomi.data.database.tables.*
 
-class DbOpenHelper(context: Context)
-: SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
 
     companion object {
         /**
@@ -20,7 +21,7 @@ class DbOpenHelper(context: Context)
         const val DATABASE_VERSION = 8
     }
 
-    override fun onCreate(db: SQLiteDatabase) = with(db) {
+    override fun onCreate(db: SupportSQLiteDatabase) = with(db) {
         execSQL(MangaTable.createTableQuery)
         execSQL(ChapterTable.createTableQuery)
         execSQL(TrackTable.createTableQuery)
@@ -36,7 +37,7 @@ class DbOpenHelper(context: Context)
         execSQL(HistoryTable.createChapterIdIndexQuery)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+    override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
             db.execSQL(ChapterTable.sourceOrderUpdateQuery)
 
@@ -68,7 +69,7 @@ class DbOpenHelper(context: Context)
         }
     }
 
-    override fun onConfigure(db: SQLiteDatabase) {
+    override fun onConfigure(db: SupportSQLiteDatabase) {
         db.setForeignKeyConstraintsEnabled(true)
     }
 
