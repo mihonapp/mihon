@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.network
 
 import com.squareup.duktape.Duktape
 import okhttp3.*
+import java.io.IOException
 
 class CloudflareInterceptor : Interceptor {
 
@@ -19,7 +20,13 @@ class CloudflareInterceptor : Interceptor {
 
         // Check if Cloudflare anti-bot is on
         if (response.code() == 503 && response.header("Server") in serverCheck) {
-            return chain.proceed(resolveChallenge(response))
+            return try {
+                chain.proceed(resolveChallenge(response))
+            } catch (e: Exception) {
+                // Because OkHttp's enqueue only handles IOExceptions, wrap the exception so that
+                // we don't crash the entire app
+                throw IOException(e)
+            }
         }
 
         return response
