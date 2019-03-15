@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:text="Pull up for more options"
+        android:text="@string/reader_pull_up_for_more_options"
         android:textColor="?android:attr/textColorHint"
         app:layout_constraintLeft_toRightOf="@id/general_prefs"
         app:layout_constraintTop_toTopOf="@id/general_prefs" />
