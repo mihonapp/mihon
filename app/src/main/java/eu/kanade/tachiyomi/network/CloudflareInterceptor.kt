@@ -14,7 +14,19 @@ class CloudflareInterceptor : Interceptor {
 
     private val sPattern = Regex("""name="s" value="([^"]+)""")
 
+    private val kPattern = Regex("""k\s+=\s+'([^']+)';""")
+
     private val serverCheck = arrayOf("cloudflare-nginx", "cloudflare")
+
+    private interface IBase64 {
+        fun decode(input: String): String
+    }
+
+    private val b64: IBase64 = object : IBase64 {
+        override fun decode(input: String): String {
+            return okio.ByteString.decodeBase64(input)!!.utf8()
+        }
+    }
 
     @Synchronized
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -49,17 +61,28 @@ class CloudflareInterceptor : Interceptor {
             val pass = passPattern.find(content)?.groups?.get(1)?.value
             val s = sPattern.find(content)?.groups?.get(1)?.value
 
+            // If `k` is null, it uses old methods.
+            val k = kPattern.find(content)?.groups?.get(1)?.value ?: ""
+            val innerHTMLValue = Regex("""<div(.*)id="$k"(.*)>(.*)</div>""")
+                    .find(content)?.groups?.get(3)?.value ?: ""
+
             if (operation == null || challenge == null || pass == null || s == null) {
                 throw Exception("Failed resolving Cloudflare challenge")
             }
 
+            // Export native Base64 decode function to js object.
+            duktape.set("b64", IBase64::class.java, b64)
+
+            // Return simulated innerHTML when call DOM.
+            val simulatedDocumentJS = """var document = { getElementById: function (x) { return { innerHTML: "$innerHTMLValue" }; } }"""
+
             val js = operation
-                    .replace(Regex("""a\.value = (.+ \+ t\.length(\).toFixed\(10\))?).+"""), "$1")
+                    .replace(Regex("""a\.value = (.+\.toFixed\(10\);).+"""), "$1")
                     .replace(Regex("""\s{3,}[a-z](?: = |\.).+"""), "")
                     .replace("t.length", "${domain.length}")
                     .replace("\n", "")
 
-            val result = duktape.evaluate(js) as String
+            val result = duktape.evaluate("""$simulatedDocumentJS;$ATOB_JS;var t="$domain";$js""") as String
 
             val cloudflareUrl = HttpUrl.parse("${url.scheme()}://$domain/cdn-cgi/l/chk_jschl")!!
                     .newBuilder()
@@ -80,4 +103,8 @@ class CloudflareInterceptor : Interceptor {
         }
     }
 
+    companion object {
+        // atob() is browser API, Using Android's own function. (java.util.Base64 can't be used because of min API level)
+        private const val ATOB_JS = """var atob = function (input) { return b64.decode(input) }"""
+    }
 }
