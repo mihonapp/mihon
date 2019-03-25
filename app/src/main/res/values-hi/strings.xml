@@ -14,7 +14,7 @@
     <string name="label_recent_updates">पुस्तकालय अद्यतन</string>
     <string name="label_latest_updates">नवीनतम अद्यतन</string>
     <string name="label_categories">श्रेणियाँ</string>
-    <string name="label_selected">श्रेणियाँ</string>
+    <string name="label_selected">श्रेणियाँ %1$d</string>
     <string name="label_backup">बैकअप</string>
 
 

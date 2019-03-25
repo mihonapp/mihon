@@ -242,7 +242,7 @@
     <string name="backup_created">Copie de rezervă creată</string>
     <string name="restore_completed">Restaurare completă</string>
     <string name="error_opening_log">Nu s-a putut deschide log</string>
-    <string name="restore_completed_content">Restaurarea a durat %$s.
+    <string name="restore_completed_content">Restaurarea a durat %1$s.
 \n%2$s erori găsite.</string>
     <string name="backup_restore_content">Restaurare folosește sursa pentru a aduce datele, cost suplimentar aplicabil. De asemenea verificați dacă sunteți autentificați în sursele ce au nevoie înainte de a incepe restaurarea.</string>
     <string name="file_saved">Fișier salvat in %1$s</string>
@@ -395,7 +395,7 @@
     <string name="downloading">Descărcare…</string>
     <string name="download_progress">Descărcat %1$d%%</string>
     <string name="chapter_progress">Pagina: %1$d</string>
-    <string name="chapter_subtitle">Capitolul %1$d</string>
+    <string name="chapter_subtitle">Capitolul %1$s</string>
     <string name="no_next_chapter">Capitolul următor nu a fost găsit</string>
     <string name="no_previous_chapter">Capitolul precedent nu a fost găsit</string>
     <string name="decode_image_error">Imaginea nu a putu fi decodată</string>
