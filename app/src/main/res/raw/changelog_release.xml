@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v0.8.2" changeDate="">
+        <changelogtext>Updated Cloudflare.</changelogtext>
+        <changelogtext>Fixed crashes with some translations.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.8.1" changeDate="">
         <changelogtext>Fixed latest Cloudflare changes.</changelogtext>
         <changelogtext>Bundled SQLite for better performance and new features.</changelogtext>
