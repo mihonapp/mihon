@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources><string name="name">নাম</string>
     <string name="categories">ধরণ</string>
     <string name="manga">মাংগা</string>
@@ -50,7 +50,6 @@
     <string name="action_edit_cover">কভার ছবি সম্পাদন</string>
     <string name="action_sort_up">সাজান</string>
     <string name="action_sort_down">বাছাই করুন</string>
-    <string name="action_show_unread">অপঠিত</string>
     <string name="action_show_downloaded">ডাউনলোডেড</string>
     <string name="action_next_unread">অপঠিত পরবর্তি</string>
     <string name="action_start">শুরু</string>
@@ -123,7 +122,6 @@
     <string name="charging">চার্জ হচ্ছে</string>
     <string name="pref_update_only_non_completed">কেবল চলমান মাংগা আপডেট করুন</string>
     <string name="pref_auto_update_manga_sync">পড়ার পর অধ্যায়গুলো সুসংগত করুন</string>
-    <string name="pref_ask_update_manga_sync">আপডেটের আগে নিশ্চিত করুন</string>
     <string name="pref_theme">এপ্লিকেশন থিম</string>
     <string name="light_theme">প্রধান থিম</string>
     <string name="dark_theme">কালো থিম</string>
@@ -180,7 +178,6 @@
 
 
       <string name="pref_download_directory">ডাউনলোডের নির্দেশক</string>
-    <string name="pref_download_slots">সমকালীন ডাউনলোডগুলো</string>
     <string name="pref_download_only_over_wifi">শুধুমাত্র ওয়াই-ফাইয়ে ডাউনলোড করুন</string>
     <string name="pref_remove_after_marked_as_read">পঠিত হলে সরিয়ে ফেলুন</string>
     <string name="pref_remove_after_read">পড়ার পর সরিয়ে ফেলুন</string>
@@ -280,7 +277,6 @@
     <string name="ongoing">চলমান</string>
     <string name="unknown">অজানা</string>
     <string name="licensed">লাইসেন্সকৃত</string>
-    <string name="add_to_library">মাংগাশালায় যোগ করুন</string>
     <string name="remove_from_library">মাংগাশালা থেকে সরিয়ে ফেলুন</string>
     <string name="manga_info_author_label">লেখক</string>
     <string name="manga_info_artist_label">চিত্রকর</string>
@@ -354,8 +350,7 @@
     <string name="chapter_subtitle">অধ্যায় %1$s</string>
     <string name="no_next_chapter">পরবর্তী অধ্যায় খুঁজে পাওয়া যায়নি</string>
     <string name="no_previous_chapter">আগের অধ্যায় খুঁজে পাওয়া যায়নি</string>
-    <string name="decode_image_error">ছবি লোড করা সম্ভব হয়নি।
-\nছবি ডিকোডার পরিবর্তন করুন অথবা নিচের যেকোন একটি অপশন চেষ্টা করুন</string>
+    <string name="decode_image_error">ছবি decoded করা যাবে না</string>
     <string name="confirm_update_manga_sync">শেষ পড়া অধ্যায় সেবাগুলোতে আপডেট করুন %1$d?</string>
     <string name="confirm_set_image_as_cover">আপনি কি এই ছবিটিকে কভার হিসেবে সেট করতে চান?</string>
     <string name="viewer_for_this_series">এই সিরিজের দর্শক</string>
@@ -461,4 +456,22 @@
     <string name="copy">কপি</string>
     <string name="migrating">সরানো হচ্ছে…</string>
 
-    </resources>
+    <string name="pager_viewer">পেজার</string>
+    <string name="source_not_installed">উৎস ইন্সটল করা নেই: %1$s</string>
+
+    <string name="repeating">পুনরায় পড়া</string>
+    <string name="track_status">স্ট্যাটাস</string>
+    <string name="track_start_date">শুরু হয়েছে</string>
+    <string name="track_type">ধরণ</string>
+    <string name="track_author">লেখক</string>
+    <string name="darkblue_theme">গাঢ় নীল</string>
+    <string name="transition_finished">"শেষ  :"</string>
+    <string name="transition_current">"এখনকার  :"</string>
+    <string name="transition_next">আসছে :</string>
+    <string name="transition_previous">পূর্ববর্তী :</string>
+    <string name="transition_no_next">কোন পরের অধ্যায় আছে</string>
+    <string name="transition_no_previous">কোন পূর্ববর্তী অধ্যায় আছে</string>
+    <string name="transition_pages_loading">পৃষ্ঠা লোড হচ্ছে …</string>
+    <string name="transition_pages_error">পৃষ্ঠা লোড করতে ব্যর্থ হয়েছে: %1$s</string>
+    <string name="url_not_set">মাংগা ইউআরএল সেট না শিরোনাম ক্লিক করুন এবং আবার মাংগা নির্বাচন করুন</string>
+</resources>

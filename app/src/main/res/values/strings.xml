@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">TachiyomiEH</string>
 
@@ -91,7 +92,7 @@
     <string name="action_create">Create</string>
     <string name="action_restore">Restore</string>
     <string name="action_open">Open</string>
-    <string name="action_login">Login</string>
+    <string name="action_login">Log in</string>
 
     <!-- Operations -->
     <string name="deleting">Deleting…</string>
@@ -135,11 +136,11 @@
     <string name="charging">Charging</string>
     <string name="pref_update_only_non_completed">Only update ongoing manga</string>
     <string name="pref_auto_update_manga_sync">Sync chapters after reading</string>
-    <string name="pref_ask_update_manga_sync">Confirm before updating</string>
     <string name="pref_theme">Application theme</string>
     <string name="light_theme">Main theme</string>
     <string name="dark_theme">Dark theme</string>
     <string name="amoled_theme">AMOLED theme</string>
+    <string name="darkblue_theme">Dark blue</string>
     <string name="pref_start_screen">Start screen</string>
     <string name="pref_language">Language</string>
     <string name="system_default">System default</string>
@@ -172,6 +173,7 @@
     <string name="pref_page_transitions">Page transitions</string>
     <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="pref_show_page_number">Show page number</string>
+    <string name="pref_true_color">32-bit color</string>
     <string name="pref_crop_borders">Crop borders</string>
     <string name="pref_custom_brightness">Use custom brightness</string>
     <string name="pref_custom_color_filter">Use custom color filter</string>
@@ -180,6 +182,7 @@
     <string name="pref_read_with_volume_keys">Volume keys</string>
     <string name="pref_read_with_volume_keys_inverted">Invert volume keys</string>
     <string name="pref_read_with_tapping">Tapping</string>
+    <string name="pref_read_with_long_tap">Long tap dialog</string>
     <string name="pref_reader_theme">Background color</string>
     <string name="white_background">White</string>
     <string name="black_background">Black</string>
@@ -421,10 +424,19 @@
     <string name="chapter_subtitle">Chapter %1$s</string>
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="no_previous_chapter">Previous chapter not found</string>
-    <string name="decode_image_error">Image could not be loaded.\nTry changing the image decoder or with one of the options below</string>
+    <string name="decode_image_error">The image could not be decoded</string>
     <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
     <string name="confirm_set_image_as_cover">Do you want to set this image as the cover?</string>
     <string name="viewer_for_this_series">Viewer for this series</string>
+    <string name="transition_finished">Finished:</string>
+    <string name="transition_current">Current:</string>
+    <string name="transition_next">Next:</string>
+    <string name="transition_previous">Previous:</string>
+    <string name="transition_no_next">There\'s no next chapter</string>
+    <string name="transition_no_previous">There\'s no previous chapter</string>
+    <string name="transition_pages_loading">Loading pages…</string>
+    <string name="transition_pages_error">Failed to load pages: %1$s</string>
+    <string name="reader_pull_up_for_more_options">Pull up for more options</string>
 
     <!-- Recent manga fragment -->
     <string name="recent_manga_source">%1$s - Ch.%2$s</string>

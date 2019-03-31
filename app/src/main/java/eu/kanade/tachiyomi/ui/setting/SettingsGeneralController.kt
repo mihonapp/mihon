@@ -31,9 +31,9 @@ class SettingsGeneralController : SettingsController() {
         listPreference {
             key = Keys.lang
             titleRes = R.string.pref_language
-            entryValues = arrayOf("", "ar", "bg", "bn", "de", "en-US", "en-GB", "es", "fr", "hi",
-                    "hu", "in", "it", "ja", "ko", "lv", "ms", "nl", "pl", "pt", "pt-BR", "ro",
-                    "ru", "vi")
+            entryValues = arrayOf("", "ar", "bg", "bn", "ca", "cs", "de", "el", "en-US", "en-GB",
+            "es", "fr", "hi", "hu", "in", "it", "ja", "ko", "lv", "ms", "nb-rNO", "nl", "pl", "pt",
+            "pt-BR", "ro", "ru", "sr", "sv", "th", "tr", "uk", "vi", "zh-rCN")
             entries = entryValues.map { value ->
                 val locale = LocaleHelper.getLocaleFromString(value.toString())
                 locale?.getDisplayName(locale)?.capitalize() ?:
@@ -54,8 +54,9 @@ class SettingsGeneralController : SettingsController() {
         intListPreference {
             key = Keys.theme
             titleRes = R.string.pref_theme
-            entriesRes = arrayOf(R.string.light_theme, R.string.dark_theme, R.string.amoled_theme)
-            entryValues = arrayOf("1", "2", "3")
+            entriesRes = arrayOf(R.string.light_theme, R.string.dark_theme,
+                    R.string.amoled_theme, R.string.darkblue_theme)
+            entryValues = arrayOf("1", "2", "3", "4")
             defaultValue = "1"
             summary = "%s"
 

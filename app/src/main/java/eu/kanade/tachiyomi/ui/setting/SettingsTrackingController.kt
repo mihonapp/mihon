@@ -27,13 +27,6 @@ class SettingsTrackingController : SettingsController(),
             titleRes = R.string.pref_auto_update_manga_sync
             defaultValue = true
         }
-        switchPreference {
-            key = Keys.askUpdateTrack
-            titleRes = R.string.pref_ask_update_manga_sync
-            defaultValue = false
-        }.apply {
-            dependency = Keys.autoUpdateTrack // the preference needs to be attached.
-        }
         preferenceCategory {
             titleRes = R.string.services
 

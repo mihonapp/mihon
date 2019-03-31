@@ -46,7 +46,6 @@
     <string name="action_edit_cover">Vorschaubild bearbeiten</string>
     <string name="action_sort_up">Aufsteigend sortieren</string>
     <string name="action_sort_down">Absteigend Sortieren</string>
-    <string name="action_show_unread">Ungelesen</string>
     <string name="action_show_downloaded">Heruntergeladen</string>
     <string name="action_next_unread">Nächstes Ungelesenes</string>
     <string name="action_start">Start</string>
@@ -83,7 +82,7 @@
     <string name="loading">Wird geladen…</string>
 
     <string name="app_not_available">App nicht verfügbar</string>
-    <string name="short_recent_updates">Updates</string>
+    <string name="short_recent_updates">Aktualisierungen</string>
 
     <string name="pref_category_general">Allgemein</string>
     <string name="pref_category_reader">Lese-Einstellungen</string>
@@ -116,7 +115,6 @@
     <string name="charging">Am Laden</string>
     <string name="pref_update_only_non_completed">Nur fortlaufende Manga aktualisieren</string>
     <string name="pref_auto_update_manga_sync">Kapitel nach dem Lesen synchronisieren</string>
-    <string name="pref_ask_update_manga_sync">Vor Update bestätigen</string>
     <string name="pref_theme">App Design</string>
     <string name="light_theme">Hauptdesign</string>
     <string name="dark_theme">Dunkles Design</string>
@@ -173,7 +171,6 @@
 
 
       <string name="pref_download_directory">Downloadordner</string>
-    <string name="pref_download_slots">Simultane Downloads</string>
     <string name="pref_download_only_over_wifi">Nur über WLAN herunterladen</string>
     <string name="pref_remove_after_marked_as_read">Gelesene Kapitel löschen</string>
     <string name="pref_remove_after_read">Gelesene Kapitel löschen ab dem</string>
@@ -268,7 +265,6 @@
     <string name="ongoing">Fortlaufend</string>
     <string name="unknown">Unbekannt</string>
     <string name="licensed">Lizenziert</string>
-    <string name="add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="remove_from_library">Aus Bibliothek entfernen</string>
     <string name="manga_info_author_label">Autor</string>
     <string name="manga_info_artist_label">Künstler</string>
@@ -341,8 +337,7 @@
     <string name="chapter_subtitle">Kapitel %1$s</string>
     <string name="no_next_chapter">Nächstes Kapitel nicht gefunden</string>
     <string name="no_previous_chapter">Vorheriges Kapitel nicht gefunden</string>
-    <string name="decode_image_error">Bild konnte nicht geladen werden. 
-\nVersuche entweder den Bilddecoder zu ändern oder probiere eine der Optionen weiter unten aus</string>
+    <string name="decode_image_error">Das Bild konnte nicht dekodiert werden</string>
     <string name="confirm_update_manga_sync">Setze das letzte gelesen Kapitel auf %1$d?</string>
     <string name="confirm_set_image_as_cover">Wollen Sie dieses Bild als Vorschaubild setzen?</string>
     <string name="viewer_for_this_series">Leser dieser Serie</string>
@@ -461,4 +456,25 @@
     <string name="custom_download">Benutzerdefinierte Anzahl herunterladen</string>
     <string name="migration_info">Wähle die Quelle von welcher Migriert werden soll</string>
     <string name="migration_dialog_what_to_include">Wähle zu beinhaltende Daten</string>
+    <string name="darkblue_theme">Dunkelblau</string>
+    <string name="pager_viewer">Seiten</string>
+    <string name="source_not_installed">Quelle nicht installiert: %1$s</string>
+
+    <string name="download_custom">Benutzerdefinition herunterladen</string>
+    <string name="repeating">Erneutes Lesen</string>
+    <string name="track_status">Stand</string>
+    <string name="track_start_date">Gestartet</string>
+    <string name="track_type">Typ</string>
+    <string name="track_author">Autor</string>
+    <string name="url_not_set">Manga url ist nicht gesetzt. Bitte auf den Titel drücken und den Manga erneut wählen</string>
+
+    <string name="transition_finished">Beendet:</string>
+    <string name="transition_current">Aktuell:</string>
+    <string name="transition_next">Nächste:</string>
+    <string name="transition_previous">Vorherige:</string>
+    <string name="transition_no_next">Es gibt kein nächstes Kapitel</string>
+    <string name="transition_no_previous">Es gibt kein vorheriges Kapitel</string>
+    <string name="transition_pages_loading">Lade Seiten…</string>
+    <string name="transition_pages_error">Seiten konnten nicht geladen werden: %1$s</string>
+
     </resources>

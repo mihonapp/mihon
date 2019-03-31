@@ -47,7 +47,6 @@
     <string name="action_edit_cover">Ubah gambar sampul</string>
     <string name="action_sort_up">Sortir keatas</string>
     <string name="action_sort_down">Sortir kebawah</string>
-    <string name="action_show_unread">Belum dibaca</string>
     <string name="action_show_downloaded">Terunduh</string>
     <string name="action_next_unread">Selanjutnya belum dibaca</string>
     <string name="action_start">Mulai</string>
@@ -118,7 +117,6 @@
     <string name="charging">Pengisian</string>
     <string name="pref_update_only_non_completed">Hanya perbaharui saja manga yang masih berlanjut</string>
     <string name="pref_auto_update_manga_sync">Sinkronkan bab setelah membaca</string>
-    <string name="pref_ask_update_manga_sync">Konfirmasikan sebelum memperbarui</string>
     <string name="pref_theme">Tema aplikasi</string>
     <string name="light_theme">Tema utama</string>
     <string name="dark_theme">Tema gelap</string>
@@ -144,12 +142,12 @@
     <string name="pref_reader_theme">Warna latar</string>
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
-    <string name="pref_viewer_type">Bawaan penampil</string>
+    <string name="pref_viewer_type">Penampil bawaan</string>
     <string name="default_viewer">Bawaan</string>
     <string name="left_to_right_viewer">Kiri ke kanan</string>
     <string name="right_to_left_viewer">Kanan ke kiri</string>
     <string name="vertical_viewer">Vertikal</string>
-    <string name="webtoon_viewer">Kartun web</string>
+    <string name="webtoon_viewer">Webtoon</string>
     <string name="pref_image_decoder">Pengurai gambar</string>
     <string name="pref_image_scale_type">Tipe skala</string>
     <string name="scale_type_fit_screen">Pas layar</string>
@@ -175,7 +173,6 @@
 
 
       <string name="pref_download_directory">Tempat unduhan</string>
-    <string name="pref_download_slots">Unduh bersamaan</string>
     <string name="pref_download_only_over_wifi">Hanya unduh melalui Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Hapus ketika ditandai telah dibaca</string>
     <string name="pref_remove_after_read">Hapus setelah dibaca</string>
@@ -270,7 +267,6 @@
     <string name="ongoing">Berlanjut</string>
     <string name="unknown">Tidak diketahui</string>
     <string name="licensed">Berlisensi</string>
-    <string name="add_to_library">Tambahkan ke perpustakaan</string>
     <string name="remove_from_library">Hapus dari perpustakaan</string>
     <string name="manga_info_author_label">Penulis</string>
     <string name="manga_info_artist_label">Artis</string>
@@ -343,8 +339,7 @@
     <string name="chapter_subtitle">Bab %1$s</string>
     <string name="no_next_chapter">Bab berikutnya tidak ditemukan</string>
     <string name="no_previous_chapter">Bab sebelumnya tidak ditemukan</string>
-    <string name="decode_image_error">Gambar tidak dapat dimuat.
-\nCoba ganti dekoder gambar atau dengan salah satu opsi di bawah ini</string>
+    <string name="decode_image_error">Gambar tidak bisa diterjemahkan</string>
     <string name="confirm_update_manga_sync">Perbaharui bab terakhir baca di layanan yang diaktifkan ke %1$d?</string>
     <string name="confirm_set_image_as_cover">Apakah anda ingin mengatur gambar ini sebagai sampul?</string>
     <string name="viewer_for_this_series">Penonton untuk seri yang ini</string>
@@ -461,5 +456,25 @@
     <string name="migrate">Migrasi</string>
     <string name="copy">Salin</string>
     <string name="migrating">Memindah…</string>
+
+    <string name="pager_viewer">Halaman</string>
+    <string name="source_not_installed">Sumber tidak terpasang: %1$s</string>
+
+    <string name="repeating">Baca ulang</string>
+    <string name="track_status">Status</string>
+    <string name="track_start_date">Dimulai</string>
+    <string name="track_type">Tipe</string>
+    <string name="track_author">Penulis</string>
+    <string name="url_not_set">Url Manga belum siap, silahkan klik judul dan pilih manga lagi</string>
+
+    <string name="darkblue_theme">Biru gelap</string>
+    <string name="transition_finished">Selesai:</string>
+    <string name="transition_current">Saat ini:</string>
+    <string name="transition_next">Selanjutnya:</string>
+    <string name="transition_previous">Sebelumnya:</string>
+    <string name="transition_no_next">Tidak ada chapter lanjutannya</string>
+    <string name="transition_no_previous">Tidak ada chapter sebelumnya</string>
+    <string name="transition_pages_loading">Memuat halaman…</string>
+    <string name="transition_pages_error">Gagal memuat halaman: %1$s</string>
 
     </resources>

@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import rx.Observable
+import java.util.Calendar
 
 
 class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
@@ -90,7 +91,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     fun search(search: String): Observable<List<TrackSearch>> {
         val query = """
             query Search(${'$'}query: String) {
-                  Page (perPage: 25) {
+                  Page (perPage: 50) {
                     media(search: ${'$'}query, type: MANGA, format_not_in: [NOVEL]) {
                       id
                       title {
@@ -102,6 +103,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                       type
                       status
                       chapters
+                      description
                       startDate {
                         year
                         month
@@ -160,6 +162,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                       type
                       status
                       chapters
+                      description
                       startDate {
                        year
                        month
@@ -244,10 +247,18 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     }
 
     fun jsonToALManga(struct: JsonObject): ALManga{
+        val date = try {
+            val date = Calendar.getInstance()
+            date.set(struct["startDate"]["year"].nullInt ?: 0, (struct["startDate"]["month"].nullInt ?: 0) - 1,
+                    struct["startDate"]["day"].nullInt ?: 0)
+            date.timeInMillis
+        } catch (_: Exception) {
+            0L
+        }
+
         return ALManga(struct["id"].asInt, struct["title"]["romaji"].asString, struct["coverImage"]["large"].asString,
-                null, struct["type"].asString, struct["status"].asString,
-                struct["startDate"]["year"].nullString.orEmpty() + struct["startDate"]["month"].nullString.orEmpty()
-                        + struct["startDate"]["day"].nullString.orEmpty(), struct["chapters"].nullInt ?: 0)
+                struct["description"].nullString.orEmpty(), struct["type"].asString, struct["status"].asString,
+                date, struct["chapters"].nullInt ?: 0)
     }
 
     fun jsonToALUserManga(struct: JsonObject): ALUserManga{

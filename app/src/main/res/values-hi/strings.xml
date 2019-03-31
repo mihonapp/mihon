@@ -1,7 +1,7 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources><string name="name">नाम</string>
     <string name="categories">श्रेणियाँ</string>
-    <string name="manga">मंगा</string>
+    <string name="manga">मांगा</string>
     <string name="chapters">अध्याय</string>
     <string name="track">पदचिह्न</string>
     <string name="history">इतिहास</string>
@@ -14,7 +14,7 @@
     <string name="label_recent_updates">पुस्तकालय अद्यतन</string>
     <string name="label_latest_updates">नवीनतम अद्यतन</string>
     <string name="label_categories">श्रेणियाँ</string>
-    <string name="label_selected">श्रेणियाँ</string>
+    <string name="label_selected">श्रेणियाँ %1$d</string>
     <string name="label_backup">बैकअप</string>
 
 
@@ -50,7 +50,6 @@
     <string name="action_edit_cover">आवरण चित्र को संपादित करें</string>
     <string name="action_sort_up">ऊपर छांटे</string>
     <string name="action_sort_down">नीचे छांटे</string>
-    <string name="action_show_unread">अपठित</string>
     <string name="action_show_downloaded">डाउनलोड किया हुआ</string>
     <string name="action_next_unread">अगला अपठित</string>
     <string name="action_start">प्रारंभ</string>
@@ -84,7 +83,7 @@
     <string name="action_create">सर्जन करना</string>
     <string name="action_restore">पुनःस्थापन करे</string>
     <string name="action_open">खुला हुआ</string>
-    <string name="action_login">लॉग इन</string>
+    <string name="action_login">लोगिन</string>
 
     <string name="deleting">हटाया जा रहा है…</string>
     <string name="loading">लोड हो रहा है…</string>
@@ -123,7 +122,6 @@
     <string name="charging">चार्ज होते समय</string>
     <string name="pref_update_only_non_completed">केवल चालू मंगा का अद्यतन करे</string>
     <string name="pref_auto_update_manga_sync">अध्याय पढ़ने के बाद समकालीन करे</string>
-    <string name="pref_ask_update_manga_sync">अद्यतन करने से पहले पुष्टि करे</string>
     <string name="pref_theme">एप्पलीकेशन थीम</string>
     <string name="light_theme">मुख्य थीम</string>
     <string name="dark_theme">गहरी थीम</string>
@@ -180,7 +178,6 @@
 
 
       <string name="pref_download_directory">डाउनलोड निर्देशिका</string>
-    <string name="pref_download_slots">समकालिक डाउनलोड</string>
     <string name="pref_download_only_over_wifi">वाई - फाई पर ही डाउनलोड करे</string>
     <string name="pref_remove_after_marked_as_read">पढ़ा जाने चिह्नित होने पर हटाएं</string>
     <string name="pref_remove_after_read">पढ़ने के बाद हटा दें</string>
@@ -281,7 +278,6 @@
     <string name="ongoing">चल रही है</string>
     <string name="unknown">अज्ञात</string>
     <string name="licensed">लाइसेंस प्राप्त</string>
-    <string name="add_to_library">पुस्तकालय में जोड़ें</string>
     <string name="remove_from_library">लाइब्रेरी से निकालें</string>
     <string name="manga_info_author_label">लेखक</string>
     <string name="manga_info_artist_label">कलाकार</string>
@@ -355,8 +351,7 @@
     <string name="chapter_subtitle">अध्याय %1$s</string>
     <string name="no_next_chapter">अगले अध्याय नहीं मिला</string>
     <string name="no_previous_chapter">पिछला अध्याय नहीं मिला</string>
-    <string name="decode_image_error">चित्र लोड नहीं किया जा सका।
-\nछवि डिकोडर को बदलने या नीचे दिए गए विकल्पों में से एक के साथ आज़माएं</string>
+    <string name="decode_image_error">छवि को डीकोड नहीं किया जा सका</string>
     <string name="confirm_update_manga_sync">पिछले अध्याय को सक्षम सेवाओं में %1$d तक पढ़ा है?</string>
     <string name="confirm_set_image_as_cover">क्या आप इस छवि को कवर के रूप में सेट करना चाहते हैं?</string>
     <string name="viewer_for_this_series">इस श्रृंखला के लिए दर्शक</string>
@@ -460,4 +455,24 @@
     <string name="copy">नकल</string>
     <string name="migrating">प्रवास हो रहा है…</string>
 
+    <string name="pager_viewer">पृष्ठक</string>
+    <string name="source_not_installed">स्रोत स्थापित नहीं है : %1$s</string>
+
+    <string name="repeating">फिर से पढाना</string>
+    <string name="track_status">स्थिति</string>
+    <string name="track_start_date">शुरू कर दिया है</string>
+    <string name="track_type">प्रकार</string>
+    <string name="track_author">लेखक</string>
+    <string name="url_not_set">मंगा यूआरएल सेट नहीं है कृपया शीर्षक पर क्लिक करें और फिर मंगा का चयन करें</string>
+
+    <string name="transition_finished">समाप्त:</string>
+    <string name="transition_current">प्रचलित:</string>
+    <string name="transition_next">अगला:</string>
+    <string name="transition_previous">पिछला:</string>
+    <string name="transition_no_next">कोई अगला अध्याय नहीं है</string>
+    <string name="transition_no_previous">कोई पिछला अध्याय नहीं है</string>
+    <string name="transition_pages_loading">पेज लोड हो रहे है …</string>
+    <string name="transition_pages_error">पृष्ठों को लोड करने में विफल है: %1$s</string>
+
+    <string name="darkblue_theme">गहरा नीला</string>
     </resources>

@@ -60,6 +60,11 @@ class PersistentCookieStore(context: Context) {
         cookieMap.clear()
     }
 
+    fun remove(uri: URI) {
+        prefs.edit().remove(uri.host).apply()
+        cookieMap.remove(uri.host)
+    }
+
     fun get(url: HttpUrl) = get(url.uri().host)
 
     fun get(uri: URI) = get(uri.host)
