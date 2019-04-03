@@ -14,6 +14,13 @@ class AndroidCookieJar(context: Context) : CookieJar {
 
     private val syncManager by lazy { CookieSyncManager.createInstance(context) }
 
+    init {
+        // Init sync manager when using anything below L
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            syncManager
+        }
+    }
+
     override fun saveFromResponse(url: HttpUrl, cookies: MutableList<Cookie>) {
         val urlString = url.toString()
 

@@ -101,11 +101,12 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
                 }
 
                 override fun onPageFinished(view: WebView, url: String) {
-                    if (url == origRequestUrl) {
+                    // Http error codes are only received since M
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        url == origRequestUrl && !challengeFound
+                    ) {
                         // The first request didn't return the challenge, abort.
-                        if (!challengeFound) {
-                            latch.countDown()
-                        }
+                        latch.countDown()
                     }
                 }
 
@@ -124,11 +125,6 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
                             // Unlock thread, the challenge wasn't found.
                             latch.countDown()
                         }
-                    }
-                    // Any error on the main frame that isn't the Cloudflare check should unlock
-                    // OkHttp's thread.
-                    if (errorCode != 503 && isMainFrame) {
-                        latch.countDown()
                     }
                 }
             }
