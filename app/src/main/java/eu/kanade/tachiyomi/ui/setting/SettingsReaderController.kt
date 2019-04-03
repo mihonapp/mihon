@@ -64,6 +64,11 @@ class SettingsReaderController : SettingsController() {
             summary = "%s"
         }
         switchPreference {
+            key = Keys.skipRead
+            titleRes = R.string.pref_skip_read_chapters
+            defaultValue = false
+        }
+        switchPreference {
             key = Keys.fullscreen
             titleRes = R.string.pref_fullscreen
             defaultValue = true
