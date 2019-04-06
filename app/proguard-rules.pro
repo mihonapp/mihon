@@ -97,6 +97,7 @@
 -dontwarn com.fasterxml.jackson.databind.ext.Java7SupportImpl
 -dontwarn com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector$hasCreatorAnnotation$1
 -dontwarn com.fasterxml.jackson.module.kotlin.KotlinValueInstantiator
+-dontwarn exh.metadata.MetadataUtilKt$joinTagsToGenreString$2
 
 # Realm
 -dontnote rx.internal.util.PlatformDependent

@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.widget.SimpleNavigationView
 import kotlinx.android.synthetic.main.catalogue_drawer_content.view.*
 import android.util.TypedValue
 import android.view.View
+import exh.EXHSavedSearch
 
 class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
     : SimpleNavigationView(context, attrs) {

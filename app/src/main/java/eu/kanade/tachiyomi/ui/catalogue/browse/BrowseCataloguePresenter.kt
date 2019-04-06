@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.catalogue.filter.*
+import exh.EXHSavedSearch
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers

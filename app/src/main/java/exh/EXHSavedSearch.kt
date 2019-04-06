@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.catalogue.browse
+package exh
 
 import eu.kanade.tachiyomi.source.model.Filter
 
