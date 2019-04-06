@@ -36,7 +36,7 @@ object EXHMigrations {
                             .query("""
                             UPDATE ${MangaTable.TABLE}
                                 SET ${MangaTable.COL_SOURCE} = 260868874183818481
-                                WHERE ${MangaTable.COL_SOURCE} = $HENTAI_CAFE_SOURCE_ID
+                                WHERE ${MangaTable.COL_SOURCE} = 6908
                         """.trimIndent())
                             .affectsTables(MangaTable.TABLE)
                             .build())

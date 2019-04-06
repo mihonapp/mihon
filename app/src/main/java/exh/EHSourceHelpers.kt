@@ -1,6 +1,7 @@
 package exh
 
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.english.HentaiCafe
 
 /**
  * Source helpers
@@ -18,7 +19,9 @@ const val PERV_EDEN_IT_SOURCE_ID = LEWD_SOURCE_SERIES + 6
 const val NHENTAI_SOURCE_ID = LEWD_SOURCE_SERIES + 7
 
 @Deprecated("Now a delegated source")
-const val HENTAI_CAFE_SOURCE_ID = LEWD_SOURCE_SERIES + 8
+val HENTAI_CAFE_SOURCE_ID = SourceManager.DELEGATED_SOURCES.entries.find {
+    it.value.newSourceClass == HentaiCafe::class
+}!!.value.sourceId
 
 const val TSUMINO_SOURCE_ID = LEWD_SOURCE_SERIES + 9
 
