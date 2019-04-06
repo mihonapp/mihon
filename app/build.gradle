@@ -263,11 +263,6 @@ dependencies {
     // Debug network interceptor (EH)
     devImplementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
 
-    // Serialization
-    implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+") {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-reflect'
-    }
-
     // Firebase (EH)
     implementation 'com.google.firebase:firebase-perf:16.0.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'

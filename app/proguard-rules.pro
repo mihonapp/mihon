@@ -97,6 +97,7 @@
 -dontwarn com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector$hasCreatorAnnotation$1
 -dontwarn com.fasterxml.jackson.module.kotlin.KotlinValueInstantiator
 -dontwarn exh.metadata.MetadataUtilKt$joinTagsToGenreString$2
+-keep class xyz.nulldev.** { *; }
 
 # Realm
 -dontnote rx.internal.util.PlatformDependent

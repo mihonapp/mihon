@@ -38,7 +38,7 @@ class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs:
     // EXH <--
 
     // EXH -->
-    var onSavedSearchDeleteClicked: (Int) -> Unit = {}
+    var onSavedSearchDeleteClicked: (Int, String) -> Unit = { index, name -> }
     // EXH <--
 
     init {
@@ -58,7 +58,7 @@ class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs:
     }
 
     // EXH -->
-    fun setSavedSearches(searches: List<EXHSavedSearch>) {
+    fun setSavedSearches(id: Long, searches: List<EXHSavedSearch>) {
         saved_searches.removeAllViews()
 
         val outValue = TypedValue()
@@ -76,7 +76,7 @@ class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs:
             restoreBtn.setBackgroundResource(outValue.resourceId)
             restoreBtn.setPadding(8.dpToPx, 8.dpToPx, 8.dpToPx, 8.dpToPx)
             restoreBtn.setOnClickListener { onSavedSearchClicked(index) }
-            restoreBtn.setOnLongClickListener { onSavedSearchDeleteClicked(index); true }
+            restoreBtn.setOnLongClickListener { onSavedSearchDeleteClicked(index, search.name); true }
             saved_searches.addView(restoreBtn)
         }
     }
