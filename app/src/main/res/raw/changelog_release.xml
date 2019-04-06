@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v8.2.0-EH" changeDate="">
+        <changelogtext>Rewrite library tag searching (for hopefully better performance)</changelogtext>
+        <changelogtext>Fix EHentai/ExHentai</changelogtext>
+        <changelogtext>Fix hitomi.la</changelogtext>
+        <changelogtext>Rewrite hitomi.la search engine to be much, much faster</changelogtext>
+        <changelogtext>Fix some random crashes</changelogtext>
+        <changelogtext>Fix nhentai</changelogtext>
+        <changelogtext>Add additional filters to nhentai</changelogtext>
+        <changelogtext>Fix PervEden</changelogtext>
+        <changelogtext>Introduce delegated sources</changelogtext>
+        <changelogtext>Integrate HentaiCafe with the Tachiyomi extension</changelogtext>
+        <changelogtext>Introduce ability to save/load search presets</changelogtext>
+        <changelogtext>Fix tap-to-search-tag breaking on aliased tags</changelogtext>
+        <changelogtext>Add experimental automatic Tsumino captcha solver</changelogtext>
+        <changelogtext>Add ability to interrupt metadata migrator</changelogtext>
+        <changelogtext>Fix incognito open-in-browser being zoomed in incorrectly sometimes</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.8.2" changeDate="">
         <changelogtext>Updated Cloudflare.</changelogtext>
         <changelogtext>Fixed crashes with some translations.</changelogtext>
