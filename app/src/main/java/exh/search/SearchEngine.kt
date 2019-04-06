@@ -1,95 +1,122 @@
 package exh.search
 
-import exh.metadata.models.SearchableGalleryMetadata
-import exh.metadata.models.Tag
-import io.realm.Case
-import io.realm.RealmQuery
+import eu.kanade.tachiyomi.data.database.tables.MangaTable
+import exh.metadata.sql.tables.SearchMetadataTable
+import exh.metadata.sql.tables.SearchTagTable
+import exh.metadata.sql.tables.SearchTitleTable
 
 class SearchEngine {
 
     private val queryCache = mutableMapOf<String, List<QueryComponent>>()
 
-    fun <T : SearchableGalleryMetadata> filterResults(rQuery: RealmQuery<T>,
-                                                      query: List<QueryComponent>,
-                                                      titleFields: List<String>):
-            RealmQuery<T> {
-        var queryEmpty = true
-
-        fun matchTagList(namespace: String?,
-                         component: Text?,
-                         excluded: Boolean) {
-            when {
-                excluded -> rQuery.not()
-                queryEmpty -> queryEmpty = false
-                else -> rQuery.or()
-            }
-
-            rQuery.beginGroup()
-            //Match namespace if specified
-            namespace?.let {
-                rQuery.equalTo("${SearchableGalleryMetadata::tags.name}.${Tag::namespace.name}",
-                        it,
-                        Case.INSENSITIVE)
-            }
-            //Match tag name if specified
-            component?.let {
-                rQuery.beginGroup()
-                val q = if (!it.exact)
+    fun textToSubQueries(namespace: String?,
+                         component: Text?): Pair<String, List<String>>? {
+        val maybeLenientComponent = component?.let {
+            if (!it.exact)
                     it.asLenientTagQueries()
                 else
                     listOf(it.asQuery())
-                q.forEachIndexed { index, s ->
-                    if(index > 0)
-                        rQuery.or()
-
-                    rQuery.like("${SearchableGalleryMetadata::tags.name}.${Tag::name.name}", s, Case.INSENSITIVE)
-                }
-                rQuery.endGroup()
-            }
-            rQuery.endGroup()
         }
+        val componentTagQuery = maybeLenientComponent?.let {
+            val params = mutableListOf<String>()
+            it.map { q ->
+                params += q
+                "${SearchTagTable.TABLE}.${SearchTagTable.COL_NAME} LIKE ?"
+            }.joinToString(separator = " OR ", prefix = "(", postfix = ")") to params
+        }
+        return if(namespace != null) {
+            var query = """
+                (SELECT ${SearchTagTable.COL_MANGA_ID} AS $COL_MANGA_ID FROM ${SearchTagTable.TABLE}
+                    WHERE ${SearchTagTable.COL_NAMESPACE} IS NOT NULL
+                    AND ${SearchTagTable.COL_NAMESPACE} LIKE ?
+            """.trimIndent()
+            val params = mutableListOf(escapeLike(namespace))
+            if(componentTagQuery != null) {
+                query += "\n    AND ${componentTagQuery.first}"
+                params += componentTagQuery.second
+            }
 
-        for(component in query) {
-            if(component is Text) {
-                if(component.excluded)
-                    rQuery.not()
+            "$query)" to params
+        } else if(component != null) {
+            // Match title + tags
+            val tagQuery = """
+                SELECT ${SearchTagTable.COL_MANGA_ID} AS $COL_MANGA_ID FROM ${SearchTagTable.TABLE}
+                    WHERE ${componentTagQuery!!.first}
+            """.trimIndent() to componentTagQuery.second
 
-                rQuery.beginGroup()
+            val titleQuery = """
+                SELECT ${SearchTitleTable.COL_MANGA_ID} AS $COL_MANGA_ID FROM ${SearchTitleTable.TABLE}
+                    WHERE ${SearchTitleTable.COL_TITLE} LIKE ?
+            """.trimIndent() to listOf(component.asLenientTitleQuery())
 
-                //Match title
-                titleFields.forEachIndexed { index, s ->
-                    queryEmpty = false
-                    if(index > 0)
-                        rQuery.or()
+            "(${tagQuery.first} UNION ${titleQuery.first})".trimIndent() to
+                    (tagQuery.second + titleQuery.second)
+        } else null
+    }
 
-                    rQuery.like(s, component.asLenientTitleQuery(), Case.INSENSITIVE)
-                }
+    fun queryToSql(q: List<QueryComponent>): Pair<String, List<String>> {
+        val wheres = mutableListOf<String>()
+        val whereParams = mutableListOf<String>()
 
-                //Match tags
-                matchTagList(null, component, false) //We already deal with exclusions here
-                rQuery.endGroup()
+        val include = mutableListOf<Pair<String, List<String>>>()
+        val exclude = mutableListOf<Pair<String, List<String>>>()
+
+        for(component in q) {
+            val query = if(component is Text) {
+                textToSubQueries(null, component)
             } else if(component is Namespace) {
                 if(component.namespace == "uploader") {
-                    queryEmpty = false
-                    //Match uploader
-                    rQuery.equalTo(SearchableGalleryMetadata::uploader.name,
-                            component.tag!!.rawTextOnly(),
-                            Case.INSENSITIVE)
+                    wheres += "meta.${SearchMetadataTable.COL_UPLOADER} LIKE ?"
+                    whereParams += component.tag!!.rawTextEscapedForLike()
+                    null
                 } else {
                     if(component.tag!!.components.size > 0) {
                         //Match namespace + tags
-                        matchTagList(component.namespace, component.tag!!, component.tag!!.excluded)
+                        textToSubQueries(component.namespace, component.tag)
                     } else {
                         //Perform namespace search
-                        matchTagList(component.namespace, null, component.excluded)
+                        textToSubQueries(component.namespace, null)
                     }
                 }
+            } else error("Unknown query component!")
+
+            if(query != null) {
+                (if(component.excluded) exclude else include) += query
             }
         }
-        return rQuery
+
+        val completeParams = mutableListOf<String>()
+        var baseQuery = """
+            SELECT ${SearchMetadataTable.COL_MANGA_ID}
+            FROM ${SearchMetadataTable.TABLE} meta
+        """.trimIndent()
+
+        include.forEachIndexed { index, pair ->
+            baseQuery += "\n" + ("""
+                INNER JOIN ${pair.first} i$index
+                ON i$index.$COL_MANGA_ID = meta.${SearchMetadataTable.COL_MANGA_ID}
+            """.trimIndent())
+            completeParams += pair.second
+        }
+
+
+        exclude.forEach {
+            wheres += """
+                (meta.${SearchMetadataTable.COL_MANGA_ID} NOT IN ${it.first})
+            """.trimIndent()
+            whereParams += it.second
+        }
+        if(wheres.isNotEmpty()) {
+            completeParams += whereParams
+            baseQuery += "\nWHERE\n"
+            baseQuery += wheres.joinToString("\nAND\n")
+        }
+        baseQuery += "\nORDER BY ${SearchMetadataTable.COL_MANGA_ID}"
+
+        return baseQuery to completeParams
     }
 
-    fun parseQuery(query: String) = queryCache.getOrPut(query, {
+    fun parseQuery(query: String) = queryCache.getOrPut(query) {
         val res = mutableListOf<QueryComponent>()
 
         var inQuotes = false
@@ -130,10 +157,10 @@ class SearchEngine {
                 inQuotes = !inQuotes
             } else if(char == '?' || char == '_') {
                 flushText()
-                queuedText.add(SingleWildcard())
+                queuedText.add(SingleWildcard(char.toString()))
             } else if(char == '*' || char == '%') {
                 flushText()
-                queuedText.add(MultiWildcard())
+                queuedText.add(MultiWildcard(char.toString()))
             } else if(char == '-') {
                 nextIsExcluded = true
             } else if(char == '$') {
@@ -163,5 +190,16 @@ class SearchEngine {
         flushAll()
 
         res
-    })
+    }
+
+    companion object {
+        private const val COL_MANGA_ID = "cmid"
+
+        fun escapeLike(string: String): String {
+            return string.replace("\\", "\\\\")
+                    .replace("_", "\\_")
+                    .replace("%", "\\%")
+
+        }
+    }
 }

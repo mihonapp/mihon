@@ -14,23 +14,29 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
+import com.afollestad.materialdialogs.MaterialDialog
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.jakewharton.rxbinding.view.clicks
+import com.jakewharton.rxbinding.widget.checkedChanges
+import com.jakewharton.rxbinding.widget.textChanges
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.AddToLibraryFirst
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.Error
 import eu.kanade.tachiyomi.ui.reader.ReaderPresenter.SetAsCoverResult.Success
+import eu.kanade.tachiyomi.ui.reader.loader.HttpPageLoader
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.*
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.*
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
@@ -46,6 +52,7 @@ import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToLong
 
 /**
  * Activity containing the reader of Tachiyomi. This activity is mostly a container of the
@@ -75,6 +82,15 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      */
     var menuVisible = false
         private set
+
+    // --> EH
+    private var ehUtilsVisible = false
+
+    private val exhSubscriptions = CompositeSubscription()
+
+    private var autoscrollSubscription: Subscription? = null
+    private val sourceManager: SourceManager by injectLazy()
+    // <-- EH
 
     /**
      * System UI helper to hide status & navigation bar on all different API levels.
@@ -132,11 +148,48 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         if (savedState != null) {
             menuVisible = savedState.getBoolean(::menuVisible.name)
+            // --> EH
+            ehUtilsVisible = savedState.getBoolean(::ehUtilsVisible.name)
+            // <-- EH
         }
 
         config = ReaderConfig()
         initializeMenu()
     }
+
+    // --> EH
+    private fun setEhUtilsVisibility(visible: Boolean) {
+        if(visible) {
+            eh_utils.visible()
+            expand_eh_button.setImageResource(R.drawable.ic_keyboard_arrow_up_white_32dp)
+        } else {
+            eh_utils.gone()
+            expand_eh_button.setImageResource(R.drawable.ic_keyboard_arrow_down_white_32dp)
+        }
+    }
+    // <-- EH
+
+    // --> EH
+    private fun setupAutoscroll(interval: Float) {
+        exhSubscriptions.remove(autoscrollSubscription)
+        autoscrollSubscription = null
+
+        if(interval == -1f) return
+
+        val intervalMs = (interval * 1000).roundToLong()
+        val sub = Observable.interval(intervalMs, intervalMs, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    viewer.let { v ->
+                        if(v is PagerViewer) v.moveToNext()
+                        else if(v is WebtoonViewer) v.scrollDown()
+                    }
+                }
+
+        autoscrollSubscription = sub
+        exhSubscriptions += sub
+    }
+    // <-- EH
 
     /**
      * Called when the activity is destroyed. Cleans up the viewer, configuration and any view.
@@ -157,6 +210,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      */
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(::menuVisible.name, menuVisible)
+        // EXH -->
+        outState.putBoolean(::ehUtilsVisible.name, ehUtilsVisible)
+        // EXH <--
         if (!isChangingConfigurations) {
             presenter.onSaveInstanceStateNonConfigurationChange()
         }
@@ -257,9 +313,150 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             }
         }
 
+        // --> EH
+        exhSubscriptions += expand_eh_button.clicks().subscribe {
+            ehUtilsVisible = !ehUtilsVisible
+            setEhUtilsVisibility(ehUtilsVisible)
+        }
+
+        eh_autoscroll_freq.setText(preferences.eh_utilAutoscrollInterval().getOrDefault().let {
+            if(it == -1f)
+                ""
+            else it.toString()
+        })
+
+        exhSubscriptions += eh_autoscroll.checkedChanges()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    setupAutoscroll(if(it)
+                        preferences.eh_utilAutoscrollInterval().getOrDefault()
+                    else -1f)
+                }
+
+        exhSubscriptions += eh_autoscroll_freq.textChanges()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val parsed = it?.toString()?.toFloatOrNull()
+
+                    if (parsed == null || parsed <= 0 || parsed > 9999) {
+                        eh_autoscroll_freq.error = "Invalid frequency"
+                        preferences.eh_utilAutoscrollInterval().set(-1f)
+                        eh_autoscroll.isEnabled = false
+                        setupAutoscroll(-1f)
+                    } else {
+                        eh_autoscroll_freq.error = null
+                        preferences.eh_utilAutoscrollInterval().set(parsed)
+                        eh_autoscroll.isEnabled = true
+                        setupAutoscroll(if(eh_autoscroll.isChecked) parsed else -1f)
+                    }
+                }
+
+        exhSubscriptions += eh_autoscroll_help.clicks().subscribe {
+            MaterialDialog.Builder(this)
+                    .title("Autoscroll help")
+                    .content("Automatically scroll to the next page in the specified interval. Interval is specified in seconds.")
+                    .positiveText("Ok")
+                    .show()
+        }
+
+        exhSubscriptions += eh_retry_all.clicks().subscribe {
+            var retried = 0
+
+            presenter.viewerChaptersRelay.value
+                    .currChapter
+                    .pages
+                    ?.forEachIndexed { index, page ->
+                        var shouldQueuePage = false
+                        if(page.status == Page.ERROR) {
+                            shouldQueuePage = true
+                        } else if(page.status == Page.LOAD_PAGE
+                                || page.status == Page.DOWNLOAD_IMAGE) {
+                            // Do nothing
+                        }
+
+                        if(shouldQueuePage) {
+                            page.status = Page.QUEUE
+                        } else {
+                            return@forEachIndexed
+                        }
+
+                        //If we are using EHentai/ExHentai, get a new image URL
+                        presenter.manga?.let { m ->
+                            val src = sourceManager.get(m.source)
+                            if(src is EHentai)
+                                page.imageUrl = null
+                        }
+
+                        val loader = page.chapter.pageLoader
+                        if(page.index == exh_currentPage()?.index && loader is HttpPageLoader) {
+                            loader.boostPage(page)
+                        } else {
+                            loader?.retryPage(page)
+                        }
+
+                        retried++
+                    }
+
+            toast("Retrying $retried failed pages...")
+        }
+
+        exhSubscriptions += eh_retry_all_help.clicks().subscribe {
+            MaterialDialog.Builder(this)
+                    .title("Retry all help")
+                    .content("Re-add all failed pages to the download queue.")
+                    .positiveText("Ok")
+                    .show()
+        }
+
+        exhSubscriptions += eh_boost_page.clicks().subscribe {
+            viewer?.let { viewer ->
+                val curPage = exh_currentPage() ?: run {
+                    toast("This page cannot be boosted (invalid page)!")
+                    return@let
+                }
+
+                if(curPage.status == Page.ERROR) {
+                    toast("Page failed to load, press the retry button instead!")
+                } else if(curPage.status == Page.LOAD_PAGE || curPage.status == Page.DOWNLOAD_IMAGE) {
+                    toast("This page is already downloading!")
+                } else if(curPage.status == Page.READY) {
+                    toast("This page has already been downloaded!")
+                } else {
+                    val loader = (presenter.viewerChaptersRelay.value.currChapter.pageLoader as? HttpPageLoader)
+                    if(loader != null) {
+                        loader.boostPage(curPage)
+                        toast("Boosted current page!")
+                    } else {
+                        toast("This page cannot be boosted (invalid page loader)!")
+                    }
+                }
+            }
+        }
+
+        exhSubscriptions += eh_boost_page_help.clicks().subscribe {
+            MaterialDialog.Builder(this)
+                    .title("Boost page help")
+                    .content("Normally the downloader can only download a specific amount of pages at the same time. This means you can be waiting for a page to download but the downloader will not start downloading the page until it has a free download slot. Pressing 'Boost page' will force the downloader to begin downloading the current page, regardless of whether or not there is an available slot.")
+                    .positiveText("Ok")
+                    .show()
+        }
+        // <-- EH
+
         // Set initial visibility
         setMenuVisibility(menuVisible)
+
+        // --> EH
+        setEhUtilsVisibility(ehUtilsVisible)
+        // <-- EH
     }
+
+    // EXH -->
+    private fun exh_currentPage(): ReaderPage? {
+        val currentPage = (((viewer as? PagerViewer)?.currentPage
+                ?: (viewer as? WebtoonViewer)?.currentPage) as? ReaderPage)?.index
+        return currentPage?.let { presenter.viewerChaptersRelay.value.currChapter.pages?.getOrNull(it) }
+    }
+    // EXH <--
 
     /**
      * Sets the visibility of the menu according to [visible] and with an optional parameter to
@@ -282,7 +479,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         }
                     }
                 })
-                toolbar.startAnimation(toolbarAnimation)
+                // EXH -->
+                header.startAnimation(toolbarAnimation)
+                // EXH <--
 
                 val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
                 reader_menu_bottom.startAnimation(bottomAnimation)
@@ -297,7 +496,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         reader_menu.visibility = View.GONE
                     }
                 })
-                toolbar.startAnimation(toolbarAnimation)
+                // EXH -->
+                header.startAnimation(toolbarAnimation)
+                // EXH <--
 
                 val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
                 reader_menu_bottom.startAnimation(bottomAnimation)

@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.ui.setting
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.preference.PreferenceScreen
+import android.text.Html
 import android.view.View
-import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
@@ -15,12 +15,13 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.source.SourceManager.Companion.DELEGATED_SOURCES
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.util.toast
+import exh.debug.SettingsDebugController
 import exh.ui.migration.MetadataFetchDialog
-import exh.util.realmTrans
-import io.realm.Realm
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -74,6 +75,8 @@ class SettingsAdvancedController : SettingsController() {
 
             onClick { LibraryUpdateService.start(context, target = Target.TRACKING) }
         }
+
+        // --> EXH
         preferenceCategory {
             title = "Gallery metadata"
             isPersistent = false
@@ -98,14 +101,29 @@ class SettingsAdvancedController : SettingsController() {
                 summary = "Clear all library metadata. Disables tag searching in the library"
 
                 onClick {
-                    realmTrans {
-                        it.deleteAll()
+                    db.inTransaction {
+                        db.deleteAllSearchMetadata().executeAsBlocking()
+                        db.deleteAllSearchTags().executeAsBlocking()
+                        db.deleteAllSearchTitle().executeAsBlocking()
                     }
 
                     context.toast("Library metadata cleared!")
                 }
             }
         }
+        switchPreference {
+            title = "Enable delegated sources"
+            key = PreferenceKeys.eh_delegateSources
+            defaultValue = true
+            summary = "Apply TachiyomiEH enhancements to the following sources if they are installed: ${DELEGATED_SOURCES.values.joinToString { it.sourceName }}"
+        }
+
+        preference {
+            title = "Open debug menu"
+            summary = Html.fromHtml("DO NOT TOUCH THIS MENU UNLESS YOU KNOW WHAT YOU ARE DOING! <font color='red'>IT CAN CORRUPT YOUR LIBRARY!</font>")
+            onClick { router.pushController(SettingsDebugController().withFadeTransaction()) }
+        }
+        // <-- EXH
     }
 
     private fun clearChapterCache() {

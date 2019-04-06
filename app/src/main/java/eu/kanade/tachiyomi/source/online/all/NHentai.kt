@@ -5,7 +5,6 @@ import android.net.Uri
 import com.github.salomonbrys.kotson.*
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
@@ -14,55 +13,93 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
+import eu.kanade.tachiyomi.util.asJsoup
 import exh.NHENTAI_SOURCE_ID
+import exh.metadata.metadata.NHentaiSearchMetadata
+import exh.metadata.metadata.NHentaiSearchMetadata.Companion.TAG_TYPE_DEFAULT
+import exh.metadata.metadata.base.RaisedTag
 import exh.metadata.models.NHentaiMetadata
-import exh.metadata.models.PageImageType
-import exh.metadata.models.Tag
 import exh.util.*
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
-import timber.log.Timber
 
 /**
  * NHentai source
  */
 
-class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiMetadata, JsonObject> {
+class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata, Response> {
+    override val metaClass = NHentaiSearchMetadata::class
+
     override fun fetchPopularManga(page: Int): Observable<MangasPage> {
         //TODO There is currently no way to get the most popular mangas
         //TODO Instead, we delegate this to the latest updates thing to avoid confusing users with an empty screen
         return fetchLatestUpdates(page)
     }
 
-    override fun popularMangaRequest(page: Int): Request {
-        TODO("Currently unavailable!")
-    }
+    override fun popularMangaRequest(page: Int) = throw UnsupportedOperationException()
 
-    override fun popularMangaParse(response: Response): MangasPage {
-        TODO("Currently unavailable!")
-    }
+    override fun popularMangaParse(response: Response) = throw UnsupportedOperationException()
 
     //Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-            urlImportFetchSearchManga(query, {
-                super.fetchSearchManga(page, query, filters)
-            })
+            urlImportFetchSearchManga(query) {
+                searchMangaRequestObservable(page, query, filters).flatMap {
+                    client.newCall(it).asObservableSuccess()
+                } .map { response ->
+                    searchMangaParse(response)
+                }
+            }
 
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
-        //Currently we have no filters
-        //TODO Filter builder
-        val uri = Uri.parse("$baseUrl/api/galleries/search").buildUpon()
-        uri.appendQueryParameter("query", query)
+    private fun searchMangaRequestObservable(page: Int, query: String, filters: FilterList): Observable<Request> {
+        val uri = if(query.isNotBlank()) {
+            Uri.parse("$baseUrl/search/").buildUpon().apply {
+                appendQueryParameter("q", query)
+            }
+        } else {
+            Uri.parse(baseUrl).buildUpon()
+        }
+        val sortFilter = filters.filterIsInstance<SortFilter>().firstOrNull()?.state
+                ?: defaultSortFilterSelection()
+
+        if(sortFilter.index == 1) {
+            if(query.isBlank()) error("You must specify a search query if you wish to sort by popularity!")
+            uri.appendQueryParameter("sort", "popular")
+        }
+
+        if(sortFilter.ascending) {
+            return client.newCall(nhGet(uri.toString()))
+                    .asObservableSuccess()
+                    .map {
+                        val doc = it.asJsoup()
+
+                        val lastPage = doc.selectFirst(".last")
+                                ?.attr("href")
+                                ?.substringAfterLast('=')
+                                ?.toIntOrNull() ?: 1
+
+                        val thisPage = lastPage - (page - 1)
+
+                        uri.appendQueryParameter(REVERSE_PARAM, (thisPage > 1).toString())
+                        uri.appendQueryParameter("page", thisPage.toString())
+
+                        nhGet(uri.toString(), page)
+                    }
+        }
+
         uri.appendQueryParameter("page", page.toString())
-        return nhGet(uri.toString(), page)
+
+        return Observable.just(nhGet(uri.toString(), page))
     }
+
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
+            = throw UnsupportedOperationException()
 
     override fun searchMangaParse(response: Response)
             = parseResultPage(response)
 
     override fun latestUpdatesRequest(page: Int): Request {
-        val uri = Uri.parse("$baseUrl/api/galleries/all").buildUpon()
+        val uri = Uri.parse(baseUrl).buildUpon()
         uri.appendQueryParameter("page", page.toString())
         return nhGet(uri.toString(), page)
     }
@@ -70,124 +107,122 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiMetadata, Json
     override fun latestUpdatesParse(response: Response)
             = parseResultPage(response)
 
-    override fun mangaDetailsParse(response: Response): SManga {
-        val obj = jsonParser.parse(response.body()!!.string()).asJsonObject
-        return parseToManga(NHentaiMetadata.Query(obj["id"].long), obj)
-    }
+    override fun mangaDetailsParse(response: Response) = throw UnsupportedOperationException()
 
-    //Used so we can use a different URL for fetching manga details and opening the details in the browser
+    /**
+     * Returns an observable with the updated details for a manga. Normally it's not needed to
+     * override this method.
+     *
+     * @param manga the manga to be updated.
+     */
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
-        return client.newCall(urlToDetailsRequest(manga.url))
+        return client.newCall(mangaDetailsRequest(manga))
                 .asObservableSuccess()
-                .map { response ->
-                    mangaDetailsParse(response).apply { initialized = true }
+                .flatMap {
+                    parseToManga(manga, it).andThen(Observable.just(manga.apply {
+                        initialized = true
+                    }))
                 }
     }
 
     override fun mangaDetailsRequest(manga: SManga)
-            = nhGet(manga.url)
+            = nhGet(baseUrl + manga.url)
 
     fun urlToDetailsRequest(url: String)
             = nhGet(baseUrl + "/api/gallery/" + url.split("/").last { it.isNotBlank() })
 
     fun parseResultPage(response: Response): MangasPage {
-        val res = jsonParser.parse(response.body()!!.string()).asJsonObject
+        val doc = response.asJsoup()
 
-        val error = res.get("error")
-        if(error == null) {
-            val results = res.getAsJsonArray("result")?.map {
-                val obj = it.asJsonObject
-                parseToManga(NHentaiMetadata.Query(obj["id"].long), obj)
+        // TODO Parse lang + tags
+
+        val mangas = doc.select(".gallery > a").map {
+            SManga.create().apply {
+                url = it.attr("href")
+
+                title = it.selectFirst(".caption").text()
+
+                // last() is a hack to ignore the lazy-loader placeholder image on the front page
+                thumbnail_url = it.select("img").last().attr("src")
+                // In some pages, the thumbnail url does not include the protocol
+                if(!thumbnail_url!!.startsWith("https:")) thumbnail_url = "https:$thumbnail_url"
             }
-            val numPages = res.get("num_pages")?.int
-            if(results != null && numPages != null)
-                return MangasPage(results, numPages > response.request().tag() as Int)
+        }
+
+        val hasNextPage = if(!response.request().url().queryParameterNames().contains(REVERSE_PARAM)) {
+            doc.selectFirst(".next") != null
         } else {
-            Timber.w("An error occurred while performing the search: $error")
+            response.request().url().queryParameter(REVERSE_PARAM)!!.toBoolean()
         }
-        return MangasPage(emptyList(), false)
+
+        return MangasPage(mangas, hasNextPage)
     }
 
-    override val metaParser: NHentaiMetadata.(JsonObject) -> Unit = { obj ->
-        nhId = obj["id"].asLong
+    override fun parseIntoMetadata(metadata: NHentaiSearchMetadata, input: Response) {
+        val json = GALLERY_JSON_REGEX.find(input.body()!!.string())!!.groupValues[1]
+        val obj = jsonParser.parse(json).asJsonObject
 
-        uploadDate = obj["upload_date"].nullLong
+        with(metadata) {
+            nhId = obj["id"].asLong
 
-        favoritesCount = obj["num_favorites"].nullLong
+            uploadDate = obj["upload_date"].nullLong
 
-        mediaId = obj["media_id"].nullString
+            favoritesCount = obj["num_favorites"].nullLong
 
-        obj["title"].nullObj?.let { it ->
-            japaneseTitle = it["japanese"].nullString
-            shortTitle = it["pretty"].nullString
-            englishTitle = it["english"].nullString
-        }
+            mediaId = obj["media_id"].nullString
 
-        obj["images"].nullObj?.let {
-            coverImageType = it["cover"]?.get("t").nullString
-            it["pages"].nullArray?.mapNotNull {
-                it?.asJsonObject?.get("t").nullString
-            }?.map {
-                PageImageType(it)
-            }?.let {
-                pageImageTypes.clear()
-                pageImageTypes.addAll(it)
+            obj["title"].nullObj?.let { title ->
+                japaneseTitle = title["japanese"].nullString
+                shortTitle = title["pretty"].nullString
+                englishTitle = title["english"].nullString
             }
-            thumbnailImageType = it["thumbnail"]?.get("t").nullString
-        }
 
-        scanlator = obj["scanlator"].nullString
-
-        obj["tags"]?.asJsonArray?.map {
-            val asObj = it.asJsonObject
-            Pair(asObj["type"].nullString, asObj["name"].nullString)
-        }?.apply {
-            tags.clear()
-        }?.forEach {
-            if(it.first != null && it.second != null)
-                tags.add(Tag(it.first!!, it.second!!, false))
-        }
-    }
-
-    fun lazyLoadMetadata(url: String) =
-            defRealm { realm ->
-                val meta = NHentaiMetadata.UrlQuery(url).query(realm).findFirst()
-                if(meta == null) {
-                    client.newCall(urlToDetailsRequest(url))
-                            .asObservableSuccess()
-                            .map {
-                                realmTrans { realm ->
-                                    realm.copyFromRealm(realm.createUUIDObj(queryAll().clazz.java).apply {
-                                        metaParser(this,
-                                                jsonParser.parse(it.body()!!.string()).asJsonObject)
-                                    })
-                                }
-                            }
-                            .first()
-                } else {
-                    Observable.just(realm.copyFromRealm(meta))
+            obj["images"].nullObj?.let {
+                coverImageType = it["cover"]?.get("t").nullString
+                it["pages"].nullArray?.mapNotNull {
+                    it?.asJsonObject?.get("t").nullString
+                }?.let {
+                    pageImageTypes = it
                 }
+                thumbnailImageType = it["thumbnail"]?.get("t").nullString
             }
+
+            scanlator = obj["scanlator"].nullString
+
+            obj["tags"]?.asJsonArray?.map {
+                val asObj = it.asJsonObject
+                Pair(asObj["type"].nullString, asObj["name"].nullString)
+            }?.apply {
+                tags.clear()
+            }?.forEach {
+                if (it.first != null && it.second != null)
+                    tags.add(RaisedTag(it.first!!, it.second!!, TAG_TYPE_DEFAULT))
+            }
+        }
+    }
+
+    fun getOrLoadMetadata(mangaId: Long?, nhId: Long) = getOrLoadMetadata(mangaId) {
+        client.newCall(nhGet(baseUrl + NHentaiSearchMetadata.nhIdToPath(nhId)))
+                .asObservableSuccess()
+                .toSingle()
+    }
 
     override fun fetchChapterList(manga: SManga)
-            = lazyLoadMetadata(manga.url).map {
-        listOf(SChapter.create().apply {
-            url = manga.url
-            name = "Chapter"
-            date_upload = ((it.uploadDate ?: 0) * 1000)
-            chapter_number = 1f
-        })
-    }!!
+            = Observable.just(listOf(SChapter.create().apply {
+        url = manga.url
+        name = "Chapter"
+        chapter_number = 1f
+    }))
 
     override fun fetchPageList(chapter: SChapter)
-            = lazyLoadMetadata(chapter.url).map { metadata ->
+            = getOrLoadMetadata(chapter.mangaId, NHentaiSearchMetadata.nhUrlToId(chapter.url)).map { metadata ->
         if(metadata.mediaId == null) emptyList()
         else
             metadata.pageImageTypes.mapIndexed { index, s ->
-                val imageUrl = imageUrlFromType(metadata.mediaId!!, index + 1, s.type!!)
+                val imageUrl = imageUrlFromType(metadata.mediaId!!, index + 1, s)
                 Page(index, imageUrl!!, imageUrl)
             }
-    }!!
+    }.toObservable()
 
     override fun fetchImageUrl(page: Page) = Observable.just(page.imageUrl!!)!!
 
@@ -206,6 +241,14 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiMetadata, Json
     override fun imageUrlParse(response: Response): String {
         throw NotImplementedError("Unused method called!")
     }
+
+    override fun getFilterList() = FilterList(SortFilter())
+
+    class SortFilter : Filter.Sort(
+            "Sort",
+            arrayOf("Date", "Popular"),
+            defaultSortFilterSelection()
+    )
 
     val appName by lazy {
         context.getString(R.string.app_name)!!
@@ -226,14 +269,16 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiMetadata, Json
 
     override val name = "nhentai"
 
-    override val baseUrl = NHentaiMetadata.BASE_URL
+    override val baseUrl = NHentaiSearchMetadata.BASE_URL
 
     override val supportsLatest = true
 
-    override fun queryAll() = NHentaiMetadata.EmptyQuery()
-    override fun queryFromUrl(url: String) = NHentaiMetadata.UrlQuery(url)
-
     companion object {
+        private val GALLERY_JSON_REGEX = Regex("new N.gallery\\((.*)\\);")
+        private const val REVERSE_PARAM = "TEH_REVERSE"
+
+        private fun defaultSortFilterSelection() = Filter.Sort.Selection(0, false)
+
         val jsonParser by lazy {
             JsonParser()
         }

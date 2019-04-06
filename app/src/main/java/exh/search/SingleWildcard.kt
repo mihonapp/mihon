@@ -1,3 +1,3 @@
 package exh.search
 
-class SingleWildcard : TextComponent()
+class SingleWildcard(rawText: String) : TextComponent(rawText)

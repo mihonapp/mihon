@@ -47,7 +47,7 @@
         <!-- Attributes specific for SDK 16 to SDK 20 -->
     </style>
 
-    <style name="Theme.EHIntercept" parent="Theme.Tachiyomi">
+    <style name="Theme.EHActivity" parent="Theme.Tachiyomi">
         <!-- Attributes specific for SDK 16 to SDK 20 -->
     </style>
 

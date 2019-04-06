@@ -114,7 +114,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         subscriptions += controller.searchRelay
                 .doOnNext { adapter.searchText = it }
                 .skip(1)
-                .debounce(350, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { adapter.performFilter() }
 

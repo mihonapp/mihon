@@ -38,10 +38,6 @@ import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import exh.favorites.FavoritesIntroDialog
 import exh.favorites.FavoritesSyncStatus
-import exh.metadata.loadAllMetadata
-import exh.metadata.models.SearchableGalleryMetadata
-import io.realm.Realm
-import io.realm.RealmResults
 import kotlinx.android.synthetic.main.library_controller.*
 import kotlinx.android.synthetic.main.main_activity.*
 import rx.Subscription
@@ -51,7 +47,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.KClass
 
 
 class LibraryController(
@@ -130,10 +125,6 @@ class LibraryController(
     private var searchViewSubscription: Subscription? = null
 
     // --> EH
-    //Cached realm
-    var realm: Realm? = null
-    //Cached metadata
-    var meta: Map<KClass<out SearchableGalleryMetadata>, RealmResults<out SearchableGalleryMetadata>>? = null
     //Sync dialog
     private var favSyncDialog: MaterialDialog? = null
     //Old sync status
@@ -158,16 +149,6 @@ class LibraryController(
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         return inflater.inflate(R.layout.library_controller, container, false)
     }
-
-    // --> EH
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedViewState: Bundle?): View {
-        //Load realm
-        realm = Realm.getDefaultInstance()?.apply {
-            meta = loadAllMetadata()
-        }
-        return super.onCreateView(inflater, container, savedViewState)
-    }
-    // <-- EH
 
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
@@ -205,12 +186,6 @@ class LibraryController(
         tabsVisibilitySubscription?.unsubscribe()
         tabsVisibilitySubscription = null
         super.onDestroyView(view)
-
-        // --> EH
-        //Clean up realm
-        realm?.close()
-        meta = null
-        // <-- EH
     }
 
     override fun createSecondaryDrawer(drawer: DrawerLayout): ViewGroup {

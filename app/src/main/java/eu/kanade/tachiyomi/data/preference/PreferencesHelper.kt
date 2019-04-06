@@ -189,16 +189,16 @@ class PreferencesHelper(val context: Context) {
 
     fun thumbnailRows() = rxPrefs.getString("ex_thumb_rows", "tr_2")
 
-    fun migrateLibraryAsked2() = rxPrefs.getBoolean("ex_migrate_library2", false)
+    fun migrateLibraryAsked() = rxPrefs.getBoolean("ex_migrate_library3", false)
 
     fun migrationStatus() = rxPrefs.getInteger("migration_status", MigrationStatus.NOT_INITIALIZED)
 
     fun hasPerformedURLMigration() = rxPrefs.getBoolean("performed_url_migration", false)
 
     //EH Cookies
-    fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", null)
-    fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", null)
-    fun igneousVal() = rxPrefs.getString("eh_igneous", null)
+    fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", "")
+    fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", "")
+    fun igneousVal() = rxPrefs.getString("eh_igneous", "")
     fun eh_ehSettingsProfile() = rxPrefs.getInteger(Keys.eh_ehSettingsProfile, -1)
     fun eh_exhSettingsProfile() = rxPrefs.getInteger(Keys.eh_exhSettingsProfile, -1)
     fun eh_settingsKey() = rxPrefs.getString(Keys.eh_settingsKey, "")
@@ -228,16 +228,6 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_showSettingsUploadWarning() = rxPrefs.getBoolean(Keys.eh_showSettingsUploadWarning, true)
 
-    // Default is 24h, refresh daily
-    fun eh_hl_earlyRefresh() = rxPrefs.getBoolean(Keys.eh_hl_earlyRefresh, false)
-
-    fun eh_hl_refreshFrequency() = rxPrefs.getString(Keys.eh_hl_refreshFrequency, "24")
-
-    fun eh_hl_lastRefresh() = rxPrefs.getLong(Keys.eh_hl_lastRefresh, 0L)
-
-    fun eh_hl_lastRealmIndex() = rxPrefs.getInteger(Keys.eh_hl_lastRealmIndex, -1)
-    // <-- EH
-
     fun eh_expandFilters() = rxPrefs.getBoolean(Keys.eh_expandFilters, false)
 
     fun eh_readerThreads() = rxPrefs.getInteger(Keys.eh_readerThreads, 2)
@@ -253,4 +243,12 @@ class PreferencesHelper(val context: Context) {
     fun eh_incogWebview() = rxPrefs.getBoolean(Keys.eh_incogWebview, false)
 
     fun eh_askCategoryOnLongPress() = rxPrefs.getBoolean(Keys.eh_askCategoryOnLongPress, false)
+
+    fun eh_autoSolveCaptchas() = rxPrefs.getBoolean(Keys.eh_autoSolveCaptchas, false)
+
+    fun eh_delegateSources() = rxPrefs.getBoolean(Keys.eh_delegateSources, true)
+
+    fun eh_lastVersionCode() = rxPrefs.getInteger("eh_last_version_code", 0)
+
+    fun eh_savedSearches() = rxPrefs.getString("eh_saved_searches", "")
 }

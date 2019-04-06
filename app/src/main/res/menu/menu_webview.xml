@@ -10,10 +10,6 @@
         android:id="@+id/action_forward"
         android:title="Forward" />
     <item
-        android:id="@+id/action_desktop_site"
-        android:checkable="true"
-        android:title="Desktop site" />
-    <item
         android:id="@+id/action_open_in_browser"
         android:title="Open in browser" />
 </menu>

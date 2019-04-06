@@ -57,6 +57,10 @@ class WebViewActivity : BaseActivity() {
         webview.settings.javaScriptEnabled = true
         webview.settings.domStorageEnabled = true
         webview.settings.databaseEnabled = true
+        webview.settings.useWideViewPort = true
+        webview.settings.loadWithOverviewMode = true
+        webview.settings.builtInZoomControls = true
+        webview.settings.displayZoomControls = false
         webview.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
@@ -134,7 +138,6 @@ class WebViewActivity : BaseActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.action_forward)?.isEnabled = webview.canGoForward()
-        menu?.findItem(R.id.action_desktop_site)?.isChecked = isDesktop
 
         return super.onPrepareOptionsMenu(menu)
     }
@@ -156,26 +159,6 @@ class WebViewActivity : BaseActivity() {
             android.R.id.home -> finish()
             R.id.action_refresh -> webview.reload()
             R.id.action_forward -> webview.goForward()
-            R.id.action_desktop_site -> {
-                isDesktop = !item.isChecked
-                item.isChecked = isDesktop
-
-                (if(isDesktop) {
-                    mobileUserAgent?.replace("\\([^(]*(Mobile|Android)[^)]*\\)"
-                            .toRegex(RegexOption.IGNORE_CASE), "")
-                            ?.replace("Mobile", "", true)
-                            ?.replace("Android", "", true)
-                } else {
-                    mobileUserAgent
-                })?.let {
-                    webview.settings.userAgentString = it
-                }
-
-                webview.settings.useWideViewPort = isDesktop
-                webview.settings.loadWithOverviewMode = isDesktop
-
-                webview.reload()
-            }
             R.id.action_open_in_browser ->
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(webview.url)))
         }

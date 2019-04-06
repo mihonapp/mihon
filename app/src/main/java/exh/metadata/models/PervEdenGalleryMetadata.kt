@@ -104,29 +104,6 @@ open class PervEdenGalleryMetadata : RealmObject(), SearchableGalleryMetadata {
                 .joinToString(separator = "\n")
     }
 
-    class EmptyQuery : GalleryQuery<PervEdenGalleryMetadata>(PervEdenGalleryMetadata::class)
-
-    class UrlQuery(
-            val url: String,
-            val lang: PervEdenLang
-    ) : GalleryQuery<PervEdenGalleryMetadata>(PervEdenGalleryMetadata::class) {
-        override fun transform() = Query(
-                pvIdFromUrl(url),
-                lang
-        )
-    }
-
-    class Query(val pvId: String,
-                val lang: PervEdenLang
-    ) : GalleryQuery<PervEdenGalleryMetadata>(PervEdenGalleryMetadata::class) {
-        override fun map() = mapOf(
-                PervEdenGalleryMetadata::pvId to Query::pvId
-        )
-
-        override fun override(meta: RealmQuery<PervEdenGalleryMetadata>)
-            = meta.equalTo(PervEdenGalleryMetadata::lang.name, lang.name)
-    }
-
     companion object {
         private fun splitGalleryUrl(url: String)
                 = url.let {
@@ -164,16 +141,4 @@ open class PervEdenTitle(var metadata: PervEdenGalleryMetadata? = null,
     }
 
     override fun toString() = "PervEdenTitle(metadata=$metadata, title=$title)"
-}
-
-enum class PervEdenLang(val id: Long) {
-    //DO NOT RENAME THESE TO CAPITAL LETTERS! The enum names are used to build URLs
-    en(PERV_EDEN_EN_SOURCE_ID),
-    it(PERV_EDEN_IT_SOURCE_ID);
-
-    companion object {
-        fun source(id: Long)
-                = PervEdenLang.values().find { it.id == id }
-                ?: throw IllegalArgumentException("Unknown source ID: $id!")
-    }
 }

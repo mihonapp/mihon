@@ -141,6 +141,99 @@ open class BrowseCatalogueController(bundle: Bundle) :
 
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END)
 
+        // EXH -->
+        presenter.loadSearches()?.let {
+            navView.setSavedSearches(it)
+        } ?: run {
+            MaterialDialog.Builder(navView.context)
+                    .title("Failed to load saved searches!")
+                    .content("An error occurred while loading your saved searches.")
+                    .cancelable(true)
+                    .canceledOnTouchOutside(true)
+                    .show()
+        }
+        navView.onSaveClicked = {
+            MaterialDialog.Builder(navView.context)
+                    .title("Save current search query?")
+                    .input("My search name", "") { _, searchName ->
+                        val oldSavedSearches = presenter.loadSearches() ?: emptyList()
+                        if(searchName.isNotBlank()
+                                && oldSavedSearches.size < CatalogueNavigationView.MAX_SAVED_SEARCHES) {
+                            val newSearches = oldSavedSearches + EXHSavedSearch(
+                                    searchName.toString().trim(),
+                                    presenter.query,
+                                    presenter.sourceFilters.toList()
+                            )
+                            presenter.saveSearches(newSearches)
+                            navView.setSavedSearches(newSearches)
+                        }
+                    }
+                    .positiveText("Save")
+                    .negativeText("Cancel")
+                    .cancelable(true)
+                    .canceledOnTouchOutside(true)
+                    .show()
+        }
+
+        navView.onSavedSearchClicked = cb@{ indexToSearch ->
+            val savedSearches = presenter.loadSearches()
+
+            if(savedSearches == null) {
+                MaterialDialog.Builder(navView.context)
+                        .title("Failed to load saved searches!")
+                        .content("An error occurred while loading your saved searches.")
+                        .cancelable(true)
+                        .canceledOnTouchOutside(true)
+                        .show()
+                return@cb
+            }
+
+            val search = savedSearches[indexToSearch]
+
+            presenter.sourceFilters = FilterList(search.filterList)
+            navView.setFilters(presenter.filterItems)
+            val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
+
+            showProgressBar()
+            adapter?.clear()
+            drawer.closeDrawer(Gravity.END)
+            presenter.restartPager(search.query, if (allDefault) FilterList() else presenter.sourceFilters)
+            activity?.invalidateOptionsMenu()
+        }
+
+        navView.onSavedSearchDeleteClicked = cb@{ indexToDelete ->
+            val savedSearches = presenter.loadSearches()
+
+            if(savedSearches == null) {
+                MaterialDialog.Builder(navView.context)
+                        .title("Failed to delete saved search!")
+                        .content("An error occurred while deleting the search.")
+                        .cancelable(true)
+                        .canceledOnTouchOutside(true)
+                        .show()
+                return@cb
+            }
+
+            val search = savedSearches[indexToDelete]
+
+            MaterialDialog.Builder(navView.context)
+                    .title("Delete saved search query?")
+                    .content("Are you sure you wish to delete your saved search query: '${search.name}'?")
+                    .positiveText("Cancel")
+                    .negativeText("Confirm")
+                    .onNegative { _, _ ->
+                        val newSearches = savedSearches.filterIndexed { index, _ ->
+                            index != indexToDelete
+                        }
+                        presenter.saveSearches(newSearches)
+                        navView.setSavedSearches(newSearches)
+                    }
+                    .cancelable(true)
+                    .canceledOnTouchOutside(true)
+                    .show()
+        }
+        // EXH <--
+
         navView.onSearchClicked = {
             val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
             showProgressBar()

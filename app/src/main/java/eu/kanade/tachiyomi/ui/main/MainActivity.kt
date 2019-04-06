@@ -15,7 +15,6 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.Toolbar
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.*
-import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -29,27 +28,20 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
-import exh.metadata.loadAllMetadata
 import exh.uconfig.WarnConfigureDialogController
 import exh.ui.batchadd.BatchAddController
 import exh.ui.lock.LockChangeHandler
 import exh.ui.lock.LockController
 import exh.ui.lock.lockEnabled
 import exh.ui.lock.notifyLockSecurity
-import exh.ui.migration.MetadataFetchDialog
-import exh.util.defRealm
 import kotlinx.android.synthetic.main.main_activity.*
 import uy.kohesive.injekt.injectLazy
 import android.text.TextUtils
 import android.view.View
-import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.online.all.Hitomi
 import eu.kanade.tachiyomi.util.vibrate
-import exh.HITOMI_SOURCE_ID
-import rx.schedulers.Schedulers
+import exh.EXHMigrations
+import exh.ui.migration.MetadataFetchDialog
 import timber.log.Timber
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 
 class MainActivity : BaseActivity() {
@@ -176,35 +168,32 @@ class MainActivity : BaseActivity() {
                 notifyLockSecurity(this)
             }
         }
-
-        // Early hitomi.la refresh
-        if(preferences.eh_hl_earlyRefresh().getOrDefault()) {
-            (Injekt.get<SourceManager>().get(HITOMI_SOURCE_ID) as Hitomi)
-                    .ensureCacheLoaded(false)
-                    .subscribeOn(Schedulers.computation())
-                    .subscribe()
-        }
         // <-- EH
 
         syncActivityViewWithController(router.backstack.lastOrNull()?.controller())
 
         if (savedInstanceState == null) {
             // Show changelog if needed
-            if (Migrations.upgrade(preferences)) {
+            // TODO
+//            if (Migrations.upgrade(preferences)) {
+//                ChangelogDialogController().showDialog(router)
+//            }
+
+            // EXH -->
+            // Perform EXH specific migrations
+            if(EXHMigrations.upgrade(preferences)) {
                 ChangelogDialogController().showDialog(router)
             }
-
             // Migrate metadata if empty (EH)
-            if(!defRealm {
-                it.loadAllMetadata().any {
-                    it.value.isNotEmpty()
-                }
-            }) MetadataFetchDialog().askMigration(this, false)
+            if(!preferences.migrateLibraryAsked().getOrDefault()) {
+                MetadataFetchDialog().askMigration(this, false)
+            }
 
             // Upload settings
             if(preferences.enableExhentai().getOrDefault()
                     && preferences.eh_showSettingsUploadWarning().getOrDefault())
                 WarnConfigureDialogController.uploadSettings(router)
+            // EXH <--
         }
     }
 

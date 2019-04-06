@@ -2,16 +2,18 @@ package eu.kanade.tachiyomi.source.online.all
 
 import android.net.Uri
 import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.ChapterRecognition
 import eu.kanade.tachiyomi.util.asJsoup
-import exh.metadata.EMULATED_TAG_NAMESPACE
+import exh.metadata.metadata.PervEdenLang
+import exh.metadata.metadata.PervEdenSearchMetadata
+import exh.metadata.metadata.PervEdenSearchMetadata.Companion.TAG_TYPE_DEFAULT
+import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUAL
+import exh.metadata.metadata.base.RaisedTag
 import exh.metadata.models.PervEdenGalleryMetadata
-import exh.metadata.models.PervEdenLang
-import exh.metadata.models.PervEdenTitle
-import exh.metadata.models.Tag
 import exh.util.UriFilter
 import exh.util.UriGroup
 import exh.util.urlImportFetchSearchManga
@@ -20,11 +22,17 @@ import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
+import rx.Observable
 import java.text.SimpleDateFormat
 import java.util.*
 
+// TODO Transform into delegated source
 class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSource(),
-        LewdSource<PervEdenGalleryMetadata, Document> {
+        LewdSource<PervEdenSearchMetadata, Document> {
+    /**
+     * The class of the metadata used by this source
+     */
+    override val metaClass = PervEdenSearchMetadata::class
 
     override val supportsLatest = true
     override val name = "Perv Eden"
@@ -48,9 +56,9 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
 
     //Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-            urlImportFetchSearchManga(query, {
+            urlImportFetchSearchManga(query) {
                 super.fetchSearchManga(page, query, filters)
-            })
+            }
 
     override fun searchMangaSelector() = "#mangaList > tbody > tr"
 
@@ -79,7 +87,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
         val titleElement = header.child(0)
         manga.url = titleElement.attr("href")
         manga.title = titleElement.text().trim()
-        manga.thumbnail_url = "http:" + titleElement.getElementsByClass("mangaImage").first().attr("tmpsrc")
+        manga.thumbnail_url = "https:" + header.parent().selectFirst(".mangaImage img").attr("tmpsrc")
         return manga
     }
 
@@ -107,67 +115,90 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
         throw NotImplementedError("Unused method called!")
     }
 
-    override val metaParser: PervEdenGalleryMetadata.(Document) -> Unit = { document ->
-        url = Uri.parse(document.location()).path
+    /**
+     * Returns an observable with the updated details for a manga. Normally it's not needed to
+     * override this method.
+     *
+     * @param manga the manga to be updated.
+     */
+    override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
+        return client.newCall(mangaDetailsRequest(manga))
+                .asObservableSuccess()
+                .flatMap {
+                    parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga.apply {
+                        initialized = true
+                    }))
+                }
+    }
 
-        pvId = PervEdenGalleryMetadata.pvIdFromUrl(url!!)
+    /**
+     * Parse the supplied input into the supplied metadata object
+     */
+    override fun parseIntoMetadata(metadata: PervEdenSearchMetadata, input: Document) {
+        with(metadata) {
+            url = Uri.parse(input.location()).path
 
-        lang = this@PervEden.lang
+            pvId = PervEdenGalleryMetadata.pvIdFromUrl(url!!)
 
-        title = document.getElementsByClass("manga-title").first()?.text()
+            lang = this@PervEden.lang
 
-        thumbnailUrl = "http:" + document.getElementsByClass("mangaImage2").first()?.child(0)?.attr("src")
+            title = input.getElementsByClass("manga-title").first()?.text()
 
-        val rightBoxElement = document.select(".rightBox:not(.info)").first()
+            thumbnailUrl = "http:" + input.getElementsByClass("mangaImage2").first()?.child(0)?.attr("src")
 
-        altTitles.clear()
-        tags.clear()
-        var inStatus: String? = null
-        rightBoxElement.childNodes().forEach {
-            if(it is Element && it.tagName().toLowerCase() == "h4") {
-                inStatus = it.text().trim()
-            } else {
-                when(inStatus) {
-                    "Alternative name(s)" -> {
-                        if(it is TextNode) {
-                            val text = it.text().trim()
-                            if(!text.isBlank())
-                                altTitles.add(PervEdenTitle(this, text))
+            val rightBoxElement = input.select(".rightBox:not(.info)").first()
+
+            val newAltTitles = mutableListOf<String>()
+            tags.clear()
+            var inStatus: String? = null
+            rightBoxElement.childNodes().forEach {
+                if(it is Element && it.tagName().toLowerCase() == "h4") {
+                    inStatus = it.text().trim()
+                } else {
+                    when(inStatus) {
+                        "Alternative name(s)" -> {
+                            if(it is TextNode) {
+                                val text = it.text().trim()
+                                if(!text.isBlank())
+                                    newAltTitles += text
+                            }
                         }
-                    }
-                    "Artist" -> {
-                        if(it is Element && it.tagName() == "a") {
-                            artist = it.text()
-                            tags.add(Tag("artist", it.text().toLowerCase(), false))
+                        "Artist" -> {
+                            if(it is Element && it.tagName() == "a") {
+                                artist = it.text()
+                                tags += RaisedTag("artist", it.text().toLowerCase(), TAG_TYPE_VIRTUAL)
+                            }
                         }
-                    }
-                    "Genres" -> {
-                        if(it is Element && it.tagName() == "a")
-                            tags.add(Tag(EMULATED_TAG_NAMESPACE, it.text().toLowerCase(), false))
-                    }
-                    "Type" -> {
-                        if(it is TextNode) {
-                            val text = it.text().trim()
-                            if(!text.isBlank())
-                                type = text
+                        "Genres" -> {
+                            if(it is Element && it.tagName() == "a")
+                                tags += RaisedTag(null, it.text().toLowerCase(), TAG_TYPE_DEFAULT)
                         }
-                    }
-                    "Status" -> {
-                        if(it is TextNode) {
-                            val text = it.text().trim()
-                            if(!text.isBlank())
-                                status = text
+                        "Type" -> {
+                            if(it is TextNode) {
+                                val text = it.text().trim()
+                                if(!text.isBlank())
+                                    type = text
+                            }
+                        }
+                        "Status" -> {
+                            if(it is TextNode) {
+                                val text = it.text().trim()
+                                if(!text.isBlank())
+                                    status = text
+                            }
                         }
                     }
                 }
             }
-        }
 
-        rating = document.getElementById("rating-score")?.attr("value")?.toFloat()
+            altTitles = newAltTitles
+
+            rating = input.getElementById("rating-score")?.attr("value")?.toFloat()
+        }
     }
 
     override fun mangaDetailsParse(document: Document): SManga
-        = parseToManga(queryFromUrl(document.location()), document)
+        = throw UnsupportedOperationException()
 
     override fun latestUpdatesRequest(page: Int): Request {
         val num = when (lang) {
@@ -205,9 +236,6 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
 
     override fun imageUrlParse(document: Document)
             = "http:" + document.getElementById("mainImg").attr("src")!!
-
-    override fun queryAll() = PervEdenGalleryMetadata.EmptyQuery()
-    override fun queryFromUrl(url: String) = PervEdenGalleryMetadata.UrlQuery(url, PervEdenLang.source(id))
 
     override fun getFilterList() = FilterList (
             AuthorFilter(),

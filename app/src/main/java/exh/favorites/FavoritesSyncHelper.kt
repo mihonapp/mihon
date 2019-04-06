@@ -87,12 +87,12 @@ class FavoritesSyncHelper(val context: Context) {
             ignore { wakeLock?.release() }
             wakeLock = ignore {
                 context.powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                        "ExhFavoritesSyncWakelock")
+                        "teh:ExhFavoritesSyncWakelock")
             }
             ignore { wifiLock?.release() }
             wifiLock = ignore {
                 context.wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL,
-                        "ExhFavoritesSyncWifi")
+                        "teh:ExhFavoritesSyncWifi")
             }
 
             storage.getRealm().use { realm ->

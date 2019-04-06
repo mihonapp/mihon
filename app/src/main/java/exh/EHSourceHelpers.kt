@@ -1,5 +1,7 @@
 package exh
 
+import eu.kanade.tachiyomi.source.SourceManager
+
 /**
  * Source helpers
  */
@@ -15,13 +17,17 @@ const val PERV_EDEN_IT_SOURCE_ID = LEWD_SOURCE_SERIES + 6
 
 const val NHENTAI_SOURCE_ID = LEWD_SOURCE_SERIES + 7
 
+@Deprecated("Now a delegated source")
 const val HENTAI_CAFE_SOURCE_ID = LEWD_SOURCE_SERIES + 8
 
 const val TSUMINO_SOURCE_ID = LEWD_SOURCE_SERIES + 9
 
 const val HITOMI_SOURCE_ID = LEWD_SOURCE_SERIES + 10
 
-fun isLewdSource(source: Long) = source in 6900..6999
+// TODO hentai.cafe is a lewd source!
+fun isLewdSource(source: Long) = source in 6900..6999 || SourceManager.DELEGATED_SOURCES.any {
+    it.value.sourceId == source
+}
 
 fun isEhSource(source: Long) = source == EH_SOURCE_ID
     || source == EH_METADATA_SOURCE_ID

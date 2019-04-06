@@ -39,7 +39,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
     /**
      * Currently active item. It can be a chapter page or a chapter transition.
      */
-    private var currentPage: Any? = null
+    /* [EXH] private */ var currentPage: Any? = null
 
     /**
      * Viewer chapters to set when the pager enters idle mode. Otherwise, if the view was settling

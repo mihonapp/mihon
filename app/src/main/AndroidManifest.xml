@@ -100,7 +100,7 @@
         <activity
             android:name="exh.ui.intercept.InterceptActivity"
             android:label="TachiyomiEH"
-            android:theme="@style/Theme.EHIntercept">
+            android:theme="@style/Theme.EHActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -191,7 +191,8 @@
         </activity>
         <activity
             android:name="exh.ui.captcha.SolveCaptchaActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.EHActivity" />
         <activity android:name="exh.ui.webview.WebViewActivity"></activity>
     </application>
 

@@ -1,6 +1,9 @@
 package eu.kanade.tachiyomi.ui.catalogue.browse
 
 import android.os.Bundle
+import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.davidea.flexibleadapter.items.ISectionable
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -9,6 +12,7 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Filter
@@ -374,4 +378,23 @@ open class BrowseCataloguePresenter(
         }
     }
 
+    // EXH -->
+    private val mapper = jacksonObjectMapper().enableDefaultTyping()
+    fun saveSearches(searches: List<EXHSavedSearch>) {
+        val serialized = mapper.writeValueAsString(searches.toTypedArray())
+        prefs.eh_savedSearches().set(serialized)
+    }
+
+    fun loadSearches(): List<EXHSavedSearch>? {
+        val loaded = prefs.eh_savedSearches().getOrDefault()
+        return try {
+            if (!loaded.isEmpty()) mapper.readValue<Array<EXHSavedSearch>>(loaded).toList()
+            else emptyList()
+        } catch(t: JsonProcessingException) {
+            // Load failed
+            Timber.e(t, "Failed to load saved searches!")
+            null
+        }
+    }
+    // EXH <--
 }

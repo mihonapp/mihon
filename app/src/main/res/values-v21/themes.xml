@@ -41,7 +41,7 @@
     </style>
 
     <!-- EH Intercept Theme-->
-    <style name="Theme.EHIntercept" parent="Theme.Tachiyomi">
+    <style name="Theme.EHActivity" parent="Theme.Tachiyomi">
         <!-- Attributes specific for SDK 21 and up  -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>

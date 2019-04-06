@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.preference.PreferenceScreen
@@ -180,7 +181,7 @@ class SettingsGeneralController : SettingsController() {
             }
         }
 
-        // --> EH
+        // --> EXH
         switchPreference {
             key = Keys.eh_askCategoryOnLongPress
             title = "Long-press favorite button to specify category"
@@ -191,6 +192,14 @@ class SettingsGeneralController : SettingsController() {
             key = Keys.eh_expandFilters
             title = "Expand all search filters by default"
             defaultValue = false
+        }
+
+        switchPreference {
+            key = Keys.eh_autoSolveCaptchas
+            title = "Automatically solve captcha"
+            summary = "Use HIGHLY EXPERIMENTAL automatic ReCAPTCHA solver. Will be grayed out if unsupported by your device."
+            defaultValue = false
+            shouldDisableView = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP
         }
 
         switchPreference {
@@ -228,7 +237,7 @@ class SettingsGeneralController : SettingsController() {
                 defaultValue = false
             }
         }
-        // <-- EH
+        // <-- EXH
     }
 
     class LibraryColumnsDialog : DialogController() {

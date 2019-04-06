@@ -1,3 +1,3 @@
 package exh.search
 
-class MultiWildcard : TextComponent()
+class MultiWildcard(rawText: String) : TextComponent(rawText)

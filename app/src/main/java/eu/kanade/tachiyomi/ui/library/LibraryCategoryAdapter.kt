@@ -1,17 +1,14 @@
 package eu.kanade.tachiyomi.ui.library
 
+import com.pushtorefresh.storio.sqlite.queries.RawQuery
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
-import exh.*
-import exh.metadata.metadataClass
-import exh.metadata.models.SearchableGalleryMetadata
-import exh.metadata.syncMangaIds
+import exh.isLewdSource
+import exh.metadata.sql.tables.SearchMetadataTable
 import exh.search.SearchEngine
-import exh.util.defRealm
-import io.realm.RealmResults
 import timber.log.Timber
-import java.util.concurrent.ConcurrentHashMap
-import kotlin.concurrent.thread
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Adapter storing a list of manga in a certain category.
@@ -21,6 +18,7 @@ import kotlin.concurrent.thread
 class LibraryCategoryAdapter(val view: LibraryCategoryView) :
         FlexibleAdapter<LibraryItem>(null, view, true) {
     // --> EH
+    private val db: DatabaseHelper by injectLazy()
     private val searchEngine = SearchEngine()
     // <-- EH
 
@@ -38,15 +36,6 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
         // A copy of manga always unfiltered.
         mangas = list.toList()
 
-        // Sync manga IDs in background (EH)
-        thread {
-            //Wait 1s to reduce UI stutter during animations
-            Thread.sleep(2000)
-            defRealm {
-                it.syncMangaIds(mangas)
-            }
-        }
-
         performFilter()
     }
 
@@ -61,104 +50,43 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
 
     fun performFilter() {
         if(searchText.isNotBlank()) {
-            if(cacheText != searchText) {
-                globalSearchCache.clear()
-                cacheText = searchText
-            }
-
+            // EXH -->
             try {
-                val thisCache = globalSearchCache.getOrPut(view.category.name) {
-                    SearchCache(mangas.size)
+                val startTime = System.currentTimeMillis()
+
+                val parsedQuery = searchEngine.parseQuery(searchText)
+                val sqlQuery = searchEngine.queryToSql(parsedQuery)
+                val queryResult = db.lowLevel().rawQuery(RawQuery.builder()
+                        .query(sqlQuery.first)
+                        .args(*sqlQuery.second.toTypedArray())
+                        .build())
+
+                val convertedResult = ArrayList<Long>(queryResult.count)
+                val mangaIdCol = queryResult.getColumnIndex(SearchMetadataTable.COL_MANGA_ID)
+                queryResult.moveToFirst()
+                while(queryResult.count > 0 && !queryResult.isAfterLast) {
+                    convertedResult += queryResult.getLong(mangaIdCol)
+                    queryResult.moveToNext()
                 }
 
-                if(thisCache.ready) {
-                    //Skip everything if cache matches our query exactly
-                    updateDataSet(mangas.filter {
-                        thisCache.cache[it.manga.id] ?: false
-                    })
-                } else {
-                    thisCache.cache.clear()
-
-                    val parsedQuery = searchEngine.parseQuery(searchText)
-                    var totalFilteredSize = 0
-
-                    val metadata = view.controller.meta!!.map {
-                        val meta: RealmResults<out SearchableGalleryMetadata> = if (it.value.isNotEmpty())
-                            searchEngine.filterResults(it.value.where(),
-                                    parsedQuery,
-                                    it.value.first()!!.titleFields)
-                                    .sort(SearchableGalleryMetadata::mangaId.name)
-                                    .findAll().apply {
-                                totalFilteredSize += size
-                            }
-                        else
-                            it.value
-                        Pair(it.key, meta)
-                    }.toMap()
-
-                    val out = ArrayList<LibraryItem>(mangas.size)
-
-                    var lewdMatches = 0
-
-                    for(manga in mangas) {
-                        // --> EH
-                        try {
-                            if (isLewdSource(manga.manga.source)) {
-                                //Stop matching lewd manga if we have matched them all already!
-                                if (lewdMatches >= totalFilteredSize)
-                                    continue
-
-                                val metaClass = manga.manga.metadataClass
-                                val unfilteredMeta = view.controller.meta!![metaClass]
-                                val filteredMeta = metadata[metaClass]
-
-                                val hasMeta = manga.hasMetadata ?: (unfilteredMeta
-                                        ?.where()
-                                        ?.equalTo(SearchableGalleryMetadata::mangaId.name, manga.manga.id)
-                                        ?.count() ?: 0 > 0)
-
-                                if (hasMeta) {
-                                    if (filteredMeta!!.where()
-                                            .equalTo(SearchableGalleryMetadata::mangaId.name, manga.manga.id)
-                                            .count() > 0) {
-                                        //Metadata match!
-                                        lewdMatches++
-                                        thisCache.cache[manga.manga.id!!] = true
-                                        out += manga
-                                        continue
-                                    }
-                                }
-                            }
-                        } catch (e: Exception) {
-                            Timber.w(e, "Could not filter manga! %s", manga.manga)
-                        }
-
-                        //Fallback to regular filter
-                        val filterRes = manga.filter(searchText)
-                        thisCache.cache[manga.manga.id!!] = filterRes
-                        if(filterRes) out += manga
-                        // <-- EH
+                val out = mangas.filter {
+                    if(isLewdSource(it.manga.source)) {
+                        convertedResult.binarySearch(it.manga.id) >= 0
+                    } else {
+                        it.filter(searchText)
                     }
-                    thisCache.ready = true
-                    updateDataSet(out)
                 }
+
+                Timber.d("===> Took %s milliseconds to filter manga!", System.currentTimeMillis() - startTime)
+
+                updateDataSet(out)
             } catch(e: Exception) {
                 Timber.w(e, "Could not filter mangas!")
                 updateDataSet(mangas)
             }
+            // EXH <--
         } else {
-            globalSearchCache.clear()
             updateDataSet(mangas)
         }
-    }
-
-    class SearchCache(size: Int) {
-        var ready = false
-        var cache = HashMap<Long, Boolean>(size)
-    }
-
-    companion object {
-        var cacheText: String? = null
-        val globalSearchCache = ConcurrentHashMap<String, SearchCache>()
     }
 }

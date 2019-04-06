@@ -92,10 +92,10 @@ object Entry {
         override val key = "tl"
     }
 
-    //Locked to list mode as that's what the parser and toplists use
+    //Locked to extended mode as that's what the parser and toplists use
     class DisplayMode: ConfigItem {
         override val key = "dm"
-        override val value = "0"
+        override val value = "2"
     }
 
     enum class SearchResultsCount(override val value: String): ConfigItem {

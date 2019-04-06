@@ -157,15 +157,7 @@ object PreferenceKeys {
 
     const val eh_ts_aspNetCookie = "eh_ts_aspNetCookie"
 
-    const val eh_showSettingsUploadWarning = "eh_showSettingsUploadWarning1"
-
-    const val eh_hl_earlyRefresh = "eh_hl_early_refresh"
-
-    const val eh_hl_refreshFrequency = "eh_hl_refresh_frequency"
-
-    const val eh_hl_lastRefresh = "eh_hl_last_refresh"
-
-    const val eh_hl_lastRealmIndex = "eh_hl_lastRealmIndex"
+    const val eh_showSettingsUploadWarning = "eh_showSettingsUploadWarning2"
 
     const val eh_expandFilters = "eh_expand_filters"
 
@@ -182,4 +174,8 @@ object PreferenceKeys {
     const val eh_preserveReadingPosition = "eh_preserve_reading_position"
 
     const val eh_incogWebview = "eh_incognito_webview"
+
+    const val eh_autoSolveCaptchas = "eh_autosolve_captchas"
+
+    const val eh_delegateSources = "eh_delegate_sources"
 }

@@ -241,6 +241,7 @@ dependencies {
     testImplementation "org.robolectric:shadows-play-services:$robolectric_version"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     final coroutines_version = '0.22.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
@@ -261,6 +262,11 @@ dependencies {
 
     // Debug network interceptor (EH)
     devImplementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
+
+    // Serialization
+    implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-reflect'
+    }
 
     // Firebase (EH)
     implementation 'com.google.firebase:firebase-perf:16.0.0'

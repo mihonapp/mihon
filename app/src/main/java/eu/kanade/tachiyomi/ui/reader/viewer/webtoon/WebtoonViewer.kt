@@ -48,7 +48,7 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
     /**
      * Currently active item. It can be a chapter page or a chapter transition.
      */
-    private var currentPage: Any? = null
+    /* [EXH] private */ var currentPage: Any? = null
 
     /**
      * Configuration used by this viewer, like allow taps, or crop image borders.
@@ -200,7 +200,7 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
     /**
      * Scrolls down by [scrollDistance].
      */
-    private fun scrollDown() {
+    /* [EXH] private */ fun scrollDown() {
         recycler.smoothScrollBy(0, scrollDistance)
     }
 

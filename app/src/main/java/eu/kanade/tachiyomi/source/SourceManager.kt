@@ -22,8 +22,12 @@ import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.PERV_EDEN_EN_SOURCE_ID
 import exh.PERV_EDEN_IT_SOURCE_ID
-import exh.metadata.models.PervEdenLang
+import exh.metadata.metadata.PervEdenLang
+import exh.source.DelegatedHttpSource
+import exh.source.EnhancedHttpSource
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
+import kotlin.reflect.KClass
 
 open class SourceManager(private val context: Context) {
 
@@ -66,8 +70,17 @@ open class SourceManager(private val context: Context) {
     fun getCatalogueSources() = sourcesMap.values.filterIsInstance<CatalogueSource>()
 
     internal fun registerSource(source: Source, overwrite: Boolean = false) {
+        val sourceQName = source::class.qualifiedName
+        val delegate = DELEGATED_SOURCES[sourceQName]
+        val newSource = if(source is HttpSource && delegate != null) {
+            Timber.d("[EXH] Delegating source: %s -> %s!", sourceQName, delegate.newSourceClass.qualifiedName)
+            EnhancedHttpSource(
+                    source,
+                    delegate.newSourceClass.constructors.find { it.parameters.size == 1 }!!.call(source)
+            )
+        } else source
         if (overwrite || !sourcesMap.containsKey(source.id)) {
-            sourcesMap[source.id] = source
+            sourcesMap[source.id] = newSource
         }
     }
 
@@ -99,9 +112,8 @@ open class SourceManager(private val context: Context) {
         exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, PervEdenLang.en)
         exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, PervEdenLang.it)
         exSrcs += NHentai(context)
-        exSrcs += HentaiCafe()
         exSrcs += Tsumino(context)
-        exSrcs += Hitomi(context)
+        exSrcs += Hitomi()
         return exSrcs
     }
 
@@ -129,5 +141,21 @@ open class SourceManager(private val context: Context) {
         private fun getSourceNotInstalledException(): Exception {
             return Exception(context.getString(R.string.source_not_installed, id.toString()))
         }
+    }
+
+    companion object {
+        val DELEGATED_SOURCES = listOf(
+                DelegatedSource(
+                        "Hentai Cafe",
+                        260868874183818481,
+                        "eu.kanade.tachiyomi.extension.all.foolslide.HentaiCafe",
+                        HentaiCafe::class
+                )
+        ).associateBy { it.originalSourcePackageName }
+
+        data class DelegatedSource(val sourceName: String,
+                                   val sourceId: Long,
+                                   val originalSourcePackageName: String,
+                                   val newSourceClass: KClass<out DelegatedHttpSource>)
     }
 }

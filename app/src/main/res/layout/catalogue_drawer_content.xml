@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
     android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/title_background"
         android:layout_width="match_parent"
@@ -41,19 +43,30 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/divider"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:animateLayoutChanges="true"
         android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/save_search_btn"
+            style="@style/Theme.Widget.Button.Borderless"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:tint="?attr/colorAccent"
+            app:srcCompat="@drawable/ic_save_black_24dp" />
 
         <Button
             android:id="@+id/reset_btn"
             style="@style/Theme.Widget.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/action_reset"/>
+            android:layout_weight="0.75"
+            android:text="@string/action_reset" />
 
         <Button
             android:id="@+id/search_btn"
@@ -61,6 +74,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/action_search"/>
+            android:text="@string/action_search" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/divider"/>
+
+    <LinearLayout
+        android:id="@+id/saved_searches"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical" />
 </LinearLayout>

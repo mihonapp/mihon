@@ -14,21 +14,21 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import kotlin.reflect.KClass
 
-fun Realm.loadAllMetadata(): Map<KClass<out SearchableGalleryMetadata>, RealmResults<out SearchableGalleryMetadata>> =
-        Injekt.get<SourceManager>().getOnlineSources().filterIsInstance<LewdSource<*, *>>().map {
-            it.queryAll()
-        }.associate {
-            it.clazz to it.query(this@loadAllMetadata).sort(SearchableGalleryMetadata::mangaId.name).findAll()
-        }.toMap()
+//fun Realm.loadAllMetadata(): Map<KClass<out SearchableGalleryMetadata>, RealmResults<out SearchableGalleryMetadata>> =
+//        Injekt.get<SourceManager>().getOnlineSources().filterIsInstance<LewdSource<*, *>>().map {
+//            it.queryAll()
+//        }.associate {
+//            it.clazz to it.query(this@loadAllMetadata).sort(SearchableGalleryMetadata::mangaId.name).findAll()
+//        }.toMap()
 
-fun Realm.queryMetadataFromManga(manga: Manga,
-                                 meta: RealmQuery<SearchableGalleryMetadata>? = null):
-        RealmQuery<out SearchableGalleryMetadata> =
-        Injekt.get<SourceManager>().get(manga.source)?.let {
-            (it as LewdSource<*, *>).queryFromUrl(manga.url) as GalleryQuery<SearchableGalleryMetadata>
-        }?.query(this, meta) ?: throw IllegalArgumentException("Unknown source type!")
+//fun Realm.queryMetadataFromManga(manga: Manga,
+//                                 meta: RealmQuery<SearchableGalleryMetadata>? = null):
+//        RealmQuery<out SearchableGalleryMetadata> =
+//        Injekt.get<SourceManager>().get(manga.source)?.let {
+//            (it as LewdSource<*, *>).queryFromUrl(manga.url) as GalleryQuery<SearchableGalleryMetadata>
+//        }?.query(this, meta) ?: throw IllegalArgumentException("Unknown source type!")
 
-fun Realm.syncMangaIds(mangas: List<LibraryItem>) {
+/*fun Realm.syncMangaIds(mangas: List<LibraryItem>) {
     Timber.d("--> EH: Begin syncing ${mangas.size} manga IDs...")
     executeTransaction {
         mangas.forEach { manga ->
@@ -46,7 +46,7 @@ fun Realm.syncMangaIds(mangas: List<LibraryItem>) {
         }
     }
     Timber.d("--> EH: Finish syncing ${mangas.size} manga IDs!")
-}
+}*/
 
-val Manga.metadataClass
-    get() = (Injekt.get<SourceManager>().get(source) as? LewdSource<*, *>)?.queryAll()?.clazz
+//val Manga.metadataClass
+//    get() = (Injekt.get<SourceManager>().get(source) as? LewdSource<*, *>)?.queryAll()?.clazz

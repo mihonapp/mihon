@@ -93,6 +93,10 @@
 
 # [EH]
 -keep class exh.** { *; }
+-dontwarn com.fasterxml.jackson.databind.ext.DOMSerializer
+-dontwarn com.fasterxml.jackson.databind.ext.Java7SupportImpl
+-dontwarn com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector$hasCreatorAnnotation$1
+-dontwarn com.fasterxml.jackson.module.kotlin.KotlinValueInstantiator
 
 # Realm
 -dontnote rx.internal.util.PlatformDependent

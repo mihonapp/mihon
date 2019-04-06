@@ -1,6 +1,7 @@
 package exh.search
 
 import exh.plusAssign
+import exh.search.SearchEngine.Companion.escapeLike
 
 class Text: QueryComponent() {
     val components = mutableListOf<TextComponent>()
@@ -19,7 +20,7 @@ class Text: QueryComponent() {
 
     fun asLenientTitleQuery(): String {
         if(lenientTitleQuery == null) {
-            lenientTitleQuery = StringBuilder("*").append(rBaseBuilder()).append("*").toString()
+            lenientTitleQuery = StringBuilder("%").append(rBaseBuilder()).append("%").toString()
         }
         return lenientTitleQuery!!
     }
@@ -28,7 +29,7 @@ class Text: QueryComponent() {
         if(lenientTagQueries == null) {
             lenientTagQueries = listOf(
                     //Match beginning of tag
-                    rBaseBuilder().append("*").toString(),
+                    rBaseBuilder().append("%").toString(),
                     //Tag word matcher (that matches multiple words)
                     //Can't make it match a single word in Realm :(
                     StringBuilder(" ").append(rBaseBuilder()).append(" ").toString(),
@@ -43,9 +44,9 @@ class Text: QueryComponent() {
         val builder = StringBuilder()
         for(component in components) {
             when(component) {
-                is StringTextComponent -> builder += component.value
-                is SingleWildcard -> builder += "?"
-                is MultiWildcard -> builder += "*"
+                is StringTextComponent -> builder += escapeLike(component.value)
+                is SingleWildcard -> builder += "_"
+                is MultiWildcard -> builder += "%"
             }
         }
         return builder
@@ -55,10 +56,9 @@ class Text: QueryComponent() {
         rawText!!
     else {
         rawText = components
-                .filter { it is StringTextComponent }
-                .joinToString(separator = "", transform = {
-                    (it as StringTextComponent).value
-                })
+                .joinToString(separator = "", transform = { it.rawText })
         rawText!!
     }
+
+    fun rawTextEscapedForLike() = escapeLike(rawTextOnly())
 }

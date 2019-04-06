@@ -53,6 +53,7 @@ import exh.ui.webview.WebViewActivity
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import jp.wasabeef.glide.transformations.MaskTransformation
 import kotlinx.android.synthetic.main.manga_info_controller.*
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -139,7 +140,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
             var text = tag
             if(isEHentaiBasedSource()) {
                 val parsed = parseTag(text)
-                text = wrapTag(parsed.first, parsed.second)
+                text = wrapTag(parsed.first, parsed.second.substringBefore('|').trim())
             }
             performGlobalSearch(text)
         }
@@ -386,6 +387,9 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     fun onFetchMangaError(error: Throwable) {
         setRefreshing(false)
         activity?.toast(error.message)
+        // EXH -->
+        Timber.e(error, "Failed to fetch manga details!")
+        // EXH <--
     }
 
     /**

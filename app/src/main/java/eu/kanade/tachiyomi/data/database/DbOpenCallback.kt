@@ -2,10 +2,10 @@ package eu.kanade.tachiyomi.data.database
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.db.SupportSQLiteOpenHelper
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import eu.kanade.tachiyomi.data.database.tables.*
+import exh.metadata.sql.tables.SearchMetadataTable
+import exh.metadata.sql.tables.SearchTagTable
+import exh.metadata.sql.tables.SearchTitleTable
 
 class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
 
@@ -18,7 +18,7 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
         /**
          * Version of the database.
          */
-        const val DATABASE_VERSION = 8
+        const val DATABASE_VERSION = 9 // [EXH]
     }
 
     override fun onCreate(db: SupportSQLiteDatabase) = with(db) {
@@ -28,6 +28,11 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
         execSQL(CategoryTable.createTableQuery)
         execSQL(MangaCategoryTable.createTableQuery)
         execSQL(HistoryTable.createTableQuery)
+        // EXH -->
+        execSQL(SearchMetadataTable.createTableQuery)
+        execSQL(SearchTagTable.createTableQuery)
+        execSQL(SearchTitleTable.createTableQuery)
+        // EXH <--
 
         // DB indexes
         execSQL(MangaTable.createUrlIndexQuery)
@@ -35,6 +40,14 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
         execSQL(ChapterTable.createMangaIdIndexQuery)
         execSQL(ChapterTable.createUnreadChaptersIndexQuery)
         execSQL(HistoryTable.createChapterIdIndexQuery)
+        // EXH -->
+        db.execSQL(SearchMetadataTable.createUploaderIndexQuery)
+        db.execSQL(SearchMetadataTable.createIndexedExtraIndexQuery)
+        db.execSQL(SearchTagTable.createMangaIdIndexQuery)
+        db.execSQL(SearchTagTable.createNamespaceNameIndexQuery)
+        db.execSQL(SearchTitleTable.createMangaIdIndexQuery)
+        db.execSQL(SearchTitleTable.createTitleIndexQuery)
+        // EXH <--
     }
 
     override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -67,6 +80,21 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
             db.execSQL(MangaTable.createLibraryIndexQuery)
             db.execSQL(ChapterTable.createUnreadChaptersIndexQuery)
         }
+        // EXH -->
+        if (oldVersion < 9) {
+            db.execSQL(SearchMetadataTable.createTableQuery)
+            db.execSQL(SearchTagTable.createTableQuery)
+            db.execSQL(SearchTitleTable.createTableQuery)
+
+            db.execSQL(SearchMetadataTable.createUploaderIndexQuery)
+            db.execSQL(SearchMetadataTable.createIndexedExtraIndexQuery)
+            db.execSQL(SearchTagTable.createMangaIdIndexQuery)
+            db.execSQL(SearchTagTable.createNamespaceNameIndexQuery)
+            db.execSQL(SearchTitleTable.createMangaIdIndexQuery)
+            db.execSQL(SearchTitleTable.createTitleIndexQuery)
+        }
+        // Remember to increment any Tachiyomi database upgrades after this
+        // EXH <--
     }
 
     override fun onConfigure(db: SupportSQLiteDatabase) {

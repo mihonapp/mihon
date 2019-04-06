@@ -8,6 +8,8 @@ import java.io.File
 
 object Migrations {
 
+    // TODO NATIVE TACHIYOMI MIGRATIONS ARE FUCKED UP DUE TO DIFFERING VERSION NUMBERS
+
     /**
      * Performs a migration when the application is updated.
      *

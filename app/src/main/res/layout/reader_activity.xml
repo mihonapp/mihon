@@ -56,8 +56,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?colorPrimary"
-                android:elevation="4dp" />
+                android:background="?colorPrimary" />
 
             <LinearLayout
                 android:id="@+id/eh_utils"

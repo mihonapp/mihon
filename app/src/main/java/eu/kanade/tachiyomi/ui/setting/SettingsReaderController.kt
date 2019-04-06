@@ -86,6 +86,7 @@ class SettingsReaderController : SettingsController() {
                 defaultValue = false
             }
         }
+        // EXH -->
         intListPreference {
             key = Keys.eh_readerThreads
             title = "Download threads"
@@ -147,6 +148,7 @@ class SettingsReaderController : SettingsController() {
             title = "Preserve reading position on read manga"
             defaultValue = false
         }
+        // EXH <--
         preferenceCategory {
             titleRes = R.string.pager_viewer
 

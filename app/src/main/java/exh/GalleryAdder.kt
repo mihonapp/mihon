@@ -138,7 +138,7 @@ class GalleryAdder {
 
             val cleanedUrl = when(source) {
                 EH_SOURCE_ID, EXH_SOURCE_ID -> ExGalleryMetadata.normalizeUrl(getUrlWithoutDomain(realUrl))
-                NHENTAI_SOURCE_ID -> realUrl //nhentai uses URLs directly (oops, my bad when implementing this source)
+                NHENTAI_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 PERV_EDEN_EN_SOURCE_ID,
                 PERV_EDEN_IT_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 HENTAI_CAFE_SOURCE_ID -> getUrlWithoutDomain(realUrl)

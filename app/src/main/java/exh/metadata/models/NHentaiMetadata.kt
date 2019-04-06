@@ -29,7 +29,7 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
     var url get() = nhId?.let { "$BASE_URL/g/$it" }
     set(a) {
         a?.let {
-            nhId = nhIdFromUrl(a)
+            nhId = nhUrlToId(a)
         }
     }
 
@@ -71,7 +71,7 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
             val url: String
     ) : GalleryQuery<NHentaiMetadata>(NHentaiMetadata::class) {
         override fun transform() = Query(
-                nhIdFromUrl(url)
+                nhUrlToId(url)
         )
     }
 
@@ -154,7 +154,7 @@ open class NHentaiMetadata : RealmObject(), SearchableGalleryMetadata {
                     else -> null
                 }
 
-        fun nhIdFromUrl(url: String)
+        fun nhUrlToId(url: String)
                 = url.split("/").last { it.isNotBlank() }.toLong()
 
         val TITLE_FIELDS = listOf(
