@@ -143,30 +143,21 @@ open class BrowseCatalogueController(bundle: Bundle) :
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END)
 
         // EXH -->
-        presenter.loadSearches()?.let {
-            navView.setSavedSearches(it)
-        } ?: run {
-            MaterialDialog.Builder(navView.context)
-                    .title("Failed to load saved searches!")
-                    .content("An error occurred while loading your saved searches.")
-                    .cancelable(true)
-                    .canceledOnTouchOutside(true)
-                    .show()
-        }
+        navView.setSavedSearches(presenter.loadSearches().map { it.second })
         navView.onSaveClicked = {
             MaterialDialog.Builder(navView.context)
                     .title("Save current search query?")
                     .input("My search name", "") { _, searchName ->
-                        val oldSavedSearches = presenter.loadSearches() ?: emptyList()
+                        val oldSavedSearches = presenter.loadSearches()
                         if(searchName.isNotBlank()
                                 && oldSavedSearches.size < CatalogueNavigationView.MAX_SAVED_SEARCHES) {
-                            val newSearches = oldSavedSearches + EXHSavedSearch(
+                            val newSearches = oldSavedSearches + (presenter.source.id to EXHSavedSearch(
                                     searchName.toString().trim(),
                                     presenter.query,
                                     presenter.sourceFilters.toList()
-                            )
+                            ))
                             presenter.saveSearches(newSearches)
-                            navView.setSavedSearches(newSearches)
+                            navView.setSavedSearches(newSearches.map { it.second })
                         }
                     }
                     .positiveText("Save")
@@ -179,7 +170,9 @@ open class BrowseCatalogueController(bundle: Bundle) :
         navView.onSavedSearchClicked = cb@{ indexToSearch ->
             val savedSearches = presenter.loadSearches()
 
-            if(savedSearches == null) {
+            val search = savedSearches.getOrNull(indexToSearch)
+
+            if(search == null) {
                 MaterialDialog.Builder(navView.context)
                         .title("Failed to load saved searches!")
                         .content("An error occurred while loading your saved searches.")
@@ -189,23 +182,23 @@ open class BrowseCatalogueController(bundle: Bundle) :
                 return@cb
             }
 
-            val search = savedSearches[indexToSearch]
-
-            presenter.sourceFilters = FilterList(search.filterList)
+            presenter.sourceFilters = FilterList(search.second.filterList)
             navView.setFilters(presenter.filterItems)
             val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
 
             showProgressBar()
             adapter?.clear()
             drawer.closeDrawer(Gravity.END)
-            presenter.restartPager(search.query, if (allDefault) FilterList() else presenter.sourceFilters)
+            presenter.restartPager(search.second.query, if (allDefault) FilterList() else presenter.sourceFilters)
             activity?.invalidateOptionsMenu()
         }
 
         navView.onSavedSearchDeleteClicked = cb@{ indexToDelete ->
             val savedSearches = presenter.loadSearches()
 
-            if(savedSearches == null) {
+            val search = savedSearches.getOrNull(indexToDelete)
+
+            if(search == null) {
                 MaterialDialog.Builder(navView.context)
                         .title("Failed to delete saved search!")
                         .content("An error occurred while deleting the search.")
@@ -215,11 +208,9 @@ open class BrowseCatalogueController(bundle: Bundle) :
                 return@cb
             }
 
-            val search = savedSearches[indexToDelete]
-
             MaterialDialog.Builder(navView.context)
                     .title("Delete saved search query?")
-                    .content("Are you sure you wish to delete your saved search query: '${search.name}'?")
+                    .content("Are you sure you wish to delete your saved search query: '${search.second.name}'?")
                     .positiveText("Cancel")
                     .negativeText("Confirm")
                     .onNegative { _, _ ->
@@ -227,7 +218,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
                             index != indexToDelete
                         }
                         presenter.saveSearches(newSearches)
-                        navView.setSavedSearches(newSearches)
+                        navView.setSavedSearches(newSearches.map { it.second })
                     }
                     .cancelable(true)
                     .canceledOnTouchOutside(true)

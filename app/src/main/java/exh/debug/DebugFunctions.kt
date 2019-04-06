@@ -34,5 +34,5 @@ object DebugFunctions {
         it.favorite && db.getSearchMetadataForManga(it.id!!).executeAsBlocking() == null
     }
 
-    fun clearSavedSearches() = prefs.eh_savedSearches().set("")
+    fun clearSavedSearches() = prefs.eh_savedSearches().set(emptySet())
 }

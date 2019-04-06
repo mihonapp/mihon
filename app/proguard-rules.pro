@@ -1,8 +1,7 @@
 -dontobfuscate
 
 -dontwarn eu.kanade.tachiyomi.**
--keep class eu.kanade.tachiyomi.**
--keep class eu.kanade.tachiyomi.source.model.** { *; }
+-keep class eu.kanade.tachiyomi.** { *; }
 
 -keep class com.hippo.image.** { *; }
 -keep interface com.hippo.image.** { *; }
@@ -112,3 +111,20 @@
 # Keep google stuff
 -dontwarn com.google.android.gms.**
 -dontwarn com.google.firebase.**
+
+# Jackson
+# Proguard configuration for Jackson 2.x
+-keep class com.fasterxml.jackson.databind.ObjectMapper {
+    public <methods>;
+    protected <methods>;
+}
+-keep class com.fasterxml.jackson.databind.ObjectWriter {
+    public ** writeValueAsString(**);
+}
+-keepnames class com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
+# Proguard configuration for Jackson 2.x
+-dontwarn com.fasterxml.jackson.databind.**
+-keepclassmembers class * {
+     @com.fasterxml.jackson.annotation.* *;
+}

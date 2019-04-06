@@ -1,7 +1,12 @@
 package eu.kanade.tachiyomi.ui.catalogue.browse
 
 import android.os.Bundle
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.type.TypeFactory
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -29,6 +34,7 @@ import rx.subjects.PublishSubject
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Presenter of [BrowseCatalogueController].
@@ -380,22 +386,37 @@ open class BrowseCataloguePresenter(
     }
 
     // EXH -->
-    private val mapper = jacksonObjectMapper().enableDefaultTyping()
-    fun saveSearches(searches: List<EXHSavedSearch>) {
-        val serialized = mapper.writeValueAsString(searches.toTypedArray())
+    private val sourceManager: SourceManager by injectLazy()
+    private fun mapper() = jacksonObjectMapper().enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)
+            .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+            .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    fun saveSearches(searches: List<Pair<Long, EXHSavedSearch>>) {
+        val m = mapper()
+        val serialized = searches.map {
+            "${it.first}:" + m.writeValueAsString(it.second)
+        }.toSet()
         prefs.eh_savedSearches().set(serialized)
     }
 
-    fun loadSearches(): List<EXHSavedSearch>? {
+    fun loadSearches(): List<Pair<Long, EXHSavedSearch>> {
         val loaded = prefs.eh_savedSearches().getOrDefault()
-        return try {
-            if (!loaded.isEmpty()) mapper.readValue<Array<EXHSavedSearch>>(loaded).toList()
-            else emptyList()
-        } catch(t: JsonProcessingException) {
-            // Load failed
-            Timber.e(t, "Failed to load saved searches!")
-            null
-        }
+        return loaded.map {
+            try {
+                val id = it.substringBefore(':').toLong()
+                val content = it.substringAfter(':')
+                val newMapper = mapper()
+                        .setTypeFactory(TypeFactory.defaultInstance()
+                                .withClassLoader(sourceManager.getOrStub(id).javaClass.classLoader))
+                id to newMapper.readValue<EXHSavedSearch>(content)
+
+            } catch(t: JsonProcessingException) {
+                // Load failed
+                Timber.e(t, "Failed to load saved search!")
+                t.printStackTrace()
+                null
+            }
+        }.filterNotNull()
     }
     // EXH <--
 }
