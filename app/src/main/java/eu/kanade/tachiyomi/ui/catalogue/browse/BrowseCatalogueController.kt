@@ -143,7 +143,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END)
 
         // EXH -->
-        navView.setSavedSearches(presenter.source.id, presenter.loadSearches())
+        navView.setSavedSearches(presenter.loadSearches())
         navView.onSaveClicked = {
             MaterialDialog.Builder(navView.context)
                     .title("Save current search query?")
@@ -157,7 +157,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
                                     presenter.sourceFilters
                             )
                             presenter.saveSearches(newSearches)
-                            navView.setSavedSearches(presenter.source.id, newSearches)
+                            navView.setSavedSearches(newSearches)
                         }
                     }
                     .positiveText("Save")
@@ -218,7 +218,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
                             index != indexToDelete
                         }
                         presenter.saveSearches(newSearches)
-                        navView.setSavedSearches(presenter.source.id, newSearches)
+                        navView.setSavedSearches(newSearches)
                     }
                     .cancelable(true)
                     .canceledOnTouchOutside(true)

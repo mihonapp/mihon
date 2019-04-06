@@ -58,7 +58,7 @@ class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs:
     }
 
     // EXH -->
-    fun setSavedSearches(id: Long, searches: List<EXHSavedSearch>) {
+    fun setSavedSearches(searches: List<EXHSavedSearch>) {
         saved_searches.removeAllViews()
 
         val outValue = TypedValue()
@@ -66,7 +66,7 @@ class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs:
 
         save_search_btn.visibility = if(searches.size < 5) View.VISIBLE else View.GONE
 
-        searches.forEachIndexed { index, search ->
+        searches.withIndex().sortedBy { it.value.name }.forEach { (index, search) ->
             val restoreBtn = TextView(context)
             restoreBtn.text = search.name
             val params = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
