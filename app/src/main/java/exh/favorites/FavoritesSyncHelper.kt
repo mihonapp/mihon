@@ -370,7 +370,7 @@ class FavoritesSyncHelper(val context: Context) {
     class IgnoredException : RuntimeException()
 
     companion object {
-        private const val THROTTLE_MAX = 5000
+        private const val THROTTLE_MAX = 4500
         private const val THROTTLE_INC = 10
         private const val THROTTLE_WARN = 1000
     }
