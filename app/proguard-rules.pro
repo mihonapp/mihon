@@ -99,6 +99,9 @@
 -dontwarn exh.metadata.MetadataUtilKt$joinTagsToGenreString$2
 -keep class xyz.nulldev.** { *; }
 
+## Attempt to fix: java.lang.NoClassDefFoundError: uy.kohesive.injekt.registry.default.DefaultRegistrar$NOKEY$1
+-keep class uy.kohesive.injekt.** { *; }
+
 # Realm
 -dontnote rx.internal.util.PlatformDependent
 -keep public class * extends io.realm.RealmObject
