@@ -491,7 +491,7 @@ class ReaderPresenter(
 
         val destDir = File(context.cacheDir, "shared_image")
 
-        Observable.fromCallable { destDir.delete() } // Keep only the last shared file
+        Observable.fromCallable { destDir.deleteRecursively() } // Keep only the last shared file
                 .map { saveImage(page, destDir, manga) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
