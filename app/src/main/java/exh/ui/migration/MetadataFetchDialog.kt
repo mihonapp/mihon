@@ -2,6 +2,7 @@ package exh.ui.migration
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.text.Html
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
@@ -86,12 +87,15 @@ class MetadataFetchDialog {
             }
 
             context.runOnUiThread {
-                progressDialog.dismiss()
+                // Ensure activity still exists before we do anything to the activity
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 || !context.isDestroyed) {
+                    progressDialog.dismiss()
 
-                //Enable orientation changes again
-                context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+                    //Enable orientation changes again
+                    context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
 
-                if(running) displayMigrationComplete(context)
+                    if (running) displayMigrationComplete(context)
+                }
             }
         }
     }
