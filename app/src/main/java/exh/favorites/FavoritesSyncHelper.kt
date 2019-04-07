@@ -15,10 +15,7 @@ import eu.kanade.tachiyomi.util.launchUI
 import eu.kanade.tachiyomi.util.powerManager
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.wifiManager
-import exh.EH_METADATA_SOURCE_ID
-import exh.EXH_SOURCE_ID
-import exh.GalleryAddEvent
-import exh.GalleryAdder
+import exh.*
 import exh.util.ignore
 import exh.util.trans
 import okhttp3.FormBody
@@ -291,7 +288,7 @@ class FavoritesSyncHelper(val context: Context) {
 
             //Consider both EX and EH sources
             listOf(db.getManga(url, EXH_SOURCE_ID),
-                    db.getManga(url, EH_METADATA_SOURCE_ID)).forEach {
+                    db.getManga(url, EH_SOURCE_ID)).forEach {
                 val manga = it.executeAsBlocking()
 
                 if(manga?.favorite == true) {
