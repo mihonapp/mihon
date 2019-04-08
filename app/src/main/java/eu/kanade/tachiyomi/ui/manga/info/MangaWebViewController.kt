@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -31,6 +32,7 @@ class MangaWebViewController(bundle: Bundle? = null) : BaseController(bundle) {
         val headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
 
         val web = view as WebView
+        web.webViewClient = WebViewClient()
         web.settings.javaScriptEnabled = true
         web.settings.userAgentString = source.headers["User-Agent"]
         web.loadUrl(url, headers)
