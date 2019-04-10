@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.library
 
+import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -8,6 +9,7 @@ import com.f2prateek.rx.preferences.Preference
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFilterable
+import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -15,7 +17,7 @@ import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
 class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference<Boolean>) :
-        AbstractFlexibleItem<LibraryHolder>(), IFilterable {
+        AbstractFlexibleItem<LibraryHolder>(), IFilterable<String> {
     // Temp metadata holder (EXH)
     @Volatile
     var hasMetadata: Boolean? = null
@@ -29,7 +31,7 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
             R.layout.catalogue_grid_item
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<*>): LibraryHolder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): LibraryHolder {
         val parent = adapter.recyclerView
         return if (parent is AutofitRecyclerView) {
             view.apply {
@@ -44,7 +46,7 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
         }
     }
 
-    override fun bindViewHolder(adapter: FlexibleAdapter<*>,
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
                                 holder: LibraryHolder,
                                 position: Int,
                                 payloads: List<Any?>?) {

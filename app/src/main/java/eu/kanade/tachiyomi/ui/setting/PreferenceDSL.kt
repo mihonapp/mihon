@@ -42,7 +42,9 @@ inline fun PreferenceGroup.multiSelectListPreference(block: (@DSL MultiSelectLis
 }
 
 inline fun PreferenceScreen.preferenceCategory(block: (@DSL PreferenceCategory).() -> Unit): PreferenceCategory {
-    return addThenInit(PreferenceCategory(context), block)
+    return addThenInit(PreferenceCategory(context).apply {
+        isIconSpaceReserved = false
+    }, block)
 }
 
 inline fun PreferenceScreen.preferenceScreen(block: (@DSL PreferenceScreen).() -> Unit): PreferenceScreen {

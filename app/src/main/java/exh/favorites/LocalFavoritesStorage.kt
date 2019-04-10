@@ -115,6 +115,7 @@ class LocalFavoritesStorage {
                     token = ExGalleryMetadata.galleryToken(it.second.url)
                     category = it.first
 
+                    // TODO Throw error here
                     if(this.category > 9)
                         return@mapNotNull null
                 }

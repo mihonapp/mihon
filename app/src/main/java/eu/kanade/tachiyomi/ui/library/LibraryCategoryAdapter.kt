@@ -20,6 +20,11 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
     // --> EH
     private val db: DatabaseHelper by injectLazy()
     private val searchEngine = SearchEngine()
+
+    // Keep compatibility as searchText field was replaced when we upgraded FlexibleAdapter
+    var searchText
+        get() = getFilter(String::class.java) ?: ""
+        set(value) { setFilter(value) }
     // <-- EH
 
     /**

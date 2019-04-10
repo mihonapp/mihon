@@ -132,3 +132,6 @@
 -keepclassmembers class * {
      @com.fasterxml.jackson.annotation.* *;
 }
+
+# Better Proguard + sugarify compatibility
+-keepattributes EnclosingMethod

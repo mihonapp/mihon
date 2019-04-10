@@ -62,10 +62,12 @@ open class WebtoonRecyclerView @JvmOverloads constructor(
     override fun onScrollStateChanged(state: Int) {
         super.onScrollStateChanged(state)
         val layoutManager = layoutManager
-        val visibleItemCount = layoutManager.childCount
-        val totalItemCount = layoutManager.itemCount
-        atLastPosition = visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1
-        atFirstPosition = firstVisibleItemPosition == 0
+        if(layoutManager != null) {
+            val visibleItemCount = layoutManager.childCount
+            val totalItemCount = layoutManager.itemCount
+            atLastPosition = visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1
+            atFirstPosition = firstVisibleItemPosition == 0
+        }
     }
 
     private fun getPositionX(positionX: Float): Float {

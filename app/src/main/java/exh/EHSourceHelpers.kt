@@ -26,7 +26,6 @@ const val TSUMINO_SOURCE_ID = LEWD_SOURCE_SERIES + 9
 
 const val HITOMI_SOURCE_ID = LEWD_SOURCE_SERIES + 10
 
-// TODO hentai.cafe is a lewd source!
 fun isLewdSource(source: Long) = source in 6900..6999 || SourceManager.DELEGATED_SOURCES.any {
     it.value.sourceId == source
 }

@@ -84,7 +84,7 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         }
     }
 
-    override fun onItemClick(position: Int): Boolean {
+    override fun onItemClick(view: View, position: Int): Boolean {
         val extension = (adapter?.getItem(position) as? ExtensionItem)?.extension ?: return false
         if (extension is Extension.Installed) {
             openDetails(extension)
