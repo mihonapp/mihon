@@ -1,59 +1,50 @@
 <div style="text-align:center"><img src ="https://raw.githubusercontent.com/NerdNumber9/TachiyomiEH/master/branding/teh-banner.png" /></div>
 <br>
 
-TachiyomiEH is a free and open source E-Hentai, ExHentai and PervEden galleries reader for Android.
-
-TachiyomiEH is a fork of the [original Tachiyomi app](https://github.com/inorichi/tachiyomi).
-### E-Hentai Thread
-[https://forums.e-hentai.org/index.php?showtopic=185421](https://forums.e-hentai.org/index.php?showtopic=185421)
+TachiyomiEH is a free and open source manga and hentai reader for Android and is based off of the [original Tachiyomi app](https://github.com/inorichi/tachiyomi).
 
 # Download
-[![stable release](https://img.shields.io/github/release/NerdNumber9/TachiyomiEH.svg?maxAge=3600&label=stable)](https://github.com/NerdNumber9/TachiyomiEH/releases)
+The latest version is: [![stable release](https://img.shields.io/github/release/NerdNumber9/TachiyomiEH.svg?maxAge=3600&label=)](https://github.com/NerdNumber9/TachiyomiEH/releases). Download it on our [releases page](https://github.com/NerdNumber9/TachiyomiEH/releases).
 
 # Features
 
-* Online and offline reading
-* Configurable reader with multiple viewers and settings
-* MyAnimeList support
-* Track your reading position
-* Chapter filtering
-* Schedule searching for updates
+**All the features you expect from Tachiyomi:**
+* Online reading from sources such as KissManga, MangaFox, [and more](https://github.com/inorichi/tachiyomi-extensions)
+* Local reading of downloaded manga
+* Configurable reader with multiple viewers, reading directions and other settings
+* [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), and [Kitsu](https://kitsu.io/explore/anime) support
 * Categories to organize your library
-* Log into ExHentai
-* Read both NSFW and SFW manga/doujinshi
-* Full offline tag/namespace searching support
-* Batch import galleries
-* Automatically open E-Hentai/ExHentai links
-* Lock the app with a PIN code
+* Light and dark themes
+* Schedule updating your library for new chapters
+* Create backups locally to read offline or to your desired cloud service 
+* Use Tachiyomi extensions
 
-### Built-in manga sources
-##### SFW
-* Batoto
-* Mangahere
-* Mangafox
-* Kissmanga
-* Readmanga
-* Mintmanga
-* Mangachan
-* Readmangatoday
-* Mangasee
-* Wiemanga
-* And more!
+**And some extra features you'll only find in TachiyomiEH:**
+- Sync your favorites with your EHentai/ExHentai account
+- Search through your favorites by tag/language/artist
+- Open galleries in an incognito browser window
+- Faster download engine in the reader
+- Fingerprint/PIN app lock
+- Batch import gallery URLs (import single URLs by pasting them into the catalogue search box)
+- Automatic catcha solving
+- Open gallery URLs directly in Tachiyomi
 
-##### NSFW
+### Supported manga sources
+TachiyomiEH supports all of Tachiyomi's 100+ manga sources and also:
 * E-Hentai
 * ExHentai
 * PervEden
 * nhentai
 * Tsumino
-* Hitomi.la
+* hitomi.la
+* Hentai Cafe (install via the Tachiyomi 'Foolslide' extension)
 
-TachiyomiEH is fully compatible with Tachiyomi source extensions.
-Backups from Tachiyomi are also compatible with TachiyomiEH (and vice versa).
+### E-Hentai Thread
+[https://forums.e-hentai.org/index.php?showtopic=185421](https://forums.e-hentai.org/index.php?showtopic=185421)
 
 ## License
 
-    Copyright 2015 Javier Tomás
+    Copyright 2019 Javier Tomás
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
