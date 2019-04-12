@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import exh.isLewdSource
 import exh.metadata.sql.tables.SearchMetadataTable
 import exh.search.SearchEngine
+import exh.util.cancellable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
@@ -77,24 +78,24 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
                             .args(*sqlQuery.second.toTypedArray())
                             .build())
 
-                    if(!isActive) return@launch // Fail early when cancelled
+                    ensureActive() // Fail early when cancelled
 
                     val convertedResult = LongArray(queryResult.count)
                     if(convertedResult.isNotEmpty()) {
                         val mangaIdCol = queryResult.getColumnIndex(SearchMetadataTable.COL_MANGA_ID)
                         queryResult.moveToFirst()
                         while (!queryResult.isAfterLast) {
-                            if(!isActive) return@launch // Fail early when cancelled
+                            ensureActive() // Fail early when cancelled
 
                             convertedResult[queryResult.position] = queryResult.getLong(mangaIdCol)
                             queryResult.moveToNext()
                         }
                     }
 
-                    if(!isActive) return@launch // Fail early when cancelled
+                    ensureActive() // Fail early when cancelled
 
                     // Flow the mangas to allow cancellation of this filter operation
-                    mangas.asFlow().filter { item ->
+                    mangas.asFlow().cancellable().filter { item ->
                         if(isLewdSource(item.manga.source)) {
                             convertedResult.binarySearch(item.manga.id ?: -1) >= 0
                         } else {
