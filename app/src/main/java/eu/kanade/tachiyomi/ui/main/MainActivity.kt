@@ -164,10 +164,19 @@ class MainActivity : BaseActivity() {
                 //If the intent match the "standard" Android search intent
                 // or the Google-specific search intent (triggered by saying or typing "search *query* on *Tachiyomi*" in Google Search/Google Assistant)
 
-                setSelectedDrawerItem(R.id.nav_drawer_catalogues)
                 //Get the search query provided in extras, and if not null, perform a global search with it.
-                intent.getStringExtra(SearchManager.QUERY)?.also { query ->
+                val query = intent.getStringExtra(SearchManager.QUERY)
+                if (query != null && !query.isEmpty()) {
+                    setSelectedDrawerItem(R.id.nav_drawer_catalogues)
                     router.pushController(CatalogueSearchController(query).withFadeTransaction())
+                }
+            }
+            INTENT_SEARCH -> {
+                val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
+                val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
+                if (query != null && !query.isEmpty()) {
+                    setSelectedDrawerItem(R.id.nav_drawer_catalogues)
+                    router.pushController(CatalogueSearchController(query, filter).withFadeTransaction())
                 }
             }
             else -> return false
@@ -254,6 +263,10 @@ class MainActivity : BaseActivity() {
         const val SHORTCUT_CATALOGUES = "eu.kanade.tachiyomi.SHOW_CATALOGUES"
         const val SHORTCUT_DOWNLOADS = "eu.kanade.tachiyomi.SHOW_DOWNLOADS"
         const val SHORTCUT_MANGA = "eu.kanade.tachiyomi.SHOW_MANGA"
+
+        const val INTENT_SEARCH = "eu.kanade.tachiyomi.SEARCH"
+        const val INTENT_SEARCH_QUERY = "query"
+        const val INTENT_SEARCH_FILTER = "filter"
     }
 
 }
