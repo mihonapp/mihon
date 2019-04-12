@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
-import exh.isExSource
+import exh.EXH_SOURCE_ID
 import exh.isLewdSource
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
@@ -110,7 +110,7 @@ class MetadataFetchDialog {
             } else {
                 //Not logged in but have ExHentai galleries
                 if (!preferenceHelper.enableExhentai().getOrDefault()) {
-                    it.find { isExSource(it.source) }?.let {
+                    it.find { it.source == EXH_SOURCE_ID }?.let {
                         extra = "<b><font color='red'>If you use ExHentai, please log in first before fetching your library metadata!</font></b><br><br>"
                     }
                 }
