@@ -8,6 +8,13 @@
         android:layout_height="match_parent"
         android:id="@+id/library_pager"/>
 
+    <ProgressBar
+        android:id="@+id/library_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
     <eu.kanade.tachiyomi.widget.EmptyView
         android:id="@+id/empty_view"
         android:visibility="gone"

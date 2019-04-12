@@ -38,6 +38,7 @@ import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.toast
 import exh.favorites.FavoritesIntroDialog
 import exh.favorites.FavoritesSyncStatus
+import exh.ui.LoaderManager
 import kotlinx.android.synthetic.main.library_controller.*
 import kotlinx.android.synthetic.main.main_activity.*
 import rx.Subscription
@@ -131,6 +132,7 @@ class LibraryController(
     private var oldSyncStatus: FavoritesSyncStatus? = null
     //Favorites
     private var favoritesSyncSubscription: Subscription? = null
+    val loaderManager = LoaderManager()
     // <-- EH
 
     init {
@@ -169,6 +171,12 @@ class LibraryController(
         if (selectedMangas.isNotEmpty()) {
             createActionModeIfNeeded()
         }
+
+        // EXH -->
+        loaderManager.loadingChangeListener = {
+            library_progress.visibility = if(it) View.VISIBLE else View.GONE
+        }
+        // EXH <--
     }
 
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
@@ -185,6 +193,9 @@ class LibraryController(
         actionMode = null
         tabsVisibilitySubscription?.unsubscribe()
         tabsVisibilitySubscription = null
+        // EXH -->
+        loaderManager.loadingChangeListener = null
+        // EXH <--
         super.onDestroyView(view)
     }
 
