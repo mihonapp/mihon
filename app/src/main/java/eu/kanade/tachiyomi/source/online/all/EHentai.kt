@@ -17,7 +17,6 @@ import exh.metadata.metadata.EHentaiSearchMetadata.Companion.EH_GENRE_NAMESPACE
 import exh.metadata.metadata.EHentaiSearchMetadata.Companion.TAG_TYPE_LIGHT
 import exh.metadata.metadata.EHentaiSearchMetadata.Companion.TAG_TYPE_NORMAL
 import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUAL
-import exh.metadata.models.ExGalleryMetadata
 import exh.metadata.nullIfBlank
 import exh.metadata.parseHumanReadableByteCount
 import exh.ui.login.LoginController
@@ -253,9 +252,9 @@ class EHentai(override val id: Long,
     override fun parseIntoMetadata(metadata: EHentaiSearchMetadata, input: Response) {
         with(metadata) {
             with(input.asJsoup()) {
-                val url = input.request().url().encodedPath()!!
-                gId = ExGalleryMetadata.galleryId(url)
-                gToken = ExGalleryMetadata.galleryToken(url)
+                val url = input.request().url().encodedPath()
+                gId = EHentaiSearchMetadata.galleryId(url)
+                gToken = EHentaiSearchMetadata.galleryToken(url)
 
                 exh = this@EHentai.exh
                 title = select("#gn").text().nullIfBlank()?.trim()

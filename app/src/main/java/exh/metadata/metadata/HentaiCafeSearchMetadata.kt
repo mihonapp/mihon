@@ -47,7 +47,7 @@ class HentaiCafeSearchMetadata : RaisedSearchMetadata() {
 
         const val TAG_TYPE_DEFAULT = 0
 
-        val BASE_URL = "https://hentai.cafe"
+        const val BASE_URL = "https://hentai.cafe"
 
         fun hcIdFromUrl(url: String)
                 = url.split("/").last { it.isNotBlank() }

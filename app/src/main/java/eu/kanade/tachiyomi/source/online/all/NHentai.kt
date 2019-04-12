@@ -18,7 +18,6 @@ import exh.NHENTAI_SOURCE_ID
 import exh.metadata.metadata.NHentaiSearchMetadata
 import exh.metadata.metadata.NHentaiSearchMetadata.Companion.TAG_TYPE_DEFAULT
 import exh.metadata.metadata.base.RaisedTag
-import exh.metadata.models.NHentaiMetadata
 import exh.util.*
 import okhttp3.Request
 import okhttp3.Response
@@ -226,7 +225,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
 
     override fun fetchImageUrl(page: Page) = Observable.just(page.imageUrl!!)!!
 
-    fun imageUrlFromType(mediaId: String, page: Int, t: String) = NHentaiMetadata.typeToExtension(t)?.let {
+    fun imageUrlFromType(mediaId: String, page: Int, t: String) = NHentaiSearchMetadata.typeToExtension(t)?.let {
         "https://i.nhentai.net/galleries/$mediaId/$page.$it"
     }
 

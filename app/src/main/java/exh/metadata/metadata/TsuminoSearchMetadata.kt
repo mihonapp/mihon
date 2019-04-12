@@ -3,8 +3,6 @@ package exh.metadata.metadata
 import android.net.Uri
 import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.EX_DATE_FORMAT
-import exh.metadata.buildTagsDescription
-import exh.metadata.joinEmulatedTagsToGenreString
 import exh.metadata.metadata.base.RaisedSearchMetadata
 import exh.plusAssign
 import java.util.*

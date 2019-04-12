@@ -1,7 +1,5 @@
 package exh.metadata
 
-import exh.metadata.models.SearchableGalleryMetadata
-import exh.plusAssign
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -10,18 +8,18 @@ import java.util.*
  */
 fun humanReadableByteCount(bytes: Long, si: Boolean): String {
     val unit = if (si) 1000 else 1024
-    if (bytes < unit) return bytes.toString() + " B"
+    if (bytes < unit) return "$bytes B"
     val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
     val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
     return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
 }
 
-private val KB_FACTOR: Long = 1000
-private val KIB_FACTOR: Long = 1024
-private val MB_FACTOR = 1000 * KB_FACTOR
-private val MIB_FACTOR = 1024 * KIB_FACTOR
-private val GB_FACTOR = 1000 * MB_FACTOR
-private val GIB_FACTOR = 1024 * MIB_FACTOR
+private const val KB_FACTOR: Long = 1000
+private const val KIB_FACTOR: Long = 1024
+private const val MB_FACTOR = 1000 * KB_FACTOR
+private const val MIB_FACTOR = 1024 * KIB_FACTOR
+private const val GB_FACTOR = 1000 * MB_FACTOR
+private const val GIB_FACTOR = 1024 * MIB_FACTOR
 
 fun parseHumanReadableByteCount(arg0: String): Double? {
     val spaceNdx = arg0.indexOf(" ")
@@ -66,24 +64,3 @@ val ONGOING_SUFFIX = arrayOf(
 )
 
 val EX_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
-
-fun buildTagsDescription(metadata: SearchableGalleryMetadata)
-        = StringBuilder("Tags:\n").apply {
-    //BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
-    metadata.tags.groupBy {
-        it.namespace
-    }.entries.forEach { namespace, tags ->
-        if (tags.isNotEmpty()) {
-            val joinedTags = tags.joinToString(separator = " ", transform = { "<${it.name}>" })
-            this += "▪ $namespace: $joinedTags\n"
-        }
-    }
-}
-
-fun joinTagsToGenreString(metadata: SearchableGalleryMetadata)
-    = metadata.tags.joinToString { "${it.namespace}: ${it.name}" }
-
-fun joinEmulatedTagsToGenreString(metadata: SearchableGalleryMetadata)
-        = metadata.tags.filter { it.namespace == EMULATED_TAG_NAMESPACE }.joinToString { it.name.toString() }
-
-val EMULATED_TAG_NAMESPACE = "tag"

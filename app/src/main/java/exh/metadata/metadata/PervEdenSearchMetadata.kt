@@ -42,9 +42,10 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
             titleDesc += "Title: $it\n"
         }
         if(altTitles.isNotEmpty())
-            titleDesc += "Alternate Titles: \n" + altTitles.map {
+            titleDesc += "Alternate Titles: \n" + altTitles
+                    .joinToString(separator = "\n", postfix = "\n") {
                 "▪ $it"
-            }.joinToString(separator = "\n", postfix = "\n")
+            }
 
         val detailsDesc = StringBuilder()
         artist?.let {
@@ -102,7 +103,7 @@ enum class PervEdenLang(val id: Long) {
 
     companion object {
         fun source(id: Long)
-                = PervEdenLang.values().find { it.id == id }
+                = values().find { it.id == id }
                 ?: throw IllegalArgumentException("Unknown source ID: $id!")
     }
 }

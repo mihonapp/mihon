@@ -1,6 +1,6 @@
 package exh.favorites
 
-import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.metadata.EHentaiSearchMetadata
 import io.realm.RealmObject
 import io.realm.annotations.Index
 import io.realm.annotations.PrimaryKey
@@ -19,5 +19,5 @@ open class FavoriteEntry : RealmObject() {
 
     @Index var category: Int = -1
 
-    fun getUrl() = ExGalleryMetadata.normalizeUrl(gid, token)
+    fun getUrl() = EHentaiSearchMetadata.idAndTokenToUrl(gid, token)
 }

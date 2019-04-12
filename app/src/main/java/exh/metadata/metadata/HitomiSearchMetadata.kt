@@ -89,9 +89,8 @@ class HitomiSearchMetadata: RaisedSearchMetadata() {
 
         const val TAG_TYPE_DEFAULT = 0
 
-        val LTN_BASE_URL = "https://ltn.hitomi.la"
-        val BASE_URL = "https://hitomi.la"
-        val IMG_BASE_URL = "https://aa.hitomi.la/galleries"
+        const val LTN_BASE_URL = "https://ltn.hitomi.la"
+        const val BASE_URL = "https://hitomi.la"
 
         fun hlIdFromUrl(url: String)
                 = url.split('/').last().substringBeforeLast('.')

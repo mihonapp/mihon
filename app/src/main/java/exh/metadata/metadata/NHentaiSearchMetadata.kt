@@ -100,7 +100,7 @@ class NHentaiSearchMetadata : RaisedSearchMetadata() {
 
         const val TAG_TYPE_DEFAULT = 0
 
-        val BASE_URL = "https://nhentai.net"
+        const val BASE_URL = "https://nhentai.net"
 
         private const val NHENTAI_ARTIST_NAMESPACE = "artist"
         private const val NHENTAI_CATEGORIES_NAMESPACE = "category"

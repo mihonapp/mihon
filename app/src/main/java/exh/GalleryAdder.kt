@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
-import exh.metadata.models.ExGalleryMetadata
+import exh.metadata.metadata.EHentaiSearchMetadata
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -137,7 +137,7 @@ class GalleryAdder {
                     ?: return GalleryAddEvent.Fail.Error(url, "Could not find EH source!")
 
             val cleanedUrl = when(source) {
-                EH_SOURCE_ID, EXH_SOURCE_ID -> ExGalleryMetadata.normalizeUrl(getUrlWithoutDomain(realUrl))
+                EH_SOURCE_ID, EXH_SOURCE_ID -> EHentaiSearchMetadata.normalizeUrl(getUrlWithoutDomain(realUrl))
                 NHENTAI_SOURCE_ID -> getUrlWithoutDomain(realUrl)
                 PERV_EDEN_EN_SOURCE_ID,
                 PERV_EDEN_IT_SOURCE_ID -> getUrlWithoutDomain(realUrl)
