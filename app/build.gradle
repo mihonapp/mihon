@@ -39,7 +39,7 @@ android {
         targetSdkVersion 27
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 41
-        versionName "0.8.3"
+        versionName "0.8.4"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
@@ -47,6 +47,8 @@ android {
         buildConfigField "boolean", "INCLUDE_UPDATER", "false"
 
         vectorDrawables.useSupportLibrary = true
+
+        multiDexEnabled true
 
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86"
@@ -57,13 +59,6 @@ android {
         debug {
             versionNameSuffix "-${getCommitCount()}"
             applicationIdSuffix ".debug"
-            multiDexEnabled true
-        }
-        release {
-            minifyEnabled true
-            shrinkResources true
-            multiDexEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
-    <changelogversion versionName="v0.8.3" changeDate="">
+    <changelogversion versionName="v0.8.4" changeDate="">
         <changelogtext>All the internal sources have been removed. They now need to be
             installed as an extension.</changelogtext>
         <changelogtext>Cloudflare is now resolved with a WebView in background which should put
