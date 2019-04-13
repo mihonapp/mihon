@@ -23,7 +23,7 @@
         android:theme="@style/Theme.Tachiyomi">
         <activity
             android:name=".ui.main.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

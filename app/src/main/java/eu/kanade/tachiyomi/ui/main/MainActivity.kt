@@ -167,7 +167,9 @@ class MainActivity : BaseActivity() {
                 //Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY)
                 if (query != null && !query.isEmpty()) {
-                    setSelectedDrawerItem(R.id.nav_drawer_catalogues)
+                    if (router.backstackSize > 1) {
+                        router.popToRoot()
+                    }
                     router.pushController(CatalogueSearchController(query).withFadeTransaction())
                 }
             }
@@ -175,7 +177,9 @@ class MainActivity : BaseActivity() {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
                 val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
                 if (query != null && !query.isEmpty()) {
-                    setSelectedDrawerItem(R.id.nav_drawer_catalogues)
+                    if (router.backstackSize > 1) {
+                        router.popToRoot()
+                    }
                     router.pushController(CatalogueSearchController(query, filter).withFadeTransaction())
                 }
             }
