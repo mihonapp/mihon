@@ -159,6 +159,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_open_in_browser -> openInBrowser()
+            R.id.action_open_in_web_view -> openInWebView()
             R.id.action_share -> shareManga()
             R.id.action_add_to_home_screen -> addToHomeScreen()
             else -> return super.onOptionsItemSelected(item)
@@ -330,6 +331,19 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         } catch (e: Exception) {
             context.toast(e.message)
         }
+    }
+
+    private fun openInWebView() {
+        val source = presenter.source as? HttpSource ?: return
+
+        val url = try {
+            source.mangaDetailsRequest(presenter.manga).url().toString()
+        } catch (e: Exception) {
+            return
+        }
+
+        parentController?.router?.pushController(MangaWebViewController(source.id, url)
+            .withFadeTransaction())
     }
 
     /**

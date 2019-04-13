@@ -49,7 +49,7 @@ class SettingsAdvancedController : SettingsController() {
             titleRes = R.string.pref_clear_cookies
 
             onClick {
-                network.cookies.removeAll()
+                network.cookieManager.removeAll()
                 activity?.toast(R.string.cookies_cleared)
             }
         }

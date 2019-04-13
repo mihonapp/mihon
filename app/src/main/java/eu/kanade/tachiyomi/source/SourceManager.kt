@@ -12,11 +12,7 @@ import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.source.online.all.Hitomi
 import eu.kanade.tachiyomi.source.online.all.NHentai
 import eu.kanade.tachiyomi.source.online.all.PervEden
-import eu.kanade.tachiyomi.source.online.english.*
-import eu.kanade.tachiyomi.source.online.german.WieManga
-import eu.kanade.tachiyomi.source.online.russian.Mangachan
-import eu.kanade.tachiyomi.source.online.russian.Mintmanga
-import eu.kanade.tachiyomi.source.online.russian.Readmanga
+import eu.kanade.tachiyomi.source.online.english.HentaiCafe
 import rx.Observable
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
@@ -89,17 +85,7 @@ open class SourceManager(private val context: Context) {
     }
 
     private fun createInternalSources(): List<Source> = listOf(
-            LocalSource(context),
-            Batoto(),
-            Mangahere(),
-            Mangafox(),
-            Kissmanga(),
-            Readmanga(),
-            Mintmanga(),
-            Mangachan(),
-            Readmangatoday(),
-            Mangasee(),
-            WieManga()
+            LocalSource(context)
     )
 
     private fun createEHSources(): List<Source> {

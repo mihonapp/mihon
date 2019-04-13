@@ -42,8 +42,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 8200
-        versionName "v8.2.0-EH"
+        versionCode 8400
+        versionName "v8.4.0-EH"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
@@ -51,6 +51,8 @@ android {
         buildConfigField "boolean", "INCLUDE_UPDATER", "true"
 
         vectorDrawables.useSupportLibrary = true
+
+        multiDexEnabled true
 
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86"
@@ -61,13 +63,12 @@ android {
         debug {
             versionNameSuffix "-${getCommitCount()}"
             applicationIdSuffix ".debug"
-            multiDexEnabled true
             ext.enableCrashlytics = false
         }
         release {
-            minifyEnabled true
+            //minifyEnabled true
             shrinkResources true
-            multiDexEnabled true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
