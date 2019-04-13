@@ -90,6 +90,9 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     private var autoscrollSubscription: Subscription? = null
     private val sourceManager: SourceManager by injectLazy()
+    private val prefs: PreferencesHelper by injectLazy()
+
+    val showTransitionPages by lazy { prefs.eh_showTransitionPages().getOrDefault() }
     // <-- EH
 
     /**
@@ -167,9 +170,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             expand_eh_button.setImageResource(R.drawable.ic_keyboard_arrow_down_white_32dp)
         }
     }
-    // <-- EH
 
-    // --> EH
     private fun setupAutoscroll(interval: Float) {
         exhSubscriptions.remove(autoscrollSubscription)
         autoscrollSubscription = null

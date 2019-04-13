@@ -37,7 +37,13 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
                 newItems.addAll(prevPages.takeLast(2))
             }
         }
-        newItems.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
+        // EXH -->
+        if(viewer.activity.showTransitionPages) {
+            // EXH <--
+            newItems.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
+            // EXH -->
+        }
+        // EXH <--
 
         // Add current chapter.
         val currPages = chapters.currChapter.pages
@@ -46,7 +52,13 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         }
 
         // Add next chapter transition and pages.
-        newItems.add(ChapterTransition.Next(chapters.currChapter, chapters.nextChapter))
+        // EXH -->
+        if(viewer.activity.showTransitionPages) {
+            // EXH <--
+            newItems.add(ChapterTransition.Next(chapters.currChapter, chapters.nextChapter))
+            // EXH -->
+        }
+        // EXH <--
         if (chapters.nextChapter != null) {
             // Add at most two pages, because this chapter will be selected before the user can
             // swap more pages.

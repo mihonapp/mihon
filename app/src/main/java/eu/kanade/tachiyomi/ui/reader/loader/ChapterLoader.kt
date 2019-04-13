@@ -37,18 +37,18 @@ class ChapterLoader(
                 Timber.d("Loading pages for ${chapter.chapter.name}")
 
                 val loader = getPageLoader(it)
-                chapter.pageLoader = loader
 
                 loader.getPages().take(1).doOnNext { pages ->
                     pages.forEach { it.chapter = chapter }
-                }
+                }.map { pages -> loader to pages }
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { pages ->
+            .doOnNext { (loader, pages) ->
                 if (pages.isEmpty()) {
                     throw Exception("Page list is empty")
                 }
 
+                chapter.pageLoader = loader // Assign here to fix race with unref
                 chapter.state = ReaderChapter.State.Loaded(pages)
 
                 // If the chapter is partially read, set the starting page to the last the user read

@@ -148,6 +148,11 @@ class SettingsReaderController : SettingsController() {
             title = "Preserve reading position on read manga"
             defaultValue = false
         }
+        switchPreference {
+            key = Keys.eh_showTransitionPages
+            title = "Show transition pages between chapters"
+            defaultValue = true
+        }
         // EXH <--
         preferenceCategory {
             titleRes = R.string.pager_viewer

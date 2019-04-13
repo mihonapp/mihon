@@ -178,4 +178,6 @@ object PreferenceKeys {
     const val eh_autoSolveCaptchas = "eh_autosolve_captchas"
 
     const val eh_delegateSources = "eh_delegate_sources"
+
+    const val eh_showTransitionPages = "eh_show_transition_pages"
 }

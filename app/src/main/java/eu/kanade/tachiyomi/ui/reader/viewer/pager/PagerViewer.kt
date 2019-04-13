@@ -9,6 +9,7 @@ import android.view.ViewGroup.LayoutParams
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
+import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
@@ -40,6 +41,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
      * Currently active item. It can be a chapter page or a chapter transition.
      */
     /* [EXH] private */ var currentPage: Any? = null
+
+    // EXH -->
+    private var nextChapter: ReaderChapter? = null
+    private var prevChapter: ReaderChapter? = null
+    // EXH <--
 
     /**
      * Viewer chapters to set when the pager enters idle mode. Otherwise, if the view was settling
@@ -137,13 +143,21 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         Timber.d("onPageSelected: ${page.number}/${pages.size}")
         activity.onPageSelected(page)
 
-        if (page === pages.last()) {
+        if (page === pages.last() || page === pages.getOrNull(pages.lastIndex - 1)) {
             Timber.d("Request preload next chapter because we're at the last page")
-            val transition = adapter.items.getOrNull(position + 1) as? ChapterTransition.Next
-            if (transition?.to != null) {
-                activity.requestPreloadChapter(transition.to)
+            // EXH -->
+            nextChapter?.let {
+                activity.requestPreloadChapter(it)
+            }
+            // EXH <--
+        }
+        // EXH -->
+        if(page === pages.first() || page === pages.getOrNull(1)) {
+            prevChapter?.let {
+                activity.requestPreloadChapter(it)
             }
         }
+        // EXH <--
     }
 
     /**
@@ -167,6 +181,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
      * it sets the chapters immediately, otherwise they are saved and set when it becomes idle.
      */
     override fun setChapters(chapters: ViewerChapters) {
+        // EXH -->
+        nextChapter = chapters.nextChapter
+        prevChapter = chapters.prevChapter
+        // EXH <--
+
         if (isIdle) {
             setChaptersInternal(chapters)
         } else {
@@ -187,6 +206,12 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
             val pages = chapters.currChapter.pages ?: return
             moveToPage(pages[chapters.currChapter.requestedPage])
             pager.visibility = View.VISIBLE
+        } else {
+            // Trigger page change
+            val page = adapter.items.getOrNull(pager.currentItem)
+            if(page is ReaderPage) {
+                onPageSelected(page, pager.currentItem)
+            }
         }
     }
 
@@ -197,7 +222,14 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         Timber.d("moveToPage")
         val position = adapter.items.indexOf(page)
         if (position != -1) {
-            pager.setCurrentItem(position, true)
+            // EXH -->
+            if(position == pager.currentItem) {
+                // Invoke anyways to update seekbar
+                onPageSelected(page, position)
+            } else {
+                pager.setCurrentItem(position, true)
+            }
+            // EXH <--
         } else {
             Timber.d("Page $page not found in adapter")
         }

@@ -251,4 +251,6 @@ class PreferencesHelper(val context: Context) {
     fun eh_lastVersionCode() = rxPrefs.getInteger("eh_last_version_code", 0)
 
     fun eh_savedSearches() = rxPrefs.getStringSet("eh_saved_searches", emptySet())
+
+    fun eh_showTransitionPages() = rxPrefs.getBoolean(Keys.eh_showTransitionPages, true)
 }
