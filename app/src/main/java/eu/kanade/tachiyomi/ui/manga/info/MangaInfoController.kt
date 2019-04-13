@@ -49,6 +49,7 @@ import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.truncateCenter
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.NHENTAI_SOURCE_ID
 import exh.ui.webview.WebViewActivity
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import jp.wasabeef.glide.transformations.MaskTransformation
@@ -138,7 +139,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         manga_genres_tags.setOnTagClickListener { tag ->
             //EXH Special case E-Hentai/ExHentai to use tag based search
             var text = tag
-            if(isEHentaiBasedSource()) {
+            if(isEHentaiBasedSource() || presenter.source.id == NHENTAI_SOURCE_ID) {
                 val parsed = parseTag(text)
                 text = wrapTag(parsed.first, parsed.second.substringBefore('|').trim())
             }
@@ -556,19 +557,9 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     private fun parseTag(tag: String) = tag.substringBefore(':').trim() to tag.substringAfter(':').trim()
 
     private fun isEHentaiBasedSource(): Boolean {
-        val mangaSourceText = manga_source.text
-
-        sourceManager.get(EH_SOURCE_ID)?.let {
-            if(mangaSourceText.startsWith(it.name))
-                return true
-        }
-
-        sourceManager.get(EXH_SOURCE_ID)?.let {
-            if(mangaSourceText.startsWith(it.name))
-                return true
-        }
-
-        return false
+        val sourceId = presenter.source.id
+        return sourceId == EH_SOURCE_ID
+                || sourceId == EXH_SOURCE_ID
     }
     // <-- EH
 
