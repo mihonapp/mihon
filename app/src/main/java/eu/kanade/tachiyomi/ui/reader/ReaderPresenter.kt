@@ -475,7 +475,7 @@ class ReaderPresenter(
         // Pictures directory.
         val destDir = File(Environment.getExternalStorageDirectory().absolutePath +
                 File.separator + Environment.DIRECTORY_PICTURES +
-                File.separator + "TachiyomiEH")
+                File.separator + context.getString(R.string.app_name))
 
         // Copy file in background.
         Observable.fromCallable { saveImage(page, destDir, manga) }
