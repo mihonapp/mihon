@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
 import android.webkit.MimeTypeMap
+import com.elvishew.xlog.XLog
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
@@ -284,6 +285,16 @@ class Downloader(
                 .doOnNext { ensureSuccessfulDownload(download, mangaDir, tmpDir, chapterDirname) }
                 // If the page list threw, it will resume here
                 .onErrorReturn { error ->
+                    // [EXH]
+                    XLog.w("> Download error!", error)
+                    XLog.w("> (source.id: %s, source.name: %s, manga.id: %s, manga.url: %s, chapter.id: %s, chapter.url: %s)",
+                            download.source.id,
+                            download.source.name,
+                            download.manga.id,
+                            download.manga.url,
+                            download.chapter.id,
+                            download.chapter.url)
+
                     download.status = Download.ERROR
                     notifier.onError(error.message, download.chapter.name)
                     download
@@ -355,6 +366,15 @@ class Downloader(
                         val extension = getImageExtension(response, file)
                         file.renameTo("$filename.$extension")
                     } catch (e: Exception) {
+                        // [EXH]
+                        XLog.w("> Failed to fetch image!", e)
+                        XLog.w("> (source.id: %s, source.name: %s, page.index: %s, page.url: %s, page.imageUrl: %s)",
+                                source.id,
+                                source.name,
+                                page.index,
+                                page.url,
+                                page.imageUrl)
+
                         response.close()
                         file.delete()
                         throw e

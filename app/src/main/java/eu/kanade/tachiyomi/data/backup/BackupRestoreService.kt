@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
 import android.os.PowerManager
+import com.elvishew.xlog.XLog
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
@@ -249,7 +250,10 @@ class BackupRestoreService : Service() {
 
                 }
                 .doOnError { error ->
-                    Timber.e(error)
+                    // [EXH]
+                    XLog.w("> Failed to perform restore!", error)
+                    XLog.w("> (uri: %s)", uri)
+
                     writeErrorLog()
                     val errorIntent = Intent(BackupConst.INTENT_FILTER).apply {
                         putExtra(BackupConst.ACTION, BackupConst.ACTION_ERROR_RESTORE_DIALOG)
@@ -322,6 +326,14 @@ class BackupRestoreService : Service() {
                                      tracks: List<Track>): Observable<Manga> {
         return backupManager.restoreMangaFetchObservable(source, manga)
                 .onErrorReturn {
+                    // [EXH]
+                    XLog.w("> Failed to restore manga!", it)
+                    XLog.w("> (source.id: %s, source.name: %s, manga.id: %s, manga.url: %s)",
+                            source.id,
+                            source.name,
+                            manga.id,
+                            manga.url)
+
                     errors.add(Date() to "${manga.title} - ${it.message}")
                     manga
                 }
@@ -394,6 +406,15 @@ class BackupRestoreService : Service() {
         return backupManager.restoreChapterFetchObservable(source, manga, chapters)
                 // If there's any error, return empty update and continue.
                 .onErrorReturn {
+                    // [EXH]
+                    XLog.w("> Failed to restore chapter!", it)
+                    XLog.w("> (source.id: %s, source.name: %s, manga.id: %s, manga.url: %s, chapters.size: %s)",
+                            source.id,
+                            source.name,
+                            manga.id,
+                            manga.url,
+                            chapters.size)
+
                     errors.add(Date() to "${manga.title} - ${it.message}")
                     Pair(emptyList(), emptyList())
                 }

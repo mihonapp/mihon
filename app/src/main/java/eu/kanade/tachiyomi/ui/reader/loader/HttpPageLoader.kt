@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
+import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -203,7 +204,20 @@ class HttpPageLoader(
         page.status = Page.LOAD_PAGE
         return fetchImageUrl(page)
             .doOnError { page.status = Page.ERROR }
-            .onErrorReturn { null }
+            .onErrorReturn {
+                // [EXH]
+                XLog.w("> Failed to fetch image URL!", it)
+                XLog.w("> (source.id: %s, source.name: %s, page.index: %s, page.url: %s, page.imageUrl: %s, chapter.id: %s, chapter.url: %s)",
+                        source.id,
+                        source.name,
+                        page.index,
+                        page.url,
+                        page.imageUrl,
+                        page.chapter.chapter.id,
+                        page.chapter.chapter.url)
+
+                null
+            }
             .doOnNext { page.imageUrl = it }
             .map { page }
     }
@@ -229,7 +243,20 @@ class HttpPageLoader(
                 page.stream = { chapterCache.getImageFile(imageUrl).inputStream() }
                 page.status = Page.READY
             }
-            .doOnError { page.status = Page.ERROR }
+            .doOnError {
+                // [EXH]
+                XLog.w("> Failed to fetch image!", it)
+                XLog.w("> (source.id: %s, source.name: %s, page.index: %s, page.url: %s, page.imageUrl: %s, chapter.id: %s, chapter.url: %s)",
+                        source.id,
+                        source.name,
+                        page.index,
+                        page.url,
+                        page.imageUrl,
+                        page.chapter.chapter.id,
+                        page.chapter.chapter.url)
+
+                page.status = Page.ERROR
+            }
             .onErrorReturn { page }
     }
 

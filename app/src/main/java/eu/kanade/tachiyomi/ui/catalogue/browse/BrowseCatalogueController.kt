@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.*
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.elvishew.xlog.XLog
 import com.f2prateek.rx.preferences.Preference
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -401,7 +402,11 @@ open class BrowseCatalogueController(bundle: Bundle) :
      * @param error the error received.
      */
     fun onAddPageError(error: Throwable) {
-        Timber.e(error)
+        XLog.w("> Failed to load next catalogue page!", error)
+        XLog.w("> (source.id: %s, source.name: %s)",
+                presenter.source.id,
+                presenter.source.name)
+
         val adapter = adapter ?: return
         adapter.onLoadMoreComplete(null)
         hideProgressBar()

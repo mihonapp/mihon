@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
+import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -62,7 +63,19 @@ class ChapterLoader(
                 }
             }
             .toCompletable()
-            .doOnError { chapter.state = ReaderChapter.State.Error(it) }
+            .doOnError {
+                // [EXH]
+                XLog.w("> Failed to fetch page list!", it)
+                XLog.w("> (source.id: %s, source.name: %s, manga.id: %s, manga.url: %s, chapter.id: %s, chapter.url: %s)",
+                        source.id,
+                        source.name,
+                        manga.id,
+                        manga.url,
+                        chapter.chapter.id,
+                        chapter.chapter.url)
+
+                chapter.state = ReaderChapter.State.Error(it)
+            }
     }
 
     /**

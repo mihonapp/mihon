@@ -11,6 +11,7 @@ import android.support.v7.view.ActionMode
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import com.elvishew.xlog.XLog
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -223,6 +224,13 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     fun onFetchChaptersError(error: Throwable) {
         swipe_refresh?.isRefreshing = false
         activity?.toast(error.message)
+        // [EXH]
+        XLog.w("> Failed to fetch chapters!", error)
+        XLog.w("> (source.id: %s, source.name: %s, manga.id: %s, manga.url: %s)",
+                presenter.source.id,
+                presenter.source.name,
+                presenter.manga.id,
+                presenter.manga.url)
     }
 
     fun onChapterStatusChange(download: Download) {

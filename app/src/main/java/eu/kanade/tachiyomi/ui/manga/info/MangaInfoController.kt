@@ -22,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.elvishew.xlog.XLog
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.view.longClicks
@@ -402,9 +403,14 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     fun onFetchMangaError(error: Throwable) {
         setRefreshing(false)
         activity?.toast(error.message)
-        // EXH -->
-        Timber.e(error, "Failed to fetch manga details!")
-        // EXH <--
+
+        // [EXH]
+        XLog.w("> Failed to fetch manga details!", error)
+        XLog.w("> (source.id: %s, source.name: %s, manga.id: %s, manga.url: %s)",
+                presenter.source.id,
+                presenter.source.name,
+                presenter.manga.id,
+                presenter.manga.url)
     }
 
     /**
