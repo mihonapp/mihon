@@ -8,6 +8,7 @@ import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -116,6 +117,21 @@ class SettingsAdvancedController : SettingsController() {
             key = PreferenceKeys.eh_delegateSources
             defaultValue = true
             summary = "Apply TachiyomiEH enhancements to the following sources if they are installed: ${DELEGATED_SOURCES.values.joinToString { it.sourceName }}"
+        }
+
+        switchPreference {
+            title = "Detailed logs"
+
+            if(BuildConfig.DEBUG) {
+                summary = "Force-enabled in this debug build."
+                isChecked = true
+                isPersistent = false
+                isEnabled = false
+            } else {
+                key = PreferenceKeys.eh_detailedLogs
+                defaultValue = false
+                summary = "Increase detail level of logs. May cause the app to become slightly slower."
+            }
         }
 
         preference {

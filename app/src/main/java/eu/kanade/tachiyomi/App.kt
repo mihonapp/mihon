@@ -3,19 +3,35 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Environment
 import android.support.multidex.MultiDex
+import com.elvishew.xlog.LogConfiguration
+import com.elvishew.xlog.LogLevel
+import com.elvishew.xlog.XLog
+import com.elvishew.xlog.printer.AndroidPrinter
+import com.elvishew.xlog.printer.Printer
+import com.elvishew.xlog.printer.file.FilePrinter
+import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
+import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.evernote.android.job.JobManager
 import com.github.ajalt.reprint.core.Reprint
+import com.kizitonwose.time.days
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.util.LocaleHelper
+import exh.log.CrashlyticsPrinter
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektScope
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.registry.default.DefaultRegistrar
 import java.io.File
 import kotlin.concurrent.thread
@@ -31,8 +47,9 @@ open class App : Application() {
 
         setupJobManager()
         setupNotificationChannels()
-        setupRealm() //Setup metadata DB (EH)
+        GlobalScope.launch { deleteOldMetadataRealm() } // Delete old metadata DB (EH)
         Reprint.initialize(this) //Setup fingerprint (EH)
+        setupExhLogging() // EXH logging
 
         LocaleHelper.updateConfiguration(this, resources.configuration)
     }
@@ -67,14 +84,14 @@ open class App : Application() {
     }
 
     // EXH
-    private fun setupRealm() {
+    private fun deleteOldMetadataRealm() {
         Realm.init(this)
         val config = RealmConfiguration.Builder()
                 .name("gallery-metadata.realm")
                 .schemaVersion(3)
                 .deleteRealmIfMigrationNeeded()
                 .build()
-        Realm.setDefaultConfiguration(config)
+        Realm.deleteRealm(config)
 
         //Delete old paper db files
         listOf(
@@ -88,5 +105,45 @@ open class App : Application() {
                 }
             }
         }
+    }
+
+    // EXH
+    private fun setupExhLogging() {
+        val logLevel = if(BuildConfig.DEBUG ||
+                Injekt.get<PreferencesHelper>().eh_detailedLogs().getOrDefault()) {
+            LogLevel.ALL
+        } else {
+            LogLevel.WARN
+        }
+
+        val logConfig = LogConfiguration.Builder()
+                .logLevel(logLevel)
+                .t()
+                .st(2)
+                .nb()
+                .build()
+
+        val printers = mutableListOf<Printer>(AndroidPrinter())
+
+        val logFolder = File(Environment.getExternalStorageDirectory().absolutePath + File.separator +
+                getString(R.string.app_name), "logs")
+
+        printers += FilePrinter
+                .Builder(logFolder.absolutePath)
+                .fileNameGenerator(DateFileNameGenerator())
+                .cleanStrategy(FileLastModifiedCleanStrategy(7.days.inMilliseconds.longValue))
+                .build()
+
+        // Install Crashlytics in prod
+        if(!BuildConfig.DEBUG) {
+            printers += CrashlyticsPrinter(LogLevel.ERROR)
+        }
+
+        XLog.init(
+                logConfig,
+                *printers.toTypedArray()
+        )
+
+        XLog.d("Application booting...")
     }
 }

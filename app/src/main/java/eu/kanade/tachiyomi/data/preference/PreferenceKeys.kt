@@ -182,4 +182,6 @@ object PreferenceKeys {
     const val eh_delegateSources = "eh_delegate_sources"
 
     const val eh_showTransitionPages = "eh_show_transition_pages"
+
+    const val eh_detailedLogs = "eh_detailed_logs"
 }

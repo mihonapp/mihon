@@ -269,6 +269,14 @@ dependencies {
 
     // Firebase (EH)
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+
+    // Better logging (EH)
+    implementation 'com.elvishew:xlog:1.6.1'
+
+    // Time utils (EH)
+    def typed_time_version = '1.0.2'
+    implementation "com.github.kizitonwose.time:time:$typed_time_version"
+    implementation "com.github.kizitonwose.time:time-android:$typed_time_version"
 }
 
 buildscript {
