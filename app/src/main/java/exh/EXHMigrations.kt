@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.database.resolvers.MangaUrlPutResolver
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import exh.source.BlacklistedSources
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 import java.net.URI
@@ -87,35 +88,22 @@ object EXHMigrations {
         }
 
         // Allow importing of nhentai extension backups
-        if(manga.source == 3122156392225024195) {
+        if(manga.source in BlacklistedSources.NHENTAI_EXT_SOURCES) {
             manga.source = NHENTAI_SOURCE_ID
         }
 
+        // Allow importing of English PervEden extension backups
+        if(manga.source in BlacklistedSources.PERVEDEN_EN_EXT_SOURCES) {
+            manga.source = PERV_EDEN_EN_SOURCE_ID
+        }
+
         // Allow importing of Italian PervEden extension backups
-        if(manga.source == 1433898225963724122) {
+        if(manga.source in BlacklistedSources.PERVEDEN_IT_EXT_SOURCES) {
             manga.source = PERV_EDEN_IT_SOURCE_ID
         }
 
-        if(manga.source in listOf(
-                        8100626124886895451,
-                        57122881048805941,
-                        4678440076103929247,
-                        1876021963378735852,
-                        3955189842350477641,
-                        4348288691341764259,
-                        773611868725221145,
-                        5759417018342755550,
-                        825187715438990384,
-                        6116711405602166104,
-                        7151438547982231541,
-                        2171445159732592630,
-                        3032959619549451093,
-                        5980349886941016589,
-                        6073266008352078708,
-                        5499077866612745456,
-                        6140480779421365791
-                )
-        ) {
+        // Allow importing of EHentai extension backups
+        if(manga.source in BlacklistedSources.EHENTAI_EXT_SOURCES) {
             manga.source = EH_SOURCE_ID
         }
 

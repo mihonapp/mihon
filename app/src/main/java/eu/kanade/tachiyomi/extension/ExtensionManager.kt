@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.extension
 
 import android.content.Context
+import com.elvishew.xlog.XLog
 import com.jakewharton.rxrelay.BehaviorRelay
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -13,6 +14,7 @@ import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.launchNow
+import exh.source.BlacklistedSources
 import kotlinx.coroutines.async
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -111,6 +113,7 @@ class ExtensionManager(
         installedExtensions = extensions
                 .filterIsInstance<LoadResult.Success>()
                 .map { it.extension }
+                .filterNotBlacklisted()
         installedExtensions
                 .flatMap { it.sources }
                 // overwrite is needed until the bundled sources are removed
@@ -119,7 +122,24 @@ class ExtensionManager(
         untrustedExtensions = extensions
                 .filterIsInstance<LoadResult.Untrusted>()
                 .map { it.extension }
+                .filterNotBlacklisted()
     }
+    // EXH -->
+    fun <T : Extension> Iterable<T>.filterNotBlacklisted(): List<T> {
+        val blacklistEnabled = preferences.eh_enableSourceBlacklist().getOrDefault()
+        return filter {
+            if(it.isBlacklisted(blacklistEnabled)) {
+                XLog.d("[EXH] Removing blacklisted extension: (name: String, pkgName: %s)!", it.name, it.pkgName)
+                false
+            } else true
+        }
+    }
+
+    fun Extension.isBlacklisted(blacklistEnabled: Boolean =
+                                        preferences.eh_enableSourceBlacklist().getOrDefault()): Boolean {
+        return pkgName in BlacklistedSources.BLACKLISTED_EXTENSIONS && blacklistEnabled
+    }
+    // EXH <--
 
     /**
      * Returns the relay of the installed extensions as an observable.
@@ -150,7 +170,7 @@ class ExtensionManager(
                 .onErrorReturn { emptyList() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { availableExtensions = it }
+                .subscribe { availableExtensions = it.filterNotBlacklisted() }
     }
 
     /**
@@ -173,7 +193,7 @@ class ExtensionManager(
             }
         }
         if (changed) {
-            installedExtensions = mutInstalledExtensions
+            installedExtensions = mutInstalledExtensions.filterNotBlacklisted()
         }
     }
 
@@ -258,6 +278,11 @@ class ExtensionManager(
      * @param extension The extension to be registered.
      */
     private fun registerNewExtension(extension: Extension.Installed) {
+        if(extension.isBlacklisted()) {
+            XLog.d("[EXH] Removing blacklisted extension: (name: String, pkgName: %s)!", extension.name, extension.pkgName)
+            return
+        }
+
         installedExtensions += extension
         extension.sources.forEach { sourceManager.registerSource(it) }
     }
@@ -269,6 +294,11 @@ class ExtensionManager(
      * @param extension The extension to be registered.
      */
     private fun registerUpdatedExtension(extension: Extension.Installed) {
+        if(extension.isBlacklisted()) {
+            XLog.d("[EXH] Removing blacklisted extension: (name: String, pkgName: %s)!", extension.name, extension.pkgName)
+            return
+        }
+
         val mutInstalledExtensions = installedExtensions.toMutableList()
         val oldExtension = mutInstalledExtensions.find { it.pkgName == extension.pkgName }
         if (oldExtension != null) {

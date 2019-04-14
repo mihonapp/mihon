@@ -113,30 +113,42 @@ class SettingsAdvancedController : SettingsController() {
                 }
             }
         }
-        switchPreference {
-            title = "Enable delegated sources"
-            key = PreferenceKeys.eh_delegateSources
-            defaultValue = true
-            summary = "Apply TachiyomiEH enhancements to the following sources if they are installed: ${DELEGATED_SOURCES.values.joinToString { it.sourceName }}"
-        }
+        preferenceCategory {
+            title = "Developer tools"
+            isPersistent = false
 
-        intListPreference {
-            key = PreferenceKeys.eh_logLevel
-            title = "Log level"
+            switchPreference {
+                title = "Enable delegated sources"
+                key = PreferenceKeys.eh_delegateSources
+                defaultValue = true
+                summary = "Apply ${context.getString(R.string.app_name)} enhancements to the following sources if they are installed: ${DELEGATED_SOURCES.values.joinToString { it.sourceName }}"
+            }
 
-            entries = EHLogLevel.values().map {
-                "${it.name.toLowerCase().capitalize()} (${it.description})"
-            }.toTypedArray()
-            entryValues = EHLogLevel.values().mapIndexed { index, _ -> "$index" }.toTypedArray()
-            defaultValue = "0"
+            intListPreference {
+                key = PreferenceKeys.eh_logLevel
+                title = "Log level"
 
-            summary = "Changing this can impact app performance. Force-restart app after changing. Current value: %s"
-        }
+                entries = EHLogLevel.values().map {
+                    "${it.name.toLowerCase().capitalize()} (${it.description})"
+                }.toTypedArray()
+                entryValues = EHLogLevel.values().mapIndexed { index, _ -> "$index" }.toTypedArray()
+                defaultValue = "0"
 
-        preference {
-            title = "Open debug menu"
-            summary = Html.fromHtml("DO NOT TOUCH THIS MENU UNLESS YOU KNOW WHAT YOU ARE DOING! <font color='red'>IT CAN CORRUPT YOUR LIBRARY!</font>")
-            onClick { router.pushController(SettingsDebugController().withFadeTransaction()) }
+                summary = "Changing this can impact app performance. Force-restart app after changing. Current value: %s"
+            }
+
+            switchPreference {
+                title = "Enable source blacklist"
+                key = PreferenceKeys.eh_enableSourceBlacklist
+                defaultValue = true
+                summary = "Hide extensions/sources that are incompatible with ${context.getString(R.string.app_name)}. Force-restart app after changing."
+            }
+
+            preference {
+                title = "Open debug menu"
+                summary = Html.fromHtml("DO NOT TOUCH THIS MENU UNLESS YOU KNOW WHAT YOU ARE DOING! <font color='red'>IT CAN CORRUPT YOUR LIBRARY!</font>")
+                onClick { router.pushController(SettingsDebugController().withFadeTransaction()) }
+            }
         }
         // <-- EXH
     }

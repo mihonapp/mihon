@@ -1,9 +1,8 @@
 package exh.log
 
+import android.content.Context
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 enum class EHLogLevel(val description: String) {
     MINIMAL("critical errors only"),
@@ -11,12 +10,15 @@ enum class EHLogLevel(val description: String) {
     EXTREME("network inspection mode");
 
     companion object {
-        private val curLogLevel by lazy {
-            Injekt.get<PreferencesHelper>().eh_logLevel().getOrDefault()
+        private var curLogLevel: Int? = null
+
+        fun init(context: Context) {
+            curLogLevel = PreferencesHelper(context)
+                    .eh_logLevel().getOrDefault()
         }
 
         fun shouldLog(requiredLogLevel: EHLogLevel): Boolean {
-            return curLogLevel >= requiredLogLevel.ordinal
+            return curLogLevel!! >= requiredLogLevel.ordinal
         }
     }
 }

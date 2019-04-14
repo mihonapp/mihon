@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.source
 
 import android.content.Context
+import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
@@ -20,6 +21,7 @@ import exh.EXH_SOURCE_ID
 import exh.PERV_EDEN_EN_SOURCE_ID
 import exh.PERV_EDEN_IT_SOURCE_ID
 import exh.metadata.metadata.PervEdenLang
+import exh.source.BlacklistedSources
 import exh.source.DelegatedHttpSource
 import exh.source.EnhancedHttpSource
 import timber.log.Timber
@@ -67,15 +69,23 @@ open class SourceManager(private val context: Context) {
     fun getCatalogueSources() = sourcesMap.values.filterIsInstance<CatalogueSource>()
 
     internal fun registerSource(source: Source, overwrite: Boolean = false) {
+        // EXH -->
         val sourceQName = source::class.qualifiedName
         val delegate = DELEGATED_SOURCES[sourceQName]
         val newSource = if(source is HttpSource && delegate != null) {
-            Timber.d("[EXH] Delegating source: %s -> %s!", sourceQName, delegate.newSourceClass.qualifiedName)
+            XLog.d("[EXH] Delegating source: %s -> %s!", sourceQName, delegate.newSourceClass.qualifiedName)
             EnhancedHttpSource(
                     source,
                     delegate.newSourceClass.constructors.find { it.parameters.size == 1 }!!.call(source)
             )
         } else source
+
+        if(source.id in BlacklistedSources.BLACKLISTED_EXT_SOURCES) {
+            XLog.d("[EXH] Removing blacklisted source: (id: %s, name: %s, lang: %s)!", source.id, source.name, (source as? CatalogueSource)?.lang)
+            return
+        }
+        // EXH <--
+
         if (overwrite || !sourcesMap.containsKey(source.id)) {
             sourcesMap[source.id] = newSource
         }

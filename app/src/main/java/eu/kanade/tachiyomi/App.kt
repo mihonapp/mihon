@@ -42,6 +42,7 @@ open class App : Application() {
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+        setupExhLogging() // EXH logging
 
         Injekt = InjektScope(DefaultRegistrar())
         Injekt.importModule(AppModule(this))
@@ -50,7 +51,6 @@ open class App : Application() {
         setupNotificationChannels()
         GlobalScope.launch { deleteOldMetadataRealm() } // Delete old metadata DB (EH)
         Reprint.initialize(this) //Setup fingerprint (EH)
-        setupExhLogging() // EXH logging
 
         LocaleHelper.updateConfiguration(this, resources.configuration)
     }
@@ -110,6 +110,8 @@ open class App : Application() {
 
     // EXH
     private fun setupExhLogging() {
+        EHLogLevel.init(this)
+
         val logLevel = if(BuildConfig.DEBUG || EHLogLevel.shouldLog(EHLogLevel.EXTRA)) {
             LogLevel.ALL
         } else {

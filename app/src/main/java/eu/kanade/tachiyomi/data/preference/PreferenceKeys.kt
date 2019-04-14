@@ -184,4 +184,6 @@ object PreferenceKeys {
     const val eh_showTransitionPages = "eh_show_transition_pages"
 
     const val eh_logLevel = "eh_log_level"
+
+    const val eh_enableSourceBlacklist = "eh_enable_source_blacklist"
 }
