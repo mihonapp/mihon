@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -135,7 +136,29 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
      * activity of the change and requests the preload of the next chapter if this is the last page.
      */
     private fun onPageSelected(page: ReaderPage, position: Int) {
-        val pages = page.chapter.pages!! // Won't be null because it's the loaded chapter
+        val pages = page.chapter.pages // Won't be null because it's the loaded chapter
+        // EXH -->
+        if(pages == null) {
+            XLog.e("Webtoon reader chapter pages are null (position: %s," +
+                    " page.index: %s," +
+                    " page.url: %s," +
+                    " page.imageUrl: %s," +
+                    " page.chapter.state: %s," +
+                    " page.chapter.pageLoader == null: %s," +
+                    " page.chapter.requestedPage: %s" +
+                    " page.chapter.references: %s)!",
+                    position,
+                    page.index,
+                    page.url,
+                    page.imageUrl,
+                    page.chapter.state::class.simpleName,
+                    page.chapter.pageLoader == null,
+                    page.chapter.requestedPage,
+                    page.chapter.references)
+            return
+        }
+        // EXH <--
+
         Timber.d("onPageSelected: ${page.number}/${pages.size}")
         activity.onPageSelected(page)
 
