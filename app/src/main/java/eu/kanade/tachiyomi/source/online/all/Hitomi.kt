@@ -374,6 +374,16 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document> {
      */
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
+    override fun imageRequest(page: Page): Request {
+        val request = super.imageRequest(page)
+        val hlId = request.url().pathSegments().let {
+            it[it.lastIndex - 1]
+        }
+        return request.newBuilder()
+                .header("Referer", "$BASE_URL/reader/$hlId.html")
+                .build()
+    }
+
     companion object {
         private val INDEX_VERSION_CACHE_TIME_MS = 1000 * 60 * 10
         private val PAGE_SIZE = 25
