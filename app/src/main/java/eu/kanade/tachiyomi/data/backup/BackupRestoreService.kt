@@ -27,6 +27,8 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.chop
 import eu.kanade.tachiyomi.util.isServiceRunning
 import eu.kanade.tachiyomi.util.sendLocalBroadcast
+import exh.BackupEntry
+import exh.EXHMigrations
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers
@@ -223,7 +225,21 @@ class BackupRestoreService : Service() {
                     val history = backupManager.parser.fromJson<List<DHistory>>(obj.get(HISTORY) ?: JsonArray())
                     val tracks = backupManager.parser.fromJson<List<TrackImpl>>(obj.get(TRACK) ?: JsonArray())
 
-                    val observable = getMangaRestoreObservable(manga, chapters, categories, history, tracks)
+                    // EXH -->
+                    val migrated = EXHMigrations.migrateBackupEntry(
+                            BackupEntry(
+                                    manga,
+                                    chapters,
+                                    categories,
+                                    history,
+                                    tracks
+                            )
+                    )
+
+                    val observable = migrated.flatMap { (manga, chapters, categories, history, tracks) ->
+                        getMangaRestoreObservable(manga, chapters, categories, history, tracks)
+                    }
+                    // EXH <--
                     if (observable != null) {
                         observable
                     } else {

@@ -2,12 +2,16 @@ package exh
 
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
+import eu.kanade.tachiyomi.data.backup.models.DHistory
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.database.resolvers.MangaUrlPutResolver
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import rx.Observable
 import uy.kohesive.injekt.injectLazy
 import java.net.URI
 import java.net.URISyntaxException
@@ -35,7 +39,7 @@ object EXHMigrations {
                     db.lowLevel().executeSQL(RawQuery.builder()
                             .query("""
                             UPDATE ${MangaTable.TABLE}
-                                SET ${MangaTable.COL_SOURCE} = 260868874183818481
+                                SET ${MangaTable.COL_SOURCE} = $HENTAI_CAFE_SOURCE_ID
                                 WHERE ${MangaTable.COL_SOURCE} = 6908
                         """.trimIndent())
                             .affectsTables(MangaTable.TABLE)
@@ -69,6 +73,22 @@ object EXHMigrations {
         return false
     }
 
+    fun migrateBackupEntry(backupEntry: BackupEntry): Observable<BackupEntry> {
+        val (manga, chapters, categories, history, tracks) = backupEntry
+
+        // Migrate HentaiCafe source IDs
+        if(manga.source == 6908L) {
+            manga.source = HENTAI_CAFE_SOURCE_ID
+        }
+
+        // Migrate nhentai URLs
+        if(manga.source == NHENTAI_SOURCE_ID) {
+            manga.url = getUrlWithoutDomain(manga.url)
+        }
+
+        return Observable.just(backupEntry)
+    }
+
     private fun getUrlWithoutDomain(orig: String): String {
         return try {
             val uri = URI(orig)
@@ -83,3 +103,11 @@ object EXHMigrations {
         }
     }
 }
+
+data class BackupEntry(
+        val manga: Manga,
+        val chapters: List<Chapter>,
+        val categories: List<String>,
+        val history: List<DHistory>,
+        val tracks: List<Track>
+)
