@@ -167,6 +167,7 @@ class GalleryAdder {
             val newManga = sourceObj.fetchMangaDetails(manga).toBlocking().first()
             manga.copyFrom(newManga)
             manga.title = newManga.title //Forcibly copy title as copyFrom does not copy title
+            manga.initialized = true
 
             if (fav) manga.favorite = true
 
