@@ -12,6 +12,7 @@ import com.elvishew.xlog.XLog
 import com.elvishew.xlog.printer.AndroidPrinter
 import com.elvishew.xlog.printer.Printer
 import com.elvishew.xlog.printer.file.FilePrinter
+import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.evernote.android.job.JobManager
@@ -138,6 +139,7 @@ open class App : Application() {
                 .Builder(logFolder.absolutePath)
                 .fileNameGenerator(DateFileNameGenerator())
                 .cleanStrategy(FileLastModifiedCleanStrategy(7.days.inMilliseconds.longValue))
+                .backupStrategy(NeverBackupStrategy())
                 .build()
 
         // Install Crashlytics in prod
