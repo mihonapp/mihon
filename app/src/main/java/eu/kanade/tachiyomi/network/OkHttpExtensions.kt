@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.network
 
+import exh.util.withRootCause
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -47,11 +48,18 @@ fun Call.asObservable(): Observable<Response> {
 }
 
 fun Call.asObservableSuccess(): Observable<Response> {
+    // Record stacktrace at creation time for easier debugging
+    //   asObservable is involved in a lot of crashes so this is worth the performance hit
+    val asyncStackTrace = Exception("Async stacktrace")
+
     return asObservable().doOnNext { response ->
         if (!response.isSuccessful) {
             response.close()
             throw Exception("HTTP error ${response.code()}")
         }
+    }.onErrorReturn {
+        // Set root cause to async stacktrace and throw again
+        throw it.withRootCause(asyncStackTrace)
     }
 }
 
