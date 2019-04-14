@@ -116,7 +116,7 @@ open class App : Application() {
     private fun setupExhLogging() {
         EHLogLevel.init(this)
 
-        val logLevel = if(BuildConfig.DEBUG || EHLogLevel.shouldLog(EHLogLevel.EXTRA)) {
+        val logLevel = if(EHLogLevel.shouldLog(EHLogLevel.EXTRA)) {
             LogLevel.ALL
         } else {
             LogLevel.WARN

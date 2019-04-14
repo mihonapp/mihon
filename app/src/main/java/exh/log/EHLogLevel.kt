@@ -12,7 +12,7 @@ enum class EHLogLevel(val description: String) {
     companion object {
         private var curLogLevel: Int? = null
 
-        val currentLogLevel get() = EHLogLevel.values()[curLogLevel!!]
+        val currentLogLevel get() = values()[curLogLevel!!]
 
         fun init(context: Context) {
             curLogLevel = PreferencesHelper(context)
