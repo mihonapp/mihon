@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.log.maybeInjectEHLogger
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -16,7 +17,9 @@ class EHConfigurator {
     private val prefs: PreferencesHelper by injectLazy()
     private val sources: SourceManager by injectLazy()
 
-    private val configuratorClient = OkHttpClient.Builder().build()
+    private val configuratorClient = OkHttpClient.Builder()
+            .maybeInjectEHLogger()
+            .build()
 
     private fun EHentai.requestWithCreds(sp: Int = 1) = Request.Builder()
             .addHeader("Cookie", cookiesHeader(sp))

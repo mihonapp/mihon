@@ -256,5 +256,5 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_showTransitionPages() = rxPrefs.getBoolean(Keys.eh_showTransitionPages, true)
 
-    fun eh_detailedLogs() = rxPrefs.getBoolean(Keys.eh_detailedLogs, false)
+    fun eh_logLevel() = rxPrefs.getInteger(Keys.eh_logLevel, 0)
 }

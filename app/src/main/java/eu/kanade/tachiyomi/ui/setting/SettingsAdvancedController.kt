@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.util.toast
 import exh.debug.SettingsDebugController
+import exh.log.EHLogLevel
 import exh.ui.migration.MetadataFetchDialog
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -119,19 +120,17 @@ class SettingsAdvancedController : SettingsController() {
             summary = "Apply TachiyomiEH enhancements to the following sources if they are installed: ${DELEGATED_SOURCES.values.joinToString { it.sourceName }}"
         }
 
-        switchPreference {
-            title = "Detailed logs"
+        intListPreference {
+            key = PreferenceKeys.eh_logLevel
+            title = "Log level"
 
-            if(BuildConfig.DEBUG) {
-                summary = "Force-enabled in this debug build."
-                isChecked = true
-                isPersistent = false
-                isEnabled = false
-            } else {
-                key = PreferenceKeys.eh_detailedLogs
-                defaultValue = false
-                summary = "Increase detail level of logs. May cause the app to become slightly slower."
-            }
+            entries = EHLogLevel.values().map {
+                "${it.name.toLowerCase().capitalize()} (${it.description})"
+            }.toTypedArray()
+            entryValues = EHLogLevel.values().mapIndexed { index, _ -> "$index" }.toTypedArray()
+            defaultValue = "0"
+
+            summary = "Changing this can impact app performance. Force-restart app after changing. Current value: %s"
         }
 
         preference {

@@ -26,6 +26,7 @@ import android.os.SystemClock
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import exh.log.maybeInjectEHLogger
 import exh.util.melt
 import rx.Observable
 
@@ -33,7 +34,9 @@ class SolveCaptchaActivity : AppCompatActivity() {
     private val sourceManager: SourceManager by injectLazy()
     private val preferencesHelper: PreferencesHelper by injectLazy()
 
-    val httpClient = OkHttpClient()
+    val httpClient = OkHttpClient.Builder()
+            .maybeInjectEHLogger()
+            .build()
     private val jsonParser = JsonParser()
 
     private var currentLoopId: String? = null

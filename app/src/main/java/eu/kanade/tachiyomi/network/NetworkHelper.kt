@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.network
 
 import android.content.Context
 import android.os.Build
+import exh.log.maybeInjectEHLogger
 import okhttp3.*
 import java.io.File
 import java.io.IOException
@@ -25,6 +26,7 @@ class NetworkHelper(context: Context) {
             .cookieJar(cookieManager)
             .cache(Cache(cacheDir, cacheSize))
             .enableTLS12()
+            .maybeInjectEHLogger()
             .build()
 
     val cloudflareClient = client.newBuilder()

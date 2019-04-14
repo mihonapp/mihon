@@ -24,6 +24,7 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.util.LocaleHelper
 import exh.log.CrashlyticsPrinter
+import exh.log.EHLogLevel
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.coroutines.GlobalScope
@@ -109,8 +110,7 @@ open class App : Application() {
 
     // EXH
     private fun setupExhLogging() {
-        val logLevel = if(BuildConfig.DEBUG ||
-                Injekt.get<PreferencesHelper>().eh_detailedLogs().getOrDefault()) {
+        val logLevel = if(BuildConfig.DEBUG || EHLogLevel.shouldLog(EHLogLevel.EXTRA)) {
             LogLevel.ALL
         } else {
             LogLevel.WARN

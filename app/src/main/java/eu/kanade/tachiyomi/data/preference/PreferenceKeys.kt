@@ -183,5 +183,5 @@ object PreferenceKeys {
 
     const val eh_showTransitionPages = "eh_show_transition_pages"
 
-    const val eh_detailedLogs = "eh_detailed_logs"
+    const val eh_logLevel = "eh_log_level"
 }

@@ -265,7 +265,7 @@ dependencies {
     implementation 'com.lvla.android:rxjava2-interop-kt:0.2.1'
 
     // Debug network interceptor (EH)
-    devImplementation "com.squareup.okhttp3:logging-interceptor:3.12.1"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.12.1"
 
     // Firebase (EH)
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
