@@ -8,6 +8,8 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.plusAssign
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
 import rx.Completable
 import rx.Observable
 import rx.schedulers.Schedulers
@@ -155,6 +157,10 @@ class HttpPageLoader(
             page.status = Page.QUEUE
         }
         // EXH -->
+        // Grab a new image URL on EXH sources
+        if(source.id == EH_SOURCE_ID || source.id == EXH_SOURCE_ID)
+            page.imageUrl = null
+
         if(prefs.eh_readerInstantRetry().getOrDefault()) boostPage(page)
         else // EXH <--
         queue.offer(PriorityPage(page, 2))
