@@ -159,8 +159,14 @@ class WebViewActivity : BaseActivity() {
             android.R.id.home -> finish()
             R.id.action_refresh -> webview.reload()
             R.id.action_forward -> webview.goForward()
-            R.id.action_open_in_browser ->
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(webview.url)))
+            R.id.action_open_in_browser -> {
+                val url = webview.url
+                if(url != null) {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                } else {
+                    toast("An error occurred while opening this page in your browser!")
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
