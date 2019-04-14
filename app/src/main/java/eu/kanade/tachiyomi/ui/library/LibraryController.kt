@@ -585,6 +585,25 @@ class LibraryController(
                 favSyncDialog?.dismiss()
                 favSyncDialog = null
             }
+            is FavoritesSyncStatus.BadLibraryState.MangaInMultipleCategories -> {
+                releaseSyncLocks()
+
+                favSyncDialog?.dismiss()
+                favSyncDialog = buildDialog()
+                        ?.title("Favorites sync error")
+                        ?.content(status.message + " Sync will not start until the gallery is in only one category.")
+                        ?.cancelable(false)
+                        ?.positiveText("Show gallery")
+                        ?.onPositive { _, _ ->
+                            openManga(status.manga)
+                            presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                        }
+                        ?.negativeText("Ok")
+                        ?.onNegative { _, _ ->
+                            presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                        }
+                        ?.show()
+            }
             is FavoritesSyncStatus.Error -> {
                 releaseSyncLocks()
 

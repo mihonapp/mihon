@@ -69,6 +69,24 @@ class FavoritesSyncHelper(val context: Context) {
             return
         }
 
+        // Validate library state
+        status.onNext(FavoritesSyncStatus.Processing("Verifying local library"))
+        val libraryManga = db.getLibraryMangas().executeAsBlocking()
+        val seenManga = HashSet<Long>(libraryManga.size)
+        libraryManga.forEach {
+            if(it.source != EXH_SOURCE_ID && it.source != EH_SOURCE_ID) return@forEach
+
+            if(it.id in seenManga) {
+                val inCategories = db.getCategoriesForManga(it).executeAsBlocking()
+                status.onNext(FavoritesSyncStatus.BadLibraryState
+                        .MangaInMultipleCategories(it, inCategories))
+                logger.w("Manga %s is in multiple categories!", it.id)
+                return
+            } else {
+                seenManga += it.id!!
+            }
+        }
+
         //Download remote favorites
         val favorites = try {
             status.onNext(FavoritesSyncStatus.Processing("Downloading favorites from remote server"))
@@ -387,6 +405,11 @@ class FavoritesSyncHelper(val context: Context) {
 sealed class FavoritesSyncStatus(val message: String) {
     class Error(message: String) : FavoritesSyncStatus(message)
     class Idle : FavoritesSyncStatus("Waiting for sync to start")
+    sealed class BadLibraryState(message: String) : FavoritesSyncStatus(message) {
+        class MangaInMultipleCategories(val manga: Manga,
+                                        val categories: List<Category>):
+                BadLibraryState("The gallery: ${manga.title} is in more than one category (${categories.joinToString { it.name }})!")
+    }
     class Initializing : FavoritesSyncStatus("Initializing sync")
     class Processing(message: String, isThrottle: Boolean = false) : FavoritesSyncStatus(if(isThrottle)
         "$message\n\nSync is currently throttling (to avoid being banned from ExHentai) and may take a long time to complete."

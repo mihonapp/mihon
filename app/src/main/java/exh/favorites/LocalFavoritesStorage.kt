@@ -115,14 +115,17 @@ class LocalFavoritesStorage {
                     token = EHentaiSearchMetadata.galleryToken(it.second.url)
                     category = it.first
 
-                    // TODO Throw error here
-                    if(this.category > 9)
+                    if(this.category > MAX_CATEGORIES)
                         return@mapNotNull null
                 }
             }
 
     private fun validateDbManga(manga: Manga)
             = manga.favorite && (manga.source == EH_SOURCE_ID || manga.source == EXH_SOURCE_ID)
+
+    companion object {
+        const val MAX_CATEGORIES = 9
+    }
 }
 
 data class ChangeSet(val added: List<FavoriteEntry>,
