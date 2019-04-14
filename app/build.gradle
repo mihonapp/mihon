@@ -33,6 +33,18 @@ ext {
     }
 }
 
+// Fix for: https://stackoverflow.com/questions/51185566/application-running-on-avd-for-api-28-but-not-api-24
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == "com.android.support") {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion "26.+"
+            }
+        }
+    }
+}
+
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
