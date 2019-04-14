@@ -331,10 +331,10 @@ open class BrowseCatalogueController(bundle: Bundle) :
         menu.findItem(R.id.action_set_filter).apply {
             icon.mutate()
             if (presenter.sourceFilters.isEmpty()) {
-                isEnabled = false
+//                isEnabled = false [EXH]
                 icon.alpha = 128
             } else {
-                isEnabled = true
+//                isEnabled = true [EXH]
                 icon.alpha = 255
             }
         }
