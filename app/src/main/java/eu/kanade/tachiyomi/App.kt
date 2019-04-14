@@ -137,7 +137,11 @@ open class App : Application() {
 
         printers += FilePrinter
                 .Builder(logFolder.absolutePath)
-                .fileNameGenerator(DateFileNameGenerator())
+                .fileNameGenerator(object : DateFileNameGenerator() {
+                    override fun generateFileName(logLevel: Int, timestamp: Long): String {
+                        return super.generateFileName(logLevel, timestamp) + "-${BuildConfig.BUILD_TYPE}"
+                    }
+                })
                 .cleanStrategy(FileLastModifiedCleanStrategy(7.days.inMilliseconds.longValue))
                 .backupStrategy(NeverBackupStrategy())
                 .build()
