@@ -286,7 +286,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<Tsum
 
         chain.observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
-                .subscribe()
+                .subscribe({}, {})
     }
 
     override val client: OkHttpClient
