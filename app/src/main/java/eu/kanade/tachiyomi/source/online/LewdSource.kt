@@ -46,11 +46,13 @@ interface LewdSource<M : RaisedSearchMetadata, I> : CatalogueSource {
     fun parseToManga(manga: SManga, input: I): Completable {
         val mangaId = (manga as? Manga)?.id
         val metaObservable = if(mangaId != null) {
-            db.getFlatMetadataForManga(mangaId).asRxSingle()
-                    .map {
-                        if(it != null) it.raise(metaClass)
-                        else newMetaInstance()
-                    }
+            // We have to use fromCallable because StorIO messes up the thread scheduling if we use their rx functions
+            Single.fromCallable {
+                db.getFlatMetadataForManga(mangaId).executeAsBlocking()
+            } .map {
+                if(it != null) it.raise(metaClass)
+                else newMetaInstance()
+            }
         } else {
             Single.just(newMetaInstance())
         }
@@ -76,10 +78,12 @@ interface LewdSource<M : RaisedSearchMetadata, I> : CatalogueSource {
      */
     fun getOrLoadMetadata(mangaId: Long?, inputProducer: () -> Single<I>): Single<M> {
         val metaObservable = if(mangaId != null) {
-            db.getFlatMetadataForManga(mangaId).asRxSingle()
-                    .map {
-                        it?.raise(metaClass)
-                    }
+            // We have to use fromCallable because StorIO messes up the thread scheduling if we use their rx functions
+            Single.fromCallable {
+                db.getFlatMetadataForManga(mangaId).executeAsBlocking()
+            }.map {
+                it?.raise(metaClass)
+            }
         } else Single.just(null)
 
         return metaObservable.flatMap { existingMeta ->

@@ -3,6 +3,7 @@ package exh.favorites
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.os.PowerManager
+import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -21,7 +22,6 @@ import exh.util.trans
 import okhttp3.FormBody
 import okhttp3.Request
 import rx.subjects.BehaviorSubject
-import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -46,6 +46,8 @@ class FavoritesSyncHelper(val context: Context) {
 
     private var wifiLock: WifiManager.WifiLock? = null
     private var wakeLock: PowerManager.WakeLock? = null
+
+    private val logger = XLog.tag("EHFavSync").build()
 
     val status = BehaviorSubject.create<FavoritesSyncStatus>(FavoritesSyncStatus.Idle())
 
@@ -73,7 +75,7 @@ class FavoritesSyncHelper(val context: Context) {
             exh.fetchFavorites()
         } catch(e: Exception) {
             status.onNext(FavoritesSyncStatus.Error("Failed to fetch favorites from remote server!"))
-            Timber.e(e, "Could not fetch favorites!")
+            logger.e( "Could not fetch favorites!", e)
             return
         }
 
@@ -125,11 +127,11 @@ class FavoritesSyncHelper(val context: Context) {
             }
         } catch(e: IgnoredException) {
             //Do not display error as this error has already been reported
-            Timber.w(e, "Ignoring exception!")
+            logger.w( "Ignoring exception!", e)
             return
         } catch (e: Exception) {
             status.onNext(FavoritesSyncStatus.Error("Unknown error: ${e.message}"))
-            Timber.e(e, "Sync error!")
+            logger.e( "Sync error!", e)
             return
         } finally {
             //Release wake + wifi locks
@@ -228,7 +230,7 @@ class FavoritesSyncHelper(val context: Context) {
                     break
                 }
             } catch (e: Exception) {
-                Timber.e(e, "Sync network error!")
+                logger.w( "Sync network error!", e)
             }
         }
 
@@ -381,7 +383,7 @@ sealed class FavoritesSyncStatus(val message: String) {
     class Idle : FavoritesSyncStatus("Waiting for sync to start")
     class Initializing : FavoritesSyncStatus("Initializing sync")
     class Processing(message: String, isThrottle: Boolean = false) : FavoritesSyncStatus(if(isThrottle)
-        (message + "\n\nSync is currently throttling (to avoid being banned from ExHentai) and may take a long time to complete.")
+        "$message\n\nSync is currently throttling (to avoid being banned from ExHentai) and may take a long time to complete."
     else
         message)
     class CompleteWithErrors(messages: List<String>) : FavoritesSyncStatus(messages.joinToString("\n"))

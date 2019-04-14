@@ -24,14 +24,15 @@ data class FlatMetadata(
 }
 
 fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<FlatMetadata?> {
-    fun getSingle() = getSearchMetadataForManga(mangaId).asRxSingle().flatMap { meta ->
-        if(meta == null) Single.just(null)
-        else Single.zip(
-                getSearchTagsForManga(mangaId).asRxSingle(),
-                getSearchTitlesForManga(mangaId).asRxSingle()
-        ) { tags, titles ->
+    // We have to use fromCallable because StorIO messes up the thread scheduling if we use their rx functions
+    fun getSingle() = Single.fromCallable {
+        val meta = getSearchMetadataForManga(mangaId).executeAsBlocking()
+        if(meta != null) {
+            val tags = getSearchTagsForManga(mangaId).executeAsBlocking()
+            val titles = getSearchTitlesForManga(mangaId).executeAsBlocking()
+
             FlatMetadata(meta, tags, titles)
-        }
+        } else null
     }
 
     return object : PreparedOperation<FlatMetadata?> {
