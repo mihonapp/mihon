@@ -279,7 +279,7 @@ class MainActivity : BaseActivity() {
     fun getToolbarNavigationIcon(toolbar: Toolbar): View? {
         try {
             //check if contentDescription previously was set
-            val hadContentDescription = TextUtils.isEmpty(toolbar.navigationContentDescription)
+            val hadContentDescription = !TextUtils.isEmpty(toolbar.navigationContentDescription)
             val contentDescription = if (!hadContentDescription) toolbar.navigationContentDescription else "navigationIcon"
             toolbar.navigationContentDescription = contentDescription
 
@@ -292,7 +292,7 @@ class MainActivity : BaseActivity() {
             val navIcon = potentialViews.firstOrNull()
 
             //Clear content description if not previously present
-            if (hadContentDescription)
+            if (!hadContentDescription)
                 toolbar.navigationContentDescription = null
             return navIcon
         } catch(t: Throwable) {
