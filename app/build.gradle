@@ -33,18 +33,6 @@ ext {
     }
 }
 
-// Fix for: https://stackoverflow.com/questions/51185566/application-running-on-avd-for-api-28-but-not-api-24
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == "com.android.support") {
-            if (!requested.name.startsWith("multidex")) {
-                details.useVersion "26.+"
-            }
-        }
-    }
-}
-
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -77,10 +65,16 @@ android {
             applicationIdSuffix ".debug"
             ext.enableCrashlytics = false
         }
+        releaseTest {
+            applicationIdSuffix ".rt"
+            //minifyEnabled true
+            zipAlignEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             //minifyEnabled true
             zipAlignEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -289,6 +283,12 @@ dependencies {
     def typed_time_version = '1.0.2'
     implementation "com.github.kizitonwose.time:time:$typed_time_version"
     implementation "com.github.kizitonwose.time:time-android:$typed_time_version"
+
+    // Debug utils (EH)
+    debugImplementation 'com.ms-square:debugoverlay:1.1.3'
+    releaseTestImplementation 'com.ms-square:debugoverlay:1.1.3'
+    releaseImplementation 'com.ms-square:debugoverlay-no-op:1.1.3'
+    testImplementation 'com.ms-square:debugoverlay-no-op:1.1.3'
 }
 
 buildscript {

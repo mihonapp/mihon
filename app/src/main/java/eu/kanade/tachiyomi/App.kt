@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Environment
 import android.support.multidex.MultiDex
 import com.elvishew.xlog.LogConfiguration
@@ -16,14 +17,15 @@ import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.evernote.android.job.JobManager
 import com.github.ajalt.reprint.core.Reprint
 import com.kizitonwose.time.days
+import com.ms_square.debugoverlay.DebugOverlay
+import com.ms_square.debugoverlay.modules.FpsModule
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.util.LocaleHelper
 import exh.log.CrashlyticsPrinter
+import exh.log.EHDebugModeOverlay
 import exh.log.EHLogLevel
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -32,7 +34,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektScope
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.registry.default.DefaultRegistrar
 import java.io.File
 import kotlin.concurrent.thread
@@ -51,6 +52,9 @@ open class App : Application() {
         setupNotificationChannels()
         GlobalScope.launch { deleteOldMetadataRealm() } // Delete old metadata DB (EH)
         Reprint.initialize(this) //Setup fingerprint (EH)
+        if(BuildConfig.DEBUG || BuildConfig.BUILD_TYPE == "releaseTest") {
+            setupDebugOverlay()
+        }
 
         LocaleHelper.updateConfiguration(this, resources.configuration)
     }
@@ -147,5 +151,16 @@ open class App : Application() {
         )
 
         XLog.d("Application booting...")
+    }
+
+    // EXH
+    private fun setupDebugOverlay() {
+        DebugOverlay.Builder(this)
+                .modules(FpsModule(), EHDebugModeOverlay(this))
+                .bgColor(Color.parseColor("#7F000000"))
+                .notification(false)
+                .allowSystemLayer(false)
+                .build()
+                .install()
     }
 }
