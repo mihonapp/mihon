@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.source.online.all.Hitomi
 import eu.kanade.tachiyomi.source.online.all.NHentai
 import eu.kanade.tachiyomi.source.online.all.PervEden
 import eu.kanade.tachiyomi.source.online.english.HentaiCafe
+import eu.kanade.tachiyomi.source.online.english.Tsumino
 import rx.Observable
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
