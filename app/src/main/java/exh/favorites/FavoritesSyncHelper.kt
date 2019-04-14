@@ -323,6 +323,12 @@ class FavoritesSyncHelper(val context: Context) {
                     EXH_SOURCE_ID)
 
             if(result is GalleryAddEvent.Fail) {
+                if(result is GalleryAddEvent.Fail.NotFound) {
+                    XLog.e("Remote gallery does not exist, skipping: %s!", it.getUrl())
+                    // Skip this gallery, it no longer exists
+                    return@forEachIndexed
+                }
+
                 val errorString = "Failed to add gallery to local database: " + when (result) {
                     is GalleryAddEvent.Fail.Error -> "'${it.title}' ${result.logMessage}"
                     is GalleryAddEvent.Fail.UnknownType -> "'${it.title}' (${result.galleryUrl}) is not a valid gallery!"

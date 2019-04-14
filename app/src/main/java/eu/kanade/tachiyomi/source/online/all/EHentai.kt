@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
+import eu.kanade.tachiyomi.network.asObservableWithAsyncStacktrace
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
@@ -32,6 +33,7 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
 import exh.metadata.metadata.base.RaisedTag
+import java.lang.RuntimeException
 
 class EHentai(override val id: Long,
               val exh: Boolean,
@@ -236,11 +238,21 @@ class EHentai(override val id: Long,
      */
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return client.newCall(mangaDetailsRequest(manga))
-                .asObservableSuccess()
-                .flatMap {
-                    parseToManga(manga, it).andThen(Observable.just(manga.apply {
-                        initialized = true
-                    }))
+                .asObservableWithAsyncStacktrace()
+                .flatMap { (stacktrace, response) ->
+                    if(response.isSuccessful) {
+                        parseToManga(manga, response).andThen(Observable.just(manga.apply {
+                            initialized = true
+                        }))
+                    } else {
+                        response.close()
+
+                        if(response.code() == 404) {
+                            throw GalleryNotFoundException(stacktrace)
+                        } else {
+                            throw Exception("HTTP error ${response.code()}", stacktrace)
+                        }
+                    }
                 }
     }
 
@@ -521,6 +533,8 @@ class EHentai(override val id: Long,
         "ExHentai"
     else
         "E-Hentai"
+
+    class GalleryNotFoundException(cause: Throwable): RuntimeException("Gallery not found!", cause)
 
     companion object {
         private const val QUERY_PREFIX = "?f_apply=Apply+Filter"

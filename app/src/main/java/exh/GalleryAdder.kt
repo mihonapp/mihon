@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import exh.metadata.metadata.EHentaiSearchMetadata
 import okhttp3.MediaType
@@ -186,6 +187,11 @@ class GalleryAdder {
             return GalleryAddEvent.Success(url, manga)
         } catch(e: Exception) {
             XLog.w("Could not add gallery!", e)
+
+            if(e is EHentai.GalleryNotFoundException) {
+                return GalleryAddEvent.Fail.NotFound(url)
+            }
+
             return GalleryAddEvent.Fail.Error(url,
                     ((e.message ?: "Unknown error!") + " (Gallery: $url)").trim())
         }
@@ -223,7 +229,10 @@ sealed class GalleryAddEvent {
             override val logMessage = "Unknown gallery type for gallery: $galleryUrl"
         }
 
-        class Error(override val galleryUrl: String,
+        open class Error(override val galleryUrl: String,
                     override val logMessage: String): Fail()
+
+        class NotFound(galleryUrl: String):
+                Error(galleryUrl, "Gallery does not exist: $galleryUrl")
     }
 }

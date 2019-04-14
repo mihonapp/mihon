@@ -10,7 +10,11 @@ import rx.Producer
 import rx.Subscription
 import java.util.concurrent.atomic.AtomicBoolean
 
-fun Call.asObservable(): Observable<Response> {
+fun Call.asObservableWithAsyncStacktrace(): Observable<Pair<Exception, Response>> {
+    // Record stacktrace at creation time for easier debugging
+    //   asObservable is involved in a lot of crashes so this is worth the performance hit
+    val asyncStackTrace = Exception("Async stacktrace")
+
     return Observable.unsafeCreate { subscriber ->
         // Since Call is a one-shot type, clone it for each new subscriber.
         val call = clone()
@@ -23,12 +27,12 @@ fun Call.asObservable(): Observable<Response> {
                 try {
                     val response = call.execute()
                     if (!subscriber.isUnsubscribed) {
-                        subscriber.onNext(response)
+                        subscriber.onNext(asyncStackTrace to response)
                         subscriber.onCompleted()
                     }
                 } catch (error: Exception) {
                     if (!subscriber.isUnsubscribed) {
-                        subscriber.onError(error)
+                        subscriber.onError(error.withRootCause(asyncStackTrace))
                     }
                 }
             }
@@ -47,19 +51,14 @@ fun Call.asObservable(): Observable<Response> {
     }
 }
 
-fun Call.asObservableSuccess(): Observable<Response> {
-    // Record stacktrace at creation time for easier debugging
-    //   asObservable is involved in a lot of crashes so this is worth the performance hit
-    val asyncStackTrace = Exception("Async stacktrace")
+fun Call.asObservable() = asObservableWithAsyncStacktrace().map { it.second }
 
-    return asObservable().doOnNext { response ->
+fun Call.asObservableSuccess(): Observable<Response> {
+    return asObservableWithAsyncStacktrace().map { (asyncStacktrace, response) ->
         if (!response.isSuccessful) {
             response.close()
-            throw Exception("HTTP error ${response.code()}")
-        }
-    }.onErrorReturn {
-        // Set root cause to async stacktrace and throw again
-        throw it.withRootCause(asyncStackTrace)
+            throw Exception("HTTP error ${response.code()}", asyncStacktrace)
+        } else response
     }
 }
 

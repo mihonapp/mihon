@@ -43,7 +43,6 @@ class BatchAddPresenter: BasePresenter<BatchAddController>() {
                 eventRelay?.call((when (result) {
                     is GalleryAddEvent.Success -> "[OK]"
                     is GalleryAddEvent.Fail -> "[ERROR]"
-                    else -> "[???]"
                 }) + " " + result.logMessage)
             }
 
