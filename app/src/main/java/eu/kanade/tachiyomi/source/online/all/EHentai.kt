@@ -511,7 +511,10 @@ class EHentai(override val id: Long,
             "5 stars"
     )), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if(state > 0) builder.appendQueryParameter("f_srdd", Integer.toString(state + 1))
+            if(state > 0) {
+                builder.appendQueryParameter("f_srdd", Integer.toString(state + 1))
+                builder.appendQueryParameter("f_sr", "on")
+            }
         }
     }
 
