@@ -54,7 +54,7 @@ class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(n
     fun buildInfo() = """
         <font color='green'>===[ ${context.getString(R.string.app_name)} ]===</font><br>
         <b>Build type:</b> ${BuildConfig.BUILD_TYPE}<br>
-        <b>Debug mode:</b> ${BuildConfig.DEBUG}<br>
+        <b>Debug mode:</b> ${BuildConfig.DEBUG.asEnabledString()}<br>
         <b>Version code:</b> ${BuildConfig.VERSION_CODE}<br>
         <b>Commit SHA:</b> ${BuildConfig.COMMIT_SHA}<br>
         <b>Log level:</b> ${EHLogLevel.currentLogLevel.name.toLowerCase()}<br>
