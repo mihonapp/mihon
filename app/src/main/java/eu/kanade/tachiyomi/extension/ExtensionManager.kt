@@ -129,7 +129,7 @@ class ExtensionManager(
         val blacklistEnabled = preferences.eh_enableSourceBlacklist().getOrDefault()
         return filter {
             if(it.isBlacklisted(blacklistEnabled)) {
-                XLog.d("[EXH] Removing blacklisted extension: (name: String, pkgName: %s)!", it.name, it.pkgName)
+                XLog.d("[EXH] Removing blacklisted extension: (name: %s, pkgName: %s)!", it.name, it.pkgName)
                 false
             } else true
         }
