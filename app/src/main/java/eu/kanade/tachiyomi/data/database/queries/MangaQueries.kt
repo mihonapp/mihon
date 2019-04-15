@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.database.tables.CategoryTable
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable
 import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
+import exh.metadata.sql.tables.SearchMetadataTable
 
 interface MangaQueries : DbProvider {
 
@@ -110,4 +111,16 @@ interface MangaQueries : DbProvider {
 
     fun getTotalChapterManga() = db.get().listOfObjects(Manga::class.java)
             .withQuery(RawQuery.builder().query(getTotalChapterMangaQuery()).observesTables(MangaTable.TABLE).build()).prepare();
+
+    fun getMangaWithMetadata() = db.get()
+            .listOfObjects(Manga::class.java)
+            .withQuery(RawQuery.builder()
+                    .query("""
+                        SELECT ${MangaTable.TABLE}.* FROM ${MangaTable.TABLE}
+                        INNER JOIN ${SearchMetadataTable.TABLE}
+                            ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
+                        ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
+                    """.trimIndent())
+                    .build())
+            .prepare()
 }

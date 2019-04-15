@@ -78,6 +78,8 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
                             .args(*sqlQuery.second.toTypedArray())
                             .build())
 
+                    val mangaWithMetadata = db.getMangaWithMetadata().executeAsBlocking()
+
                     ensureActive() // Fail early when cancelled
 
                     val convertedResult = LongArray(queryResult.count)
@@ -97,7 +99,14 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
                     // Flow the mangas to allow cancellation of this filter operation
                     mangas.asFlow().cancellable().filter { item ->
                         if(isLewdSource(item.manga.source)) {
-                            convertedResult.binarySearch(item.manga.id ?: -1) >= 0
+                            val mangaId = item.manga.id ?: -1
+                            if(convertedResult.binarySearch(mangaId) < 0) {
+                                // Check if this manga even has metadata
+                                if(mangaWithMetadata.binarySearchBy(mangaId) { it.id } < 0) {
+                                    // No meta? Filter using title
+                                    item.filter(savedSearchText)
+                                } else false
+                            } else true
                         } else {
                             item.filter(savedSearchText)
                         }
