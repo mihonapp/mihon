@@ -25,7 +25,7 @@ data class FlatMetadata(
 
 fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<FlatMetadata?> {
     // We have to use fromCallable because StorIO messes up the thread scheduling if we use their rx functions
-    fun getSingle() = Single.fromCallable {
+    val single = Single.fromCallable {
         val meta = getSearchMetadataForManga(mangaId).executeAsBlocking()
         if(meta != null) {
             val tags = getSearchTagsForManga(mangaId).executeAsBlocking()
@@ -35,7 +35,11 @@ fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<Fla
         } else null
     }
 
-    return object : PreparedOperation<FlatMetadata?> {
+    return preparedOperationFromSingle(single)
+}
+
+private fun <T> preparedOperationFromSingle(single: Single<T>): PreparedOperation<T> {
+    return object : PreparedOperation<T> {
         /**
          * Creates [rx.Observable] that emits result of Operation.
          *
@@ -44,7 +48,7 @@ fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<Fla
          *
          * @return observable result of operation with only one [rx.Observer.onNext] call.
          */
-        override fun createObservable() = getSingle().toObservable()
+        override fun createObservable() = single.toObservable()
 
         /**
          * Executes operation synchronously in current thread.
@@ -57,7 +61,7 @@ fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<Fla
          *
          * @return nullable result of operation.
          */
-        override fun executeAsBlocking() = getSingle().toBlocking().value()
+        override fun executeAsBlocking() = single.toBlocking().value()
 
         /**
          * Creates [rx.Observable] that emits result of Operation.
@@ -67,7 +71,7 @@ fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<Fla
          *
          * @return observable result of operation with only one [rx.Observer.onNext] call.
          */
-        override fun asRxObservable() = getSingle().toObservable()
+        override fun asRxObservable() = single.toObservable()
 
         /**
          * Creates [rx.Single] that emits result of Operation lazily when somebody subscribes to it.
@@ -76,8 +80,7 @@ fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<Fla
          *
          * @return single result of operation.
          */
-        override fun asRxSingle() = getSingle()
-
+        override fun asRxSingle() = single
     }
 }
 

@@ -1,5 +1,6 @@
 package exh
 
+import com.elvishew.xlog.XLog
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
 import eu.kanade.tachiyomi.data.backup.models.DHistory
@@ -20,6 +21,8 @@ import java.net.URISyntaxException
 object EXHMigrations {
     private val db: DatabaseHelper by injectLazy()
 
+    private val logger = XLog.tag("EXHMigrations")
+
     private const val CURRENT_MIGRATION_VERSION = 1
 
     /**
@@ -31,45 +34,49 @@ object EXHMigrations {
     fun upgrade(preferences: PreferencesHelper): Boolean {
         val context = preferences.context
         val oldVersion = preferences.eh_lastVersionCode().getOrDefault()
-        if (oldVersion < CURRENT_MIGRATION_VERSION) {
-            preferences.eh_lastVersionCode().set(CURRENT_MIGRATION_VERSION)
-
-            if(oldVersion < 1) {
-                db.inTransaction {
-                    // Migrate HentaiCafe source IDs
-                    db.lowLevel().executeSQL(RawQuery.builder()
-                            .query("""
+        try {
+            if (oldVersion < CURRENT_MIGRATION_VERSION) {
+                if (oldVersion < 1) {
+                    db.inTransaction {
+                        // Migrate HentaiCafe source IDs
+                        db.lowLevel().executeSQL(RawQuery.builder()
+                                .query("""
                             UPDATE ${MangaTable.TABLE}
                                 SET ${MangaTable.COL_SOURCE} = $HENTAI_CAFE_SOURCE_ID
                                 WHERE ${MangaTable.COL_SOURCE} = 6908
                         """.trimIndent())
-                            .affectsTables(MangaTable.TABLE)
-                            .build())
+                                .affectsTables(MangaTable.TABLE)
+                                .build())
 
-                    // Migrate nhentai URLs
-                    val nhentaiManga = db.db.get()
-                            .listOfObjects(Manga::class.java)
-                            .withQuery(Query.builder()
-                                    .table(MangaTable.TABLE)
-                                    .where("${MangaTable.COL_SOURCE} = $NHENTAI_SOURCE_ID")
-                                    .build())
-                            .prepare()
-                            .executeAsBlocking()
+                        // Migrate nhentai URLs
+                        val nhentaiManga = db.db.get()
+                                .listOfObjects(Manga::class.java)
+                                .withQuery(Query.builder()
+                                        .table(MangaTable.TABLE)
+                                        .where("${MangaTable.COL_SOURCE} = $NHENTAI_SOURCE_ID")
+                                        .build())
+                                .prepare()
+                                .executeAsBlocking()
 
-                    nhentaiManga.forEach {
-                        it.url = getUrlWithoutDomain(it.url)
+                        nhentaiManga.forEach {
+                            it.url = getUrlWithoutDomain(it.url)
+                        }
+
+                        db.db.put()
+                                .objects(nhentaiManga)
+                                // Extremely slow without the resolver :/
+                                .withPutResolver(MangaUrlPutResolver())
+                                .prepare()
+                                .executeAsBlocking()
                     }
-
-                    db.db.put()
-                            .objects(nhentaiManga)
-                            // Extremely slow without the resolver :/
-                            .withPutResolver(MangaUrlPutResolver())
-                            .prepare()
-                            .executeAsBlocking()
                 }
-            }
 
-            return true
+                preferences.eh_lastVersionCode().set(CURRENT_MIGRATION_VERSION)
+
+                return true
+            }
+        } catch(e: Exception) {
+            logger.e( "Failed to migrate app from $oldVersion -> $CURRENT_MIGRATION_VERSION!", e)
         }
         return false
     }

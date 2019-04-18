@@ -1,26 +1,54 @@
 package eu.kanade.tachiyomi.ui.setting
 
+import android.os.Build
+import android.os.Handler
 import android.support.v7.preference.PreferenceScreen
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.f2prateek.rx.preferences.Preference
+import com.github.salomonbrys.kotson.fromJson
+import com.google.gson.Gson
+import com.kizitonwose.time.Interval
+import com.kizitonwose.time.days
+import com.kizitonwose.time.hours
+import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.toast
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
+import exh.eh.EHentaiUpdateWorker
+import exh.eh.EHentaiUpdaterStats
 import exh.favorites.FavoritesIntroDialog
 import exh.favorites.LocalFavoritesStorage
+import exh.metadata.metadata.EHentaiSearchMetadata
+import exh.metadata.metadata.base.getFlatMetadataForManga
+import exh.metadata.nullIfBlank
 import exh.uconfig.WarnConfigureDialogController
 import exh.ui.login.LoginController
+import exh.util.await
 import exh.util.trans
+import humanize.Humanize
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import uy.kohesive.injekt.injectLazy
+import java.util.*
 
 /**
  * EH Settings fragment
  */
 
 class SettingsEhController : SettingsController() {
+    private val gson: Gson by injectLazy()
+    private val db: DatabaseHelper by injectLazy()
+
     private fun Preference<*>.reconfigure(): Boolean {
         //Listen for change commit
         asObservable()
@@ -179,6 +207,114 @@ class SettingsEhController : SettingsController() {
                                 .negativeText("No")
                                 .cancelable(false)
                                 .show()
+                    }
+                }
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            preferenceCategory {
+                title = "Gallery update checker"
+
+                intListPreference {
+                    key = PreferenceKeys.eh_autoUpdateFrequency
+                    title = "Time between update batches"
+                    entries = arrayOf("Never update galleries", "1 hour", "2 hours", "3 hours", "6 hours", "12 hours", "24 hours", "48 hours")
+                    entryValues = arrayOf("0", "1", "2", "3", "6", "12", "24", "48")
+                    defaultValue = "0"
+
+                    preferences.eh_autoUpdateFrequency().asObservable().subscribeUntilDestroy { newVal ->
+                        summary = if(newVal == 0) {
+                            "${context.getString(R.string.app_name)} will currently never check galleries in your library for updates."
+                        } else {
+                            "${context.getString(R.string.app_name)} checks/updates galleries in batches. " +
+                                    "This means it will wait $newVal hour(s), check ${EHentaiUpdateWorker.UPDATES_PER_ITERATION} galleries," +
+                                    " wait $newVal hour(s), check ${EHentaiUpdateWorker.UPDATES_PER_ITERATION} and so on..."
+                        }
+                    }
+
+                    onChange { newValue ->
+                        val interval = (newValue as String).toInt()
+                        EHentaiUpdateWorker.scheduleBackground(context, interval)
+                        true
+                    }
+                }
+
+                multiSelectListPreference {
+                    key = PreferenceKeys.eh_autoUpdateRestrictions
+                    title = "Auto update restrictions"
+                    entriesRes = arrayOf(R.string.wifi, R.string.charging)
+                    entryValues = arrayOf("wifi", "ac")
+                    summaryRes = R.string.pref_library_update_restriction_summary
+
+                    preferences.eh_autoUpdateFrequency().asObservable()
+                            .subscribeUntilDestroy { isVisible = it > 0 }
+
+                    onChange {
+                        // Post to event looper to allow the preference to be updated.
+                        Handler().post { EHentaiUpdateWorker.scheduleBackground(context) }
+                        true
+                    }
+                }
+
+                preference {
+                    title = "Show updater statistics"
+
+                    onClick {
+                        val progress = MaterialDialog.Builder(context)
+                                .progress(true, 0)
+                                .content("Collecting statistics...")
+                                .cancelable(false)
+                                .show()
+
+                        GlobalScope.launch(Dispatchers.IO) {
+                            val updateInfo = try {
+                                val stats = preferences.eh_autoUpdateStats().getOrDefault().nullIfBlank()?.let {
+                                    gson.fromJson<EHentaiUpdaterStats>(it)
+                                }
+
+                                val statsText = if (stats != null) {
+                                    "The updater last ran ${Humanize.naturalTime(Date(stats.startTime))}, and checked ${stats.updateCount} out of the ${stats.possibleUpdates} galleries that were ready for checking."
+                                } else "The updater has not ran yet."
+
+                                val allMeta = db.getMangaWithMetadata().await().filter {
+                                    it.favorite && (it.source == EH_SOURCE_ID || it.source == EXH_SOURCE_ID)
+                                }.mapNotNull {
+                                    db.getFlatMetadataForManga(it.id!!).await()?.raise<EHentaiSearchMetadata>()
+                                }.toList()
+
+                                fun metaInRelativeDuration(duration: Interval<*>): Int {
+                                    val durationMs = duration.inMilliseconds.longValue
+                                    return allMeta.asSequence().filter {
+                                        System.currentTimeMillis() - it.lastUpdateCheck < durationMs
+                                    }.count()
+                                }
+
+                                """
+                                    $statsText
+
+                                    Galleries that were checked in the last:
+                                    - hour: ${metaInRelativeDuration(1.hours)}
+                                    - 6 hours: ${metaInRelativeDuration(6.hours)}
+                                    - 12 hours: ${metaInRelativeDuration(12.hours)}
+                                    - day: ${metaInRelativeDuration(1.days)}
+                                    - 2 days: ${metaInRelativeDuration(2.days)}
+                                    - week: ${metaInRelativeDuration(7.days)}
+                                    - month: ${metaInRelativeDuration(30.days)}
+                                    - year: ${metaInRelativeDuration(365.days)}
+                                """.trimIndent()
+                            } finally {
+                                progress.dismiss()
+                            }
+
+                            withContext(Dispatchers.Main) {
+                                MaterialDialog.Builder(context)
+                                        .title("Gallery updater statistics")
+                                        .content(updateInfo)
+                                        .positiveText("Ok")
+                                        .show()
+                            }
+                        }
                     }
                 }
             }

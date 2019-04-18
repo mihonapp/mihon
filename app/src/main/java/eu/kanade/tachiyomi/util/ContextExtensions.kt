@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.util
 import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.job.JobScheduler
 import android.content.*
 import android.content.Context.VIBRATOR_SERVICE
 import android.content.pm.PackageManager
@@ -128,11 +129,11 @@ val Context.wifiManager: WifiManager
     get() = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
 // --> EH
-/**
- * Property to get the wifi manager from the context.
- */
 val Context.clipboardManager: ClipboardManager
     get() = applicationContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+val Context.jobScheduler: JobScheduler
+    get() = applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 // <-- EH
 
 /**

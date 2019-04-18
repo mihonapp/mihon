@@ -259,4 +259,10 @@ class PreferencesHelper(val context: Context) {
     fun eh_logLevel() = rxPrefs.getInteger(Keys.eh_logLevel, 0)
 
     fun eh_enableSourceBlacklist() = rxPrefs.getBoolean(Keys.eh_enableSourceBlacklist, true)
+
+    fun eh_autoUpdateFrequency() = rxPrefs.getInteger(Keys.eh_autoUpdateFrequency, 1)
+
+    fun eh_autoUpdateRequirements() = prefs.getStringSet(Keys.eh_autoUpdateRestrictions, emptySet())
+
+    fun eh_autoUpdateStats() = rxPrefs.getString(Keys.eh_autoUpdateStats, "")
 }

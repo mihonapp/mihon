@@ -61,7 +61,8 @@ class GalleryAdder {
 
     fun addGallery(url: String,
                    fav: Boolean = false,
-                   forceSource: Long? = null): GalleryAddEvent {
+                   forceSource: Long? = null,
+                   throttleFunc: () -> Unit = {}): GalleryAddEvent {
         XLog.d("Importing gallery (url: %s, fav: %s, forceSource: %s)...", url, fav, forceSource)
         try {
             val urlObj = Uri.parse(url)
@@ -167,7 +168,6 @@ class GalleryAdder {
             // Fetch and copy details
             val newManga = sourceObj.fetchMangaDetails(manga).toBlocking().first()
             manga.copyFrom(newManga)
-            manga.title = newManga.title //Forcibly copy title as copyFrom does not copy title
             manga.initialized = true
 
             if (fav) manga.favorite = true
@@ -180,13 +180,13 @@ class GalleryAdder {
                     syncChaptersWithSource(db, it, manga, sourceObj)
                 }.toBlocking().first()
             } catch (e: Exception) {
-                XLog.w("Failed to update chapters for gallery: %s!", manga.title)
+                XLog.w("Failed to update chapters for gallery: ${manga.title}!", e)
                 return GalleryAddEvent.Fail.Error(url, "Failed to update chapters for gallery: $url")
             }
 
             return GalleryAddEvent.Success(url, manga)
         } catch(e: Exception) {
-            XLog.w("Could not add gallery!", e)
+            XLog.w("Could not add gallery (url: $url)!", e)
 
             if(e is EHentai.GalleryNotFoundException) {
                 return GalleryAddEvent.Fail.NotFound(url)

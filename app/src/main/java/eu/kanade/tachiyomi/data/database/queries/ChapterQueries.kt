@@ -15,12 +15,14 @@ import java.util.*
 
 interface ChapterQueries : DbProvider {
 
-    fun getChapters(manga: Manga) = db.get()
+    fun getChapters(manga: Manga) = getChaptersByMangaId(manga.id)
+
+    fun getChaptersByMangaId(mangaId: Long?) = db.get()
             .listOfObjects(Chapter::class.java)
             .withQuery(Query.builder()
                     .table(ChapterTable.TABLE)
                     .where("${ChapterTable.COL_MANGA_ID} = ?")
-                    .whereArgs(manga.id)
+                    .whereArgs(mangaId)
                     .build())
             .prepare()
 
@@ -45,6 +47,15 @@ interface ChapterQueries : DbProvider {
 
     fun getChapter(url: String) = db.get()
             .`object`(Chapter::class.java)
+            .withQuery(Query.builder()
+                    .table(ChapterTable.TABLE)
+                    .where("${ChapterTable.COL_URL} = ?")
+                    .whereArgs(url)
+                    .build())
+            .prepare()
+
+    fun getChapters(url: String) = db.get()
+            .listOfObjects(Chapter::class.java)
             .withQuery(Query.builder()
                     .table(ChapterTable.TABLE)
                     .where("${ChapterTable.COL_URL} = ?")

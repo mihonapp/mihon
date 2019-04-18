@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.source.online.all
 
 import android.content.Context
 import android.net.Uri
+import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -12,6 +13,7 @@ import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.util.asJsoup
+import exh.eh.EHentaiUpdateHelper
 import exh.metadata.EX_DATE_FORMAT
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.EHentaiSearchMetadata.Companion.EH_GENRE_NAMESPACE
@@ -33,11 +35,17 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
 import exh.metadata.metadata.base.RaisedTag
+import exh.eh.EHentaiUpdateWorker
+import exh.eh.GalleryEntry
+import kotlinx.coroutines.runBlocking
+import org.jsoup.nodes.TextNode
+import rx.Single
 import java.lang.RuntimeException
 
+// TODO Consider gallery updating when doing tabbed browsing
 class EHentai(override val id: Long,
               val exh: Boolean,
-              val context: Context) : HttpSource(), LewdSource<EHentaiSearchMetadata, Response> {
+              val context: Context) : HttpSource(), LewdSource<EHentaiSearchMetadata, Document> {
     override val metaClass = EHentaiSearchMetadata::class
 
     val schema: String
@@ -58,7 +66,8 @@ class EHentai(override val id: Long,
     override val lang = "all"
     override val supportsLatest = true
 
-    val prefs: PreferencesHelper by injectLazy()
+    private val prefs: PreferencesHelper by injectLazy()
+    private val updateHelper: EHentaiUpdateHelper by injectLazy()
 
     /**
      * Gallery list entry
@@ -115,15 +124,83 @@ class EHentai(override val id: Long,
         MangasPage(it.first.map { it.manga }, it.second)
     }
 
-    override fun fetchChapterList(manga: SManga): Observable<List<SChapter>>
-            = Observable.just(listOf(SChapter.create().apply {
-        url = manga.url
-        name = "Chapter"
-        chapter_number = 1f
-    }))
+    override fun fetchChapterList(manga: SManga)
+            = fetchChapterList(manga) {}
+
+    fun fetchChapterList(manga: SManga, throttleFunc: () -> Unit): Observable<List<SChapter>> {
+        return Single.fromCallable {
+            // Pull all the way to the root gallery
+            // We can't do this with RxJava or we run into stack overflows on shit like this:
+            //   https://exhentai.org/g/1073061/f9345f1c12/
+            var url: String = manga.url
+            var doc: Document? = null
+
+            runBlocking {
+                while (true) {
+                    val gid = EHentaiSearchMetadata.galleryId(url).toInt()
+                    val cachedParent = updateHelper.parentLookupTable.get(
+                            gid
+                    )
+                    if(cachedParent == null) {
+                        throttleFunc()
+
+                        val resp = client.newCall(exGet(baseUrl + url)).execute()
+                        if (!resp.isSuccessful) error("HTTP error (${resp.code()})!")
+                        doc = resp.asJsoup()
+
+                        val parentLink = doc!!.select("#gdd .gdt1").find { el ->
+                            el.text().toLowerCase() == "parent:"
+                        }!!.nextElementSibling().selectFirst("a")?.attr("href")
+
+                        if (parentLink != null) {
+                            updateHelper.parentLookupTable.put(
+                                    gid,
+                                    GalleryEntry(
+                                            EHentaiSearchMetadata.galleryId(parentLink),
+                                            EHentaiSearchMetadata.galleryToken(parentLink)
+                                    )
+                            )
+                            url = EHentaiSearchMetadata.normalizeUrl(parentLink)
+                        } else break
+                    } else {
+                        XLog.d("Parent cache hit: %s!", gid)
+                        url = EHentaiSearchMetadata.idAndTokenToUrl(
+                                cachedParent.gId,
+                                cachedParent.gToken
+                        )
+                    }
+                }
+            }
+
+            doc!!
+        }.map { d ->
+            val newDisplay = d.select("#gnd a")
+            // Build chapter for root gallery
+            val self = SChapter.create().apply {
+                url = EHentaiSearchMetadata.normalizeUrl(d.location())
+                name = "v1: " + d.selectFirst("#gn").text()
+                chapter_number = 1f
+                date_upload = EX_DATE_FORMAT.parse(d.select("#gdd .gdt1").find { el ->
+                    el.text().toLowerCase() == "posted:"
+                }!!.nextElementSibling().text()).time
+            }
+            // Build and append the rest of the galleries
+            listOf(self) + newDisplay.mapIndexed { index, newGallery ->
+                val link = newGallery.attr("href")
+                val name = newGallery.text()
+                val posted = (newGallery.nextSibling() as TextNode).text().removePrefix(", added ")
+                SChapter.create().apply {
+                    this.url = EHentaiSearchMetadata.normalizeUrl(link)
+                    this.name = "v${index + 2}: $name"
+                    this.chapter_number = index + 2f
+                    this.date_upload = EX_DATE_FORMAT.parse(posted).time
+                }
+            }
+        }.toObservable()
+    }
 
     override fun fetchPageList(chapter: SChapter)
-            = fetchChapterPage(chapter, "$baseUrl/${chapter.url}").map {
+            = fetchChapterPage(chapter, baseUrl + chapter.url).map {
         it.mapIndexed { i, s ->
             Page(i, s)
         }
@@ -241,9 +318,20 @@ class EHentai(override val id: Long,
                 .asObservableWithAsyncStacktrace()
                 .flatMap { (stacktrace, response) ->
                     if(response.isSuccessful) {
-                        parseToManga(manga, response).andThen(Observable.just(manga.apply {
-                            initialized = true
-                        }))
+                        // Pull to most recent
+                        val doc = response.asJsoup()
+                        val newerGallery = doc.select("#gnd a").lastOrNull()
+                        val pre = if(newerGallery != null) {
+                            manga.url = EHentaiSearchMetadata.normalizeUrl(newerGallery.attr("href"))
+                            client.newCall(mangaDetailsRequest(manga))
+                                    .asObservableSuccess().map { it.asJsoup() }
+                        } else Observable.just(doc)
+
+                        pre.flatMap {
+                            parseToManga(manga, it).andThen(Observable.just(manga.apply {
+                                initialized = true
+                            }))
+                        }
                     } else {
                         response.close()
 
@@ -261,10 +349,10 @@ class EHentai(override val id: Long,
      */
     override fun mangaDetailsParse(response: Response) = throw UnsupportedOperationException()
 
-    override fun parseIntoMetadata(metadata: EHentaiSearchMetadata, input: Response) {
+    override fun parseIntoMetadata(metadata: EHentaiSearchMetadata, input: Document) {
         with(metadata) {
-            with(input.asJsoup()) {
-                val url = input.request().url().encodedPath()
+            with(input) {
+                val url = input.location()
                 gId = EHentaiSearchMetadata.galleryId(url)
                 gToken = EHentaiSearchMetadata.galleryToken(url)
 
@@ -296,6 +384,8 @@ class EHentai(override val id: Long,
                                     .toLowerCase()) {
                                 "posted" -> datePosted = EX_DATE_FORMAT.parse(right).time
                                 // Example gallery with parent: https://e-hentai.org/g/1390451/7f181c2426/
+                                // Example JP gallery: https://exhentai.org/g/1375385/03519d541b/
+                                // Parent is older variation of the gallery
                                 "parent" -> parent = if (!right.equals("None", true)) {
                                     rightElement.child(0).attr("href")
                                 } else null
@@ -310,6 +400,12 @@ class EHentai(override val id: Long,
                             }
                         }
                     }
+                }
+
+                lastUpdateCheck = System.currentTimeMillis()
+                if(datePosted != null
+                        && lastUpdateCheck - datePosted!! > EHentaiUpdateWorker.GALLERY_AGE_TIME) {
+                    aged = true
                 }
 
                 //Parse ratings

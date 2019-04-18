@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.util.powerManager
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.wifiManager
 import exh.*
+import exh.eh.EHentaiUpdateWorker
 import exh.util.ignore
 import exh.util.trans
 import okhttp3.FormBody
@@ -112,6 +113,9 @@ class FavoritesSyncHelper(val context: Context) {
                         "teh:ExhFavoritesSyncWifi")
             }
 
+            // Do not update galleries while syncing favorites
+            EHentaiUpdateWorker.cancelBackground(context)
+
             storage.getRealm().use { realm ->
                 realm.trans {
                     db.inTransaction {
@@ -161,6 +165,9 @@ class FavoritesSyncHelper(val context: Context) {
                 wifiLock?.release()
                 wifiLock = null
             }
+
+            // Update galleries again!
+            EHentaiUpdateWorker.scheduleBackground(context)
         }
 
         if(errorList.isEmpty())
@@ -338,7 +345,8 @@ class FavoritesSyncHelper(val context: Context) {
             //Import using gallery adder
             val result = galleryAdder.addGallery("${exh.baseUrl}${it.getUrl()}",
                     true,
-                    EXH_SOURCE_ID)
+                    EXH_SOURCE_ID,
+                    ::throttle)
 
             if(result is GalleryAddEvent.Fail) {
                 if(result is GalleryAddEvent.Fail.NotFound) {
@@ -396,7 +404,7 @@ class FavoritesSyncHelper(val context: Context) {
     class IgnoredException : RuntimeException()
 
     companion object {
-        private const val THROTTLE_MAX = 4500
+        private const val THROTTLE_MAX = 5500
         private const val THROTTLE_INC = 10
         private const val THROTTLE_WARN = 1000
     }

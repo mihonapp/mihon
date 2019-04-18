@@ -57,6 +57,9 @@ object Migrations {
                     }
                 }
             }
+
+            // ===========[ ALL MIGRATIONS ABOVE HERE HAVE BEEN ALREADY REWRITTEN ]===========
+
             return true
         }
         return false

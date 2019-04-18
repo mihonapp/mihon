@@ -36,6 +36,9 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
     var ratingCount: Int? = null
     var averageRating: Double? = null
 
+    var aged: Boolean = false
+    var lastUpdateCheck: Long = 0
+
     override fun copyTo(manga: SManga) {
         gId?.let { gId ->
             gToken?.let { gToken ->

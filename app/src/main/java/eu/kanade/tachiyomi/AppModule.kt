@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
+import exh.eh.EHentaiUpdateHelper
 import rx.Observable
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.api.*
@@ -40,6 +41,8 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { TrackManager(app) }
 
         addSingletonFactory { Gson() }
+
+        addSingletonFactory { EHentaiUpdateHelper(app) }
 
         // Asynchronously init expensive components for a faster cold start
 

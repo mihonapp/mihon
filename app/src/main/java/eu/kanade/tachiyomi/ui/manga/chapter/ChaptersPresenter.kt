@@ -15,6 +15,9 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
+import exh.eh.EHentaiUpdateHelper
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -22,6 +25,7 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 import java.util.Date
 
 /**
@@ -66,6 +70,14 @@ class ChaptersPresenter(
      */
     private var observeDownloadsSubscription: Subscription? = null
 
+    // EXH -->
+    private val updateHelper: EHentaiUpdateHelper by injectLazy()
+
+    val redirectUserRelay = BehaviorRelay.create<EXHRedirect>()
+
+    data class EXHRedirect(val manga: Manga, val update: Boolean)
+    // EXH <--
+
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
@@ -100,6 +112,25 @@ class ChaptersPresenter(
                     lastUpdateRelay.call(Date(chapters.maxBy { it.date_upload }?.date_upload
                             ?: 0))
 
+                    // EXH -->
+                    if(chapters.isNotEmpty()
+                            && (source.id == EXH_SOURCE_ID || source.id == EH_SOURCE_ID)) {
+                        // Check for gallery in library and accept manga with lowest id
+                        // Find chapters sharing same root
+                        add(updateHelper.findAcceptedRootAndDiscardOthers(chapters)
+                                .subscribeOn(Schedulers.io())
+                                .subscribe { (acceptedChain, _) ->
+                                    // Redirect if we are not the accepted root
+                                    if(manga.id != acceptedChain.manga.id) {
+                                        // Update if any of our chapters are not in accepted manga's chapters
+                                        val ourChapterUrls = chapters.map { it.url }.toSet()
+                                        val acceptedChapterUrls = acceptedChain.chapters.map { it.url }.toSet()
+                                        val update = (ourChapterUrls - acceptedChapterUrls).isNotEmpty()
+                                        redirectUserRelay.call(EXHRedirect(acceptedChain.manga, update))
+                                    }
+                                })
+                    }
+                    // EXH <--
                 }
                 .subscribe { chaptersRelay.call(it) })
     }

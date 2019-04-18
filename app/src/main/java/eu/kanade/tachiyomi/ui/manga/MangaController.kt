@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.ui.base.controller.RxController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersController
+import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoController
 import eu.kanade.tachiyomi.ui.manga.track.TrackController
 import eu.kanade.tachiyomi.util.toast
@@ -48,6 +49,18 @@ class MangaController : RxController, TabbedController {
         }
     }
 
+    // EXH -->
+    constructor(redirect: ChaptersPresenter.EXHRedirect) : super(Bundle().apply {
+        putLong(MANGA_EXTRA, redirect.manga.id!!)
+        putBoolean(UPDATE_EXTRA, redirect.update)
+    }) {
+        this.manga = redirect.manga
+        if (manga != null) {
+            source = Injekt.get<SourceManager>().getOrStub(redirect.manga.source)
+        }
+    }
+    // EXH <--
+
     constructor(mangaId: Long) : this(
             Injekt.get<DatabaseHelper>().getManga(mangaId).executeAsBlocking())
 
@@ -63,6 +76,8 @@ class MangaController : RxController, TabbedController {
     private var adapter: MangaDetailAdapter? = null
 
     val fromCatalogue = args.getBoolean(FROM_CATALOGUE_EXTRA, false)
+
+    val update = args.getBoolean(UPDATE_EXTRA, false)
 
     val lastUpdateRelay: BehaviorRelay<Date> = BehaviorRelay.create()
 
@@ -180,6 +195,9 @@ class MangaController : RxController, TabbedController {
 
     companion object {
 
+        // EXH -->
+        const val UPDATE_EXTRA = "update"
+        // EXH <--
         const val FROM_CATALOGUE_EXTRA = "from_catalogue"
         const val MANGA_EXTRA = "manga"
 

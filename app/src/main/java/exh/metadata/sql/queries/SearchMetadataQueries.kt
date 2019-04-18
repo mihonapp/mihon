@@ -25,6 +25,15 @@ interface SearchMetadataQueries : DbProvider {
                     .build())
             .prepare()
 
+    fun getSearchMetadataByIndexedExtra(extra: String) = db.get()
+            .listOfObjects(SearchMetadata::class.java)
+            .withQuery(Query.builder()
+                    .table(SearchMetadataTable.TABLE)
+                    .where("${SearchMetadataTable.COL_INDEXED_EXTRA} = ?")
+                    .whereArgs(extra)
+                    .build())
+            .prepare()
+
     fun insertSearchMetadata(metadata: SearchMetadata) = db.put().`object`(metadata).prepare()
 
     fun deleteSearchMetadata(metadata: SearchMetadata) = db.delete().`object`(metadata).prepare()

@@ -289,6 +289,9 @@ dependencies {
     releaseTestImplementation 'com.ms-square:debugoverlay:1.1.3'
     releaseImplementation 'com.ms-square:debugoverlay-no-op:1.1.3'
     testImplementation 'com.ms-square:debugoverlay-no-op:1.1.3'
+
+    // Humanize (EH)
+    implementation 'com.github.mfornos:humanize-slim:1.2.2'
 }
 
 buildscript {

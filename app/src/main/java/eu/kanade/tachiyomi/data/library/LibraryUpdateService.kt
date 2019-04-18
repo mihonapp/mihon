@@ -29,6 +29,8 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.*
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers
@@ -283,24 +285,29 @@ class LibraryUpdateService(
                 .doOnNext { showProgressNotification(it, count.andIncrement, mangaToUpdate.size) }
                 // Update the chapters of the manga.
                 .concatMap { manga ->
-                    updateManga(manga)
-                            // If there's any error, return empty update and continue.
-                            .onErrorReturn {
-                                failedUpdates.add(manga)
-                                Pair(emptyList(), emptyList())
-                            }
-                            // Filter out mangas without new chapters (or failed).
-                            .filter { pair -> pair.first.isNotEmpty() }
-                            .doOnNext {
-                                if (downloadNew && (categoriesToDownload.isEmpty() ||
-                                        manga.category in categoriesToDownload)) {
-
-                                    downloadChapters(manga, it.first)
-                                    hasDownloads = true
+                    if(manga.source == EXH_SOURCE_ID || manga.source == EH_SOURCE_ID) {
+                        // Ignore EXH manga, updating chapters for every manga will get you banned
+                        Observable.just(manga)
+                    } else {
+                        updateManga(manga)
+                                // If there's any error, return empty update and continue.
+                                .onErrorReturn {
+                                    failedUpdates.add(manga)
+                                    Pair(emptyList(), emptyList())
                                 }
-                            }
-                            // Convert to the manga that contains new chapters.
-                            .map { manga }
+                                // Filter out mangas without new chapters (or failed).
+                                .filter { pair -> pair.first.isNotEmpty() }
+                                .doOnNext {
+                                    if (downloadNew && (categoriesToDownload.isEmpty() ||
+                                                    manga.category in categoriesToDownload)) {
+
+                                        downloadChapters(manga, it.first)
+                                        hasDownloads = true
+                                    }
+                                }
+                                // Convert to the manga that contains new chapters.
+                                .map { manga }
+                    }
                 }
                 // Add manga with new chapters to the list.
                 .doOnNext { manga ->

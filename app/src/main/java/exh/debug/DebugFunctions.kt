@@ -1,5 +1,7 @@
 package exh.debug
 
+import android.app.Application
+import android.os.Build
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
@@ -7,9 +9,11 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.eh.EHentaiUpdateWorker
 import uy.kohesive.injekt.injectLazy
 
 object DebugFunctions {
+    val app: Application by injectLazy()
     val db: DatabaseHelper by injectLazy()
     val prefs: PreferencesHelper by injectLazy()
     val sourceManager: SourceManager by injectLazy()
@@ -47,6 +51,14 @@ object DebugFunctions {
     fun convertAllEhentaiGalleriesToExhentai() = convertSources(EH_SOURCE_ID, EXH_SOURCE_ID)
 
     fun convertAllExhentaiGalleriesToEhentai() = convertSources(EXH_SOURCE_ID, EH_SOURCE_ID)
+
+    fun testLaunchBackgroundUpdater() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            EHentaiUpdateWorker.launchBackgroundTest(app)
+        } else {
+            error("OS/SDK version too old!")
+        }
+    }
 
     private fun convertSources(from: Long, to: Long) {
         db.lowLevel().executeSQL(RawQuery.builder()

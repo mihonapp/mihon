@@ -22,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.bumptech.glide.signature.ObjectKey
 import com.elvishew.xlog.XLog
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
@@ -74,7 +75,9 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      */
     private val preferences: PreferencesHelper by injectLazy()
 
-    private val sourceManager: SourceManager by injectLazy()
+    // EXH -->
+    private var lastMangaThumbnail: String? = null
+    // EXH <--
 
     init {
         setHasOptionsMenu(true)
@@ -181,6 +184,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
             // Update view.
             setMangaInfo(manga, source)
 
+            if((parentController as MangaController).update) fetchMangaFromSource()
         } else {
             // Initialize manga.
             fetchMangaFromSource()
@@ -247,10 +251,17 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         // Set the favorite drawable to the correct one.
         setFavoriteDrawable(manga.favorite)
 
-        // Set cover if it wasn't already.
-        if (manga_cover.drawable == null && !manga.thumbnail_url.isNullOrEmpty()) {
+        // Set cover if it matches
+        val tagMatches = lastMangaThumbnail == manga.thumbnail_url
+        val coverLoaded = manga_cover.drawable != null
+        if ((!tagMatches || !coverLoaded) && !manga.thumbnail_url.isNullOrEmpty()) {
+            lastMangaThumbnail = manga.thumbnail_url
+
+            val coverSig = ObjectKey(manga.thumbnail_url ?: "")
+
             GlideApp.with(view.context)
                     .load(manga)
+                    .signature(coverSig)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .centerCrop()
                     .into(manga_cover)
@@ -258,6 +269,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
             if (backdrop != null) {
                 GlideApp.with(view.context)
                         .load(manga)
+                        .signature(coverSig)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .centerCrop()
                         .into(backdrop)

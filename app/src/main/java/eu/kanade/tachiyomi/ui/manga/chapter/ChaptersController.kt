@@ -11,6 +11,7 @@ import android.support.v7.view.ActionMode
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import com.bluelinelabs.conductor.RouterTransaction
 import com.elvishew.xlog.XLog
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
@@ -28,6 +29,7 @@ import eu.kanade.tachiyomi.util.getCoordinates
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import kotlinx.android.synthetic.main.chapters_controller.*
+import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 
 class ChaptersController : NucleusController<ChaptersPresenter>(),
@@ -104,6 +106,14 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
                 view.context.toast(R.string.no_next_chapter)
             }
         }
+
+        presenter.redirectUserRelay
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeUntilDestroy { redirect ->
+                    XLog.d("Redirecting to updated manga (manga.id: %s, manga.title: %s, update: %s)!", redirect.manga.id, redirect.manga.title, redirect.update)
+                    // Replace self
+                    parentController?.router?.replaceTopController(RouterTransaction.with(MangaController(redirect)))
+                }
     }
 
     override fun onDestroyView(view: View) {
@@ -187,6 +197,9 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         // We use presenter chapters instead because they are always unfiltered
         if (presenter.chapters.isEmpty())
             initialFetchChapters()
+
+        if ((parentController as MangaController).update)
+            fetchChaptersFromSource()
 
         val adapter = adapter ?: return
         adapter.updateDataSet(chapters)

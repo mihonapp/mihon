@@ -122,6 +122,10 @@
             android:exported="false" />
 
         <!-- EH -->
+        <service
+            android:name="exh.eh.EHentaiUpdateWorker"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true" />
         <activity
             android:name="exh.ui.intercept.InterceptActivity"
             android:label="TachiyomiEH"
@@ -218,7 +222,7 @@
             android:name="exh.ui.captcha.SolveCaptchaActivity"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.EHActivity" />
-        <activity android:name="exh.ui.webview.WebViewActivity"></activity>
+        <activity android:name="exh.ui.webview.WebViewActivity" />
     </application>
 
 </manifest>

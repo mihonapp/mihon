@@ -23,6 +23,11 @@ interface SManga : Serializable {
     var initialized: Boolean
 
     fun copyFrom(other: SManga) {
+        // EXH -->
+        url = other.url // Allow dynamically mutating one manga into another
+        title = other.title
+        // EXH <--
+
         if (other.author != null)
             author = other.author
 
