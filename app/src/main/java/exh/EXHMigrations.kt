@@ -1,5 +1,6 @@
 package exh
 
+import android.content.Context
 import com.elvishew.xlog.XLog
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
@@ -15,6 +16,7 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import exh.source.BlacklistedSources
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
+import java.io.File
 import java.net.URI
 import java.net.URISyntaxException
 
@@ -23,7 +25,7 @@ object EXHMigrations {
 
     private val logger = XLog.tag("EXHMigrations")
 
-    private const val CURRENT_MIGRATION_VERSION = 1
+    private const val CURRENT_MIGRATION_VERSION = 2
 
     /**
      * Performs a migration when the application is updated.
@@ -71,6 +73,11 @@ object EXHMigrations {
                     }
                 }
 
+                // Backup database in next release
+                if (oldVersion < 2) {
+                    backupDatabase(context, oldVersion)
+                }
+
                 preferences.eh_lastVersionCode().set(CURRENT_MIGRATION_VERSION)
 
                 return true
@@ -115,6 +122,18 @@ object EXHMigrations {
         }
 
         return Observable.just(backupEntry)
+    }
+
+    private fun backupDatabase(context: Context, oldMigrationVersion: Int) {
+        val backupLocation = File(File(context.filesDir, "exh_db_bck"), "$oldMigrationVersion.bck.db")
+        if(backupLocation.exists()) return // Do not backup same version twice
+
+        val dbLocation = context.getDatabasePath(db.lowLevel().sqliteOpenHelper().databaseName)
+        try {
+            dbLocation.copyTo(backupLocation, overwrite = true)
+        } catch(t: Throwable) {
+            XLog.w("Failed to backup database!")
+        }
     }
 
     private fun getUrlWithoutDomain(orig: String): String {
