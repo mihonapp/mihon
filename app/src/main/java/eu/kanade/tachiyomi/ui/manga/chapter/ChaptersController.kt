@@ -198,7 +198,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         if (presenter.chapters.isEmpty())
             initialFetchChapters()
 
-        if ((parentController as MangaController).update)
+        if ((parentController as MangaController).update || (chapters.size == 1 && chapters.first().date_upload == 0L))
             fetchChaptersFromSource()
 
         val adapter = adapter ?: return
