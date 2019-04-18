@@ -78,7 +78,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
      * to end the job entirely.  Regardless of the value returned, your job must stop executing.
      */
     override fun onStopJob(params: JobParameters?): Boolean {
-        runBlocking { coroutineContext[Job]?.cancelAndJoin() }
+        runBlocking { this@EHentaiUpdateWorker.coroutineContext[Job]?.cancelAndJoin() }
         return false
     }
 
@@ -299,7 +299,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                     .setRequiredNetworkType(
                             if(requireUnmetered) JobInfo.NETWORK_TYPE_UNMETERED
                             else JobInfo.NETWORK_TYPE_ANY)
-                    .setRequiresDeviceIdle(true)
+//                    .setRequiresDeviceIdle(true) Job never seems to run with this
                     .build()
         }
 
