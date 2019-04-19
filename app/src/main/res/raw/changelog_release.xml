@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v8.2.0-EH" changeDate="">
+        <changelogtext>Many crash fixes</changelogtext>
+        <changelogtext>Sort saved searches alphabetically</changelogtext>
+        <changelogtext>Fix favorites sync not properly syncing EHentai (not ExHentai) galleries</changelogtext>
+        <changelogtext>Fix images being saved to wrong folder (thanks Scrxtchy!)</changelogtext>
+        <changelogtext>Many optimizations to library search (it should no longer freeze the app)</changelogtext>
+        <changelogtext>Add ability to remove transition page between chapters</changelogtext>
+        <changelogtext>Fix hitomi.la</changelogtext>
+        <changelogtext>Fix handling of old backups containing hentai.cafe or nhentai galleries</changelogtext>
+        <changelogtext>Add support for importing backups containing galleries from sources in Tachiyomi extensions</changelogtext>
+        <changelogtext>Hide extensions/sources that conflict with TachiyomiEH</changelogtext>
+        <changelogtext>Fix backup/favorites sync randomly hanging</changelogtext>
+        <changelogtext>Fix gallery import/favorites sync not adding search metadata</changelogtext>
+        <changelogtext>Allow saving searches in sources with no filters</changelogtext>
+        <changelogtext>Fix favorites sync failing on removed galleries</changelogtext>
+        <changelogtext>Favorites sync will now scan invalid galleries before starting</changelogtext>
+        <changelogtext>Allow searching by title in the library for galleries with missing metadata</changelogtext>
+        <changelogtext>Fix EHentai/ExHentai rating search</changelogtext>
+        <changelogtext>Add ability to aggressively load pages</changelogtext>
+        <changelogtext>Add MangaDex login</changelogtext>
+        <changelogtext>Add option to toggle between low/high quality hitomi.la thumbnails</changelogtext>
+        <changelogtext>TachiyomiEH will now automatically detect captchas in all sources</changelogtext>
+        <changelogtext>Add ability to auto-check EHentai/ExHentai galleries for updates</changelogtext>
+        <changelogtext>Add support for EHentai/ExHentai gallery versioning</changelogtext>
+        <changelogtext>Fix preserve reading position on read manga</changelogtext>
+        <changelogtext>Retrying an EHentai/ExHentai page will now grab a different Hentai@Home URL</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v0.8.4" changeDate="">
         <changelogtext>All the internal sources have been removed. They now need to be
             installed as an extension.</changelogtext>
