@@ -28,6 +28,8 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.getCoordinates
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
 import kotlinx.android.synthetic.main.chapters_controller.*
 import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
@@ -198,7 +200,10 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         if (presenter.chapters.isEmpty())
             initialFetchChapters()
 
-        if ((parentController as MangaController).update || (chapters.size == 1 && chapters.first().date_upload == 0L))
+        if ((parentController as MangaController).update
+                // Auto-update old format galleries
+                || ((presenter.manga.source == EH_SOURCE_ID || presenter.manga.source == EXH_SOURCE_ID)
+                        && chapters.size == 1 && chapters.first().date_upload == 0L))
             fetchChaptersFromSource()
 
         val adapter = adapter ?: return
