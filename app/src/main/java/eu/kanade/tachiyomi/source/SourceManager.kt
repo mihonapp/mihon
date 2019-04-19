@@ -24,7 +24,6 @@ import exh.metadata.metadata.PervEdenLang
 import exh.source.BlacklistedSources
 import exh.source.DelegatedHttpSource
 import exh.source.EnhancedHttpSource
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import kotlin.reflect.KClass
 

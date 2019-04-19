@@ -7,11 +7,11 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-open class HeadersInjectingWebViewClient(activity: SolveCaptchaActivity,
-                                         source: CaptchaCompletionVerifier,
+open class HeadersInjectingWebViewClient(activity: BrowserActionActivity,
+                                         verifyComplete: (String) -> Boolean,
                                          injectScript: String?,
                                          private val headers: Map<String, String>)
-    : BasicWebViewClient(activity, source, injectScript) {
+    : BasicWebViewClient(activity, verifyComplete, injectScript) {
 
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
         // Temp disabled as it's unreliable

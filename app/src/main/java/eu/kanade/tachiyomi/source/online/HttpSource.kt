@@ -1,15 +1,14 @@
 package eu.kanade.tachiyomi.source.online
 
 import android.app.Application
-import com.elvishew.xlog.XLog
-import eu.kanade.tachiyomi.network.GET
-import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.network.asObservableSuccess
-import eu.kanade.tachiyomi.network.newCallWithProgress
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.network.*
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.*
-import eu.kanade.tachiyomi.util.asJsoup
-import exh.ui.captcha.SolveCaptchaActivity
+import exh.source.DelegatedHttpSource
+import exh.ui.captcha.BrowserActionActivity
+import exh.util.interceptAsHtml
 import okhttp3.*
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -28,7 +27,19 @@ abstract class HttpSource : CatalogueSource {
     /**
      * Network service.
      */
-    protected val network: NetworkHelper by injectLazy()
+    protected val network: NetworkHelper by lazy {
+        val original = Injekt.get<NetworkHelper>()
+        object : NetworkHelper(Injekt.get<Application>()) {
+            override val client: OkHttpClient?
+                get() = delegate?.networkHttpClient ?: original.client
+
+            override val cloudflareClient: OkHttpClient?
+                get() = delegate?.networkCloudflareClient ?: original.cloudflareClient
+
+            override val cookieManager: AndroidCookieJar
+                get() = original.cookieManager
+        }
+    }
 
 //    /**
 //     * Preferences that a source may need.
@@ -68,36 +79,21 @@ abstract class HttpSource : CatalogueSource {
      * Default network client for doing requests.
      */
     open val client: OkHttpClient
-        get() = network.client.newBuilder().addInterceptor { chain ->
+        get() = delegate?.baseHttpClient ?: network.client.newBuilder().addInterceptor { chain ->
+            // Automatic captcha detection
             val response = chain.proceed(chain.request())
-            val body = response.body()
-            if(!response.isSuccessful && body != null) {
-                if(body.contentType()?.type() == "text"
-                        && body.contentType()?.subtype() == "html") {
-                    val bodyString = body.string()
-                    val rebuiltResponse = response.newBuilder()
-                                .body(ResponseBody.create(body.contentType(), bodyString))
-                                .build()
-                    try {
-                        // Search for captcha
-                        val parsed = response.asJsoup(html = bodyString)
-                        if(parsed.getElementsByClass("g-recaptcha").isNotEmpty()) {
-                            // Found it, allow the user to solve this thing
-                            SolveCaptchaActivity.launchUniversal(
-                                    Injekt.get<Application>(),
-                                    this,
-                                    chain.request().url().toString()
-                            )
-                        }
-                    } catch(t: Throwable) {
-                        // Ignore all errors
-                        XLog.w("Captcha detection error!", t)
+            if(!response.isSuccessful) {
+                response.interceptAsHtml { doc ->
+                    if (doc.getElementsByClass("g-recaptcha").isNotEmpty()) {
+                        // Found it, allow the user to solve this thing
+                        BrowserActionActivity.launchUniversal(
+                                Injekt.get<Application>(),
+                                this,
+                                chain.request().url().toString()
+                        )
                     }
-
-                    return@addInterceptor rebuiltResponse
                 }
-            }
-            response
+            } else response
         }.build()
 
     /**
@@ -397,4 +393,14 @@ abstract class HttpSource : CatalogueSource {
      * Returns the list of filters for the source.
      */
     override fun getFilterList() = FilterList()
+
+    // EXH -->
+    private var delegate: DelegatedHttpSource? = null
+        get() = if(Injekt.get<PreferencesHelper>().eh_delegateSources().getOrDefault())
+            field
+        else null
+    fun bindDelegate(delegate: DelegatedHttpSource) {
+        this.delegate = delegate
+    }
+    // EXH <--
 }

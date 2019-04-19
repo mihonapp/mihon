@@ -96,21 +96,21 @@ class EnhancedHttpSource(val originalSource: HttpSource,
     /**
      * Base url of the website without the trailing slash, like: http://mysite.com
      */
-    override val baseUrl = source().baseUrl
+    override val baseUrl get() = source().baseUrl
 
     /**
      * Whether the source has support for latest updates.
      */
-    override val supportsLatest = source().supportsLatest
+    override val supportsLatest get() = source().supportsLatest
     /**
      * Name of the source.
      */
-    override val name = source().name
+    override val name get() = source().name
 
     /**
      * An ISO 639-1 compliant language code (two letters in lower case).
      */
-    override val lang = source().lang
+    override val lang get() = source().lang
 
     // ===> OPTIONAL FIELDS
 
@@ -119,11 +119,11 @@ class EnhancedHttpSource(val originalSource: HttpSource,
      * of the MD5 of the string: sourcename/language/versionId
      * Note the generated id sets the sign bit to 0.
      */
-    override val id = source().id
+    override val id get() = source().id
     /**
      * Default network client for doing requests.
      */
-    override val client = source().client
+    override val client get() = source().client
 
     /**
      * Visible name of the source.

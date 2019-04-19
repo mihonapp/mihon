@@ -16,8 +16,8 @@ import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.toast
 import exh.TSUMINO_SOURCE_ID
-import exh.ui.captcha.CaptchaCompletionVerifier
-import exh.ui.captcha.SolveCaptchaActivity
+import exh.ui.captcha.ActionCompletionVerifier
+import exh.ui.captcha.BrowserActionActivity
 import exh.metadata.metadata.TsuminoSearchMetadata
 import exh.metadata.metadata.TsuminoSearchMetadata.Companion.BASE_URL
 import exh.metadata.metadata.TsuminoSearchMetadata.Companion.TAG_TYPE_DEFAULT
@@ -33,7 +33,7 @@ import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<TsuminoSearchMetadata, Document>, CaptchaCompletionVerifier {
+class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<TsuminoSearchMetadata, Document>, ActionCompletionVerifier {
     override val metaClass = TsuminoSearchMetadata::class
 
     private val preferences: PreferencesHelper by injectLazy()
@@ -343,7 +343,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<Tsum
                 else
                     emptyMap()
 
-                SolveCaptchaActivity.launch(context,
+                BrowserActionActivity.launchCaptcha(context,
                         this,
                         cookiesMap,
                         CAPTCHA_SCRIPT,
@@ -356,7 +356,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<Tsum
         }
     }
 
-    override fun verifyNoCaptcha(url: String): Boolean {
+    override fun verifyComplete(url: String): Boolean {
         return Uri.parse(url).pathSegments.getOrNull(1) == "View"
     }
 

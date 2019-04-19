@@ -6,17 +6,17 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import eu.kanade.tachiyomi.util.asJsoup
-import exh.ui.captcha.SolveCaptchaActivity.Companion.CROSS_WINDOW_SCRIPT_INNER
+import exh.ui.captcha.BrowserActionActivity.Companion.CROSS_WINDOW_SCRIPT_INNER
 import org.jsoup.nodes.DataNode
 import org.jsoup.nodes.Element
 import java.nio.charset.Charset
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class AutoSolvingWebViewClient(activity: SolveCaptchaActivity,
-                               source: CaptchaCompletionVerifier,
+class AutoSolvingWebViewClient(activity: BrowserActionActivity,
+                               verifyComplete: (String) -> Boolean,
                                injectScript: String?,
                                headers: Map<String, String>)
-    : HeadersInjectingWebViewClient(activity, source, injectScript, headers) {
+    : HeadersInjectingWebViewClient(activity, verifyComplete, injectScript, headers) {
 
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
         // Inject our custom script into the recaptcha iframes

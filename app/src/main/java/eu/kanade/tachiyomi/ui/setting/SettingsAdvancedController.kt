@@ -121,7 +121,7 @@ class SettingsAdvancedController : SettingsController() {
                 title = "Enable delegated sources"
                 key = PreferenceKeys.eh_delegateSources
                 defaultValue = true
-                summary = "Apply ${context.getString(R.string.app_name)} enhancements to the following sources if they are installed: ${DELEGATED_SOURCES.values.joinToString { it.sourceName }}"
+                summary = "Apply ${context.getString(R.string.app_name)} enhancements to the following sources if they are installed: ${DELEGATED_SOURCES.values.map { it.sourceName }.distinct().joinToString()}"
             }
 
             intListPreference {

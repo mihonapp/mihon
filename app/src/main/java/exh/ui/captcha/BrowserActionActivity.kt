@@ -31,8 +31,10 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import exh.source.DelegatedHttpSource
 import exh.util.melt
 import rx.Observable
+import java.io.Serializable
+import kotlin.collections.HashMap
 
-class SolveCaptchaActivity : AppCompatActivity() {
+class BrowserActionActivity : AppCompatActivity() {
     private val sourceManager: SourceManager by injectLazy()
     private val preferencesHelper: PreferencesHelper by injectLazy()
     private val networkHelper: NetworkHelper by injectLazy()
@@ -54,31 +56,38 @@ class SolveCaptchaActivity : AppCompatActivity() {
         val sourceId = intent.getLongExtra(SOURCE_ID_EXTRA, -1)
         val originalSource = if(sourceId != -1L) sourceManager.get(sourceId) else null
         val source = if(originalSource != null) {
-            originalSource as? CaptchaCompletionVerifier
+            originalSource as? ActionCompletionVerifier
                     ?: run {
                         (originalSource as? HttpSource)?.let {
-                            NoopCaptchaCompletionVerifier(it)
+                            NoopActionCompletionVerifier(it)
                         }
                     }
         } else null
 
-        val headers = (source as? HttpSource)?.headers?.toMultimap()?.mapValues {
+        val headers = ((source as? HttpSource)?.headers?.toMultimap()?.mapValues {
             it.value.joinToString(",")
-        } ?: emptyMap()
+        } ?: emptyMap()) + (intent.getSerializableExtra(HEADERS_EXTRA) as? HashMap<String, String> ?: emptyMap())
 
         val cookies: HashMap<String, String>?
                 = intent.getSerializableExtra(COOKIES_EXTRA) as? HashMap<String, String>
-
         val script: String? = intent.getStringExtra(SCRIPT_EXTRA)
-
         val url: String? = intent.getStringExtra(URL_EXTRA)
+        val actionName = intent.getStringExtra(ACTION_NAME_EXTRA)
 
-        if(source == null || url == null) {
+        val verifyComplete = if(source != null) {
+            source::verifyComplete!!
+        } else intent.getSerializableExtra(VERIFY_LAMBDA_EXTRA) as? (String) -> Boolean
+
+        if(verifyComplete == null || url == null) {
             finish()
             return
         }
 
-        toolbar.title = source.name + ": Solve captcha"
+        val actionStr = actionName ?: "Solve captcha"
+
+        toolbar.title = if(source != null) {
+            "${source.name}: $actionStr"
+        } else actionStr
 
         val parsedUrl = URL(url)
 
@@ -94,6 +103,9 @@ class SolveCaptchaActivity : AppCompatActivity() {
 
         webview.settings.javaScriptEnabled = true
         webview.settings.domStorageEnabled = true
+        headers.entries.find { it.key.equals("user-agent", true) }?.let {
+            webview.settings.userAgentString = it.value
+        }
 
         var loadedInners = 0
 
@@ -125,7 +137,7 @@ class SolveCaptchaActivity : AppCompatActivity() {
         }
 
         webview.webViewClient = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if(preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
+            if(actionName == null && preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
                 // Fetch auto-solve credentials early for speed
                 credentialsObservable = httpClient.newCall(Request.Builder()
                         // Rob demo credentials
@@ -139,13 +151,13 @@ class SolveCaptchaActivity : AppCompatActivity() {
                             json["token"].string
                         }.melt()
 
-                webview.addJavascriptInterface(this@SolveCaptchaActivity, "exh")
-                AutoSolvingWebViewClient(this, source, script, headers)
+                webview.addJavascriptInterface(this@BrowserActionActivity, "exh")
+                AutoSolvingWebViewClient(this, verifyComplete, script, headers)
             } else {
-                HeadersInjectingWebViewClient(this, source, script, headers)
+                HeadersInjectingWebViewClient(this, verifyComplete, script, headers)
             }
         } else {
-            BasicWebViewClient(this, source, script)
+            BasicWebViewClient(this, verifyComplete, script)
         }
 
         webview.loadUrl(url, headers)
@@ -490,11 +502,14 @@ class SolveCaptchaActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val VERIFY_LAMBDA_EXTRA = "verify_lambda_extra"
         const val SOURCE_ID_EXTRA = "source_id_extra"
         const val COOKIES_EXTRA = "cookies_extra"
         const val SCRIPT_EXTRA = "script_extra"
         const val URL_EXTRA = "url_extra"
         const val ASBTN_EXTRA = "asbtn_extra"
+        const val ACTION_NAME_EXTRA = "action_name_extra"
+        const val HEADERS_EXTRA = "headers_extra"
 
         const val STAGE_CHECKBOX = 0
         const val STAGE_GET_AUDIO_BTN_LOCATION = 1
@@ -600,13 +615,13 @@ class SolveCaptchaActivity : AppCompatActivity() {
         val TRANSCRIPT_CLEANER_REGEX = Regex("[^0-9a-zA-Z_ -]")
         val SPACE_DEDUPE_REGEX = Regex(" +")
 
-        fun launch(context: Context,
-                   source: CaptchaCompletionVerifier,
-                   cookies: Map<String, String>,
-                   script: String,
-                   url: String,
-                   autoSolveSubmitBtnSelector: String? = null) {
-            val intent = Intent(context, SolveCaptchaActivity::class.java).apply {
+        fun launchCaptcha(context: Context,
+                          source: ActionCompletionVerifier,
+                          cookies: Map<String, String>,
+                          script: String?,
+                          url: String,
+                          autoSolveSubmitBtnSelector: String? = null) {
+            val intent = Intent(context, BrowserActionActivity::class.java).apply {
                 putExtra(SOURCE_ID_EXTRA, source.id)
                 putExtra(COOKIES_EXTRA, HashMap(cookies))
                 putExtra(SCRIPT_EXTRA, script)
@@ -620,9 +635,41 @@ class SolveCaptchaActivity : AppCompatActivity() {
         fun launchUniversal(context: Context,
                             source: HttpSource,
                             url: String) {
-            val intent = Intent(context, SolveCaptchaActivity::class.java).apply {
+            val intent = Intent(context, BrowserActionActivity::class.java).apply {
                 putExtra(SOURCE_ID_EXTRA, source.id)
                 putExtra(URL_EXTRA, url)
+            }
+
+            context.startActivity(intent)
+        }
+
+        fun launchAction(context: Context,
+                         completionVerifier: ActionCompletionVerifier,
+                         script: String?,
+                         url: String,
+                         actionName: String) {
+            val intent = Intent(context, BrowserActionActivity::class.java).apply {
+                putExtra(SOURCE_ID_EXTRA, completionVerifier.id)
+                putExtra(SCRIPT_EXTRA, script)
+                putExtra(URL_EXTRA, url)
+                putExtra(ACTION_NAME_EXTRA, actionName)
+            }
+
+            context.startActivity(intent)
+        }
+
+        fun launchAction(context: Context,
+                         completionVerifier: (String) -> Boolean,
+                         script: String?,
+                         url: String,
+                         actionName: String,
+                         headers: Map<String, String>? = emptyMap()) {
+            val intent = Intent(context, BrowserActionActivity::class.java).apply {
+                putExtra(HEADERS_EXTRA, HashMap(headers))
+                putExtra(VERIFY_LAMBDA_EXTRA, completionVerifier as Serializable)
+                putExtra(SCRIPT_EXTRA, script)
+                putExtra(URL_EXTRA, url)
+                putExtra(ACTION_NAME_EXTRA, actionName)
             }
 
             context.startActivity(intent)
@@ -630,15 +677,15 @@ class SolveCaptchaActivity : AppCompatActivity() {
     }
 }
 
-class NoopCaptchaCompletionVerifier(private val source: HttpSource): DelegatedHttpSource(source),
-        CaptchaCompletionVerifier {
+class NoopActionCompletionVerifier(private val source: HttpSource): DelegatedHttpSource(source),
+        ActionCompletionVerifier {
     override val versionId get() = source.versionId
     override val lang: String get() = source.lang
 
-    override fun verifyNoCaptcha(url: String) = false
+    override fun verifyComplete(url: String) = false
 }
 
-interface CaptchaCompletionVerifier : Source {
-    fun verifyNoCaptcha(url: String): Boolean
+interface ActionCompletionVerifier : Source {
+    fun verifyComplete(url: String): Boolean
 }
 

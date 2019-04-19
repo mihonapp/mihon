@@ -219,7 +219,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="exh.ui.captcha.SolveCaptchaActivity"
+            android:name="exh.ui.captcha.BrowserActionActivity"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.EHActivity" />
         <activity android:name="exh.ui.webview.WebViewActivity" />

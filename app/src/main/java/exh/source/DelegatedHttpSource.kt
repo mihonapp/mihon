@@ -2,6 +2,7 @@ package exh.source
 
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
@@ -93,16 +94,16 @@ abstract class DelegatedHttpSource(val delegate: HttpSource): HttpSource() {
     /**
      * Base url of the website without the trailing slash, like: http://mysite.com
      */
-    override val baseUrl = delegate.baseUrl
+    override val baseUrl get() = delegate.baseUrl
 
     /**
      * Whether the source has support for latest updates.
      */
-    override val supportsLatest = delegate.supportsLatest
+    override val supportsLatest get() = delegate.supportsLatest
     /**
      * Name of the source.
      */
-    final override val name = delegate.name
+    final override val name get() = delegate.name
 
     // ===> OPTIONAL FIELDS
 
@@ -111,11 +112,18 @@ abstract class DelegatedHttpSource(val delegate: HttpSource): HttpSource() {
      * of the MD5 of the string: sourcename/language/versionId
      * Note the generated id sets the sign bit to 0.
      */
-    override val id = delegate.id
+    override val id get() = delegate.id
     /**
      * Default network client for doing requests.
      */
-    override val client = delegate.client
+    final override val client get() = delegate.client
+
+    /**
+     * You must NEVER call super.client if you override this!
+     */
+    open val baseHttpClient: OkHttpClient? = null
+    open val networkHttpClient: OkHttpClient get() = network.client
+    open val networkCloudflareClient: OkHttpClient get() = network.cloudflareClient
 
     /**
      * Visible name of the source.
@@ -235,4 +243,8 @@ abstract class DelegatedHttpSource(val delegate: HttpSource): HttpSource() {
     }
 
     class IncompatibleDelegateException(message: String) : RuntimeException(message)
+
+    init {
+        delegate.bindDelegate(this)
+    }
 }
