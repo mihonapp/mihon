@@ -26,17 +26,18 @@ import android.os.SystemClock
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import exh.log.maybeInjectEHLogger
+import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.source.online.HttpSource
+import exh.source.DelegatedHttpSource
 import exh.util.melt
 import rx.Observable
 
 class SolveCaptchaActivity : AppCompatActivity() {
     private val sourceManager: SourceManager by injectLazy()
     private val preferencesHelper: PreferencesHelper by injectLazy()
+    private val networkHelper: NetworkHelper by injectLazy()
 
-    val httpClient = OkHttpClient.Builder()
-            .maybeInjectEHLogger()
-            .build()
+    val httpClient = networkHelper.client
     private val jsonParser = JsonParser()
 
     private var currentLoopId: String? = null
@@ -51,9 +52,19 @@ class SolveCaptchaActivity : AppCompatActivity() {
         setContentView(eu.kanade.tachiyomi.R.layout.eh_activity_captcha)
 
         val sourceId = intent.getLongExtra(SOURCE_ID_EXTRA, -1)
-        val source = if(sourceId != -1L)
-            sourceManager.get(sourceId) as? CaptchaCompletionVerifier
-        else null
+        val originalSource = if(sourceId != -1L) sourceManager.get(sourceId) else null
+        val source = if(originalSource != null) {
+            originalSource as? CaptchaCompletionVerifier
+                    ?: run {
+                        (originalSource as? HttpSource)?.let {
+                            NoopCaptchaCompletionVerifier(it)
+                        }
+                    }
+        } else null
+
+        val headers = (source as? HttpSource)?.headers?.toMultimap()?.mapValues {
+            it.value.joinToString(",")
+        } ?: emptyMap()
 
         val cookies: HashMap<String, String>?
                 = intent.getSerializableExtra(COOKIES_EXTRA) as? HashMap<String, String>
@@ -62,7 +73,7 @@ class SolveCaptchaActivity : AppCompatActivity() {
 
         val url: String? = intent.getStringExtra(URL_EXTRA)
 
-        if(source == null || cookies == null || url == null) {
+        if(source == null || url == null) {
             finish()
             return
         }
@@ -73,80 +84,71 @@ class SolveCaptchaActivity : AppCompatActivity() {
 
         val cm = CookieManager.getInstance()
 
-        fun continueLoading() {
-            cookies.forEach { (t, u) ->
-                val cookieString = t + "=" + u + "; domain=" + parsedUrl.host
-                cm.setCookie(url, cookieString)
-            }
+        cookies?.forEach { (t, u) ->
+            val cookieString = t + "=" + u + "; domain=" + parsedUrl.host
+            cm.setCookie(url, cookieString)
+        }
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-                CookieSyncManager.createInstance(this).sync()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+            CookieSyncManager.createInstance(this).sync()
 
-            webview.settings.javaScriptEnabled = true
-            webview.settings.domStorageEnabled = true
+        webview.settings.javaScriptEnabled = true
+        webview.settings.domStorageEnabled = true
 
-            var loadedInners = 0
+        var loadedInners = 0
 
-            webview.webChromeClient = object : WebChromeClient() {
-                override fun onJsAlert(view: WebView?, url: String?, message: String, result: JsResult): Boolean {
-                    if(message.startsWith("exh-")) {
-                        loadedInners++
-                        // Wait for both inner scripts to be loaded
-                        if(loadedInners >= 2) {
-                            // Attempt to autosolve captcha
-                            if(preferencesHelper.eh_autoSolveCaptchas().getOrDefault()
-                                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                webview.post {
-                                    // 10 seconds to auto-solve captcha
-                                    strictValidationStartTime = System.currentTimeMillis() + 1000 * 10
-                                    beginSolveLoop()
-                                    beginValidateCaptchaLoop()
-                                    webview.evaluateJavascript(SOLVE_UI_SCRIPT_HIDE) {
-                                        webview.evaluateJavascript(SOLVE_UI_SCRIPT_SHOW, null)
-                                    }
+        webview.webChromeClient = object : WebChromeClient() {
+            override fun onJsAlert(view: WebView?, url: String?, message: String, result: JsResult): Boolean {
+                if(message.startsWith("exh-")) {
+                    loadedInners++
+                    // Wait for both inner scripts to be loaded
+                    if(loadedInners >= 2) {
+                        // Attempt to autosolve captcha
+                        if(preferencesHelper.eh_autoSolveCaptchas().getOrDefault()
+                                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            webview.post {
+                                // 10 seconds to auto-solve captcha
+                                strictValidationStartTime = System.currentTimeMillis() + 1000 * 10
+                                beginSolveLoop()
+                                beginValidateCaptchaLoop()
+                                webview.evaluateJavascript(SOLVE_UI_SCRIPT_HIDE) {
+                                    webview.evaluateJavascript(SOLVE_UI_SCRIPT_SHOW, null)
                                 }
                             }
                         }
-                        result.confirm()
-                        return true
                     }
-                    return false
+                    result.confirm()
+                    return true
                 }
+                return false
             }
-
-            webview.webViewClient = if (preferencesHelper.eh_autoSolveCaptchas().getOrDefault()
-                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                // Fetch auto-solve credentials early for speed
-                credentialsObservable = httpClient.newCall(Request.Builder()
-                        // Rob demo credentials
-                        .url("https://speech-to-text-demo.ng.bluemix.net/api/v1/credentials")
-                        .build())
-                        .asObservableSuccess()
-                        .subscribeOn(Schedulers.io())
-                        .map {
-                            val json = jsonParser.parse(it.body()!!.string())
-                            it.close()
-                            json["token"].string
-                        }.melt()
-
-                webview.addJavascriptInterface(this@SolveCaptchaActivity, "exh")
-                AutoSolvingWebViewClient(this, source, script)
-            } else {
-                BasicWebViewClient(this, source, script)
-            }
-
-            webview.loadUrl(url)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cm.removeAllCookies { continueLoading() }
+        webview.webViewClient = if (preferencesHelper.eh_autoSolveCaptchas().getOrDefault()
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Fetch auto-solve credentials early for speed
+            credentialsObservable = httpClient.newCall(Request.Builder()
+                    // Rob demo credentials
+                    .url("https://speech-to-text-demo.ng.bluemix.net/api/v1/credentials")
+                    .build())
+                    .asObservableSuccess()
+                    .subscribeOn(Schedulers.io())
+                    .map {
+                        val json = jsonParser.parse(it.body()!!.string())
+                        it.close()
+                        json["token"].string
+                    }.melt()
+
+            webview.addJavascriptInterface(this@SolveCaptchaActivity, "exh")
+            AutoSolvingWebViewClient(this, source, script, headers)
         } else {
-            cm.removeAllCookie()
-            continueLoading()
+            BasicWebViewClient(this, source, script)
         }
+
+        webview.loadUrl(url, headers)
 
         setSupportActionBar(toolbar)
-        
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -611,7 +613,26 @@ class SolveCaptchaActivity : AppCompatActivity() {
 
             context.startActivity(intent)
         }
+
+        fun launchUniversal(context: Context,
+                            source: HttpSource,
+                            url: String) {
+            val intent = Intent(context, SolveCaptchaActivity::class.java).apply {
+                putExtra(SOURCE_ID_EXTRA, source.id)
+                putExtra(URL_EXTRA, url)
+            }
+
+            context.startActivity(intent)
+        }
     }
+}
+
+class NoopCaptchaCompletionVerifier(private val source: HttpSource): DelegatedHttpSource(source),
+        CaptchaCompletionVerifier {
+    override val versionId get() = source.versionId
+    override val lang: String get() = source.lang
+
+    override fun verifyNoCaptcha(url: String) = false
 }
 
 interface CaptchaCompletionVerifier : Source {

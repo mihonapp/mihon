@@ -2,9 +2,7 @@ package exh.eh
 
 import android.support.v4.util.AtomicFile
 import android.util.SparseArray
-import android.util.SparseIntArray
 import com.elvishew.xlog.XLog
-import exh.ui.captcha.SolveCaptchaActivity.Companion.launch
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock

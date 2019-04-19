@@ -14,7 +14,8 @@ import java.nio.charset.Charset
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class AutoSolvingWebViewClient(activity: SolveCaptchaActivity,
                                source: CaptchaCompletionVerifier,
-                               injectScript: String?)
+                               injectScript: String?,
+                               private val headers: Map<String, String>)
     : BasicWebViewClient(activity, source, injectScript) {
 
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
@@ -29,6 +30,24 @@ class AutoSolvingWebViewClient(activity: SolveCaptchaActivity,
                     "text/html",
                     "UTF-8",
                     doc.toString().byteInputStream(Charset.forName("UTF-8")).buffered()
+            )
+        }
+        if(headers.isNotEmpty()) {
+            val response = activity.httpClient.newCall(request.toOkHttpRequest()
+                    .newBuilder()
+                    .apply {
+                        headers.forEach { (n, v) -> addHeader(n, v) }
+                    }
+                    .build())
+                    .execute()
+
+            return WebResourceResponse(
+                    response.body()?.contentType()?.let { "${it.type()}/${it.subtype()}" },
+                    response.body()?.contentType()?.charset()?.toString(),
+                    response.code(),
+                    response.message(),
+                    response.headers().toMultimap().mapValues { it.value.joinToString(",") },
+                    response.body()?.byteStream()
             )
         }
         return super.shouldInterceptRequest(view, request)

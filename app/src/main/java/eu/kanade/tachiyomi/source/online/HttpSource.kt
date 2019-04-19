@@ -1,16 +1,19 @@
 package eu.kanade.tachiyomi.source.online
 
+import android.app.Application
+import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.network.newCallWithProgress
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.*
-import okhttp3.Headers
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import eu.kanade.tachiyomi.util.asJsoup
+import exh.ui.captcha.SolveCaptchaActivity
+import okhttp3.*
 import rx.Observable
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.lang.Exception
 import java.net.URI
@@ -65,7 +68,37 @@ abstract class HttpSource : CatalogueSource {
      * Default network client for doing requests.
      */
     open val client: OkHttpClient
-        get() = network.client
+        get() = network.client.newBuilder().addInterceptor { chain ->
+            val response = chain.proceed(chain.request())
+            val body = response.body()
+            if(!response.isSuccessful && body != null) {
+                if(body.contentType()?.type() == "text"
+                        && body.contentType()?.subtype() == "html") {
+                    val bodyString = body.string()
+                    val rebuiltResponse = response.newBuilder()
+                                .body(ResponseBody.create(body.contentType(), bodyString))
+                                .build()
+                    try {
+                        // Search for captcha
+                        val parsed = response.asJsoup(html = bodyString)
+                        if(parsed.getElementsByClass("g-recaptcha").isNotEmpty()) {
+                            // Found it, allow the user to solve this thing
+                            SolveCaptchaActivity.launchUniversal(
+                                    Injekt.get<Application>(),
+                                    this,
+                                    chain.request().url().toString()
+                            )
+                        }
+                    } catch(t: Throwable) {
+                        // Ignore all errors
+                        XLog.w("Captcha detection error!", t)
+                    }
+
+                    return@addInterceptor rebuiltResponse
+                }
+            }
+            response
+        }.build()
 
     /**
      * Headers builder for requests. Implementations can override this method for custom headers.

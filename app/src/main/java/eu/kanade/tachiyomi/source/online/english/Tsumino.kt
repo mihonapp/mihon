@@ -290,7 +290,8 @@ class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<Tsum
     }
 
     override val client: OkHttpClient
-        get() = super.client.newBuilder()
+        // Do not call super here as we don't want auto-captcha detection here
+        get() = network.client.newBuilder()
                 .cookieJar(CookieJar.NO_COOKIES)
                 .addNetworkInterceptor {
                     val cAspNetCookie = preferences.eh_ts_aspNetCookie().getOrDefault()
