@@ -8,10 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.customtabs.CustomTabsIntent
 import android.support.v4.content.pm.ShortcutInfoCompat
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.graphics.drawable.IconCompat
@@ -35,7 +33,6 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -45,7 +42,7 @@ import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.util.getResourceColor
+import eu.kanade.tachiyomi.util.openInBrowser
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.truncateCenter
@@ -56,7 +53,6 @@ import exh.ui.webview.WebViewActivity
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import jp.wasabeef.glide.transformations.MaskTransformation
 import kotlinx.android.synthetic.main.manga_info_controller.*
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -334,11 +330,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                     putExtra(WebViewActivity.KEY_URL, urlString)
                 })
             } else {
-                val url = Uri.parse(urlString)
-                val intent = CustomTabsIntent.Builder()
-                        .setToolbarColor(context.getResourceColor(R.attr.colorPrimary))
-                        .build()
-                intent.launchUrl(activity, url)
+                context.openInBrowser(source.mangaDetailsRequest(presenter.manga).url().toString())
             }
             // <-- EH
         } catch (e: Exception) {
