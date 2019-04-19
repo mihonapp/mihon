@@ -124,23 +124,26 @@ class SolveCaptchaActivity : AppCompatActivity() {
             }
         }
 
-        webview.webViewClient = if (preferencesHelper.eh_autoSolveCaptchas().getOrDefault()
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Fetch auto-solve credentials early for speed
-            credentialsObservable = httpClient.newCall(Request.Builder()
-                    // Rob demo credentials
-                    .url("https://speech-to-text-demo.ng.bluemix.net/api/v1/credentials")
-                    .build())
-                    .asObservableSuccess()
-                    .subscribeOn(Schedulers.io())
-                    .map {
-                        val json = jsonParser.parse(it.body()!!.string())
-                        it.close()
-                        json["token"].string
-                    }.melt()
+        webview.webViewClient = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if(preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
+                // Fetch auto-solve credentials early for speed
+                credentialsObservable = httpClient.newCall(Request.Builder()
+                        // Rob demo credentials
+                        .url("https://speech-to-text-demo.ng.bluemix.net/api/v1/credentials")
+                        .build())
+                        .asObservableSuccess()
+                        .subscribeOn(Schedulers.io())
+                        .map {
+                            val json = jsonParser.parse(it.body()!!.string())
+                            it.close()
+                            json["token"].string
+                        }.melt()
 
-            webview.addJavascriptInterface(this@SolveCaptchaActivity, "exh")
-            AutoSolvingWebViewClient(this, source, script, headers)
+                webview.addJavascriptInterface(this@SolveCaptchaActivity, "exh")
+                AutoSolvingWebViewClient(this, source, script, headers)
+            } else {
+                HeadersInjectingWebViewClient(this, source, script, headers)
+            }
         } else {
             BasicWebViewClient(this, source, script)
         }
