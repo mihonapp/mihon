@@ -405,7 +405,7 @@ class FavoritesSyncHelper(val context: Context) {
 
     companion object {
         private const val THROTTLE_MAX = 5500
-        private const val THROTTLE_INC = 10
+        private const val THROTTLE_INC = 20
         private const val THROTTLE_WARN = 1000
     }
 }
