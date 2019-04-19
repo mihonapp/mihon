@@ -17,6 +17,11 @@ class SettingsHlController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         title = "hitomi.la"
 
-        // TODO Thumbnail quality chooser
+        switchPreference {
+            title = "Use high-quality thumbnails"
+            summary = "May slow down search results"
+            key = PreferenceKeys.eh_hl_useHighQualityThumbs
+            defaultValue = false
+        }
     }
 }

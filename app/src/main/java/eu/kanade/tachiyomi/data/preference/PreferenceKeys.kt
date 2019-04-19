@@ -194,4 +194,6 @@ object PreferenceKeys {
     const val eh_autoUpdateStats = "eh_auto_update_stats"
 
     const val eh_aggressivePageLoading = "eh_aggressive_page_loading"
+
+    const val eh_hl_useHighQualityThumbs = "eh_hl_hq_thumbs"
 }

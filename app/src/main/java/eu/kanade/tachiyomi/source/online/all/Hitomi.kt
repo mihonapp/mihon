@@ -5,6 +5,8 @@ import com.github.salomonbrys.kotson.array
 import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonParser
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
@@ -27,6 +29,7 @@ import org.vepta.vdm.ByteCursor
 import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
+import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,6 +37,7 @@ import java.util.*
  * Man, I hate this source :(
  */
 class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document> {
+    private val prefs: PreferencesHelper by injectLazy()
     private val jsonParser by lazy { JsonParser() }
 
     override val id = HITOMI_SOURCE_ID
@@ -289,9 +293,11 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document> {
         return SManga.create().apply {
             val titleElement = doc.selectFirst("h1")
             title = titleElement.text()
-            // TODO High/low quality thumbnail toggle
-//            thumbnail_url = "https:" + doc.selectFirst("img").attr("data-srcset").substringBefore(' ')
-            thumbnail_url = "https:" + doc.selectFirst("img").attr("data-src")
+            thumbnail_url = "https:" + if(prefs.eh_hl_useHighQualityThumbs().getOrDefault()) {
+                doc.selectFirst("img").attr("data-srcset").substringBefore(' ')
+            } else {
+                doc.selectFirst("img").attr("data-src")
+            }
             url = titleElement.child(0).attr("href")
 
             // TODO Parse tags and stuff

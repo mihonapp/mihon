@@ -267,4 +267,6 @@ class PreferencesHelper(val context: Context) {
     fun eh_autoUpdateStats() = rxPrefs.getString(Keys.eh_autoUpdateStats, "")
 
     fun eh_aggressivePageLoading() = rxPrefs.getBoolean(Keys.eh_aggressivePageLoading, false)
+
+    fun eh_hl_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_hl_useHighQualityThumbs, false)
 }
