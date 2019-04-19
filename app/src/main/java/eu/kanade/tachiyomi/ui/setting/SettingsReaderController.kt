@@ -104,7 +104,7 @@ class SettingsReaderController : SettingsController() {
             key = Keys.eh_aggressivePageLoading
             title = "Aggressively load pages"
             summary = "Slowly download the entire gallery while reading instead of just loading the pages you are viewing."
-            defaultValue = true
+            defaultValue = false
         }
         switchPreference {
             key = Keys.eh_readerInstantRetry
