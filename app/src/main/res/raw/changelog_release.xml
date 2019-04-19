@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
-    <changelogversion versionName="v8.2.0-EH" changeDate="">
+    <changelogversion versionName="v8.4.0-EH" changeDate="">
         <changelogtext>Many crash fixes</changelogtext>
         <changelogtext>Sort saved searches alphabetically</changelogtext>
         <changelogtext>Fix favorites sync not properly syncing EHentai (not ExHentai) galleries</changelogtext>
