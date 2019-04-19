@@ -52,7 +52,11 @@ class HttpPageLoader(
             // EXH <--
             subscriptions += Observable.defer { Observable.just(queue.take().page) }
                     .filter { it.status == Page.QUEUE }
-                    .concatMap { source.fetchImageFromCacheThenNet(it) }
+                    .concatMap {
+                        source.fetchImageFromCacheThenNet(it).doOnNext {
+                            XLog.d("Downloaded page: ${it.number}!")
+                        }
+                    }
                     .repeat()
                     .subscribeOn(Schedulers.io())
                     .subscribe({
@@ -98,9 +102,17 @@ class HttpPageLoader(
             .getPageListFromCache(chapter.chapter)
             .onErrorResumeNext { source.fetchPageList(chapter.chapter) }
             .map { pages ->
-                pages.mapIndexed { index, page -> // Don't trust sources and use our own indexing
+                val rp = pages.mapIndexed { index, page -> // Don't trust sources and use our own indexing
                     ReaderPage(index, page.url, page.imageUrl)
                 }
+                if(prefs.eh_aggressivePageLoading().getOrDefault()) {
+                    rp.mapNotNull {
+                        if (it.status == Page.QUEUE) {
+                            PriorityPage(it, 0)
+                        } else null
+                    }.forEach { queue.offer(it) }
+                }
+                rp
             }
     }
 

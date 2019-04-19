@@ -265,4 +265,6 @@ class PreferencesHelper(val context: Context) {
     fun eh_autoUpdateRequirements() = prefs.getStringSet(Keys.eh_autoUpdateRestrictions, emptySet())
 
     fun eh_autoUpdateStats() = rxPrefs.getString(Keys.eh_autoUpdateStats, "")
+
+    fun eh_aggressivePageLoading() = rxPrefs.getBoolean(Keys.eh_aggressivePageLoading, false)
 }

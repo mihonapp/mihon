@@ -101,6 +101,12 @@ class SettingsReaderController : SettingsController() {
             summary = "Higher values can speed up image downloading significantly, but can also trigger bans. Recommended value is 2 or 3. Current value is: %s"
         }
         switchPreference {
+            key = Keys.eh_aggressivePageLoading
+            title = "Aggressively load pages"
+            summary = "Slowly download the entire gallery while reading instead of just loading the pages you are viewing."
+            defaultValue = true
+        }
+        switchPreference {
             key = Keys.eh_readerInstantRetry
             title = "Skip queue on retry"
             summary = "Normally, pressing the retry button on a failed download will wait until the downloader has finished downloading the last page before beginning to re-download the failed page. Enabling this will force the downloader to begin re-downloading the failed page as soon as you press the retry button."
