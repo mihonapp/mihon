@@ -39,7 +39,9 @@ interface SearchTagQueries : DbProvider {
     fun setSearchTagsForManga(mangaId: Long, tags: List<SearchTag>) {
         db.inTransaction {
             deleteSearchTagsForManga(mangaId).executeAsBlocking()
-            insertSearchTags(tags).executeAsBlocking()
+            tags.chunked(100) { chunk ->
+                insertSearchTags(chunk).executeAsBlocking()
+            }
         }
     }
 }

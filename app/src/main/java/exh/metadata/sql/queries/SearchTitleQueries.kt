@@ -41,7 +41,9 @@ interface SearchTitleQueries : DbProvider {
     fun setSearchTitlesForManga(mangaId: Long, titles: List<SearchTitle>) {
         db.inTransaction {
             deleteSearchTitlesForManga(mangaId).executeAsBlocking()
-            insertSearchTitles(titles).executeAsBlocking()
+            titles.chunked(100) { chunk ->
+                insertSearchTitles(chunk).executeAsBlocking()
+            }
         }
     }
 }
