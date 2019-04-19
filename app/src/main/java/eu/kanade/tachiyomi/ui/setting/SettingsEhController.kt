@@ -156,6 +156,12 @@ class SettingsEhController : SettingsController() {
             onChange { preferences.imageQuality().reconfigure() }
         }.dependency = PreferenceKeys.eh_enableExHentai
 
+        switchPreference {
+            title = "Force ascending sort on gallery versions"
+            key = PreferenceKeys.eh_forceSortEhVersionsAsc
+            defaultValue = true
+        }
+
         preferenceCategory {
             title = "Favorites sync"
 

@@ -446,7 +446,8 @@ class ChaptersPresenter(
      * Whether the sorting method is descending or ascending.
      */
     fun sortDescending(): Boolean {
-        return manga.sortDescending()
+        return !((source.id == EH_SOURCE_ID || source.id == EXH_SOURCE_ID)
+                && preferences.eh_forceSortEhVersionsAsc().getOrDefault()) && manga.sortDescending()
     }
 
 }
