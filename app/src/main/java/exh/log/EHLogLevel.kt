@@ -1,8 +1,8 @@
 package exh.log
 
 import android.content.Context
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
+import android.preference.PreferenceManager
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 
 enum class EHLogLevel(val description: String) {
     MINIMAL("critical errors only"),
@@ -15,8 +15,8 @@ enum class EHLogLevel(val description: String) {
         val currentLogLevel get() = values()[curLogLevel!!]
 
         fun init(context: Context) {
-            curLogLevel = PreferencesHelper(context)
-                    .eh_logLevel().getOrDefault()
+            curLogLevel = PreferenceManager.getDefaultSharedPreferences(context)
+                    .getInt(PreferenceKeys.eh_logLevel, 0)
         }
 
         fun shouldLog(requiredLogLevel: EHLogLevel): Boolean {
