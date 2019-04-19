@@ -24,8 +24,8 @@ interface SManga : Serializable {
 
     fun copyFrom(other: SManga) {
         // EXH -->
-        url = other.url // Allow dynamically mutating one manga into another
-        title = other.title
+        if(other.title.isNotBlank())
+            title = other.title
         // EXH <--
 
         if (other.author != null)
