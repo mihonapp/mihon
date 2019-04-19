@@ -6,8 +6,12 @@ buildscript {
         google()
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'http://storage.googleapis.com/r8-releases/raw' }
     }
     dependencies {
+        // Temp workaround for: https://issuetracker.google.com/issues/129730297
+        classpath 'com.android.tools:r8:1.4.88' // Must be before the Gradle Plugin for Android.
+
         classpath 'com.android.tools.build:gradle:3.4.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
         classpath 'com.github.zellius:android-shortcut-gradle-plugin:0.1.2'

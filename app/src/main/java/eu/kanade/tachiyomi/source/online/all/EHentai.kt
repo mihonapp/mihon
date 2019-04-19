@@ -35,7 +35,7 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
 import exh.metadata.metadata.base.RaisedTag
-import exh.eh.EHentaiUpdateWorker
+import exh.eh.EHentaiUpdateWorkerConstants
 import exh.eh.GalleryEntry
 import kotlinx.coroutines.runBlocking
 import org.jsoup.nodes.TextNode
@@ -404,7 +404,7 @@ class EHentai(override val id: Long,
 
                 lastUpdateCheck = System.currentTimeMillis()
                 if(datePosted != null
-                        && lastUpdateCheck - datePosted!! > EHentaiUpdateWorker.GALLERY_AGE_TIME) {
+                        && lastUpdateCheck - datePosted!! > EHentaiUpdateWorkerConstants.GALLERY_AGE_TIME) {
                     aged = true
                 }
 

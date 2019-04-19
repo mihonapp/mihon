@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.util.toast
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.eh.EHentaiUpdateWorker
+import exh.eh.EHentaiUpdateWorkerConstants
 import exh.eh.EHentaiUpdaterStats
 import exh.favorites.FavoritesIntroDialog
 import exh.favorites.LocalFavoritesStorage
@@ -234,8 +235,8 @@ class SettingsEhController : SettingsController() {
                             "${context.getString(R.string.app_name)} will currently never check galleries in your library for updates."
                         } else {
                             "${context.getString(R.string.app_name)} checks/updates galleries in batches. " +
-                                    "This means it will wait $newVal hour(s), check ${EHentaiUpdateWorker.UPDATES_PER_ITERATION} galleries," +
-                                    " wait $newVal hour(s), check ${EHentaiUpdateWorker.UPDATES_PER_ITERATION} and so on..."
+                                    "This means it will wait $newVal hour(s), check ${EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION} galleries," +
+                                    " wait $newVal hour(s), check ${EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION} and so on..."
                         }
                     }
 

@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.util.jobScheduler
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.eh.EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.base.*
 import exh.util.await
@@ -249,12 +250,9 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
     }
 
     companion object {
-        const val UPDATES_PER_ITERATION = 50
         private const val MAX_UPDATE_FAILURES = 5
 
         private val MIN_BACKGROUND_UPDATE_FREQ = 1.days.inMilliseconds.longValue
-
-        val GALLERY_AGE_TIME = 365.days.inMilliseconds.longValue
 
         private const val JOB_ID_UPDATE_BACKGROUND = 0
         private const val JOB_ID_UPDATE_BACKGROUND_TEST = 1
@@ -342,3 +340,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
 }
 
 data class UpdateEntry(val manga: Manga, val meta: EHentaiSearchMetadata, val rootChapter: Chapter?)
+
+object EHentaiUpdateWorkerConstants {
+    const val UPDATES_PER_ITERATION = 50
+    val GALLERY_AGE_TIME = 365.days.inMilliseconds.longValue
+}

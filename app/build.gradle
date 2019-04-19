@@ -149,7 +149,7 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork:0.7.0'
 
     // Network client
-    implementation "com.squareup.okhttp3:okhttp:3.13.1"
+    implementation "com.squareup.okhttp3:okhttp:3.12.2" // DO NOT UPGRADE TO 3.13.X+, it requires minSdk 21
     implementation 'com.squareup.okio:okio:1.17.2'
 
     // REST
