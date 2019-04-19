@@ -4,9 +4,11 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import exh.isLewdSource
 import exh.metadata.sql.tables.SearchMetadataTable
 import exh.search.SearchEngine
+import exh.util.await
 import exh.util.cancellable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
@@ -78,7 +80,20 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
                             .args(*sqlQuery.second.toTypedArray())
                             .build())
 
-                    val mangaWithMetadata = db.getMangaWithMetadata().executeAsBlocking()
+                    ensureActive() // Fail early when cancelled
+
+                    val mangaWithMetaIdsQuery = db.getIdsOfFavoriteMangaWithMetadata().await()
+                    val mangaWithMetaIds = LongArray(mangaWithMetaIdsQuery.count)
+                    if(mangaWithMetaIds.isNotEmpty()) {
+                        val mangaIdCol = mangaWithMetaIdsQuery.getColumnIndex(MangaTable.COL_ID)
+                        mangaWithMetaIdsQuery.moveToFirst()
+                        while (!mangaWithMetaIdsQuery.isAfterLast) {
+                            ensureActive() // Fail early when cancelled
+
+                            mangaWithMetaIds[mangaWithMetaIdsQuery.position] = mangaWithMetaIdsQuery.getLong(mangaIdCol)
+                            mangaWithMetaIdsQuery.moveToNext()
+                        }
+                    }
 
                     ensureActive() // Fail early when cancelled
 
@@ -102,7 +117,7 @@ class LibraryCategoryAdapter(val view: LibraryCategoryView) :
                             val mangaId = item.manga.id ?: -1
                             if(convertedResult.binarySearch(mangaId) < 0) {
                                 // Check if this manga even has metadata
-                                if(mangaWithMetadata.binarySearchBy(mangaId) { it.id } < 0) {
+                                if(mangaWithMetaIds.binarySearch(mangaId) < 0) {
                                     // No meta? Filter using title
                                     item.filter(savedSearchText)
                                 } else false

@@ -277,8 +277,8 @@ class SettingsEhController : SettingsController() {
                                     "The updater last ran ${Humanize.naturalTime(Date(stats.startTime))}, and checked ${stats.updateCount} out of the ${stats.possibleUpdates} galleries that were ready for checking."
                                 } else "The updater has not ran yet."
 
-                                val allMeta = db.getMangaWithMetadata().await().filter {
-                                    it.favorite && (it.source == EH_SOURCE_ID || it.source == EXH_SOURCE_ID)
+                                val allMeta = db.getFavoriteMangaWithMetadata().await().filter {
+                                    it.source == EH_SOURCE_ID || it.source == EXH_SOURCE_ID
                                 }.mapNotNull {
                                     db.getFlatMetadataForManga(it.id!!).await()?.raise<EHentaiSearchMetadata>()
                                 }.toList()

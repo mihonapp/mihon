@@ -123,4 +123,30 @@ interface MangaQueries : DbProvider {
                     """.trimIndent())
                     .build())
             .prepare()
+
+    fun getFavoriteMangaWithMetadata() = db.get()
+            .listOfObjects(Manga::class.java)
+            .withQuery(RawQuery.builder()
+                    .query("""
+                        SELECT ${MangaTable.TABLE}.* FROM ${MangaTable.TABLE}
+                        INNER JOIN ${SearchMetadataTable.TABLE}
+                            ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
+                        WHERE ${MangaTable.TABLE}.${MangaTable.COL_FAVORITE} = 1
+                        ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
+                    """.trimIndent())
+                    .build())
+            .prepare()
+
+    fun getIdsOfFavoriteMangaWithMetadata() = db.get()
+            .cursor()
+            .withQuery(RawQuery.builder()
+                    .query("""
+                        SELECT ${MangaTable.TABLE}.${MangaTable.COL_ID} FROM ${MangaTable.TABLE}
+                        INNER JOIN ${SearchMetadataTable.TABLE}
+                            ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
+                        WHERE ${MangaTable.TABLE}.${MangaTable.COL_FAVORITE} = 1
+                        ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
+                    """.trimIndent())
+                    .build())
+            .prepare()
 }

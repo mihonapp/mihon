@@ -9,19 +9,15 @@ import android.content.Context
 import android.os.Build
 import android.support.annotation.RequiresApi
 import com.elvishew.xlog.XLog
-import com.evernote.android.job.JobRequest
 import com.google.gson.Gson
 import com.kizitonwose.time.days
 import com.kizitonwose.time.hours
-import com.kizitonwose.time.minutes
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.util.jobScheduler
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
@@ -29,9 +25,7 @@ import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.base.*
-import exh.metadata.sql.models.SearchMetadata
 import exh.util.await
-import exh.util.awaitSuspending
 import exh.util.cancellable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -39,7 +33,6 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -128,12 +121,12 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
         val startTime = System.currentTimeMillis()
 
         logger.d("Finding manga with metadata...")
-        val metadataManga = db.getMangaWithMetadata().await()
+        val metadataManga = db.getFavoriteMangaWithMetadata().await()
 
         logger.d("Filtering manga and raising metadata...")
         val curTime = System.currentTimeMillis()
         val allMeta = metadataManga.asFlow().cancellable().mapNotNull { manga ->
-            if (!manga.favorite || (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID))
+            if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID)
                 return@mapNotNull null
 
             val meta = db.getFlatMetadataForManga(manga.id!!).asRxSingle().await()
