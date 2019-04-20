@@ -8,23 +8,15 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.afollestad.materialdialogs.MaterialDialog
-import com.jakewharton.rxbinding.view.clicks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.invisible
 import eu.kanade.tachiyomi.util.launchUI
 import eu.kanade.tachiyomi.util.visible
-import exh.EXH_SOURCE_ID
 import exh.uconfig.WarnConfigureDialogController
 import kotlinx.android.synthetic.main.eh_activity_login.view.*
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.net.HttpCookie
@@ -53,7 +45,6 @@ class LoginController : NucleusController<LoginPresenter>() {
 
             btn_advanced.setOnClickListener {
                 advanced_options.visible()
-                adv_shim.visible()
                 webview.gone()
                 btn_advanced.isEnabled = false
                 btn_cancel.isEnabled = false
@@ -94,7 +85,6 @@ class LoginController : NucleusController<LoginPresenter>() {
     private fun hideAdvancedOptions(view: View) {
         with(view) {
             advanced_options.gone()
-            adv_shim.gone()
             webview.visible()
             btn_advanced.isEnabled = true
             btn_cancel.isEnabled = true
@@ -115,8 +105,9 @@ class LoginController : NucleusController<LoginPresenter>() {
                     val parsedUrl = Uri.parse(url)
                     if (parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
                         //Hide distracting content
-                        if(!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT))
-                            view.loadUrl(HIDE_JS)
+                        if(!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT)
+                                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                            view.evaluateJavascript(HIDE_JS, null)
 
                         //Check login result
                         if (parsedUrl.getQueryParameter("code")?.toInt() != 0) {
@@ -126,7 +117,7 @@ class LoginController : NucleusController<LoginPresenter>() {
                         //At ExHentai, check that everything worked out...
                         if (applyExHentaiCookies(url)) {
                             preferenceManager.enableExhentai().set(true)
-                            finishLogin(view)
+                            finishLogin()
                         }
                     }
                 }
@@ -134,35 +125,11 @@ class LoginController : NucleusController<LoginPresenter>() {
         }
     }
 
-    fun finishLogin(view: View) {
-        val progressDialog = MaterialDialog.Builder(view.context)
-                .title("Finalizing login")
-                .progress(true, 0)
-                .content("Please wait...")
-                .cancelable(false)
-                .show()
+    fun finishLogin() {
+        router.popCurrentController()
 
-        val eh = sourceManager
-                .getOnlineSources()
-                .find { it.id == EXH_SOURCE_ID } as EHentai
-
-        Observable.fromCallable {
-            //I honestly have no idea why we need to call this twice, but it works, so whatever
-            try {
-                eh.fetchFavorites()
-            } catch(ignored: Exception) {}
-            try {
-                eh.fetchFavorites()
-            } catch(ignored: Exception) {}
-        }.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    progressDialog.dismiss()
-                    router.popCurrentController()
-
-                    //Upload settings
-                    WarnConfigureDialogController.uploadSettings(router)
-                }
+        //Upload settings
+        WarnConfigureDialogController.uploadSettings(router)
     }
 
     /**
