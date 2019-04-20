@@ -615,13 +615,18 @@ class BrowserActionActivity : AppCompatActivity() {
         val TRANSCRIPT_CLEANER_REGEX = Regex("[^0-9a-zA-Z_ -]")
         val SPACE_DEDUPE_REGEX = Regex(" +")
 
+        private fun baseIntent(context: Context) =
+                Intent(context, BrowserActionActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_NO_HISTORY)
+                }
+
         fun launchCaptcha(context: Context,
                           source: ActionCompletionVerifier,
                           cookies: Map<String, String>,
                           script: String?,
                           url: String,
                           autoSolveSubmitBtnSelector: String? = null) {
-            val intent = Intent(context, BrowserActionActivity::class.java).apply {
+            val intent = baseIntent(context).apply {
                 putExtra(SOURCE_ID_EXTRA, source.id)
                 putExtra(COOKIES_EXTRA, HashMap(cookies))
                 putExtra(SCRIPT_EXTRA, script)
@@ -635,7 +640,7 @@ class BrowserActionActivity : AppCompatActivity() {
         fun launchUniversal(context: Context,
                             source: HttpSource,
                             url: String) {
-            val intent = Intent(context, BrowserActionActivity::class.java).apply {
+            val intent = baseIntent(context).apply {
                 putExtra(SOURCE_ID_EXTRA, source.id)
                 putExtra(URL_EXTRA, url)
             }
@@ -648,7 +653,7 @@ class BrowserActionActivity : AppCompatActivity() {
                          script: String?,
                          url: String,
                          actionName: String) {
-            val intent = Intent(context, BrowserActionActivity::class.java).apply {
+            val intent = baseIntent(context).apply {
                 putExtra(SOURCE_ID_EXTRA, completionVerifier.id)
                 putExtra(SCRIPT_EXTRA, script)
                 putExtra(URL_EXTRA, url)
@@ -664,7 +669,7 @@ class BrowserActionActivity : AppCompatActivity() {
                          url: String,
                          actionName: String,
                          headers: Map<String, String>? = emptyMap()) {
-            val intent = Intent(context, BrowserActionActivity::class.java).apply {
+            val intent = baseIntent(context).apply {
                 putExtra(HEADERS_EXTRA, HashMap(headers))
                 putExtra(VERIFY_LAMBDA_EXTRA, completionVerifier as Serializable)
                 putExtra(SCRIPT_EXTRA, script)
