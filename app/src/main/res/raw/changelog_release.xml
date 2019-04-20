@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v8.4.1-EH" changeDate="">
+        <changelogtext>Fix app crashing when updating library</changelogtext>
+        <changelogtext>Fix E-Hentai/ExHentai and many other sources not working</changelogtext>
+        <changelogtext>Fix many crashes that occur when the app is run on older Android versions</changelogtext>
+        <changelogtext>Fix autoscroll crashing the reader sometimes</changelogtext>
+        <changelogtext>Fix the app crashing on startup for some users</changelogtext>
+        <changelogtext>Fix multi-select operations crashing the app when the selection is too large</changelogtext>
+        <changelogtext>Add throttling when restoring E-Hentai/ExHentai galleries from backups</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v8.4.0-EH" changeDate="">
         <changelogtext>Many crash fixes</changelogtext>
         <changelogtext>Sort saved searches alphabetically</changelogtext>
