@@ -18,10 +18,6 @@ import kotlinx.android.synthetic.main.catalogue_grid_item.view.*
 
 class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference<Boolean>) :
         AbstractFlexibleItem<LibraryHolder>(), IFilterable<String> {
-    // Temp metadata holder (EXH)
-    @Volatile
-    var hasMetadata: Boolean? = null
-
     var downloadCount = -1
 
     override fun getLayoutRes(): Int {
