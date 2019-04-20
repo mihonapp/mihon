@@ -305,7 +305,7 @@ class SettingsBackupController : SettingsController() {
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             return MaterialDialog.Builder(activity!!)
                     .title(R.string.pref_restore_backup)
-                    .content(R.string.backup_restore_content)
+                    .content(activity!!.getString(R.string.backup_restore_content) + "\n\nThe app will throttle when restoring EHentai/ExHentai backups. This may cause the app to appear frozen when it is actually still working. Report an issue if the app remains frozen for more than 30 minutes however.")
                     .positiveText(R.string.action_restore)
                     .onPositive { _, _ ->
                         val context = applicationContext

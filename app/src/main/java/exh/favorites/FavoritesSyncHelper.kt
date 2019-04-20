@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.util.powerManager
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.wifiManager
 import exh.*
+import exh.eh.EHentaiThrottleManager
 import exh.eh.EHentaiUpdateWorker
 import exh.util.ignore
 import exh.util.trans
@@ -42,8 +43,7 @@ class FavoritesSyncHelper(val context: Context) {
 
     private val galleryAdder = GalleryAdder()
 
-    private var lastThrottleTime: Long = 0
-    private var throttleTime: Long = 0
+    private val throttleManager = EHentaiThrottleManager()
 
     private var wifiLock: WifiManager.WifiLock? = null
     private var wakeLock: PowerManager.WakeLock? = null
@@ -294,12 +294,12 @@ class FavoritesSyncHelper(val context: Context) {
         }
 
         //Apply additions
-        resetThrottle()
+        throttleManager.resetThrottle()
         changeSet.added.forEachIndexed { index, it ->
             status.onNext(FavoritesSyncStatus.Processing("Adding gallery ${index + 1} of ${changeSet.added.size} to remote server",
                     needWarnThrottle()))
 
-            throttle()
+            throttleManager.throttle()
 
             addGalleryRemote(errorList, it)
         }
@@ -335,18 +335,18 @@ class FavoritesSyncHelper(val context: Context) {
         val categories = db.getCategories().executeAsBlocking()
 
         //Apply additions
-        resetThrottle()
+        throttleManager.resetThrottle()
         changeSet.added.forEachIndexed { index, it ->
             status.onNext(FavoritesSyncStatus.Processing("Adding gallery ${index + 1} of ${changeSet.added.size} to local library",
                     needWarnThrottle()))
 
-            throttle()
+            throttleManager.throttle()
 
             //Import using gallery adder
             val result = galleryAdder.addGallery("${exh.baseUrl}${it.getUrl()}",
                     true,
                     EXH_SOURCE_ID,
-                    ::throttle)
+                    throttleManager::throttle)
 
             if(result is GalleryAddEvent.Fail) {
                 if(result is GalleryAddEvent.Fail.NotFound) {
@@ -380,32 +380,12 @@ class FavoritesSyncHelper(val context: Context) {
                 }
     }
 
-    fun throttle() {
-        //Throttle requests if necessary
-        val now = System.currentTimeMillis()
-        val timeDiff = now - lastThrottleTime
-        if(timeDiff < throttleTime)
-            Thread.sleep(throttleTime - timeDiff)
-
-        if(throttleTime < THROTTLE_MAX)
-            throttleTime += THROTTLE_INC
-
-        lastThrottleTime = System.currentTimeMillis()
-    }
-
-    fun resetThrottle() {
-        lastThrottleTime = 0
-        throttleTime = 0
-    }
-
     fun needWarnThrottle()
-            = throttleTime >= THROTTLE_WARN
+            = throttleManager.throttleTime >= THROTTLE_WARN
 
     class IgnoredException : RuntimeException()
 
     companion object {
-        private const val THROTTLE_MAX = 5500
-        private const val THROTTLE_INC = 20
         private const val THROTTLE_WARN = 1000
     }
 }

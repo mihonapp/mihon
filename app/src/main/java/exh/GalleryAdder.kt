@@ -176,7 +176,12 @@ class GalleryAdder {
 
             //Fetch and copy chapters
             try {
-                sourceObj.fetchChapterList(manga).map {
+                val chapterListObs = if(sourceObj is EHentai) {
+                    sourceObj.fetchChapterList(manga, throttleFunc)
+                } else {
+                    sourceObj.fetchChapterList(manga)
+                }
+                chapterListObs.map {
                     syncChaptersWithSource(db, it, manga, sourceObj)
                 }.toBlocking().first()
             } catch (e: Exception) {

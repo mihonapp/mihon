@@ -30,8 +30,10 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.util.sendLocalBroadcast
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
+import exh.eh.EHentaiThrottleManager
 import rx.Observable
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
@@ -280,9 +282,12 @@ class BackupManager(val context: Context, version: Int = CURRENT_VERSION) {
      * @param manga manga that needs updating
      * @return [Observable] that contains manga
      */
-    fun restoreChapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>): Observable<Pair<List<Chapter>, List<Chapter>>> {
-        return source.fetchChapterList(manga)
-                .map { syncChaptersWithSource(databaseHelper, it, manga, source) }
+    fun restoreChapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>, throttleManager: EHentaiThrottleManager): Observable<Pair<List<Chapter>, List<Chapter>>> {
+        return (if(source is EHentai) {
+            source.fetchChapterList(manga, throttleManager::throttle)
+        } else {
+            source.fetchChapterList(manga)
+        }).map { syncChaptersWithSource(databaseHelper, it, manga, source) }
                 .doOnNext {
                     if (it.first.isNotEmpty()) {
                         chapters.forEach { it.manga_id = manga.id }
