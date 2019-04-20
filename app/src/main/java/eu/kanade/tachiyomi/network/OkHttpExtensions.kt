@@ -30,7 +30,7 @@ fun Call.asObservableWithAsyncStacktrace(): Observable<Pair<Exception, Response>
                         subscriber.onNext(asyncStackTrace to response)
                         subscriber.onCompleted()
                     }
-                } catch (error: Exception) {
+                } catch (error: Throwable) {
                     if (!subscriber.isUnsubscribed) {
                         subscriber.onError(error.withRootCause(asyncStackTrace))
                     }
