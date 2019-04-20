@@ -179,8 +179,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         val intervalMs = (interval * 1000).roundToLong()
         val sub = Observable.interval(intervalMs, intervalMs, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
                 .onBackpressureDrop()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     viewer.let { v ->
                         if(v is PagerViewer) v.moveToNext()
