@@ -2,12 +2,14 @@ package exh.ui.lock
 
 import android.annotation.TargetApi
 import android.app.AppOpsManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import com.afollestad.materialdialogs.MaterialDialog
+import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -61,7 +63,20 @@ fun notifyLockSecurity(context: Context,
                 .negativeText("Cancel")
                 .positiveText("Ok")
                 .onPositive { _, _ ->
-                    context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                    try {
+                        context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                    } catch(e: ActivityNotFoundException) {
+                        XLog.e("Device does not support USAGE_ACCESS_SETTINGS shortcut!")
+                        MaterialDialog.Builder(context)
+                                .title("Grant permission manually")
+                                .content("Failed to launch the window used to grant the usage stats permission. " +
+                                        "You can still grant this permission manually: go to your phone's settings and search for 'usage access'.")
+                                .positiveText("Ok")
+                                .onPositive { dialog, _ -> dialog.dismiss() }
+                                .cancelable(true)
+                                .canceledOnTouchOutside(false)
+                                .show()
+                    }
                 }
                 .autoDismiss(true)
                 .cancelable(false)
@@ -74,13 +89,13 @@ fun notifyLockSecurity(context: Context,
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 fun hasAccessToUsageStats(context: Context): Boolean {
-    try {
+    return try {
         val packageManager = context.packageManager
         val applicationInfo = packageManager.getApplicationInfo(context.packageName, 0)
         val appOpsManager = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, applicationInfo.uid, applicationInfo.packageName)
-        return (mode == AppOpsManager.MODE_ALLOWED)
+        (mode == AppOpsManager.MODE_ALLOWED)
     } catch (e: PackageManager.NameNotFoundException) {
-        return false
+        false
     }
 }
