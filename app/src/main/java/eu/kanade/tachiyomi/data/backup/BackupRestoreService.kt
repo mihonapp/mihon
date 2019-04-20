@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import com.elvishew.xlog.XLog
@@ -180,13 +181,17 @@ class BackupRestoreService : Service() {
         subscription = Observable.using(
                 {
                     // Pause auto-gallery-update during restore
-                    EHentaiUpdateWorker.cancelBackground(this)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        EHentaiUpdateWorker.cancelBackground(this)
+                    }
                     db.lowLevel().beginTransaction()
                 },
                 { getRestoreObservable(uri).doOnNext { db.lowLevel().setTransactionSuccessful() } },
                 {
                     // Resume auto-gallery-update
-                    EHentaiUpdateWorker.scheduleBackground(this)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        EHentaiUpdateWorker.scheduleBackground(this)
+                    }
                     executor.execute { db.lowLevel().endTransaction() }
                 })
                 .doAfterTerminate { stopSelf(startId) }

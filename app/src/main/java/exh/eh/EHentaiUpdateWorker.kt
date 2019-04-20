@@ -249,6 +249,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     companion object {
         private const val MAX_UPDATE_FAILURES = 5
 
