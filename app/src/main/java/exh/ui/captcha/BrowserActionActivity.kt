@@ -617,7 +617,7 @@ class BrowserActionActivity : AppCompatActivity() {
 
         private fun baseIntent(context: Context) =
                 Intent(context, BrowserActionActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_NO_HISTORY)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
 
         fun launchCaptcha(context: Context,
