@@ -6,6 +6,8 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
+import exh.metadata.metadata.EHentaiSearchMetadata
+import exh.metadata.metadata.base.getFlatMetadataForManga
 import rx.Observable
 import rx.Single
 import uy.kohesive.injekt.injectLazy
@@ -58,7 +60,24 @@ class EHentaiUpdateHelper(context: Context) {
             if(toDiscard.isNotEmpty()) {
                 // Copy chain chapters to curChapters
                 val newChapters = toDiscard
-                        .flatMap { it.chapters }
+                        .flatMap { chain ->
+                            val meta by lazy {
+                                db.getFlatMetadataForManga(chain.manga.id!!)
+                                        .executeAsBlocking()
+                                        ?.raise<EHentaiSearchMetadata>()
+                            }
+
+                            chain.chapters.map { chapter ->
+                                // Convert old style chapters to new style chapters if possible
+                                if(chapter.date_upload <= 0
+                                        && meta?.datePosted != null
+                                        && meta?.title != null) {
+                                    chapter.name = meta!!.title!!
+                                    chapter.date_upload = meta!!.datePosted!!
+                                }
+                                chapter
+                            }
+                        }
                         .fold(accepted.chapters) { curChapters, chapter ->
                             val existing = curChapters.find { it.url == chapter.url }
 
