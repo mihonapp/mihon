@@ -157,8 +157,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         menuFilterDownloaded.isChecked = presenter.onlyDownloaded()
         menuFilterBookmarked.isChecked = presenter.onlyBookmarked()
 
-        val showSortOptions = !(presenter.preferences.eh_forceSortEhVersionsAsc().getOrDefault()
-                && presenter.source.isEhBasedSource())
+        val showSortOptions = !presenter.isSortingForced()
         menuSort.isVisible = showSortOptions
         menuSortingMode.isVisible = showSortOptions
 
@@ -419,7 +418,8 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     private fun markPreviousAsRead(chapter: ChapterItem) {
         val adapter = adapter ?: return
-        val chapters = if (presenter.sortDescending()) adapter.items.reversed() else adapter.items
+        val chapters = if (presenter.sortDescending()
+                || presenter.isSortingForced()) adapter.items.reversed() else adapter.items
         val chapterPos = chapters.indexOf(chapter)
         if (chapterPos != -1) {
             markAsRead(chapters.take(chapterPos))

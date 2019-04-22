@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.eh.EHentaiUpdateHelper
+import exh.isEhBasedSource
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -446,8 +447,10 @@ class ChaptersPresenter(
      * Whether the sorting method is descending or ascending.
      */
     fun sortDescending(): Boolean {
-        return !((source.id == EH_SOURCE_ID || source.id == EXH_SOURCE_ID)
-                && preferences.eh_forceSortEhVersionsAsc().getOrDefault()) && manga.sortDescending()
+        return !isSortingForced() && manga.sortDescending()
     }
+
+    fun isSortingForced() = source.isEhBasedSource()
+                && preferences.eh_forceSortEhVersionsAsc().getOrDefault()
 
 }
