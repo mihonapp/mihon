@@ -648,6 +648,17 @@ class BrowserActionActivity : AppCompatActivity() {
             context.startActivity(intent)
         }
 
+        fun launchUniversal(context: Context,
+                            sourceId: Long,
+                            url: String) {
+            val intent = baseIntent(context).apply {
+                putExtra(SOURCE_ID_EXTRA, sourceId)
+                putExtra(URL_EXTRA, url)
+            }
+
+            context.startActivity(intent)
+        }
+
         fun launchAction(context: Context,
                          completionVerifier: ActionCompletionVerifier,
                          script: String?,

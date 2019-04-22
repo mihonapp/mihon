@@ -27,7 +27,7 @@ private fun verifyComplete(url: String): Boolean {
 fun OkHttpClient.Builder.attachMangaDexLogin() =
         addInterceptor { chain ->
             val response = chain.proceed(chain.request())
-            if(response.request().url().host() == "mangadex.org") {
+            if(response.request().url().host() == MANGADEX_DOMAIN) {
                 response.interceptAsHtml { doc ->
                     if (doc.title().trim().equals("Login - MangaDex", true)) {
                         BrowserActionActivity.launchAction(
@@ -36,7 +36,7 @@ fun OkHttpClient.Builder.attachMangaDexLogin() =
                                 HIDE_SCRIPT,
                                 "https://mangadex.org/login",
                                 "Login",
-                                (Injekt.get<SourceManager>().get(2499283573021220255) as? HttpSource)?.headers?.toMultimap()?.mapValues {
+                                (Injekt.get<SourceManager>().get(MANGADEX_SOURCE_ID) as? HttpSource)?.headers?.toMultimap()?.mapValues {
                                     it.value.joinToString(",")
                                 } ?: emptyMap()
                         )
@@ -44,3 +44,6 @@ fun OkHttpClient.Builder.attachMangaDexLogin() =
                 }
             } else response
         }
+
+const val MANGADEX_SOURCE_ID = 2499283573021220255
+const val MANGADEX_DOMAIN = "mangadex.org"

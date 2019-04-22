@@ -8,24 +8,24 @@ import org.jsoup.nodes.Document
 
 fun Response.interceptAsHtml(block: (Document) -> Unit): Response {
     val body = body()
-    if(body != null) {
-        if (body.contentType()?.type() == "text"
-                && body.contentType()?.subtype() == "html") {
-            val bodyString = body.string()
-            val rebuiltResponse = newBuilder()
-                    .body(ResponseBody.create(body.contentType(), bodyString))
-                    .build()
-            try {
-                // Search for captcha
-                val parsed = asJsoup(html = bodyString)
-                block(parsed)
-            } catch (t: Throwable) {
-                // Ignore all errors
-                XLog.w("Interception error!", t)
-            }
-
-            return rebuiltResponse
+    if (body?.contentType()?.type() == "text"
+            && body.contentType()?.subtype() == "html") {
+        val bodyString = body.string()
+        val rebuiltResponse = newBuilder()
+                .body(ResponseBody.create(body.contentType(), bodyString))
+                .build()
+        try {
+            // Search for captcha
+            val parsed = asJsoup(html = bodyString)
+            block(parsed)
+        } catch (t: Throwable) {
+            // Ignore all errors
+            XLog.w("Interception error!", t)
+        } finally {
+            close()
         }
+
+        return rebuiltResponse
     }
     return this
 }

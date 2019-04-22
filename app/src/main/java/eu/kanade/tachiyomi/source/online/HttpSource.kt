@@ -6,9 +6,8 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.*
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.*
+import exh.patch.detectCaptchas
 import exh.source.DelegatedHttpSource
-import exh.ui.captcha.BrowserActionActivity
-import exh.util.interceptAsHtml
 import okhttp3.*
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -79,22 +78,10 @@ abstract class HttpSource : CatalogueSource {
      * Default network client for doing requests.
      */
     open val client: OkHttpClient
-        get() = delegate?.baseHttpClient ?: network.client.newBuilder().addInterceptor { chain ->
-            // Automatic captcha detection
-            val response = chain.proceed(chain.request())
-            if(!response.isSuccessful) {
-                response.interceptAsHtml { doc ->
-                    if (doc.getElementsByClass("g-recaptcha").isNotEmpty()) {
-                        // Found it, allow the user to solve this thing
-                        BrowserActionActivity.launchUniversal(
-                                Injekt.get<Application>(),
-                                this,
-                                chain.request().url().toString()
-                        )
-                    }
-                }
-            } else response
-        }.build()
+        get() = delegate?.baseHttpClient ?: network.client
+                .newBuilder()
+                .detectCaptchas(Injekt.get<Application>(), id, null)
+                .build()
 
     /**
      * Headers builder for requests. Implementations can override this method for custom headers.
