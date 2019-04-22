@@ -3,10 +3,6 @@ package eu.kanade.tachiyomi.network
 import android.content.Context
 import android.os.Build
 import exh.log.maybeInjectEHLogger
-import exh.patch.MANGADEX_DOMAIN
-import exh.patch.MANGADEX_SOURCE_ID
-import exh.patch.attachMangaDexLogin
-import exh.patch.detectCaptchas
 import okhttp3.*
 import java.io.File
 import java.io.IOException
@@ -35,8 +31,7 @@ open class NetworkHelper(context: Context) {
 
     open val cloudflareClient = client.newBuilder()
             .addInterceptor(CloudflareInterceptor(context))
-            .attachMangaDexLogin()
-            .detectCaptchas(context, MANGADEX_SOURCE_ID, listOf(MANGADEX_DOMAIN))
+            .maybeInjectEHLogger()
             .build()
 
     private fun OkHttpClient.Builder.enableTLS12(): OkHttpClient.Builder {

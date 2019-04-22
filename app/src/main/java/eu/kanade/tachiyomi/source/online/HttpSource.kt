@@ -6,13 +6,12 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.*
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.*
-import exh.patch.detectCaptchas
+import exh.patch.injectPatches
 import exh.source.DelegatedHttpSource
 import okhttp3.*
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 import java.lang.Exception
 import java.net.URI
 import java.net.URISyntaxException
@@ -31,9 +30,15 @@ abstract class HttpSource : CatalogueSource {
         object : NetworkHelper(Injekt.get<Application>()) {
             override val client: OkHttpClient?
                 get() = delegate?.networkHttpClient ?: original.client
+                        .newBuilder()
+                        .injectPatches { id }
+                        .build()
 
             override val cloudflareClient: OkHttpClient?
                 get() = delegate?.networkCloudflareClient ?: original.cloudflareClient
+                        .newBuilder()
+                        .injectPatches { id }
+                        .build()
 
             override val cookieManager: AndroidCookieJar
                 get() = original.cookieManager
@@ -79,9 +84,6 @@ abstract class HttpSource : CatalogueSource {
      */
     open val client: OkHttpClient
         get() = delegate?.baseHttpClient ?: network.client
-                .newBuilder()
-                .detectCaptchas(Injekt.get<Application>(), id, null)
-                .build()
 
     /**
      * Headers builder for requests. Implementations can override this method for custom headers.

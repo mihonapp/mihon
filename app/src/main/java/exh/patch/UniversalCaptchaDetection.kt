@@ -1,28 +1,23 @@
 package exh.patch
 
-import android.content.Context
+import android.app.Application
 import exh.ui.captcha.BrowserActionActivity
 import exh.util.interceptAsHtml
-import okhttp3.OkHttpClient
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-fun OkHttpClient.Builder.detectCaptchas(context: Context, sourceId: Long, domains: List<String>? = null): OkHttpClient.Builder {
-    return addInterceptor { chain ->
-        // Automatic captcha detection
-        val response = chain.proceed(chain.request())
-        if(!response.isSuccessful) {
-            if(domains != null && response.request().url().host() !in domains)
-                return@addInterceptor response
-
-            response.interceptAsHtml { doc ->
-                if (doc.getElementsByClass("g-recaptcha").isNotEmpty()) {
-                    // Found it, allow the user to solve this thing
-                    BrowserActionActivity.launchUniversal(
-                            context,
-                            sourceId,
-                            chain.request().url().toString()
-                    )
-                }
+val CAPTCHA_DETECTION_PATCH: EHInterceptor = { request, response, sourceId ->
+    if(!response.isSuccessful) {
+        response.interceptAsHtml { doc ->
+            // Find captcha
+            if (doc.getElementsByClass("g-recaptcha").isNotEmpty()) {
+                // Found it, allow the user to solve this thing
+                BrowserActionActivity.launchUniversal(
+                        Injekt.get<Application>(),
+                        sourceId,
+                        request.url().toString()
+                )
             }
-        } else response
-    }
+        }
+    } else response
 }
