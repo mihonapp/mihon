@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -30,6 +31,7 @@ import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.isEhBasedSource
 import kotlinx.android.synthetic.main.chapters_controller.*
 import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
@@ -146,12 +148,19 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         val menuFilterUnread = menu.findItem(R.id.action_filter_unread)
         val menuFilterDownloaded = menu.findItem(R.id.action_filter_downloaded)
         val menuFilterBookmarked = menu.findItem(R.id.action_filter_bookmarked)
+        val menuSort = menu.findItem(R.id.action_sort)
+        val menuSortingMode = menu.findItem(R.id.action_sorting_mode)
 
         // Set correct checkbox values.
         menuFilterRead.isChecked = presenter.onlyRead()
         menuFilterUnread.isChecked = presenter.onlyUnread()
         menuFilterDownloaded.isChecked = presenter.onlyDownloaded()
         menuFilterBookmarked.isChecked = presenter.onlyBookmarked()
+
+        val showSortOptions = !(presenter.preferences.eh_forceSortEhVersionsAsc().getOrDefault()
+                && presenter.source.isEhBasedSource())
+        menuSort.isVisible = showSortOptions
+        menuSortingMode.isVisible = showSortOptions
 
         if (presenter.onlyRead())
             //Disable unread filter option if read filter is enabled.

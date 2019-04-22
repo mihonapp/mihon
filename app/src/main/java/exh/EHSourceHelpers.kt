@@ -1,5 +1,6 @@
 package exh
 
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.english.HentaiCafe
 
@@ -36,3 +37,5 @@ private val lewdDelegatedSourceIds = SourceManager.DELEGATED_SOURCES.filter {
 // This method MUST be fast!
 fun isLewdSource(source: Long) = source in 6900..6999
         || lewdDelegatedSourceIds.binarySearch(source) >= 0
+
+fun Source.isEhBasedSource() = id == EH_SOURCE_ID || id == EXH_SOURCE_ID
