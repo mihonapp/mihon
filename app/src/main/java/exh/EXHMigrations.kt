@@ -4,6 +4,7 @@ import android.content.Context
 import com.elvishew.xlog.XLog
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.backup.models.DHistory
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -25,8 +26,6 @@ object EXHMigrations {
 
     private val logger = XLog.tag("EXHMigrations")
 
-    private const val CURRENT_MIGRATION_VERSION = 2
-
     /**
      * Performs a migration when the application is updated.
      *
@@ -37,7 +36,7 @@ object EXHMigrations {
         val context = preferences.context
         val oldVersion = preferences.eh_lastVersionCode().getOrDefault()
         try {
-            if (oldVersion < CURRENT_MIGRATION_VERSION) {
+            if (oldVersion < BuildConfig.VERSION_CODE) {
                 if (oldVersion < 1) {
                     db.inTransaction {
                         // Migrate HentaiCafe source IDs
@@ -78,12 +77,12 @@ object EXHMigrations {
                     backupDatabase(context, oldVersion)
                 }
 
-                preferences.eh_lastVersionCode().set(CURRENT_MIGRATION_VERSION)
+                preferences.eh_lastVersionCode().set(BuildConfig.VERSION_CODE)
 
                 return true
             }
         } catch(e: Exception) {
-            logger.e( "Failed to migrate app from $oldVersion -> $CURRENT_MIGRATION_VERSION!", e)
+            logger.e( "Failed to migrate app from $oldVersion -> ${BuildConfig.VERSION_CODE}!", e)
         }
         return false
     }
