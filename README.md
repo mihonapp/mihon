@@ -7,7 +7,7 @@ TachiyomiEH is a free and open source manga and hentai reader for Android and is
 The latest version is: [![stable release](https://img.shields.io/github/release/NerdNumber9/TachiyomiEH.svg?maxAge=3600&label=)](https://github.com/NerdNumber9/TachiyomiEH/releases). Download it on our [releases page](https://github.com/NerdNumber9/TachiyomiEH/releases).
 
 # Support
-You can find us in the `#support-eh` channel in the [Tachiyomi discord](https://discord.gg/tachiyomi). **Please keep TachiyomiEH discussion restricted to this channel.**
+You can find us in the `#tachiyomi-eh` channel in the [Tachiyomi discord](https://discord.gg/tachiyomi). **Please keep TachiyomiEH discussion restricted to this channel.**
 
 # Features
 
