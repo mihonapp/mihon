@@ -26,7 +26,9 @@ import android.widget.Toast
 import com.nononsenseapps.filepicker.FilePickerActivity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 /**
@@ -36,7 +38,9 @@ import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
  * @param duration the duration of the toast. Defaults to short.
  */
 fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(this, resource, duration).show()
+    GlobalScope.launch(Dispatchers.Main) {
+        Toast.makeText(this@toast, resource, duration).show()
+    }
 }
 
 /**
@@ -46,7 +50,9 @@ fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) 
  * @param duration the duration of the toast. Defaults to short.
  */
 fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(this, text.orEmpty(), duration).show()
+    GlobalScope.launch(Dispatchers.Main) {
+        Toast.makeText(this@toast, text.orEmpty(), duration).show()
+    }
 }
 
 /**
