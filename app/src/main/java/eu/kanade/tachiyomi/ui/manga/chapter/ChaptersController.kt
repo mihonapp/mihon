@@ -21,7 +21,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -31,7 +30,6 @@ import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
-import exh.isEhBasedSource
 import kotlinx.android.synthetic.main.chapters_controller.*
 import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber

@@ -151,10 +151,9 @@ class ReaderPresenter(
 
     /**
      * Called when the user pressed the back button and is going to leave the reader. Used to
-     * update tracking services and trigger deletion of the downloaded chapters.
+     * trigger deletion of the downloaded chapters.
      */
     fun onBackPressed() {
-        updateTrackLastChapterRead()
         deletePendingChapters()
     }
 
@@ -323,7 +322,7 @@ class ReaderPresenter(
 
     /**
      * Called every time a page changes on the reader. Used to mark the flag of chapters being
-     * read, enqueue downloaded chapter deletion, and updating the active chapter if this
+     * read, update tracking services, enqueue downloaded chapter deletion, and updating the active chapter if this
      * [page]'s chapter is different from the currently active.
      */
     fun onPageSelected(page: ReaderPage) {
@@ -335,6 +334,7 @@ class ReaderPresenter(
         selectedChapter.chapter.last_page_read = page.index
         if (selectedChapter.pages?.lastIndex == page.index) {
             selectedChapter.chapter.read = true
+            updateTrackLastChapterRead()
             enqueueDeleteReadChapters(selectedChapter)
         }
 
@@ -449,7 +449,8 @@ class ReaderPresenter(
 
         // Build destination file.
         val filename = DiskUtil.buildValidFilename(
-                "${manga.title} - ${chapter.name}") + " - ${page.number}.${type.extension}"
+                "${manga.title} - ${chapter.name}".take(225)
+        ) + " - ${page.number}.${type.extension}"
 
         val destFile = File(directory, filename)
         stream().use { input ->

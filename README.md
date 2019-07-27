@@ -12,7 +12,7 @@ You can find us in the `#support-eh` channel in the [Tachiyomi discord](https://
 # Features
 
 **All the features you expect from Tachiyomi:**
-* Online reading from sources such as KissManga, MangaFox, [and more](https://github.com/inorichi/tachiyomi-extensions)
+* Online reading from sources such as KissManga, MangaDex, [and more](https://github.com/inorichi/tachiyomi-extensions)
 * Local reading of downloaded manga
 * Configurable reader with multiple viewers, reading directions and other settings
 * [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), and [Kitsu](https://kitsu.io/explore/anime) support

@@ -76,8 +76,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.setting.ShikomoriLoginActivity"
-            android:label="Shikomori">
+            android:name=".ui.setting.ShikimoriLoginActivity"
+            android:label="Shikimori">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -86,6 +86,20 @@
 
                 <data
                     android:host="shikimori-auth"
+                    android:scheme="tachiyomi" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.setting.BangumiLoginActivity"
+            android:label="Bangumi">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="bangumi-auth"
                     android:scheme="tachiyomi" />
             </intent-filter>
         </activity>

@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
@@ -157,9 +158,9 @@ open class CatalogueSearchPresenter(
         fetchSourcesSubscription?.unsubscribe()
         fetchSourcesSubscription = Observable.from(sources)
                 .flatMap({ source ->
-                    source.fetchSearchManga(1, query, FilterList())
+                    Observable.defer { source.fetchSearchManga(1, query, FilterList()) }
                             .subscribeOn(Schedulers.io())
-                            .onExceptionResumeNext(Observable.empty()) // Ignore timeouts.
+                            .onErrorReturn { MangasPage(emptyList(), false) } // Ignore timeouts or other exceptions
                             .map { it.mangas.take(10) } // Get at most 10 manga from search result.
                             .map { it.map { networkToLocalManga(it, source.id) } } // Convert to local manga.
                             .doOnNext { fetchImage(it, source) } // Load manga covers.
@@ -239,7 +240,7 @@ open class CatalogueSearchPresenter(
      * @param sManga the manga from the source.
      * @return a manga from the database.
      */
-    private fun networkToLocalManga(sManga: SManga, sourceId: Long): Manga {
+    protected open fun networkToLocalManga(sManga: SManga, sourceId: Long): Manga {
         var localManga = db.getManga(sManga.url, sourceId).executeAsBlocking()
         if (localManga == null) {
             val newManga = Manga.create(sManga.url, sManga.title, sourceId)

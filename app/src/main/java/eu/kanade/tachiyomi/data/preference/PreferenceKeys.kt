@@ -29,6 +29,8 @@ object PreferenceKeys {
 
     const val colorFilterValue = "color_filter_value"
 
+    const val colorFilterMode = "color_filter_mode"
+
     const val defaultViewer = "pref_default_viewer_key"
 
     const val imageScaleType = "pref_image_scale_type_key"
@@ -84,6 +86,8 @@ object PreferenceKeys {
     const val libraryUpdateRestriction = "library_update_restriction"
 
     const val libraryUpdateCategories = "library_update_categories"
+
+    const val libraryUpdatePrioritization = "library_update_prioritization"
 
     const val filterDownloaded = "pref_filter_downloaded_key"
 

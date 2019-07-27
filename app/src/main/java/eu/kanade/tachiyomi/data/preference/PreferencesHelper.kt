@@ -58,6 +58,8 @@ class PreferencesHelper(val context: Context) {
 
     fun colorFilterValue() = rxPrefs.getInteger(Keys.colorFilterValue, 0)
 
+    fun colorFilterMode() = rxPrefs.getInteger(Keys.colorFilterMode, 0)
+
     fun defaultViewer() = prefs.getInt(Keys.defaultViewer, 1)
 
     fun imageScaleType() = rxPrefs.getInteger(Keys.imageScaleType, 1)
@@ -141,6 +143,8 @@ class PreferencesHelper(val context: Context) {
     fun libraryUpdateRestriction() = prefs.getStringSet(Keys.libraryUpdateRestriction, emptySet())
 
     fun libraryUpdateCategories() = rxPrefs.getStringSet(Keys.libraryUpdateCategories, emptySet())
+
+    fun libraryUpdatePrioritization() = rxPrefs.getInteger(Keys.libraryUpdatePrioritization, 0)
 
     fun libraryAsList() = rxPrefs.getBoolean(Keys.libraryAsList, false)
 
