@@ -199,12 +199,6 @@ class SettingsGeneralController : SettingsController() {
 
         // --> EXH
         switchPreference {
-            key = Keys.eh_askCategoryOnLongPress
-            title = "Long-press favorite button to specify category"
-            defaultValue = false
-        }
-
-        switchPreference {
             key = Keys.eh_expandFilters
             title = "Expand all search filters by default"
             defaultValue = false

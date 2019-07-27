@@ -248,8 +248,6 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_incogWebview() = rxPrefs.getBoolean(Keys.eh_incogWebview, false)
 
-    fun eh_askCategoryOnLongPress() = rxPrefs.getBoolean(Keys.eh_askCategoryOnLongPress, false)
-
     fun eh_autoSolveCaptchas() = rxPrefs.getBoolean(Keys.eh_autoSolveCaptchas, false)
 
     fun eh_delegateSources() = rxPrefs.getBoolean(Keys.eh_delegateSources, true)

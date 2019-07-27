@@ -167,8 +167,6 @@ object PreferenceKeys {
 
     const val eh_expandFilters = "eh_expand_filters"
 
-    const val eh_askCategoryOnLongPress = "eh_ask_category_on_long_press"
-
     const val eh_readerThreads = "eh_reader_threads"
 
     const val eh_readerInstantRetry = "eh_reader_instant_retry"
