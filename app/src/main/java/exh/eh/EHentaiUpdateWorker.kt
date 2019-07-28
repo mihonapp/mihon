@@ -225,7 +225,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
     }
 
     suspend fun updateEntryAndGetChapters(manga: Manga): List<Chapter> {
-        val source = sourceManager.get(manga.source) as EHentai
+        val source = sourceManager.get(manga.source) as? EHentai
+                ?: throw GalleryNotUpdatedException(false, IllegalStateException("Missing EH-based source (${manga.source})!"))
 
         try {
             val updatedManga = source.fetchMangaDetails(manga).toSingle().await(Schedulers.io())
