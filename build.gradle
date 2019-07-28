@@ -6,16 +6,12 @@ buildscript {
         google()
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
-        maven { url 'http://storage.googleapis.com/r8-releases/raw' }
     }
     dependencies {
-        // Temp workaround for: https://issuetracker.google.com/issues/129730297
-        classpath 'com.android.tools:r8:1.4.88' // Must be before the Gradle Plugin for Android.
-
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.android.tools.build:gradle:3.4.2'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
         classpath 'com.github.zellius:android-shortcut-gradle-plugin:0.1.2'
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.google.gms:google-services:4.3.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
@@ -23,8 +19,7 @@ buildscript {
         classpath "io.realm:realm-gradle-plugin:5.10.0"
 
         // Firebase (EH)
-        classpath 'com.google.firebase:firebase-plugins:1.2.0'
-        classpath 'io.fabric.tools:gradle:1.28.1'
+        classpath 'io.fabric.tools:gradle:1.31.0'
     }
 }
 
