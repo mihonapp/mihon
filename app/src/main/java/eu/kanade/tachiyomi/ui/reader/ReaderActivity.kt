@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import com.afollestad.materialdialogs.MaterialDialog
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.elvishew.xlog.XLog
 import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.widget.checkedChanges
 import com.jakewharton.rxbinding.widget.textChanges
@@ -93,6 +94,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private val prefs: PreferencesHelper by injectLazy()
 
     val showTransitionPages by lazy { prefs.eh_showTransitionPages().getOrDefault() }
+
+    private val logger = XLog.tag("ReaderActivity")
     // <-- EH
 
     /**
@@ -631,7 +634,15 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      * actions to perform is shown.
      */
     fun onPageLongTap(page: ReaderPage) {
-        ReaderPageSheet(this, page).show()
+        // EXH -->
+        try {
+            // EXH <--
+            ReaderPageSheet(this, page).show()
+            // EXH -->
+        } catch(e: WindowManager.BadTokenException) {
+            logger.e("Caught and ignoring reader page sheet launch exception!", e)
+        }
+        // EXH <--
     }
 
     /**
