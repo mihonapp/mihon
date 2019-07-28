@@ -13,6 +13,7 @@ import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.elvishew.xlog.XLog
 import com.jakewharton.rxbinding.view.clicks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.EmptyPreferenceDataStore
@@ -23,6 +24,7 @@ import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.setting.preferenceCategory
 import eu.kanade.tachiyomi.util.LocaleHelper
+import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
 import kotlinx.android.synthetic.main.extension_detail_controller.*
@@ -33,6 +35,10 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
         PreferenceManager.OnDisplayPreferenceDialogListener,
         DialogPreference.TargetFragment,
         SourceLoginDialog.Listener {
+
+    // EXH -->
+    private val logger = XLog.tag("ExtensionDetailsController")
+    // EXH <--
 
     private var lastOpenPreferencePosition: Int? = null
 
@@ -81,7 +87,16 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
 
         for (source in extension.sources) {
             if (source is ConfigurableSource) {
-                addPreferencesForSource(screen, source, multiSource)
+                // EXH -->
+                try {
+                    // EXH <--
+                    addPreferencesForSource(screen, source, multiSource)
+                    // EXH -->
+                } catch(e: Exception) {
+                    logger.e("Failed to load preferences for source: ${source.name}!", e)
+                    context.toast("Failed to load preferences for this source!")
+                }
+                // EXH <--
             }
         }
 
