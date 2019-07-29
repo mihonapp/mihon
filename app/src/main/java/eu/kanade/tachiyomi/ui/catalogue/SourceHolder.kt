@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.util.visible
 import io.github.mthli.slice.Slice
 import kotlinx.android.synthetic.main.catalogue_main_controller_card_item.*
 
-class SourceHolder(view: View, override val adapter: CatalogueAdapter) :
+class SourceHolder(view: View, override val adapter: CatalogueAdapter, val showButtons: Boolean) :
         BaseFlexibleViewHolder(view, adapter),
         SlicedHolder {
 
@@ -29,6 +29,11 @@ class SourceHolder(view: View, override val adapter: CatalogueAdapter) :
 
         source_latest.setOnClickListener {
             adapter.latestClickListener.onLatestClick(adapterPosition)
+        }
+
+        if(!showButtons) {
+            source_browse.gone()
+            source_latest.gone()
         }
     }
 
@@ -50,7 +55,7 @@ class SourceHolder(view: View, override val adapter: CatalogueAdapter) :
             source_latest.gone()
         } else {
             source_browse.setText(R.string.browse)
-            if (source.supportsLatest) {
+            if (source.supportsLatest && showButtons) {
                 source_latest.visible()
             } else {
                 source_latest.gone()

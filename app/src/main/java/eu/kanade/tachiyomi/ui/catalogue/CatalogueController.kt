@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.os.Bundle
+import android.os.Parcelable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
@@ -23,6 +25,8 @@ import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
 import eu.kanade.tachiyomi.ui.catalogue.latest.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
+import exh.ui.smartsearch.SmartSearchController
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.catalogue_main_controller.*
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -34,7 +38,7 @@ import uy.kohesive.injekt.api.get
  * [CatalogueAdapter.OnBrowseClickListener] call function data on browse item click.
  * [CatalogueAdapter.OnLatestClickListener] call function data on latest item click
  */
-class CatalogueController : NucleusController<CataloguePresenter>(),
+class CatalogueController(bundle: Bundle? = null) : NucleusController<CataloguePresenter>(bundle),
         SourceLoginDialog.Listener,
         FlexibleAdapter.OnItemClickListener,
         CatalogueAdapter.OnBrowseClickListener,
@@ -50,12 +54,18 @@ class CatalogueController : NucleusController<CataloguePresenter>(),
      */
     private var adapter: CatalogueAdapter? = null
 
+    private val smartSearchConfig: SmartSearchConfig? = args.getParcelable(SMART_SEARCH_CONFIG)
+
+    // EXH -->
+    private val mode = if(smartSearchConfig == null) Mode.CATALOGUE else Mode.SMART_SEARCH
+    // EXH <--
+
     /**
      * Called when controller is initialized.
      */
     init {
         // Enable the option menu
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(mode == Mode.CATALOGUE)
     }
 
     /**
@@ -64,7 +74,10 @@ class CatalogueController : NucleusController<CataloguePresenter>(),
      * @return title.
      */
     override fun getTitle(): String? {
-        return applicationContext?.getString(R.string.label_catalogues)
+        return when(mode) {
+            Mode.CATALOGUE -> applicationContext?.getString(R.string.label_catalogues)
+            Mode.SMART_SEARCH -> "Find in another source"
+        }
     }
 
     /**
@@ -73,7 +86,7 @@ class CatalogueController : NucleusController<CataloguePresenter>(),
      * @return instance of [CataloguePresenter]
      */
     override fun createPresenter(): CataloguePresenter {
-        return CataloguePresenter()
+        return CataloguePresenter(controllerMode = mode)
     }
 
     /**
@@ -140,8 +153,16 @@ class CatalogueController : NucleusController<CataloguePresenter>(),
             dialog.targetController = this
             dialog.showDialog(router)
         } else {
-            // Open the catalogue view.
-            openCatalogue(source, BrowseCatalogueController(source))
+            when(mode) {
+                Mode.CATALOGUE -> {
+                    // Open the catalogue view.
+                    openCatalogue(source, BrowseCatalogueController(source))
+                }
+                Mode.SMART_SEARCH -> router.pushController(SmartSearchController(Bundle().apply {
+                    putLong(SmartSearchController.ARG_SOURCE_ID, source.id)
+                    putParcelable(SmartSearchController.ARG_SMART_SEARCH_CONFIG, smartSearchConfig)
+                }).withFadeTransaction())
+            }
         }
         return false
     }
@@ -233,4 +254,18 @@ class CatalogueController : NucleusController<CataloguePresenter>(),
     }
 
     class SettingsSourcesFadeChangeHandler : FadeChangeHandler()
+
+    // EXH -->
+    @Parcelize
+    data class SmartSearchConfig(val title: String) : Parcelable
+    // EXH <--
+
+    enum class Mode {
+        CATALOGUE,
+        SMART_SEARCH
+    }
+
+    companion object {
+        const val SMART_SEARCH_CONFIG = "SMART_SEARCH_CONFIG"
+    }
 }

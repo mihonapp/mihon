@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                android:theme="?attr/actionBarTheme"/>
+                android:theme="?attr/actionBarTheme" />
 
         </android.support.design.widget.AppBarLayout>
 
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Loading gallery..."
+                android:text="Searching source..."
                 android:textAppearance="@style/TextAppearance.Medium.Title"
                 android:textColor="@color/white" />
 

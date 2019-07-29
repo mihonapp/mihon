@@ -38,6 +38,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -160,6 +161,9 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            // EXH -->
+            R.id.action_smart_search -> openSmartSearch()
+            // EXH <--
             R.id.action_open_in_browser -> openInBrowser()
             R.id.action_open_in_web_view -> openInWebView()
             R.id.action_share -> shareManga()
@@ -168,6 +172,17 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         }
         return true
     }
+
+
+    // EXH -->
+    private fun openSmartSearch() {
+        val smartSearchConfig = CatalogueController.SmartSearchConfig(presenter.manga.title)
+
+        parentController?.router?.pushController(CatalogueController(Bundle().apply {
+            putParcelable(CatalogueController.SMART_SEARCH_CONFIG, smartSearchConfig)
+        }).withFadeTransaction())
+    }
+    // EXH <--
 
     /**
      * Check if manga is initialized.

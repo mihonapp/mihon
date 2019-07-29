@@ -24,7 +24,8 @@ import java.util.concurrent.TimeUnit
  */
 class CataloguePresenter(
         val sourceManager: SourceManager = Injekt.get(),
-        private val preferences: PreferencesHelper = Injekt.get()
+        private val preferences: PreferencesHelper = Injekt.get(),
+        private val controllerMode: CatalogueController.Mode
 ) : BasePresenter<CatalogueController>() {
 
     /**
@@ -62,7 +63,7 @@ class CataloguePresenter(
         val byLang = sources.groupByTo(map, { it.lang })
         val sourceItems = byLang.flatMap {
             val langItem = LangItem(it.key)
-            it.value.map { source -> SourceItem(source, langItem) }
+            it.value.map { source -> SourceItem(source, langItem, controllerMode == CatalogueController.Mode.CATALOGUE) }
         }
 
         sourceSubscription = Observable.just(sourceItems)
@@ -77,7 +78,7 @@ class CataloguePresenter(
                 sharedObs.take(1),
                 sharedObs.skip(1).delay(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()))
                 .distinctUntilChanged()
-                .map { (sourceManager.get(it) as? CatalogueSource)?.let { SourceItem(it) } }
+                .map { (sourceManager.get(it) as? CatalogueSource)?.let { SourceItem(it, showButtons = controllerMode == CatalogueController.Mode.CATALOGUE) } }
                 .subscribeLatestCache(CatalogueController::setLastUsedSource)
     }
 
