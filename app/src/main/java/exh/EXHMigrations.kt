@@ -77,6 +77,8 @@ object EXHMigrations {
                     backupDatabase(context, oldVersion)
                 }
 
+                // TODO BE CAREFUL TO NOT FUCK UP MergedSources IF CHANGING URLs
+
                 preferences.eh_lastVersionCode().set(BuildConfig.VERSION_CODE)
 
                 return true

@@ -314,7 +314,7 @@ abstract class HttpSource : CatalogueSource {
      *
      * @param page the page whose source image has to be downloaded.
      */
-    fun fetchImage(page: Page): Observable<Response> {
+    open fun fetchImage(page: Page): Observable<Response> {
         return client.newCallWithProgress(imageRequest(page), page)
                 .asObservableSuccess()
     }
