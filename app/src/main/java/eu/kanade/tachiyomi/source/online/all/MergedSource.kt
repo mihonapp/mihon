@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
+import exh.MERGED_SOURCE_ID
 import exh.util.await
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -29,6 +30,8 @@ class MergedSource : HttpSource() {
     private val db: DatabaseHelper by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
     private val gson: Gson by injectLazy()
+
+    override val id: Long = MERGED_SOURCE_ID
 
     override val baseUrl = ""
 
@@ -51,14 +54,16 @@ class MergedSource : HttpSource() {
         return GlobalScope.async(Dispatchers.IO) {
             val loadedMangas = readMangaConfig(manga).load(db, sourceManager).buffer()
             loadedMangas.map { loadedManga ->
-                loadedManga.source.fetchChapterList(loadedManga.manga).map { chapterList ->
-                    chapterList.map { chapter ->
-                        chapter.apply {
-                            url = writeUrlConfig(UrlConfig(loadedManga.source.id, url, loadedManga.manga.url))
+                async(Dispatchers.IO) {
+                    loadedManga.source.fetchChapterList(loadedManga.manga).map { chapterList ->
+                        chapterList.map { chapter ->
+                            chapter.apply {
+                                url = writeUrlConfig(UrlConfig(loadedManga.source.id, url, loadedManga.manga.url))
+                            }
                         }
-                    }
+                    }.toSingle().await(Schedulers.io())
                 }
-            }.buffer().map { it.toSingle().await(Schedulers.io()) }.toList().flatten()
+            }.buffer().map { it.await() }.toList().flatten()
         }.asSingle(Dispatchers.IO).toV1Single().toObservable()
     }
     override fun mangaDetailsParse(response: Response) = throw UnsupportedOperationException()
@@ -102,11 +107,12 @@ class MergedSource : HttpSource() {
         chapter.url = chapterConfig.url
         source.prepareNewChapter(chapter, copiedManga)
         chapter.url = writeUrlConfig(UrlConfig(source.id, chapter.url, chapterConfig.mangaUrl))
-        chapter.scanlator = "${source.name}: ${chapter.scanlator}"
+        chapter.scanlator = if(chapter.scanlator.isNullOrBlank()) source.name
+        else "${source.name}: ${chapter.scanlator}"
     }
 
     fun readMangaConfig(manga: SManga): MangaConfig {
-        return gson.fromJson(manga.url)
+        return MangaConfig.readFromUrl(gson, manga.url)
     }
     fun readUrlConfig(url: String): UrlConfig {
         return gson.fromJson(url)
@@ -126,11 +132,6 @@ class MergedSource : HttpSource() {
             val source = sourceManager.getOrStub(source)
             return LoadedMangaSource(source, manga)
         }
-        companion object {
-            fun fromLoadedMangaSource(loadedMS: LoadedMangaSource): MangaSource {
-                return MangaSource(loadedMS.source.id, loadedMS.manga.url)
-            }
-        }
     }
     data class MangaConfig(
             @SerializedName("c")
@@ -140,6 +141,16 @@ class MergedSource : HttpSource() {
             return children.asFlow().map { mangaSource ->
                 mangaSource.load(db, sourceManager)
                         ?: throw IllegalStateException("Missing source manga: $mangaSource")
+            }
+        }
+
+        fun writeAsUrl(gson: Gson): String {
+            return gson.toJson(this)
+        }
+
+        companion object {
+            fun readFromUrl(gson: Gson, url: String): MangaConfig {
+                return gson.fromJson(url)
             }
         }
     }

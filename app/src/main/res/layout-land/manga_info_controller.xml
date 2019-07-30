@@ -254,6 +254,35 @@
                     app:atg_textColor="@color/md_blue_A400"
                     android:layout_marginRight="64dp"/>
 
+                <LinearLayout
+                    android:id="@+id/smartsearch_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_genres_tags"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    tools:visibility="visible">
+
+                    <Button
+                        android:id="@+id/smartsearch_merge_btn"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Merge with current" />
+
+                    <Button
+                        android:id="@+id/smartsearch_replace_btn"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Replace current" />
+                </LinearLayout>
+
 
             </android.support.constraint.ConstraintLayout>
 

@@ -8,8 +8,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.zellius.shortcut-helper'
 // Realm (EH)
 apply plugin: 'realm-android'
-// Firebase (EH)
-apply plugin: 'io.fabric'
 
 shortcutHelper.filePath = './shortcuts.xml'
 
@@ -139,7 +137,8 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    standardImplementation 'com.google.firebase:firebase-core:17.0.1'
+    // DO NOT UPGRADE TO 17.0, IT REQUIRES ANDROIDX
+    standardImplementation 'com.google.firebase:firebase-core:16.0.8'
 
     // ReactiveX
     implementation 'io.reactivex:rxandroid:1.2.1'
@@ -174,6 +173,7 @@ dependencies {
 
     // Job scheduling
     implementation 'com.evernote:android-job:1.2.5'
+    // DO NOT UPGRADE TO 17.0, IT REQUIRES ANDROIDX
     implementation 'com.google.android.gms:play-services-gcm:15.0.1'
 
     // Changelog
@@ -274,6 +274,7 @@ dependencies {
 
     // RxJava 2 interop for Realm (EH)
     implementation 'com.lvla.android:rxjava2-interop-kt:0.2.1'
+    implementation 'com.github.akarnokd:rxjava2-interop:0.13.7'
 
     // Debug network interceptor (EH)
     implementation "com.squareup.okhttp3:logging-interceptor:3.12.1"
@@ -297,6 +298,8 @@ dependencies {
 
     // Humanize (EH)
     implementation 'com.github.mfornos:humanize-slim:1.2.2'
+
+    implementation 'com.android.support:gridlayout-v7:28.0.0'
 }
 
 buildscript {
@@ -319,4 +322,6 @@ androidExtensions {
 
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Standard")) {
     apply plugin: 'com.google.gms.google-services'
+    // Firebase (EH)
+    apply plugin: 'io.fabric'
 }

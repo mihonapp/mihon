@@ -9,11 +9,8 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:layout_height="match_parent">
 
         <View
             android:id="@+id/guideline"
@@ -230,12 +227,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
                     android:textIsSelectable="false"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/manga_source_label"
                     app:layout_constraintLeft_toRightOf="@+id/manga_source_label"
-                    app:layout_constraintRight_toRightOf="parent"/>
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_status_label" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -287,7 +282,34 @@
                     app:atg_borderStrokeWidth="1dp"
                     app:atg_backgroundColor="@android:color/transparent"
                     app:atg_borderColor="@color/md_blue_A400"
-                    app:atg_textColor="@color/md_blue_A400" />
+                    app:atg_textColor="@color/md_blue_A400" >
+
+                </me.gujun.android.taggroup.TagGroup>
+
+                <LinearLayout
+                    android:id="@+id/smartsearch_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <Button
+                        android:id="@+id/smartsearch_merge_btn"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Merge with current" />
+
+                    <Button
+                        android:id="@+id/smartsearch_replace_btn"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Replace current" />
+                </LinearLayout>
 
             </LinearLayout>
 

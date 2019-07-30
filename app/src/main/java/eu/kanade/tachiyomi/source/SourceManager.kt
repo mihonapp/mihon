@@ -9,10 +9,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.source.online.all.EHentai
-import eu.kanade.tachiyomi.source.online.all.Hitomi
-import eu.kanade.tachiyomi.source.online.all.NHentai
-import eu.kanade.tachiyomi.source.online.all.PervEden
+import eu.kanade.tachiyomi.source.online.all.*
 import eu.kanade.tachiyomi.source.online.english.HentaiCafe
 import eu.kanade.tachiyomi.source.online.english.Tsumino
 import rx.Observable
@@ -51,6 +48,8 @@ open class SourceManager(private val context: Context) {
         Observable.merge(prefEntries).skip(prefEntries.size - 1).subscribe {
             createEHSources().forEach { registerSource(it) }
         }
+
+        registerSource(MergedSource())
     }
 
     open fun get(sourceKey: Long): Source? {

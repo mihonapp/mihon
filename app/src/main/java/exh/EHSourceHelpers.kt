@@ -18,6 +18,7 @@ const val NHENTAI_SOURCE_ID = LEWD_SOURCE_SERIES + 7
 val HENTAI_CAFE_SOURCE_ID = delegatedSourceId<HentaiCafe>()
 const val TSUMINO_SOURCE_ID = LEWD_SOURCE_SERIES + 9
 const val HITOMI_SOURCE_ID = LEWD_SOURCE_SERIES + 10
+const val MERGED_SOURCE_ID = LEWD_SOURCE_SERIES + 69
 
 private val DELEGATED_LEWD_SOURCES = listOf(
         HentaiCafe::class

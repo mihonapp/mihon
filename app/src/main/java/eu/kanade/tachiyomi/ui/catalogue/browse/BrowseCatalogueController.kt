@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.manga.info.MangaWebViewController
@@ -50,11 +51,15 @@ open class BrowseCatalogueController(bundle: Bundle) :
         ChangeMangaCategoriesDialog.Listener {
 
     constructor(source: CatalogueSource,
-                searchQuery: String? = null) : this(Bundle().apply {
+                searchQuery: String? = null,
+                smartSearchConfig: CatalogueController.SmartSearchConfig? = null) : this(Bundle().apply {
         putLong(SOURCE_ID_KEY, source.id)
 
         if(searchQuery != null)
             putString(SEARCH_QUERY_KEY, searchQuery)
+
+        if (smartSearchConfig != null)
+            putParcelable(SMART_SEARCH_CONFIG_KEY, smartSearchConfig)
     })
 
     /**
@@ -561,7 +566,9 @@ open class BrowseCatalogueController(bundle: Bundle) :
      */
     override fun onItemClick(view: View, position: Int): Boolean {
         val item = adapter?.getItem(position) as? CatalogueItem ?: return false
-        router.pushController(MangaController(item.manga, true).withFadeTransaction())
+        router.pushController(MangaController(item.manga,
+                true,
+                args.getParcelable(SMART_SEARCH_CONFIG_KEY)).withFadeTransaction())
 
         return false
     }
@@ -628,6 +635,9 @@ open class BrowseCatalogueController(bundle: Bundle) :
     protected companion object {
         const val SOURCE_ID_KEY = "sourceId"
         const val SEARCH_QUERY_KEY = "searchQuery"
+        // EXH -->
+        const val SMART_SEARCH_CONFIG_KEY = "smartSearchConfig"
+        // EXH <--
     }
 
 }

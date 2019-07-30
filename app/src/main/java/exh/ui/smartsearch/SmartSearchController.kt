@@ -50,7 +50,7 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
             for(event in presenter.smartSearchChannel) {
                 withContext(NonCancellable) {
                     if (event is SmartSearchPresenter.SearchResults.Found) {
-                        val transaction = MangaController(event.manga, true).withFadeTransaction()
+                        val transaction = MangaController(event.manga, true, smartSearchConfig).withFadeTransaction()
                         withContext(Dispatchers.Main) {
                             router.replaceTopController(transaction)
                         }
@@ -61,7 +61,7 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
                             applicationContext?.toast("Error performing automatic search!")
                         }
 
-                        val transaction = BrowseCatalogueController(source, smartSearchConfig.title).withFadeTransaction()
+                        val transaction = BrowseCatalogueController(source, smartSearchConfig.origTitle, smartSearchConfig).withFadeTransaction()
                         withContext(Dispatchers.Main) {
                             router.replaceTopController(transaction)
                         }

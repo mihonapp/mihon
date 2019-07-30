@@ -25,6 +25,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.RxController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
+import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersController
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoController
@@ -39,9 +40,14 @@ import java.util.Date
 
 class MangaController : RxController, TabbedController {
 
-    constructor(manga: Manga?, fromCatalogue: Boolean = false) : super(Bundle().apply {
+    constructor(manga: Manga?,
+                fromCatalogue: Boolean = false,
+                smartSearchConfig: CatalogueController.SmartSearchConfig? = null,
+                update: Boolean = false) : super(Bundle().apply {
         putLong(MANGA_EXTRA, manga?.id ?: 0)
         putBoolean(FROM_CATALOGUE_EXTRA, fromCatalogue)
+        putParcelable(SMART_SEARCH_CONFIG_EXTRA, smartSearchConfig)
+        putBoolean(UPDATE_EXTRA, update)
     }) {
         this.manga = manga
         if (manga != null) {
@@ -78,6 +84,10 @@ class MangaController : RxController, TabbedController {
     val fromCatalogue = args.getBoolean(FROM_CATALOGUE_EXTRA, false)
 
     val update = args.getBoolean(UPDATE_EXTRA, false)
+
+    // EXH -->
+    val smartSearchConfig: CatalogueController.SmartSearchConfig? = args.getParcelable(SMART_SEARCH_CONFIG_EXTRA)
+    // EXH <--
 
     val lastUpdateRelay: BehaviorRelay<Date> = BehaviorRelay.create()
 
@@ -197,6 +207,7 @@ class MangaController : RxController, TabbedController {
 
         // EXH -->
         const val UPDATE_EXTRA = "update"
+        const val SMART_SEARCH_CONFIG_EXTRA = "smartSearchConfig"
         // EXH <--
         const val FROM_CATALOGUE_EXTRA = "from_catalogue"
         const val MANGA_EXTRA = "manga"

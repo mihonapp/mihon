@@ -257,7 +257,7 @@ class CatalogueController(bundle: Bundle? = null) : NucleusController<CatalogueP
 
     // EXH -->
     @Parcelize
-    data class SmartSearchConfig(val title: String) : Parcelable
+    data class SmartSearchConfig(val origTitle: String, val origMangaId: Long) : Parcelable
     // EXH <--
 
     enum class Mode {

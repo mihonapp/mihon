@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
 import android.os.Bundle
+import com.google.gson.Gson
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -10,8 +11,14 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
+import exh.MERGED_SOURCE_ID
+import exh.util.await
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -28,12 +35,14 @@ import java.util.*
 class MangaInfoPresenter(
         val manga: Manga,
         val source: Source,
+        val smartSearchConfig: CatalogueController.SmartSearchConfig?,
         private val chapterCountRelay: BehaviorRelay<Float>,
         private val lastUpdateRelay: BehaviorRelay<Date>,
         private val mangaFavoriteRelay: PublishRelay<Boolean>,
         private val db: DatabaseHelper = Injekt.get(),
         private val downloadManager: DownloadManager = Injekt.get(),
-        private val coverCache: CoverCache = Injekt.get()
+        private val coverCache: CoverCache = Injekt.get(),
+        private val gson: Gson = Injekt.get()
 ) : BasePresenter<MangaInfoController>() {
 
     /**
@@ -170,4 +179,59 @@ class MangaInfoPresenter(
         moveMangaToCategories(manga, listOfNotNull(category))
     }
 
+    suspend fun smartSearchMerge(manga: Manga, originalMangaId: Long): Manga {
+        val originalManga = db.getManga(originalMangaId).await()
+                ?: throw IllegalArgumentException("Unknown manga ID: $originalMangaId")
+        val toInsert = if(originalManga.source == MERGED_SOURCE_ID) {
+            originalManga.apply {
+                val originalChildren = MergedSource.MangaConfig.readFromUrl(gson, url).children
+                if(originalChildren.any { it.source == manga.source && it.url == manga.url })
+                    throw IllegalArgumentException("This manga is already merged with the current manga!")
+
+                url = MergedSource.MangaConfig(originalChildren + MergedSource.MangaSource(
+                        manga.source,
+                        manga.url
+                )).writeAsUrl(gson)
+            }
+        } else {
+            val newMangaConfig = MergedSource.MangaConfig(listOf(
+                    MergedSource.MangaSource(
+                            originalManga.source,
+                            originalManga.url
+                    ),
+                    MergedSource.MangaSource(
+                            manga.source,
+                            manga.url
+                    )
+            ))
+            Manga.create(newMangaConfig.writeAsUrl(gson), originalManga.title, MERGED_SOURCE_ID).apply {
+                copyFrom(originalManga)
+                favorite = true
+                last_update = originalManga.last_update
+                viewer = originalManga.viewer
+                chapter_flags = originalManga.chapter_flags
+                sorting = Manga.SORTING_NUMBER
+            }
+        }
+
+        // Note that if the manga are merged in a different order, this won't trigger, but I don't care lol
+        val existingManga = db.getManga(toInsert.url, toInsert.source).await()
+        if(existingManga != null) {
+            withContext(NonCancellable) {
+                if(toInsert.id != null) {
+                    db.deleteManga(toInsert).await()
+                }
+            }
+
+            return existingManga
+        }
+
+        // Reload chapters immediately
+        toInsert.initialized = false
+
+        val newId = db.insertManga(toInsert).await().insertedId()
+        if(newId != null) toInsert.id = newId
+
+        return toInsert
+    }
 }

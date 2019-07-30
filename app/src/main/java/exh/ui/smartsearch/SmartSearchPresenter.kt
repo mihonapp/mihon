@@ -54,7 +54,7 @@ class SmartSearchPresenter(private val source: CatalogueSource?, private val con
     }
 
     private suspend fun smartSearch(source: CatalogueSource, config: CatalogueController.SmartSearchConfig): SManga? {
-        val cleanedTitle = cleanSmartSearchTitle(config.title)
+        val cleanedTitle = cleanSmartSearchTitle(config.origTitle)
 
         val queries = getSmartSearchQueries(cleanedTitle)
 
