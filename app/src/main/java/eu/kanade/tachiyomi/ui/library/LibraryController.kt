@@ -39,6 +39,7 @@ import eu.kanade.tachiyomi.util.toast
 import exh.favorites.FavoritesIntroDialog
 import exh.favorites.FavoritesSyncStatus
 import exh.ui.LoaderManager
+import exh.ui.migration.manga.design.MigrationDesignController
 import kotlinx.android.synthetic.main.library_controller.*
 import kotlinx.android.synthetic.main.main_activity.*
 import rx.Subscription
@@ -435,6 +436,10 @@ class LibraryController(
             }
             R.id.action_move_to_category -> showChangeMangaCategoriesDialog()
             R.id.action_delete -> showDeleteMangaDialog()
+            R.id.action_auto_source_migration -> {
+                destroyActionModeIfNeeded()
+                router.pushController(MigrationDesignController().withFadeTransaction())
+            }
             else -> return false
         }
         return true

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/eh_manga_card_from"
+        layout="@layout/eh_manga_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintWidth_max="450dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:scaleType="center"
+        android:layout_height="50dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="migrating to"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eh_manga_card_from"
+        app:srcCompat="@drawable/eh_ic_arrow_drop_down_white_100dp" />
+
+    <include
+        android:id="@+id/eh_manga_card_to"
+        layout="@layout/eh_manga_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintWidth_max="450dp" />
+
+    <Button
+        android:id="@+id/skip_migration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:drawableStart="@drawable/eh_ic_clear_white_24dp"
+        android:drawablePadding="6dp"
+        android:text="Skip manga"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/accept_migration"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:backgroundTint="#E53935"
+        android:drawableLeft="@drawable/eh_ic_clear_white_24dp" />
+
+    <Button
+        android:id="@+id/accept_migration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/eh_ic_check_white_24dp"
+        android:drawablePadding="6dp"
+        android:text="Migrate manga"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toBottomOf="@+id/skip_migration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/skip_migration"
+        app:backgroundTint="#00C853"
+        android:drawableLeft="@drawable/eh_ic_check_white_24dp" />
+</android.support.constraint.ConstraintLayout>
