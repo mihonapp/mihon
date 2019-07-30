@@ -102,7 +102,7 @@ open class CatalogueSearchPresenter(
         val languages = preferencesHelper.enabledLanguages().getOrDefault()
         val hiddenCatalogues = preferencesHelper.hiddenCatalogues().getOrDefault()
 
-        return sourceManager.getCatalogueSources()
+        return sourceManager.getVisibleCatalogueSources()
                 .filter { it.lang in languages }
                 .filterNot { it is LoginSource && !it.isLogged() }
                 .filterNot { it.id.toString() in hiddenCatalogues }

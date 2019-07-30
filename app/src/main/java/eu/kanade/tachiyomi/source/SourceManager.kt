@@ -66,6 +66,10 @@ open class SourceManager(private val context: Context) {
 
     fun getCatalogueSources() = sourcesMap.values.filterIsInstance<CatalogueSource>()
 
+    fun getVisibleCatalogueSources() = sourcesMap.values.filterIsInstance<CatalogueSource>().filter {
+        it.id !in BlacklistedSources.HIDDEN_SOURCES
+    }
+
     internal fun registerSource(source: Source, overwrite: Boolean = false) {
         // EXH -->
         val sourceQName = source::class.qualifiedName
