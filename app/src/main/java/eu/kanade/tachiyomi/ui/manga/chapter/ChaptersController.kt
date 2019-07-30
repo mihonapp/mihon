@@ -206,11 +206,14 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         if (presenter.chapters.isEmpty())
             initialFetchChapters()
 
-        if ((parentController as MangaController).update
+        val mangaController = parentController as MangaController
+        if (mangaController.update
                 // Auto-update old format galleries
                 || ((presenter.manga.source == EH_SOURCE_ID || presenter.manga.source == EXH_SOURCE_ID)
-                        && chapters.size == 1 && chapters.first().date_upload == 0L))
+                        && chapters.size == 1 && chapters.first().date_upload == 0L)) {
+            mangaController.update = false
             fetchChaptersFromSource()
+        }
 
         val adapter = adapter ?: return
         adapter.updateDataSet(chapters)

@@ -83,7 +83,7 @@ class MangaController : RxController, TabbedController {
 
     val fromCatalogue = args.getBoolean(FROM_CATALOGUE_EXTRA, false)
 
-    val update = args.getBoolean(UPDATE_EXTRA, false)
+    var update = args.getBoolean(UPDATE_EXTRA, false)
 
     // EXH -->
     val smartSearchConfig: CatalogueController.SmartSearchConfig? = args.getParcelable(SMART_SEARCH_CONFIG_EXTRA)
