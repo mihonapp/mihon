@@ -108,7 +108,7 @@ class MergedSource : HttpSource() {
         source.prepareNewChapter(chapter, copiedManga)
         chapter.url = writeUrlConfig(UrlConfig(source.id, chapter.url, chapterConfig.mangaUrl))
         chapter.scanlator = if(chapter.scanlator.isNullOrBlank()) source.name
-        else "${source.name}: ${chapter.scanlator}"
+        else "$source: ${chapter.scanlator}"
     }
 
     fun readMangaConfig(manga: SManga): MangaConfig {
