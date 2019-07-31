@@ -97,7 +97,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
                         eh_manga_card_to.loading_group.gone()
                         eh_manga_card_to.attachManga(tag, searchResult, resultSource)
                         eh_manga_card_to.setOnClickListener {
-                            controller.router.pushController(MangaController(manga, true).withFadeTransaction())
+                            controller.router.pushController(MangaController(searchResult, true).withFadeTransaction())
                         }
                     } else {
                         eh_manga_card_to.search_progress.gone()
