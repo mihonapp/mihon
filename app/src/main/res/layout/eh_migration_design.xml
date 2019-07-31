@@ -1,22 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/eh_source_item" />
+        tools:listitem="@layout/eh_source_item">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Data to include in migration"
+        android:textAppearance="@style/TextAppearance.Medium.Body2"
+        app:layout_constraintBottom_toTopOf="@+id/mig_chapters"
+        app:layout_constraintStart_toStartOf="@+id/textView" />
+
+    <CheckBox
+        android:id="@+id/mig_chapters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/chapters"
+        android:checked="true"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView2" />
+
+    <CheckBox
+        android:id="@+id/mig_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/categories"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@+id/mig_chapters"
+        app:layout_constraintStart_toEndOf="@+id/mig_chapters" />
+
+    <CheckBox
+        android:id="@+id/mig_tracking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/track"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="@+id/mig_categories"
+        app:layout_constraintStart_toEndOf="@+id/mig_categories" />
 
     <TextView
         android:id="@+id/textView"
@@ -25,7 +69,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Migration mode"
+        android:text="Search options"
         android:textAppearance="@style/TextAppearance.Medium.Body2"
         app:layout_constraintBottom_toTopOf="@+id/prioritize_chapter_count"
         app:layout_constraintStart_toStartOf="parent" />
@@ -70,7 +114,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="start|center_vertical"
-        android:text="Use lenient search algorithm"
+        android:text="Use smart search algorithm"
         app:layout_constraintBottom_toTopOf="@+id/begin_migration_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />

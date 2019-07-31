@@ -1,12 +1,15 @@
 package exh.ui.migration.manga.design
 
+import android.os.Parcelable
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.android.parcel.Parcelize
 
 class MigrationSourceItem(val source: HttpSource, var sourceEnabled: Boolean): AbstractFlexibleItem<MigrationSourceHolder>() {
     override fun getLayoutRes() = R.layout.eh_source_item
@@ -47,5 +50,23 @@ class MigrationSourceItem(val source: HttpSource, var sourceEnabled: Boolean): A
 
     override fun hashCode(): Int {
         return source.id.hashCode()
+    }
+
+    @Parcelize
+    data class ParcelableSI(val sourceId: Long, val sourceEnabled: Boolean): Parcelable
+
+    fun asParcelable(): ParcelableSI {
+        return ParcelableSI(source.id, sourceEnabled)
+    }
+
+    companion object {
+        fun fromParcelable(sourceManager: SourceManager, si: ParcelableSI): MigrationSourceItem? {
+            val source = sourceManager.get(si.sourceId) as? HttpSource ?: return null
+
+            return MigrationSourceItem(
+                    source,
+                    si.sourceEnabled
+            )
+        }
     }
 }

@@ -252,6 +252,8 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     private fun setMangaInfo(manga: Manga, source: Source?) {
         val view = view ?: return
 
+        // TODO Duplicated in MigrationProcedureAdapter
+
         //update full title TextView.
         manga_full_title.text = if (manga.title.isBlank()) {
             view.context.getString(R.string.unknown)

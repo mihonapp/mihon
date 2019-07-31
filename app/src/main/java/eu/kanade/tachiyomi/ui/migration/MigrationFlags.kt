@@ -4,9 +4,9 @@ import eu.kanade.tachiyomi.R
 
 object MigrationFlags {
 
-    private const val CHAPTERS   = 0b001
-    private const val CATEGORIES = 0b010
-    private const val TRACK      = 0b100
+    const val CHAPTERS   = 0b001
+    const val CATEGORIES = 0b010
+    const val TRACK      = 0b100
 
     private const val CHAPTERS2   = 0x1
     private const val CATEGORIES2 = 0x2

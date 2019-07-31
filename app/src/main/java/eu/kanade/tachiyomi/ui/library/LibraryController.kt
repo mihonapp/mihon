@@ -437,8 +437,10 @@ class LibraryController(
             R.id.action_move_to_category -> showChangeMangaCategoriesDialog()
             R.id.action_delete -> showDeleteMangaDialog()
             R.id.action_auto_source_migration -> {
+                router.pushController(MigrationDesignController.create(
+                        selectedMangas.mapNotNull { it.id }
+                ).withFadeTransaction())
                 destroyActionModeIfNeeded()
-                router.pushController(MigrationDesignController().withFadeTransaction())
             }
             else -> return false
         }
