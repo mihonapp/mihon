@@ -68,14 +68,16 @@
         android:id="@+id/accept_migration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0.5"
         android:drawableStart="@drawable/eh_ic_check_white_24dp"
+        android:drawableLeft="@drawable/eh_ic_check_white_24dp"
         android:drawablePadding="6dp"
+        android:enabled="false"
         android:text="Migrate manga"
         android:textColor="#ffffff"
+        app:backgroundTint="#00C853"
         app:layout_constraintBottom_toBottomOf="@+id/skip_migration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/skip_migration"
-        app:backgroundTint="#00C853"
-        android:drawableLeft="@drawable/eh_ic_check_white_24dp" />
+        app:layout_constraintStart_toEndOf="@+id/skip_migration" />
 </android.support.constraint.ConstraintLayout>

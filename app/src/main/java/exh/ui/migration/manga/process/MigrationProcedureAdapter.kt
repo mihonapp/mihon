@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoController
 import eu.kanade.tachiyomi.util.gone
 import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.visible
 import exh.MERGED_SOURCE_ID
 import exh.debug.DebugFunctions.sourceManager
 import exh.util.await
@@ -99,6 +100,8 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
                         eh_manga_card_to.setOnClickListener {
                             controller.router.pushController(MangaController(manga, true).withFadeTransaction())
                         }
+                        accept_migration.isEnabled = true
+                        accept_migration.alpha = 1.0f
                     } else {
                         eh_manga_card_to.search_progress.gone()
                         eh_manga_card_to.search_status.text = "Found no manga"
