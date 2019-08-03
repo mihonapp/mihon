@@ -16,14 +16,16 @@ import exh.ui.base.BaseExhController
 import exh.util.await
 import kotlinx.android.synthetic.main.eh_migration_process.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
+import java.util.concurrent.atomic.AtomicInteger
 
 class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(bundle), CoroutineScope {
     override val layoutId = R.layout.eh_migration_process
 
-    private var titleText = "Migrate manga (1/300)"
+    private var titleText = "Migrate manga"
 
     private var adapter: MigrationProcedureAdapter? = null
 
@@ -108,42 +110,36 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                             it.id != mangaSource.id
                         }
                         if(config.useSourceWithMostChapters) {
-                            val sourceQueue = Channel<CatalogueSource>(Channel.RENDEZVOUS)
-                            launch {
-                                validSources.forEachIndexed { index, catalogueSource ->
-                                    sourceQueue.send(catalogueSource)
-                                    manga.progress.send(validSources.size to index)
+                            val sourceSemaphore = Semaphore(3)
+                            val processedSources = AtomicInteger()
+
+                            validSources.map { source ->
+                               async {
+                                   sourceSemaphore.withPermit {
+                                       try {
+                                           supervisorScope {
+                                               val searchResult = if (config.enableLenientSearch) {
+                                                   smartSearchEngine.smartSearch(source, mangaObj.title)
+                                               } else {
+                                                   smartSearchEngine.normalSearch(source, mangaObj.title)
+                                               }
+
+                                               if(searchResult != null) {
+                                                   val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
+                                                   val chapters = source.fetchChapterList(localManga).toSingle().await(Schedulers.io())
+                                                   manga.progress.send(validSources.size to processedSources.incrementAndGet())
+                                                   localManga to chapters.size
+                                               } else {
+                                                   null
+                                               }
+                                           }
+                                       } catch(e: Exception) {
+                                           logger.e("Failed to search in source: ${source.id}!", e)
+                                           null
+                                       }
+                                   }
                                 }
-                                sourceQueue.close()
-                            }
-
-                            val results = mutableListOf<Pair<Manga, Int>>()
-
-                            (1 .. 3).map {
-                                launch {
-                                    for(source in sourceQueue) {
-                                        try {
-                                            supervisorScope {
-                                                val searchResult = if (config.enableLenientSearch) {
-                                                    smartSearchEngine.smartSearch(source, mangaObj.title)
-                                                } else {
-                                                    smartSearchEngine.normalSearch(source, mangaObj.title)
-                                                }
-
-                                                if(searchResult != null) {
-                                                    val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
-                                                    val chapters = source.fetchChapterList(localManga).toSingle().await(Schedulers.io())
-                                                    results += localManga to chapters.size
-                                                }
-                                            }
-                                        } catch(e: Exception) {
-                                            logger.e("Failed to search in source: ${source.id}!", e)
-                                        }
-                                    }
-                                }
-                            }.forEach { it.join() }
-
-                            results.maxBy { it.second }?.first
+                            }.mapNotNull { it.await() }.maxBy { it.second }?.first
                         } else {
                             validSources.forEachIndexed { index, source ->
                                 val searchResult = try {
