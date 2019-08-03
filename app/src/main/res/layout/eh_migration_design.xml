@@ -69,7 +69,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Search options"
+        android:text="Options"
         android:textAppearance="@style/TextAppearance.Medium.Body2"
         app:layout_constraintBottom_toTopOf="@+id/prioritize_chapter_count"
         app:layout_constraintStart_toStartOf="parent" />
