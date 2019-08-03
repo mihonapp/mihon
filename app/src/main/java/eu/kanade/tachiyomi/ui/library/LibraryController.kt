@@ -99,6 +99,8 @@ class LibraryController(
      */
     val libraryMangaRelay: BehaviorRelay<LibraryMangaEvent> = BehaviorRelay.create()
 
+    val selectAllRelay: PublishRelay<Int> = PublishRelay.create()
+
     /**
      * Number of manga per row in grid mode.
      */
@@ -436,6 +438,9 @@ class LibraryController(
             }
             R.id.action_move_to_category -> showChangeMangaCategoriesDialog()
             R.id.action_delete -> showDeleteMangaDialog()
+            R.id.action_select_all -> {
+                selectAllRelay.call(activeCategory)
+            }
             R.id.action_auto_source_migration -> {
                 router.pushController(MigrationDesignController.create(
                         selectedMangas.mapNotNull { it.id }

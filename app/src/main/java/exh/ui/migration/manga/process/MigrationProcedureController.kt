@@ -4,12 +4,13 @@ import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
 import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.toast
 import exh.smartsearch.SmartSearchEngine
 import exh.ui.base.BaseExhController
@@ -22,6 +23,7 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 import java.util.concurrent.atomic.AtomicInteger
 
+// TODO Will probably implode if activity is fully destroyed
 class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(bundle), CoroutineScope {
     override val layoutId = R.layout.eh_migration_process
 
@@ -29,12 +31,12 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
 
     private var adapter: MigrationProcedureAdapter? = null
 
-    private val config: MigrationProcedureConfig = args.getParcelable(CONFIG_EXTRA)
+    val config: MigrationProcedureConfig = args.getParcelable(CONFIG_EXTRA)
 
     private val db: DatabaseHelper by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
 
-    private val smartSearchEngine = SmartSearchEngine(coroutineContext)
+    private val smartSearchEngine = SmartSearchEngine(coroutineContext, config.extraSearchParams)
 
     private val logger = XLog.tag("MigrationProcedureController")
 
@@ -74,11 +76,15 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
             }
         }
 
-        updateTitle()
+        pager.post {
+            // pager.currentItem doesn't appear to be valid if we don't do this in a post
+            updateTitle()
+        }
     }
 
     fun updateTitle() {
         titleText = "Migrate manga (${pager.currentItem + 1}/${adapter?.count ?: 0})"
+        setTitle()
     }
 
     fun nextMigration() {
@@ -88,11 +94,20 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                 router.popCurrentController()
             } else {
                 pager.setCurrentItem(pager.currentItem + 1, true)
-                updateTitle()
                 launch(Dispatchers.Main) {
-                    setTitle()
+                    updateTitle()
                 }
             }
+        }
+    }
+
+    fun migrationFailure() {
+        activity?.let {
+            MaterialDialog.Builder(it)
+                    .title("Migration failure")
+                    .content("An unknown error occured while migrating this manga!")
+                    .positiveText("Ok")
+                    .show()
         }
     }
 
@@ -123,21 +138,22 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                                async {
                                    sourceSemaphore.withPermit {
                                        try {
-                                           supervisorScope {
-                                               val searchResult = if (config.enableLenientSearch) {
-                                                   smartSearchEngine.smartSearch(source, mangaObj.title)
-                                               } else {
-                                                   smartSearchEngine.normalSearch(source, mangaObj.title)
-                                               }
+                                           val searchResult = if (config.enableLenientSearch) {
+                                               smartSearchEngine.smartSearch(source, mangaObj.title)
+                                           } else {
+                                               smartSearchEngine.normalSearch(source, mangaObj.title)
+                                           }
 
-                                               if(searchResult != null) {
-                                                   val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
-                                                   val chapters = source.fetchChapterList(localManga).toSingle().await(Schedulers.io())
-                                                   manga.progress.send(validSources.size to processedSources.incrementAndGet())
-                                                   localManga to chapters.size
-                                               } else {
-                                                   null
+                                           if(searchResult != null) {
+                                               val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
+                                               val chapters = source.fetchChapterList(localManga).toSingle().await(Schedulers.io())
+                                               withContext(Dispatchers.IO) {
+                                                   syncChaptersWithSource(db, chapters, localManga, source)
                                                }
+                                               manga.progress.send(validSources.size to processedSources.incrementAndGet())
+                                               localManga to chapters.size
+                                           } else {
+                                               null
                                            }
                                        } catch(e: Exception) {
                                            logger.e("Failed to search in source: ${source.id}!", e)
@@ -149,17 +165,20 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                         } else {
                             validSources.forEachIndexed { index, source ->
                                 val searchResult = try {
-                                    supervisorScope {
-                                        val searchResult = if (config.enableLenientSearch) {
-                                            smartSearchEngine.smartSearch(source, mangaObj.title)
-                                        } else {
-                                            smartSearchEngine.normalSearch(source, mangaObj.title)
-                                        }
-
-                                        if (searchResult != null) {
-                                            smartSearchEngine.networkToLocalManga(searchResult, source.id)
-                                        } else null
+                                    val searchResult = if (config.enableLenientSearch) {
+                                        smartSearchEngine.smartSearch(source, mangaObj.title)
+                                    } else {
+                                        smartSearchEngine.normalSearch(source, mangaObj.title)
                                     }
+
+                                    if (searchResult != null) {
+                                        val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
+                                        val chapters = source.fetchChapterList(localManga).toSingle().await(Schedulers.io())
+                                        withContext(Dispatchers.IO) {
+                                            syncChaptersWithSource(db, chapters, localManga, source)
+                                        }
+                                        localManga
+                                    } else null
                                 } catch(e: Exception) {
                                     logger.e("Failed to search in source: ${source.id}!", e)
                                     null
@@ -180,15 +199,13 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
 
                 if(result != null && result.thumbnail_url == null) {
                     try {
-                        supervisorScope {
-                            val newManga = sourceManager.getOrStub(result.source)
-                                    .fetchMangaDetails(result)
-                                    .toSingle()
-                                    .await()
-                            result.copyFrom(newManga)
+                        val newManga = sourceManager.getOrStub(result.source)
+                                .fetchMangaDetails(result)
+                                .toSingle()
+                                .await()
+                        result.copyFrom(newManga)
 
-                            db.insertManga(result).await()
-                        }
+                        db.insertManga(result).await()
                     } catch(e: Exception) {
                         logger.e("Could not load search manga details", e)
                     }

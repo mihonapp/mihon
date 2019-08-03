@@ -41,6 +41,6 @@ class DeferredField<T> {
         mutex.withLock {}
 
         // Field is initialized, return value
-        return content!!
+        return content as T
     }
 }

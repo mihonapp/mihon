@@ -13,7 +13,8 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 import kotlin.coroutines.CoroutineContext
 
-class SmartSearchEngine(parentContext: CoroutineContext): CoroutineScope {
+class SmartSearchEngine(parentContext: CoroutineContext,
+                        val extraSearchParams: String? = null): CoroutineScope {
     override val coroutineContext: CoroutineContext = parentContext + Job() + Dispatchers.Default
 
     private val db: DatabaseHelper by injectLazy()
@@ -26,7 +27,11 @@ class SmartSearchEngine(parentContext: CoroutineContext): CoroutineScope {
         val eligibleManga = supervisorScope {
             queries.map { query ->
                 async(Dispatchers.Default) {
-                    val searchResults = source.fetchSearchManga(1, query, FilterList()).toSingle().await(Schedulers.io())
+                    val builtQuery = if(extraSearchParams != null) {
+                        "$query ${extraSearchParams.trim()}"
+                    } else title
+
+                    val searchResults = source.fetchSearchManga(1, builtQuery, FilterList()).toSingle().await(Schedulers.io())
 
                     searchResults.mangas.map {
                         val cleanedMangaTitle = cleanSmartSearchTitle(it.title)
@@ -44,7 +49,10 @@ class SmartSearchEngine(parentContext: CoroutineContext): CoroutineScope {
 
     suspend fun normalSearch(source: CatalogueSource, title: String): SManga? {
         val eligibleManga = supervisorScope {
-            val searchResults = source.fetchSearchManga(1, title, FilterList()).toSingle().await(Schedulers.io())
+            val searchQuery = if(extraSearchParams != null) {
+                "$title ${extraSearchParams.trim()}"
+            } else title
+            val searchResults = source.fetchSearchManga(1, searchQuery, FilterList()).toSingle().await(Schedulers.io())
 
             searchResults.mangas.map {
                 val normalizedDistance = NormalizedLevenshtein().similarity(title, it.title)
@@ -80,7 +88,7 @@ class SmartSearchEngine(parentContext: CoroutineContext): CoroutineScope {
         )
 
         return searchQueries.map {
-            it.joinToString().trim()
+            it.joinToString(" ").trim()
         }.distinct()
     }
 
@@ -167,8 +175,8 @@ class SmartSearchEngine(parentContext: CoroutineContext): CoroutineScope {
     }
 
     companion object {
-        const val MIN_SMART_ELIGIBLE_THRESHOLD = 0.7
-        const val MIN_NORMAL_ELIGIBLE_THRESHOLD = 0.5
+        const val MIN_SMART_ELIGIBLE_THRESHOLD = 0.4
+        const val MIN_NORMAL_ELIGIBLE_THRESHOLD = 0.4
 
         private val titleRegex = Regex("[^a-zA-Z0-9- ]")
         private val consecutiveSpacesRegex = Regex(" +")

@@ -4,28 +4,22 @@ import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.glide.GlideApp
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.manga.info.MangaInfoController
 import eu.kanade.tachiyomi.ui.migration.MigrationFlags
-import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.inflate
-import eu.kanade.tachiyomi.util.syncChaptersWithSource
-import eu.kanade.tachiyomi.util.visible
+import eu.kanade.tachiyomi.util.*
 import exh.MERGED_SOURCE_ID
-import exh.debug.DebugFunctions.sourceManager
 import exh.util.await
 import kotlinx.android.synthetic.main.eh_manga_card.view.*
 import kotlinx.android.synthetic.main.eh_migration_process_item.view.*
@@ -33,6 +27,9 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import uy.kohesive.injekt.injectLazy
+import java.text.DateFormat
+import java.text.DecimalFormat
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class MigrationProcedureAdapter(val controller: MigrationProcedureController,
@@ -41,6 +38,8 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
     private val db: DatabaseHelper by injectLazy()
     private val gson: Gson by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
+
+    private val logger = XLog.tag(this::class.simpleName)
 
     override fun isViewFromObject(p0: View, p1: Any): Boolean {
         return p0 == p1
@@ -57,34 +56,51 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
             controller.nextMigration()
         }
 
-        view.accept_migration.setOnClickListener {
-            view.migrating_frame.visible()
-        }
-
         val viewTag = ViewTag(coroutineContext)
         view.tag = viewTag
         view.setupView(viewTag, item)
 
+        view.accept_migration.setOnClickListener {
+            viewTag.launch(Dispatchers.Main) {
+                view.migrating_frame.visible()
+                try {
+                    withContext(Dispatchers.Default) {
+                        performMigration(item)
+                    }
+                    controller.nextMigration()
+                } catch(e: Exception) {
+                    logger.e("Migration failure!", e)
+                    controller.migrationFailure()
+                }
+                view.migrating_frame.gone()
+            }
+        }
+
         return view
     }
 
-    fun performMigration() {
+    suspend fun performMigration(manga: MigratingManga) {
+        if(!manga.searchResult.initialized) {
+            return
+        }
 
+        val toMangaObj = db.getManga(manga.searchResult.get() ?: return).await() ?: return
+
+        withContext(Dispatchers.IO) {
+            migrateMangaInternal(
+                    manga.manga() ?: return@withContext,
+                    toMangaObj,
+                    !controller.config.copy
+            )
+        }
     }
-    private fun migrateMangaInternal(source: Source,
-                                     sourceChapters: List<SChapter>,
-                                     prevManga: Manga,
+
+    private fun migrateMangaInternal(prevManga: Manga,
                                      manga: Manga,
                                      replace: Boolean) {
         db.inTransaction {
             // Update chapters read
-            if (migrateChapters) {
-                try {
-                    syncChaptersWithSource(db, sourceChapters, manga, source)
-                } catch (e: Exception) {
-                    // Worst case, chapters won't be synced
-                }
-
+            if (MigrationFlags.hasChapters(controller.config.migrationFlags)) {
                 val prevMangaChapters = db.getChapters(prevManga).executeAsBlocking()
                 val maxChapterRead = prevMangaChapters.filter { it.read }
                         .maxBy { it.chapter_number }?.chapter_number
@@ -99,13 +115,13 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
                 }
             }
             // Update categories
-            if (migrateCategories) {
+            if (MigrationFlags.hasCategories(controller.config.migrationFlags)) {
                 val categories = db.getCategoriesForManga(prevManga).executeAsBlocking()
                 val mangaCategories = categories.map { MangaCategory.create(manga, it) }
                 db.setMangaCategories(mangaCategories, listOf(manga))
             }
             // Update track
-            if (migrateTracks) {
+            if (MigrationFlags.hasTracks(controller.config.migrationFlags)) {
                 val tracks = db.getTracks(prevManga).executeAsBlocking()
                 for (track in tracks) {
                     track.id = null
@@ -174,7 +190,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
         }
     }
 
-    fun View.attachManga(tag: ViewTag, manga: Manga, source: Source) {
+    suspend fun View.attachManga(tag: ViewTag, manga: Manga, source: Source) {
         // TODO Duplicated in MangaInfoController
 
         GlideApp.with(context)
@@ -221,6 +237,23 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
             SManga.LICENSED -> R.string.licensed
             else -> R.string.unknown
         })
+
+        val mangaChapters = db.getChapters(manga).await()
+        manga_chapters.text = mangaChapters.size.toString()
+        val latestChapter = mangaChapters.maxBy { it.chapter_number }?.chapter_number ?: -1f
+        val lastUpdate = Date(mangaChapters.maxBy { it.date_upload }?.date_upload ?: 0)
+
+        if (latestChapter > 0f) {
+            manga_last_chapter.text = DecimalFormat("#.#").format(count)
+        } else {
+            manga_last_chapter.setText(R.string.unknown)
+        }
+
+        if (lastUpdate.time != 0L) {
+            manga_last_update.text = DateFormat.getDateInstance(DateFormat.SHORT).format(lastUpdate)
+        } else {
+            manga_last_update.setText(R.string.unknown)
+        }
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

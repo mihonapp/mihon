@@ -7,11 +7,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import exh.util.DeferredField
 import exh.util.await
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.CoroutineContext
 
 class MigratingManga(private val db: DatabaseHelper,

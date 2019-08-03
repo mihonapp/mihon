@@ -11,13 +11,14 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.migration.MigrationFlags
+import eu.kanade.tachiyomi.util.gone
+import eu.kanade.tachiyomi.util.visible
 import exh.ui.base.BaseExhController
 import exh.ui.migration.manga.process.MigrationProcedureConfig
 import exh.ui.migration.manga.process.MigrationProcedureController
 import kotlinx.android.synthetic.main.eh_migration_design.*
 import uy.kohesive.injekt.injectLazy
 
-// TODO Handle config changes
 // TODO Select all in library
 class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bundle), FlexibleAdapter.OnItemClickListener {
     private val sourceManager: SourceManager by injectLazy()
@@ -28,6 +29,8 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
     private var adapter: MigrationSourceAdapter? = null
 
     private val config: LongArray = args.getLongArray(MANGA_IDS_EXTRA) ?: LongArray(0)
+
+    private var showingOptions = false
 
     override fun getTitle() = "Select target sources"
 
@@ -53,13 +56,33 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
             use_smart_search.toggle()
         }
 
+        copy_manga_desc.setOnClickListener {
+            copy_manga.toggle()
+        }
+
+        extra_search_param_desc.setOnClickListener {
+            extra_search_param.toggle()
+        }
+
         prioritize_chapter_count.setOnCheckedChangeListener { _, b ->
             updatePrioritizeChapterCount(b)
         }
 
+        extra_search_param.setOnCheckedChangeListener { _, b ->
+            updateOptionsState()
+        }
+
         updatePrioritizeChapterCount(prioritize_chapter_count.isChecked)
 
+        updateOptionsState()
+
         begin_migration_btn.setOnClickListener {
+            if(!showingOptions) {
+                showingOptions = true
+                updateOptionsState()
+                return@setOnClickListener
+            }
+
             var flags = 0
             if(mig_chapters.isChecked) flags = flags or MigrationFlags.CHAPTERS
             if(mig_categories.isChecked) flags = flags or MigrationFlags.CATEGORIES
@@ -73,10 +96,39 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
                             }.map { it.source.id },
                             useSourceWithMostChapters = prioritize_chapter_count.isChecked,
                             enableLenientSearch = use_smart_search.isChecked,
-                            migrationFlags = flags
+                            migrationFlags = flags,
+                            copy = copy_manga.isChecked,
+                            extraSearchParams = if(extra_search_param.isChecked && extra_search_param_text.text.isNotBlank()) {
+                                extra_search_param_text.text.toString()
+                            } else null
                     )
             ).withFadeTransaction())
         }
+    }
+
+    fun updateOptionsState() {
+        if (showingOptions) {
+            begin_migration_btn.text = "Begin migration"
+            options_group.visible()
+            if(extra_search_param.isChecked) {
+                extra_search_param_text.visible()
+            } else {
+                extra_search_param_text.gone()
+            }
+        } else {
+            begin_migration_btn.text = "Next step"
+            options_group.gone()
+            extra_search_param_text.gone()
+        }
+    }
+
+    override fun handleBack(): Boolean {
+        if(showingOptions) {
+            showingOptions = false
+            updateOptionsState()
+            return true
+        }
+        return super.handleBack()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -92,9 +144,9 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
 
     private fun updatePrioritizeChapterCount(migrationMode: Boolean) {
         migration_mode.text = if(migrationMode) {
-            "Use the source with the most chapters and use the above list to break ties (slow with many sources or smart search)"
+            "Currently using the source with the most chapters and the above list to break ties (slow with many sources or smart search)"
         } else {
-            "Use the first source in the list that has the manga"
+            "Currently using the first source in the list that has the manga"
         }
     }
 

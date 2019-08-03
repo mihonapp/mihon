@@ -35,8 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="@string/chapters"
         android:checked="true"
+        android:text="@string/chapters"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView2" />
 
@@ -46,8 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="@string/categories"
         android:checked="true"
+        android:text="@string/categories"
         app:layout_constraintBottom_toBottomOf="@+id/mig_chapters"
         app:layout_constraintStart_toEndOf="@+id/mig_chapters" />
 
@@ -57,8 +57,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="@string/track"
         android:checked="true"
+        android:text="@string/track"
         app:layout_constraintBottom_toBottomOf="@+id/mig_categories"
         app:layout_constraintStart_toEndOf="@+id/mig_categories" />
 
@@ -92,6 +92,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="start|center_vertical"
+        android:clickable="true"
         app:layout_constraintBottom_toTopOf="@+id/fuzzy_search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />
@@ -100,7 +101,6 @@
         android:id="@+id/use_smart_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/fuzzy_search" />
 
@@ -114,10 +114,72 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="start|center_vertical"
-        android:text="Use smart search algorithm"
-        app:layout_constraintBottom_toTopOf="@+id/begin_migration_btn"
+        android:text="Use intelligent search algorithm"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/copy_manga"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/copy_manga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/copy_manga_desc" />
+
+    <TextView
+        android:id="@+id/copy_manga_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="start|center_vertical"
+        android:text="Keep old manga"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/extra_search_param"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/extra_search_param"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/extra_search_param_desc" />
+
+    <TextView
+        android:id="@+id/extra_search_param_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="start|center_vertical"
+        android:text="Include extra search parameter when searching"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/extra_search_param_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />
+
+    <EditText
+        android:id="@+id/extra_search_param_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
+        android:hint="Search parameter (e.g. language:english)"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/begin_migration_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/begin_migration_btn"
@@ -133,5 +195,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Group
+        android:id="@+id/options_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="migration_mode,use_smart_search,fuzzy_search,copy_manga,extra_search_param_desc,mig_tracking,textView,mig_chapters,copy_manga_desc,textView2,prioritize_chapter_count,mig_categories,extra_search_param" />
 
 </android.support.constraint.ConstraintLayout>

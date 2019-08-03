@@ -9,5 +9,7 @@ data class MigrationProcedureConfig(
         val targetSourceIds: List<Long>,
         val useSourceWithMostChapters: Boolean,
         val enableLenientSearch: Boolean,
-        val migrationFlags: Int
+        val migrationFlags: Int,
+        val copy: Boolean,
+        val extraSearchParams: String?
 ): Parcelable
