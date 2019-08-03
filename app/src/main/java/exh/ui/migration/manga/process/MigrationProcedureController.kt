@@ -73,6 +73,12 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                 runMigrations(newMigratingManga)
             }
         }
+
+        updateTitle()
+    }
+
+    fun updateTitle() {
+        titleText = "Migrate manga (${pager.currentItem + 1}/${adapter?.count ?: 0})"
     }
 
     fun nextMigration() {
@@ -82,7 +88,7 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                 router.popCurrentController()
             } else {
                 pager.setCurrentItem(pager.currentItem + 1, true)
-                titleText = "Migrate manga (${pager.currentItem + 1}/${adapter.count})"
+                updateTitle()
                 launch(Dispatchers.Main) {
                     setTitle()
                 }

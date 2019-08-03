@@ -8,16 +8,22 @@ import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.glide.GlideApp
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoController
+import eu.kanade.tachiyomi.ui.migration.MigrationFlags
 import eu.kanade.tachiyomi.util.gone
 import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.visible
 import exh.MERGED_SOURCE_ID
 import exh.debug.DebugFunctions.sourceManager
 import exh.util.await
@@ -52,7 +58,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
         }
 
         view.accept_migration.setOnClickListener {
-
+            view.migrating_frame.visible()
         }
 
         val viewTag = ViewTag(coroutineContext)
@@ -60,6 +66,64 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
         view.setupView(viewTag, item)
 
         return view
+    }
+
+    fun performMigration() {
+
+    }
+    private fun migrateMangaInternal(source: Source,
+                                     sourceChapters: List<SChapter>,
+                                     prevManga: Manga,
+                                     manga: Manga,
+                                     replace: Boolean) {
+        db.inTransaction {
+            // Update chapters read
+            if (migrateChapters) {
+                try {
+                    syncChaptersWithSource(db, sourceChapters, manga, source)
+                } catch (e: Exception) {
+                    // Worst case, chapters won't be synced
+                }
+
+                val prevMangaChapters = db.getChapters(prevManga).executeAsBlocking()
+                val maxChapterRead = prevMangaChapters.filter { it.read }
+                        .maxBy { it.chapter_number }?.chapter_number
+                if (maxChapterRead != null) {
+                    val dbChapters = db.getChapters(manga).executeAsBlocking()
+                    for (chapter in dbChapters) {
+                        if (chapter.isRecognizedNumber && chapter.chapter_number <= maxChapterRead) {
+                            chapter.read = true
+                        }
+                    }
+                    db.insertChapters(dbChapters).executeAsBlocking()
+                }
+            }
+            // Update categories
+            if (migrateCategories) {
+                val categories = db.getCategoriesForManga(prevManga).executeAsBlocking()
+                val mangaCategories = categories.map { MangaCategory.create(manga, it) }
+                db.setMangaCategories(mangaCategories, listOf(manga))
+            }
+            // Update track
+            if (migrateTracks) {
+                val tracks = db.getTracks(prevManga).executeAsBlocking()
+                for (track in tracks) {
+                    track.id = null
+                    track.manga_id = manga.id!!
+                }
+                db.insertTracks(tracks).executeAsBlocking()
+            }
+            // Update favorite status
+            if (replace) {
+                prevManga.favorite = false
+                db.updateMangaFavorite(prevManga).executeAsBlocking()
+            }
+            manga.favorite = true
+            db.updateMangaFavorite(manga).executeAsBlocking()
+
+            // SearchPresenter#networkToLocalManga may have updated the manga title, so ensure db gets updated title
+            db.updateMangaTitle(manga).executeAsBlocking()
+        }
     }
 
     fun View.setupView(tag: ViewTag, migratingManga: MigratingManga) {
@@ -99,6 +163,8 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
                         eh_manga_card_to.setOnClickListener {
                             controller.router.pushController(MangaController(searchResult, true).withFadeTransaction())
                         }
+                        accept_migration.isEnabled = true
+                        accept_migration.alpha = 1.0f
                     } else {
                         eh_manga_card_to.search_progress.gone()
                         eh_manga_card_to.search_status.text = "Found no manga"
