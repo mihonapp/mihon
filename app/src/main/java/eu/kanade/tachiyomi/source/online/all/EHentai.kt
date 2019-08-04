@@ -55,9 +55,9 @@ class EHentai(override val id: Long,
             "http"
 
     val domain: String
-        get() = /*if(exh)
+        get() = if(exh)
             "exhentai.org"
-        else*/
+        else
             "e-hentai.org"
 
     override val baseUrl: String
@@ -234,9 +234,9 @@ class EHentai(override val id: Long,
         return if (it.text() == ">") it.attr("href") else null
     }
 
-    override fun popularMangaRequest(page: Int) = /*if(exh)
+    override fun popularMangaRequest(page: Int) = if(exh)
         latestUpdatesRequest(page)
-    else*/
+    else
         exGet("$baseUrl/toplist.php?tl=15&p=${page - 1}", null) // Custom page logic for toplists
 
     //Support direct URL importing
@@ -629,7 +629,7 @@ class EHentai(override val id: Long,
     class ReverseFilter : Filter.CheckBox("Reverse search results")
 
     override val name = if(exh)
-        "ExHentai (RIP)"
+        "ExHentai"
     else
         "E-Hentai"
 
