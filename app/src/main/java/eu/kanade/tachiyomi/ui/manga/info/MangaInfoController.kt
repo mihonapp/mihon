@@ -201,7 +201,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             // EXH -->
-            R.id.action_smart_search -> openSmartSearch()
+//            R.id.action_smart_search -> openSmartSearch()
             // EXH <--
             R.id.action_open_in_browser -> openInBrowser()
             R.id.action_open_in_web_view -> openInWebView()
