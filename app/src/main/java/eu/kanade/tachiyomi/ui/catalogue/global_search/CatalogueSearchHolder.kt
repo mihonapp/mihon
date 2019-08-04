@@ -105,11 +105,13 @@ class CatalogueSearchHolder(view: View, val adapter: CatalogueSearchAdapter) :
     private fun showHolder() {
         title.visible()
         source_card.visible()
+        more.visible() // EXH
     }
 
     private fun hideHolder() {
         title.gone()
         source_card.gone()
+        more.gone() // EXH
     }
 
 }
