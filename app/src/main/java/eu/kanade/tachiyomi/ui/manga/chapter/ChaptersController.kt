@@ -146,18 +146,12 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         val menuFilterUnread = menu.findItem(R.id.action_filter_unread)
         val menuFilterDownloaded = menu.findItem(R.id.action_filter_downloaded)
         val menuFilterBookmarked = menu.findItem(R.id.action_filter_bookmarked)
-        val menuSort = menu.findItem(R.id.action_sort)
-        val menuSortingMode = menu.findItem(R.id.action_sorting_mode)
 
         // Set correct checkbox values.
         menuFilterRead.isChecked = presenter.onlyRead()
         menuFilterUnread.isChecked = presenter.onlyUnread()
         menuFilterDownloaded.isChecked = presenter.onlyDownloaded()
         menuFilterBookmarked.isChecked = presenter.onlyBookmarked()
-
-        val showSortOptions = !presenter.isSortingForced()
-        menuSort.isVisible = showSortOptions
-        menuSortingMode.isVisible = showSortOptions
 
         if (presenter.onlyRead())
             //Disable unread filter option if read filter is enabled.
@@ -419,8 +413,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     private fun markPreviousAsRead(chapter: ChapterItem) {
         val adapter = adapter ?: return
-        val chapters = if (presenter.sortDescending()
-                || presenter.isSortingForced()) adapter.items.reversed() else adapter.items
+        val chapters = if (presenter.sortDescending()) adapter.items.reversed() else adapter.items
         val chapterPos = chapters.indexOf(chapter)
         if (chapterPos != -1) {
             markAsRead(chapters.take(chapterPos))

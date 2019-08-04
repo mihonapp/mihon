@@ -447,10 +447,6 @@ class ChaptersPresenter(
      * Whether the sorting method is descending or ascending.
      */
     fun sortDescending(): Boolean {
-        return !isSortingForced() && manga.sortDescending()
+        return manga.sortDescending()
     }
-
-    fun isSortingForced() = source.isEhBasedSource()
-                && preferences.eh_forceSortEhVersionsAsc().getOrDefault()
-
 }
