@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.util.jobScheduler
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.debug.DebugToggles
 import exh.eh.EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.base.*
@@ -136,7 +137,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
             val raisedMeta = meta.raise<EHentaiSearchMetadata>()
 
             // Don't update galleries too frequently
-            if (raisedMeta.aged || curTime - raisedMeta.lastUpdateCheck < MIN_BACKGROUND_UPDATE_FREQ)
+            if (raisedMeta.aged || (curTime - raisedMeta.lastUpdateCheck < MIN_BACKGROUND_UPDATE_FREQ && DebugToggles.RESTRICT_EXH_GALLERY_UPDATE_CHECK_FREQUENCY.enabled))
                 return@mapNotNull null
 
             val chapter = db.getChaptersByMangaId(manga.id!!).asRxSingle().await().minBy {
@@ -269,12 +270,6 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
             return JobInfo.Builder(
                     if(isTest) JOB_ID_UPDATE_BACKGROUND_TEST
                     else JOB_ID_UPDATE_BACKGROUND, componentName())
-                    .apply {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            setEstimatedNetworkBytes(15000L * UPDATES_PER_ITERATION,
-                                    1000L * UPDATES_PER_ITERATION)
-                        }
-                    }
         }
 
         private fun Context.periodicBackgroundJobInfo(period: Long,
@@ -283,15 +278,19 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
             return baseBackgroundJobInfo(false)
                     .setPeriodic(period)
                     .setPersisted(true)
+                    .setRequiredNetworkType(
+                            if(requireUnmetered) JobInfo.NETWORK_TYPE_UNMETERED
+                            else JobInfo.NETWORK_TYPE_ANY)
                     .apply {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             setRequiresBatteryNotLow(true)
                         }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            setEstimatedNetworkBytes(15000L * UPDATES_PER_ITERATION,
+                                    1000L * UPDATES_PER_ITERATION)
+                        }
                     }
                     .setRequiresCharging(requireCharging)
-                    .setRequiredNetworkType(
-                            if(requireUnmetered) JobInfo.NETWORK_TYPE_UNMETERED
-                            else JobInfo.NETWORK_TYPE_ANY)
 //                    .setRequiresDeviceIdle(true) Job never seems to run with this
                     .build()
         }

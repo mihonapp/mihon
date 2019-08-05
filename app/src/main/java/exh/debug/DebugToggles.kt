@@ -6,7 +6,8 @@ import uy.kohesive.injekt.injectLazy
 enum class DebugToggles(val default: Boolean) {
     ENABLE_EXH_ROOT_REDIRECT(true),
     ENABLE_DEBUG_OVERLAY(true),
-    PULL_TO_ROOT_WHEN_LOADING_EXH_MANGA_DETAILS(true);
+    PULL_TO_ROOT_WHEN_LOADING_EXH_MANGA_DETAILS(true),
+    RESTRICT_EXH_GALLERY_UPDATE_CHECK_FREQUENCY(true);
 
     val prefKey = "eh_debug_toggle_${name.toLowerCase()}"
 
