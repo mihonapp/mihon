@@ -19,8 +19,8 @@ fun Preference<Boolean>.invert(): Boolean = getOrDefault().let { set(!it); !it }
 
 class PreferencesHelper(val context: Context) {
 
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-    private val rxPrefs = RxSharedPreferences.create(prefs)
+    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    val rxPrefs = RxSharedPreferences.create(prefs)
 
     private val defaultDownloadsDir = Uri.fromFile(
             File(Environment.getExternalStorageDirectory().absolutePath + File.separator +

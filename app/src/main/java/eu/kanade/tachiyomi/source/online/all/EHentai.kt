@@ -22,6 +22,7 @@ import exh.metadata.metadata.EHentaiSearchMetadata.Companion.TAG_TYPE_NORMAL
 import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUAL
 import exh.metadata.nullIfBlank
 import exh.metadata.parseHumanReadableByteCount
+import exh.debug.DebugToggles
 import exh.ui.login.LoginController
 import exh.util.UriFilter
 import exh.util.UriGroup
@@ -321,7 +322,7 @@ class EHentai(override val id: Long,
                         // Pull to most recent
                         val doc = response.asJsoup()
                         val newerGallery = doc.select("#gnd a").lastOrNull()
-                        val pre = if(newerGallery != null) {
+                        val pre = if(newerGallery != null && DebugToggles.PULL_TO_ROOT_WHEN_LOADING_EXH_MANGA_DETAILS.enabled) {
                             manga.url = EHentaiSearchMetadata.normalizeUrl(newerGallery.attr("href"))
                             client.newCall(mangaDetailsRequest(manga))
                                     .asObservableSuccess().map { it.asJsoup() }

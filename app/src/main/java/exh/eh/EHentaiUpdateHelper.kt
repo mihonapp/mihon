@@ -57,6 +57,8 @@ class EHentaiUpdateHelper(context: Context) {
         return chainsWithAccepted.map { (accepted, chains) ->
             val toDiscard = chains.filter { it.manga.favorite && it.manga.id != accepted.manga.id }
 
+            val chainsAsChapters = chains.flatMap { it.chapters }
+
             if(toDiscard.isNotEmpty()) {
                 // Copy chain chapters to curChapters
                 val newChapters = toDiscard
@@ -81,9 +83,16 @@ class EHentaiUpdateHelper(context: Context) {
                         .fold(accepted.chapters) { curChapters, chapter ->
                             val existing = curChapters.find { it.url == chapter.url }
 
+                            val newLastPageRead = chainsAsChapters.filter { it.date_upload < chapter.date_upload }.maxBy {
+                                it.last_page_read
+                            }?.last_page_read
+
                             if (existing != null) {
                                 existing.read = existing.read || chapter.read
                                 existing.last_page_read = existing.last_page_read.coerceAtLeast(chapter.last_page_read)
+                                if(newLastPageRead != null && existing.last_page_read <= 0) {
+                                    existing.last_page_read = newLastPageRead
+                                }
                                 existing.bookmark = existing.bookmark || chapter.bookmark
                                 curChapters
                             } else if (chapter.date_upload > 0) { // Ignore chapters using the old system
@@ -93,19 +102,24 @@ class EHentaiUpdateHelper(context: Context) {
                                     name = chapter.name
                                     read = chapter.read
                                     bookmark = chapter.bookmark
+
                                     last_page_read = chapter.last_page_read
+                                    if(newLastPageRead != null && last_page_read <= 0) {
+                                        last_page_read = newLastPageRead
+                                    }
+
                                     date_fetch = chapter.date_fetch
                                     date_upload = chapter.date_upload
                                 }
                             } else curChapters
                         }
-                        .filter { it.date_upload <= 0 } // Ignore chapters using the old system (filter after to prevent dupes from insert)
+                        .filter { it.date_upload > 0 } // Ignore chapters using the old system (filter after to prevent dupes from insert)
                         .sortedBy { it.date_upload }
                         .apply {
-                            withIndex().map { (index, chapter) ->
+                            mapIndexed { index, chapter ->
                                 chapter.name = "v${index + 1}: " + chapter.name.substringAfter(" ")
                                 chapter.chapter_number = index + 1f
-                                chapter.source_order = index
+                                chapter.source_order = lastIndex - index
                             }
                         }
 
@@ -119,7 +133,7 @@ class EHentaiUpdateHelper(context: Context) {
                     // Apply changes to all manga
                     db.insertMangas(rootsToMutate.map { it.manga }).executeAsBlocking()
                     // Insert new chapters for accepted manga
-                    db.insertChapters(newAccepted.chapters)
+                    db.insertChapters(newAccepted.chapters).executeAsBlocking()
                     // Copy categories from all chains to accepted manga
                     val newCategories = rootsToMutate.flatMap {
                         db.getCategoriesForManga(it.manga).executeAsBlocking()

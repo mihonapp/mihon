@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.debug.DebugToggles
 import exh.eh.EHentaiUpdateHelper
 import exh.isEhBasedSource
 import rx.Observable
@@ -115,7 +116,8 @@ class ChaptersPresenter(
 
                     // EXH -->
                     if(chapters.isNotEmpty()
-                            && (source.id == EXH_SOURCE_ID || source.id == EH_SOURCE_ID)) {
+                            && (source.id == EXH_SOURCE_ID || source.id == EH_SOURCE_ID)
+                            && DebugToggles.ENABLE_EXH_ROOT_REDIRECT.enabled) {
                         // Check for gallery in library and accept manga with lowest id
                         // Find chapters sharing same root
                         add(updateHelper.findAcceptedRootAndDiscardOthers(chapters)
