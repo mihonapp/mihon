@@ -176,6 +176,9 @@ dependencies {
     // DO NOT UPGRADE TO 17.0, IT REQUIRES ANDROIDX
     implementation 'com.google.android.gms:play-services-gcm:15.0.1'
 
+    // [EXH] Android 7 SSL Workaround
+    implementation 'com.google.android.gms:play-services-safetynet:15.0.1'
+
     // Changelog
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 

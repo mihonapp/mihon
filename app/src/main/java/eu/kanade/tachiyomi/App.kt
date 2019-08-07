@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
+import android.os.Build
 import android.os.Environment
 import android.support.multidex.MultiDex
 import com.elvishew.xlog.LogConfiguration
@@ -17,6 +18,9 @@ import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.evernote.android.job.JobManager
 import com.github.ajalt.reprint.core.Reprint
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.android.gms.security.ProviderInstaller
 import com.kizitonwose.time.days
 import com.ms_square.debugoverlay.DebugOverlay
 import com.ms_square.debugoverlay.modules.FpsModule
@@ -38,14 +42,17 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektScope
 import uy.kohesive.injekt.registry.default.DefaultRegistrar
 import java.io.File
+import java.security.NoSuchAlgorithmException
+import javax.net.ssl.SSLContext
 import kotlin.concurrent.thread
 
 open class App : Application() {
-
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
         setupExhLogging() // EXH logging
+
+        workaroundAndroid7BrokenSSL()
 
         Injekt = InjektScope(DefaultRegistrar())
         Injekt.importModule(AppModule(this))
@@ -69,6 +76,25 @@ open class App : Application() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         LocaleHelper.updateConfiguration(this, newConfig, true)
+    }
+
+    private fun workaroundAndroid7BrokenSSL() {
+        if(Build.VERSION.SDK_INT == Build.VERSION_CODES.N
+                || Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
+            try {
+                SSLContext.getInstance("TLSv1.2")
+            } catch (e: NoSuchAlgorithmException) {
+                XLog.e("Could not install Android 7 broken SSL workaround!", e)
+            }
+
+            try {
+                ProviderInstaller.installIfNeeded(applicationContext)
+            } catch (e: GooglePlayServicesRepairableException) {
+                XLog.e("Could not install Android 7 broken SSL workaround!", e)
+            } catch (e: GooglePlayServicesNotAvailableException) {
+                XLog.e("Could not install Android 7 broken SSL workaround!", e)
+            }
+        }
     }
 
     protected open fun setupJobManager() {
