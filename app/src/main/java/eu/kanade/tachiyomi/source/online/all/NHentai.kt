@@ -43,14 +43,20 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
     override fun popularMangaParse(response: Response) = throw UnsupportedOperationException()
 
     //Support direct URL importing
-    override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-            urlImportFetchSearchManga(query) {
-                searchMangaRequestObservable(page, query, filters).flatMap {
-                    client.newCall(it).asObservableSuccess()
-                } .map { response ->
-                    searchMangaParse(response)
-                }
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
+        val trimmedIdQuery = query.trim().removePrefix("id:")
+        val newQuery = if(trimmedIdQuery.toIntOrNull() ?: -1 >= 0) {
+            "$baseUrl/g/$trimmedIdQuery/"
+        } else query
+
+        return urlImportFetchSearchManga(newQuery) {
+            searchMangaRequestObservable(page, query, filters).flatMap {
+                client.newCall(it).asObservableSuccess()
+            }.map { response ->
+                searchMangaParse(response)
             }
+        }
+    }
 
     private fun searchMangaRequestObservable(page: Int, query: String, filters: FilterList): Observable<Request> {
         val uri = if(query.isNotBlank()) {
@@ -281,7 +287,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
         if(uri.pathSegments.firstOrNull()?.toLowerCase() != "g")
             return null
 
-        return "https://nhentai.net/g/${uri.pathSegments[1]}/"
+        return "$baseUrl/g/${uri.pathSegments[1]}/"
     }
 
     companion object {
