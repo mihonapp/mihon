@@ -1,11 +1,13 @@
 package eu.kanade.tachiyomi.source.online.english
 
+import android.net.Uri
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
+import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.metadata.metadata.HentaiCafeSearchMetadata
 import exh.metadata.metadata.HentaiCafeSearchMetadata.Companion.TAG_TYPE_DEFAULT
@@ -18,7 +20,7 @@ import org.jsoup.nodes.Document
 import rx.Observable
 
 class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
-        LewdSource<HentaiCafeSearchMetadata, Document> {
+        LewdSource<HentaiCafeSearchMetadata, Document>, UrlImportableSource {
     /**
      * An ISO 639-1 compliant language code (two letters in lower case).
      */
@@ -88,4 +90,17 @@ class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
                 }
         )
     }.toObservable()
+
+    override val matchingHosts = listOf(
+            "hentai.cafe"
+    )
+
+    override fun mapUrlToMangaUrl(uri: Uri): String? {
+        val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
+
+        return if(lcFirstPathSegment == "manga")
+            "https://hentai.cafe/${uri.pathSegments[2]}"
+        else
+            "https://hentai.cafe/$lcFirstPathSegment"
+    }
 }

@@ -13,7 +13,9 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
+import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
+import exh.GalleryAddEvent
 import exh.NHENTAI_SOURCE_ID
 import exh.metadata.metadata.NHentaiSearchMetadata
 import exh.metadata.metadata.NHentaiSearchMetadata.Companion.TAG_TYPE_DEFAULT
@@ -27,7 +29,7 @@ import rx.Observable
  * NHentai source
  */
 
-class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata, Response> {
+class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata, Response>, UrlImportableSource {
     override val metaClass = NHentaiSearchMetadata::class
 
     override fun fetchPopularManga(page: Int): Observable<MangasPage> {
@@ -126,9 +128,6 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
 
     override fun mangaDetailsRequest(manga: SManga)
             = nhGet(baseUrl + manga.url)
-
-    fun urlToDetailsRequest(url: String)
-            = nhGet(baseUrl + "/api/gallery/" + url.split("/").last { it.isNotBlank() })
 
     fun parseResultPage(response: Response): MangasPage {
         val doc = response.asJsoup()
@@ -250,7 +249,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
     )
 
     val appName by lazy {
-        context.getString(R.string.app_name)!!
+        context.getString(R.string.app_name)
     }
     fun nhGet(url: String, tag: Any? = null) = GET(url)
             .newBuilder()
@@ -260,7 +259,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
                             "Chrome/56.0.2924.87 " +
                             "Safari/537.36 " +
                             "$appName/${BuildConfig.VERSION_CODE}")
-            .tag(tag).build()!!
+            .tag(tag).build()
 
     override val id = NHENTAI_SOURCE_ID
 
@@ -272,6 +271,19 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
 
     override val supportsLatest = true
 
+    // === URL IMPORT STUFF
+
+    override val matchingHosts = listOf(
+            "nhentai.net"
+    )
+
+    override fun mapUrlToMangaUrl(uri: Uri): String? {
+        if(uri.pathSegments.firstOrNull()?.toLowerCase() != "g")
+            return null
+
+        return "https://nhentai.net/g/${uri.pathSegments[1]}/"
+    }
+
     companion object {
         private val GALLERY_JSON_REGEX = Regex("new N.gallery\\((.*)\\);")
         private const val REVERSE_PARAM = "TEH_REVERSE"
@@ -282,9 +294,4 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
             JsonParser()
         }
     }
-
-    fun JsonElement.notNull() =
-            if(this is JsonNull)
-                null
-            else this
 }

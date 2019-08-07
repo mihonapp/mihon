@@ -350,7 +350,7 @@ class FavoritesSyncHelper(val context: Context) {
             //Import using gallery adder
             val result = galleryAdder.addGallery("${exh.baseUrl}${it.getUrl()}",
                     true,
-                    EXH_SOURCE_ID,
+                    exh,
                     throttleManager::throttle)
 
             if(result is GalleryAddEvent.Fail) {

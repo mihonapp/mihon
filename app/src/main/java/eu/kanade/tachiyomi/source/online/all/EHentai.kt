@@ -3,6 +3,10 @@ package eu.kanade.tachiyomi.source.online.all
 import android.content.Context
 import android.net.Uri
 import com.elvishew.xlog.XLog
+import com.github.salomonbrys.kotson.*
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -12,6 +16,7 @@ import eu.kanade.tachiyomi.network.asObservableWithAsyncStacktrace
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
+import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.eh.EHentaiUpdateHelper
 import exh.metadata.EX_DATE_FORMAT
@@ -46,7 +51,7 @@ import java.lang.RuntimeException
 // TODO Consider gallery updating when doing tabbed browsing
 class EHentai(override val id: Long,
               val exh: Boolean,
-              val context: Context) : HttpSource(), LewdSource<EHentaiSearchMetadata, Document> {
+              val context: Context) : HttpSource(), LewdSource<EHentaiSearchMetadata, Document>, UrlImportableSource {
     override val metaClass = EHentaiSearchMetadata::class
 
     val schema: String
@@ -636,10 +641,66 @@ class EHentai(override val id: Long,
 
     class GalleryNotFoundException(cause: Throwable): RuntimeException("Gallery not found!", cause)
 
+     // === URL IMPORT STUFF
+
+    override val matchingHosts: List<String> = if(exh) listOf(
+            "exhentai.org"
+    ) else listOf(
+            "g.e-hentai.org",
+            "e-hentai.org"
+    )
+
+    override fun mapUrlToMangaUrl(uri: Uri): String? {
+        return when (uri.pathSegments.firstOrNull()) {
+            "g" -> {
+                //Is already gallery page, do nothing
+                uri.toString()
+            }
+            "s" -> {
+                //Is page, fetch gallery token and use that
+                getGalleryUrlFromPage(uri)
+            }
+            else -> null
+        }
+    }
+
+    override fun cleanMangaUrl(url: String): String {
+        return EHentaiSearchMetadata.normalizeUrl(super.cleanMangaUrl(url))
+    }
+
+    private fun getGalleryUrlFromPage(uri: Uri): String {
+        val lastSplit = uri.pathSegments.last().split("-")
+        val pageNum = lastSplit.last()
+        val gallery = lastSplit.first()
+        val pageToken = uri.pathSegments.elementAt(1)
+
+        val json = JsonObject()
+        json["method"] = "gtoken"
+        json["pagelist"] = JsonArray().apply {
+            add(JsonArray().apply {
+                add(gallery.toInt())
+                add(pageToken)
+                add(pageNum.toInt())
+            })
+        }
+
+        val outJson = JsonParser().parse(client.newCall(Request.Builder()
+                .url(EH_API_BASE)
+                .post(RequestBody.create(JSON, json.toString()))
+                .build()).execute().body()!!.string()).obj
+
+        val obj = outJson["tokenlist"].array.first()
+        return "${uri.scheme}://${uri.host}/g/${obj["gid"].int}/${obj["token"].string}/"
+    }
+
+
     companion object {
         private const val QUERY_PREFIX = "?f_apply=Apply+Filter"
         private const val TR_SUFFIX = "TR"
         private const val REVERSE_PARAM = "TEH_REVERSE"
+
+        private const val EH_API_BASE = "https://api.e-hentai.org/api.php"
+        private val JSON = MediaType.parse("application/json; charset=utf-8")!!
 
         private val FAVORITES_BORDER_HEX_COLORS = listOf(
                 "000",

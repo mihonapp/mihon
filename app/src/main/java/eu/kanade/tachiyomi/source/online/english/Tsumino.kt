@@ -13,8 +13,10 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
+import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.toast
+import exh.GalleryAddEvent
 import exh.TSUMINO_SOURCE_ID
 import exh.ui.captcha.ActionCompletionVerifier
 import exh.ui.captcha.BrowserActionActivity
@@ -33,7 +35,10 @@ import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<TsuminoSearchMetadata, Document>, ActionCompletionVerifier {
+class Tsumino(private val context: Context): ParsedHttpSource(),
+        LewdSource<TsuminoSearchMetadata, Document>,
+        ActionCompletionVerifier,
+        UrlImportableSource {
     override val metaClass = TsuminoSearchMetadata::class
 
     private val preferences: PreferencesHelper by injectLazy()
@@ -399,6 +404,19 @@ class Tsumino(private val context: Context): ParsedHttpSource(), LewdSource<Tsum
     class LengthFilter : Filter.Select<LengthType>("Length", LengthType.values())
     class MinimumRatingFilter : Filter.Select<String>("Minimum rating", (0 .. 5).map { "$it stars" }.toTypedArray())
     class ExcludeParodiesFilter : Filter.CheckBox("Exclude parodies")
+
+    override val matchingHosts = listOf(
+            "www.tsumino.com"
+    )
+
+    override fun mapUrlToMangaUrl(uri: Uri): String? {
+        val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
+
+        if(lcFirstPathSegment != "read" && lcFirstPathSegment != "book")
+            return null
+
+        return "https://tsumino.com/Book/Info/${uri.pathSegments[2]}"
+    }
 
     companion object {
         val jsonParser by lazy {

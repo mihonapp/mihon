@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
+import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.ChapterRecognition
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.metadata.metadata.PervEdenLang
@@ -27,7 +28,7 @@ import java.util.*
 
 // TODO Transform into delegated source
 class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSource(),
-        LewdSource<PervEdenSearchMetadata, Document> {
+        LewdSource<PervEdenSearchMetadata, Document>, UrlImportableSource {
     /**
      * The class of the metadata used by this source
      */
@@ -304,6 +305,23 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
             if(state)
                 builder.appendQueryParameter("type", id.toString())
         }
+    }
+
+    override val matchingHosts = listOf("www.perveden.com")
+
+    override fun matchesUri(uri: Uri): Boolean {
+        return super.matchesUri(uri) && uri.pathSegments.firstOrNull()?.toLowerCase() == when(pvLang) {
+            PervEdenLang.en -> "en-manga"
+            PervEdenLang.it -> "it-manga"
+        }
+    }
+
+    override fun mapUrlToMangaUrl(uri: Uri): String? {
+        val newUri = Uri.parse("http://www.perveden.com/").buildUpon()
+        uri.pathSegments.take(3).forEach {
+            newUri.appendPath(it)
+        }
+        return newUri.toString()
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.source.online.all
 
+import android.net.Uri
 import android.os.Build
 import com.github.salomonbrys.kotson.array
 import com.github.salomonbrys.kotson.get
@@ -12,7 +13,9 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
+import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
+import exh.GalleryAddEvent
 import exh.HITOMI_SOURCE_ID
 import exh.hitomi.HitomiNozomi
 import exh.metadata.metadata.HitomiSearchMetadata
@@ -36,7 +39,7 @@ import java.util.*
 /**
  * Man, I hate this source :(
  */
-class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document> {
+class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImportableSource {
     private val prefs: PreferencesHelper by injectLazy()
     private val jsonParser by lazy { JsonParser() }
 
@@ -388,6 +391,19 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document> {
         return request.newBuilder()
                 .header("Referer", "$BASE_URL/reader/$hlId.html")
                 .build()
+    }
+
+    override val matchingHosts = listOf(
+            "hitomi.la"
+    )
+
+    override fun mapUrlToMangaUrl(uri: Uri): String? {
+        val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
+
+        if(lcFirstPathSegment != "galleries" && lcFirstPathSegment != "reader")
+            return null
+
+        return "https://hitomi.la/galleries/${uri.pathSegments[1].substringBefore('.')}.html"
     }
 
     companion object {
