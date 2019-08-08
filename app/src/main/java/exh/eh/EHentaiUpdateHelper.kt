@@ -28,7 +28,7 @@ class EHentaiUpdateHelper(context: Context) {
      *
      * @return Pair<Accepted, Discarded>
      */
-    fun findAcceptedRootAndDiscardOthers(chapters: List<Chapter>): Single<Pair<ChapterChain, List<ChapterChain>>> {
+    fun findAcceptedRootAndDiscardOthers(sourceId: Long, chapters: List<Chapter>): Single<Pair<ChapterChain, List<ChapterChain>>> {
         // Find other chains
         val chainsObservable = Observable.merge(chapters.map { chapter ->
             db.getChapters(chapter.url).asRxSingle().toObservable()
@@ -42,7 +42,9 @@ class EHentaiUpdateHelper(context: Context) {
                                 db.getChaptersByMangaId(mangaId).asRxSingle()
                         ) { manga, chapters ->
                             ChapterChain(manga, chapters)
-                        }.toObservable()
+                        }.toObservable().filter {
+                            it.manga.source == sourceId
+                        }
                     }
             )
         }.toList()

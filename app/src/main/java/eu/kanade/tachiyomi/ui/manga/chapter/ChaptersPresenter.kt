@@ -120,7 +120,7 @@ class ChaptersPresenter(
                             && DebugToggles.ENABLE_EXH_ROOT_REDIRECT.enabled) {
                         // Check for gallery in library and accept manga with lowest id
                         // Find chapters sharing same root
-                        add(updateHelper.findAcceptedRootAndDiscardOthers(chapters)
+                        add(updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters)
                                 .subscribeOn(Schedulers.io())
                                 .subscribe { (acceptedChain, _) ->
                                     // Redirect if we are not the accepted root

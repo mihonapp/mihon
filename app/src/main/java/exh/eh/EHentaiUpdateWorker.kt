@@ -206,7 +206,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
 
                 // Find accepted root and discard others
                 val (acceptedRoot, discardedRoots) =
-                        updateHelper.findAcceptedRootAndDiscardOthers(chapters).await()
+                        updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters).await()
 
                 modifiedThisIteration += acceptedRoot.manga.id!!
                 modifiedThisIteration += discardedRoots.map { it.manga.id!! }
