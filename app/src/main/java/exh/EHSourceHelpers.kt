@@ -17,6 +17,7 @@ const val PERV_EDEN_EN_SOURCE_ID = LEWD_SOURCE_SERIES + 5
 const val PERV_EDEN_IT_SOURCE_ID = LEWD_SOURCE_SERIES + 6
 const val NHENTAI_SOURCE_ID = LEWD_SOURCE_SERIES + 7
 val HENTAI_CAFE_SOURCE_ID = delegatedSourceId<HentaiCafe>()
+val PURURIN_SOURCE_ID = delegatedSourceId<Pururin>()
 const val TSUMINO_SOURCE_ID = LEWD_SOURCE_SERIES + 9
 const val HITOMI_SOURCE_ID = LEWD_SOURCE_SERIES + 10
 const val MERGED_SOURCE_ID = LEWD_SOURCE_SERIES + 69
@@ -24,6 +25,16 @@ const val MERGED_SOURCE_ID = LEWD_SOURCE_SERIES + 69
 private val DELEGATED_LEWD_SOURCES = listOf(
         HentaiCafe::class,
         Pururin::class
+)
+
+val LIBRARY_UPDATE_EXCLUDED_SOURCES = listOf(
+        EH_SOURCE_ID,
+        EXH_SOURCE_ID,
+        NHENTAI_SOURCE_ID,
+        HENTAI_CAFE_SOURCE_ID,
+        TSUMINO_SOURCE_ID,
+        HITOMI_SOURCE_ID,
+        PURURIN_SOURCE_ID
 )
 
 private inline fun <reified T> delegatedSourceId(): Long {
