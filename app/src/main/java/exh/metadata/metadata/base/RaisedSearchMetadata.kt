@@ -60,6 +60,10 @@ abstract class RaisedSearchMetadata {
         }
     }
 
+    fun List<RaisedTag>.ofNamespace(ns: String): List<RaisedTag> {
+        return filter { it.namespace == ns }
+    }
+
     fun flatten(): FlatMetadata {
         require(mangaId != -1L)
 

@@ -14,27 +14,6 @@ class PururinSearchMetadata : RaisedSearchMetadata() {
 
     var thumbnailUrl: String? = null
 
-    var artist: String? = null
-    var artistDisp: String? = null
-
-    var circle: String? = null
-    var circleDisp: String? = null
-
-    var parody: String? = null // TODO Mult
-    var parodyDisp: String? = null
-
-    var character: String? = null // TODO Mult
-    var characterDisp: String? = null
-
-    var category: String? = null
-    var categoryDisp: String? = null
-
-    var collection: String? = null
-    var collectionDisp: String? = null
-
-    var language: String? = null
-    var languageDisp: String? = null
-
     var uploaderDisp: String? = null
 
     var pages: Int? = null
@@ -59,9 +38,7 @@ class PururinSearchMetadata : RaisedSearchMetadata() {
             manga.thumbnail_url = it
         }
 
-        (artistDisp ?: artist)?.let {
-            manga.artist = it
-        }
+        manga.artist = tags.ofNamespace(TAG_NAMESPACE_ARTIST).joinToString { it.name }
 
         manga.genre = tagsToGenreString()
 
@@ -70,10 +47,10 @@ class PururinSearchMetadata : RaisedSearchMetadata() {
         altTitle?.let { titleDesc += "Japanese Title: $it\n" }
 
         val detailsDesc = StringBuilder()
-        (uploaderDisp ?: uploader)?.let { detailsDesc += "Uploader: $it"}
-        pages?.let { detailsDesc += "Length: $it pages" }
-        fileSize?.let { detailsDesc += "Size: $it" }
-        ratingCount?.let { detailsDesc += "Rating: $averageRating ($ratingCount)" }
+        (uploaderDisp ?: uploader)?.let { detailsDesc += "Uploader: $it\n"}
+        pages?.let { detailsDesc += "Length: $it pages\n" }
+        fileSize?.let { detailsDesc += "Size: $it\n" }
+        ratingCount?.let { detailsDesc += "Rating: $averageRating ($ratingCount)\n" }
 
         val tagsDesc = tagsToDescription()
 
@@ -86,7 +63,9 @@ class PururinSearchMetadata : RaisedSearchMetadata() {
         private const val TITLE_TYPE_TITLE = 0
         private const val TITLE_TYPE_ALT_TITLE = 1
 
-        const val TAG_TYPE_CONTENTS = 0
+        const val TAG_TYPE_DEFAULT = 0
+
+        private const val TAG_NAMESPACE_ARTIST = "artist"
 
         val BASE_URL = "https://pururin.io"
     }

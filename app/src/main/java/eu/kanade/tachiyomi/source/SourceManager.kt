@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.all.*
 import eu.kanade.tachiyomi.source.online.english.HentaiCafe
+import eu.kanade.tachiyomi.source.online.english.Pururin
 import eu.kanade.tachiyomi.source.online.english.Tsumino
 import rx.Observable
 import exh.EH_SOURCE_ID
@@ -149,12 +150,18 @@ open class SourceManager(private val context: Context) {
                         260868874183818481,
                         "eu.kanade.tachiyomi.extension.all.foolslide.HentaiCafe",
                         HentaiCafe::class
+                ),
+                DelegatedSource(
+                        "Pururin",
+                        2221515250486218861,
+                        "eu.kanade.tachiyomi.extension.en.pururin.Pururin",
+                        Pururin::class
                 )
-        ).associateBy { it.originalSourcePackageName }
+        ).associateBy { it.originalSourceQualifiedClassName }
 
         data class DelegatedSource(val sourceName: String,
                                    val sourceId: Long,
-                                   val originalSourcePackageName: String,
+                                   val originalSourceQualifiedClassName: String,
                                    val newSourceClass: KClass<out DelegatedHttpSource>)
     }
 }

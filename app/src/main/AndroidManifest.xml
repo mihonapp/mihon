@@ -154,6 +154,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!-- EH -->
                 <data
                     android:host="g.e-hentai.org"
                     android:pathPrefix="/g/"
@@ -170,6 +171,8 @@
                     android:host="e-hentai.org"
                     android:pathPrefix="/g/"
                     android:scheme="https" />
+
+                <!-- EXH -->
                 <data
                     android:host="exhentai.org"
                     android:pathPrefix="/g/"
@@ -178,6 +181,8 @@
                     android:host="exhentai.org"
                     android:pathPrefix="/g/"
                     android:scheme="https" />
+
+                <!-- nhentai -->
                 <data
                     android:host="nhentai.net"
                     android:pathPrefix="/g/"
@@ -186,6 +191,8 @@
                     android:host="nhentai.net"
                     android:pathPrefix="/g/"
                     android:scheme="https" />
+
+                <!-- Perv Eden -->
                 <data
                     android:host="www.perveden.com"
                     android:pathPattern="/.*/.*-manga/.*"
@@ -194,6 +201,8 @@
                     android:host="www.perveden.com"
                     android:pathPattern="/.*/.*-manga/.*"
                     android:scheme="https" />
+
+                <!-- Hentai Cafe -->
                 <data
                     android:host="hentai.cafe"
                     android:pathPattern="/.*/.*"
@@ -202,6 +211,8 @@
                     android:host="hentai.cafe"
                     android:pathPattern="/.*/.*"
                     android:scheme="https" />
+
+                <!-- Tsumino -->
                 <data
                     android:host="www.tsumino.com"
                     android:pathPrefix="/Book/Info/"
@@ -218,6 +229,8 @@
                     android:host="www.tsumino.com"
                     android:pathPrefix="/Read/View/"
                     android:scheme="https" />
+
+                 <!-- Hitomi.la -->
                 <data
                     android:host="hitomi.la"
                     android:pathPrefix="/galleries/"
@@ -233,6 +246,16 @@
                 <data
                     android:host="hitomi.la"
                     android:pathPrefix="/reader/"
+                    android:scheme="https" />
+
+                <!-- Pururin.io -->
+                <data
+                    android:host="pururin.io"
+                    android:pathPrefix="/gallery/"
+                    android:scheme="http" />
+                <data
+                    android:host="pururin.io"
+                    android:pathPrefix="/gallery/"
                     android:scheme="https" />
             </intent-filter>
         </activity>

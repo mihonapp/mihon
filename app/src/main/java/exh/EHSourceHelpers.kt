@@ -3,6 +3,7 @@ package exh
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.english.HentaiCafe
+import eu.kanade.tachiyomi.source.online.english.Pururin
 
 /**
  * Source helpers
@@ -21,7 +22,8 @@ const val HITOMI_SOURCE_ID = LEWD_SOURCE_SERIES + 10
 const val MERGED_SOURCE_ID = LEWD_SOURCE_SERIES + 69
 
 private val DELEGATED_LEWD_SOURCES = listOf(
-        HentaiCafe::class
+        HentaiCafe::class,
+        Pururin::class
 )
 
 private inline fun <reified T> delegatedSourceId(): Long {
