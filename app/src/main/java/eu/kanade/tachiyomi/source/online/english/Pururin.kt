@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.source.online.english
 
+import android.net.Uri
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -32,6 +33,18 @@ class Pururin(delegate: HttpSource) : DelegatedHttpSource(delegate),
 
         return urlImportFetchSearchManga(newQuery) {
             super.fetchSearchManga(page, query, filters)
+        }
+    }
+
+    override fun parseIntoMetadata(metadata: PururinSearchMetadata, input: Document) {
+        val selfLink = input.select("[itemprop=name]").last().parent()
+        val parsedSelfLink = Uri.parse(selfLink.attr("href")).pathSegments
+
+        with(metadata) {
+            prId = parsedSelfLink[parsedSelfLink.lastIndex - 1].toIntOrNull()
+            prShortLink = parsedSelfLink.last()
+
+            title =
         }
     }
 }

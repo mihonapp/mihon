@@ -2,6 +2,7 @@ package exh.metadata.metadata
 
 import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.metadata.base.RaisedSearchMetadata
+import exh.plusAssign
 
 class PururinSearchMetadata : RaisedSearchMetadata() {
     var prId: Int? = null
@@ -34,7 +35,7 @@ class PururinSearchMetadata : RaisedSearchMetadata() {
     var language: String? = null
     var languageDisp: String? = null
 
-    var uploadDisp: String? = null
+    var uploaderDisp: String? = null
 
     var pages: Int? = null
 
@@ -44,7 +45,41 @@ class PururinSearchMetadata : RaisedSearchMetadata() {
     var averageRating: Double? = null
 
     override fun copyTo(manga: SManga) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        prId?.let { prId ->
+            prShortLink?.let { prShortLink ->
+                manga.url = "$BASE_URL/gallery/$prId/$prShortLink"
+            }
+        }
+
+        (title ?: altTitle)?.let {
+            manga.title = it
+        }
+
+        thumbnailUrl?.let {
+            manga.thumbnail_url = it
+        }
+
+        (artistDisp ?: artist)?.let {
+            manga.artist = it
+        }
+
+        manga.genre = tagsToGenreString()
+
+        val titleDesc = StringBuilder()
+        title?.let { titleDesc += "English Title: $it\n" }
+        altTitle?.let { titleDesc += "Japanese Title: $it\n" }
+
+        val detailsDesc = StringBuilder()
+        (uploaderDisp ?: uploader)?.let { detailsDesc += "Uploader: $it"}
+        pages?.let { detailsDesc += "Length: $it pages" }
+        fileSize?.let { detailsDesc += "Size: $it" }
+        ratingCount?.let { detailsDesc += "Rating: $averageRating ($ratingCount)" }
+
+        val tagsDesc = tagsToDescription()
+
+        manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
+                .filter(String::isNotBlank)
+                .joinToString(separator = "\n")
     }
 
     companion object {
