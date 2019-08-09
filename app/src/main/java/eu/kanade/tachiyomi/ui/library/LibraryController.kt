@@ -439,7 +439,9 @@ class LibraryController(
             R.id.action_move_to_category -> showChangeMangaCategoriesDialog()
             R.id.action_delete -> showDeleteMangaDialog()
             R.id.action_select_all -> {
-                selectAllRelay.call(activeCategory)
+                adapter?.categories?.getOrNull(library_pager.currentItem)?.id?.let {
+                    selectAllRelay.call(it)
+                }
             }
             R.id.action_auto_source_migration -> {
                 router.pushController(MigrationDesignController.create(
