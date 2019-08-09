@@ -181,7 +181,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                     continue
                 }
 
-                val chapters = try {
+                val (new, chapters) = try {
                     updateEntryAndGetChapters(manga)
                 } catch (e: GalleryNotUpdatedException) {
                     if (e.network) {
@@ -212,7 +212,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                 val (acceptedRoot, discardedRoots, hasNew) =
                         updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters).await()
 
-                if(hasNew && updatedManga.none { it.id == acceptedRoot.manga.id }) {
+                if((new.isNotEmpty() && manga.id == acceptedRoot.manga.id)
+                        || (hasNew && updatedManga.none { it.id == acceptedRoot.manga.id })) {
                     updatedManga += acceptedRoot.manga
                 }
 
@@ -237,7 +238,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
         }
     }
 
-    suspend fun updateEntryAndGetChapters(manga: Manga): List<Chapter> {
+    // New, current
+    suspend fun updateEntryAndGetChapters(manga: Manga): Pair<List<Chapter>, List<Chapter>> {
         val source = sourceManager.get(manga.source) as? EHentai
                 ?: throw GalleryNotUpdatedException(false, IllegalStateException("Missing EH-based source (${manga.source})!"))
 
@@ -247,8 +249,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
             db.insertManga(manga).asRxSingle().await()
 
             val newChapters = source.fetchChapterList(manga).toSingle().await(Schedulers.io())
-            syncChaptersWithSource(db, newChapters, manga, source) // Not suspending, but does block, maybe fix this?
-            return db.getChapters(manga).await()
+            val (new, _) = syncChaptersWithSource(db, newChapters, manga, source) // Not suspending, but does block, maybe fix this?
+            return new to db.getChapters(manga).await()
         } catch(t: Throwable) {
             if(t is EHentai.GalleryNotFoundException) {
                 val meta = db.getFlatMetadataForManga(manga.id!!).await()?.raise<EHentaiSearchMetadata>()
