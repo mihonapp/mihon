@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v8.4.2-EH" changeDate="">
+        <changelogtext>Fix incorrect update notifications for E-Hentai/ExHentai galleries</changelogtext>
+        <changelogtext>Fix EH manga opening in EXH source sometimes</changelogtext>
+        <changelogtext>Add experimental 8muses source</changelogtext>
+        <changelogtext>Enable library tag search and url importing for Pururin.io extension</changelogtext>
+        <changelogtext>Attempt to fix hitomi.la failed handshake error</changelogtext>
+        <changelogtext>Allow searching by ID in nhentai source</changelogtext>
+        <changelogtext>Fix reading position not being saved when EH/EXH galleries update</changelogtext>
+        <changelogtext>Fix extension uninstall button not working</changelogtext>
+        <changelogtext>Fix EH/EXH chapter/version sorting issues</changelogtext>
+        <changelogtext>Add auto-source-migration feature (long-press and select some manga in your library, then tap on the three-dots menu in the top-right)</changelogtext>
+        <changelogtext>Fix rare crash when opening extension preferences</changelogtext>
+        <changelogtext>Fix rare crash in reader</changelogtext>
+        <changelogtext>Fix application sometimes crashing in the background</changelogtext>
+        <changelogtext>Fix crash when opening Tsumino captcha</changelogtext>
+        <changelogtext>Enable long-press-to-change-manga-category by default</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v8.4.1-EH" changeDate="">
         <changelogtext>Fix app crashing when updating library</changelogtext>
         <changelogtext>Fix E-Hentai/ExHentai and many other sources not working</changelogtext>
