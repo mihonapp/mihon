@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.util.LocaleHelper
 import eu.kanade.tachiyomi.widget.preference.LoginCheckBoxPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
 import eu.kanade.tachiyomi.widget.preference.SwitchPreferenceCategory
+import exh.source.BlacklistedSources
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.*
@@ -19,7 +20,11 @@ import java.util.*
 class SettingsSourcesController : SettingsController(),
         SourceLoginDialog.Listener {
 
-    private val onlineSources by lazy { Injekt.get<SourceManager>().getOnlineSources() }
+    private val onlineSources by lazy {
+        Injekt.get<SourceManager>().getOnlineSources().filter {
+            it.id !in BlacklistedSources.HIDDEN_SOURCES
+        }
+    }
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.pref_category_sources
