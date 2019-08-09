@@ -148,7 +148,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
             }
 
             UpdateEntry(manga, raisedMeta, chapter)
-        }.toList()
+        }.toList().sortedBy { it.meta.lastUpdateCheck }
 
         logger.d("Found %s manga to update, starting updates!", allMeta.size)
         val mangaMetaToUpdateThisIter = allMeta.take(UPDATES_PER_ITERATION)
