@@ -244,7 +244,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
         val lastUpdate = Date(mangaChapters.maxBy { it.date_upload }?.date_upload ?: 0)
 
         if (latestChapter > 0f) {
-            manga_last_chapter.text = DecimalFormat("#.#").format(count)
+            manga_last_chapter.text = DecimalFormat("#.#").format(latestChapter)
         } else {
             manga_last_chapter.setText(R.string.unknown)
         }
