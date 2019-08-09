@@ -29,7 +29,7 @@ class SmartSearchEngine(parentContext: CoroutineContext,
                 async(Dispatchers.Default) {
                     val builtQuery = if(extraSearchParams != null) {
                         "$query ${extraSearchParams.trim()}"
-                    } else title
+                    } else query
 
                     val searchResults = source.fetchSearchManga(1, builtQuery, FilterList()).toSingle().await(Schedulers.io())
 
