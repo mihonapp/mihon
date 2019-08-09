@@ -21,11 +21,14 @@ fun Call.asObservableWithAsyncStacktrace(): Observable<Pair<Exception, Response>
 
         // Wrap the call in a helper which handles both unsubscription and backpressure.
         val requestArbiter = object : AtomicBoolean(), Producer, Subscription {
+            val executed = AtomicBoolean(false)
+
             override fun request(n: Long) {
                 if (n == 0L || !compareAndSet(false, true)) return
 
                 try {
                     val response = call.execute()
+                    executed.set(true)
                     if (!subscriber.isUnsubscribed) {
                         subscriber.onNext(asyncStackTrace to response)
                         subscriber.onCompleted()
@@ -38,7 +41,8 @@ fun Call.asObservableWithAsyncStacktrace(): Observable<Pair<Exception, Response>
             }
 
             override fun unsubscribe() {
-                call.cancel()
+                if(!executed.get())
+                    call.cancel()
             }
 
             override fun isUnsubscribed(): Boolean {
