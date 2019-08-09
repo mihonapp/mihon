@@ -231,7 +231,9 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                     )
             )
 
-            updateNotifier.showResultNotification(updatedManga)
+            if(updatedManga.isNotEmpty()) {
+                updateNotifier.showResultNotification(updatedManga)
+            }
         }
     }
 
