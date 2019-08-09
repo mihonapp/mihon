@@ -15,6 +15,7 @@ import com.kizitonwose.time.hours
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
@@ -48,6 +49,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
     private val sourceManager: SourceManager by injectLazy()
     private val updateHelper: EHentaiUpdateHelper by injectLazy()
     private val logger = XLog.tag("EHUpdater")
+
+    private val updateNotifier by lazy { LibraryUpdateNotifier(this) }
 
     /**
      * This method is called if the system has determined that you must stop execution of your job
@@ -152,6 +155,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
 
         var failuresThisIteration = 0
         var updatedThisIteration = 0
+        val updatedManga = mutableListOf<Manga>()
         val modifiedThisIteration = mutableSetOf<Long>()
 
         try {
@@ -205,8 +209,12 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                 }
 
                 // Find accepted root and discard others
-                val (acceptedRoot, discardedRoots) =
+                val (acceptedRoot, discardedRoots, hasNew) =
                         updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters).await()
+
+                if(hasNew && updatedManga.none { it.id == acceptedRoot.manga.id }) {
+                    updatedManga += acceptedRoot.manga
+                }
 
                 modifiedThisIteration += acceptedRoot.manga.id!!
                 modifiedThisIteration += discardedRoots.map { it.manga.id!! }
@@ -222,6 +230,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                             )
                     )
             )
+
+            updateNotifier.showResultNotification(updatedManga)
         }
     }
 

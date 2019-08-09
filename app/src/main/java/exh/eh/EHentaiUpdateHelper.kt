@@ -26,9 +26,9 @@ class EHentaiUpdateHelper(context: Context) {
     /**
      * @param chapters Cannot be an empty list!
      *
-     * @return Pair<Accepted, Discarded>
+     * @return Triple<Accepted, Discarded, HasNew>
      */
-    fun findAcceptedRootAndDiscardOthers(sourceId: Long, chapters: List<Chapter>): Single<Pair<ChapterChain, List<ChapterChain>>> {
+    fun findAcceptedRootAndDiscardOthers(sourceId: Long, chapters: List<Chapter>): Single<Triple<ChapterChain, List<ChapterChain>, Boolean>> {
         // Find other chains
         val chainsObservable = Observable.merge(chapters.map { chapter ->
             db.getChapters(chapter.url).asRxSingle().toObservable()
@@ -62,6 +62,8 @@ class EHentaiUpdateHelper(context: Context) {
             val chainsAsChapters = chains.flatMap { it.chapters }
 
             if(toDiscard.isNotEmpty()) {
+                var new = false
+
                 // Copy chain chapters to curChapters
                 val newChapters = toDiscard
                         .flatMap { chain ->
@@ -98,6 +100,7 @@ class EHentaiUpdateHelper(context: Context) {
                                 existing.bookmark = existing.bookmark || chapter.bookmark
                                 curChapters
                             } else if (chapter.date_upload > 0) { // Ignore chapters using the old system
+                                new = true
                                 curChapters + ChapterImpl().apply {
                                     manga_id = accepted.manga.id
                                     url = chapter.url
@@ -145,8 +148,8 @@ class EHentaiUpdateHelper(context: Context) {
                     db.setMangaCategories(newCategories, rootsToMutate.map { it.manga })
                 }
 
-                newAccepted to toDiscard
-            } else accepted to emptyList()
+                Triple(newAccepted, toDiscard, new)
+            } else Triple(accepted, emptyList(), false)
         }.toSingle()
     }
 }
