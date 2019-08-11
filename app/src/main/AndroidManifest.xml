@@ -257,6 +257,16 @@
                     android:host="pururin.io"
                     android:pathPrefix="/gallery/"
                     android:scheme="https" />
+
+                <!-- HBrowse -->
+                <data
+                    android:host="www.hbrowse.com"
+                    android:pathPrefix="/"
+                    android:scheme="http" />
+                <data
+                    android:host="www.hbrowse.com"
+                    android:pathPrefix="/"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity

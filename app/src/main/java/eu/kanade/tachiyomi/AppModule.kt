@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import exh.eh.EHentaiUpdateHelper
+import io.noties.markwon.Markwon
 import rx.Observable
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.api.*
@@ -43,6 +44,8 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { Gson() }
 
         addSingletonFactory { EHentaiUpdateHelper(app) }
+
+        addSingletonFactory { Markwon.create(app) }
 
         // Asynchronously init expensive components for a faster cold start
 

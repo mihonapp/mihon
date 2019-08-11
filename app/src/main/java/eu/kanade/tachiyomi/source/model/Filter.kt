@@ -2,6 +2,10 @@ package eu.kanade.tachiyomi.source.model
 
 sealed class Filter<T>(val name: String, var state: T) {
     open class Header(name: String) : Filter<Any>(name, 0)
+    // --> EXH
+    // name = button text
+    open class HelpDialog(name: String, val dialogTitle: String = name, val markdown: String) : Filter<Any>(name, 0)
+    // <-- EXH
     open class Separator(name: String = "") : Filter<Any>(name, 0)
     abstract class Select<V>(name: String, val values: Array<V>, state: Int = 0) : Filter<Int>(name, state)
     abstract class Text(name: String, state: String = "") : Filter<String>(name, state)

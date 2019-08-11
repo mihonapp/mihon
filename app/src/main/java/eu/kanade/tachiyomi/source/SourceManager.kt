@@ -10,10 +10,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.all.*
-import eu.kanade.tachiyomi.source.online.english.EightMuses
-import eu.kanade.tachiyomi.source.online.english.HentaiCafe
-import eu.kanade.tachiyomi.source.online.english.Pururin
-import eu.kanade.tachiyomi.source.online.english.Tsumino
+import eu.kanade.tachiyomi.source.online.english.*
 import rx.Observable
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
@@ -116,6 +113,7 @@ open class SourceManager(private val context: Context) {
         exSrcs += Tsumino(context)
         exSrcs += Hitomi()
         exSrcs += EightMuses()
+        exSrcs += HBrowse()
         return exSrcs
     }
 

@@ -292,6 +292,9 @@ open class BrowseCataloguePresenter(
         return mapNotNull {
             when (it) {
                 is Filter.Header -> HeaderItem(it)
+                // --> EXH
+                is Filter.HelpDialog -> HelpDialogItem(it)
+                // <-- EXH
                 is Filter.Separator -> SeparatorItem(it)
                 is Filter.CheckBox -> CheckboxItem(it)
                 is Filter.TriState -> TriStateItem(it)

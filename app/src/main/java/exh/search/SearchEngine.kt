@@ -1,12 +1,10 @@
 package exh.search
 
-import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import exh.metadata.sql.tables.SearchMetadataTable
 import exh.metadata.sql.tables.SearchTagTable
 import exh.metadata.sql.tables.SearchTitleTable
 
 class SearchEngine {
-
     private val queryCache = mutableMapOf<String, List<QueryComponent>>()
 
     fun textToSubQueries(namespace: String?,
@@ -116,7 +114,7 @@ class SearchEngine {
         return baseQuery to completeParams
     }
 
-    fun parseQuery(query: String) = queryCache.getOrPut(query) {
+    fun parseQuery(query: String, enableWildcard: Boolean = true) = queryCache.getOrPut(query) {
         val res = mutableListOf<QueryComponent>()
 
         var inQuotes = false
@@ -155,10 +153,10 @@ class SearchEngine {
         for(char in query.toLowerCase()) {
             if(char == '"') {
                 inQuotes = !inQuotes
-            } else if(char == '?' || char == '_') {
+            } else if(enableWildcard && (char == '?' || char == '_')) {
                 flushText()
                 queuedText.add(SingleWildcard(char.toString()))
-            } else if(char == '*' || char == '%') {
+            } else if(enableWildcard && (char == '*' || char == '%')) {
                 flushText()
                 queuedText.add(MultiWildcard(char.toString()))
             } else if(char == '-') {
