@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v8.4.3-EH" changeDate="">
+        <changelogtext>Remove useless help button in sidebar</changelogtext>
+        <changelogtext>Add HBrowse source</changelogtext>
+        <changelogtext>Auto-migration performance improvements</changelogtext>
+        <changelogtext>Fix "use intelligent search algorithm" in auto-migration not working</changelogtext>
+        <changelogtext>Hide useless sources from source selection screen</changelogtext>
+        <changelogtext>Fix background updater not updating all galleries on large libraries</changelogtext>
+        <changelogtext>Fix E-Hentai/ExHentai gallery update notifications (again)</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v8.4.2-EH" changeDate="">
         <changelogtext>Fix incorrect update notifications for E-Hentai/ExHentai galleries</changelogtext>
         <changelogtext>Fix EH manga opening in EXH source sometimes</changelogtext>
