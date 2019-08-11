@@ -32,7 +32,6 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/Theme.ActionBar.Tab"
                 app:tabIndicatorColor="@android:color/white"
-                app:tabGravity="center"
                 app:tabMode="scrollable"
                 app:tabMinWidth="75dp"/>
 

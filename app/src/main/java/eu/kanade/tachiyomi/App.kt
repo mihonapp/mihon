@@ -188,12 +188,17 @@ open class App : Application() {
 
     // EXH
     private fun setupDebugOverlay() {
-        DebugOverlay.Builder(this)
-                .modules(FpsModule(), EHDebugModeOverlay(this))
-                .bgColor(Color.parseColor("#7F000000"))
-                .notification(false)
-                .allowSystemLayer(false)
-                .build()
-                .install()
+        try {
+            DebugOverlay.Builder(this)
+                    .modules(FpsModule(), EHDebugModeOverlay(this))
+                    .bgColor(Color.parseColor("#7F000000"))
+                    .notification(false)
+                    .allowSystemLayer(false)
+                    .build()
+                    .install()
+        } catch(e: IllegalStateException) {
+            // Crashes if app is in background
+            XLog.e("Failed to initialize debug overlay, app in background?", e)
+        }
     }
 }
