@@ -138,7 +138,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     // DO NOT UPGRADE TO 17.0, IT REQUIRES ANDROIDX
-    standardImplementation 'com.google.firebase:firebase-core:16.0.8'
+    standardImplementation 'com.google.firebase:firebase-core:16.0.9'
 
     // ReactiveX
     implementation 'io.reactivex:rxandroid:1.2.1'
@@ -174,10 +174,10 @@ dependencies {
     // Job scheduling
     implementation 'com.evernote:android-job:1.2.5'
     // DO NOT UPGRADE TO 17.0, IT REQUIRES ANDROIDX
-    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
+    implementation 'com.google.android.gms:play-services-gcm:16.1.0'
 
     // [EXH] Android 7 SSL Workaround
-    implementation 'com.google.android.gms:play-services-safetynet:15.0.1'
+    implementation 'com.google.android.gms:play-services-safetynet:16.0.0'
 
     // Changelog
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
@@ -197,7 +197,7 @@ dependencies {
     implementation "com.github.inorichi.injekt:injekt-core:65b0440"
 
     // Image library
-    final glide_version = '4.8.0'
+    final glide_version = '4.9.0'
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
