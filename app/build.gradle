@@ -40,8 +40,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 8403
-        versionName "v8.4.3-EH"
+        versionCode 8404
+        versionName "v8.4.4-EH"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""

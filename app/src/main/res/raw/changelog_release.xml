@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v8.4.4-EH" changeDate="">
+        <changelogtext>Fix MangaPlus extension not working</changelogtext>
+        <changelogtext>General performance improvements</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v8.4.3-EH" changeDate="">
         <changelogtext>Remove useless help button in sidebar</changelogtext>
         <changelogtext>Add HBrowse source</changelogtext>
