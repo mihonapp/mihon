@@ -19,6 +19,8 @@ class SmartSearchEngine(parentContext: CoroutineContext,
 
     private val db: DatabaseHelper by injectLazy()
 
+    private val normalizedLevenshtein = NormalizedLevenshtein()
+
     suspend fun smartSearch(source: CatalogueSource, title: String): SManga? {
         val cleanedTitle = cleanSmartSearchTitle(title)
 
@@ -35,7 +37,7 @@ class SmartSearchEngine(parentContext: CoroutineContext,
 
                     searchResults.mangas.map {
                         val cleanedMangaTitle = cleanSmartSearchTitle(it.title)
-                        val normalizedDistance = NormalizedLevenshtein().similarity(cleanedTitle, cleanedMangaTitle)
+                        val normalizedDistance = normalizedLevenshtein.similarity(cleanedTitle, cleanedMangaTitle)
                         SmartSearchPresenter.SearchEntry(it, normalizedDistance)
                     }.filter { (_, normalizedDistance) ->
                         normalizedDistance >= MIN_SMART_ELIGIBLE_THRESHOLD
@@ -55,7 +57,7 @@ class SmartSearchEngine(parentContext: CoroutineContext,
             val searchResults = source.fetchSearchManga(1, searchQuery, FilterList()).toSingle().await(Schedulers.io())
 
             searchResults.mangas.map {
-                val normalizedDistance = NormalizedLevenshtein().similarity(title, it.title)
+                val normalizedDistance = normalizedLevenshtein.similarity(title, it.title)
                 SmartSearchPresenter.SearchEntry(it, normalizedDistance)
             }.filter { (_, normalizedDistance) ->
                 normalizedDistance >= MIN_NORMAL_ELIGIBLE_THRESHOLD
