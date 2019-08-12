@@ -69,7 +69,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
      * @param page the page number to retrieve.
      */
     override fun popularMangaRequest(page: Int)
-            = GET("$baseUrl/browse/title/rank/DESC", headers)
+            = GET("$baseUrl/browse/title/rank/DESC/$page", headers)
 
     private fun parseListing(response: Response): MangasPage {
         val doc = response.asJsoup()
@@ -281,7 +281,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
      *
      * @param page the page number to retrieve.
      */
-    override fun latestUpdatesRequest(page: Int) = GET("$baseUrl/browse/title/date/DESC", headers)
+    override fun latestUpdatesRequest(page: Int) = GET("$baseUrl/browse/title/date/DESC/$page", headers)
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
