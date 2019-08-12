@@ -152,7 +152,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                                 // ns, value
                                 var minContent: Pair<String, String> = "" to ""
                                 for(ns in ALL_TAGS) {
-                                    val (v, d) = ns.value.nearest(query, minDist)
+                                    val (v, d) = ns.value.nearest(it.rawTextOnly(), minDist)
                                     if(d < minDist) {
                                         minDist = d
                                         minContent = ns.key to v
