@@ -1,6 +1,7 @@
 package exh
 
 import android.content.Context
+import android.os.Build
 import com.elvishew.xlog.XLog
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
@@ -14,6 +15,7 @@ import eu.kanade.tachiyomi.data.database.resolvers.MangaUrlPutResolver
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.util.jobScheduler
 import exh.source.BlacklistedSources
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
@@ -77,7 +79,6 @@ object EXHMigrations {
                     backupDatabase(context, oldVersion)
                 }
 
-                // Backup database in next release
                 if (oldVersion < 8405) {
                     db.inTransaction {
                         // Migrate HBrowse source IDs
@@ -89,6 +90,11 @@ object EXHMigrations {
                         """.trimIndent())
                                 .affectsTables(MangaTable.TABLE)
                                 .build())
+                    }
+
+                    // Cancel old scheduler jobs with old ids
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        context.jobScheduler.cancelAll()
                     }
                 }
 
