@@ -191,17 +191,20 @@ class EHentai(override val id: Long,
                 }!!.nextElementSibling().text()).time
             }
             // Build and append the rest of the galleries
-            newDisplay.mapIndexed { index, newGallery ->
-                val link = newGallery.attr("href")
-                val name = newGallery.text()
-                val posted = (newGallery.nextSibling() as TextNode).text().removePrefix(", added ")
-                SChapter.create().apply {
-                    this.url = EHentaiSearchMetadata.normalizeUrl(link)
-                    this.name = "v${index + 2}: $name"
-                    this.chapter_number = index + 2f
-                    this.date_upload = EX_DATE_FORMAT.parse(posted).time
-                }
-            }.reversed() + self
+            if(DebugToggles.INCLUDE_ONLY_ROOT_WHEN_LOADING_EXH_VERSIONS.enabled) listOf(self)
+            else {
+                newDisplay.mapIndexed { index, newGallery ->
+                    val link = newGallery.attr("href")
+                    val name = newGallery.text()
+                    val posted = (newGallery.nextSibling() as TextNode).text().removePrefix(", added ")
+                    SChapter.create().apply {
+                        this.url = EHentaiSearchMetadata.normalizeUrl(link)
+                        this.name = "v${index + 2}: $name"
+                        this.chapter_number = index + 2f
+                        this.date_upload = EX_DATE_FORMAT.parse(posted).time
+                    }
+                }.reversed() + self
+            }
         }.toObservable()
     }
 

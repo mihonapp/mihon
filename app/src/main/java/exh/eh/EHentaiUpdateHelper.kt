@@ -87,9 +87,7 @@ class EHentaiUpdateHelper(context: Context) {
                         .fold(accepted.chapters) { curChapters, chapter ->
                             val existing = curChapters.find { it.url == chapter.url }
 
-                            val newLastPageRead = chainsAsChapters.filter { it.date_upload < chapter.date_upload }.maxBy {
-                                it.last_page_read
-                            }?.last_page_read
+                            val newLastPageRead = chainsAsChapters.maxBy { it.last_page_read }?.last_page_read
 
                             if (existing != null) {
                                 existing.read = existing.read || chapter.read

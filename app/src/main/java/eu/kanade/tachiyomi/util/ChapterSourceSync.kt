@@ -6,6 +6,8 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.HttpSource
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
 import java.util.*
 
 /**
@@ -118,6 +120,21 @@ fun syncChaptersWithSource(db: DatabaseHelper,
                     readded.add(c)
                 }
             }
+
+            // --> EXH (carry over reading progress)
+            if(manga.source == EH_SOURCE_ID || manga.source == EXH_SOURCE_ID) {
+                val finalAdded = toAdd.subtract(readded)
+                if(finalAdded.isNotEmpty()) {
+                    val max = dbChapters.maxBy { it.last_page_read }
+                    if (max != null && max.last_page_read > 0) {
+                        for (chapter in finalAdded) {
+                            chapter.last_page_read = max.last_page_read
+                        }
+                    }
+                }
+            }
+            // <-- EXH
+
             db.insertChapters(toAdd).executeAsBlocking()
         }
 
