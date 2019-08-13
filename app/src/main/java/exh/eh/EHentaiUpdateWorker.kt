@@ -271,8 +271,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
 
         private val MIN_BACKGROUND_UPDATE_FREQ = 1.days.inMilliseconds.longValue
 
-        private const val JOB_ID_UPDATE_BACKGROUND = 0
-        private const val JOB_ID_UPDATE_BACKGROUND_TEST = 1
+        private const val JOB_ID_UPDATE_BACKGROUND = 700
+        private const val JOB_ID_UPDATE_BACKGROUND_TEST = 701
 
         private val logger by lazy { XLog.tag("EHUpdaterScheduler") }
 
