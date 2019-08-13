@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.util.jobScheduler
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.eh.EHentaiUpdateWorker
@@ -52,12 +53,41 @@ object DebugFunctions {
 
     fun convertAllExhentaiGalleriesToEhentai() = convertSources(EXH_SOURCE_ID, EH_SOURCE_ID)
 
-    fun testLaunchBackgroundUpdater() {
+    fun testLaunchEhentaiBackgroundUpdater() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             EHentaiUpdateWorker.launchBackgroundTest(app)
         } else {
             error("OS/SDK version too old!")
         }
+    }
+
+    fun rescheduleEhentaiBackgroundUpdater() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            EHentaiUpdateWorker.scheduleBackground(app)
+        } else {
+            error("OS/SDK version too old!")
+        }
+    }
+
+    fun listScheduledJobs() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        app.jobScheduler.allPendingJobs.map { j ->
+            """
+                {
+                    info: ${j.id},
+                    isPeriod: ${j.isPeriodic},
+                    isPersisted: ${j.isPersisted},
+                    intervalMillis: ${j.intervalMillis},
+                }
+            """.trimIndent()
+        }.joinToString(",\n")
+    } else {
+        error("OS/SDK version too old!")
+    }
+
+    fun cancelAllScheduledJobs() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        app.jobScheduler.cancelAll()
+    } else {
+        error("OS/SDK version too old!")
     }
 
     private fun convertSources(from: Long, to: Long) {

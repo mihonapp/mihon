@@ -1,6 +1,7 @@
 package exh.debug
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.support.v7.preference.PreferenceScreen
 import android.text.Html
 import android.util.Log
@@ -62,6 +63,11 @@ class SettingsDebugController : SettingsController() {
                 }
             }
         }
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+        super.onActivityStopped(activity)
+        router.popCurrentController()
     }
 
     companion object {

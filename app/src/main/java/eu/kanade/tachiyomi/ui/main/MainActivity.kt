@@ -10,6 +10,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
@@ -42,8 +43,11 @@ import android.text.TextUtils
 import android.view.View
 import eu.kanade.tachiyomi.util.vibrate
 import exh.EXHMigrations
+import exh.eh.EHentaiUpdateWorker
 import exh.ui.migration.MetadataFetchDialog
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : BaseActivity() {
@@ -65,6 +69,35 @@ class MainActivity : BaseActivity() {
     }
 
     lateinit var tabAnimator: TabsAnimator
+
+    // Idle-until-urgent
+    private var firstPaint = false
+    private val iuuQueue = LinkedList<() -> Unit>()
+
+    private fun initWhenIdle(task: () -> Unit) {
+        // Avoid sync issues by enforcing main thread
+        if(Looper.myLooper() != Looper.getMainLooper())
+            throw IllegalStateException("Can only be called on main thread!")
+
+        if(firstPaint) {
+            task()
+        } else {
+            iuuQueue += task
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if(!firstPaint) {
+            drawer.postDelayed({
+                if(!firstPaint) {
+                    firstPaint = true
+                    iuuQueue.forEach { it() }
+                }
+            }, 500)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(when (preferences.theme()) {
@@ -151,13 +184,15 @@ class MainActivity : BaseActivity() {
         })
 
         // --> EH
-        //Hook long press hamburger menu to lock
-        getToolbarNavigationIcon(toolbar)?.setOnLongClickListener {
-            if(lockEnabled(preferences)) {
-                doLock(true)
-                vibrate(50) // Notify user of lock
-                true
-            } else false
+        initWhenIdle {
+            //Hook long press hamburger menu to lock
+            getToolbarNavigationIcon(toolbar)?.setOnLongClickListener {
+                if(lockEnabled(preferences)) {
+                    doLock(true)
+                    vibrate(50) // Notify user of lock
+                    true
+                } else false
+            }
         }
 
         //Show lock
@@ -186,15 +221,23 @@ class MainActivity : BaseActivity() {
             if(EXHMigrations.upgrade(preferences)) {
                 ChangelogDialogController().showDialog(router)
             }
-            // Migrate metadata if empty (EH)
-            if(!preferences.migrateLibraryAsked().getOrDefault()) {
-                MetadataFetchDialog().askMigration(this, false)
-            }
 
-            // Upload settings
-            if(preferences.enableExhentai().getOrDefault()
-                    && preferences.eh_showSettingsUploadWarning().getOrDefault())
-                WarnConfigureDialogController.uploadSettings(router)
+            initWhenIdle {
+                // Migrate metadata if empty (EH)
+                if(!preferences.migrateLibraryAsked().getOrDefault()) {
+                    MetadataFetchDialog().askMigration(this, false)
+                }
+
+                // Upload settings
+                if(preferences.enableExhentai().getOrDefault()
+                        && preferences.eh_showSettingsUploadWarning().getOrDefault())
+                    WarnConfigureDialogController.uploadSettings(router)
+
+                // Scheduler uploader job if required
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    EHentaiUpdateWorker.scheduleBackground(this)
+                }
+            }
             // EXH <--
         }
     }
