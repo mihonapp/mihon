@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="v8.4.5-EH" changeDate="">
+        <changelogtext>Add shortcut to auto-migration of all manga in a source</changelogtext>
+        <changelogtext>Improve responsiveness when skipping manga during auto-migration</changelogtext>
+        <changelogtext>Optimize auto-migration colors for dark themes</changelogtext>
+        <changelogtext>Fix saving HBrowse search queries crashing application</changelogtext>
+        <changelogtext>Another attempt to fix E-Hentai/ExHentai reading progress not carrying over when updating galleries</changelogtext>
+        <changelogtext>Minor improvements to application boot speed</changelogtext>
+        <changelogtext>Fix E-Hentai/ExHentai never updating galleries in some cases</changelogtext>
+        <changelogtext>Fix HBrowse tag search and pagination</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="v8.4.4-EH" changeDate="">
         <changelogtext>Fix MangaPlus extension not working</changelogtext>
         <changelogtext>General performance improvements</changelogtext>
