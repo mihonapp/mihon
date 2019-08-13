@@ -25,6 +25,25 @@ interface Serializer<in T : Filter<out Any?>> {
     val clazz: KClass<in T>
 }
 
+// EXH -->
+class HelpDialogSerializer(override val serializer: FilterSerializer) : Serializer<Filter.HelpDialog> {
+    override val type = "HELP_DIALOG"
+    override val clazz = Filter.HelpDialog::class
+
+    override fun mappings() = listOf(
+            Pair(NAME, Filter.HelpDialog::name),
+            Pair(DIALOG_TITLE, Filter.HelpDialog::dialogTitle),
+            Pair(MARKDOWN, Filter.HelpDialog::markdown)
+    )
+
+    companion object {
+        const val NAME = "name"
+        const val DIALOG_TITLE = "dialogTitle"
+        const val MARKDOWN = "markdown"
+    }
+}
+// EXH <--
+
 class HeaderSerializer(override val serializer: FilterSerializer) : Serializer<Filter.Header> {
     override val type = "HEADER"
     override val clazz = Filter.Header::class
