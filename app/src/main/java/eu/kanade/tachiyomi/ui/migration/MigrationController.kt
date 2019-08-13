@@ -10,16 +10,27 @@ import com.afollestad.materialdialogs.MaterialDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import exh.ui.migration.manga.design.MigrationDesignController
+import exh.util.await
 import kotlinx.android.synthetic.main.migration_controller.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import rx.schedulers.Schedulers
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class MigrationController : NucleusController<MigrationPresenter>(),
         FlexibleAdapter.OnItemClickListener,
-        SourceAdapter.OnSelectClickListener {
+        SourceAdapter.OnSelectClickListener,
+        SourceAdapter.OnAutoClickListener {
 
     private var adapter: FlexibleAdapter<IFlexible<*>>? = null
 
@@ -107,6 +118,18 @@ class MigrationController : NucleusController<MigrationPresenter>(),
 
     override fun onSelectClick(position: Int) {
         onItemClick(null, position)
+    }
+
+    override fun onAutoClick(position: Int) {
+        val item = adapter?.getItem(position) as? SourceItem ?: return
+
+        GlobalScope.launch {
+            val manga = Injekt.get<DatabaseHelper>().getFavoriteMangas().asRxSingle().await(Schedulers.io())
+            val sourceMangas = manga.asSequence().filter { it.source == item.source.id }.map { it.id!! }.toList()
+            withContext(Dispatchers.Main) {
+                router.pushController(MigrationDesignController.create(sourceMangas).withFadeTransaction())
+            }
+        }
     }
 
     fun migrateManga(prevManga: Manga, manga: Manga) {

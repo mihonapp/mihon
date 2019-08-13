@@ -93,6 +93,7 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                 applicationContext?.toast("All migrations complete!")
                 router.popCurrentController()
             } else {
+                adapter.migratingManga[pager.currentItem].migrationJob.cancel()
                 pager.setCurrentItem(pager.currentItem + 1, true)
                 launch(Dispatchers.Main) {
                     updateTitle()
@@ -155,6 +156,9 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                                            } else {
                                                null
                                            }
+                                       } catch(e: CancellationException) {
+                                           // Ignore cancellations
+                                           throw e
                                        } catch(e: Exception) {
                                            logger.e("Failed to search in source: ${source.id}!", e)
                                            null
@@ -179,6 +183,9 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                                         }
                                         localManga
                                     } else null
+                                } catch(e: CancellationException) {
+                                    // Ignore cancellations
+                                    throw e
                                 } catch(e: Exception) {
                                     logger.e("Failed to search in source: ${source.id}!", e)
                                     null
@@ -206,6 +213,9 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                         result.copyFrom(newManga)
 
                         db.insertManga(result).await()
+                    } catch(e: CancellationException) {
+                        // Ignore cancellations
+                        throw e
                     } catch(e: Exception) {
                         logger.e("Could not load search manga details", e)
                     }
