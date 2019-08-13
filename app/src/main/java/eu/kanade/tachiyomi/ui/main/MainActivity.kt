@@ -95,7 +95,7 @@ class MainActivity : BaseActivity() {
                     firstPaint = true
                     iuuQueue.forEach { it() }
                 }
-            }, 500)
+            }, 1000)
         }
     }
 
@@ -202,7 +202,9 @@ class MainActivity : BaseActivity() {
                 doLock()
 
                 //Check lock security
-                notifyLockSecurity(this)
+                initWhenIdle {
+                    notifyLockSecurity(this)
+                }
             }
         }
         // <-- EH
