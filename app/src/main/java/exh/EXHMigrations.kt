@@ -77,6 +77,21 @@ object EXHMigrations {
                     backupDatabase(context, oldVersion)
                 }
 
+                // Backup database in next release
+                if (oldVersion < 8405) {
+                    db.inTransaction {
+                        // Migrate HBrowse source IDs
+                        db.lowLevel().executeSQL(RawQuery.builder()
+                                .query("""
+                            UPDATE ${MangaTable.TABLE}
+                                SET ${MangaTable.COL_SOURCE} = $HBROWSE_SOURCE_ID
+                                WHERE ${MangaTable.COL_SOURCE} = 1401584337232758222
+                        """.trimIndent())
+                                .affectsTables(MangaTable.TABLE)
+                                .build())
+                    }
+                }
+
                 // TODO BE CAREFUL TO NOT FUCK UP MergedSources IF CHANGING URLs
 
                 preferences.eh_lastVersionCode().set(BuildConfig.VERSION_CODE)

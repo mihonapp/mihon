@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
+import exh.HBROWSE_SOURCE_ID
 import exh.metadata.metadata.HBrowseSearchMetadata
 import exh.metadata.metadata.base.RaisedTag
 import exh.search.Namespace
@@ -49,6 +50,8 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
     override val supportsLatest = true
 
     override val metaClass = HBrowseSearchMetadata::class
+
+    override val id: Long = HBROWSE_SOURCE_ID
 
     override fun headersBuilder() = Headers.Builder()
             .add("Cookie", BASE_COOKIES)
