@@ -608,6 +608,21 @@ class EHentai(override val id: Long,
                 builder.appendQueryParameter(param, "on")
         }
     }
+
+    open class PageOption(name: String, private val queryKey: String) : Filter.Text(name), UriFilter {
+        override fun addToUri(builder: Uri.Builder) {
+            if(state.isNotBlank()) {
+                if (builder.build().getQueryParameters("f_sp").isEmpty()) {
+                    builder.appendQueryParameter("f_sp", "on")
+                }
+
+                builder.appendQueryParameter(queryKey, state.trim())
+            }
+        }
+    }
+    class MinPagesOption : PageOption("Minimum Pages", "f_spf")
+    class MaxPagesOption : PageOption("Maximum Pages", "f_spt")
+
     class RatingOption : Filter.Select<String>("Minimum Rating", arrayOf(
             "Any",
             "2 stars",
@@ -632,7 +647,9 @@ class EHentai(override val id: Long,
             AdvancedOption("Search Low-Power Tags", "f_sdt1"),
             AdvancedOption("Search Downvoted Tags", "f_sdt2"),
             AdvancedOption("Show Expunged Galleries", "f_sh"),
-            RatingOption()
+            RatingOption(),
+            MinPagesOption(),
+            MaxPagesOption()
     ))
 
     class ReverseFilter : Filter.CheckBox("Reverse search results")
