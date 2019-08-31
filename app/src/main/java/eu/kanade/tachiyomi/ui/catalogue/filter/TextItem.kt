@@ -13,6 +13,11 @@ import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.widget.SimpleTextWatcher
 
 open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Holder>() {
+    private val textWatcher = object : SimpleTextWatcher() {
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            filter.state = s.toString()
+        }
+    }
 
     override fun getLayoutRes(): Int {
         return R.layout.navigation_view_text
@@ -25,11 +30,11 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
     override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: Holder, position: Int, payloads: List<Any?>?) {
         holder.wrapper.hint = filter.name
         holder.edit.setText(filter.state)
-        holder.edit.addTextChangedListener(object : SimpleTextWatcher() {
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                filter.state = s.toString()
-            }
-        })
+        holder.edit.addTextChangedListener(textWatcher)
+    }
+
+    override fun unbindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: Holder, position: Int) {
+        holder.edit.removeTextChangedListener(textWatcher)
     }
 
     override fun equals(other: Any?): Boolean {
