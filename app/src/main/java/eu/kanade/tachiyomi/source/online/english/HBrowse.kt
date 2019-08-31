@@ -168,7 +168,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                                 val mappedNs = NS_MAPPINGS[it.namespace] ?: it.namespace
 
                                 var key = mappedNs
-                                if(ALL_TAGS.containsKey(key)) key = ALL_TAGS.keys.sorted().nearest(mappedNs).first
+                                if(!ALL_TAGS.containsKey(key)) key = ALL_TAGS.keys.sorted().nearest(mappedNs).first
 
                                 // Find nearest NS
                                 val nsContents = ALL_TAGS[key]
@@ -757,7 +757,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                         "workmate",
                         "younger_sister"
                 ),
-                "malebody" to listOf(
+                "maleBody" to listOf(
                         "adult",
                         "animal",
                         "animal_ears",
@@ -791,7 +791,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                         "wings",
                         "young"
                 ),
-                "femalebody" to listOf(
+                "femaleBody" to listOf(
                         "adult",
                         "animal_ears",
                         "bald",
