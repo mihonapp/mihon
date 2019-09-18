@@ -7,7 +7,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
 fun launchUI(block: suspend CoroutineScope.() -> Unit): Job =
-        launch(UI, CoroutineStart.DEFAULT, null, block)
+        launch(UI, CoroutineStart.DEFAULT, null, null, block)
 
 fun launchNow(block: suspend CoroutineScope.() -> Unit): Job =
-        launch(UI, CoroutineStart.UNDISPATCHED, null, block)
+        launch(UI, CoroutineStart.UNDISPATCHED, null, null, block)
