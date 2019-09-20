@@ -31,7 +31,6 @@ ext {
 android {
     compileSdkVersion 27
     buildToolsVersion '28.0.3'
-    publishNonDefault true
 
     defaultConfig {
         applicationId "eu.kanade.tachiyomi"
