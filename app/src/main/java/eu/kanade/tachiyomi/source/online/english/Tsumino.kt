@@ -121,7 +121,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
 
     fun genericMangaParse(response: Response): MangasPage {
         val json = jsonParser.parse(response.body()!!.string()!!).asJsonObject
-        val hasNextPage = json["PageNumber"].int < json["PageCount"].int
+        val hasNextPage = json["pageNumber"].int < json["PageCount"].int
         
         val manga = json["Data"].array.map {
             val obj = it.obj["Entry"].obj
