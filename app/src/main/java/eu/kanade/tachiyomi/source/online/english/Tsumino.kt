@@ -145,7 +145,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
                             minRating: Int,
                             excludeParodies: Boolean = false,
                             advSearch: List<AdvSearchEntry> = emptyList())
-        = POST("$BASE_URL/Books/Operate", body = FormBody.Builder()
+        = POST("$BASE_URL/Search/Operate", body = FormBody.Builder()
             .add("PageNumber", page.toString())
             .add("Text", query)
             .add("Sort", sort.name)
