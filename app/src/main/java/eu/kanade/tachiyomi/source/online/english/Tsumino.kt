@@ -129,7 +129,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
             SManga.create().apply {
                 val id = obj["id"].long
                 url = TsuminoSearchMetadata.mangaUrlFromId(id.toString())
-                thumbnail_url = BASE_URL + TsuminoSearchMetadata.thumbUrlFromId(id.toString())
+                thumbnail_url = BASE_URL.replace("www", "content") + TsuminoSearchMetadata.thumbUrlFromId(id.toString())
                 
                 title = obj["title"].string
             }
