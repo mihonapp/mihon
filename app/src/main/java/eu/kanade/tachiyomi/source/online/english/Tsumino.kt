@@ -121,17 +121,17 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
 
     fun genericMangaParse(response: Response): MangasPage {
         val json = jsonParser.parse(response.body()!!.string()!!).asJsonObject
-        val hasNextPage = json["pageNumber"].int < json["PageCount"].int
+        val hasNextPage = json["pageNumber"].int < json["pageCount"].int
         
-        val manga = json["Data"].array.map {
-            val obj = it.obj["Entry"].obj
+        val manga = json["data"].array.map {
+            val obj = it.obj["entry"].obj
             
             SManga.create().apply {
-                val id = obj["Id"].long
+                val id = obj["id"].long
                 url = TsuminoSearchMetadata.mangaUrlFromId(id.toString())
                 thumbnail_url = BASE_URL + TsuminoSearchMetadata.thumbUrlFromId(id.toString())
                 
-                title = obj["Title"].string
+                title = obj["title"].string
             }
         }
         
