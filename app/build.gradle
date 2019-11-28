@@ -36,12 +36,12 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        applicationId "eu.kanade.tachiyomi.eh2"
+        applicationId "eu.kanade.tachiyomi.az"
         minSdkVersion 16
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 8405
-        versionName "v8.4.5-EH"
+        versionName "v8.4.5-AZ"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""

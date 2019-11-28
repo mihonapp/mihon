@@ -27,7 +27,7 @@ interface GithubService {
         }
     }
 
-    @GET("/repos/NerdNumber9/tachiyomi/releases/latest")
+    @GET("/repos/az4521/tachiyomiAZ/releases/latest")
     fun getLatestVersion(): Observable<GithubRelease>
 
 }
