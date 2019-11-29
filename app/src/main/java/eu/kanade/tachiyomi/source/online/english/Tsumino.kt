@@ -34,6 +34,7 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.*
+import java.io.IOException
 
 class Tsumino(private val context: Context): ParsedHttpSource(),
         LewdSource<TsuminoSearchMetadata, Document>,
@@ -129,7 +130,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
             SManga.create().apply {
                 val id = obj["id"].long
                 url = TsuminoSearchMetadata.mangaUrlFromId(id.toString())
-                thumbnail_url = BASE_URL.replace("www", "content") + TsuminoSearchMetadata.thumbUrlFromId(id.toString())
+                thumbnail_url = obj["thumbnailUrl"].asString
                 
                 title = obj["title"].string
             }
@@ -259,11 +260,10 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
                 .map { it.asJsoup() }
                 .toSingle()
     }.map {
-        trickTsumino(it.tmId)
 
         listOf(
                 SChapter.create().apply {
-                    url = "/Read/View/${it.tmId}"
+                    url = "/entry/${it.tmId}"
                     name = "Chapter"
                     
                     it.uploadDate?.let { date_upload = it }
@@ -272,27 +272,6 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
                 }
         )
     }.toObservable()
-
-    fun trickTsumino(id: Int?) {
-        if(id == null) return
-
-        //Make one call to /Read/View (ASP session cookie)
-        val rvReq = GET("$BASE_URL/Read/View/$id")
-        val resp = client.newCall(rvReq).execute()
-
-        // Make 5 requests to the first 5 pages of the book in reader process
-        var chain: Observable<Any> = Observable.just(0)
-        for(i in 1 .. 5) {
-            chain = chain.flatMap {
-                val req = GET("$BASE_URL/Read/Process/$id/$i")
-                client.newCall(req).asObservableSuccess()
-            }
-        }
-
-        chain.observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .subscribe({}, {})
-    }
 
     override val client: OkHttpClient
         // Do not call super here as we don't want auto-captcha detection here
@@ -327,17 +306,28 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
                     response
                 }.build()
 
+
     override fun fetchPageList(chapter: SChapter): Observable<List<Page>> {
         val id = chapter.url.substringAfterLast('/')
         val call = POST("$BASE_URL/Read/Load", body = FormBody.Builder().add("q", id).build())
         return client.newCall(call).asObservableSuccess().map {
-            val parsed = jsonParser.parse(it.body()!!.string()).obj
-            val pageUrls = parsed["reader_page_urls"].array
+            val page = client.newCall(GET("$BASE_URL/Read/Index/$id?page=1")).execute().asJsoup()
+            val numPages = page.select("h1").text().split(" ").last()
 
-            val imageUrl = Uri.parse("$BASE_URL/Image/Object")
-            pageUrls.mapIndexed { index, obj ->
-                val newImageUrl = imageUrl.buildUpon().appendQueryParameter("name", obj.string)
-                Page(index, chapter.url + "#${index + 1}", newImageUrl.toString())
+            if (numPages.isNotEmpty()) {
+                val pageArr = Array(numPages.toInt()) {i -> (
+                    page.select("#image-container").attr("data-cdn")
+                .replace("[PAGE]", (i+1).toString())
+                )}
+
+                val pageUrls = Array(numPages.toInt()) {i -> (
+                    "$BASE_URL/Read/Index/$id?page="+(i+1).toString()
+                )}
+                pageUrls.mapIndexed {index, obj -> 
+                    Page(index, pageUrls[index], pageArr[index])
+                }
+            } else {
+                throw IOException("probably a captcha")
             }
         }.doOnError {
             try {
@@ -360,6 +350,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
             }
         }
     }
+
 
     override fun verifyComplete(url: String): Boolean {
         return Uri.parse(url).pathSegments.getOrNull(1) == "View"
