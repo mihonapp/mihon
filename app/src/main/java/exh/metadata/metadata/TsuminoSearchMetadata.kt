@@ -32,7 +32,7 @@ class TsuminoSearchMetadata : RaisedSearchMetadata() {
 
     override fun copyTo(manga: SManga) {
         title?.let { manga.title = it }
-        manga.thumbnail_url = BASE_URL + thumbUrlFromId(tmId.toString())
+        manga.thumbnail_url = BASE_URL.replace("www", "content") + thumbUrlFromId(tmId.toString())
 
         artist?.let { manga.artist = it }
 

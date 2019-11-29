@@ -44,6 +44,8 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
 
     private val preferences: PreferencesHelper by injectLazy()
 
+
+
     override val id = TSUMINO_SOURCE_ID
     
     override val lang = "en"
@@ -56,6 +58,10 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
         with(metadata) {
             tmId = TsuminoSearchMetadata.tmIdFromUrl(input.location()).toInt()
             tags.clear()
+
+//            input.getElementsByClass(".book-page-image")?.first()?.attr("src")?.text()?.trim()?.let {
+//                thumbNail = it;
+//            }
 
             input.getElementById("Title")?.text()?.let {
                 title = it.trim()
@@ -252,6 +258,21 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
     override fun mangaDetailsParse(document: Document)
             = throw UnsupportedOperationException("Unused method called!")
 
+/*    override fun mangaDetailsParse(document: Document): SManga {
+        val infoElement = document.select("div.book-page-container")
+        val manga = SManga.create()
+
+        manga.title = infoElement.select("#Title").text()
+        manga.artist = getArtists(document)
+        manga.author = manga.artist
+        manga.status = SManga.COMPLETED
+        manga.thumbnail_url = infoElement.select("img").attr("src")
+        manga.description = getDesc(document)
+
+        return manga
+    }
+*/
+
     override fun chapterListSelector() = throw UnsupportedOperationException("Unused method called!")
     override fun chapterFromElement(element: Element) = throw UnsupportedOperationException("Unused method called!")
     override fun fetchChapterList(manga: SManga) = getOrLoadMetadata(manga.id) {
@@ -289,7 +310,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
                                 .build()
                     }
 
-                    val response = it.proceed(request)
+                   val response = it.proceed(request)
 
                     val newCookie = response.headers("Set-Cookie").map(String::trim).find {
                         it.startsWith(ASP_NET_COOKIE_NAME)
@@ -408,6 +429,71 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
 
         return "https://tsumino.com/Book/Info/${uri.pathSegments[2]}"
     }
+
+        private fun getArtists(document: Document): String {
+            val stringBuilder = StringBuilder()
+            val artists = document.select("#Artist a")
+
+            artists.forEach {
+                stringBuilder.append(it.text())
+
+                if (it != artists.last())
+                    stringBuilder.append(", ")
+            }
+
+            return stringBuilder.toString()
+        }
+
+
+       private fun getDesc(document: Document): String {
+            val stringBuilder = StringBuilder()
+            val pages = document.select("#Pages").text()
+            val parodies = document.select("#Parody a")
+            val characters = document.select("#Character a")
+            val tags = document.select("#Tag a")
+
+            stringBuilder.append("Pages: $pages")
+
+            if (parodies.size > 0) {
+                stringBuilder.append("\n\n")
+                stringBuilder.append("Parodies: ")
+
+                parodies.forEach {
+                    stringBuilder.append(it.text())
+
+                    if (it != parodies.last())
+                        stringBuilder.append(", ")
+                }
+            }
+
+            if (characters.size > 0) {
+                stringBuilder.append("\n\n")
+                stringBuilder.append("Characters: ")
+
+                characters.forEach {
+                    stringBuilder.append(it.text())
+
+                    if (it != characters.last())
+                        stringBuilder.append(", ")
+                }
+            }
+
+            if (tags.size > 0) {
+                stringBuilder.append("\n\n")
+                stringBuilder.append("Tags: ")
+
+                tags.forEach {
+                    stringBuilder.append(it.text())
+
+                    if (it != tags.last())
+                        stringBuilder.append(", ")
+                }
+            }
+
+            return stringBuilder.toString()
+        }
+
+
 
     companion object {
         val jsonParser by lazy {
