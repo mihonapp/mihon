@@ -82,6 +82,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
     private fun initWebtoonPreferences() {
         webtoon_prefs_group.visible()
         crop_borders_webtoon.bindToPreference(preferences.cropBordersWebtoon())
+        margin_ratio_webtoon.bindToPreference(preferences.marginRatio())
     }
 
     /**

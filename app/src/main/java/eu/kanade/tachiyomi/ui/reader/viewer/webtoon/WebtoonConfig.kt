@@ -34,6 +34,9 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
     var doubleTapAnimDuration = 500
         private set
 
+    var marginRatio = 0f
+        private set
+
     init {
         preferences.readWithTapping()
             .register({ tappingEnabled = it })
@@ -52,6 +55,23 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
 
         preferences.readWithVolumeKeysInverted()
             .register({ volumeKeysInverted = it })
+
+        preferences.marginRatio()
+            .register({ marginFromPreference(it) }, { imagePropertyChangedListener?.invoke() })
+    }
+
+    private fun marginFromPreference(position: Int) {
+        marginRatio = when (position) {
+            1 -> PageMargin.TEN_PERCENT
+            2 -> PageMargin.TWENTY_FIVE_PERCENT
+            else -> PageMargin.NO_MARGIN
+        }
+    }
+
+    object PageMargin {
+        const val NO_MARGIN = 0f
+        const val TEN_PERCENT = 0.1f
+        const val TWENTY_FIVE_PERCENT = 0.25f
     }
 
     fun unsubscribe() {

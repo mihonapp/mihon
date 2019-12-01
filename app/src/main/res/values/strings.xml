@@ -196,6 +196,7 @@
     <string name="pref_read_with_tapping">Tapping</string>
     <string name="pref_read_with_long_tap">Long tap dialog</string>
     <string name="pref_reader_theme">Background color</string>
+    <string name="pref_reader_margin">Margin ratio</string>
     <string name="white_background">White</string>
     <string name="black_background">Black</string>
     <string name="pref_viewer_type">Default viewer</string>
@@ -230,6 +231,9 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
+    <string name="webtoon_margin_ratio_0">No margin</string>
+    <string name="webtoon_margin_ratio_10">10%</string>
+    <string name="webtoon_margin_ratio_25">25%</string>
 
 
       <!-- Downloads section -->
