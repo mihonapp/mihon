@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.setting
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.preference.*
-import eu.kanade.tachiyomi.widget.preference.FloatListPreference
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
 
 @DslMarker
@@ -36,10 +35,6 @@ inline fun PreferenceGroup.listPreference(block: (@DSL ListPreference).() -> Uni
 
 inline fun PreferenceGroup.intListPreference(block: (@DSL IntListPreference).() -> Unit): IntListPreference {
     return initThenAdd(IntListPreference(context), block).also(::initDialog)
-}
-
-inline fun PreferenceGroup.floatListPreference(block: (@DSL FloatListPreference).() -> Unit): FloatListPreference {
-    return initThenAdd(FloatListPreference(context), block).also(::initDialog)
 }
 
 inline fun PreferenceGroup.multiSelectListPreference(block: (@DSL MultiSelectListPreference).() -> Unit): MultiSelectListPreference {
