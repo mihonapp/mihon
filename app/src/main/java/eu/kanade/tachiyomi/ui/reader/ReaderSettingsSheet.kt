@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.os.Bundle
+import android.support.annotation.ArrayRes
 import android.support.design.widget.BottomSheetDialog
 import android.support.v4.widget.NestedScrollView
 import android.widget.CompoundButton
@@ -82,7 +83,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
     private fun initWebtoonPreferences() {
         webtoon_prefs_group.visible()
         crop_borders_webtoon.bindToPreference(preferences.cropBordersWebtoon())
-        margin_ratio_webtoon.bindToPreference(preferences.marginRatio())
+        margin_ratio_webtoon.bindToFloatPreference(preferences.marginRatioWebtoon(), R.array.webtoon_margin_ratio_values)
     }
 
     /**
@@ -101,6 +102,19 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
             pref.set(position + offset)
         }
         setSelection(pref.getOrDefault() - offset, false)
+    }
+
+    /**
+     * Binds a spinner to a float preference. The position of the spinner item must
+     * correlate with the [floatValues] resource item (in arrays.xml), which is a <string-array>
+     * of float values that will be parsed here and applied to the preference.
+     */
+    private fun Spinner.bindToFloatPreference(pref: Preference<Float>, @ArrayRes floatValuesResource: Int) {
+        val floatValues = resources.getStringArray(floatValuesResource).map { it.toFloatOrNull() }
+        onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
+            pref.set(floatValues[position])
+        }
+        setSelection(floatValues.indexOf(pref.getOrDefault()), false)
     }
 
 }

@@ -233,6 +233,8 @@
     <string name="color_filter_a_value">A</string>
     <string name="webtoon_margin_ratio_0">No margin</string>
     <string name="webtoon_margin_ratio_10">10%</string>
+    <string name="webtoon_margin_ratio_15">15%</string>
+    <string name="webtoon_margin_ratio_20">20%</string>
     <string name="webtoon_margin_ratio_25">25%</string>
 
 

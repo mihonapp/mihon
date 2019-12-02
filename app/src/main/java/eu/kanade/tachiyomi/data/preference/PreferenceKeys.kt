@@ -51,7 +51,7 @@ object PreferenceKeys {
 
     const val readWithVolumeKeysInverted = "reader_volume_keys_inverted"
 
-    const val webtoonMarginRatio = "margin_ratio"
+    const val marginRatioWebtoon = "margin_ratio_webtoon"
 
     const val portraitColumns = "pref_library_columns_portrait_key"
 

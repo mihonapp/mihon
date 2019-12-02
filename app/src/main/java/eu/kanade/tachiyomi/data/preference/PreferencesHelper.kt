@@ -71,6 +71,8 @@ class PreferencesHelper(val context: Context) {
 
     fun cropBordersWebtoon() = rxPrefs.getBoolean(Keys.cropBordersWebtoon, false)
 
+    fun marginRatioWebtoon() = rxPrefs.getFloat(Keys.marginRatioWebtoon, 0f)
+
     fun readWithTapping() = rxPrefs.getBoolean(Keys.readWithTapping, true)
 
     fun readWithLongTap() = rxPrefs.getBoolean(Keys.readWithLongTap, true)
@@ -78,8 +80,6 @@ class PreferencesHelper(val context: Context) {
     fun readWithVolumeKeys() = rxPrefs.getBoolean(Keys.readWithVolumeKeys, false)
 
     fun readWithVolumeKeysInverted() = rxPrefs.getBoolean(Keys.readWithVolumeKeysInverted, false)
-
-    fun marginRatio() = rxPrefs.getInteger(Keys.webtoonMarginRatio, 0)
 
     fun portraitColumns() = rxPrefs.getInteger(Keys.portraitColumns, 0)
 

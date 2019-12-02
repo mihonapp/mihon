@@ -254,7 +254,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:entries="@array/margin_ratio"
+        android:entries="@array/webtoon_margin_ratio"
         app:layout_constraintLeft_toRightOf="@id/verticalcenter"
         app:layout_constraintRight_toRightOf="@id/spinner_end"
         app:layout_constraintTop_toBottomOf="@id/crop_borders_webtoon"/>

@@ -53,10 +53,20 @@
         <item>@string/scale_type_smart_fit</item>
     </string-array>
 
-    <string-array name="margin_ratio">
+    <string-array name="webtoon_margin_ratio">
         <item>@string/webtoon_margin_ratio_0</item>
         <item>@string/webtoon_margin_ratio_10</item>
+        <item>@string/webtoon_margin_ratio_15</item>
+        <item>@string/webtoon_margin_ratio_20</item>
         <item>@string/webtoon_margin_ratio_25</item>
+    </string-array>
+
+    <string-array name="webtoon_margin_ratio_values">
+        <item>0.0</item>
+        <item>0.1</item>
+        <item>0.15</item>
+        <item>0.2</item>
+        <item>0.25</item>
     </string-array>
 
     <string-array name="image_scale_type_values">
