@@ -1,11 +1,11 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.content.Context
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.kanade.tachiyomi.R
@@ -18,8 +18,8 @@ import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.util.plusAssign
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import kotlinx.android.synthetic.main.chapters_controller.fast_scroller
-import kotlinx.android.synthetic.main.library_category.view.*
+import kotlinx.android.synthetic.main.library_category.view.fast_scroller
+import kotlinx.android.synthetic.main.library_category.view.swipe_refresh
 import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
 
@@ -61,6 +61,8 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
      * Subscriptions while the view is bound.
      */
     private var subscriptions = CompositeSubscription()
+
+    private var lastClickPosition = -1
 
     fun onCreate(controller: LibraryController) {
         this.controller = controller
@@ -174,6 +176,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
             }
             is LibrarySelectionEvent.Unselected -> {
                 findAndToggleSelection(event.manga)
+                if (adapter.indexOf(event.manga) != -1) lastClickPosition = -1
                 if (controller.selectedMangas.isEmpty()) {
                     adapter.mode = SelectableAdapter.Mode.SINGLE
                 }
@@ -181,6 +184,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
             is LibrarySelectionEvent.Cleared -> {
                 adapter.mode = SelectableAdapter.Mode.SINGLE
                 adapter.clearSelection()
+                lastClickPosition = -1
             }
         }
     }
@@ -204,10 +208,11 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
      * @param position the position of the element clicked.
      * @return true if the item should be selected, false otherwise.
      */
-    override fun onItemClick(view: View, position: Int): Boolean {
+    override fun onItemClick(view: View?, position: Int): Boolean {
         // If the action mode is created and the position is valid, toggle the selection.
         val item = adapter.getItem(position) ?: return false
         if (adapter.mode == SelectableAdapter.Mode.MULTI) {
+            lastClickPosition = position
             toggleSelection(position)
             return true
         } else {
@@ -223,7 +228,15 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
      */
     override fun onItemLongClick(position: Int) {
         controller.createActionModeIfNeeded()
-        toggleSelection(position)
+        when {
+            lastClickPosition == -1 -> setSelection(position)
+            lastClickPosition > position -> for (i in position until lastClickPosition)
+                setSelection(i)
+            lastClickPosition < position -> for (i in lastClickPosition + 1..position)
+                setSelection(i)
+            else -> setSelection(position)
+        }
+        lastClickPosition = position
     }
 
     /**
@@ -244,6 +257,19 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         val item = adapter.getItem(position) ?: return
 
         controller.setSelection(item.manga, !adapter.isSelected(position))
+        controller.invalidateActionMode()
+    }
+
+
+    /**
+     * Tells the presenter to set the selection for the given position.
+     *
+     * @param position the position to toggle.
+     */
+    private fun setSelection(position: Int) {
+        val item = adapter.getItem(position) ?: return
+
+        controller.setSelection(item.manga, true)
         controller.invalidateActionMode()
     }
 

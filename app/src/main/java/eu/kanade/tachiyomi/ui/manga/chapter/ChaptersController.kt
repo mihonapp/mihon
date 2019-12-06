@@ -55,6 +55,8 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
      */
     private val selectedItems = mutableSetOf<ChapterItem>()
 
+    private var lastClickPosition = -1
+
     init {
         setHasOptionsMenu(true)
         setOptionsMenuHidden(true)
@@ -184,8 +186,9 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     fun onNextChapters(chapters: List<ChapterItem>) {
         // If the list is empty, fetch chapters from source if the conditions are met
         // We use presenter chapters instead because they are always unfiltered
-        if (presenter.chapters.isEmpty())
+        if (presenter.chapters.isEmpty()) {
             initialFetchChapters()
+        }
 
         val adapter = adapter ?: return
         adapter.updateDataSet(chapters)
@@ -242,10 +245,11 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         startActivity(intent)
     }
 
-    override fun onItemClick(view: View, position: Int): Boolean {
+    override fun onItemClick(view: View?, position: Int): Boolean {
         val adapter = adapter ?: return false
         val item = adapter.getItem(position) ?: return false
         if (actionMode != null && adapter.mode == SelectableAdapter.Mode.MULTI) {
+            lastClickPosition = position
             toggleSelection(position)
             return true
         } else {
@@ -256,7 +260,16 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     override fun onItemLongClick(position: Int) {
         createActionModeIfNeeded()
-        toggleSelection(position)
+        when {
+            lastClickPosition == -1 -> setSelection(position)
+            lastClickPosition > position -> for (i in position until lastClickPosition)
+                setSelection(i)
+            lastClickPosition < position -> for (i in lastClickPosition + 1..position)
+                setSelection(i)
+            else -> setSelection(position)
+        }
+        lastClickPosition = position
+        adapter?.notifyDataSetChanged()
     }
 
     // SELECTIONS & ACTION MODE
@@ -265,12 +278,23 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         val adapter = adapter ?: return
         val item = adapter.getItem(position) ?: return
         adapter.toggleSelection(position)
+        adapter.notifyDataSetChanged()
         if (adapter.isSelected(position)) {
             selectedItems.add(item)
         } else {
             selectedItems.remove(item)
         }
         actionMode?.invalidate()
+    }
+
+    private fun setSelection(position: Int) {
+        val adapter = adapter ?: return
+        val item = adapter.getItem(position) ?: return
+        if (!adapter.isSelected(position)) {
+            adapter.toggleSelection(position)
+            selectedItems.add(item)
+            actionMode?.invalidate()
+        }
     }
 
     private fun getSelectedChapters(): List<ChapterItem> {
@@ -285,6 +309,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     }
 
     private fun destroyActionModeIfNeeded() {
+        lastClickPosition = -1
         actionMode?.finish()
     }
 
@@ -372,7 +397,6 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
             }
         }
     }
-
 
     private fun showDeleteChaptersConfirmationDialog() {
         DeleteChaptersDialog(this).showDialog(router)
