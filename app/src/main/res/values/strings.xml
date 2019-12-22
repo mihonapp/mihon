@@ -323,6 +323,7 @@
     <string name="select_source">Select a source</string>
     <string name="no_valid_sources">Please enable at least one valid source</string>
     <string name="no_more_results">No more results</string>
+    <string name="no_results_found">No results found</string>
     <string name="local_source">Local manga</string>
     <string name="other_source">Other</string>
     <string name="invalid_combination">Default can\'t be selected with other categories</string>
@@ -455,6 +456,7 @@
     <!-- Source migration screen -->
     <string name="migration_info">Tap to select the source to migrate from</string>
     <string name="migration_dialog_what_to_include">Select data to include</string>
+    <string name="migration_selection_prompt">Select a source to migrate from</string>
     <string name="select">Select</string>
     <string name="migrate">Migrate</string>
     <string name="copy">Copy</string>

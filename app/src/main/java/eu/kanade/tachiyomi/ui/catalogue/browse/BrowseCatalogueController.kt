@@ -341,19 +341,22 @@ open class BrowseCatalogueController(bundle: Bundle) :
         adapter.onLoadMoreComplete(null)
         hideProgressBar()
 
-        val message = if (error is NoResultsException) "No results found" else (error.message ?: "")
-
         snack?.dismiss()
-        snack = catalogue_view?.snack(message, Snackbar.LENGTH_INDEFINITE) {
-            setAction(R.string.action_retry) {
-                // If not the first page, show bottom progress bar.
-                if (adapter.mainItemCount > 0) {
-                    val item = progressItem ?: return@setAction
-                    adapter.addScrollableFooterWithDelay(item, 0, true)
-                } else {
-                    showProgressBar()
+
+        if (catalogue_view != null) {
+            val message = if (error is NoResultsException) catalogue_view.context.getString(R.string.no_results_found) else (error.message ?: "")
+
+            snack = catalogue_view.snack(message, Snackbar.LENGTH_INDEFINITE) {
+                setAction(R.string.action_retry) {
+                    // If not the first page, show bottom progress bar.
+                    if (adapter.mainItemCount > 0) {
+                        val item = progressItem ?: return@setAction
+                        adapter.addScrollableFooterWithDelay(item, 0, true)
+                    } else {
+                        showProgressBar()
+                    }
+                    presenter.requestNext()
                 }
-                presenter.requestNext()
             }
         }
     }
