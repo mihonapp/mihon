@@ -118,10 +118,10 @@ dependencies {
 
     // ReactiveX
     implementation 'io.reactivex:rxandroid:1.2.1'
-    implementation 'io.reactivex:rxjava:1.3.6'
+    implementation 'io.reactivex:rxjava:1.3.8'
     implementation 'com.jakewharton.rxrelay:rxrelay:1.2.0'
     implementation 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
-    implementation 'com.github.pwittchen:reactivenetwork:0.7.0'
+    implementation 'com.github.pwittchen:reactivenetwork:0.13.0'
 
     // Network client
     implementation "com.squareup.okhttp3:okhttp:3.10.0"
@@ -178,7 +178,7 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:3.1.1'
 
     // Logging
-    implementation 'com.jakewharton.timber:timber:4.6.1'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Crash reports
     implementation 'ch.acra:acra:4.9.2'
