@@ -45,7 +45,7 @@ class SharedPreferencesDataStore(private val prefs: SharedPreferences) : Prefere
         prefs.edit().putString(key, value).apply()
     }
 
-    override fun getStringSet(key: String?, defValues: MutableSet<String>?): MutableSet<String> {
+    override fun getStringSet(key: String?, defValues: MutableSet<String>?): MutableSet<String>? {
         return prefs.getStringSet(key, defValues)
     }
 

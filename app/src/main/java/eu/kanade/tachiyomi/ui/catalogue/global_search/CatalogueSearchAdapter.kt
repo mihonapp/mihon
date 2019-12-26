@@ -38,7 +38,7 @@ class CatalogueSearchAdapter(val controller: CatalogueSearchController) :
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        bundle = savedInstanceState.getBundle(HOLDER_BUNDLE_KEY)
+        bundle = savedInstanceState.getBundle(HOLDER_BUNDLE_KEY)!!
     }
 
     /**

@@ -119,8 +119,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         setContentView(R.layout.reader_activity)
 
         if (presenter.needsInit()) {
-            val manga = intent.extras.getLong("manga", -1)
-            val chapter = intent.extras.getLong("chapter", -1)
+            val manga = intent.extras!!.getLong("manga", -1)
+            val chapter = intent.extras!!.getLong("chapter", -1)
 
             if (manga == -1L || chapter == -1L) {
                 finish()
