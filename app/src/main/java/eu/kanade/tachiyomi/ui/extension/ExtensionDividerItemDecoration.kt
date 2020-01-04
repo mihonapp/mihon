@@ -13,7 +13,7 @@ class ExtensionDividerItemDecoration(context: Context) : RecyclerView.ItemDecora
 
     init {
         val a = context.obtainStyledAttributes(intArrayOf(android.R.attr.listDivider))
-        divider = a.getDrawable(0)
+        divider = a.getDrawable(0)!!
         a.recycle()
     }
 

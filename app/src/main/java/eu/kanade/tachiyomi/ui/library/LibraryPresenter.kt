@@ -14,6 +14,9 @@ import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.Companion.STATE_EXCLUDE
+import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.Companion.STATE_INCLUDE
+import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.Companion.STATE_IGNORE
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.combineLatest
 import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
@@ -121,26 +124,22 @@ class LibraryPresenter(
 
         val filterFn: (LibraryItem) -> Boolean = f@ { item ->
             // Filter when there isn't unread chapters.
-            if (filterUnread && item.manga.unread == 0) {
+            if (filterUnread == STATE_INCLUDE && item.manga.unread == 0) {return@f false}
+            if (filterUnread == STATE_EXCLUDE && item.manga.unread > 0) {return@f false}
+            if (filterCompleted == STATE_INCLUDE && item.manga.status != SManga.COMPLETED) {
                 return@f false
             }
-
-            if (filterCompleted && item.manga.status != SManga.COMPLETED) {
+            if (filterCompleted == STATE_EXCLUDE && item.manga.status == SManga.COMPLETED) {
                 return@f false
             }
-
             // Filter when there are no downloads.
-            if (filterDownloaded) {
-                // Local manga are always downloaded
-                if (item.manga.source == LocalSource.ID) {
-                    return@f true
+            if (filterDownloaded != STATE_IGNORE) {
+                val isDownloaded = when {
+                    item.manga.source == LocalSource.ID -> true
+                    item.downloadCount != -1 -> item.downloadCount > 0
+                    else -> downloadManager.getDownloadCount(item.manga) > 0
                 }
-                // Don't bother with directory checking if download count has been set.
-                if (item.downloadCount != -1) {
-                    return@f item.downloadCount > 0
-                }
-
-                return@f downloadManager.getDownloadCount(item.manga) > 0
+                return@f if (filterDownloaded == STATE_INCLUDE) isDownloaded else !isDownloaded
             }
             true
         }

@@ -204,7 +204,6 @@ class MangaController : RxController, TabbedController {
     }
 
     companion object {
-
         // EXH -->
         const val UPDATE_EXTRA = "update"
         const val SMART_SEARCH_CONFIG_EXTRA = "smartSearchConfig"
@@ -219,6 +218,5 @@ class MangaController : RxController, TabbedController {
         private val tabField = TabLayout.Tab::class.java.getDeclaredField("view")
                 .apply { isAccessible = true }
     }
-
 
 }

@@ -33,7 +33,8 @@ ext {
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
+    publishNonDefault true
 
     defaultConfig {
         applicationId "eu.kanade.tachiyomi.az"
@@ -116,6 +117,14 @@ android {
         checkReleaseBuilds false
     }
 
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -147,7 +156,7 @@ dependencies {
     implementation 'io.reactivex:rxjava:1.3.8'
     implementation 'com.jakewharton.rxrelay:rxrelay:1.2.0'
     implementation 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
-    implementation 'com.github.pwittchen:reactivenetwork:0.12.4'
+    implementation 'com.github.pwittchen:reactivenetwork:0.13.0'
 
     // Network client
     implementation "com.squareup.okhttp3:okhttp:3.12.3" // DO NOT UPGRADE TO 3.13.X+, it requires minSdk 21
@@ -210,8 +219,8 @@ dependencies {
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    // Sort
-    implementation 'com.github.gpanther:java-nat-sort:natural-comparator-1.1'
+    // Crash reports
+    implementation 'ch.acra:acra:4.9.2'
 
     // UI
     implementation 'com.dmitrymalkovich.android:material-design-dimens:1.4'
@@ -255,7 +264,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    final coroutines_version = '1.3.0'
+    final coroutines_version = '1.3.3'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$coroutines_version"
@@ -313,7 +322,7 @@ dependencies {
 }
 
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.3.61'
     repositories {
         mavenCentral()
     }
@@ -324,6 +333,11 @@ buildscript {
 
 repositories {
     mavenCentral()
+}
+
+// See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api-markers
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
 }
 
 androidExtensions {

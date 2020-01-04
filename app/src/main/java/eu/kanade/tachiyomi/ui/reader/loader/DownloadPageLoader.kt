@@ -32,9 +32,9 @@ class DownloadPageLoader(
         return downloadManager.buildPageList(source, manga, chapter.chapter)
             .map { pages ->
                 pages.map { page ->
-                    ReaderPage(page.index, page.url, page.imageUrl, {
+                    ReaderPage(page.index, page.url, page.imageUrl) {
                         context.contentResolver.openInputStream(page.uri)
-                    }).apply {
+                    }.apply {
                         status = Page.READY
                     }
                 }

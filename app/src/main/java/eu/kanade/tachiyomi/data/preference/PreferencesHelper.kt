@@ -150,11 +150,12 @@ class PreferencesHelper(val context: Context) {
 
     fun downloadBadge() = rxPrefs.getBoolean(Keys.downloadBadge, false)
 
-    fun filterDownloaded() = rxPrefs.getBoolean(Keys.filterDownloaded, false)
+    // J2K converted from boolean to integer
+    fun filterDownloaded() = rxPrefs.getInteger(Keys.filterDownloaded, 0)
 
-    fun filterUnread() = rxPrefs.getBoolean(Keys.filterUnread, false)
+    fun filterUnread() = rxPrefs.getInteger(Keys.filterUnread, 0)
 
-    fun filterCompleted() = rxPrefs.getBoolean(Keys.filterCompleted, false)
+    fun filterCompleted() = rxPrefs.getInteger(Keys.filterCompleted, 0)
 
     fun librarySortingMode() = rxPrefs.getInteger(Keys.librarySortingMode, 0)
 
@@ -177,6 +178,20 @@ class PreferencesHelper(val context: Context) {
     fun migrateFlags() = rxPrefs.getInteger("migrate_flags", Int.MAX_VALUE)
 
     fun trustedSignatures() = rxPrefs.getStringSet("trusted_signatures", emptySet())
+
+    // --> AZ J2K CHERRYPICKING
+
+    fun upgradeFilters() {
+        val filterDl = rxPrefs.getBoolean(Keys.filterDownloaded, false).getOrDefault()
+        val filterUn = rxPrefs.getBoolean(Keys.filterUnread, false).getOrDefault()
+        val filterCm = rxPrefs.getBoolean(Keys.filterCompleted, false).getOrDefault()
+        filterDownloaded().set(if (filterDl) 1 else 0)
+        filterUnread().set(if (filterUn) 1 else 0)
+        filterCompleted().set(if (filterCm) 1 else 0)
+    }
+
+    // <--
+
 
     // --> EH
     fun enableExhentai() = rxPrefs.getBoolean(Keys.eh_enableExHentai, false)

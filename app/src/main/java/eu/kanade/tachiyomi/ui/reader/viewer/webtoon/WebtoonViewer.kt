@@ -111,7 +111,7 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
         recycler.longTapListener = f@ { event ->
             if (activity.menuVisible || config.longTapEnabled) {
                 val child = recycler.findChildViewUnder(event.x, event.y)
-                if(child != null) {
+                if (child != null) {
                     val position = recycler.getChildAdapterPosition(child)
                     val item = adapter.items.getOrNull(position)
                     if (item is ReaderPage) {

@@ -199,11 +199,11 @@ fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
  */
 fun Context.openInBrowser(url: String) {
     try {
-        val url = Uri.parse(url)
+        val parsedUrl = Uri.parse(url)
         val intent = CustomTabsIntent.Builder()
                 .setToolbarColor(getResourceColor(R.attr.colorPrimary))
                 .build()
-        intent.launchUrl(this, url)
+        intent.launchUrl(this, parsedUrl)
     } catch (e: Exception) {
         toast(e.message)
     }

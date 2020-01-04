@@ -53,7 +53,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
     }
 
     override fun createPresenter(): ExtensionDetailsPresenter {
-        return ExtensionDetailsPresenter(args.getString(PKGNAME_KEY))
+        return ExtensionDetailsPresenter(args.getString(PKGNAME_KEY)!!)
     }
 
     override fun getTitle(): String? {
@@ -134,7 +134,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
     private fun addPreferencesForSource(screen: PreferenceScreen, source: Source, multiSource: Boolean) {
         val context = screen.context
 
-        // TODO 
+        // TODO
         val dataStore = SharedPreferencesDataStore(/*if (source is HttpSource) {
             source.preferences
         } else {*/

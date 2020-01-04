@@ -121,7 +121,7 @@ internal object ExtensionLoader {
 
         val classLoader = PathClassLoader(appInfo.sourceDir, null, context.classLoader)
 
-        val sources = appInfo.metaData.getString(METADATA_SOURCE_CLASS)
+        val sources = appInfo.metaData.getString(METADATA_SOURCE_CLASS)!!
                 .split(";")
                 .map {
                     val sourceClass = it.trim()
