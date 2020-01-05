@@ -36,7 +36,10 @@ class WebtoonTransitionHolder(
     /**
      * Text view used to display the text of the current and next/prev chapters.
      */
-    private var textView = TextView(context)
+    private var textView = TextView(context).apply {
+        textSize = 17.5F
+        wrapContent()
+    }
 
     /**
      * View container of the current status of the transition page. Child views will be added
