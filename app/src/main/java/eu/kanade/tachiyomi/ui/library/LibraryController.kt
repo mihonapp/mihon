@@ -5,13 +5,14 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
-import android.support.v7.widget.SearchView
+import com.google.android.material.tabs.TabLayout
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.SearchView
 import android.view.*
+import androidx.core.view.GravityCompat
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.f2prateek.rx.preferences.Preference
@@ -353,7 +354,7 @@ class LibraryController(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter -> {
-                navView?.let { activity?.drawer?.openDrawer(Gravity.END) }
+                navView?.let { activity?.drawer?.openDrawer(GravityCompat.END) }
             }
             R.id.action_update_library -> {
                 activity?.let { LibraryUpdateService.start(it) }

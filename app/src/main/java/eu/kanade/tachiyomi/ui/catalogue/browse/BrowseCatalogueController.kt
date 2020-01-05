@@ -2,10 +2,15 @@ package eu.kanade.tachiyomi.ui.catalogue.browse
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.widget.*
+import com.google.android.material.snackbar.Snackbar
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.widget.*
 import android.view.*
+import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.f2prateek.rx.preferences.Preference
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
@@ -136,13 +141,13 @@ open class BrowseCatalogueController(bundle: Bundle) :
         this.navView = navView
         navView.setFilters(presenter.filterItems)
 
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END)
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END)
 
         navView.onSearchClicked = {
             val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
             showProgressBar()
             adapter?.clear()
-            drawer.closeDrawer(Gravity.END)
+            drawer.closeDrawer(GravityCompat.END)
             presenter.setSourceFilter(if (allDefault) FilterList() else presenter.sourceFilters)
         }
 
@@ -273,7 +278,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_display_mode -> swapDisplayMode()
-            R.id.action_set_filter -> navView?.let { activity?.drawer?.openDrawer(Gravity.END) }
+            R.id.action_set_filter -> navView?.let { activity?.drawer?.openDrawer(GravityCompat.END) }
             R.id.action_open_in_browser -> openInBrowser()
             R.id.action_open_in_web_view -> openInWebView()
             else -> return super.onOptionsItemSelected(item)
@@ -468,7 +473,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
      * @param position the position of the element clicked.
      * @return true if the item should be selected, false otherwise.
      */
-    override fun onItemClick(position: Int): Boolean {
+    override fun onItemClick(view: View, position: Int): Boolean {
         val item = adapter?.getItem(position) as? CatalogueItem ?: return false
         router.pushController(MangaController(item.manga, true).withFadeTransaction())
 

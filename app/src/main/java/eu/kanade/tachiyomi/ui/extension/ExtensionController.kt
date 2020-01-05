@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.extension
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -116,7 +116,7 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         searchItem.fixExpand()
     }
 
-    override fun onItemClick(position: Int): Boolean {
+    override fun onItemClick(view: View, position: Int): Boolean {
         val extension = (adapter?.getItem(position) as? ExtensionItem)?.extension ?: return false
         if (extension is Extension.Installed) {
             openDetails(extension)
