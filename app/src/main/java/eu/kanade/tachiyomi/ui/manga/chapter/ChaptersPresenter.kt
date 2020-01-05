@@ -278,7 +278,7 @@ class ChaptersPresenter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeFirst({ view, _ ->
-                    view.onChaptersDeleted()
+                    view.onChaptersDeleted(chapters)
                 }, ChaptersController::onChaptersDeletedError)
     }
 
