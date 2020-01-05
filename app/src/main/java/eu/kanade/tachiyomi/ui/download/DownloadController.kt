@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit
  * Controller that shows the currently active downloads.
  * Uses R.layout.fragment_download_queue.
  */
-class DownloadController : NucleusController<DownloadPresenter>() {
+class DownloadController : NucleusController<DownloadPresenter>(),
+    DownloadAdapter.OnItemReleaseListener {
 
     /**
      * Adapter containing the active downloads.
@@ -58,8 +59,9 @@ class DownloadController : NucleusController<DownloadPresenter>() {
         setInformationView()
 
         // Initialize adapter.
-        adapter = DownloadAdapter()
+        adapter = DownloadAdapter(this@DownloadController)
         recycler.adapter = adapter
+        adapter?.isHandleDragEnabled = true
 
         // Set the layout manager for the recycler and fixed size.
         recycler.layoutManager = LinearLayoutManager(view.context)
@@ -168,7 +170,7 @@ class DownloadController : NucleusController<DownloadPresenter>() {
         // Avoid leaking subscriptions
         progressSubscriptions.remove(download)?.unsubscribe()
 
-        progressSubscriptions.put(download, subscription)
+        progressSubscriptions[download] = subscription
     }
 
     /**
@@ -198,10 +200,10 @@ class DownloadController : NucleusController<DownloadPresenter>() {
      *
      * @param downloads the downloads from the queue.
      */
-    fun onNextDownloads(downloads: List<Download>) {
+    fun onNextDownloads(downloads: List<DownloadItem>) {
         activity?.invalidateOptionsMenu()
         setInformationView()
-        adapter?.setItems(downloads)
+        adapter?.updateDataSet(downloads)
     }
 
     /**
@@ -242,6 +244,17 @@ class DownloadController : NucleusController<DownloadPresenter>() {
         } else {
             empty_view?.hide()
         }
+    }
+
+    /**
+     * Called when an item is released from a drag.
+     *
+     * @param position The position of the released item.
+     */
+    override fun onItemReleased(position: Int) {
+        val adapter = adapter ?: return
+        val downloads = (0 until adapter.itemCount).mapNotNull { adapter.getItem(it)?.download }
+        presenter.reorder(downloads)
     }
 
 }

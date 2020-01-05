@@ -2,9 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/material_layout_keylines_screen_edge_margin"
     android:paddingRight="@dimen/material_layout_keylines_screen_edge_margin"
     android:paddingTop="@dimen/material_component_lists_padding_above_list">
 
@@ -25,6 +25,7 @@
         android:layout_alignParentLeft="true"
         android:maxLines="1"
         android:ellipsize="end"
+        android:layout_marginStart="@dimen/material_component_lists_single_line_with_avatar_height"
         android:textAppearance="@style/TextAppearance.Regular.Body1"
         tools:text="Manga title"/>
 
@@ -36,6 +37,7 @@
         android:maxLines="1"
         android:ellipsize="end"
         tools:text="Chapter Title"
+        android:layout_marginStart="@dimen/material_component_lists_single_line_with_avatar_height"
         android:textAppearance="@style/TextAppearance.Regular.Caption"/>
 
     <ProgressBar
@@ -43,6 +45,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/chapter_title"
+        android:layout_marginStart="@dimen/material_component_lists_single_line_with_avatar_height"
         style="?android:attr/progressBarStyleHorizontal"/>
+
+    <ImageView
+        android:id="@+id/reorder"
+        android:layout_width="@dimen/material_component_lists_single_line_with_avatar_height"
+        android:layout_height="@dimen/material_component_lists_single_line_with_avatar_height"
+        android:layout_gravity="start"
+        android:scaleType="center"
+        android:tint="?android:attr/textColorPrimary"
+        app:srcCompat="@drawable/ic_reorder_grey_24dp" />
 
 </RelativeLayout>
