@@ -4,8 +4,14 @@ import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.glide.GlideApp
+import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.source.LocalSource
-import kotlinx.android.synthetic.main.catalogue_list_item.*
+import eu.kanade.tachiyomi.util.view.visibleIf
+import kotlinx.android.synthetic.main.source_list_item.download_text
+import kotlinx.android.synthetic.main.source_list_item.local_text
+import kotlinx.android.synthetic.main.source_list_item.thumbnail
+import kotlinx.android.synthetic.main.source_list_item.title
+import kotlinx.android.synthetic.main.source_list_item.unread_text
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
@@ -18,8 +24,8 @@ import kotlinx.android.synthetic.main.catalogue_list_item.*
  */
 
 class LibraryListHolder(
-        private val view: View,
-        private val adapter: FlexibleAdapter<*>
+    private val view: View,
+    private val adapter: FlexibleAdapter<*>
 ) : LibraryHolder(view, adapter) {
 
     /**
@@ -34,16 +40,16 @@ class LibraryListHolder(
 
         // Update the unread count and its visibility.
         with(unread_text) {
-            visibility = if (item.manga.unread > 0) View.VISIBLE else View.GONE
+            visibleIf { item.manga.unread > 0 }
             text = item.manga.unread.toString()
         }
         // Update the download count and its visibility.
         with(download_text) {
-            visibility = if (item.downloadCount > 0) View.VISIBLE else View.GONE
+            visibleIf { item.downloadCount > 0 }
             text = "${item.downloadCount}"
         }
-        //show local text badge if local manga
-        local_text.visibility = if (item.manga.source == LocalSource.ID) View.VISIBLE else View.GONE
+        // show local text badge if local manga
+        local_text.visibleIf { item.manga.source == LocalSource.ID }
 
         // Create thumbnail onclick to simulate long click
         thumbnail.setOnClickListener {
@@ -54,12 +60,11 @@ class LibraryListHolder(
         // Update the cover.
         GlideApp.with(itemView.context).clear(thumbnail)
         GlideApp.with(itemView.context)
-                .load(item.manga)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .centerCrop()
-                .circleCrop()
-                .dontAnimate()
-                .into(thumbnail)
+            .load(item.manga.toMangaThumbnail())
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .centerCrop()
+            .circleCrop()
+            .dontAnimate()
+            .into(thumbnail)
     }
-
 }

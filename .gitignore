@@ -2,14 +2,21 @@
 /local.properties
 /.idea/workspace.xml
 .DS_Store
-/build
 .idea/
 *iml
 *.iml
-*/build
 /mainframer
 /.mainframer
+
+# Built files
+*/build
+/build
 *.apk
+app/**/output.json
+
+# Hebrew assets are copied on build
+app/src/main/res/values-iw/
+
 TODO.md
 CHANGELOG.md
 /captures

@@ -8,9 +8,9 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.request.target.ImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.getResourceColor
-import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.visible
+import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.visible
 
 /**
  * A glide target to display an image with an optional view to show while loading and a configurable
@@ -21,12 +21,12 @@ import eu.kanade.tachiyomi.util.visible
  * @param errorDrawableRes the error drawable resource to show.
  * @param errorScaleType the scale type for the error drawable, [ScaleType.CENTER] by default.
  */
-class StateImageViewTarget(view: ImageView,
-                           val progress: View? = null,
-                           val errorDrawableRes: Int = R.drawable.ic_broken_image_grey_24dp,
-                           val errorScaleType: ScaleType = ScaleType.CENTER) :
-
-        ImageViewTarget<Drawable>(view) {
+class StateImageViewTarget(
+    view: ImageView,
+    val progress: View? = null,
+    private val errorDrawableRes: Int = R.drawable.ic_broken_image_grey_24dp,
+    private val errorScaleType: ScaleType = ScaleType.CENTER
+) : ImageViewTarget<Drawable>(view) {
 
     private var resource: Drawable? = null
 
@@ -46,7 +46,7 @@ class StateImageViewTarget(view: ImageView,
         view.scaleType = errorScaleType
 
         val vector = VectorDrawableCompat.create(view.context.resources, errorDrawableRes, null)
-        vector?.setTint(view.context.getResourceColor(android.R.attr.textColorSecondary))
+        vector?.setTint(view.context.getResourceColor(R.attr.colorOnBackground, 0.38f))
         view.setImageDrawable(vector)
     }
 

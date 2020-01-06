@@ -1,22 +1,15 @@
-#-repackageclasses ''
+-dontobfuscate
 
-# == Make debugging easier
--renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
-
-# === Keep app classes
+# Extensions may require methods unused in the core app
 -dontwarn eu.kanade.tachiyomi.**
--keep class eu.kanade.tachiyomi.** { *; }
+-keep class eu.kanade.tachiyomi.** { public protected private *; }
 
-# === Keep extension classes
 -keep class org.jsoup.** { *; }
 -keep class kotlin.** { *; }
 -keep class okhttp3.** { *; }
 -keep class com.google.gson.** { *; }
 -keep class com.github.salomonbrys.kotson.** { *; }
 -keep class com.squareup.duktape.** { *; }
--keep class android.support.v7.preference.** { *; }
--keep class uy.kohesive.injekt.** { *; }
 
 # === Keep EH classes
 -keep class exh.** { *; }
@@ -25,7 +18,20 @@
 # === Keep RxAndroid, https://github.com/ReactiveX/RxAndroid/issues/350
 -keep class rx.android.** { *; }
 
-# === RxJava 1.3.8
+# Design library
+-dontwarn com.google.android.material.**
+-keep class com.google.android.material.** { *; }
+-keep interface com.google.android.material.** { *; }
+-keep public class com.google.android.material.R$* { *; }
+
+-keep class com.hippo.image.** { *; }
+-keep interface com.hippo.image.** { *; }
+-keepclassmembers class * extends nucleus.presenter.Presenter {
+    <init>();
+}
+
+
+# RxJava 1.1.0
 -dontwarn sun.misc.**
 
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
@@ -130,6 +136,7 @@
 
 # === Humanize + Guava: https://github.com/google/guava/wiki/UsingProGuardWithGuava
 -dontwarn javax.lang.model.element.Modifier
+-keep class org.ocpsoft.prettytime.i18n.**
 
 # Note: We intentionally don't add the flags we'd need to make Enums work.
 # That's because the Proguard configuration required to make it work on
@@ -223,10 +230,3 @@
 -keep class com.google.apphosting.api.ApiProxy {
   static *** getCurrentEnvironment (...);
 }
-
-# === Support library
-# From original config: http://stackoverflow.com/questions/29679177/cardview-shadow-not-appearing-in-lollipop-after-obfuscate-with-proguard/29698051
--keep class android.support.v7.widget.RoundRectDrawable { *; }
-
-# Fix missing back button: https://stackoverflow.com/a/46207775/5054192
--keep class android.support.v7.graphics.** { *; }

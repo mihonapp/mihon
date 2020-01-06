@@ -6,16 +6,20 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewbinding.ViewBinding
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RestoreViewOnCreateController
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.clearFindViewByIdCache
 import timber.log.Timber
 
-abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateController(bundle),
-        LayoutContainer {
+abstract class BaseController<VB : ViewBinding>(bundle: Bundle? = null) :
+    RestoreViewOnCreateController(bundle),
+    LayoutContainer {
+
+    lateinit var binding: VB
 
     init {
         addLifecycleListener(object : LifecycleListener() {
@@ -55,12 +59,13 @@ abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateContr
 
     abstract fun inflateView(inflater: LayoutInflater, container: ViewGroup): View
 
-    open fun onViewCreated(view: View) { }
+    open fun onViewCreated(view: View) {}
 
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
         if (type.isEnter) {
             setTitle()
         }
+        setHasOptionsMenu(type.isEnter)
         super.onChangeStarted(handler, type)
     }
 
@@ -71,7 +76,7 @@ abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateContr
     fun setTitle() {
         var parentController = parentController
         while (parentController != null) {
-            if (parentController is BaseController && parentController.getTitle() != null) {
+            if (parentController is BaseController<*> && parentController.getTitle() != null) {
                 return
             }
             parentController = parentController.parentController
@@ -85,21 +90,42 @@ abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateContr
     }
 
     /**
-     * Workaround for disappearing menu items when collapsing an expandable item like a SearchView.
+     * Workaround for buggy menu item layout after expanding/collapsing an expandable item like a SearchView.
      * This method should be removed when fixed upstream.
      * Issue link: https://issuetracker.google.com/issues/37657375
      */
-    fun MenuItem.fixExpand() {
+    var expandActionViewFromInteraction = false
+
+    fun MenuItem.fixExpand(onExpand: ((MenuItem) -> Boolean)? = null, onCollapse: ((MenuItem) -> Boolean)? = null) {
         setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                return true
+                return onExpand?.invoke(item) ?: true
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 activity?.invalidateOptionsMenu()
-                return true
+
+                return onCollapse?.invoke(item) ?: true
             }
         })
+
+        if (expandActionViewFromInteraction) {
+            expandActionViewFromInteraction = false
+            expandActionView()
+        }
     }
 
+    /**
+     * Workaround for menu items not disappearing when expanding an expandable item like a SearchView.
+     * [expandActionViewFromInteraction] should be set to true in [onOptionsItemSelected] when the expandable item is selected
+     * This method should be called as part of [MenuItem.OnActionExpandListener.onMenuItemActionExpand]
+     */
+    fun invalidateMenuOnExpand(): Boolean {
+        return if (expandActionViewFromInteraction) {
+            activity?.invalidateOptionsMenu()
+            false
+        } else {
+            true
+        }
+    }
 }

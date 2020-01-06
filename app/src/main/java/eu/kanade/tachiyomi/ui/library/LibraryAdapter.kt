@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.widget.RecyclerViewPagerAdapter
 
 /**
@@ -99,5 +99,4 @@ class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPa
             }
         }
     }
-
 }

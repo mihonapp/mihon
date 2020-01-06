@@ -1,113 +1,81 @@
 package eu.kanade.tachiyomi.ui.main
 
-import android.animation.ObjectAnimator
-import android.app.ActivityManager
+import android.app.Activity
 import android.app.SearchManager
-import android.app.Service
-import android.app.usage.UsageStatsManager
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.os.Looper
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import com.bluelinelabs.conductor.*
+import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.bluelinelabs.conductor.Conductor
+import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.ControllerChangeHandler
+import com.bluelinelabs.conductor.Router
+import com.bluelinelabs.conductor.RouterTransaction
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.tabs.TabLayout
+import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.databinding.MainActivityBinding
+import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.ui.base.controller.*
-import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
-import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
+import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
+import eu.kanade.tachiyomi.ui.base.controller.RootController
+import eu.kanade.tachiyomi.ui.base.controller.TabbedController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.browse.BrowseController
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.download.DownloadController
-import eu.kanade.tachiyomi.ui.extension.ExtensionController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
-import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
-import eu.kanade.tachiyomi.ui.setting.SettingsMainController
-import eu.kanade.tachiyomi.util.openInBrowser
-import eu.kanade.tachiyomi.util.vibrate
-import exh.EXHMigrations
-import exh.eh.EHentaiUpdateWorker
-import exh.uconfig.WarnConfigureDialogController
-import exh.ui.batchadd.BatchAddController
-import exh.ui.lock.LockChangeHandler
-import exh.ui.lock.LockController
-import exh.ui.lock.lockEnabled
-import exh.ui.lock.notifyLockSecurity
-import exh.ui.migration.MetadataFetchDialog
-import kotlinx.android.synthetic.main.main_activity.*
+import eu.kanade.tachiyomi.ui.more.MoreController
+import eu.kanade.tachiyomi.ui.recent.history.HistoryController
+import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
+import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.system.WebViewUtil
+import eu.kanade.tachiyomi.util.system.toast
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import uy.kohesive.injekt.injectLazy
-import java.util.*
-import kotlin.collections.ArrayList
 
-
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity<MainActivityBinding>() {
 
     private lateinit var router: Router
 
-    val preferences: PreferencesHelper by injectLazy()
-
-    private var drawerArrow: DrawerArrowDrawable? = null
-
-    private var secondaryDrawer: ViewGroup? = null
-
     private val startScreenId by lazy {
         when (preferences.startScreen()) {
-            2 -> R.id.nav_drawer_recently_read
-            3 -> R.id.nav_drawer_recent_updates
-            else -> R.id.nav_drawer_library
+            2 -> R.id.nav_history
+            3 -> R.id.nav_updates
+            else -> R.id.nav_library
         }
     }
 
-    lateinit var tabAnimator: TabsAnimator
+    lateinit var tabAnimator: ViewHeightAnimator
+    private lateinit var bottomNavAnimator: ViewHeightAnimator
 
-    // Idle-until-urgent
-    private var firstPaint = false
-    private val iuuQueue = LinkedList<() -> Unit>()
-
-    private fun initWhenIdle(task: () -> Unit) {
-        // Avoid sync issues by enforcing main thread
-        if(Looper.myLooper() != Looper.getMainLooper())
-            throw IllegalStateException("Can only be called on main thread!")
-
-        if(firstPaint) {
-            task()
-        } else {
-            iuuQueue += task
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        if(!firstPaint) {
-            drawer.postDelayed({
-                if(!firstPaint) {
-                    firstPaint = true
-                    iuuQueue.forEach { it() }
-                }
-            }, 1000)
-        }
-    }
+    private var isConfirmingExit: Boolean = false
+    private var isHandlingShortcut: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(when (preferences.theme()) {
-            2 -> R.style.Theme_Tachiyomi_Dark
-            3 -> R.style.Theme_Tachiyomi_Amoled
-            4 -> R.style.Theme_Tachiyomi_DarkBlue
-            else -> R.style.Theme_Tachiyomi
-        })
         super.onCreate(savedInstanceState)
+
+        binding = MainActivityBinding.inflate(layoutInflater)
+
+        // Enforce WebView availability
+        if (!WebViewUtil.supportsWebView(this)) {
+            toast(R.string.information_webview_required, Toast.LENGTH_LONG)
+            finishAndRemoveTask()
+        }
 
         // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079
         if (!isTaskRoot) {
@@ -115,43 +83,37 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        setContentView(R.layout.main_activity)
+        setContentView(binding.root)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
-        drawerArrow = DrawerArrowDrawable(this)
-        drawerArrow?.color = Color.WHITE
-        toolbar.navigationIcon = drawerArrow
+        tabAnimator = ViewHeightAnimator(binding.tabs)
+        bottomNavAnimator = ViewHeightAnimator(binding.bottomNav)
 
-        tabAnimator = TabsAnimator(tabs)
-
-        // Set behavior of Navigation drawer
-        nav_view.setNavigationItemSelectedListener { item ->
+        // Set behavior of bottom nav
+        binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             val id = item.itemId
 
             val currentRoot = router.backstack.firstOrNull()
             if (currentRoot?.tag()?.toIntOrNull() != id) {
                 when (id) {
-                    R.id.nav_drawer_library -> setRoot(LibraryController(), id)
-                    R.id.nav_drawer_recent_updates -> setRoot(RecentChaptersController(), id)
-                    R.id.nav_drawer_recently_read -> setRoot(RecentlyReadController(), id)
-                    R.id.nav_drawer_catalogues -> setRoot(CatalogueController(), id)
-                    R.id.nav_drawer_extensions -> setRoot(ExtensionController(), id)
+                    R.id.nav_library -> setRoot(LibraryController(), id)
+                    R.id.nav_updates -> setRoot(UpdatesController(), id)
+                    R.id.nav_history -> setRoot(HistoryController(), id)
+                    R.id.nav_browse -> setRoot(BrowseController(), id)
+                    R.id.nav_more -> setRoot(MoreController(), id)
                     // --> EXH
-                    R.id.nav_drawer_batch_add -> setRoot(BatchAddController(), id)
+                    R.id.nav_batch_add -> setRoot(BatchAddController(), id)
                     // <-- EHX
-                    R.id.nav_drawer_downloads -> {
-                        router.pushController(DownloadController().withFadeTransaction())
-                    }
-                    R.id.nav_drawer_settings -> {
-                        router.pushController(SettingsMainController().withFadeTransaction())
-                    }
-                    R.id.nav_drawer_help -> {
-                        openInBrowser(URL_HELP)
+                }
+            } else if (!isHandlingShortcut) {
+                when (id) {
+                    R.id.nav_library -> {
+                        val controller = router.getControllerWithTag(id.toString()) as? LibraryController
+                        controller?.showSettingsSheet()
                     }
                 }
             }
-            drawer.closeDrawer(GravityCompat.START)
             true
         }
 
@@ -161,63 +123,40 @@ class MainActivity : BaseActivity() {
         if (!router.hasRootController()) {
             // Set start screen
             if (!handleIntentAction(intent)) {
-                setSelectedDrawerItem(startScreenId)
+                setSelectedNavItem(startScreenId)
             }
         }
 
-        toolbar.setNavigationOnClickListener {
-            if (router.backstackSize == 1) {
-                drawer.openDrawer(GravityCompat.START)
-            } else {
-                onBackPressed()
-            }
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
         }
 
         router.addChangeListener(object : ControllerChangeHandler.ControllerChangeListener {
-            override fun onChangeStarted(to: Controller?, from: Controller?, isPush: Boolean,
-                                         container: ViewGroup, handler: ControllerChangeHandler) {
-
+            override fun onChangeStarted(
+                to: Controller?,
+                from: Controller?,
+                isPush: Boolean,
+                container: ViewGroup,
+                handler: ControllerChangeHandler
+            ) {
                 syncActivityViewWithController(to, from)
             }
 
-            override fun onChangeCompleted(to: Controller?, from: Controller?, isPush: Boolean,
-                                           container: ViewGroup, handler: ControllerChangeHandler) {
-
+            override fun onChangeCompleted(
+                to: Controller?,
+                from: Controller?,
+                isPush: Boolean,
+                container: ViewGroup,
+                handler: ControllerChangeHandler
+            ) {
             }
-
         })
-
-        // --> EH
-        initWhenIdle {
-            //Hook long press hamburger menu to lock
-            getToolbarNavigationIcon(toolbar)?.setOnLongClickListener {
-                if(lockEnabled(preferences)) {
-                    doLock(true)
-                    vibrate(50) // Notify user of lock
-                    true
-                } else false
-            }
-        }
-
-        //Show lock
-        if (savedInstanceState == null) {
-            if (lockEnabled(preferences)) {
-                //Special case first lock
-                doLock()
-
-                //Check lock security
-                initWhenIdle {
-                    notifyLockSecurity(this)
-                }
-            }
-        }
-        // <-- EH
 
         syncActivityViewWithController(router.backstack.lastOrNull()?.controller())
 
         if (savedInstanceState == null) {
             // Show changelog if needed
-            // TODO
+              // TODO
 //            if (Migrations.upgrade(preferences)) {
 //                ChangelogDialogController().showDialog(router)
 //            }
@@ -240,12 +179,16 @@ class MainActivity : BaseActivity() {
                     WarnConfigureDialogController.uploadSettings(router)
 
                 // Scheduler uploader job if required
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    EHentaiUpdateWorker.scheduleBackground(this)
-                }
+                EHentaiUpdateWorker.scheduleBackground(this)
+                
             }
             // EXH <--
         }
+
+        setExtensionsBadge()
+        preferences.extensionUpdatesCount().asFlow()
+            .onEach { setExtensionsBadge() }
+            .launchIn(scope)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -254,70 +197,146 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        getExtensionUpdates()
+    }
+
+    private fun setExtensionsBadge() {
+        val updates = preferences.extensionUpdatesCount().get()
+        if (updates > 0) {
+            binding.bottomNav.getOrCreateBadge(R.id.nav_browse).number = updates
+        } else {
+            binding.bottomNav.removeBadge(R.id.nav_browse)
+        }
+    }
+
+    private fun getExtensionUpdates() {
+        // Limit checks to once a day at most
+        val now = Date().time
+        if (now < preferences.lastExtCheck().get() + TimeUnit.DAYS.toMillis(1)) {
+            return
+        }
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val pendingUpdates = ExtensionGithubApi().checkForUpdates(this@MainActivity)
+                preferences.extensionUpdatesCount().set(pendingUpdates.size)
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+    }
+
     private fun handleIntentAction(intent: Intent): Boolean {
+        val notificationId = intent.getIntExtra("notificationId", -1)
+        if (notificationId > -1) {
+            NotificationReceiver.dismissNotification(applicationContext, notificationId, intent.getIntExtra("groupId", 0))
+        }
+
+        isHandlingShortcut = true
+
         when (intent.action) {
-            SHORTCUT_LIBRARY -> setSelectedDrawerItem(R.id.nav_drawer_library)
-            SHORTCUT_RECENTLY_UPDATED -> setSelectedDrawerItem(R.id.nav_drawer_recent_updates)
-            SHORTCUT_RECENTLY_READ -> setSelectedDrawerItem(R.id.nav_drawer_recently_read)
-            SHORTCUT_CATALOGUES -> setSelectedDrawerItem(R.id.nav_drawer_catalogues)
+            SHORTCUT_LIBRARY -> setSelectedNavItem(R.id.nav_library)
+            SHORTCUT_RECENTLY_UPDATED -> setSelectedNavItem(R.id.nav_updates)
+            SHORTCUT_RECENTLY_READ -> setSelectedNavItem(R.id.nav_history)
+            SHORTCUT_CATALOGUES -> setSelectedNavItem(R.id.nav_browse)
+            SHORTCUT_EXTENSIONS -> {
+                if (router.backstackSize > 1) {
+                    router.popToRoot()
+                }
+                setSelectedNavItem(R.id.nav_browse)
+                router.pushController(BrowseController(true).withFadeTransaction())
+            }
             SHORTCUT_MANGA -> {
                 val extras = intent.extras ?: return false
-                router.setRoot(RouterTransaction.with(MangaController(extras)))
+                if (router.backstackSize > 1) {
+                    router.popToRoot()
+                }
+                setSelectedNavItem(R.id.nav_library)
+                router.pushController(RouterTransaction.with(MangaController(extras)))
             }
             SHORTCUT_DOWNLOADS -> {
-                if (router.backstack.none { it.controller() is DownloadController }) {
-                    setSelectedDrawerItem(R.id.nav_drawer_downloads)
+                if (router.backstackSize > 1) {
+                    router.popToRoot()
                 }
+                setSelectedNavItem(R.id.nav_more)
+                router.pushController(RouterTransaction.with(DownloadController()))
             }
             Intent.ACTION_SEARCH, "com.google.android.gms.actions.SEARCH_ACTION" -> {
-                //If the intent match the "standard" Android search intent
+                // If the intent match the "standard" Android search intent
                 // or the Google-specific search intent (triggered by saying or typing "search *query* on *Tachiyomi*" in Google Search/Google Assistant)
 
-                //Get the search query provided in extras, and if not null, perform a global search with it.
+                // Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY)
-                if (query != null && !query.isEmpty()) {
+                if (query != null && query.isNotEmpty()) {
                     if (router.backstackSize > 1) {
                         router.popToRoot()
                     }
-                    router.pushController(CatalogueSearchController(query).withFadeTransaction())
+                    router.pushController(GlobalSearchController(query).withFadeTransaction())
                 }
             }
             INTENT_SEARCH -> {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
                 val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
-                if (query != null && !query.isEmpty()) {
+                if (query != null && query.isNotEmpty()) {
                     if (router.backstackSize > 1) {
                         router.popToRoot()
                     }
-                    router.pushController(CatalogueSearchController(query, filter).withFadeTransaction())
+                    router.pushController(GlobalSearchController(query, filter).withFadeTransaction())
                 }
             }
-            else -> return false
+            else -> {
+                isHandlingShortcut = false
+                return false
+            }
         }
+
+        isHandlingShortcut = false
         return true
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        nav_view?.setNavigationItemSelectedListener(null)
-        toolbar?.setNavigationOnClickListener(null)
+        binding.bottomNav.setOnNavigationItemSelectedListener(null)
+        binding.toolbar.setNavigationOnClickListener(null)
     }
 
     override fun onBackPressed() {
         val backstackSize = router.backstackSize
-        if (drawer.isDrawerOpen(GravityCompat.START) || drawer.isDrawerOpen(GravityCompat.END)) {
-            drawer.closeDrawers()
-        } else if (backstackSize == 1 && router.getControllerWithTag("$startScreenId") == null) {
-            setSelectedDrawerItem(startScreenId)
+        if (backstackSize == 1 && router.getControllerWithTag("$startScreenId") == null) {
+            // Return to start screen
+            setSelectedNavItem(startScreenId)
+        } else if (shouldHandleExitConfirmation()) {
+            // Exit confirmation (resets after 2 seconds)
+            launchUI { resetExitConfirmation() }
         } else if (backstackSize == 1 || !router.handleBack()) {
+            // Regular back
             super.onBackPressed()
         }
     }
 
-    private fun setSelectedDrawerItem(itemId: Int) {
+    private suspend fun resetExitConfirmation() {
+        isConfirmingExit = true
+        val toast = Toast.makeText(this, R.string.confirm_exit, Toast.LENGTH_LONG)
+        toast.show()
+
+        delay(2000)
+
+        toast.cancel()
+        isConfirmingExit = false
+    }
+
+    private fun shouldHandleExitConfirmation(): Boolean {
+        return router.backstackSize == 1 &&
+            router.getControllerWithTag("$startScreenId") != null &&
+            preferences.confirmExit() &&
+            !isConfirmingExit
+    }
+
+    fun setSelectedNavItem(itemId: Int) {
         if (!isFinishing) {
-            nav_view.setCheckedItem(itemId)
-            nav_view.menu.performIdentifierAction(itemId, 0)
+            binding.bottomNav.selectedItemId = itemId
         }
     }
 
@@ -325,139 +344,59 @@ class MainActivity : BaseActivity() {
         router.setRoot(controller.withFadeTransaction().tag(id.toString()))
     }
 
-    fun getToolbarNavigationIcon(toolbar: Toolbar): View? {
-        try {
-            //check if contentDescription previously was set
-            val hadContentDescription = !TextUtils.isEmpty(toolbar.navigationContentDescription)
-            val contentDescription = if (!hadContentDescription) toolbar.navigationContentDescription else "navigationIcon"
-            toolbar.navigationContentDescription = contentDescription
-
-            val potentialViews = ArrayList<View>()
-
-            //find the view based on it's content description, set programmatically or with android:contentDescription
-            toolbar.findViewsWithText(potentialViews, contentDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION)
-
-            //Nav icon is always instantiated at this point because calling setNavigationContentDescription ensures its existence
-            val navIcon = potentialViews.firstOrNull()
-
-            //Clear content description if not previously present
-            if (!hadContentDescription)
-                toolbar.navigationContentDescription = null
-            return navIcon
-        } catch(t: Throwable) {
-            Timber.w(t, "Could not find toolbar nav icon!")
-            return null
-        }
-    }
-
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
         if (from is DialogController || to is DialogController) {
             return
         }
 
-        val showHamburger = router.backstackSize == 1
-        if (showHamburger) {
-            drawer.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_UNLOCKED)
-        } else {
-            drawer.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(router.backstackSize != 1)
 
-        // --> EH
-        //Special case and hide drawer arrow for lock controller
-        if(to is LockController) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            toolbar.navigationIcon = null
-        } else {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            toolbar.navigationIcon = drawerArrow
-        }
-        // <-- EH
+        // Always show appbar again when changing controllers
+        binding.appbar.setExpanded(true)
 
-        ObjectAnimator.ofFloat(drawerArrow, "progress", if (showHamburger) 0f else 1f).start()
+        if ((from == null || from is RootController) && to !is RootController) {
+            showBottomNav(visible = false, collapse = true)
+        }
+        if (to is RootController) {
+            // Always show bottom nav again when returning to a RootController
+            showBottomNav(visible = true, collapse = from !is RootController)
+        }
 
         if (from is TabbedController) {
-            from.cleanupTabs(tabs)
+            from.cleanupTabs(binding.tabs)
         }
         if (to is TabbedController) {
             tabAnimator.expand()
-            to.configureTabs(tabs)
+            to.configureTabs(binding.tabs)
         } else {
             tabAnimator.collapse()
-            tabs.setupWithViewPager(null)
-        }
-
-        if (from is SecondaryDrawerController) {
-            if (secondaryDrawer != null) {
-                from.cleanupSecondaryDrawer(drawer)
-                drawer.removeView(secondaryDrawer)
-                secondaryDrawer = null
-            }
-        }
-        if (to is SecondaryDrawerController) {
-            secondaryDrawer = to.createSecondaryDrawer(drawer)?.also { drawer.addView(it) }
+            binding.tabs.setupWithViewPager(null)
         }
 
         if (to is NoToolbarElevationController) {
-            appbar.disableElevation()
+            binding.appbar.disableElevation()
         } else {
-            appbar.enableElevation()
+            binding.appbar.enableElevation()
         }
     }
 
-    // --> EH
-    //Lock code
-    var willLock = false
-    override fun onRestart() {
-        super.onRestart()
-        if(willLock && lockEnabled()) {
-            doLock()
-        }
-
-        willLock = false
-    }
-
-    override fun onStop() {
-        super.onStop()
-        tryLock()
-    }
-
-    fun tryLock() {
-        //Do not double-lock
-        if(router.backstack.lastOrNull()?.controller() is LockController)
-            return
-
-        //Do not lock if manual lock enabled
-        if(preferences.eh_lockManually().getOrDefault())
-            return
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val mUsageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-            val time = System.currentTimeMillis()
-            // We get usage stats for the last 20 seconds
-            val sortedStats =
-                    mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
-                            time - 1000 * 20,
-                            time)
-                            ?.associateBy {
-                                it.lastTimeUsed
-                            }?.toSortedMap()
-            if(sortedStats != null && sortedStats.isNotEmpty())
-                if(sortedStats[sortedStats.lastKey()]?.packageName != packageName)
-                    willLock = true
-        } else {
-            val am = getSystemService(Service.ACTIVITY_SERVICE) as ActivityManager
-            val running = am.getRunningTasks(1)[0]
-            if (running.topActivity.packageName != packageName) {
-                willLock = true
+    fun showBottomNav(visible: Boolean, collapse: Boolean = false) {
+        val layoutParams = binding.bottomNav.layoutParams as CoordinatorLayout.LayoutParams
+        val bottomViewNavigationBehavior = layoutParams.behavior as HideBottomViewOnScrollBehavior
+        if (visible) {
+            if (collapse) {
+                bottomNavAnimator.expand()
             }
+
+            bottomViewNavigationBehavior.slideUp(binding.bottomNav)
+        } else {
+            if (collapse) {
+                bottomNavAnimator.collapse()
+            }
+
+            bottomViewNavigationBehavior.slideDown(binding.bottomNav)
         }
     }
-
-    fun doLock(animate: Boolean = false) {
-        router.pushController(RouterTransaction.with(LockController())
-                .popChangeHandler(LockChangeHandler(animate)))
-    }
-    // <-- EH
 
     companion object {
         // Shortcut actions
@@ -467,12 +406,25 @@ class MainActivity : BaseActivity() {
         const val SHORTCUT_CATALOGUES = "eu.kanade.tachiyomi.SHOW_CATALOGUES"
         const val SHORTCUT_DOWNLOADS = "eu.kanade.tachiyomi.SHOW_DOWNLOADS"
         const val SHORTCUT_MANGA = "eu.kanade.tachiyomi.SHOW_MANGA"
+        const val SHORTCUT_EXTENSIONS = "eu.kanade.tachiyomi.EXTENSIONS"
 
         const val INTENT_SEARCH = "eu.kanade.tachiyomi.SEARCH"
         const val INTENT_SEARCH_QUERY = "query"
         const val INTENT_SEARCH_FILTER = "filter"
-
-        private const val URL_HELP = "https://tachiyomi.org/help/"
     }
+}
 
+/**
+ * Used to manually offset a FAB within child views that might be cut off due to the collapsing
+ * AppBarLayout.
+ */
+fun View.offsetFabAppbarHeight(activity: Activity) {
+    val appbar: AppBarLayout = activity.findViewById(R.id.appbar)
+    val tabs: TabLayout = activity.findViewById(R.id.tabs)
+    appbar.addOnOffsetChangedListener(
+        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val maxAbsOffset = appBarLayout.measuredHeight - tabs.measuredHeight
+            translationY = -maxAbsOffset - verticalOffset.toFloat()
+        }
+    )
 }

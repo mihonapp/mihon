@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.widget
 import android.view.View
 import android.view.ViewGroup
 import com.nightlynexus.viewstatepageradapter.ViewStatePagerAdapter
-import java.util.*
+import java.util.Stack
 
 abstract class RecyclerViewPagerAdapter : ViewStatePagerAdapter() {
 
@@ -31,6 +31,4 @@ abstract class RecyclerViewPagerAdapter : ViewStatePagerAdapter() {
         recycleView(view, position)
         if (recycle) pool.push(view)
     }
-
-
 }

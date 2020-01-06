@@ -1,7 +1,8 @@
 package eu.kanade.tachiyomi.data.backup.models
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Json values
@@ -13,6 +14,7 @@ object Backup {
     const val TRACK = "track"
     const val CHAPTERS = "chapters"
     const val CATEGORIES = "categories"
+    const val EXTENSIONS = "extensions"
     const val HISTORY = "history"
     const val VERSION = "version"
 

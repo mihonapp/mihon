@@ -19,25 +19,25 @@ class HistoryLastReadPutResolver : HistoryPutResolver() {
     override fun performPut(@NonNull db: StorIOSQLite, @NonNull history: History): PutResult = db.inTransactionReturn {
         val updateQuery = mapToUpdateQuery(history)
 
-        val cursor = db.lowLevel().query(Query.builder()
+        val cursor = db.lowLevel().query(
+            Query.builder()
                 .table(updateQuery.table())
                 .where(updateQuery.where())
                 .whereArgs(updateQuery.whereArgs())
-                .build())
+                .build()
+        )
 
         val putResult: PutResult
 
-        try {
-            if (cursor.count == 0) {
+        putResult = cursor.use { putCursor ->
+            if (putCursor.count == 0) {
                 val insertQuery = mapToInsertQuery(history)
                 val insertedId = db.lowLevel().insert(insertQuery, mapToContentValues(history))
-                putResult = PutResult.newInsertResult(insertedId, insertQuery.table())
+                PutResult.newInsertResult(insertedId, insertQuery.table())
             } else {
                 val numberOfRowsUpdated = db.lowLevel().update(updateQuery, mapToUpdateContentValues(history))
-                putResult = PutResult.newUpdateResult(numberOfRowsUpdated, updateQuery.table())
+                PutResult.newUpdateResult(numberOfRowsUpdated, updateQuery.table())
             }
-        } finally {
-            cursor.close()
         }
 
         putResult
@@ -48,10 +48,10 @@ class HistoryLastReadPutResolver : HistoryPutResolver() {
      * @param obj history object
      */
     override fun mapToUpdateQuery(obj: History) = UpdateQuery.builder()
-            .table(HistoryTable.TABLE)
-            .where("${HistoryTable.COL_CHAPTER_ID} = ?")
-            .whereArgs(obj.chapter_id)
-            .build()
+        .table(HistoryTable.TABLE)
+        .where("${HistoryTable.COL_CHAPTER_ID} = ?")
+        .whereArgs(obj.chapter_id)
+        .build()
 
     /**
      * Create content query
@@ -60,5 +60,4 @@ class HistoryLastReadPutResolver : HistoryPutResolver() {
     fun mapToUpdateContentValues(history: History) = ContentValues(1).apply {
         put(HistoryTable.COL_LAST_READ, history.last_read)
     }
-
 }

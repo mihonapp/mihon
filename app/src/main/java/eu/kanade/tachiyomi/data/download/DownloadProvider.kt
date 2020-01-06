@@ -3,12 +3,17 @@ package eu.kanade.tachiyomi.data.download
 import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.util.DiskUtil
+import eu.kanade.tachiyomi.util.storage.DiskUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -19,24 +24,23 @@ import uy.kohesive.injekt.injectLazy
  */
 class DownloadProvider(private val context: Context) {
 
-    /**
-     * Preferences helper.
-     */
     private val preferences: PreferencesHelper by injectLazy()
+
+    private val scope = CoroutineScope(Job() + Dispatchers.Main)
 
     /**
      * The root directory for downloads.
      */
-    private var downloadsDir = preferences.downloadsDirectory().getOrDefault().let {
+    private var downloadsDir = preferences.downloadsDirectory().get().let {
         val dir = UniFile.fromUri(context, Uri.parse(it))
         DiskUtil.createNoMediaFile(dir, context)
         dir
     }
 
     init {
-        preferences.downloadsDirectory().asObservable()
-                .skip(1)
-                .subscribe { downloadsDir = UniFile.fromUri(context, Uri.parse(it)) }
+        preferences.downloadsDirectory().asFlow()
+            .onEach { downloadsDir = UniFile.fromUri(context, Uri.parse(it)) }
+            .launchIn(scope)
     }
 
     /**
@@ -46,9 +50,13 @@ class DownloadProvider(private val context: Context) {
      * @param source the source of the manga.
      */
     internal fun getMangaDir(manga: Manga, source: Source): UniFile {
-        return downloadsDir
+        try {
+            return downloadsDir
                 .createDirectory(getSourceDirName(source))
                 .createDirectory(getMangaDirName(manga))
+        } catch (e: NullPointerException) {
+            throw Exception(context.getString(R.string.invalid_download_dir))
+        }
     }
 
     /**
@@ -121,5 +129,4 @@ class DownloadProvider(private val context: Context) {
     fun getChapterDirName(chapter: Chapter): String {
         return DiskUtil.buildValidFilename(chapter.name)
     }
-
 }

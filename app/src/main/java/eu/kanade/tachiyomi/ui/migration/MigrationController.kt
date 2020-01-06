@@ -78,14 +78,14 @@ class MigrationController : NucleusController<MigrationPresenter>(),
             title = resources?.getString(R.string.label_migration)
             if (adapter !is SourceAdapter) {
                 adapter = SourceAdapter(this)
-                migration_recycler.adapter = adapter
+                binding.migrationRecycler.adapter = adapter
             }
             adapter?.updateDataSet(state.sourcesWithManga)
         } else {
             title = state.selectedSource.toString()
             if (adapter !is MangaAdapter) {
                 adapter = MangaAdapter(this)
-                migration_recycler.adapter = adapter
+                binding.migrationRecycler.adapter = adapter
             }
             adapter?.updateDataSet(state.mangaForSource)
         }
@@ -154,4 +154,3 @@ class MigrationController : NucleusController<MigrationPresenter>(),
         const val LOADING_DIALOG_TAG = "LoadingDialog"
     }
 
-}

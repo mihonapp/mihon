@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi
 
+import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
+import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
+import eu.kanade.tachiyomi.ui.library.LibrarySort
 import java.io.File
 
 object Migrations {
@@ -18,18 +20,33 @@ object Migrations {
      */
     fun upgrade(preferences: PreferencesHelper): Boolean {
         val context = preferences.context
-        val oldVersion = preferences.lastVersionCode().getOrDefault()
+        val oldVersion = preferences.lastVersionCode().get()
+
+        // Cancel app updater job for debug builds that don't include it
+        if (BuildConfig.DEBUG && !BuildConfig.INCLUDE_UPDATER) {
+            UpdaterJob.cancelTask(context)
+        }
+
         if (oldVersion < BuildConfig.VERSION_CODE) {
             preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
 
-            if (oldVersion == 0) return false
+            // Fresh install
+            if (oldVersion == 0) {
+                // Set up default background tasks
+                if (BuildConfig.INCLUDE_UPDATER) {
+                    UpdaterJob.setupTask(context)
+                }
+                ExtensionUpdateJob.setupTask(context)
+                LibraryUpdateJob.setupTask(context)
+                return false
+            }
 
             if (oldVersion < 14) {
-                // Restore jobs after upgrading to evernote's job scheduler.
-                if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
-                    UpdaterJob.setupTask()
+                // Restore jobs after upgrading to Evernote's job scheduler.
+                if (BuildConfig.INCLUDE_UPDATER) {
+                    UpdaterJob.setupTask(context)
                 }
-                LibraryUpdateJob.setupTask()
+                LibraryUpdateJob.setupTask(context)
             }
             if (oldVersion < 15) {
                 // Delete internal chapter cache dir.
@@ -41,7 +58,7 @@ object Migrations {
                 if (oldDir.exists()) {
                     val destDir = context.getExternalFilesDir("covers")
                     if (destDir != null) {
-                        oldDir.listFiles().forEach {
+                        oldDir.listFiles()?.forEach {
                             it.renameTo(File(destDir, it.name))
                         }
                     }
@@ -57,12 +74,25 @@ object Migrations {
                     }
                 }
             }
+            if (oldVersion < 43) {
+                // Restore jobs after migrating from Evernote's job scheduler to WorkManager.
+                if (BuildConfig.INCLUDE_UPDATER) {
+                    UpdaterJob.setupTask(context)
+                }
+                LibraryUpdateJob.setupTask(context)
+                BackupCreatorJob.setupTask(context)
 
-            // ===========[ ALL MIGRATIONS ABOVE HERE HAVE BEEN ALREADY REWRITTEN ]===========
-
+                // New extension update check job
+                ExtensionUpdateJob.setupTask(context)
+            }
+            if (oldVersion < 44) {
+                // Reset sorting preference if using removed sort by source
+                if (preferences.librarySortingMode().get() == LibrarySort.SOURCE) {
+                    preferences.librarySortingMode().set(LibrarySort.ALPHA)
+                }
+            }
             return true
         }
         return false
     }
-
 }

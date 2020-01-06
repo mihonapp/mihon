@@ -1,31 +1,40 @@
 package eu.kanade.tachiyomi.ui.category
 
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.jakewharton.rxbinding.view.clicks
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.davidea.flexibleadapter.helpers.UndoHelper
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.tachiyomi.databinding.CategoriesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.categories_controller.*
+import eu.kanade.tachiyomi.ui.main.offsetFabAppbarHeight
+import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.android.view.clicks
 
 /**
  * Controller to manage the categories for the users' library.
  */
-class CategoryController : NucleusController<CategoryPresenter>(),
-        ActionMode.Callback,
-        FlexibleAdapter.OnItemClickListener,
-        FlexibleAdapter.OnItemLongClickListener,
-        CategoryAdapter.OnItemReleaseListener,
-        CategoryCreateDialog.Listener,
-        CategoryRenameDialog.Listener,
-        UndoHelper.OnActionListener {
+class CategoryController :
+    NucleusController<CategoriesControllerBinding, CategoryPresenter>(),
+    ActionMode.Callback,
+    FlexibleAdapter.OnItemClickListener,
+    FlexibleAdapter.OnItemLongClickListener,
+    CategoryAdapter.OnItemReleaseListener,
+    CategoryCreateDialog.Listener,
+    CategoryRenameDialog.Listener,
+    UndoHelper.OnActionListener {
 
     /**
      * Object used to show ActionMode toolbar.
@@ -61,7 +70,8 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      * @param container The parent view for this one.
      */
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.categories_controller, container, false)
+        binding = CategoriesControllerBinding.inflate(inflater)
+        return binding.root
     }
 
     /**
@@ -73,15 +83,19 @@ class CategoryController : NucleusController<CategoryPresenter>(),
         super.onViewCreated(view)
 
         adapter = CategoryAdapter(this@CategoryController)
-        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
-        recycler.setHasFixedSize(true)
-        recycler.adapter = adapter
+        binding.recycler.layoutManager = LinearLayoutManager(view.context)
+        binding.recycler.setHasFixedSize(true)
+        binding.recycler.adapter = adapter
         adapter?.isHandleDragEnabled = true
         adapter?.isPermanentDelete = false
 
-        fab.clicks().subscribeUntilDestroy {
-            CategoryCreateDialog(this@CategoryController).showDialog(router, null)
-        }
+        binding.fab.clicks()
+            .onEach {
+                CategoryCreateDialog(this@CategoryController).showDialog(router, null)
+            }
+            .launchIn(scope)
+
+        binding.fab.offsetFabAppbarHeight(activity!!)
     }
 
     /**
@@ -107,13 +121,13 @@ class CategoryController : NucleusController<CategoryPresenter>(),
         actionMode?.finish()
         adapter?.updateDataSet(categories)
         if (categories.isNotEmpty()) {
-            empty_view.hide()
+            binding.emptyView.hide()
             val selected = categories.filter { it.isSelected }
             if (selected.isNotEmpty()) {
                 selected.forEach { onItemLongClick(categories.indexOf(it)) }
             }
         } else {
-            empty_view.show(R.drawable.ic_shape_black_128dp, R.string.information_empty_category)
+            binding.emptyView.show(R.string.information_empty_category)
         }
     }
 
@@ -144,7 +158,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val adapter = adapter ?: return false
         val count = adapter.selectedItemCount
-        mode.title = resources?.getString(R.string.label_selected, count)
+        mode.title = count.toString()
 
         // Show edit button only when one item is selected
         val editItem = mode.menu.findItem(R.id.action_edit)
@@ -166,8 +180,10 @@ class CategoryController : NucleusController<CategoryPresenter>(),
         when (item.itemId) {
             R.id.action_delete -> {
                 undoHelper = UndoHelper(adapter, this)
-                undoHelper?.start(adapter.selectedPositions, view!!,
-                        R.string.snack_categories_deleted, R.string.action_undo, 3000)
+                undoHelper?.start(
+                    adapter.selectedPositions, view!!,
+                    R.string.snack_categories_deleted, R.string.action_undo, 3000
+                )
 
                 mode.finish()
             }
@@ -206,11 +222,11 @@ class CategoryController : NucleusController<CategoryPresenter>(),
      */
     override fun onItemClick(view: View, position: Int): Boolean {
         // Check if action mode is initialized and selected item exist.
-        if (actionMode != null && position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+        return if (actionMode != null && position != RecyclerView.NO_POSITION) {
             toggleSelection(position)
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
@@ -241,7 +257,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
     private fun toggleSelection(position: Int) {
         val adapter = adapter ?: return
 
-        //Mark the position selected
+        // Mark the position selected
         adapter.toggleSelection(position)
 
         if (adapter.selectedItemCount == 0) {
@@ -318,5 +334,4 @@ class CategoryController : NucleusController<CategoryPresenter>(),
     fun onCategoryExistsError() {
         activity?.toast(R.string.error_category_exists)
     }
-
 }

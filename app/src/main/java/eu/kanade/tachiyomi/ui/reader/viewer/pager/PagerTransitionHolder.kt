@@ -17,7 +17,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
-import eu.kanade.tachiyomi.util.dpToPx
+import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -27,8 +27,8 @@ import rx.android.schedulers.AndroidSchedulers
  */
 @SuppressLint("ViewConstructor")
 class PagerTransitionHolder(
-        val viewer: PagerViewer,
-        val transition: ChapterTransition
+    val viewer: PagerViewer,
+    val transition: ChapterTransition
 ) : LinearLayout(viewer.activity), ViewPagerAdapter.PositionableView {
 
     /**
@@ -55,7 +55,7 @@ class PagerTransitionHolder(
      * dynamically.
      */
     private var pagesContainer = LinearLayout(context).apply {
-        layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+        layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
         orientation = VERTICAL
         gravity = Gravity.CENTER
     }
@@ -144,7 +144,8 @@ class PagerTransitionHolder(
             .subscribe { state ->
                 pagesContainer.removeAllViews()
                 when (state) {
-                    is ReaderChapter.State.Wait -> {}
+                    is ReaderChapter.State.Wait -> {
+                    }
                     is ReaderChapter.State.Loading -> setLoading()
                     is ReaderChapter.State.Error -> setError(state.error)
                     is ReaderChapter.State.Loaded -> setLoaded()
@@ -204,5 +205,4 @@ class PagerTransitionHolder(
     private fun View.wrapContent() {
         layoutParams = ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
     }
-
 }

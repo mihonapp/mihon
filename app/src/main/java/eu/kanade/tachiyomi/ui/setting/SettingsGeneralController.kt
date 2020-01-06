@@ -1,202 +1,193 @@
 package eu.kanade.tachiyomi.ui.setting
 
-import android.app.Dialog
+import android.content.Intent
 import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.view.View
+import android.provider.Settings
 import androidx.preference.PreferenceScreen
-import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.util.LocaleHelper
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
+import eu.kanade.tachiyomi.data.preference.asImmediateFlow
+import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.entriesRes
+import eu.kanade.tachiyomi.util.preference.intListPreference
+import eu.kanade.tachiyomi.util.preference.listPreference
+import eu.kanade.tachiyomi.util.preference.onChange
+import eu.kanade.tachiyomi.util.preference.onClick
+import eu.kanade.tachiyomi.util.preference.preference
+import eu.kanade.tachiyomi.util.preference.preferenceCategory
+import eu.kanade.tachiyomi.util.preference.switchPreference
+import eu.kanade.tachiyomi.util.preference.titleRes
+import eu.kanade.tachiyomi.util.system.LocaleHelper
 import exh.ui.lock.FingerLockPreference
 import exh.ui.lock.LockPreference
-import kotlinx.android.synthetic.main.pref_library_columns.view.*
-import rx.Observable
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import kotlinx.coroutines.flow.launchIn
 
 class SettingsGeneralController : SettingsController() {
-
-    private val db: DatabaseHelper = Injekt.get()
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.pref_category_general
 
-        listPreference {
-            key = Keys.lang
-            titleRes = R.string.pref_language
-            entryValues = arrayOf("", "ar", "bg", "bn", "ca", "cs", "de", "el", "en-US", "en-GB",
-            "es", "fr", "hi", "hu", "in", "it", "ja", "ko", "lv", "ms", "nb-rNO", "nl", "pl", "pt",
-            "pt-BR", "ro", "ru", "sc", "sr", "sv", "th", "tl", "tr", "uk", "vi", "zh-rCN")
-            entries = entryValues.map { value ->
-                val locale = LocaleHelper.getLocaleFromString(value.toString())
-                locale?.getDisplayName(locale)?.capitalize() ?:
-                        context.getString(R.string.system_default)
-            }.toTypedArray()
-            defaultValue = ""
-            summary = "%s"
-
-            onChange { newValue ->
-                val activity = activity ?: return@onChange false
-                val app = activity.application
-                LocaleHelper.changeLocale(newValue.toString())
-                LocaleHelper.updateConfiguration(app, app.resources.configuration)
-                activity.recreate()
-                true
-            }
-        }
-        intListPreference {
-            key = Keys.theme
-            titleRes = R.string.pref_theme
-            entriesRes = arrayOf(R.string.light_theme, R.string.dark_theme,
-                    R.string.amoled_theme, R.string.darkblue_theme)
-            entryValues = arrayOf("1", "2", "3", "4")
-            defaultValue = "1"
-            summary = "%s"
-
-            onChange {
-                activity?.recreate()
-                true
-            }
-        }
-        preference {
-            titleRes = R.string.pref_library_columns
-            onClick {
-                LibraryColumnsDialog().showDialog(router)
-            }
-
-            fun getColumnValue(value: Int): String {
-                return if (value == 0)
-                    context.getString(R.string.default_columns)
-                else
-                    value.toString()
-            }
-
-            Observable.combineLatest(
-                    preferences.portraitColumns().asObservable(),
-                    preferences.landscapeColumns().asObservable(),
-                    { portraitCols, landscapeCols -> Pair(portraitCols, landscapeCols) })
-                    .subscribeUntilDestroy { (portraitCols, landscapeCols) ->
-                        val portrait = getColumnValue(portraitCols)
-                        val landscape = getColumnValue(landscapeCols)
-                        summary = "${context.getString(R.string.portrait)}: $portrait, " +
-                                "${context.getString(R.string.landscape)}: $landscape"
-                    }
-        }
         intListPreference {
             key = Keys.startScreen
             titleRes = R.string.pref_start_screen
-            entriesRes = arrayOf(R.string.label_library, R.string.label_recent_manga,
-                    R.string.label_recent_updates)
-            entryValues = arrayOf("1", "2", "3")
+            entriesRes = arrayOf(
+                R.string.label_library,
+                R.string.label_recent_updates,
+                R.string.label_recent_manga
+            )
+            entryValues = arrayOf("1", "3", "2")
             defaultValue = "1"
             summary = "%s"
         }
-        intListPreference {
-            key = Keys.libraryUpdateInterval
-            titleRes = R.string.pref_library_update_interval
-            entriesRes = arrayOf(R.string.update_never, R.string.update_1hour,
-                    R.string.update_2hour, R.string.update_3hour, R.string.update_6hour,
-                    R.string.update_12hour, R.string.update_24hour, R.string.update_48hour)
-            entryValues = arrayOf("0", "1", "2", "3", "6", "12", "24", "48")
-            defaultValue = "0"
-            summary = "%s"
-
-            onChange { newValue ->
-                // Always cancel the previous task, it seems that sometimes they are not updated.
-                LibraryUpdateJob.cancelTask()
-
-                val interval = (newValue as String).toInt()
-                if (interval > 0) {
-                    LibraryUpdateJob.setupTask(interval)
-                }
-                true
-            }
-        }
-        multiSelectListPreference {
-            key = Keys.libraryUpdateRestriction
-            titleRes = R.string.pref_library_update_restriction
-            entriesRes = arrayOf(R.string.wifi, R.string.charging)
-            entryValues = arrayOf("wifi", "ac")
-            summaryRes = R.string.pref_library_update_restriction_summary
-
-            preferences.libraryUpdateInterval().asObservable()
-                    .subscribeUntilDestroy { isVisible = it > 0 }
-
-            onChange {
-                // Post to event looper to allow the preference to be updated.
-                Handler().post { LibraryUpdateJob.setupTask() }
-                true
-            }
-        }
         switchPreference {
-            key = Keys.updateOnlyNonCompleted
-            titleRes = R.string.pref_update_only_non_completed
+            key = Keys.confirmExit
+            titleRes = R.string.pref_confirm_exit
             defaultValue = false
         }
-
-        val dbCategories = db.getCategories().executeAsBlocking()
-
-        multiSelectListPreference {
-            key = Keys.libraryUpdateCategories
-            titleRes = R.string.pref_library_update_categories
-            entries = dbCategories.map { it.name }.toTypedArray()
-            entryValues = dbCategories.map { it.id.toString() }.toTypedArray()
-
-            preferences.libraryUpdateCategories().asObservable()
-                    .subscribeUntilDestroy {
-                        val selectedCategories = it
-                                .mapNotNull { id -> dbCategories.find { it.id == id.toInt() } }
-                                .sortedBy { it.order }
-
-                        summary = if (selectedCategories.isEmpty())
-                            context.getString(R.string.all)
-                        else
-                            selectedCategories.joinToString { it.name }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            preference {
+                titleRes = R.string.pref_manage_notifications
+                onClick {
+                    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
                     }
+                    startActivity(intent)
+                }
+            }
         }
-        intListPreference{
-            key = Keys.libraryUpdatePrioritization
-            titleRes = R.string.pref_library_update_prioritization
-            // The following arrays are to be lined up with the list rankingScheme in:
-            // ../../data/library/LibraryUpdateRanker.kt
-            entriesRes = arrayOf(
-                    R.string.action_sort_alpha,
-                    R.string.action_sort_last_updated
-            )
-            entryValues = arrayOf(
-                    "0",
-                    "1"
-            )
-            defaultValue = "0"
-            summaryRes = R.string.pref_library_update_prioritization_summary
-        }
-        intListPreference {
-            key = Keys.defaultCategory
-            titleRes = R.string.default_category
 
-            val categories = listOf(Category.createDefault()) + dbCategories
+        preferenceCategory {
+            titleRes = R.string.pref_category_display
 
-            val selectedCategory = categories.find { it.id == preferences.defaultCategory() }
-            entries = arrayOf(context.getString(R.string.default_category_summary)) +
-                    categories.map { it.name }.toTypedArray()
-            entryValues = arrayOf("-1") + categories.map { it.id.toString() }.toTypedArray()
-            defaultValue = "-1"
-            summary = selectedCategory?.name ?: context.getString(R.string.default_category_summary)
+            listPreference {
+                key = Keys.lang
+                titleRes = R.string.pref_language
 
-            onChange { newValue ->
-                summary = categories.find {
-                    it.id == (newValue as String).toInt()
-                }?.name ?: context.getString(R.string.default_category_summary)
-                true
+                val langs = mutableListOf<Pair<String, String>>()
+                langs += Pair("", "${context.getString(R.string.system_default)} (${LocaleHelper.getDisplayName("")})")
+                langs += arrayOf(
+                    "ar", "bg", "bn", "ca", "cs", "de", "el", "en-US", "en-GB", "es", "fr", "he",
+                    "hi", "hu", "in", "it", "ja", "ko", "lv", "ms", "nb-rNO", "nl", "pl", "pt",
+                    "pt-BR", "ro", "ru", "sc", "sr", "sv", "th", "tl", "tr", "uk", "vi", "zh-rCN"
+                )
+                    .map {
+                        Pair(it, LocaleHelper.getDisplayName(it))
+                    }
+                    .sortedBy { it.second }
+
+                entryValues = langs.map { it.first }.toTypedArray()
+                entries = langs.map { it.second }.toTypedArray()
+                defaultValue = ""
+                summary = "%s"
+
+                onChange { newValue ->
+                    val activity = activity ?: return@onChange false
+                    val app = activity.application
+                    LocaleHelper.changeLocale(newValue.toString())
+                    LocaleHelper.updateConfiguration(app, app.resources.configuration)
+                    activity.recreate()
+                    true
+                }
+            }
+            listPreference {
+                key = Keys.dateFormat
+                titleRes = R.string.pref_date_format
+                entryValues = arrayOf("", "MM/dd/yy", "dd/MM/yy", "yyyy-MM-dd")
+                entries = entryValues.map { value ->
+                    if (value == "") {
+                        context.getString(R.string.system_default)
+                    } else {
+                        value
+                    }
+                }.toTypedArray()
+                defaultValue = ""
+                summary = "%s"
+            }
+            listPreference {
+                key = Keys.themeMode
+                titleRes = R.string.pref_theme_mode
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    entriesRes = arrayOf(
+                        R.string.theme_system,
+                        R.string.theme_light,
+                        R.string.theme_dark
+                    )
+                    entryValues = arrayOf(
+                        Values.THEME_MODE_SYSTEM,
+                        Values.THEME_MODE_LIGHT,
+                        Values.THEME_MODE_DARK
+                    )
+                    defaultValue = Values.THEME_MODE_SYSTEM
+                } else {
+                    entriesRes = arrayOf(
+                        R.string.theme_light,
+                        R.string.theme_dark
+                    )
+                    entryValues = arrayOf(
+                        Values.THEME_MODE_LIGHT,
+                        Values.THEME_MODE_DARK
+                    )
+                    defaultValue = Values.THEME_MODE_LIGHT
+                }
+
+                summary = "%s"
+
+                onChange {
+                    activity?.recreate()
+                    true
+                }
+            }
+            listPreference {
+                key = Keys.themeLight
+                titleRes = R.string.pref_theme_light
+                entriesRes = arrayOf(
+                    R.string.theme_light_default,
+                    R.string.theme_light_blue
+                )
+                entryValues = arrayOf(
+                    Values.THEME_LIGHT_DEFAULT,
+                    Values.THEME_LIGHT_BLUE
+                )
+                defaultValue = Values.THEME_LIGHT_DEFAULT
+                summary = "%s"
+
+                preferences.themeMode().asImmediateFlow { isVisible = it != Values.THEME_MODE_DARK }
+                    .launchIn(scope)
+
+                onChange {
+                    if (preferences.themeMode().get() != Values.THEME_MODE_DARK) {
+                        activity?.recreate()
+                    }
+                    true
+                }
+            }
+            listPreference {
+                key = Keys.themeDark
+                titleRes = R.string.pref_theme_dark
+                entriesRes = arrayOf(
+                    R.string.theme_dark_default,
+                    R.string.theme_dark_blue,
+                    R.string.theme_dark_amoled
+                )
+                entryValues = arrayOf(
+                    Values.THEME_DARK_DEFAULT,
+                    Values.THEME_DARK_BLUE,
+                    Values.THEME_DARK_AMOLED
+                )
+                defaultValue = Values.THEME_DARK_DEFAULT
+                summary = "%s"
+
+                preferences.themeMode().asImmediateFlow { isVisible = it != Values.THEME_MODE_LIGHT }
+                    .launchIn(scope)
+
+                onChange {
+                    if (preferences.themeMode().get() != Values.THEME_MODE_LIGHT) {
+                        activity?.recreate()
+                    }
+                    true
+                }
             }
         }
 
@@ -210,15 +201,8 @@ class SettingsGeneralController : SettingsController() {
         switchPreference {
             key = Keys.eh_autoSolveCaptchas
             title = "Automatically solve captcha"
-            summary = "Use HIGHLY EXPERIMENTAL automatic ReCAPTCHA solver. Will be grayed out if unsupported by your device."
-            defaultValue = false
-            shouldDisableView = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP
-        }
-
-        switchPreference {
-            key = Keys.eh_incogWebview
-            title = "Incognito 'Open in browser'"
-            summary = "Prevent pages viewed from the 'Open in browser' menu option from being placed into Chrome's browsing history. May be buggy, some browser features will be unavailable."
+            summary =
+                "Use HIGHLY EXPERIMENTAL automatic ReCAPTCHA solver. Will be grayed out if unsupported by your device."
             defaultValue = false
         }
 
@@ -238,7 +222,7 @@ class SettingsGeneralController : SettingsController() {
 
                 addPreference(this)
 
-                //Call after addPreference
+                // Call after addPreference
                 dependency = "pref_app_lock"
             }
 
@@ -246,57 +230,21 @@ class SettingsGeneralController : SettingsController() {
                 key = Keys.eh_lock_manually
 
                 title = "Lock manually only"
-                summary = "Disable automatic app locking. The app can still be locked manually by long-pressing the three-lines/back button in the top left corner."
+                summary =
+                    "Disable automatic app locking. The app can still be locked manually by long-pressing the three-lines/back button in the top left corner."
+                defaultValue = false
+            }
+            switchPreference {
+                key = Keys.secureScreen
+                title = "Enable Secure Screen"
+                defaultValue = false
+            }
+            switchPreference {
+                key = Keys.hideNotificationContent
+                titleRes = R.string.hide_notification_content
                 defaultValue = false
             }
         }
         // <-- EXH
     }
-
-    class LibraryColumnsDialog : DialogController() {
-
-        private val preferences: PreferencesHelper = Injekt.get()
-
-        private var portrait = preferences.portraitColumns().getOrDefault()
-        private var landscape = preferences.landscapeColumns().getOrDefault()
-
-        override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-            val dialog = MaterialDialog.Builder(activity!!)
-                    .title(R.string.pref_library_columns)
-                    .customView(R.layout.pref_library_columns, false)
-                    .positiveText(android.R.string.ok)
-                    .negativeText(android.R.string.cancel)
-                    .onPositive { _, _ ->
-                        preferences.portraitColumns().set(portrait)
-                        preferences.landscapeColumns().set(landscape)
-                    }
-                    .build()
-
-            onViewCreated(dialog.view)
-            return dialog
-        }
-
-        fun onViewCreated(view: View) {
-            with(view.portrait_columns) {
-                displayedValues = arrayOf(context.getString(R.string.default_columns)) +
-                        IntRange(1, 10).map(Int::toString)
-                value = portrait
-
-                setOnValueChangedListener { _, _, newValue ->
-                    portrait = newValue
-                }
-            }
-            with(view.landscape_columns) {
-                displayedValues = arrayOf(context.getString(R.string.default_columns)) +
-                        IntRange(1, 10).map(Int::toString)
-                value = landscape
-
-                setOnValueChangedListener { _, _, newValue ->
-                    landscape = newValue
-                }
-            }
-        }
-
-    }
-
 }

@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.app.Application
+import android.net.Uri
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
@@ -14,10 +15,10 @@ import uy.kohesive.injekt.injectLazy
  * Loader used to load a chapter from the downloaded chapters.
  */
 class DownloadPageLoader(
-        private val chapter: ReaderChapter,
-        private val manga: Manga,
-        private val source: Source,
-        private val downloadManager: DownloadManager
+    private val chapter: ReaderChapter,
+    private val manga: Manga,
+    private val source: Source,
+    private val downloadManager: DownloadManager
 ) : PageLoader() {
 
     /**
@@ -33,7 +34,7 @@ class DownloadPageLoader(
             .map { pages ->
                 pages.map { page ->
                     ReaderPage(page.index, page.url, page.imageUrl) {
-                        context.contentResolver.openInputStream(page.uri)
+                        context.contentResolver.openInputStream(page.uri ?: Uri.EMPTY)!!
                     }.apply {
                         status = Page.READY
                     }
@@ -44,5 +45,4 @@ class DownloadPageLoader(
     override fun getPage(page: ReaderPage): Observable<Int> {
         return Observable.just(Page.READY) // TODO maybe check if file still exists?
     }
-
 }

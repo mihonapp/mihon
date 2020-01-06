@@ -6,7 +6,7 @@ import android.widget.NumberPicker
 import eu.kanade.tachiyomi.R
 
 class MinMaxNumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        NumberPicker(context, attrs) {
+    NumberPicker(context, attrs) {
 
     init {
         if (attrs != null) {
@@ -20,4 +20,3 @@ class MinMaxNumberPicker @JvmOverloads constructor(context: Context, attrs: Attr
         }
     }
 }
-

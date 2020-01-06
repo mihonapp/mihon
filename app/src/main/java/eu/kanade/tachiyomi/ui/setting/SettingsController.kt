@@ -15,6 +15,9 @@ import com.bluelinelabs.conductor.ControllerChangeType
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import rx.Observable
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription
@@ -24,6 +27,7 @@ import uy.kohesive.injekt.api.get
 abstract class SettingsController : PreferenceController() {
 
     val preferences: PreferencesHelper = Injekt.get()
+    val scope = CoroutineScope(Job() + Dispatchers.Main)
 
     var untilDestroySubscriptions = CompositeSubscription()
         private set
@@ -61,7 +65,7 @@ abstract class SettingsController : PreferenceController() {
     fun setTitle() {
         var parentController = parentController
         while (parentController != null) {
-            if (parentController is BaseController && parentController.getTitle() != null) {
+            if (parentController is BaseController<*> && parentController.getTitle() != null) {
                 return
             }
             parentController = parentController.parentController
@@ -74,11 +78,8 @@ abstract class SettingsController : PreferenceController() {
         if (type.isEnter) {
             setTitle()
         }
+        setHasOptionsMenu(type.isEnter)
         super.onChangeStarted(handler, type)
-    }
-
-    fun <T> Observable<T>.subscribeUntilDestroy(): Subscription {
-        return subscribe().also { untilDestroySubscriptions.add(it) }
     }
 
     fun <T> Observable<T>.subscribeUntilDestroy(onNext: (T) -> Unit): Subscription {

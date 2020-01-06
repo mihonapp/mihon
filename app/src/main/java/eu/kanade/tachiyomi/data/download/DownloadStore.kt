@@ -15,8 +15,8 @@ import uy.kohesive.injekt.injectLazy
  * @param context the application context.
  */
 class DownloadStore(
-        context: Context,
-        private val sourceManager: SourceManager
+    context: Context,
+    private val sourceManager: SourceManager
 ) {
 
     /**
@@ -29,9 +29,6 @@ class DownloadStore(
      */
     private val gson: Gson by injectLazy()
 
-    /**
-     * Database helper.
-     */
     private val db: DatabaseHelper by injectLazy()
 
     /**
@@ -80,9 +77,9 @@ class DownloadStore(
      */
     fun restore(): List<Download> {
         val objs = preferences.all
-                .mapNotNull { it.value as? String }
-                .mapNotNull { deserialize(it) }
-                .sortedBy { it.order }
+            .mapNotNull { it.value as? String }
+            .mapNotNull { deserialize(it) }
+            .sortedBy { it.order }
 
         val downloads = mutableListOf<Download>()
         if (objs.isNotEmpty()) {
@@ -133,5 +130,4 @@ class DownloadStore(
      * @param order the order of the download in the queue.
      */
     data class DownloadObject(val mangaId: Long, val chapterId: Long, val order: Int)
-
 }

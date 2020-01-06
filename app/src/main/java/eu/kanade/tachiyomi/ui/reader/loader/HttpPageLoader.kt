@@ -8,9 +8,10 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import eu.kanade.tachiyomi.util.plusAssign
-import exh.EH_SOURCE_ID
-import exh.EXH_SOURCE_ID
+import eu.kanade.tachiyomi.util.lang.plusAssign
+import java.util.concurrent.PriorityBlockingQueue
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.math.min
 import rx.Completable
 import rx.Observable
 import rx.schedulers.Schedulers
@@ -28,9 +29,9 @@ import java.util.concurrent.atomic.AtomicInteger
  * Loader used to load chapters from an online source.
  */
 class HttpPageLoader(
-        private val chapter: ReaderChapter,
-        private val source: HttpSource,
-        private val chapterCache: ChapterCache = Injekt.get()
+    private val chapter: ReaderChapter,
+    private val source: HttpSource,
+    private val chapterCache: ChapterCache = Injekt.get()
 ) : PageLoader() {
     // EXH -->
     private val prefs: PreferencesHelper by injectLazy()
@@ -46,17 +47,15 @@ class HttpPageLoader(
      */
     private val subscriptions = CompositeSubscription()
 
+    private val preloadSize = 4
+
     init {
         // EXH -->
         repeat(prefs.eh_readerThreads().getOrDefault()) {
             // EXH <--
             subscriptions += Observable.defer { Observable.just(queue.take().page) }
                     .filter { it.status == Page.QUEUE }
-                    .concatMap {
-                        source.fetchImageFromCacheThenNet(it).doOnNext {
-                            XLog.d("Downloaded page: ${it.number}!")
-                        }
-                    }
+                    .concatMap { source.fetchImageFromCacheThenNet(it) }
                     .repeat()
                     .subscribeOn(Schedulers.io())
                     .subscribe({
@@ -64,7 +63,8 @@ class HttpPageLoader(
                         if (error !is InterruptedException) {
                             Timber.e(error)
                         }
-                    })
+                    }
+                )
             // EXH -->
         }
         // EXH <--
@@ -102,7 +102,8 @@ class HttpPageLoader(
             .getPageListFromCache(chapter.chapter)
             .onErrorResumeNext { source.fetchPageList(chapter.chapter) }
             .map { pages ->
-                val rp = pages.mapIndexed { index, page -> // Don't trust sources and use our own indexing
+                val rp = pages.mapIndexed { index, page ->
+                    // Don't trust sources and use our own indexing
                     ReaderPage(index, page.url, page.imageUrl)
                 }
                 if(prefs.eh_aggressivePageLoading().getOrDefault()) {
@@ -137,29 +138,41 @@ class HttpPageLoader(
             val statusSubject = SerializedSubject(PublishSubject.create<Int>())
             page.setStatusSubject(statusSubject)
 
+            val queuedPages = mutableListOf<PriorityPage>()
             if (page.status == Page.QUEUE) {
-                queue.offer(PriorityPage(page, 1))
+                queuedPages += PriorityPage(page, 1).also { queue.offer(it) }
             }
-
-            preloadNextPages(page, 4)
+            queuedPages += preloadNextPages(page, preloadSize)
 
             statusSubject.startWith(page.status)
+                .doOnUnsubscribe {
+                    queuedPages.forEach {
+                        if (it.page.status == Page.QUEUE) {
+                            queue.remove(it)
+                        }
+                    }
+                }
         }
+            .subscribeOn(Schedulers.io())
+            .unsubscribeOn(Schedulers.io())
     }
 
     /**
      * Preloads the given [amount] of pages after the [currentPage] with a lower priority.
+     * @return a list of [PriorityPage] that were added to the [queue]
      */
-    private fun preloadNextPages(currentPage: ReaderPage, amount: Int) {
+    private fun preloadNextPages(currentPage: ReaderPage, amount: Int): List<PriorityPage> {
         val pageIndex = currentPage.index
-        val pages = currentPage.chapter.pages ?: return
-        if (pageIndex == pages.lastIndex) return
-        val nextPages = pages.subList(pageIndex + 1, Math.min(pageIndex + 1 + amount, pages.size))
-        for (nextPage in nextPages) {
-            if (nextPage.status == Page.QUEUE) {
-                queue.offer(PriorityPage(nextPage, 0))
+        val pages = currentPage.chapter.pages ?: return emptyList()
+        if (pageIndex == pages.lastIndex) return emptyList()
+
+        return pages
+            .subList(pageIndex + 1, min(pageIndex + 1 + amount, pages.size))
+            .mapNotNull {
+                if (it.status == Page.QUEUE) {
+                    PriorityPage(it, 0).apply { queue.offer(this) }
+                } else null
             }
-        }
     }
 
     /**
@@ -182,11 +195,10 @@ class HttpPageLoader(
     /**
      * Data class used to keep ordering of pages in order to maintain priority.
      */
-    private data class PriorityPage(
-            val page: ReaderPage,
-            val priority: Int
-    ): Comparable<PriorityPage> {
-
+    private class PriorityPage(
+        val page: ReaderPage,
+        val priority: Int
+    ) : Comparable<PriorityPage> {
         companion object {
             private val idGenerator = AtomicInteger()
         }
@@ -197,7 +209,6 @@ class HttpPageLoader(
             val p = other.priority.compareTo(priority)
             return if (p != 0) p else identifier.compareTo(other.identifier)
         }
-
     }
 
     /**
@@ -206,30 +217,18 @@ class HttpPageLoader(
      * @param page the page whose source image has to be downloaded.
      */
     private fun HttpSource.fetchImageFromCacheThenNet(page: ReaderPage): Observable<ReaderPage> {
-        return if (page.imageUrl.isNullOrEmpty())
+        return if (page.imageUrl.isNullOrEmpty()) {
             getImageUrl(page).flatMap { getCachedImage(it) }
-        else
+        } else {
             getCachedImage(page)
+        }
     }
 
     private fun HttpSource.getImageUrl(page: ReaderPage): Observable<ReaderPage> {
         page.status = Page.LOAD_PAGE
         return fetchImageUrl(page)
             .doOnError { page.status = Page.ERROR }
-            .onErrorReturn {
-                // [EXH]
-                XLog.w("> Failed to fetch image URL!", it)
-                XLog.w("> (source.id: %s, source.name: %s, page.index: %s, page.url: %s, page.imageUrl: %s, chapter.id: %s, chapter.url: %s)",
-                        source.id,
-                        source.name,
-                        page.index,
-                        page.url,
-                        page.imageUrl,
-                        page.chapter.chapter.id,
-                        page.chapter.chapter.url)
-
-                null
-            }
+            .onErrorReturn { null }
             .doOnNext { page.imageUrl = it }
             .map { page }
     }
@@ -255,20 +254,7 @@ class HttpPageLoader(
                 page.stream = { chapterCache.getImageFile(imageUrl).inputStream() }
                 page.status = Page.READY
             }
-            .doOnError {
-                // [EXH]
-                XLog.w("> Failed to fetch image!", it)
-                XLog.w("> (source.id: %s, source.name: %s, page.index: %s, page.url: %s, page.imageUrl: %s, chapter.id: %s, chapter.url: %s)",
-                        source.id,
-                        source.name,
-                        page.index,
-                        page.url,
-                        page.imageUrl,
-                        page.chapter.chapter.id,
-                        page.chapter.chapter.url)
-
-                page.status = Page.ERROR
-            }
+            .doOnError { page.status = Page.ERROR }
             .onErrorReturn { page }
     }
 

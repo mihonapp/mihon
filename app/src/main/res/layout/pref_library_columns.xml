@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="horizontal"
-              android:paddingBottom="@dimen/dialog_content_padding"
-              android:paddingLeft="@dimen/dialog_content_padding"
-              android:paddingRight="@dimen/dialog_content_padding"
-              android:paddingTop="@dimen/dialog_margin_top_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -19,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/portrait"/>
+            android:text="@string/portrait" />
 
         <eu.kanade.tachiyomi.widget.MinMaxNumberPicker
             android:id="@+id/portrait_columns"
@@ -27,7 +24,7 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"
             app:max="10"
-            app:min="0"/>
+            app:min="0" />
 
     </LinearLayout>
 
@@ -41,7 +38,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/landscape"/>
+            android:text="@string/landscape" />
 
         <eu.kanade.tachiyomi.widget.MinMaxNumberPicker
             android:id="@+id/landscape_columns"
@@ -49,7 +46,7 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"
             app:max="10"
-            app:min="0"/>
+            app:min="0" />
 
     </LinearLayout>
 

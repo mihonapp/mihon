@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name">Tên</string>
-
     <!-- Activities and fragments labels (toolbar title) -->
     <string name="label_settings">Cài đặt</string>
     <string name="label_download_queue">Hàng chờ tải xuống</string>
-    <string name="label_library">Thư viện của tôi</string>
-    <string name="label_recent_manga">Đã đọc gần đây</string>
-    <string name="label_catalogues">Danh mục</string>
-    <string name="label_recent_updates">Cập nhật mới của thư viện</string>
-    <string name="label_latest_updates">Cập nhật mới nhất</string>
+    <string name="label_library">Thư Viện</string>
+    <string name="label_recent_manga">Lịch Sử</string>
+    <string name="label_recent_updates">Mới Cập Nhật</string>
     <string name="label_categories">Hạng mục</string>
-    <string name="label_selected">Đã chọn: %1$d</string>
     <string name="label_backup">Sao lưu</string>
-
     <!-- Actions -->
     <string name="action_settings">Cài đặt</string>
     <string name="action_filter">Bộ lọc</string>
@@ -24,7 +19,6 @@
     <string name="action_filter_empty">Bỏ bộ lọc</string>
     <string name="action_sort_alpha">Theo bảng chữ cái</string>
     <string name="action_sort_last_read">Đã đọc gần nhất</string>
-    <string name="action_sort_last_updated">Cập nhật mới nhất</string>
     <string name="action_search">Tìm kiếm</string>
     <string name="action_select_all">Chọn tất cả</string>
     <string name="action_mark_as_read">Đánh dấu là đã đọc</string>
@@ -47,22 +41,18 @@
     <string name="action_sort_down">Sắp theo thứ tự giảm dần</string>
     <string name="action_show_downloaded">Đã tải xuống</string>
     <string name="action_next_unread">Truyện chưa đọc kế tiếp</string>
-    <string name="action_start">Bắt đầu</string>
     <string name="action_stop">Dừng lại</string>
     <string name="action_pause">Tạm dừng</string>
-    <string name="action_clear">Dọn dẹp</string>
     <string name="action_previous_chapter">Chương trước</string>
     <string name="action_next_chapter">Chương kế</string>
     <string name="action_retry">Thử lại</string>
     <string name="action_remove">Gỡ bỏ</string>
     <string name="action_resume">Tiếp tục</string>
     <string name="action_open_in_browser">Mở trong trình duyệt</string>
-    <string name="action_add_to_home_screen">Thêm vào màn hình chính</string>
-    <string name="action_display_mode">Thay đổi chế độ hiển thị</string>
+    <string name="action_display_mode">Chế độ hiển thị</string>
     <string name="action_display">Hiển thị</string>
     <string name="action_display_grid">Lưới</string>
     <string name="action_display_list">Danh sách</string>
-    <string name="action_set_filter">Đặt bộ lọc</string>
     <string name="action_cancel">Hủy</string>
     <string name="action_sort">Sắp xếp</string>
     <string name="action_install">Cài đặt</string>
@@ -70,21 +60,16 @@
     <string name="action_save">Lưu lại</string>
     <string name="action_reset">Cài lại</string>
     <string name="action_undo">Quay lại</string>
-
     <!-- Operations -->
-    <string name="deleting">Đang xóa…</string>
     <string name="loading">Đang tải…</string>
-
     <!-- Preferences -->
     <!-- Subsections -->
     <string name="pref_category_general">Chung</string>
     <string name="pref_category_reader">Trình đọc</string>
     <string name="pref_category_downloads">Tải xuống</string>
-    <string name="pref_category_sources">Nguồn truyện</string>
     <string name="pref_category_tracking">Theo dõi</string>
     <string name="pref_category_advanced">Nâng cao</string>
     <string name="pref_category_about">Giới thiệu</string>
-
     <!-- General section -->
     <string name="pref_library_columns">Số truyện hiển thị trong thư viện trên cùng một dòng</string>
     <string name="portrait">Dọc</string>
@@ -107,13 +92,9 @@
     <string name="charging">Đang sạc</string>
     <string name="pref_update_only_non_completed">Chỉ cập nhật truyện đang tiến hành</string>
     <string name="pref_auto_update_manga_sync">Đồng bộ các chương sau khi đọc</string>
-    <string name="pref_theme">Chủ đề ứng dụng</string>
-    <string name="light_theme">Chủ đề chính</string>
-    <string name="dark_theme">Chủ đề tối</string>
     <string name="pref_start_screen">Màn hình khởi động</string>
     <string name="pref_language">Ngôn ngữ</string>
     <string name="system_default">Mặc định hệ thống</string>
-
     <!-- Reader section -->
     <string name="pref_fullscreen">Toàn màn hình</string>
     <string name="pref_lock_orientation">Khóa xoay</string>
@@ -124,7 +105,7 @@
     <string name="pref_keep_screen_on">Giữ màn hình bật</string>
     <string name="pref_reader_navigation">Điều hướng</string>
     <string name="pref_read_with_volume_keys">Phím âm lượng</string>
-    <string name="pref_read_with_tapping">Nhấn giữ</string>
+    <string name="pref_read_with_tapping">Nhấn</string>
     <string name="pref_reader_theme">Màu nền</string>
     <string name="white_background">Trắng</string>
     <string name="black_background">Đen</string>
@@ -133,7 +114,7 @@
     <string name="left_to_right_viewer">Trái sang phải</string>
     <string name="right_to_left_viewer">Phải sang trái</string>
     <string name="vertical_viewer">Theo chiều dọc</string>
-    <string name="webtoon_viewer">Chế độ cuộn</string>
+    <string name="webtoon_viewer">Webtoon</string>
     <string name="pref_image_decoder">Giải mã hình ảnh</string>
     <string name="pref_image_scale_type">Kiểu tỉ lệ</string>
     <string name="scale_type_fit_screen">Vừa màn hình</string>
@@ -156,14 +137,12 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-
-
     <!-- Downloads section -->
-    <string name="pref_download_directory">Thư mục tải xuống</string>
+    <string name="pref_download_directory">Đường dẫn tải xuống</string>
     <string name="pref_download_only_over_wifi">Chỉ tải trên Wi-Fi</string>
     <string name="pref_remove_after_marked_as_read">Gỡ bỏ sau khi được đánh dấu đã đọc</string>
     <string name="pref_remove_after_read">Gỡ bỏ sau khi đọc</string>
-    <string name="custom_dir">Thư mục tùy chỉnh</string>
+    <string name="custom_dir">Đường dẫn tùy chỉnh</string>
     <string name="disabled">Vô hiệu hóa</string>
     <string name="last_read_chapter">Chương đã đọc gần nhất</string>
     <string name="second_to_last">Hai chương gần nhất</string>
@@ -171,10 +150,8 @@
     <string name="fourth_to_last">Bốn chương gần nhất</string>
     <string name="fifth_to_last">Năm chương gần nhất</string>
     <string name="pref_download_new">Tải chương mới</string>
-
     <!-- Sync section -->
     <string name="services">Dịch vụ</string>
-
     <!-- Advanced section -->
     <string name="pref_clear_chapter_cache">Dọn dẹp bộ nhớ đệm</string>
     <string name="used_cache">Đã sử dụng: %1$s</string>
@@ -189,17 +166,12 @@
     <string name="clear_database_completed">Các mục đã bị xóa</string>
     <string name="pref_refresh_library_metadata">Làm mới siêu dữ liệu của thư viện</string>
     <string name="pref_refresh_library_metadata_summary">Cập nhật ảnh bìa, thể loại, thông tin trạng thái của các bộ truyện</string>
-
     <!-- About section -->
     <string name="version">Phiên bản</string>
     <string name="build_time">Thời gian tạo</string>
-    <string name="pref_enable_automatic_updates">Kiểm tra cập nhật</string>
-    <string name="pref_enable_automatic_updates_summary">Tự động kiểm tra cập nhật ứng dụng</string>
     <!-- ACRA -->
     <string name="pref_enable_acra">Gửi báo cáo lỗi</string>
     <string name="pref_acra_summary">Giúp đỡ sửa lỗi. Sẽ không có thông tin nhạy cảm nào được gửi đi</string>
-
-
     <!-- Login dialog -->
     <string name="login_title">Đăng nhập vào %1$s</string>
     <string name="username">Tên đăng nhập</string>
@@ -209,21 +181,17 @@
     <string name="login_success">Đăng nhập thành công</string>
     <string name="invalid_login">Lỗi đăng nhập</string>
     <string name="unknown_error">Lỗi không xác định</string>
-
     <!-- Library fragment -->
     <string name="library_search_hint">Tiêu đề truyện hoặc tên tác giả…</string>
     <string name="updating_category">Cập nhật danh mục</string>
     <string name="confirm_delete_manga">Bạn có chắc là muốn xóa truyện đã chọn không\?</string>
-
     <!-- Catalogue fragment -->
     <string name="source_requires_login">Nguồn truyện này yêu cầu đăng nhập</string>
     <string name="select_source">Chọn một nguồn truyện</string>
     <string name="no_valid_sources">Vui lòng chọn ít nhất một nguồn truyện hợp lệ</string>
     <string name="no_more_results">Không có thêm kết quả nào</string>
-
     <!-- Manga activity -->
-    <string name="manga_not_in_db">Truyện này đã bị xóa khỏi cơ sở dữ liệu!</string>
-
+    <string name="manga_not_in_db">Truyện này đã bị xóa khỏi cơ sở dữ liệu.</string>
     <!-- Manga info fragment -->
     <string name="manga_detail_tab">Thông tin</string>
     <string name="description">Mô tả</string>
@@ -237,14 +205,6 @@
     <string name="manga_info_status_label">Trạng thái</string>
     <string name="manga_info_source_label">Nguồn truyện</string>
     <string name="manga_info_genres_label">Thể loại</string>
-    <string name="circular_icon">Biểu tượng hình tròn</string>
-    <string name="rounded_icon">Biểu tượng hình chữ nhật</string>
-    <string name="square_icon">Biểu tượng hình vuông</string>
-    <string name="star_icon">Biểu tượng hình ngôi sao</string>
-    <string name="shortcut_title">Tiêu đề của lối tắt</string>
-    <string name="icon_shape">Kiểu biểu tượng</string>
-    <string name="icon_creation_fail">Tạo lối tắt thất bại!</string>
-
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Danh sách chương</string>
     <string name="manga_chapter_no_title">Không có tiêu đề</string>
@@ -256,19 +216,18 @@
     <string name="chapter_error">Lỗi</string>
     <string name="chapter_paused">Đã tạm dừng</string>
     <string name="fetch_chapters_error">Lỗi khi lấy dữ liệu các chương</string>
-    <string name="show_title">Hiện tiêu đề</string>
-    <string name="show_chapter_number">Hiện số chương</string>
+    <string name="show_title">Tiêu đề</string>
+    <string name="show_chapter_number">Số chương</string>
     <string name="sorting_mode">Sắp xếp</string>
     <string name="sort_by_source">Theo nguồn truyện</string>
     <string name="sort_by_number">Theo số chương</string>
     <string name="manga_download">Tải xuống</string>
-    <string name="download_1">Tải chương kế</string>
-    <string name="download_5">Tải 5 chương kế tiếp</string>
-    <string name="download_10">Tải 10 chương kế tiếp</string>
-    <string name="download_all">Tải về toàn bộ</string>
-    <string name="download_unread">Tải các chương chưa đọc</string>
+    <string name="download_1">Chương kế tiếp</string>
+    <string name="download_5">5 chương kế tiếp</string>
+    <string name="download_10">10 chương kế tiếp</string>
+    <string name="download_all">Tất cả</string>
+    <string name="download_unread">Chưa đọc</string>
     <string name="confirm_delete_chapters">Bạn có chắc muốn xóa các chương đã chọn?</string>
-
     <!-- MyAnimeList fragment -->
     <string name="manga_tracking_tab">Theo dõi</string>
     <string name="reading">Đang đọc</string>
@@ -280,23 +239,18 @@
     <string name="title">Tiêu đề</string>
     <string name="status">Trạng thái</string>
     <string name="chapters">Các chương</string>
-
     <!-- Category activity -->
     <string name="error_category_exists">Tên danh mục này đã tồn tại!</string>
     <string name="snack_categories_deleted">Danh mục đã bị xóa</string>
-
     <!-- Dialog option with checkbox view -->
     <string name="dialog_with_checkbox_remove_description">Sẽ xóa ngày đọc các chương. Bạn chắc chứ?</string>
     <string name="dialog_with_checkbox_reset">Làm mới mọi chương của truyện này</string>
-
     <!-- SnackBar -->
     <string name="snack_add_to_library">Thêm truyện vào thư viện?</string>
-
     <!-- Image notifier -->
     <string name="picture_saved">Đã lưu ảnh</string>
     <string name="saving_picture">Đang lưu ảnh</string>
     <string name="options">Tùy chọn</string>
-
     <!-- Reader activity -->
     <string name="custom_filter">Bộ lọc tùy chỉnh</string>
     <string name="set_as_cover">Đặt làm ảnh bìa</string>
@@ -309,19 +263,12 @@
     <string name="no_next_chapter">Không tìm thấy chương kế tiếp</string>
     <string name="no_previous_chapter">Không tìm thấy chương trước</string>
     <string name="decode_image_error">Không thể giải mã hình ảnh</string>
-    <string name="confirm_update_manga_sync">Cập nhật chương mới nhất của dịch vụ đang bật đến %1$d\?</string>
     <string name="confirm_set_image_as_cover">Bạn có chắc muốn đặt ảnh này làm ảnh bìa?</string>
-    <string name="viewer_for_this_series">Kiểu đọc cho series này</string>
-
     <!-- Backup fragment -->
     <string name="backup">Sao lưu</string>
-
     <!-- Recent manga fragment -->
-    <string name="recent_manga_source">%1$s - Ch.%2$s</string>
-
     <!-- Downloads activity and service -->
-    <string name="download_queue_error">Có lỗi đã xảy ra khi đang tải chương. Bạn có thể thử lại trong phần tải xuống</string>
-
+    <string name="download_queue_error">Có lỗi đã xảy ra khi đang tải các chương. Bạn có thể thử lại trong phần Tải xuống</string>
     <!-- Library update service notifications -->
     <string name="notification_update_progress">Tiến độ cập nhật: %1$d/%2$d</string>
     <string name="notification_new_chapters">"Đã tìm thấy chương mới "</string>
@@ -331,43 +278,35 @@
     <string name="notification_not_connected_to_ac_body">Chưa được kết nối đến nguồn điện</string>
     <string name="notification_no_connection_title">Đã hủy đồng bộ</string>
     <string name="notification_no_connection_body">Không có kết nối</string>
-
     <!-- File Picker Titles -->
     <string name="file_select_cover">Chọn ảnh bìa</string>
     <string name="file_select_backup">Chọn file sao lưu</string>
     <string name="file_select_icon">Chọn biểu tượng phím tắt</string>
-
     <!--UpdateCheck-->
-    <string name="update_check_title">Có bản cập nhật mới!</string>
     <string name="update_check_confirm">Tải xuống</string>
     <string name="update_check_ignore">Bỏ qua</string>
     <string name="update_check_no_new_updates">Không có cập nhật mới</string>
-    <string name="update_check_download_started">Đã bắt đầu tải xuống</string>
-    <string name="update_check_look_for_updates">Đang tìm bản cập nhật mới</string>
-
+    <string name="update_check_look_for_updates">Đang tìm cập nhật mới…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_file_download">Tải xuống cập nhật</string>
-    <string name="update_check_notification_download_in_progress">Đang trong quá trình tải xuống</string>
+    <string name="update_check_notification_download_in_progress">Đang tải xuống…</string>
     <string name="update_check_notification_download_complete">Đã tải xong</string>
     <string name="update_check_notification_download_error">Lỗi khi tải xuống</string>
-    <string name="update_check_notification_update_available">Có cập nhật mới</string>
-
+    <string name="update_check_notification_update_available">Có cập nhật mới!</string>
     <!--Content Description-->
     <string name="description_backdrop">Ảnh nền của truyện</string>
     <string name="description_cover">Ảnh bìa của truyện</string>
-
     <!-- Information Text -->
     <string name="information_no_downloads">Không có tải xuống</string>
     <string name="information_no_recent">Không có các chương gần đây</string>
     <string name="information_no_recent_manga">Không có truyện đã đọc gần đây</string>
-    <string name="information_empty_library">Thư viện trống, bạn có thể thêm truyện vào thư viện từ Danh mục.</string>
-
+    <string name="information_empty_library">Thư viện trống, bạn có thể thêm truyện vào thư viện từ Nguồn.</string>
     <!-- Download Notification -->
     <string name="download_notifier_downloader_title">Trình tải xuống</string>
     <string name="download_notifier_title_error">Lỗi</string>
-    <string name="download_notifier_unkown_error">Một lỗi không mong đợi đã xảy ra khi tải xuống chương này</string>
+    <string name="download_notifier_unknown_error">Đã xảy ra lỗi khi tải xuống chương này</string>
     <string name="download_notifier_page_error">Một trang đã bị thiếu trong thư mục</string>
-    <string name="download_notifier_page_ready_error">Một trang chưa được tải</string>
+    <string name="download_notifier_page_ready_error">Trang chưa được tải</string>
     <string name="download_notifier_text_only_wifi">Không có kết nối Wi-fi</string>
     <string name="download_notifier_no_network">Không có kết nối mạng</string>
     <string name="download_notifier_download_paused">Tải xuống đã tạm dừng</string>
@@ -376,14 +315,13 @@
     <string name="track">Theo dõi</string>
     <string name="history">Lịch sử</string>
     <string name="label_migration">Di chuyển nguồn</string>
-    <string name="label_extensions">Tiện ích mở rộng</string>
-    <string name="label_extension_info">Thông tin về tiện ích mở rộng</string>
+    <string name="label_extensions">Tiện ích bổ sung</string>
+    <string name="label_extension_info">Thông tin về tiện ích bổ sung</string>
     <string name="action_sort_total">Toàn bộ các chương</string>
     <string name="action_global_search">tìm kiếm toàn cầu</string>
     <string name="action_close">Đóng</string>
     <string name="action_move">Di chuyển</string>
     <string name="action_display_download_badge">Tải phù hiệu</string>
-    <string name="action_export">Xuất</string>
     <string name="action_open_log">Nhật ký mở</string>
     <string name="action_create">Tạo</string>
     <string name="action_restore">Khôi phục</string>
@@ -393,8 +331,6 @@
     <string name="short_recent_updates">Cập nhật</string>
     <string name="update_weekly">Mỗi tuần</string>
     <string name="update_monthly">Mỗi tháng</string>
-    <string name="amoled_theme">Chủ đề AMOLED</string>
-    <string name="darkblue_theme">Xanh đậm</string>
     <string name="default_category">Danh mục Mặc định</string>
     <string name="default_category_summary">Luôn hỏi</string>
     <string name="all_lang">Tất cả</string>
@@ -411,14 +347,14 @@
     <string name="ext_preferences">Yêu thích</string>
     <string name="ext_available">Có sẵn</string>
     <string name="untrusted_extension">Tiện ích mở rộng không đáng tin cậy</string>
-    <string name="untrusted_extension_message">Tiện ích mở rộng này được đăng ký bằng chứng chỉ không đáng tin cậy và không thể kích hoạt.
-\n
-\nMột tiện ích mở rộng độc hại có thể đọc được bất kỳ thông tin đăng nhập được lưu trữ nào của Tachiyomi hoặc tự ý thay đổi mã nguồn.
-\n
+    <string name="untrusted_extension_message">Tiện ích bổ sung này được đăng ký bằng chứng chỉ không đáng tin cậy và chưa được kích hoạt. 
+\n 
+\nMột tiện ích bổ sung độc hại có thể đọc được bất kỳ thông tin đăng nhập được lưu trữ nào của Tachiyomi hoặc tự ý thay đổi mã nguồn. 
+\n 
 \nBạn sẽ chấp nhận những rủi ro khi tin tưởng chứng chỉ này.</string>
     <string name="ext_version_info">Phiên bản: %1$s</string>
     <string name="ext_language_info">Ngôn ngữ: %1$s</string>
-    <string name="ext_empty_preferences">Không có tùy chọn để sửa chữa cho tiện ích mở rộng này</string>
+    <string name="ext_empty_preferences">Không có tùy chọn để sửa chữa cho tiện ích bổ sung này</string>
     <string name="pref_double_tap_anim_speed">Double tap tốc độ hình ảnh động</string>
     <string name="pref_crop_borders">Cắt viền</string>
     <string name="pref_read_with_volume_keys_inverted">Đảo ngược phím âm lượng</string>
@@ -431,23 +367,18 @@
     <string name="pref_create_backup_summ">Có thể sử dụng để khôi phục thư viện hiện tại</string>
     <string name="pref_restore_backup">Khôi phục sao lưu</string>
     <string name="pref_restore_backup_summ">Khôi phục thư viện từ tập tin sao lưu</string>
-    <string name="pref_backup_directory">Thư mục sao lưu</string>
+    <string name="pref_backup_directory">Đường dẫn sao lưu</string>
     <string name="pref_backup_service_category">Dịch vụ</string>
     <string name="pref_backup_interval">Lịch sao lưu</string>
     <string name="pref_backup_slots">Sao lưu tự động tối đa</string>
-    <string name="dialog_restoring_backup">Khôi phục sao lưu
-\n%1$s đã thêm vào thư viện</string>
     <string name="source_not_found">Không tìm thấy nguồn</string>
-    <string name="dialog_restoring_source_not_found">Khôi phục sao lưu
-\n%1$s không tìm thấy nguồn</string>
     <string name="backup_created">Sao lưu đã được tạo</string>
     <string name="restore_completed">Khôi phục hoàn tất</string>
-    <string name="error_opening_log">Không thể mở nhật ký</string>
     <string name="restore_completed_content">Khôi phục được %1$s.
 \n%2$s lỗi đã được tìm thấy.</string>
-    <string name="backup_restore_content">Khôi phục sử dụng nguồn để lấy dữ liệu, yêu cầu sử dụng mạng
-\nHãy đảm bảo rằng bạn đã đăng nhập đúng cách vào các nguồn trước khi khôi phục.</string>
-    <string name="file_saved">Tập tin được lưu tới %1$s</string>
+    <string name="backup_restore_content">Khôi phục yêu cầu sử dụng mạng để truy cập các nguồn truyện và nguồn theo dõi để lấy dữ liệu.
+\n
+\nHãy đảm bảo rằng bạn đã cài đặt và đăng nhập vào các nguồn truyện và nguồn theo dõi trước khi khôi phục.</string>
     <string name="backup_choice">Bạn có muốn sao lưu không\?</string>
     <string name="restoring_backup">Khôi phục sao lưu</string>
     <string name="creating_backup">Đang tạo bản sao lưu</string>
@@ -455,10 +386,9 @@
     <string name="pref_refresh_library_tracking_summary">Cập nhật trạng thái, điểm số và chương cuối đã đọc từ dịch vụ theo dõi</string>
     <string name="local_source_badge">Địa phương</string>
     <string name="also_delete_chapters">Đồng thời xóa các chương đã tải</string>
-    <string name="source_search_options">Bộ lọc tìm kiếm</string>
     <string name="local_source">Truyện tranh địa phương</string>
     <string name="other_source">Khác</string>
-    <string name="invalid_combination">Mặc định không thể chọn với các danh mục khác</string>
+    <string name="invalid_combination">Danh mục mặc định không thể chọn với các danh mục khác</string>
     <string name="added_to_library">Truyện này đã được thêm vào thư viện</string>
     <string name="action_global_search_hint">Tìm kiếm toàn cầu…</string>
     <string name="latest">Mới nhất</string>
@@ -466,21 +396,17 @@
     <string name="manga_info_full_title_label">Tiêu đề</string>
     <string name="manga_added_library">Đã thêm vào thư viện</string>
     <string name="manga_removed_library">Đã xóa khỏi thư viện</string>
-    <string name="manga_info_last_chapter_label">Chương cuối cùng</string>
-    <string name="manga_info_latest_data_label">Đã cập nhật</string>
-    <string name="shortcut_created">Phím tắt đã được thêm vào màn hình chính.</string>
     <string name="delete_downloads_for_manga">Muốn xóa các chương đã tải\?</string>
     <string name="copied_to_clipboard">%1$s được sao chép từ bộ nhớ đệm</string>
     <string name="source_not_installed">Nguồn truyện không thể cài đặt: %1$s</string>
     <string name="custom_download">Tùy chỉnh số lượng cùng tải</string>
-    <string name="custom_hint">tổng cộng</string>
-    <string name="download_custom">Tùy chỉnh tải về</string>
+    <string name="download_custom">Tùy chỉnh</string>
     <string name="repeating">Đọc lại</string>
     <string name="track_status">Trạng thái</string>
     <string name="track_start_date">Đã bắt đầu</string>
     <string name="track_type">Loại</string>
     <string name="track_author">Tác giả</string>
-    <string name="url_not_set">Đường dẫn truyện chưa được đặt, vui lòng nhấn vào tiêu đề và chọn lại truyện một lần nữa</string>
+    <string name="url_not_set">Đường dẫn truyện chưa được thiết lập, vui lòng nhấn vào tiêu đề và chọn lại truyện một lần nữa</string>
     <string name="transition_finished">Đã đọc xong:</string>
     <string name="transition_current">Đang đọc:</string>
     <string name="transition_next">Chương kế:</string>
@@ -494,10 +420,104 @@
     <string name="select">Chọn</string>
     <string name="migrate">Di chuyển</string>
     <string name="copy">Sao chép</string>
-    <string name="migrating">Đang di chuyển…</string>
-    <string name="notification_new_chapters_text">Dành cho %1$d tiêu đề</string>
     <string name="information_empty_category">Không có danh mục. Nhấn vào dấu cộng để tạo một nhóm từ thư viện.</string>
     <string name="channel_common">Thường gặp</string>
     <string name="channel_library">Thư viện</string>
     <string name="channel_downloader">Trình tải xuống</string>
+    <string name="pref_read_with_long_tap">Nhấn giữ mở hộp thoại</string>
+    <string name="action_open_in_web_view">Mở bằng WebView</string>
+    <string name="pref_true_color">Màu 32-bit</string>
+    <string name="pref_skip_read_chapters">Bỏ qua chap đã đọc</string>
+    <string name="pref_color_filter_mode">Chế độ hòa trộn bộ lọc màu</string>
+    <string name="filter_mode_default">Mặc định</string>
+    <string name="filter_mode_overlay">Phủ lên</string>
+    <string name="filter_mode_multiply">Nhân</string>
+    <string name="label_help">Trợ giúp</string>
+    <string name="pref_library_update_prioritization">Thứ tự ưu tiên cập nhật</string>
+    <string name="no_results_found">Không tìm thấy kết quả nào</string>
+    <string name="migration_selection_prompt">Chọn 1 nguồn để di chuyển từ</string>
+    <string name="channel_ext_updates">Cập nhật tiện ích bổ sung</string>
+    <string name="information_webview_outdated">Vui lòng cập nhật WebView để tương thích tốt hơn</string>
+    <string name="information_cloudflare_bypass_failure">Bỏ qua Cloudflare thất bại</string>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="other">Có %d bản cập nhật của các tiện ích bổ sung</item>
+    </plurals>
+    <string name="notification_chapters_single">Chương %1$s</string>
+    <plurals name="notification_chapters_generic">
+        <item quantity="other">%1$d chương mới</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="other">Cho %d tiêu đề</item>
+    </plurals>
+    <string name="notification_check_updates">Kiểm tra các chương cập nhật mới</string>
+    <string name="updating_library">Đang cập nhật thư viện</string>
+    <string name="want_to_read">Sẽ đọc</string>
+    <string name="paused">Đã tạm ngưng</string>
+    <string name="currently_reading">Đang đọc</string>
+    <string name="invalid_download_dir">Đường dẫn tải xuống không hợp lệ</string>
+    <string name="http_error_hint">Kiểm tra trang web bằng WebView</string>
+    <string name="logout_success">Bạn đã đăng xuất</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="logout_title">Đăng xuất khỏi %1$s\?</string>
+    <string name="email">Địa chỉ email</string>
+    <string name="changelog">Thay đổi</string>
+    <string name="notices">Thông báo</string>
+    <string name="battery_optimization_disabled">Tối ưu pin đã được tắt</string>
+    <string name="pref_disable_battery_optimization_summary">Giúp cập nhật và sao lưu thư viện nền</string>
+    <string name="pref_disable_battery_optimization">Tắt tối ưu pin</string>
+    <string name="pref_category_reading">Đang đọc</string>
+    <string name="pref_always_show_chapter_transition">Luôn hiển thị chuyển tiếp chương</string>
+    <string name="pref_skip_filtered_chapters">Bỏ qua các chương đã lọc</string>
+    <string name="filter_mode_screen">Màn hình</string>
+    <string name="pref_cutout_short">Hiển thị nội dung ở phần rìa</string>
+    <string name="pref_enable_automatic_extension_updates">Kiểm tra cập nhật của các tiện ích bổ sung</string>
+    <string name="obsolete_extension_message">Tiện ích bổ sung này không còn tồn tại.</string>
+    <string name="ext_obsolete">Lỗi thời</string>
+    <string name="ext_updates_pending">Cập nhật đang chờ</string>
+    <string name="pref_category_library_categories">Thể loại</string>
+    <string name="pref_category_library_update">Cập nhật</string>
+    <string name="pref_category_display">Hiển thị</string>
+    <string name="hide_notification_content">Ẩn nội dung thông báo</string>
+    <string name="secure_screen_summary">Ẩn nội dung khi chuyển đổi ứng dụng và chặn chụp ảnh màn hình</string>
+    <string name="secure_screen">Bảo vệ màn hình</string>
+    <plurals name="lock_after_mins">
+        <item quantity="other">Sau %1$s phút</item>
+    </plurals>
+    <string name="lock_never">Không bao giờ</string>
+    <string name="lock_always">Luôn luôn</string>
+    <string name="lock_when_idle">Khoá khi rảnh rỗi</string>
+    <string name="lock_with_biometrics">Khoá sinh trắc học</string>
+    <string name="pref_category_security">Bảo mật</string>
+    <string name="pref_manage_notifications">Quản lý thông báo</string>
+    <string name="pref_date_format">Định dạng ngày</string>
+    <string name="theme_dark_amoled">AMOLED đen</string>
+    <string name="theme_dark_blue">Xanh đen</string>
+    <string name="theme_dark_default">Mặc định</string>
+    <string name="pref_theme_dark">Giao diện tối</string>
+    <string name="theme_light_blue">Xanh trắng</string>
+    <string name="theme_light_default">Mặc định</string>
+    <string name="pref_theme_light">Giao diện sáng</string>
+    <string name="theme_system">Theo hệ thống</string>
+    <string name="theme_dark">Tối</string>
+    <string name="theme_light">Sáng</string>
+    <string name="pref_theme_mode">Chủ đề</string>
+    <string name="pref_category_library">Thư viện</string>
+    <string name="action_webview_refresh">Làm mới</string>
+    <string name="action_webview_forward">Chuyển tới trước</string>
+    <string name="action_webview_back">Trở lại</string>
+    <string name="action_move_to_bottom">Di chuyển xuống dưới</string>
+    <string name="action_move_to_top">Di chuyển lên đầu</string>
+    <string name="action_oldest">Cũ nhất</string>
+    <string name="action_newest">Mới nhất</string>
+    <string name="action_reorganize_by">Sắp xếp lại</string>
+    <string name="action_cancel_all">Huỷ bỏ tất cả</string>
+    <string name="action_hide">Ẩn</string>
+    <string name="action_view_chapters">Xem các chương</string>
+    <string name="action_select_inverse">Đảo ngược lựa chọn</string>
+    <string name="action_sort_latest_chapter">Chương mới nhất</string>
+    <string name="action_sort_last_checked">Lần kiểm tra gần nhất</string>
+    <string name="action_menu">Menu</string>
+    <string name="unlock_app">Mở Khoá Tachiyomi</string>
+    <string name="label_sources">Nguồn</string>
+    <string name="label_more">Thêm</string>
 </resources>

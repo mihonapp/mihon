@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.download
 
+import android.view.MenuItem
 import eu.davidea.flexibleadapter.FlexibleAdapter
 
 /**
@@ -7,18 +8,19 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
  *
  * @param context the context of the fragment containing this adapter.
  */
-class DownloadAdapter(controller: DownloadController) : FlexibleAdapter<DownloadItem>(null, controller,
-    true) {
+class DownloadAdapter(controller: DownloadController) : FlexibleAdapter<DownloadItem>(
+    null,
+    controller,
+    true
+) {
 
     /**
      * Listener called when an item of the list is released.
      */
-    val onItemReleaseListener: OnItemReleaseListener = controller
+    val downloadItemListener: DownloadItemListener = controller
 
-    interface OnItemReleaseListener {
-        /**
-         * Called when an item of the list is released.
-         */
+    interface DownloadItemListener {
         fun onItemReleased(position: Int)
+        fun onMenuItemClick(position: Int, menuItem: MenuItem)
     }
 }

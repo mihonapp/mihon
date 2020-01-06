@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?attr/listPreferredItemHeightSmall"
-    android:paddingLeft="?attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?attr/listPreferredItemPaddingRight"
+    android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:focusable="true">
+    android:baselineAligned="false"
+    android:focusable="true"
+    android:paddingStart="?attr/listPreferredItemPaddingStart"
+    android:paddingEnd="?attr/listPreferredItemPaddingEnd">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nav_view_item_wrapper"
+        style="@style/Theme.Widget.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical|start">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nav_view_item"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:maxLines="1"
-            android:inputType="text"
+            android:layout_height="wrap_content"
             android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     </com.google.android.material.textfield.TextInputLayout>

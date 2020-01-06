@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <cache-path name="cache_files" path="."/>
-    <external-path name="ext_files" path="." />
-    <external-cache-path name="ext_cache_files" path="."/>
+    <cache-path
+        name="cache_files"
+        path="." />
+    <external-path
+        name="ext_files"
+        path="." />
+    <external-cache-path
+        name="ext_cache_files"
+        path="." />
     <!--suppress AndroidElementNotAllowed -->
-    <root-path name="ext_storage" path="/storage/"/>
+    <root-path
+        name="ext_storage"
+        path="/storage/" />
 </paths>

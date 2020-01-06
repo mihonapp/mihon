@@ -1,44 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_component_lists_single_line_with_avatar_height"
-    android:background="?attr/selectable_list_drawable">
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/material_component_lists_single_line_with_avatar_height"
-        android:layout_height="@dimen/material_component_lists_single_line_with_avatar_height"
-        android:clickable="true"
-        android:paddingLeft="@dimen/material_component_lists_icon_left_padding"
-        android:paddingStart="@dimen/material_component_lists_icon_left_padding"
-        android:paddingRight="0dp"
-        android:paddingEnd="0dp"
-        tools:src="@mipmap/ic_launcher_round"/>
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/material_component_lists_text_left_padding"
-        android:layout_marginStart="@dimen/material_component_lists_text_left_padding"
-        android:layout_marginRight="@dimen/material_component_lists_single_line_with_avatar_height"
-        android:layout_marginEnd="@dimen/material_component_lists_single_line_with_avatar_height"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:layout_gravity="center_vertical"
-        android:textAppearance="@style/TextAppearance.Regular.SubHeading"
-        tools:text="Title"/>
+    android:background="@drawable/list_item_selector">
 
     <ImageView
         android:id="@+id/reorder"
         android:layout_width="@dimen/material_component_lists_single_line_with_avatar_height"
         android:layout_height="@dimen/material_component_lists_single_line_with_avatar_height"
         android:scaleType="center"
-        android:layout_gravity="end"
         app:srcCompat="@drawable/ic_reorder_grey_24dp"
-        android:tint="?android:attr/textColorPrimary"/>
+        app:tint="?android:attr/textColorPrimary"
+        tools:ignore="ContentDescription" />
 
-</FrameLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_label_24dp"
+        app:tint="?android:attr/textColorPrimary"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.Regular.SubHeading"
+        tools:text="Title" />
+
+</LinearLayout>

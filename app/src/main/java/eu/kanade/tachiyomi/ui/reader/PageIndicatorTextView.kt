@@ -2,37 +2,24 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ScaleXSpan
 import android.util.AttributeSet
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
+import eu.kanade.tachiyomi.widget.OutlineSpan
 
 /**
  * Page indicator found at the bottom of the reader
  */
 class PageIndicatorTextView(
-        context: Context,
-        attrs: AttributeSet? = null
+    context: Context,
+    attrs: AttributeSet? = null
 ) : AppCompatTextView(context, attrs) {
 
-    private val fillColor = Color.rgb(235, 235, 235)
-    private val strokeColor = Color.rgb(45, 45, 45)
-
-    override fun onDraw(canvas: Canvas) {
-        textColorField.set(this, strokeColor)
-        paint.strokeWidth = 4f
-        paint.style = Paint.Style.STROKE
-        super.onDraw(canvas)
-
-        textColorField.set(this, fillColor)
-        paint.strokeWidth = 0f
-        paint.style = Paint.Style.FILL
-        super.onDraw(canvas)
+    init {
+        setTextColor(fillColor)
     }
 
     @SuppressLint("SetTextI18n")
@@ -42,20 +29,26 @@ class PageIndicatorTextView(
         val currText = " $text "
 
         // Also add a bit of spacing between each character, as the stroke overlaps them
-        val finalText = SpannableString(currText.asIterable().joinToString("\u00A0"))
+        val finalText = SpannableString(currText.asIterable().joinToString("\u00A0")).apply {
+            // Apply text outline
+            setSpan(spanOutline, 1, length - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        for (i in 1..finalText.lastIndex step 2) {
-            finalText.setSpan(ScaleXSpan(0.1f), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            for (i in 1..lastIndex step 2) {
+                setSpan(ScaleXSpan(0.2f), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
         }
 
-        super.setText(finalText, TextView.BufferType.SPANNABLE)
+        super.setText(finalText, BufferType.SPANNABLE)
     }
 
     private companion object {
-        // We need to use reflection to set the text color instead of using [setTextColor],
-        // otherwise the view is invalidated inside [onDraw] and there's an infinite loop
-        val textColorField = TextView::class.java.getDeclaredField("mCurTextColor").apply {
-            isAccessible = true
-        }!!
+        private val fillColor = Color.rgb(235, 235, 235)
+        private val strokeColor = Color.rgb(45, 45, 45)
+
+        // A span object with text outlining properties
+        val spanOutline = OutlineSpan(
+            strokeColor = strokeColor,
+            strokeWidth = 4f
+        )
     }
 }

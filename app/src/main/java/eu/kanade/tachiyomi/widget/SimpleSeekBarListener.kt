@@ -1,4 +1,5 @@
 package eu.kanade.tachiyomi.widget
+
 import android.widget.SeekBar
 
 open class SimpleSeekBarListener : SeekBar.OnSeekBarChangeListener {

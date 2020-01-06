@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,9 +12,9 @@
         android:layout_height="match_parent"
         android:background="?attr/colorAccent"
         android:elevation="5dp"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <eu.kanade.tachiyomi.widget.ThemedSwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,30 +25,37 @@
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:clipToPadding="false"
             android:descendantFocusability="blocksDescendants"
-            tools:listitem="@layout/chapters_item">
+            android:paddingBottom="@dimen/fab_list_padding"
+            tools:listitem="@layout/chapters_item" />
 
-        </androidx.recyclerview.widget.RecyclerView>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </eu.kanade.tachiyomi.widget.ThemedSwipeRefreshLayout>
 
     <eu.davidea.fastscroller.FastScroller
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fast_scroller"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="end"
+        android:layout_gravity="right"
+        android:layoutDirection="ltr"
         app:fastScrollerBubbleEnabled="false"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <eu.kanade.tachiyomi.widget.ActionToolbar
+        android:id="@+id/action_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_dodgeInsetEdges="bottom" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
         style="@style/Theme.Widget.FAB"
-        app:layout_anchor="@id/recycler"
-        app:srcCompat="@drawable/ic_play_arrow_white_24dp"/>
+        android:text="@string/action_resume"
+        app:icon="@drawable/ic_play_arrow_24dp"
+        app:layout_anchor="@id/recycler" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

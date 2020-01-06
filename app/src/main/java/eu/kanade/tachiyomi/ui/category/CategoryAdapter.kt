@@ -8,7 +8,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
  * @param controller The containing controller.
  */
 class CategoryAdapter(controller: CategoryController) :
-        FlexibleAdapter<CategoryItem>(null, controller, true) {
+    FlexibleAdapter<CategoryItem>(null, controller, true) {
 
     /**
      * Listener called when an item of the list is released.
@@ -21,13 +21,6 @@ class CategoryAdapter(controller: CategoryController) :
     override fun clearSelection() {
         super.clearSelection()
         (0 until itemCount).forEach { getItem(it)?.isSelected = false }
-    }
-
-    /**
-     * Clears the active selections from the model.
-     */
-    fun clearModelSelection() {
-        selectedPositions.forEach { getItem(it)?.isSelected = false }
     }
 
     /**
@@ -46,5 +39,4 @@ class CategoryAdapter(controller: CategoryController) :
          */
         fun onItemReleased(position: Int)
     }
-
 }

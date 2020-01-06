@@ -4,19 +4,28 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import androidx.annotation.StringRes
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.dd.processbutton.iml.ActionProcessButton
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.widget.SimpleTextWatcher
-import kotlinx.android.synthetic.main.pref_account_login.view.*
+import kotlinx.android.synthetic.main.pref_account_login.view.login
+import kotlinx.android.synthetic.main.pref_account_login.view.password
+import kotlinx.android.synthetic.main.pref_account_login.view.show_password
+import kotlinx.android.synthetic.main.pref_account_login.view.username_label
 import rx.Subscription
 import uy.kohesive.injekt.injectLazy
 
-abstract class LoginDialogPreference(bundle: Bundle? = null) : DialogController(bundle) {
+abstract class LoginDialogPreference(
+    @StringRes private val titleRes: Int? = null,
+    private val titleFormatArgs: Any? = null,
+    @StringRes private val usernameLabelRes: Int? = null,
+    bundle: Bundle? = null
+) : DialogController(bundle) {
 
     var v: View? = null
         private set
@@ -25,11 +34,14 @@ abstract class LoginDialogPreference(bundle: Bundle? = null) : DialogController(
 
     var requestSubscription: Subscription? = null
 
-    override fun onCreateDialog(savedState: Bundle?): Dialog {
-        val dialog = MaterialDialog.Builder(activity!!)
-                .customView(R.layout.pref_account_login, false)
-                .negativeText(android.R.string.cancel)
-                .build()
+    override fun onCreateDialog(savedViewState: Bundle?): Dialog {
+        var dialog = MaterialDialog(activity!!)
+            .customView(R.layout.pref_account_login)
+            .negativeButton(android.R.string.cancel)
+
+        if (titleRes != null) {
+            dialog = dialog.title(text = activity!!.getString(titleRes, titleFormatArgs))
+        }
 
         onViewCreated(dialog.view)
 
@@ -39,28 +51,22 @@ abstract class LoginDialogPreference(bundle: Bundle? = null) : DialogController(
     fun onViewCreated(view: View) {
         v = view.apply {
             show_password.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked)
+                if (isChecked) {
                     password.transformationMethod = null
-                else
+                } else {
                     password.transformationMethod = PasswordTransformationMethod()
+                }
+            }
+
+            if (usernameLabelRes != null) {
+                username_label.hint = context.getString(usernameLabelRes)
             }
 
             login.setMode(ActionProcessButton.Mode.ENDLESS)
             login.setOnClickListener { checkLogin() }
 
             setCredentialsOnView(this)
-
-            show_password.isEnabled = password.text.isNullOrEmpty()
-
-            password.addTextChangedListener(object : SimpleTextWatcher() {
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (s.isEmpty()) {
-                        show_password.isEnabled = true
-                    }
-                }
-            })
         }
-
     }
 
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
@@ -77,5 +83,4 @@ abstract class LoginDialogPreference(bundle: Bundle? = null) : DialogController(
     protected abstract fun checkLogin()
 
     protected abstract fun setCredentialsOnView(view: View)
-
 }

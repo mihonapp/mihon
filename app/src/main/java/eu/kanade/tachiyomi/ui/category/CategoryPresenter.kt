@@ -13,7 +13,7 @@ import uy.kohesive.injekt.api.get
  * Presenter of [CategoryController]. Used to manage the categories of the library.
  */
 class CategoryPresenter(
-        private val db: DatabaseHelper = Injekt.get()
+    private val db: DatabaseHelper = Injekt.get()
 ) : BasePresenter<CategoryController>() {
 
     /**
@@ -30,10 +30,10 @@ class CategoryPresenter(
         super.onCreate(savedState)
 
         db.getCategories().asRxObservable()
-                .doOnNext { categories = it }
-                .map { it.map(::CategoryItem) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeLatestCache(CategoryController::setCategories)
+            .doOnNext { categories = it }
+            .map { it.map(::CategoryItem) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeLatestCache(CategoryController::setCategories)
     }
 
     /**
@@ -100,8 +100,7 @@ class CategoryPresenter(
     /**
      * Returns true if a category with the given name already exists.
      */
-    fun categoryExists(name: String): Boolean {
+    private fun categoryExists(name: String): Boolean {
         return categories.any { it.name.equals(name, true) }
     }
-
 }

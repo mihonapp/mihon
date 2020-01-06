@@ -7,10 +7,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import java.text.DecimalFormat
 import rx.Completable
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
-import java.text.DecimalFormat
 
 class Kitsu(private val context: Context, id: Int) : TrackService(id) {
 
@@ -33,28 +33,26 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
 
     private val api by lazy { KitsuApi(client, interceptor) }
 
-    override fun getLogo(): Int {
-        return R.drawable.kitsu
-    }
+    override fun getLogo() = R.drawable.ic_tracker_kitsu
 
-    override fun getLogoColor(): Int {
-        return Color.rgb(51, 37, 50)
-    }
+    override fun getLogoColor() = Color.rgb(51, 37, 50)
 
     override fun getStatusList(): List<Int> {
-        return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
+        return listOf(READING, PLAN_TO_READ, COMPLETED, ON_HOLD, DROPPED)
     }
 
     override fun getStatus(status: Int): String = with(context) {
         when (status) {
-            READING -> getString(R.string.reading)
+            READING -> getString(R.string.currently_reading)
+            PLAN_TO_READ -> getString(R.string.want_to_read)
             COMPLETED -> getString(R.string.completed)
             ON_HOLD -> getString(R.string.on_hold)
             DROPPED -> getString(R.string.dropped)
-            PLAN_TO_READ -> getString(R.string.plan_to_read)
             else -> ""
         }
     }
+
+    override fun getCompletionStatus(): Int = COMPLETED
 
     override fun getScoreList(): List<String> {
         val df = DecimalFormat("0.#")
@@ -75,26 +73,22 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override fun update(track: Track): Observable<Track> {
-        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
-            track.status = COMPLETED
-        }
-
         return api.updateLibManga(track)
     }
 
     override fun bind(track: Track): Observable<Track> {
         return api.findLibManga(track, getUserId())
-                .flatMap { remoteTrack ->
-                    if (remoteTrack != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        track.media_id = remoteTrack.media_id
-                        update(track)
-                    } else {
-                        track.score = DEFAULT_SCORE
-                        track.status = DEFAULT_STATUS
-                        add(track)
-                    }
+            .flatMap { remoteTrack ->
+                if (remoteTrack != null) {
+                    track.copyPersonalFrom(remoteTrack)
+                    track.media_id = remoteTrack.media_id
+                    update(track)
+                } else {
+                    track.score = DEFAULT_SCORE
+                    track.status = DEFAULT_STATUS
+                    add(track)
                 }
+            }
     }
 
     override fun search(query: String): Observable<List<TrackSearch>> {
@@ -103,20 +97,20 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
 
     override fun refresh(track: Track): Observable<Track> {
         return api.getLibManga(track)
-                .map { remoteTrack ->
-                    track.copyPersonalFrom(remoteTrack)
-                    track.total_chapters = remoteTrack.total_chapters
-                    track
-                }
+            .map { remoteTrack ->
+                track.copyPersonalFrom(remoteTrack)
+                track.total_chapters = remoteTrack.total_chapters
+                track
+            }
     }
 
     override fun login(username: String, password: String): Completable {
         return api.login(username, password)
-                .doOnNext { interceptor.newAuth(it) }
-                .flatMap { api.getCurrentUser() }
-                .doOnNext { userId -> saveCredentials(username, userId) }
-                .doOnError { logout() }
-                .toCompletable()
+            .doOnNext { interceptor.newAuth(it) }
+            .flatMap { api.getCurrentUser() }
+            .doOnNext { userId -> saveCredentials(username, userId) }
+            .doOnError { logout() }
+            .toCompletable()
     }
 
     override fun logout() {
@@ -140,5 +134,4 @@ class Kitsu(private val context: Context, id: Int) : TrackService(id) {
             null
         }
     }
-
 }

@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.manga.chapter
 import android.app.Dialog
 import android.os.Bundle
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.bluelinelabs.conductor.Controller
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -23,10 +24,12 @@ class DownloadCustomChaptersDialog<T> : DialogController
      * Initialize dialog.
      * @param maxChapters maximal number of chapters that user can download.
      */
-    constructor(target: T, maxChapters: Int) : super(Bundle().apply {
-        // Add maximum number of chapters to download value to bundle.
-        putInt(KEY_ITEM_MAX, maxChapters)
-    }) {
+    constructor(target: T, maxChapters: Int) : super(
+        Bundle().apply {
+            // Add maximum number of chapters to download value to bundle.
+            putInt(KEY_ITEM_MAX, maxChapters)
+        }
+    ) {
         targetController = target
         this.maxChapters = maxChapters
     }
@@ -55,15 +58,13 @@ class DownloadCustomChaptersDialog<T> : DialogController
 
         // Build dialog.
         // when positive dialog is pressed call custom listener.
-        return MaterialDialog.Builder(activity)
-                .title(R.string.custom_download)
-                .customView(view, true)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .onPositive { _, _ ->
-                    (targetController as? Listener)?.downloadCustomChapters(view.amount)
-                }
-                .build()
+        return MaterialDialog(activity)
+            .title(R.string.custom_download)
+            .customView(view = view, scrollable = true)
+            .positiveButton(android.R.string.ok) {
+                (targetController as? Listener)?.downloadCustomChapters(view.amount)
+            }
+            .negativeButton(android.R.string.cancel)
     }
 
     interface Listener {

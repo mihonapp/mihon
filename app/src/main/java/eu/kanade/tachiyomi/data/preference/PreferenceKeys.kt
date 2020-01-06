@@ -5,7 +5,13 @@ package eu.kanade.tachiyomi.data.preference
  */
 object PreferenceKeys {
 
-    const val theme = "pref_theme_key"
+    const val themeMode = "pref_theme_mode_key"
+
+    const val themeLight = "pref_theme_light_key"
+
+    const val themeDark = "pref_theme_dark_key"
+
+    const val confirmExit = "pref_confirm_exit"
 
     const val rotation = "pref_rotation_type_key"
 
@@ -18,6 +24,8 @@ object PreferenceKeys {
     const val trueColor = "pref_true_color_key"
 
     const val fullscreen = "fullscreen"
+
+    const val cutoutShort = "cutout_short"
 
     const val keepScreenOn = "pref_keep_screen_on_key"
 
@@ -51,6 +59,8 @@ object PreferenceKeys {
 
     const val readWithVolumeKeysInverted = "reader_volume_keys_inverted"
 
+    const val webtoonSidePadding = "webtoon_side_padding"
+
     const val portraitColumns = "pref_library_columns_portrait_key"
 
     const val landscapeColumns = "pref_library_columns_landscape_key"
@@ -66,6 +76,8 @@ object PreferenceKeys {
     const val catalogueAsList = "pref_display_catalogue_as_list"
 
     const val enabledLanguages = "source_languages"
+
+    const val sourcesSort = "sources_sort"
 
     const val backupDirectory = "backup_directory"
 
@@ -89,6 +101,8 @@ object PreferenceKeys {
 
     const val libraryUpdatePrioritization = "library_update_prioritization"
 
+    const val downloadedOnly = "pref_downloaded_only"
+
     const val filterDownloaded = "pref_filter_downloaded_key"
 
     const val filterUnread = "pref_filter_unread_key"
@@ -97,9 +111,19 @@ object PreferenceKeys {
 
     const val librarySortingMode = "library_sorting_mode"
 
-    const val automaticUpdates = "automatic_updates"
+    const val automaticExtUpdates = "automatic_ext_updates"
 
     const val startScreen = "start_screen"
+
+    const val useBiometricLock = "use_biometric_lock"
+
+    const val lockAppAfter = "lock_app_after"
+
+    const val lastAppUnlock = "last_app_unlock"
+
+    const val secureScreen = "secure_screen"
+
+    const val hideNotificationContent = "hide_notification_content"
 
     const val downloadNew = "download_new"
 
@@ -109,19 +133,21 @@ object PreferenceKeys {
 
     const val lang = "app_language"
 
+    const val dateFormat = "app_date_format"
+
     const val defaultCategory = "default_category"
 
     const val skipRead = "skip_read"
 
+    const val skipFiltered = "skip_filtered"
+
     const val downloadBadge = "display_download_badge"
 
-    @Deprecated("Use the preferences of the source")
-    fun sourceUsername(sourceId: Long) = "pref_source_username_$sourceId"
+    const val skipPreMigration = "skip_pre_migration"
 
-    @Deprecated("Use the preferences of the source")
-    fun sourcePassword(sourceId: Long) = "pref_source_password_$sourceId"
+    const val alwaysShowChapterTransition = "always_show_chapter_transition"
 
-    fun sourceSharedPref(sourceId: Long) = "source_$sourceId"
+    const val searchPinnedSourcesOnly = "search_pinned_sources_only"
 
     fun trackUsername(syncId: Int) = "pref_mangasync_username_$syncId"
 
@@ -177,13 +203,9 @@ object PreferenceKeys {
 
     const val eh_preserveReadingPosition = "eh_preserve_reading_position"
 
-    const val eh_incogWebview = "eh_incognito_webview"
-
     const val eh_autoSolveCaptchas = "eh_autosolve_captchas"
 
     const val eh_delegateSources = "eh_delegate_sources"
-
-    const val eh_showTransitionPages = "eh_show_transition_pages"
 
     const val eh_logLevel = "eh_log_level"
 
@@ -198,4 +220,8 @@ object PreferenceKeys {
     const val eh_aggressivePageLoading = "eh_aggressive_page_loading"
 
     const val eh_hl_useHighQualityThumbs = "eh_hl_hq_thumbs"
+
+    const val eh_library_rounded_corners = "eh_library_corners"
+
+    const val eh_preload_size = "eh_preload_size"
 }

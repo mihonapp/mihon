@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_bookmark"
+        android:icon="@drawable/ic_bookmark_border_24dp"
+        android:title="@string/action_bookmark"
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_remove_bookmark"
+        android:icon="@drawable/ic_bookmark_24dp"
+        android:title="@string/action_remove_bookmark"
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_custom_filter"
-        android:icon="@drawable/ic_brightness_4_white_24dp"
+        android:icon="@drawable/ic_brightness_4_24dp"
         android:title="@string/custom_filter"
+        app:iconTint="?attr/colorOnPrimary"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings_white_24dp"
+        android:icon="@drawable/ic_settings_24dp"
         android:title="@string/label_settings"
-        app:showAsAction="ifRoom"
-        />
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="ifRoom" />
 
 </menu>

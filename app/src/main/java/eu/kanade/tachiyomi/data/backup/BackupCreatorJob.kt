@@ -1,42 +1,51 @@
 package eu.kanade.tachiyomi.data.backup
 
+import android.content.Context
 import android.net.Uri
-import com.evernote.android.job.Job
-import com.evernote.android.job.JobManager
-import com.evernote.android.job.JobRequest
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
+import java.util.concurrent.TimeUnit
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class BackupCreatorJob : Job() {
+class BackupCreatorJob(private val context: Context, workerParams: WorkerParameters) :
+    Worker(context, workerParams) {
 
-    override fun onRunJob(params: Params): Result {
+    override fun doWork(): Result {
         val preferences = Injekt.get<PreferencesHelper>()
         val backupManager = BackupManager(context)
-        val uri = Uri.parse(preferences.backupsDirectory().getOrDefault())
+        val uri = Uri.parse(preferences.backupsDirectory().get())
         val flags = BackupCreateService.BACKUP_ALL
-        backupManager.createBackup(uri, flags, true)
-        return Result.SUCCESS
+        return try {
+            backupManager.createBackup(uri, flags, true)
+            Result.success()
+        } catch (e: Exception) {
+            Result.failure()
+        }
     }
 
     companion object {
-        const val TAG = "BackupCreator"
+        private const val TAG = "BackupCreator"
 
-        fun setupTask(prefInterval: Int? = null) {
+        fun setupTask(context: Context, prefInterval: Int? = null) {
             val preferences = Injekt.get<PreferencesHelper>()
-            val interval = prefInterval ?: preferences.backupInterval().getOrDefault()
+            val interval = prefInterval ?: preferences.backupInterval().get()
             if (interval > 0) {
-                JobRequest.Builder(TAG)
-                        .setPeriodic(interval * 60 * 60 * 1000L, 10 * 60 * 1000)
-                        .setUpdateCurrent(true)
-                        .build()
-                        .schedule()
-            }
-        }
+                val request = PeriodicWorkRequestBuilder<BackupCreatorJob>(
+                    interval.toLong(), TimeUnit.HOURS,
+                    10, TimeUnit.MINUTES
+                )
+                    .addTag(TAG)
+                    .build()
 
-        fun cancelTask() {
-            JobManager.instance().cancelAllForTag(TAG)
+                WorkManager.getInstance(context).enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
+            } else {
+                WorkManager.getInstance(context).cancelAllWorkByTag(TAG)
+            }
         }
     }
 }

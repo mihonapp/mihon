@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.cache
 
 import android.content.Context
-import eu.kanade.tachiyomi.util.DiskUtil
+import eu.kanade.tachiyomi.util.storage.DiskUtil
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -20,8 +20,8 @@ class CoverCache(private val context: Context) {
     /**
      * Cache directory used for cache management.
      */
-    private val cacheDir = context.getExternalFilesDir("covers") ?:
-            File(context.filesDir, "covers").also { it.mkdirs() }
+    private val cacheDir = context.getExternalFilesDir("covers")
+        ?: File(context.filesDir, "covers").also { it.mkdirs() }
 
     /**
      * Returns the cover from cache.
@@ -37,7 +37,7 @@ class CoverCache(private val context: Context) {
      * Copy the given stream to this cache.
      *
      * @param thumbnailUrl url of the thumbnail.
-     * @param inputStream  the stream to copy.
+     * @param inputStream the stream to copy.
      * @throws IOException if there's any error.
      */
     @Throws(IOException::class)
@@ -56,12 +56,12 @@ class CoverCache(private val context: Context) {
      */
     fun deleteFromCache(thumbnailUrl: String?): Boolean {
         // Check if url is empty.
-        if (thumbnailUrl.isNullOrEmpty())
+        if (thumbnailUrl.isNullOrEmpty()) {
             return false
+        }
 
         // Remove file.
         val file = getCoverFile(thumbnailUrl)
         return file.exists() && file.delete()
     }
-
 }

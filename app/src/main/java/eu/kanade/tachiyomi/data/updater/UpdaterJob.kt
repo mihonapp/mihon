@@ -1,44 +1,54 @@
 package eu.kanade.tachiyomi.data.updater
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import com.evernote.android.job.Job
-import com.evernote.android.job.JobManager
-import com.evernote.android.job.JobRequest
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.util.notificationManager
+import eu.kanade.tachiyomi.util.system.notificationManager
+import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.runBlocking
 
-class UpdaterJob : Job() {
+class UpdaterJob(private val context: Context, workerParams: WorkerParameters) :
+    Worker(context, workerParams) {
 
-    override fun onRunJob(params: Params): Result {
-        return UpdateChecker.getUpdateChecker()
-                .checkForUpdate()
-                .map { result ->
-                    if (result is UpdateResult.NewUpdate<*>) {
-                        val url = result.release.downloadLink
+    override fun doWork(): Result {
+        return runBlocking {
+            try {
+                val result = UpdateChecker.getUpdateChecker().checkForUpdate()
 
-                        val intent = Intent(context, UpdaterService::class.java).apply {
-                            putExtra(UpdaterService.EXTRA_DOWNLOAD_URL, url)
-                        }
+                if (result is UpdateResult.NewUpdate<*>) {
+                    val url = result.release.downloadLink
 
-                        NotificationCompat.Builder(context, Notifications.CHANNEL_COMMON).update {
-                            setContentTitle(context.getString(R.string.app_name))
-                            setContentText(context.getString(R.string.update_check_notification_update_available))
-                            setSmallIcon(android.R.drawable.stat_sys_download_done)
-                            // Download action
-                            addAction(android.R.drawable.stat_sys_download_done,
-                                    context.getString(R.string.action_download),
-                                    PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
-                        }
+                    val intent = Intent(context, UpdaterService::class.java).apply {
+                        putExtra(UpdaterService.EXTRA_DOWNLOAD_URL, url)
                     }
-                    Result.SUCCESS
+
+                    NotificationCompat.Builder(context, Notifications.CHANNEL_COMMON).update {
+                        setContentTitle(context.getString(R.string.app_name))
+                        setContentText(context.getString(R.string.update_check_notification_update_available))
+                        setSmallIcon(android.R.drawable.stat_sys_download_done)
+                        // Download action
+                        addAction(
+                            android.R.drawable.stat_sys_download_done,
+                            context.getString(R.string.action_download),
+                            PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                        )
+                    }
                 }
-                .onErrorReturn { Result.FAILURE }
-                // Sadly, the task needs to be synchronous.
-                .toBlocking()
-                .single()
+                Result.success()
+            } catch (e: Exception) {
+                Result.failure()
+            }
+        }
     }
 
     fun NotificationCompat.Builder.update(block: NotificationCompat.Builder.() -> Unit) {
@@ -47,21 +57,26 @@ class UpdaterJob : Job() {
     }
 
     companion object {
-        const val TAG = "UpdateChecker"
+        private const val TAG = "UpdateChecker"
 
-        fun setupTask() {
-            JobRequest.Builder(TAG)
-                    .setPeriodic(24 * 60 * 60 * 1000, 60 * 60 * 1000)
-                    .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
-                    .setRequirementsEnforced(true)
-                    .setUpdateCurrent(true)
-                    .build()
-                    .schedule()
+        fun setupTask(context: Context) {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val request = PeriodicWorkRequestBuilder<UpdaterJob>(
+                3, TimeUnit.DAYS,
+                3, TimeUnit.HOURS
+            )
+                .addTag(TAG)
+                .setConstraints(constraints)
+                .build()
+
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
         }
 
-        fun cancelTask() {
-            JobManager.instance().cancelAllForTag(TAG)
+        fun cancelTask(context: Context) {
+            WorkManager.getInstance(context).cancelAllWorkByTag(TAG)
         }
     }
-
 }

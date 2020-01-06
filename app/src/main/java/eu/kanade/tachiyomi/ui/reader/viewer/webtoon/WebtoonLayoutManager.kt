@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
  * This layout manager uses the same package name as the support library in order to use a package
  * protected method.
  */
-class WebtoonLayoutManager(activity: ReaderActivity) : androidx.recyclerview.widget.LinearLayoutManager(activity) {
+class WebtoonLayoutManager(activity: ReaderActivity) : LinearLayoutManager(activity) {
 
     /**
      * Extra layout space is set to half the screen height.
@@ -27,7 +27,7 @@ class WebtoonLayoutManager(activity: ReaderActivity) : androidx.recyclerview.wid
     /**
      * Returns the custom extra layout space.
      */
-    override fun getExtraLayoutSpace(state: androidx.recyclerview.widget.RecyclerView.State): Int {
+    override fun getExtraLayoutSpace(state: RecyclerView.State): Int {
         return extraLayoutSpace
     }
 
@@ -36,20 +36,20 @@ class WebtoonLayoutManager(activity: ReaderActivity) : androidx.recyclerview.wid
      */
     fun findLastEndVisibleItemPosition(): Int {
         ensureLayoutState()
-        @androidx.recyclerview.widget.ViewBoundsCheck.ViewBounds val preferredBoundsFlag =
-                (androidx.recyclerview.widget.ViewBoundsCheck.FLAG_CVE_LT_PVE or androidx.recyclerview.widget.ViewBoundsCheck.FLAG_CVE_EQ_PVE)
+        @ViewBoundsCheck.ViewBounds val preferredBoundsFlag =
+            (ViewBoundsCheck.FLAG_CVE_LT_PVE or ViewBoundsCheck.FLAG_CVE_EQ_PVE)
 
         val fromIndex = childCount - 1
         val toIndex = -1
 
-        val child = if (mOrientation == HORIZONTAL)
+        val child = if (mOrientation == HORIZONTAL) {
             mHorizontalBoundCheck
                 .findOneViewWithinBoundFlags(fromIndex, toIndex, preferredBoundsFlag, 0)
-        else
+        } else {
             mVerticalBoundCheck
                 .findOneViewWithinBoundFlags(fromIndex, toIndex, preferredBoundsFlag, 0)
+        }
 
         return if (child == null) NO_POSITION else getPosition(child)
     }
-
 }

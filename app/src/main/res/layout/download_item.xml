@@ -1,60 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingRight="@dimen/material_layout_keylines_screen_edge_margin"
     android:paddingTop="@dimen/material_component_lists_padding_above_list">
+
+    <ImageView
+        android:id="@+id/reorder"
+        android:layout_width="@dimen/material_component_lists_single_line_with_avatar_height"
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="start"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_reorder_grey_24dp"
+        app:tint="?android:attr/textColorPrimary" />
+
+    <TextView
+        android:id="@+id/manga_full_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_toEndOf="@id/reorder"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.Regular.Body1"
+        app:layout_constraintEnd_toStartOf="@+id/download_progress_text"
+        app:layout_constraintStart_toEndOf="@+id/reorder"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Manga title" />
+
+    <TextView
+        android:id="@+id/chapter_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@id/reorder"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.Regular.Caption"
+        app:layout_constraintEnd_toStartOf="@+id/menu"
+        app:layout_constraintStart_toStartOf="@+id/manga_full_title"
+        app:layout_constraintTop_toBottomOf="@+id/manga_full_title"
+        tools:text="Chapter Title" />
+
+    <ProgressBar
+        android:id="@+id/download_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/menu"
+        app:layout_constraintStart_toEndOf="@+id/reorder"
+        app:layout_constraintTop_toBottomOf="@+id/chapter_title" />
 
     <TextView
         android:id="@+id/download_progress_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@id/manga_full_title"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.Regular.Caption.Hint"
-        tools:text="(0/10)"/>
+        app:layout_constraintBottom_toBottomOf="@+id/manga_full_title"
+        app:layout_constraintEnd_toStartOf="@+id/menu"
+        app:layout_constraintTop_toTopOf="@+id/manga_full_title"
+        tools:text="(0/10)" />
 
-    <TextView
-        android:id="@+id/manga_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/download_progress_text"
-        android:layout_alignParentLeft="true"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_marginStart="@dimen/material_component_lists_single_line_with_avatar_height"
-        android:textAppearance="@style/TextAppearance.Regular.Body1"
-        tools:text="Manga title"/>
-
-    <TextView
-        android:id="@+id/chapter_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/manga_title"
-        android:maxLines="1"
-        android:ellipsize="end"
-        tools:text="Chapter Title"
-        android:layout_marginStart="@dimen/material_component_lists_single_line_with_avatar_height"
-        android:textAppearance="@style/TextAppearance.Regular.Caption"/>
-
-    <ProgressBar
-        android:id="@+id/download_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/chapter_title"
-        android:layout_marginStart="@dimen/material_component_lists_single_line_with_avatar_height"
-        style="?android:attr/progressBarStyleHorizontal"/>
-
-    <ImageView
-        android:id="@+id/reorder"
-        android:layout_width="@dimen/material_component_lists_single_line_with_avatar_height"
+    <ImageButton
+        android:id="@+id/menu"
+        android:layout_width="44dp"
         android:layout_height="@dimen/material_component_lists_single_line_with_avatar_height"
-        android:layout_gravity="start"
-        android:scaleType="center"
-        android:tint="?android:attr/textColorPrimary"
-        app:srcCompat="@drawable/ic_reorder_grey_24dp" />
+        android:layout_toEndOf="@id/download_progress_text"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/action_menu"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_more_vert_24dp"
+        app:tint="?attr/colorOnBackground" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

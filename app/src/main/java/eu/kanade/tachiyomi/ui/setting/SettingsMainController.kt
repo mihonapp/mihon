@@ -1,24 +1,40 @@
 package eu.kanade.tachiyomi.ui.setting
 
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
-import eu.kanade.tachiyomi.util.getResourceColor
+import eu.kanade.tachiyomi.util.preference.iconRes
+import eu.kanade.tachiyomi.util.preference.iconTint
+import eu.kanade.tachiyomi.util.preference.onClick
+import eu.kanade.tachiyomi.util.preference.preference
+import eu.kanade.tachiyomi.util.preference.titleRes
+import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.openInBrowser
 
 class SettingsMainController : SettingsController() {
+
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.label_settings
 
         val tintColor = context.getResourceColor(R.attr.colorAccent)
 
         preference {
-            iconRes = R.drawable.ic_tune_black_24dp
+            iconRes = R.drawable.ic_tune_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_general
             onClick { navigateTo(SettingsGeneralController()) }
         }
         preference {
-            iconRes = R.drawable.ic_chrome_reader_mode_black_24dp
+            iconRes = R.drawable.ic_collections_bookmark_24dp
+            iconTint = tintColor
+            titleRes = R.string.pref_category_library
+            onClick { navigateTo(SettingsLibraryController()) }
+        }
+        preference {
+            iconRes = R.drawable.ic_chrome_reader_mode_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_reader
             onClick { navigateTo(SettingsReaderController()) }
@@ -30,16 +46,28 @@ class SettingsMainController : SettingsController() {
             onClick { navigateTo(SettingsDownloadController()) }
         }
         preference {
-            iconRes = R.drawable.ic_sync_black_24dp
+            iconRes = R.drawable.ic_sync_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_tracking
             onClick { navigateTo(SettingsTrackingController()) }
         }
         preference {
-            iconRes = R.drawable.ic_backup_black_24dp
+            iconRes = R.drawable.ic_explore_24dp
+            iconTint = tintColor
+            titleRes = R.string.browse
+            onClick { navigateTo(SettingsBrowseController()) }
+        }
+        preference {
+            iconRes = R.drawable.ic_backup_24dp
             iconTint = tintColor
             titleRes = R.string.backup
             onClick { navigateTo(SettingsBackupController()) }
+        }
+        preference {
+            iconRes = R.drawable.ic_security_24dp
+            iconTint = tintColor
+            titleRes = R.string.pref_category_security
+            onClick { navigateTo(SettingsSecurityController()) }
         }
         preference {
             iconRes = R.drawable.eh_ic_ehlogo_red_24dp
@@ -60,13 +88,13 @@ class SettingsMainController : SettingsController() {
             onClick { navigateTo(SettingsHlController()) }
         }
         preference {
-            iconRes = R.drawable.ic_code_black_24dp
+            iconRes = R.drawable.ic_code_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_advanced
             onClick { navigateTo(SettingsAdvancedController()) }
         }
         preference {
-            iconRes = R.drawable.ic_help_black_24dp
+            iconRes = R.drawable.ic_info_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_about
             onClick { navigateTo(SettingsAboutController()) }

@@ -9,15 +9,15 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.util.DiskUtil
-import eu.kanade.tachiyomi.util.saveTo
+import eu.kanade.tachiyomi.util.storage.DiskUtil
+import eu.kanade.tachiyomi.util.storage.saveTo
+import java.io.File
+import java.io.IOException
 import okhttp3.Response
 import okio.buffer
 import okio.sink
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
-import java.io.File
-import java.io.IOException
 
 /**
  * Class used to create chapter cache
@@ -29,6 +29,7 @@ import java.io.IOException
  * @constructor creates an instance of the chapter cache.
  */
 class ChapterCache(private val context: Context) {
+
     companion object {
         /** Name of cache directory.  */
         const val PARAMETER_CACHE_DIRECTORY = "chapter_disk_cache"
@@ -96,16 +97,17 @@ class ChapterCache(private val context: Context) {
      */
     fun removeFileFromCache(file: String): Boolean {
         // Make sure we don't delete the journal file (keeps track of cache).
-        if (file == "journal" || file.startsWith("journal."))
+        if (file == "journal" || file.startsWith("journal.")) {
             return false
+        }
 
-        try {
+        return try {
             // Remove the extension from the file to get the key of the cache
             val key = file.substringBeforeLast(".")
             // Remove file from cache.
-            return diskCache.remove(key)
+            diskCache.remove(key)
         } catch (e: Exception) {
-            return false
+            false
         }
     }
 
@@ -154,7 +156,6 @@ class ChapterCache(private val context: Context) {
             diskCache.flush()
             editor.commit()
             editor.abortUnlessCommitted()
-
         } catch (e: Exception) {
             // Ignore.
         } finally {
@@ -169,10 +170,10 @@ class ChapterCache(private val context: Context) {
      * @return true if in cache otherwise false.
      */
     fun isImageInCache(imageUrl: String): Boolean {
-        try {
-            return diskCache.get(DiskUtil.hashKeyForDisk(imageUrl)) != null
+        return try {
+            diskCache.get(DiskUtil.hashKeyForDisk(imageUrl)) != null
         } catch (e: IOException) {
-            return false
+            false
         }
     }
 
@@ -190,7 +191,7 @@ class ChapterCache(private val context: Context) {
 
     /**
      * Add image to cache.
-     * 
+     *
      * @param imageUrl url of image.
      * @param response http response from page.
      * @throws IOException image error.
@@ -220,4 +221,3 @@ class ChapterCache(private val context: Context) {
         return "${chapter.manga_id}${chapter.url}"
     }
 }
-

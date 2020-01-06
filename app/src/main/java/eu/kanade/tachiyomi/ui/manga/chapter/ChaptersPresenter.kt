@@ -9,17 +9,12 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.util.isNullOrUnsubscribed
-import eu.kanade.tachiyomi.util.syncChaptersWithSource
-import exh.EH_SOURCE_ID
-import exh.EXH_SOURCE_ID
-import exh.debug.DebugToggles
-import exh.eh.EHentaiUpdateHelper
-import exh.isEhBasedSource
+import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
+import java.util.Date
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -28,20 +23,19 @@ import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.util.Date
 
 /**
  * Presenter of [ChaptersController].
  */
 class ChaptersPresenter(
-        val manga: Manga,
-        val source: Source,
-        private val chapterCountRelay: BehaviorRelay<Float>,
-        private val lastUpdateRelay: BehaviorRelay<Date>,
-        private val mangaFavoriteRelay: PublishRelay<Boolean>,
-        val preferences: PreferencesHelper = Injekt.get(),
-        private val db: DatabaseHelper = Injekt.get(),
-        private val downloadManager: DownloadManager = Injekt.get()
+    val manga: Manga,
+    val source: Source,
+    private val chapterCountRelay: BehaviorRelay<Float>,
+    private val lastUpdateRelay: BehaviorRelay<Date>,
+    private val mangaFavoriteRelay: PublishRelay<Boolean>,
+    val preferences: PreferencesHelper = Injekt.get(),
+    private val db: DatabaseHelper = Injekt.get(),
+    private val downloadManager: DownloadManager = Injekt.get()
 ) : BasePresenter<ChaptersController>() {
 
     /**
@@ -54,7 +48,7 @@ class ChaptersPresenter(
      * Subject of list of chapters to allow updating the view without going to DB.
      */
     val chaptersRelay: PublishRelay<List<ChapterItem>>
-            by lazy { PublishRelay.create<List<ChapterItem>>() }
+    by lazy { PublishRelay.create<List<ChapterItem>>() }
 
     /**
      * Whether the chapter list has been requested to the source.
@@ -85,13 +79,13 @@ class ChaptersPresenter(
 
         // Prepare the relay.
         chaptersRelay.flatMap { applyChapterFilters(it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeLatestCache(ChaptersController::onNextChapters,
-                        { _, error -> Timber.e(error) })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeLatestCache(ChaptersController::onNextChapters) { _, error -> Timber.e(error) }
 
         // Add the subscription that retrieves the chapters from the database, keeps subscribed to
         // changes, and sends the list of chapters to the relay.
-        add(db.getChapters(manga).asRxObservable()
+        add(
+            db.getChapters(manga).asRxObservable()
                 .map { chapters ->
                     // Convert every chapter to a model.
                     chapters.map { it.toModel() }
@@ -107,13 +101,18 @@ class ChaptersPresenter(
                     observeDownloads()
 
                     // Emit the number of chapters to the info tab.
-                    chapterCountRelay.call(chapters.maxBy { it.chapter_number }?.chapter_number
-                            ?: 0f)
+                    chapterCountRelay.call(
+                        chapters.maxBy { it.chapter_number }?.chapter_number
+                            ?: 0f
+                    )
 
                     // Emit the upload date of the most recent chapter
-                    lastUpdateRelay.call(Date(chapters.maxBy { it.date_upload }?.date_upload
-                            ?: 0))
-
+                    lastUpdateRelay.call(
+                        Date(
+                            chapters.maxBy { it.date_upload }?.date_upload
+                                ?: 0
+                        )
+                    )
                     // EXH -->
                     if(chapters.isNotEmpty()
                             && (source.id == EXH_SOURCE_ID || source.id == EH_SOURCE_ID)
@@ -135,17 +134,20 @@ class ChaptersPresenter(
                     }
                     // EXH <--
                 }
-                .subscribe { chaptersRelay.call(it) })
+                }
+                .subscribe { chaptersRelay.call(it) }
+        )
     }
 
     private fun observeDownloads() {
         observeDownloadsSubscription?.let { remove(it) }
         observeDownloadsSubscription = downloadManager.queue.getStatusObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter { download -> download.manga.id == manga.id }
-                .doOnNext { onDownloadStatusChange(it) }
-                .subscribeLatestCache(ChaptersController::onChapterStatusChange,
-                        { _, error -> Timber.e(error) })
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter { download -> download.manga.id == manga.id }
+            .doOnNext { onDownloadStatusChange(it) }
+            .subscribeLatestCache(ChaptersController::onChapterStatusChange) { _, error ->
+                Timber.e(error)
+            }
     }
 
     /**
@@ -186,12 +188,15 @@ class ChaptersPresenter(
 
         if (!fetchChaptersSubscription.isNullOrUnsubscribed()) return
         fetchChaptersSubscription = Observable.defer { source.fetchChapterList(manga) }
-                .subscribeOn(Schedulers.io())
-                .map { syncChaptersWithSource(db, it, manga, source) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeFirst({ view, _ ->
+            .subscribeOn(Schedulers.io())
+            .map { syncChaptersWithSource(db, it, manga, source) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeFirst(
+                { view, _ ->
                     view.onFetchChaptersDone()
-                }, ChaptersController::onFetchChaptersError)
+                },
+                ChaptersController::onFetchChaptersError
+            )
     }
 
     /**
@@ -210,8 +215,7 @@ class ChaptersPresenter(
         var observable = Observable.from(chapters).subscribeOn(Schedulers.io())
         if (onlyUnread()) {
             observable = observable.filter { !it.read }
-        }
-        else if (onlyRead()) {
+        } else if (onlyRead()) {
             observable = observable.filter { it.read }
         }
         if (onlyDownloaded()) {
@@ -249,8 +253,9 @@ class ChaptersPresenter(
         }
 
         // Force UI update if downloaded filter active and download finished.
-        if (onlyDownloaded() && download.status == Download.DOWNLOADED)
+        if (onlyDownloaded() && download.status == Download.DOWNLOADED) {
             refreshChapters()
+        }
     }
 
     /**
@@ -267,18 +272,18 @@ class ChaptersPresenter(
      */
     fun markChaptersRead(selectedChapters: List<ChapterItem>, read: Boolean) {
         Observable.from(selectedChapters)
-                .doOnNext { chapter ->
-                    chapter.read = read
-                    if (!read /* --> EH */ && !preferences
+            .doOnNext { chapter ->
+                chapter.read = read
+                if (!read /* --> EH */ && !preferences
                                     .eh_preserveReadingPosition()
                                     .getOrDefault() /* <-- EH */) {
-                        chapter.last_page_read = 0
-                    }
+                    chapter.last_page_read = 0
                 }
-                .toList()
-                .flatMap { db.updateChaptersProgress(it).asRxObservable() }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            }
+            .toList()
+            .flatMap { db.updateChaptersProgress(it).asRxObservable() }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     /**
@@ -295,13 +300,13 @@ class ChaptersPresenter(
      */
     fun bookmarkChapters(selectedChapters: List<ChapterItem>, bookmarked: Boolean) {
         Observable.from(selectedChapters)
-                .doOnNext { chapter ->
-                    chapter.bookmark = bookmarked
-                }
-                .toList()
-                .flatMap { db.updateChaptersProgress(it).asRxObservable() }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            .doOnNext { chapter ->
+                chapter.bookmark = bookmarked
+            }
+            .toList()
+            .flatMap { db.updateChaptersProgress(it).asRxObservable() }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     /**
@@ -310,13 +315,16 @@ class ChaptersPresenter(
      */
     fun deleteChapters(chapters: List<ChapterItem>) {
         Observable.just(chapters)
-                .doOnNext { deleteChaptersInternal(chapters) }
-                .doOnNext { if (onlyDownloaded()) refreshChapters() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeFirst({ view, _ ->
-                    view.onChaptersDeleted()
-                }, ChaptersController::onChaptersDeletedError)
+            .doOnNext { deleteChaptersInternal(chapters) }
+            .doOnNext { if (onlyDownloaded()) refreshChapters() }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeFirst(
+                { view, _ ->
+                    view.onChaptersDeleted(chapters)
+                },
+                ChaptersController::onChaptersDeletedError
+            )
     }
 
     /**
@@ -418,10 +426,17 @@ class ChaptersPresenter(
     }
 
     /**
+     * Whether downloaded only mode is enabled.
+     */
+    fun forceDownloaded(): Boolean {
+        return manga.favorite && preferences.downloadedOnly().get()
+    }
+
+    /**
      * Whether the display only downloaded filter is enabled.
      */
     fun onlyDownloaded(): Boolean {
-        return manga.downloadedFilter == Manga.SHOW_DOWNLOADED
+        return forceDownloaded() || manga.downloadedFilter == Manga.SHOW_DOWNLOADED
     }
 
     /**

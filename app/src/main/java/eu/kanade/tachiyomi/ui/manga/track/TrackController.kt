@@ -5,20 +5,25 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.jakewharton.rxbinding.support.v4.widget.refreshes
+import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.databinding.TrackControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.track_controller.*
+import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 
-class TrackController : NucleusController<TrackPresenter>(),
-        TrackAdapter.OnClickListener,
-        SetTrackStatusDialog.Listener,
-        SetTrackChaptersDialog.Listener,
-        SetTrackScoreDialog.Listener {
+class TrackController :
+    NucleusController<TrackControllerBinding, TrackPresenter>(),
+    TrackAdapter.OnClickListener,
+    SetTrackStatusDialog.Listener,
+    SetTrackChaptersDialog.Listener,
+    SetTrackScoreDialog.Listener,
+    SetTrackReadingDatesDialog.Listener {
 
     private var adapter: TrackAdapter? = null
 
@@ -33,19 +38,20 @@ class TrackController : NucleusController<TrackPresenter>(),
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.track_controller, container, false)
+        binding = TrackControllerBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
         adapter = TrackAdapter(this)
-        with(view) {
-            track_recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-            track_recycler.adapter = adapter
-            swipe_refresh.isEnabled = false
-            swipe_refresh.refreshes().subscribeUntilDestroy { presenter.refresh() }
-        }
+        binding.trackRecycler.layoutManager = LinearLayoutManager(view.context)
+        binding.trackRecycler.adapter = adapter
+        binding.swipeRefresh.isEnabled = false
+        binding.swipeRefresh.refreshes()
+            .onEach { presenter.refresh() }
+            .launchIn(scope)
     }
 
     override fun onDestroyView(view: View) {
@@ -56,7 +62,7 @@ class TrackController : NucleusController<TrackPresenter>(),
     fun onNextTrackings(trackings: List<TrackItem>) {
         val atLeastOneLink = trackings.any { it.track != null }
         adapter?.items = trackings
-        swipe_refresh?.isEnabled = atLeastOneLink
+        binding.swipeRefresh.isEnabled = atLeastOneLink
         (parentController as? MangaController)?.setTrackingIcon(atLeastOneLink)
     }
 
@@ -75,25 +81,25 @@ class TrackController : NucleusController<TrackPresenter>(),
     }
 
     fun onRefreshDone() {
-        swipe_refresh?.isRefreshing = false
+        binding.swipeRefresh.isRefreshing = false
     }
 
     fun onRefreshError(error: Throwable) {
-        swipe_refresh?.isRefreshing = false
+        binding.swipeRefresh.isRefreshing = false
         activity?.toast(error.message)
     }
 
     override fun onLogoClick(position: Int) {
         val track = adapter?.getItem(position)?.track ?: return
 
-        if (track.tracking_url.isNullOrBlank()) {
+        if (track.tracking_url.isBlank()) {
             activity?.toast(R.string.url_not_set)
         } else {
             activity?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(track.tracking_url)))
         }
     }
 
-    override fun onTitleClick(position: Int) {
+    override fun onSetClick(position: Int) {
         val item = adapter?.getItem(position) ?: return
         TrackSearchDialog(this, item.service).showDialog(router, TAG_SEARCH_CONTROLLER)
     }
@@ -119,23 +125,44 @@ class TrackController : NucleusController<TrackPresenter>(),
         SetTrackScoreDialog(this, item).showDialog(router)
     }
 
+    override fun onStartDateClick(position: Int) {
+        val item = adapter?.getItem(position) ?: return
+        if (item.track == null) return
+
+        SetTrackReadingDatesDialog(this, SetTrackReadingDatesDialog.ReadingDate.Start, item).showDialog(router)
+    }
+
+    override fun onFinishDateClick(position: Int) {
+        val item = adapter?.getItem(position) ?: return
+        if (item.track == null) return
+
+        SetTrackReadingDatesDialog(this, SetTrackReadingDatesDialog.ReadingDate.Finish, item).showDialog(router)
+    }
+
     override fun setStatus(item: TrackItem, selection: Int) {
         presenter.setStatus(item, selection)
-        swipe_refresh?.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
     }
 
     override fun setScore(item: TrackItem, score: Int) {
         presenter.setScore(item, score)
-        swipe_refresh?.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
     }
 
     override fun setChaptersRead(item: TrackItem, chaptersRead: Int) {
         presenter.setLastChapterRead(item, chaptersRead)
-        swipe_refresh?.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
+    }
+
+    override fun setReadingDate(item: TrackItem, type: SetTrackReadingDatesDialog.ReadingDate, date: Long) {
+        when (type) {
+            SetTrackReadingDatesDialog.ReadingDate.Start -> presenter.setStartDate(item, date)
+            SetTrackReadingDatesDialog.ReadingDate.Finish -> presenter.setFinishDate(item, date)
+        }
+        binding.swipeRefresh.isRefreshing = true
     }
 
     private companion object {
         const val TAG_SEARCH_CONTROLLER = "track_search_controller"
     }
-
 }

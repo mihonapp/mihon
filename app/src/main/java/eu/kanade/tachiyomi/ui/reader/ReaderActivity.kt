@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -10,21 +11,26 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
+import androidx.core.view.ViewCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.elvishew.xlog.XLog
-import com.jakewharton.rxbinding.view.clicks
-import com.jakewharton.rxbinding.widget.checkedChanges
-import com.jakewharton.rxbinding.widget.textChanges
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.all.EHentai
@@ -37,40 +43,56 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
-import eu.kanade.tachiyomi.ui.reader.viewer.pager.*
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
-import eu.kanade.tachiyomi.util.*
+import eu.kanade.tachiyomi.util.lang.plusAssign
+import eu.kanade.tachiyomi.util.storage.getUriCompat
+import eu.kanade.tachiyomi.util.system.GLUtil
+import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.defaultBar
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.hideBar
+import eu.kanade.tachiyomi.util.view.isDefaultBar
+import eu.kanade.tachiyomi.util.view.showBar
+import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
-import kotlinx.android.synthetic.main.reader_activity.*
-import me.zhanghai.android.systemuihelper.SystemUiHelper
+import java.io.File
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
+import kotlin.math.roundToLong
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.observeOn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.sample
 import nucleus.factory.RequiresPresenter
+import reactivecircus.flowbinding.android.view.clicks
+import reactivecircus.flowbinding.android.widget.checkedChanges
+import reactivecircus.flowbinding.android.widget.textChanges
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.io.File
-import java.util.concurrent.TimeUnit
-import kotlin.math.roundToLong
 
 /**
  * Activity containing the reader of Tachiyomi. This activity is mostly a container of the
  * viewers, to which calls from the presenter or UI events are delegated.
  */
 @RequiresPresenter(ReaderPresenter::class)
-class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
+class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() {
 
-    /**
-     * Preferences helper.
-     */
     private val preferences by injectLazy<PreferencesHelper>()
 
     /**
      * The maximum bitmap size supported by the device.
      */
-    val maxBitmapSize by lazy { GLUtil.getMaxTextureSize() }
+    val maxBitmapSize by lazy { GLUtil.maxTextureSize }
 
     /**
      * Viewer used to display the pages (pager, webtoon, ...).
@@ -93,15 +115,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private val sourceManager: SourceManager by injectLazy()
     private val prefs: PreferencesHelper by injectLazy()
 
-    val showTransitionPages by lazy { prefs.eh_showTransitionPages().getOrDefault() }
-
     private val logger = XLog.tag("ReaderActivity")
     // <-- EH
-
-    /**
-     * System UI helper to hide status & navigation bar on all different API levels.
-     */
-    private var systemUi: SystemUiHelper? = null
 
     /**
      * Configuration at reader level, like background color or forced orientation.
@@ -120,42 +135,48 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         const val RIGHT_TO_LEFT = 2
         const val VERTICAL = 3
         const val WEBTOON = 4
+        const val VERTICAL_PLUS = 5
 
         fun newIntent(context: Context, manga: Manga, chapter: Chapter): Intent {
-            val intent = Intent(context, ReaderActivity::class.java)
-            intent.putExtra("manga", manga.id)
-            intent.putExtra("chapter", chapter.id)
-            return intent
+            return Intent(context, ReaderActivity::class.java).apply {
+                putExtra("manga", manga.id)
+                putExtra("chapter", chapter.id)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
         }
     }
 
     /**
      * Called when the activity is created. Initializes the presenter and configuration.
      */
-    override fun onCreate(savedState: Bundle?) {
-        setTheme(when (preferences.readerTheme().getOrDefault()) {
-            0 -> R.style.Theme_Reader_Light
-            else -> R.style.Theme_Reader
-        })
-        super.onCreate(savedState)
-        setContentView(R.layout.reader_activity)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(
+            when (preferences.readerTheme().get()) {
+                0 -> R.style.Theme_Reader_Light
+                2 -> R.style.Theme_Reader_Dark_Grey
+                else -> R.style.Theme_Reader_Dark
+            }
+        )
+        super.onCreate(savedInstanceState)
+
+        binding = ReaderActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (presenter.needsInit()) {
             val manga = intent.extras!!.getLong("manga", -1)
             val chapter = intent.extras!!.getLong("chapter", -1)
-
             if (manga == -1L || chapter == -1L) {
                 finish()
                 return
             }
-
+            NotificationReceiver.dismissNotification(this, manga.hashCode(), Notifications.ID_NEW_CHAPTERS)
             presenter.init(manga, chapter)
         }
 
-        if (savedState != null) {
-            menuVisible = savedState.getBoolean(::menuVisible.name)
+        if (savedInstanceState != null) {
+            menuVisible = savedInstanceState.getBoolean(::menuVisible.name)
             // --> EH
-            ehUtilsVisible = savedState.getBoolean(::ehUtilsVisible.name)
+            ehUtilsVisible = savedInstanceState.getBoolean(::ehUtilsVisible.name)
             // <-- EH
         }
 
@@ -165,31 +186,33 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     // --> EH
     private fun setEhUtilsVisibility(visible: Boolean) {
-        if(visible) {
-            eh_utils.visible()
-            expand_eh_button.setImageResource(R.drawable.ic_keyboard_arrow_up_white_32dp)
+        if (visible) {
+            binding.ehUtils.visible()
+            binding.expandEhButton.setImageResource(R.drawable.ic_keyboard_arrow_up_white_32dp)
         } else {
-            eh_utils.gone()
-            expand_eh_button.setImageResource(R.drawable.ic_keyboard_arrow_down_white_32dp)
+            binding.ehUtils.gone()
+            binding.expandEhButton.setImageResource(R.drawable.ic_keyboard_arrow_down_white_32dp)
         }
     }
+    // <-- EH
 
+    // --> EH
     private fun setupAutoscroll(interval: Float) {
         exhSubscriptions.remove(autoscrollSubscription)
         autoscrollSubscription = null
 
-        if(interval == -1f) return
+        if (interval == -1f) return
 
         val intervalMs = (interval * 1000).roundToLong()
         val sub = Observable.interval(intervalMs, intervalMs, TimeUnit.MILLISECONDS)
-                .onBackpressureDrop()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    viewer.let { v ->
-                        if(v is PagerViewer) v.moveToNext()
-                        else if(v is WebtoonViewer) v.scrollDown()
-                    }
+            .onBackpressureDrop()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                viewer.let { v ->
+                    if (v is PagerViewer) v.moveToNext()
+                    else if (v is WebtoonViewer) v.scrollDown()
                 }
+            }
 
         autoscrollSubscription = sub
         exhSubscriptions += sub
@@ -225,8 +248,17 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     }
 
     /**
+     * Set menu visibility again on activity resume to apply immersive mode again if needed.
+     * Helps with rotations.
+     */
+    override fun onResume() {
+        super.onResume()
+        setMenuVisibility(menuVisible, animate = false)
+    }
+
+    /**
      * Called when the window focus changes. It sets the menu visibility to the last known state
-     * to apply again System UI (for immersive mode).
+     * to apply immersive mode again if needed.
      */
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -240,6 +272,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.reader, menu)
+
+        val isChapterBookmarked = presenter?.getCurrentChapter()?.chapter?.bookmark ?: false
+        menu.findItem(R.id.action_bookmark).isVisible = !isChapterBookmarked
+        menu.findItem(R.id.action_remove_bookmark).isVisible = isChapterBookmarked
+
         return true
     }
 
@@ -249,11 +286,18 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_bookmark -> {
+                presenter.bookmarkCurrentChapter(true)
+                invalidateOptionsMenu()
+            }
+            R.id.action_remove_bookmark -> {
+                presenter.bookmarkCurrentChapter(false)
+                invalidateOptionsMenu()
+            }
             R.id.action_settings -> ReaderSettingsSheet(this).show()
             R.id.action_custom_filter -> ReaderColorFilterSheet(this).show()
-            else -> return super.onOptionsItemSelected(item)
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -287,113 +331,143 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      */
     private fun initializeMenu() {
         // Set toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.readerMenu) { _, insets ->
+            if (!window.isDefaultBar()) {
+                binding.readerMenu.setPadding(
+                    insets.systemWindowInsetLeft,
+                    insets.systemWindowInsetTop,
+                    insets.systemWindowInsetRight,
+                    insets.systemWindowInsetBottom
+                )
+            }
+            insets
+        }
+
         // Init listeners on bottom menu
-        page_seekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
+        binding.pageSeekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
             override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
                 if (viewer != null && fromUser) {
                     moveToPageIndex(value)
                 }
             }
         })
-        left_chapter.setOnClickListener {
+        binding.leftChapter.setOnClickListener {
             if (viewer != null) {
-                if (viewer is R2LPagerViewer)
+                if (viewer is R2LPagerViewer) {
                     loadNextChapter()
-                else
+                } else {
                     loadPreviousChapter()
+                }
             }
         }
-        right_chapter.setOnClickListener {
+        binding.rightChapter.setOnClickListener {
             if (viewer != null) {
-                if (viewer is R2LPagerViewer)
+                if (viewer is R2LPagerViewer) {
                     loadPreviousChapter()
-                else
+                } else {
                     loadNextChapter()
+                }
             }
         }
 
         // --> EH
-        exhSubscriptions += expand_eh_button.clicks().subscribe {
-            ehUtilsVisible = !ehUtilsVisible
-            setEhUtilsVisibility(ehUtilsVisible)
-        }
+        binding.expandEhButton.clicks()
+            .onEach {
+                ehUtilsVisible = !ehUtilsVisible
+                setEhUtilsVisibility(ehUtilsVisible)
+            }
+            .launchIn(scope)
 
-        eh_autoscroll_freq.setText(preferences.eh_utilAutoscrollInterval().getOrDefault().let {
-            if(it == -1f)
-                ""
-            else it.toString()
-        })
-
-        exhSubscriptions += eh_autoscroll.checkedChanges()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    setupAutoscroll(if(it)
-                        preferences.eh_utilAutoscrollInterval().getOrDefault()
-                    else -1f)
+        binding.ehAutoscrollFreq.setText(
+            preferences.eh_utilAutoscrollInterval().get().let {
+                if (it == -1f) {
+                    ""
+                } else {
+                    it.toString()
                 }
+            }
+        )
 
-        exhSubscriptions += eh_autoscroll_freq.textChanges()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    val parsed = it?.toString()?.toFloatOrNull()
-
-                    if (parsed == null || parsed <= 0 || parsed > 9999) {
-                        eh_autoscroll_freq.error = "Invalid frequency"
-                        preferences.eh_utilAutoscrollInterval().set(-1f)
-                        eh_autoscroll.isEnabled = false
-                        setupAutoscroll(-1f)
+        binding.ehAutoscroll.checkedChanges()
+            // .observeOn(AndroidSchedulers.mainThread())
+            .onEach {
+                setupAutoscroll(
+                    if (it) {
+                        preferences.eh_utilAutoscrollInterval().get()
                     } else {
-                        eh_autoscroll_freq.error = null
-                        preferences.eh_utilAutoscrollInterval().set(parsed)
-                        eh_autoscroll.isEnabled = true
-                        setupAutoscroll(if(eh_autoscroll.isChecked) parsed else -1f)
+                        -1f
                     }
+                )
+            }
+            .launchIn(scope)
+
+        binding.ehAutoscrollFreq.textChanges()
+            // .observeOn(AndroidSchedulers.mainThread())
+            .onEach {
+                val parsed = it.toString().toFloatOrNull()
+
+                if (parsed == null || parsed <= 0 || parsed > 9999) {
+                    binding.ehAutoscrollFreq.error = "Invalid frequency"
+                    preferences.eh_utilAutoscrollInterval().set(-1f)
+                    binding.ehAutoscroll.isEnabled = false
+                    setupAutoscroll(-1f)
+                } else {
+                    binding.ehAutoscrollFreq.error = null
+                    preferences.eh_utilAutoscrollInterval().set(parsed)
+                    binding.ehAutoscroll.isEnabled = true
+                    setupAutoscroll(if (binding.ehAutoscroll.isChecked) parsed else -1f)
                 }
+            }
+            .launchIn(scope)
 
-        exhSubscriptions += eh_autoscroll_help.clicks().subscribe {
-            MaterialDialog.Builder(this)
-                    .title("Autoscroll help")
-                    .content("Automatically scroll to the next page in the specified interval. Interval is specified in seconds.")
-                    .positiveText("Ok")
+        binding.ehAutoscrollHelp.clicks()
+            .onEach {
+                MaterialDialog(this)
+                    .title(R.string.eh_autoscroll_help)
+                    .message(R.string.eh_autoscroll_help_message)
+                    .positiveButton(android.R.string.ok)
                     .show()
-        }
+            }
+            .launchIn(scope)
 
-        exhSubscriptions += eh_retry_all.clicks().subscribe {
-            var retried = 0
+        binding.ehRetryAll.clicks()
+            .onEach {
+                var retried = 0
 
-            presenter.viewerChaptersRelay.value
+                presenter.viewerChaptersRelay.value
                     .currChapter
                     .pages
-                    ?.forEachIndexed { index, page ->
+                    ?.forEachIndexed { _, page ->
                         var shouldQueuePage = false
-                        if(page.status == Page.ERROR) {
+                        if (page.status == Page.ERROR) {
                             shouldQueuePage = true
-                        } else if(page.status == Page.LOAD_PAGE
-                                || page.status == Page.DOWNLOAD_IMAGE) {
-                            // Do nothing
-                        }
+                        } /*else if (page.status == Page.LOAD_PAGE ||
+                                    page.status == Page.DOWNLOAD_IMAGE) {
+                                // Do nothing
+                            }*/
 
-                        if(shouldQueuePage) {
+                        if (shouldQueuePage) {
                             page.status = Page.QUEUE
                         } else {
                             return@forEachIndexed
                         }
 
-                        //If we are using EHentai/ExHentai, get a new image URL
+                        // If we are using EHentai/ExHentai, get a new image URL
                         presenter.manga?.let { m ->
                             val src = sourceManager.get(m.source)
-                            if(src is EHentai)
+                            if (src is EHentai) {
                                 page.imageUrl = null
+                            }
                         }
 
                         val loader = page.chapter.pageLoader
-                        if(page.index == exh_currentPage()?.index && loader is HttpPageLoader) {
+                        if (page.index == exh_currentPage()?.index && loader is HttpPageLoader) {
                             loader.boostPage(page)
                         } else {
                             loader?.retryPage(page)
@@ -402,49 +476,56 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                         retried++
                     }
 
-            toast("Retrying $retried failed pages...")
-        }
+                toast("Retrying $retried failed pages...")
+            }
+            .launchIn(scope)
 
-        exhSubscriptions += eh_retry_all_help.clicks().subscribe {
-            MaterialDialog.Builder(this)
-                    .title("Retry all help")
-                    .content("Re-add all failed pages to the download queue.")
-                    .positiveText("Ok")
+        binding.ehRetryAllHelp.clicks()
+            .onEach {
+                MaterialDialog(this)
+                    .title(R.string.eh_retry_all_help)
+                    .message(R.string.eh_retry_all_help_message)
+                    .positiveButton(android.R.string.ok)
                     .show()
-        }
+            }
+            .launchIn(scope)
 
-        exhSubscriptions += eh_boost_page.clicks().subscribe {
-            viewer?.let { viewer ->
-                val curPage = exh_currentPage() ?: run {
-                    toast("This page cannot be boosted (invalid page)!")
-                    return@let
-                }
+        binding.ehBoostPage.clicks()
+            .onEach {
+                viewer?.let { _ ->
+                    val curPage = exh_currentPage() ?: run {
+                        toast("This page cannot be boosted (invalid page)!")
+                        return@let
+                    }
 
-                if(curPage.status == Page.ERROR) {
-                    toast("Page failed to load, press the retry button instead!")
-                } else if(curPage.status == Page.LOAD_PAGE || curPage.status == Page.DOWNLOAD_IMAGE) {
-                    toast("This page is already downloading!")
-                } else if(curPage.status == Page.READY) {
-                    toast("This page has already been downloaded!")
-                } else {
-                    val loader = (presenter.viewerChaptersRelay.value.currChapter.pageLoader as? HttpPageLoader)
-                    if(loader != null) {
-                        loader.boostPage(curPage)
-                        toast("Boosted current page!")
+                    if (curPage.status == Page.ERROR) {
+                        toast("Page failed to load, press the retry button instead!")
+                    } else if (curPage.status == Page.LOAD_PAGE || curPage.status == Page.DOWNLOAD_IMAGE) {
+                        toast("This page is already downloading!")
+                    } else if (curPage.status == Page.READY) {
+                        toast("This page has already been downloaded!")
                     } else {
-                        toast("This page cannot be boosted (invalid page loader)!")
+                        val loader = (presenter.viewerChaptersRelay.value.currChapter.pageLoader as? HttpPageLoader)
+                        if (loader != null) {
+                            loader.boostPage(curPage)
+                            toast("Boosted current page!")
+                        } else {
+                            toast("This page cannot be boosted (invalid page loader)!")
+                        }
                     }
                 }
             }
-        }
+            .launchIn(scope)
 
-        exhSubscriptions += eh_boost_page_help.clicks().subscribe {
-            MaterialDialog.Builder(this)
-                    .title("Boost page help")
-                    .content("Normally the downloader can only download a specific amount of pages at the same time. This means you can be waiting for a page to download but the downloader will not start downloading the page until it has a free download slot. Pressing 'Boost page' will force the downloader to begin downloading the current page, regardless of whether or not there is an available slot.")
-                    .positiveText("Ok")
+        binding.ehBoostPageHelp.clicks()
+            .onEach {
+                MaterialDialog(this)
+                    .title(R.string.eh_boost_page_help)
+                    .message(R.string.eh_boost_page_help_message)
+                    .positiveButton(android.R.string.ok)
                     .show()
-        }
+            }
+            .launchIn(scope)
         // <-- EH
 
         // Set initial visibility
@@ -457,8 +538,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
     // EXH -->
     private fun exh_currentPage(): ReaderPage? {
-        val currentPage = (((viewer as? PagerViewer)?.currentPage
-                ?: (viewer as? WebtoonViewer)?.currentPage) as? ReaderPage)?.index
+        val currentPage = (
+            (
+                (viewer as? PagerViewer)?.currentPage
+                    ?: (viewer as? WebtoonViewer)?.currentPage
+                ) as? ReaderPage
+            )?.index
         return currentPage?.let { presenter.viewerChaptersRelay.value.currChapter.pages?.getOrNull(it) }
     }
     // EXH <--
@@ -470,45 +555,66 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
         menuVisible = visible
         if (visible) {
-            systemUi?.show()
-            reader_menu.visibility = View.VISIBLE
+            if (preferences.fullscreen().get()) {
+                window.showBar()
+            } else {
+                resetDefaultMenuAndBar()
+            }
+            binding.readerMenu.visible()
 
             if (animate) {
                 val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
                 toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
                     override fun onAnimationStart(animation: Animation) {
                         // Fix status bar being translucent the first time it's opened.
-                        if (Build.VERSION.SDK_INT >= 21) {
-                            window.addFlags(
-                                    WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                        }
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                     }
                 })
                 // EXH -->
-                header.startAnimation(toolbarAnimation)
+                binding.header.startAnimation(toolbarAnimation)
                 // EXH <--
 
                 val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
-                reader_menu_bottom.startAnimation(bottomAnimation)
+                binding.readerMenuBottom.startAnimation(bottomAnimation)
+            }
+
+            if (preferences.showPageNumber().get()) {
+                config?.setPageNumberVisibility(false)
             }
         } else {
-            systemUi?.hide()
+            if (preferences.fullscreen().get()) {
+                window.hideBar()
+            } else {
+                resetDefaultMenuAndBar()
+            }
 
             if (animate) {
                 val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
                 toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
                     override fun onAnimationEnd(animation: Animation) {
-                        reader_menu.visibility = View.GONE
+                        binding.readerMenu.gone()
                     }
                 })
                 // EXH -->
-                header.startAnimation(toolbarAnimation)
+                binding.header.startAnimation(toolbarAnimation)
                 // EXH <--
 
                 val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
-                reader_menu_bottom.startAnimation(bottomAnimation)
+                binding.readerMenuBottom.startAnimation(bottomAnimation)
+            }
+
+            if (preferences.showPageNumber().get()) {
+                config?.setPageNumberVisibility(true)
             }
         }
+    }
+
+    /**
+     * Reset menu padding and system bar
+     */
+    private fun resetDefaultMenuAndBar() {
+        binding.readerMenu.setPadding(0, 0, 0, 0)
+        window.defaultBar()
     }
 
     /**
@@ -521,23 +627,24 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             RIGHT_TO_LEFT -> R2LPagerViewer(this)
             VERTICAL -> VerticalPagerViewer(this)
             WEBTOON -> WebtoonViewer(this)
+            VERTICAL_PLUS -> WebtoonViewer(this, isContinuous = false)
             else -> L2RPagerViewer(this)
         }
 
         // Destroy previous viewer if there was one
         if (prevViewer != null) {
             prevViewer.destroy()
-            viewer_container.removeAllViews()
+            binding.viewerContainer.removeAllViews()
         }
         viewer = newViewer
-        viewer_container.addView(newViewer.getView())
+        binding.viewerContainer.addView(newViewer.getView())
 
-        toolbar.title = manga.title
+        binding.toolbar.title = manga.title
 
-        page_seekbar.isRTL = newViewer is R2LPagerViewer
+        binding.pageSeekbar.isRTL = newViewer is R2LPagerViewer
 
-        please_wait.visible()
-        please_wait.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_long))
+        binding.pleaseWait.visible()
+        binding.pleaseWait.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_long))
     }
 
     /**
@@ -545,9 +652,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      * method to the current viewer, but also set the subtitle on the toolbar.
      */
     fun setChapters(viewerChapters: ViewerChapters) {
-        please_wait.gone()
+        binding.pleaseWait.gone()
         viewer?.setChapters(viewerChapters)
-        toolbar.subtitle = viewerChapters.currChapter.chapter.name
+        binding.toolbar.subtitle = viewerChapters.currChapter.chapter.name
+
+        // Invalidate menu to show proper chapter bookmark state
+        invalidateOptionsMenu()
     }
 
     /**
@@ -613,20 +723,20 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         val pages = page.chapter.pages ?: return
 
         // Set bottom page number
-        page_number.text = "${page.number}/${pages.size}"
+        binding.pageNumber.text = "${page.number}/${pages.size}"
 
         // Set seekbar page number
         if (viewer !is R2LPagerViewer) {
-            left_page_text.text = "${page.number}"
-            right_page_text.text = "${pages.size}"
+            binding.leftPageText.text = "${page.number}"
+            binding.rightPageText.text = "${pages.size}"
         } else {
-            right_page_text.text = "${page.number}"
-            left_page_text.text = "${pages.size}"
+            binding.rightPageText.text = "${page.number}"
+            binding.leftPageText.text = "${pages.size}"
         }
 
         // Set seekbar progress
-        page_seekbar.max = pages.lastIndex
-        page_seekbar.progress = page.index
+        binding.pageSeekbar.max = pages.lastIndex
+        binding.pageSeekbar.progress = page.index
     }
 
     /**
@@ -639,7 +749,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             // EXH <--
             ReaderPageSheet(this, page).show()
             // EXH -->
-        } catch(e: WindowManager.BadTokenException) {
+        } catch (e: WindowManager.BadTokenException) {
             logger.e("Caught and ignoring reader page sheet launch exception!", e)
         }
         // EXH <--
@@ -728,11 +838,28 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      * depending on the [result].
      */
     fun onSetAsCoverResult(result: ReaderPresenter.SetAsCoverResult) {
-        toast(when (result) {
-            Success -> R.string.cover_updated
-            AddToLibraryFirst -> R.string.notification_first_add_to_library
-            Error -> R.string.notification_cover_update_failed
-        })
+        toast(
+            when (result) {
+                Success -> R.string.cover_updated
+                AddToLibraryFirst -> R.string.notification_first_add_to_library
+                Error -> R.string.notification_cover_update_failed
+            }
+        )
+    }
+
+    /**
+     * Sets notch cutout mode to "NEVER", if mobile is in a landscape view
+     */
+    private fun setNotchCutoutMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val currentOrientation = resources.configuration.orientation
+
+            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                val params = window.attributes
+                params.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
+            }
+        }
     }
 
     /**
@@ -746,16 +873,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         private val subscriptions = CompositeSubscription()
 
         /**
-         * Custom brightness subscription.
-         */
-        private var customBrightnessSubscription: Subscription? = null
-
-        /**
-         * Custom color filter subscription.
-         */
-        private var customFilterColorSubscription: Subscription? = null
-
-        /**
          * Initializes the reader subscriptions.
          */
         init {
@@ -767,30 +884,40 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             subscriptions += Observable.merge(initialRotation, rotationUpdates)
                 .subscribe { setOrientation(it) }
 
-            subscriptions += preferences.readerTheme().asObservable()
-                .skip(1) // We only care about updates
-                .subscribe { recreate() }
+            preferences.readerTheme().asFlow()
+                .drop(1) // We only care about updates
+                .onEach { recreate() }
+                .launchIn(scope)
 
-            subscriptions += preferences.showPageNumber().asObservable()
-                .subscribe { setPageNumberVisibility(it) }
+            preferences.showPageNumber().asFlow()
+                .onEach { setPageNumberVisibility(it) }
+                .launchIn(scope)
 
-            subscriptions += preferences.trueColor().asObservable()
-                .subscribe { setTrueColor(it) }
+            preferences.trueColor().asFlow()
+                .onEach { setTrueColor(it) }
+                .launchIn(scope)
 
-            subscriptions += preferences.fullscreen().asObservable()
-                .subscribe { setFullscreen(it) }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                preferences.cutoutShort().asFlow()
+                    .onEach { setCutoutShort(it) }
+                    .launchIn(scope)
+            }
 
-            subscriptions += preferences.keepScreenOn().asObservable()
-                .subscribe { setKeepScreenOn(it) }
+            preferences.keepScreenOn().asFlow()
+                .onEach { setKeepScreenOn(it) }
+                .launchIn(scope)
 
-            subscriptions += preferences.customBrightness().asObservable()
-                .subscribe { setCustomBrightness(it) }
+            preferences.customBrightness().asFlow()
+                .onEach { setCustomBrightness(it) }
+                .launchIn(scope)
 
-            subscriptions += preferences.colorFilter().asObservable()
-                .subscribe { setColorFilter(it) }
+            preferences.colorFilter().asFlow()
+                .onEach { setColorFilter(it) }
+                .launchIn(scope)
 
-            subscriptions += preferences.colorFilterMode().asObservable()
-                .subscribe { setColorFilter(preferences.colorFilter().getOrDefault()) }
+            preferences.colorFilterMode().asFlow()
+                .onEach { setColorFilter(preferences.colorFilter().get()) }
+                .launchIn(scope)
         }
 
         /**
@@ -798,8 +925,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          */
         fun destroy() {
             subscriptions.unsubscribe()
-            customBrightnessSubscription = null
-            customFilterColorSubscription = null
         }
 
         /**
@@ -832,36 +957,26 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         /**
          * Sets the visibility of the bottom page indicator according to [visible].
          */
-        private fun setPageNumberVisibility(visible: Boolean) {
-            page_number.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+        fun setPageNumberVisibility(visible: Boolean) {
+            binding.pageNumber.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         }
 
         /**
          * Sets the 32-bit color mode according to [enabled].
          */
         private fun setTrueColor(enabled: Boolean) {
-            if (enabled)
+            if (enabled) {
                 SubsamplingScaleImageView.setPreferredBitmapConfig(Bitmap.Config.ARGB_8888)
-            else
+            } else {
                 SubsamplingScaleImageView.setPreferredBitmapConfig(Bitmap.Config.RGB_565)
+            }
         }
 
-        /**
-         * Sets the fullscreen reading mode (immersive) according to [enabled].
-         */
-        private fun setFullscreen(enabled: Boolean) {
-            systemUi = if (enabled) {
-                val level = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    SystemUiHelper.LEVEL_IMMERSIVE
-                } else {
-                    SystemUiHelper.LEVEL_HIDE_STATUS_BAR
-                }
-                val flags = SystemUiHelper.FLAG_IMMERSIVE_STICKY or
-                        SystemUiHelper.FLAG_LAYOUT_IN_SCREEN_OLDER_DEVICES
-
-                SystemUiHelper(this@ReaderActivity, level, flags)
-            } else {
-                null
+        @TargetApi(Build.VERSION_CODES.P)
+        private fun setCutoutShort(enabled: Boolean) {
+            window.attributes.layoutInDisplayCutoutMode = when (enabled) {
+                true -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                false -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
             }
         }
 
@@ -881,13 +996,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          */
         private fun setCustomBrightness(enabled: Boolean) {
             if (enabled) {
-                customBrightnessSubscription = preferences.customBrightnessValue().asObservable()
-                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                    .subscribe { setCustomBrightnessValue(it) }
-
-                subscriptions.add(customBrightnessSubscription)
+                preferences.customBrightnessValue().asFlow()
+                    .sample(100)
+                    .onEach { setCustomBrightnessValue(it) }
+                    .launchIn(scope)
             } else {
-                customBrightnessSubscription?.let { subscriptions.remove(it) }
                 setCustomBrightnessValue(0)
             }
         }
@@ -897,14 +1010,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          */
         private fun setColorFilter(enabled: Boolean) {
             if (enabled) {
-                customFilterColorSubscription = preferences.colorFilterValue().asObservable()
-                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                    .subscribe { setColorFilterValue(it) }
-
-                subscriptions.add(customFilterColorSubscription)
+                preferences.colorFilterValue().asFlow()
+                    .sample(100)
+                    .onEach { setColorFilterValue(it) }
+                    .launchIn(scope)
             } else {
-                customFilterColorSubscription?.let { subscriptions.remove(it) }
-                color_overlay.visibility = View.GONE
+                binding.colorOverlay.gone()
             }
         }
 
@@ -916,21 +1027,25 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          */
         private fun setCustomBrightnessValue(value: Int) {
             // Calculate and set reader brightness.
-            val readerBrightness = if (value > 0) {
-                value / 100f
-            } else if (value < 0) {
-                0.01f
-            } else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+            val readerBrightness = when {
+                value > 0 -> {
+                    value / 100f
+                }
+                value < 0 -> {
+                    0.01f
+                }
+                else -> WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+            }
 
             window.attributes = window.attributes.apply { screenBrightness = readerBrightness }
 
             // Set black overlay visibility.
             if (value < 0) {
-                brightness_overlay.visibility = View.VISIBLE
-                val alpha = (Math.abs(value) * 2.56).toInt()
-                brightness_overlay.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
+                binding.brightnessOverlay.visible()
+                val alpha = (abs(value) * 2.56).toInt()
+                binding.brightnessOverlay.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
             } else {
-                brightness_overlay.visibility = View.GONE
+                binding.brightnessOverlay.gone()
             }
         }
 
@@ -938,10 +1053,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          * Sets the color filter [value].
          */
         private fun setColorFilterValue(value: Int) {
-            color_overlay.visibility = View.VISIBLE
-            color_overlay.setFilterColor(value, preferences.colorFilterMode().getOrDefault())
+            binding.colorOverlay.visible()
+            binding.colorOverlay.setFilterColor(value, preferences.colorFilterMode().get())
         }
-
     }
-
 }

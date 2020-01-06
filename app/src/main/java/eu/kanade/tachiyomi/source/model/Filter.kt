@@ -21,10 +21,11 @@ sealed class Filter<T>(val name: String, var state: T) {
             const val STATE_EXCLUDE = 2
         }
     }
-    abstract class Group<V>(name: String, state: List<V>): Filter<List<V>>(name, state)
 
-    abstract class Sort(name: String, val values: Array<String>, state: Selection? = null)
-        : Filter<Sort.Selection?>(name, state) {
+    abstract class Group<V>(name: String, state: List<V>) : Filter<List<V>>(name, state)
+
+    abstract class Sort(name: String, val values: Array<String>, state: Selection? = null) :
+        Filter<Sort.Selection?>(name, state) {
         data class Selection(val index: Int, val ascending: Boolean)
     }
 
@@ -40,5 +41,4 @@ sealed class Filter<T>(val name: String, var state: T) {
         result = 31 * result + (state?.hashCode() ?: 0)
         return result
     }
-
 }

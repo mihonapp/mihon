@@ -26,8 +26,13 @@ object TrackTable {
 
     const val COL_TRACKING_URL = "remote_url"
 
+    const val COL_START_DATE = "start_date"
+
+    const val COL_FINISH_DATE = "finish_date"
+
     val createTableQuery: String
-        get() = """CREATE TABLE $TABLE(
+        get() =
+            """CREATE TABLE $TABLE(
             $COL_ID INTEGER NOT NULL PRIMARY KEY,
             $COL_MANGA_ID INTEGER NOT NULL,
             $COL_SYNC_ID INTEGER NOT NULL,
@@ -39,6 +44,8 @@ object TrackTable {
             $COL_STATUS INTEGER NOT NULL,
             $COL_SCORE FLOAT NOT NULL,
             $COL_TRACKING_URL TEXT NOT NULL,
+            $COL_START_DATE LONG NOT NULL,
+            $COL_FINISH_DATE LONG NOT NULL,
             UNIQUE ($COL_MANGA_ID, $COL_SYNC_ID) ON CONFLICT REPLACE,
             FOREIGN KEY($COL_MANGA_ID) REFERENCES ${MangaTable.TABLE} (${MangaTable.COL_ID})
             ON DELETE CASCADE
@@ -49,4 +56,10 @@ object TrackTable {
 
     val addLibraryId: String
         get() = "ALTER TABLE $TABLE ADD COLUMN $COL_LIBRARY_ID INTEGER NULL"
+
+    val addStartDate: String
+        get() = "ALTER TABLE $TABLE ADD COLUMN $COL_START_DATE LONG NOT NULL DEFAULT 0"
+
+    val addFinishDate: String
+        get() = "ALTER TABLE $TABLE ADD COLUMN $COL_FINISH_DATE LONG NOT NULL DEFAULT 0"
 }

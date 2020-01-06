@@ -3,15 +3,22 @@ package eu.kanade.tachiyomi.source
 import android.content.Context
 import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.source.online.all.*
-import eu.kanade.tachiyomi.source.online.english.*
-import rx.Observable
+import eu.kanade.tachiyomi.source.online.all.EHentai
+import eu.kanade.tachiyomi.source.online.all.Hitomi
+import eu.kanade.tachiyomi.source.online.all.MergedSource
+import eu.kanade.tachiyomi.source.online.all.NHentai
+import eu.kanade.tachiyomi.source.online.all.PervEden
+import eu.kanade.tachiyomi.source.online.english.EightMuses
+import eu.kanade.tachiyomi.source.online.english.HBrowse
+import eu.kanade.tachiyomi.source.online.english.HentaiCafe
+import eu.kanade.tachiyomi.source.online.english.Pururin
+import eu.kanade.tachiyomi.source.online.english.Tsumino
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.PERV_EDEN_EN_SOURCE_ID
@@ -20,8 +27,9 @@ import exh.metadata.metadata.PervEdenLang
 import exh.source.BlacklistedSources
 import exh.source.DelegatedHttpSource
 import exh.source.EnhancedHttpSource
-import uy.kohesive.injekt.injectLazy
 import kotlin.reflect.KClass
+import rx.Observable
+import uy.kohesive.injekt.injectLazy
 
 open class SourceManager(private val context: Context) {
 
@@ -34,14 +42,14 @@ open class SourceManager(private val context: Context) {
     init {
         createInternalSources().forEach { registerSource(it) }
 
-        //Recreate sources when they change
+        // Recreate sources when they change
         val prefEntries = arrayOf(
-                prefs.enableExhentai(),
-                prefs.imageQuality(),
-                prefs.useHentaiAtHome(),
-                prefs.useJapaneseTitle(),
-                prefs.ehSearchSize(),
-                prefs.thumbnailRows()
+            prefs.enableExhentai(),
+            prefs.imageQuality(),
+            prefs.useHentaiAtHome(),
+            prefs.useJapaneseTitle(),
+            prefs.ehSearchSize(),
+            prefs.thumbnailRows()
         ).map { it.asObservable() }
 
         Observable.merge(prefEntries).skip(prefEntries.size - 1).subscribe {
@@ -73,15 +81,15 @@ open class SourceManager(private val context: Context) {
         // EXH -->
         val sourceQName = source::class.qualifiedName
         val delegate = DELEGATED_SOURCES[sourceQName]
-        val newSource = if(source is HttpSource && delegate != null) {
+        val newSource = if (source is HttpSource && delegate != null) {
             XLog.d("[EXH] Delegating source: %s -> %s!", sourceQName, delegate.newSourceClass.qualifiedName)
             EnhancedHttpSource(
-                    source,
-                    delegate.newSourceClass.constructors.find { it.parameters.size == 1 }!!.call(source)
+                source,
+                delegate.newSourceClass.constructors.find { it.parameters.size == 1 }!!.call(source)
             )
         } else source
 
-        if(source.id in BlacklistedSources.BLACKLISTED_EXT_SOURCES) {
+        if (source.id in BlacklistedSources.BLACKLISTED_EXT_SOURCES) {
             XLog.d("[EXH] Removing blacklisted source: (id: %s, name: %s, lang: %s)!", source.id, source.name, (source as? CatalogueSource)?.lang)
             return
         }
@@ -97,20 +105,19 @@ open class SourceManager(private val context: Context) {
     }
 
     private fun createInternalSources(): List<Source> = listOf(
-            LocalSource(context)
+        LocalSource(context)
     )
 
     private fun createEHSources(): List<Source> {
         val exSrcs = mutableListOf<HttpSource>(
-                EHentai(EH_SOURCE_ID, false, context)
+            EHentai(EH_SOURCE_ID, false, context)
         )
-        if(prefs.enableExhentai().getOrDefault()) {
+        if (prefs.enableExhentai().getOrDefault()) {
             exSrcs += EHentai(EXH_SOURCE_ID, true, context)
         }
         exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, PervEdenLang.en)
         exSrcs += PervEden(PERV_EDEN_IT_SOURCE_ID, PervEdenLang.it)
         exSrcs += NHentai(context)
-        exSrcs += Tsumino(context)
         exSrcs += Hitomi()
         exSrcs += EightMuses()
         exSrcs += HBrowse()
@@ -145,23 +152,33 @@ open class SourceManager(private val context: Context) {
 
     companion object {
         val DELEGATED_SOURCES = listOf(
-                DelegatedSource(
-                        "Hentai Cafe",
-                        260868874183818481,
-                        "eu.kanade.tachiyomi.extension.all.foolslide.HentaiCafe",
-                        HentaiCafe::class
-                ),
-                DelegatedSource(
-                        "Pururin",
-                        2221515250486218861,
-                        "eu.kanade.tachiyomi.extension.en.pururin.Pururin",
-                        Pururin::class
-                )
+            DelegatedSource(
+                "Hentai Cafe",
+                260868874183818481,
+                "eu.kanade.tachiyomi.extension.all.foolslide.HentaiCafe",
+                HentaiCafe::class
+            ),
+            DelegatedSource(
+                "Pururin",
+                2221515250486218861,
+                "eu.kanade.tachiyomi.extension.en.pururin.Pururin",
+                Pururin::class
+            ),
+            DelegatedSource(
+                "Tsumino",
+                6707338697138388238,
+                "eu.kanade.tachiyomi.extension.en.tsumino.Tsumino",
+                Tsumino::class
+            )
         ).associateBy { it.originalSourceQualifiedClassName }
 
-        data class DelegatedSource(val sourceName: String,
-                                   val sourceId: Long,
-                                   val originalSourceQualifiedClassName: String,
-                                   val newSourceClass: KClass<out DelegatedHttpSource>)
+        data class DelegatedSource(
+            val sourceName: String,
+            val sourceId: Long,
+            val originalSourceQualifiedClassName: String,
+            val newSourceClass: KClass<out DelegatedHttpSource>
+        )
     }
 }
+
+class SourceNotFoundException(message: String, val id: Long) : Exception(message)

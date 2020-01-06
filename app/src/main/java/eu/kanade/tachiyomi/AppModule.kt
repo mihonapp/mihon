@@ -11,16 +11,17 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.SourceManager
-import exh.eh.EHentaiUpdateHelper
-import io.noties.markwon.Markwon
-import rx.Observable
-import rx.schedulers.Schedulers
-import uy.kohesive.injekt.api.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import uy.kohesive.injekt.api.InjektModule
+import uy.kohesive.injekt.api.InjektRegistrar
+import uy.kohesive.injekt.api.addSingleton
+import uy.kohesive.injekt.api.addSingletonFactory
+import uy.kohesive.injekt.api.get
 
 class AppModule(val app: Application) : InjektModule {
 
     override fun InjektRegistrar.registerInjectables() {
-
         addSingleton(app)
 
         addSingletonFactory { PreferencesHelper(app) }
@@ -49,20 +50,14 @@ class AppModule(val app: Application) : InjektModule {
 
         // Asynchronously init expensive components for a faster cold start
 
-        rxAsync { get<PreferencesHelper>() }
+        GlobalScope.launch { get<PreferencesHelper>() }
 
-        rxAsync { get<NetworkHelper>() }
+        GlobalScope.launch { get<NetworkHelper>() }
 
-        rxAsync { get<SourceManager>() }
+        GlobalScope.launch { get<SourceManager>() }
 
-        rxAsync { get<DatabaseHelper>() }
+        GlobalScope.launch { get<DatabaseHelper>() }
 
-        rxAsync { get<DownloadManager>() }
-
+        GlobalScope.launch { get<DownloadManager>() }
     }
-
-    private fun rxAsync(block: () -> Unit) {
-        Observable.fromCallable { block() }.subscribeOn(Schedulers.computation()).subscribe()
-    }
-
 }

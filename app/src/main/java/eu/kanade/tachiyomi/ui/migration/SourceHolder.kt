@@ -2,16 +2,20 @@ package eu.kanade.tachiyomi.ui.migration
 
 import android.view.View
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.source.icon
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.holder.SlicedHolder
-import eu.kanade.tachiyomi.util.getRound
-import eu.kanade.tachiyomi.util.gone
+import eu.kanade.tachiyomi.util.view.gone
 import io.github.mthli.slice.Slice
-import kotlinx.android.synthetic.main.catalogue_main_controller_card_item.*
+import kotlinx.android.synthetic.main.source_main_controller_card_item.card
+import kotlinx.android.synthetic.main.source_main_controller_card_item.image
+import kotlinx.android.synthetic.main.source_main_controller_card_item.source_browse
+import kotlinx.android.synthetic.main.source_main_controller_card_item.source_latest
+import kotlinx.android.synthetic.main.source_main_controller_card_item.title
 
 class SourceHolder(view: View, override val adapter: SourceAdapter) :
-        BaseFlexibleViewHolder(view, adapter),
-        SlicedHolder {
+    BaseFlexibleViewHolder(view, adapter),
+    SlicedHolder {
 
     override val slice = Slice(card).apply {
         setColor(adapter.cardBackground)
@@ -27,7 +31,7 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
         }
         source_browse.setText(R.string.select)
         source_browse.setOnClickListener {
-            adapter.selectClickListener?.onSelectClick(adapterPosition)
+            adapter.selectClickListener?.onSelectClick(bindingAdapterPosition)
         }
     }
 
@@ -40,7 +44,10 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
 
         // Set circle letter image.
         itemView.post {
-            image.setImageDrawable(image.getRound(source.name.take(1).toUpperCase(),false))
+            val icon = source.icon()
+            if (icon != null) {
+                image.setImageDrawable(icon)
+            }
         }
     }
 }

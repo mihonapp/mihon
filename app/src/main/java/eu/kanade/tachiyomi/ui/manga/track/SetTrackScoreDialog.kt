@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.NumberPicker
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.bluelinelabs.conductor.Controller
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -17,9 +19,11 @@ class SetTrackScoreDialog<T> : DialogController
 
     private val item: TrackItem
 
-    constructor(target: T, item: TrackItem) : super(Bundle().apply {
-        putSerializable(KEY_ITEM_TRACK, item.track)
-    }) {
+    constructor(target: T, item: TrackItem) : super(
+        Bundle().apply {
+            putSerializable(KEY_ITEM_TRACK, item.track)
+        }
+    ) {
         targetController = target
         this.item = item
     }
@@ -34,36 +38,30 @@ class SetTrackScoreDialog<T> : DialogController
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {
         val item = item
 
-        val dialog = MaterialDialog.Builder(activity!!)
-                .title(R.string.score)
-                .customView(R.layout.track_score_dialog, false)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .onPositive { dialog, _ ->
-                    val view = dialog.customView
-                    if (view != null) {
-                        // Remove focus to update selected number
-                        val np: NumberPicker = view.findViewById(R.id.score_picker)
-                        np.clearFocus()
+        val dialog = MaterialDialog(activity!!)
+            .title(R.string.score)
+            .customView(R.layout.track_score_dialog, dialogWrapContent = false)
+            .positiveButton(android.R.string.ok) { dialog ->
+                val view = dialog.getCustomView()
+                // Remove focus to update selected number
+                val np: NumberPicker = view.findViewById(R.id.score_picker)
+                np.clearFocus()
 
-                        (targetController as? Listener)?.setScore(item, np.value)
-                    }
-                }
-                .show()
-
-        val view = dialog.customView
-        if (view != null) {
-            val np: NumberPicker = view.findViewById(R.id.score_picker)
-            val scores = item.service.getScoreList().toTypedArray()
-            np.maxValue = scores.size - 1
-            np.displayedValues = scores
-
-            // Set initial value
-            val displayedScore = item.service.displayScore(item.track!!)
-            if (displayedScore != "-") {
-                val index = scores.indexOf(displayedScore)
-                np.value = if (index != -1) index else 0
+                (targetController as? Listener)?.setScore(item, np.value)
             }
+            .negativeButton(android.R.string.cancel)
+
+        val view = dialog.getCustomView()
+        val np: NumberPicker = view.findViewById(R.id.score_picker)
+        val scores = item.service.getScoreList().toTypedArray()
+        np.maxValue = scores.size - 1
+        np.displayedValues = scores
+
+        // Set initial value
+        val displayedScore = item.service.displayScore(item.track!!)
+        if (displayedScore != "-") {
+            val index = scores.indexOf(displayedScore)
+            np.value = if (index != -1) index else 0
         }
 
         return dialog
@@ -76,5 +74,4 @@ class SetTrackScoreDialog<T> : DialogController
     private companion object {
         const val KEY_ITEM_TRACK = "SetTrackScoreDialog.item.track"
     }
-
 }

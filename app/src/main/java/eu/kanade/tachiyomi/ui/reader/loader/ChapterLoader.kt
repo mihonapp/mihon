@@ -19,9 +19,9 @@ import timber.log.Timber
  * Loader used to retrieve the [PageLoader] for a given chapter.
  */
 class ChapterLoader(
-        private val downloadManager: DownloadManager,
-        private val manga: Manga,
-        private val source: Source
+    private val downloadManager: DownloadManager,
+    private val manga: Manga,
+    private val source: Source
 ) {
 
     /**
@@ -29,17 +29,17 @@ class ChapterLoader(
      * completes if the chapter is already loaded.
      */
     fun loadChapter(chapter: ReaderChapter): Completable {
-        if (chapter.state is ReaderChapter.State.Loaded) {
+        if (chapterIsReady(chapter)) {
             return Completable.complete()
         }
 
         return Observable.just(chapter)
             .doOnNext { chapter.state = ReaderChapter.State.Loading }
             .observeOn(Schedulers.io())
-            .flatMap {
+            .flatMap { readerChapter ->
                 Timber.d("Loading pages for ${chapter.chapter.name}")
 
-                val loader = getPageLoader(it)
+                val loader = getPageLoader(readerChapter)
 
                 loader.getPages().take(1).doOnNext { pages ->
                     pages.forEach { it.chapter = chapter }
@@ -63,19 +63,14 @@ class ChapterLoader(
                 }
             }
             .toCompletable()
-            .doOnError {
-                // [EXH]
-                XLog.w("> Failed to fetch page list!", it)
-                XLog.w("> (source.id: %s, source.name: %s, manga.id: %s, manga.url: %s, chapter.id: %s, chapter.url: %s)",
-                        source.id,
-                        source.name,
-                        manga.id,
-                        manga.url,
-                        chapter.chapter.id,
-                        chapter.chapter.url)
+            .doOnError { chapter.state = ReaderChapter.State.Error(it) }
+    }
 
-                chapter.state = ReaderChapter.State.Error(it)
-            }
+    /**
+     * Checks [chapter] to be loaded based on present pages and loader in addition to state.
+     */
+    private fun chapterIsReady(chapter: ReaderChapter): Boolean {
+        return chapter.state is ReaderChapter.State.Loaded && chapter.pageLoader != null
     }
 
     /**
@@ -97,5 +92,4 @@ class ChapterLoader(
             else -> error("Loader not implemented")
         }
     }
-
 }

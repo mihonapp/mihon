@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
+<<<<<<< HEAD
 import android.graphics.Color
 import android.os.Build
 import android.os.Environment
@@ -37,16 +38,28 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.multidex.MultiDex
+import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
+import eu.kanade.tachiyomi.util.system.LocaleHelper
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektScope
+import uy.kohesive.injekt.injectLazy
 import uy.kohesive.injekt.registry.default.DefaultRegistrar
 import java.io.File
 import java.security.NoSuchAlgorithmException
 import javax.net.ssl.SSLContext
 import kotlin.concurrent.thread
 
-open class App : Application() {
+
+open class App : Application(), LifecycleObserver {
+
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
@@ -57,7 +70,6 @@ open class App : Application() {
         Injekt = InjektScope(DefaultRegistrar())
         Injekt.importModule(AppModule(this))
 
-        setupJobManager()
         setupNotificationChannels()
         GlobalScope.launch { deleteOldMetadataRealm() } // Delete old metadata DB (EH)
         Reprint.initialize(this) //Setup fingerprint (EH)
@@ -66,6 +78,8 @@ open class App : Application() {
         }
 
         LocaleHelper.updateConfiguration(this, resources.configuration)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
     override fun attachBaseContext(base: Context) {
@@ -97,18 +111,12 @@ open class App : Application() {
         }
     }
 
-    protected open fun setupJobManager() {
-        try {
-            JobManager.create(this).addJobCreator { tag ->
-                when (tag) {
-                    LibraryUpdateJob.TAG -> LibraryUpdateJob()
-                    UpdaterJob.TAG -> UpdaterJob()
-                    BackupCreatorJob.TAG -> BackupCreatorJob()
-                    else -> null
-                }
-            }
-        } catch (e: Exception) {
-            Timber.w("Can't initialize job manager")
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    @Suppress("unused")
+    fun onAppBackgrounded() {
+        val preferences: PreferencesHelper by injectLazy()
+        if (preferences.lockAppAfter().get() >= 0) {
+            SecureActivityDelegate.locked = true
         }
     }
 

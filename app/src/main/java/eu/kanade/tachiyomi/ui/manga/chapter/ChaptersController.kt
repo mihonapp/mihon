@@ -2,46 +2,53 @@ package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import com.bluelinelabs.conductor.RouterTransaction
-import com.elvishew.xlog.XLog
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.jakewharton.rxbinding.support.v4.widget.refreshes
-import com.jakewharton.rxbinding.view.clicks
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.databinding.ChaptersControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
+import eu.kanade.tachiyomi.ui.main.offsetFabAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.getCoordinates
-import eu.kanade.tachiyomi.util.snack
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.getCoordinates
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.shrinkOnScroll
+import eu.kanade.tachiyomi.util.view.snack
+import eu.kanade.tachiyomi.util.view.visible
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
-import kotlinx.android.synthetic.main.chapters_controller.*
-import rx.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.android.view.clicks
+import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 
-class ChaptersController : NucleusController<ChaptersPresenter>(),
-        ActionMode.Callback,
-        FlexibleAdapter.OnItemClickListener,
-        FlexibleAdapter.OnItemLongClickListener,
-        ChaptersAdapter.OnMenuItemClickListener,
-        SetDisplayModeDialog.Listener,
-        SetSortingDialog.Listener,
-        DownloadChaptersDialog.Listener,
-        DownloadCustomChaptersDialog.Listener,
-        DeleteChaptersDialog.Listener {
+class ChaptersController :
+    NucleusController<ChaptersControllerBinding, ChaptersPresenter>(),
+    ActionMode.Callback,
+    FlexibleAdapter.OnItemClickListener,
+    FlexibleAdapter.OnItemLongClickListener,
+    DownloadCustomChaptersDialog.Listener,
+    DeleteChaptersDialog.Listener {
 
     /**
      * Adapter containing a list of chapters.
@@ -67,12 +74,15 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     override fun createPresenter(): ChaptersPresenter {
         val ctrl = parentController as MangaController
-        return ChaptersPresenter(ctrl.manga!!, ctrl.source!!,
-                ctrl.chapterCountRelay, ctrl.lastUpdateRelay, ctrl.mangaFavoriteRelay)
+        return ChaptersPresenter(
+            ctrl.manga!!, ctrl.source!!,
+            ctrl.chapterCountRelay, ctrl.lastUpdateRelay, ctrl.mangaFavoriteRelay
+        )
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.chapters_controller, container, false)
+        binding = ChaptersControllerBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View) {
@@ -81,46 +91,48 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         // Init RecyclerView and adapter
         adapter = ChaptersAdapter(this, view.context)
 
-        recycler.adapter = adapter
-        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
-        recycler.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(view.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
-        recycler.setHasFixedSize(true)
-        adapter?.fastScroller = fast_scroller
+        binding.recycler.adapter = adapter
+        binding.recycler.layoutManager = LinearLayoutManager(view.context)
+        binding.recycler.addItemDecoration(DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL))
+        binding.recycler.setHasFixedSize(true)
+        adapter?.fastScroller = binding.fastScroller
 
-        swipe_refresh.refreshes().subscribeUntilDestroy { fetchChaptersFromSource() }
+        binding.swipeRefresh.refreshes()
+            .onEach { fetchChaptersFromSource() }
+            .launchIn(scope)
 
-        fab.clicks().subscribeUntilDestroy {
-            val item = presenter.getNextUnreadChapter()
-            if (item != null) {
-                // Create animation listener
-                val revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
-                    override fun onAnimationStart(animation: Animator?) {
-                        openChapter(item.chapter, true)
+        binding.fab.clicks()
+            .onEach {
+                val item = presenter.getNextUnreadChapter()
+                if (item != null) {
+                    // Create animation listener
+                    val revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
+                        override fun onAnimationStart(animation: Animator?) {
+                            openChapter(item.chapter, true)
+                        }
                     }
-                }
 
-                // Get coordinates and start animation
-                val coordinates = fab.getCoordinates()
-                if (!reveal_view.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
-                    openChapter(item.chapter)
+                    // Get coordinates and start animation
+                    val coordinates = binding.fab.getCoordinates()
+                    if (!binding.revealView.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
+                        openChapter(item.chapter)
+                    }
+                } else {
+                    view.context.toast(R.string.no_next_chapter)
                 }
-            } else {
-                view.context.toast(R.string.no_next_chapter)
             }
-        }
+            .launchIn(scope)
 
-        presenter.redirectUserRelay
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeUntilDestroy { redirect ->
-                    XLog.d("Redirecting to updated manga (manga.id: %s, manga.title: %s, update: %s)!", redirect.manga.id, redirect.manga.title, redirect.update)
-                    // Replace self
-                    parentController?.router?.replaceTopController(RouterTransaction.with(MangaController(redirect)))
-                }
+        binding.fab.shrinkOnScroll(binding.recycler)
+
+        binding.actionToolbar.offsetFabAppbarHeight(activity!!)
+        binding.fab.offsetFabAppbarHeight(activity!!)
     }
 
     override fun onDestroyView(view: View) {
+        destroyActionModeIfNeeded()
+        binding.actionToolbar.destroy()
         adapter = null
-        actionMode = null
         super.onDestroyView(view)
     }
 
@@ -128,11 +140,12 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         if (view == null) return
 
         // Check if animation view is visible
-        if (reveal_view.visibility == View.VISIBLE) {
-            // Show the unReveal effect
-            val coordinates = fab.getCoordinates()
-            reveal_view.hideRevealEffect(coordinates.x, coordinates.y, 1920)
+        if (binding.revealView.visibility == View.VISIBLE) {
+            // Show the unreveal effect
+            val coordinates = binding.fab.getCoordinates()
+            binding.revealView.hideRevealEffect(coordinates.x, coordinates.y, 1920)
         }
+
         super.onActivityResumed(activity)
     }
 
@@ -146,26 +159,73 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         val menuFilterUnread = menu.findItem(R.id.action_filter_unread)
         val menuFilterDownloaded = menu.findItem(R.id.action_filter_downloaded)
         val menuFilterBookmarked = menu.findItem(R.id.action_filter_bookmarked)
+        val menuFilterEmpty = menu.findItem(R.id.action_filter_empty)
 
         // Set correct checkbox values.
         menuFilterRead.isChecked = presenter.onlyRead()
         menuFilterUnread.isChecked = presenter.onlyUnread()
         menuFilterDownloaded.isChecked = presenter.onlyDownloaded()
+        menuFilterDownloaded.isEnabled = !presenter.forceDownloaded()
         menuFilterBookmarked.isChecked = presenter.onlyBookmarked()
 
-        if (presenter.onlyRead())
-            //Disable unread filter option if read filter is enabled.
+        val filterSet = presenter.onlyRead() || presenter.onlyUnread() || presenter.onlyDownloaded() || presenter.onlyBookmarked()
+
+        if (filterSet) {
+            val filterColor = activity!!.getResourceColor(R.attr.colorFilterActive)
+            DrawableCompat.setTint(menu.findItem(R.id.action_filter).icon, filterColor)
+        }
+
+        // Only show remove filter option if there's a filter set.
+        menuFilterEmpty.isVisible = filterSet
+
+        // Disable unread filter option if read filter is enabled.
+        if (presenter.onlyRead()) {
             menuFilterUnread.isEnabled = false
-        if (presenter.onlyUnread())
-            //Disable read filter option if unread filter is enabled.
+        }
+        // Disable read filter option if unread filter is enabled.
+        if (presenter.onlyUnread()) {
             menuFilterRead.isEnabled = false
+        }
+
+        // Display mode submenu
+        if (presenter.manga.displayMode == Manga.DISPLAY_NAME) {
+            menu.findItem(R.id.display_title).isChecked = true
+        } else {
+            menu.findItem(R.id.display_chapter_number).isChecked = true
+        }
+
+        // Sorting mode submenu
+        if (presenter.manga.sorting == Manga.SORTING_SOURCE) {
+            menu.findItem(R.id.sort_by_source).isChecked = true
+        } else {
+            menu.findItem(R.id.sort_by_number).isChecked = true
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_display_mode -> showDisplayModeDialog()
-            R.id.manga_download -> showDownloadDialog()
-            R.id.action_sorting_mode -> showSortingDialog()
+            R.id.display_title -> {
+                item.isChecked = true
+                setDisplayMode(Manga.DISPLAY_NAME)
+            }
+            R.id.display_chapter_number -> {
+                item.isChecked = true
+                setDisplayMode(Manga.DISPLAY_NUMBER)
+            }
+
+            R.id.sort_by_source -> {
+                item.isChecked = true
+                presenter.setSorting(Manga.SORTING_SOURCE)
+            }
+            R.id.sort_by_number -> {
+                item.isChecked = true
+                presenter.setSorting(Manga.SORTING_NUMBER)
+            }
+
+            R.id.download_next, R.id.download_next_5, R.id.download_next_10,
+            R.id.download_custom, R.id.download_unread, R.id.download_all
+            -> downloadChapters(item.itemId)
+
             R.id.action_filter_unread -> {
                 item.isChecked = !item.isChecked
                 presenter.setUnreadFilter(item.isChecked)
@@ -179,26 +239,28 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
             R.id.action_filter_downloaded -> {
                 item.isChecked = !item.isChecked
                 presenter.setDownloadedFilter(item.isChecked)
+                activity?.invalidateOptionsMenu()
             }
             R.id.action_filter_bookmarked -> {
                 item.isChecked = !item.isChecked
                 presenter.setBookmarkedFilter(item.isChecked)
+                activity?.invalidateOptionsMenu()
             }
             R.id.action_filter_empty -> {
                 presenter.removeFilters()
                 activity?.invalidateOptionsMenu()
             }
             R.id.action_sort -> presenter.revertSortOrder()
-            else -> return super.onOptionsItemSelected(item)
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     fun onNextChapters(chapters: List<ChapterItem>) {
         // If the list is empty, fetch chapters from source if the conditions are met
         // We use presenter chapters instead because they are always unfiltered
-        if (presenter.chapters.isEmpty())
+        if (presenter.chapters.isEmpty()) {
             initialFetchChapters()
+        }
 
         val mangaController = parentController as MangaController
         if (mangaController.update
@@ -207,7 +269,6 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
                         && chapters.size == 1 && chapters.first().date_upload == 0L)) {
             mangaController.update = false
             fetchChaptersFromSource()
-        }
 
         val adapter = adapter ?: return
         adapter.updateDataSet(chapters)
@@ -223,35 +284,27 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
             }
             actionMode?.invalidate()
         }
-
     }
 
     private fun initialFetchChapters() {
         // Only fetch if this view is from the catalog and it hasn't requested previously
-        if ((parentController as MangaController).fromCatalogue && !presenter.hasRequested) {
+        if ((parentController as MangaController).fromSource && !presenter.hasRequested) {
             fetchChaptersFromSource()
         }
     }
 
     private fun fetchChaptersFromSource() {
-        swipe_refresh?.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
         presenter.fetchChaptersFromSource()
     }
 
     fun onFetchChaptersDone() {
-        swipe_refresh?.isRefreshing = false
+        binding.swipeRefresh.isRefreshing = false
     }
 
     fun onFetchChaptersError(error: Throwable) {
-        swipe_refresh?.isRefreshing = false
+        binding.swipeRefresh.isRefreshing = false
         activity?.toast(error.message)
-        // [EXH]
-        XLog.w("> Failed to fetch chapters!", error)
-        XLog.w("> (source.id: %s, source.name: %s, manga.id: %s, manga.url: %s)",
-                presenter.source.id,
-                presenter.source.name,
-                presenter.manga.id,
-                presenter.manga.url)
     }
 
     fun onChapterStatusChange(download: Download) {
@@ -259,7 +312,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     }
 
     private fun getHolder(chapter: Chapter): ChapterHolder? {
-        return recycler?.findViewHolderForItemId(chapter.id!!) as? ChapterHolder
+        return binding.recycler.findViewHolderForItemId(chapter.id!!) as? ChapterHolder
     }
 
     fun openChapter(chapter: Chapter, hasAnimation: Boolean = false) {
@@ -271,16 +324,16 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         startActivity(intent)
     }
 
-    override fun onItemClick(view: View, position: Int): Boolean {
+    override fun onItemClick(view: View?, position: Int): Boolean {
         val adapter = adapter ?: return false
         val item = adapter.getItem(position) ?: return false
-        if (actionMode != null && adapter.mode == SelectableAdapter.Mode.MULTI) {
+        return if (actionMode != null && adapter.mode == SelectableAdapter.Mode.MULTI) {
             lastClickPosition = position
             toggleSelection(position)
-            return true
+            true
         } else {
             openChapter(item.chapter)
-            return false
+            false
         }
     }
 
@@ -288,10 +341,12 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         createActionModeIfNeeded()
         when {
             lastClickPosition == -1 -> setSelection(position)
-            lastClickPosition > position -> for (i in position until lastClickPosition)
-                setSelection(i)
-            lastClickPosition < position -> for (i in lastClickPosition + 1..position)
-                setSelection(i)
+            lastClickPosition > position ->
+                for (i in position until lastClickPosition)
+                    setSelection(i)
+            lastClickPosition < position ->
+                for (i in lastClickPosition + 1..position)
+                    setSelection(i)
             else -> setSelection(position)
         }
         lastClickPosition = position
@@ -331,6 +386,10 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     private fun createActionModeIfNeeded() {
         if (actionMode == null) {
             actionMode = (activity as? AppCompatActivity)?.startSupportActionMode(this)
+            binding.actionToolbar.show(
+                actionMode!!,
+                R.menu.chapter_selection
+            ) { onActionItemClicked(actionMode!!, it!!) }
         }
     }
 
@@ -340,19 +399,30 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.chapter_selection, menu)
+        mode.menuInflater.inflate(R.menu.generic_selection, menu)
         adapter?.mode = SelectableAdapter.Mode.MULTI
         return true
     }
 
-    @SuppressLint("StringFormatInvalid")
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val count = adapter?.selectedItemCount ?: 0
         if (count == 0) {
             // Destroy action mode if there are no items selected.
             destroyActionModeIfNeeded()
         } else {
-            mode.title = resources?.getString(R.string.label_selected, count)
+            mode.title = count.toString()
+
+            val chapters = getSelectedChapters()
+            binding.actionToolbar.findItem(R.id.action_download)?.isVisible = chapters.any { !it.isDownloaded }
+            binding.actionToolbar.findItem(R.id.action_delete)?.isVisible = chapters.any { it.isDownloaded }
+            binding.actionToolbar.findItem(R.id.action_bookmark)?.isVisible = chapters.any { !it.chapter.bookmark }
+            binding.actionToolbar.findItem(R.id.action_remove_bookmark)?.isVisible = chapters.all { it.chapter.bookmark }
+            binding.actionToolbar.findItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
+            binding.actionToolbar.findItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
+
+            // Hide FAB to avoid interfering with the bottom action toolbar
+            // binding.fab.hide()
+            binding.fab.gone()
         }
         return false
     }
@@ -360,35 +430,35 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_select_all -> selectAll()
-            R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
-            R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
+            R.id.action_select_inverse -> selectInverse()
             R.id.action_download -> downloadChapters(getSelectedChapters())
             R.id.action_delete -> showDeleteChaptersConfirmationDialog()
+            R.id.action_bookmark -> bookmarkChapters(getSelectedChapters(), true)
+            R.id.action_remove_bookmark -> bookmarkChapters(getSelectedChapters(), false)
+            R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
+            R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
+            R.id.action_mark_previous_as_read -> markPreviousAsRead(getSelectedChapters())
             else -> return false
         }
         return true
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
+        binding.actionToolbar.hide()
         adapter?.mode = SelectableAdapter.Mode.SINGLE
         adapter?.clearSelection()
         selectedItems.clear()
         actionMode = null
+
+        // TODO: there seems to be a bug in MaterialComponents where the [ExtendedFloatingActionButton]
+        // fails to show up properly
+        // binding.fab.show()
+        binding.fab.visible()
     }
 
-    override fun onMenuItemClick(position: Int, item: MenuItem) {
-        val chapter = adapter?.getItem(position) ?: return
-        val chapters = listOf(chapter)
-
-        when (item.itemId) {
-            R.id.action_download -> downloadChapters(chapters)
-            R.id.action_bookmark -> bookmarkChapters(chapters, true)
-            R.id.action_remove_bookmark -> bookmarkChapters(chapters, false)
-            R.id.action_delete -> deleteChapters(chapters)
-            R.id.action_mark_as_read -> markAsRead(chapters)
-            R.id.action_mark_as_unread -> markAsUnread(chapters)
-            R.id.action_mark_previous_as_read -> markPreviousAsRead(chapter)
-        }
+    override fun onDetach(view: View) {
+        destroyActionModeIfNeeded()
+        super.onDetach(view)
     }
 
     // SELECTION MODE ACTIONS
@@ -398,6 +468,19 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         adapter.selectAll()
         selectedItems.addAll(adapter.items)
         actionMode?.invalidate()
+    }
+
+    private fun selectInverse() {
+        val adapter = adapter ?: return
+
+        selectedItems.clear()
+        for (i in 0..adapter.itemCount) {
+            adapter.toggleSelection(i)
+        }
+        selectedItems.addAll(adapter.selectedPositions.mapNotNull { adapter.getItem(it) })
+
+        actionMode?.invalidate()
+        adapter.notifyDataSetChanged()
     }
 
     private fun markAsRead(chapters: List<ChapterItem>) {
@@ -413,17 +496,15 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     private fun downloadChapters(chapters: List<ChapterItem>) {
         val view = view
-        destroyActionModeIfNeeded()
         presenter.downloadChapters(chapters)
         if (view != null && !presenter.manga.favorite) {
-            recycler?.snack(view.context.getString(R.string.snack_add_to_library), Snackbar.LENGTH_INDEFINITE) {
+            binding.recycler.snack(view.context.getString(R.string.snack_add_to_library), Snackbar.LENGTH_INDEFINITE) {
                 setAction(R.string.action_add) {
                     presenter.addToLibrary()
                 }
             }
         }
     }
-
 
     private fun showDeleteChaptersConfirmationDialog() {
         DeleteChaptersDialog(this).showDialog(router)
@@ -433,74 +514,62 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         deleteChapters(getSelectedChapters())
     }
 
-    private fun markPreviousAsRead(chapter: ChapterItem) {
+    private fun markPreviousAsRead(chapters: List<ChapterItem>) {
         val adapter = adapter ?: return
-        val chapters = if (presenter.sortDescending()) adapter.items.reversed() else adapter.items
-        val chapterPos = chapters.indexOf(chapter)
+        val prevChapters = if (presenter.sortDescending()) adapter.items.reversed() else adapter.items
+        val chapterPos = prevChapters.indexOf(chapters.last())
         if (chapterPos != -1) {
-            markAsRead(chapters.take(chapterPos))
+            markAsRead(prevChapters.take(chapterPos))
         }
     }
 
     private fun bookmarkChapters(chapters: List<ChapterItem>, bookmarked: Boolean) {
-        destroyActionModeIfNeeded()
         presenter.bookmarkChapters(chapters, bookmarked)
     }
 
     fun deleteChapters(chapters: List<ChapterItem>) {
-        destroyActionModeIfNeeded()
         if (chapters.isEmpty()) return
 
-        DeletingChaptersDialog().showDialog(router)
         presenter.deleteChapters(chapters)
     }
 
-    fun onChaptersDeleted() {
-        dismissDeletingDialog()
+    fun onChaptersDeleted(chapters: List<ChapterItem>) {
+        // this is needed so the downloaded text gets removed from the item
+        chapters.forEach {
+            adapter?.updateItem(it)
+        }
         adapter?.notifyDataSetChanged()
     }
 
     fun onChaptersDeletedError(error: Throwable) {
-        dismissDeletingDialog()
         Timber.e(error)
-    }
-
-    private fun dismissDeletingDialog() {
-        router.popControllerWithTag(DeletingChaptersDialog.TAG)
     }
 
     // OVERFLOW MENU DIALOGS
 
-    private fun showDisplayModeDialog() {
-        val preselected = if (presenter.manga.displayMode == Manga.DISPLAY_NAME) 0 else 1
-        SetDisplayModeDialog(this, preselected).showDialog(router)
-    }
-
-    override fun setDisplayMode(id: Int) {
+    private fun setDisplayMode(id: Int) {
         presenter.setDisplayMode(id)
         adapter?.notifyDataSetChanged()
     }
 
-    private fun showSortingDialog() {
-        val preselected = if (presenter.manga.sorting == Manga.SORTING_SOURCE) 0 else 1
-        SetSortingDialog(this, preselected).showDialog(router)
-    }
-
-    override fun setSorting(id: Int) {
-        presenter.setSorting(id)
-    }
-
-    private fun showDownloadDialog() {
-        DownloadChaptersDialog(this).showDialog(router)
-    }
-
     private fun getUnreadChaptersSorted() = presenter.chapters
-            .filter { !it.read && it.status == Download.NOT_DOWNLOADED }
-            .distinctBy { it.name }
-            .sortedByDescending { it.source_order }
+        .filter { !it.read && it.status == Download.NOT_DOWNLOADED }
+        .distinctBy { it.name }
+        .sortedByDescending { it.source_order }
 
-    override fun downloadCustomChapters(amount: Int) {
-        val chaptersToDownload = getUnreadChaptersSorted().take(amount)
+    private fun downloadChapters(choice: Int) {
+        val chaptersToDownload = when (choice) {
+            R.id.download_next -> getUnreadChaptersSorted().take(1)
+            R.id.download_next_5 -> getUnreadChaptersSorted().take(5)
+            R.id.download_next_10 -> getUnreadChaptersSorted().take(10)
+            R.id.download_custom -> {
+                showCustomDownloadDialog()
+                return
+            }
+            R.id.download_unread -> presenter.chapters.filter { !it.read }
+            R.id.download_all -> presenter.chapters
+            else -> emptyList()
+        }
         if (chaptersToDownload.isNotEmpty()) {
             downloadChapters(chaptersToDownload)
         }
@@ -510,26 +579,8 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         DownloadCustomChaptersDialog(this, presenter.chapters.size).showDialog(router)
     }
 
-
-    override fun downloadChapters(choice: Int) {
-        // i = 0: Download 1
-        // i = 1: Download 5
-        // i = 2: Download 10
-        // i = 3: Download x
-        // i = 4: Download unread
-        // i = 5: Download all
-        val chaptersToDownload = when (choice) {
-            0 -> getUnreadChaptersSorted().take(1)
-            1 -> getUnreadChaptersSorted().take(5)
-            2 -> getUnreadChaptersSorted().take(10)
-            3 -> {
-                showCustomDownloadDialog()
-                return
-            }
-            4 -> presenter.chapters.filter { !it.read }
-            5 -> presenter.chapters
-            else -> emptyList()
-        }
+    override fun downloadCustomChapters(amount: Int) {
+        val chaptersToDownload = getUnreadChaptersSorted().take(amount)
         if (chaptersToDownload.isNotEmpty()) {
             downloadChapters(chaptersToDownload)
         }

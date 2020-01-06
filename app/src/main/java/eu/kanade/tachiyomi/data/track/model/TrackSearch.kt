@@ -24,6 +24,10 @@ class TrackSearch : Track {
 
     override var status: Int = 0
 
+    override var started_reading_date: Long = 0
+
+    override var finished_reading_date: Long = 0
+
     override lateinit var tracking_url: String
 
     var cover_url: String = ""
@@ -53,12 +57,10 @@ class TrackSearch : Track {
         result = 31 * result + media_id
         return result
     }
-    companion object {
 
+    companion object {
         fun create(serviceId: Int): TrackSearch = TrackSearch().apply {
             sync_id = serviceId
         }
-
     }
-
 }

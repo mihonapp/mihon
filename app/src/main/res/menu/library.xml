@@ -1,32 +1,35 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
 
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_white_24dp"
+        android:icon="@drawable/ic_search_24dp"
         android:title="@string/action_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom"/>
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="collapseActionView|ifRoom" />
 
     <item
         android:id="@+id/action_filter"
-        android:icon="@drawable/ic_filter_list_white_24dp"
+        android:icon="@drawable/ic_filter_list_24dp"
         android:title="@string/action_filter"
-        app:showAsAction="ifRoom"/>
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_update_library"
-        android:icon="@drawable/ic_refresh_white_24dp"
+        android:icon="@drawable/ic_refresh_24dp"
         android:title="@string/action_update_library"
-        app:showAsAction="ifRoom"/>
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_sync_favorites"
         android:icon="@drawable/ic_cloud_white_24dp"
         android:title="Sync favorites"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_edit_categories"

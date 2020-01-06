@@ -4,13 +4,13 @@ import eu.kanade.tachiyomi.R
 
 object MigrationFlags {
 
-    const val CHAPTERS   = 0b001
-    const val CATEGORIES = 0b010
-    const val TRACK      = 0b100
+    private const val CHAPTERS = 0b001
+    private const val CATEGORIES = 0b010
+    private const val TRACK = 0b100
 
-    private const val CHAPTERS2   = 0x1
+    private const val CHAPTERS2 = 0x1
     private const val CATEGORIES2 = 0x2
-    private const val TRACK2      = 0x4
+    private const val TRACK2 = 0x4
 
     val titles get() = arrayOf(R.string.chapters, R.string.categories, R.string.track)
 

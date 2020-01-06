@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.widget
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 
 abstract class ViewPagerAdapter : androidx.viewpager.widget.PagerAdapter() {
 
@@ -29,5 +30,4 @@ abstract class ViewPagerAdapter : androidx.viewpager.widget.PagerAdapter() {
     interface PositionableView {
         val item: Any
     }
-
 }

@@ -4,7 +4,7 @@ class SMangaImpl : SManga {
 
     override lateinit var url: String
 
-    override var title: String = ""
+    override lateinit var title: String
 
     override var artist: String? = null
 
@@ -19,5 +19,4 @@ class SMangaImpl : SManga {
     override var thumbnail_url: String? = null
 
     override var initialized: Boolean = false
-
 }

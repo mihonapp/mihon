@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.track.shikimori
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -13,56 +12,6 @@ import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
 class Shikimori(private val context: Context, id: Int) : TrackService(id) {
-
-    override fun getScoreList(): List<String> {
-        return IntRange(0, 10).map(Int::toString)
-    }
-
-    override fun displayScore(track: Track): String {
-        return track.score.toInt().toString()
-    }
-
-    override fun add(track: Track): Observable<Track> {
-        return api.addLibManga(track, getUsername())
-    }
-
-    override fun update(track: Track): Observable<Track> {
-        if (track.total_chapters != 0 && track.last_chapter_read == track.total_chapters) {
-            track.status = COMPLETED
-        }
-        return api.updateLibManga(track, getUsername())
-    }
-
-    override fun bind(track: Track): Observable<Track> {
-        return api.findLibManga(track, getUsername())
-                .flatMap { remoteTrack ->
-                    if (remoteTrack != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        track.library_id = remoteTrack.library_id
-                        update(track)
-                    } else {
-                        // Set default fields if it's not found in the list
-                        track.score = DEFAULT_SCORE.toFloat()
-                        track.status = DEFAULT_STATUS
-                        add(track)
-                    }
-                }
-    }
-
-    override fun search(query: String): Observable<List<TrackSearch>> {
-        return api.search(query)
-    }
-
-    override fun refresh(track: Track): Observable<Track> {
-        return api.findLibManga(track, getUsername())
-                .map { remoteTrack ->
-                    if (remoteTrack != null) {
-                        track.copyPersonalFrom(remoteTrack)
-                        track.total_chapters = remoteTrack.total_chapters
-                    }
-                    track
-                }
-    }
 
     companion object {
         const val READING = 1
@@ -84,7 +33,54 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
 
     private val api by lazy { ShikimoriApi(client, interceptor) }
 
-    override fun getLogo() = R.drawable.shikimori
+    override fun getScoreList(): List<String> {
+        return IntRange(0, 10).map(Int::toString)
+    }
+
+    override fun displayScore(track: Track): String {
+        return track.score.toInt().toString()
+    }
+
+    override fun add(track: Track): Observable<Track> {
+        return api.addLibManga(track, getUsername())
+    }
+
+    override fun update(track: Track): Observable<Track> {
+        return api.updateLibManga(track, getUsername())
+    }
+
+    override fun bind(track: Track): Observable<Track> {
+        return api.findLibManga(track, getUsername())
+            .flatMap { remoteTrack ->
+                if (remoteTrack != null) {
+                    track.copyPersonalFrom(remoteTrack)
+                    track.library_id = remoteTrack.library_id
+                    update(track)
+                } else {
+                    // Set default fields if it's not found in the list
+                    track.score = DEFAULT_SCORE.toFloat()
+                    track.status = DEFAULT_STATUS
+                    add(track)
+                }
+            }
+    }
+
+    override fun search(query: String): Observable<List<TrackSearch>> {
+        return api.search(query)
+    }
+
+    override fun refresh(track: Track): Observable<Track> {
+        return api.findLibManga(track, getUsername())
+            .map { remoteTrack ->
+                if (remoteTrack != null) {
+                    track.copyPersonalFrom(remoteTrack)
+                    track.total_chapters = remoteTrack.total_chapters
+                }
+                track
+            }
+    }
+
+    override fun getLogo() = R.drawable.ic_tracker_shikimori
 
     override fun getLogoColor() = Color.rgb(40, 40, 40)
 
@@ -103,6 +99,8 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
             else -> ""
         }
     }
+
+    override fun getCompletionStatus(): Int = COMPLETED
 
     override fun login(username: String, password: String) = login(password)
 
@@ -133,7 +131,7 @@ class Shikimori(private val context: Context, id: Int) : TrackService(id) {
 
     override fun logout() {
         super.logout()
-        preferences.trackToken(this).set(null)
+        preferences.trackToken(this).delete()
         interceptor.newAuth(null)
     }
 }

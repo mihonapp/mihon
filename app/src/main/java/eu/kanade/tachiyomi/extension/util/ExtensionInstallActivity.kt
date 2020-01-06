@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import eu.kanade.tachiyomi.extension.ExtensionManager
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.system.toast
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -18,9 +18,9 @@ class ExtensionInstallActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         val installIntent = Intent(Intent.ACTION_INSTALL_PACKAGE)
-                .setDataAndType(intent.data, intent.type)
-                .putExtra(Intent.EXTRA_RETURN_RESULT, true)
-                .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            .setDataAndType(intent.data, intent.type)
+            .putExtra(Intent.EXTRA_RETURN_RESULT, true)
+            .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
         try {
             startActivityForResult(installIntent, INSTALL_REQUEST_CODE)

@@ -1,3 +1,1 @@
-I dont want to maintain a readme
-
-#YEET
+I havent started a readme

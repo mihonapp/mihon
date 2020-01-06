@@ -20,16 +20,14 @@ class ChapterProgressPutResolver : PutResolver<Chapter>() {
     }
 
     fun mapToUpdateQuery(chapter: Chapter) = UpdateQuery.builder()
-            .table(ChapterTable.TABLE)
-            .where("${ChapterTable.COL_ID} = ?")
-            .whereArgs(chapter.id)
-            .build()
+        .table(ChapterTable.TABLE)
+        .where("${ChapterTable.COL_ID} = ?")
+        .whereArgs(chapter.id)
+        .build()
 
     fun mapToContentValues(chapter: Chapter) = ContentValues(3).apply {
         put(ChapterTable.COL_READ, chapter.read)
         put(ChapterTable.COL_BOOKMARK, chapter.bookmark)
         put(ChapterTable.COL_LAST_PAGE_READ, chapter.last_page_read)
     }
-
 }
-

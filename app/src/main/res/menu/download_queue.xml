@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="@string/action_start"
-          android:id="@+id/start_queue"
-          android:icon="@drawable/ic_play_arrow_white_24dp"
-          android:visible="false"
-          app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/reorder"
+        android:title="@string/action_reorganize_by"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/newest"
+                android:title="@string/action_newest" />
+            <item
+                android:id="@+id/oldest"
+                android:title="@string/action_oldest" />
+        </menu>
+    </item>
 
-    <item android:title="@string/action_pause"
-          android:id="@+id/pause_queue"
-          android:icon="@drawable/ic_pause_white_24dp"
-          android:visible="false"
-          app:showAsAction="ifRoom"/>
-
-    <item android:title="@string/action_clear"
-          android:id="@+id/clear_queue"
-          android:visible="false"
-          app:showAsAction="never"/>
+    <item
+        android:id="@+id/clear_queue"
+        android:title="@string/action_cancel_all"
+        app:showAsAction="never" />
 
 </menu>

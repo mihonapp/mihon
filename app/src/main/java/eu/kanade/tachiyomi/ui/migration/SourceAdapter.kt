@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.migration
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.getResourceColor
+import eu.kanade.tachiyomi.util.system.getResourceColor
 
 /**
  * Adapter that holds the catalogue cards.
@@ -11,9 +11,9 @@ import eu.kanade.tachiyomi.util.getResourceColor
  * @param controller instance of [MigrationController].
  */
 class SourceAdapter(val controller: MigrationController) :
-        FlexibleAdapter<IFlexible<*>>(null, controller, true) {
+    FlexibleAdapter<IFlexible<*>>(null, controller, true) {
 
-    val cardBackground = controller.activity!!.getResourceColor(R.attr.background_card)
+    val cardBackground = controller.activity!!.getResourceColor(R.attr.colorSurface)
 
     private var items: List<IFlexible<*>>? = null
 

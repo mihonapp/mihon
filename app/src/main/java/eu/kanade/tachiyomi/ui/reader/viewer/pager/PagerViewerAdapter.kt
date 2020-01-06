@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 import android.view.View
 import android.view.ViewGroup
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
+import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
@@ -19,12 +20,16 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     var items: List<Any> = emptyList()
         private set
 
+    var nextTransition: ChapterTransition.Next? = null
+        private set
+
+    var currentChapter: ReaderChapter? = null
     /**
      * Updates this adapter with the given [chapters]. It handles setting a few pages of the
      * next/previous chapter to allow seamless transitions and inverting the pages if the viewer
      * has R2L direction.
      */
-    fun setChapters(chapters: ViewerChapters) {
+    fun setChapters(chapters: ViewerChapters, forceTransition: Boolean) {
         val newItems = mutableListOf<Any>()
 
         // Add previous chapter pages and transition.
@@ -36,13 +41,11 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
                 newItems.addAll(prevPages.takeLast(2))
             }
         }
-        // EXH -->
-        if(viewer.activity.showTransitionPages) {
-            // EXH <--
+
+        // Skip transition page if the chapter is loaded & current page is not a transition page
+        if (forceTransition || chapters.prevChapter?.state !is ReaderChapter.State.Loaded) {
             newItems.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
-            // EXH -->
         }
-        // EXH <--
 
         // Add current chapter.
         val currPages = chapters.currChapter.pages
@@ -50,14 +53,18 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
             newItems.addAll(currPages)
         }
 
+        currentChapter = chapters.currChapter
+
         // Add next chapter transition and pages.
-        // EXH -->
-        if(viewer.activity.showTransitionPages) {
-            // EXH <--
-            newItems.add(ChapterTransition.Next(chapters.currChapter, chapters.nextChapter))
-            // EXH -->
-        }
-        // EXH <--
+        nextTransition = ChapterTransition.Next(chapters.currChapter, chapters.nextChapter)
+            .also {
+                if (forceTransition ||
+                    chapters.nextChapter?.state !is ReaderChapter.State.Loaded
+                ) {
+                    newItems.add(it)
+                }
+            }
+
         if (chapters.nextChapter != null) {
             // Add at most two pages, because this chapter will be selected before the user can
             // swap more pages.
@@ -86,8 +93,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      * Creates a new view for the item at the given [position].
      */
     override fun createView(container: ViewGroup, position: Int): View {
-        val item = items[position]
-        return when (item) {
+        return when (val item = items[position]) {
             is ReaderPage -> PagerPageHolder(viewer, item)
             is ChapterTransition -> PagerTransitionHolder(viewer, item)
             else -> throw NotImplementedError("Holder for ${item.javaClass} not implemented")
@@ -106,7 +112,6 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
                 Timber.d("Position for ${view.item} not found")
             }
         }
-        return androidx.viewpager.widget.PagerAdapter.POSITION_NONE
+        return POSITION_NONE
     }
-
 }

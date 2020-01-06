@@ -4,12 +4,14 @@ import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.glide.GlideApp
+import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
-import kotlinx.android.synthetic.main.catalogue_list_item.*
+import kotlinx.android.synthetic.main.source_list_item.thumbnail
+import kotlinx.android.synthetic.main.source_list_item.title
 
 class MangaHolder(
-        private val view: View,
-        private val adapter: FlexibleAdapter<*>
+    view: View,
+    adapter: FlexibleAdapter<*>
 ) : BaseFlexibleViewHolder(view, adapter) {
 
     fun bind(item: MangaItem) {
@@ -25,12 +27,11 @@ class MangaHolder(
         // Update the cover.
         GlideApp.with(itemView.context).clear(thumbnail)
         GlideApp.with(itemView.context)
-                .load(item.manga)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .centerCrop()
-                .circleCrop()
-                .dontAnimate()
-                .into(thumbnail)
+            .load(item.manga.toMangaThumbnail())
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .centerCrop()
+            .circleCrop()
+            .dontAnimate()
+            .into(thumbnail)
     }
-
 }

@@ -22,8 +22,8 @@ import uy.kohesive.injekt.injectLazy
  *
  * @param view the fragment containing this adapter.
  */
-class LibraryCategoryAdapter(val view: LibraryCategoryView) :
-        FlexibleAdapter<LibraryItem>(null, view, true) {
+class LibraryCategoryAdapter(view: LibraryCategoryView) :
+    FlexibleAdapter<LibraryItem>(null, view, true) {
     // EXH -->
     private val db: DatabaseHelper by injectLazy()
     private val searchEngine = SearchEngine()

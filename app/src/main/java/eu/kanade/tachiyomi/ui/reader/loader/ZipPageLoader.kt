@@ -2,12 +2,12 @@ package eu.kanade.tachiyomi.ui.reader.loader
 
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import eu.kanade.tachiyomi.util.ComparatorUtil.CaseInsensitiveNaturalComparator
-import eu.kanade.tachiyomi.util.ImageUtil
-import rx.Observable
+import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
+import eu.kanade.tachiyomi.util.system.ImageUtil
 import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import rx.Observable
 
 /**
  * Loader used to load a chapter from a .zip or .cbz file.
@@ -34,7 +34,7 @@ class ZipPageLoader(file: File) : PageLoader() {
     override fun getPages(): Observable<List<ReaderPage>> {
         return zip.entries().toList()
             .filter { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
-            .sortedWith(Comparator<ZipEntry> { f1, f2 -> CaseInsensitiveNaturalComparator.compare(f1.name, f2.name) })
+            .sortedWith(Comparator<ZipEntry> { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) })
             .mapIndexed { i, entry ->
                 val streamFn = { zip.getInputStream(entry) }
                 ReaderPage(i).apply {
@@ -49,10 +49,12 @@ class ZipPageLoader(file: File) : PageLoader() {
      * Returns an observable that emits a ready state unless the loader was recycled.
      */
     override fun getPage(page: ReaderPage): Observable<Int> {
-        return Observable.just(if (isRecycled) {
-            Page.ERROR
-        } else {
-            Page.READY
-        })
+        return Observable.just(
+            if (isRecycled) {
+                Page.ERROR
+            } else {
+                Page.READY
+            }
+        )
     }
 }

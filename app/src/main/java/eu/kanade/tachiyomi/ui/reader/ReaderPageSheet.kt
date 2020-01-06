@@ -7,19 +7,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import kotlinx.android.synthetic.main.reader_page_sheet.*
+import kotlinx.android.synthetic.main.reader_page_sheet.save_layout
+import kotlinx.android.synthetic.main.reader_page_sheet.set_as_cover_layout
+import kotlinx.android.synthetic.main.reader_page_sheet.share_layout
 
 /**
  * Sheet to show when a page is long clicked.
  */
 class ReaderPageSheet(
-        private val activity: ReaderActivity,
-        private val page: ReaderPage
+    private val activity: ReaderActivity,
+    private val page: ReaderPage
 ) : BottomSheetDialog(activity) {
 
-    /**
-     * View used on this sheet.
-     */
     private val view = activity.layoutInflater.inflate(R.layout.reader_page_sheet, null)
 
     init {
@@ -44,14 +43,13 @@ class ReaderPageSheet(
     private fun setAsCover() {
         if (page.status != Page.READY) return
 
-        MaterialDialog.Builder(activity)
-            .content(activity.getString(R.string.confirm_set_image_as_cover))
-            .positiveText(android.R.string.yes)
-            .negativeText(android.R.string.no)
-            .onPositive { _, _ ->
+        MaterialDialog(activity)
+            .message(R.string.confirm_set_image_as_cover)
+            .positiveButton(android.R.string.ok) {
                 activity.setAsCover(page)
                 dismiss()
             }
+            .negativeButton(android.R.string.cancel)
             .show()
     }
 
@@ -70,5 +68,4 @@ class ReaderPageSheet(
         activity.saveImage(page)
         dismiss()
     }
-
 }

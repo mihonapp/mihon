@@ -2,7 +2,12 @@ package eu.kanade.tachiyomi.data.database
 
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
-import eu.kanade.tachiyomi.data.database.tables.*
+import eu.kanade.tachiyomi.data.database.tables.CategoryTable
+import eu.kanade.tachiyomi.data.database.tables.ChapterTable
+import eu.kanade.tachiyomi.data.database.tables.HistoryTable
+import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable
+import eu.kanade.tachiyomi.data.database.tables.MangaTable
+import eu.kanade.tachiyomi.data.database.tables.TrackTable
 import exh.metadata.sql.tables.SearchMetadataTable
 import exh.metadata.sql.tables.SearchTagTable
 import exh.metadata.sql.tables.SearchTitleTable
@@ -18,7 +23,7 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
         /**
          * Version of the database.
          */
-        const val DATABASE_VERSION = 9 // [EXH]
+        const val DATABASE_VERSION = 0 // [SY]
     }
 
     override fun onCreate(db: SupportSQLiteDatabase) = with(db) {
@@ -51,54 +56,18 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
     }
 
     override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 2) {
+        if (oldVersion < 0) {
             db.execSQL(ChapterTable.sourceOrderUpdateQuery)
 
             // Fix kissmanga covers after supporting cloudflare
-            db.execSQL("""UPDATE mangas SET thumbnail_url =
-                    REPLACE(thumbnail_url, '93.174.95.110', 'kissmanga.com') WHERE source = 4""")
+            db.execSQL(
+                """UPDATE mangas SET thumbnail_url =
+                    REPLACE(thumbnail_url, '93.174.95.110', 'kissmanga.com') WHERE source = 4"""
+            )
         }
-        if (oldVersion < 3) {
-            // Initialize history tables
-            db.execSQL(HistoryTable.createTableQuery)
-            db.execSQL(HistoryTable.createChapterIdIndexQuery)
-        }
-        if (oldVersion < 4) {
-            db.execSQL(ChapterTable.bookmarkUpdateQuery)
-        }
-        if (oldVersion < 5) {
-            db.execSQL(ChapterTable.addScanlator)
-        }
-        if (oldVersion < 6) {
-            db.execSQL(TrackTable.addTrackingUrl)
-        }
-        if (oldVersion < 7) {
-            db.execSQL(TrackTable.addLibraryId)
-        }
-        if (oldVersion < 8) {
-            db.execSQL("DROP INDEX IF EXISTS mangas_favorite_index")
-            db.execSQL(MangaTable.createLibraryIndexQuery)
-            db.execSQL(ChapterTable.createUnreadChaptersIndexQuery)
-        }
-        // EXH -->
-        if (oldVersion < 9) {
-            db.execSQL(SearchMetadataTable.createTableQuery)
-            db.execSQL(SearchTagTable.createTableQuery)
-            db.execSQL(SearchTitleTable.createTableQuery)
-
-            db.execSQL(SearchMetadataTable.createUploaderIndexQuery)
-            db.execSQL(SearchMetadataTable.createIndexedExtraIndexQuery)
-            db.execSQL(SearchTagTable.createMangaIdIndexQuery)
-            db.execSQL(SearchTagTable.createNamespaceNameIndexQuery)
-            db.execSQL(SearchTitleTable.createMangaIdIndexQuery)
-            db.execSQL(SearchTitleTable.createTitleIndexQuery)
-        }
-        // Remember to increment any Tachiyomi database upgrades after this
-        // EXH <--
     }
 
     override fun onConfigure(db: SupportSQLiteDatabase) {
         db.setForeignKeyConstraintsEnabled(true)
     }
-
 }
