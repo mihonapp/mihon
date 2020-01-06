@@ -11,4 +11,5 @@ object LibrarySort {
 
     @Deprecated("Removed in favor of searching by source")
     const val SOURCE = 5
+    const val DRAG_AND_DROP = 6
 }

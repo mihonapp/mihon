@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 
 abstract class LibraryHolder(
     view: View,
-    adapter: FlexibleAdapter<*>
+    val adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
 ) : BaseFlexibleViewHolder(view, adapter) {
 
     /**
@@ -23,4 +23,16 @@ abstract class LibraryHolder(
      * @param item the manga item to bind.
      */
     abstract fun onSetValues(item: LibraryItem)
+
+
+    /**
+     * Called when an item is released.
+     *
+     * @param position The position of the released item.
+     */
+    override fun onItemReleased(position: Int) {
+        super.onItemReleased(position)
+        (adapter as? LibraryCategoryAdapter)?.onItemReleaseListener?.onItemReleased(position)
+    }
+
 }

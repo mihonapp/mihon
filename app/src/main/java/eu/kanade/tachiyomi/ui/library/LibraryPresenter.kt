@@ -214,6 +214,9 @@ class LibraryPresenter(
                         ?: latestChapterManga.size
                     manga1latestChapter.compareTo(manga2latestChapter)
                 }
+                LibrarySort.DRAG_AND_DROP -> {
+                    0
+                }
                 else -> throw Exception("Unknown sorting mode")
             }
         }
@@ -225,6 +228,12 @@ class LibraryPresenter(
         }
 
         return map.mapValues { entry -> entry.value.sortedWith(comparator) }
+    }
+
+    private fun sortAlphabetical(i1: LibraryItem, i2: LibraryItem): Int {
+        return if (preferences.removeArticles().getOrDefault())
+            i1.manga.title.removeArticles().compareTo(i2.manga.title.removeArticles(), true)
+        else i1.manga.title.compareTo(i2.manga.title, true)
     }
 
     /**

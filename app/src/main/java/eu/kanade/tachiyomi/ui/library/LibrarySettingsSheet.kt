@@ -110,10 +110,11 @@ class LibrarySettingsSheet(
             private val lastChecked = Item.MultiSort(R.string.action_sort_last_checked, this)
             private val unread = Item.MultiSort(R.string.action_filter_unread, this)
             private val latestChapter = Item.MultiSort(R.string.action_sort_latest_chapter, this)
+			private val dragAndDrop = Item.MultiSort(R.string.action_sort_drag_and_drop, this)
 
             override val header = null
             override val items =
-                listOf(alphabetically, lastRead, lastChecked, unread, total, latestChapter)
+                listOf(alphabetically, lastRead, lastChecked, unread, total, latestChapter, dragAndDrop)
             override val footer = null
 
             override fun initModels() {
@@ -135,6 +136,7 @@ class LibrarySettingsSheet(
                 total.state = if (sorting == LibrarySort.TOTAL) order else Item.MultiSort.SORT_NONE
                 latestChapter.state =
                     if (sorting == LibrarySort.LATEST_CHAPTER) order else Item.MultiSort.SORT_NONE
+                dragAndDrop.state = if (sorting == LibrarySort.DRAG_AND_DROP) order else SORT_NONE
             }
 
             override fun onItemClicked(item: Item) {
@@ -145,11 +147,14 @@ class LibrarySettingsSheet(
                     (it as Item.MultiStateGroup).state =
                         Item.MultiSort.SORT_NONE
                 }
-                item.state = when (prevState) {
-                    Item.MultiSort.SORT_NONE -> Item.MultiSort.SORT_ASC
-                    Item.MultiSort.SORT_ASC -> Item.MultiSort.SORT_DESC
-                    Item.MultiSort.SORT_DESC -> Item.MultiSort.SORT_ASC
-                    else -> throw Exception("Unknown state")
+                if (item == dragAndDrop)
+                    item.state = SORT_ASC
+                else
+                    item.state = when (prevState) {
+                        SORT_NONE -> SORT_ASC
+                        SORT_ASC -> SORT_DESC
+                        SORT_DESC -> SORT_ASC
+                        else -> throw Exception("Unknown state")
                 }
 
                 preferences.librarySortingMode().set(
@@ -160,6 +165,7 @@ class LibrarySettingsSheet(
                         unread -> LibrarySort.UNREAD
                         total -> LibrarySort.TOTAL
                         latestChapter -> LibrarySort.LATEST_CHAPTER
+						dragAndDrop -> LibrarySort.DRAG_AND_DROP
                         else -> throw Exception("Unknown sorting")
                     }
                 )

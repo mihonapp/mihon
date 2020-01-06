@@ -41,4 +41,24 @@
         android:title="@string/label_migration"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_reorganize"
+        android:title="@string/label_reorganize_by"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/action_alpha_asc"
+                android:title="@string/action_sort_alpha"/>
+            <item
+                android:id="@+id/action_alpha_dsc"
+                android:title="@string/label_alpha_reverse"/>
+            <item
+                android:id="@+id/action_update_asc"
+                android:title="@string/action_sort_last_updated"/>
+            <item
+                android:id="@+id/action_update_dsc"
+                android:title="@string/action_sort_first_updated"/>
+        </menu>
+    </item>
+
 </menu>

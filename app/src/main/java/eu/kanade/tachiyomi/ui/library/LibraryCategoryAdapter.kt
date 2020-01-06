@@ -16,6 +16,10 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.toList
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
+import androidx.recyclerview.widget.RecyclerView
+import eu.davidea.flexibleadapter.SelectableAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
+import eu.kanade.tachiyomi.ui.category.CategoryAdapter
 
 /**
  * Adapter storing a list of manga in a certain category.
@@ -39,6 +43,8 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
      * The list of manga in this category.
      */
     private var mangas: List<LibraryItem> = emptyList()
+
+    val onItemReleaseListener: CategoryAdapter.OnItemReleaseListener = view
 
     /**
      * Sets a list of manga in the adapter.

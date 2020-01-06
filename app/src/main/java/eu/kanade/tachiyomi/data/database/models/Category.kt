@@ -12,6 +12,8 @@ interface Category : Serializable {
 
     var flags: Int
 
+    var mangaOrder:List<Long>
+
     val nameLower: String
         get() = name.toLowerCase()
 

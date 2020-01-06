@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.source_list_item.unread_text
 
 class LibraryListHolder(
     private val view: View,
-    private val adapter: FlexibleAdapter<*>
+    adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
 ) : LibraryHolder(view, adapter) {
 
     /**

@@ -60,6 +60,13 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
     }
 
     /**
+     * Returns true if this item is draggable.
+     */
+    override fun isDraggable(): Boolean {
+        return true
+    }
+
+    /**
      * Filters a manga depending on a query.
      *
      * @param constraint the query to apply.

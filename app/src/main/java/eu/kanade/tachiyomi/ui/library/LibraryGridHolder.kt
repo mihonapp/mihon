@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.source_grid_item.unread_text
  */
 class LibraryGridHolder(
     private val view: View,
-    private val adapter: FlexibleAdapter<*>
+    adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
 ) : LibraryHolder(view, adapter) {
 
     /**

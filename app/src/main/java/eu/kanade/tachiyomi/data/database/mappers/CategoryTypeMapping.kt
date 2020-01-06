@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.CategoryImpl
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable.COL_FLAGS
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable.COL_ID
+import eu.kanade.tachiyomi.data.database.tables.CategoryTable.COL_MANGA_ORDER
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable.COL_NAME
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable.COL_ORDER
 import eu.kanade.tachiyomi.data.database.tables.CategoryTable.TABLE
@@ -40,6 +41,9 @@ class CategoryPutResolver : DefaultPutResolver<Category>() {
         put(COL_NAME, obj.name)
         put(COL_ORDER, obj.order)
         put(COL_FLAGS, obj.flags)
+        val orderString = obj.mangaOrder.joinToString("/")
+        put(COL_MANGA_ORDER, orderString)
+
     }
 }
 
@@ -50,6 +54,9 @@ class CategoryGetResolver : DefaultGetResolver<Category>() {
         name = cursor.getString(cursor.getColumnIndex(COL_NAME))
         order = cursor.getInt(cursor.getColumnIndex(COL_ORDER))
         flags = cursor.getInt(cursor.getColumnIndex(COL_FLAGS))
+
+        val orderString = cursor.getString(cursor.getColumnIndex(COL_MANGA_ORDER))
+        mangaOrder = orderString?.split("/")?.mapNotNull { it.toLongOrNull() } ?: emptyList()
     }
 }
 

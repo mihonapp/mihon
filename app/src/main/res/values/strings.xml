@@ -21,6 +21,10 @@
     <string name="label_categories">Categories</string>
     <string name="label_backup">Backup</string>
     <string name="label_migration">Source migration</string>
+    <string name="label_reorganize_by">Re-order</string>
+    <string name="label_alpha_reverse">Alphabetically (descending)</string>
+    <string name="label_hide_title">Hide title</string>
+    <string name="label_show_title">Show title</string>
     <string name="label_extensions">Extensions</string>
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
@@ -42,6 +46,7 @@
     <string name="action_sort_last_read">Last read</string>
     <string name="action_sort_last_checked">Last checked</string>
     <string name="action_sort_latest_chapter">Latest chapter</string>
+    <string name="action_sort_drag_and_drop">Drag &amp; Drop</string>
     <string name="action_search">Search</string>
     <string name="action_global_search">Global search</string>
     <string name="action_select_all">Select all</string>

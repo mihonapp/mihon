@@ -107,6 +107,11 @@ class LibraryController(
     val selectInverseRelay: PublishRelay<Int> = PublishRelay.create()
 
     /**
+     * Relay to notify the library's viewpager to reotagnize all
+     */
+    val reorganizeRelay: PublishRelay<Pair<Int, Int>> = PublishRelay.create()
+
+    /**
      * Number of manga per row in grid mode.
      */
     var mangaPerRow = 0
@@ -302,6 +307,7 @@ class LibraryController(
      * Called when the sorting mode is changed.
      */
     private fun onSortChanged() {
+        activity?.invalidateOptionsMenu()
         presenter.requestSortUpdate()
     }
 
@@ -342,6 +348,9 @@ class LibraryController(
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.library, menu)
+
+        val reorganizeItem = menu.findItem(R.id.action_reorganize)
+        reorganizeItem.isVisible = preferences.librarySortingMode().getOrDefault() == LibrarySort.DRAG_AND_DROP
 
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
@@ -409,9 +418,19 @@ class LibraryController(
                     presenter.favoritesSync.runSync()
             }
             // <-- EXH
+			R.id.action_alpha_asc -> reOrder(1)
+            R.id.action_alpha_dsc -> reOrder(2)
+            R.id.action_update_asc -> reOrder(3)
+            R.id.action_update_dsc -> reOrder(4)
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun reOrder(type: Int) {
+        adapter?.categories?.getOrNull(library_pager.currentItem)?.id?.let {
+            reorganizeRelay.call(it to type)
+        }
     }
 
     /**
