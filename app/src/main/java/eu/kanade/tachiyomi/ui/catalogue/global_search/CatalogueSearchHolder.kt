@@ -1,16 +1,12 @@
 package eu.kanade.tachiyomi.ui.catalogue.global_search
 
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import eu.kanade.tachiyomi.R
+import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
-import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.setVectorCompat
 import eu.kanade.tachiyomi.util.visible
 import kotlinx.android.synthetic.main.catalogue_global_search_controller_card.*
-import kotlinx.android.synthetic.main.catalogue_global_search_controller_card.view.*
 
 /**
  * Holder that binds the [CatalogueSearchItem] containing catalogue cards.
@@ -30,7 +26,7 @@ class CatalogueSearchHolder(view: View, val adapter: CatalogueSearchAdapter) :
 
     init {
         // Set layout horizontal.
-        recycler.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
         recycler.adapter = mangaAdapter
 
         more.setOnClickListener {

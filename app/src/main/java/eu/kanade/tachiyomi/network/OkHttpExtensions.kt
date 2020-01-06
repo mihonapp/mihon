@@ -46,7 +46,7 @@ fun Call.asObservableWithAsyncStacktrace(): Observable<Pair<Exception, Response>
             }
 
             override fun isUnsubscribed(): Boolean {
-                return call.isCanceled
+                return call.isCanceled()
             }
         }
 
@@ -61,7 +61,7 @@ fun Call.asObservableSuccess(): Observable<Response> {
     return asObservableWithAsyncStacktrace().map { (asyncStacktrace, response) ->
         if (!response.isSuccessful) {
             response.close()
-            throw Exception("HTTP error ${response.code()}", asyncStacktrace)
+            throw Exception("HTTP error ${response.code}", asyncStacktrace)
         } else response
     }
 }
@@ -72,7 +72,7 @@ fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListene
             .addNetworkInterceptor { chain ->
                 val originalResponse = chain.proceed(chain.request())
                 originalResponse.newBuilder()
-                        .body(ProgressResponseBody(originalResponse.body()!!, listener))
+                        .body(ProgressResponseBody(originalResponse.body!!, listener))
                         .build()
             }
             .build()

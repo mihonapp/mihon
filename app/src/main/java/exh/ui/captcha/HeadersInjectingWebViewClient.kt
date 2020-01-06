@@ -1,10 +1,10 @@
 package exh.ui.captcha
 
 import android.os.Build
-import android.support.annotation.RequiresApi
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
+import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 open class HeadersInjectingWebViewClient(activity: BrowserActionActivity,

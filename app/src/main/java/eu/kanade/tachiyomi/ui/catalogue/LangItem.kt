@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.catalogue
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractHeaderItem
@@ -24,14 +23,14 @@ data class LangItem(val code: String) : AbstractHeaderItem<LangHolder>() {
     /**
      * Creates a new view holder for this item.
      */
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): LangHolder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): LangHolder {
         return LangHolder(view, adapter)
     }
 
     /**
      * Binds this item to the given view holder.
      */
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: LangHolder,
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>, holder: LangHolder,
                                 position: Int, payloads: List<Any?>?) {
 
         holder.bind(this)

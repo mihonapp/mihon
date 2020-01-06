@@ -3,9 +3,8 @@ package eu.kanade.tachiyomi.ui.catalogue
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RouterTransaction
@@ -111,7 +110,7 @@ class CatalogueController(bundle: Bundle? = null) : NucleusController<CatalogueP
         adapter = CatalogueAdapter(this)
 
         // Create recycler and set adapter.
-        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
         recycler.adapter = adapter
         recycler.addItemDecoration(SourceDividerItemDecoration(view.context))
 

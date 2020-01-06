@@ -1,10 +1,10 @@
 package exh.ui.captcha
 
 import android.os.Build
-import android.support.annotation.RequiresApi
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
+import androidx.annotation.RequiresApi
 import eu.kanade.tachiyomi.util.asJsoup
 import exh.ui.captcha.BrowserActionActivity.Companion.CROSS_WINDOW_SCRIPT_INNER
 import org.jsoup.nodes.DataNode

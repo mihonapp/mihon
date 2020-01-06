@@ -9,20 +9,19 @@ import android.content.Context.VIBRATOR_SERVICE
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
-import android.net.Uri
 import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.support.annotation.AttrRes
-import android.support.annotation.RequiresApi
-import android.support.annotation.StringRes
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
+import androidx.annotation.AttrRes
+import androidx.annotation.RequiresApi
+import androidx.annotation.StringRes
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.nononsenseapps.filepicker.FilePickerActivity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
@@ -153,7 +152,7 @@ val Context.jobScheduler: JobScheduler
  * @param intent intent that contains broadcast information
  */
 fun Context.sendLocalBroadcast(intent: Intent) {
-    LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+    androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 }
 
 /**
@@ -162,7 +161,7 @@ fun Context.sendLocalBroadcast(intent: Intent) {
  * @param intent intent that contains broadcast information
  */
 fun Context.sendLocalBroadcastSync(intent: Intent) {
-    LocalBroadcastManager.getInstance(this).sendBroadcastSync(intent)
+    androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this).sendBroadcastSync(intent)
 }
 
 /**
@@ -171,7 +170,7 @@ fun Context.sendLocalBroadcastSync(intent: Intent) {
  * @param receiver receiver that gets registered.
  */
 fun Context.registerLocalReceiver(receiver: BroadcastReceiver, filter: IntentFilter) {
-    LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter)
+    androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter)
 }
 
 /**
@@ -180,7 +179,7 @@ fun Context.registerLocalReceiver(receiver: BroadcastReceiver, filter: IntentFil
  * @param receiver receiver that gets unregistered.
  */
 fun Context.unregisterLocalReceiver(receiver: BroadcastReceiver) {
-    LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
+    androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
 }
 
 /**

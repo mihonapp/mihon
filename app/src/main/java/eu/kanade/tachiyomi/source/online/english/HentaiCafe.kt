@@ -15,7 +15,7 @@ import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUA
 import exh.metadata.metadata.base.RaisedTag
 import exh.source.DelegatedHttpSource
 import exh.util.urlImportFetchSearchManga
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.jsoup.nodes.Document
 import rx.Observable
 
@@ -72,7 +72,7 @@ class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
                 RaisedTag("artist", it, TAG_TYPE_VIRTUAL)
             }
 
-            readerId = HttpUrl.parse(input.select("[title=Read]").attr("href"))!!.pathSegments()[2]
+            readerId = input.select("[title=Read]").attr("href").toHttpUrlOrNull()!!.pathSegments[2]
         }
     }
 

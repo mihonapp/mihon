@@ -3,8 +3,6 @@ package eu.kanade.tachiyomi.source.online.all
 import android.content.Context
 import android.net.Uri
 import com.github.salomonbrys.kotson.*
-import com.google.gson.JsonElement
-import com.google.gson.JsonNull
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
@@ -15,12 +13,11 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
-import exh.GalleryAddEvent
 import exh.NHENTAI_SOURCE_ID
 import exh.metadata.metadata.NHentaiSearchMetadata
 import exh.metadata.metadata.NHentaiSearchMetadata.Companion.TAG_TYPE_DEFAULT
 import exh.metadata.metadata.base.RaisedTag
-import exh.util.*
+import exh.util.urlImportFetchSearchManga
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
@@ -153,17 +150,17 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
             }
         }
 
-        val hasNextPage = if(!response.request().url().queryParameterNames().contains(REVERSE_PARAM)) {
+        val hasNextPage = if (!response.request.url.queryParameterNames.contains(REVERSE_PARAM)) {
             doc.selectFirst(".next") != null
         } else {
-            response.request().url().queryParameter(REVERSE_PARAM)!!.toBoolean()
+            response.request.url.queryParameter(REVERSE_PARAM)!!.toBoolean()
         }
 
         return MangasPage(mangas, hasNextPage)
     }
 
     override fun parseIntoMetadata(metadata: NHentaiSearchMetadata, input: Response) {
-        val json = GALLERY_JSON_REGEX.find(input.body()!!.string())!!.groupValues[1]
+        val json = GALLERY_JSON_REGEX.find(input.body!!.string())!!.groupValues[1]
         val obj = jsonParser.parse(json).asJsonObject
 
         with(metadata) {

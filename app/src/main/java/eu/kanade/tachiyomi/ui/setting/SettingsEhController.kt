@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Build
 import android.os.Handler
-import android.support.v7.preference.PreferenceScreen
 import android.widget.Toast
+import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler

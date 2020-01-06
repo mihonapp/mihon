@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.recently_read
 
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +53,7 @@ class RecentlyReadController : NucleusController<RecentlyReadPresenter>(),
         super.onViewCreated(view)
 
         // Initialize adapter
-        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
         adapter = RecentlyReadAdapter(this@RecentlyReadController)
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter

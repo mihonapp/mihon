@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.catalogue.filter
 
 import android.annotation.SuppressLint
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -23,11 +22,11 @@ class HelpDialogItem(val filter: Filter.HelpDialog) : AbstractHeaderItem<HelpDia
         return R.layout.navigation_view_help_dialog
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): Holder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): Holder {
         return Holder(view, adapter)
     }
 
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: Holder, position: Int, payloads: List<Any?>?) {
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>, holder: Holder, position: Int, payloads: List<Any?>?) {
         val view = holder.button as TextView
         view.text = filter.name
         view.setOnClickListener {

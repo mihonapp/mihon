@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.migration
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractSectionableItem
@@ -27,14 +26,14 @@ data class SourceItem(val source: Source, val header: SelectionHeader? = null) :
     /**
      * Creates a new view holder for this item.
      */
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): SourceHolder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): SourceHolder {
         return SourceHolder(view, adapter as SourceAdapter)
     }
 
     /**
      * Binds this item to the given view holder.
      */
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: SourceHolder,
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>, holder: SourceHolder,
                                 position: Int, payloads: List<Any?>?) {
 
         holder.bind(this)

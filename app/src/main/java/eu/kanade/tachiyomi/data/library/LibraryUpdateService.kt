@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -25,7 +25,9 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.util.*
+import eu.kanade.tachiyomi.util.isServiceRunning
+import eu.kanade.tachiyomi.util.notificationManager
+import eu.kanade.tachiyomi.util.syncChaptersWithSource
 import exh.LIBRARY_UPDATE_EXCLUDED_SOURCES
 import rx.Observable
 import rx.Subscription

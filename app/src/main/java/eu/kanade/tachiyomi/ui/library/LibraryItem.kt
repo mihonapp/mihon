@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.library
 
-import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -27,7 +26,7 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
             R.layout.catalogue_grid_item
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): LibraryHolder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): LibraryHolder {
         val parent = adapter.recyclerView
         return if (parent is AutofitRecyclerView) {
             view.apply {
@@ -42,7 +41,7 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
         }
     }
 
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>,
                                 holder: LibraryHolder,
                                 position: Int,
                                 payloads: List<Any?>?) {

@@ -2,13 +2,12 @@ package eu.kanade.tachiyomi.widget
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.annotation.CallSuper
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
+import androidx.core.content.ContextCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.getResourceColor
 
@@ -190,7 +189,7 @@ open class ExtendedNavigationView @JvmOverloads constructor(
      * Base adapter for the navigation view. It knows how to create and render every subclass of
      * [Item].
      */
-    abstract inner class Adapter(private val items: List<Item>) : RecyclerView.Adapter<Holder>() {
+    abstract inner class Adapter(private val items: List<Item>) : androidx.recyclerview.widget.RecyclerView.Adapter<Holder>() {
 
         private val onClick = View.OnClickListener {
             val pos = recycler.getChildAdapterPosition(it)

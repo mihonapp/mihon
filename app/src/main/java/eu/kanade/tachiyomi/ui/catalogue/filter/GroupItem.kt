@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.catalogue.filter
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -33,11 +32,11 @@ class GroupItem(val filter: Filter.Group<*>) : AbstractExpandableHeaderItem<Grou
         return 101
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): Holder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): Holder {
         return Holder(view, adapter)
     }
 
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: Holder, position: Int, payloads: List<Any?>?) {
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>, holder: Holder, position: Int, payloads: List<Any?>?) {
         holder.title.text = filter.name
 
         holder.icon.setVectorCompat(if (isExpanded)

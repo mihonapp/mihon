@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import android.support.v7.preference.SwitchPreferenceCompat
-import android.support.v7.widget.LinearLayoutCompat
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.preference.SwitchPreferenceCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.github.ajalt.reprint.core.AuthenticationResult
 import com.github.ajalt.reprint.core.Reprint

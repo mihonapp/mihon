@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.util
 
-import android.support.annotation.DrawableRes
-import android.support.graphics.drawable.VectorDrawableCompat
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 
 /**
  * Set a vector on a [ImageView].

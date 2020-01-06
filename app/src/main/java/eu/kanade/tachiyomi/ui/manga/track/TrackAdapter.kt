@@ -1,11 +1,10 @@
 package eu.kanade.tachiyomi.ui.manga.track
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.inflate
 
-class TrackAdapter(controller: TrackController) : RecyclerView.Adapter<TrackHolder>() {
+class TrackAdapter(controller: TrackController) : androidx.recyclerview.widget.RecyclerView.Adapter<TrackHolder>() {
 
     var items = emptyList<TrackItem>()
         set(value) {

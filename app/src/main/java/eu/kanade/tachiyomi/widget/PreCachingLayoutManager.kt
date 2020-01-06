@@ -1,10 +1,8 @@
 package eu.kanade.tachiyomi.widget
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 
-class PreCachingLayoutManager(context: Context) : LinearLayoutManager(context) {
+class PreCachingLayoutManager(context: Context) : androidx.recyclerview.widget.LinearLayoutManager(context) {
 
     init {
         isItemPrefetchEnabled = false
@@ -16,7 +14,7 @@ class PreCachingLayoutManager(context: Context) : LinearLayoutManager(context) {
 
     var extraLayoutSpace = 0
 
-    override fun getExtraLayoutSpace(state: RecyclerView.State): Int {
+    override fun getExtraLayoutSpace(state: androidx.recyclerview.widget.RecyclerView.State): Int {
         if (extraLayoutSpace > 0) {
             return extraLayoutSpace
         }

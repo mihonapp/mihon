@@ -1,11 +1,10 @@
 package exh.ui.migration.manga.process
 
 import android.content.Context
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
 
-class DeactivatableViewPager: ViewPager {
+class DeactivatableViewPager : androidx.viewpager.widget.ViewPager {
     constructor(context: Context): super(context)
     constructor(context: Context, attrs: AttributeSet): super(context, attrs)
 

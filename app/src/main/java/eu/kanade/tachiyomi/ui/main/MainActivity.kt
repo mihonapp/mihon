@@ -3,19 +3,21 @@ package eu.kanade.tachiyomi.ui.main
 import android.animation.ObjectAnimator
 import android.app.ActivityManager
 import android.app.SearchManager
-import android.app.usage.UsageStatsManager
 import android.app.Service
+import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.graphics.drawable.DrawerArrowDrawable
-import android.support.v7.widget.Toolbar
+import android.text.TextUtils
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.bluelinelabs.conductor.*
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -32,21 +34,19 @@ import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 import eu.kanade.tachiyomi.util.openInBrowser
+import eu.kanade.tachiyomi.util.vibrate
+import exh.EXHMigrations
+import exh.eh.EHentaiUpdateWorker
 import exh.uconfig.WarnConfigureDialogController
 import exh.ui.batchadd.BatchAddController
 import exh.ui.lock.LockChangeHandler
 import exh.ui.lock.LockController
 import exh.ui.lock.lockEnabled
 import exh.ui.lock.notifyLockSecurity
-import kotlinx.android.synthetic.main.main_activity.*
-import uy.kohesive.injekt.injectLazy
-import android.text.TextUtils
-import android.view.View
-import eu.kanade.tachiyomi.util.vibrate
-import exh.EXHMigrations
-import exh.eh.EHentaiUpdateWorker
 import exh.ui.migration.MetadataFetchDialog
+import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -357,9 +357,9 @@ class MainActivity : BaseActivity() {
 
         val showHamburger = router.backstackSize == 1
         if (showHamburger) {
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            drawer.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_UNLOCKED)
         } else {
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            drawer.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
 
         // --> EH

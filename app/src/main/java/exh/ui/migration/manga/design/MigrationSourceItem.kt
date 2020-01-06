@@ -1,7 +1,6 @@
 package exh.ui.migration.manga.design
 
 import android.os.Parcelable
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
@@ -14,7 +13,7 @@ import kotlinx.android.parcel.Parcelize
 class MigrationSourceItem(val source: HttpSource, var sourceEnabled: Boolean): AbstractFlexibleItem<MigrationSourceHolder>() {
     override fun getLayoutRes() = R.layout.eh_source_item
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): MigrationSourceHolder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): MigrationSourceHolder {
         return MigrationSourceHolder(view, adapter as MigrationSourceAdapter)
     }
 
@@ -26,7 +25,7 @@ class MigrationSourceItem(val source: HttpSource, var sourceEnabled: Boolean): A
      * @param position The position of this item in the adapter.
      * @param payloads List of partial changes.
      */
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>,
                                 holder: MigrationSourceHolder,
                                 position: Int,
                                 payloads: List<Any?>?) {

@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.preference.PreferenceScreen
 import android.view.View
+import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
@@ -22,8 +22,7 @@ import timber.log.Timber
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsAboutController : SettingsController() {

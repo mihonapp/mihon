@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.migration
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +51,7 @@ class MigrationController : NucleusController<MigrationPresenter>(),
         super.onViewCreated(view)
 
         adapter = FlexibleAdapter(null, this)
-        migration_recycler.layoutManager = LinearLayoutManager(view.context)
+        migration_recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
         migration_recycler.adapter = adapter
     }
 

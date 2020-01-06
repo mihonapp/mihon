@@ -2,10 +2,10 @@ package eu.kanade.tachiyomi.widget.preference
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.preference.CheckBoxPreference
-import android.support.v7.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.view.View
+import androidx.preference.CheckBoxPreference
+import androidx.preference.PreferenceViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LoginSource

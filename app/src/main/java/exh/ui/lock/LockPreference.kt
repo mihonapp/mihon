@@ -1,9 +1,9 @@
 package exh.ui.lock
 
 import android.content.Context
-import android.support.v7.preference.SwitchPreferenceCompat
 import android.text.InputType
 import android.util.AttributeSet
+import androidx.preference.SwitchPreferenceCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper

@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.catalogue.global_search
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.source.CatalogueSource
@@ -25,12 +24,12 @@ class CatalogueSearchAdapter(val controller: CatalogueSearchController) :
      */
     private var bundle = Bundle()
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any?>) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, payloads: List<Any?>) {
         super.onBindViewHolder(holder, position, payloads)
         restoreHolderState(holder)
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+    override fun onViewRecycled(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
         saveHolderState(holder, bundle)
     }
@@ -53,7 +52,7 @@ class CatalogueSearchAdapter(val controller: CatalogueSearchController) :
      * @param holder The holder to save.
      * @param outState The bundle where the state is saved.
      */
-    private fun saveHolderState(holder: RecyclerView.ViewHolder, outState: Bundle) {
+    private fun saveHolderState(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, outState: Bundle) {
         val key = "holder_${holder.adapterPosition}"
         val holderState = SparseArray<Parcelable>()
         holder.itemView.saveHierarchyState(holderState)
@@ -65,7 +64,7 @@ class CatalogueSearchAdapter(val controller: CatalogueSearchController) :
      *
      * @param holder The holder to restore.
      */
-    private fun restoreHolderState(holder: RecyclerView.ViewHolder) {
+    private fun restoreHolderState(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         val key = "holder_${holder.adapterPosition}"
         val holderState = bundle.getSparseParcelableArray<Parcelable>(key)
         if (holderState != null) {

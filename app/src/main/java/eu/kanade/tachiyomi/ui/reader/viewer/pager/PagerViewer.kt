@@ -1,11 +1,11 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
-import android.support.v4.view.ViewPager
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup.LayoutParams
+import androidx.viewpager.widget.ViewPager
 import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -75,7 +75,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         pager.offscreenPageLimit = 1
         pager.id = R.id.reader_pager
         pager.adapter = adapter
-        pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+        pager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 val page = adapter.items.getOrNull(position)
                 if (page != null && currentPage != page) {
@@ -88,7 +88,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
             }
 
             override fun onPageScrollStateChanged(state: Int) {
-                isIdle = state == ViewPager.SCROLL_STATE_IDLE
+                isIdle = state == androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE
             }
         })
         pager.tapListener = { event ->

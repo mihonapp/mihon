@@ -7,7 +7,7 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.kizitonwose.time.days
@@ -27,11 +27,14 @@ import exh.EXH_SOURCE_ID
 import exh.debug.DebugToggles
 import exh.eh.EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION
 import exh.metadata.metadata.EHentaiSearchMetadata
-import exh.metadata.metadata.base.*
+import exh.metadata.metadata.base.getFlatMetadataForManga
+import exh.metadata.metadata.base.insertFlatMetadata
 import exh.util.await
 import exh.util.cancellable
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.toList
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

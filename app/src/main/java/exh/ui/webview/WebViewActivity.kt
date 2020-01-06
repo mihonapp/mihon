@@ -129,7 +129,7 @@ class WebViewActivity : BaseActivity() {
         webview.restoreState(savedInstanceState)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState?.putString(STATE_KEY_MOBILE_USER_AGENT, mobileUserAgent)
         outState?.putBoolean(STATE_KEY_IS_DESKTOP, isDesktop)

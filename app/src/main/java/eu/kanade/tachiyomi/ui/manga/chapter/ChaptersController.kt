@@ -5,14 +5,12 @@ import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import com.bluelinelabs.conductor.RouterTransaction
 import com.elvishew.xlog.XLog
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -84,8 +82,8 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         adapter = ChaptersAdapter(this, view.context)
 
         recycler.adapter = adapter
-        recycler.layoutManager = LinearLayoutManager(view.context)
-        recycler.addItemDecoration(DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL))
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
+        recycler.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(view.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         recycler.setHasFixedSize(true)
         adapter?.fastScroller = fast_scroller
 

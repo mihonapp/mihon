@@ -2,11 +2,11 @@ package exh.debug
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.support.v7.preference.PreferenceScreen
 import android.text.Html
 import android.util.Log
 import android.widget.HorizontalScrollView
 import android.widget.TextView
+import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.ui.setting.*
 import kotlin.reflect.KVisibility

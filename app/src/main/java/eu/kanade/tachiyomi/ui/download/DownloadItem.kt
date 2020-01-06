@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.download
 
 import android.view.View
-import android.support.v7.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -28,7 +27,7 @@ class DownloadItem(val download: Download) : AbstractFlexibleItem<DownloadHolder
      * @param view The view of this item.
      * @param adapter The adapter of this item.
      */
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView
     .ViewHolder>>): DownloadHolder {
         return DownloadHolder(view, adapter as DownloadAdapter)
     }
@@ -41,8 +40,8 @@ class DownloadItem(val download: Download) : AbstractFlexibleItem<DownloadHolder
      * @param position The position of this item in the adapter.
      * @param payloads List of partial changes.
      */
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
-        holder: DownloadHolder, position: Int, payloads: MutableList<Any>) {
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>,
+                                holder: DownloadHolder, position: Int, payloads: MutableList<Any>) {
         holder.bind(download)
     }
 

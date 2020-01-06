@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
-import exh.GalleryAddEvent
 import exh.HITOMI_SOURCE_ID
 import exh.hitomi.HitomiNozomi
 import exh.metadata.metadata.HitomiSearchMetadata
@@ -265,7 +264,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
         val range = response.header("Content-Range")!!
         val total = range.substringAfter('/').toLong()
         val end = range.substringBefore('/').substringAfter('-').toLong()
-        val body = response.body()!!
+        val body = response.body!!
         return parseNozomiPage(body.bytes())
                 .map {
                     MangasPage(it, end < total - 1)
@@ -360,8 +359,8 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
      * @param response the response from the site.
      */
     override fun pageListParse(response: Response): List<Page> {
-        val hlId = response.request().url().pathSegments().last().removeSuffix(".js").toLong()
-        val str = response.body()!!.string()
+        val hlId = response.request.url.pathSegments.last().removeSuffix(".js").toLong()
+        val str = response.body!!.string()
         val json = jsonParser.parse(str.removePrefix("var galleryinfo ="))
         return json.array.mapIndexed { index, jsonElement ->
             Page(
@@ -385,7 +384,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
 
     override fun imageRequest(page: Page): Request {
         val request = super.imageRequest(page)
-        val hlId = request.url().pathSegments().let {
+        val hlId = request.url.pathSegments.let {
             it[it.lastIndex - 1]
         }
         return request.newBuilder()

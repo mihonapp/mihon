@@ -5,8 +5,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import exh.ui.captcha.BrowserActionActivity
 import exh.util.interceptAsHtml
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -19,13 +18,13 @@ private val HIDE_SCRIPT = """
         """.trimIndent()
 
 private fun verifyComplete(url: String): Boolean {
-    return HttpUrl.parse(url)?.let { parsed ->
-        parsed.host() == "mangadex.org" && parsed.pathSegments().none { it.isNotBlank() }
+    return url.toHttpUrlOrNull()?.let { parsed ->
+        parsed.host == "mangadex.org" && parsed.pathSegments.none { it.isNotBlank() }
     } ?: false
 }
 
 val MANGADEX_LOGIN_PATCH: EHInterceptor = { request, response, sourceId ->
-    if(request.url().host() == MANGADEX_DOMAIN) {
+    if (request.url.host == MANGADEX_DOMAIN) {
         response.interceptAsHtml { doc ->
             if (doc.title().trim().equals("Login - MangaDex", true)) {
                 BrowserActionActivity.launchAction(

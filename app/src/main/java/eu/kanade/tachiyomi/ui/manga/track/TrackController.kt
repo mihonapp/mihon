@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.manga.track
 
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +41,7 @@ class TrackController : NucleusController<TrackPresenter>(),
 
         adapter = TrackAdapter(this)
         with(view) {
-            track_recycler.layoutManager = LinearLayoutManager(context)
+            track_recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
             track_recycler.adapter = adapter
             swipe_refresh.isEnabled = false
             swipe_refresh.refreshes().subscribeUntilDestroy { presenter.refresh() }

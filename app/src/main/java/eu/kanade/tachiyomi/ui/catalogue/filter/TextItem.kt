@@ -1,9 +1,8 @@
 package eu.kanade.tachiyomi.ui.catalogue.filter
 
-import android.support.design.widget.TextInputLayout
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.EditText
+import com.google.android.material.textfield.TextInputLayout
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -23,17 +22,17 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
         return R.layout.navigation_view_text
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): Holder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): Holder {
         return Holder(view, adapter)
     }
 
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: Holder, position: Int, payloads: List<Any?>?) {
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>, holder: Holder, position: Int, payloads: List<Any?>?) {
         holder.wrapper.hint = filter.name
         holder.edit.setText(filter.state)
         holder.edit.addTextChangedListener(textWatcher)
     }
 
-    override fun unbindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: Holder, position: Int) {
+    override fun unbindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>, holder: Holder, position: Int) {
         holder.edit.removeTextChangedListener(textWatcher)
     }
 

@@ -1,12 +1,12 @@
 package eu.kanade.tachiyomi.widget
 
 import android.content.Context
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import eu.kanade.tachiyomi.R
 
 @Suppress("unused", "UNUSED_PARAMETER")

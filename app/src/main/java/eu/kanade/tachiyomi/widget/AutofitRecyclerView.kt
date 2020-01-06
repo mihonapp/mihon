@@ -1,14 +1,12 @@
 package eu.kanade.tachiyomi.widget
 
 import android.content.Context
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 
 class AutofitRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        RecyclerView(context, attrs) {
+        androidx.recyclerview.widget.RecyclerView(context, attrs) {
 
-    private val manager = GridLayoutManager(context, 1)
+    private val manager = androidx.recyclerview.widget.GridLayoutManager(context, 1)
 
     private var columnWidth = -1
 

@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.catalogue.global_search
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
@@ -14,11 +13,11 @@ class CatalogueSearchCardItem(val manga: Manga) : AbstractFlexibleItem<Catalogue
         return R.layout.catalogue_global_search_controller_card_item
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): CatalogueSearchCardHolder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): CatalogueSearchCardHolder {
         return CatalogueSearchCardHolder(view, adapter as CatalogueSearchCardAdapter)
     }
 
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: CatalogueSearchCardHolder,
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>, holder: CatalogueSearchCardHolder,
                                 position: Int, payloads: List<Any?>?) {
         holder.bind(manga)
     }

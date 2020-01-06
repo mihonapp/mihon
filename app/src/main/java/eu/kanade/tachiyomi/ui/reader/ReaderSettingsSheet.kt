@@ -1,11 +1,11 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialog
-import android.support.v4.widget.NestedScrollView
 import android.widget.CompoundButton
 import android.widget.Spinner
+import androidx.core.widget.NestedScrollView
 import com.f2prateek.rx.preferences.Preference
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault

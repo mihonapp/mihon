@@ -1,10 +1,8 @@
 package eu.kanade.tachiyomi.ui.recent_updates
 
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.support.v7.widget.scrollStateChanges
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -68,9 +66,9 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
         super.onViewCreated(view)
 
         // Init RecyclerView and adapter
-        val layoutManager = LinearLayoutManager(view.context)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
         recycler.layoutManager = layoutManager
-        recycler.addItemDecoration(DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL))
+        recycler.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(view.context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         recycler.setHasFixedSize(true)
         adapter = RecentChaptersAdapter(this@RecentChaptersController)
         recycler.adapter = adapter

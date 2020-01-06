@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.base.controller
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
 import android.view.View
+import androidx.annotation.CallSuper
 import rx.Observable
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription

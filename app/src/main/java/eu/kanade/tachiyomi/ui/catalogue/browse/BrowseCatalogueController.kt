@@ -2,13 +2,15 @@ package eu.kanade.tachiyomi.ui.catalogue.browse
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.widget.*
 import android.view.*
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.elvishew.xlog.XLog
 import com.f2prateek.rx.preferences.Preference
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -35,7 +37,6 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.util.concurrent.TimeUnit
 
@@ -85,7 +86,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
     /**
      * Recycler view with the list of results.
      */
-    private var recycler: RecyclerView? = null
+    private var recycler: androidx.recyclerview.widget.RecyclerView? = null
 
     /**
      * Subscription for the search view.
@@ -142,13 +143,13 @@ open class BrowseCatalogueController(bundle: Bundle) :
         super.onDestroyView(view)
     }
 
-    override fun createSecondaryDrawer(drawer: DrawerLayout): ViewGroup? {
+    override fun createSecondaryDrawer(drawer: androidx.drawerlayout.widget.DrawerLayout): ViewGroup? {
         // Inflate and prepare drawer
-        val navView = drawer.inflate(R.layout.catalogue_drawer) as CatalogueNavigationView
+        val navView = drawer.inflate(R.layout.catalogue_drawer) as CatalogueNavigationView //TODO whatever this is
         this.navView = navView
         navView.setFilters(presenter.filterItems)
 
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END)
+        drawer.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END)
 
         // EXH -->
         navView.setSavedSearches(presenter.loadSearches())
@@ -196,7 +197,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
 
             showProgressBar()
             adapter?.clear()
-            drawer.closeDrawer(Gravity.END)
+            drawer.closeDrawer(GravityCompat.END)
             presenter.restartPager(search.query, if (allDefault) FilterList() else presenter.sourceFilters)
             activity?.invalidateOptionsMenu()
         }
@@ -238,7 +239,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
             val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
             showProgressBar()
             adapter?.clear()
-            drawer.closeDrawer(Gravity.END)
+            drawer.closeDrawer(GravityCompat.END)
             presenter.setSourceFilter(if (allDefault) FilterList() else presenter.sourceFilters)
         }
 
@@ -248,31 +249,31 @@ open class BrowseCatalogueController(bundle: Bundle) :
             presenter.sourceFilters = newFilters
             navView.setFilters(presenter.filterItems)
         }
-        return navView
+        return navView as ViewGroup //TODO fix this bullshit
     }
 
-    override fun cleanupSecondaryDrawer(drawer: DrawerLayout) {
+    override fun cleanupSecondaryDrawer(drawer: androidx.drawerlayout.widget.DrawerLayout) {
         navView = null
     }
 
     private fun setupRecycler(view: View) {
         numColumnsSubscription?.unsubscribe()
 
-        var oldPosition = RecyclerView.NO_POSITION
+        var oldPosition = androidx.recyclerview.widget.RecyclerView.NO_POSITION
         val oldRecycler = catalogue_view?.getChildAt(1)
-        if (oldRecycler is RecyclerView) {
-            oldPosition = (oldRecycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        if (oldRecycler is androidx.recyclerview.widget.RecyclerView) {
+            oldPosition = (oldRecycler.layoutManager as androidx.recyclerview.widget.LinearLayoutManager).findFirstVisibleItemPosition()
             oldRecycler.adapter = null
 
             catalogue_view?.removeView(oldRecycler)
         }
 
         val recycler = if (presenter.isListMode) {
-            RecyclerView(view.context).apply {
+            androidx.recyclerview.widget.RecyclerView(view.context).apply {
                 id = R.id.recycler
-                layoutManager = LinearLayoutManager(context)
-                layoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+                layoutParams = androidx.recyclerview.widget.RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
             }
         } else {
             (catalogue_view.inflate(R.layout.catalogue_recycler_autofit) as AutofitRecyclerView).apply {
@@ -282,7 +283,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
                         // Set again the adapter to recalculate the covers height
                         .subscribe { adapter = this@BrowseCatalogueController.adapter }
 
-                (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                (layoutManager as androidx.recyclerview.widget.GridLayoutManager).spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
                         return when (adapter?.getItemViewType(position)) {
                             R.layout.catalogue_grid_item, null -> 1
@@ -297,7 +298,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
 
         catalogue_view.addView(recycler, 1)
 
-        if (oldPosition != RecyclerView.NO_POSITION) {
+        if (oldPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
             recycler.layoutManager?.scrollToPosition(oldPosition)
         }
         this.recycler = recycler
@@ -369,7 +370,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_display_mode -> swapDisplayMode()
-            R.id.action_set_filter -> navView?.let { activity?.drawer?.openDrawer(Gravity.END) }
+            R.id.action_set_filter -> navView?.let { activity?.drawer?.openDrawer(GravityCompat.END) }
             R.id.action_open_in_browser -> openInBrowser()
             R.id.action_open_in_web_view -> openInWebView()
             else -> return super.onOptionsItemSelected(item)

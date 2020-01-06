@@ -18,35 +18,36 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
+import exh.debug.DebugToggles
 import exh.eh.EHentaiUpdateHelper
+import exh.eh.EHentaiUpdateWorkerConstants
+import exh.eh.GalleryEntry
 import exh.metadata.EX_DATE_FORMAT
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.EHentaiSearchMetadata.Companion.EH_GENRE_NAMESPACE
 import exh.metadata.metadata.EHentaiSearchMetadata.Companion.TAG_TYPE_LIGHT
 import exh.metadata.metadata.EHentaiSearchMetadata.Companion.TAG_TYPE_NORMAL
 import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUAL
+import exh.metadata.metadata.base.RaisedTag
 import exh.metadata.nullIfBlank
 import exh.metadata.parseHumanReadableByteCount
-import exh.debug.DebugToggles
 import exh.ui.login.LoginController
 import exh.util.UriFilter
 import exh.util.UriGroup
 import exh.util.ignore
 import exh.util.urlImportFetchSearchManga
+import kotlinx.coroutines.runBlocking
 import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 import rx.Observable
+import rx.Single
 import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.util.*
-import exh.metadata.metadata.base.RaisedTag
-import exh.eh.EHentaiUpdateWorkerConstants
-import exh.eh.GalleryEntry
-import kotlinx.coroutines.runBlocking
-import org.jsoup.nodes.TextNode
-import rx.Single
-import java.lang.RuntimeException
 
 // TODO Consider gallery updating when doing tabbed browsing
 class EHentai(override val id: Long,
@@ -108,11 +109,11 @@ class EHentai(override val id: Long,
                     })
         }
 
-        val parsedLocation = HttpUrl.parse(doc.location())
+        val parsedLocation = doc.location().toHttpUrlOrNull()
 
         //Add to page if required
         val hasNextPage = if(parsedLocation == null
-                || !parsedLocation.queryParameterNames().contains(REVERSE_PARAM)) {
+                || !parsedLocation.queryParameterNames.contains(REVERSE_PARAM)) {
             select("a[onclick=return false]").last()?.let {
                 it.text() == ">"
             } ?: false
@@ -151,7 +152,7 @@ class EHentai(override val id: Long,
                         throttleFunc()
 
                         val resp = client.newCall(exGet(baseUrl + url)).execute()
-                        if (!resp.isSuccessful) error("HTTP error (${resp.code()})!")
+                        if (!resp.isSuccessful) error("HTTP error (${resp.code})!")
                         doc = resp.asJsoup()
 
                         val parentLink = doc!!.select("#gdd .gdt1").find { el ->
@@ -344,10 +345,10 @@ class EHentai(override val id: Long,
                     } else {
                         response.close()
 
-                        if(response.code() == 404) {
+                        if (response.code == 404) {
                             throw GalleryNotFoundException(stacktrace)
                         } else {
-                            throw Exception("HTTP error ${response.code()}", stacktrace)
+                            throw Exception("HTTP error ${response.code}", stacktrace)
                         }
                     }
                 }
@@ -707,7 +708,7 @@ class EHentai(override val id: Long,
         val outJson = JsonParser().parse(client.newCall(Request.Builder()
                 .url(EH_API_BASE)
                 .post(RequestBody.create(JSON, json.toString()))
-                .build()).execute().body()!!.string()).obj
+                .build()).execute().body!!.string()).obj
 
         val obj = outJson["tokenlist"].array.first()
         return "${uri.scheme}://${uri.host}/g/${obj["gid"].int}/${obj["token"].string}/"
@@ -720,7 +721,7 @@ class EHentai(override val id: Long,
         private const val REVERSE_PARAM = "TEH_REVERSE"
 
         private const val EH_API_BASE = "https://api.e-hentai.org/api.php"
-        private val JSON = MediaType.parse("application/json; charset=utf-8")!!
+        private val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()!!
 
         private val FAVORITES_BORDER_HEX_COLORS = listOf(
                 "000",

@@ -78,7 +78,7 @@ class HitomiNozomi(private val client: OkHttpClient,
         return client.newCall(rangedGet(url, offset, offset + length - 1))
                 .asObservable()
                 .map {
-                    it.body()?.bytes() ?: ByteArray(0)
+                    it.body?.bytes() ?: ByteArray(0)
                 }
                 .onErrorReturn { ByteArray(0) }
                 .map { inbuf ->
@@ -183,7 +183,7 @@ class HitomiNozomi(private val client: OkHttpClient,
         return client.newCall(rangedGet(url, address, address + MAX_NODE_SIZE - 1))
                 .asObservableSuccess()
                 .map {
-                    it.body()?.bytes() ?: ByteArray(0)
+                    it.body?.bytes() ?: ByteArray(0)
                 }
                 .onErrorReturn { ByteArray(0) }
                 .map { nodedata ->
@@ -204,7 +204,7 @@ class HitomiNozomi(private val client: OkHttpClient,
                 .build())
                 .asObservableSuccess()
                 .map { resp ->
-                    val body = resp.body()!!.bytes()
+                    val body = resp.body!!.bytes()
                     val cursor = ByteCursor(body)
                     (1 .. body.size / 4).map {
                         cursor.nextInt()
@@ -238,7 +238,7 @@ class HitomiNozomi(private val client: OkHttpClient,
         fun getIndexVersion(httpClient: OkHttpClient, name: String): Observable<Long> {
             return httpClient.newCall(GET("$LTN_BASE_URL/$name/version?_=${System.currentTimeMillis()}"))
                     .asObservableSuccess()
-                    .map { it.body()!!.string().toLong() }
+                    .map { it.body!!.string().toLong() }
         }
     }
 }

@@ -2,18 +2,18 @@ package eu.kanade.tachiyomi.ui.manga
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.graphics.drawable.VectorDrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.support.RouterPagerAdapter
+import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.R
@@ -36,7 +36,7 @@ import kotlinx.android.synthetic.main.manga_controller.*
 import rx.Subscription
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.Date
+import java.util.*
 
 class MangaController : RxController, TabbedController {
 

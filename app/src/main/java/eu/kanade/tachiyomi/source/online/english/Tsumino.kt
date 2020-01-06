@@ -16,25 +16,23 @@ import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.toast
-import exh.GalleryAddEvent
 import exh.TSUMINO_SOURCE_ID
-import exh.ui.captcha.ActionCompletionVerifier
-import exh.ui.captcha.BrowserActionActivity
 import exh.metadata.metadata.TsuminoSearchMetadata
 import exh.metadata.metadata.TsuminoSearchMetadata.Companion.BASE_URL
 import exh.metadata.metadata.TsuminoSearchMetadata.Companion.TAG_TYPE_DEFAULT
 import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUAL
 import exh.metadata.metadata.base.RaisedTag
+import exh.ui.captcha.ActionCompletionVerifier
+import exh.ui.captcha.BrowserActionActivity
 import exh.util.urlImportFetchSearchManga
 import okhttp3.*
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import rx.Observable
-import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.io.IOException
 
 class Tsumino(private val context: Context): ParsedHttpSource(),
         LewdSource<TsuminoSearchMetadata, Document>,
@@ -127,7 +125,7 @@ class Tsumino(private val context: Context): ParsedHttpSource(),
     }
 
     fun genericMangaParse(response: Response): MangasPage {
-        val json = jsonParser.parse(response.body()!!.string()!!).asJsonObject
+        val json = jsonParser.parse(response.body!!.string()!!).asJsonObject
         val hasNextPage = json["pageNumber"].int < json["pageCount"].int
         
         val manga = json["data"].array.map {

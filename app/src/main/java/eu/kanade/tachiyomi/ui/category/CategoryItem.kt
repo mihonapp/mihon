@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.category
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
@@ -31,7 +30,7 @@ class CategoryItem(val category: Category) : AbstractFlexibleItem<CategoryHolder
      * @param view The view of this item.
      * @param adapter The adapter of this item.
      */
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): CategoryHolder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): CategoryHolder {
         return CategoryHolder(view, adapter as CategoryAdapter)
     }
 
@@ -43,7 +42,7 @@ class CategoryItem(val category: Category) : AbstractFlexibleItem<CategoryHolder
      * @param position The position of this item in the adapter.
      * @param payloads List of partial changes.
      */
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>,
                                 holder: CategoryHolder,
                                 position: Int,
                                 payloads: List<Any?>?) {

@@ -15,7 +15,7 @@ val CAPTCHA_DETECTION_PATCH: EHInterceptor = { request, response, sourceId ->
                 BrowserActionActivity.launchUniversal(
                         Injekt.get<Application>(),
                         sourceId,
-                        request.url().toString()
+                        request.url.toString()
                 )
             }
         }

@@ -8,7 +8,7 @@ import java.io.IOException
 class ProgressResponseBody(private val responseBody: ResponseBody, private val progressListener: ProgressListener) : ResponseBody() {
 
     private val bufferedSource: BufferedSource by lazy {
-        Okio.buffer(source(responseBody.source()))
+        source(responseBody.source()).buffer()
     }
 
     override fun contentType(): MediaType {

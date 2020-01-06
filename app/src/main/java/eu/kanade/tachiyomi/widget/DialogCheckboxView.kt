@@ -1,9 +1,9 @@
 package eu.kanade.tachiyomi.widget
 
 import android.content.Context
-import android.support.annotation.StringRes
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.inflate
 import kotlinx.android.synthetic.main.common_dialog_with_checkbox.view.*

@@ -1,12 +1,15 @@
 package exh.eh
 
-import android.support.v4.util.AtomicFile
 import android.util.SparseArray
+import androidx.core.util.AtomicFile
 import com.elvishew.xlog.XLog
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.io.*
+import java.io.Closeable
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.InputStream
 import java.nio.ByteBuffer
 import kotlin.concurrent.thread
 import kotlin.coroutines.CoroutineContext

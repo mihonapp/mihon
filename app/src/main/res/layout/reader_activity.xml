@@ -44,7 +44,7 @@
         android:visibility="invisible"
         tools:visibility="visible">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:background="?colorPrimary"
             android:elevation="4dp">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:padding="0dp"
                 app:srcCompat="@drawable/ic_keyboard_arrow_down_white_32dp" />
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
             android:id="@+id/reader_menu_bottom"

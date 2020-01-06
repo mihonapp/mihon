@@ -8,11 +8,13 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.*
 import exh.patch.injectPatches
 import exh.source.DelegatedHttpSource
-import okhttp3.*
+import okhttp3.Headers
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.lang.Exception
 import java.net.URI
 import java.net.URISyntaxException
 import java.security.MessageDigest
@@ -28,13 +30,13 @@ abstract class HttpSource : CatalogueSource {
     protected val network: NetworkHelper by lazy {
         val original = Injekt.get<NetworkHelper>()
         object : NetworkHelper(Injekt.get<Application>()) {
-            override val client: OkHttpClient?
+            override val client: OkHttpClient
                 get() = delegate?.networkHttpClient ?: original.client
                         .newBuilder()
                         .injectPatches { id }
                         .build()
 
-            override val cloudflareClient: OkHttpClient?
+            override val cloudflareClient: OkHttpClient
                 get() = delegate?.networkCloudflareClient ?: original.cloudflareClient
                         .newBuilder()
                         .injectPatches { id }

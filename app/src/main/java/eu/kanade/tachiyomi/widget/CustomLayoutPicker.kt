@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.widget
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.nononsenseapps.filepicker.AbstractFilePickerFragment
 import com.nononsenseapps.filepicker.FilePickerActivity
@@ -21,7 +20,7 @@ class CustomLayoutPickerActivity : FilePickerActivity() {
 }
 
 class CustomLayoutFilePickerFragment : FilePickerFragment() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         when (viewType) {
             LogicHandler.VIEWTYPE_DIR -> {
                 val view = parent.inflate(R.layout.common_listitem_dir)

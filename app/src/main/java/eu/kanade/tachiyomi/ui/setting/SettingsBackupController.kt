@@ -7,8 +7,8 @@ import android.content.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.preference.PreferenceScreen
 import android.view.View
+import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R

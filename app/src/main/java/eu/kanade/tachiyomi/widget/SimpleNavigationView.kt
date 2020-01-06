@@ -2,22 +2,20 @@ package eu.kanade.tachiyomi.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.design.R
-import android.support.design.internal.ScrimInsetsFrameLayout
-import android.support.design.widget.TextInputLayout
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.TintTypedArray
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.TintTypedArray
+import androidx.core.view.ViewCompat
+import com.google.android.material.R
+import com.google.android.material.internal.ScrimInsetsFrameLayout
+import com.google.android.material.textfield.TextInputLayout
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.R as TR
 
 @Suppress("LeakingThis")
-@SuppressLint("PrivateResource")
+@SuppressLint("PrivateResource", "RestrictedApi")
 open class SimpleNavigationView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -32,7 +30,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
     /**
      * Recycler view containing all the items.
      */
-    protected val recycler = RecyclerView(context)
+    protected val recycler = androidx.recyclerview.widget.RecyclerView(context)
 
     init {
         // Custom attributes
@@ -56,7 +54,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
 
         a.recycle()
 
-        recycler.layoutManager = LinearLayoutManager(context)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
     }
 
     /**
@@ -77,7 +75,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
     /**
      * Base view holder.
      */
-    abstract class Holder(view: View) : RecyclerView.ViewHolder(view)
+    abstract class Holder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 
     /**
      * Separator view holder.

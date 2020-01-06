@@ -6,7 +6,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Environment
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog

@@ -1,13 +1,12 @@
 package eu.kanade.tachiyomi.ui.migration
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractHeaderItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
-import kotlinx.android.synthetic.main.catalogue_main_controller_card.title
+import kotlinx.android.synthetic.main.catalogue_main_controller_card.*
 
 /**
  * Item that contains the selection header.
@@ -24,14 +23,14 @@ class SelectionHeader : AbstractHeaderItem<SelectionHeader.Holder>() {
     /**
      * Creates a new view holder for this item.
      */
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): Holder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): Holder {
         return SelectionHeader.Holder(view, adapter)
     }
 
     /**
      * Binds this item to the given view holder.
      */
-    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>, holder: Holder,
+    override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>, holder: Holder,
                                 position: Int, payloads: List<Any?>?) {
         // Intentionally empty
     }

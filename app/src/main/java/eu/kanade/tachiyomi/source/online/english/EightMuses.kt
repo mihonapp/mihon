@@ -17,9 +17,13 @@ import exh.util.CachedField
 import exh.util.NakedTrie
 import exh.util.await
 import exh.util.urlImportFetchSearchManga
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.rx2.asSingle
+import kotlinx.coroutines.withContext
 import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -64,7 +68,7 @@ class EightMuses: HttpSource(),
                     .asObservableSuccess()
                     .toSingle()
                     .await(Schedulers.io())
-                    .body()!!.string()
+                    .body!!.string()
 
             val parsed = Jsoup.parse(result)
 
@@ -115,11 +119,11 @@ class EightMuses: HttpSource(),
      */
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         val urlBuilder = if(!query.isBlank()) {
-            HttpUrl.parse("$baseUrl/search")!!
+            "$baseUrl/search".toHttpUrlOrNull()!!
                     .newBuilder()
                     .addQueryParameter("q", query)
         } else {
-            HttpUrl.parse("$baseUrl/comics")!!
+            "$baseUrl/comics".toHttpUrlOrNull()!!
                     .newBuilder()
         }
 

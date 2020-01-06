@@ -2,7 +2,9 @@ package eu.kanade.tachiyomi.ui.catalogue.browse
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -10,13 +12,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.dpToPx
 import eu.kanade.tachiyomi.util.inflate
 import eu.kanade.tachiyomi.widget.SimpleNavigationView
-import kotlinx.android.synthetic.main.catalogue_drawer_content.view.*
-import android.util.TypedValue
-import android.view.View
 import exh.EXHSavedSearch
+import kotlinx.android.synthetic.main.catalogue_drawer_content.view.*
 
 class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
     : SimpleNavigationView(context, attrs) {
@@ -44,10 +45,10 @@ class CatalogueNavigationView @JvmOverloads constructor(context: Context, attrs:
     init {
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
-        val view = inflate(eu.kanade.tachiyomi.R.layout.catalogue_drawer_content)
+        val view = inflate(R.layout.catalogue_drawer_content)
         ((view as ViewGroup).getChildAt(1) as ViewGroup).addView(recycler)
         addView(view)
-        title.text = context?.getString(eu.kanade.tachiyomi.R.string.source_search_options)
+        title.text = context.getString(R.string.source_search_options)
         save_search_btn.setOnClickListener { onSaveClicked() }
         search_btn.setOnClickListener { onSearchClicked() }
         reset_btn.setOnClickListener { onResetClicked() }

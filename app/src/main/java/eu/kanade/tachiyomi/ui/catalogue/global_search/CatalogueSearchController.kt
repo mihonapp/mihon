@@ -1,9 +1,8 @@
 package eu.kanade.tachiyomi.ui.catalogue.global_search
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -139,7 +138,7 @@ open class CatalogueSearchController(
         adapter = CatalogueSearchAdapter(this)
 
         // Create recycler and set adapter.
-        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
         recycler.adapter = adapter
     }
 

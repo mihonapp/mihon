@@ -28,7 +28,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.rx2.asSingle
-import okhttp3.*
+import okhttp3.CookieJar
+import okhttp3.FormBody
+import okhttp3.Headers
+import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import rx.Observable
@@ -371,7 +374,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
      */
     override fun pageListParse(response: Response): List<Page> {
         val doc = response.asJsoup()
-        val basePath = listOf("data") + response.request().url().pathSegments()
+        val basePath = listOf("data") + response.request.url.pathSegments
         val scripts = doc.getElementsByTag("script").map { it.data() }
         for(script in scripts) {
             val totalPages = TOTAL_PAGES_REGEX.find(script)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: continue

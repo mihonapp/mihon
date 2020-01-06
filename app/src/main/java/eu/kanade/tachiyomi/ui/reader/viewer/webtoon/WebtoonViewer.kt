@@ -1,12 +1,12 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.WebtoonLayoutManager
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.WebtoonLayoutManager
 import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
@@ -67,8 +67,8 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
         recycler.itemAnimator = null
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
-        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        recycler.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 val position = layoutManager.findLastEndVisibleItemPosition()
                 val item = adapter.items.getOrNull(position)
                 if (item != null) {

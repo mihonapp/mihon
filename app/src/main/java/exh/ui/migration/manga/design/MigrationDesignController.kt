@@ -1,7 +1,6 @@
 package exh.ui.migration.manga.design
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
@@ -42,7 +41,7 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
                 this
         )
         adapter = ourAdapter
-        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
         recycler.adapter = ourAdapter
         ourAdapter.itemTouchHelperCallback = null // Reset adapter touch adapter to fix drag after rotation

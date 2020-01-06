@@ -1,12 +1,7 @@
 package eu.kanade.tachiyomi.ui.extension
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChanges
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -63,7 +58,7 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         // Initialize adapter, scroll listener and recycler views
         adapter = ExtensionAdapter(this)
         // Create recycler and set adapter.
-        ext_recycler.layoutManager = LinearLayoutManager(view.context)
+        ext_recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
         ext_recycler.adapter = adapter
         ext_recycler.addItemDecoration(ExtensionDividerItemDecoration(view.context))
     }

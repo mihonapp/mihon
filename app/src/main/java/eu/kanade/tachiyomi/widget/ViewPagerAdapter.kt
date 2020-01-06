@@ -1,10 +1,9 @@
 package eu.kanade.tachiyomi.widget
 
-import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
 
-abstract class ViewPagerAdapter : PagerAdapter() {
+abstract class ViewPagerAdapter : androidx.viewpager.widget.PagerAdapter() {
 
     protected abstract fun createView(container: ViewGroup, position: Int): View
 

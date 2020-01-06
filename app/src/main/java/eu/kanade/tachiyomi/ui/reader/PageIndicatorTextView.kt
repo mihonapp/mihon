@@ -5,12 +5,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.support.v7.widget.AppCompatTextView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ScaleXSpan
 import android.util.AttributeSet
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 
 /**
  * Page indicator found at the bottom of the reader

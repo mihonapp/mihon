@@ -6,13 +6,12 @@ import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.view.animation.DecelerateInterpolator
+import androidx.recyclerview.widget.RecyclerView
 import eu.kanade.tachiyomi.ui.reader.viewer.GestureDetectorWithLongTap
 
 /**
@@ -22,7 +21,7 @@ open class WebtoonRecyclerView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0
-) : RecyclerView(context, attrs, defStyle) {
+) : androidx.recyclerview.widget.RecyclerView(context, attrs, defStyle) {
 
     private var isZooming = false
     private var atLastPosition = false
@@ -54,7 +53,7 @@ open class WebtoonRecyclerView @JvmOverloads constructor(
         super.onScrolled(dx, dy)
         val layoutManager = layoutManager
         lastVisibleItemPosition =
-                (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                (layoutManager as androidx.recyclerview.widget.LinearLayoutManager).findLastVisibleItemPosition()
         firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
     }
 

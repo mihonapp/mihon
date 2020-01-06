@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.database
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper
 import android.content.Context
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite
 import eu.kanade.tachiyomi.data.database.mappers.*
 import eu.kanade.tachiyomi.data.database.models.*

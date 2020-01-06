@@ -1,6 +1,5 @@
 package exh.ui.migration.manga.process
 
-import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -18,7 +17,9 @@ import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.migration.MigrationFlags
-import eu.kanade.tachiyomi.util.*
+import eu.kanade.tachiyomi.util.gone
+import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.visible
 import exh.MERGED_SOURCE_ID
 import exh.util.await
 import kotlinx.android.synthetic.main.eh_manga_card.view.*
@@ -34,7 +35,7 @@ import kotlin.coroutines.CoroutineContext
 
 class MigrationProcedureAdapter(val controller: MigrationProcedureController,
                                 val migratingManga: List<MigratingManga>,
-                                override val coroutineContext: CoroutineContext) : PagerAdapter(), CoroutineScope {
+                                override val coroutineContext: CoroutineContext) : androidx.viewpager.widget.PagerAdapter(), CoroutineScope {
     private val db: DatabaseHelper by injectLazy()
     private val gson: Gson by injectLazy()
     private val sourceManager: SourceManager by injectLazy()

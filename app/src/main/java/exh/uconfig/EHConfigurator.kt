@@ -117,13 +117,13 @@ class EHConfigurator {
         //Persist slot + sk
         source.spPref().set(slot)
 
-        val keyCookie = response.headers().toMultimap()["Set-Cookie"]?.find {
+        val keyCookie = response.headers.toMultimap()["Set-Cookie"]?.find {
             it.startsWith("sk=")
         }?.removePrefix("sk=")?.substringBefore(';')
-        val sessionCookie = response.headers().toMultimap()["Set-Cookie"]?.find {
+        val sessionCookie = response.headers.toMultimap()["Set-Cookie"]?.find {
             it.startsWith("s=")
         }?.removePrefix("s=")?.substringBefore(';')
-        val hathPerksCookie = response.headers().toMultimap()["Set-Cookie"]?.find {
+        val hathPerksCookie = response.headers.toMultimap()["Set-Cookie"]?.find {
             it.startsWith("hath_perks=")
         }?.removePrefix("hath_perks=")?.substringBefore(';')
 

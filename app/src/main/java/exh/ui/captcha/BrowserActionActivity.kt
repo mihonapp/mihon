@@ -4,34 +4,38 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
-import android.support.v7.app.AppCompatActivity
+import android.os.SystemClock
+import android.view.MotionEvent
 import android.webkit.*
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import com.afollestad.materialdialogs.MaterialDialog
 import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonParser
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.HttpSource
+import exh.source.DelegatedHttpSource
+import exh.util.melt
 import kotlinx.android.synthetic.main.eh_activity_captcha.*
-import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.Request
+import okhttp3.RequestBody
+import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
+import java.io.Serializable
 import java.net.URL
 import java.util.*
-import android.view.MotionEvent
-import android.os.SystemClock
-import com.afollestad.materialdialogs.MaterialDialog
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.source.online.HttpSource
-import exh.source.DelegatedHttpSource
-import exh.util.melt
-import rx.Observable
-import java.io.Serializable
 import kotlin.collections.HashMap
 
 class BrowserActionActivity : AppCompatActivity() {
@@ -146,7 +150,7 @@ class BrowserActionActivity : AppCompatActivity() {
                         .asObservableSuccess()
                         .subscribeOn(Schedulers.io())
                         .map {
-                            val json = jsonParser.parse(it.body()!!.string())
+                            val json = jsonParser.parse(it.body!!.string())
                             it.close()
                             json["token"].string
                         }.melt()
@@ -267,10 +271,10 @@ class BrowserActionActivity : AppCompatActivity() {
                 token to it
             }
         }.flatMap { (token, response) ->
-            val audioFile = response.body()!!.bytes()
+            val audioFile = response.body!!.bytes()
 
             httpClient.newCall(Request.Builder()
-                    .url(HttpUrl.parse("https://stream.watsonplatform.net/speech-to-text/api/v1/recognize")!!
+                    .url("https://stream.watsonplatform.net/speech-to-text/api/v1/recognize".toHttpUrlOrNull()!!
                             .newBuilder()
                             .addQueryParameter("watson-token", token)
                             .build())
@@ -279,11 +283,11 @@ class BrowserActionActivity : AppCompatActivity() {
                             .addFormDataPart("jsonDescription", RECOGNIZE_JSON)
                             .addFormDataPart("audio.mp3",
                                     "audio.mp3",
-                                    RequestBody.create(MediaType.parse("audio/mp3"), audioFile))
+                                    RequestBody.create("audio/mp3".toMediaTypeOrNull(), audioFile))
                             .build())
                     .build()).asObservableSuccess()
         }.map { response ->
-            jsonParser.parse(response.body()!!.string())["results"][0]["alternatives"][0]["transcript"].string.trim()
+            jsonParser.parse(response.body!!.string())["results"][0]["alternatives"][0]["transcript"].string.trim()
         }.toSingle()
     }
 
