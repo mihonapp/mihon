@@ -173,7 +173,7 @@ internal object ExtensionLoader {
      */
     private fun getSignatureHash(pkgInfo: PackageInfo): String? {
         val signatures = pkgInfo.signatures
-        return if (signatures != null && !signatures.isEmpty()) {
+        return if (signatures != null && signatures.isNotEmpty()) {
             Hash.sha256(signatures.first().toByteArray())
         } else {
             null

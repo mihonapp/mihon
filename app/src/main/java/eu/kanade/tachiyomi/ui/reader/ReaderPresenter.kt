@@ -90,7 +90,7 @@ class ReaderPresenter(
 
         val chaptersForReader =
                 if (preferences.skipRead()) {
-                    var list = dbChapters.filter { it -> !it.read }.toMutableList()
+                    val list = dbChapters.filter { !it.read }.toMutableList()
                     val find = list.find { it.id == chapterId }
                     if (find == null) {
                         list.add(selectedChapter)

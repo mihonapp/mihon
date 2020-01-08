@@ -147,7 +147,7 @@ class SettingsDownloadController : SettingsController() {
 
             return MaterialDialog.Builder(activity)
                     .items(externalDirs)
-                    .itemsCallbackSingleChoice(selectedIndex, { _, _, which, text ->
+                    .itemsCallbackSingleChoice(selectedIndex) { _, _, which, text ->
                         val target = targetController as? SettingsDownloadController
                         if (which == externalDirs.lastIndex) {
                             target?.customDirectorySelected(currentDir)
@@ -155,7 +155,7 @@ class SettingsDownloadController : SettingsController() {
                             target?.predefinedDirectorySelected(text.toString())
                         }
                         true
-                    })
+                    }
                     .build()
         }
 

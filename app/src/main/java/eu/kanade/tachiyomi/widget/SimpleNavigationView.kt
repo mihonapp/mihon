@@ -2,18 +2,19 @@ package eu.kanade.tachiyomi.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.google.android.material.R
-import com.google.android.material.textfield.TextInputLayout
-import androidx.core.view.ViewCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.TintTypedArray
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.TintTypedArray
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.R
 import com.google.android.material.internal.ScrimInsetsFrameLayout
+import com.google.android.material.textfield.TextInputLayout
 import eu.kanade.tachiyomi.util.inflate
+import kotlin.math.min
 import eu.kanade.tachiyomi.R as TR
 
 @Suppress("LeakingThis")
@@ -66,7 +67,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         val width = when (MeasureSpec.getMode(widthSpec)) {
             MeasureSpec.AT_MOST -> MeasureSpec.makeMeasureSpec(
-                    Math.min(MeasureSpec.getSize(widthSpec), maxWidth), MeasureSpec.EXACTLY)
+                    min(MeasureSpec.getSize(widthSpec), maxWidth), MeasureSpec.EXACTLY)
             MeasureSpec.UNSPECIFIED -> MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY)
             else -> widthSpec
         }

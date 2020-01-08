@@ -170,7 +170,7 @@ class MainActivity : BaseActivity() {
 
                 //Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY)
-                if (query != null && !query.isEmpty()) {
+                if (query != null && query.isNotEmpty()) {
                     if (router.backstackSize > 1) {
                         router.popToRoot()
                     }
@@ -180,7 +180,7 @@ class MainActivity : BaseActivity() {
             INTENT_SEARCH -> {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
                 val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
-                if (query != null && !query.isEmpty()) {
+                if (query != null && query.isNotEmpty()) {
                     if (router.backstackSize > 1) {
                         router.popToRoot()
                     }

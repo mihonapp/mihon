@@ -19,6 +19,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
@@ -40,7 +41,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
                         "status" to track.toShikimoriStatus()
                 )
         )
-        val body = RequestBody.create(jsonime, payload.toString())
+        val body = payload.toString().toRequestBody(jsonime)
         val request = Request.Builder()
                 .url("$apiUrl/v2/user_rates")
                 .post(body)

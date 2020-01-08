@@ -5,11 +5,12 @@ package eu.kanade.tachiyomi.util
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Typeface
-import com.google.android.material.snackbar.Snackbar
 import android.view.View
 import android.widget.TextView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
+import com.google.android.material.snackbar.Snackbar
+import kotlin.math.min
 
 /**
  * Returns coordinates of view.
@@ -58,7 +59,7 @@ inline fun View.visibleIf(block: () -> Boolean) {
  * @param random random color
  */
 fun View.getRound(text: String, random : Boolean = true): TextDrawable {
-    val size = Math.min(this.width, this.height)
+    val size = min(this.width, this.height)
     return TextDrawable.builder()
             .beginConfig()
             .width(size)

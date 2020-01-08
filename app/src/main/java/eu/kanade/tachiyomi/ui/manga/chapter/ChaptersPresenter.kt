@@ -109,8 +109,9 @@ class ChaptersPresenter(
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter { download -> download.manga.id == manga.id }
                 .doOnNext { onDownloadStatusChange(it) }
-                .subscribeLatestCache(ChaptersController::onChapterStatusChange,
-                        { _, error -> Timber.e(error) })
+                .subscribeLatestCache(ChaptersController::onChapterStatusChange) {
+                    _, error -> Timber.e(error)
+                }
     }
 
     /**

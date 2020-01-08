@@ -29,7 +29,7 @@ class Myanimelist(private val context: Context, id: Int) : TrackService(id) {
     }
 
     private val interceptor by lazy { MyAnimeListInterceptor(this) }
-    private val api by lazy { MyanimelistApi(client, interceptor) }
+    private val api by lazy { MyAnimeListApi(client, interceptor) }
 
     override val name: String
         get() = "MyAnimeList"

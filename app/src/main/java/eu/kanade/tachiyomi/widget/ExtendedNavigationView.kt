@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.getResourceColor
 
 /**
- * An alternative implementation of [android.support.design.widget.NavigationView], without menu
+ * An alternative implementation of [com.google.android.material.navigation.NavigationView], without menu
  * inflation and allowing customizable items (multiple selections, custom views, etc).
  */
 open class ExtendedNavigationView @JvmOverloads constructor(
@@ -179,8 +179,7 @@ open class ExtendedNavigationView @JvmOverloads constructor(
 
         @CallSuper
         override fun getItemViewType(position: Int): Int {
-            val item = items[position]
-            return when (item) {
+            return when (items[position]) {
                 is Item.Header -> VIEW_TYPE_HEADER
                 is Item.Separator -> VIEW_TYPE_SEPARATOR
                 is Item.Radio -> VIEW_TYPE_RADIO

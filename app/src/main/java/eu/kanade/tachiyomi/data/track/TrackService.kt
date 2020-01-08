@@ -57,8 +57,8 @@ abstract class TrackService(val id: Int) {
     }
 
     open val isLogged: Boolean
-        get() = !getUsername().isEmpty() &&
-                !getPassword().isEmpty()
+        get() = getUsername().isNotEmpty() &&
+                getPassword().isNotEmpty()
 
     fun getUsername() = preferences.trackUsername(this)!!
 

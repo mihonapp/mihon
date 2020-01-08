@@ -206,7 +206,7 @@ class SettingsBackupController : SettingsController() {
                     .content(R.string.backup_choice)
                     .items(options)
                     .itemsDisabledIndices(0)
-                    .itemsCallbackMultiChoice(arrayOf(0, 1, 2, 3, 4), { _, positions, _ ->
+                    .itemsCallbackMultiChoice(arrayOf(0, 1, 2, 3, 4)) { _, positions, _ ->
                         var flags = 0
                         for (i in 1 until positions.size) {
                             when (positions[i]) {
@@ -219,7 +219,7 @@ class SettingsBackupController : SettingsController() {
 
                         (targetController as? SettingsBackupController)?.createBackup(flags)
                         true
-                    })
+                    }
                     .positiveText(R.string.action_create)
                     .negativeText(android.R.string.cancel)
                     .build()

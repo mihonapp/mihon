@@ -61,14 +61,16 @@ inline fun <P : Preference> PreferenceGroup.initThenAdd(p: P, block: P.() -> Uni
     return p.apply {
         block()
         this.isIconSpaceReserved  = false
-        addPreference(this) }
+        addPreference(this)
+    }
 }
 
 inline fun <P : Preference> PreferenceGroup.addThenInit(p: P, block: P.() -> Unit): P {
     return p.apply {
         this.isIconSpaceReserved  = false
         addPreference(this)
-        block() }
+        block()
+    }
 }
 
 inline fun Preference.onClick(crossinline block: () -> Unit) {

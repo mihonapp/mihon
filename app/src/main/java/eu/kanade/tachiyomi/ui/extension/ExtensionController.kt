@@ -99,7 +99,7 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         val searchView = searchItem.actionView as SearchView
         searchView.maxWidth = Int.MAX_VALUE
 
-        if (!query.isEmpty()) {
+        if (query.isNotEmpty()) {
             searchItem.expandActionView()
             searchView.setQuery(query, true)
             searchView.clearFocus()

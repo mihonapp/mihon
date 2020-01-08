@@ -195,11 +195,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         }
 
         // If manga source is known update source TextView.
-        manga_source.text = if (source == null) {
-            view.context.getString(R.string.unknown)
-        } else {
-            source.toString()
-        }
+        manga_source.text = source?.toString() ?: view.context.getString(R.string.unknown)
 
         // Update genres list
         if (manga.genre.isNullOrBlank().not()) {

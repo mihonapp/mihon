@@ -14,6 +14,7 @@ import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONObject
 import org.jsoup.Jsoup
@@ -26,7 +27,7 @@ import java.io.InputStreamReader
 import java.util.zip.GZIPInputStream
 
 
-class MyanimelistApi(private val client: OkHttpClient, interceptor: MyAnimeListInterceptor) {
+class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListInterceptor) {
 
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
@@ -37,8 +38,7 @@ class MyanimelistApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                     .flatMap { Observable.from(it) }
                     .filter { it.title.contains(realQuery, true) }
                     .toList()
-        }
-        else {
+        } else {
             client.newCall(GET(searchUrl(query)))
                     .asObservable()
                     .flatMap { response ->
@@ -266,7 +266,7 @@ class MyanimelistApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                     .put("score", track.score)
                     .put("num_read_chapters", track.last_chapter_read)
 
-            return RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), body.toString())
+            return body.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
         }
 
         private fun Element.searchTitle() = select("strong").text()!!

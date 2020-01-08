@@ -79,8 +79,8 @@ class SettingsGeneralController : SettingsController() {
 
             Observable.combineLatest(
                     preferences.portraitColumns().asObservable(),
-                    preferences.landscapeColumns().asObservable(),
-                    { portraitCols, landscapeCols -> Pair(portraitCols, landscapeCols) })
+                    preferences.landscapeColumns().asObservable()
+            ) { portraitCols, landscapeCols -> Pair(portraitCols, landscapeCols) }
                     .subscribeUntilDestroy { (portraitCols, landscapeCols) ->
                         val portrait = getColumnValue(portraitCols)
                         val landscape = getColumnValue(landscapeCols)
