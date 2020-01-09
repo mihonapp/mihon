@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item android:drawable="@color/colorSplash" />
+
     <item
-        android:drawable="@drawable/tachiyomi_circle"
-        android:gravity="center"></item>
+        android:drawable="@drawable/splash_icon"
+        android:gravity="center" />
+
 </layer-list>
