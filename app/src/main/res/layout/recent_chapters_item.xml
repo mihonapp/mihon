@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/branded_logo_icon" />
+        tools:src="@drawable/tachiyomi_circle" />
 
     <TextView
         android:id="@+id/manga_title"

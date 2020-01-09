@@ -8,6 +8,8 @@
     <color name="colorDarkPrimaryDark">#1C1C1D</color>
     <color name="colorAmoledPrimary">@color/md_black_1000</color>
 
+    <color name="colorSplash">#455A64</color>
+
     <!-- Light Theme -->
     <color name="colorAccentLight">@color/md_blue_A400</color>
     <color name="textColorPrimaryLight">@color/md_black_1000_87</color>
@@ -83,7 +85,5 @@
     <color name="md_red_500">#F44336</color>
 
     <color name="md_teal_500">#009688</color>
-
-    <color name="colorSplash">#455A64</color>
 
 </resources>

@@ -27,7 +27,7 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/SplashScreenBackground">
+            android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

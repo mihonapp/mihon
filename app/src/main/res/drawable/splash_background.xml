@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/colorSplash"/>
+    <item android:drawable="@color/colorSplash" />
     <item
-        android:gravity="center"
-        android:drawable="@mipmap/ic_launcher_round">
-    </item>
+        android:drawable="@drawable/tachiyomi_circle"
+        android:gravity="center"></item>
 </layer-list>

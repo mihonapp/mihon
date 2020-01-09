@@ -156,8 +156,8 @@
     <!--===============-->
     <!-- Launch Screen -->
     <!--===============-->
-    <style name="Theme.BrandedLaunch">
-        <item name="android:windowBackground">@drawable/branded_logo</item>
+    <style name="Theme.Splash" parent="Theme.Tachiyomi">
+        <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
 
