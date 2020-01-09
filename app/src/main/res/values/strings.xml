@@ -77,7 +77,7 @@
     <string name="action_open_in_web_view">Open in web view</string>
     <string name="action_add_to_home_screen">Add to home screen</string>
     <string name="action_display_mode">Change display mode</string>
-    <string name="action_display">Screen</string>
+    <string name="action_display">Display</string>
     <string name="action_display_grid">Grid</string>
     <string name="action_display_list">List</string>
     <string name="action_display_download_badge">Download badges</string>
@@ -144,9 +144,9 @@
     <string name="pref_auto_update_manga_sync">Sync chapters after reading</string>
     <string name="pref_ask_update_manga_sync">Confirm before updating</string>
     <string name="pref_theme">App theme</string>
-    <string name="light_theme">Main theme</string>
-    <string name="dark_theme">Dark theme</string>
-    <string name="amoled_theme">AMOLED theme</string>
+    <string name="light_theme">Light</string>
+    <string name="dark_theme">Dark</string>
+    <string name="amoled_theme">AMOLED dark</string>
     <string name="darkblue_theme">Dark blue</string>
     <string name="pref_start_screen">Start screen</string>
     <string name="pref_language">Language</string>
@@ -169,10 +169,10 @@
     <string name="ext_preferences">Preferences</string>
     <string name="ext_available">Available</string>
     <string name="untrusted_extension">Untrusted extension</string>
-    <string name="untrusted_extension_message">This extension was signed with an untrusted certificate and it wasn\'t activated.\n\nA malicious extension could read any login credentials stored in Tachiyomi or execute arbitrary code.\n\nBy trusting this certificate you accept these risks.</string>
+    <string name="untrusted_extension_message">This extension was signed with an untrusted certificate and wasn\'t activated.\n\nA malicious extension could read any login credentials stored in Tachiyomi or execute arbitrary code.\n\nBy trusting this certificate you accept these risks.</string>
     <string name="ext_version_info">Version: %1$s</string>
     <string name="ext_language_info">Language: %1$s</string>
-    <string name="ext_empty_preferences">There are no preferences to edit for this extension</string>
+    <string name="ext_empty_preferences">No preferences to edit for this extension</string>
 
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
@@ -270,7 +270,7 @@
     <string name="restore_completed">Restore completed</string>
     <string name="error_opening_log">Could not open log</string>
     <string name="restore_completed_content">Restore took %1$s.\n%2$s errors found.</string>
-    <string name="backup_restore_content">Restore uses source to fetch data, carrier costs may apply.\nAlso make sure you are properly logged in sources that require so before restoring.</string>
+    <string name="backup_restore_content">Restore uses source to fetch data, carrier costs may apply.\n\nMake sure you have installed all necessary extensions and are logged in to sources and tracking services before restoring.</string>
     <string name="file_saved">File saved at %1$s</string>
     <string name="backup_choice">What do you want to backup?</string>
     <string name="restoring_backup">Restoring backup</string>
@@ -309,7 +309,7 @@
     <string name="password">Password</string>
     <string name="show_password">Show password</string>
     <string name="login">Login</string>
-    <string name="login_success">Now logged in</string>
+    <string name="login_success">Successfully logged in</string>
     <string name="invalid_login">Could not log in</string>
     <string name="unknown_error">Unknown error</string>
 
@@ -356,14 +356,14 @@
     <string name="manga_info_status_label">Status</string>
     <string name="manga_info_source_label">Source</string>
     <string name="manga_info_genres_label">Genres</string>
-    <string name="circular_icon">Circular icon</string>
-    <string name="rounded_icon">Rounded icon</string>
-    <string name="square_icon">Square icon</string>
-    <string name="star_icon">Star icon</string>
+    <string name="circular_icon">Circular</string>
+    <string name="rounded_icon">Rounded</string>
+    <string name="square_icon">Square</string>
+    <string name="star_icon">Star</string>
     <string name="shortcut_title">Shortcut title</string>
     <string name="shortcut_created">Shortcut was added to home screen.</string>
     <string name="icon_shape">Icon shape</string>
-    <string name="icon_creation_fail">Could not create shortcut.</string>
+    <string name="icon_creation_fail">Could not create shortcut</string>
     <string name="delete_downloads_for_manga">Delete downloaded chapters?</string>
     <string name="copied_to_clipboard">%1$s copied to clipboard</string>
     <string name="source_not_installed">Source not installed: %1$s</string>
@@ -387,12 +387,12 @@
     <string name="manga_download">Download</string>
     <string name="custom_download">Download custom amount</string>
     <string name="custom_hint">amount</string>
-    <string name="download_1">Download next chapter</string>
-    <string name="download_5">Download next 5 chapters</string>
-    <string name="download_10">Download next 10 chapters</string>
-    <string name="download_custom">Download custom</string>
-    <string name="download_all">Download all</string>
-    <string name="download_unread">Download unread</string>
+    <string name="download_1">Next chapter</string>
+    <string name="download_5">Next 5 chapters</string>
+    <string name="download_10">Next 10 chapters</string>
+    <string name="download_custom">Custom</string>
+    <string name="download_all">All</string>
+    <string name="download_unread">Unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete selected chapters?</string>
 
     <!-- Tracking Screen -->
@@ -417,7 +417,7 @@
     <string name="snack_categories_deleted">Categories deleted</string>
 
     <!-- Dialog option with checkbox view -->
-    <string name="dialog_with_checkbox_remove_description">This will remove the reading date of this chapter. Are you sure?</string>
+    <string name="dialog_with_checkbox_remove_description">This will remove the read date of this chapter. Are you sure?</string>
     <string name="dialog_with_checkbox_reset">Reset all chapters for this manga</string>
 
     <!-- SnackBar -->
@@ -441,7 +441,7 @@
     <string name="no_previous_chapter">Previous chapter not found</string>
     <string name="decode_image_error">The image could not be decoded</string>
     <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
-    <string name="confirm_set_image_as_cover">Use this image as coverart?</string>
+    <string name="confirm_set_image_as_cover">Use this image as cover art?</string>
     <string name="viewer_for_this_series">Viewer for this series</string>
     <string name="transition_finished">Finished:</string>
     <string name="transition_current">Current:</string>
@@ -495,7 +495,7 @@
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_file_download">Download update</string>
     <string name="update_check_notification_download_in_progress">Downloading…</string>
-    <string name="update_check_notification_download_complete">Downloaded</string>
+    <string name="update_check_notification_download_complete">Download complete</string>
     <string name="update_check_notification_download_error">Download error</string>
     <string name="update_check_notification_update_available">Update available</string>
 
