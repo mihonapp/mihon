@@ -17,6 +17,7 @@
         android:name=".App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
+        android:hasFragileUserData="true"
         android:hardwareAccelerated="true"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
