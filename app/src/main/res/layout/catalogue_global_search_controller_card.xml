@@ -14,7 +14,7 @@
         android:padding="@dimen/material_component_text_fields_padding_above_and_below_label"
         app:layout_constraintBottom_toTopOf="@+id/source_card"
         app:layout_constraintHeight_default="wrap"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Title" />
 
@@ -45,5 +45,7 @@
             android:paddingStart="4dp"
             android:clipToPadding="false"
             tools:listitem="@layout/catalogue_global_search_controller_card_item" />
+
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -65,8 +65,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/remove"
-                android:layout_toRightOf="@id/remove"
                 android:text="@string/action_resume"/>
+
         </RelativeLayout>
+
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>
