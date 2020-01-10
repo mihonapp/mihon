@@ -18,6 +18,12 @@ class SettingsMainController : SettingsController() {
             onClick { navigateTo(SettingsGeneralController()) }
         }
         preference {
+            iconRes = R.drawable.ic_book_black_24dp
+            iconTint = tintColor
+            titleRes = R.string.pref_category_library
+            onClick { navigateTo(SettingsLibraryController()) }
+        }
+        preference {
             iconRes = R.drawable.ic_chrome_reader_mode_black_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_reader
