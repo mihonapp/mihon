@@ -4,6 +4,7 @@
 # Windows forced line-endings
 /.idea/* text eol=crlf
 
+*.webp binary
 *.png binary
 *.jpg binary
 *.jpeg binary
