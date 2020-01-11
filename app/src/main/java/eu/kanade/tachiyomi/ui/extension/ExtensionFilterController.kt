@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.extension
 
-import android.support.v7.preference.PreferenceScreen
-import android.support.v7.preference.SwitchPreference
+import androidx.preference.PreferenceScreen
+import androidx.preference.SwitchPreference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -12,10 +12,10 @@ import eu.kanade.tachiyomi.util.LocaleHelper
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class SettingsExtensionsController: SettingsController() {
+class ExtensionFilterController: SettingsController() {
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
-        titleRes = R.string.ext_settings
+        titleRes = R.string.action_filter
 
         val activeLangs = preferences.enabledLanguages().getOrDefault()
 
