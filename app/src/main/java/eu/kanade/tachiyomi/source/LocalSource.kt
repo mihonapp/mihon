@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.source
 
 import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
@@ -21,6 +23,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.util.Locale
+import java.util.Scanner
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
@@ -117,8 +120,6 @@ class LocalSource(private val context: Context) : CatalogueSource {
                         }
                     }
                 }
-
-                initialized = true
             }
         }
         return Observable.just(MangasPage(mangas, false))
@@ -126,7 +127,26 @@ class LocalSource(private val context: Context) : CatalogueSource {
 
     override fun fetchLatestUpdates(page: Int) = fetchSearchManga(page, "", LATEST_FILTERS)
 
-    override fun fetchMangaDetails(manga: SManga) = Observable.just(manga)
+    override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
+        getBaseDirectories(context)
+                .mapNotNull { File(it, manga.url).listFiles()?.toList() }
+                .flatten()
+                .filter { it.extension.equals("json") }
+                .firstOrNull()
+                ?.apply {
+            val json = Gson().fromJson(Scanner(this).useDelimiter("\\Z").next(), JsonObject::class.java)
+            manga.title = json["title"]?.asString ?: manga.title
+            manga.author = json["author"]?.asString ?: manga.author
+            manga.artist = json["artist"]?.asString ?: manga.artist
+            manga.description = json["description"]?.asString ?: manga.description
+            manga.genre = json["genre"]?.asJsonArray
+                    ?.map { it.asString }
+                    ?.joinToString(", ")
+                    ?: manga.genre
+            manga.status = json["status"]?.asInt ?: manga.status
+        }
+        return Observable.just(manga)
+    }
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
         val chapters = getBaseDirectories(context)
