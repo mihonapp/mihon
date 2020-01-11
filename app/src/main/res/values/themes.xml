@@ -158,7 +158,8 @@
     <!--===============-->
     <style name="Theme.Splash" parent="Theme.Tachiyomi">
         <item name="android:windowBackground">@drawable/splash_background</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@color/splashBackgroundColor</item>
+        <item name="android:navigationBarColor">@color/splashBackgroundColor</item>
     </style>
 
 
