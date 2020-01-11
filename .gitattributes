@@ -4,18 +4,16 @@
 # Windows forced line-endings
 /.idea/* text eol=crlf
 
+# Gradle wrapper
+*.jar binary
+
+# Images
 *.webp binary
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
 *.ico binary
-*.mov binary
-*.mp4 binary
-*.mp3 binary
-*.flv binary
-*.fla binary
-*.swf binary
 *.gz binary
 *.zip binary
 *.7z binary
@@ -23,7 +21,4 @@
 *.eot binary
 *.woff binary
 *.pyc binary
-*.pdf binary
-*.ez binary
-*.bz2 binary
 *.swp binary
