@@ -77,10 +77,16 @@
                 android:textSize="15sp"
                 tools:text="1" />
 
+            <!--
+                Wonky way of setting height due to issues with horizontally centering the thumb in Android 5.
+                See https://stackoverflow.com/questions/15701767/android-thumb-is-not-centered-in-seekbar
+            -->
             <eu.kanade.tachiyomi.ui.reader.ReaderSeekBar
                 android:id="@+id/page_seekbar"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="?attr/actionBarSize"
+                android:minHeight="?attr/actionBarSize"
                 android:layout_weight="1" />
 
             <TextView
