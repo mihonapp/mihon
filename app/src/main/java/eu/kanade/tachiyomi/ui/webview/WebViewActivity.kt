@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.util.WebViewClientCompat
+import eu.kanade.tachiyomi.util.getResourceColor
 import kotlinx.android.synthetic.main.webview_activity.toolbar
 import kotlinx.android.synthetic.main.webview_activity.webview
 import uy.kohesive.injekt.injectLazy
@@ -28,6 +29,10 @@ class WebViewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.webview_activity)
+
+        // Manually override status bar color since it's normally transparent with the app themes
+        // This is needed to hide the app bar when it scrolls up
+        window.statusBarColor = getResourceColor(R.attr.colorPrimaryDark)
 
         title = intent.extras?.getString(TITLE_KEY)
         setSupportActionBar(toolbar)
