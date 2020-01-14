@@ -159,6 +159,10 @@ class ExtensionManager(
      * @param availableExtensions The list of extensions given by the [api].
      */
     private fun updatedInstalledExtensionsStatuses(availableExtensions: List<Extension.Available>) {
+        if (availableExtensions.isEmpty()) {
+            return
+        }
+
         val mutInstalledExtensions = installedExtensions.toMutableList()
         var changed = false
 
@@ -166,12 +170,10 @@ class ExtensionManager(
             val pkgName = installedExt.pkgName
             val availableExt = availableExtensions.find { it.pkgName == pkgName }
 
-            if (availableExt == null) {
-                if (!installedExt.isObsolete) {
-                    mutInstalledExtensions[index] = installedExt.copy(isObsolete = true)
-                    changed = true
-                }
-            } else {
+            if (availableExt == null && !installedExt.isObsolete) {
+                mutInstalledExtensions[index] = installedExt.copy(isObsolete = true)
+                changed = true
+            } else if (availableExt != null) {
                 val hasUpdate = availableExt.versionCode > installedExt.versionCode
                 if (installedExt.hasUpdate != hasUpdate) {
                     mutInstalledExtensions[index] = installedExt.copy(hasUpdate = hasUpdate)
