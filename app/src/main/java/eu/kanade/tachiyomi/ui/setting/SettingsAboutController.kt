@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.data.updater.UpdateResult
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.data.updater.UpdaterService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.ui.main.ChangelogDialogController
 import eu.kanade.tachiyomi.util.toast
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -101,6 +102,10 @@ class SettingsAboutController : SettingsController() {
         preference {
             titleRes = R.string.build_time
             summary = getFormattedBuildTime()
+
+            onClick {
+                ChangelogDialogController().showDialog(router)
+            }
         }
     }
 
