@@ -446,7 +446,6 @@
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="no_previous_chapter">Previous chapter not found</string>
     <string name="decode_image_error">The image could not be decoded</string>
-    <string name="confirm_update_manga_sync">Update last chapter read in enabled services to %1$d?</string>
     <string name="confirm_set_image_as_cover">Use this image as cover art?</string>
     <string name="viewer_for_this_series">Viewer for this series</string>
     <string name="transition_finished">Finished:</string>
