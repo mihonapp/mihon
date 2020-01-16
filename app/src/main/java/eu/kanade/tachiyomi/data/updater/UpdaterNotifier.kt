@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
 
 /**
@@ -16,12 +17,7 @@ import eu.kanade.tachiyomi.util.system.notificationManager
  */
 internal class UpdaterNotifier(private val context: Context) {
 
-    /**
-     * Builder to manage notifications.
-     */
-    private val notification by lazy {
-        NotificationCompat.Builder(context, Notifications.CHANNEL_COMMON)
-    }
+    private val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_COMMON)
 
     /**
      * Call to show notification.
@@ -38,13 +34,13 @@ internal class UpdaterNotifier(private val context: Context) {
      * @param title tile of notification.
      */
     fun onDownloadStarted(title: String) {
-        with(notification) {
+        with(notificationBuilder) {
             setContentTitle(title)
             setContentText(context.getString(R.string.update_check_notification_download_in_progress))
             setSmallIcon(android.R.drawable.stat_sys_download)
             setOngoing(true)
         }
-        notification.show()
+        notificationBuilder.show()
     }
 
     /**
@@ -53,11 +49,11 @@ internal class UpdaterNotifier(private val context: Context) {
      * @param progress progress of download (xx%/100).
      */
     fun onProgressChange(progress: Int) {
-        with(notification) {
+        with(notificationBuilder) {
             setProgress(100, progress, false)
             setOnlyAlertOnce(true)
         }
-        notification.show()
+        notificationBuilder.show()
     }
 
     /**
@@ -66,7 +62,7 @@ internal class UpdaterNotifier(private val context: Context) {
      * @param uri path location of apk.
      */
     fun onDownloadFinished(uri: Uri) {
-        with(notification) {
+        with(notificationBuilder) {
             setContentText(context.getString(R.string.update_check_notification_download_complete))
             setSmallIcon(android.R.drawable.stat_sys_download_done)
             setOnlyAlertOnce(false)
@@ -81,7 +77,7 @@ internal class UpdaterNotifier(private val context: Context) {
                     context.getString(R.string.action_cancel),
                     NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_UPDATER))
         }
-        notification.show()
+        notificationBuilder.show()
     }
 
     /**
@@ -90,7 +86,7 @@ internal class UpdaterNotifier(private val context: Context) {
      * @param url web location of apk to download.
      */
     fun onDownloadError(url: String) {
-        with(notification) {
+        with(notificationBuilder) {
             setContentText(context.getString(R.string.update_check_notification_download_error))
             setSmallIcon(android.R.drawable.stat_sys_warning)
             setOnlyAlertOnce(false)
@@ -104,6 +100,6 @@ internal class UpdaterNotifier(private val context: Context) {
                     context.getString(R.string.action_cancel),
                     NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_UPDATER))
         }
-        notification.show(Notifications.ID_UPDATER)
+        notificationBuilder.show(Notifications.ID_UPDATER)
     }
 }

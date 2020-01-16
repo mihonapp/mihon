@@ -33,6 +33,7 @@ import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.lang.chop
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import eu.kanade.tachiyomi.util.system.notification
+import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
 import rx.Observable
 import rx.Subscription
@@ -86,13 +87,15 @@ class LibraryUpdateService(
     /**
      * Cached progress notification to avoid creating a lot.
      */
-    private val progressNotification by lazy { NotificationCompat.Builder(this, Notifications.CHANNEL_LIBRARY)
-            .setContentTitle(getString(R.string.app_name))
-            .setSmallIcon(R.drawable.ic_refresh_white_24dp)
-            .setLargeIcon(notificationBitmap)
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .addAction(R.drawable.ic_close_white_24dp, getString(android.R.string.cancel), cancelIntent)
+    private val progressNotificationBuilder by lazy {
+        notificationBuilder(Notifications.CHANNEL_LIBRARY) {
+            setContentTitle(getString(R.string.app_name))
+            setSmallIcon(R.drawable.ic_refresh_white_24dp)
+            setLargeIcon(notificationBitmap)
+            setOngoing(true)
+            setOnlyAlertOnce(true)
+            addAction(R.drawable.ic_close_white_24dp, getString(android.R.string.cancel), cancelIntent)
+        }
     }
 
     /**
@@ -165,7 +168,7 @@ class LibraryUpdateService(
      */
     override fun onCreate() {
         super.onCreate()
-        startForeground(Notifications.ID_LIBRARY_PROGRESS, progressNotification.build())
+        startForeground(Notifications.ID_LIBRARY_PROGRESS, progressNotificationBuilder.build())
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
                 PowerManager.PARTIAL_WAKE_LOCK, "LibraryUpdateService:WakeLock")
         wakeLock.acquire()
@@ -430,7 +433,7 @@ class LibraryUpdateService(
      * @param total the total progress.
      */
     private fun showProgressNotification(manga: Manga, current: Int, total: Int) {
-        notificationManager.notify(Notifications.ID_LIBRARY_PROGRESS, progressNotification
+        notificationManager.notify(Notifications.ID_LIBRARY_PROGRESS, progressNotificationBuilder
                 .setContentTitle(manga.title)
                 .setProgress(total, current, false)
                 .build())

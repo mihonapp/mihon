@@ -44,15 +44,30 @@ fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
 }
 
 /**
+ * Helper method to create a notification builder.
+ *
+ * @param id the channel id.
+ * @param block the function that will execute inside the builder.
+ * @return a notification to be displayed or updated.
+ */
+fun Context.notificationBuilder(channelId: String, block: (NotificationCompat.Builder.() -> Unit)? = null): NotificationCompat.Builder {
+    val builder = NotificationCompat.Builder(this, channelId)
+            .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
+    if (block != null) {
+        builder.block()
+    }
+    return builder
+}
+
+/**
  * Helper method to create a notification.
  *
  * @param id the channel id.
- * @param func the function that will execute inside the builder.
+ * @param block the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
  */
-inline fun Context.notification(channelId: String, func: NotificationCompat.Builder.() -> Unit): Notification {
-    val builder = NotificationCompat.Builder(this, channelId)
-    builder.func()
+fun Context.notification(channelId: String, block: (NotificationCompat.Builder.() -> Unit)?): Notification {
+    val builder = notificationBuilder(channelId, block)
     return builder.build()
 }
 
