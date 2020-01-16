@@ -56,13 +56,20 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
     }
 
     private fun searchMangaRequestObservable(page: Int, query: String, filters: FilterList): Observable<Request> {
+	val langFilter = filters.filterIsInstance<filterLang>().firstOrNull()
+        var langFilterString = ""
+	if (langFilter != null) {
+            langFilterString = SOURCE_LANG_LIST.first {it.first == langFilter!!.values[langFilter!!.state]}.second
+        }
+
         val uri = if(query.isNotBlank()) {
             Uri.parse("$baseUrl/search/").buildUpon().apply {
-                appendQueryParameter("q", query)
+                appendQueryParameter("q", query+langFilterString)
             }
         } else {
             Uri.parse(baseUrl).buildUpon()
         }
+
         val sortFilter = filters.filterIsInstance<SortFilter>().firstOrNull()?.state
                 ?: defaultSortFilterSelection()
 
@@ -243,7 +250,10 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
         throw NotImplementedError("Unused method called!")
     }
 
-    override fun getFilterList() = FilterList(SortFilter())
+    override fun getFilterList() = FilterList(SortFilter(), filterLang())
+
+    //language filtering
+    private class filterLang : Filter.Select<String>("Language", SOURCE_LANG_LIST.map { it.first }.toTypedArray())
 
     class SortFilter : Filter.Sort(
             "Sort",
@@ -292,6 +302,14 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
         private const val REVERSE_PARAM = "TEH_REVERSE"
 
         private fun defaultSortFilterSelection() = Filter.Sort.Selection(0, false)
+
+        private val SOURCE_LANG_LIST = listOf(
+            Pair("All", ""),
+            Pair("English", " english"),
+            Pair("Japanese", " japanese"),
+            Pair("Chinese", " chinese")
+        )
+
 
         val jsonParser by lazy {
             JsonParser()
