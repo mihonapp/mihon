@@ -88,9 +88,11 @@ class SettingsTrackingController : SettingsController(),
 
     override fun onActivityResumed(activity: Activity) {
         super.onActivityResumed(activity)
-        // Manually refresh anilist holder
+
+        // Manually refresh OAuth trackers' holders
         updatePreference(trackManager.aniList.id)
         updatePreference(trackManager.shikimori.id)
+        updatePreference(trackManager.bangumi.id)
     }
 
     private fun updatePreference(id: Int) {
