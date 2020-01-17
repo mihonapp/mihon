@@ -60,6 +60,7 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
     override fun filter(constraint: String): Boolean {
         return manga.title.contains(constraint, true) ||
             (manga.author?.contains(constraint, true) ?: false) ||
+            (manga.artist?.contains(constraint, true) ?: false) ||
             if (constraint.contains(",")) {
                 val genres = manga.genre?.split(", ")
                 constraint.split(",").all { containsGenre(it.trim(), genres) }
