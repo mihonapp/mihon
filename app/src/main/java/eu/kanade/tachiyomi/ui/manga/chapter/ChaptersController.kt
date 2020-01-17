@@ -350,6 +350,11 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         actionMode = null
     }
 
+    override fun onDetach(view: View) {
+        destroyActionModeIfNeeded()
+        super.onDetach(view)
+    }
+
     override fun onMenuItemClick(position: Int, item: MenuItem) {
         val chapter = adapter?.getItem(position) ?: return
         val chapters = listOf(chapter)
