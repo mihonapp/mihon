@@ -41,7 +41,6 @@ import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
-import eu.kanade.tachiyomi.util.openInBrowser
 import eu.kanade.tachiyomi.util.snack
 import eu.kanade.tachiyomi.util.toast
 import eu.kanade.tachiyomi.util.truncateCenter
@@ -134,13 +133,11 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_open_in_browser -> openInBrowser()
             R.id.action_open_in_web_view -> openInWebView()
             R.id.action_share -> shareManga()
             R.id.action_add_to_home_screen -> addToHomeScreen()
-            else -> return super.onOptionsItemSelected(item)
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -276,16 +273,6 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                 }
             }
         }
-    }
-
-    /**
-     * Open the manga in browser.
-     */
-    private fun openInBrowser() {
-        val context = view?.context ?: return
-        val source = presenter.source as? HttpSource ?: return
-
-        context.openInBrowser(source.mangaDetailsRequest(presenter.manga).url.toString())
     }
 
     private fun openInWebView() {

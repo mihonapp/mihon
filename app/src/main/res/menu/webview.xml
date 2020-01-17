@@ -24,4 +24,9 @@
         android:title="@string/action_share"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_web_browser"
+        android:title="@string/action_open_in_browser"
+        app:showAsAction="never" />
+
 </menu>

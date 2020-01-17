@@ -2,17 +2,17 @@ package eu.kanade.tachiyomi.ui.catalogue.browse
 
 import android.content.res.Configuration
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.widget.*
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.f2prateek.rx.preferences.Preference
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -31,8 +31,9 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.*
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import kotlinx.android.synthetic.main.catalogue_controller.*
-import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.android.synthetic.main.catalogue_controller.catalogue_view
+import kotlinx.android.synthetic.main.catalogue_controller.progress
+import kotlinx.android.synthetic.main.main_activity.drawer
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -274,7 +275,6 @@ open class BrowseCatalogueController(bundle: Bundle) :
         super.onPrepareOptionsMenu(menu)
 
         val isHttpSource = presenter.source is HttpSource
-        menu.findItem(R.id.action_open_in_browser).isVisible = isHttpSource
         menu.findItem(R.id.action_open_in_web_view).isVisible = isHttpSource
     }
 
@@ -283,17 +283,10 @@ open class BrowseCatalogueController(bundle: Bundle) :
             R.id.action_search -> expandActionViewFromInteraction = true
             R.id.action_display_mode -> swapDisplayMode()
             R.id.action_set_filter -> navView?.let { activity?.drawer?.openDrawer(GravityCompat.END) }
-            R.id.action_open_in_browser -> openInBrowser()
             R.id.action_open_in_web_view -> openInWebView()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
-    }
-
-    private fun openInBrowser() {
-        val source = presenter.source as? HttpSource ?: return
-
-        activity?.openInBrowser(source.baseUrl)
     }
 
     private fun openInWebView() {

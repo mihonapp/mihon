@@ -123,6 +123,7 @@ class WebViewActivity : BaseActivity() {
             R.id.action_web_forward -> webview.goForward()
             R.id.action_web_refresh -> refreshPage()
             R.id.action_web_share -> shareWebpage()
+            R.id.action_web_browser -> openInBrowser()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -142,6 +143,10 @@ class WebViewActivity : BaseActivity() {
         } catch (e: Exception) {
             toast(e.message)
         }
+    }
+
+    private fun openInBrowser() {
+        openInBrowser(webview.url)
     }
 
     companion object {
