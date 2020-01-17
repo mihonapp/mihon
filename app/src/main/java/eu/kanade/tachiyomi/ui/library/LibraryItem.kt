@@ -64,8 +64,9 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
             if (constraint.contains(",")) {
                 val genres = manga.genre?.split(", ")
                 constraint.split(",").all { containsGenre(it.trim(), genres) }
+            } else {
+                containsGenre(constraint, manga.genre?.split(", "))
             }
-            else containsGenre(constraint, manga.genre?.split(", "))
     }
 
     private fun containsGenre(tag: String, genres: List<String>?): Boolean {
@@ -75,7 +76,8 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
             } == null
         else
             genres?.find {
-                it.trim().toLowerCase() == tag.toLowerCase() } != null
+                it.trim().toLowerCase() == tag.toLowerCase()
+            } != null
     }
 
     override fun equals(other: Any?): Boolean {

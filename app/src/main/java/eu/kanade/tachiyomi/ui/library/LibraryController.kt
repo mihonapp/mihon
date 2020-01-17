@@ -342,7 +342,7 @@ class LibraryController(
         searchItem.fixExpand(onExpand = { invalidateMenuOnExpand() })
     }
 
-    fun search(query:String) {
+    fun search(query: String) {
         this.query = query
     }
 
