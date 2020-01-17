@@ -7,18 +7,16 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import androidx.core.graphics.ColorUtils
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.util.WebViewClientCompat
-import eu.kanade.tachiyomi.util.getResourceColor
-import kotlinx.android.synthetic.main.webview_activity.toolbar
-import kotlinx.android.synthetic.main.webview_activity.webview
+import eu.kanade.tachiyomi.util.*
+import kotlinx.android.synthetic.main.webview_activity.*
 import uy.kohesive.injekt.injectLazy
-
 
 class WebViewActivity : BaseActivity() {
 
@@ -41,10 +39,26 @@ class WebViewActivity : BaseActivity() {
             super.onBackPressed()
         }
 
+        swipe_refresh.isEnabled = false
+        swipe_refresh.setOnRefreshListener {
+            refreshPage()
+        }
+
         if (bundle == null) {
             val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource ?: return
             val url = intent.extras!!.getString(URL_KEY) ?: return
             val headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
+
+            webview.webChromeClient = object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                    progress_bar.visible()
+                    progress_bar.progress = newProgress
+                    if (newProgress == 100) {
+                        progress_bar.invisible()
+                    }
+                    super.onProgressChanged(view, newProgress)
+                }
+            }
 
             webview.webViewClient = object : WebViewClientCompat() {
                 override fun shouldOverrideUrlCompat(view: WebView, url: String): Boolean {
@@ -56,11 +70,20 @@ class WebViewActivity : BaseActivity() {
                     super.onPageFinished(view, url)
                     invalidateOptionsMenu()
                     title = view?.title
+                    swipe_refresh.isEnabled = true
+                    swipe_refresh?.isRefreshing = false
                 }
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
                     invalidateOptionsMenu()
+                }
+
+                override fun onPageCommitVisible(view: WebView?, url: String?) {
+                    super.onPageCommitVisible(view, url)
+
+                    // Reset to top when page refreshes
+                    nested_view.scrollTo(0, 0)
                 }
             }
             webview.settings.javaScriptEnabled = true
@@ -98,9 +121,27 @@ class WebViewActivity : BaseActivity() {
         when (item.itemId) {
             R.id.action_web_back -> webview.goBack()
             R.id.action_web_forward -> webview.goForward()
-            R.id.action_web_refresh -> webview.reload()
+            R.id.action_web_refresh -> refreshPage()
+            R.id.action_web_share -> shareWebpage()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun refreshPage() {
+        swipe_refresh.isRefreshing = true
+        webview.reload()
+    }
+
+    private fun shareWebpage() {
+        try {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, webview.url)
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
+        } catch (e: Exception) {
+            toast(e.message)
+        }
     }
 
     companion object {

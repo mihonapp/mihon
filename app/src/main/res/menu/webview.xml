@@ -16,8 +16,12 @@
 
     <item
         android:id="@+id/action_web_refresh"
-        android:icon="@drawable/ic_refresh_white_24dp"
         android:title="@string/action_webview_refresh"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_web_share"
+        android:title="@string/action_share"
+        app:showAsAction="never" />
 
 </menu>
