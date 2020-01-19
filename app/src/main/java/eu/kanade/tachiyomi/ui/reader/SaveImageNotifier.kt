@@ -53,7 +53,7 @@ class SaveImageNotifier(private val context: Context) {
     private fun showCompleteNotification(file: File, image: Bitmap) {
         with(notificationBuilder) {
             setContentTitle(context.getString(R.string.picture_saved))
-            setSmallIcon(R.drawable.ic_insert_photo_white_24dp)
+            setSmallIcon(R.drawable.ic_image_black_24dp)
             setStyle(NotificationCompat.BigPictureStyle().bigPicture(image))
             setLargeIcon(image)
             setAutoCancel(true)
@@ -64,11 +64,11 @@ class SaveImageNotifier(private val context: Context) {
 
             setContentIntent(NotificationHandler.openImagePendingActivity(context, file))
             // Share action
-            addAction(R.drawable.ic_share_grey_24dp,
+            addAction(R.drawable.ic_share_white_24dp,
                     context.getString(R.string.action_share),
                     NotificationReceiver.shareImagePendingBroadcast(context, file.absolutePath, notificationId))
             // Delete action
-            addAction(R.drawable.ic_delete_grey_24dp,
+            addAction(R.drawable.ic_delete_white_24dp,
                     context.getString(R.string.action_delete),
                     NotificationReceiver.deleteImagePendingBroadcast(context, file.absolutePath, notificationId))
 

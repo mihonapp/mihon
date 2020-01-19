@@ -21,8 +21,8 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:srcCompat="@drawable/ic_image_black_24dp"
-            android:tint="@color/md_white_1000_54"/>
+            android:tint="@color/md_white_1000_54"
+            app:srcCompat="@drawable/ic_image_black_24dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -46,7 +46,8 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:srcCompat="@drawable/ic_share_grey_24dp"/>
+            android:tint="@color/md_white_1000_54"
+            app:srcCompat="@drawable/ic_share_black_24dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -70,8 +71,8 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:srcCompat="@drawable/ic_file_download_black_24dp"
-            android:tint="@color/md_white_1000_54"/>
+            android:tint="@color/md_white_1000_54"
+            app:srcCompat="@drawable/ic_file_download_black_24dp" />
 
         <TextView
             android:layout_width="match_parent"

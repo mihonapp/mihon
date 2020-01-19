@@ -84,11 +84,11 @@ class LibraryUpdateService(
      */
     private val progressNotification by lazy { NotificationCompat.Builder(this, Notifications.CHANNEL_LIBRARY)
             .setContentTitle(getString(R.string.app_name))
-            .setSmallIcon(R.drawable.ic_refresh_white_24dp_img)
+            .setSmallIcon(R.drawable.ic_refresh_white_24dp)
             .setLargeIcon(notificationBitmap)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
-            .addAction(R.drawable.ic_clear_grey_24dp_img, getString(android.R.string.cancel), cancelIntent)
+            .addAction(R.drawable.ic_close_white_24dp, getString(android.R.string.cancel), cancelIntent)
     }
 
     /**
