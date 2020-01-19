@@ -18,4 +18,9 @@
           android:icon="@drawable/ic_delete_white_24dp"
           app:showAsAction="ifRoom"/>
 
+    <item android:id="@+id/action_select_all"
+        android:title="@string/action_select_all"
+        android:icon="@drawable/ic_select_all_white_24dp"
+        app:showAsAction="ifRoom"/>
+
 </menu>

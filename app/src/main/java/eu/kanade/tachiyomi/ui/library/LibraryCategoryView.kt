@@ -124,6 +124,15 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
 
         subscriptions += controller.selectionRelay
                 .subscribe { onSelectionChanged(it) }
+
+        subscriptions += controller.selectAllRelay
+                .filter { it == category.id }
+                .subscribe {
+                    adapter.currentItems.forEach { item ->
+                        controller.setSelection(item.manga, true)
+                    }
+                    controller.invalidateActionMode()
+                }
     }
 
     fun onRecycle() {

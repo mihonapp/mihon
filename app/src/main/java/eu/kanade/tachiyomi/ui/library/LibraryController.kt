@@ -95,6 +95,11 @@ class LibraryController(
     val libraryMangaRelay: BehaviorRelay<LibraryMangaEvent> = BehaviorRelay.create()
 
     /**
+     * Relay to notify the library's viewpager to select all manga
+     */
+    val selectAllRelay: PublishRelay<Int> = PublishRelay.create()
+
+    /**
      * Number of manga per row in grid mode.
      */
     var mangaPerRow = 0
@@ -409,6 +414,7 @@ class LibraryController(
             }
             R.id.action_move_to_category -> showChangeMangaCategoriesDialog()
             R.id.action_delete -> showDeleteMangaDialog()
+            R.id.action_select_all -> selectAllCategoryManga()
             else -> return false
         }
         return true
@@ -493,6 +499,12 @@ class LibraryController(
                     resources?.getString(R.string.file_select_cover)), REQUEST_IMAGE_OPEN)
         } else {
             activity?.toast(R.string.notification_first_add_to_library)
+        }
+    }
+
+    private fun selectAllCategoryManga() {
+        adapter?.categories?.getOrNull(library_pager.currentItem)?.id?.let {
+            selectAllRelay.call(it)
         }
     }
 
