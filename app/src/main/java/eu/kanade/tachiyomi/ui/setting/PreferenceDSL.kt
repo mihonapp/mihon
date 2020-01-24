@@ -4,6 +4,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.preference.*
 import eu.kanade.tachiyomi.widget.preference.IntListPreference
+import eu.kanade.tachiyomi.widget.preference.SwitchPreferenceCategory
 
 @DslMarker
 @Target(AnnotationTarget.TYPE)
@@ -19,6 +20,10 @@ inline fun PreferenceGroup.preference(block: (@DSL Preference).() -> Unit): Pref
 
 inline fun PreferenceGroup.switchPreference(block: (@DSL SwitchPreferenceCompat).() -> Unit): SwitchPreferenceCompat {
     return initThenAdd(SwitchPreferenceCompat(context), block)
+}
+
+inline fun PreferenceGroup.switchPreferenceCategory(block: (@DSL SwitchPreferenceCategory).() -> Unit): SwitchPreferenceCategory {
+    return initThenAdd(SwitchPreferenceCategory(context), block)
 }
 
 inline fun PreferenceGroup.checkBoxPreference(block: (@DSL CheckBoxPreference).() -> Unit): CheckBoxPreference {

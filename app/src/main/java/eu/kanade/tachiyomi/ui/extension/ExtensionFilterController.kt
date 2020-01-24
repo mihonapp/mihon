@@ -1,12 +1,12 @@
 package eu.kanade.tachiyomi.ui.extension
 
 import androidx.preference.PreferenceScreen
-import androidx.preference.SwitchPreference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.ui.setting.onChange
+import eu.kanade.tachiyomi.ui.setting.switchPreference
 import eu.kanade.tachiyomi.ui.setting.titleRes
 import eu.kanade.tachiyomi.util.LocaleHelper
 import uy.kohesive.injekt.Injekt
@@ -29,7 +29,7 @@ class ExtensionFilterController: SettingsController() {
                 }
 
         availableLangs.forEach {
-            SwitchPreference(context).apply {
+            switchPreference {
                 preferenceScreen.addPreference(this)
                 title = LocaleHelper.getDisplayName(it, context)
                 isPersistent = false
