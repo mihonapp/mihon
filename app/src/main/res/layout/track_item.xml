@@ -14,10 +14,10 @@
             android:id="@+id/logo_container"
             android:layout_width="48dp"
             android:layout_height="0dp"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:clickable="true"
             tools:background="#2E51A2">
 
             <ImageView
@@ -29,150 +29,147 @@
 
         </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/title_container"
+        <Button
+            android:id="@+id/track_set"
+            style="@style/Theme.Widget.Button.Borderless.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?attr/selectable_list_drawable"
-            android:clickable="true"
             android:padding="16dp"
-            app:layout_constraintStart_toEndOf="@+id/logo_container"
+            android:text="@string/action_edit"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/logo_container"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/track_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/logo_container"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                style="@style/TextAppearance.Regular.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title" />
-
-            <TextView
-                android:id="@+id/track_title"
-                style="@style/TextAppearance.Medium.Button"
+            <LinearLayout
+                android:id="@+id/title_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:ellipsize="middle"
-                android:gravity="end"
-                android:maxLines="1"
-                android:text="@string/action_edit" />
+                android:background="?attr/selectable_list_drawable"
+                android:clickable="true"
+                android:padding="16dp">
 
-        </LinearLayout>
+                <TextView
+                    style="@style/TextAppearance.Regular.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title" />
 
-        <View
-            android:id="@+id/divider1"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:background="?android:attr/divider"
-            app:layout_constraintStart_toEndOf="@+id/logo_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_container" />
+                <TextView
+                    android:id="@+id/track_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:ellipsize="middle"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    android:text="@string/action_edit" />
 
-        <LinearLayout
-            android:id="@+id/status_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectable_list_drawable"
-            android:clickable="true"
-            android:padding="16dp"
-            app:layout_constraintStart_toEndOf="@+id/logo_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider1">
+            </LinearLayout>
 
-            <TextView
-                style="@style/TextAppearance.Regular.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/status" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/divider" />
 
-            <TextView
-                android:id="@+id/track_status"
-                style="@style/TextAppearance.Regular.Body1.Secondary"
+            <LinearLayout
+                android:id="@+id/status_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:gravity="end"
-                tools:text="Reading" />
+                android:background="?attr/selectable_list_drawable"
+                android:clickable="true"
+                android:padding="16dp">
 
-        </LinearLayout>
+                <TextView
+                    style="@style/TextAppearance.Regular.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status" />
 
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:background="?android:attr/divider"
-            app:layout_constraintStart_toEndOf="@+id/logo_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status_container" />
+                <TextView
+                    android:id="@+id/track_status"
+                    style="@style/TextAppearance.Regular.Body1.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:gravity="end"
+                    tools:text="Reading" />
 
-        <LinearLayout
-            android:id="@+id/chapters_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectable_list_drawable"
-            android:clickable="true"
-            android:padding="16dp"
-            app:layout_constraintStart_toEndOf="@+id/logo_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider2">
+            </LinearLayout>
 
-            <TextView
-                style="@style/TextAppearance.Regular.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/chapters" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/divider" />
 
-            <TextView
-                android:id="@+id/track_chapters"
-                style="@style/TextAppearance.Regular.Body1.Secondary"
+            <LinearLayout
+                android:id="@+id/chapters_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:gravity="end"
-                tools:text="12/24" />
+                android:background="?attr/selectable_list_drawable"
+                android:clickable="true"
+                android:padding="16dp">
 
-        </LinearLayout>
+                <TextView
+                    style="@style/TextAppearance.Regular.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chapters" />
 
-        <View
-            android:id="@+id/divider3"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:background="?android:attr/divider"
-            app:layout_constraintStart_toEndOf="@+id/logo_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chapters_container" />
+                <TextView
+                    android:id="@+id/track_chapters"
+                    style="@style/TextAppearance.Regular.Body1.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:gravity="end"
+                    tools:text="12/24" />
 
-        <LinearLayout
-            android:id="@+id/score_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectable_list_drawable"
-            android:clickable="true"
-            android:padding="16dp"
-            app:layout_constraintStart_toEndOf="@+id/logo_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider3">
+            </LinearLayout>
 
-            <TextView
-                style="@style/TextAppearance.Regular.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/score" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/divider" />
 
-            <TextView
-                android:id="@+id/track_score"
-                style="@style/TextAppearance.Regular.Body1.Secondary"
+            <LinearLayout
+                android:id="@+id/score_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:gravity="end"
-                tools:text="10" />
+                android:background="?attr/selectable_list_drawable"
+                android:clickable="true"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.Regular.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/score" />
+
+                <TextView
+                    android:id="@+id/track_score"
+                    style="@style/TextAppearance.Regular.Body1.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:gravity="end"
+                    tools:text="10" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

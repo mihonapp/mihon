@@ -129,12 +129,6 @@
         <item name="android:textColor">?android:attr/textColorHint</item>
     </style>
 
-    <style name="TextAppearance.Medium.Button">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">?attr/colorAccent</item>
-    </style>
-
     <!--=======-->
     <!--Widgets-->
     <!--=======-->
