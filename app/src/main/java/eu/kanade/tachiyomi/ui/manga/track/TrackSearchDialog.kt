@@ -54,8 +54,10 @@ class TrackSearchDialog : DialogController {
         val dialog = MaterialDialog.Builder(activity!!)
                 .customView(R.layout.track_search_dialog, false)
                 .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
                 .onPositive { _, _ -> onPositiveButtonClick() }
+                .negativeText(android.R.string.cancel)
+                .neutralText(R.string.action_remove)
+                .onNeutral { _, _ ->  onRemoveButtonClick() }
                 .build()
 
         if (subscriptions.isUnsubscribed) {
@@ -135,6 +137,10 @@ class TrackSearchDialog : DialogController {
 
     private fun onPositiveButtonClick() {
         trackController.presenter.registerTracking(selectedItem, service)
+    }
+
+    private fun onRemoveButtonClick() {
+        trackController.presenter.unregisterTracking(service)
     }
 
     private companion object {
