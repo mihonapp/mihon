@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_filter"
@@ -11,22 +11,22 @@
             <item
                 android:id="@+id/action_filter_read"
                 android:checkable="true"
-                android:title="@string/action_filter_read"/>
+                android:title="@string/action_filter_read" />
             <item
                 android:id="@+id/action_filter_unread"
                 android:checkable="true"
-                android:title="@string/action_filter_unread"/>
+                android:title="@string/action_filter_unread" />
             <item
                 android:id="@+id/action_filter_downloaded"
                 android:checkable="true"
-                android:title="@string/action_filter_downloaded"/>
+                android:title="@string/action_filter_downloaded" />
             <item
                 android:id="@+id/action_filter_bookmarked"
                 android:checkable="true"
-                android:title="@string/action_filter_bookmarked"/>
+                android:title="@string/action_filter_bookmarked" />
             <item
                 android:id="@+id/action_filter_empty"
-                android:title="@string/action_filter_empty"/>
+                android:title="@string/action_filter_empty" />
         </menu>
     </item>
 
@@ -34,7 +34,7 @@
         android:id="@+id/action_sort"
         android:icon="@drawable/ic_sort_by_numeric_white_24dp"
         android:title="@string/action_sort"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_display_mode"

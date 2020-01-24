@@ -37,7 +37,6 @@ class SortGroup(val filter: Filter.Sort) : AbstractExpandableHeaderItem<SortGrou
             R.drawable.ic_chevron_right_white_24dp)
 
         holder.itemView.setOnClickListener(holder)
-
     }
 
     override fun equals(other: Any?): Boolean {

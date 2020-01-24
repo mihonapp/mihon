@@ -41,7 +41,6 @@ open class CheckboxItem(val filter: Filter.CheckBox) : AbstractFlexibleItem<Chec
     }
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
-
         val check: CheckBox = itemView.findViewById(R.id.nav_view_item)
     }
 }

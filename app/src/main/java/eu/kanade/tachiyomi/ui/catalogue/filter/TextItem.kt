@@ -43,7 +43,6 @@ open class TextItem(val filter: Filter.Text) : AbstractFlexibleItem<TextItem.Hol
     }
 
     class Holder(view: View, adapter: FlexibleAdapter<*>) : FlexibleViewHolder(view, adapter) {
-
         val wrapper: TextInputLayout = itemView.findViewById(R.id.nav_view_item_wrapper)
         val edit: EditText = itemView.findViewById(R.id.nav_view_item)
     }
