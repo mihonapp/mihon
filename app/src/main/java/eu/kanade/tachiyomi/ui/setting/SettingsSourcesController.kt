@@ -21,7 +21,7 @@ class SettingsSourcesController : SettingsController(),
     private val onlineSources by lazy { Injekt.get<SourceManager>().getOnlineSources() }
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
-        titleRes = R.string.pref_category_sources
+        titleRes = R.string.action_filter
 
         // Get the list of active language codes.
         val activeLangsCodes = preferences.enabledLanguages().getOrDefault()
