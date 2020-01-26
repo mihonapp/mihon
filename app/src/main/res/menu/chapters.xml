@@ -37,17 +37,36 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_display_mode"
         android:title="@string/action_display_mode"
-        app:showAsAction="never" />
+        app:showAsAction="never">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/display_title"
+                    android:title="@string/show_title" />
+                <item
+                    android:id="@+id/display_chapter_number"
+                    android:title="@string/show_chapter_number" />
+            </group>
+        </menu>
+    </item>
 
     <item
-        android:id="@+id/action_sorting_mode"
         android:title="@string/sorting_mode"
-        app:showAsAction="never" />
+        app:showAsAction="never">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_by_source"
+                    android:title="@string/sort_by_source" />
+                <item
+                    android:id="@+id/sort_by_number"
+                    android:title="@string/sort_by_number" />
+            </group>
+        </menu>
+    </item>
 
     <item
-        android:id="@+id/manga_download"
         android:title="@string/manga_download"
         app:showAsAction="never">
         <menu>

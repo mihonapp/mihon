@@ -34,8 +34,6 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         FlexibleAdapter.OnItemClickListener,
         FlexibleAdapter.OnItemLongClickListener,
         ChaptersAdapter.OnMenuItemClickListener,
-        SetDisplayModeDialog.Listener,
-        SetSortingDialog.Listener,
         DownloadCustomChaptersDialog.Listener,
         DeleteChaptersDialog.Listener {
 
@@ -147,17 +145,46 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         if (presenter.onlyUnread())
             //Disable read filter option if unread filter is enabled.
             menuFilterRead.isEnabled = false
+
+        // Display mode submenu
+        if (presenter.manga.displayMode == Manga.DISPLAY_NAME) {
+            menu.findItem(R.id.display_title).isChecked = true
+        } else {
+            menu.findItem(R.id.display_chapter_number).isChecked = true
+        }
+
+        // Sorting mode submenu
+        if (presenter.manga.sorting == Manga.SORTING_SOURCE) {
+            menu.findItem(R.id.sort_by_source).isChecked = true
+        } else {
+            menu.findItem(R.id.sort_by_number).isChecked = true
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_display_mode -> showDisplayModeDialog()
+            R.id.display_title -> {
+                item.isChecked = true
+                setDisplayMode(Manga.DISPLAY_NAME)
+            }
+            R.id.display_chapter_number -> {
+                item.isChecked = true
+                setDisplayMode(Manga.DISPLAY_NUMBER)
+            }
+
+            R.id.sort_by_source -> {
+                item.isChecked = true
+                presenter.setSorting(Manga.SORTING_SOURCE)
+            }
+            R.id.sort_by_number -> {
+                item.isChecked = true
+                presenter.setSorting(Manga.SORTING_NUMBER)
+            }
 
             R.id.download_next, R.id.download_next_5, R.id.download_next_10,
             R.id.download_custom, R.id.download_unread, R.id.download_all
             -> downloadChapters(item.itemId)
 
-            R.id.action_sorting_mode -> showSortingDialog()
             R.id.action_filter_unread -> {
                 item.isChecked = !item.isChecked
                 presenter.setUnreadFilter(item.isChecked)
@@ -456,41 +483,15 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     // OVERFLOW MENU DIALOGS
 
-    private fun showDisplayModeDialog() {
-        val preselected = if (presenter.manga.displayMode == Manga.DISPLAY_NAME) 0 else 1
-        SetDisplayModeDialog(this, preselected).showDialog(router)
-    }
-
-    override fun setDisplayMode(id: Int) {
+    private fun setDisplayMode(id: Int) {
         presenter.setDisplayMode(id)
         adapter?.notifyDataSetChanged()
-    }
-
-    private fun showSortingDialog() {
-        val preselected = if (presenter.manga.sorting == Manga.SORTING_SOURCE) 0 else 1
-        SetSortingDialog(this, preselected).showDialog(router)
-    }
-
-    override fun setSorting(id: Int) {
-        presenter.setSorting(id)
     }
 
     private fun getUnreadChaptersSorted() = presenter.chapters
             .filter { !it.read && it.status == Download.NOT_DOWNLOADED }
             .distinctBy { it.name }
             .sortedByDescending { it.source_order }
-
-    override fun downloadCustomChapters(amount: Int) {
-        val chaptersToDownload = getUnreadChaptersSorted().take(amount)
-        if (chaptersToDownload.isNotEmpty()) {
-            downloadChapters(chaptersToDownload)
-        }
-    }
-
-    private fun showCustomDownloadDialog() {
-        DownloadCustomChaptersDialog(this, presenter.chapters.size).showDialog(router)
-    }
-
 
     private fun downloadChapters(choice: Int) {
         val chaptersToDownload = when (choice) {
@@ -505,6 +506,17 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
             R.id.download_all -> presenter.chapters
             else -> emptyList()
         }
+        if (chaptersToDownload.isNotEmpty()) {
+            downloadChapters(chaptersToDownload)
+        }
+    }
+
+    private fun showCustomDownloadDialog() {
+        DownloadCustomChaptersDialog(this, presenter.chapters.size).showDialog(router)
+    }
+
+    override fun downloadCustomChapters(amount: Int) {
+        val chaptersToDownload = getUnreadChaptersSorted().take(amount)
         if (chaptersToDownload.isNotEmpty()) {
             downloadChapters(chaptersToDownload)
         }
