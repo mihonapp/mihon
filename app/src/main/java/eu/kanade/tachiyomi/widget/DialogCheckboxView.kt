@@ -1,12 +1,13 @@
 package eu.kanade.tachiyomi.widget
 
 import android.content.Context
-import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.inflate
-import kotlinx.android.synthetic.main.common_dialog_with_checkbox.view.*
+import kotlinx.android.synthetic.main.common_dialog_with_checkbox.view.checkbox_option
+import kotlinx.android.synthetic.main.common_dialog_with_checkbox.view.description
 
 class DialogCheckboxView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
         LinearLayout(context, attrs) {

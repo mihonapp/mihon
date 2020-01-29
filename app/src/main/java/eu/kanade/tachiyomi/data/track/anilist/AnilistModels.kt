@@ -7,7 +7,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 data class ALManga(
         val media_id: Int,

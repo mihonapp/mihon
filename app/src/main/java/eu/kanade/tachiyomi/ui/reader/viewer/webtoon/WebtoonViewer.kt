@@ -1,12 +1,12 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.WebtoonLayoutManager
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.WebtoonLayoutManager
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage

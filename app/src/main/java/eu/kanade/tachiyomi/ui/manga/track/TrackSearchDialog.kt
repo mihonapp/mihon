@@ -13,7 +13,9 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.plusAssign
-import kotlinx.android.synthetic.main.track_search_dialog.view.*
+import kotlinx.android.synthetic.main.track_search_dialog.view.progress
+import kotlinx.android.synthetic.main.track_search_dialog.view.track_search
+import kotlinx.android.synthetic.main.track_search_dialog.view.track_search_list
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription

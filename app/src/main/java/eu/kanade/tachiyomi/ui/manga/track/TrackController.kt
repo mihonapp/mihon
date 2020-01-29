@@ -2,17 +2,18 @@ package eu.kanade.tachiyomi.ui.manga.track
 
 import android.content.Intent
 import android.net.Uri
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.track_controller.*
+import kotlinx.android.synthetic.main.track_controller.swipe_refresh
+import kotlinx.android.synthetic.main.track_controller.track_recycler
 import timber.log.Timber
 
 class TrackController : NucleusController<TrackPresenter>(),

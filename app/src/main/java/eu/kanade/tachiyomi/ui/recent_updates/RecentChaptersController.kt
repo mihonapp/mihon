@@ -1,10 +1,10 @@
 package eu.kanade.tachiyomi.ui.recent_updates
 
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.*
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.support.v7.widget.scrollStateChanges
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -20,7 +20,9 @@ import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.recent_chapters_controller.*
+import kotlinx.android.synthetic.main.recent_chapters_controller.empty_view
+import kotlinx.android.synthetic.main.recent_chapters_controller.recycler
+import kotlinx.android.synthetic.main.recent_chapters_controller.swipe_refresh
 import timber.log.Timber
 
 /**

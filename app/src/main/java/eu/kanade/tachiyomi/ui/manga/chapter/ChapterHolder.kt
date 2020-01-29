@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.util.getResourceColor
 import eu.kanade.tachiyomi.util.gone
 import eu.kanade.tachiyomi.util.setVectorCompat
 import kotlinx.android.synthetic.main.chapters_item.*
-import java.util.*
+import java.util.Date
 
 class ChapterHolder(
         private val view: View,

@@ -4,14 +4,14 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.TypedArray
 import android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceViewHolder
-import androidx.appcompat.widget.SwitchCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Checkable
 import android.widget.CompoundButton
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceViewHolder
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.getResourceColor
 

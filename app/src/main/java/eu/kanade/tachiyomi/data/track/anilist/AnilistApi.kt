@@ -1,12 +1,7 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
 import android.net.Uri
-import com.github.salomonbrys.kotson.array
-import com.github.salomonbrys.kotson.get
-import com.github.salomonbrys.kotson.jsonObject
-import com.github.salomonbrys.kotson.nullInt
-import com.github.salomonbrys.kotson.nullString
-import com.github.salomonbrys.kotson.obj
+import com.github.salomonbrys.kotson.*
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -15,7 +10,6 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import rx.Observable
 import java.util.Calendar

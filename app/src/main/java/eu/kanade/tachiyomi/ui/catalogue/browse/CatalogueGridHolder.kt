@@ -6,7 +6,9 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.widget.StateImageViewTarget
-import kotlinx.android.synthetic.main.catalogue_grid_item.*
+import kotlinx.android.synthetic.main.catalogue_grid_item.progress
+import kotlinx.android.synthetic.main.catalogue_grid_item.thumbnail
+import kotlinx.android.synthetic.main.catalogue_grid_item.title
 
 /**
  * Class used to hold the displayed data of a manga in the catalogue, like the cover or the title.

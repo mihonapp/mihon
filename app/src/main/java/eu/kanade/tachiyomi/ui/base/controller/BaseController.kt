@@ -1,17 +1,17 @@
 package eu.kanade.tachiyomi.ui.base.controller
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RestoreViewOnCreateController
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.clearFindViewByIdCache
 import timber.log.Timber
 
 abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateController(bundle),

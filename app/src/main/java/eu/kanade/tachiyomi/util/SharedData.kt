@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.util
 
-import java.util.*
+import java.util.HashMap
 
 /**
  * This singleton is used to share some objects within the application, useful to communicate

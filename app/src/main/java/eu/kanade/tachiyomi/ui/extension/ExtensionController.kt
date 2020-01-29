@@ -1,13 +1,8 @@
 package eu.kanade.tachiyomi.ui.extension
 
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.view.*
 import androidx.appcompat.widget.SearchView
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RouterTransaction
@@ -20,7 +15,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
-import kotlinx.android.synthetic.main.extension_controller.*
+import kotlinx.android.synthetic.main.extension_controller.ext_recycler
+import kotlinx.android.synthetic.main.extension_controller.ext_swipe_refresh
 
 
 /**

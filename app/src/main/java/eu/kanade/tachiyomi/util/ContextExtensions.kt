@@ -12,13 +12,13 @@ import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.PowerManager
+import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import android.widget.Toast
 import com.nononsenseapps.filepicker.FilePickerActivity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity

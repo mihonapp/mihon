@@ -1,9 +1,9 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ObjectAnimator
-import com.google.android.material.tabs.TabLayout
 import android.view.ViewTreeObserver
 import android.view.animation.DecelerateInterpolator
+import com.google.android.material.tabs.TabLayout
 
 class TabsAnimator(val tabs: TabLayout) {
 

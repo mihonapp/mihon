@@ -6,7 +6,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.util.toast
-import kotlinx.android.synthetic.main.pref_account_login.view.*
+import kotlinx.android.synthetic.main.pref_account_login.view.dialog_title
+import kotlinx.android.synthetic.main.pref_account_login.view.login
+import kotlinx.android.synthetic.main.pref_account_login.view.password
+import kotlinx.android.synthetic.main.pref_account_login.view.username
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt

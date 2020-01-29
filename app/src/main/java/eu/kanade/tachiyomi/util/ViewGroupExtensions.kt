@@ -1,9 +1,9 @@
 package eu.kanade.tachiyomi.util
 
-import androidx.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 
 /**
  * Extension method to inflate a view directly from its parent.

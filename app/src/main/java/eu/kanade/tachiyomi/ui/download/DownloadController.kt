@@ -1,17 +1,18 @@
 package eu.kanade.tachiyomi.ui.download
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import kotlinx.android.synthetic.main.download_controller.*
+import kotlinx.android.synthetic.main.download_controller.empty_view
+import kotlinx.android.synthetic.main.download_controller.recycler
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
-import java.util.*
+import java.util.HashMap
 import java.util.concurrent.TimeUnit
 
 /**

@@ -6,7 +6,9 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.widget.StateImageViewTarget
-import kotlinx.android.synthetic.main.catalogue_global_search_controller_card_item.*
+import kotlinx.android.synthetic.main.catalogue_global_search_controller_card_item.itemImage
+import kotlinx.android.synthetic.main.catalogue_global_search_controller_card_item.progress
+import kotlinx.android.synthetic.main.catalogue_global_search_controller_card_item.tvTitle
 
 class CatalogueSearchCardHolder(view: View, adapter: CatalogueSearchCardAdapter)
     : BaseFlexibleViewHolder(view, adapter) {

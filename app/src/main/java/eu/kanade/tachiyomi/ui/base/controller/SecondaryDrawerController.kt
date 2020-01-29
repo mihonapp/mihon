@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.base.controller
 
-import androidx.drawerlayout.widget.DrawerLayout
 import android.view.ViewGroup
+import androidx.drawerlayout.widget.DrawerLayout
 
 interface SecondaryDrawerController {
 

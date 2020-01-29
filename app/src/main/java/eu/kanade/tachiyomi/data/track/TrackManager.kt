@@ -2,10 +2,10 @@ package eu.kanade.tachiyomi.data.track
 
 import android.content.Context
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
+import eu.kanade.tachiyomi.data.track.bangumi.Bangumi
 import eu.kanade.tachiyomi.data.track.kitsu.Kitsu
 import eu.kanade.tachiyomi.data.track.myanimelist.Myanimelist
 import eu.kanade.tachiyomi.data.track.shikimori.Shikimori
-import eu.kanade.tachiyomi.data.track.bangumi.Bangumi
 
 class TrackManager(private val context: Context) {
 

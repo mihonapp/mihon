@@ -9,10 +9,10 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import eu.kanade.tachiyomi.util.WebViewClientCompat
 import okhttp3.Cookie
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.HttpUrl.Companion.toHttpUrl
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import java.util.concurrent.CountDownLatch

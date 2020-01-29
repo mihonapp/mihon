@@ -12,7 +12,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.widget.SimpleTextWatcher
-import kotlinx.android.synthetic.main.pref_account_login.view.*
+import kotlinx.android.synthetic.main.pref_account_login.view.login
+import kotlinx.android.synthetic.main.pref_account_login.view.password
+import kotlinx.android.synthetic.main.pref_account_login.view.show_password
 import rx.Subscription
 import uy.kohesive.injekt.injectLazy
 

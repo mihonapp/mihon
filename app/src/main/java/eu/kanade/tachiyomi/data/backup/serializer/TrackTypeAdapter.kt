@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.backup.serializer
 
-import android.telecom.DisconnectCause.REMOTE
 import com.github.salomonbrys.kotson.typeAdapter
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonToken

@@ -9,7 +9,7 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Presenter of [DownloadController].

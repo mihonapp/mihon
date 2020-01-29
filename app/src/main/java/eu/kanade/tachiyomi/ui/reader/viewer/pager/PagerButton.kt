@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.appcompat.widget.AppCompatButton
 import android.view.MotionEvent
+import androidx.appcompat.widget.AppCompatButton
 
 /**
  * A button class to be used by child views of the pager viewer. All tap gestures are handled by

@@ -1,13 +1,15 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import kotlinx.android.synthetic.main.reader_page_sheet.*
+import kotlinx.android.synthetic.main.reader_page_sheet.save_layout
+import kotlinx.android.synthetic.main.reader_page_sheet.set_as_cover_layout
+import kotlinx.android.synthetic.main.reader_page_sheet.share_layout
 
 /**
  * Sheet to show when a page is long clicked.
