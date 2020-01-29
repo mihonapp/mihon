@@ -66,7 +66,9 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
      */
     private val preferences: PreferencesHelper by injectLazy()
 
-    val dateFormat: DateFormat = preferences.dateFormat().getOrDefault()
+    private val dateFormat: DateFormat by lazy {
+        preferences.dateFormat().getOrDefault()
+    }
 
     init {
         setHasOptionsMenu(true)

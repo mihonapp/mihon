@@ -22,17 +22,17 @@ fun Preference<Boolean>.invert(): Boolean = getOrDefault().let { set(!it); !it }
 
 private class DateFormatConverter : Preference.Adapter<DateFormat> {
     override fun get(key: String, preferences: SharedPreferences): DateFormat {
-        var dateFormat = preferences.getString(Keys.dateFormat, "")
+        val dateFormat = preferences.getString(Keys.dateFormat, "")!!
 
         if (dateFormat != "") {
-            return SimpleDateFormat(dateFormat)
+            return SimpleDateFormat(dateFormat, Locale.getDefault())
         }
 
         return DateFormat.getDateInstance(DateFormat.SHORT)
     }
 
     override fun set(key: String, value: DateFormat, editor: SharedPreferences.Editor) {
-        TODO("not implemented")
+        // No-op
     }
 }
 

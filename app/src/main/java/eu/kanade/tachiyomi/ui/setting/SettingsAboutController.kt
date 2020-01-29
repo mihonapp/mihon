@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.preference.PreferenceScreen
 import android.view.View
+import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.data.updater.UpdaterService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.main.ChangelogDialogController
+import eu.kanade.tachiyomi.util.toTimestampString
 import eu.kanade.tachiyomi.util.toast
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -26,7 +27,8 @@ import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsAboutController : SettingsController() {
@@ -36,10 +38,9 @@ class SettingsAboutController : SettingsController() {
      */
     private val updateChecker by lazy { UpdateChecker.getUpdateChecker() }
 
-
     private val userPreferences: PreferencesHelper by injectLazy()
 
-    val dateFormat: DateFormat = userPreferences.dateFormat().getOrDefault()
+    private val dateFormat: DateFormat = userPreferences.dateFormat().getOrDefault()
 
     /**
      * The subscribtion service of the obtained release object
@@ -192,9 +193,7 @@ class SettingsAboutController : SettingsController() {
                     DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault())
             outputDf.timeZone = TimeZone.getDefault()
 
-            val date = dateFormat.format(buildTime)
-            val time = DateFormat.getTimeInstance(DateFormat.SHORT).format(buildTime)
-            return "$date $time"
+            return buildTime.toTimestampString(dateFormat)
         } catch (e: ParseException) {
             return BuildConfig.BUILD_TIME
         }
