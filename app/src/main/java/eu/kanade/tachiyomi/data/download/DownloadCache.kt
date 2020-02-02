@@ -100,7 +100,9 @@ class DownloadCache(
         if (sourceDir != null) {
             val mangaDir = sourceDir.files[provider.getMangaDirName(manga)]
             if (mangaDir != null) {
-                return mangaDir.files.size
+                return mangaDir.files
+                        .filter { !it.endsWith(Downloader.TMP_DIR_SUFFIX) }
+                        .size
             }
         }
         return 0
