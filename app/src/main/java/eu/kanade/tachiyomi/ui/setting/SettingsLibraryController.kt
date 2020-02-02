@@ -13,6 +13,8 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.category.CategoryController
 import kotlinx.android.synthetic.main.pref_library_columns.view.landscape_columns
 import kotlinx.android.synthetic.main.pref_library_columns.view.portrait_columns
 import rx.Observable
@@ -150,6 +152,13 @@ class SettingsLibraryController : SettingsController() {
 
         preferenceCategory {
             titleRes = R.string.pref_category_library_categories
+
+            preference {
+                titleRes = R.string.action_edit_categories
+                onClick {
+                    router.pushController(CategoryController().withFadeTransaction())
+                }
+            }
 
             intListPreference {
                 key = Keys.defaultCategory
