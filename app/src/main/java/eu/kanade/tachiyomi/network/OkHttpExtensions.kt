@@ -52,6 +52,11 @@ suspend fun Call.await(): Response {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    continuation.resumeWithException(Exception("HTTP error ${response.code}"))
+                    return
+                }
+
                 continuation.resume(response)
             }
 
