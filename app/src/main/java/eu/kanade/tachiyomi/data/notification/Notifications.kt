@@ -5,7 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.notificationManager
+import eu.kanade.tachiyomi.util.system.notificationManager
 
 /**
  * Class to manage the basic information of all the notifications used in the app.

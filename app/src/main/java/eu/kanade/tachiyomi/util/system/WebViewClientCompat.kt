@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.system
 
 import android.annotation.TargetApi
 import android.os.Build

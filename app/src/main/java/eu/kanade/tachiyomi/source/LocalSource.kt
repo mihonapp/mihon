@@ -5,11 +5,11 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.*
-import eu.kanade.tachiyomi.util.ChapterRecognition
-import eu.kanade.tachiyomi.util.ComparatorUtil.CaseInsensitiveNaturalComparator
+import eu.kanade.tachiyomi.util.chapter.ChapterRecognition
+import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.EpubFile
-import eu.kanade.tachiyomi.util.ImageUtil
+import eu.kanade.tachiyomi.util.system.ImageUtil
 import junrar.Archive
 import junrar.rarfile.FileHeader
 import rx.Observable
@@ -164,7 +164,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
                 }
                 .sortedWith(Comparator { c1, c2 ->
                     val c = c2.chapter_number.compareTo(c1.chapter_number)
-                    if (c == 0) CaseInsensitiveNaturalComparator.compare(c2.name, c1.name) else c
+                    if (c == 0) c2.name.compareToCaseInsensitiveNaturalOrder(c1.name) else c
                 })
 
         return Observable.just(chapters)
@@ -210,7 +210,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
         return when (format) {
             is Format.Directory -> {
                 val entry = format.file.listFiles()
-                    .sortedWith(Comparator<File> { f1, f2 -> CaseInsensitiveNaturalComparator.compare(f1.name, f2.name) })
+                    .sortedWith(Comparator<File> { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) })
                     .find { !it.isDirectory && ImageUtil.isImage(it.name) { FileInputStream(it) } }
 
                 entry?.let { updateCover(context, manga, it.inputStream())}
@@ -218,7 +218,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
             is Format.Zip -> {
                 ZipFile(format.file).use { zip ->
                     val entry = zip.entries().toList()
-                        .sortedWith(Comparator<ZipEntry> { f1, f2 -> CaseInsensitiveNaturalComparator.compare(f1.name, f2.name) })
+                        .sortedWith(Comparator<ZipEntry> { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) })
                         .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
 
                     entry?.let { updateCover(context, manga, zip.getInputStream(it) )}
@@ -227,7 +227,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
             is Format.Rar -> {
                 Archive(format.file).use { archive ->
                     val entry = archive.fileHeaders
-                        .sortedWith(Comparator<FileHeader> { f1, f2 -> CaseInsensitiveNaturalComparator.compare(f1.fileNameString, f2.fileNameString) })
+                        .sortedWith(Comparator<FileHeader> { f1, f2 -> f1.fileNameString.compareToCaseInsensitiveNaturalOrder(f2.fileNameString) })
                         .find { !it.isDirectory && ImageUtil.isImage(it.fileNameString) { archive.getInputStream(it) } }
 
                     entry?.let { updateCover(context, manga, archive.getInputStream(it) )}

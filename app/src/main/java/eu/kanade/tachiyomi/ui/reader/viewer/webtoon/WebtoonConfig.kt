@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import com.f2prateek.rx.preferences.Preference
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.util.addTo
+import eu.kanade.tachiyomi.util.lang.addTo
 import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

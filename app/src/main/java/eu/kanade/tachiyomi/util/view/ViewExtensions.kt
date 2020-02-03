@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.view
 
 import android.graphics.Color
 import android.graphics.Point

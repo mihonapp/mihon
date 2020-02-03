@@ -4,8 +4,8 @@ import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.holder.SlicedHolder
-import eu.kanade.tachiyomi.util.getRound
-import eu.kanade.tachiyomi.util.gone
+import eu.kanade.tachiyomi.util.view.getRound
+import eu.kanade.tachiyomi.util.view.gone
 import io.github.mthli.slice.Slice
 import kotlinx.android.synthetic.main.catalogue_main_controller_card_item.*
 

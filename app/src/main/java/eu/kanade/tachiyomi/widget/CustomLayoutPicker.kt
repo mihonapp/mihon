@@ -7,7 +7,7 @@ import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.FilePickerFragment
 import com.nononsenseapps.filepicker.LogicHandler
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.view.inflate
 import java.io.File
 
 class CustomLayoutPickerActivity : FilePickerActivity() {

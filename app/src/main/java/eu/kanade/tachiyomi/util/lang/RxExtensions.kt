@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.lang
 
 import rx.Observable
 import rx.Subscription

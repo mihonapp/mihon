@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.view
 
 import android.widget.ImageView
 import androidx.annotation.DrawableRes

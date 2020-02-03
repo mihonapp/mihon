@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.database
 
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.util.ChapterRecognition
+import eu.kanade.tachiyomi.util.chapter.ChapterRecognition
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

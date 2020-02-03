@@ -15,8 +15,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
-import eu.kanade.tachiyomi.util.dpToPx
-import eu.kanade.tachiyomi.util.visibleIf
+import eu.kanade.tachiyomi.util.system.dpToPx
+import eu.kanade.tachiyomi.util.view.visibleIf
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 

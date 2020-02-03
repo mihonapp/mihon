@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.davidea.flexibleadapter.items.ISectionable
-import eu.kanade.tachiyomi.util.dpToPx
+import eu.kanade.tachiyomi.util.system.dpToPx
 import io.github.mthli.slice.Slice
 
 interface SlicedHolder {

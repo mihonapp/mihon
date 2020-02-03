@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.extension.util.ExtensionInstallReceiver
 import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.util.launchNow
+import eu.kanade.tachiyomi.util.lang.launchNow
 import kotlinx.coroutines.async
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers

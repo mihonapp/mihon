@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.android.synthetic.main.recent_chapters_controller.empty_view
 import kotlinx.android.synthetic.main.recent_chapters_controller.recycler
 import kotlinx.android.synthetic.main.recent_chapters_controller.swipe_refresh

@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.view.inflate
 import kotlinx.android.synthetic.main.download_custom_amount.view.*
 import timber.log.Timber
 

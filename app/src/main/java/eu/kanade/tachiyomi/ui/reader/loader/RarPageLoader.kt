@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.ui.reader.loader
 
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import eu.kanade.tachiyomi.util.ComparatorUtil.CaseInsensitiveNaturalComparator
-import eu.kanade.tachiyomi.util.ImageUtil
+import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
+import eu.kanade.tachiyomi.util.system.ImageUtil
 import junrar.Archive
 import junrar.rarfile.FileHeader
 import rx.Observable
@@ -44,7 +44,7 @@ class RarPageLoader(file: File) : PageLoader() {
     override fun getPages(): Observable<List<ReaderPage>> {
         return archive.fileHeaders
             .filter { !it.isDirectory && ImageUtil.isImage(it.fileNameString) { archive.getInputStream(it) } }
-            .sortedWith(Comparator<FileHeader> { f1, f2 -> CaseInsensitiveNaturalComparator.compare(f1.fileNameString, f2.fileNameString) })
+            .sortedWith(Comparator<FileHeader> { f1, f2 -> f1.fileNameString.compareToCaseInsensitiveNaturalOrder(f2.fileNameString) })
             .mapIndexed { i, header ->
                 val streamFn = { getStream(header) }
 

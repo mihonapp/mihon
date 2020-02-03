@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.lang
 
 import java.text.DateFormat
 import java.util.Date

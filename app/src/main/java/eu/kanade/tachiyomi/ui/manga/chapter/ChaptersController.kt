@@ -23,9 +23,9 @@ import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.getCoordinates
-import eu.kanade.tachiyomi.util.snack
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.getCoordinates
+import eu.kanade.tachiyomi.util.view.snack
 import kotlinx.android.synthetic.main.chapters_controller.*
 import timber.log.Timber
 

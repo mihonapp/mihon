@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.holder.BaseViewHolder
-import eu.kanade.tachiyomi.util.visibleIf
+import eu.kanade.tachiyomi.util.view.visibleIf
 import kotlinx.android.synthetic.main.track_item.*
 
 class TrackHolder(view: View, adapter: TrackAdapter) : BaseViewHolder(view) {

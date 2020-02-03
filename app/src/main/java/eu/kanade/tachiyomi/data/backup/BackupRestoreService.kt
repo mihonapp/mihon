@@ -23,9 +23,9 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.*
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.util.chop
-import eu.kanade.tachiyomi.util.isServiceRunning
-import eu.kanade.tachiyomi.util.sendLocalBroadcast
+import eu.kanade.tachiyomi.util.lang.chop
+import eu.kanade.tachiyomi.util.system.isServiceRunning
+import eu.kanade.tachiyomi.util.system.sendLocalBroadcast
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers

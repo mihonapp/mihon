@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.system
 
 import okhttp3.Response
 import org.jsoup.Jsoup

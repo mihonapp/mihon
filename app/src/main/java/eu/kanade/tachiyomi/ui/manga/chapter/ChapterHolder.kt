@@ -6,9 +6,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
-import eu.kanade.tachiyomi.util.getResourceColor
-import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.setVectorCompat
+import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.setVectorCompat
 import kotlinx.android.synthetic.main.chapters_item.*
 import java.util.Date
 

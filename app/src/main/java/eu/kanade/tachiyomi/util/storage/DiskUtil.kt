@@ -7,7 +7,7 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import androidx.core.os.EnvironmentCompat
 import com.hippo.unifile.UniFile
-import eu.kanade.tachiyomi.util.Hash
+import eu.kanade.tachiyomi.util.lang.Hash
 import java.io.File
 
 object DiskUtil {

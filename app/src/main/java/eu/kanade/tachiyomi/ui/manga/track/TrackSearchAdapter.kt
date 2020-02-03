@@ -8,8 +8,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.inflate
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.inflate
 import kotlinx.android.synthetic.main.track_search_item.view.*
 import java.util.ArrayList
 

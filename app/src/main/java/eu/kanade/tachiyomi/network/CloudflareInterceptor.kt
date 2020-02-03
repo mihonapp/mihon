@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.webkit.WebSettings
 import android.webkit.WebView
-import eu.kanade.tachiyomi.util.WebViewClientCompat
+import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import okhttp3.Cookie
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
