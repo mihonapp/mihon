@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.storage
 
 import android.content.Context
 import android.net.Uri

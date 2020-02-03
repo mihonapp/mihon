@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.util.*
+import eu.kanade.tachiyomi.util.storage.getUriCompat
 import java.io.File
 import java.util.concurrent.TimeUnit
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys

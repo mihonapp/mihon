@@ -7,8 +7,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.util.ChapterRecognition
 import eu.kanade.tachiyomi.util.ComparatorUtil.CaseInsensitiveNaturalComparator
-import eu.kanade.tachiyomi.util.DiskUtil
-import eu.kanade.tachiyomi.util.EpubFile
+import eu.kanade.tachiyomi.util.storage.DiskUtil
+import eu.kanade.tachiyomi.util.storage.EpubFile
 import eu.kanade.tachiyomi.util.ImageUtil
 import junrar.Archive
 import junrar.rarfile.FileHeader

@@ -10,8 +10,8 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.ProgressListener
 import eu.kanade.tachiyomi.network.newCallWithProgress
-import eu.kanade.tachiyomi.util.getUriCompat
-import eu.kanade.tachiyomi.util.saveTo
+import eu.kanade.tachiyomi.util.storage.getUriCompat
+import eu.kanade.tachiyomi.util.storage.saveTo
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.io.File

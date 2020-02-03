@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.loader
 
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import eu.kanade.tachiyomi.util.EpubFile
+import eu.kanade.tachiyomi.util.storage.EpubFile
 import rx.Observable
 import java.io.File
 

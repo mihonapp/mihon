@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.storage
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

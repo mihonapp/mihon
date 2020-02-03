@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.util.storage
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import androidx.core.os.EnvironmentCompat
 import com.hippo.unifile.UniFile
+import eu.kanade.tachiyomi.util.Hash
 import java.io.File
 
 object DiskUtil {

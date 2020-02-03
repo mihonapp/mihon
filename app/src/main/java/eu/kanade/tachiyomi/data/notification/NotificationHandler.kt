@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.util.getUriCompat
+import eu.kanade.tachiyomi.util.storage.getUriCompat
 import java.io.File
 
 /**
