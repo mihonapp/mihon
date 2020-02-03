@@ -17,9 +17,7 @@ import uy.kohesive.injekt.injectLazy
 import java.io.File
 
 class UpdaterService : IntentService(UpdaterService::class.java.name) {
-    /**
-     * Network helper
-     */
+
     private val network: NetworkHelper by injectLazy()
 
     /**

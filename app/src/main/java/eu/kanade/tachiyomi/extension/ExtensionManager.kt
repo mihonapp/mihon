@@ -15,8 +15,6 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.lang.launchNow
 import kotlinx.coroutines.async
 import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -146,11 +144,13 @@ class ExtensionManager(
      * Finds the available extensions in the [api] and updates [availableExtensions].
      */
     fun findAvailableExtensions() {
-        api.findExtensions()
-                .onErrorReturn { emptyList() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { availableExtensions = it }
+        launchNow {
+            availableExtensions = try {
+                api.findExtensions()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
     }
 
     /**
