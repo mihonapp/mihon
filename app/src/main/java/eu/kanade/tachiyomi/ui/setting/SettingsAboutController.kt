@@ -99,7 +99,7 @@ class SettingsAboutController : SettingsController() {
         preference {
             titleRes = R.string.version
             summary = if (BuildConfig.DEBUG)
-                "r" + BuildConfig.COMMIT_COUNT
+                "r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA})"
             else
                 BuildConfig.VERSION_NAME
 
