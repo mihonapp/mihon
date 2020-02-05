@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/tachiyomi_circle" />
+        tools:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/manga_title"

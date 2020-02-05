@@ -16,6 +16,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="@dimen/navigation_drawer_header_margin"
         android:scaleType="centerCrop"
-        android:src="@drawable/tachiyomi_circle" />
+        android:src="@drawable/splash_icon" />
 
 </FrameLayout>
