@@ -23,7 +23,7 @@ import uy.kohesive.injekt.injectLazy
 import java.io.File
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
-class SettingsDownloadController : SettingsController() {
+class SettingsDownloadController : BaseSettingsController() {
 
     private val db: DatabaseHelper by injectLazy()
 

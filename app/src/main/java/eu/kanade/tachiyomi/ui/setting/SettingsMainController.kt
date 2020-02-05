@@ -1,11 +1,12 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import androidx.preference.PreferenceScreen
+import com.bluelinelabs.conductor.RouterTransaction
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.util.system.getResourceColor
 
-class SettingsMainController : SettingsController() {
+class SettingsMainController : BaseSettingsController() {
+
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.label_settings
 
@@ -54,7 +55,7 @@ class SettingsMainController : SettingsController() {
             onClick { navigateTo(SettingsAdvancedController()) }
         }
         preference {
-            iconRes = R.drawable.ic_help_black_24dp
+            iconRes = R.drawable.ic_info_black_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_about
             onClick { navigateTo(SettingsAboutController()) }
@@ -62,6 +63,6 @@ class SettingsMainController : SettingsController() {
     }
 
     private fun navigateTo(controller: SettingsController) {
-        router.pushController(controller.withFadeTransaction())
+        router.pushController(RouterTransaction.with(controller))
     }
 }

@@ -22,7 +22,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
-class SettingsLibraryController : SettingsController() {
+class SettingsLibraryController : BaseSettingsController() {
 
     private val db: DatabaseHelper = Injekt.get()
 
