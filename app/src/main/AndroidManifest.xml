@@ -62,7 +62,7 @@
             android:label="@string/app_name"
             android:theme="@style/FilePickerTheme" />
         <activity
-            android:name=".ui.setting.AnilistLoginActivity"
+            android:name=".ui.setting.track.AnilistLoginActivity"
             android:label="Anilist">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -76,7 +76,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.setting.ShikimoriLoginActivity"
+            android:name=".ui.setting.track.ShikimoriLoginActivity"
             android:label="Shikimori">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -90,7 +90,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.setting.BangumiLoginActivity"
+            android:name=".ui.setting.track.BangumiLoginActivity"
             android:label="Bangumi">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

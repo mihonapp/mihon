@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.setting
+package eu.kanade.tachiyomi.ui.setting.track
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +13,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 
-class BangumiLoginActivity : AppCompatActivity() {
+class AnilistLoginActivity : AppCompatActivity() {
 
     private val trackManager: TrackManager by injectLazy()
 
@@ -23,9 +23,10 @@ class BangumiLoginActivity : AppCompatActivity() {
         val view = ProgressBar(this)
         setContentView(view, FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, CENTER))
 
-        val code = intent.data?.getQueryParameter("code")
-        if (code != null) {
-            trackManager.bangumi.login(code)
+        val regex = "(?:access_token=)(.*?)(?:&)".toRegex()
+        val matchResult = regex.find(intent.data?.fragment.toString())
+        if (matchResult?.groups?.get(1) != null) {
+            trackManager.aniList.login(matchResult.groups[1]!!.value)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
@@ -34,7 +35,7 @@ class BangumiLoginActivity : AppCompatActivity() {
                         returnToSettings()
                     })
         } else {
-            trackManager.bangumi.logout()
+            trackManager.aniList.logout()
             returnToSettings()
         }
     }
