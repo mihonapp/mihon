@@ -21,7 +21,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 
-class SettingsAdvancedController : BaseSettingsController() {
+class SettingsAdvancedController : SettingsController() {
 
     private val network: NetworkHelper by injectLazy()
 

@@ -31,7 +31,7 @@ import java.util.Locale
 import java.util.TimeZone
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
-class SettingsAboutController : BaseSettingsController() {
+class SettingsAboutController : SettingsController() {
 
     /**
      * Checks for new releases

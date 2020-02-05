@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.widget.preference.TrackLogoutDialog
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
-class SettingsTrackingController : BaseSettingsController(),
+class SettingsTrackingController : SettingsController(),
         TrackLoginDialog.Listener,
         TrackLogoutDialog.Listener {
 

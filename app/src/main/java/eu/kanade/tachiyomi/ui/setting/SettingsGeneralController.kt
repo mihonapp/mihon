@@ -5,7 +5,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
-class SettingsGeneralController : BaseSettingsController() {
+class SettingsGeneralController : SettingsController() {
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.pref_category_general

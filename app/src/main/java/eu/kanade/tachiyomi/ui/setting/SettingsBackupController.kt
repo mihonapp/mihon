@@ -29,7 +29,7 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
-class SettingsBackupController : BaseSettingsController() {
+class SettingsBackupController : SettingsController() {
 
     /**
      * Flags containing information of what to backup.
