@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.setting
+package eu.kanade.tachiyomi.util.preference
 
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.preference.*

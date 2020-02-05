@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.category.CategoryController
+import eu.kanade.tachiyomi.util.preference.*
 import kotlinx.android.synthetic.main.pref_library_columns.view.landscape_columns
 import kotlinx.android.synthetic.main.pref_library_columns.view.portrait_columns
 import rx.Observable
