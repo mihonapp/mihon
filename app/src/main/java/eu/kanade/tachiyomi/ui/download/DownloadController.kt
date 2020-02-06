@@ -116,9 +116,8 @@ class DownloadController : NucleusController<DownloadPresenter>() {
                 DownloadService.stop(context)
                 presenter.clearQueue()
             }
-            else -> return super.onOptionsItemSelected(item)
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     /**

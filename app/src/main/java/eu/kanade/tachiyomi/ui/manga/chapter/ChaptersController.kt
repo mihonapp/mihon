@@ -208,9 +208,8 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
                 activity?.invalidateOptionsMenu()
             }
             R.id.action_sort -> presenter.revertSortOrder()
-            else -> return super.onOptionsItemSelected(item)
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     fun onNextChapters(chapters: List<ChapterItem>) {

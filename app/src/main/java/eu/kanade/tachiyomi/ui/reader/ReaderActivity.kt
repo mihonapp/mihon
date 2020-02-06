@@ -193,9 +193,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         when (item.itemId) {
             R.id.action_settings -> ReaderSettingsSheet(this).show()
             R.id.action_custom_filter -> ReaderColorFilterSheet(this).show()
-            else -> return super.onOptionsItemSelected(item)
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     /**

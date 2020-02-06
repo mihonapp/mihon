@@ -374,10 +374,9 @@ class LibraryController(
             R.id.action_source_migration -> {
                 router.pushController(MigrationController().withFadeTransaction())
             }
-            else -> return super.onOptionsItemSelected(item)
         }
 
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     /**
