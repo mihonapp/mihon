@@ -84,7 +84,7 @@
     <string name="action_login">लोगिन</string>
     <string name="deleting">हटाया जा रहा है…</string>
     <string name="loading">लोड हो रहा है…</string>
-    <string name="app_not_available">एप्पलीकेशन उपलब्ध नहीं है</string>
+    <string name="app_not_available">ऐप उपलब्ध नहीं</string>
     <string name="short_recent_updates">अद्यतन</string>
     <string name="pref_category_general">सामान्य</string>
     <string name="pref_category_reader">पाठमाला</string>
@@ -116,10 +116,10 @@
     <string name="charging">चार्ज होते समय</string>
     <string name="pref_update_only_non_completed">केवल चालू मंगा का अद्यतन करे</string>
     <string name="pref_auto_update_manga_sync">अध्याय पढ़ने के बाद समकालीन करे</string>
-    <string name="pref_theme">एप्पलीकेशन थीम</string>
-    <string name="light_theme">मुख्य थीम</string>
-    <string name="dark_theme">गहरी थीम</string>
-    <string name="amoled_theme">अलौकिक थीम</string>
+    <string name="pref_theme">ऐप थीम</string>
+    <string name="light_theme">सफ़ेद थीम</string>
+    <string name="dark_theme">काली थीम</string>
+    <string name="amoled_theme">अलौकिक गहरी थीम</string>
     <string name="pref_start_screen">प्रथम प्रदर्शनी</string>
     <string name="pref_language">भाषा</string>
     <string name="system_default">डिफ़ॉल्ट प्रणाली</string>
@@ -201,8 +201,9 @@
     <string name="error_opening_log">लॉग खोल नहीं सके</string>
     <string name="restore_completed_content">पुनर्स्थापित किया गया %1$s.
 \n%2$s त्रुटियां मिलीं.</string>
-    <string name="backup_restore_content">पुनर्स्थापना डेटा प्राप्त करने के लिए स्रोत का उपयोग करता है, वाहक की लागत लागू हो सकती है
-\nयह भी सुनिश्चित करें कि आप संसाधनों में ठीक से लॉग इन कर रहे हैं जो बहाल करने से पहले की आवश्यकता होती है।</string>
+    <string name="backup_restore_content">डेटा लाने के लिए स्रोतों का उपयोग करें, वाहक लागत लागू हो सकती है।
+\n
+\nसुनिश्चित करें कि आपने सभी आवश्यक एक्सटेंशन स्थापित किए हैं और बहाल करने से पहले स्रोतों और ट्रैकिंग सेवाओं में लॉग इन किया है।</string>
     <string name="file_saved">फ़ाइल को %1$s पर सहेजा गया</string>
     <string name="backup_choice">आप बैकअप के लिए क्या चाहते हैं?</string>
     <string name="restoring_backup">बैकअप को पुनर्स्थापित करना</string>
@@ -225,7 +226,7 @@
     <string name="version">संस्करण</string>
     <string name="build_time">निर्माण समय</string>
     <string name="pref_enable_automatic_updates">अद्यतन के लिए जाँच</string>
-    <string name="pref_enable_automatic_updates_summary">स्वचालित रूप से एप्लिकेशन अपडेट की जांच करें</string>
+    <string name="pref_enable_automatic_updates_summary">नए ऐप संस्करणों की स्वचालित रूप से जांच करें</string>
     <string name="pref_enable_acra">क्रैश रिपोर्ट भेजें</string>
     <string name="pref_acra_summary">किसी भी बग को ठीक करने में मदद करता है कोई संवेदनशील डेटा नहीं भेजा जाएगा</string>
     <string name="login_title">%1$s के लिए लॉगिन</string>
@@ -233,8 +234,8 @@
     <string name="password">पासवर्ड</string>
     <string name="show_password">पासवर्ड दिखाए</string>
     <string name="login">लॉग इन करें</string>
-    <string name="login_success">सफलतापूर्ण लॉग इन</string>
-    <string name="invalid_login">लॉग इन त्रुटि</string>
+    <string name="login_success">लॉग इन किया गया</string>
+    <string name="invalid_login">लॉग इन नहीं कर सका</string>
     <string name="unknown_error">अज्ञात त्रुटि</string>
     <string name="library_search_hint">शीर्षक या लेखक …</string>
     <string name="updating_category">श्रेणी अपडेट कर रहा है</string>
@@ -252,7 +253,7 @@
     <string name="action_global_search_hint">वैश्विक खोज …</string>
     <string name="latest">नवीनतम</string>
     <string name="browse">ब्राउज</string>
-    <string name="manga_not_in_db">यह मंगा डेटाबेस से हटा दिया गया था!</string>
+    <string name="manga_not_in_db">इस मंगा को डाटाबेस से हटा दिया गया है।</string>
     <string name="manga_detail_tab">जानकारी</string>
     <string name="description">विवरण</string>
     <string name="ongoing">चल रही है</string>
@@ -266,14 +267,14 @@
     <string name="manga_info_status_label">स्थिति</string>
     <string name="manga_info_source_label">स्रोत</string>
     <string name="manga_info_genres_label">शैलियां</string>
-    <string name="circular_icon">परिपत्र आइकन</string>
-    <string name="rounded_icon">गोल आइकन</string>
-    <string name="square_icon">स्क्वायर आइकन</string>
-    <string name="star_icon">स्टार आइकन</string>
+    <string name="circular_icon">परिपत्र</string>
+    <string name="rounded_icon">गोल</string>
+    <string name="square_icon">वर्ग</string>
+    <string name="star_icon">स्टार</string>
     <string name="shortcut_title">शॉर्टकट शीर्षक</string>
     <string name="shortcut_created">शॉर्टकट को होम स्क्रीन पर जोड़ा गया था.</string>
     <string name="icon_shape">चिह्न आकार</string>
-    <string name="icon_creation_fail">शॉर्टकट बनाने में विफल!</string>
+    <string name="icon_creation_fail">शॉर्टकट बनाने में विफल</string>
     <string name="delete_downloads_for_manga">डाउनलोड किए गए अध्याय हटाएं?</string>
     <string name="manga_chapters_tab">अध्याय</string>
     <string name="manga_chapter_no_title">कोई शीर्षक नहीं</string>
@@ -284,18 +285,18 @@
     <string name="chapter_downloading_progress">डाउनलोड किया जा रहा है (%1$d/%2$d)</string>
     <string name="chapter_error">त्रुटि</string>
     <string name="chapter_paused">रोके गए</string>
-    <string name="fetch_chapters_error">अध्याय लाने के दौरान त्रुटि</string>
+    <string name="fetch_chapters_error">अध्याय नहीं ला सके</string>
     <string name="show_title">शीर्षक दिखाओ</string>
     <string name="show_chapter_number">अध्याय संख्या दिखाएं</string>
     <string name="sorting_mode">छंटनी मोड</string>
     <string name="sort_by_source">स्रोत से</string>
     <string name="sort_by_number">अध्याय संख्या से</string>
     <string name="manga_download">डाउनलोड</string>
-    <string name="download_1">अगले अध्याय डाउनलोड करें</string>
-    <string name="download_5">अगले ५ अध्याय डाउनलोड करें</string>
-    <string name="download_10">अगले १० अध्याय डाउनलोड करें</string>
-    <string name="download_all">सभी डाउनलोड करे</string>
-    <string name="download_unread">अपठित डाउनलोड करें</string>
+    <string name="download_1">अगला अध्याय</string>
+    <string name="download_5">अगले 5 अध्याय</string>
+    <string name="download_10">अगले 10 अध्याय</string>
+    <string name="download_all">सभी</string>
+    <string name="download_unread">अपठित</string>
     <string name="confirm_delete_chapters">क्या आप वाकई चयनित अध्यायों को हटाना चाहते हैं?</string>
     <string name="manga_tracking_tab">पदचिह्न</string>
     <string name="reading">पठन</string>
@@ -326,10 +327,10 @@
     <string name="no_previous_chapter">पिछला अध्याय नहीं मिला</string>
     <string name="decode_image_error">छवि को डीकोड नहीं किया जा सका</string>
     <string name="confirm_update_manga_sync">पिछले अध्याय को सक्षम सेवाओं में %1$d तक पढ़ा है?</string>
-    <string name="confirm_set_image_as_cover">क्या आप इस छवि को कवर के रूप में सेट करना चाहते हैं?</string>
+    <string name="confirm_set_image_as_cover">कवर कला के रूप में इस छवि का उपयोग करें\?</string>
     <string name="viewer_for_this_series">इस श्रृंखला के लिए दर्शक</string>
     <string name="recent_manga_source">%1$s - Ch.%2$s</string>
-    <string name="download_queue_error">अध्याय डाउनलोड करते समय एक त्रुटि हुई आप डाउनलोड अनुभाग में पुनः प्रयास कर सकते हैं</string>
+    <string name="download_queue_error">चैप्टर डाउनलोड नहीं कर सके। आप डाउनलोड अनुभाग में फिर से आज़मा सकते हैं</string>
     <string name="notification_update_progress">अपडेट प्रगति: %1$d/%2$d</string>
     <string name="notification_new_chapters">नए अध्याय पाए गए</string>
     <string name="notification_new_chapters_text">%1$d शीर्षक के लिए</string>
@@ -342,14 +343,14 @@
     <string name="file_select_cover">कवर छवि का चयन करें</string>
     <string name="file_select_backup">बैकअप फ़ाइल का चयन करें</string>
     <string name="file_select_icon">शॉर्टकट आइकन चुनें</string>
-    <string name="update_check_title">नया अद्यतन उपलब्ध है!</string>
+    <string name="update_check_title">नया संस्करण उपलब्ध है!</string>
     <string name="update_check_confirm">डाउनलोड</string>
     <string name="update_check_ignore">नज़रअंदाज़ करे</string>
     <string name="update_check_no_new_updates">कोई नया अद्यतन उपलब्ध नहीं है</string>
     <string name="update_check_download_started">डाउनलोड शुरू</string>
-    <string name="update_check_look_for_updates">अद्यतन ढूंढ रहे हैं</string>
+    <string name="update_check_look_for_updates">अपडेट के लिए खोज…</string>
     <string name="update_check_notification_file_download">अद्यतन डाउनलोड करे</string>
-    <string name="update_check_notification_download_in_progress">डाउनलोड जारी है</string>
+    <string name="update_check_notification_download_in_progress">डाउनलोड…</string>
     <string name="update_check_notification_download_complete">डाउनलोड सम्पन्न हुआ</string>
     <string name="update_check_notification_download_error">डाउनलोड त्रुटि</string>
     <string name="update_check_notification_update_available">अद्यतन उपलब्ध है</string>
@@ -358,13 +359,13 @@
     <string name="information_no_downloads">कोई डाउनलोड नहीं है</string>
     <string name="information_no_recent">हाल के कोई अध्याय नहीं है</string>
     <string name="information_no_recent_manga">हाल ही में मंगा पढ़ा नहीं है</string>
-    <string name="information_empty_library">आपकी लाइब्रेरी खाली है, आप कैटलॉग से अपनी लाइब्रेरी में श्रृंखला जोड़ सकते हैं।</string>
+    <string name="information_empty_library">आपकी लाइब्रेरी खाली है, कैटलॉग से आपकी लाइब्रेरी में श्रृंखला जोड़ें।</string>
     <string name="information_empty_category">आपके पास कोई श्रेणियां नहीं हैं अपने पुस्तकालय के आयोजन के लिए एक बनाने के लिए प्लस बटन को दबाएं।</string>
     <string name="download_notifier_downloader_title">डाउनलोडर</string>
     <string name="download_notifier_title_error">त्रुटि</string>
-    <string name="download_notifier_unkown_error">अध्याय डाउनलोड करते समय एक अनपेक्षित त्रुटि हुई</string>
+    <string name="download_notifier_unkown_error">अप्रत्याशित त्रुटि के कारण अध्याय डाउनलोड नहीं कर सका</string>
     <string name="download_notifier_page_error">निर्देशिका में एक पृष्ठ गुम है</string>
-    <string name="download_notifier_page_ready_error">एक पृष्ठ लोड नहीं हुआ है</string>
+    <string name="download_notifier_page_ready_error">एक पृष्ठ लोड नहीं किया गया है</string>
     <string name="download_notifier_text_only_wifi">कोई वाई-फ़ाई कनेक्शन उपलब्ध नहीं है</string>
     <string name="download_notifier_no_network">कोई नेटवर्क कनेक्शन उपलब्ध नहीं है</string>
     <string name="download_notifier_download_paused">डाउनलोड रोक दिया है</string>
@@ -388,12 +389,12 @@
     <string name="ext_preferences">पसंद</string>
     <string name="ext_available">उपलब्ध</string>
     <string name="untrusted_extension">अविश्वस्त एक्सटेंशन</string>
-    <string name="untrusted_extension_message">यह एक्सटेंशन एक अविश्वस्त प्रमाणपत्र के साथ हस्ताक्षरित हुआ था और यह सक्रिय नहीं हुआ था।
-\nदुर्भावनापूर्ण विस्तार, किसी भी लॉगिन क्रेडेंशियल्स को तचीयोमी में संग्रहीत या मनमाना कोड निष्पादित कर सकता है
+    <string name="untrusted_extension_message">यह एक्सटेंशन एक अविश्वस्त प्रमाणपत्र के साथ हस्ताक्षरित हुआ था और सक्रिय नहीं हुआ था। 
+\nदुर्भावनापूर्ण विस्तार, किसी भी लॉगिन क्रेडेंशियल्स को तचीयोमी में संग्रहीत या मनमाना कोड निष्पादित कर सकता है 
 \nइस प्रमाणपत्र पर विश्वास करके आप इन जोखिमों को स्वीकार करते हैं।</string>
     <string name="ext_version_info">संस्करण: %1$s</string>
     <string name="ext_language_info">भाषा: %1$s</string>
-    <string name="ext_empty_preferences">इस एक्सटेंशन के लिए कोई प्राथमिकताएं संपादित नहीं हैं</string>
+    <string name="ext_empty_preferences">एक्सटेंशन के लिए कोई प्राथमिकताएं संपादित नहीं हैं</string>
     <string name="pref_double_tap_anim_speed">डबल टैप एनीमेशन गति</string>
     <string name="double_tap_anim_speed_0">कोई एनीमेशन नहीं</string>
     <string name="double_tap_anim_speed_normal">साधारण</string>
@@ -406,7 +407,7 @@
     <string name="copied_to_clipboard">%1$s क्लिपबोर्ड पर नकल</string>
     <string name="custom_download">कस्टम राशि डाउनलोड करें</string>
     <string name="custom_hint">रकम</string>
-    <string name="download_custom">कस्टम डाउनलोड करें</string>
+    <string name="download_custom">कस्टम</string>
     <string name="migration_info">से माइग्रेट करने के लिए स्रोत का चयन करने के लिए टैप करें</string>
     <string name="migration_dialog_what_to_include">शामिल करने के लिए डेटा का चयन करें</string>
     <string name="select">चयन</string>
@@ -420,7 +421,7 @@
     <string name="track_start_date">शुरू कर दिया है</string>
     <string name="track_type">प्रकार</string>
     <string name="track_author">लेखक</string>
-    <string name="url_not_set">मंगा यूआरएल सेट नहीं है कृपया शीर्षक पर क्लिक करें और फिर मंगा का चयन करें</string>
+    <string name="url_not_set">मंगा यूआरएल सेट नहीं, कृपया शीर्षक पर क्लिक करें और मंगा का चयन फिर से करें</string>
     <string name="transition_finished">समाप्त:</string>
     <string name="transition_current">प्रचलित:</string>
     <string name="transition_next">अगला:</string>
@@ -444,9 +445,14 @@
     <string name="filter_mode_darken">जल/गहरा</string>
     <string name="label_help">मदद</string>
     <string name="pref_library_update_prioritization">लाइब्रेरी अद्यतन क्रम</string>
-    <string name="pref_library_update_prioritization_summary">उस क्रम का चयन करें जिसमें टचियोमी अद्यतन की जांच करे</string>
-    <string name="action_forward">आगे</string>
-    <string name="action_refresh">पुनश्चर्या</string>
     <string name="no_results_found">कोई परिणाम नहीं मिला</string>
     <string name="migration_selection_prompt">से माइग्रेट करने के लिए एक स्रोत का चयन करें</string>
+    <string name="action_webview_back">पिछली तरफ</string>
+    <string name="action_webview_forward">आगे की ओर</string>
+    <string name="action_webview_refresh">रीफ़्रेश करें</string>
+    <string name="pref_category_library">पुस्तकालय</string>
+    <string name="pref_ask_update_manga_sync">अपडेट करने से पहले पुष्टि करें</string>
+    <string name="invalid_download_dir">अमान्य डाउनलोड निर्देशिका</string>
+    <string name="ext_obsolete">अप्रचलित</string>
+    <string name="obsolete_extension_message">यह एक्सटेंशन अब उपलब्ध नहीं है।</string>
 </resources>
