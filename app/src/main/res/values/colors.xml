@@ -6,6 +6,8 @@
     <!-- Dark Application Colors -->
     <color name="colorDarkPrimary">#212121</color>
     <color name="colorDarkPrimaryDark">#1C1C1D</color>
+    <color name="colorDarkPrimaryTranslucent">#BF212121</color>
+    <color name="colorDarkPrimaryDarkTranslucent">#BF1C1C1D</color>
     <color name="colorAmoledPrimary">@color/md_black_1000</color>
 
     <color name="splashBackgroundColor">@color/colorPrimary</color>
