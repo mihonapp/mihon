@@ -46,7 +46,6 @@ import eu.kanade.tachiyomi.util.lang.truncateCenter
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.snack
 import jp.wasabeef.glide.transformations.CropSquareTransformation
-import jp.wasabeef.glide.transformations.MaskTransformation
 import kotlinx.android.synthetic.main.manga_info_controller.*
 import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
@@ -444,8 +443,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             val modes = intArrayOf(R.string.circular_icon,
                     R.string.rounded_icon,
-                    R.string.square_icon,
-                    R.string.star_icon)
+                    R.string.square_icon)
 
             return MaterialDialog.Builder(activity!!)
                     .title(R.string.icon_shape)
@@ -475,7 +473,6 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                         0 -> circleCrop()
                         1 -> transform(RoundedCorners(5))
                         2 -> transform(CropSquareTransformation())
-                        3 -> centerCrop().transform(MaskTransformation(R.drawable.mask_star))
                     }
                 }
                 .into(object : CustomTarget<Bitmap>(96, 96) {
