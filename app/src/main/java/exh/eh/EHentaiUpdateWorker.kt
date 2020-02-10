@@ -259,6 +259,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                 val meta = db.getFlatMetadataForManga(manga.id!!).await()?.raise<EHentaiSearchMetadata>()
                 if(meta != null) {
                     // Age dead galleries
+                    logger.d("Aged %s - notfound", manga.id)
                     meta.aged = true
                     db.insertFlatMetadata(meta.flatten()).await()
                 }

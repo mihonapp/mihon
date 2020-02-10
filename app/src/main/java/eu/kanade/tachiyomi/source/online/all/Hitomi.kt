@@ -336,7 +336,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     }
 
     override fun pageListRequest(chapter: SChapter): Request {
-        return GET("$LTN_BASE_URL/galleries/${HitomiSearchMetadata.hlIdFromUrl(chapter.url)}.js")
+        return GET("$LTN_BASE_URL/manga/${HitomiSearchMetadata.hlIdFromUrl(chapter.url)}.js")
     }
 
     /**
@@ -366,7 +366,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
             Page(
                     index,
                     "",
-            "https://${subdomainFromGalleryId(hlId)}a.hitomi.la/galleries/$hlId/${jsonElement["name"].string}"
+            "https://${subdomainFromGalleryId(hlId)}a.hitomi.la/manga/$hlId/${jsonElement["name"].string}"
             )
         }
     }
@@ -399,10 +399,10 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     override fun mapUrlToMangaUrl(uri: Uri): String? {
         val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
 
-        if(lcFirstPathSegment != "galleries" && lcFirstPathSegment != "reader")
+        if(lcFirstPathSegment != "manga" && lcFirstPathSegment != "reader")
             return null
 
-        return "https://hitomi.la/galleries/${uri.pathSegments[1].substringBefore('.')}.html"
+        return "https://hitomi.la/manga/${uri.pathSegments[1].substringBefore('.')}.html"
     }
 
     companion object {

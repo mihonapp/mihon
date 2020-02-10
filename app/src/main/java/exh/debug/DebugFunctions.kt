@@ -11,13 +11,44 @@ import eu.kanade.tachiyomi.util.jobScheduler
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.eh.EHentaiUpdateWorker
+import exh.metadata.metadata.EHentaiSearchMetadata
+import exh.metadata.metadata.base.getFlatMetadataForManga
+import exh.metadata.metadata.base.insertFlatMetadata
+import exh.util.await
+import exh.util.cancellable
 import uy.kohesive.injekt.injectLazy
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.toList
+import kotlin.coroutines.CoroutineContext
 
 object DebugFunctions {
     val app: Application by injectLazy()
     val db: DatabaseHelper by injectLazy()
     val prefs: PreferencesHelper by injectLazy()
     val sourceManager: SourceManager by injectLazy()
+
+    fun resetAgedFlagInEXHManga() {
+        runBlocking {
+            val metadataManga = db.getFavoriteMangaWithMetadata().await()
+
+            val allManga = metadataManga.asFlow().cancellable().mapNotNull { manga ->
+                if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID)
+                    return@mapNotNull null
+                manga
+            }.toList()
+
+            for (manga in allManga) {
+                val meta = db.getFlatMetadataForManga(manga.id!!).await()?.raise<EHentaiSearchMetadata>()
+                if(meta != null) {
+                    // remove age flag
+                    meta.aged = false
+                    db.insertFlatMetadata(meta.flatten()).await()
+                }
+            }
+        }
+    }
 
     fun addAllMangaInDatabaseToLibrary() {
         db.inTransaction {

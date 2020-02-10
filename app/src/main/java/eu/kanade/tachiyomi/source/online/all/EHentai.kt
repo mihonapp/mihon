@@ -416,6 +416,7 @@ class EHentai(override val id: Long,
                 if(datePosted != null
                         && lastUpdateCheck - datePosted!! > EHentaiUpdateWorkerConstants.GALLERY_AGE_TIME) {
                     aged = true
+                        XLog.d("aged %s - too old", title)
                 }
 
                 //Parse ratings
