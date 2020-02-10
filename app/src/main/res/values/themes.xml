@@ -131,8 +131,8 @@
     <!-- Reader Theme -->
     <!--==============-->
     <style name="Theme.Base.Reader.Dark" parent="Theme.Base.Dark">
-        <item name="colorPrimary">@color/colorDarkPrimaryTranslucent</item>
-        <item name="colorPrimaryDark">@color/colorDarkPrimaryDarkTranslucent</item>
+        <item name="colorPrimary">@color/readerColorDarkPrimary</item>
+        <item name="colorPrimaryDark">@color/readerColorDarkPrimaryDark</item>
         <item name="android:colorBackground">@android:color/black</item>
 
         <item name="android:statusBarColor">?colorPrimaryDark</item>
@@ -140,8 +140,8 @@
     </style>
 
     <style name="Theme.Base.Reader.Light" parent="Theme.Base">
-        <item name="colorPrimary">@color/colorDarkPrimaryTranslucent</item>
-        <item name="colorPrimaryDark">@color/colorDarkPrimaryDarkTranslucent</item>
+        <item name="colorPrimary">@color/readerColorDarkPrimary</item>
+        <item name="colorPrimaryDark">@color/readerColorDarkPrimaryDark</item>
         <item name="android:colorBackground">@android:color/white</item>
 
         <item name="android:statusBarColor">?colorPrimaryDark</item>

@@ -6,8 +6,6 @@
     <!-- Dark Application Colors -->
     <color name="colorDarkPrimary">#212121</color>
     <color name="colorDarkPrimaryDark">#1C1C1D</color>
-    <color name="colorDarkPrimaryTranslucent">#BF212121</color>
-    <color name="colorDarkPrimaryDarkTranslucent">#BF1C1C1D</color>
     <color name="colorAmoledPrimary">@color/md_black_1000</color>
 
     <color name="splashBackgroundColor">@color/colorPrimary</color>
@@ -47,6 +45,8 @@
     <color name="iconColorDark">@color/md_white_1000_54</color>
 
     <!-- Reader Theme -->
+    <color name="readerColorDarkPrimary">@color/colorDarkPrimary</color>
+    <color name="readerColorDarkPrimaryDark">@color/colorDarkPrimaryDark</color>
     <color name="pageNumberBackgroundLight">@color/md_grey_50_75</color>
     <color name="pageNumberBackgroundDark">@color/md_grey_900_75</color>
 
