@@ -117,7 +117,7 @@ class LibraryNavigationView @JvmOverloads constructor(context: Context, attrs: A
 
         private val source = Item.MultiSort(R.string.manga_info_source_label, this)
 
-        private val latestChapter = Item.MultiSort(R.string.manga_info_last_chapter_label, this)
+        private val latestChapter = Item.MultiSort(R.string.action_sort_latest_chapter, this)
 
         override val items = listOf(alphabetically, lastRead, lastUpdated, unread, total, source, latestChapter)
 
