@@ -53,12 +53,11 @@ class TrackSearch : Track {
         result = 31 * result + media_id
         return result
     }
-    companion object {
 
+    companion object {
         fun create(serviceId: Int): TrackSearch = TrackSearch().apply {
             sync_id = serviceId
         }
-
     }
 
 }

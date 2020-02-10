@@ -5,7 +5,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -28,6 +27,6 @@ interface GithubService {
     }
 
     @GET("/repos/inorichi/tachiyomi/releases/latest")
-    fun getLatestVersion(): Observable<GithubRelease>
+    suspend fun getLatestVersion(): GithubRelease
 
 }

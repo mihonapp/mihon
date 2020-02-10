@@ -5,9 +5,8 @@ import eu.kanade.tachiyomi.data.updater.UpdateChecker
 import eu.kanade.tachiyomi.data.updater.UpdateResult
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.network.asObservable
+import eu.kanade.tachiyomi.network.await
 import okhttp3.OkHttpClient
-import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -23,18 +22,17 @@ class DevRepoUpdateChecker : UpdateChecker() {
         Regex("tachiyomi-r(\\d+).apk")
     }
 
-    override fun checkForUpdate(): Observable<UpdateResult> {
-        return client.newCall(GET(DevRepoRelease.LATEST_URL)).asObservable()
-                .map { response ->
-                    // Get latest repo version number from header in format "Location: tachiyomi-r1512.apk"
-                    val latestVersionNumber: String = versionRegex.find(response.header("Location")!!)!!.groupValues[1]
+    override suspend fun checkForUpdate(): UpdateResult {
+        val response = client.newCall(GET(DevRepoRelease.LATEST_URL)).await(assertSuccess = false)
 
-                    if (latestVersionNumber.toInt() > BuildConfig.COMMIT_COUNT.toInt()) {
-                        DevRepoUpdateResult.NewUpdate(DevRepoRelease("v$latestVersionNumber"))
-                    } else {
-                        DevRepoUpdateResult.NoNewUpdate()
-                    }
-                }
+        // Get latest repo version number from header in format "Location: tachiyomi-r1512.apk"
+        val latestVersionNumber: String = versionRegex.find(response.header("Location")!!)!!.groupValues[1]
+
+        return if (latestVersionNumber.toInt() > BuildConfig.COMMIT_COUNT.toInt()) {
+            DevRepoUpdateResult.NewUpdate(DevRepoRelease("v$latestVersionNumber"))
+        } else {
+            DevRepoUpdateResult.NoNewUpdate()
+        }
     }
 
 }

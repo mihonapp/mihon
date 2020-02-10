@@ -9,36 +9,37 @@ import com.evernote.android.job.JobRequest
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.notificationManager
+import kotlinx.coroutines.runBlocking
 
 class UpdaterJob : Job() {
 
     override fun onRunJob(params: Params): Result {
-        return UpdateChecker.getUpdateChecker()
-                .checkForUpdate()
-                .map { result ->
-                    if (result is UpdateResult.NewUpdate<*>) {
-                        val url = result.release.downloadLink
+        return runBlocking {
+            try {
+                val result = UpdateChecker.getUpdateChecker().checkForUpdate()
 
-                        val intent = Intent(context, UpdaterService::class.java).apply {
-                            putExtra(UpdaterService.EXTRA_DOWNLOAD_URL, url)
-                        }
+                if (result is UpdateResult.NewUpdate<*>) {
+                    val url = result.release.downloadLink
 
-                        NotificationCompat.Builder(context, Notifications.CHANNEL_COMMON).update {
-                            setContentTitle(context.getString(R.string.app_name))
-                            setContentText(context.getString(R.string.update_check_notification_update_available))
-                            setSmallIcon(android.R.drawable.stat_sys_download_done)
-                            // Download action
-                            addAction(android.R.drawable.stat_sys_download_done,
-                                    context.getString(R.string.action_download),
-                                    PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
-                        }
+                    val intent = Intent(context, UpdaterService::class.java).apply {
+                        putExtra(UpdaterService.EXTRA_DOWNLOAD_URL, url)
                     }
-                    Result.SUCCESS
+
+                    NotificationCompat.Builder(context, Notifications.CHANNEL_COMMON).update {
+                        setContentTitle(context.getString(R.string.app_name))
+                        setContentText(context.getString(R.string.update_check_notification_update_available))
+                        setSmallIcon(android.R.drawable.stat_sys_download_done)
+                        // Download action
+                        addAction(android.R.drawable.stat_sys_download_done,
+                                context.getString(R.string.action_download),
+                                PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                    }
                 }
-                .onErrorReturn { Result.FAILURE }
-                // Sadly, the task needs to be synchronous.
-                .toBlocking()
-                .single()
+                Result.SUCCESS
+            } catch (e: Exception) {
+                Result.FAILURE
+            }
+        }
     }
 
     fun NotificationCompat.Builder.update(block: NotificationCompat.Builder.() -> Unit) {

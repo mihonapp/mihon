@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.BuildConfig
@@ -17,12 +16,11 @@ import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.data.updater.UpdaterService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.main.ChangelogDialogController
+import eu.kanade.tachiyomi.util.lang.launchIO
+import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.toast
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
@@ -42,11 +40,6 @@ class SettingsAboutController : SettingsController() {
     private val userPreferences: PreferencesHelper by injectLazy()
 
     private val dateFormat: DateFormat = userPreferences.dateFormat().getOrDefault()
-
-    /**
-     * The subscribtion service of the obtained release object
-     */
-    private var releaseSubscription: Subscription? = null
 
     private val isUpdaterEnabled = BuildConfig.INCLUDE_UPDATER
 
@@ -118,12 +111,6 @@ class SettingsAboutController : SettingsController() {
         }
     }
 
-    override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
-        releaseSubscription?.unsubscribe()
-        releaseSubscription = null
-    }
-
     /**
      * Checks version and shows a user prompt if an update is available.
      */
@@ -131,11 +118,11 @@ class SettingsAboutController : SettingsController() {
         if (activity == null) return
 
         activity?.toast(R.string.update_check_look_for_updates)
-        releaseSubscription?.unsubscribe()
-        releaseSubscription = updateChecker.checkForUpdate()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
+
+        launchIO {
+            try {
+                val result = updateChecker.checkForUpdate()
+                launchUI {
                     when (result) {
                         is UpdateResult.NewUpdate<*> -> {
                             val body = result.release.info
@@ -148,10 +135,14 @@ class SettingsAboutController : SettingsController() {
                             activity?.toast(R.string.update_check_no_new_updates)
                         }
                     }
-                }, { error ->
+                }
+            } catch (error: Exception) {
+                launchUI {
                     activity?.toast(error.message)
                     Timber.e(error)
-                })
+                }
+            }
+        }
     }
 
     class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundle) {
