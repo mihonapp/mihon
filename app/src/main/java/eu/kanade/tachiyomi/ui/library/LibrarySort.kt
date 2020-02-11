@@ -8,4 +8,5 @@ object LibrarySort {
     const val UNREAD = 3
     const val TOTAL = 4
     const val SOURCE = 5
+    const val LATEST_CHAPTER = 6
 }
