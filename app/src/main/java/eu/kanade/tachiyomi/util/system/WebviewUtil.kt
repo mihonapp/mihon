@@ -1,19 +1,15 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.webkit.WebView
-import android.widget.Toast
-import eu.kanade.tachiyomi.R
 
 private val WEBVIEW_UA_VERSION_REGEX by lazy {
     Regex(""".*Chrome/(\d+)\..*""")
 }
 
-private const val MINIMUM_WEBVIEW_VERSION = 72
+private const val MINIMUM_WEBVIEW_VERSION = 70
 
-fun WebView.checkVersion() {
-    if (getWebviewMajorVersion(this) < MINIMUM_WEBVIEW_VERSION) {
-        this.context.toast(R.string.information_webview_outdated, Toast.LENGTH_LONG)
-    }
+fun WebView.isOutdated(): Boolean {
+    return getWebviewMajorVersion(this) < MINIMUM_WEBVIEW_VERSION
 }
 
 // Based on https://stackoverflow.com/a/29218966

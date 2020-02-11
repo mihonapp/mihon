@@ -15,7 +15,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.util.system.*
+import eu.kanade.tachiyomi.util.system.WebViewClientCompat
+import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.openInBrowser
+import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.invisible
 import eu.kanade.tachiyomi.util.view.visible
 import kotlinx.android.synthetic.main.webview_activity.*
@@ -52,8 +55,6 @@ class WebViewActivity : BaseActivity() {
             val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource ?: return
             val url = intent.extras!!.getString(URL_KEY) ?: return
             val headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
-
-            webview.checkVersion()
 
             webview.settings.javaScriptEnabled = true
             webview.settings.userAgentString = source.headers["User-Agent"]
