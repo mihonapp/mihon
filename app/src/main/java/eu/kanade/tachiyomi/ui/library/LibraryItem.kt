@@ -13,12 +13,17 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.card
 import kotlinx.android.synthetic.main.catalogue_grid_item.view.gradient
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference<Boolean>) :
         AbstractFlexibleItem<LibraryHolder>(), IFilterable<String> {
+
+    private val sourceManager: SourceManager = Injekt.get()
 
     var downloadCount = -1
 
@@ -48,7 +53,6 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
                                 holder: LibraryHolder,
                                 position: Int,
                                 payloads: List<Any?>?) {
-
         holder.onSetValues(this)
     }
 
@@ -62,6 +66,7 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
         return manga.title.contains(constraint, true) ||
             (manga.author?.contains(constraint, true) ?: false) ||
             (manga.artist?.contains(constraint, true) ?: false) ||
+            sourceManager.getOrStub(manga.source).name.contains(constraint, true) ||
             if (constraint.contains(",")) {
                 val genres = manga.genre?.split(", ")
                 constraint.split(",").all { containsGenre(it.trim(), genres) }
