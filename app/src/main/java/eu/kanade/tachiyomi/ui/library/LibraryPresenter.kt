@@ -206,11 +206,6 @@ class LibraryPresenter(
                     val mange2TotalChapter = totalChapterManga[i2.manga.id!!] ?: 0
                     manga1TotalChapter.compareTo(mange2TotalChapter)
                 }
-                LibrarySort.SOURCE -> {
-                    val source1Name = sourceManager.getOrStub(i1.manga.source).name
-                    val source2Name = sourceManager.getOrStub(i2.manga.source).name
-                    source1Name.compareTo(source2Name)
-                }
                 LibrarySort.LATEST_CHAPTER -> {
                     val manga1latestChapter = latestChapterManga[i1.manga.id!!] ?: 0
                     val manga2latestChapter = latestChapterManga[i2.manga.id!!] ?: 0
