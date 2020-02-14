@@ -16,8 +16,7 @@ import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.data.updater.UpdaterService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.main.ChangelogDialogController
-import eu.kanade.tachiyomi.util.lang.launchIO
-import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.toast
@@ -119,28 +118,23 @@ class SettingsAboutController : SettingsController() {
 
         activity?.toast(R.string.update_check_look_for_updates)
 
-        launchIO {
+        launchNow {
             try {
-                val result = updateChecker.checkForUpdate()
-                launchUI {
-                    when (result) {
-                        is UpdateResult.NewUpdate<*> -> {
-                            val body = result.release.info
-                            val url = result.release.downloadLink
+                when (val result = updateChecker.checkForUpdate()) {
+                    is UpdateResult.NewUpdate<*> -> {
+                        val body = result.release.info
+                        val url = result.release.downloadLink
 
-                            // Create confirmation window
-                            NewUpdateDialogController(body, url).showDialog(router)
-                        }
-                        is UpdateResult.NoNewUpdate -> {
-                            activity?.toast(R.string.update_check_no_new_updates)
-                        }
+                        // Create confirmation window
+                        NewUpdateDialogController(body, url).showDialog(router)
+                    }
+                    is UpdateResult.NoNewUpdate -> {
+                        activity?.toast(R.string.update_check_no_new_updates)
                     }
                 }
             } catch (error: Exception) {
-                launchUI {
-                    activity?.toast(error.message)
-                    Timber.e(error)
-                }
+                activity?.toast(error.message)
+                Timber.e(error)
             }
         }
     }
