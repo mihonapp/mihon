@@ -39,7 +39,7 @@ class ChapterCache(private val context: Context) {
         const val PARAMETER_VALUE_COUNT = 1
 
         /** The maximum number of bytes this cache should use to store.  */
-        const val PARAMETER_CACHE_SIZE = 75L * 1024 * 1024
+        const val PARAMETER_CACHE_SIZE = 100L * 1024 * 1024
     }
 
     /** Google Json class used for parsing JSON files.  */
