@@ -10,6 +10,8 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.await
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 
@@ -22,7 +24,9 @@ internal class ExtensionGithubApi {
     suspend fun findExtensions(): List<Extension.Available> {
         val call = GET("$REPO_URL/index.json")
 
-        return parseResponse(network.client.newCall(call).await())
+        return withContext(Dispatchers.IO) {
+             parseResponse(network.client.newCall(call).await())
+        }
     }
 
     private fun parseResponse(response: Response): List<Extension.Available> {
