@@ -57,6 +57,8 @@ class WebViewActivity : BaseActivity() {
             val url = intent.extras!!.getString(URL_KEY) ?: return
             val headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
 
+            supportActionBar?.subtitle = url
+
             webview.settings.javaScriptEnabled = true
             webview.settings.userAgentString = source.headers["User-Agent"]
 
@@ -81,6 +83,7 @@ class WebViewActivity : BaseActivity() {
                     super.onPageFinished(view, url)
                     invalidateOptionsMenu()
                     title = view?.title
+                    supportActionBar?.subtitle = url
                     swipe_refresh.isEnabled = true
                     swipe_refresh?.isRefreshing = false
                 }
