@@ -336,7 +336,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     }
 
     override fun pageListRequest(chapter: SChapter): Request {
-        return GET("$LTN_BASE_URL/manga/${HitomiSearchMetadata.hlIdFromUrl(chapter.url)}.js")
+        return GET("$LTN_BASE_URL/galleries/${HitomiSearchMetadata.hlIdFromUrl(chapter.url)}.js")
     }
 
     /**
@@ -362,11 +362,14 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
         val hlId = response.request.url.pathSegments.last().removeSuffix(".js").toLong()
         val str = response.body!!.string()
         val json = jsonParser.parse(str.removePrefix("var galleryinfo ="))
-        return json.array.mapIndexed { index, jsonElement ->
+        return json.array.mapIndexed { index, jsonElement -> 
+            val hash = jsonElement["hash"].string
+            val hashPath1 = hash.takeLast(1)
+            val hashPath2 = hash.takeLast(3).take(2)
             Page(
                     index,
                     "",
-            "https://${subdomainFromGalleryId(hlId)}a.hitomi.la/manga/$hlId/${jsonElement["name"].string}"
+            "https://${subdomainFromGalleryId(hlId)}a.hitomi.la/webp/$hashPath1/$hashPath2/$hash.webp"
             )
         }
     }

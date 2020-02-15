@@ -93,7 +93,7 @@ class HitomiSearchMetadata: RaisedSearchMetadata() {
         const val BASE_URL = "https://hitomi.la"
 
         fun hlIdFromUrl(url: String)
-                = url.split('/').last().substringBeforeLast('.')
+                = url.split('/').last().split('-').last().substringBeforeLast('.')
 
         fun urlFromHlId(id: String)
                 = "$BASE_URL/galleries/$id.html"
