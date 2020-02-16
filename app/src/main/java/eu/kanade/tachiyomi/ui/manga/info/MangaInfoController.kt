@@ -133,6 +133,10 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.manga_info, menu)
+
+        if (presenter.source !is HttpSource) {
+            menu.findItem(R.id.action_share).isVisible = false
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
