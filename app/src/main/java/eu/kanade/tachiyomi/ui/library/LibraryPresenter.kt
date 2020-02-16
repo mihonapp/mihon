@@ -207,8 +207,10 @@ class LibraryPresenter(
                     manga1TotalChapter.compareTo(mange2TotalChapter)
                 }
                 LibrarySort.LATEST_CHAPTER -> {
-                    val manga1latestChapter = latestChapterManga[i1.manga.id!!] ?: 0
-                    val manga2latestChapter = latestChapterManga[i2.manga.id!!] ?: 0
+                    val manga1latestChapter = latestChapterManga[i1.manga.id!!]
+                            ?: latestChapterManga.size
+                    val manga2latestChapter = latestChapterManga[i2.manga.id!!]
+                            ?: latestChapterManga.size
                     manga1latestChapter.compareTo(manga2latestChapter)
                 }
                 else -> throw Exception("Unknown sorting mode")
