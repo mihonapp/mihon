@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -72,6 +73,7 @@ class SettingsDownloadController : SettingsController() {
         }
 
         val dbCategories = db.getCategories().executeAsBlocking()
+        val categories = listOf(Category.createDefault()) + dbCategories
 
         preferenceCategory {
             titleRes = R.string.pref_download_new
@@ -84,8 +86,8 @@ class SettingsDownloadController : SettingsController() {
             multiSelectListPreference {
                 key = Keys.downloadNewCategories
                 titleRes = R.string.pref_download_new_categories
-                entries = dbCategories.map { it.name }.toTypedArray()
-                entryValues = dbCategories.map { it.id.toString() }.toTypedArray()
+                entries = categories.map { it.name }.toTypedArray()
+                entryValues = categories.map { it.id.toString() }.toTypedArray()
 
                 preferences.downloadNew().asObservable()
                         .subscribeUntilDestroy { isVisible = it }
@@ -93,7 +95,7 @@ class SettingsDownloadController : SettingsController() {
                 preferences.downloadNewCategories().asObservable()
                         .subscribeUntilDestroy {
                             val selectedCategories = it
-                                    .mapNotNull { id -> dbCategories.find { it.id == id.toInt() } }
+                                    .mapNotNull { id -> categories.find { it.id == id.toInt() } }
                                     .sortedBy { it.order }
 
                             summary = if (selectedCategories.isEmpty())
