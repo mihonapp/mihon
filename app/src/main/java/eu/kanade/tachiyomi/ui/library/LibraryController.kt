@@ -423,7 +423,7 @@ class LibraryController(
             // Destroy action mode if there are no items selected.
             destroyActionModeIfNeeded()
         } else {
-            mode.title = resources?.getString(R.string.label_selected, count)
+            mode.title = count.toString()
             menu.findItem(R.id.action_edit_cover)?.isVisible = count == 1
         }
         return false

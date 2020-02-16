@@ -147,7 +147,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val adapter = adapter ?: return false
         val count = adapter.selectedItemCount
-        mode.title = resources?.getString(R.string.label_selected, count)
+        mode.title = count.toString()
 
         // Show edit button only when one item is selected
         val editItem = mode.menu.findItem(R.id.action_edit)

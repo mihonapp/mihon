@@ -300,7 +300,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
             // Destroy action mode if there are no items selected.
             destroyActionModeIfNeeded()
         } else {
-            mode.title = resources?.getString(R.string.label_selected, count)
+            mode.title = count.toString()
         }
         return false
     }

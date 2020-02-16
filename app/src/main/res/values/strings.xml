@@ -18,7 +18,6 @@
     <string name="label_recent_manga">Recently read</string>
     <string name="label_catalogues">Catalogues</string>
     <string name="label_categories">Categories</string>
-    <string name="label_selected">Selected: %1$d</string>
     <string name="label_backup">Backup</string>
     <string name="label_migration">Source migration</string>
     <string name="label_extensions">Extensions</string>
