@@ -63,7 +63,9 @@ class RecentChaptersPresenter(
                             .groupByTo(map, { getMapKey(it.chapter.date_fetch) })
                     byDay.flatMap {
                         val dateItem = DateItem(it.key)
-                        it.value.map { RecentChapterItem(it.chapter, it.manga, dateItem) }
+                        it.value
+                                .sortedByDescending { it.chapter.chapter_number }
+                                .map { RecentChapterItem(it.chapter, it.manga, dateItem) }
                     }
                 }
                 .doOnNext {
