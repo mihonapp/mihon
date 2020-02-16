@@ -16,6 +16,16 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_bookmark"
+        android:title="@string/action_bookmark"
+        android:visible="true" />
+
+    <item
+        android:id="@+id/action_remove_bookmark"
+        android:title="@string/action_remove_bookmark"
+        android:visible="true" />
+
+    <item
         android:id="@+id/action_mark_as_read"
         android:icon="@drawable/ic_done_all_white_24dp"
         android:title="@string/action_mark_as_read"

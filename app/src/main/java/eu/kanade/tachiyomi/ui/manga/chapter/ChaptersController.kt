@@ -362,11 +362,13 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_select_all -> selectAll()
-            R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
-            R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
             R.id.action_download -> downloadChapters(getSelectedChapters())
             R.id.action_delete -> showDeleteChaptersConfirmationDialog()
+            R.id.action_bookmark -> bookmarkChapters(getSelectedChapters(), true)
+            R.id.action_remove_bookmark -> bookmarkChapters(getSelectedChapters(), false)
+            R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
+            R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
+            R.id.action_select_all -> selectAll()
             else -> return false
         }
         return true
@@ -390,9 +392,9 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
         when (item.itemId) {
             R.id.action_download -> downloadChapters(chapters)
+            R.id.action_delete -> deleteChapters(chapters)
             R.id.action_bookmark -> bookmarkChapters(chapters, true)
             R.id.action_remove_bookmark -> bookmarkChapters(chapters, false)
-            R.id.action_delete -> deleteChapters(chapters)
             R.id.action_mark_as_read -> markAsRead(chapters)
             R.id.action_mark_as_unread -> markAsUnread(chapters)
             R.id.action_mark_previous_as_read -> markPreviousAsRead(chapter)
