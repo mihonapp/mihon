@@ -64,7 +64,7 @@ class RecentChaptersPresenter(
                     byDay.flatMap {
                         val dateItem = DateItem(it.key)
                         it.value
-                                .sortedByDescending { it.chapter.chapter_number }
+                                .sortedWith(compareBy({ it.chapter.date_fetch }, { it.chapter.chapter_number })).asReversed()
                                 .map { RecentChapterItem(it.chapter, it.manga, dateItem) }
                     }
                 }
