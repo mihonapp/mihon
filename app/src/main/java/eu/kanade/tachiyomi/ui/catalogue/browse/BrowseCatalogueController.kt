@@ -495,6 +495,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
     override fun onItemLongClick(position: Int) {
         val activity = activity ?: return
         val manga = (adapter?.getItem(position) as? CatalogueItem?)?.manga ?: return
+
         if (manga.favorite) {
             MaterialDialog.Builder(activity)
                     .items(activity.getString(R.string.remove_from_library))
@@ -508,16 +509,30 @@ open class BrowseCatalogueController(bundle: Bundle) :
                         }
                     }.show()
         } else {
-            presenter.changeMangaFavorite(manga)
-            adapter?.notifyItemChanged(position)
-
             val categories = presenter.getCategories()
             val defaultCategoryId = preferences.defaultCategory()
             val defaultCategory = categories.find { it.id == defaultCategoryId }
+
             when {
-                defaultCategory != null -> presenter.moveMangaToCategory(manga, defaultCategory)
-                defaultCategoryId == 0 || categories.isEmpty() -> // 'Default' or no category
+                // Default category set
+                defaultCategory != null -> {
+                    presenter.moveMangaToCategory(manga, defaultCategory)
+
+                    presenter.changeMangaFavorite(manga)
+                    adapter?.notifyItemChanged(position)
+                    activity.toast(activity.getString(R.string.manga_added_library))
+                }
+
+                // Automatic 'Default' or no categories
+                defaultCategoryId == 0 || categories.isEmpty() -> {
                     presenter.moveMangaToCategory(manga, null)
+
+                    presenter.changeMangaFavorite(manga)
+                    adapter?.notifyItemChanged(position)
+                    activity.toast(activity.getString(R.string.manga_added_library))
+                }
+
+                // Choose a category
                 else -> {
                     val ids = presenter.getMangaCategoryIds(manga)
                     val preselected = ids.mapNotNull { id ->
@@ -528,7 +543,6 @@ open class BrowseCatalogueController(bundle: Bundle) :
                             .showDialog(router)
                 }
             }
-            activity.toast(activity.getString(R.string.manga_added_library))
         }
     }
 
@@ -540,7 +554,15 @@ open class BrowseCatalogueController(bundle: Bundle) :
      */
     override fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>) {
         val manga = mangas.firstOrNull() ?: return
+
+        presenter.changeMangaFavorite(manga)
         presenter.updateMangaCategories(manga, categories)
+
+        val position = adapter?.currentItems?.indexOfFirst { it -> (it as CatalogueItem).manga.id == manga.id }
+        if (position != null) {
+            adapter?.notifyItemChanged(position)
+        }
+        activity?.toast(activity?.getString(R.string.manga_added_library))
     }
 
     protected companion object {
