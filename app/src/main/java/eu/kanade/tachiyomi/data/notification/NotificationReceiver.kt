@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.notificationManager
@@ -170,16 +171,22 @@ class NotificationReceiver : BroadcastReceiver() {
         val preferences: PreferencesHelper = Injekt.get()
         val sourceManager: SourceManager = Injekt.get()
 
-        chapterUrls.mapNotNull { db.getChapter(it, mangaId).executeAsBlocking() }
-                .forEach {
-                    it.read = true
-                    db.updateChapterProgress(it).executeAsBlocking()
-                    if (preferences.removeAfterMarkedAsRead()) {
-                        val manga = db.getManga(mangaId).executeAsBlocking() ?: return
-                        val source = sourceManager.get(manga.source) ?: return
-                        downloadManager.deleteChapters(listOf(it), manga, source)
+        launchIO {
+            chapterUrls.mapNotNull { db.getChapter(it, mangaId).executeAsBlocking() }
+                    .forEach {
+                        it.read = true
+                        db.updateChapterProgress(it).executeAsBlocking()
+                        if (preferences.removeAfterMarkedAsRead()) {
+                            val manga = db.getManga(mangaId).executeAsBlocking()
+                            if (manga != null) {
+                                val source = sourceManager.get(manga.source)
+                                if (source != null) {
+                                    downloadManager.deleteChapters(listOf(it), manga, source)
+                                }
+                            }
+                        }
                     }
-                }
+        }
     }
 
     companion object {
