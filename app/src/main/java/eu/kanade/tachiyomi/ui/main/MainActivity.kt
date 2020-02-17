@@ -138,9 +138,10 @@ class MainActivity : BaseActivity() {
 
     private fun handleIntentAction(intent: Intent): Boolean {
         val notificationId = intent.getIntExtra("notificationId", -1)
-        if (notificationId > -1) NotificationReceiver.dismissNotification(
-            applicationContext, notificationId, intent.getIntExtra("groupId", 0)
-        )
+        if (notificationId > -1) {
+            NotificationReceiver.dismissNotification(applicationContext, notificationId, intent.getIntExtra("groupId", 0))
+        }
+
         when (intent.action) {
             SHORTCUT_LIBRARY -> setSelectedDrawerItem(R.id.nav_drawer_library)
             SHORTCUT_RECENTLY_UPDATED -> setSelectedDrawerItem(R.id.nav_drawer_recent_updates)

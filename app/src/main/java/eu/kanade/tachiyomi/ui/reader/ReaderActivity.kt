@@ -106,15 +106,14 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         const val VERTICAL = 3
         const val WEBTOON = 4
 
-        fun newIntent(context: Context, manga: Manga, chapter: Chapter):
-            Intent {
-            val intent = Intent(context, ReaderActivity::class.java)
-            intent.putExtra("manga", manga.id)
-            intent.putExtra("chapter", chapter.id)
-            // chapters just added from library updates don't have an id yet
-            intent.putExtra("chapterUrl", chapter.url)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            return intent
+        fun newIntent(context: Context, manga: Manga, chapter: Chapter): Intent {
+            return Intent(context, ReaderActivity::class.java).apply {
+                putExtra("manga", manga.id)
+                putExtra("chapter", chapter.id)
+                // chapters just added from library updates don't have an id yet
+                putExtra("chapterUrl", chapter.url)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
         }
     }
 

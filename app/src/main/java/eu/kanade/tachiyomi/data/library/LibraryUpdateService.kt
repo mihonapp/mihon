@@ -12,7 +12,6 @@ import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.GROUP_ALERT_SUMMARY
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -281,7 +280,7 @@ class LibraryUpdateService(
         val count = AtomicInteger(0)
         // List containing new updates
         val newUpdates = ArrayList<Pair<LibraryManga, Array<Chapter>>>()
-        // list containing failed updates
+        // List containing failed updates
         val failedUpdates = ArrayList<Manga>()
         // List containing categories that get included in downloads.
         val categoriesToDownload = preferences.downloadNewCategories().getOrDefault().map(String::toInt)
@@ -313,8 +312,12 @@ class LibraryUpdateService(
                                 }
                             }
                             // Convert to the manga that contains new chapters.
-                            .map { Pair(manga, (it.first.sortedByDescending { ch -> ch
-                                .source_order }.toTypedArray())) }
+                            .map {
+                                Pair(
+                                    manga,
+                                    (it.first.sortedByDescending { ch -> ch.source_order }.toTypedArray())
+                                )
+                            }
                 }
                 // Add manga with new chapters to the list.
                 .doOnNext { manga ->
@@ -491,7 +494,6 @@ class LibraryUpdateService(
         }
 
         NotificationManagerCompat.from(this).apply {
-
             notify(Notifications.ID_NEW_CHAPTERS, notification(Notifications.CHANNEL_NEW_CHAPTERS) {
                 setSmallIcon(R.drawable.ic_tachi)
                 setLargeIcon(notificationBitmap)
@@ -532,9 +534,10 @@ class LibraryUpdateService(
      * Returns an intent to open the main activity.
      */
     private fun getNotificationIntent(): PendingIntent {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        intent.action = MainActivity.SHORTCUT_RECENTLY_UPDATED
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            action = MainActivity.SHORTCUT_RECENTLY_UPDATED
+        }
         return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 

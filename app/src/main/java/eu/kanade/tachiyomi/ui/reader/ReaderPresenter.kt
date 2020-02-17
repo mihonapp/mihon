@@ -191,11 +191,13 @@ class ReaderPresenter(
      */
     fun init(mangaId: Long, chapterUrl: String) {
         if (!needsInit()) return
+
         val context = Injekt.get<Application>()
         val db = DatabaseHelper(context)
         val chapterId = db.getChapter(chapterUrl, mangaId).executeAsBlocking()?.id
-        if (chapterId != null)
+        if (chapterId != null) {
             init(mangaId, chapterId)
+        }
     }
 
     /**

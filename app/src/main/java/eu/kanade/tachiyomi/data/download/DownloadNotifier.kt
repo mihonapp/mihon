@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -96,6 +95,7 @@ internal class DownloadNotifier(private val context: Context) {
                     .format(download.downloadedImages, download.pages!!.size))
             setProgress(download.pages!!.size, download.downloadedImages, false)
         }
+
         // Displays the progress bar on notification
         notificationBuilder.show()
     }

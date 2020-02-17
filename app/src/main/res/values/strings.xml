@@ -542,8 +542,8 @@
 
     <!-- Notification channels -->
     <string name="channel_common">Common</string>
-    <string name="channel_library">Updating Library</string>
+    <string name="channel_library">Library</string>
     <string name="channel_downloader">Downloader</string>
-    <string name="channel_new_chapters">New Chapters</string>
+    <string name="channel_new_chapters">Chapter updates</string>
 
 </resources>
