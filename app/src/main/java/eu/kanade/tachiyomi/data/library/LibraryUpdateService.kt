@@ -327,7 +327,7 @@ class LibraryUpdateService(
                 // Notify result of the overall update.
                 .doOnCompleted {
                     if (newUpdates.isNotEmpty()) {
-                        showResultNotification(newUpdates)
+                        showUpdateNotifications(newUpdates)
                         if (downloadNew && hasDownloads) {
                             DownloadService.start(this)
                         }
@@ -453,50 +453,10 @@ class LibraryUpdateService(
      *
      * @param updates a list of manga with new updates.
      */
-    private fun showResultNotification(updates: List<Pair<Manga, Array<Chapter>>>) {
-        val notifications = ArrayList<Pair<Notification, Int>>()
-        updates.forEach {
-            val manga = it.first
-            val chapters = it.second
-            val chapterNames = chapters.map { chapter -> chapter.name }.toSet()
-            notifications.add(Pair(notification(Notifications.CHANNEL_NEW_CHAPTERS) {
-                setSmallIcon(R.drawable.ic_tachi)
-                try {
-                    val icon = Glide.with(this@LibraryUpdateService)
-                        .asBitmap().load(manga).dontTransform().centerCrop().circleCrop()
-                        .override(256, 256).submit().get()
-                    setLargeIcon(icon)
-                }
-                catch (e: Exception) { }
-                setGroupAlertBehavior(GROUP_ALERT_SUMMARY)
-                setContentTitle(manga.title)
-                val chaptersNames = if (chapterNames.size > 5) {
-                    "${chapterNames.take(4).joinToString(", ")}, " +
-                        resources.getString(R.string.notification_and_n_more, (chapterNames.size - 4))
-                } else chapterNames.joinToString(", ")
-                setContentText(chaptersNames)
-                setStyle(NotificationCompat.BigTextStyle().bigText(chaptersNames))
-                priority = NotificationCompat.PRIORITY_HIGH
-                setGroup(Notifications.GROUP_NEW_CHAPTERS)
-                setContentIntent(
-                    NotificationReceiver.openChapterPendingActivity(
-                        this@LibraryUpdateService, manga, chapters.first()
-                    )
-                )
-                addAction(R.drawable.ic_glasses_black_24dp, getString(R.string.action_mark_as_read),
-                    NotificationReceiver.markAsReadPendingBroadcast(this@LibraryUpdateService,
-                        manga, chapters, Notifications.ID_NEW_CHAPTERS))
-                addAction(R.drawable.ic_book_white_24dp, getString(R.string.action_view_chapters),
-                    NotificationReceiver.openChapterPendingActivity(this@LibraryUpdateService,
-                        manga, Notifications.ID_NEW_CHAPTERS))
-                setAutoCancel(true)
-            }, manga.id.hashCode()))
-        }
-
+    private fun showUpdateNotifications(updates: List<Pair<Manga, Array<Chapter>>>) {
         NotificationManagerCompat.from(this).apply {
+            // Group notification
             notify(Notifications.ID_NEW_CHAPTERS, notification(Notifications.CHANNEL_NEW_CHAPTERS) {
-                setSmallIcon(R.drawable.ic_tachi)
-                setLargeIcon(notificationBitmap)
                 setContentTitle(getString(R.string.notification_new_chapters))
                 if (updates.size > 1) {
                     setContentText(resources.getQuantityString(R.plurals
@@ -509,17 +469,64 @@ class LibraryUpdateService(
                 else {
                     setContentText(updates.first().first.title.chop(45))
                 }
-                priority = NotificationCompat.PRIORITY_HIGH
+
+                setSmallIcon(R.drawable.ic_tachi)
+                setLargeIcon(notificationBitmap)
+
                 setGroup(Notifications.GROUP_NEW_CHAPTERS)
                 setGroupAlertBehavior(GROUP_ALERT_SUMMARY)
                 setGroupSummary(true)
+                priority = NotificationCompat.PRIORITY_HIGH
+
                 setContentIntent(getNotificationIntent())
                 setAutoCancel(true)
             })
 
-            notifications.forEach {
-                notify(it.second, it.first)
+            // Per-manga notification
+            updates.forEach {
+                val (manga, chapters) = it
+                notify(manga.id.hashCode(), createNewChaptersNotification(manga, chapters))
             }
+        }
+    }
+
+    private fun createNewChaptersNotification(manga: Manga, chapters: Array<Chapter>): Notification {
+        val chapterNames = chapters.map { chapter -> chapter.name }.toSet()
+
+        return notification(Notifications.CHANNEL_NEW_CHAPTERS) {
+            setContentTitle(manga.title)
+            val chaptersNames = if (chapterNames.size > 5) {
+                "${chapterNames.take(4).joinToString(", ")}, " +
+                        resources.getString(R.string.notification_and_n_more, (chapterNames.size - 4))
+            } else chapterNames.joinToString(", ")
+            setContentText(chaptersNames)
+            setStyle(NotificationCompat.BigTextStyle().bigText(chaptersNames))
+
+            setSmallIcon(R.drawable.ic_tachi)
+            try {
+                val icon = Glide.with(this@LibraryUpdateService)
+                        .asBitmap().load(manga).dontTransform().centerCrop().circleCrop()
+                        .override(256, 256).submit().get()
+                setLargeIcon(icon)
+            } catch (e: Exception) {
+            }
+
+            setGroup(Notifications.GROUP_NEW_CHAPTERS)
+            setGroupAlertBehavior(GROUP_ALERT_SUMMARY)
+            priority = NotificationCompat.PRIORITY_HIGH
+
+            // Open first chapter on tap
+            setContentIntent(NotificationReceiver.openChapterPendingActivity(this@LibraryUpdateService, manga, chapters.first()))
+            setAutoCancel(true)
+
+            // Mark chapters as read action
+            addAction(R.drawable.ic_glasses_black_24dp, getString(R.string.action_mark_as_read),
+                    NotificationReceiver.markAsReadPendingBroadcast(this@LibraryUpdateService,
+                            manga, chapters, Notifications.ID_NEW_CHAPTERS))
+            // View chapters action
+            addAction(R.drawable.ic_book_white_24dp, getString(R.string.action_view_chapters),
+                    NotificationReceiver.openChapterPendingActivity(this@LibraryUpdateService,
+                            manga, Notifications.ID_NEW_CHAPTERS))
         }
     }
 

@@ -167,18 +167,19 @@ class NotificationReceiver : BroadcastReceiver() {
      */
     private fun markAsRead(chapterUrls: Array<String>, mangaId: Long) {
         val db: DatabaseHelper = Injekt.get()
-        chapterUrls.forEach {
-            val chapter = db.getChapter(it, mangaId).executeAsBlocking() ?: return
-            chapter.read = true
-            db.updateChapterProgress(chapter).executeAsBlocking()
-            val preferences: PreferencesHelper = Injekt.get()
-            if (preferences.removeAfterMarkedAsRead()) {
-                val manga = db.getManga(mangaId).executeAsBlocking() ?: return
-                val sourceManager: SourceManager = Injekt.get()
-                val source = sourceManager.get(manga.source) ?: return
-                downloadManager.deleteChapters(listOf(chapter), manga, source)
-            }
-        }
+        val preferences: PreferencesHelper = Injekt.get()
+        val sourceManager: SourceManager = Injekt.get()
+
+        chapterUrls.mapNotNull { db.getChapter(it, mangaId).executeAsBlocking() }
+                .forEach {
+                    it.read = true
+                    db.updateChapterProgress(it).executeAsBlocking()
+                    if (preferences.removeAfterMarkedAsRead()) {
+                        val manga = db.getManga(mangaId).executeAsBlocking() ?: return
+                        val source = sourceManager.get(manga.source) ?: return
+                        downloadManager.deleteChapters(listOf(it), manga, source)
+                    }
+                }
     }
 
     companion object {
@@ -301,6 +302,16 @@ class NotificationReceiver : BroadcastReceiver() {
          * @return [PendingIntent]
          */
         internal fun dismissNotification(context: Context, notificationId: Int, groupId: Int? = null) {
+            /*
+            Group notifications always have at least 2 notifications:
+            - Group summary notification
+            - Single manga notification
+
+            If the single notification is dismissed by the system, ie by a user swipe or tapping on the notification,
+            it will auto dismiss the group notification if there's no other single updates.
+
+            When programmatically dismissing this notification, the group notification is not automatically dismissed.
+             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val groupKey = context.notificationManager.activeNotifications.find {
                     it.id == notificationId
