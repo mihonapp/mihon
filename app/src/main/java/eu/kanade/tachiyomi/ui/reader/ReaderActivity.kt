@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
@@ -565,6 +567,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             subscriptions += preferences.fullscreen().asObservable()
                 .subscribe { setFullscreen(it) }
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                subscriptions += preferences.cutoutShort().asObservable()
+                        .subscribe { setCutoutShort(it)}
+            }
+
             subscriptions += preferences.keepScreenOn().asObservable()
                 .subscribe { setKeepScreenOn(it) }
 
@@ -643,6 +650,14 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 SystemUiHelper(this@ReaderActivity, level, flags)
             } else {
                 null
+            }
+        }
+
+        @TargetApi(Build.VERSION_CODES.P)
+        private fun setCutoutShort(enabled: Boolean) {
+            window.attributes.layoutInDisplayCutoutMode = when (enabled) {
+                true -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                false -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
             }
         }
 
