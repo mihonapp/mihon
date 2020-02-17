@@ -26,8 +26,7 @@
         android:title="@string/action_display"
         app:showAsAction="never">
         <menu>
-            <group
-                android:checkableBehavior="single">
+            <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/action_display_grid"
                     android:title="@string/action_display_grid" />
