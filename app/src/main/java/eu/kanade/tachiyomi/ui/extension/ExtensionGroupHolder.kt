@@ -11,6 +11,11 @@ class ExtensionGroupHolder(view: View, adapter: FlexibleAdapter<*>) :
 
     @SuppressLint("SetTextI18n")
     fun bind(item: ExtensionGroupItem) {
-        title.text = item.name
+        var text = item.name
+        if (item.showSize) {
+            text += " (${item.size})"
+        }
+
+        title.text = text
     }
 }
