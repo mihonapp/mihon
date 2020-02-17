@@ -131,7 +131,8 @@ class DownloadService : Service() {
         subscriptions += ReactiveNetwork.observeNetworkConnectivity(applicationContext)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ state -> onNetworkStateChanged(state)
+                .subscribe({ state ->
+                    onNetworkStateChanged(state)
                 }, {
                     toast(R.string.download_queue_error)
                     stopSelf()
@@ -156,7 +157,9 @@ class DownloadService : Service() {
             DISCONNECTED -> {
                 downloadManager.stopDownloads(getString(R.string.download_notifier_no_network))
             }
-            else -> { /* Do nothing */ }
+            else -> {
+                /* Do nothing */
+            }
         }
     }
 

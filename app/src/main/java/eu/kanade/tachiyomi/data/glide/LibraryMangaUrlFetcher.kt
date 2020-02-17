@@ -19,7 +19,7 @@ import java.io.InputStream
 class LibraryMangaUrlFetcher(private val networkFetcher: DataFetcher<InputStream>,
                              private val manga: Manga,
                              private val file: File)
-: FileFetcher(file) {
+    : FileFetcher(file) {
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
         if (!file.exists()) {

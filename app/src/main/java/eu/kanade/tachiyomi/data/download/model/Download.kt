@@ -10,17 +10,24 @@ class Download(val source: HttpSource, val manga: Manga, val chapter: Chapter) {
 
     var pages: List<Page>? = null
 
-    @Volatile @Transient var totalProgress: Int = 0
+    @Volatile
+    @Transient
+    var totalProgress: Int = 0
 
-    @Volatile @Transient var downloadedImages: Int = 0
+    @Volatile
+    @Transient
+    var downloadedImages: Int = 0
 
-    @Volatile @Transient var status: Int = 0
+    @Volatile
+    @Transient
+    var status: Int = 0
         set(status) {
             field = status
             statusSubject?.onNext(this)
         }
 
-    @Transient private var statusSubject: PublishSubject<Download>? = null
+    @Transient
+    private var statusSubject: PublishSubject<Download>? = null
 
     fun setStatusSubject(subject: PublishSubject<Download>?) {
         statusSubject = subject

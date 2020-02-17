@@ -206,7 +206,7 @@ class ExtensionManager(
      *
      * @param extension The extension to be updated.
      */
-    fun updateExtension(extension: Extension.Installed): Observable<InstallStep>  {
+    fun updateExtension(extension: Extension.Installed): Observable<InstallStep> {
         val availableExt = availableExtensions.find { it.pkgName == extension.pkgName }
                 ?: return Observable.empty()
         return installExtension(availableExt)

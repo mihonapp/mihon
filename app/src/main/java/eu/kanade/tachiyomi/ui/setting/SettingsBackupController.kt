@@ -109,10 +109,10 @@ class SettingsBackupController : SettingsController() {
 
                 onClick {
                     val currentDir = preferences.backupsDirectory().getOrDefault()
-                    try{
+                    try {
                         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                         startActivityForResult(intent, CODE_BACKUP_DIR)
-                    } catch (e: ActivityNotFoundException){
+                    } catch (e: ActivityNotFoundException) {
                         // Fall back to custom picker on error
                         startActivityForResult(preferences.context.getFilePicker(currentDir), CODE_BACKUP_DIR)
                     }

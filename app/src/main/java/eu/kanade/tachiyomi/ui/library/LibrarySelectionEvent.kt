@@ -6,5 +6,5 @@ sealed class LibrarySelectionEvent {
 
     class Selected(val manga: Manga) : LibrarySelectionEvent()
     class Unselected(val manga: Manga) : LibrarySelectionEvent()
-    class Cleared() : LibrarySelectionEvent()
+    class Cleared : LibrarySelectionEvent()
 }

@@ -95,8 +95,8 @@ internal object ExtensionLoader {
             return LoadResult.Error(error)
         }
 
-        val extName = pkgManager.getApplicationLabel(appInfo)?.toString()
-            .orEmpty().substringAfter("Tachiyomi: ")
+        val extName = pkgManager.getApplicationLabel(appInfo).toString()
+                .orEmpty().substringAfter("Tachiyomi: ")
         val versionName = pkgInfo.versionName
         val versionCode = pkgInfo.versionCode
 

@@ -347,7 +347,8 @@ open class BrowseCatalogueController(bundle: Bundle) :
         snack?.dismiss()
 
         if (catalogue_view != null) {
-            val message = if (error is NoResultsException) catalogue_view.context.getString(R.string.no_results_found) else (error.message ?: "")
+            val message = if (error is NoResultsException) catalogue_view.context.getString(R.string.no_results_found) else (error.message
+                    ?: "")
 
             snack = catalogue_view.snack(message, Snackbar.LENGTH_INDEFINITE) {
                 setAction(R.string.action_retry) {
@@ -497,7 +498,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
                             0 -> {
                                 presenter.changeMangaFavorite(manga)
                                 adapter?.notifyItemChanged(position)
-                                activity?.toast(activity?.getString(R.string.manga_removed_library))
+                                activity.toast(activity.getString(R.string.manga_removed_library))
                             }
                         }
                     }.show()
@@ -522,7 +523,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
                             .showDialog(router)
                 }
             }
-            activity?.toast(activity?.getString(R.string.manga_added_library))
+            activity.toast(activity.getString(R.string.manga_added_library))
         }
 
     }

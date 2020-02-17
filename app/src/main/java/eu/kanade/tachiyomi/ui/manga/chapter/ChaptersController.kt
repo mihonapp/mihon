@@ -139,11 +139,11 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         menuFilterDownloaded.isChecked = presenter.onlyDownloaded()
         menuFilterBookmarked.isChecked = presenter.onlyBookmarked()
 
+        // Disable unread filter option if read filter is enabled.
         if (presenter.onlyRead())
-            //Disable unread filter option if read filter is enabled.
             menuFilterUnread.isEnabled = false
+        // Disable read filter option if unread filter is enabled.
         if (presenter.onlyUnread())
-            //Disable read filter option if unread filter is enabled.
             menuFilterRead.isEnabled = false
 
         // Display mode submenu

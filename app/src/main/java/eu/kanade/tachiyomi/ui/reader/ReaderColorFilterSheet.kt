@@ -55,13 +55,13 @@ class ReaderColorFilterSheet(activity: ReaderActivity) : BottomSheetDialog(activ
 
         // Initialize subscriptions.
         subscriptions += preferences.colorFilter().asObservable()
-            .subscribe { setColorFilter(it, view) }
+                .subscribe { setColorFilter(it, view) }
 
         subscriptions += preferences.colorFilterMode().asObservable()
-            .subscribe { setColorFilter(preferences.colorFilter().getOrDefault(), view) }
+                .subscribe { setColorFilter(preferences.colorFilter().getOrDefault(), view) }
 
         subscriptions += preferences.customBrightness().asObservable()
-            .subscribe { setCustomBrightness(it, view) }
+                .subscribe { setCustomBrightness(it, view) }
 
         // Get color and update values
         val color = preferences.colorFilterValue().getOrDefault()
@@ -202,8 +202,8 @@ class ReaderColorFilterSheet(activity: ReaderActivity) : BottomSheetDialog(activ
     private fun setCustomBrightness(enabled: Boolean, view: View) {
         if (enabled) {
             customBrightnessSubscription = preferences.customBrightnessValue().asObservable()
-                .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                .subscribe { setCustomBrightnessValue(it, view) }
+                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                    .subscribe { setCustomBrightnessValue(it, view) }
 
             subscriptions.add(customBrightnessSubscription)
         } else {
@@ -241,8 +241,8 @@ class ReaderColorFilterSheet(activity: ReaderActivity) : BottomSheetDialog(activ
     private fun setColorFilter(enabled: Boolean, view: View) {
         if (enabled) {
             customFilterColorSubscription = preferences.colorFilterValue().asObservable()
-                .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                .subscribe { setColorFilterValue(it, view) }
+                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                    .subscribe { setColorFilterValue(it, view) }
 
             subscriptions.add(customFilterColorSubscription)
         } else {

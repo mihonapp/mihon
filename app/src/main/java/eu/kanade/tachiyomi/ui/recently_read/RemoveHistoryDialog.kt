@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.widget.DialogCheckboxView
 
 class RemoveHistoryDialog<T>(bundle: Bundle? = null) : DialogController(bundle)
-        where T : Controller, T: RemoveHistoryDialog.Listener {
+        where T : Controller, T : RemoveHistoryDialog.Listener {
 
     private var manga: Manga? = null
 

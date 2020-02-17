@@ -126,11 +126,11 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         }
 
         searchView.queryTextChanges()
-            .filter { router.backstack.lastOrNull()?.controller() == this }
-            .subscribeUntilDestroy {
-                query = it.toString()
-                drawExtensions()
-            }
+                .filter { router.backstack.lastOrNull()?.controller() == this }
+                .subscribeUntilDestroy {
+                    query = it.toString()
+                    drawExtensions()
+                }
 
         // Fixes problem with the overflow icon showing up in lieu of search
         searchItem.fixExpand(onExpand = { invalidateMenuOnExpand() })

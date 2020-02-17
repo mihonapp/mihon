@@ -25,7 +25,7 @@ internal class ExtensionGithubApi {
         val call = GET("$REPO_URL/index.json")
 
         return withContext(Dispatchers.IO) {
-             parseResponse(network.client.newCall(call).await())
+            parseResponse(network.client.newCall(call).await())
         }
     }
 

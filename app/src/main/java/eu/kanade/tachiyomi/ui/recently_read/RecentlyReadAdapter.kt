@@ -18,7 +18,7 @@ import java.text.DecimalFormatSymbols
  * @constructor creates an instance of the adapter.
  */
 class RecentlyReadAdapter(controller: RecentlyReadController)
-: FlexibleAdapter<RecentlyReadItem>(null, controller, true) {
+    : FlexibleAdapter<RecentlyReadItem>(null, controller, true) {
 
     val sourceManager by injectLazy<SourceManager>()
 

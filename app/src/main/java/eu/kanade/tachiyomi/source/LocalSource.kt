@@ -129,17 +129,17 @@ class LocalSource(private val context: Context) : CatalogueSource {
                 .filter { it.extension.equals("json") }
                 .firstOrNull()
                 ?.apply {
-            val json = Gson().fromJson(Scanner(this).useDelimiter("\\Z").next(), JsonObject::class.java)
-            manga.title = json["title"]?.asString ?: manga.title
-            manga.author = json["author"]?.asString ?: manga.author
-            manga.artist = json["artist"]?.asString ?: manga.artist
-            manga.description = json["description"]?.asString ?: manga.description
-            manga.genre = json["genre"]?.asJsonArray
-                    ?.map { it.asString }
-                    ?.joinToString(", ")
-                    ?: manga.genre
-            manga.status = json["status"]?.asInt ?: manga.status
-        }
+                    val json = Gson().fromJson(Scanner(this).useDelimiter("\\Z").next(), JsonObject::class.java)
+                    manga.title = json["title"]?.asString ?: manga.title
+                    manga.author = json["author"]?.asString ?: manga.author
+                    manga.artist = json["artist"]?.asString ?: manga.artist
+                    manga.description = json["description"]?.asString ?: manga.description
+                    manga.genre = json["genre"]?.asJsonArray
+                            ?.map { it.asString }
+                            ?.joinToString(", ")
+                            ?: manga.genre
+                    manga.status = json["status"]?.asInt ?: manga.status
+                }
         return Observable.just(manga)
     }
 
@@ -210,34 +210,34 @@ class LocalSource(private val context: Context) : CatalogueSource {
         return when (format) {
             is Format.Directory -> {
                 val entry = format.file.listFiles()
-                    .sortedWith(Comparator<File> { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) })
-                    .find { !it.isDirectory && ImageUtil.isImage(it.name) { FileInputStream(it) } }
+                        .sortedWith(Comparator<File> { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) })
+                        .find { !it.isDirectory && ImageUtil.isImage(it.name) { FileInputStream(it) } }
 
-                entry?.let { updateCover(context, manga, it.inputStream())}
+                entry?.let { updateCover(context, manga, it.inputStream()) }
             }
             is Format.Zip -> {
                 ZipFile(format.file).use { zip ->
                     val entry = zip.entries().toList()
-                        .sortedWith(Comparator<ZipEntry> { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) })
-                        .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
+                            .sortedWith(Comparator<ZipEntry> { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) })
+                            .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
 
-                    entry?.let { updateCover(context, manga, zip.getInputStream(it) )}
+                    entry?.let { updateCover(context, manga, zip.getInputStream(it)) }
                 }
             }
             is Format.Rar -> {
                 Archive(format.file).use { archive ->
                     val entry = archive.fileHeaders
-                        .sortedWith(Comparator<FileHeader> { f1, f2 -> f1.fileNameString.compareToCaseInsensitiveNaturalOrder(f2.fileNameString) })
-                        .find { !it.isDirectory && ImageUtil.isImage(it.fileNameString) { archive.getInputStream(it) } }
+                            .sortedWith(Comparator<FileHeader> { f1, f2 -> f1.fileNameString.compareToCaseInsensitiveNaturalOrder(f2.fileNameString) })
+                            .find { !it.isDirectory && ImageUtil.isImage(it.fileNameString) { archive.getInputStream(it) } }
 
-                    entry?.let { updateCover(context, manga, archive.getInputStream(it) )}
+                    entry?.let { updateCover(context, manga, archive.getInputStream(it)) }
                 }
             }
             is Format.Epub -> {
                 EpubFile(format.file).use { epub ->
                     val entry = epub.getImagesFromPages()
-                        .firstOrNull()
-                        ?.let { epub.getEntry(it) }
+                            .firstOrNull()
+                            ?.let { epub.getEntry(it) }
 
                     entry?.let { updateCover(context, manga, epub.getInputStream(it)) }
                 }
@@ -252,7 +252,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
     sealed class Format {
         data class Directory(val file: File) : Format()
         data class Zip(val file: File) : Format()
-        data class Rar(val file: File): Format()
+        data class Rar(val file: File) : Format()
         data class Epub(val file: File) : Format()
     }
 

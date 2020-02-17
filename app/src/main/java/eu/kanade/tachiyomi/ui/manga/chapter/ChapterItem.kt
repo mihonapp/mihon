@@ -17,9 +17,12 @@ class ChapterItem(val chapter: Chapter, val manga: Manga) : AbstractFlexibleItem
 
     var status: Int
         get() = download?.status ?: _status
-        set(value) { _status = value }
+        set(value) {
+            _status = value
+        }
 
-    @Transient var download: Download? = null
+    @Transient
+    var download: Download? = null
 
     val isDownloaded: Boolean
         get() = status == Download.DOWNLOADED

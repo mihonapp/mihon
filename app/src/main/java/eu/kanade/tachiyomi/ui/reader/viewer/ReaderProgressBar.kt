@@ -157,7 +157,7 @@ class ReaderProgressBar @JvmOverloads constructor(
         if (!animate) {
             visibility = View.GONE
         } else {
-            ObjectAnimator.ofFloat(this, "alpha",  1f, 0f).apply {
+            ObjectAnimator.ofFloat(this, "alpha", 1f, 0f).apply {
                 interpolator = DecelerateInterpolator()
                 duration = 1000
                 addListener(object : AnimatorListenerAdapter() {

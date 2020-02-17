@@ -16,11 +16,11 @@ class DialogCheckboxView @JvmOverloads constructor(context: Context, attrs: Attr
         addView(inflate(R.layout.common_dialog_with_checkbox))
     }
 
-    fun setDescription(@StringRes id: Int){
+    fun setDescription(@StringRes id: Int) {
         description.text = context.getString(id)
     }
 
-    fun setOptionDescription(@StringRes id: Int){
+    fun setOptionDescription(@StringRes id: Int) {
         checkbox_option.text = context.getString(id)
     }
 

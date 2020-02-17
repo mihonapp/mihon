@@ -109,8 +109,8 @@ class ChaptersPresenter(
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter { download -> download.manga.id == manga.id }
                 .doOnNext { onDownloadStatusChange(it) }
-                .subscribeLatestCache(ChaptersController::onChapterStatusChange) {
-                    _, error -> Timber.e(error)
+                .subscribeLatestCache(ChaptersController::onChapterStatusChange) { _, error ->
+                    Timber.e(error)
                 }
     }
 
@@ -176,8 +176,7 @@ class ChaptersPresenter(
         var observable = Observable.from(chapters).subscribeOn(Schedulers.io())
         if (onlyUnread()) {
             observable = observable.filter { !it.read }
-        }
-        else if (onlyRead()) {
+        } else if (onlyRead()) {
             observable = observable.filter { it.read }
         }
         if (onlyDownloaded()) {

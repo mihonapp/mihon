@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.data.updater.Release
  */
 class GithubRelease(@SerializedName("tag_name") val version: String,
                     @SerializedName("body") override val info: String,
-                    @SerializedName("assets") private val assets: List<Assets>): Release {
+                    @SerializedName("assets") private val assets: List<Assets>) : Release {
 
     /**
      * Get download link of latest release from the assets.

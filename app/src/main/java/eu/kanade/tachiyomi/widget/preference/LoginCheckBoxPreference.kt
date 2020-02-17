@@ -51,7 +51,7 @@ class LoginCheckBoxPreference @JvmOverloads constructor(
     }
 
     // Make method public
-    override public fun notifyChanged() {
+    public override fun notifyChanged() {
         super.notifyChanged()
     }
 

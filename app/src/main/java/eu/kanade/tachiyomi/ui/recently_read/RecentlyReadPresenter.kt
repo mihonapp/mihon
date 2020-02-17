@@ -99,8 +99,9 @@ class RecentlyReadPresenter : BasePresenter<RecentlyReadController>() {
 
                 ((currChapterIndex + 1) until chapters.size)
                         .map { chapters[it] }
-                        .firstOrNull { it.chapter_number > chapterNumber &&
-                                it.chapter_number <= chapterNumber + 1
+                        .firstOrNull {
+                            it.chapter_number > chapterNumber &&
+                                    it.chapter_number <= chapterNumber + 1
                         }
             }
             else -> throw NotImplementedError("Unknown sorting method")

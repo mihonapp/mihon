@@ -8,6 +8,7 @@ sealed class ChapterTransition {
     class Prev(
             override val from: ReaderChapter, override val to: ReaderChapter?
     ) : ChapterTransition()
+
     class Next(
             override val from: ReaderChapter, override val to: ReaderChapter?
     ) : ChapterTransition()

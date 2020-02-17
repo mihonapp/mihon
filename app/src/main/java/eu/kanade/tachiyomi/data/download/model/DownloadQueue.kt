@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 class DownloadQueue(
         private val store: DownloadStore,
         private val queue: MutableList<Download> = CopyOnWriteArrayList<Download>())
-: List<Download> by queue {
+    : List<Download> by queue {
 
     private val statusSubject = PublishSubject.create<Download>()
 
@@ -42,7 +42,9 @@ class DownloadQueue(
     }
 
     fun remove(chapters: List<Chapter>) {
-        for (chapter in chapters) { remove(chapter) }
+        for (chapter in chapters) {
+            remove(chapter)
+        }
     }
 
     fun remove(manga: Manga) {
@@ -59,7 +61,7 @@ class DownloadQueue(
     }
 
     fun getActiveDownloads(): Observable<Download> =
-        Observable.from(this).filter { download -> download.status == Download.DOWNLOADING }
+            Observable.from(this).filter { download -> download.status == Download.DOWNLOADING }
 
     fun getStatusObservable(): Observable<Download> = statusSubject.onBackpressureBuffer()
 

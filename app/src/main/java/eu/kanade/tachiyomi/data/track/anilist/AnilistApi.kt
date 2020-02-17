@@ -250,7 +250,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     private fun jsonToALManga(struct: JsonObject): ALManga {
         val date = try {
             val date = Calendar.getInstance()
-            date.set(struct["startDate"]["year"].nullInt ?: 0, (struct["startDate"]["month"].nullInt ?: 0) - 1,
+            date.set(struct["startDate"]["year"].nullInt ?: 0, (struct["startDate"]["month"].nullInt
+                    ?: 0) - 1,
                     struct["startDate"]["day"].nullInt ?: 0)
             date.timeInMillis
         } catch (_: Exception) {

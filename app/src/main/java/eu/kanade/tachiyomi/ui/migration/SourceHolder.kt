@@ -37,7 +37,7 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
 
         // Set circle letter image.
         itemView.post {
-            image.setImageDrawable(image.getRound(source.name.take(1).toUpperCase(),false))
+            image.setImageDrawable(image.getRound(source.name.take(1).toUpperCase(), false))
         }
     }
 }

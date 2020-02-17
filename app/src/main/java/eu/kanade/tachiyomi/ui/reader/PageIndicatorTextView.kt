@@ -32,7 +32,7 @@ class PageIndicatorTextView(
         // Also add a bit of spacing between each character, as the stroke overlaps them
         val finalText = SpannableString(currText.asIterable().joinToString("\u00A0")).apply {
             // Apply text outline
-            setSpan(spanOutline, 1, length-1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(spanOutline, 1, length - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             for (i in 1..lastIndex step 2) {
                 setSpan(ScaleXSpan(0.2f), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

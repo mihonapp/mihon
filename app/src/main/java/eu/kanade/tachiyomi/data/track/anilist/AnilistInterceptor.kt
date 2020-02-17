@@ -23,7 +23,7 @@ class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Int
         if (token.isNullOrEmpty()) {
             throw Exception("Not authenticated with Anilist")
         }
-        if (oauth == null){
+        if (oauth == null) {
             oauth = anilist.loadOAuth()
         }
         // Refresh access token if null or expired.

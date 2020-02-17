@@ -217,10 +217,14 @@ class BackupRestoreService : Service() {
                 .concatMap {
                     val obj = it.asJsonObject
                     val manga = backupManager.parser.fromJson<MangaImpl>(obj.get(MANGA))
-                    val chapters = backupManager.parser.fromJson<List<ChapterImpl>>(obj.get(CHAPTERS) ?: JsonArray())
-                    val categories = backupManager.parser.fromJson<List<String>>(obj.get(CATEGORIES) ?: JsonArray())
-                    val history = backupManager.parser.fromJson<List<DHistory>>(obj.get(HISTORY) ?: JsonArray())
-                    val tracks = backupManager.parser.fromJson<List<TrackImpl>>(obj.get(TRACK) ?: JsonArray())
+                    val chapters = backupManager.parser.fromJson<List<ChapterImpl>>(obj.get(CHAPTERS)
+                            ?: JsonArray())
+                    val categories = backupManager.parser.fromJson<List<String>>(obj.get(CATEGORIES)
+                            ?: JsonArray())
+                    val history = backupManager.parser.fromJson<List<DHistory>>(obj.get(HISTORY)
+                            ?: JsonArray())
+                    val tracks = backupManager.parser.fromJson<List<TrackImpl>>(obj.get(TRACK)
+                            ?: JsonArray())
 
                     val observable = getMangaRestoreObservable(manga, chapters, categories, history, tracks)
                     if (observable != null) {

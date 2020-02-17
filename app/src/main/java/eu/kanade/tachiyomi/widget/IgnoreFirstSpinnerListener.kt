@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 
-class IgnoreFirstSpinnerListener(private val block: (Int) -> Unit): OnItemSelectedListener {
+class IgnoreFirstSpinnerListener(private val block: (Int) -> Unit) : OnItemSelectedListener {
 
     private var firstEvent = true
 

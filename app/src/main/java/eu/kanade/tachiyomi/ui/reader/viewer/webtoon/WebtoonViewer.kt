@@ -95,7 +95,7 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
                 else -> activity.toggleMenu()
             }
         }
-        recycler.longTapListener = f@ { event ->
+        recycler.longTapListener = f@{ event ->
             if (activity.menuVisible || config.longTapEnabled) {
                 val child = recycler.findChildViewUnder(event.x, event.y)
                 if (child != null) {

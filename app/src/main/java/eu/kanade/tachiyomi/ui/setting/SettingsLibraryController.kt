@@ -111,7 +111,7 @@ class SettingsLibraryController : SettingsController() {
                 key = Keys.libraryUpdateCategories
                 titleRes = R.string.pref_library_update_categories
                 entries = categories.map { it.name }.toTypedArray()
-                entryValues =  categories.map { it.id.toString() }.toTypedArray()
+                entryValues = categories.map { it.id.toString() }.toTypedArray()
                 preferences.libraryUpdateCategories().asObservable()
                         .subscribeUntilDestroy {
                             val selectedCategories = it
@@ -171,7 +171,8 @@ class SettingsLibraryController : SettingsController() {
                 defaultValue = "-1"
 
                 val selectedCategory = categories.find { it.id == preferences.defaultCategory() }
-                summary = selectedCategory?.name ?: context.getString(R.string.default_category_summary)
+                summary = selectedCategory?.name
+                        ?: context.getString(R.string.default_category_summary)
                 onChange { newValue ->
                     summary = categories.find {
                         it.id == (newValue as String).toInt()

@@ -59,7 +59,7 @@ class TrackSearchDialog : DialogController {
                 .onPositive { _, _ -> onPositiveButtonClick() }
                 .negativeText(android.R.string.cancel)
                 .neutralText(R.string.action_remove)
-                .onNeutral { _, _ ->  onRemoveButtonClick() }
+                .onNeutral { _, _ -> onRemoveButtonClick() }
                 .build()
 
         if (subscriptions.isUnsubscribed) {

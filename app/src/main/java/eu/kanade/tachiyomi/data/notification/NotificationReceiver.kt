@@ -393,11 +393,11 @@ class NotificationReceiver : BroadcastReceiver() {
          */
         internal fun openChapterPendingActivity(context: Context, manga: Manga, groupId: Int): PendingIntent {
             val newIntent =
-                Intent(context, MainActivity::class.java).setAction(MainActivity.SHORTCUT_MANGA)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    .putExtra(MangaController.MANGA_EXTRA, manga.id)
-                    .putExtra("notificationId", manga.id.hashCode())
-                    .putExtra("groupId", groupId)
+                    Intent(context, MainActivity::class.java).setAction(MainActivity.SHORTCUT_MANGA)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            .putExtra(MangaController.MANGA_EXTRA, manga.id)
+                            .putExtra("notificationId", manga.id.hashCode())
+                            .putExtra("groupId", groupId)
             return PendingIntent.getActivity(context, manga.id.hashCode(), newIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
@@ -408,8 +408,8 @@ class NotificationReceiver : BroadcastReceiver() {
          * @param manga manga of chapter
          */
         internal fun markAsReadPendingBroadcast(context: Context, manga: Manga, chapters:
-            Array<Chapter>, groupId: Int):
-            PendingIntent {
+        Array<Chapter>, groupId: Int):
+                PendingIntent {
             val newIntent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_MARK_AS_READ
                 putExtra(EXTRA_CHAPTER_URL, chapters.map { it.url }.toTypedArray())

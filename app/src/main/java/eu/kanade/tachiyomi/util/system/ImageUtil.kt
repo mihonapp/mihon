@@ -44,7 +44,7 @@ object ImageUtil {
             if (bytes.compareWith("RIFF".toByteArray())) {
                 return ImageType.WEBP
             }
-        } catch(e: Exception) {
+        } catch (e: Exception) {
         }
         return null
     }

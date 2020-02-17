@@ -46,7 +46,7 @@ open class ExtensionPresenter(
                 .startWith(emptyList<Extension.Available>())
 
         return Observable.combineLatest(installedObservable, untrustedObservable, availableObservable)
-                { installed, untrusted, available -> Triple(installed, untrusted, available) }
+        { installed, untrusted, available -> Triple(installed, untrusted, available) }
                 .debounce(100, TimeUnit.MILLISECONDS)
                 .map(::toItems)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -67,9 +67,11 @@ open class ExtensionPresenter(
         val untrustedSorted = untrusted.sortedBy { it.pkgName }
         val availableSorted = available
                 // Filter out already installed extensions and disabled languages
-                .filter { avail -> installed.none { it.pkgName == avail.pkgName }
-                        && untrusted.none { it.pkgName == avail.pkgName }
-                        && (avail.lang in activeLangs || avail.lang == "all")}
+                .filter { avail ->
+                    installed.none { it.pkgName == avail.pkgName }
+                            && untrusted.none { it.pkgName == avail.pkgName }
+                            && (avail.lang in activeLangs || avail.lang == "all")
+                }
                 .sortedBy { it.pkgName }
 
         if (updatesSorted.isNotEmpty()) {

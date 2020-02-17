@@ -86,7 +86,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     fun findLibManga(track: Track): Observable<Track?> {
         return authClient.newCall(GET(url = listEntryUrl(track.media_id)))
                 .asObservable()
-                .map {response ->
+                .map { response ->
                     var libTrack: Track? = null
                     response.use {
                         if (it.priorResponse?.isRedirect != true) {
@@ -96,7 +96,8 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                                 last_chapter_read = trackForm.select("#add_manga_num_read_chapters").`val`().toInt()
                                 total_chapters = trackForm.select("#totalChap").text().toInt()
                                 status = trackForm.select("#add_manga_status > option[selected]").`val`().toInt()
-                                score = trackForm.select("#add_manga_score > option[selected]").`val`().toFloatOrNull() ?: 0f
+                                score = trackForm.select("#add_manga_score > option[selected]").`val`().toFloatOrNull()
+                                        ?: 0f
                             }
                         }
                     }
@@ -158,7 +159,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
     private fun getListUrl(): Observable<String> {
         return authClient.newCall(POST(url = exportListUrl(), body = exportPostBody()))
                 .asObservable()
-                .map {response ->
+                .map { response ->
                     baseUrl + Jsoup.parse(response.consumeBody())
                             .select("div.goodresult")
                             .select("a")
@@ -233,7 +234,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                 .toString()
 
         private fun addUrl() = Uri.parse(baseModifyListUrl).buildUpon()
-                .appendPath( "add.json")
+                .appendPath("add.json")
                 .toString()
 
         private fun listEntryUrl(mediaId: Int) = Uri.parse(baseModifyListUrl).buildUpon()
@@ -300,6 +301,6 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
             "Dropped" -> 4
             "Plan to Read" -> 6
             else -> 1
-            }
+        }
     }
 }

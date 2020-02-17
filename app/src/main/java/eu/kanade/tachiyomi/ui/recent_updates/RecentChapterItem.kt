@@ -17,9 +17,12 @@ class RecentChapterItem(val chapter: Chapter, val manga: Manga, header: DateItem
 
     var status: Int
         get() = download?.status ?: _status
-        set(value) { _status = value }
+        set(value) {
+            _status = value
+        }
 
-    @Transient var download: Download? = null
+    @Transient
+    var download: Download? = null
 
     val isDownloaded: Boolean
         get() = status == Download.DOWNLOADED
@@ -29,7 +32,7 @@ class RecentChapterItem(val chapter: Chapter, val manga: Manga, header: DateItem
     }
 
     override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): RecentChapterHolder {
-        return RecentChapterHolder(view , adapter as RecentChaptersAdapter)
+        return RecentChapterHolder(view, adapter as RecentChaptersAdapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,

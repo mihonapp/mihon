@@ -65,14 +65,14 @@ fun initDialog(dialogPreference: DialogPreference) {
 inline fun <P : Preference> PreferenceGroup.initThenAdd(p: P, block: P.() -> Unit): P {
     return p.apply {
         block()
-        this.isIconSpaceReserved  = false
+        this.isIconSpaceReserved = false
         addPreference(this)
     }
 }
 
 inline fun <P : Preference> PreferenceGroup.addThenInit(p: P, block: P.() -> Unit): P {
     return p.apply {
-        this.isIconSpaceReserved  = false
+        this.isIconSpaceReserved = false
         addPreference(this)
         block()
     }
@@ -88,28 +88,42 @@ inline fun Preference.onChange(crossinline block: (Any?) -> Boolean) {
 
 var Preference.defaultValue: Any?
     get() = null // set only
-    set(value) { setDefaultValue(value) }
+    set(value) {
+        setDefaultValue(value)
+    }
 
 var Preference.titleRes: Int
     get() = 0 // set only
-    set(value) { setTitle(value) }
+    set(value) {
+        setTitle(value)
+    }
 
 var Preference.iconRes: Int
     get() = 0 // set only
-    set(value) { icon = VectorDrawableCompat.create(context.resources, value, context.theme) }
+    set(value) {
+        icon = VectorDrawableCompat.create(context.resources, value, context.theme)
+    }
 
 var Preference.summaryRes: Int
     get() = 0 // set only
-    set(value) { setSummary(value) }
+    set(value) {
+        setSummary(value)
+    }
 
 var Preference.iconTint: Int
     get() = 0 // set only
-    set(value) { DrawableCompat.setTint(icon, value) }
+    set(value) {
+        DrawableCompat.setTint(icon, value)
+    }
 
 var ListPreference.entriesRes: Array<Int>
     get() = emptyArray() // set only
-    set(value) { entries = value.map { context.getString(it) }.toTypedArray() }
+    set(value) {
+        entries = value.map { context.getString(it) }.toTypedArray()
+    }
 
 var MultiSelectListPreference.entriesRes: Array<Int>
     get() = emptyArray() // set only
-    set(value) { entries = value.map { context.getString(it) }.toTypedArray() }
+    set(value) {
+        entries = value.map { context.getString(it) }.toTypedArray()
+    }

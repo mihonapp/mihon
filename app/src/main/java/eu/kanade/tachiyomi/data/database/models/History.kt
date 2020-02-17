@@ -35,7 +35,7 @@ interface History : Serializable {
          * @param chapter chapter object
          * @return history object
          */
-        fun create(chapter: Chapter): History =  HistoryImpl().apply {
+        fun create(chapter: Chapter): History = HistoryImpl().apply {
             this.chapter_id = chapter.id!!
         }
     }

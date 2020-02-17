@@ -90,7 +90,7 @@ open class SimpleNavigationView @JvmOverloads constructor(
      * Header view holder.
      */
     class HeaderHolder(parent: ViewGroup)
-        : Holder(parent.inflate(TR.layout.navigation_view_group)){
+        : Holder(parent.inflate(TR.layout.navigation_view_group)) {
 
         val title: TextView = itemView.findViewById(TR.id.title)
     }

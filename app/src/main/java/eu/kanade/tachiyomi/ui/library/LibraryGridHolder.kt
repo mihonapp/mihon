@@ -43,7 +43,7 @@ class LibraryGridHolder(
             text = item.downloadCount.toString()
         }
         //set local visibility if its local manga
-        local_text.visibility = if(item.manga.source == LocalSource.ID) View.VISIBLE else View.GONE
+        local_text.visibility = if (item.manga.source == LocalSource.ID) View.VISIBLE else View.GONE
 
         // Update the cover.
         GlideApp.with(view.context).clear(thumbnail)

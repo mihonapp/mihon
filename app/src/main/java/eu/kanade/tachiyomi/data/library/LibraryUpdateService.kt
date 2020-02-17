@@ -312,7 +312,7 @@ class LibraryUpdateService(
                             .filter { pair -> pair.first.isNotEmpty() }
                             .doOnNext {
                                 if (downloadNew && (categoriesToDownload.isEmpty() ||
-                                        manga.category in categoriesToDownload)) {
+                                                manga.category in categoriesToDownload)) {
 
                                     downloadChapters(manga, it.first)
                                     hasDownloads = true
@@ -321,8 +321,8 @@ class LibraryUpdateService(
                             // Convert to the manga that contains new chapters.
                             .map {
                                 Pair(
-                                    manga,
-                                    (it.first.sortedByDescending { ch -> ch.source_order }.toTypedArray())
+                                        manga,
+                                        (it.first.sortedByDescending { ch -> ch.source_order }.toTypedArray())
                                 )
                             }
                 }
@@ -573,7 +573,7 @@ class LibraryUpdateService(
 
         var description = resources.getQuantityString(R.plurals.notification_chapters, chapters.size, chaptersDescription)
         if (shouldTruncate) {
-           description += " ${resources.getString(R.string.notification_and_n_more, (chapterNumbers.size - (NOTIF_MAX_CHAPTERS - 1)))}"
+            description += " ${resources.getString(R.string.notification_and_n_more, (chapterNumbers.size - (NOTIF_MAX_CHAPTERS - 1)))}"
         }
 
         return description

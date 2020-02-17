@@ -53,7 +53,8 @@ class WebViewActivity : BaseActivity() {
         }
 
         if (bundle == null) {
-            val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource ?: return
+            val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource
+                    ?: return
             val url = intent.extras!!.getString(URL_KEY) ?: return
             val headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
 

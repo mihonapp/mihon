@@ -137,7 +137,7 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
             track.status = COMPLETED
         }
         // If user was using API v1 fetch library_id
-        if (track.library_id == null || track.library_id!! == 0L){
+        if (track.library_id == null || track.library_id!! == 0L) {
             return api.findLibManga(track, getUsername().toInt()).flatMap {
                 if (it == null) {
                     throw Exception("$track not found on user library")
@@ -187,7 +187,7 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
         return api.getCurrentUser().map { (username, scoreType) ->
             scorePreference.set(scoreType)
             saveCredentials(username.toString(), oauth.access_token)
-         }.doOnError{
+        }.doOnError {
             logout()
         }.toCompletable()
     }

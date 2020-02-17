@@ -36,22 +36,22 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
 
     init {
         preferences.readWithTapping()
-            .register({ tappingEnabled = it })
+                .register({ tappingEnabled = it })
 
         preferences.readWithLongTap()
-            .register({ longTapEnabled = it })
+                .register({ longTapEnabled = it })
 
         preferences.cropBordersWebtoon()
-            .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
+                .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
 
         preferences.doubleTapAnimSpeed()
-            .register({ doubleTapAnimDuration = it })
+                .register({ doubleTapAnimDuration = it })
 
         preferences.readWithVolumeKeys()
-            .register({ volumeKeysEnabled = it })
+                .register({ volumeKeysEnabled = it })
 
         preferences.readWithVolumeKeysInverted()
-            .register({ volumeKeysInverted = it })
+                .register({ volumeKeysInverted = it })
     }
 
     fun unsubscribe() {
@@ -63,12 +63,12 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
             onChanged: (T) -> Unit = {}
     ) {
         asObservable()
-            .doOnNext(valueAssignment)
-            .skip(1)
-            .distinctUntilChanged()
-            .doOnNext(onChanged)
-            .subscribe()
-            .addTo(subscriptions)
+                .doOnNext(valueAssignment)
+                .skip(1)
+                .distinctUntilChanged()
+                .doOnNext(onChanged)
+                .subscribe()
+                .addTo(subscriptions)
     }
 
 }

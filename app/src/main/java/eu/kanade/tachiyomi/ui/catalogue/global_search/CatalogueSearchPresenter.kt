@@ -74,11 +74,12 @@ open class CatalogueSearchPresenter(
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        extensionFilter = savedState?.getString(CatalogueSearchPresenter::extensionFilter.name) ?:
-                          initialExtensionFilter
+        extensionFilter = savedState?.getString(CatalogueSearchPresenter::extensionFilter.name)
+                ?: initialExtensionFilter
 
         // Perform a search with previous or initial state
-        search(savedState?.getString(BrowseCataloguePresenter::query.name) ?: initialQuery.orEmpty())
+        search(savedState?.getString(BrowseCataloguePresenter::query.name)
+                ?: initialQuery.orEmpty())
     }
 
     override fun onDestroy() {
@@ -117,10 +118,10 @@ open class CatalogueSearchPresenter(
         }
 
         val filterSources = extensionManager.installedExtensions
-            .filter { it.pkgName == filter }
-            .flatMap { it.sources }
-            .filter { it in enabledSources }
-            .filterIsInstance<CatalogueSource>()
+                .filter { it.pkgName == filter }
+                .flatMap { it.sources }
+                .filter { it in enabledSources }
+                .filterIsInstance<CatalogueSource>()
 
         if (filterSources.isEmpty()) {
             return enabledSources

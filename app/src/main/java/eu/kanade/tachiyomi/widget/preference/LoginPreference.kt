@@ -23,7 +23,7 @@ class LoginPreference @JvmOverloads constructor(context: Context, attrs: Attribu
             R.drawable.ic_done_green_24dp)
     }
 
-    override public fun notifyChanged() {
+    public override fun notifyChanged() {
         super.notifyChanged()
     }
 

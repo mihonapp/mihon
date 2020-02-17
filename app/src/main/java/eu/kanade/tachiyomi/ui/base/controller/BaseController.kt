@@ -55,7 +55,7 @@ abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateContr
 
     abstract fun inflateView(inflater: LayoutInflater, container: ViewGroup): View
 
-    open fun onViewCreated(view: View) { }
+    open fun onViewCreated(view: View) {}
 
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
         if (type.isEnter) {
@@ -90,6 +90,7 @@ abstract class BaseController(bundle: Bundle? = null) : RestoreViewOnCreateContr
      * Issue link: https://issuetracker.google.com/issues/37657375
      */
     var expandActionViewFromInteraction = false
+
     fun MenuItem.fixExpand(onExpand: ((MenuItem) -> Boolean)? = null, onCollapse: ((MenuItem) -> Boolean)? = null) {
         setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {

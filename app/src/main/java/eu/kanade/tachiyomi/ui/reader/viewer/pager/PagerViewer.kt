@@ -85,7 +85,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
                 else -> activity.toggleMenu()
             }
         }
-        pager.longTapListener = f@ {
+        pager.longTapListener = f@{
             if (activity.menuVisible || config.longTapEnabled) {
                 val item = adapter.items.getOrNull(pager.currentItem)
                 if (item is ReaderPage) {

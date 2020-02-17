@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.network
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.webkit.WebResourceRequest
@@ -104,7 +103,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
 
                     // HTTP error codes are only received since M
                     if (WebViewFeature.isFeatureSupported(WebViewFeature.RECEIVE_WEB_RESOURCE_ERROR) &&
-                        url == origRequestUrl && !challengeFound
+                            url == origRequestUrl && !challengeFound
                     ) {
                         // The first request didn't return the challenge, abort.
                         latch.countDown()

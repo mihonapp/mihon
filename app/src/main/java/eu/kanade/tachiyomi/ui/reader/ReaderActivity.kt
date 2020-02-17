@@ -555,40 +555,40 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             val sharedRotation = preferences.rotation().asObservable().share()
             val initialRotation = sharedRotation.take(1)
             val rotationUpdates = sharedRotation.skip(1)
-                .delay(250, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                    .delay(250, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
 
             subscriptions += Observable.merge(initialRotation, rotationUpdates)
-                .subscribe { setOrientation(it) }
+                    .subscribe { setOrientation(it) }
 
             subscriptions += preferences.readerTheme().asObservable()
-                .skip(1) // We only care about updates
-                .subscribe { recreate() }
+                    .skip(1) // We only care about updates
+                    .subscribe { recreate() }
 
             subscriptions += preferences.showPageNumber().asObservable()
-                .subscribe { setPageNumberVisibility(it) }
+                    .subscribe { setPageNumberVisibility(it) }
 
             subscriptions += preferences.trueColor().asObservable()
-                .subscribe { setTrueColor(it) }
+                    .subscribe { setTrueColor(it) }
 
             subscriptions += preferences.fullscreen().asObservable()
-                .subscribe { setFullscreen(it) }
+                    .subscribe { setFullscreen(it) }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 subscriptions += preferences.cutoutShort().asObservable()
-                        .subscribe { setCutoutShort(it)}
+                        .subscribe { setCutoutShort(it) }
             }
 
             subscriptions += preferences.keepScreenOn().asObservable()
-                .subscribe { setKeepScreenOn(it) }
+                    .subscribe { setKeepScreenOn(it) }
 
             subscriptions += preferences.customBrightness().asObservable()
-                .subscribe { setCustomBrightness(it) }
+                    .subscribe { setCustomBrightness(it) }
 
             subscriptions += preferences.colorFilter().asObservable()
-                .subscribe { setColorFilter(it) }
+                    .subscribe { setColorFilter(it) }
 
             subscriptions += preferences.colorFilterMode().asObservable()
-                .subscribe { setColorFilter(preferences.colorFilter().getOrDefault()) }
+                    .subscribe { setColorFilter(preferences.colorFilter().getOrDefault()) }
         }
 
         /**
@@ -684,8 +684,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         private fun setCustomBrightness(enabled: Boolean) {
             if (enabled) {
                 customBrightnessSubscription = preferences.customBrightnessValue().asObservable()
-                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                    .subscribe { setCustomBrightnessValue(it) }
+                        .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                        .subscribe { setCustomBrightnessValue(it) }
 
                 subscriptions.add(customBrightnessSubscription)
             } else {
@@ -700,8 +700,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         private fun setColorFilter(enabled: Boolean) {
             if (enabled) {
                 customFilterColorSubscription = preferences.colorFilterValue().asObservable()
-                    .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                    .subscribe { setColorFilterValue(it) }
+                        .sample(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                        .subscribe { setColorFilterValue(it) }
 
                 subscriptions.add(customFilterColorSubscription)
             } else {
