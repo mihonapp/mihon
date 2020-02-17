@@ -45,6 +45,8 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.util.ArrayList
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -123,6 +125,8 @@ class LibraryUpdateService(
          */
         const val KEY_TARGET = "target"
 
+        private const val NOTIF_MAX_CHAPTERS = 5
+        private const val NOTIF_TITLE_MAX_LEN = 45
         private const val NOTIF_ICON_SIZE = 192
 
         /**
@@ -466,11 +470,11 @@ class LibraryUpdateService(
             notify(Notifications.ID_NEW_CHAPTERS, notification(Notifications.CHANNEL_NEW_CHAPTERS) {
                 setContentTitle(getString(R.string.notification_new_chapters))
                 if (updates.size == 1) {
-                    setContentText(updates.first().first.title)
+                    setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
                 } else {
                     setContentText(resources.getQuantityString(R.plurals.notification_new_chapters_text, updates.size, updates.size))
                     setStyle(NotificationCompat.BigTextStyle().bigText(updates.joinToString("\n") {
-                        it.first.title
+                        it.first.title.chop(NOTIF_TITLE_MAX_LEN)
                     }))
                 }
 
@@ -495,16 +499,12 @@ class LibraryUpdateService(
     }
 
     private fun createNewChaptersNotification(manga: Manga, chapters: Array<Chapter>): Notification {
-        val chapterNames = chapters.map { chapter -> chapter.name }.toSet()
-
         return notification(Notifications.CHANNEL_NEW_CHAPTERS) {
             setContentTitle(manga.title)
-            val chaptersNames = if (chapterNames.size > 5) {
-                "${chapterNames.take(4).joinToString(", ")}, " +
-                        resources.getString(R.string.notification_and_n_more, (chapterNames.size - 4))
-            } else chapterNames.joinToString(", ")
-            setContentText(chaptersNames)
-            setStyle(NotificationCompat.BigTextStyle().bigText(chaptersNames))
+
+            val description = getChaptersDescriptionString(chapters)
+            setContentText(description)
+            setStyle(NotificationCompat.BigTextStyle().bigText(description))
 
             setSmallIcon(R.drawable.ic_tachi)
 
@@ -553,6 +553,30 @@ class LibraryUpdateService(
         } catch (e: Exception) {
             null
         }
+    }
+
+    private fun getChaptersDescriptionString(chapters: Array<Chapter>): String {
+        val formatter = DecimalFormat("#.###", DecimalFormatSymbols()
+                .apply { decimalSeparator = '.' })
+
+        val chapterNumbers = chapters
+                .sortedBy { it.chapter_number }
+                .map { formatter.format(it.chapter_number) }
+                .toSet()
+
+        val shouldTruncate = chapterNumbers.size > NOTIF_MAX_CHAPTERS
+        val chaptersDescription = if (shouldTruncate) {
+            chapterNumbers.take(NOTIF_MAX_CHAPTERS - 1).joinToString(", ")
+        } else {
+            chapterNumbers.joinToString(", ")
+        }
+
+        var description = resources.getQuantityString(R.plurals.notification_chapters, chapters.size, chaptersDescription)
+        if (shouldTruncate) {
+           description += " ${resources.getString(R.string.notification_and_n_more, (chapterNumbers.size - (NOTIF_MAX_CHAPTERS - 1)))}"
+        }
+
+        return description
     }
 
     /**
