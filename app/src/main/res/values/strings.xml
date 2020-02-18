@@ -507,14 +507,20 @@
     <string name="notification_update_progress">Update progress: %1$d/%2$d</string>
     <string name="notification_new_chapters">New chapters found</string>
     <plurals name="notification_new_chapters_text">
-        <item quantity="one">For %d title</item>
+        <item quantity="one">For 1 title</item>
         <item quantity="other">For %d titles</item>
     </plurals>
-    <plurals name="notification_chapters">
-        <item quantity="one">Chapter %1$s</item>
-        <item quantity="other">Chapters %1$s</item>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">1 new chapter</item>
+        <item quantity="other">%1$d new chapters</item>
     </plurals>
-    <string name="notification_and_n_more">and %1$d more</string>
+    <string name="notification_chapters_single">Chapter %1$s</string>
+    <string name="notification_chapters_single_and_more">Chapter %1$s and %2$d more</string>
+    <string name="notification_chapters_multiple">Chapters %1$s</string>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Chapter %1$s and 1 more</item>
+        <item quantity="other">Chapters %1$s and %2$d more</item>
+    </plurals>
     <string name="notification_cover_update_failed">Failed to update cover</string>
     <string name="notification_first_add_to_library">Please add the manga to your library before doing this</string>
     <string name="notification_not_connected_to_ac_title">Sync canceled</string>
