@@ -54,15 +54,17 @@ class SettingsGeneralController : SettingsController() {
         listPreference {
             key = Keys.themeMode
             titleRes = R.string.pref_theme_mode
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 entriesRes = arrayOf(
+                        R.string.theme_system,
                         R.string.theme_light,
-                        R.string.theme_dark,
-                        R.string.theme_system)
+                        R.string.theme_dark)
                 entryValues = arrayOf(
+                        Values.THEME_MODE_SYSTEM,
                         Values.THEME_MODE_LIGHT,
-                        Values.THEME_MODE_DARK,
-                        Values.THEME_MODE_SYSTEM)
+                        Values.THEME_MODE_DARK)
+                defaultValue = Values.THEME_MODE_SYSTEM
             } else {
                 entriesRes = arrayOf(
                         R.string.theme_light,
@@ -70,8 +72,9 @@ class SettingsGeneralController : SettingsController() {
                 entryValues = arrayOf(
                         Values.THEME_MODE_LIGHT,
                         Values.THEME_MODE_DARK)
+                defaultValue = Values.THEME_MODE_LIGHT
             }
-            defaultValue = Values.THEME_MODE_SYSTEM
+
             summary = "%s"
 
             onChange {
