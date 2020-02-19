@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.setting
 import android.os.Build
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
@@ -83,17 +84,20 @@ class SettingsGeneralController : SettingsController() {
             titleRes = R.string.pref_theme_dark
             entriesRes = arrayOf(
                     R.string.theme_dark_default,
-                    R.string.theme_dark_amoled,
-                    R.string.theme_dark_blue)
+                    R.string.theme_dark_blue,
+                    R.string.theme_dark_amoled)
             entryValues = arrayOf(
                     Values.THEME_DARK_DEFAULT,
-                    Values.THEME_DARK_AMOLED,
-                    Values.THEME_DARK_BLUE)
+                    Values.THEME_DARK_BLUE,
+                    Values.THEME_DARK_AMOLED)
             defaultValue = Values.THEME_DARK_DEFAULT
             summary = "%s"
 
+            preferences.themeMode().asObservable()
+                    .subscribeUntilDestroy { isVisible = it != Values.THEME_MODE_LIGHT }
+
             onChange {
-                if (preferences.themeMode() != Values.THEME_MODE_LIGHT) {
+                if (preferences.themeMode().getOrDefault() != Values.THEME_MODE_LIGHT) {
                     activity?.recreate()
                 }
                 true
