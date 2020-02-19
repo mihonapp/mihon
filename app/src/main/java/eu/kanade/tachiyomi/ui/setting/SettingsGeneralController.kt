@@ -1,10 +1,12 @@
 package eu.kanade.tachiyomi.ui.setting
 
+import android.os.Build
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
 class SettingsGeneralController : SettingsController() {
 
@@ -48,17 +50,52 @@ class SettingsGeneralController : SettingsController() {
             defaultValue = ""
             summary = "%s"
         }
-        intListPreference {
-            key = Keys.theme
-            titleRes = R.string.pref_theme
-            entriesRes = arrayOf(R.string.light_theme, R.string.dark_theme,
-                    R.string.amoled_theme, R.string.darkblue_theme)
-            entryValues = arrayOf("1", "2", "3", "4")
-            defaultValue = "1"
+        listPreference {
+            key = Keys.themeMode
+            titleRes = R.string.pref_theme_mode
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                entriesRes = arrayOf(
+                        R.string.theme_light,
+                        R.string.theme_dark,
+                        R.string.theme_system)
+                entryValues = arrayOf(
+                        Values.THEME_MODE_LIGHT,
+                        Values.THEME_MODE_DARK,
+                        Values.THEME_MODE_SYSTEM)
+            } else {
+                entriesRes = arrayOf(
+                        R.string.theme_light,
+                        R.string.theme_dark)
+                entryValues = arrayOf(
+                        Values.THEME_MODE_LIGHT,
+                        Values.THEME_MODE_DARK)
+            }
+            defaultValue = Values.THEME_MODE_LIGHT
             summary = "%s"
 
             onChange {
                 activity?.recreate()
+                true
+            }
+        }
+        listPreference {
+            key = Keys.themeDark
+            titleRes = R.string.pref_theme_dark
+            entriesRes = arrayOf(
+                    R.string.theme_dark_default,
+                    R.string.theme_dark_amoled,
+                    R.string.theme_dark_blue)
+            entryValues = arrayOf(
+                    Values.THEME_DARK_DEFAULT,
+                    Values.THEME_DARK_AMOLED,
+                    Values.THEME_DARK_BLUE)
+            defaultValue = Values.THEME_DARK_DEFAULT
+            summary = "%s"
+
+            onChange {
+                if (preferences.themeMode() != Values.THEME_MODE_LIGHT) {
+                    activity?.recreate()
+                }
                 true
             }
         }
