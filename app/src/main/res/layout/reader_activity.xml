@@ -85,9 +85,9 @@
                 android:id="@+id/page_seekbar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:maxHeight="?attr/actionBarSize"
-                android:minHeight="?attr/actionBarSize"
-                android:layout_weight="1" />
+                android:minHeight="?attr/actionBarSize" />
 
             <TextView
                 android:id="@+id/right_page_text"
