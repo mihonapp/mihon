@@ -116,7 +116,6 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.browser:browser:1.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.webkit:webkit:1.1.0'
 
     // UI library
     implementation 'com.google.android.material:material:1.1.0'
