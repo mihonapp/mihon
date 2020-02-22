@@ -48,8 +48,8 @@ class ReaderPageSheet(
 
         MaterialDialog.Builder(activity)
                 .content(activity.getString(R.string.confirm_set_image_as_cover))
-                .positiveText(android.R.string.yes)
-                .negativeText(android.R.string.no)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
                 .onPositive { _, _ ->
                     activity.setAsCover(page)
                     dismiss()

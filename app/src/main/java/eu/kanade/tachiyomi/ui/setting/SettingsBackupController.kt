@@ -364,7 +364,7 @@ class SettingsBackupController : SettingsController() {
             return MaterialDialog.Builder(activity)
                     .title(R.string.restore_completed)
                     .content(activity.getString(R.string.restore_completed_content, timeString,
-                            if (errors > 0) "$errors" else activity.getString(android.R.string.no)))
+                            if (errors > 0) "$errors" else activity.getString(android.R.string.cancel)))
                     .positiveText(R.string.action_close)
                     .negativeText(R.string.action_open_log)
                     .onNegative { _, _ ->
