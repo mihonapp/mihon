@@ -58,6 +58,8 @@ class PreferencesHelper(val context: Context) {
 
     fun lastAppUnlock() = rxPrefs.getLong(Keys.lastAppUnlock, 0)
 
+    fun secureScreen() = rxPrefs.getBoolean(Keys.secureScreen, false)
+
     fun clear() = prefs.edit().clear().apply()
 
     fun themeMode() = rxPrefs.getString(Keys.themeMode, Values.THEME_MODE_SYSTEM)

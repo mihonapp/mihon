@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.ui.security.BiometricUnlockDelegate
+import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
@@ -45,11 +45,14 @@ abstract class BaseActivity : AppCompatActivity() {
         })
 
         super.onCreate(savedInstanceState)
+
+        SecureActivityDelegate.onCreate(this)
     }
 
     override fun onResume() {
         super.onResume()
-        BiometricUnlockDelegate.onResume(this)
+
+        SecureActivityDelegate.onResume(this)
     }
 
 }

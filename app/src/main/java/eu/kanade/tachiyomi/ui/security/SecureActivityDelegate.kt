@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.security
 
 import android.content.Intent
+import android.view.WindowManager
 import androidx.biometric.BiometricManager
 import androidx.fragment.app.FragmentActivity
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -8,11 +9,22 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
 
-object BiometricUnlockDelegate {
+object SecureActivityDelegate {
 
     private val preferences by injectLazy<PreferencesHelper>()
 
     var locked: Boolean = true
+
+    fun onCreate(activity: FragmentActivity) {
+        preferences.secureScreen().asObservable()
+                .subscribe {
+                    if (it) {
+                        activity.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+                    } else {
+                        activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                    }
+                }
+    }
 
     fun onResume(activity: FragmentActivity) {
         val lockApp = preferences.useBiometricLock().getOrDefault()

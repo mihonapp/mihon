@@ -28,7 +28,7 @@ class BiometricUnlockActivity : AppCompatActivity() {
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                BiometricUnlockDelegate.locked = false
+                SecureActivityDelegate.locked = false
                 preferences.lastAppUnlock().set(Date().time)
                 finish()
             }

@@ -111,6 +111,8 @@ object PreferenceKeys {
 
     const val lastAppUnlock = "last_app_unlock"
 
+    const val secureScreen = "secure_screen"
+
     const val downloadNew = "download_new"
 
     const val downloadNewCategories = "download_new_categories"

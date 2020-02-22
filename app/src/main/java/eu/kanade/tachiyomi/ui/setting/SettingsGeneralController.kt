@@ -117,10 +117,10 @@ class SettingsGeneralController : SettingsController() {
             summary = "%s"
         }
 
-        if (BiometricManager.from(context).canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
-            preferenceCategory {
-                titleRes = R.string.pref_category_security
+        preferenceCategory {
+            titleRes = R.string.pref_category_security
 
+            if (BiometricManager.from(context).canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
                 switchPreference {
                     key = Keys.useBiometricLock
                     titleRes = R.string.lock_with_biometrics
@@ -144,6 +144,12 @@ class SettingsGeneralController : SettingsController() {
                     preferences.useBiometricLock().asObservable()
                             .subscribeUntilDestroy { isVisible = it }
                 }
+            }
+
+            switchPreference {
+                key = Keys.secureScreen
+                titleRes = R.string.secure_screen
+                defaultValue = false
             }
         }
     }

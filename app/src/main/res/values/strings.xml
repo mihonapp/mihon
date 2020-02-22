@@ -141,6 +141,7 @@
         <item quantity="one">After 1 minute</item>
         <item quantity="other">After %1$s minutes</item>
     </plurals>
+    <string name="secure_screen">Secure screen</string>
 
       <!-- Library section -->
     <string name="pref_category_library_display">Display</string>

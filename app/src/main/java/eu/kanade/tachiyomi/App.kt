@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
-import eu.kanade.tachiyomi.ui.security.BiometricUnlockDelegate
+import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import org.acra.ACRA
 import org.acra.annotation.ReportsCrashes
@@ -64,7 +64,7 @@ open class App : Application(), LifecycleObserver {
     fun onAppBackgrounded() {
         val preferences: PreferencesHelper by injectLazy()
         if (preferences.lockAppAfter().getOrDefault() >= 0) {
-            BiometricUnlockDelegate.locked = true
+            SecureActivityDelegate.locked = true
         }
     }
 
