@@ -105,6 +105,12 @@ object PreferenceKeys {
 
     const val startScreen = "start_screen"
 
+    const val useBiometricLock = "use_biometric_lock"
+
+    const val lockAppAfter = "lock_app_after"
+
+    const val lastAppUnlock = "last_app_unlock"
+
     const val downloadNew = "download_new"
 
     const val downloadNewCategories = "download_new_categories"

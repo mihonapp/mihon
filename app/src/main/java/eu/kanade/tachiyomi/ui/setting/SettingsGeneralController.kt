@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Build
+import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -114,6 +115,36 @@ class SettingsGeneralController : SettingsController() {
             entryValues = arrayOf("1", "2", "3")
             defaultValue = "1"
             summary = "%s"
+        }
+
+        if (BiometricManager.from(context).canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
+            preferenceCategory {
+                titleRes = R.string.pref_category_security
+
+                switchPreference {
+                    key = Keys.useBiometricLock
+                    titleRes = R.string.lock_with_biometrics
+                    defaultValue = false
+                }
+                intListPreference {
+                    key = Keys.lockAppAfter
+                    titleRes = R.string.lock_when_idle
+                    val values = arrayOf("0", "1", "2", "5", "10", "-1")
+                    entries = values.mapNotNull {
+                        when (it) {
+                            "-1" -> context.getString(R.string.lock_never)
+                            "0" -> context.getString(R.string.lock_always)
+                            else -> resources?.getQuantityString(R.plurals.lock_after_mins, it.toInt(), it)
+                        }
+                    }.toTypedArray()
+                    entryValues = values
+                    defaultValue = "0"
+                    summary = "%s"
+
+                    preferences.useBiometricLock().asObservable()
+                            .subscribeUntilDestroy { isVisible = it }
+                }
+            }
         }
     }
 

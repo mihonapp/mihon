@@ -52,6 +52,12 @@ class PreferencesHelper(val context: Context) {
 
     fun startScreen() = prefs.getInt(Keys.startScreen, 1)
 
+    fun useBiometricLock() = rxPrefs.getBoolean(Keys.useBiometricLock, false)
+
+    fun lockAppAfter() = rxPrefs.getInteger(Keys.lockAppAfter, 0)
+
+    fun lastAppUnlock() = rxPrefs.getLong(Keys.lastAppUnlock, 0)
+
     fun clear() = prefs.edit().clear().apply()
 
     fun themeMode() = rxPrefs.getString(Keys.themeMode, Values.THEME_MODE_SYSTEM)

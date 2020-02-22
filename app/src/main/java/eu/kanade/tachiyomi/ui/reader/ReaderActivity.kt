@@ -33,6 +33,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
+import eu.kanade.tachiyomi.ui.security.BiometricUnlockDelegate
 import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.GLUtil
@@ -147,6 +148,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
         config = ReaderConfig()
         initializeMenu()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        BiometricUnlockDelegate.onResume(this)
     }
 
     /**

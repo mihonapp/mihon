@@ -24,6 +24,7 @@
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
 
+    <string name="unlock_library">Unlock Library</string>
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
@@ -130,6 +131,16 @@
     <string name="pref_language">Language</string>
     <string name="system_default">System default</string>
     <string name="pref_date_format">Date format</string>
+
+    <string name="pref_category_security">Security</string>
+    <string name="lock_with_biometrics">Lock with biometrics</string>
+    <string name="lock_when_idle">Lock when idle</string>
+    <string name="lock_always">Always</string>
+    <string name="lock_never">Never</string>
+    <plurals name="lock_after_mins">
+        <item quantity="one">After 1 minute</item>
+        <item quantity="other">After %1$s minutes</item>
+    </plurals>
 
       <!-- Library section -->
     <string name="pref_category_library_display">Display</string>

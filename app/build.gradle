@@ -116,6 +116,11 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.browser:browser:1.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.biometric:biometric:1.0.1'
+
+    final lifecycle_version = '2.1.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
     // UI library
     implementation 'com.google.android.material:material:1.1.0'
