@@ -97,6 +97,21 @@ object EXHMigrations {
                         context.jobScheduler.cancelAll()
                     }
                 }
+                if (oldVersion < 8408) {
+                    db.inTransaction {
+                        // Migrate Tsumino source IDs
+                        db.lowLevel().executeSQL(RawQuery.builder()
+                                .query("""
+                            UPDATE ${MangaTable.TABLE}
+                                SET ${MangaTable.COL_SOURCE} = $TSUMINO_SOURCE_ID
+                                WHERE ${MangaTable.COL_SOURCE} = 6909
+                        """.trimIndent())
+                                .affectsTables(MangaTable.TABLE)
+                                .build())
+                    }
+                }
+
+
 
                 // TODO BE CAREFUL TO NOT FUCK UP MergedSources IF CHANGING URLs
 
@@ -116,6 +131,11 @@ object EXHMigrations {
         // Migrate HentaiCafe source IDs
         if(manga.source == 6908L) {
             manga.source = HENTAI_CAFE_SOURCE_ID
+        }
+
+        // Migrate Tsumino source IDs
+        if(manga.source == 6909L) {
+            manga.source = TSUMINO_SOURCE_ID
         }
 
         // Migrate nhentai URLs

@@ -133,8 +133,10 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
                     }
                     "tags" -> {
                         tags += content.select("a").map {
-                            val ns = if(it.attr("href").startsWith("/tag/male")) "male" else "female"
-                            RaisedTag(ns, it.text().dropLast(2), TAG_TYPE_DEFAULT)
+                            val ns = if(it.attr("href").startsWith("/tag/male")) "male"
+                                     else if (it.attr("href").startsWith("/tag/female")) "female"
+                                     else "misc"
+                            RaisedTag(ns, it.text().dropLast(if (ns=="misc") 0 else 2), TAG_TYPE_DEFAULT)
                         }
                     }
                 }
@@ -361,15 +363,17 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     override fun pageListParse(response: Response): List<Page> {
         val hlId = response.request.url.pathSegments.last().removeSuffix(".js").toLong()
         val str = response.body!!.string()
-        val json = jsonParser.parse(str.removePrefix("var galleryinfo ="))
-        return json.array.mapIndexed { index, jsonElement -> 
+        val json = jsonParser.parse(str.removePrefix("var galleryinfo = "))
+        return json["files"].array.mapIndexed { index, jsonElement -> 
             val hash = jsonElement["hash"].string
+            val ext = if (jsonElement["haswebp"].string=="0") jsonElement["name"].string.split('.').last() else "webp"
+            val path = if (jsonElement["haswebp"].string=="0") "images" else "webp"
             val hashPath1 = hash.takeLast(1)
             val hashPath2 = hash.takeLast(3).take(2)
             Page(
                     index,
                     "",
-            "https://${subdomainFromGalleryId(hlId)}a.hitomi.la/webp/$hashPath1/$hashPath2/$hash.webp"
+            "https://${subdomainFromGalleryId(hlId)}a.hitomi.la/$path/$hashPath1/$hashPath2/$hash.$ext"
             )
         }
     }

@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.jobScheduler
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
+import exh.EXHMigrations
 import exh.eh.EHentaiUpdateWorker
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.base.getFlatMetadataForManga
@@ -28,6 +29,11 @@ object DebugFunctions {
     val db: DatabaseHelper by injectLazy()
     val prefs: PreferencesHelper by injectLazy()
     val sourceManager: SourceManager by injectLazy()
+
+    fun forceUpgradeMigration() {
+	prefs.eh_lastVersionCode().set(0)
+        EXHMigrations.upgrade(prefs)
+    }
 
     fun resetAgedFlagInEXHManga() {
         runBlocking {

@@ -77,7 +77,7 @@ class TsuminoSearchMetadata : RaisedSearchMetadata() {
         val BASE_URL = "https://www.tsumino.com"
 
         fun tmIdFromUrl(url: String)
-                = Uri.parse(url).pathSegments[2]
+                = Uri.parse(url).lastPathSegment
 
         fun mangaUrlFromId(id: String) = "/Book/Info/$id"
 
