@@ -119,7 +119,7 @@ internal class DownloadNotifier(private val context: Context) {
                     NotificationReceiver.resumeDownloadsPendingBroadcast(context))
             //Clear action
             addAction(R.drawable.ic_close_white_24dp,
-                    context.getString(R.string.action_clear),
+                    context.getString(R.string.action_cancel_all),
                     NotificationReceiver.clearDownloadsPendingBroadcast(context))
         }
 
