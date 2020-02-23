@@ -113,10 +113,7 @@ class WebtoonPageHolder(
     private var readImageHeaderSubscription: Subscription? = null
 
     init {
-        frame.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        if (viewer.config.padPagesVert) {
-            frame.setPadding(0, 0, 0, 15.dpToPx)
-        }
+        refreshLayoutParams()
     }
 
     /**
@@ -125,6 +122,15 @@ class WebtoonPageHolder(
     fun bind(page: ReaderPage) {
         this.page = page
         observeStatus()
+        refreshLayoutParams()
+    }
+
+    private fun refreshLayoutParams() {
+        frame.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+            if (viewer.config.padPagesVert) {
+                bottomMargin = 15.dpToPx
+            }
+        }
     }
 
     /**
