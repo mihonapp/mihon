@@ -120,6 +120,11 @@ class SettingsReaderController : SettingsController() {
                 titleRes = R.string.pref_crop_borders
                 defaultValue = false
             }
+            switchPreference {
+                key = Keys.padPagesVertWebtoon
+                titleRes = R.string.pref_webtoon_padding_vert
+                defaultValue = false
+            }
         }
         preferenceCategory {
             titleRes = R.string.pref_reader_navigation
