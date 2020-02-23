@@ -278,18 +278,20 @@ class SettingsBackupController : SettingsController() {
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {
             val activity = activity!!
             val unifile = UniFile.fromUri(activity, args.getParcelable(KEY_URI))
-            return MaterialDialog.Builder(activity)
-                    .title(R.string.backup_created)
-                    .content(activity.getString(R.string.file_saved, unifile.filePath))
-                    .positiveText(R.string.action_close)
-                    .negativeText(R.string.action_export)
-                    .onNegative { _, _ ->
-                        val sendIntent = Intent(Intent.ACTION_SEND)
-                        sendIntent.type = "application/json"
-                        sendIntent.putExtra(Intent.EXTRA_STREAM, unifile.uri)
-                        startActivity(Intent.createChooser(sendIntent, ""))
-                    }
-                    .build()
+            return MaterialDialog.Builder(activity).apply {
+                title(R.string.backup_created)
+                if (unifile.filePath != null) {
+                    content(activity.getString(R.string.file_saved, unifile.filePath))
+                }
+                positiveText(R.string.action_close)
+                negativeText(R.string.action_export)
+                onNegative { _, _ ->
+                    val sendIntent = Intent(Intent.ACTION_SEND)
+                    sendIntent.type = "application/json"
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, unifile.uri)
+                    startActivity(Intent.createChooser(sendIntent, ""))
+                }
+            }.build()
         }
 
         private companion object {
