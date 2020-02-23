@@ -15,10 +15,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.library.LibraryController
-import eu.kanade.tachiyomi.util.preference.onClick
-import eu.kanade.tachiyomi.util.preference.preference
-import eu.kanade.tachiyomi.util.preference.summaryRes
-import eu.kanade.tachiyomi.util.preference.titleRes
+import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.toast
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -36,6 +33,12 @@ class SettingsAdvancedController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.pref_category_advanced
 
+        switchPreference {
+            key = "acra.enable"
+            titleRes = R.string.pref_enable_acra
+            summaryRes = R.string.pref_acra_summary
+            defaultValue = true
+        }
         preference {
             key = CLEAR_CACHE_KEY
             titleRes = R.string.pref_clear_chapter_cache

@@ -46,12 +46,6 @@ class SettingsAboutController : SettingsController() {
         titleRes = R.string.pref_category_about
 
         switchPreference {
-            key = "acra.enable"
-            titleRes = R.string.pref_enable_acra
-            summaryRes = R.string.pref_acra_summary
-            defaultValue = true
-        }
-        switchPreference {
             key = Keys.automaticUpdates
             titleRes = R.string.pref_enable_automatic_updates
             summaryRes = R.string.pref_enable_automatic_updates_summary
