@@ -182,7 +182,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
         if (size > 0) {
             empty_view?.hide()
         } else {
-            empty_view?.show(R.drawable.ic_update_black_128dp, R.string.information_no_recent)
+            empty_view?.show(R.drawable.ic_new_releases_black_128dp, R.string.information_no_recent)
         }
     }
 

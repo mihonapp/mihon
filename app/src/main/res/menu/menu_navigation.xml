@@ -10,11 +10,11 @@
             android:title="@string/label_library" />
         <item
             android:id="@+id/nav_drawer_recent_updates"
-            android:icon="@drawable/ic_update_black_24dp"
+            android:icon="@drawable/ic_new_releases_black_24dp"
             android:title="@string/label_recent_updates" />
         <item
             android:id="@+id/nav_drawer_recently_read"
-            android:icon="@drawable/ic_glasses_black_24dp"
+            android:icon="@drawable/ic_history_black_24dp"
             android:title="@string/label_recent_manga" />
         <item
             android:id="@+id/nav_drawer_catalogues"
