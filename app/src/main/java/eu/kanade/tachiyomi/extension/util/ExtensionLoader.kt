@@ -100,6 +100,12 @@ internal object ExtensionLoader {
         val versionName = pkgInfo.versionName
         val versionCode = pkgInfo.versionCode
 
+        if (versionName.isNullOrEmpty()) {
+            val exception = Exception("Missing versionName for extension $extName")
+            Timber.w(exception)
+            return LoadResult.Error(exception)
+        }
+
         // Validate lib version
         val majorLibVersion = versionName.substringBefore('.').toInt()
         if (majorLibVersion < LIB_VERSION_MIN || majorLibVersion > LIB_VERSION_MAX) {
