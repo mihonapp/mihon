@@ -118,7 +118,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.biometric:biometric:1.0.1'
 
-    final lifecycle_version = '2.1.0'
+    final lifecycle_version = '2.2.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
