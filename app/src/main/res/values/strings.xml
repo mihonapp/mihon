@@ -131,6 +131,7 @@
     <string name="pref_language">Language</string>
     <string name="system_default">System default</string>
     <string name="pref_date_format">Date format</string>
+    <string name="pref_manage_notifications">Manage notifications</string>
 
     <string name="pref_category_security">Security</string>
     <string name="lock_with_biometrics">Lock with biometrics</string>
