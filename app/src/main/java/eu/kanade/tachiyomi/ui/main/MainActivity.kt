@@ -1,14 +1,10 @@
 package eu.kanade.tachiyomi.ui.main
 
-import android.animation.ObjectAnimator
 import android.app.SearchManager
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import com.bluelinelabs.conductor.*
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
@@ -18,12 +14,11 @@ import eu.kanade.tachiyomi.ui.base.controller.*
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
 import eu.kanade.tachiyomi.ui.download.DownloadController
-import eu.kanade.tachiyomi.ui.extension.ExtensionController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
-import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 import kotlinx.android.synthetic.main.main_activity.*
 
 
@@ -31,15 +26,13 @@ class MainActivity : BaseActivity() {
 
     private lateinit var router: Router
 
-    private var drawerArrow: DrawerArrowDrawable? = null
-
     private var secondaryDrawer: ViewGroup? = null
 
     private val startScreenId by lazy {
         when (preferences.startScreen()) {
-            2 -> R.id.nav_drawer_recently_read
-            3 -> R.id.nav_drawer_recent_updates
-            else -> R.id.nav_drawer_library
+            2 -> R.id.nav_history
+            3 -> R.id.nav_updates
+            else -> R.id.nav_library
         }
     }
 
@@ -58,33 +51,25 @@ class MainActivity : BaseActivity() {
 
         setSupportActionBar(toolbar)
 
-        drawerArrow = DrawerArrowDrawable(this)
-        drawerArrow?.color = Color.WHITE
-        toolbar.navigationIcon = drawerArrow
-
         tabAnimator = TabsAnimator(tabs)
 
-        // Set behavior of Navigation drawer
-        nav_view.setNavigationItemSelectedListener { item ->
+        // Set behavior of bottom nav
+        bottom_nav.setOnNavigationItemSelectedListener { item ->
             val id = item.itemId
 
             val currentRoot = router.backstack.firstOrNull()
             if (currentRoot?.tag()?.toIntOrNull() != id) {
                 when (id) {
-                    R.id.nav_drawer_library -> setRoot(LibraryController(), id)
-                    R.id.nav_drawer_recent_updates -> setRoot(RecentChaptersController(), id)
-                    R.id.nav_drawer_recently_read -> setRoot(RecentlyReadController(), id)
-                    R.id.nav_drawer_catalogues -> setRoot(CatalogueController(), id)
-                    R.id.nav_drawer_extensions -> setRoot(ExtensionController(), id)
-                    R.id.nav_drawer_downloads -> {
-                        router.pushController(DownloadController().withFadeTransaction())
-                    }
-                    R.id.nav_drawer_settings -> {
-                        router.pushController(SettingsMainController().withFadeTransaction())
-                    }
+                    R.id.nav_library -> setRoot(LibraryController(), id)
+                    R.id.nav_updates -> setRoot(RecentChaptersController(), id)
+                    R.id.nav_history -> setRoot(RecentlyReadController(), id)
+                    R.id.nav_catalogues -> setRoot(CatalogueController(), id)
+                    R.id.nav_more -> setRoot(MoreController(), id)
                 }
+            } else {
+                router.popToRoot()
             }
-            drawer.closeDrawer(GravityCompat.START)
+
             true
         }
 
@@ -143,18 +128,18 @@ class MainActivity : BaseActivity() {
         }
 
         when (intent.action) {
-            SHORTCUT_LIBRARY -> setSelectedDrawerItem(R.id.nav_drawer_library)
-            SHORTCUT_RECENTLY_UPDATED -> setSelectedDrawerItem(R.id.nav_drawer_recent_updates)
-            SHORTCUT_RECENTLY_READ -> setSelectedDrawerItem(R.id.nav_drawer_recently_read)
-            SHORTCUT_CATALOGUES -> setSelectedDrawerItem(R.id.nav_drawer_catalogues)
+            SHORTCUT_LIBRARY -> setSelectedDrawerItem(R.id.nav_library)
+            SHORTCUT_RECENTLY_UPDATED -> setSelectedDrawerItem(R.id.nav_updates)
+            SHORTCUT_RECENTLY_READ -> setSelectedDrawerItem(R.id.nav_history)
+            SHORTCUT_CATALOGUES -> setSelectedDrawerItem(R.id.nav_catalogues)
             SHORTCUT_MANGA -> {
                 val extras = intent.extras ?: return false
-                router.setRoot(RouterTransaction.with(MangaController(extras)))
+                setSelectedDrawerItem(R.id.nav_library)
+                router.pushController(RouterTransaction.with(MangaController(extras)))
             }
             SHORTCUT_DOWNLOADS -> {
-                if (router.backstack.none { it.controller() is DownloadController }) {
-                    setSelectedDrawerItem(R.id.nav_drawer_downloads)
-                }
+                setSelectedDrawerItem(R.id.nav_more)
+                router.pushController(RouterTransaction.with(DownloadController()))
             }
             Intent.ACTION_SEARCH, "com.google.android.gms.actions.SEARCH_ACTION" -> {
                 //If the intent match the "standard" Android search intent
@@ -186,7 +171,7 @@ class MainActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        nav_view?.setNavigationItemSelectedListener(null)
+        bottom_nav?.setOnNavigationItemSelectedListener(null)
         toolbar?.setNavigationOnClickListener(null)
     }
 
@@ -203,8 +188,7 @@ class MainActivity : BaseActivity() {
 
     private fun setSelectedDrawerItem(itemId: Int) {
         if (!isFinishing) {
-            nav_view.setCheckedItem(itemId)
-            nav_view.menu.performIdentifierAction(itemId, 0)
+            bottom_nav.selectedItemId = itemId
         }
     }
 
@@ -217,14 +201,7 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        val showHamburger = router.backstackSize == 1
-        if (showHamburger) {
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        } else {
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        }
-
-        ObjectAnimator.ofFloat(drawerArrow, "progress", if (showHamburger) 0f else 1f).start()
+        supportActionBar?.setDisplayHomeAsUpEnabled(router.backstackSize != 1)
 
         if (from is TabbedController) {
             from.cleanupTabs(tabs)

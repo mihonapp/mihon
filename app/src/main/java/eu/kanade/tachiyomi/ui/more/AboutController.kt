@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.setting
+package eu.kanade.tachiyomi.ui.more
 
 import android.app.Dialog
 import android.content.Intent
@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.data.updater.UpdaterService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.main.ChangelogDialogController
+import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import eu.kanade.tachiyomi.util.preference.*
@@ -29,7 +30,7 @@ import java.util.Locale
 import java.util.TimeZone
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
-class SettingsAboutController : SettingsController() {
+class AboutController : SettingsController() {
 
     /**
      * Checks for new releases

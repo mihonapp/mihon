@@ -33,7 +33,6 @@ import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.inflate
 import kotlinx.android.synthetic.main.library_controller.empty_view
@@ -395,10 +394,6 @@ class LibraryController(
                 item.isChecked = !item.isChecked
                 preferences.downloadBadge().set(item.isChecked)
                 onDownloadBadgeChanged()
-            }
-
-            R.id.action_source_migration -> {
-                router.pushController(MigrationController().withFadeTransaction())
             }
         }
 

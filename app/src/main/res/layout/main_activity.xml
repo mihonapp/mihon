@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -40,18 +39,19 @@
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
             android:id="@+id/controller_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?attr/colorPrimary"
+            app:itemIconTint="@drawable/bottom_nav_item_selector"
+            app:itemTextColor="@drawable/bottom_nav_item_selector"
+            app:menu="@menu/bottom_nav" />
 
     </LinearLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:theme="?attr/navigation_view_theme"
-        app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/menu_navigation" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
