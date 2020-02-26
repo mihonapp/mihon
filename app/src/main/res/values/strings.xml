@@ -144,6 +144,7 @@
         <item quantity="other">After %1$s minutes</item>
     </plurals>
     <string name="secure_screen">Secure screen</string>
+    <string name="secure_screen_summary">Hide app contents when switching apps and block screenshots</string>
 
       <!-- Library section -->
     <string name="pref_category_library_display">Display</string>

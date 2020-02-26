@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
+import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -171,6 +172,7 @@ class SettingsGeneralController : SettingsController() {
             switchPreference {
                 key = Keys.secureScreen
                 titleRes = R.string.secure_screen
+                summaryRes = R.string.secure_screen_summary
                 defaultValue = false
             }
         }
