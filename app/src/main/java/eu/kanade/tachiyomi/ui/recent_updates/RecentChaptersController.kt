@@ -254,7 +254,6 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
     override fun onCoverClick(position: Int) {
         val chapterClicked = adapter?.getItem(position) as? RecentChapterItem ?: return
         openManga(chapterClicked)
-
     }
 
     fun openManga(chapter: RecentChapterItem) {
@@ -333,5 +332,4 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
         adapter?.clearSelection()
         actionMode = null
     }
-
 }

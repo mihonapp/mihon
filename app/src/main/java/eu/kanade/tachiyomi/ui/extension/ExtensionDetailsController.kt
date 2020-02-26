@@ -196,5 +196,4 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
         const val PKGNAME_KEY = "pkg_name"
         const val LASTOPENPREFERENCE_KEY = "last_open_preference"
     }
-
 }

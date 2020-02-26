@@ -41,7 +41,6 @@ class KitsuSearchManga(obj: JsonObject) {
     }
 }
 
-
 class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
     val id by manga.byInt
     private val canonicalTitle by manga["attributes"].byString
@@ -78,7 +77,6 @@ class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
         "planned" -> Kitsu.PLAN_TO_READ
         else -> throw Exception("Unknown status")
     }
-
 }
 
 fun Track.toKitsuStatus() = when (status) {

@@ -101,5 +101,4 @@ class ExtensionHolder(view: View, override val adapter: ExtensionAdapter) :
             setText(R.string.ext_install)
         }
     }
-
 }

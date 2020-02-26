@@ -13,6 +13,8 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 import kotlinx.android.synthetic.main.reader_color_filter.*
 import kotlinx.android.synthetic.main.reader_color_filter_sheet.brightness_overlay
 import kotlinx.android.synthetic.main.reader_color_filter_sheet.color_overlay
@@ -20,8 +22,6 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
-import java.util.concurrent.TimeUnit
-import kotlin.math.abs
 
 /**
  * Color filter sheet to toggle custom filter and brightness overlay.
@@ -181,7 +181,7 @@ class ReaderColorFilterSheet(activity: ReaderActivity) : BottomSheetDialog(activ
         val green = getGreenFromColor(color)
         val blue = getBlueFromColor(color)
 
-        //Initialize values
+        // Initialize values
         with(view) {
             txt_color_filter_alpha_value.text = alpha.toString()
 
@@ -324,5 +324,4 @@ class ReaderColorFilterSheet(activity: ReaderActivity) : BottomSheetDialog(activ
         /** Integer mask of blue value **/
         const val BLUE_MASK: Long = 0x000000FF
     }
-
 }

@@ -41,6 +41,9 @@ import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
+import java.io.File
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 import kotlinx.android.synthetic.main.reader_activity.*
 import me.zhanghai.android.systemuihelper.SystemUiHelper
 import nucleus.factory.RequiresPresenter
@@ -50,9 +53,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.io.File
-import java.util.concurrent.TimeUnit
-import kotlin.math.abs
 
 /**
  * Activity containing the reader of Tachiyomi. This activity is mostly a container of the
@@ -747,7 +747,5 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             color_overlay.visibility = View.VISIBLE
             color_overlay.setFilterColor(value, preferences.colorFilterMode().getOrDefault())
         }
-
     }
-
 }

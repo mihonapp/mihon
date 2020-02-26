@@ -21,7 +21,6 @@ import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
 import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
 import kotlinx.android.synthetic.main.main_activity.*
 
-
 class MainActivity : BaseActivity() {
 
     private lateinit var router: Router
@@ -92,17 +91,25 @@ class MainActivity : BaseActivity() {
         }
 
         router.addChangeListener(object : ControllerChangeHandler.ControllerChangeListener {
-            override fun onChangeStarted(to: Controller?, from: Controller?, isPush: Boolean,
-                                         container: ViewGroup, handler: ControllerChangeHandler) {
+            override fun onChangeStarted(
+                to: Controller?,
+                from: Controller?,
+                isPush: Boolean,
+                container: ViewGroup,
+                handler: ControllerChangeHandler
+            ) {
 
                 syncActivityViewWithController(to, from)
             }
 
-            override fun onChangeCompleted(to: Controller?, from: Controller?, isPush: Boolean,
-                                           container: ViewGroup, handler: ControllerChangeHandler) {
-
+            override fun onChangeCompleted(
+                to: Controller?,
+                from: Controller?,
+                isPush: Boolean,
+                container: ViewGroup,
+                handler: ControllerChangeHandler
+            ) {
             }
-
         })
 
         syncActivityViewWithController(router.backstack.lastOrNull()?.controller())
@@ -142,10 +149,10 @@ class MainActivity : BaseActivity() {
                 router.pushController(RouterTransaction.with(DownloadController()))
             }
             Intent.ACTION_SEARCH, "com.google.android.gms.actions.SEARCH_ACTION" -> {
-                //If the intent match the "standard" Android search intent
+                // If the intent match the "standard" Android search intent
                 // or the Google-specific search intent (triggered by saying or typing "search *query* on *Tachiyomi*" in Google Search/Google Assistant)
 
-                //Get the search query provided in extras, and if not null, perform a global search with it.
+                // Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY)
                 if (query != null && query.isNotEmpty()) {
                     if (router.backstackSize > 1) {
@@ -245,5 +252,4 @@ class MainActivity : BaseActivity() {
         const val INTENT_SEARCH_QUERY = "query"
         const val INTENT_SEARCH_FILTER = "filter"
     }
-
 }

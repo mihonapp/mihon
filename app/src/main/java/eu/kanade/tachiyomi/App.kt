@@ -90,5 +90,4 @@ open class App : Application(), LifecycleObserver {
     protected open fun setupNotificationChannels() {
         Notifications.createChannels(this)
     }
-
 }

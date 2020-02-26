@@ -233,7 +233,6 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
             }
             actionMode?.invalidate()
         }
-
     }
 
     private fun initialFetchChapters() {
@@ -466,7 +465,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
 
     fun onChaptersDeleted(chapters: List<ChapterItem>) {
         dismissDeletingDialog()
-        //this is needed so the downloaded text gets removed from the item
+        // this is needed so the downloaded text gets removed from the item
         chapters.forEach {
             adapter?.updateItem(it)
         }

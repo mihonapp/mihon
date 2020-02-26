@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.ui.setting
 import android.os.Build
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.util.preference.*
 
 class SettingsReaderController : SettingsController() {
 
@@ -151,5 +151,4 @@ class SettingsReaderController : SettingsController() {
             }.apply { dependency = Keys.readWithVolumeKeys }
         }
     }
-
 }

@@ -244,7 +244,7 @@ class CategoryController : NucleusController<CategoryPresenter>(),
     private fun toggleSelection(position: Int) {
         val adapter = adapter ?: return
 
-        //Mark the position selected
+        // Mark the position selected
         adapter.toggleSelection(position)
 
         if (adapter.selectedItemCount == 0) {
@@ -321,5 +321,4 @@ class CategoryController : NucleusController<CategoryPresenter>(),
     fun onCategoryExistsError() {
         activity?.toast(R.string.error_category_exists)
     }
-
 }

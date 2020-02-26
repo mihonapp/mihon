@@ -18,7 +18,6 @@ import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import kotlinx.android.synthetic.main.extension_controller.ext_recycler
 import kotlinx.android.synthetic.main.extension_controller.ext_swipe_refresh
 
-
 /**
  * Controller to manage the catalogues available in the app.
  */

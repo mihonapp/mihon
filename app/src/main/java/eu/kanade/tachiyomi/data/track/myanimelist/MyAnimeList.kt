@@ -159,5 +159,4 @@ class Myanimelist(private val context: Context, id: Int) : TrackService(id) {
 
         return ckCount == 2
     }
-
 }

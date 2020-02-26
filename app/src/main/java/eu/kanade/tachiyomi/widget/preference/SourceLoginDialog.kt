@@ -68,5 +68,4 @@ class SourceLoginDialog(bundle: Bundle? = null) : LoginDialogPreference(bundle) 
     interface Listener {
         fun loginDialogClosed(source: LoginSource)
     }
-
 }

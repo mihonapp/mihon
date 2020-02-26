@@ -29,11 +29,11 @@ import uy.kohesive.injekt.api.get
  * Presenter of [BrowseCatalogueController].
  */
 open class BrowseCataloguePresenter(
-        sourceId: Long,
-        sourceManager: SourceManager = Injekt.get(),
-        private val db: DatabaseHelper = Injekt.get(),
-        private val prefs: PreferencesHelper = Injekt.get(),
-        private val coverCache: CoverCache = Injekt.get()
+    sourceId: Long,
+    sourceManager: SourceManager = Injekt.get(),
+    private val db: DatabaseHelper = Injekt.get(),
+    private val prefs: PreferencesHelper = Injekt.get(),
+    private val coverCache: CoverCache = Injekt.get()
 ) : BasePresenter<BrowseCatalogueController>() {
 
     /**
@@ -372,5 +372,4 @@ open class BrowseCataloguePresenter(
             changeMangaFavorite(manga)
         }
     }
-
 }

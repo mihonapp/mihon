@@ -18,8 +18,12 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
 
     private var preselected = emptyArray<Int>()
 
-    constructor(target: T, mangas: List<Manga>, categories: List<Category>,
-                preselected: Array<Int>) : this() {
+    constructor(
+        target: T,
+        mangas: List<Manga>,
+        categories: List<Category>,
+        preselected: Array<Int>
+    ) : this() {
 
         this.mangas = mangas
         this.categories = categories
@@ -44,5 +48,4 @@ class ChangeMangaCategoriesDialog<T>(bundle: Bundle? = null) :
     interface Listener {
         fun updateCategoriesForMangas(mangas: List<Manga>, categories: List<Category>)
     }
-
 }

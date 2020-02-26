@@ -19,8 +19,8 @@ import kotlinx.android.synthetic.main.catalogue_global_search_controller.recycle
  * [CatalogueSearchCardAdapter.OnMangaClickListener] called when manga is clicked in global search
  */
 open class CatalogueSearchController(
-        protected val initialQuery: String? = null,
-        protected val extensionFilter: String? = null
+    protected val initialQuery: String? = null,
+    protected val extensionFilter: String? = null
 ) : NucleusController<CatalogueSearchPresenter>(),
         CatalogueSearchCardAdapter.OnMangaClickListener {
 
@@ -186,5 +186,4 @@ open class CatalogueSearchController(
     fun onMangaInitialized(source: CatalogueSource, manga: Manga) {
         getHolder(source)?.setImage(manga)
     }
-
 }

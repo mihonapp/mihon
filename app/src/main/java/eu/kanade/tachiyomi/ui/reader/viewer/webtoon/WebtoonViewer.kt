@@ -12,10 +12,10 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
-import rx.subscriptions.CompositeSubscription
-import timber.log.Timber
 import kotlin.math.max
 import kotlin.math.min
+import rx.subscriptions.CompositeSubscription
+import timber.log.Timber
 
 /**
  * Implementation of a [BaseViewer] to display pages with a [RecyclerView].
@@ -264,5 +264,4 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
         val position = layoutManager.findLastEndVisibleItemPosition()
         adapter.notifyItemRangeChanged(max(0, position - 1), min(2, adapter.itemCount - position))
     }
-
 }

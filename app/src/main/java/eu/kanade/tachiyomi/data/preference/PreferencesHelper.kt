@@ -8,14 +8,14 @@ import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences.Preference
 import com.f2prateek.rx.preferences.RxSharedPreferences
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.Source
 import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
-import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
 fun <T> Preference<T>.getOrDefault(): T = get() ?: defaultValue()!!
 

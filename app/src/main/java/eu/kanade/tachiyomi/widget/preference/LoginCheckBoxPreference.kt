@@ -15,9 +15,9 @@ import kotlinx.android.synthetic.main.pref_item_source.view.login
 import kotlinx.android.synthetic.main.pref_item_source.view.login_frame
 
 class LoginCheckBoxPreference @JvmOverloads constructor(
-        context: Context,
-        val source: HttpSource,
-        attrs: AttributeSet? = null
+    context: Context,
+    val source: HttpSource,
+    attrs: AttributeSet? = null
 ) : CheckBoxPreference(context, attrs) {
 
     init {
@@ -54,5 +54,4 @@ class LoginCheckBoxPreference @JvmOverloads constructor(
     public override fun notifyChanged() {
         super.notifyChanged()
     }
-
 }

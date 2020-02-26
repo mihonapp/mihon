@@ -37,7 +37,6 @@ class DialogCustomDownloadView @JvmOverloads constructor(context: Context, attrs
         addView(inflate(R.layout.download_custom_amount))
     }
 
-
     /**
      * Called when view is added
      *

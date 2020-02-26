@@ -34,11 +34,11 @@ import uy.kohesive.injekt.injectLazy
  * @param preferencesHelper manages the preference calls.
  */
 open class CatalogueSearchPresenter(
-        val initialQuery: String? = "",
-        val initialExtensionFilter: String? = null,
-        val sourceManager: SourceManager = Injekt.get(),
-        val db: DatabaseHelper = Injekt.get(),
-        val preferencesHelper: PreferencesHelper = Injekt.get()
+    val initialQuery: String? = "",
+    val initialExtensionFilter: String? = null,
+    val sourceManager: SourceManager = Injekt.get(),
+    val db: DatabaseHelper = Injekt.get(),
+    val preferencesHelper: PreferencesHelper = Injekt.get()
 ) : BasePresenter<CatalogueSearchController>() {
 
     /**
@@ -204,7 +204,6 @@ open class CatalogueSearchPresenter(
                             .map { Pair(it, source) }
                             .concatMap { getMangaDetailsObservable(it.first, it.second) }
                             .map { Pair(source as CatalogueSource, it) }
-
                 }
                 .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())

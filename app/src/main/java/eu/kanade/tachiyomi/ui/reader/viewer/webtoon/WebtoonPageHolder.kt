@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.Gravity
@@ -32,15 +31,14 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressBar
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.system.dpToPx
-import eu.kanade.tachiyomi.util.system.pxToDp
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
+import java.io.InputStream
+import java.util.concurrent.TimeUnit
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.io.InputStream
-import java.util.concurrent.TimeUnit
 
 /**
  * Holder of the webtoon reader for a single page of a chapter.
@@ -50,8 +48,8 @@ import java.util.concurrent.TimeUnit
  * @constructor creates a new webtoon holder.
  */
 class WebtoonPageHolder(
-        private val frame: FrameLayout,
-        viewer: WebtoonViewer
+    private val frame: FrameLayout,
+    viewer: WebtoonViewer
 ) : WebtoonBaseHolder(frame, viewer) {
 
     /**
@@ -493,21 +491,21 @@ class WebtoonPageHolder(
                 .transition(DrawableTransitionOptions.with(NoTransition.getFactory()))
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
                     ): Boolean {
                         onImageDecodeError()
                         return false
                     }
 
                     override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
                     ): Boolean {
                         if (resource is GifDrawable) {
                             resource.setLoopCount(GifDrawable.LOOP_INTRINSIC)
@@ -518,5 +516,4 @@ class WebtoonPageHolder(
                 })
                 .into(this)
     }
-
 }

@@ -1,14 +1,14 @@
 package eu.kanade.tachiyomi.network
 
+import java.io.IOException
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
 import rx.Observable
 import rx.Producer
 import rx.Subscription
-import java.io.IOException
-import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 fun Call.asObservable(): Observable<Response> {
     return Observable.unsafeCreate { subscriber ->

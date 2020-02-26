@@ -65,8 +65,8 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
     }
 
     private fun <T> Preference<T>.register(
-            valueAssignment: (T) -> Unit,
-            onChanged: (T) -> Unit = {}
+        valueAssignment: (T) -> Unit,
+        onChanged: (T) -> Unit = {}
     ) {
         asObservable()
                 .doOnNext(valueAssignment)
@@ -76,5 +76,4 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
                 .subscribe()
                 .addTo(subscriptions)
     }
-
 }

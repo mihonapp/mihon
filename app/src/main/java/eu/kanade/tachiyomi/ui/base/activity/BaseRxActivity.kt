@@ -24,5 +24,4 @@ abstract class BaseRxActivity<P : BasePresenter<*>> : NucleusAppCompatActivity<P
 
         SecureActivityDelegate.onResume(this)
     }
-
 }

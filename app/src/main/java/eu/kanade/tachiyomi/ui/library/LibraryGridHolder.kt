@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.catalogue_grid_item.*
  * @constructor creates a new library holder.
  */
 class LibraryGridHolder(
-        private val view: View,
-        private val adapter: FlexibleAdapter<*>
+    private val view: View,
+    private val adapter: FlexibleAdapter<*>
 
 ) : LibraryHolder(view, adapter) {
 
@@ -42,7 +42,7 @@ class LibraryGridHolder(
             visibility = if (item.downloadCount > 0) View.VISIBLE else View.GONE
             text = item.downloadCount.toString()
         }
-        //set local visibility if its local manga
+        // set local visibility if its local manga
         local_text.visibility = if (item.manga.source == LocalSource.ID) View.VISIBLE else View.GONE
 
         // Update the cover.
@@ -53,5 +53,4 @@ class LibraryGridHolder(
                 .centerCrop()
                 .into(thumbnail)
     }
-
 }

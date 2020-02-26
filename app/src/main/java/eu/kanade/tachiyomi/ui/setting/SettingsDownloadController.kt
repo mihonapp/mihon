@@ -14,16 +14,16 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.getFilePicker
+import java.io.File
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.io.File
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsDownloadController : SettingsController() {
 

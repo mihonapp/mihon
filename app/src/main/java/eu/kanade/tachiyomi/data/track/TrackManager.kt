@@ -32,5 +32,4 @@ class TrackManager(private val context: Context) {
     fun getService(id: Int) = services.find { it.id == id }
 
     fun hasLoggedServices() = services.any { it.isLogged }
-
 }

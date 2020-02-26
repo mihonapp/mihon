@@ -26,17 +26,17 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.lang.chop
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import eu.kanade.tachiyomi.util.system.sendLocalBroadcast
-import rx.Observable
-import rx.Subscription
-import rx.schedulers.Schedulers
-import timber.log.Timber
-import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import rx.Observable
+import rx.Subscription
+import rx.schedulers.Schedulers
+import timber.log.Timber
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Restores backup from json file
@@ -118,7 +118,6 @@ class BackupRestoreService : Service() {
      * Tracking manager
      */
     internal val trackManager: TrackManager by injectLazy()
-
 
     private lateinit var executor: ExecutorService
 
@@ -250,7 +249,6 @@ class BackupRestoreService : Service() {
                         putExtra(BackupConst.ACTION, BackupConst.ACTION_RESTORE_COMPLETED_DIALOG)
                     }
                     sendLocalBroadcast(completeIntent)
-
                 }
                 .doOnError { error ->
                     Timber.e(error)
@@ -296,9 +294,13 @@ class BackupRestoreService : Service() {
      * @param tracks tracking data from json
      * @return [Observable] containing manga restore information
      */
-    private fun getMangaRestoreObservable(manga: Manga, chapters: List<Chapter>,
-                                          categories: List<String>, history: List<DHistory>,
-                                          tracks: List<Track>): Observable<Manga>? {
+    private fun getMangaRestoreObservable(
+        manga: Manga,
+        chapters: List<Chapter>,
+        categories: List<String>,
+        history: List<DHistory>,
+        tracks: List<Track>
+    ): Observable<Manga>? {
         // Get source
         val source = backupManager.sourceManager.getOrStub(manga.source)
         val dbManga = backupManager.getMangaFromDatabase(manga)
@@ -321,9 +323,14 @@ class BackupRestoreService : Service() {
      * @param chapters chapters of manga that needs updating
      * @param categories categories that need updating
      */
-    private fun mangaFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>,
-                                     categories: List<String>, history: List<DHistory>,
-                                     tracks: List<Track>): Observable<Manga> {
+    private fun mangaFetchObservable(
+        source: Source,
+        manga: Manga,
+        chapters: List<Chapter>,
+        categories: List<String>,
+        history: List<DHistory>,
+        tracks: List<Track>
+    ): Observable<Manga> {
         return backupManager.restoreMangaFetchObservable(source, manga)
                 .onErrorReturn {
                     errors.add(Date() to "${manga.title} - ${it.message}")
@@ -349,9 +356,14 @@ class BackupRestoreService : Service() {
                 }
     }
 
-    private fun mangaNoFetchObservable(source: Source, backupManga: Manga, chapters: List<Chapter>,
-                                       categories: List<String>, history: List<DHistory>,
-                                       tracks: List<Track>): Observable<Manga> {
+    private fun mangaNoFetchObservable(
+        source: Source,
+        backupManga: Manga,
+        chapters: List<Chapter>,
+        categories: List<String>,
+        history: List<DHistory>,
+        tracks: List<Track>
+    ): Observable<Manga> {
 
         return Observable.just(backupManga)
                 .flatMap { manga ->
@@ -434,8 +446,13 @@ class BackupRestoreService : Service() {
      * @param amount total restoreAmount of manga
      * @param title title of restored manga
      */
-    private fun showRestoreProgress(progress: Int, amount: Int, title: String, errors: Int,
-                                    content: String = getString(R.string.dialog_restoring_backup, title.chop(15))) {
+    private fun showRestoreProgress(
+        progress: Int,
+        amount: Int,
+        title: String,
+        errors: Int,
+        content: String = getString(R.string.dialog_restoring_backup, title.chop(15))
+    ) {
         val intent = Intent(BackupConst.INTENT_FILTER).apply {
             putExtra(BackupConst.EXTRA_PROGRESS, progress)
             putExtra(BackupConst.EXTRA_AMOUNT, amount)
@@ -445,5 +462,4 @@ class BackupRestoreService : Service() {
         }
         sendLocalBroadcast(intent)
     }
-
 }

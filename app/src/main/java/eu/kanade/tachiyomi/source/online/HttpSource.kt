@@ -6,15 +6,15 @@ import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.network.newCallWithProgress
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.*
+import java.net.URI
+import java.net.URISyntaxException
+import java.security.MessageDigest
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
-import java.net.URI
-import java.net.URISyntaxException
-import java.security.MessageDigest
 
 /**
  * A simple implementation for sources from a website.

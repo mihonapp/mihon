@@ -11,5 +11,4 @@ interface LoginSource : Source {
     fun login(username: String, password: String): Observable<Boolean>
 
     fun isAuthenticationSuccessful(response: Response): Boolean
-
 }

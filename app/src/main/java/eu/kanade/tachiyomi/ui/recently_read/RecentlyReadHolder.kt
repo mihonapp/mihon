@@ -7,8 +7,8 @@ import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.lang.toTimestampString
-import kotlinx.android.synthetic.main.recently_read_item.*
 import java.util.Date
+import kotlinx.android.synthetic.main.recently_read_item.*
 
 /**
  * Holder that contains recent manga item
@@ -20,8 +20,8 @@ import java.util.Date
  * @constructor creates a new recent chapter holder.
  */
 class RecentlyReadHolder(
-        view: View,
-        val adapter: RecentlyReadAdapter
+    view: View,
+    val adapter: RecentlyReadAdapter
 ) : BaseFlexibleViewHolder(view, adapter) {
 
     init {
@@ -68,6 +68,4 @@ class RecentlyReadHolder(
                     .into(cover)
         }
     }
-
-
 }

@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
 
-class MoreController  : SettingsController() {
+class MoreController : SettingsController() {
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.label_more
@@ -77,5 +77,4 @@ class MoreController  : SettingsController() {
     companion object {
         private const val URL_HELP = "https://tachiyomi.org/help/"
     }
-
 }

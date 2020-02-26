@@ -228,7 +228,6 @@ class BackupTest {
         val manga = getSingleManga("One Piece")
         manga.id = backupManager.databaseHelper.insertManga(manga).executeAsBlocking().insertedId()
 
-
         // Create restore list
         val chapters = ArrayList<Chapter>()
         for (i in 1..8) {
@@ -323,7 +322,7 @@ class BackupTest {
 
         // Check parser and restore already in database
         var trackList = listOf(track)
-        //Check parser
+        // Check parser
         var trackListJson = backupManager.parser.toJsonTree(trackList)
         var trackListRestore = backupManager.parser.fromJson<List<TrackImpl>>(trackListJson)
         backupManager.restoreTrackForManga(manga, trackListRestore)
@@ -346,7 +345,7 @@ class BackupTest {
         // Check parser and restore, track not in database
         trackList = listOf(track2)
 
-        //Check parser
+        // Check parser
         trackListJson = backupManager.parser.toJsonTree(trackList)
         trackListRestore = backupManager.parser.fromJson<List<TrackImpl>>(trackListJson)
         backupManager.restoreTrackForManga(manga2, trackListRestore)

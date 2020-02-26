@@ -6,8 +6,8 @@ import androidx.biometric.BiometricManager
 import androidx.fragment.app.FragmentActivity
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import uy.kohesive.injekt.injectLazy
 import java.util.Date
+import uy.kohesive.injekt.injectLazy
 
 object SecureActivityDelegate {
 
@@ -41,8 +41,7 @@ object SecureActivityDelegate {
 
     private fun isAppLocked(): Boolean {
         return locked &&
-                (preferences.lockAppAfter().getOrDefault() <= 0
-                        || Date().time >= preferences.lastAppUnlock().getOrDefault() + 60 * 1000 * preferences.lockAppAfter().getOrDefault())
+                (preferences.lockAppAfter().getOrDefault() <= 0 ||
+                        Date().time >= preferences.lastAppUnlock().getOrDefault() + 60 * 1000 * preferences.lockAppAfter().getOrDefault())
     }
-
 }

@@ -52,7 +52,5 @@ class AppModule(val app: Application) : InjektModule {
         GlobalScope.launch { get<DatabaseHelper>() }
 
         GlobalScope.launch { get<DownloadManager>() }
-
     }
-
 }

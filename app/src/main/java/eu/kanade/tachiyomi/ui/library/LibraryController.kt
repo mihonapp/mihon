@@ -35,6 +35,7 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.inflate
+import java.io.IOException
 import kotlinx.android.synthetic.main.library_controller.empty_view
 import kotlinx.android.synthetic.main.library_controller.library_pager
 import kotlinx.android.synthetic.main.main_activity.drawer
@@ -43,12 +44,10 @@ import rx.Subscription
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.io.IOException
-
 
 class LibraryController(
-        bundle: Bundle? = null,
-        private val preferences: PreferencesHelper = Injekt.get()
+    bundle: Bundle? = null,
+    private val preferences: PreferencesHelper = Injekt.get()
 ) : NucleusController<LibraryPresenter>(bundle),
         TabbedController,
         SecondaryDrawerController,
@@ -556,5 +555,4 @@ class LibraryController(
          */
         const val REQUEST_IMAGE_OPEN = 101
     }
-
 }

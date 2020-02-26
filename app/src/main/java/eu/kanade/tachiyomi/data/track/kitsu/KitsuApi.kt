@@ -94,7 +94,6 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         }
     }
 
-
     fun search(query: String): Observable<List<TrackSearch>> {
         return searchRest
                 .getKey().map { json ->
@@ -103,7 +102,6 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                     algoliaSearch(key, query)
                 }
     }
-
 
     private fun algoliaSearch(key: String, query: String): Observable<List<TrackSearch>> {
         val jsonObject = jsonObject("params" to "query=$query$algoliaFilter")
@@ -163,35 +161,33 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         @Headers("Content-Type: application/vnd.api+json")
         @POST("library-entries")
         fun addLibManga(
-                @Body data: JsonObject
+            @Body data: JsonObject
         ): Observable<JsonObject>
 
         @Headers("Content-Type: application/vnd.api+json")
         @PATCH("library-entries/{id}")
         fun updateLibManga(
-                @Path("id") remoteId: Int,
-                @Body data: JsonObject
+            @Path("id") remoteId: Int,
+            @Body data: JsonObject
         ): Observable<JsonObject>
-
 
         @GET("library-entries")
         fun findLibManga(
-                @Query("filter[manga_id]", encoded = true) remoteId: Int,
-                @Query("filter[user_id]", encoded = true) userId: String,
-                @Query("include") includes: String = "manga"
+            @Query("filter[manga_id]", encoded = true) remoteId: Int,
+            @Query("filter[user_id]", encoded = true) userId: String,
+            @Query("include") includes: String = "manga"
         ): Observable<JsonObject>
 
         @GET("library-entries")
         fun getLibManga(
-                @Query("filter[id]", encoded = true) remoteId: Int,
-                @Query("include") includes: String = "manga"
+            @Query("filter[id]", encoded = true) remoteId: Int,
+            @Query("include") includes: String = "manga"
         ): Observable<JsonObject>
 
         @GET("users")
         fun getCurrentUser(
-                @Query("filter[self]", encoded = true) self: Boolean = true
+            @Query("filter[self]", encoded = true) self: Boolean = true
         ): Observable<JsonObject>
-
     }
 
     private interface SearchKeyRest {
@@ -209,13 +205,12 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         @FormUrlEncoded
         @POST("oauth/token")
         fun requestAccessToken(
-                @Field("username") username: String,
-                @Field("password") password: String,
-                @Field("grant_type") grantType: String = "password",
-                @Field("client_id") client_id: String = clientId,
-                @Field("client_secret") client_secret: String = clientSecret
+            @Field("username") username: String,
+            @Field("password") password: String,
+            @Field("grant_type") grantType: String = "password",
+            @Field("client_id") client_id: String = clientId,
+            @Field("client_secret") client_secret: String = clientSecret
         ): Observable<OAuth>
-
     }
 
     companion object {
@@ -229,11 +224,9 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         private const val algoliaAppId = "AWQO5J657S"
         private const val algoliaFilter = "&facetFilters=%5B%22kind%3Amanga%22%5D&attributesToRetrieve=%5B%22synopsis%22%2C%22canonicalTitle%22%2C%22chapterCount%22%2C%22posterImage%22%2C%22startDate%22%2C%22subtype%22%2C%22endDate%22%2C%20%22id%22%5D"
 
-
         fun mangaUrl(remoteId: Int): String {
             return baseMangaUrl + remoteId
         }
-
 
         fun refreshTokenRequest(token: String) = POST("${loginUrl}oauth/token",
                 body = FormBody.Builder()
@@ -242,7 +235,5 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                         .add("client_secret", clientSecret)
                         .add("refresh_token", token)
                         .build())
-
     }
-
 }

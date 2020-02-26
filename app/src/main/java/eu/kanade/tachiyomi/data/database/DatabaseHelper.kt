@@ -11,8 +11,8 @@ import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 /**
  * This class provides operations to manage the database through its interfaces.
  */
-open class DatabaseHelper(context: Context)
-    : MangaQueries, ChapterQueries, TrackQueries, CategoryQueries, MangaCategoryQueries, HistoryQueries {
+open class DatabaseHelper(context: Context) :
+    MangaQueries, ChapterQueries, TrackQueries, CategoryQueries, MangaCategoryQueries, HistoryQueries {
 
     private val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)
             .name(DbOpenCallback.DATABASE_NAME)
@@ -32,5 +32,4 @@ open class DatabaseHelper(context: Context)
     inline fun inTransaction(block: () -> Unit) = db.inTransaction(block)
 
     fun lowLevel() = db.lowLevel()
-
 }

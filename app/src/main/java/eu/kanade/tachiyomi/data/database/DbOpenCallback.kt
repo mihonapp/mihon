@@ -69,5 +69,4 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
     override fun onConfigure(db: SupportSQLiteDatabase) {
         db.setForeignKeyConstraintsEnabled(true)
     }
-
 }

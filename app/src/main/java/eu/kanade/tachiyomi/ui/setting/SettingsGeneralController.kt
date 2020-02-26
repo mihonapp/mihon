@@ -6,11 +6,11 @@ import android.provider.Settings
 import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
-import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
 class SettingsGeneralController : SettingsController() {
 
@@ -166,5 +166,4 @@ class SettingsGeneralController : SettingsController() {
             }
         }
     }
-
 }
