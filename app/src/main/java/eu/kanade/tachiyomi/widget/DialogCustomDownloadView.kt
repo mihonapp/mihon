@@ -7,7 +7,11 @@ import android.view.View
 import android.widget.LinearLayout
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.view.inflate
-import kotlinx.android.synthetic.main.download_custom_amount.view.*
+import kotlinx.android.synthetic.main.download_custom_amount.view.btn_decrease
+import kotlinx.android.synthetic.main.download_custom_amount.view.btn_decrease_10
+import kotlinx.android.synthetic.main.download_custom_amount.view.btn_increase
+import kotlinx.android.synthetic.main.download_custom_amount.view.btn_increase_10
+import kotlinx.android.synthetic.main.download_custom_amount.view.myNumber
 import timber.log.Timber
 
 /**

@@ -2,7 +2,11 @@ package eu.kanade.tachiyomi.util.system
 
 import android.annotation.TargetApi
 import android.os.Build
-import android.webkit.*
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 
 @Suppress("OverridingDeprecatedMember")
 abstract class WebViewClientCompat : WebViewClient() {

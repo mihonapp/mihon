@@ -21,7 +21,11 @@ import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.invisible
 import eu.kanade.tachiyomi.util.view.visible
-import kotlinx.android.synthetic.main.webview_activity.*
+import kotlinx.android.synthetic.main.webview_activity.nested_view
+import kotlinx.android.synthetic.main.webview_activity.progress_bar
+import kotlinx.android.synthetic.main.webview_activity.swipe_refresh
+import kotlinx.android.synthetic.main.webview_activity.toolbar
+import kotlinx.android.synthetic.main.webview_activity.webview
 import uy.kohesive.injekt.injectLazy
 
 class WebViewActivity : BaseActivity() {

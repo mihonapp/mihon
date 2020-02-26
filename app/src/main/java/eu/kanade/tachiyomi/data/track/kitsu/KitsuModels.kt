@@ -1,7 +1,12 @@
 package eu.kanade.tachiyomi.data.track.kitsu
 
 import androidx.annotation.CallSuper
-import com.github.salomonbrys.kotson.*
+import com.github.salomonbrys.kotson.byInt
+import com.github.salomonbrys.kotson.byString
+import com.github.salomonbrys.kotson.nullInt
+import com.github.salomonbrys.kotson.nullObj
+import com.github.salomonbrys.kotson.nullString
+import com.github.salomonbrys.kotson.obj
 import com.google.gson.JsonObject
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager

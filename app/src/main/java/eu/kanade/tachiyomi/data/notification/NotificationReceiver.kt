@@ -410,7 +410,7 @@ class NotificationReceiver : BroadcastReceiver() {
         internal fun markAsReadPendingBroadcast(
             context: Context,
             manga: Manga,
-            chapters:            
+            chapters:
                     Array<Chapter>,
             groupId: Int
         ):

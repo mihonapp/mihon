@@ -18,7 +18,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Matchers.anyLong
 import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.mockito.Mockito.RETURNS_DEEP_STUBS
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.robolectric.Robolectric
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config

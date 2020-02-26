@@ -8,7 +8,12 @@ import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import java.util.Date
-import kotlinx.android.synthetic.main.recently_read_item.*
+import kotlinx.android.synthetic.main.recently_read_item.cover
+import kotlinx.android.synthetic.main.recently_read_item.last_read
+import kotlinx.android.synthetic.main.recently_read_item.manga_source
+import kotlinx.android.synthetic.main.recently_read_item.manga_title
+import kotlinx.android.synthetic.main.recently_read_item.remove
+import kotlinx.android.synthetic.main.recently_read_item.resume
 
 /**
  * Holder that contains recent manga item

@@ -9,7 +9,12 @@ import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.view.setVectorCompat
-import kotlinx.android.synthetic.main.recent_chapters_item.*
+import kotlinx.android.synthetic.main.recent_chapters_item.chapter_menu
+import kotlinx.android.synthetic.main.recent_chapters_item.chapter_menu_icon
+import kotlinx.android.synthetic.main.recent_chapters_item.chapter_title
+import kotlinx.android.synthetic.main.recent_chapters_item.download_text
+import kotlinx.android.synthetic.main.recent_chapters_item.manga_cover
+import kotlinx.android.synthetic.main.recent_chapters_item.manga_title
 
 /**
  * Holder that contains chapter item

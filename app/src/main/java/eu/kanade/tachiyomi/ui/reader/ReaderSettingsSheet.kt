@@ -15,7 +15,22 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
-import kotlinx.android.synthetic.main.reader_settings_sheet.*
+import kotlinx.android.synthetic.main.reader_settings_sheet.background_color
+import kotlinx.android.synthetic.main.reader_settings_sheet.crop_borders
+import kotlinx.android.synthetic.main.reader_settings_sheet.crop_borders_webtoon
+import kotlinx.android.synthetic.main.reader_settings_sheet.cutout_short
+import kotlinx.android.synthetic.main.reader_settings_sheet.fullscreen
+import kotlinx.android.synthetic.main.reader_settings_sheet.keepscreen
+import kotlinx.android.synthetic.main.reader_settings_sheet.long_tap
+import kotlinx.android.synthetic.main.reader_settings_sheet.pad_pages_vert_webtoon
+import kotlinx.android.synthetic.main.reader_settings_sheet.page_transitions
+import kotlinx.android.synthetic.main.reader_settings_sheet.pager_prefs_group
+import kotlinx.android.synthetic.main.reader_settings_sheet.rotation_mode
+import kotlinx.android.synthetic.main.reader_settings_sheet.scale_type
+import kotlinx.android.synthetic.main.reader_settings_sheet.show_page_number
+import kotlinx.android.synthetic.main.reader_settings_sheet.viewer
+import kotlinx.android.synthetic.main.reader_settings_sheet.webtoon_prefs_group
+import kotlinx.android.synthetic.main.reader_settings_sheet.zoom_start
 import uy.kohesive.injekt.injectLazy
 
 /**

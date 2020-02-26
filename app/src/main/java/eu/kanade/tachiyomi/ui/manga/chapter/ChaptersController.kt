@@ -5,7 +5,12 @@ import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -26,7 +31,11 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
 import eu.kanade.tachiyomi.util.view.snack
-import kotlinx.android.synthetic.main.chapters_controller.*
+import kotlinx.android.synthetic.main.chapters_controller.fab
+import kotlinx.android.synthetic.main.chapters_controller.fast_scroller
+import kotlinx.android.synthetic.main.chapters_controller.recycler
+import kotlinx.android.synthetic.main.chapters_controller.reveal_view
+import kotlinx.android.synthetic.main.chapters_controller.swipe_refresh
 import timber.log.Timber
 
 class ChaptersController : NucleusController<ChaptersPresenter>(),

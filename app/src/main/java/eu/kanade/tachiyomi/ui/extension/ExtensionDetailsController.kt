@@ -8,7 +8,17 @@ import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.preference.*
+import androidx.preference.DialogPreference
+import androidx.preference.EditTextPreference
+import androidx.preference.EditTextPreferenceDialogController
+import androidx.preference.ListPreference
+import androidx.preference.ListPreferenceDialogController
+import androidx.preference.MultiSelectListPreference
+import androidx.preference.MultiSelectListPreferenceDialogController
+import androidx.preference.Preference
+import androidx.preference.PreferenceGroupAdapter
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +34,15 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
 import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
-import kotlinx.android.synthetic.main.extension_detail_controller.*
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_icon
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_lang
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_obsolete
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_pkg
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_prefs_empty_view
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_prefs_recycler
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_title
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_uninstall_button
+import kotlinx.android.synthetic.main.extension_detail_controller.extension_version
 
 @SuppressLint("RestrictedApi")
 class ExtensionDetailsController(bundle: Bundle? = null) :
