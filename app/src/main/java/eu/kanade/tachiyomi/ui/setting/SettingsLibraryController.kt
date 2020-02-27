@@ -41,7 +41,7 @@ class SettingsLibraryController : SettingsController() {
         titleRes = R.string.pref_category_library
 
         preferenceCategory {
-            titleRes = R.string.pref_category_library_display
+            titleRes = R.string.pref_category_display
 
             preference {
                 titleRes = R.string.pref_library_columns
