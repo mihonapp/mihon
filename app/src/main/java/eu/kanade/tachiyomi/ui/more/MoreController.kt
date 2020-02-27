@@ -24,30 +24,28 @@ class MoreController : SettingsController() {
 
         val tintColor = context.getResourceColor(R.attr.colorAccent)
 
-        preferenceCategory {
-            preference {
-                titleRes = R.string.label_extensions
-                iconRes = R.drawable.ic_extension_black_24dp
-                iconTint = tintColor
-                onClick {
-                    router.pushController(ExtensionController().withFadeTransaction())
-                }
+        preference {
+            titleRes = R.string.label_extensions
+            iconRes = R.drawable.ic_extension_black_24dp
+            iconTint = tintColor
+            onClick {
+                router.pushController(ExtensionController().withFadeTransaction())
             }
-            preference {
-                titleRes = R.string.label_download_queue
-                iconRes = R.drawable.ic_file_download_black_24dp
-                iconTint = tintColor
-                onClick {
-                    router.pushController(DownloadController().withFadeTransaction())
-                }
+        }
+        preference {
+            titleRes = R.string.label_download_queue
+            iconRes = R.drawable.ic_file_download_black_24dp
+            iconTint = tintColor
+            onClick {
+                router.pushController(DownloadController().withFadeTransaction())
             }
-            preference {
-                titleRes = R.string.label_migration
-                iconRes = R.drawable.ic_compare_arrows_black_24dp
-                iconTint = tintColor
-                onClick {
-                    router.pushController(MigrationController().withFadeTransaction())
-                }
+        }
+        preference {
+            titleRes = R.string.label_migration
+            iconRes = R.drawable.ic_compare_arrows_black_24dp
+            iconTint = tintColor
+            onClick {
+                router.pushController(MigrationController().withFadeTransaction())
             }
         }
 
