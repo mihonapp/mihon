@@ -50,6 +50,7 @@
             android:background="?attr/colorPrimary"
             app:itemIconTint="@drawable/bottom_nav_item_selector"
             app:itemTextColor="@drawable/bottom_nav_item_selector"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav" />
 
     </LinearLayout>
