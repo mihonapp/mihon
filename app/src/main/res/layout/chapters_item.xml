@@ -57,19 +57,19 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Pages: 45" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/chapter_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:contentDescription="@string/description_cover"
-        android:paddingStart="24dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="24dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/action_menu"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+        app:layout_constraintBottom_toTopOf="@+id/download_text"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp"
+        app:tint="?attr/icon_color" />
 
     <TextView
         android:id="@+id/download_text"

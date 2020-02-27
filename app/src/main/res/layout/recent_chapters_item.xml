@@ -59,22 +59,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Downloaded" />
 
-    <FrameLayout
+    <ImageButton
         android:id="@+id/chapter_menu"
-        android:layout_width="50dp"
-        android:layout_height="0dp"
-        android:paddingBottom="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|end"
+        android:layout_marginEnd="8dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/action_menu"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/download_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/chapter_menu_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center|end"
-            android:layout_marginEnd="16dp" />
-
-    </FrameLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_more_horiz_black_24dp"
+        app:tint="?attr/icon_color" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
