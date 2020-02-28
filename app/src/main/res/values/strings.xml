@@ -25,7 +25,7 @@
     <string name="label_extension_info">Extension info</string>
     <string name="label_help">Help</string>
 
-    <string name="unlock_library">Unlock Library</string>
+    <string name="unlock_app">Unlock Tachiyomi</string>
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
