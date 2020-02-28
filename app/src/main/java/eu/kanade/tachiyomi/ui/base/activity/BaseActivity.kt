@@ -1,10 +1,8 @@
 package eu.kanade.tachiyomi.ui.base.activity
 
-import android.app.UiModeManager
-import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -34,8 +32,7 @@ abstract class BaseActivity : AppCompatActivity() {
         setTheme(when (preferences.themeMode().getOrDefault()) {
             Values.THEME_MODE_DARK -> darkTheme
             Values.THEME_MODE_SYSTEM -> {
-                val mode = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
-                if (mode.nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+                if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
                     darkTheme
                 } else {
                     R.style.Theme_Tachiyomi
