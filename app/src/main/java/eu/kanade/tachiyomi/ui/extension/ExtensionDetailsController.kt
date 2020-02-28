@@ -28,12 +28,9 @@ import eu.kanade.tachiyomi.data.preference.EmptyPreferenceDataStore
 import eu.kanade.tachiyomi.data.preference.SharedPreferencesDataStore
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.source.online.LoginSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import eu.kanade.tachiyomi.widget.preference.LoginPreference
-import eu.kanade.tachiyomi.widget.preference.SourceLoginDialog
 import kotlinx.android.synthetic.main.extension_detail_controller.extension_icon
 import kotlinx.android.synthetic.main.extension_detail_controller.extension_lang
 import kotlinx.android.synthetic.main.extension_detail_controller.extension_obsolete
@@ -48,8 +45,7 @@ import kotlinx.android.synthetic.main.extension_detail_controller.extension_vers
 class ExtensionDetailsController(bundle: Bundle? = null) :
         NucleusController<ExtensionDetailsPresenter>(bundle),
         PreferenceManager.OnDisplayPreferenceDialogListener,
-        DialogPreference.TargetFragment,
-        SourceLoginDialog.Listener {
+        DialogPreference.TargetFragment {
 
     private var lastOpenPreferencePosition: Int? = null
 
@@ -203,11 +199,6 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
 
     override fun <T : Preference> findPreference(key: CharSequence): T? {
         return preferenceScreen!!.findPreference(key)
-    }
-
-    override fun loginDialogClosed(source: LoginSource) {
-        val lastOpen = lastOpenPreferencePosition ?: return
-        (preferenceScreen?.getPreference(lastOpen) as? LoginPreference)?.notifyChanged()
     }
 
     private companion object {
