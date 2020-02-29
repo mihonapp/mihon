@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.setting
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.preference.PreferenceScreen
 import android.view.View
@@ -120,6 +121,11 @@ class SettingsAboutController : SettingsController() {
      */
     private fun checkVersion() {
         if (activity == null) return
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            activity?.toast("Newer versions of Tachiyomi require Android 5+")
+            return
+        }
 
         activity?.toast(R.string.update_check_look_for_updates)
         releaseSubscription?.unsubscribe()

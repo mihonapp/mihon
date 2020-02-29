@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.updater
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobManager
@@ -13,6 +14,11 @@ import eu.kanade.tachiyomi.util.notificationManager
 class UpdaterJob : Job() {
 
     override fun onRunJob(params: Params): Result {
+        // Android 4.x is no longer supported
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return Result.SUCCESS
+        }
+
         return UpdateChecker.getUpdateChecker()
                 .checkForUpdate()
                 .map { result ->
