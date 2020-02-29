@@ -168,7 +168,6 @@ class HttpPageLoader(
         val page: ReaderPage,
         val priority: Int
     ) : Comparable<PriorityPage> {
-
         companion object {
             private val idGenerator = AtomicInteger()
         }

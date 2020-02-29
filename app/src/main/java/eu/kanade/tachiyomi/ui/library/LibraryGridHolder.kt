@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.catalogue_grid_item.unread_text
 class LibraryGridHolder(
     private val view: View,
     private val adapter: FlexibleAdapter<*>
-
 ) : LibraryHolder(view, adapter) {
 
     /**

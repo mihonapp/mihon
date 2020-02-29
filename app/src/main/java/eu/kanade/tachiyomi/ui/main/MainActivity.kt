@@ -80,7 +80,6 @@ class MainActivity : BaseActivity() {
             } else {
                 router.popToRoot()
             }
-
             true
         }
 
@@ -110,7 +109,6 @@ class MainActivity : BaseActivity() {
                 container: ViewGroup,
                 handler: ControllerChangeHandler
             ) {
-
                 syncActivityViewWithController(to, from)
             }
 

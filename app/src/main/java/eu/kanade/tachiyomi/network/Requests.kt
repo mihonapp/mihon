@@ -16,7 +16,6 @@ fun GET(
     headers: Headers = DEFAULT_HEADERS,
     cache: CacheControl = DEFAULT_CACHE_CONTROL
 ): Request {
-
     return Request.Builder()
             .url(url)
             .headers(headers)
@@ -30,7 +29,6 @@ fun POST(
     body: RequestBody = DEFAULT_BODY,
     cache: CacheControl = DEFAULT_CACHE_CONTROL
 ): Request {
-
     return Request.Builder()
             .url(url)
             .post(body)
