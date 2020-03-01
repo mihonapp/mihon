@@ -163,8 +163,10 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.12.1'
 
     // Job scheduling
-    implementation 'com.evernote:android-job:1.2.5'
-    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
+    implementation 'com.evernote:android-job:1.4.2'
+    final workManagerVersion = '2.3.2'
+    implementation "android.arch.work:work-runtime:$workManagerVersion"
+    implementation "android.arch.work:work-runtime-ktx:$workManagerVersion"
 
     // Changelog
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
