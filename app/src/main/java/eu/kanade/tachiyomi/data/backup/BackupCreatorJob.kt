@@ -1,23 +1,28 @@
 package eu.kanade.tachiyomi.data.backup
 
+import android.content.Context
 import android.net.Uri
-import com.evernote.android.job.Job
-import com.evernote.android.job.JobManager
-import com.evernote.android.job.JobRequest
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import java.util.concurrent.TimeUnit
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class BackupCreatorJob : Job() {
+class BackupCreatorJob(private val context: Context, workerParams: WorkerParameters) :
+        Worker(context, workerParams) {
 
-    override fun onRunJob(params: Params): Result {
+    override fun doWork(): Result {
         val preferences = Injekt.get<PreferencesHelper>()
         val backupManager = BackupManager(context)
         val uri = Uri.parse(preferences.backupsDirectory().getOrDefault())
         val flags = BackupCreateService.BACKUP_ALL
         backupManager.createBackup(uri, flags, true)
-        return Result.SUCCESS
+        return Result.success()
     }
 
     companion object {
@@ -27,16 +32,16 @@ class BackupCreatorJob : Job() {
             val preferences = Injekt.get<PreferencesHelper>()
             val interval = prefInterval ?: preferences.backupInterval().getOrDefault()
             if (interval > 0) {
-                JobRequest.Builder(TAG)
-                        .setPeriodic(interval * 60 * 60 * 1000L, 10 * 60 * 1000)
-                        .setUpdateCurrent(true)
+                val request = PeriodicWorkRequestBuilder<BackupCreatorJob>(interval.toLong(), TimeUnit.HOURS)
+                        .addTag(TAG)
                         .build()
-                        .schedule()
+
+                WorkManager.getInstance().enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
             }
         }
 
         fun cancelTask() {
-            JobManager.instance().cancelAllForTag(TAG)
+            WorkManager.getInstance().cancelAllWorkByTag(TAG)
         }
     }
 }

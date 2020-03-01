@@ -1,18 +1,25 @@
 package eu.kanade.tachiyomi.data.library
 
-import com.evernote.android.job.Job
-import com.evernote.android.job.JobManager
-import com.evernote.android.job.JobRequest
+import android.content.Context
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import java.util.concurrent.TimeUnit
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class LibraryUpdateJob : Job() {
+class LibraryUpdateJob(private val context: Context, workerParams: WorkerParameters) :
+        Worker(context, workerParams) {
 
-    override fun onRunJob(params: Params): Result {
+    override fun doWork(): Result {
         LibraryUpdateService.start(context)
-        return Job.Result.SUCCESS
+        return Result.success()
     }
 
     companion object {
@@ -25,23 +32,26 @@ class LibraryUpdateJob : Job() {
                 val restrictions = preferences.libraryUpdateRestriction()!!
                 val acRestriction = "ac" in restrictions
                 val wifiRestriction = if ("wifi" in restrictions)
-                    JobRequest.NetworkType.UNMETERED
+                    NetworkType.UNMETERED
                 else
-                    JobRequest.NetworkType.CONNECTED
+                    NetworkType.CONNECTED
 
-                JobRequest.Builder(TAG)
-                        .setPeriodic(interval * 60 * 60 * 1000L, 10 * 60 * 1000)
+                val constraints = Constraints.Builder()
                         .setRequiredNetworkType(wifiRestriction)
                         .setRequiresCharging(acRestriction)
-                        .setRequirementsEnforced(true)
-                        .setUpdateCurrent(true)
                         .build()
-                        .schedule()
+
+                val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(interval.toLong(), TimeUnit.HOURS)
+                        .addTag(TAG)
+                        .setConstraints(constraints)
+                        .build()
+
+                WorkManager.getInstance().enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
             }
         }
 
         fun cancelTask() {
-            JobManager.instance().cancelAllForTag(TAG)
+            WorkManager.getInstance().cancelAllWorkByTag(TAG)
         }
     }
 }

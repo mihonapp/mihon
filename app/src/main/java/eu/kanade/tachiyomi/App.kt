@@ -8,13 +8,9 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
-import com.evernote.android.job.JobManager
-import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import org.acra.ACRA
@@ -42,7 +38,6 @@ open class App : Application(), LifecycleObserver {
         Injekt.importModule(AppModule(this))
 
         setupAcra()
-        setupJobManager()
         setupNotificationChannels()
 
         LocaleHelper.updateConfiguration(this, resources.configuration)
@@ -70,21 +65,6 @@ open class App : Application(), LifecycleObserver {
 
     protected open fun setupAcra() {
         ACRA.init(this)
-    }
-
-    protected open fun setupJobManager() {
-        try {
-            JobManager.create(this).addJobCreator { tag ->
-                when (tag) {
-                    LibraryUpdateJob.TAG -> LibraryUpdateJob()
-                    UpdaterJob.TAG -> UpdaterJob()
-                    BackupCreatorJob.TAG -> BackupCreatorJob()
-                    else -> null
-                }
-            }
-        } catch (e: Exception) {
-            Timber.w("Can't initialize job manager")
-        }
     }
 
     protected open fun setupNotificationChannels() {
