@@ -32,16 +32,16 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
             val preferences = Injekt.get<PreferencesHelper>()
             val interval = prefInterval ?: preferences.backupInterval().getOrDefault()
             if (interval > 0) {
-                val request = PeriodicWorkRequestBuilder<BackupCreatorJob>(interval.toLong(), TimeUnit.HOURS)
+                val request = PeriodicWorkRequestBuilder<BackupCreatorJob>(
+                        interval.toLong(), TimeUnit.HOURS,
+                        10, TimeUnit.MINUTES)
                         .addTag(TAG)
                         .build()
 
                 WorkManager.getInstance().enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
+            } else {
+                WorkManager.getInstance().cancelAllWorkByTag(TAG)
             }
-        }
-
-        fun cancelTask() {
-            WorkManager.getInstance().cancelAllWorkByTag(TAG)
         }
     }
 }

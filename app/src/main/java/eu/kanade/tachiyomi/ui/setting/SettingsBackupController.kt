@@ -105,13 +105,8 @@ class SettingsBackupController : SettingsController() {
                 summary = "%s"
 
                 onChange { newValue ->
-                    // Always cancel the previous task, it seems that sometimes they are not updated
-                    BackupCreatorJob.cancelTask()
-
                     val interval = (newValue as String).toInt()
-                    if (interval > 0) {
-                        BackupCreatorJob.setupTask(interval)
-                    }
+                    BackupCreatorJob.setupTask(interval)
                     true
                 }
             }

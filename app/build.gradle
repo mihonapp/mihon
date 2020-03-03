@@ -163,7 +163,9 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.12.1'
 
     // Job scheduling
-    implementation 'android.arch.work:work-runtime:2.3.2'
+    final workManagerVersion = '2.3.2'
+    implementation "android.arch.work:work-runtime:$workManagerVersion"
+    implementation "android.arch.work:work-runtime-ktx:$workManagerVersion"
 
     // Changelog
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'

@@ -41,17 +41,17 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                         .setRequiresCharging(acRestriction)
                         .build()
 
-                val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(interval.toLong(), TimeUnit.HOURS)
+                val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(
+                        interval.toLong(), TimeUnit.HOURS,
+                        10, TimeUnit.MINUTES)
                         .addTag(TAG)
                         .setConstraints(constraints)
                         .build()
 
                 WorkManager.getInstance().enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, request)
+            } else {
+                WorkManager.getInstance().cancelAllWorkByTag(TAG)
             }
-        }
-
-        fun cancelTask() {
-            WorkManager.getInstance().cancelAllWorkByTag(TAG)
         }
     }
 }
