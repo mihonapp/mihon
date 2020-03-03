@@ -1,8 +1,15 @@
 -dontobfuscate
 
+# Extensions may require methods unused in the core app
 -dontwarn eu.kanade.tachiyomi.**
--keep class eu.kanade.tachiyomi.**
--keep class eu.kanade.tachiyomi.source.model.** { *; }
+-keep class eu.kanade.tachiyomi.** { public protected private *; }
+
+-keep class org.jsoup.** { *; }
+-keep class kotlin.** { *; }
+-keep class okhttp3.** { *; }
+-keep class com.google.gson.** { *; }
+-keep class com.github.salomonbrys.kotson.** { *; }
+-keep class com.squareup.duktape.** { *; }
 
 # Design library
 -dontwarn com.google.android.material.**
@@ -13,13 +20,6 @@
 -keep class com.hippo.image.** { *; }
 -keep interface com.hippo.image.** { *; }
 -dontwarn nucleus.view.NucleusActionBarActivity
-
-# Extensions may require methods unused in the core app
--keep class org.jsoup.** { *; }
--keep class kotlin.** { *; }
--keep class okhttp3.** { *; }
--keep class com.google.gson.** { *; }
--keep class com.github.salomonbrys.kotson.** { *; }
 
 # OkHttp
 -dontwarn okhttp3.**
@@ -69,10 +69,3 @@
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
-
-# SnakeYaml
--keep class org.yaml.snakeyaml.** { public protected private *; }
--dontwarn org.yaml.snakeyaml.**
-
-# Duktape
--keep class com.squareup.duktape.** { *; }
