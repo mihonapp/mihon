@@ -18,7 +18,9 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.CatalogueSource
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
@@ -38,8 +40,10 @@ import uy.kohesive.injekt.api.get
  */
 class CatalogueController : NucleusController<CataloguePresenter>(),
         FlexibleAdapter.OnItemClickListener,
+        FlexibleAdapter.OnItemLongClickListener,
         CatalogueAdapter.OnBrowseClickListener,
-        CatalogueAdapter.OnLatestClickListener {
+        CatalogueAdapter.OnLatestClickListener,
+        HideCatalogueDialog.Listener {
 
     /**
      * Application preferences.
@@ -118,14 +122,27 @@ class CatalogueController : NucleusController<CataloguePresenter>(),
         }
     }
 
-    /**
-     * Called when item is clicked
-     */
     override fun onItemClick(view: View, position: Int): Boolean {
         val item = adapter?.getItem(position) as? SourceItem ?: return false
         val source = item.source
         openCatalogue(source, BrowseCatalogueController(source))
         return false
+    }
+
+    override fun onItemLongClick(position: Int) {
+        val item = adapter?.getItem(position) as? SourceItem ?: return
+        val source = item.source
+
+        val dialog = HideCatalogueDialog(source)
+        dialog.targetController = this@CatalogueController
+        dialog.showDialog(router)
+    }
+
+    override fun hideCatalogueDialogClosed(source: Source) {
+        val current = preferences.hiddenCatalogues().getOrDefault()
+        preferences.hiddenCatalogues().set(current + source.id.toString())
+
+        presenter.updateSources()
     }
 
     /**
