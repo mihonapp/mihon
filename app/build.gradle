@@ -274,3 +274,7 @@ androidExtensions {
 
 preBuild.dependsOn(lintKotlin)
 lintKotlin.dependsOn(formatKotlin)
+
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Standard")) {
+    apply plugin: 'com.google.gms.google-services'
+}
