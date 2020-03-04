@@ -448,8 +448,13 @@ class LibraryUpdateService(
      * @param total the total progress.
      */
     private fun showProgressNotification(manga: Manga, current: Int, total: Int) {
+        val title = if (preferences.hideNotificationContent())
+            getString(R.string.notification_check_updates)
+        else
+            manga.title
+
         notificationManager.notify(Notifications.ID_LIBRARY_PROGRESS, progressNotificationBuilder
-                .setContentTitle(manga.title)
+                .setContentTitle(title)
                 .setProgress(total, current, false)
                 .build())
     }
@@ -468,13 +473,16 @@ class LibraryUpdateService(
             // Parent group notification
             notify(Notifications.ID_NEW_CHAPTERS, notification(Notifications.CHANNEL_NEW_CHAPTERS) {
                 setContentTitle(getString(R.string.notification_new_chapters))
-                if (updates.size == 1) {
+                if (updates.size == 1 && !preferences.hideNotificationContent()) {
                     setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
                 } else {
                     setContentText(resources.getQuantityString(R.plurals.notification_new_chapters_text, updates.size, updates.size))
-                    setStyle(NotificationCompat.BigTextStyle().bigText(updates.joinToString("\n") {
-                        it.first.title.chop(NOTIF_TITLE_MAX_LEN)
-                    }))
+
+                    if (!preferences.hideNotificationContent()) {
+                        setStyle(NotificationCompat.BigTextStyle().bigText(updates.joinToString("\n") {
+                            it.first.title.chop(NOTIF_TITLE_MAX_LEN)
+                        }))
+                    }
                 }
 
                 setSmallIcon(R.drawable.ic_tachi)
@@ -490,9 +498,11 @@ class LibraryUpdateService(
             })
 
             // Per-manga notification
-            updates.forEach {
-                val (manga, chapters) = it
-                notify(manga.id.hashCode(), createNewChaptersNotification(manga, chapters))
+            if (!preferences.hideNotificationContent()) {
+                updates.forEach {
+                    val (manga, chapters) = it
+                    notify(manga.id.hashCode(), createNewChaptersNotification(manga, chapters))
+                }
             }
         }
     }

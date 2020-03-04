@@ -180,6 +180,11 @@ class SettingsGeneralController : SettingsController() {
                 summaryRes = R.string.secure_screen_summary
                 defaultValue = false
             }
+            switchPreference {
+                key = Keys.hideNotificationContent
+                titleRes = R.string.hide_notification_content
+                defaultValue = false
+            }
         }
     }
 }

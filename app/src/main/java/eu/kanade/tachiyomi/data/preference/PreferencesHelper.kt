@@ -59,6 +59,8 @@ class PreferencesHelper(val context: Context) {
 
     fun secureScreen() = rxPrefs.getBoolean(Keys.secureScreen, false)
 
+    fun hideNotificationContent() = prefs.getBoolean(Keys.hideNotificationContent, false)
+
     fun clear() = prefs.edit().clear().apply()
 
     fun themeMode() = rxPrefs.getString(Keys.themeMode, Values.THEME_MODE_SYSTEM)

@@ -146,6 +146,7 @@
     </plurals>
     <string name="secure_screen">Secure screen</string>
     <string name="secure_screen_summary">Hide app contents when switching apps and block screenshots</string>
+    <string name="hide_notification_content">Hide notification content</string>
 
       <!-- Library section -->
     <string name="pref_category_display">Display</string>
@@ -505,6 +506,7 @@
     <string name="download_queue_error">Could not download chapters. You can try again in the downloads section</string>
 
     <!-- Library update service notifications -->
+    <string name="notification_check_updates">Checking for new chapters</string>
     <string name="notification_update_progress">Update progress: %1$d/%2$d</string>
     <string name="notification_new_chapters">New chapters found</string>
     <plurals name="notification_new_chapters_text">

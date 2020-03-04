@@ -115,6 +115,8 @@ object PreferenceKeys {
 
     const val secureScreen = "secure_screen"
 
+    const val hideNotificationContent = "hide_notification_content"
+
     const val downloadNew = "download_new"
 
     const val downloadNewCategories = "download_new_categories"
