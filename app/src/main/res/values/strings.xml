@@ -83,6 +83,7 @@
     <string name="action_display_grid">Grid</string>
     <string name="action_display_list">List</string>
     <string name="action_display_download_badge">Download badges</string>
+    <string name="action_hide">Hide</string>
     <string name="action_set_filter">Set filter</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_cancel_all">Cancel all</string>
@@ -368,7 +369,6 @@
     <string name="action_global_search_hint">Global search…</string>
     <string name="latest">Latest</string>
     <string name="browse">Browse</string>
-    <string name="hide_catalogue">Hide %1$s?</string>
 
     <!-- Manga activity -->
     <string name="manga_not_in_db">This manga has been removed from the database.</string>
