@@ -4,11 +4,12 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.SeekBar
+import androidx.appcompat.widget.AppCompatSeekBar
 import eu.kanade.tachiyomi.R
 import kotlin.math.abs
 
 class NegativeSeekBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        SeekBar(context, attrs) {
+        AppCompatSeekBar(context, attrs) {
 
     private var minValue: Int = 0
     private var maxValue: Int = 0

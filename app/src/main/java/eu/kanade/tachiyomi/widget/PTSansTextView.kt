@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import eu.kanade.tachiyomi.R
 import java.util.HashMap
 
 class PTSansTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        TextView(context, attrs) {
+        AppCompatTextView(context, attrs) {
 
     companion object {
         const val PTSANS_NARROW = 0
