@@ -448,9 +448,10 @@ class ReaderPresenter(
         val chapter = page.chapter.chapter
 
         // Build destination file.
+        val filenameSuffix = " - ${page.number}.${type.extension}"
         val filename = DiskUtil.buildValidFilename(
-                "${manga.title} - ${chapter.name}".take(225)
-        ) + " - ${page.number}.${type.extension}"
+                "${manga.title} - ${chapter.name}".take(MAX_FILE_NAME_LENGTH - filenameSuffix.length)
+        ) + filenameSuffix
 
         val destFile = File(directory, filename)
         stream().use { input ->
@@ -637,5 +638,10 @@ class ReaderPresenter(
                 .onErrorComplete()
                 .subscribeOn(Schedulers.io())
                 .subscribe()
+    }
+
+    companion object {
+        // Safe max filename size is 255 bytes and 1 char = 2 bytes
+        private const val MAX_FILE_NAME_LENGTH = 127
     }
 }
