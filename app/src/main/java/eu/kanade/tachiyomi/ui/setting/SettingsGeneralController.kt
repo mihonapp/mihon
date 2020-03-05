@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.setting
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
-import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
@@ -17,8 +16,6 @@ import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
-import eu.kanade.tachiyomi.util.preference.summaryRes
-import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 
@@ -142,48 +139,6 @@ class SettingsGeneralController : SettingsController() {
                     }
                     true
                 }
-            }
-        }
-
-        preferenceCategory {
-            titleRes = R.string.pref_category_security
-
-            if (BiometricManager.from(context).canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
-                switchPreference {
-                    key = Keys.useBiometricLock
-                    titleRes = R.string.lock_with_biometrics
-                    defaultValue = false
-                }
-                intListPreference {
-                    key = Keys.lockAppAfter
-                    titleRes = R.string.lock_when_idle
-                    val values = arrayOf("0", "1", "2", "5", "10", "-1")
-                    entries = values.mapNotNull {
-                        when (it) {
-                            "-1" -> context.getString(R.string.lock_never)
-                            "0" -> context.getString(R.string.lock_always)
-                            else -> resources?.getQuantityString(R.plurals.lock_after_mins, it.toInt(), it)
-                        }
-                    }.toTypedArray()
-                    entryValues = values
-                    defaultValue = "0"
-                    summary = "%s"
-
-                    preferences.useBiometricLock().asObservable()
-                            .subscribeUntilDestroy { isVisible = it }
-                }
-            }
-
-            switchPreference {
-                key = Keys.secureScreen
-                titleRes = R.string.secure_screen
-                summaryRes = R.string.secure_screen_summary
-                defaultValue = false
-            }
-            switchPreference {
-                key = Keys.hideNotificationContent
-                titleRes = R.string.hide_notification_content
-                defaultValue = false
             }
         }
     }
