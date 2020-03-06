@@ -231,9 +231,9 @@ class LibraryPresenter(
     }
 
     private fun sortAlphabetical(i1: LibraryItem, i2: LibraryItem): Int {
-        return if (preferences.removeArticles().getOrDefault())
-            i1.manga.title.removeArticles().compareTo(i2.manga.title.removeArticles(), true)
-        else i1.manga.title.compareTo(i2.manga.title, true)
+        //return if (preferences.removeArticles().getOrDefault())
+            return i1.manga.title.removeArticles().compareTo(i2.manga.title.removeArticles(), true)
+        //else i1.manga.title.compareTo(i2.manga.title, true)
     }
 
     /**

@@ -3,6 +3,8 @@ package eu.kanade.tachiyomi.ui.library
 import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import androidx.recyclerview.widget.RecyclerView
+import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.source.LocalSource

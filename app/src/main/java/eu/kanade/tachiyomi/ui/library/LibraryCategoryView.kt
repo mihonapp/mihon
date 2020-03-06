@@ -196,25 +196,26 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
             }
 
         subscriptions += controller.reorganizeRelay
-            .subscribe {
-                if (it.first == category.id) {
-                    var items =  when (it.second) {
+                .subscribe {
+                    if (it.first == category.id) {
+                        var items =  when (it.second) {
                             1, 2 -> adapter.currentItems.sortedBy {
-                                if (preferences.removeArticles().getOrDefault())
+//                                if (preferences.removeArticles().getOrDefault())
                                     it.manga.title.removeArticles()
-                                else
-                                    it.manga.title
-                            }
-                            3, 4 -> adapter.currentItems.sortedBy { it.manga.last_update }
-                            else ->  adapter.currentItems.sortedBy { it.manga.title }
+//                                else
+//                                    it.manga.title
+                        }
+                        3, 4 -> adapter.currentItems.sortedBy { it.manga.last_update }
+                        else ->  adapter.currentItems.sortedBy { it.manga.title }
                     }
                     if (it.second % 2 == 0)
                         items = items.reversed()
-                    adapter.setItems(items)
+                    runBlocking { adapter.setItems(this, items) }
                     adapter.notifyDataSetChanged()
                     onItemReleased(0)
                 }
             }
+//        }
     }
 
     fun onRecycle() {
