@@ -52,12 +52,12 @@ class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
     override fun parseIntoMetadata(metadata: HentaiCafeSearchMetadata, input: Document) {
         with(metadata) {
             url = input.location()
-            title = input.select(".entry-title").text()
+            title = input.select("h3").text()
             val contentElement = input.select(".entry-content").first()
             thumbnailUrl = contentElement.child(0).child(0).attr("src")
 
             fun filterableTagsOfType(type: String) = contentElement.select("a")
-                    .filter { "$baseUrl/$type/" in it.attr("href") }
+                    .filter { "$baseUrl/hc.fyi/$type/" in it.attr("href") }
                     .map { it.text() }
 
             tags.clear()
