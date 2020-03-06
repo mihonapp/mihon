@@ -52,6 +52,7 @@ fun lockEnabled(prefs: PreferencesHelper = Injekt.get())
  */
 fun notifyLockSecurity(context: Context,
                        prefs: PreferencesHelper = Injekt.get()): Boolean {
+    return false
     if (!prefs.eh_lockManually().getOrDefault()
             && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
             && !hasAccessToUsageStats(context)) {
