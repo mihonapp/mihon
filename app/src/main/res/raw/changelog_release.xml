@@ -17,9 +17,9 @@
         <changelogtext>New: select all option in library</changelogtext>
         <changelogtext>New: sort library by latest chapter</changelogtext>
         <changelogtext>New: date format setting</changelogtext>
-        <changelogtext>New: warn if webview version is too long when Cloudflare bypass fails</changelogtext>
+        <changelogtext>New: warn if webview version is too old when Cloudflare bypass fails</changelogtext>
         <changelogtext>New: translucent reader toolbars (Android 8+)</changelogtext>
-        <changelogtext>New: fullscreen reader option for notches</changelogtext>
+        <changelogtext>New: option for showing reader content in cutout area (notches)</changelogtext>
         <changelogtext>New: nicer chapter update notifications</changelogtext>
         <changelogtext>New: security options (biometrics lock, secure screen, hide notification content)</changelogtext>
         <changelogtext>New: webtoon pager vertical padding option</changelogtext>
