@@ -45,7 +45,12 @@ import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.util.view.*
+import eu.kanade.tachiyomi.util.view.defaultBar
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.hideBar
+import eu.kanade.tachiyomi.util.view.isDefaultBar
+import eu.kanade.tachiyomi.util.view.showBar
+import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import java.io.File
@@ -64,7 +69,6 @@ import kotlinx.android.synthetic.main.reader_activity.right_chapter
 import kotlinx.android.synthetic.main.reader_activity.right_page_text
 import kotlinx.android.synthetic.main.reader_activity.toolbar
 import kotlinx.android.synthetic.main.reader_activity.viewer_container
-import me.zhanghai.android.systemuihelper.SystemUiHelper
 import nucleus.factory.RequiresPresenter
 import rx.Observable
 import rx.Subscription
@@ -352,7 +356,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             }
         }
     }
-
 
     /**
      * Reset menu padding and system bar
