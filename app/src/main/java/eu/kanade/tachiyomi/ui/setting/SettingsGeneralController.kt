@@ -27,9 +27,11 @@ class SettingsGeneralController : SettingsController() {
         intListPreference {
             key = Keys.startScreen
             titleRes = R.string.pref_start_screen
-            entriesRes = arrayOf(R.string.label_library, R.string.label_recent_manga,
-                    R.string.label_recent_updates)
-            entryValues = arrayOf("1", "2", "3")
+            entriesRes = arrayOf(
+                    R.string.label_library,
+                    R.string.label_recent_updates,
+                    R.string.label_recent_manga)
+            entryValues = arrayOf("1", "3", "2")
             defaultValue = "1"
             summary = "%s"
         }
