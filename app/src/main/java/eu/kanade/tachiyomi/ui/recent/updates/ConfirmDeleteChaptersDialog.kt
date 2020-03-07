@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent_updates
+package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.app.Dialog
 import android.os.Bundle
@@ -10,9 +10,9 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 class ConfirmDeleteChaptersDialog<T>(bundle: Bundle? = null) : DialogController(bundle)
         where T : Controller, T : ConfirmDeleteChaptersDialog.Listener {
 
-    private var chaptersToDelete = emptyList<RecentChapterItem>()
+    private var chaptersToDelete = emptyList<UpdatesItem>()
 
-    constructor(target: T, chaptersToDelete: List<RecentChapterItem>) : this() {
+    constructor(target: T, chaptersToDelete: List<UpdatesItem>) : this() {
         this.chaptersToDelete = chaptersToDelete
         targetController = target
     }
@@ -29,6 +29,6 @@ class ConfirmDeleteChaptersDialog<T>(bundle: Bundle? = null) : DialogController(
     }
 
     interface Listener {
-        fun deleteChapters(chaptersToDelete: List<RecentChapterItem>)
+        fun deleteChapters(chaptersToDelete: List<UpdatesItem>)
     }
 }

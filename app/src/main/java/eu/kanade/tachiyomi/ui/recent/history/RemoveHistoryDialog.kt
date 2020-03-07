@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recently_read
+package eu.kanade.tachiyomi.ui.recent.history
 
 import android.app.Dialog
 import android.os.Bundle

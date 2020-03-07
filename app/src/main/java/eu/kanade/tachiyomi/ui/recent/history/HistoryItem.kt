@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recently_read
+package eu.kanade.tachiyomi.ui.recent.history
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -8,19 +8,19 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.MangaChapterHistory
 
-class RecentlyReadItem(val mch: MangaChapterHistory) : AbstractFlexibleItem<RecentlyReadHolder>() {
+class HistoryItem(val mch: MangaChapterHistory) : AbstractFlexibleItem<HistoryHolder>() {
 
     override fun getLayoutRes(): Int {
-        return R.layout.recently_read_item
+        return R.layout.history_item
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): RecentlyReadHolder {
-        return RecentlyReadHolder(view, adapter as RecentlyReadAdapter)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): HistoryHolder {
+        return HistoryHolder(view, adapter as HistoryAdapter)
     }
 
     override fun bindViewHolder(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
-        holder: RecentlyReadHolder,
+        holder: HistoryHolder,
         position: Int,
         payloads: List<Any?>?
     ) {
@@ -29,7 +29,7 @@ class RecentlyReadItem(val mch: MangaChapterHistory) : AbstractFlexibleItem<Rece
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is RecentlyReadItem) {
+        if (other is HistoryItem) {
             return mch.manga.id == other.mch.manga.id
         }
         return false

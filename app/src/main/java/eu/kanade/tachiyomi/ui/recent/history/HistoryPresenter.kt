@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recently_read
+package eu.kanade.tachiyomi.ui.recent.history
 
 import android.os.Bundle
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -14,11 +14,11 @@ import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
 
 /**
- * Presenter of RecentlyReadFragment.
+ * Presenter of HistoryFragment.
  * Contains information and data for fragment.
  * Observable updates should be called from here.
  */
-class RecentlyReadPresenter : BasePresenter<RecentlyReadController>() {
+class HistoryPresenter : BasePresenter<HistoryController>() {
 
     /**
      * Used to connect to database
@@ -30,21 +30,21 @@ class RecentlyReadPresenter : BasePresenter<RecentlyReadController>() {
 
         // Used to get a list of recently read manga
         getRecentMangaObservable()
-                .subscribeLatestCache(RecentlyReadController::onNextManga)
+                .subscribeLatestCache(HistoryController::onNextManga)
     }
 
     /**
      * Get recent manga observable
      * @return list of history
      */
-    fun getRecentMangaObservable(): Observable<List<RecentlyReadItem>> {
+    fun getRecentMangaObservable(): Observable<List<HistoryItem>> {
         // Set date for recent manga
         val cal = Calendar.getInstance()
         cal.time = Date()
         cal.add(Calendar.MONTH, -1)
 
         return db.getRecentManga(cal.time).asRxObservable()
-                .map { recents -> recents.map(::RecentlyReadItem) }
+                .map { recents -> recents.map(::HistoryItem) }
                 .observeOn(AndroidSchedulers.mainThread())
     }
 

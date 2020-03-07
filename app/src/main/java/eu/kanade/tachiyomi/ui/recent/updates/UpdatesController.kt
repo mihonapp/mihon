@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent_updates
+package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.view.LayoutInflater
 import android.view.Menu
@@ -27,17 +27,17 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.android.synthetic.main.recent_chapters_controller.empty_view
-import kotlinx.android.synthetic.main.recent_chapters_controller.recycler
-import kotlinx.android.synthetic.main.recent_chapters_controller.swipe_refresh
+import kotlinx.android.synthetic.main.updates_controller.empty_view
+import kotlinx.android.synthetic.main.updates_controller.recycler
+import kotlinx.android.synthetic.main.updates_controller.swipe_refresh
 import timber.log.Timber
 
 /**
  * Fragment that shows recent chapters.
- * Uses [R.layout.recent_chapters_controller].
+ * Uses [R.layout.updates_controller].
  * UI related actions should be called from here.
  */
-class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
+class UpdatesController : NucleusController<UpdatesPresenter>(),
         RootController,
         NoToolbarElevationController,
         ActionMode.Callback,
@@ -45,7 +45,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
         FlexibleAdapter.OnItemLongClickListener,
         FlexibleAdapter.OnUpdateListener,
         ConfirmDeleteChaptersDialog.Listener,
-        RecentChaptersAdapter.OnCoverClickListener {
+        UpdatesAdapter.OnCoverClickListener {
 
     /**
      * Action mode for multiple selection.
@@ -55,19 +55,19 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
     /**
      * Adapter containing the recent chapters.
      */
-    var adapter: RecentChaptersAdapter? = null
+    var adapter: UpdatesAdapter? = null
         private set
 
     override fun getTitle(): String? {
         return resources?.getString(R.string.label_recent_updates)
     }
 
-    override fun createPresenter(): RecentChaptersPresenter {
-        return RecentChaptersPresenter()
+    override fun createPresenter(): UpdatesPresenter {
+        return UpdatesPresenter()
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.recent_chapters_controller, container, false)
+        return inflater.inflate(R.layout.updates_controller, container, false)
     }
 
     /**
@@ -82,7 +82,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
         recycler.layoutManager = layoutManager
         recycler.addItemDecoration(DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL))
         recycler.setHasFixedSize(true)
-        adapter = RecentChaptersAdapter(this@RecentChaptersController)
+        adapter = UpdatesAdapter(this@UpdatesController)
         recycler.adapter = adapter
 
         recycler.scrollStateChanges().subscribeUntilDestroy {
@@ -112,9 +112,9 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      * Returns selected chapters
      * @return list of selected chapters
      */
-    fun getSelectedChapters(): List<RecentChapterItem> {
+    fun getSelectedChapters(): List<UpdatesItem> {
         val adapter = adapter ?: return emptyList()
-        return adapter.selectedPositions.mapNotNull { adapter.getItem(it) as? RecentChapterItem }
+        return adapter.selectedPositions.mapNotNull { adapter.getItem(it) as? UpdatesItem }
     }
 
     /**
@@ -125,7 +125,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
         val adapter = adapter ?: return false
 
         // Get item from position
-        val item = adapter.getItem(position) as? RecentChapterItem ?: return false
+        val item = adapter.getItem(position) as? UpdatesItem ?: return false
         if (actionMode != null && adapter.mode == SelectableAdapter.Mode.MULTI) {
             toggleSelection(position)
             return true
@@ -160,7 +160,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      * Open chapter in reader
      * @param chapter selected chapter
      */
-    private fun openChapter(item: RecentChapterItem) {
+    private fun openChapter(item: UpdatesItem) {
         val activity = activity ?: return
         val intent = ReaderActivity.newIntent(activity, item.manga, item.chapter)
         startActivity(intent)
@@ -168,9 +168,9 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
 
     /**
      * Download selected items
-     * @param chapters list of selected [RecentChapter]s
+     * @param chapters list of selected [UpdatesItem]s
      */
-    fun downloadChapters(chapters: List<RecentChapterItem>) {
+    fun downloadChapters(chapters: List<UpdatesItem>) {
         destroyActionModeIfNeeded()
         presenter.downloadChapters(chapters)
     }
@@ -204,22 +204,22 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      * Returns holder belonging to chapter
      * @param download [Download] object containing download progress.
      */
-    private fun getHolder(download: Download): RecentChapterHolder? {
-        return recycler?.findViewHolderForItemId(download.chapter.id!!) as? RecentChapterHolder
+    private fun getHolder(download: Download): UpdatesHolder? {
+        return recycler?.findViewHolderForItemId(download.chapter.id!!) as? UpdatesHolder
     }
 
     /**
      * Mark chapter as read
      * @param chapters list of chapters
      */
-    fun markAsRead(chapters: List<RecentChapterItem>) {
+    fun markAsRead(chapters: List<UpdatesItem>) {
         presenter.markChapterRead(chapters, true)
         if (presenter.preferences.removeAfterMarkedAsRead()) {
             deleteChapters(chapters)
         }
     }
 
-    override fun deleteChapters(chaptersToDelete: List<RecentChapterItem>) {
+    override fun deleteChapters(chaptersToDelete: List<UpdatesItem>) {
         destroyActionModeIfNeeded()
         DeletingChaptersDialog().showDialog(router)
         presenter.deleteChapters(chaptersToDelete)
@@ -234,9 +234,9 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
 
     /**
      * Mark chapter as unread
-     * @param chapters list of selected [RecentChapter]
+     * @param chapters list of selected [UpdatesItem]
      */
-    fun markAsUnread(chapters: List<RecentChapterItem>) {
+    fun markAsUnread(chapters: List<UpdatesItem>) {
         presenter.markChapterRead(chapters, false)
     }
 
@@ -244,7 +244,7 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      * Start downloading chapter
      * @param chapter selected chapter with manga
      */
-    fun downloadChapter(chapter: RecentChapterItem) {
+    fun downloadChapter(chapter: UpdatesItem) {
         presenter.downloadChapters(listOf(chapter))
     }
 
@@ -252,17 +252,17 @@ class RecentChaptersController : NucleusController<RecentChaptersPresenter>(),
      * Start deleting chapter
      * @param chapter selected chapter with manga
      */
-    fun deleteChapter(chapter: RecentChapterItem) {
+    fun deleteChapter(chapter: UpdatesItem) {
         DeletingChaptersDialog().showDialog(router)
         presenter.deleteChapters(listOf(chapter))
     }
 
     override fun onCoverClick(position: Int) {
-        val chapterClicked = adapter?.getItem(position) as? RecentChapterItem ?: return
+        val chapterClicked = adapter?.getItem(position) as? UpdatesItem ?: return
         openManga(chapterClicked)
     }
 
-    fun openManga(chapter: RecentChapterItem) {
+    fun openManga(chapter: UpdatesItem) {
         router.pushController(MangaController(chapter.manga).withFadeTransaction())
     }
 

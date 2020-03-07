@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent_updates
+package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.view.View
 import android.widget.PopupMenu
@@ -8,11 +8,11 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.system.getResourceColor
-import kotlinx.android.synthetic.main.recent_chapters_item.chapter_menu
-import kotlinx.android.synthetic.main.recent_chapters_item.chapter_title
-import kotlinx.android.synthetic.main.recent_chapters_item.download_text
-import kotlinx.android.synthetic.main.recent_chapters_item.manga_cover
-import kotlinx.android.synthetic.main.recent_chapters_item.manga_title
+import kotlinx.android.synthetic.main.updates_item.chapter_menu
+import kotlinx.android.synthetic.main.updates_item.chapter_title
+import kotlinx.android.synthetic.main.updates_item.download_text
+import kotlinx.android.synthetic.main.updates_item.manga_cover
+import kotlinx.android.synthetic.main.updates_item.manga_title
 
 /**
  * Holder that contains chapter item
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.recent_chapters_item.manga_title
  * @param listener a listener to react to single tap and long tap events.
  * @constructor creates a new recent chapter holder.
  */
-class RecentChapterHolder(private val view: View, private val adapter: RecentChaptersAdapter) :
+class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter) :
         BaseFlexibleViewHolder(view, adapter) {
 
     /**
@@ -40,7 +40,7 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
     /**
      * Currently bound item.
      */
-    private var item: RecentChapterItem? = null
+    private var item: UpdatesItem? = null
 
     init {
         // We need to post a Runnable to show the popup to make sure that the PopupMenu is
@@ -57,7 +57,7 @@ class RecentChapterHolder(private val view: View, private val adapter: RecentCha
      *
      * @param item item containing chapter information
      */
-    fun bind(item: RecentChapterItem) {
+    fun bind(item: UpdatesItem) {
         this.item = item
 
         // Set chapter title

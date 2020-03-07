@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent_updates
+package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.app.Dialog
 import android.os.Bundle

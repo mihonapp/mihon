@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent_updates
+package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -10,8 +10,8 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 
-class RecentChapterItem(val chapter: Chapter, val manga: Manga, header: DateItem) :
-        AbstractSectionableItem<RecentChapterHolder, DateItem>(header) {
+class UpdatesItem(val chapter: Chapter, val manga: Manga, header: DateItem) :
+        AbstractSectionableItem<UpdatesHolder, DateItem>(header) {
 
     private var _status: Int = 0
 
@@ -28,16 +28,16 @@ class RecentChapterItem(val chapter: Chapter, val manga: Manga, header: DateItem
         get() = status == Download.DOWNLOADED
 
     override fun getLayoutRes(): Int {
-        return R.layout.recent_chapters_item
+        return R.layout.updates_item
     }
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): RecentChapterHolder {
-        return RecentChapterHolder(view, adapter as RecentChaptersAdapter)
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): UpdatesHolder {
+        return UpdatesHolder(view, adapter as UpdatesAdapter)
     }
 
     override fun bindViewHolder(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
-        holder: RecentChapterHolder,
+        holder: UpdatesHolder,
         position: Int,
         payloads: List<Any?>?
     ) {
@@ -47,7 +47,7 @@ class RecentChapterItem(val chapter: Chapter, val manga: Manga, header: DateItem
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other is RecentChapterItem) {
+        if (other is UpdatesItem) {
             return chapter.id!! == other.chapter.id!!
         }
         return false

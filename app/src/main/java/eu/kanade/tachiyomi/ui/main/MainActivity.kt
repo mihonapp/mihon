@@ -26,8 +26,8 @@ import eu.kanade.tachiyomi.ui.download.DownloadController
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.more.MoreController
-import eu.kanade.tachiyomi.ui.recent_updates.RecentChaptersController
-import eu.kanade.tachiyomi.ui.recently_read.RecentlyReadController
+import eu.kanade.tachiyomi.ui.recent.history.HistoryController
+import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import kotlinx.android.synthetic.main.main_activity.appbar
 import kotlinx.android.synthetic.main.main_activity.bottom_nav
 import kotlinx.android.synthetic.main.main_activity.drawer
@@ -75,8 +75,8 @@ class MainActivity : BaseActivity() {
             if (currentRoot?.tag()?.toIntOrNull() != id) {
                 when (id) {
                     R.id.nav_library -> setRoot(LibraryController(), id)
-                    R.id.nav_updates -> setRoot(RecentChaptersController(), id)
-                    R.id.nav_history -> setRoot(RecentlyReadController(), id)
+                    R.id.nav_updates -> setRoot(UpdatesController(), id)
+                    R.id.nav_history -> setRoot(HistoryController(), id)
                     R.id.nav_catalogues -> setRoot(CatalogueController(), id)
                     R.id.nav_more -> setRoot(MoreController(), id)
                 }

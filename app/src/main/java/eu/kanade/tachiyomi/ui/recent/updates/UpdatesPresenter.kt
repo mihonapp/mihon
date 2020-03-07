@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recent_updates
+package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.os.Bundle
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -18,27 +18,27 @@ import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class RecentChaptersPresenter(
+class UpdatesPresenter(
     val preferences: PreferencesHelper = Injekt.get(),
     private val db: DatabaseHelper = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get()
-) : BasePresenter<RecentChaptersController>() {
+) : BasePresenter<UpdatesController>() {
 
     /**
      * List containing chapter and manga information
      */
-    private var chapters: List<RecentChapterItem> = emptyList()
+    private var chapters: List<UpdatesItem> = emptyList()
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        getRecentChaptersObservable()
+        getUpdatesObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeLatestCache(RecentChaptersController::onNextRecentChapters)
+                .subscribeLatestCache(UpdatesController::onNextRecentChapters)
 
         getChapterStatusObservable()
-                .subscribeLatestCache(RecentChaptersController::onChapterStatusChange) { _, error ->
+                .subscribeLatestCache(UpdatesController::onChapterStatusChange) { _, error ->
                     Timber.e(error)
                 }
     }
@@ -48,7 +48,7 @@ class RecentChaptersPresenter(
      *
      * @return observable containing recent chapters and date
      */
-    fun getRecentChaptersObservable(): Observable<List<RecentChapterItem>> {
+    private fun getUpdatesObservable(): Observable<List<UpdatesItem>> {
         // Set date limit for recent chapters
         val cal = Calendar.getInstance().apply {
             time = Date()
@@ -65,7 +65,7 @@ class RecentChaptersPresenter(
                         val dateItem = DateItem(it.key)
                         it.value
                                 .sortedWith(compareBy({ it.chapter.date_fetch }, { it.chapter.chapter_number })).asReversed()
-                                .map { RecentChapterItem(it.chapter, it.manga, dateItem) }
+                                .map { UpdatesItem(it.chapter, it.manga, dateItem) }
                     }
                 }
                 .doOnNext {
@@ -116,7 +116,7 @@ class RecentChaptersPresenter(
      *
      * @param items the list of chapter from the database.
      */
-    private fun setDownloadedChapters(items: List<RecentChapterItem>) {
+    private fun setDownloadedChapters(items: List<UpdatesItem>) {
         for (item in items) {
             val manga = item.manga
             val chapter = item.chapter
@@ -148,7 +148,7 @@ class RecentChaptersPresenter(
      * @param items list of selected chapters
      * @param read read status
      */
-    fun markChapterRead(items: List<RecentChapterItem>, read: Boolean) {
+    fun markChapterRead(items: List<UpdatesItem>, read: Boolean) {
         val chapters = items.map { it.chapter }
         chapters.forEach {
             it.read = read
@@ -167,21 +167,21 @@ class RecentChaptersPresenter(
      *
      * @param chapters list of chapters
      */
-    fun deleteChapters(chapters: List<RecentChapterItem>) {
+    fun deleteChapters(chapters: List<UpdatesItem>) {
         Observable.just(chapters)
                 .doOnNext { deleteChaptersInternal(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeFirst({ view, _ ->
                     view.onChaptersDeleted()
-                }, RecentChaptersController::onChaptersDeletedError)
+                }, UpdatesController::onChaptersDeletedError)
     }
 
     /**
      * Download selected chapters
      * @param items list of recent chapters seleted.
      */
-    fun downloadChapters(items: List<RecentChapterItem>) {
+    fun downloadChapters(items: List<UpdatesItem>) {
         items.forEach { downloadManager.downloadChapters(it.manga, listOf(it.chapter)) }
     }
 
@@ -190,7 +190,7 @@ class RecentChaptersPresenter(
      *
      * @param items chapters selected
      */
-    private fun deleteChaptersInternal(chapterItems: List<RecentChapterItem>) {
+    private fun deleteChaptersInternal(chapterItems: List<UpdatesItem>) {
         val itemsByManga = chapterItems.groupBy { it.manga.id }
         for ((_, items) in itemsByManga) {
             val manga = items.first().manga

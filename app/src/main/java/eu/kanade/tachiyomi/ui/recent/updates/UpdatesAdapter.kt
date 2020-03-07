@@ -1,9 +1,9 @@
-package eu.kanade.tachiyomi.ui.recent_updates
+package eu.kanade.tachiyomi.ui.recent.updates
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 
-class RecentChaptersAdapter(val controller: RecentChaptersController) :
+class UpdatesAdapter(val controller: UpdatesController) :
         FlexibleAdapter<IFlexible<*>>(null, controller, true) {
 
     val coverClickListener: OnCoverClickListener = controller

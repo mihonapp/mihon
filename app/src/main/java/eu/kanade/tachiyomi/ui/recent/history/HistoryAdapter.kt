@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.recently_read
+package eu.kanade.tachiyomi.ui.recent.history
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -10,15 +10,15 @@ import java.text.DecimalFormatSymbols
 import uy.kohesive.injekt.injectLazy
 
 /**
- * Adapter of RecentlyReadHolder.
+ * Adapter of HistoryHolder.
  * Connection between Fragment and Holder
  * Holder updates should be called from here.
  *
- * @param controller a RecentlyReadController object
+ * @param controller a HistoryController object
  * @constructor creates an instance of the adapter.
  */
-class RecentlyReadAdapter(controller: RecentlyReadController) :
-    FlexibleAdapter<RecentlyReadItem>(null, controller, true) {
+class HistoryAdapter(controller: HistoryController) :
+    FlexibleAdapter<HistoryItem>(null, controller, true) {
 
     val sourceManager by injectLazy<SourceManager>()
 
