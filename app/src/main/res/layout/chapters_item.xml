@@ -21,41 +21,17 @@
         tools:text="Title" />
 
     <TextView
-        android:id="@+id/chapter_scanlator"
-        style="@style/TextAppearance.Regular.Caption.Hint"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:maxLines="1"
-        app:layout_constraintBottom_toTopOf="@+id/chapter_date"
-        app:layout_constraintEnd_toStartOf="@+id/chapter_menu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chapter_title"
-        tools:text="Scanlator" />
-
-    <TextView
-        android:id="@+id/chapter_date"
+        android:id="@+id/chapter_description"
         style="@style/TextAppearance.Regular.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:ellipsize="marquee"
         android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="22/02/2016" />
-
-    <TextView
-        android:id="@+id/chapter_pages"
-        style="@style/TextAppearance.Regular.Caption.Hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="Pages: 45" />
+        tools:text="22/02/2016 • Scanlator • Page: 45" />
 
     <ImageButton
         android:id="@+id/chapter_menu"
@@ -76,6 +52,7 @@
         style="@style/TextAppearance.Regular.Caption.Hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
         android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"

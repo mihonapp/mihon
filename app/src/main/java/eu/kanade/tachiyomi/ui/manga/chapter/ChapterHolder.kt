@@ -6,12 +6,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
-import eu.kanade.tachiyomi.util.view.gone
 import java.util.Date
-import kotlinx.android.synthetic.main.chapters_item.chapter_date
+import kotlinx.android.synthetic.main.chapters_item.chapter_description
 import kotlinx.android.synthetic.main.chapters_item.chapter_menu
-import kotlinx.android.synthetic.main.chapters_item.chapter_pages
-import kotlinx.android.synthetic.main.chapters_item.chapter_scanlator
 import kotlinx.android.synthetic.main.chapters_item.chapter_title
 import kotlinx.android.synthetic.main.chapters_item.download_text
 
@@ -39,30 +36,29 @@ class ChapterHolder(
         }
 
         // Set correct text color
-        chapter_title.setTextColor(if (chapter.read) adapter.readColor else adapter.unreadColor)
-        if (chapter.bookmark) chapter_title.setTextColor(adapter.bookmarkedColor)
+        val chapterColor = if (chapter.read) adapter.readColor else adapter.unreadColor
+        chapter_title.setTextColor(chapterColor)
+        chapter_description.setTextColor(chapterColor)
+        if (chapter.bookmark) {
+            chapter_title.setTextColor(adapter.bookmarkedColor)
+        }
+
+        val descriptions = mutableListOf<String>()
 
         if (chapter.date_upload > 0) {
-            chapter_date.text = adapter.dateFormat.format(Date(chapter.date_upload))
-            chapter_date.setTextColor(if (chapter.read) adapter.readColor else adapter.unreadColor)
-        } else {
-            chapter_date.text = ""
+            descriptions.add(adapter.dateFormat.format(Date(chapter.date_upload)))
+        }
+        if (!chapter.scanlator.isNullOrBlank()) {
+            descriptions.add(chapter.scanlator!!)
+        }
+        if (!chapter.read && chapter.last_page_read > 0) {
+            descriptions.add(itemView.context.getString(R.string.chapter_progress, chapter.last_page_read + 1))
         }
 
-        // add scanlator if exists
-        chapter_scanlator.text = chapter.scanlator
-        // allow longer titles if there is no scanlator (most sources)
-        if (chapter_scanlator.text.isNullOrBlank()) {
-            chapter_title.maxLines = 2
-            chapter_scanlator.gone()
+        if (descriptions.isNotEmpty()) {
+            chapter_description.text = descriptions.joinToString(" • ")
         } else {
-            chapter_title.maxLines = 1
-        }
-
-        chapter_pages.text = if (!chapter.read && chapter.last_page_read > 0) {
-            itemView.context.getString(R.string.chapter_progress, chapter.last_page_read + 1)
-        } else {
-            ""
+            chapter_description.text = ""
         }
 
         notifyStatus(item.status)
