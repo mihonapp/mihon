@@ -23,12 +23,13 @@
     <TextView
         android:id="@+id/chapter_description"
         style="@style/TextAppearance.Regular.Caption"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
-        android:ellipsize="marquee"
+        android:ellipsize="end"
         android:singleLine="true"
+        app:layout_constraintEnd_toStartOf="@+id/download_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="22/02/2016 • Scanlator • Page: 45" />
