@@ -217,7 +217,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
-        if (from is DialogController) {
+        if (from is DialogController || to is DialogController) {
             return
         }
 
