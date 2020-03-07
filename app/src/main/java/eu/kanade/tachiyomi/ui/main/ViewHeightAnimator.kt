@@ -1,45 +1,46 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ObjectAnimator
+import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.DecelerateInterpolator
-import com.google.android.material.tabs.TabLayout
+import androidx.annotation.Keep
 
-class TabsAnimator(val tabs: TabLayout) {
+class ViewHeightAnimator(val view: View) {
 
     /**
-     * The default height of the tab layout. It's unknown until the view is layout.
+     * The default height of the view. It's unknown until the view is layout.
      */
-    private var tabsHeight = 0
+    private var height = 0
 
     /**
-     * Whether the last state of the tab layout is shown or hidden.
+     * Whether the last state of the view is shown or hidden.
      */
     private var isLastStateShown = true
 
     /**
-     * Animation used to expand and collapse the tab layout.
+     * Animation used to expand and collapse the view.
      */
     private val animation by lazy {
-        ObjectAnimator.ofInt(this, "height", tabsHeight).apply {
+        ObjectAnimator.ofInt(this, "height", height).apply {
             duration = 300L
             interpolator = DecelerateInterpolator()
         }
     }
 
     init {
-        tabs.viewTreeObserver.addOnGlobalLayoutListener(
+        view.viewTreeObserver.addOnGlobalLayoutListener(
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        if (tabs.height > 0) {
-                            tabs.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        if (view.height > 0) {
+                            view.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                             // Save the tabs default height.
-                            tabsHeight = tabs.height
+                            height = view.height
 
                             // Now that we know the height, set the initial height.
                             if (isLastStateShown) {
-                                setHeight(tabsHeight)
+                                setHeight(height)
                             } else {
                                 setHeight(0)
                             }
@@ -54,9 +55,10 @@ class TabsAnimator(val tabs: TabLayout) {
      *
      * @param newHeight The new height of the tab layout.
      */
+    @Keep
     fun setHeight(newHeight: Int) {
-        tabs.layoutParams.height = newHeight
-        tabs.requestLayout()
+        view.layoutParams.height = newHeight
+        view.requestLayout()
     }
 
     /**
@@ -64,7 +66,7 @@ class TabsAnimator(val tabs: TabLayout) {
      * reflection.
      */
     fun getHeight(): Int {
-        return tabs.layoutParams.height
+        return view.layoutParams.height
     }
 
     /**
@@ -72,8 +74,8 @@ class TabsAnimator(val tabs: TabLayout) {
      */
     fun expand() {
         if (isMeasured) {
-            if (getHeight() != tabsHeight) {
-                animation.setIntValues(tabsHeight)
+            if (getHeight() != height) {
+                animation.setIntValues(height)
                 animation.start()
             } else {
                 animation.cancel()
@@ -101,5 +103,5 @@ class TabsAnimator(val tabs: TabLayout) {
      * Returns whether the tab layout has a known height.
      */
     private val isMeasured: Boolean
-        get() = tabsHeight > 0
+        get() = height > 0
 }

@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
+import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
@@ -47,7 +48,8 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    lateinit var tabAnimator: TabsAnimator
+    lateinit var tabAnimator: ViewHeightAnimator
+    lateinit var bottomNavAnimator: ViewHeightAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +64,8 @@ class MainActivity : BaseActivity() {
 
         setSupportActionBar(toolbar)
 
-        tabAnimator = TabsAnimator(tabs)
+        tabAnimator = ViewHeightAnimator(tabs)
+        bottomNavAnimator = ViewHeightAnimator(bottom_nav)
 
         // Set behavior of bottom nav
         bottom_nav.setOnNavigationItemSelectedListener { item ->
@@ -219,6 +222,13 @@ class MainActivity : BaseActivity() {
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(router.backstackSize != 1)
+
+        if (from is RootController && to !is RootController) {
+            bottomNavAnimator.collapse()
+        }
+        if (to is RootController && from !is RootController) {
+            bottomNavAnimator.expand()
+        }
 
         if (from is TabbedController) {
             from.cleanupTabs(tabs)

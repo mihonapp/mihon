@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCatalogueController
@@ -40,6 +41,7 @@ import uy.kohesive.injekt.api.get
  * [CatalogueAdapter.OnLatestClickListener] call function data on latest item click
  */
 class CatalogueController : NucleusController<CataloguePresenter>(),
+        RootController,
         FlexibleAdapter.OnItemClickListener,
         FlexibleAdapter.OnItemLongClickListener,
         CatalogueAdapter.OnBrowseClickListener,
