@@ -20,6 +20,7 @@ import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
+import androidx.core.view.ViewCompat
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -44,8 +45,7 @@ import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.util.view.gone
-import eu.kanade.tachiyomi.util.view.visible
+import eu.kanade.tachiyomi.util.view.*
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import java.io.File
@@ -101,11 +101,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
      */
     var menuVisible = false
         private set
-
-    /**
-     * System UI helper to hide status & navigation bar on all different API levels.
-     */
-    private var systemUi: SystemUiHelper? = null
 
     /**
      * Configuration at reader level, like background color or forced orientation.
@@ -261,6 +256,17 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             onBackPressed()
         }
 
+        ViewCompat.setOnApplyWindowInsetsListener(reader_menu) { _, insets ->
+            if (!window.isDefaultBar()) {
+                reader_menu.setPadding(
+                        insets.systemWindowInsetLeft,
+                        insets.systemWindowInsetTop,
+                        insets.systemWindowInsetRight,
+                        insets.systemWindowInsetBottom)
+            }
+            insets
+        }
+
         // Init listeners on bottom menu
         page_seekbar.setOnSeekBarChangeListener(object : SimpleSeekBarListener() {
             override fun onProgressChanged(seekBar: SeekBar, value: Int, fromUser: Boolean) {
@@ -297,7 +303,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     private fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
         menuVisible = visible
         if (visible) {
-            systemUi?.show()
+            if (preferences.fullscreen().getOrDefault()) {
+                window.showBar()
+            } else {
+                resetDefaultMenuAndBar()
+            }
             reader_menu.visibility = View.VISIBLE
 
             if (animate) {
@@ -313,8 +323,16 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
                 reader_menu_bottom.startAnimation(bottomAnimation)
             }
+
+            if (preferences.showPageNumber().getOrDefault()) {
+                config?.setPageNumberVisibility(false)
+            }
         } else {
-            systemUi?.hide()
+            if (preferences.fullscreen().getOrDefault()) {
+                window.hideBar()
+            } else {
+                resetDefaultMenuAndBar()
+            }
 
             if (animate) {
                 val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
@@ -328,7 +346,20 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
                 reader_menu_bottom.startAnimation(bottomAnimation)
             }
+
+            if (preferences.showPageNumber().getOrDefault()) {
+                config?.setPageNumberVisibility(true)
+            }
         }
+    }
+
+
+    /**
+     * Reset menu padding and system bar
+     */
+    private fun resetDefaultMenuAndBar() {
+        reader_menu.setPadding(0, 0, 0, 0)
+        window.defaultBar()
     }
 
     /**
@@ -589,9 +620,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             subscriptions += preferences.trueColor().asObservable()
                     .subscribe { setTrueColor(it) }
 
-            subscriptions += preferences.fullscreen().asObservable()
-                    .subscribe { setFullscreen(it) }
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 subscriptions += preferences.cutoutShort().asObservable()
                         .subscribe { setCutoutShort(it) }
@@ -649,7 +677,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
         /**
          * Sets the visibility of the bottom page indicator according to [visible].
          */
-        private fun setPageNumberVisibility(visible: Boolean) {
+        fun setPageNumberVisibility(visible: Boolean) {
             page_number.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         }
 
@@ -661,21 +689,6 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 SubsamplingScaleImageView.setPreferredBitmapConfig(Bitmap.Config.ARGB_8888)
             else
                 SubsamplingScaleImageView.setPreferredBitmapConfig(Bitmap.Config.RGB_565)
-        }
-
-        /**
-         * Sets the fullscreen reading mode (immersive) according to [enabled].
-         */
-        private fun setFullscreen(enabled: Boolean) {
-            systemUi = if (enabled) {
-                val level = SystemUiHelper.LEVEL_IMMERSIVE
-                val flags = SystemUiHelper.FLAG_IMMERSIVE_STICKY or
-                        SystemUiHelper.FLAG_LAYOUT_IN_SCREEN_OLDER_DEVICES
-
-                SystemUiHelper(this@ReaderActivity, level, flags)
-            } else {
-                null
-            }
         }
 
         @TargetApi(Build.VERSION_CODES.P)
