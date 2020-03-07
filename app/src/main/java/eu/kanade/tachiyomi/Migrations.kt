@@ -23,11 +23,11 @@ object Migrations {
             if (oldVersion == 0) return false
 
             if (oldVersion < 14) {
-                // Restore jobs after upgrading to evernote's job scheduler.
+                // Restore jobs after upgrading to Evernote's job scheduler.
                 if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
-                    UpdaterJob.setupTask()
+                    UpdaterJob.setupTask(context)
                 }
-                LibraryUpdateJob.setupTask()
+                LibraryUpdateJob.setupTask(context)
             }
             if (oldVersion < 15) {
                 // Delete internal chapter cache dir.
@@ -39,7 +39,7 @@ object Migrations {
                 if (oldDir.exists()) {
                     val destDir = context.getExternalFilesDir("covers")
                     if (destDir != null) {
-                        oldDir.listFiles().forEach {
+                        oldDir.listFiles()?.forEach {
                             it.renameTo(File(destDir, it.name))
                         }
                     }

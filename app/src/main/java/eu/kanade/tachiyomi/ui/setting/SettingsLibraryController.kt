@@ -87,7 +87,7 @@ class SettingsLibraryController : SettingsController() {
 
                 onChange { newValue ->
                     val interval = (newValue as String).toInt()
-                    LibraryUpdateJob.setupTask(interval)
+                    LibraryUpdateJob.setupTask(context, interval)
                     true
                 }
             }
@@ -103,7 +103,7 @@ class SettingsLibraryController : SettingsController() {
 
                 onChange {
                     // Post to event looper to allow the preference to be updated.
-                    Handler().post { LibraryUpdateJob.setupTask() }
+                    Handler().post { LibraryUpdateJob.setupTask(context) }
                     true
                 }
             }

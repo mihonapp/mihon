@@ -62,9 +62,9 @@ class AboutController : SettingsController() {
                 onChange { newValue ->
                     val checked = newValue as Boolean
                     if (checked) {
-                        UpdaterJob.setupTask()
+                        UpdaterJob.setupTask(context)
                     } else {
-                        UpdaterJob.cancelTask()
+                        UpdaterJob.cancelTask(context)
                     }
                     true
                 }
