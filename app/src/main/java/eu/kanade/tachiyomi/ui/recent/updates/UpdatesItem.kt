@@ -9,9 +9,10 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.ui.recent.DateSectionItem
 
-class UpdatesItem(val chapter: Chapter, val manga: Manga, header: DateItem) :
-        AbstractSectionableItem<UpdatesHolder, DateItem>(header) {
+class UpdatesItem(val chapter: Chapter, val manga: Manga, header: DateSectionItem) :
+        AbstractSectionableItem<UpdatesHolder, DateSectionItem>(header) {
 
     private var _status: Int = 0
 
@@ -41,7 +42,6 @@ class UpdatesItem(val chapter: Chapter, val manga: Manga, header: DateItem) :
         position: Int,
         payloads: List<Any?>?
     ) {
-
         holder.bind(this)
     }
 

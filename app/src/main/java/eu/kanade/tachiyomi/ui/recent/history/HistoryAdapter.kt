@@ -1,10 +1,7 @@
 package eu.kanade.tachiyomi.ui.recent.history
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
-import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import uy.kohesive.injekt.injectLazy
@@ -34,9 +31,10 @@ class HistoryAdapter(controller: HistoryController) :
     val decimalFormat = DecimalFormat("#.###", DecimalFormatSymbols()
             .apply { decimalSeparator = '.' })
 
-    private val preferences: PreferencesHelper by injectLazy()
-
-    val dateFormat: DateFormat = preferences.dateFormat().getOrDefault()
+    init {
+        setDisplayHeadersAtStartUp(true)
+        setStickyHeaders(true)
+    }
 
     interface OnResumeClickListener {
         fun onResumeClick(position: Int)

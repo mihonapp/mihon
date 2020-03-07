@@ -8,6 +8,8 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.ui.recent.DateSectionItem
+import eu.kanade.tachiyomi.util.lang.toDateKey
 import java.util.Calendar
 import java.util.Date
 import java.util.TreeMap
@@ -60,9 +62,9 @@ class UpdatesPresenter(
                 .map { mangaChapters ->
                     val map = TreeMap<Date, MutableList<MangaChapter>> { d1, d2 -> d2.compareTo(d1) }
                     val byDay = mangaChapters
-                            .groupByTo(map, { getMapKey(it.chapter.date_fetch) })
+                            .groupByTo(map, { it.chapter.date_fetch.toDateKey() })
                     byDay.flatMap {
-                        val dateItem = DateItem(it.key)
+                        val dateItem = DateSectionItem(it.key)
                         it.value
                                 .sortedWith(compareBy({ it.chapter.date_fetch }, { it.chapter.chapter_number })).asReversed()
                                 .map { UpdatesItem(it.chapter, it.manga, dateItem) }
@@ -82,22 +84,6 @@ class UpdatesPresenter(
                     setDownloadedChapters(it)
                     chapters = it
                 }
-    }
-
-    /**
-     * Get date as time key
-     *
-     * @param date desired date
-     * @return date as time key
-     */
-    private fun getMapKey(date: Long): Date {
-        val cal = Calendar.getInstance()
-        cal.time = Date(date)
-        cal[Calendar.HOUR_OF_DAY] = 0
-        cal[Calendar.MINUTE] = 0
-        cal[Calendar.SECOND] = 0
-        cal[Calendar.MILLISECOND] = 0
-        return cal.time
     }
 
     /**

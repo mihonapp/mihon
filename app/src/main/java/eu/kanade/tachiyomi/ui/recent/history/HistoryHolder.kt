@@ -61,7 +61,7 @@ class HistoryHolder(
                 .format(adapter.sourceManager.getOrStub(manga.source).toString(), formattedNumber)
 
         // Set last read timestamp title
-        last_read.text = Date(history.last_read).toTimestampString(adapter.dateFormat)
+        last_read.text = Date(history.last_read).toTimestampString()
 
         // Set cover
         GlideApp.with(itemView.context).clear(cover)
