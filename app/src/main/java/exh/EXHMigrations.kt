@@ -110,7 +110,29 @@ object EXHMigrations {
                                 .build())
                     }
                 }
+                if (oldVersion < 8409) {
+                    db.inTransaction {
+                        // Migrate tsumino URLs
+                        val tsuminoManga = db.db.get()
+                                .listOfObjects(Manga::class.java)
+                                .withQuery(Query.builder()
+                                        .table(MangaTable.TABLE)
+                                        .where("${MangaTable.COL_SOURCE} = $TSUMINO_SOURCE_ID")
+                                        .build())
+                                .prepare()
+                                .executeAsBlocking()
+                        tsuminoManga.forEach {
+                            it.url = "/entry/"+it.url.split("/").last()
+                        }
 
+                        db.db.put()
+                                .objects(tsuminoManga)
+                                // Extremely slow without the resolver :/
+                                .withPutResolver(MangaUrlPutResolver())
+                                .prepare()
+                                .executeAsBlocking()
+                    }
+                }
 
 
                 // TODO BE CAREFUL TO NOT FUCK UP MergedSources IF CHANGING URLs
