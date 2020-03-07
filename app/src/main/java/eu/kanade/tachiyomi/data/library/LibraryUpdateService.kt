@@ -569,7 +569,7 @@ class LibraryUpdateService(
                 .apply { decimalSeparator = '.' })
 
         val displayableChapterNumbers = chapters
-                .filter { it.chapter_number >= 0 }
+                .filter { it.isRecognizedNumber }
                 .sortedBy { it.chapter_number }
                 .map { formatter.format(it.chapter_number) }
                 .toSet()
