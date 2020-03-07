@@ -20,7 +20,14 @@ object Migrations {
         if (oldVersion < BuildConfig.VERSION_CODE) {
             preferences.lastVersionCode().set(BuildConfig.VERSION_CODE)
 
-            if (oldVersion == 0) return false
+            // Fresh install
+            if (oldVersion == 0) {
+                // Set up default app updater task
+                if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
+                    UpdaterJob.setupTask(context)
+                }
+                return false
+            }
 
             if (oldVersion < 14) {
                 // Restore jobs after upgrading to Evernote's job scheduler.
