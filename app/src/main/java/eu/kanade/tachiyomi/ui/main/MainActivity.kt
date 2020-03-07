@@ -217,13 +217,13 @@ class MainActivity : BaseActivity() {
     }
 
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
-        if (from is DialogController || to is DialogController) {
+        if (from is DialogController) {
             return
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(router.backstackSize != 1)
 
-        if (from is RootController && to !is RootController) {
+        if ((from == null || from is RootController) && to !is RootController) {
             bottomNavAnimator.collapse()
         }
         if (to is RootController && from !is RootController) {
