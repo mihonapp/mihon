@@ -48,11 +48,11 @@ class ChapterHolder(
         if (chapter.date_upload > 0) {
             descriptions.add(adapter.dateFormat.format(Date(chapter.date_upload)))
         }
-        if (!chapter.scanlator.isNullOrBlank()) {
-            descriptions.add(chapter.scanlator!!)
-        }
         if (!chapter.read && chapter.last_page_read > 0) {
             descriptions.add(itemView.context.getString(R.string.chapter_progress, chapter.last_page_read + 1))
+        }
+        if (!chapter.scanlator.isNullOrBlank()) {
+            descriptions.add(chapter.scanlator!!)
         }
 
         if (descriptions.isNotEmpty()) {
