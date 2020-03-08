@@ -296,6 +296,12 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
             destroyActionModeIfNeeded()
         } else {
             mode.title = count.toString()
+
+            val chapters = getSelectedChapters()
+            action_toolbar.findItem(R.id.action_download)?.isVisible = chapters.any { !it.isDownloaded }
+            action_toolbar.findItem(R.id.action_delete)?.isVisible = chapters.any { it.isDownloaded }
+            action_toolbar.findItem(R.id.action_mark_as_read)?.isVisible = chapters.any { !it.chapter.read }
+            action_toolbar.findItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
         }
 
         return false
