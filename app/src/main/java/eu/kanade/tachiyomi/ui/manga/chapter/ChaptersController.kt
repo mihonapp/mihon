@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
 import eu.kanade.tachiyomi.util.view.snack
+import kotlinx.android.synthetic.main.chapters_controller.action_toolbar
 import kotlinx.android.synthetic.main.chapters_controller.fab
 import kotlinx.android.synthetic.main.chapters_controller.fast_scroller
 import kotlinx.android.synthetic.main.chapters_controller.recycler
@@ -112,8 +113,9 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     }
 
     override fun onDestroyView(view: View) {
+        destroyActionModeIfNeeded()
+        action_toolbar.destroy()
         adapter = null
-        actionMode = null
         super.onDestroyView(view)
     }
 
@@ -340,6 +342,10 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     private fun createActionModeIfNeeded() {
         if (actionMode == null) {
             actionMode = (activity as? AppCompatActivity)?.startSupportActionMode(this)
+            action_toolbar.show(
+                    actionMode!!,
+                    R.menu.chapter_selection
+            ) { onActionItemClicked(actionMode!!, it!!) }
         }
     }
 
@@ -349,7 +355,7 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.chapter_selection, menu)
+        mode.menuInflater.inflate(R.menu.generic_selection, menu)
         adapter?.mode = SelectableAdapter.Mode.MULTI
         return true
     }
@@ -362,14 +368,8 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         } else {
             mode.title = count.toString()
 
-            val chapters = getSelectedChapters()
-            menu.findItem(R.id.action_download).isVisible = chapters.any { !it.isDownloaded }
-            menu.findItem(R.id.action_delete).isVisible = chapters.any { it.isDownloaded }
-            menu.findItem(R.id.action_bookmark).isVisible = chapters.any { !it.chapter.bookmark }
-            menu.findItem(R.id.action_remove_bookmark).isVisible = chapters.any { it.chapter.bookmark }
-            menu.findItem(R.id.action_mark_as_read).isVisible = chapters.any { !it.chapter.read }
-            menu.findItem(R.id.action_mark_as_unread).isVisible = chapters.any { it.chapter.read }
-            menu.findItem(R.id.action_mark_previous_as_read).isVisible = count == 1
+            // Hide FAB to avoid interfering with the bottom action toolbar
+            fab.hide()
         }
         return false
     }
@@ -382,18 +382,21 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
             R.id.action_remove_bookmark -> bookmarkChapters(getSelectedChapters(), false)
             R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
             R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
+            R.id.action_mark_previous_as_read -> markPreviousAsRead(getSelectedChapters())
             R.id.action_select_all -> selectAll()
-            R.id.action_mark_previous_as_read -> markPreviousAsRead(getSelectedChapters()[0])
             else -> return false
         }
         return true
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
+        action_toolbar.hide()
         adapter?.mode = SelectableAdapter.Mode.SINGLE
         adapter?.clearSelection()
         selectedItems.clear()
         actionMode = null
+
+        fab.show()
     }
 
     override fun onDetach(view: View) {
@@ -441,12 +444,12 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         deleteChapters(getSelectedChapters())
     }
 
-    private fun markPreviousAsRead(chapter: ChapterItem) {
+    private fun markPreviousAsRead(chapters: List<ChapterItem>) {
         val adapter = adapter ?: return
-        val chapters = if (presenter.sortDescending()) adapter.items.reversed() else adapter.items
-        val chapterPos = chapters.indexOf(chapter)
+        val prevChapters = if (presenter.sortDescending()) adapter.items.reversed() else adapter.items
+        val chapterPos = prevChapters.indexOf(chapters.last())
         if (chapterPos != -1) {
-            markAsRead(chapters.take(chapterPos))
+            markAsRead(prevChapters.take(chapterPos))
         }
     }
 

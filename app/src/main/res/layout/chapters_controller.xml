@@ -44,6 +44,12 @@
         app:fastScrollerBubbleEnabled="false"
         tools:visibility="visible"/>
 
+    <eu.kanade.tachiyomi.widget.ActionToolbar
+        android:id="@+id/action_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         style="@style/Theme.Widget.FAB"

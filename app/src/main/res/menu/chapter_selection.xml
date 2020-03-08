@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -7,43 +6,37 @@
         android:id="@+id/action_download"
         android:icon="@drawable/ic_file_download_white_24dp"
         android:title="@string/action_download"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_delete_white_24dp"
         android:title="@string/action_delete"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_bookmark"
         android:icon="@drawable/ic_bookmark_white_24dp"
         android:title="@string/action_bookmark"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_remove_bookmark"
         android:icon="@drawable/ic_bookmark_border_white_24dp"
         android:title="@string/action_remove_bookmark"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_mark_as_read"
-        android:icon="@drawable/ic_done_all_white_24dp"
+        android:icon="@drawable/ic_done_all_grey_24dp"
         android:title="@string/action_mark_as_read"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_mark_as_unread"
-        android:icon="@drawable/ic_done_all_grey_24dp"
+        android:icon="@drawable/ic_done_all_white_24dp"
         android:title="@string/action_mark_as_unread"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_select_all"
-        android:icon="@drawable/ic_select_all_white_24dp"
-        android:title="@string/action_select_all"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_mark_previous_as_read"
