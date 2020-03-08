@@ -15,7 +15,7 @@
         android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintEnd_toStartOf="@+id/chapter_menu"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Title" />
@@ -33,20 +33,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="22/02/2016 • Scanlator • Page: 45" />
-
-    <ImageButton
-        android:id="@+id/chapter_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@string/action_menu"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/download_text"
-        app:srcCompat="@drawable/ic_more_vert_black_24dp"
-        app:tint="?attr/icon_color" />
 
     <TextView
         android:id="@+id/download_text"
