@@ -341,6 +341,7 @@
     <!-- Login dialog -->
     <string name="login_title">Log in to %1$s</string>
     <string name="username">Username</string>
+    <string name="email">Email address</string>
     <string name="password">Password</string>
     <string name="show_password">Show password</string>
     <string name="login">Login</string>

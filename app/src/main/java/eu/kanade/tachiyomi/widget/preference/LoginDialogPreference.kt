@@ -15,10 +15,12 @@ import eu.kanade.tachiyomi.widget.SimpleTextWatcher
 import kotlinx.android.synthetic.main.pref_account_login.view.login
 import kotlinx.android.synthetic.main.pref_account_login.view.password
 import kotlinx.android.synthetic.main.pref_account_login.view.show_password
+import kotlinx.android.synthetic.main.pref_account_login.view.username_label
 import rx.Subscription
 import uy.kohesive.injekt.injectLazy
 
-abstract class LoginDialogPreference(bundle: Bundle? = null) : DialogController(bundle) {
+abstract class LoginDialogPreference(private val usernameLabel: String? = null, bundle: Bundle? = null) :
+        DialogController(bundle) {
 
     var v: View? = null
         private set
@@ -45,6 +47,10 @@ abstract class LoginDialogPreference(bundle: Bundle? = null) : DialogController(
                     password.transformationMethod = null
                 else
                     password.transformationMethod = PasswordTransformationMethod()
+            }
+
+            if (!usernameLabel.isNullOrEmpty()) {
+                username_label.text = usernameLabel
             }
 
             login.setMode(ActionProcessButton.Mode.ENDLESS)

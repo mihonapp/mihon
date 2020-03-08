@@ -15,11 +15,15 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class TrackLoginDialog(bundle: Bundle? = null) : LoginDialogPreference(bundle) {
+class TrackLoginDialog(usernameLabel: String? = null, bundle: Bundle? = null) :
+        LoginDialogPreference(usernameLabel, bundle) {
 
     private val service = Injekt.get<TrackManager>().getService(args.getInt("key"))!!
 
-    constructor(service: TrackService) : this(Bundle().apply { putInt("key", service.id) })
+    constructor(service: TrackService) : this(service, null)
+
+    constructor(service: TrackService, usernameLabel: String?) :
+            this(usernameLabel, Bundle().apply { putInt("key", service.id) })
 
     override fun setCredentialsOnView(view: View) = with(view) {
         dialog_title.text = context.getString(R.string.login_title, service.name)

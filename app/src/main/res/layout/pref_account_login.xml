@@ -23,6 +23,7 @@
         android:background="@color/dividerLight" />
 
     <TextView
+        android:id="@+id/username_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/username" />
