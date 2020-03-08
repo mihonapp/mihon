@@ -48,7 +48,7 @@
     <string name="action_mark_previous_as_read">Mark previous as read</string>
     <string name="action_download">Download</string>
     <string name="action_bookmark">Bookmark</string>
-    <string name="action_remove_bookmark">Remove bookmark</string>
+    <string name="action_remove_bookmark">Unbookmark</string>
     <string name="action_delete">Delete</string>
     <string name="action_update">Update</string>
     <string name="action_update_library">Update library</string>
