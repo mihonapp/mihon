@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.IdRes
 import androidx.annotation.MenuRes
 import eu.kanade.tachiyomi.R
 import kotlinx.android.synthetic.main.common_bottom_action_menu.view.bottom_menu
@@ -29,6 +30,10 @@ class BottomActionMenu @JvmOverloads constructor(context: Context, attrs: Attrib
     fun cleanup() {
         bottom_menu.menu.clear()
         bottom_menu.setOnMenuItemClickListener(null)
+    }
+
+    fun findItem(@IdRes itemId: Int): MenuItem? {
+        return bottom_menu.menu.findItem(itemId)
     }
 
     fun show(menuInflater: MenuInflater) {

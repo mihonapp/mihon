@@ -107,8 +107,8 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
     }
 
     override fun onDestroyView(view: View) {
+        destroyActionModeIfNeeded()
         adapter = null
-        actionMode = null
         super.onDestroyView(view)
     }
 
@@ -116,7 +116,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * Returns selected chapters
      * @return list of selected chapters
      */
-    fun getSelectedChapters(): List<UpdatesItem> {
+    private fun getSelectedChapters(): List<UpdatesItem> {
         val adapter = adapter ?: return emptyList()
         return adapter.selectedPositions.mapNotNull { adapter.getItem(it) as? UpdatesItem }
     }
@@ -175,7 +175,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * Download selected items
      * @param chapters list of selected [UpdatesItem]s
      */
-    fun downloadChapters(chapters: List<UpdatesItem>) {
+    private fun downloadChapters(chapters: List<UpdatesItem>) {
         presenter.downloadChapters(chapters)
     }
 
@@ -216,11 +216,19 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * Mark chapter as read
      * @param chapters list of chapters
      */
-    fun markAsRead(chapters: List<UpdatesItem>) {
+    private fun markAsRead(chapters: List<UpdatesItem>) {
         presenter.markChapterRead(chapters, true)
         if (presenter.preferences.removeAfterMarkedAsRead()) {
             deleteChapters(chapters)
         }
+    }
+
+    /**
+     * Mark chapter as unread
+     * @param chapters list of selected [UpdatesItem]
+     */
+    private fun markAsUnread(chapters: List<UpdatesItem>) {
+        presenter.markChapterRead(chapters, false)
     }
 
     override fun deleteChapters(chaptersToDelete: List<UpdatesItem>) {
@@ -235,20 +243,12 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
         actionMode?.finish()
     }
 
-    /**
-     * Mark chapter as unread
-     * @param chapters list of selected [UpdatesItem]
-     */
-    fun markAsUnread(chapters: List<UpdatesItem>) {
-        presenter.markChapterRead(chapters, false)
-    }
-
     override fun onCoverClick(position: Int) {
         val chapterClicked = adapter?.getItem(position) as? UpdatesItem ?: return
         openManga(chapterClicked)
     }
 
-    fun openManga(chapter: UpdatesItem) {
+    private fun openManga(chapter: UpdatesItem) {
         router.pushController(MangaController(chapter.manga).withFadeTransaction())
     }
 
@@ -272,7 +272,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
     /**
      * Called to dismiss deleting dialog
      */
-    fun dismissDeletingDialog() {
+    private fun dismissDeletingDialog() {
         router.popControllerWithTag(DeletingChaptersDialog.TAG)
     }
 
@@ -284,7 +284,6 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.generic_selection, menu)
         adapter?.mode = SelectableAdapter.Mode.MULTI
-
         return true
     }
 
@@ -331,16 +330,16 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
         actionMode = null
     }
 
-    private fun selectAll() {
-        val adapter = adapter ?: return
-        adapter.selectAll()
-        actionMode?.invalidate()
-    }
-
     override fun configureBottomActionMenu(bottomActionMenu: BottomActionMenu) {
         this.bottomActionMenu = bottomActionMenu
         bottomActionMenu.configure(
                 R.menu.updates_chapter_selection
         ) { onActionItemClicked(actionMode!!, it!!) }
+    }
+
+    private fun selectAll() {
+        val adapter = adapter ?: return
+        adapter.selectAll()
+        actionMode?.invalidate()
     }
 }
