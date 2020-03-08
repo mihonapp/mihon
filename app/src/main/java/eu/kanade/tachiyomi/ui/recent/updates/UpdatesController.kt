@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.appcompat.widget.ActionMenuView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
@@ -19,6 +18,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.ui.base.controller.BottomActionMenuController
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
@@ -39,19 +39,16 @@ import timber.log.Timber
  * Uses [R.layout.updates_controller].
  * UI related actions should be called from here.
  */
-class UpdatesController() : NucleusController<UpdatesPresenter>(),
+class UpdatesController : NucleusController<UpdatesPresenter>(),
         RootController,
         NoToolbarElevationController,
+        BottomActionMenuController,
         ActionMode.Callback,
         FlexibleAdapter.OnItemClickListener,
         FlexibleAdapter.OnItemLongClickListener,
         FlexibleAdapter.OnUpdateListener,
         ConfirmDeleteChaptersDialog.Listener,
         UpdatesAdapter.OnCoverClickListener {
-
-    constructor(bottomActionMenu: BottomActionMenu) : this() {
-        this.bottomActionMenu = bottomActionMenu
-    }
 
     /**
      * Action mode for multiple selection.
@@ -299,11 +296,7 @@ class UpdatesController() : NucleusController<UpdatesPresenter>(),
         } else {
             mode.title = count.toString()
 
-            bottomActionMenu?.show(
-                    mode.menuInflater,
-                    R.menu.updates_chapter_selection,
-                    ActionMenuView.OnMenuItemClickListener { onActionItemClicked(actionMode!!, it) }
-            )
+            bottomActionMenu?.show(mode.menuInflater)
         }
 
         return false
@@ -342,5 +335,12 @@ class UpdatesController() : NucleusController<UpdatesPresenter>(),
         val adapter = adapter ?: return
         adapter.selectAll()
         actionMode?.invalidate()
+    }
+
+    override fun configureBottomActionMenu(bottomActionMenu: BottomActionMenu) {
+        this.bottomActionMenu = bottomActionMenu
+        bottomActionMenu.configure(
+                R.menu.updates_chapter_selection
+        ) { onActionItemClicked(actionMode!!, it!!) }
     }
 }

@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.base.controller.BottomActionMenuController
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
@@ -76,7 +77,7 @@ class MainActivity : BaseActivity() {
             if (currentRoot?.tag()?.toIntOrNull() != id) {
                 when (id) {
                     R.id.nav_library -> setRoot(LibraryController(), id)
-                    R.id.nav_updates -> setRoot(UpdatesController(bottom_action_menu), id)
+                    R.id.nav_updates -> setRoot(UpdatesController(), id)
                     R.id.nav_history -> setRoot(HistoryController(), id)
                     R.id.nav_catalogues -> setRoot(CatalogueController(), id)
                     R.id.nav_more -> setRoot(MoreController(), id)
@@ -257,6 +258,13 @@ class MainActivity : BaseActivity() {
             appbar.disableElevation()
         } else {
             appbar.enableElevation()
+        }
+
+        if (from is BottomActionMenuController) {
+            bottom_action_menu.cleanup()
+        }
+        if (to is BottomActionMenuController) {
+            to.configureBottomActionMenu(bottom_action_menu)
         }
     }
 
