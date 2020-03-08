@@ -578,10 +578,17 @@ class EHentai(override val id: Long,
 
     //Filters
     override fun getFilterList() = FilterList(
+            Watched(),
             GenreGroup(),
             AdvancedGroup(),
             ReverseFilter()
     )
+
+    class Watched : Filter.CheckBox("Watched List"), UriFilter {
+        override fun addToUri(builder: Uri.Builder) {
+            builder.appendPath("watched")
+        }
+    }
 
     class GenreOption(name: String, val genreId: Int): Filter.CheckBox(name, false)
     class GenreGroup : Filter.Group<GenreOption>("Genres", listOf(
