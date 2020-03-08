@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import kotlinx.android.synthetic.main.main_activity.appbar
+import kotlinx.android.synthetic.main.main_activity.bottom_action_menu
 import kotlinx.android.synthetic.main.main_activity.bottom_nav
 import kotlinx.android.synthetic.main.main_activity.drawer
 import kotlinx.android.synthetic.main.main_activity.tabs
@@ -49,7 +50,7 @@ class MainActivity : BaseActivity() {
     }
 
     lateinit var tabAnimator: ViewHeightAnimator
-    lateinit var bottomNavAnimator: ViewHeightAnimator
+    private lateinit var bottomNavAnimator: ViewHeightAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +76,7 @@ class MainActivity : BaseActivity() {
             if (currentRoot?.tag()?.toIntOrNull() != id) {
                 when (id) {
                     R.id.nav_library -> setRoot(LibraryController(), id)
-                    R.id.nav_updates -> setRoot(UpdatesController(), id)
+                    R.id.nav_updates -> setRoot(UpdatesController(bottom_action_menu), id)
                     R.id.nav_history -> setRoot(HistoryController(), id)
                     R.id.nav_catalogues -> setRoot(CatalogueController(), id)
                     R.id.nav_more -> setRoot(MoreController(), id)

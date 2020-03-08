@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.ActionMenuView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
@@ -27,8 +28,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.android.synthetic.main.updates_controller.bottom_menu
-import kotlinx.android.synthetic.main.updates_controller.bottom_menu_bar
+import eu.kanade.tachiyomi.widget.BottomActionMenu
 import kotlinx.android.synthetic.main.updates_controller.empty_view
 import kotlinx.android.synthetic.main.updates_controller.recycler
 import kotlinx.android.synthetic.main.updates_controller.swipe_refresh
@@ -39,7 +39,7 @@ import timber.log.Timber
  * Uses [R.layout.updates_controller].
  * UI related actions should be called from here.
  */
-class UpdatesController : NucleusController<UpdatesPresenter>(),
+class UpdatesController() : NucleusController<UpdatesPresenter>(),
         RootController,
         NoToolbarElevationController,
         ActionMode.Callback,
@@ -49,10 +49,15 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
         ConfirmDeleteChaptersDialog.Listener,
         UpdatesAdapter.OnCoverClickListener {
 
+    constructor(bottomActionMenu: BottomActionMenu) : this() {
+        this.bottomActionMenu = bottomActionMenu
+    }
+
     /**
      * Action mode for multiple selection.
      */
     private var actionMode: ActionMode? = null
+    private var bottomActionMenu: BottomActionMenu? = null
 
     /**
      * Adapter containing the recent chapters.
@@ -102,14 +107,11 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
             // It can be a very long operation, so we disable swipe refresh and show a toast.
             swipe_refresh.isRefreshing = false
         }
-
-        bottom_menu.setOnMenuItemClickListener { onActionItemClicked(actionMode!!, it) }
     }
 
     override fun onDestroyView(view: View) {
         adapter = null
         actionMode = null
-        bottom_menu.setOnMenuItemClickListener(null)
         super.onDestroyView(view)
     }
 
@@ -145,8 +147,9 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * @param position position of clicked item
      */
     override fun onItemLongClick(position: Int) {
-        if (actionMode == null)
+        if (actionMode == null) {
             actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
+        }
 
         toggleSelection(position)
     }
@@ -285,11 +288,6 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
         mode.menuInflater.inflate(R.menu.generic_selection, menu)
         adapter?.mode = SelectableAdapter.Mode.MULTI
 
-        // Avoid reinflating the menu multiple times
-        if (bottom_menu.menu.size() == 0) {
-            mode.menuInflater.inflate(R.menu.updates_chapter_selection, bottom_menu.menu)
-        }
-
         return true
     }
 
@@ -301,7 +299,11 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
         } else {
             mode.title = count.toString()
 
-            bottom_menu_bar.visibility = View.VISIBLE
+            bottomActionMenu?.show(
+                    mode.menuInflater,
+                    R.menu.updates_chapter_selection,
+                    ActionMenuView.OnMenuItemClickListener { onActionItemClicked(actionMode!!, it) }
+            )
         }
 
         return false
@@ -330,7 +332,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * @param mode the ActionMode object
      */
     override fun onDestroyActionMode(mode: ActionMode?) {
-        bottom_menu_bar.visibility = View.GONE
+        bottomActionMenu?.hide()
         adapter?.mode = SelectableAdapter.Mode.IDLE
         adapter?.clearSelection()
         actionMode = null
