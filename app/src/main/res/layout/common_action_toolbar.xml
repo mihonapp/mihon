@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/bottom_menu_bar"
+        android:id="@+id/common_action_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
@@ -16,7 +16,7 @@
         app:contentInsetEnd="8dp">
 
         <androidx.appcompat.widget.ActionMenuView
-            android:id="@+id/bottom_menu"
+            android:id="@+id/common_action_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

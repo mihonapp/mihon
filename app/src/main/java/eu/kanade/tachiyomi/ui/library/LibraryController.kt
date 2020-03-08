@@ -32,7 +32,6 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.ui.base.controller.BottomActionMenuController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.SecondaryDrawerController
@@ -42,8 +41,8 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.inflate
-import eu.kanade.tachiyomi.widget.BottomActionMenu
 import java.io.IOException
+import kotlinx.android.synthetic.main.library_controller.action_toolbar
 import kotlinx.android.synthetic.main.library_controller.empty_view
 import kotlinx.android.synthetic.main.library_controller.library_pager
 import kotlinx.android.synthetic.main.main_activity.drawer
@@ -60,7 +59,6 @@ class LibraryController(
         RootController,
         TabbedController,
         SecondaryDrawerController,
-        BottomActionMenuController,
         ActionMode.Callback,
         ChangeMangaCategoriesDialog.Listener,
         DeleteLibraryMangasDialog.Listener {
@@ -75,7 +73,6 @@ class LibraryController(
      * Action mode for selections.
      */
     private var actionMode: ActionMode? = null
-    private var bottomActionMenu: BottomActionMenu? = null
 
     /**
      * Library search query.
@@ -184,6 +181,7 @@ class LibraryController(
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
+        action_toolbar.destroy()
         adapter?.onDestroy()
         adapter = null
         tabsVisibilitySubscription?.unsubscribe()
@@ -318,6 +316,10 @@ class LibraryController(
     fun createActionModeIfNeeded() {
         if (actionMode == null) {
             actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
+            action_toolbar.show(
+                    actionMode!!,
+                    R.menu.library_selection
+            ) { onActionItemClicked(actionMode!!, it!!) }
         }
     }
 
@@ -430,8 +432,7 @@ class LibraryController(
         } else {
             mode.title = count.toString()
 
-            bottomActionMenu?.show(mode.menuInflater)
-            bottomActionMenu?.findItem(R.id.action_edit_cover)?.isVisible = count == 1
+            action_toolbar.findItem(R.id.action_edit_cover)?.isVisible = count == 1
         }
         return false
     }
@@ -451,18 +452,11 @@ class LibraryController(
     }
 
     override fun onDestroyActionMode(mode: ActionMode?) {
-        bottomActionMenu?.hide()
+        action_toolbar.hide()
         // Clear all the manga selections and notify child views.
         selectedMangas.clear()
         selectionRelay.call(LibrarySelectionEvent.Cleared())
         actionMode = null
-    }
-
-    override fun configureBottomActionMenu(bottomActionMenu: BottomActionMenu) {
-        this.bottomActionMenu = bottomActionMenu
-        bottomActionMenu.configure(
-                R.menu.library_selection
-        ) { onActionItemClicked(actionMode!!, it!!) }
     }
 
     fun openManga(manga: Manga) {

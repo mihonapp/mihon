@@ -18,7 +18,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateService
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.ui.base.controller.BottomActionMenuController
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
@@ -28,7 +27,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.widget.BottomActionMenu
+import kotlinx.android.synthetic.main.updates_controller.action_toolbar
 import kotlinx.android.synthetic.main.updates_controller.empty_view
 import kotlinx.android.synthetic.main.updates_controller.recycler
 import kotlinx.android.synthetic.main.updates_controller.swipe_refresh
@@ -42,7 +41,6 @@ import timber.log.Timber
 class UpdatesController : NucleusController<UpdatesPresenter>(),
         RootController,
         NoToolbarElevationController,
-        BottomActionMenuController,
         ActionMode.Callback,
         FlexibleAdapter.OnItemClickListener,
         FlexibleAdapter.OnItemLongClickListener,
@@ -54,7 +52,6 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * Action mode for multiple selection.
      */
     private var actionMode: ActionMode? = null
-    private var bottomActionMenu: BottomActionMenu? = null
 
     /**
      * Adapter containing the recent chapters.
@@ -108,6 +105,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
+        action_toolbar.destroy()
         adapter = null
         super.onDestroyView(view)
     }
@@ -146,6 +144,10 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
     override fun onItemLongClick(position: Int) {
         if (actionMode == null) {
             actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
+            action_toolbar.show(
+                    actionMode!!,
+                    R.menu.updates_chapter_selection
+            ) { onActionItemClicked(actionMode!!, it!!) }
         }
 
         toggleSelection(position)
@@ -294,8 +296,6 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
             destroyActionModeIfNeeded()
         } else {
             mode.title = count.toString()
-
-            bottomActionMenu?.show(mode.menuInflater)
         }
 
         return false
@@ -324,17 +324,10 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * @param mode the ActionMode object
      */
     override fun onDestroyActionMode(mode: ActionMode?) {
-        bottomActionMenu?.hide()
+        action_toolbar.hide()
         adapter?.mode = SelectableAdapter.Mode.IDLE
         adapter?.clearSelection()
         actionMode = null
-    }
-
-    override fun configureBottomActionMenu(bottomActionMenu: BottomActionMenu) {
-        this.bottomActionMenu = bottomActionMenu
-        bottomActionMenu.configure(
-                R.menu.updates_chapter_selection
-        ) { onActionItemClicked(actionMode!!, it!!) }
     }
 
     private fun selectAll() {

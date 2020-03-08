@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.ui.base.controller.BottomActionMenuController
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
@@ -30,7 +29,6 @@ import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import kotlinx.android.synthetic.main.main_activity.appbar
-import kotlinx.android.synthetic.main.main_activity.bottom_action_menu
 import kotlinx.android.synthetic.main.main_activity.bottom_nav
 import kotlinx.android.synthetic.main.main_activity.drawer
 import kotlinx.android.synthetic.main.main_activity.tabs
@@ -258,13 +256,6 @@ class MainActivity : BaseActivity() {
             appbar.disableElevation()
         } else {
             appbar.enableElevation()
-        }
-
-        if (from is BottomActionMenuController) {
-            bottom_action_menu.cleanup()
-        }
-        if (to is BottomActionMenuController) {
-            to.configureBottomActionMenu(bottom_action_menu)
         }
     }
 
