@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
@@ -355,7 +354,6 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         return true
     }
 
-    @SuppressLint("StringFormatInvalid")
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val count = adapter?.selectedItemCount ?: 0
         if (count == 0) {
