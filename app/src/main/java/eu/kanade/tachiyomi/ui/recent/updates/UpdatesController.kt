@@ -296,7 +296,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * @param menu menu object of ActionMode
      */
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.chapter_recent_selection, menu)
+        mode.menuInflater.inflate(R.menu.updates_chapter_selection, menu)
         adapter?.mode = SelectableAdapter.Mode.MULTI
         return true
     }
@@ -308,7 +308,14 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
             destroyActionModeIfNeeded()
         } else {
             mode.title = count.toString()
+
+            val chapters = getSelectedChapters()
+            menu.findItem(R.id.action_download).isVisible = chapters.any { !it.isDownloaded }
+            menu.findItem(R.id.action_delete).isVisible = chapters.any { it.isDownloaded }
+            menu.findItem(R.id.action_mark_as_read).isVisible = chapters.any { !it.chapter.read }
+            menu.findItem(R.id.action_mark_as_unread).isVisible = chapters.any { it.chapter.read }
         }
+
         return false
     }
 
@@ -319,11 +326,11 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      */
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
-            R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
             R.id.action_download -> downloadChapters(getSelectedChapters())
             R.id.action_delete -> ConfirmDeleteChaptersDialog(this, getSelectedChapters())
                     .showDialog(router)
+            R.id.action_mark_as_read -> markAsRead(getSelectedChapters())
+            R.id.action_mark_as_unread -> markAsUnread(getSelectedChapters())
             else -> return false
         }
         return true

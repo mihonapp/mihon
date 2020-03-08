@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_component_lists_two_line_height"
+    android:paddingEnd="16dp"
     android:background="?attr/selectable_list_drawable">
 
     <ImageView
@@ -26,7 +27,7 @@
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.Regular.Body1"
         app:layout_constraintBottom_toTopOf="@+id/chapter_title"
-        app:layout_constraintEnd_toStartOf="@+id/chapter_menu"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/manga_cover"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
@@ -51,27 +52,11 @@
         android:id="@+id/download_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="3dp"
         android:textAllCaps="true"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/manga_title"
         tools:text="Downloaded" />
-
-    <ImageButton
-        android:id="@+id/chapter_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|end"
-        android:layout_marginEnd="8dp"
-        android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@string/action_menu"
-        android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/download_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_more_horiz_black_24dp"
-        app:tint="?attr/icon_color" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

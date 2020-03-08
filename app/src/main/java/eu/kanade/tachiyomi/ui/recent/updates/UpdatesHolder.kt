@@ -1,14 +1,12 @@
 package eu.kanade.tachiyomi.ui.recent.updates
 
 import android.view.View
-import android.widget.PopupMenu
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.system.getResourceColor
-import kotlinx.android.synthetic.main.updates_item.chapter_menu
 import kotlinx.android.synthetic.main.updates_item.chapter_title
 import kotlinx.android.synthetic.main.updates_item.download_text
 import kotlinx.android.synthetic.main.updates_item.manga_cover
@@ -43,10 +41,6 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
     private var item: UpdatesItem? = null
 
     init {
-        // We need to post a Runnable to show the popup to make sure that the PopupMenu is
-        // correctly positioned. The reason being that the view may change position before the
-        // PopupMenu is shown.
-        chapter_menu.setOnClickListener { it.post { showPopupMenu(it) } }
         manga_cover.setOnClickListener {
             adapter.coverClickListener.onCoverClick(adapterPosition)
         }
@@ -102,51 +96,5 @@ class UpdatesHolder(private val view: View, private val adapter: UpdatesAdapter)
             Download.ERROR -> setText(R.string.chapter_error)
             else -> text = ""
         }
-    }
-
-    /**
-     * Show pop up menu
-     *
-     * @param view view containing popup menu.
-     */
-    private fun showPopupMenu(view: View) = item?.let { item ->
-        // Create a PopupMenu, giving it the clicked view for an anchor
-        val popup = PopupMenu(view.context, view)
-
-        // Inflate our menu resource into the PopupMenu's Menu
-        popup.menuInflater.inflate(R.menu.chapter_recent, popup.menu)
-
-        // Hide download and show delete if the chapter is downloaded and
-        if (item.isDownloaded) {
-            popup.menu.findItem(R.id.action_download).isVisible = false
-            popup.menu.findItem(R.id.action_delete).isVisible = true
-        }
-
-        // Hide mark as unread when the chapter is unread
-        if (!item.chapter.read /*&& mangaChapter.chapter.last_page_read == 0*/) {
-            popup.menu.findItem(R.id.action_mark_as_unread).isVisible = false
-        }
-
-        // Hide mark as read when the chapter is read
-        if (item.chapter.read) {
-            popup.menu.findItem(R.id.action_mark_as_read).isVisible = false
-        }
-
-        // Set a listener so we are notified if a menu item is clicked
-        popup.setOnMenuItemClickListener { menuItem ->
-            with(adapter.controller) {
-                when (menuItem.itemId) {
-                    R.id.action_download -> downloadChapter(item)
-                    R.id.action_delete -> deleteChapter(item)
-                    R.id.action_mark_as_read -> markAsRead(listOf(item))
-                    R.id.action_mark_as_unread -> markAsUnread(listOf(item))
-                }
-            }
-
-            true
-        }
-
-        // Finally show the PopupMenu
-        popup.show()
     }
 }
