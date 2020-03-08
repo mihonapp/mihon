@@ -27,6 +27,8 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.android.synthetic.main.updates_controller.bottom_menu
+import kotlinx.android.synthetic.main.updates_controller.bottom_menu_bar
 import kotlinx.android.synthetic.main.updates_controller.empty_view
 import kotlinx.android.synthetic.main.updates_controller.recycler
 import kotlinx.android.synthetic.main.updates_controller.swipe_refresh
@@ -100,11 +102,14 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
             // It can be a very long operation, so we disable swipe refresh and show a toast.
             swipe_refresh.isRefreshing = false
         }
+
+        bottom_menu.setOnMenuItemClickListener { onActionItemClicked(actionMode!!, it) }
     }
 
     override fun onDestroyView(view: View) {
         adapter = null
         actionMode = null
+        bottom_menu.setOnMenuItemClickListener(null)
         super.onDestroyView(view)
     }
 
@@ -171,7 +176,6 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * @param chapters list of selected [UpdatesItem]s
      */
     fun downloadChapters(chapters: List<UpdatesItem>) {
-        destroyActionModeIfNeeded()
         presenter.downloadChapters(chapters)
     }
 
@@ -220,7 +224,6 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
     }
 
     override fun deleteChapters(chaptersToDelete: List<UpdatesItem>) {
-        destroyActionModeIfNeeded()
         DeletingChaptersDialog().showDialog(router)
         presenter.deleteChapters(chaptersToDelete)
     }
@@ -228,7 +231,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
     /**
      * Destory [ActionMode] if it's shown
      */
-    fun destroyActionModeIfNeeded() {
+    private fun destroyActionModeIfNeeded() {
         actionMode?.finish()
     }
 
@@ -238,23 +241,6 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      */
     fun markAsUnread(chapters: List<UpdatesItem>) {
         presenter.markChapterRead(chapters, false)
-    }
-
-    /**
-     * Start downloading chapter
-     * @param chapter selected chapter with manga
-     */
-    fun downloadChapter(chapter: UpdatesItem) {
-        presenter.downloadChapters(listOf(chapter))
-    }
-
-    /**
-     * Start deleting chapter
-     * @param chapter selected chapter with manga
-     */
-    fun deleteChapter(chapter: UpdatesItem) {
-        DeletingChaptersDialog().showDialog(router)
-        presenter.deleteChapters(listOf(chapter))
     }
 
     override fun onCoverClick(position: Int) {
@@ -296,8 +282,14 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * @param menu menu object of ActionMode
      */
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.updates_chapter_selection, menu)
+        mode.menuInflater.inflate(R.menu.generic_selection, menu)
         adapter?.mode = SelectableAdapter.Mode.MULTI
+
+        // Avoid reinflating the menu multiple times
+        if (bottom_menu.menu.size() == 0) {
+            mode.menuInflater.inflate(R.menu.updates_chapter_selection, bottom_menu.menu)
+        }
+
         return true
     }
 
@@ -309,11 +301,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
         } else {
             mode.title = count.toString()
 
-            val chapters = getSelectedChapters()
-            menu.findItem(R.id.action_download).isVisible = chapters.any { !it.isDownloaded }
-            menu.findItem(R.id.action_delete).isVisible = chapters.any { it.isDownloaded }
-            menu.findItem(R.id.action_mark_as_read).isVisible = chapters.any { !it.chapter.read }
-            menu.findItem(R.id.action_mark_as_unread).isVisible = chapters.any { it.chapter.read }
+            bottom_menu_bar.visibility = View.VISIBLE
         }
 
         return false
@@ -326,6 +314,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      */
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_select_all -> selectAll()
             R.id.action_download -> downloadChapters(getSelectedChapters())
             R.id.action_delete -> ConfirmDeleteChaptersDialog(this, getSelectedChapters())
                     .showDialog(router)
@@ -341,8 +330,15 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      * @param mode the ActionMode object
      */
     override fun onDestroyActionMode(mode: ActionMode?) {
+        bottom_menu_bar.visibility = View.GONE
         adapter?.mode = SelectableAdapter.Mode.IDLE
         adapter?.clearSelection()
         actionMode = null
+    }
+
+    private fun selectAll() {
+        val adapter = adapter ?: return
+        adapter.selectAll()
+        actionMode?.invalidate()
     }
 }
