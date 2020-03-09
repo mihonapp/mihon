@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
+import eu.kanade.tachiyomi.util.view.invisible
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import kotlinx.android.synthetic.main.reader_settings_sheet.always_show_chapter_transition
@@ -72,6 +73,12 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
     private fun initGeneralPreferences() {
         viewer.onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
             activity.presenter.setMangaViewer(position)
+
+            if (viewer.adapter.getItem(position) == context.getString(R.string.webtoon_viewer)) {
+                initWebtoonPreferences()
+            } else {
+                initPagerPreferences()
+            }
         }
         viewer.setSelection(activity.presenter.manga?.viewer ?: 0, false)
 
@@ -92,7 +99,9 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
      * Init the preferences for the pager reader.
      */
     private fun initPagerPreferences() {
+        webtoon_prefs_group.invisible()
         pager_prefs_group.visible()
+
         scale_type.bindToPreference(preferences.imageScaleType(), 1)
         zoom_start.bindToPreference(preferences.zoomStart(), 1)
         crop_borders.bindToPreference(preferences.cropBorders())
@@ -104,7 +113,9 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
      * Init the preferences for the webtoon reader.
      */
     private fun initWebtoonPreferences() {
+        pager_prefs_group.invisible()
         webtoon_prefs_group.visible()
+
         crop_borders_webtoon.bindToPreference(preferences.cropBordersWebtoon())
         pad_pages_vert_webtoon.bindToPreference(preferences.padPagesVertWebtoon())
     }
