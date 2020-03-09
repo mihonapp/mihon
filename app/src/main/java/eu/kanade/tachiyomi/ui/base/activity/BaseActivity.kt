@@ -15,6 +15,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     val preferences: PreferencesHelper by injectLazy()
 
+    @Suppress("LeakingThis")
+    private val secureActivityDelegate = SecureActivityDelegate(this)
+
     private val darkTheme: Int by lazy {
         when (preferences.themeDark()) {
             Values.THEME_DARK_DEFAULT -> R.style.Theme_Tachiyomi_Dark
@@ -43,12 +46,18 @@ abstract class BaseActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        SecureActivityDelegate.onCreate(this)
+        secureActivityDelegate.onCreate()
     }
 
     override fun onResume() {
         super.onResume()
 
-        SecureActivityDelegate.onResume(this)
+        secureActivityDelegate.onResume()
+    }
+
+    override fun onDestroy() {
+        secureActivityDelegate.onDestroy()
+
+        super.onDestroy()
     }
 }
