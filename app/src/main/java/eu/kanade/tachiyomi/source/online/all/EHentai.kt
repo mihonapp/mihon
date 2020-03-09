@@ -586,7 +586,8 @@ class EHentai(override val id: Long,
 
     class Watched : Filter.CheckBox("Watched List"), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            builder.appendPath("watched")
+            if(state)
+                builder.appendPath("watched")
         }
     }
 
