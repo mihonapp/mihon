@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize">
 
         <FrameLayout
             android:id="@+id/logo_container"
@@ -29,66 +30,29 @@
 
         </FrameLayout>
 
-        <Button
-            android:id="@+id/track_set"
-            style="@style/Theme.Widget.Button.Borderless.Small"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/action_edit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/logo_container"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <LinearLayout
             android:id="@+id/track_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/track_set"
             app:layout_constraintStart_toEndOf="@+id/logo_container"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/title_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectable_list_drawable"
-                android:clickable="true"
-                android:padding="16dp">
-
-                <TextView
-                    style="@style/TextAppearance.Regular.Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title" />
-
-                <TextView
-                    android:id="@+id/track_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:ellipsize="middle"
-                    android:gravity="end"
-                    android:maxLines="1"
-                    android:text="@string/action_edit" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="?android:attr/divider" />
-
-            <LinearLayout
                 android:id="@+id/status_container"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectable_list_drawable"
                 android:clickable="true"
-                android:padding="16dp">
+                android:focusable="true"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     style="@style/TextAppearance.Regular.Body1"
@@ -101,26 +65,24 @@
                     style="@style/TextAppearance.Regular.Body1.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:gravity="end"
+                    android:layout_marginTop="8dp"
                     tools:text="Reading" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="?android:attr/divider" />
-
             <LinearLayout
                 android:id="@+id/chapters_container"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectable_list_drawable"
                 android:clickable="true"
-                android:padding="16dp">
+                android:focusable="true"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     style="@style/TextAppearance.Regular.Body1"
@@ -133,26 +95,24 @@
                     style="@style/TextAppearance.Regular.Body1.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:gravity="end"
+                    android:layout_marginTop="8dp"
                     tools:text="12/24" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="?android:attr/divider" />
-
             <LinearLayout
                 android:id="@+id/score_container"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectable_list_drawable"
                 android:clickable="true"
-                android:padding="16dp">
+                android:focusable="true"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     style="@style/TextAppearance.Regular.Body1"
@@ -165,13 +125,25 @@
                     style="@style/TextAppearance.Regular.Body1.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:gravity="end"
+                    android:layout_marginTop="8dp"
                     tools:text="10" />
 
             </LinearLayout>
 
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/track_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_edit"
+            android:padding="8dp"
+            android:tint="?android:attr/textColorSecondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_create_white_24dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
