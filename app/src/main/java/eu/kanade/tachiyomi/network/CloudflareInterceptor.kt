@@ -9,6 +9,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Toast
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.isOutdated
 import eu.kanade.tachiyomi.util.system.toast
@@ -61,8 +62,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
                 val newRequest = originalRequest
                         .newBuilder()
                         .removeHeader("User-Agent")
-                        .addHeader("User-Agent",
-                                DEFAULT_USERAGENT)
+                        .addHeader("User-Agent", HttpSource.DEFAULT_USERAGENT)
                         .build()
                 chain.proceed(newRequest)
             } else {
@@ -89,7 +89,6 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
 
         val origRequestUrl = request.url.toString()
         val headers = request.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
-        val withUserAgent = request.header("User-Agent").isNullOrEmpty()
 
         handler.post {
             val webview = WebView(context)
@@ -98,14 +97,14 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
 
             // Avoid set empty User-Agent, Chromium WebView will reset to default if empty
             webview.settings.userAgentString = request.header("User-Agent")
-                    ?: DEFAULT_USERAGENT
+                    ?: HttpSource.DEFAULT_USERAGENT
 
             webview.webViewClient = object : WebViewClientCompat() {
                 override fun onPageFinished(view: WebView, url: String) {
                     fun isCloudFlareBypassed(): Boolean {
                         return networkHelper.cookieManager.get(origRequestUrl.toHttpUrl())
                                 .firstOrNull { it.name == "cf_clearance" }
-                                .let { it != null && (it != oldCookie || withUserAgent) }
+                                .let { it != null && it != oldCookie }
                     }
 
                     if (isCloudFlareBypassed()) {
@@ -171,6 +170,5 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
     companion object {
         private val SERVER_CHECK = arrayOf("cloudflare-nginx", "cloudflare")
         private val COOKIE_NAMES = listOf("__cfduid", "cf_clearance")
-        private const val DEFAULT_USERAGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64)"
     }
 }
