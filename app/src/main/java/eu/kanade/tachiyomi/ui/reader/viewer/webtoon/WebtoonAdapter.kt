@@ -38,7 +38,7 @@ class WebtoonAdapter(val viewer: WebtoonViewer) : RecyclerView.Adapter<RecyclerV
             }
         }
 
-        // Skip transition page if  the chapter is loaded & current page is not a transition page
+        // Skip transition page if the chapter is loaded & current page is not a transition page
         if (forceTransition || chapters.prevChapter?.state !is ReaderChapter.State.Loaded) {
             newItems.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
         }

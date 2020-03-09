@@ -144,8 +144,10 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         Timber.d("onReaderPageSelected: ${page.number}/${pages.size}")
         activity.onPageSelected(page)
 
-        if (page === pages.last()) {
-            Timber.d("Request preload next chapter because we're at the last page")
+        // Preload next chapter once we're within the last 3 pages of the current chapter
+        val inPreloadRange = pages.size - page.number < 3
+        if (inPreloadRange) {
+            Timber.d("Request preload next chapter because we're at page ${page.number} of ${pages.size}")
             adapter.nextTransition?.to?.let {
                 activity.requestPreloadChapter(it)
             }
