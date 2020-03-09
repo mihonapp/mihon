@@ -41,8 +41,10 @@ import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
+import eu.kanade.tachiyomi.widget.EmptyView
 import java.util.concurrent.TimeUnit
 import kotlinx.android.synthetic.main.catalogue_controller.catalogue_view
+import kotlinx.android.synthetic.main.catalogue_controller.empty_view
 import kotlinx.android.synthetic.main.catalogue_controller.progress
 import kotlinx.android.synthetic.main.main_activity.drawer
 import rx.Observable
@@ -352,16 +354,32 @@ open class BrowseCatalogueController(bundle: Bundle) :
         snack?.dismiss()
 
         if (catalogue_view != null) {
-            snack = catalogue_view.snack(getErrorMessage(error), Snackbar.LENGTH_INDEFINITE) {
-                setAction(R.string.action_retry) {
-                    // If not the first page, show bottom progress bar.
-                    if (adapter.mainItemCount > 0) {
-                        val item = progressItem ?: return@setAction
-                        adapter.addScrollableFooterWithDelay(item, 0, true)
-                    } else {
-                        showProgressBar()
-                    }
-                    presenter.requestNext()
+            val message = getErrorMessage(error)
+            val retryAction = View.OnClickListener {
+                empty_view.hide()
+
+                // If not the first page, show bottom progress bar.
+                if (adapter.mainItemCount > 0 && progressItem != null) {
+                    adapter.addScrollableFooterWithDelay(progressItem!!, 0, true)
+                } else {
+                    showProgressBar()
+                }
+                presenter.requestNext()
+            }
+            val openInWebViewAction = View.OnClickListener {
+                openInWebView()
+            }
+
+            if (adapter.isEmpty) {
+                empty_view.show(message, listOf(
+                    EmptyView.Action(R.string.action_retry, retryAction),
+                    EmptyView.Action(R.string.action_open_in_web_view, openInWebViewAction)
+                ))
+            } else {
+                empty_view.hide()
+
+                snack = catalogue_view.snack(message, Snackbar.LENGTH_INDEFINITE) {
+                    setAction(R.string.action_retry, retryAction)
                 }
             }
         }
