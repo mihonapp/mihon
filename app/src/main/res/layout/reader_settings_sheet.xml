@@ -152,11 +152,20 @@
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintTop_toBottomOf="@id/keepscreen" />
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/always_show_chapter_transition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/pref_always_show_chapter_transition"
+        android:textColor="?android:attr/textColorSecondary"
+        app:layout_constraintTop_toBottomOf="@id/long_tap" />
+
     <androidx.legacy.widget.Space
         android:id="@+id/end_general_preferences"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/long_tap" />
+        app:layout_constraintBottom_toBottomOf="@id/always_show_chapter_transition" />
 
     <!-- Pager preferences -->
 

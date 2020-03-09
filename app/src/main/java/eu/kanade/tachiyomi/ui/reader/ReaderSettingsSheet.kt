@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
+import kotlinx.android.synthetic.main.reader_settings_sheet.always_show_chapter_transition
 import kotlinx.android.synthetic.main.reader_settings_sheet.background_color
 import kotlinx.android.synthetic.main.reader_settings_sheet.crop_borders
 import kotlinx.android.synthetic.main.reader_settings_sheet.crop_borders_webtoon
@@ -84,6 +85,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         }
         keepscreen.bindToPreference(preferences.keepScreenOn())
         long_tap.bindToPreference(preferences.readWithLongTap())
+        always_show_chapter_transition.bindToPreference(preferences.alwaysShowChapterTransition())
     }
 
     /**
