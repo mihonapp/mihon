@@ -112,8 +112,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
         extension_prefs_recycler.addItemDecoration(DividerItemDecoration(context, VERTICAL))
 
         if (screen.preferenceCount == 0) {
-            extension_prefs_empty_view.show(R.drawable.ic_no_settings,
-                    R.string.ext_empty_preferences)
+            extension_prefs_empty_view.show(R.string.ext_empty_preferences)
         }
     }
 

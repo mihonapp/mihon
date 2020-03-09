@@ -242,8 +242,7 @@ class DownloadController : NucleusController<DownloadPresenter>() {
      */
     private fun setInformationView() {
         if (presenter.downloadQueue.isEmpty()) {
-            empty_view?.show(R.drawable.ic_file_download_black_128dp,
-                    R.string.information_no_downloads)
+            empty_view?.show(R.string.information_no_downloads)
         } else {
             empty_view?.hide()
         }

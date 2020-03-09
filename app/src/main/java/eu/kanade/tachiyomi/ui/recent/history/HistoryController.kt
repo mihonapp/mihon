@@ -81,7 +81,7 @@ class HistoryController : NucleusController<HistoryPresenter>(),
         if (size > 0) {
             empty_view.hide()
         } else {
-            empty_view.show(R.drawable.ic_history_black_128dp, R.string.information_no_recent_manga)
+            empty_view.show(R.string.information_no_recent_manga)
         }
     }
 

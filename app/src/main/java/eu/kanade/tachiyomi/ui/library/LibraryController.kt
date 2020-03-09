@@ -237,7 +237,7 @@ class LibraryController(
         if (mangaMap.isNotEmpty()) {
             empty_view.hide()
         } else {
-            empty_view.show(R.drawable.ic_book_black_128dp, R.string.information_empty_library)
+            empty_view.show(R.string.information_empty_library)
         }
 
         // Get the current active category.
