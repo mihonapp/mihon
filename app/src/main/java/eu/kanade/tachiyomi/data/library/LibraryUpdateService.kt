@@ -476,7 +476,7 @@ class LibraryUpdateService(
                 if (updates.size == 1 && !preferences.hideNotificationContent()) {
                     setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
                 } else {
-                    setContentText(resources.getQuantityString(R.plurals.notification_new_chapters_text, updates.size, updates.size))
+                    setContentText(resources.getQuantityString(R.plurals.notification_new_chapters_summary, updates.size, updates.size))
 
                     if (!preferences.hideNotificationContent()) {
                         setStyle(NotificationCompat.BigTextStyle().bigText(updates.joinToString("\n") {

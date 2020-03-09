@@ -513,7 +513,7 @@
     <string name="notification_check_updates">Checking for new chapters</string>
     <string name="notification_update_progress">Update progress: %1$d/%2$d</string>
     <string name="notification_new_chapters">New chapters found</string>
-    <plurals name="notification_new_chapters_text">
+    <plurals name="notification_new_chapters_summary">
         <item quantity="one">For 1 title</item>
         <item quantity="other">For %d titles</item>
     </plurals>
