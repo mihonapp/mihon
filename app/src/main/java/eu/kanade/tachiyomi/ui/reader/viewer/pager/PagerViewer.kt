@@ -12,6 +12,8 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.visible
 import timber.log.Timber
 
 /**
@@ -63,7 +65,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
         }
 
     init {
-        pager.visibility = View.GONE // Don't layout the pager yet
+        pager.gone() // Don't layout the pager yet
         pager.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         pager.offscreenPageLimit = 1
         pager.id = R.id.reader_pager
@@ -195,7 +197,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
             Timber.d("Pager first layout")
             val pages = chapters.currChapter.pages ?: return
             moveToPage(pages[chapters.currChapter.requestedPage])
-            pager.visibility = View.VISIBLE
+            pager.visible()
         }
     }
 

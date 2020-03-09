@@ -31,6 +31,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import eu.kanade.tachiyomi.util.view.visible
 import kotlinx.android.synthetic.main.extension_detail_controller.extension_icon
 import kotlinx.android.synthetic.main.extension_detail_controller.extension_lang
 import kotlinx.android.synthetic.main.extension_detail_controller.extension_obsolete
@@ -86,7 +87,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
         }
 
         if (extension.isObsolete) {
-            extension_obsolete.visibility = View.VISIBLE
+            extension_obsolete.visible()
         }
 
         val themedContext by lazy { getPreferenceThemeContext() }

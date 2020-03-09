@@ -12,6 +12,8 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.visible
 import kotlin.math.max
 import kotlin.math.min
 import rx.subscriptions.CompositeSubscription
@@ -63,7 +65,7 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
     val subscriptions = CompositeSubscription()
 
     init {
-        recycler.visibility = View.GONE // Don't let the recycler layout yet
+        recycler.gone() // Don't let the recycler layout yet
         recycler.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         recycler.itemAnimator = null
         recycler.layoutManager = layoutManager
@@ -184,7 +186,7 @@ class WebtoonViewer(val activity: ReaderActivity) : BaseViewer {
             Timber.d("Recycler first layout")
             val pages = chapters.currChapter.pages ?: return
             moveToPage(pages[chapters.currChapter.requestedPage])
-            recycler.visibility = View.VISIBLE
+            recycler.visible()
         }
     }
 

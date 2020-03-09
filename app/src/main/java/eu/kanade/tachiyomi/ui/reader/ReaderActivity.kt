@@ -312,7 +312,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             } else {
                 resetDefaultMenuAndBar()
             }
-            reader_menu.visibility = View.VISIBLE
+            reader_menu.visible()
 
             if (animate) {
                 val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
@@ -342,7 +342,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
                 toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
                     override fun onAnimationEnd(animation: Animation) {
-                        reader_menu.visibility = View.GONE
+                        reader_menu.gone()
                     }
                 })
                 toolbar.startAnimation(toolbarAnimation)
@@ -741,7 +741,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
                 subscriptions.add(customFilterColorSubscription)
             } else {
                 customFilterColorSubscription?.let { subscriptions.remove(it) }
-                color_overlay.visibility = View.GONE
+                color_overlay.gone()
             }
         }
 
@@ -767,11 +767,11 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
 
             // Set black overlay visibility.
             if (value < 0) {
-                brightness_overlay.visibility = View.VISIBLE
+                brightness_overlay.visible()
                 val alpha = (abs(value) * 2.56).toInt()
                 brightness_overlay.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
             } else {
-                brightness_overlay.visibility = View.GONE
+                brightness_overlay.gone()
             }
         }
 
@@ -779,7 +779,7 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
          * Sets the color filter [value].
          */
         private fun setColorFilterValue(value: Int) {
-            color_overlay.visibility = View.VISIBLE
+            color_overlay.visible()
             color_overlay.setFilterColor(value, preferences.colorFilterMode().getOrDefault())
         }
     }

@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.CompoundButton
 import android.widget.Spinner
 import androidx.core.widget.NestedScrollView
@@ -87,7 +86,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         show_page_number.bindToPreference(preferences.showPageNumber())
         fullscreen.bindToPreference(preferences.fullscreen())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            cutout_short.visibility = View.VISIBLE
+            cutout_short.visible()
             cutout_short.bindToPreference(preferences.cutoutShort())
         }
         keepscreen.bindToPreference(preferences.keepScreenOn())
