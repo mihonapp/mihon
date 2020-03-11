@@ -152,7 +152,7 @@ class EHentai(override val id: Long,
                         throttleFunc()
 
                         val resp = client.newCall(exGet(baseUrl + url)).execute()
-                        if (!resp.isSuccessful) break //error("HTTP error (${resp.code})!")
+                        if (!resp.isSuccessful) error("HTTP error (${resp.code})!")
                         doc = resp.asJsoup()
 
                         val parentLink = doc!!.select("#gdd .gdt1").find { el ->
