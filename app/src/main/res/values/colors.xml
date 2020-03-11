@@ -18,10 +18,6 @@
     <color name="dividerLight">@color/md_black_1000_12</color>
     <color name="rippleColorLight">@color/md_black_1000_12</color>
 
-    <color name="preference_fallback_accent_color">@color/colorAccentLight</color>
-
-    <color name="statusBarLight">@color/md_grey_300</color>
-    <color name="appBarLight">@color/md_grey_100</color>
     <color name="backgroundLight">@color/md_grey_50</color>
     <color name="dialogLight">@color/md_white_1000</color>
 
