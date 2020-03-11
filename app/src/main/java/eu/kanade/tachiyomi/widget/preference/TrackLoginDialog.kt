@@ -35,7 +35,7 @@ class TrackLoginDialog(usernameLabel: String? = null, bundle: Bundle? = null) :
         requestSubscription?.unsubscribe()
 
         v?.apply {
-            if (username.text.isEmpty() || password.text.isEmpty())
+            if (username.text.isNullOrEmpty() || password.text.isNullOrEmpty())
                 return
 
             login.progress = 1

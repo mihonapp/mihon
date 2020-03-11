@@ -3,7 +3,7 @@
     <item android:state_activated="true" android:color="@color/md_white_1000">
         <shape android:shape="rectangle">
             <corners android:radius="2dp" />
-            <solid android:color="@color/colorAccentLight" />
+            <solid android:color="?attr/colorAccent" />
             <padding android:left="8dp" android:right="8dp" />
         </shape>
     </item>
@@ -15,11 +15,11 @@
             <padding android:left="8dp" android:right="8dp" />
         </shape>
     </item>
-    <item android:color="@color/colorAccentLight">
-        <shape android:shape="rectangle" android:color="@color/colorAccentLight">
+    <item android:color="?attr/colorAccent">
+        <shape android:shape="rectangle" android:color="?attr/colorAccent">
             <corners android:radius="2dp" />
             <solid android:color="@android:color/transparent" />
-            <stroke android:color="@color/colorAccentLight" android:width="1dp"/>
+            <stroke android:color="?attr/colorAccent" android:width="1dp"/>
             <padding android:left="8dp" android:right="8dp" />
         </shape>
     </item>

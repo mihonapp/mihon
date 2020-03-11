@@ -50,7 +50,7 @@ abstract class LoginDialogPreference(private val usernameLabel: String? = null, 
             }
 
             if (!usernameLabel.isNullOrEmpty()) {
-                username_label.text = usernameLabel
+                username_label.hint = usernameLabel
             }
 
             login.setMode(ActionProcessButton.Mode.ENDLESS)

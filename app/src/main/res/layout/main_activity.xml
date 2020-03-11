@@ -25,11 +25,10 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
+                style="@style/Widget.MaterialComponents.TabLayout.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Theme.ActionBar.Tab"
                 app:tabGravity="center"
-                app:tabIndicatorColor="@android:color/white"
                 app:tabInlineLabel="true"
                 app:tabMinWidth="75dp"
                 app:tabMode="scrollable" />
@@ -44,12 +43,11 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="?attr/colorPrimary"
-            app:itemIconTint="@drawable/bottom_nav_item_selector"
-            app:itemTextColor="@drawable/bottom_nav_item_selector"
+            app:itemBackground="?attr/colorPrimary"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav" />
 

@@ -9,7 +9,7 @@
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="?attr/selectable_list_drawable">
+        android:background="@drawable/list_item_selector">
 
         <ImageView
             android:id="@+id/image"
