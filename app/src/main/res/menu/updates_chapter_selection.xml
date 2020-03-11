@@ -16,13 +16,13 @@
 
     <item
         android:id="@+id/action_mark_as_read"
-        android:icon="@drawable/ic_done_all_grey_24dp"
+        android:icon="@drawable/ic_done_all_white_24dp"
         android:title="@string/action_mark_as_read"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_mark_as_unread"
-        android:icon="@drawable/ic_done_all_white_24dp"
+        android:icon="@drawable/ic_done_all_grey_24dp"
         android:title="@string/action_mark_as_unread"
         app:showAsAction="always" />
 
