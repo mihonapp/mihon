@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.source.online.english
 
 import android.net.Uri
 import com.kizitonwose.time.hours
-import com.lvla.rxjava.interopkt.toV1Single
+import hu.akarnokd.rxjava.interop.RxJavaInterop
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.*
@@ -177,9 +177,9 @@ class EightMuses: HttpSource(),
         return client.newCall(request)
                 .asObservableSuccess()
                 .flatMapSingle { response ->
-                    GlobalScope.async(Dispatchers.IO) {
+                    RxJavaInterop.toV1Single(GlobalScope.async(Dispatchers.IO) {
                         parseResultsPage(response, dig)
-                    }.asSingle(GlobalScope.coroutineContext).toV1Single()
+                    }.asSingle(GlobalScope.coroutineContext))
                 }
     }
 
@@ -252,9 +252,9 @@ class EightMuses: HttpSource(),
     }
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
-        return GlobalScope.async(Dispatchers.IO) {
+        return RxJavaInterop.toV1Single(GlobalScope.async(Dispatchers.IO) {
             fetchAndParseChapterList("", manga.url)
-        }.asSingle(GlobalScope.coroutineContext).toV1Single().toObservable()
+        }.asSingle(GlobalScope.coroutineContext)).toObservable()
     }
 
     private suspend fun fetchAndParseChapterList(prefix: String, url: String): List<SChapter> {

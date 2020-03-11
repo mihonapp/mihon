@@ -4,7 +4,7 @@ import android.net.Uri
 import com.github.salomonbrys.kotson.array
 import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonParser
-import com.lvla.rxjava.interopkt.toV1Single
+import hu.akarnokd.rxjava.interop.RxJavaInterop
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.asObservable
@@ -129,7 +129,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
             = throw UnsupportedOperationException("Should not be called!")
 
     private fun fetchSearchMangaInternal(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
-        return GlobalScope.async(Dispatchers.IO) {
+        return RxJavaInterop.toV1Single(GlobalScope.async(Dispatchers.IO) {
             val modeFilter = filters.filterIsInstance<ModeFilter>().firstOrNull()
             val sortFilter = filters.filterIsInstance<SortFilter>().firstOrNull()
 
@@ -252,7 +252,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                         hasNextPage
                 )
             }
-        }.asSingle(GlobalScope.coroutineContext).toV1Single().toObservable()
+        }.asSingle(GlobalScope.coroutineContext)).toObservable()
     }
 
     // Collection must be sorted and cannot be sorted
