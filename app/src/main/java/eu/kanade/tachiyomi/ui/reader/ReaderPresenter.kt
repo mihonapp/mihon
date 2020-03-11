@@ -408,6 +408,19 @@ class ReaderPresenter(
     }
 
     /**
+     * Bookmarks the currently active chapter.
+     */
+    fun bookmarkCurrentChapter(bookmarked: Boolean) {
+        if (getCurrentChapter()?.chapter == null) {
+            return
+        }
+
+        val chapter = getCurrentChapter()?.chapter!!
+        chapter.bookmark = bookmarked
+        db.updateChapterProgress(chapter).executeAsBlocking()
+    }
+
+    /**
      * Returns the viewer position used by this manga or the default one.
      */
     fun getMangaViewer(): Int {
