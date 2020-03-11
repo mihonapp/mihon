@@ -16,13 +16,13 @@
 
     <item
         android:id="@+id/action_bookmark"
-        android:icon="@drawable/ic_bookmark_white_24dp"
+        android:icon="@drawable/ic_bookmark_border_white_24dp"
         android:title="@string/action_bookmark"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_remove_bookmark"
-        android:icon="@drawable/ic_bookmark_border_white_24dp"
+        android:icon="@drawable/ic_bookmark_white_24dp"
         android:title="@string/action_remove_bookmark"
         app:showAsAction="always" />
 
