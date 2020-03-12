@@ -88,6 +88,7 @@
         <item name="rippleColor">@color/rippleColorDark</item>
 
         <item name="android:divider">@color/dividerDark</item>
+        <item name="android:listDivider">@drawable/line_divider</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
