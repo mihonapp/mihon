@@ -45,6 +45,7 @@
         <item name="android:forceDarkAllowed">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionBarTheme">@style/Theme.ActionBar.Light</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="dialogTheme">@style/Theme.AlertDialog.Light</item>
         <item name="alertDialogTheme">@style/Theme.AlertDialog.Dark</item>
@@ -77,6 +78,10 @@
         <item name="colorOnSurface">@color/textColorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccentDark</item>
 
+        <!-- Handles RTL text -->
+        <item name="android:textAlignment">gravity</item>
+        <item name="android:textDirection">locale</item>
+
         <!-- Base background/text colors -->
         <item name="android:colorBackground">@color/backgroundDark</item>
         <item name="android:textColorPrimary">@color/textColorPrimaryDark</item>
@@ -95,6 +100,7 @@
         <item name="android:navigationBarColor">@color/colorDarkPrimaryDark</item>
 
         <!-- Themes -->
+        <item name="android:forceDarkAllowed">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
@@ -116,10 +122,6 @@
     <style name="Theme.Tachiyomi.DarkBlue" parent="Theme.Base.Dark">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/colorDarkPrimaryDark</item>
     </style>
 
     <!--==============-->
@@ -132,8 +134,6 @@
 
         <item name="android:colorBackground">@color/colorAmoledPrimary</item>
 
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
 
         <!-- Themes -->
