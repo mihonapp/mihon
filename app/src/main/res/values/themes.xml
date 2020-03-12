@@ -48,6 +48,7 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="dialogTheme">@style/Theme.AlertDialog.Light</item>
         <item name="alertDialogTheme">@style/Theme.AlertDialog.Dark</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Widget.Button</item>
 
         <!-- Custom Attributes-->
         <item name="selectable_library_drawable">@drawable/library_item_selector_light</item>
@@ -99,6 +100,8 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="dialogTheme">@style/Theme.AlertDialog.Dark</item>
         <item name="alertDialogTheme">@style/Theme.AlertDialog.Dark</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Widget.Button</item>
+
         <item name="md_background_color">?attr/colorSurface</item>
 
         <!-- Custom Attributes-->
