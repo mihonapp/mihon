@@ -118,6 +118,14 @@
         <item name="android:textColor">?android:attr/textColorHint</item>
     </style>
 
+    <style name="TextAppearance.Widget.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Menu" parent="TextAppearance.AppCompat.Menu">
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
     <!--=======-->
     <!--Widgets-->
     <!--=======-->
@@ -189,10 +197,6 @@
     <!--==============-->
     <!--Widgets.Button-->
     <!--==============-->
-    <style name="TextAppearance.Widget.Button" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:letterSpacing">0</item>
-    </style>
-
     <style name="Theme.Widget.Button" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
