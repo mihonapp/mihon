@@ -44,7 +44,7 @@ fun String.byteSize(): Int {
  * Returns a string containing the first [n] bytes from this string, or the entire string if this
  * string is shorter.
  */
-@UseExperimental(ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class)
 fun String.takeBytes(n: Int): String {
     val bytes = toByteArray(Charsets.UTF_8)
     return if (bytes.size <= n) {

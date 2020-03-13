@@ -138,12 +138,12 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
     /**
      * Called when the activity is created. Initializes the presenter and configuration.
      */
-    override fun onCreate(savedState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(when (preferences.readerTheme().getOrDefault()) {
             0 -> R.style.Theme_Reader_Light
             else -> R.style.Theme_Reader
         })
-        super.onCreate(savedState)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.reader_activity)
 
         if (presenter.needsInit()) {
@@ -159,8 +159,8 @@ class ReaderActivity : BaseRxActivity<ReaderPresenter>() {
             else presenter.init(manga, chapterUrl)
         }
 
-        if (savedState != null) {
-            menuVisible = savedState.getBoolean(::menuVisible.name)
+        if (savedInstanceState != null) {
+            menuVisible = savedInstanceState.getBoolean(::menuVisible.name)
         }
 
         config = ReaderConfig()
