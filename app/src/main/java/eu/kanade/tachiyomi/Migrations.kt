@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi
 
+import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -61,6 +62,14 @@ object Migrations {
                         chapterCache.deleteRecursively()
                     }
                 }
+            }
+            if (oldVersion < 43) {
+                // Restore jobs after migrating from Evernote's job scheduler to WorkManager.
+                if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
+                    UpdaterJob.setupTask(context)
+                }
+                LibraryUpdateJob.setupTask(context)
+                BackupCreatorJob.setupTask(context)
             }
             return true
         }
