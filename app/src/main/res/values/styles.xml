@@ -194,6 +194,11 @@
         <item name="android:background">@drawable/list_item_selector</item>
     </style>
 
+
+    <style name="Theme.Widget.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:background">@drawable/snackbar_bg</item>
+    </style>
+
     <!--==============-->
     <!--Widgets.Button-->
     <!--==============-->
@@ -217,6 +222,7 @@
         <item name="android:minHeight">48dip</item>
         <item name="android:minWidth">48dip</item>
     </style>
+
 
     <!--===-->
     <!--OLD-->
