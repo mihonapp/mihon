@@ -36,7 +36,7 @@
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/action_edit"
                 android:padding="8dp"
-                app:srcCompat="@drawable/ic_create_white_24dp"
+                app:srcCompat="@drawable/ic_edit_24dp"
                 app:tint="@color/md_white_1000_50" />
 
         </LinearLayout>

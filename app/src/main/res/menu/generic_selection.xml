@@ -4,8 +4,9 @@
 
     <item
         android:id="@+id/action_select_all"
-        android:icon="@drawable/ic_select_all_white_24dp"
+        android:icon="@drawable/ic_select_all_24dp"
         android:title="@string/action_select_all"
+        app:iconTint="?attr/colorOnPrimary"
         app:showAsAction="ifRoom" />
 
 </menu>
