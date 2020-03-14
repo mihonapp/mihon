@@ -27,7 +27,7 @@ class MoreController : SettingsController(), RootController {
 
         preference {
             titleRes = R.string.label_extensions
-            iconRes = R.drawable.ic_extension_black_24dp
+            iconRes = R.drawable.ic_extension_24dp
             iconTint = tintColor
             onClick {
                 router.pushController(ExtensionController().withFadeTransaction())
@@ -53,14 +53,14 @@ class MoreController : SettingsController(), RootController {
         preferenceCategory {
             preference {
                 titleRes = R.string.label_settings
-                iconRes = R.drawable.ic_settings_black_24dp
+                iconRes = R.drawable.ic_settings_24dp
                 iconTint = tintColor
                 onClick {
                     router.pushController(SettingsMainController().withFadeTransaction())
                 }
             }
             preference {
-                iconRes = R.drawable.ic_info_black_24dp
+                iconRes = R.drawable.ic_info_24dp
                 iconTint = tintColor
                 titleRes = R.string.pref_category_about
                 onClick {
@@ -69,7 +69,7 @@ class MoreController : SettingsController(), RootController {
             }
             preference {
                 titleRes = R.string.label_help
-                iconRes = R.drawable.ic_help_black_24dp
+                iconRes = R.drawable.ic_help_outline_24dp
                 iconTint = tintColor
                 onClick {
                     activity?.openInBrowser(URL_HELP)
