@@ -7,6 +7,8 @@ object PreferenceKeys {
 
     const val themeMode = "pref_theme_mode_key"
 
+    const val themeLight = "pref_theme_light_key"
+
     const val themeDark = "pref_theme_dark_key"
 
     const val rotation = "pref_rotation_type_key"

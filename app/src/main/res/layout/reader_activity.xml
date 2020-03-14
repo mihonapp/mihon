@@ -52,14 +52,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?colorPrimary" />
+            android:background="?attr/colorPrimary" />
 
         <LinearLayout
             android:id="@+id/reader_menu_bottom"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
-            android:background="?colorPrimary"
+            android:background="?attr/colorPrimary"
             android:descendantFocusability="blocksDescendants"
             android:gravity="center"
             android:orientation="horizontal">

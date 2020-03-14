@@ -119,6 +119,28 @@ class SettingsGeneralController : SettingsController() {
                 }
             }
             listPreference {
+                key = Keys.themeLight
+                titleRes = R.string.pref_theme_light
+                entriesRes = arrayOf(
+                        R.string.theme_light_default,
+                        R.string.theme_light_blue)
+                entryValues = arrayOf(
+                        Values.THEME_LIGHT_DEFAULT,
+                        Values.THEME_LIGHT_BLUE)
+                defaultValue = Values.THEME_LIGHT_DEFAULT
+                summary = "%s"
+
+                preferences.themeMode().asObservable()
+                        .subscribeUntilDestroy { isVisible = it != Values.THEME_MODE_DARK }
+
+                onChange {
+                    if (preferences.themeMode().getOrDefault() == Values.THEME_MODE_LIGHT) {
+                        activity?.recreate()
+                    }
+                    true
+                }
+            }
+            listPreference {
                 key = Keys.themeDark
                 titleRes = R.string.pref_theme_dark
                 entriesRes = arrayOf(

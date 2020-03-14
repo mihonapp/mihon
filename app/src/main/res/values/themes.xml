@@ -15,11 +15,11 @@
         <item name="windowNoTitle">true</item>
 
         <!-- Theme colors -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/textColorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/md_white_1000</item>
+        <item name="colorOnPrimary">@color/md_black_1000</item>
+        <item name="colorPrimaryDark">@color/md_white_1000</item>
         <item name="colorSecondary">@color/colorAccentLight</item>
-        <item name="colorOnSecondary">@color/textColorPrimaryDark</item>
+        <item name="colorOnSecondary">@color/md_white_1000</item>
         <item name="colorSurface">@color/dialogLight</item>
         <item name="colorOnSurface">@color/textColorPrimaryLight</item>
         <item name="colorOnBackground">@color/textColorPrimaryLight</item>
@@ -43,31 +43,41 @@
         <item name="android:textDirection">locale</item>
 
         <!-- Themes -->
-        <item name="android:forceDarkAllowed">false</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionBarTheme">@style/Theme.ActionBar.Light</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="dialogTheme">@style/Theme.AlertDialog.Light</item>
         <item name="alertDialogTheme">@style/Theme.AlertDialog.Dark</item>
-        <!-- Intentially using default snackbar background in light theme -->
-        <!-- <item name="snackbarStyle">@style/Theme.Widget.Snackbar</item> -->
         <item name="snackbarButtonStyle">@style/Theme.Widget.Button.Borderless</item>
         <item name="textAppearanceButton">@style/TextAppearance.Widget.Button</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Widget.Menu</item>
 
         <!-- Custom Attributes-->
         <item name="selectable_library_drawable">@drawable/library_item_selector_light</item>
-        <item name="colorFilterActive">@color/filterColor</item>
+        <item name="colorFilterActive">@color/filterColorDark</item>
     </style>
 
     <!--===========-->
     <!-- Main Theme-->
     <!--===========-->
-    <style name="Theme.Tachiyomi" parent="Theme.Base">
+    <style name="Theme.Tachiyomi.Light" parent="Theme.Base">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/md_black_1000_54</item>
+        <item name="android:navigationBarColor">@color/md_black_1000_54</item>
+
+        <item name="colorFilterActive">@color/filterColorLight</item>
+    </style>
+
+    <style name="Theme.Tachiyomi.LightBlue" parent="Theme.Base">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/textColorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <item name="actionBarTheme">@style/Theme.ActionBar.Light</item>
     </style>
 
     <!--=============-->
@@ -107,14 +117,12 @@
         <item name="android:navigationBarColor">@color/colorDarkPrimary</item>
 
         <!-- Themes -->
-        <item name="android:forceDarkAllowed">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="dialogTheme">@style/Theme.AlertDialog.Dark</item>
         <item name="alertDialogTheme">@style/Theme.AlertDialog.Dark</item>
-        <item name="snackbarStyle">@style/Theme.Widget.Snackbar</item>
         <item name="snackbarButtonStyle">@style/Theme.Widget.Button.Borderless</item>
         <item name="textAppearanceButton">@style/TextAppearance.Widget.Button</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Widget.Menu</item>
@@ -123,7 +131,7 @@
 
         <!-- Custom Attributes-->
         <item name="selectable_library_drawable">@drawable/library_item_selector_dark</item>
-        <item name="colorFilterActive">@color/filterColor</item>
+        <item name="colorFilterActive">@color/filterColorDark</item>
     </style>
 
     <style name="Theme.Tachiyomi.Dark" parent="Theme.Base.Dark">
@@ -150,6 +158,8 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
 
         <!-- Themes -->
+        <!-- Surface-colored snackbar -->
+        <item name="snackbarStyle">@style/Theme.Widget.Snackbar</item>
         <item name="md_background_color">@color/colorAmoledPrimary</item>
 
         <!-- Custom Attributes-->
@@ -166,21 +176,27 @@
     <style name="Theme.Base.Reader.Dark" parent="Theme.Base.Dark">
         <item name="colorPrimary">@color/readerColorDarkPrimary</item>
         <item name="colorPrimaryDark">@color/readerColorDarkPrimary</item>
-        <item name="colorSurface">@android:color/black</item>
+        <item name="colorSurface">@color/md_black_1000</item>
 
-        <item name="android:colorBackground">@android:color/black</item>
+        <item name="android:colorBackground">@color/md_black_1000</item>
         <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
         <item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
+
+        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
     </style>
 
     <style name="Theme.Base.Reader.Light" parent="Theme.Base">
         <item name="colorPrimary">@color/readerColorDarkPrimary</item>
         <item name="colorPrimaryDark">@color/readerColorDarkPrimary</item>
-        <item name="colorSurface">@android:color/white</item>
+        <item name="colorSurface">@color/md_white_1000</item>
 
-        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:colorBackground">@color/md_white_1000</item>
         <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
         <item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
+
+        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
     </style>
 
     <style name="Theme.Reader" parent="Theme.Base.Reader.Dark">
@@ -195,7 +211,7 @@
     <!--===============-->
     <!-- Launch Screen -->
     <!--===============-->
-    <style name="Theme.Splash" parent="Theme.Tachiyomi">
+    <style name="Theme.Splash" parent="Theme.Tachiyomi.LightBlue">
         <item name="colorBackgroundSplash">@color/colorPrimary</item>
 
         <item name="android:windowBackground">@drawable/splash_background</item>
