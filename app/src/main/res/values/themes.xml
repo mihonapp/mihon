@@ -17,7 +17,7 @@
         <!-- Theme colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/textColorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorSecondary">@color/colorAccentLight</item>
         <item name="colorOnSecondary">@color/textColorPrimaryDark</item>
         <item name="colorSurface">@color/dialogLight</item>
@@ -66,7 +66,7 @@
     <style name="Theme.Tachiyomi" parent="Theme.Base">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <!--=============-->
@@ -76,7 +76,7 @@
         <!-- Theme colors -->
         <item name="colorPrimary">@color/colorDarkPrimary</item>
         <item name="colorOnPrimary">@color/textColorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorDarkPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorDarkPrimary</item>
         <item name="colorSecondary">@color/colorAccentDark</item>
         <item name="colorOnSecondary">@color/textColorPrimaryDark</item>
         <item name="colorSurface">@color/dialogDark</item>
@@ -103,7 +103,7 @@
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/colorDarkPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorDarkPrimary</item>
 
         <!-- Themes -->
         <item name="android:forceDarkAllowed">false</item>
@@ -130,7 +130,9 @@
 
     <style name="Theme.Tachiyomi.DarkBlue" parent="Theme.Base.Dark">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <!--==============-->
