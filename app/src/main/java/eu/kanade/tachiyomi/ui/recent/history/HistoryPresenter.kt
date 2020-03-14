@@ -43,9 +43,10 @@ class HistoryPresenter : BasePresenter<HistoryController>() {
      */
     fun getRecentMangaObservable(): Observable<List<HistoryItem>> {
         // Set date limit for recent manga
-        val cal = Calendar.getInstance()
-        cal.time = Date()
-        cal.add(Calendar.MONTH, -1)
+        val cal = Calendar.getInstance().apply {
+            time = Date()
+            add(Calendar.MONTH, -3)
+        }
 
         return db.getRecentManga(cal.time).asRxObservable()
                 .map { recents ->

@@ -54,7 +54,7 @@ class UpdatesPresenter(
         // Set date limit for recent chapters
         val cal = Calendar.getInstance().apply {
             time = Date()
-            add(Calendar.MONTH, -1)
+            add(Calendar.MONTH, -3)
         }
 
         return db.getRecentChapters(cal.time).asRxObservable()
