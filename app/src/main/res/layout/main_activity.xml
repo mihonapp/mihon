@@ -29,6 +29,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tabGravity="center"
+                app:tabIndicator="@drawable/tab_indicator"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="3dp"
                 app:tabInlineLabel="true"
                 app:tabMinWidth="75dp"
                 app:tabMode="scrollable" />
