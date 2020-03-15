@@ -311,7 +311,6 @@
     <string name="download_queue_error">Fehler beim Herunterladen der Kapitel. Du kannst es in der Downloadsektion erneut versuchen</string>
     <string name="notification_update_progress">Aktualisierungsfortschritt: %1$d/%2$d</string>
     <string name="notification_new_chapters">Neue Kapitel gefunden</string>
-    <string name="notification_new_chapters_text">Für %1$d Titel</string>
     <string name="notification_cover_update_failed">Ändern des Vorschaubildes fehlgeschlagen</string>
     <string name="notification_first_add_to_library">Füge den Manga deiner Bibliothek hinzu, bevor du dies tust</string>
     <string name="notification_not_connected_to_ac_title">Synchronisation abgebrochen</string>
@@ -416,7 +415,7 @@
     <string name="url_not_set">Manga-URL ist nicht festgelegt. Drücke auf den Titel und wähle den Manga erneut aus</string>
     <string name="transition_finished">Beendet:</string>
     <string name="transition_current">Aktuell:</string>
-    <string name="transition_next">Als nächstes:</string>
+    <string name="transition_next">Als Nächstes:</string>
     <string name="transition_previous">Zuvor:</string>
     <string name="transition_no_next">Es gibt kein nächstes Kapitel</string>
     <string name="transition_no_previous">Es gibt kein vorheriges Kapitel</string>
@@ -504,4 +503,9 @@
     <string name="pref_disable_battery_optimization_summary">Hilft bei Bibliotheksaktualisierungen und Backups im Hintergrund</string>
     <string name="battery_optimization_disabled">Akkuverbrauch-Optimierung ist bereits deaktiviert</string>
     <string name="email">E-Mail-Adresse</string>
+    <string name="pref_always_show_chapter_transition">Kapitelübergang immer anzeigen</string>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Für 1 Titel</item>
+        <item quantity="other">Für %d Titel</item>
+    </plurals>
 </resources>

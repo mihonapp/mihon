@@ -383,7 +383,6 @@
     <string name="download_queue_error">Сталась помилка при завантаженні глав. Спробуйте ще раз у розділі завантаження</string>
     <string name="notification_update_progress">Стан оновлення: %1$d/%2$d</string>
     <string name="notification_new_chapters">Знайдено нові глави</string>
-    <string name="notification_new_chapters_text">Для %1$d тайтлів</string>
     <string name="notification_cover_update_failed">"Не вдалось оновити обкладинку "</string>
     <string name="notification_first_add_to_library">Будь ласка, додайте мангу до своєї бібліотеки перед тим як робити це</string>
     <string name="notification_not_connected_to_ac_title">Синхронізацію скасовано</string>
@@ -503,4 +502,14 @@
     <string name="action_hide">Приховати</string>
     <string name="hide_notification_content">Приховати вміст сповіщення</string>
     <string name="notification_check_updates">Перевірка нових глав</string>
+    <string name="pref_disable_battery_optimization">Вимкнути збереження батареї</string>
+    <string name="pref_disable_battery_optimization_summary">Допомагає фоновому оновленню бібліотеки та резервним копіям</string>
+    <string name="battery_optimization_disabled">Збереження батареї вже вимкнено</string>
+    <string name="email">Електропошта</string>
+    <string name="pref_always_show_chapter_transition">Завжди показувати перехід глави</string>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Для 1 тайтлу</item>
+        <item quantity="few">Для %d тайтлів</item>
+        <item quantity="many">Для %d тайтлів</item>
+    </plurals>
 </resources>

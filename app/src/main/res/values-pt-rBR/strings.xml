@@ -32,7 +32,7 @@
     <string name="action_mark_previous_as_read">Marcar anteriores como lidos</string>
     <string name="action_download">Fazer download</string>
     <string name="action_bookmark">Adicionar aos favoritos</string>
-    <string name="action_remove_bookmark">Remover dos favoritos</string>
+    <string name="action_remove_bookmark">Desfavoritar</string>
     <string name="action_delete">Excluir</string>
     <string name="action_update">Atualizar</string>
     <string name="action_update_library">Atualizar biblioteca</string>
@@ -312,7 +312,6 @@
     <string name="download_queue_error">Não foi possível fazer o download dos capítulos. Você pode tentar novamente na seção de downloads</string>
     <string name="notification_update_progress">Progresso da atualização: %1$d/%2$d</string>
     <string name="notification_new_chapters">Novos capítulos encontrados</string>
-    <string name="notification_new_chapters_text">Para %1$d títulos</string>
     <string name="notification_cover_update_failed">Erro ao atualizar a capa</string>
     <string name="notification_first_add_to_library">Por favor, adicione o mangá à sua biblioteca antes de fazer isso</string>
     <string name="notification_not_connected_to_ac_title">Sincronização cancelada</string>
@@ -343,7 +342,7 @@
     <string name="download_notifier_title_error">Erro</string>
     <string name="download_notifier_unkown_error">Não foi possível realizar o download do capítulo por um erro inesperado</string>
     <string name="download_notifier_page_error">Uma página está faltando na pasta</string>
-    <string name="download_notifier_page_ready_error">Página não foi carregada</string>
+    <string name="download_notifier_page_ready_error">A página não foi carregada</string>
     <string name="download_notifier_text_only_wifi">Nenhuma conexão Wi-Fi disponível</string>
     <string name="download_notifier_no_network">Conexão à rede indisponível</string>
     <string name="download_notifier_download_paused">Download pausado</string>
@@ -425,7 +424,7 @@
     <string name="reader_pull_up_for_more_options">Deslize para cima para mais opções</string>
     <string name="pref_read_with_long_tap">Diálogo de toque longo</string>
     <string name="action_open_in_web_view">Abrir na WebView</string>
-    <string name="pref_true_color">32-bit color</string>
+    <string name="pref_true_color">Cor de 32 bits</string>
     <string name="pref_skip_read_chapters">Pular capítulos lidos</string>
     <string name="filter_mode_default">Padrão</string>
     <string name="filter_mode_screen">Tela</string>
@@ -500,4 +499,13 @@
     <string name="action_hide">Ocultar</string>
     <string name="hide_notification_content">Ocultar conteúdo da notificação</string>
     <string name="notification_check_updates">Verificando por novos capítulos</string>
+    <string name="pref_disable_battery_optimization">Desabilitar a otimização de bateria</string>
+    <string name="pref_disable_battery_optimization_summary">Ajuda com as atualizações e backups da biblioteca em segundo plano</string>
+    <string name="battery_optimization_disabled">A otimização de bateria já está desabilitada</string>
+    <string name="email">Endereço de email</string>
+    <string name="pref_always_show_chapter_transition">Sempre mostrar a transição entre capítulos</string>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Para 1 título</item>
+        <item quantity="other">Para %d títulos</item>
+    </plurals>
 </resources>
