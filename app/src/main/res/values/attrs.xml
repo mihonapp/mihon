@@ -21,6 +21,7 @@
     </declare-styleable>
 
     <attr name="selectable_library_drawable" format="reference|integer"/>
+    <attr name="colorFilterActive" format="reference|integer"/>
     <attr name="colorBackgroundSplash" format="reference|integer"/>
 
 </resources>

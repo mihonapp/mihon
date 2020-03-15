@@ -58,6 +58,7 @@
 
         <!-- Custom Attributes-->
         <item name="selectable_library_drawable">@drawable/library_item_selector_light</item>
+        <item name="colorFilterActive">@color/filterColor</item>
     </style>
 
     <!--===========-->
@@ -122,6 +123,7 @@
 
         <!-- Custom Attributes-->
         <item name="selectable_library_drawable">@drawable/library_item_selector_dark</item>
+        <item name="colorFilterActive">@color/filterColor</item>
     </style>
 
     <style name="Theme.Tachiyomi.Dark" parent="Theme.Base.Dark">
