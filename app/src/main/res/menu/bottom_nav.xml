@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_library"
-        android:icon="@drawable/ic_collections_bookmark_24dp"
+        android:icon="@drawable/ic_collections_bookmark_state"
         android:title="@string/label_library" />
     <item
         android:id="@+id/nav_updates"
-        android:icon="@drawable/ic_new_releases_24dp"
+        android:icon="@drawable/ic_new_releases_state"
         android:title="@string/label_recent_updates" />
     <item
         android:id="@+id/nav_history"
@@ -14,7 +14,7 @@
         android:title="@string/label_recent_manga" />
     <item
         android:id="@+id/nav_catalogues"
-        android:icon="@drawable/ic_explore_24dp"
+        android:icon="@drawable/ic_explore_state"
         android:title="@string/label_catalogues" />
     <item
         android:id="@+id/nav_more"
