@@ -199,6 +199,22 @@
         <item name="android:background">@drawable/snackbar_bg</item>
     </style>
 
+
+    <!--=======================-->
+    <!--Widgets.TextInputLayout-->
+    <!--=======================-->
+
+    <style name="Theme.Widget.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_stroke</item>
+        <item name="hintTextColor">?attr/colorAccent</item>
+    </style>
+
+    <style name="Theme.Widget.TextInputLayout.OutlinedBox.Dense" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_stroke</item>
+        <item name="hintTextColor">?attr/colorAccent</item>
+    </style>
+
+
     <!--==============-->
     <!--Widgets.Button-->
     <!--==============-->
