@@ -175,6 +175,7 @@
     <!--==============-->
     <style name="Theme.Base.Reader.Dark" parent="Theme.Base.Dark">
         <item name="colorPrimary">@color/readerColorDarkPrimary</item>
+        <item name="colorOnPrimary">@color/textColorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/readerColorDarkPrimary</item>
         <item name="colorSurface">@color/md_black_1000</item>
 
@@ -188,6 +189,7 @@
 
     <style name="Theme.Base.Reader.Light" parent="Theme.Base">
         <item name="colorPrimary">@color/readerColorDarkPrimary</item>
+        <item name="colorOnPrimary">@color/textColorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/readerColorDarkPrimary</item>
         <item name="colorSurface">@color/md_white_1000</item>
 
