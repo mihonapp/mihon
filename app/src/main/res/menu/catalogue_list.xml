@@ -21,6 +21,7 @@
     <item
         android:id="@+id/action_display_mode"
         android:title="@string/action_display_mode"
+        app:iconTint="?attr/colorOnPrimary"
         app:showAsAction="ifRoom" />
 
     <item
