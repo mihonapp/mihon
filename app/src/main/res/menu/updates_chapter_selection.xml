@@ -18,15 +18,16 @@
 
     <item
         android:id="@+id/action_mark_as_read"
-        android:icon="@drawable/ic_done_all_24dp"
+        android:icon="@drawable/ic_done_24dp"
         android:title="@string/action_mark_as_read"
         app:iconTint="?attr/colorOnPrimary"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_mark_as_unread"
-        android:icon="@drawable/ic_done_all_grey_24dp"
+        android:icon="@drawable/ic_done_outline_24dp"
         android:title="@string/action_mark_as_unread"
+        app:iconTint="?attr/colorOnPrimary"
         app:showAsAction="always" />
 
 </menu>
