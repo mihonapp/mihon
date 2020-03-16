@@ -69,7 +69,7 @@ class MoreController : SettingsController(), RootController {
             }
             preference {
                 titleRes = R.string.label_help
-                iconRes = R.drawable.ic_help_outline_24dp
+                iconRes = R.drawable.ic_help_24dp
                 iconTint = tintColor
                 onClick {
                     activity?.openInBrowser(URL_HELP)
