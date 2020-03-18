@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +28,7 @@ import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
 import eu.kanade.tachiyomi.util.view.snack
@@ -141,12 +143,23 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         val menuFilterUnread = menu.findItem(R.id.action_filter_unread)
         val menuFilterDownloaded = menu.findItem(R.id.action_filter_downloaded)
         val menuFilterBookmarked = menu.findItem(R.id.action_filter_bookmarked)
+        val menuFilterEmpty = menu.findItem(R.id.action_filter_empty)
 
         // Set correct checkbox values.
         menuFilterRead.isChecked = presenter.onlyRead()
         menuFilterUnread.isChecked = presenter.onlyUnread()
         menuFilterDownloaded.isChecked = presenter.onlyDownloaded()
         menuFilterBookmarked.isChecked = presenter.onlyBookmarked()
+
+        val filterSet = presenter.onlyRead() || presenter.onlyUnread() || presenter.onlyDownloaded() || presenter.onlyBookmarked()
+
+        if (filterSet) {
+            val filterColor = activity!!.getResourceColor(R.attr.colorFilterActive)
+            DrawableCompat.setTint(menu.findItem(R.id.action_filter).icon, filterColor)
+        }
+
+        // Only show remove filter option if there's a filter set.
+        menuFilterEmpty.isVisible = filterSet
 
         // Disable unread filter option if read filter is enabled.
         if (presenter.onlyRead())
@@ -207,10 +220,12 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
             R.id.action_filter_downloaded -> {
                 item.isChecked = !item.isChecked
                 presenter.setDownloadedFilter(item.isChecked)
+                activity?.invalidateOptionsMenu()
             }
             R.id.action_filter_bookmarked -> {
                 item.isChecked = !item.isChecked
                 presenter.setBookmarkedFilter(item.isChecked)
+                activity?.invalidateOptionsMenu()
             }
             R.id.action_filter_empty -> {
                 presenter.removeFilters()
