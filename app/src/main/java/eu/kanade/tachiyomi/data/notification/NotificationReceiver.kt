@@ -437,5 +437,19 @@ class NotificationReceiver : BroadcastReceiver() {
             }
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
+
+        /**
+         * Returns [PendingIntent] that opens the extensions controller.
+         *
+         * @param context context of application
+         */
+        internal fun openExtensionsPendingActivity(context: Context): PendingIntent {
+            val newIntent =
+                Intent(context, MainActivity::class.java).setAction(MainActivity.SHORTCUT_EXTENSIONS)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            return PendingIntent.getActivity(
+                context, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
     }
 }

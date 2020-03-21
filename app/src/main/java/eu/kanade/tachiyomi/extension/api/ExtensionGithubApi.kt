@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.extension.api
 
+import android.content.Context
 import com.github.salomonbrys.kotson.fromJson
 import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.int
@@ -7,6 +8,7 @@ import com.github.salomonbrys.kotson.string
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import eu.kanade.tachiyomi.extension.model.Extension
+import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -23,10 +25,38 @@ internal class ExtensionGithubApi {
     private val gson: Gson by injectLazy()
 
     suspend fun findExtensions(): List<Extension.Available> {
-        val call = GET("$REPO_URL/index.json")
+        val call = GET(EXT_URL)
 
         return withContext(Dispatchers.IO) {
             parseResponse(network.client.newCall(call).await())
+        }
+    }
+
+    suspend fun checkForUpdates(context: Context): List<Extension.Installed> {
+        return withContext(Dispatchers.IO) {
+            val call = GET(EXT_URL)
+            val response = network.client.newCall(call).await()
+
+            if (response.isSuccessful) {
+                val extensions = parseResponse(response)
+                val extensionsWithUpdate = mutableListOf<Extension.Installed>()
+
+                val installedExtensions = ExtensionLoader.loadExtensions(context)
+                    .filterIsInstance<LoadResult.Success>()
+                    .map { it.extension }
+                for (installedExt in installedExtensions) {
+                    val pkgName = installedExt.pkgName
+                    val availableExt = extensions.find { it.pkgName == pkgName } ?: continue
+
+                    val hasUpdate = availableExt.versionCode > installedExt.versionCode
+                    if (hasUpdate) extensionsWithUpdate.add(installedExt)
+                }
+
+                extensionsWithUpdate
+            } else {
+                response.close()
+                throw Exception("Failed to get extensions")
+            }
         }
     }
 
@@ -60,5 +90,6 @@ internal class ExtensionGithubApi {
 
     companion object {
         private const val REPO_URL = "https://raw.githubusercontent.com/inorichi/tachiyomi-extensions/repo"
+        private const val EXT_URL = "$REPO_URL/index.json"
     }
 }
