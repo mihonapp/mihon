@@ -137,7 +137,7 @@ class SettingsLibraryController : SettingsController() {
                 // ../../data/library/LibraryUpdateRanker.kt
                 val priorities = arrayOf(
                         Pair("0", R.string.action_sort_alpha),
-                        Pair("1", R.string.action_sort_last_updated)
+                        Pair("1", R.string.action_sort_last_checked)
                 )
                 val defaultPriority = priorities[0]
 
