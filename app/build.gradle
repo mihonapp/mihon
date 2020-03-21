@@ -168,7 +168,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.12.1'
 
     // Job scheduling
-    final work_version = '2.3.3'
+    final work_version = '2.3.4'
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
