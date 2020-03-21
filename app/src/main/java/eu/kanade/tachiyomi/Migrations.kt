@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
+import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import java.io.File
 
 object Migrations {
@@ -26,6 +27,9 @@ object Migrations {
                 // Set up default app updater task
                 if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
                     UpdaterJob.setupTask(context)
+                }
+                if (preferences.automaticExtUpdates().getOrDefault()) {
+                    ExtensionUpdateJob.setupTask(context)
                 }
                 return false
             }

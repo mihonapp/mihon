@@ -13,7 +13,6 @@ import com.bluelinelabs.conductor.RouterTransaction
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -39,7 +38,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import uy.kohesive.injekt.injectLazy
 
 class MainActivity : BaseActivity() {
 
@@ -152,33 +150,33 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun setExtensionsBadge() {
-        val updates = preferences.extensionUpdatesCount().getOrDefault()
-        if (updates > 0) {
-            val badge = bottom_nav.getOrCreateBadge(R.id.nav_more)
-            badge.number = updates
-        } else {
-            bottom_nav.removeBadge(R.id.nav_more)
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         getExtensionUpdates()
     }
 
+    private fun setExtensionsBadge() {
+        val updates = preferences.extensionUpdatesCount().getOrDefault()
+        if (updates > 0) {
+            bottom_nav.getOrCreateBadge(R.id.nav_more).number = updates
+        } else {
+            bottom_nav.removeBadge(R.id.nav_more)
+        }
+    }
+
     private fun getExtensionUpdates() {
-        if (Date().time >= preferences.lastExtCheck().getOrDefault() +
-            TimeUnit.HOURS.toMillis(2)) {
-            GlobalScope.launch(Dispatchers.IO) {
-                val preferences: PreferencesHelper by injectLazy()
-                try {
-                    val pendingUpdates = ExtensionGithubApi().checkForUpdates(this@MainActivity)
-                    preferences.extensionUpdatesCount().set(pendingUpdates.size)
-                    preferences.lastExtCheck().set(Date().time)
-                } catch (e: java.lang.Exception) {
-                    Timber.e(e)
-                }
+        // Limit checks to once every 2 hours at most
+        val now = Date().time
+        if (now < preferences.lastExtCheck().getOrDefault() + TimeUnit.HOURS.toMillis(2)) {
+            return
+        }
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val pendingUpdates = ExtensionGithubApi().checkForUpdates(this@MainActivity)
+                preferences.extensionUpdatesCount().set(pendingUpdates.size)
+            } catch (e: Exception) {
+                Timber.e(e)
             }
         }
     }

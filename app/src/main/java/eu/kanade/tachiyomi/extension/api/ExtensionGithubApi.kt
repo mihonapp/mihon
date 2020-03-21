@@ -7,12 +7,14 @@ import com.github.salomonbrys.kotson.int
 import com.github.salomonbrys.kotson.string
 import com.google.gson.Gson
 import com.google.gson.JsonArray
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.await
+import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Response
@@ -21,6 +23,7 @@ import uy.kohesive.injekt.injectLazy
 internal class ExtensionGithubApi {
 
     private val network: NetworkHelper by injectLazy()
+    private val preferences: PreferencesHelper by injectLazy()
 
     private val gson: Gson by injectLazy()
 
@@ -33,23 +36,29 @@ internal class ExtensionGithubApi {
     }
 
     suspend fun checkForUpdates(context: Context): List<Extension.Installed> {
+        val call = GET(EXT_URL)
+
         return withContext(Dispatchers.IO) {
-            val call = GET(EXT_URL)
             val response = network.client.newCall(call).await()
+
+            preferences.lastExtCheck().set(Date().time)
 
             if (response.isSuccessful) {
                 val extensions = parseResponse(response)
-                val extensionsWithUpdate = mutableListOf<Extension.Installed>()
 
                 val installedExtensions = ExtensionLoader.loadExtensions(context)
                     .filterIsInstance<LoadResult.Success>()
                     .map { it.extension }
+
+                val extensionsWithUpdate = mutableListOf<Extension.Installed>()
                 for (installedExt in installedExtensions) {
                     val pkgName = installedExt.pkgName
                     val availableExt = extensions.find { it.pkgName == pkgName } ?: continue
 
                     val hasUpdate = availableExt.versionCode > installedExt.versionCode
-                    if (hasUpdate) extensionsWithUpdate.add(installedExt)
+                    if (hasUpdate) {
+                        extensionsWithUpdate.add(installedExt)
+                    }
                 }
 
                 extensionsWithUpdate

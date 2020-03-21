@@ -36,6 +36,8 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         FlexibleAdapter.OnItemLongClickListener,
         ExtensionTrustDialog.Listener {
 
+    private val preferences: PreferencesHelper = Injekt.get()
+
     /**
      * Adapter containing the list of manga from the catalogue.
      */
@@ -92,7 +94,6 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
             }
             R.id.action_auto_check -> {
                 item.isChecked = !item.isChecked
-                val preferences: PreferencesHelper = Injekt.get()
                 preferences.automaticExtUpdates().set(item.isChecked)
                 ExtensionUpdateJob.setupTask(activity!!, item.isChecked)
             }
@@ -150,9 +151,7 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         // Fixes problem with the overflow icon showing up in lieu of search
         searchItem.fixExpand(onExpand = { invalidateMenuOnExpand() })
 
-        val autoItem = menu.findItem(R.id.action_auto_check)
-        val preferences: PreferencesHelper = Injekt.get()
-        autoItem.isChecked = preferences.automaticExtUpdates().getOrDefault()
+        menu.findItem(R.id.action_auto_check).isChecked = preferences.automaticExtUpdates().getOrDefault()
     }
 
     override fun onItemClick(view: View, position: Int): Boolean {

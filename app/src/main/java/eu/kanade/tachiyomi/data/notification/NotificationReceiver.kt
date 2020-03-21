@@ -410,11 +410,9 @@ class NotificationReceiver : BroadcastReceiver() {
         internal fun markAsReadPendingBroadcast(
             context: Context,
             manga: Manga,
-            chapters:
-                    Array<Chapter>,
+            chapters: Array<Chapter>,
             groupId: Int
-        ):
-                PendingIntent {
+        ): PendingIntent {
             val newIntent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_MARK_AS_READ
                 putExtra(EXTRA_CHAPTER_URL, chapters.map { it.url }.toTypedArray())
@@ -442,14 +440,14 @@ class NotificationReceiver : BroadcastReceiver() {
          * Returns [PendingIntent] that opens the extensions controller.
          *
          * @param context context of application
+         * @return [PendingIntent]
          */
         internal fun openExtensionsPendingActivity(context: Context): PendingIntent {
-            val newIntent =
-                Intent(context, MainActivity::class.java).setAction(MainActivity.SHORTCUT_EXTENSIONS)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            return PendingIntent.getActivity(
-                context, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT
-            )
+            val intent = Intent(context, MainActivity::class.java).apply {
+                action = MainActivity.SHORTCUT_EXTENSIONS
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
     }
 }

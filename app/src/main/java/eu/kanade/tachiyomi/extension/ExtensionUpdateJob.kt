@@ -31,36 +31,37 @@ class ExtensionUpdateJob(private val context: Context, workerParams: WorkerParam
         } catch (e: Exception) {
             return@coroutineScope Result.failure()
         }
+
         if (pendingUpdates.isNotEmpty()) {
-            val names = pendingUpdates.map { it.name }
-            NotificationManagerCompat.from(context).apply {
-                notify(Notifications.ID_UPDATES_TO_EXTS,
-                    context.notification(Notifications.CHANNEL_UPDATES_TO_EXTS) {
-                        setContentTitle(
-                            context.resources.getQuantityString(
-                                R.plurals.update_check_notification_ext_updates,
-                                names.size,
-                                names.size
-                            )
-                        )
-                        val extNames = names.joinToString(", ")
-                        setContentText(extNames)
-                        setStyle(NotificationCompat.BigTextStyle().bigText(extNames))
-                        setSmallIcon(R.drawable.ic_extension_24dp)
-                        setContentIntent(
-                            NotificationReceiver.openExtensionsPendingActivity(
-                                context
-                            )
-                        )
-                        setAutoCancel(true)
-                    })
-            }
+            createUpdateNotification(pendingUpdates.map { it.name })
         }
+
         Result.success()
     }
 
+    private fun createUpdateNotification(names: List<String>) {
+        NotificationManagerCompat.from(context).apply {
+            notify(Notifications.ID_UPDATES_TO_EXTS,
+                context.notification(Notifications.CHANNEL_UPDATES_TO_EXTS) {
+                    setContentTitle(
+                        context.resources.getQuantityString(
+                            R.plurals.update_check_notification_ext_updates,
+                            names.size,
+                            names.size
+                        )
+                    )
+                    val extNames = names.joinToString(", ")
+                    setContentText(extNames)
+                    setStyle(NotificationCompat.BigTextStyle().bigText(extNames))
+                    setSmallIcon(R.drawable.ic_extension_24dp)
+                    setContentIntent(NotificationReceiver.openExtensionsPendingActivity(context))
+                    setAutoCancel(true)
+                })
+        }
+    }
+
     companion object {
-        const val TAG = "ExtensionUpdate"
+        private const val TAG = "ExtensionUpdate"
 
         fun setupTask(context: Context, forceAutoUpdateJob: Boolean? = null) {
             val preferences = Injekt.get<PreferencesHelper>()

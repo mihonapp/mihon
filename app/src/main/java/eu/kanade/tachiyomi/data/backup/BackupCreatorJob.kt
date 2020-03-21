@@ -26,7 +26,7 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
     }
 
     companion object {
-        const val TAG = "BackupCreator"
+        private const val TAG = "BackupCreator"
 
         fun setupTask(context: Context, prefInterval: Int? = null) {
             val preferences = Injekt.get<PreferencesHelper>()

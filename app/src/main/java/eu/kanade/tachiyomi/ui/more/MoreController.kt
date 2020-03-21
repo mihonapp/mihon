@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.more
 
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.download.DownloadController
@@ -9,7 +11,7 @@ import eu.kanade.tachiyomi.ui.extension.ExtensionController
 import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
-import eu.kanade.tachiyomi.util.preference.extensionPreference
+import eu.kanade.tachiyomi.util.preference.badgePreference
 import eu.kanade.tachiyomi.util.preference.iconRes
 import eu.kanade.tachiyomi.util.preference.iconTint
 import eu.kanade.tachiyomi.util.preference.onClick
@@ -18,6 +20,8 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class MoreController : SettingsController(), RootController {
 
@@ -26,10 +30,11 @@ class MoreController : SettingsController(), RootController {
 
         val tintColor = context.getResourceColor(R.attr.colorAccent)
 
-        extensionPreference {
+        badgePreference {
             titleRes = R.string.label_extensions
             iconRes = R.drawable.ic_extension_24dp
             iconTint = tintColor
+            setBadge(Injekt.get<PreferencesHelper>().extensionUpdatesCount().getOrDefault())
             onClick {
                 router.pushController(ExtensionController().withFadeTransaction())
             }
