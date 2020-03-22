@@ -27,8 +27,8 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
 
         <item name="buttonBarPositiveButtonStyle">@style/Theme.Widget.Button</item>
-        <item name="buttonBarNegativeButtonStyle">@style/Theme.Widget.Button.Borderless</item>
-        <item name="buttonBarNeutralButtonStyle">@style/Theme.Widget.Button.Borderless</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Theme.Widget.Button</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Theme.Widget.Button</item>
     </style>
 
     <style name="Theme.AlertDialog.Light" parent="Theme.AlertDialog">
@@ -224,24 +224,24 @@
     <!--Widgets.Button-->
     <!--==============-->
     <style name="Theme.Widget.Button" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="Theme.Widget.Button.Colored" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">?attr/colorAccent</item>
-    </style>
-
-    <style name="Theme.Widget.Button.Borderless" parent="Theme.Widget.Button">
         <item name="android:textColor">?attr/colorAccent</item>
+        <item name="rippleColor">?attr/colorAccent</item>
     </style>
 
-    <style name="Theme.Widget.Button.Borderless.Negative" parent="Theme.Widget.Button.Borderless">
-        <item name="android:textColor">@color/md_red_500</item>
+    <style name="Theme.Widget.Button.Error" parent="Theme.Widget.Button">
+        <item name="android:textColor">?attr/colorError</item>
+        <item name="rippleColor">?attr/colorError</item>
     </style>
 
-    <style name="Theme.Widget.Button.Borderless.Small" parent="Theme.Widget.Button.Borderless">
-        <item name="android:minHeight">48dip</item>
-        <item name="android:minWidth">48dip</item>
+    <style name="Theme.Widget.Button.FilledAccent" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="backgroundTint">?attr/colorAccent</item>
+        <item name="rippleColor">?attr/colorAccent</item>
+    </style>
+
+    <style name="Theme.Widget.Button.Outlined.Accent" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="rippleColor">?attr/colorAccent</item>
     </style>
 
 
