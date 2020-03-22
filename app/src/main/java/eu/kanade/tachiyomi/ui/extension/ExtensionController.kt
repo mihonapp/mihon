@@ -77,6 +77,7 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         ext_recycler.layoutManager = LinearLayoutManager(view.context)
         ext_recycler.adapter = adapter
         ext_recycler.addItemDecoration(ExtensionDividerItemDecoration(view.context))
+        adapter?.fastScroller = fast_scroller
     }
 
     override fun onDestroyView(view: View) {

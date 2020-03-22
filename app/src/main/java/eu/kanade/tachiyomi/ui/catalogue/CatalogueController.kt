@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCatalogueController
 import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
 import eu.kanade.tachiyomi.ui.catalogue.latest.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
+import kotlinx.android.synthetic.main.catalogue_main_controller.fast_scroller
 import kotlinx.android.synthetic.main.catalogue_main_controller.recycler
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -108,6 +109,7 @@ class CatalogueController : NucleusController<CataloguePresenter>(),
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.adapter = adapter
         recycler.addItemDecoration(SourceDividerItemDecoration(view.context))
+        adapter?.fastScroller = fast_scroller
 
         requestPermissionsSafe(arrayOf(WRITE_EXTERNAL_STORAGE), 301)
     }
