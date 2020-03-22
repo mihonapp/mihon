@@ -33,7 +33,7 @@
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_bookmark_border_white_24dp" />
+            app:srcCompat="@drawable/ic_bookmark_border_24dp" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/info_scrollview"
