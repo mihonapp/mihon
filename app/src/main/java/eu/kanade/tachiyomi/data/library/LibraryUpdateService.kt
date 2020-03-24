@@ -601,7 +601,7 @@ class LibraryUpdateService(
                     resources.getQuantityString(R.plurals.notification_chapters_multiple_and_more, remaining, joinedChapterNumbers, remaining)
                 } else {
                     // "Chapters 1, 2.5, 3"
-                    resources.getString(R.string.notification_chapters_multiple, displayableChapterNumbers.joinToString(","))
+                    resources.getString(R.string.notification_chapters_multiple, displayableChapterNumbers.joinToString(", "))
                 }
             }
         }
