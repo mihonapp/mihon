@@ -44,6 +44,7 @@
 
         <!-- Themes -->
         <item name="windowActionModeOverlay">true</item>
+        <item name="elevationOverlayEnabled">false</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="toolbarNavigationButtonStyle">@style/Theme.Toolbar.Navigation</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
@@ -119,6 +120,7 @@
 
         <!-- Themes -->
         <item name="windowActionModeOverlay">true</item>
+        <item name="elevationOverlayEnabled">false</item>
         <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents</item>
         <item name="toolbarNavigationButtonStyle">@style/Theme.Toolbar.Navigation</item>
