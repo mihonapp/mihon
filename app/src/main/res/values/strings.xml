@@ -378,6 +378,7 @@
     <string name="no_valid_sources">Please enable at least one valid source</string>
     <string name="no_more_results">No more results</string>
     <string name="no_results_found">No results found</string>
+    <string name="http_error_hint">Check website in WebView</string>
     <string name="local_source">Local manga</string>
     <string name="other_source">Other</string>
     <string name="invalid_combination">Default can\'t be selected with other categories</string>
