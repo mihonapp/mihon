@@ -165,7 +165,7 @@ dependencies {
     implementation 'com.github.inorichi:unifile:e9ee588'
 
     // HTML parser
-    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'org.jsoup:jsoup:1.12.2'
 
     // Job scheduling
     final work_version = '2.3.4'
@@ -179,7 +179,7 @@ dependencies {
     implementation 'androidx.sqlite:sqlite:2.1.0'
     implementation 'com.github.inorichi.storio:storio-common:8be19de@aar'
     implementation 'com.github.inorichi.storio:storio-sqlite:8be19de@aar'
-    implementation 'io.requery:sqlite-android:3.25.2'
+    implementation 'io.requery:sqlite-android:3.31.0'
 
     // Model View Presenter
     final nucleus_version = '3.0.0'
@@ -194,7 +194,7 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
-    implementation 'jp.wasabeef:glide-transformations:4.0.0'
+    implementation 'jp.wasabeef:glide-transformations:4.1.0'
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
