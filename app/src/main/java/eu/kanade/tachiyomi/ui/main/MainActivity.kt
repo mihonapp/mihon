@@ -86,7 +86,12 @@ class MainActivity : BaseActivity() {
                     R.id.nav_more -> setRoot(MoreController(), id)
                 }
             } else {
-                router.popToRoot()
+                when (id) {
+                    R.id.nav_library -> {
+                        val controller = router.getControllerWithTag(id.toString()) as? LibraryController
+                        controller?.showSettingsSheet()
+                    }
+                }
             }
             true
         }
