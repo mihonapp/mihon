@@ -25,7 +25,7 @@ class LibraryNavigationView @JvmOverloads constructor(context: Context, attrs: A
     /**
      * List of groups shown in the view.
      */
-    private val groups = listOf(FilterGroup(), SortGroup())
+    private val groups = listOf(FilterGroup(), SortGroup(), DisplayGroup(), BadgeGroup())
 
     /**
      * Adapter instance.
@@ -79,7 +79,7 @@ class LibraryNavigationView @JvmOverloads constructor(context: Context, attrs: A
 
         override val header = Item.Header(R.string.action_filter)
 
-        override val footer = null
+        override val footer = Item.Separator()
 
         override fun initModels() {
             downloaded.checked = preferences.filterDownloaded().getOrDefault()
@@ -121,7 +121,7 @@ class LibraryNavigationView @JvmOverloads constructor(context: Context, attrs: A
 
         override val header = Item.Header(R.string.action_sort)
 
-        override val footer = null
+        override val footer = Item.Separator()
 
         override fun initModels() {
             val sorting = preferences.librarySortingMode().getOrDefault()
@@ -158,6 +158,57 @@ class LibraryNavigationView @JvmOverloads constructor(context: Context, attrs: A
                 else -> throw Exception("Unknown sorting")
             })
             preferences.librarySortingAscending().set(item.state == SORT_ASC)
+
+            item.group.items.forEach { adapter.notifyItemChanged(it) }
+        }
+    }
+
+    inner class BadgeGroup : Group {
+        private val downloadBadge = Item.CheckboxGroup(R.string.action_display_download_badge, this)
+        override val header = null
+        override val footer = null
+        override val items = listOf(downloadBadge)
+        override fun initModels() {
+            downloadBadge.checked = preferences.downloadBadge().getOrDefault()
+        }
+
+        override fun onItemClicked(item: Item) {
+            item as Item.CheckboxGroup
+            item.checked = !item.checked
+            preferences.downloadBadge().set((item.checked))
+            adapter.notifyItemChanged(item)
+        }
+    }
+
+    /**
+     * Display group, to show the library as a list or a grid.
+     */
+    inner class DisplayGroup : Group {
+
+        private val grid = Item.Radio(R.string.action_display_grid, this)
+
+        private val list = Item.Radio(R.string.action_display_list, this)
+
+        override val items = listOf(grid, list)
+
+        override val header = Item.Header(R.string.action_display)
+
+        override val footer = null
+
+        override fun initModels() {
+            val asList = preferences.libraryAsList().getOrDefault()
+            grid.checked = !asList
+            list.checked = asList
+        }
+
+        override fun onItemClicked(item: Item) {
+            item as Item.Radio
+            if (item.checked) return
+
+            item.group.items.forEach { (it as Item.Radio).checked = false }
+            item.checked = true
+
+            preferences.libraryAsList().set(item == list)
 
             item.group.items.forEach { adapter.notifyItemChanged(it) }
         }
