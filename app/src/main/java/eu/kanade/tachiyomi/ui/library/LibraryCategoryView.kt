@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
+import kotlinx.android.synthetic.main.library_category.view.fast_scroller
 import kotlinx.android.synthetic.main.library_category.view.swipe_refresh
 import rx.subscriptions.CompositeSubscription
 import uy.kohesive.injekt.injectLazy
@@ -81,6 +82,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
         swipe_refresh.addView(recycler)
+        adapter.fastScroller = fast_scroller
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recycler: RecyclerView, newState: Int) {
