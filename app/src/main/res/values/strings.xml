@@ -418,6 +418,7 @@
     <string name="delete_downloads_for_manga">Delete downloaded chapters?</string>
     <string name="copied_to_clipboard">%1$s copied to clipboard</string>
     <string name="source_not_installed">Source not installed: %1$s</string>
+    <string name="snack_add_to_library">Add manga to library?</string>
 
     <!-- Manga chapters fragment -->
     <string name="manga_chapters_tab">Chapters</string>
@@ -475,9 +476,6 @@
     <string name="dialog_with_checkbox_remove_description">This will remove the read date of this chapter. Are you sure?</string>
     <string name="dialog_with_checkbox_reset">Reset all chapters for this manga</string>
 
-    <!-- SnackBar -->
-    <string name="snack_add_to_library">Add manga to library?</string>
-
     <!-- Image notifier -->
     <string name="picture_saved">Picture saved</string>
     <string name="saving_picture">Saving picture</string>
@@ -506,7 +504,7 @@
     <string name="transition_pages_loading">Loading pages…</string>
     <string name="transition_pages_error">Failed to load pages: %1$s</string>
 
-    <!-- Recent manga fragment -->
+    <!-- History fragment -->
     <string name="recent_manga_source">%1$s - Ch.%2$s</string>
 
     <!-- Source migration screen -->
@@ -553,11 +551,9 @@
     <string name="file_select_icon">Select shortcut icon</string>
 
     <!--UpdateCheck-->
-    <string name="update_check_title">New version available!</string>
     <string name="update_check_confirm">Download</string>
     <string name="update_check_ignore">Ignore</string>
     <string name="update_check_no_new_updates">No new updates available</string>
-    <string name="update_check_download_started">Download started</string>
     <string name="update_check_look_for_updates">Searching for updates…</string>
 
     <!--UpdateCheck Notifications-->
@@ -565,7 +561,7 @@
     <string name="update_check_notification_download_in_progress">Downloading…</string>
     <string name="update_check_notification_download_complete">Download complete</string>
     <string name="update_check_notification_download_error">Download error</string>
-    <string name="update_check_notification_update_available">Update available</string>
+    <string name="update_check_notification_update_available">New version available!</string>
 
     <!--Extension Updates Notifications-->
     <plurals name="update_check_notification_ext_updates">
