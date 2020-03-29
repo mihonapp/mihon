@@ -366,15 +366,17 @@ open class BrowseCatalogueController(bundle: Bundle) :
                 }
                 presenter.requestNext()
             }
-            val openInWebViewAction = View.OnClickListener {
-                openInWebView()
-            }
 
             if (adapter.isEmpty) {
-                empty_view.show(message, listOf(
-                    EmptyView.Action(R.string.action_retry, retryAction),
-                    EmptyView.Action(R.string.action_open_in_web_view, openInWebViewAction)
-                ))
+                val actions = mutableListOf(EmptyView.Action(R.string.action_retry, retryAction))
+                if (presenter.source is HttpSource) {
+                    val openInWebViewAction = View.OnClickListener {
+                        openInWebView()
+                    }
+                    actions += EmptyView.Action(R.string.action_open_in_web_view, openInWebViewAction)
+                }
+
+                empty_view.show(message, actions)
             } else {
                 empty_view.hide()
 

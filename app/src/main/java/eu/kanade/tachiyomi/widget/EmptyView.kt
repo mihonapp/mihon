@@ -3,10 +3,10 @@ package eu.kanade.tachiyomi.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.annotation.StringRes
+import androidx.appcompat.widget.AppCompatButton
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
@@ -44,7 +44,7 @@ class EmptyView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         actions_container.removeAllViews()
         if (!actions.isNullOrEmpty()) {
             actions.forEach {
-                val button = Button(context).apply {
+                val button = AppCompatButton(context).apply {
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT)
