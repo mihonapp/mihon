@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.chip.Chip
 import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.view.longClicks
@@ -142,8 +143,6 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
             copyToClipboard(view.context.getString(R.string.description), manga_summary.text.toString())
         }
 
-        manga_genres_tags.setOnTagClickListener { tag -> performLocalSearch(tag) }
-
         manga_cover.longClicks().subscribeUntilDestroy {
             copyToClipboard(view.context.getString(R.string.title), presenter.manga.title)
         }
@@ -218,8 +217,15 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         manga_source.text = source?.toString() ?: view.context.getString(R.string.unknown)
 
         // Update genres list
-        if (manga.genre.isNullOrBlank().not()) {
-            manga_genres_tags.setTags(manga.genre?.split(", "))
+        if (!manga.genre.isNullOrBlank()) {
+            manga.genre?.split(", ")?.forEach { genre ->
+                val chip = Chip(view.context).apply {
+                    text = genre
+                    setOnClickListener { performLocalSearch(genre) }
+                }
+
+                manga_genres_tags.addView(chip)
+            }
         }
 
         // Update description TextView.
@@ -256,11 +262,6 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                         .into(backdrop)
             }
         }
-    }
-
-    override fun onDestroyView(view: View) {
-        manga_genres_tags.setOnTagClickListener(null)
-        super.onDestroyView(view)
     }
 
     /**

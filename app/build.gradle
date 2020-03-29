@@ -212,7 +212,6 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.nightlynexus.viewstatepageradapter:viewstatepageradapter:1.1.0'
     implementation 'com.github.mthli:Slice:v1.3'
-    implementation 'me.gujun.android.taggroup:library:1.4@aar'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.github.carlosesco:DirectionalViewPager:a844dbca0a'
 
