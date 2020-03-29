@@ -362,7 +362,11 @@ class LibraryController(
             R.id.action_search -> expandActionViewFromInteraction = true
             R.id.action_filter -> showSettingsSheet()
             R.id.action_update_library -> {
-                activity?.let { LibraryUpdateService.start(it) }
+                activity?.let {
+                    if (LibraryUpdateService.start(it)) {
+                        it.toast(R.string.updating_library)
+                    }
+                }
             }
         }
 
