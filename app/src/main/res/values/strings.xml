@@ -538,7 +538,7 @@
     <string name="notification_chapters_single_and_more">Chapter %1$s and %2$d more</string>
     <string name="notification_chapters_multiple">Chapters %1$s</string>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">Chapter %1$s and 1 more</item>
+        <item quantity="one">Chapters %1$s and 1 more</item>
         <item quantity="other">Chapters %1$s and %2$d more</item>
     </plurals>
     <string name="notification_cover_update_failed">Failed to update cover</string>
