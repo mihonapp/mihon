@@ -438,7 +438,6 @@
     <string name="sort_by_number">By chapter number</string>
     <string name="manga_download">Download</string>
     <string name="custom_download">Download custom amount</string>
-    <string name="custom_hint">amount</string>
     <string name="download_1">Next chapter</string>
     <string name="download_5">Next 5 chapters</string>
     <string name="download_10">Next 10 chapters</string>
