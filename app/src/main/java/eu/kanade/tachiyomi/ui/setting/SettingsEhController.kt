@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.util.preference.*
 import eu.kanade.tachiyomi.util.system.toast
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
