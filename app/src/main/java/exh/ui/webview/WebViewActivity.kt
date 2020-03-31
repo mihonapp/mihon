@@ -16,8 +16,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.util.clipboardManager
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.system.clipboardManager
+import eu.kanade.tachiyomi.util.system.toast
 import exh.ui.login.LoginController
 import kotlinx.android.synthetic.main.activity_webview.*
 import uy.kohesive.injekt.injectLazy

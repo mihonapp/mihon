@@ -12,7 +12,7 @@ import android.widget.TextView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.util.dpToPx
+import eu.kanade.tachiyomi.util.system.dpToPx
 import uy.kohesive.injekt.injectLazy
 
 class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(null, null) {

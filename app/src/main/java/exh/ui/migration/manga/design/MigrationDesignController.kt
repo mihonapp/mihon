@@ -10,8 +10,8 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.migration.MigrationFlags
-import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.visible
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.visible
 import exh.ui.base.BaseExhController
 import exh.ui.migration.manga.process.MigrationProcedureConfig
 import exh.ui.migration.manga.process.MigrationProcedureController

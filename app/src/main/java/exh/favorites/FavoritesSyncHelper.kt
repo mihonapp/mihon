@@ -13,10 +13,10 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
-import eu.kanade.tachiyomi.util.launchUI
-import eu.kanade.tachiyomi.util.powerManager
-import eu.kanade.tachiyomi.util.toast
-import eu.kanade.tachiyomi.util.wifiManager
+import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.system.powerManager
+import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.wifiManager
 import exh.*
 import exh.eh.EHentaiThrottleManager
 import exh.eh.EHentaiUpdateWorker

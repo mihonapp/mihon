@@ -4,7 +4,7 @@ import android.view.View
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
-import eu.kanade.tachiyomi.util.getRound
+import eu.kanade.tachiyomi.util.view.getRound
 import kotlinx.android.synthetic.main.eh_source_item.*
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 

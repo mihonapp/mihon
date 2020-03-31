@@ -12,9 +12,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.launchUI
-import eu.kanade.tachiyomi.util.visible
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.view.visible
 import exh.uconfig.WarnConfigureDialogController
 import kotlinx.android.synthetic.main.eh_activity_login.view.*
 import timber.log.Timber

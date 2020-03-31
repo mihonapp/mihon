@@ -17,9 +17,9 @@ import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.migration.MigrationFlags
-import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.inflate
-import eu.kanade.tachiyomi.util.visible
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.inflate
+import eu.kanade.tachiyomi.util.view.visible
 import exh.MERGED_SOURCE_ID
 import exh.util.await
 import kotlinx.android.synthetic.main.eh_manga_card.view.*
