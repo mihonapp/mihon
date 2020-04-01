@@ -8,8 +8,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.util.gone
-import eu.kanade.tachiyomi.util.visible
+import eu.kanade.tachiyomi.util.view.gone
+import eu.kanade.tachiyomi.util.view.visible
 import kotlinx.android.synthetic.main.eh_activity_intercept.*
 import nucleus.factory.RequiresPresenter
 import rx.Subscription

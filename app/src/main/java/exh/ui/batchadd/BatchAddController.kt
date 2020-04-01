@@ -9,8 +9,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.jakewharton.rxbinding.view.clicks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.util.combineLatest
-import eu.kanade.tachiyomi.util.plusAssign
+import eu.kanade.tachiyomi.util.lang.combineLatest
+import eu.kanade.tachiyomi.util.lang.plusAssign
 import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription

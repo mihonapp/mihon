@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.setting
 
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
+import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.switchPreference
 
 /**
  * hitomi.la Settings fragment

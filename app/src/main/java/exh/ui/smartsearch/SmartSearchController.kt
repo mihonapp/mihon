@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
 import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCatalogueController
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.android.synthetic.main.eh_smart_search.*
 import kotlinx.coroutines.*
 import uy.kohesive.injekt.injectLazy

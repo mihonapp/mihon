@@ -7,7 +7,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.util.jobScheduler
+import eu.kanade.tachiyomi.util.system.jobScheduler
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.EXHMigrations

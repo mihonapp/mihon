@@ -10,8 +10,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.util.syncChaptersWithSource
-import eu.kanade.tachiyomi.util.toast
+import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.system.toast
 import exh.smartsearch.SmartSearchEngine
 import exh.ui.base.BaseExhController
 import exh.util.await

@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.data.database.resolvers.MangaUrlPutResolver
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.util.jobScheduler
+import eu.kanade.tachiyomi.util.system.jobScheduler
 import exh.source.BlacklistedSources
 import rx.Observable
 import uy.kohesive.injekt.injectLazy

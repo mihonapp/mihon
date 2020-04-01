@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.ui.setting.*
+import eu.kanade.tachiyomi.util.preference.*
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredFunctions
 

@@ -5,7 +5,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
-import eu.kanade.tachiyomi.util.asJsoup
+import eu.kanade.tachiyomi.util.system.asJsoup
 import exh.ui.captcha.BrowserActionActivity.Companion.CROSS_WINDOW_SCRIPT_INNER
 import org.jsoup.nodes.DataNode
 import org.jsoup.nodes.Element

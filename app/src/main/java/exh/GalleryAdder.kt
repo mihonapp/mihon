@@ -7,7 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.source.online.all.EHentai
-import eu.kanade.tachiyomi.util.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import uy.kohesive.injekt.injectLazy
 
 class GalleryAdder {

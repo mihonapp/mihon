@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
-import eu.kanade.tachiyomi.util.asJsoup
+import eu.kanade.tachiyomi.util.system.asJsoup
 import exh.HITOMI_SOURCE_ID
 import exh.hitomi.HitomiNozomi
 import exh.metadata.metadata.HitomiSearchMetadata
