@@ -234,6 +234,7 @@
     <string name="filter_mode_darken">Burn / Darken</string>
     <string name="pref_keep_screen_on">Keep screen on</string>
     <string name="pref_skip_read_chapters">Skip chapters marked read</string>
+    <string name="pref_skip_filtered_chapters">Skip filtered chapters</string>
     <string name="pref_reader_navigation">Navigation</string>
     <string name="pref_read_with_volume_keys">Volume keys</string>
     <string name="pref_read_with_volume_keys_inverted">Invert volume keys</string>
@@ -275,6 +276,7 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_always_show_chapter_transition">Always show chapter transition</string>
+    <string name="pref_category_reading">Reading</string>
 
       <!-- Downloads section -->
     <string name="pref_download_directory">Download location</string>
