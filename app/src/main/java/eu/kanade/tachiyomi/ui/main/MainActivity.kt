@@ -56,6 +56,8 @@ class MainActivity : BaseActivity() {
     lateinit var tabAnimator: ViewHeightAnimator
     private lateinit var bottomNavAnimator: ViewHeightAnimator
 
+    private var isHandlingShortcut: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -85,7 +87,7 @@ class MainActivity : BaseActivity() {
                     R.id.nav_sources -> setRoot(CatalogueController(), id)
                     R.id.nav_more -> setRoot(MoreController(), id)
                 }
-            } else {
+            } else if (!isHandlingShortcut) {
                 when (id) {
                     R.id.nav_library -> {
                         val controller = router.getControllerWithTag(id.toString()) as? LibraryController
@@ -192,21 +194,32 @@ class MainActivity : BaseActivity() {
             NotificationReceiver.dismissNotification(applicationContext, notificationId, intent.getIntExtra("groupId", 0))
         }
 
+        isHandlingShortcut = true
+
         when (intent.action) {
             SHORTCUT_LIBRARY -> setSelectedDrawerItem(R.id.nav_library)
             SHORTCUT_RECENTLY_UPDATED -> setSelectedDrawerItem(R.id.nav_updates)
             SHORTCUT_RECENTLY_READ -> setSelectedDrawerItem(R.id.nav_history)
             SHORTCUT_CATALOGUES -> setSelectedDrawerItem(R.id.nav_sources)
             SHORTCUT_EXTENSIONS -> {
+                if (router.backstackSize > 1) {
+                    router.popToRoot()
+                }
                 setSelectedDrawerItem(R.id.nav_more)
                 router.pushController(ExtensionController().withFadeTransaction())
             }
             SHORTCUT_MANGA -> {
                 val extras = intent.extras ?: return false
+                if (router.backstackSize > 1) {
+                    router.popToRoot()
+                }
                 setSelectedDrawerItem(R.id.nav_library)
                 router.pushController(RouterTransaction.with(MangaController(extras)))
             }
             SHORTCUT_DOWNLOADS -> {
+                if (router.backstackSize > 1) {
+                    router.popToRoot()
+                }
                 setSelectedDrawerItem(R.id.nav_more)
                 router.pushController(RouterTransaction.with(DownloadController()))
             }
@@ -233,8 +246,13 @@ class MainActivity : BaseActivity() {
                     router.pushController(CatalogueSearchController(query, filter).withFadeTransaction())
                 }
             }
-            else -> return false
+            else -> {
+                isHandlingShortcut = false
+                return false
+            }
         }
+
+        isHandlingShortcut = false
         return true
     }
 
