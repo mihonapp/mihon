@@ -82,7 +82,7 @@ class MainActivity : BaseActivity() {
                     R.id.nav_library -> setRoot(LibraryController(), id)
                     R.id.nav_updates -> setRoot(UpdatesController(), id)
                     R.id.nav_history -> setRoot(HistoryController(), id)
-                    R.id.nav_catalogues -> setRoot(CatalogueController(), id)
+                    R.id.nav_sources -> setRoot(CatalogueController(), id)
                     R.id.nav_more -> setRoot(MoreController(), id)
                 }
             } else {
@@ -196,7 +196,7 @@ class MainActivity : BaseActivity() {
             SHORTCUT_LIBRARY -> setSelectedDrawerItem(R.id.nav_library)
             SHORTCUT_RECENTLY_UPDATED -> setSelectedDrawerItem(R.id.nav_updates)
             SHORTCUT_RECENTLY_READ -> setSelectedDrawerItem(R.id.nav_history)
-            SHORTCUT_CATALOGUES -> setSelectedDrawerItem(R.id.nav_catalogues)
+            SHORTCUT_CATALOGUES -> setSelectedDrawerItem(R.id.nav_sources)
             SHORTCUT_EXTENSIONS -> {
                 setSelectedDrawerItem(R.id.nav_more)
                 router.pushController(ExtensionController().withFadeTransaction())
