@@ -50,6 +50,8 @@ class ExtensionManager(
      */
     private val installedExtensionsRelay = BehaviorRelay.create<List<Extension.Installed>>()
 
+    private val iconMap = mutableMapOf<String, Drawable>()
+
     /**
      * List of the currently installed extensions.
      */
@@ -61,8 +63,10 @@ class ExtensionManager(
 
     fun getAppIconForSource(source: Source): Drawable? {
         val pkgName = installedExtensions.find { ext -> ext.sources.any { it.id == source.id } }?.pkgName
-        return if (pkgName != null) context.packageManager.getApplicationIcon(pkgName)
-        else null
+        if (pkgName != null) {
+            return iconMap[pkgName] ?: iconMap.getOrPut(pkgName) { context.packageManager.getApplicationIcon(pkgName) }
+        }
+        return null
     }
 
     /**
