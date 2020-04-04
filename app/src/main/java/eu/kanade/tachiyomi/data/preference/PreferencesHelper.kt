@@ -84,6 +84,8 @@ class PreferencesHelper(val context: Context) {
 
     fun hideNotificationContent() = prefs.getBoolean(Keys.hideNotificationContent, false)
 
+    fun hideNotificationContent() = prefs.getBoolean(Keys.hideNotificationContent, false)
+
     fun clear() = prefs.edit().clear().apply()
 
     fun themeMode() = flowPrefs.getString(Keys.themeMode, Values.THEME_MODE_SYSTEM)
