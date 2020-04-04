@@ -37,6 +37,7 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
@@ -69,6 +70,8 @@ import kotlinx.android.synthetic.main.manga_info_controller.manga_source
 import kotlinx.android.synthetic.main.manga_info_controller.manga_status
 import kotlinx.android.synthetic.main.manga_info_controller.manga_summary
 import kotlinx.android.synthetic.main.manga_info_controller.swipe_refresh
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -214,7 +217,18 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         }
 
         // If manga source is known update source TextView.
-        manga_source.text = source?.toString() ?: view.context.getString(R.string.unknown)
+        val mangaSource = source?.toString()
+        with(manga_source) {
+            if (mangaSource != null) {
+                text = mangaSource
+                setOnClickListener {
+                    val sourceManager = Injekt.get<SourceManager>()
+                    performLocalSearch(sourceManager.getOrStub(source.id).name)
+                }
+            } else {
+                text = view.context.getString(R.string.unknown)
+            }
+        }
 
         // Update genres list
         if (!manga.genre.isNullOrBlank()) {
