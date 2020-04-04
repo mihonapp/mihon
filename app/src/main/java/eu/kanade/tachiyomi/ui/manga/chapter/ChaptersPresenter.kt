@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
-import java.util.Date
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -22,6 +21,7 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.Date
 
 /**
  * Presenter of [ChaptersController].
@@ -90,14 +90,6 @@ class ChaptersPresenter(
 
                     // Listen for download status changes
                     observeDownloads()
-
-                    // Emit the number of chapters to the info tab.
-                    chapterCountRelay.call(chapters.maxBy { it.chapter_number }?.chapter_number
-                            ?: 0f)
-
-                    // Emit the upload date of the most recent chapter
-                    lastUpdateRelay.call(Date(chapters.maxBy { it.date_upload }?.date_upload
-                            ?: 0))
                 }
                 .subscribe { chaptersRelay.call(it) })
     }

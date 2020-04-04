@@ -54,13 +54,11 @@ import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.snack
-import java.text.DateFormat
-import java.text.DecimalFormat
-import java.util.Date
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
+import java.text.DateFormat
 
 /**
  * Fragment that shows manga information.
@@ -85,8 +83,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
 
     override fun createPresenter(): MangaInfoPresenter {
         val ctrl = parentController as MangaController
-        return MangaInfoPresenter(ctrl.manga!!, ctrl.source!!,
-                ctrl.chapterCountRelay, ctrl.lastUpdateRelay, ctrl.mangaFavoriteRelay)
+        return MangaInfoPresenter(ctrl.manga!!, ctrl.source!!, ctrl.mangaFavoriteRelay)
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -265,27 +262,6 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                         .centerCrop()
                         .into(binding.backdrop!!)
             }
-        }
-    }
-
-    /**
-     * Update chapter count TextView.
-     *
-     * @param count number of chapters.
-     */
-    fun setChapterCount(count: Float) {
-        if (count > 0f) {
-            binding.mangaChapters.text = DecimalFormat("#.#").format(count)
-        } else {
-            binding.mangaChapters.text = resources?.getString(R.string.unknown)
-        }
-    }
-
-    fun setLastUpdateDate(date: Date) {
-        if (date.time != 0L) {
-            binding.mangaLastUpdate.text = dateFormat.format(date)
-        } else {
-            binding.mangaLastUpdate.text = resources?.getString(R.string.unknown)
         }
     }
 
