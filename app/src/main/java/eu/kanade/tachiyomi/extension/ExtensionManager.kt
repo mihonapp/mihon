@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.lang.launchNow
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.async
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -160,6 +161,7 @@ class ExtensionManager(
             val extensions: List<Extension.Available> = try {
                 api.findExtensions()
             } catch (e: Exception) {
+                context.toast(e.message)
                 emptyList()
             }
 
