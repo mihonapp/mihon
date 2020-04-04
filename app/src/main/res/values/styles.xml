@@ -273,6 +273,30 @@
         <item name="rippleColor">?attr/colorAccent</item>
     </style>
 
+    <style name="Theme.Widget.Button.Icon" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingBottom">4dp</item>
+
+        <item name="elevation">0dp</item>
+
+        <item name="android:textSize">12sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="cornerRadius">16dp</item>
+
+        <item name="iconTint">?colorAccent</item>
+        <item name="rippleColor">?colorAccent</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+    <style name="Theme.Widget.Button.Icon.Textless">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="iconPadding">0dp</item>
+    </style>
+
 
     <!--===-->
     <!--OLD-->

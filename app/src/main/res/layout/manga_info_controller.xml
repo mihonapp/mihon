@@ -55,17 +55,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:background="@color/material_grey_700" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_favorite"
-                style="@style/Theme.Widget.FAB"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/guideline"
-                app:srcCompat="@drawable/ic_add_to_library_24dp" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -187,6 +176,58 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <LinearLayout
+                android:id="@+id/actions_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guideline">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_favorite"
+                    style="@style/Theme.Widget.Button.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_to_library"
+                    app:icon="@drawable/ic_add_to_library_24dp" />
+
+<!--                <com.google.android.material.button.MaterialButton-->
+<!--                    android:id="@+id/btn_tracking"-->
+<!--                    style="@style/Theme.Widget.Button.Icon"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:text="@string/manga_tracking_tab"-->
+<!--                    app:icon="@drawable/ic_sync_24dp" />-->
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_share"
+                    style="@style/Theme.Widget.Button.Icon.Textless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/action_share"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_share_24dp"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_webview"
+                    style="@style/Theme.Widget.Button.Icon.Textless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/action_open_in_web_view"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_public_24dp"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/manga_summary_label"
                 style="@style/TextAppearance.Medium.Body2"
@@ -199,7 +240,7 @@
                 android:textIsSelectable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/guideline" />
+                app:layout_constraintTop_toBottomOf="@+id/actions_bar" />
 
             <TextView
                 android:id="@+id/manga_summary"
