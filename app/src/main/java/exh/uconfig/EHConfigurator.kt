@@ -3,7 +3,7 @@ package exh.uconfig
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
-import eu.kanade.tachiyomi.util.system.asJsoup
+import eu.kanade.tachiyomi.util.asJsoup
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.log.maybeInjectEHLogger

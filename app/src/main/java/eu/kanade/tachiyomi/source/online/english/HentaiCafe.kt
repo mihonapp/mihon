@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
-import eu.kanade.tachiyomi.util.system.asJsoup
+import eu.kanade.tachiyomi.util.asJsoup
 import exh.metadata.metadata.HentaiCafeSearchMetadata
 import exh.metadata.metadata.HentaiCafeSearchMetadata.Companion.TAG_TYPE_DEFAULT
 import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUAL

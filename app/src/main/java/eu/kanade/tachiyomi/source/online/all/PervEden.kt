@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.chapter.ChapterRecognition
-import eu.kanade.tachiyomi.util.system.asJsoup
+import eu.kanade.tachiyomi.util.asJsoup
 import exh.metadata.metadata.PervEdenLang
 import exh.metadata.metadata.PervEdenSearchMetadata
 import exh.metadata.metadata.PervEdenSearchMetadata.Companion.TAG_TYPE_DEFAULT

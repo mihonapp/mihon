@@ -27,7 +27,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
-import eu.kanade.tachiyomi.util.system.asJsoup
+import eu.kanade.tachiyomi.util.asJsoup
 import exh.debug.DebugToggles
 import exh.eh.EHentaiUpdateHelper
 import exh.eh.EHentaiUpdateWorkerConstants

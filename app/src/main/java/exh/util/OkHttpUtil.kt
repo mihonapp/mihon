@@ -1,7 +1,7 @@
 package exh.util
 
 import com.elvishew.xlog.XLog
-import eu.kanade.tachiyomi.util.system.asJsoup
+import eu.kanade.tachiyomi.util.asJsoup
 import okhttp3.Response
 import okhttp3.ResponseBody
 import org.jsoup.nodes.Document

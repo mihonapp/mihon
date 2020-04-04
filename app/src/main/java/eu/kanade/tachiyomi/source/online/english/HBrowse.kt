@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
-import eu.kanade.tachiyomi.util.system.asJsoup
+import eu.kanade.tachiyomi.util.asJsoup
 import exh.HBROWSE_SOURCE_ID
 import exh.metadata.metadata.HBrowseSearchMetadata
 import exh.metadata.metadata.base.RaisedTag
