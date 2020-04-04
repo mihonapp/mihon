@@ -22,7 +22,7 @@ import exh.ui.login.LoginController
 import kotlinx.android.synthetic.main.activity_webview.*
 import uy.kohesive.injekt.injectLazy
 
-class WebViewActivity : BaseActivity() {
+class EhWebViewActivity : BaseActivity() {
     private val prefs: PreferencesHelper by injectLazy()
     private var mobileUserAgent: String? = null
     private var isDesktop: Boolean = false
