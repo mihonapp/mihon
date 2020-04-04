@@ -17,7 +17,14 @@ import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
 import exh.uconfig.WarnConfigureDialogController
 import java.net.HttpCookie
-import kotlinx.android.synthetic.main.eh_activity_login.view.*
+import kotlinx.android.synthetic.main.eh_activity_login.view.advanced_options
+import kotlinx.android.synthetic.main.eh_activity_login.view.btn_advanced
+import kotlinx.android.synthetic.main.eh_activity_login.view.btn_alt_login
+import kotlinx.android.synthetic.main.eh_activity_login.view.btn_cancel
+import kotlinx.android.synthetic.main.eh_activity_login.view.btn_close
+import kotlinx.android.synthetic.main.eh_activity_login.view.btn_recheck
+import kotlinx.android.synthetic.main.eh_activity_login.view.btn_skip_restyle
+import kotlinx.android.synthetic.main.eh_activity_login.view.webview
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 

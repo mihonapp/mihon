@@ -6,7 +6,9 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.view.getRound
-import kotlinx.android.synthetic.main.eh_source_item.*
+import kotlinx.android.synthetic.main.eh_source_item.image
+import kotlinx.android.synthetic.main.eh_source_item.reorder
+import kotlinx.android.synthetic.main.eh_source_item.title
 
 class MigrationSourceHolder(view: View, val adapter: FlexibleAdapter<MigrationSourceItem>) :
         BaseFlexibleViewHolder(view, adapter) {

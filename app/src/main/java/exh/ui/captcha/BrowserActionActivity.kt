@@ -30,7 +30,8 @@ import exh.util.melt
 import java.io.Serializable
 import java.net.URL
 import java.util.UUID
-import kotlinx.android.synthetic.main.eh_activity_captcha.*
+import kotlinx.android.synthetic.main.eh_activity_captcha.toolbar
+import kotlinx.android.synthetic.main.eh_activity_captcha.webview
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

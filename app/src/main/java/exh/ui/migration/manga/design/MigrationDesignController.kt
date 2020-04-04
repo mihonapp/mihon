@@ -15,7 +15,20 @@ import eu.kanade.tachiyomi.util.view.visible
 import exh.ui.base.BaseExhController
 import exh.ui.migration.manga.process.MigrationProcedureConfig
 import exh.ui.migration.manga.process.MigrationProcedureController
-import kotlinx.android.synthetic.main.eh_migration_design.*
+import kotlinx.android.synthetic.main.eh_migration_design.begin_migration_btn
+import kotlinx.android.synthetic.main.eh_migration_design.copy_manga
+import kotlinx.android.synthetic.main.eh_migration_design.copy_manga_desc
+import kotlinx.android.synthetic.main.eh_migration_design.extra_search_param
+import kotlinx.android.synthetic.main.eh_migration_design.extra_search_param_desc
+import kotlinx.android.synthetic.main.eh_migration_design.extra_search_param_text
+import kotlinx.android.synthetic.main.eh_migration_design.fuzzy_search
+import kotlinx.android.synthetic.main.eh_migration_design.mig_categories
+import kotlinx.android.synthetic.main.eh_migration_design.mig_chapters
+import kotlinx.android.synthetic.main.eh_migration_design.migration_mode
+import kotlinx.android.synthetic.main.eh_migration_design.options_group
+import kotlinx.android.synthetic.main.eh_migration_design.prioritize_chapter_count
+import kotlinx.android.synthetic.main.eh_migration_design.recycler
+import kotlinx.android.synthetic.main.eh_migration_design.use_smart_search
 import uy.kohesive.injekt.injectLazy
 
 // TODO Select all in library

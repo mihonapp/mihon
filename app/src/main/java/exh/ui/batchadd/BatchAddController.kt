@@ -10,7 +10,15 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.plusAssign
-import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.*
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.btn_add_galleries
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.galleries_box
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.input_title_view
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_bar
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_dismiss_btn
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_log
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_log_wrapper
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_text
+import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_title_view
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 

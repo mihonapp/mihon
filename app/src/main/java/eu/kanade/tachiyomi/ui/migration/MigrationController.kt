@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.ui.base.controller.popControllerWithTag
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import exh.ui.migration.manga.design.MigrationDesignController
 import exh.util.await
-import kotlinx.android.synthetic.main.migration_controller.*
+import kotlinx.android.synthetic.main.migration_controller.migration_recycler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

@@ -16,7 +16,7 @@ import exh.smartsearch.SmartSearchEngine
 import exh.ui.base.BaseExhController
 import exh.util.await
 import java.util.concurrent.atomic.AtomicInteger
-import kotlinx.android.synthetic.main.eh_migration_process.*
+import kotlinx.android.synthetic.main.eh_migration_process.pager
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

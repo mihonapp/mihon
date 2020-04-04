@@ -15,7 +15,9 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import exh.util.dpToPx
-import kotlinx.android.synthetic.main.activity_lock.view.*
+import kotlinx.android.synthetic.main.activity_lock.view.indicator_dots
+import kotlinx.android.synthetic.main.activity_lock.view.pin_lock_view
+import kotlinx.android.synthetic.main.activity_lock.view.swirl_container
 import uy.kohesive.injekt.injectLazy
 
 class LockController : NucleusController<LockPresenter>() {

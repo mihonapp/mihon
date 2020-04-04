@@ -10,7 +10,9 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
-import kotlinx.android.synthetic.main.eh_activity_intercept.*
+import kotlinx.android.synthetic.main.eh_activity_intercept.intercept_progress
+import kotlinx.android.synthetic.main.eh_activity_intercept.intercept_status
+import kotlinx.android.synthetic.main.eh_activity_intercept.toolbar
 import nucleus.factory.RequiresPresenter
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
