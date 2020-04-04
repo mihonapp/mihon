@@ -41,7 +41,7 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
             manga.title = it
             titleDesc += "Title: $it\n"
         }
-        if(altTitles.isNotEmpty())
+        if (altTitles.isNotEmpty())
             titleDesc += "Alternate Titles: \n" + altTitles
                     .joinToString(separator = "\n", postfix = "\n") {
                 "▪ $it"
@@ -58,7 +58,7 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
         }
 
         status?.let {
-            manga.status = when(it) {
+            manga.status = when (it) {
                 "Ongoing" -> SManga.ONGOING
                 "Completed", "Suspended" -> SManga.COMPLETED
                 else -> SManga.UNKNOWN
@@ -70,7 +70,7 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
             detailsDesc += "Rating: %.2\n".format(it)
         }
 
-        //Copy tags -> genres
+        // Copy tags -> genres
         manga.genre = tagsToGenreString()
 
         val tagsDesc = tagsToDescription()
@@ -80,15 +80,14 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
                 .joinToString(separator = "\n")
     }
 
-
     companion object {
         private const val TITLE_TYPE_MAIN = 0
         private const val TITLE_TYPE_ALT = 1
 
         const val TAG_TYPE_DEFAULT = 0
 
-        private fun splitGalleryUrl(url: String)
-                = url.let {
+        private fun splitGalleryUrl(url: String) =
+                url.let {
             Uri.parse(it).pathSegments.filterNot(String::isNullOrBlank)
         }
 
@@ -97,13 +96,13 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
 }
 
 enum class PervEdenLang(val id: Long) {
-    //DO NOT RENAME THESE TO CAPITAL LETTERS! The enum names are used to build URLs
+    // DO NOT RENAME THESE TO CAPITAL LETTERS! The enum names are used to build URLs
     en(PERV_EDEN_EN_SOURCE_ID),
     it(PERV_EDEN_IT_SOURCE_ID);
 
     companion object {
-        fun source(id: Long)
-                = values().find { it.id == id }
+        fun source(id: Long) =
+                values().find { it.id == id }
                 ?: throw IllegalArgumentException("Unknown source ID: $id!")
     }
 }

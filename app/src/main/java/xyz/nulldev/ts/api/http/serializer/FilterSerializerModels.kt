@@ -75,7 +75,7 @@ class SelectSerializer(override val serializer: FilterSerializer) : Serializer<F
     override val clazz = Filter.Select::class
 
     override fun serialize(json: JsonObject, filter: Filter.Select<Any>) {
-        //Serialize values to JSON
+        // Serialize values to JSON
         json[VALUES] = JsonArray().apply {
             filter.values.map {
                 it.toString()
@@ -147,7 +147,7 @@ class GroupSerializer(override val serializer: FilterSerializer) : Serializer<Fi
     override fun serialize(json: JsonObject, filter: Filter.Group<Any?>) {
         json[STATE] = JsonArray().apply {
             filter.state.forEach {
-                add(if(it is Filter<*>)
+                add(if (it is Filter<*>)
                     serializer.serialize(it as Filter<Any?>)
                 else
                     JsonNull.INSTANCE
@@ -158,7 +158,7 @@ class GroupSerializer(override val serializer: FilterSerializer) : Serializer<Fi
 
     override fun deserialize(json: JsonObject, filter: Filter.Group<Any?>) {
         json[STATE].asJsonArray.forEachIndexed { index, jsonElement ->
-            if(!jsonElement.isJsonNull)
+            if (!jsonElement.isJsonNull)
                 serializer.deserialize(filter.state[index] as Filter<Any?>, jsonElement.asJsonObject)
         }
     }
@@ -178,12 +178,12 @@ class SortSerializer(override val serializer: FilterSerializer) : Serializer<Fil
     override val clazz = Filter.Sort::class
 
     override fun serialize(json: JsonObject, filter: Filter.Sort) {
-        //Serialize values
+        // Serialize values
         json[VALUES] = JsonArray().apply {
             filter.values.forEach { add(it) }
         }
 
-        //Serialize state
+        // Serialize state
         json[STATE] = filter.state?.let { (index, ascending) ->
             JsonObject().apply {
                 this[STATE_INDEX] = index
@@ -193,7 +193,7 @@ class SortSerializer(override val serializer: FilterSerializer) : Serializer<Fil
     }
 
     override fun deserialize(json: JsonObject, filter: Filter.Sort) {
-        //Deserialize state
+        // Deserialize state
         filter.state = json[STATE].nullObj?.let {
             Filter.Sort.Selection(it[STATE_INDEX].int,
                     it[STATE_ASCENDING].bool)

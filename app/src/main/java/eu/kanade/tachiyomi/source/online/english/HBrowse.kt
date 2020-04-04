@@ -4,12 +4,16 @@ import android.net.Uri
 import com.github.salomonbrys.kotson.array
 import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonParser
-import hu.akarnokd.rxjava.interop.RxJavaInterop
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.asObservable
 import eu.kanade.tachiyomi.network.asObservableSuccess
-import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.model.Filter
+import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
@@ -23,7 +27,9 @@ import exh.search.Text
 import exh.util.await
 import exh.util.dropBlank
 import exh.util.urlImportFetchSearchManga
+import hu.akarnokd.rxjava.interop.RxJavaInterop
 import info.debatty.java.stringsimilarity.Levenshtein
+import kotlin.math.ceil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -36,7 +42,6 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import rx.Observable
 import rx.schedulers.Schedulers
-import kotlin.math.ceil
 
 class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlImportableSource {
     /**
@@ -181,7 +186,6 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                             Triple(p.first, p.second, it.excluded)
                         }
                     }
-
 
                     "/result"
                 } else {

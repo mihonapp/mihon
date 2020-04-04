@@ -8,12 +8,12 @@ import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.preference.onChange
+import java.math.BigInteger
+import java.security.SecureRandom
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
-import java.math.BigInteger
-import java.security.SecureRandom
 
 class LockPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
         SwitchPreferenceCompat(context, attrs) {
@@ -33,7 +33,7 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
 
     private fun updateSummary() {
         isChecked = lockEnabled(prefs)
-        if(isChecked) {
+        if (isChecked) {
             title = "Lock enabled"
             summary = "Tap to disable or change pin code"
         } else {
@@ -43,7 +43,7 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     fun tryChange() {
-        if(!notifyLockSecurity(context)) {
+        if (!notifyLockSecurity(context)) {
             MaterialDialog.Builder(context)
                     .title("Lock application")
                     .content("Enter a pin to lock the application. Enter nothing to disable the pin lock.")
@@ -76,7 +76,7 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
         val salt: String?
         val hash: String?
         val length: Int
-        if(password.isEmpty()) {
+        if (password.isEmpty()) {
             salt = null
             hash = null
             length = -1

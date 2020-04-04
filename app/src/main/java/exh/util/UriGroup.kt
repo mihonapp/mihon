@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.source.model.Filter
 open class UriGroup<V>(name: String, state: List<V>) : Filter.Group<V>(name, state), UriFilter {
     override fun addToUri(builder: Uri.Builder) {
         state.forEach {
-            if(it is UriFilter) it.addToUri(builder)
+            if (it is UriFilter) it.addToUri(builder)
         }
     }
 }

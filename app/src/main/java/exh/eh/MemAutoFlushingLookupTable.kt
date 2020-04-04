@@ -3,9 +3,6 @@ package exh.eh
 import android.util.SparseArray
 import androidx.core.util.AtomicFile
 import com.elvishew.xlog.XLog
-import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import java.io.Closeable
 import java.io.File
 import java.io.FileNotFoundException
@@ -13,6 +10,18 @@ import java.io.InputStream
 import java.nio.ByteBuffer
 import kotlin.concurrent.thread
 import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 /**
  * In memory Int -> Obj lookup table implementation that
@@ -23,9 +32,9 @@ import kotlin.coroutines.CoroutineContext
  * @author nulldev
  */
 class MemAutoFlushingLookupTable<T>(
-        file: File,
-        private val serializer: EntrySerializer<T>,
-        private val debounceTimeMs: Long = 3000
+    file: File,
+    private val serializer: EntrySerializer<T>,
+    private val debounceTimeMs: Long = 3000
 ) : CoroutineScope, Closeable {
     /**
      * The context of this scope.
@@ -49,7 +58,7 @@ class MemAutoFlushingLookupTable<T>(
     private val atomicFile = AtomicFile(file)
 
     private val shutdownHook = thread(start = false) {
-        if(!flushed) writeSynchronously()
+        if (!flushed) writeSynchronously()
     }
 
     init {
@@ -62,9 +71,9 @@ class MemAutoFlushingLookupTable<T>(
         var readIter = 0
         while (true) {
             val readThisIter = read(targetArray, readIter, byteCount - readIter)
-            if(readThisIter <= 0) return false // No more data to read
+            if (readThisIter <= 0) return false // No more data to read
             readIter += readThisIter
-            if(readIter == byteCount) return true
+            if (readIter == byteCount) return true
         }
     }
 
@@ -74,16 +83,16 @@ class MemAutoFlushingLookupTable<T>(
                 atomicFile.openRead().buffered().use { input ->
                     val bb = ByteBuffer.allocate(8)
 
-                    while(true) {
-                        if(!input.requireBytes(bb.array(), 8)) break
+                    while (true) {
+                        if (!input.requireBytes(bb.array(), 8)) break
                         val k = bb.getInt(0)
                         val size = bb.getInt(4)
                         val strBArr = ByteArray(size)
-                        if(!input.requireBytes(strBArr, size)) break
+                        if (!input.requireBytes(strBArr, size)) break
                         table.put(k, serializer.read(strBArr.toString(Charsets.UTF_8)))
                     }
                 }
-            } catch(e: FileNotFoundException) {
+            } catch (e: FileNotFoundException) {
                 XLog.d("Lookup table not found!", e)
                 // Ignored
             }
@@ -97,11 +106,11 @@ class MemAutoFlushingLookupTable<T>(
         flushed = false
         launch {
             delay(debounceTimeMs)
-            if(id != writeCounter) return@launch
+            if (id != writeCounter) return@launch
 
             mutex.withLock {
                 // Second check inside of mutex to prevent dupe writes
-                if(id != writeCounter) return@launch
+                if (id != writeCounter) return@launch
                 withContext(NonCancellable) {
                     writeSynchronously()
 
@@ -118,7 +127,7 @@ class MemAutoFlushingLookupTable<T>(
         val fos = atomicFile.startWrite()
         try {
             val out = fos.buffered()
-            for(i in 0 until table.size()) {
+            for (i in 0 until table.size()) {
                 val k = table.keyAt(i)
                 val v = serializer.write(table.valueAt(i)).toByteArray(Charsets.UTF_8)
                 bb.putInt(0, k)
@@ -128,7 +137,7 @@ class MemAutoFlushingLookupTable<T>(
             }
             out.flush()
             atomicFile.finishWrite(fos)
-        } catch(t: Throwable) {
+        } catch (t: Throwable) {
             atomicFile.failWrite(fos)
             throw t
         }

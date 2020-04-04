@@ -2,10 +2,14 @@ package eu.kanade.tachiyomi.source.online.english
 
 import android.net.Uri
 import com.kizitonwose.time.hours
-import hu.akarnokd.rxjava.interop.RxJavaInterop
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
-import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.model.Filter
+import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
@@ -17,13 +21,18 @@ import exh.util.CachedField
 import exh.util.NakedTrie
 import exh.util.await
 import exh.util.urlImportFetchSearchManga
+import hu.akarnokd.rxjava.interop.RxJavaInterop
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.rx2.asSingle
 import kotlinx.coroutines.withContext
-import okhttp3.*
+import okhttp3.Headers
+import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element

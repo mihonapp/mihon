@@ -2,13 +2,22 @@ package eu.kanade.tachiyomi.source.online.all
 
 import android.content.Context
 import android.net.Uri
-import com.github.salomonbrys.kotson.*
+import com.github.salomonbrys.kotson.get
+import com.github.salomonbrys.kotson.nullArray
+import com.github.salomonbrys.kotson.nullLong
+import com.github.salomonbrys.kotson.nullObj
+import com.github.salomonbrys.kotson.nullString
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
-import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.model.Filter
+import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
@@ -30,8 +39,8 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
     override val metaClass = NHentaiSearchMetadata::class
 
     override fun fetchPopularManga(page: Int): Observable<MangasPage> {
-        //TODO There is currently no way to get the most popular mangas
-        //TODO Instead, we delegate this to the latest updates thing to avoid confusing users with an empty screen
+        // TODO There is currently no way to get the most popular mangas
+        // TODO Instead, we delegate this to the latest updates thing to avoid confusing users with an empty screen
         return fetchLatestUpdates(page)
     }
 
@@ -39,7 +48,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
 
     override fun popularMangaParse(response: Response) = throw UnsupportedOperationException()
 
-    //Support direct URL importing
+    // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
         val trimmedIdQuery = query.trim().removePrefix("id:")
         val newQuery = if (trimmedIdQuery.toIntOrNull() ?: -1 >= 0) {
@@ -246,7 +255,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
 
     override fun getFilterList() = FilterList(SortFilter(), filterLang())
 
-    //language filtering
+    // language filtering
     private class filterLang : Filter.Select<String>("Language", SOURCE_LANG_LIST.map { it.first }.toTypedArray())
 
     class SortFilter : Filter.Sort(
@@ -304,7 +313,6 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
                 Pair("Japanese", " japanese"),
                 Pair("Chinese", " chinese")
         )
-
 
         val jsonParser by lazy {
             JsonParser()

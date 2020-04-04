@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.view.View
-import eu.davidea.flexibleadapter.FlexibleAdapter
 import androidx.recyclerview.widget.RecyclerView
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 
@@ -26,7 +26,6 @@ abstract class LibraryHolder(
      */
     abstract fun onSetValues(item: LibraryItem)
 
-
     /**
      * Called when an item is released.
      *
@@ -36,5 +35,4 @@ abstract class LibraryHolder(
         super.onItemReleased(position)
         (adapter as? LibraryCategoryAdapter)?.onItemReleaseListener?.onItemReleased(position)
     }
-
 }

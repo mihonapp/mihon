@@ -3,7 +3,12 @@ package eu.kanade.tachiyomi.source.online.all
 import android.net.Uri
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
-import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.model.Filter
+import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
@@ -17,14 +22,15 @@ import exh.metadata.metadata.base.RaisedTag
 import exh.util.UriFilter
 import exh.util.UriGroup
 import exh.util.urlImportFetchSearchManga
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 import rx.Observable
-import java.text.SimpleDateFormat
-import java.util.*
 
 // TODO Transform into delegated source
 class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSource(),
@@ -54,7 +60,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
 
     override fun popularMangaNextPageSelector(): String? = null
 
-    //Support direct URL importing
+    // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
             urlImportFetchSearchManga(query) {
                 super.fetchSearchManga(page, query, filters)
@@ -256,7 +262,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
         }
     }
 
-    //Explicit type arg for listOf() to workaround this: KT-16570
+    // Explicit type arg for listOf() to workaround this: KT-16570
     class ReleaseYearGroup : UriGroup<Filter<*>>("Release Year", listOf(
             ReleaseYearRangeFilter(),
             ReleaseYearYearFilter()

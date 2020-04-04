@@ -28,21 +28,21 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
     val prefs: PreferencesHelper by injectLazy()
 
     val fingerprintSupported
-        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && Reprint.isHardwarePresent()
-                && Reprint.hasFingerprintRegistered()
+        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                Reprint.isHardwarePresent() &&
+                Reprint.hasFingerprintRegistered()
 
     val useFingerprint
-        get() = fingerprintSupported
-                && prefs.eh_lockUseFingerprint().getOrDefault()
+        get() = fingerprintSupported &&
+                prefs.eh_lockUseFingerprint().getOrDefault()
 
     @SuppressLint("NewApi")
     override fun onAttached() {
         super.onAttached()
-        if(fingerprintSupported) {
+        if (fingerprintSupported) {
             updateSummary()
             onChange {
-                if(it as Boolean)
+                if (it as Boolean)
                     tryChange()
                 else
                     prefs.eh_lockUseFingerprint().set(false)
@@ -51,7 +51,7 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
         } else {
             title = "Fingerprint unsupported"
             shouldDisableView = true
-            summary = if(!Reprint.hasFingerprintRegistered())
+            summary = if (!Reprint.hasFingerprintRegistered())
                 "No fingerprints enrolled!"
             else
                 "Fingerprint unlock is unsupported on this device!"
@@ -61,7 +61,7 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
 
     private fun updateSummary() {
         isChecked = useFingerprint
-        title = if(isChecked)
+        title = if (isChecked)
             "Fingerprint enabled"
         else
             "Fingerprint disabled"

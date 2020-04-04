@@ -2,14 +2,14 @@ package exh.metadata.sql.models
 
 data class SearchTitle(
         // Title identifier, unique
-        val id: Long?,
+    val id: Long?,
 
         // Metadata this title is attached to
-        val mangaId: Long,
+    val mangaId: Long,
 
         // Title
-        val title: String,
+    val title: String,
 
         // Title type, useful for distinguishing between main/alt titles
-        val type: Int
+    val type: Int
 )

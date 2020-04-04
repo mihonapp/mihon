@@ -22,8 +22,8 @@ class LockController : NucleusController<LockPresenter>() {
 
     val prefs: PreferencesHelper by injectLazy()
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup)
-        = inflater.inflate(R.layout.activity_lock, container, false)!!
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
+        inflater.inflate(R.layout.activity_lock, container, false)!!
 
     override fun createPresenter() = LockPresenter()
 
@@ -32,13 +32,13 @@ class LockController : NucleusController<LockPresenter>() {
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        if(!lockEnabled(prefs)) {
+        if (!lockEnabled(prefs)) {
             closeLock()
             return
         }
 
         with(view) {
-            //Setup pin lock
+            // Setup pin lock
             pin_lock_view.attachIndicatorDots(indicator_dots)
 
             pin_lock_view.pinLength = prefs.eh_lockLength().getOrDefault()
@@ -47,7 +47,7 @@ class LockController : NucleusController<LockPresenter>() {
 
                 override fun onComplete(pin: String) {
                     if (sha512(pin, prefs.eh_lockSalt().get()!!) == prefs.eh_lockHash().get()) {
-                        //Yay!
+                        // Yay!
                         closeLock()
                     } else {
                         MaterialDialog.Builder(context)
@@ -72,7 +72,7 @@ class LockController : NucleusController<LockPresenter>() {
         super.onAttach(view)
 
         with(view) {
-            //Fingerprint
+            // Fingerprint
             if (presenter.useFingerprint) {
                 swirl_container.visibility = View.VISIBLE
                 swirl_container.removeAllViews()
@@ -90,7 +90,7 @@ class LockController : NucleusController<LockPresenter>() {
                     val lockColor = resolvColor(android.R.attr.windowBackground)
                     setBackgroundColor(lockColor)
                     val bgColor = resolvColor(android.R.attr.colorBackground)
-                    //Disable elevation if lock color is same as background color
+                    // Disable elevation if lock color is same as background color
                     if (lockColor == bgColor)
                         this@with.swirl_container.cardElevation = 0f
                     setState(SwirlView.State.OFF, true)

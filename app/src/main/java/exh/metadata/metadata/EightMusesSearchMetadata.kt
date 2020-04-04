@@ -34,7 +34,6 @@ class EightMusesSearchMetadata : RaisedSearchMetadata() {
         manga.description = listOf(titleDesc.toString(), tagsDesc.toString())
                 .filter(String::isNotBlank)
                 .joinToString(separator = "\n")
-
     }
 
     companion object {

@@ -4,9 +4,9 @@ import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.EX_DATE_FORMAT
 import exh.metadata.metadata.base.RaisedSearchMetadata
 import exh.plusAssign
-import java.util.*
+import java.util.Date
 
-class HitomiSearchMetadata: RaisedSearchMetadata() {
+class HitomiSearchMetadata : RaisedSearchMetadata() {
     var url get() = hlId?.let { urlFromHlId(it) }
         set(a) {
             a?.let {
@@ -62,10 +62,10 @@ class HitomiSearchMetadata: RaisedSearchMetadata() {
             detailsDesc += "Language: ${it.capitalize()}\n"
         }
 
-        if(series.isNotEmpty())
+        if (series.isNotEmpty())
             detailsDesc += "Series: ${series.joinToString()}\n"
 
-        if(characters.isNotEmpty())
+        if (characters.isNotEmpty())
             detailsDesc += "Characters: ${characters.joinToString()}\n"
 
         uploadDate?.let {
@@ -74,7 +74,7 @@ class HitomiSearchMetadata: RaisedSearchMetadata() {
 
         manga.status = SManga.UNKNOWN
 
-        //Copy tags -> genres
+        // Copy tags -> genres
         manga.genre = tagsToGenreString()
 
         val tagsDesc = tagsToDescription()
@@ -92,10 +92,10 @@ class HitomiSearchMetadata: RaisedSearchMetadata() {
         const val LTN_BASE_URL = "https://ltn.hitomi.la"
         const val BASE_URL = "https://hitomi.la"
 
-        fun hlIdFromUrl(url: String)
-                = url.split('/').last().split('-').last().substringBeforeLast('.')
+        fun hlIdFromUrl(url: String) =
+                url.split('/').last().split('-').last().substringBeforeLast('.')
 
-        fun urlFromHlId(id: String)
-                = "$BASE_URL/galleries/$id.html"
+        fun urlFromHlId(id: String) =
+                "$BASE_URL/galleries/$id.html"
     }
 }

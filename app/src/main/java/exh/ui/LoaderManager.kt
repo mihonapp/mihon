@@ -1,18 +1,18 @@
 package exh.ui
 
+import java.util.UUID
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 typealias LoadingHandle = String
 
 /**
  * Class used to manage loader UIs
  */
-class LoaderManager(parentContext: CoroutineContext = EmptyCoroutineContext): CoroutineScope {
+class LoaderManager(parentContext: CoroutineContext = EmptyCoroutineContext) : CoroutineScope {
     override val coroutineContext = Dispatchers.Main + parentContext
 
     private val openLoadingHandles = mutableListOf<LoadingHandle>()
@@ -25,7 +25,7 @@ class LoaderManager(parentContext: CoroutineContext = EmptyCoroutineContext): Co
             handle to (openLoadingHandles.size == 1)
         }
 
-        if(shouldUpdateLoadingStatus) {
+        if (shouldUpdateLoadingStatus) {
             launch {
                 updateLoadingStatus(true)
             }
@@ -36,13 +36,13 @@ class LoaderManager(parentContext: CoroutineContext = EmptyCoroutineContext): Co
 
     @Synchronized
     fun closeProgressBar(handle: LoadingHandle?) {
-        if(handle == null) return
+        if (handle == null) return
 
         val shouldUpdateLoadingStatus = synchronized(this) {
             openLoadingHandles.remove(handle) && openLoadingHandles.isEmpty()
         }
 
-        if(shouldUpdateLoadingStatus) {
+        if (shouldUpdateLoadingStatus) {
             launch {
                 updateLoadingStatus(false)
             }

@@ -4,8 +4,6 @@ import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.Query
 import eu.kanade.tachiyomi.data.database.DbProvider
 import eu.kanade.tachiyomi.data.database.inTransaction
-import eu.kanade.tachiyomi.data.database.models.Manga
-import exh.metadata.sql.models.SearchMetadata
 import exh.metadata.sql.models.SearchTitle
 import exh.metadata.sql.tables.SearchTitleTable
 

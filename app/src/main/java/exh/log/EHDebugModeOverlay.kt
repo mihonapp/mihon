@@ -4,11 +4,11 @@ import android.content.Context
 import android.text.Html
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.ms_square.debugoverlay.DataObserver
 import com.ms_square.debugoverlay.OverlayModule
 import eu.kanade.tachiyomi.BuildConfig
-import android.widget.LinearLayout
-import android.widget.TextView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -61,5 +61,5 @@ class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(n
         <b>Source blacklist:</b> ${prefs.eh_enableSourceBlacklist().getOrDefault().asEnabledString()}
     """.trimIndent()
 
-    private fun Boolean.asEnabledString() = if(this) "enabled" else "disabled"
+    private fun Boolean.asEnabledString() = if (this) "enabled" else "disabled"
 }

@@ -7,7 +7,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 val CAPTCHA_DETECTION_PATCH: EHInterceptor = { request, response, sourceId ->
-    if(!response.isSuccessful) {
+    if (!response.isSuccessful) {
         response.interceptAsHtml { doc ->
             // Find captcha
             if (doc.getElementsByClass("g-recaptcha").isNotEmpty()) {

@@ -17,7 +17,17 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.util.preference.*
+import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.entriesRes
+import eu.kanade.tachiyomi.util.preference.intListPreference
+import eu.kanade.tachiyomi.util.preference.listPreference
+import eu.kanade.tachiyomi.util.preference.multiSelectListPreference
+import eu.kanade.tachiyomi.util.preference.onChange
+import eu.kanade.tachiyomi.util.preference.onClick
+import eu.kanade.tachiyomi.util.preference.preference
+import eu.kanade.tachiyomi.util.preference.preferenceCategory
+import eu.kanade.tachiyomi.util.preference.summaryRes
+import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.system.toast
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
@@ -34,6 +44,7 @@ import exh.ui.login.LoginController
 import exh.util.await
 import exh.util.trans
 import humanize.Humanize
+import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,7 +52,6 @@ import kotlinx.coroutines.withContext
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
-import java.util.*
 
 /**
  * EH Settings fragment
@@ -52,17 +62,17 @@ class SettingsEhController : SettingsController() {
     private val db: DatabaseHelper by injectLazy()
 
     private fun Preference<*>.reconfigure(): Boolean {
-        //Listen for change commit
+        // Listen for change commit
         asObservable()
-                .skip(1) //Skip first as it is emitted immediately
-                .take(1) //Only listen for first commit
+                .skip(1) // Skip first as it is emitted immediately
+                .take(1) // Only listen for first commit
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeUntilDestroy {
-                    //Only listen for first change commit
+                    // Only listen for first change commit
                     WarnConfigureDialogController.uploadSettings(router)
                 }
 
-        //Always return true to save changes
+        // Always return true to save changes
         return true
     }
 

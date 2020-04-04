@@ -11,7 +11,7 @@ class EhUConfigBuilder {
     fun build(hathPerks: EHHathPerksResponse): FormBody {
         val configItems = mutableListOf<ConfigItem>()
 
-        configItems += when(prefs.imageQuality()
+        configItems += when (prefs.imageQuality()
                 .getOrDefault()
                 .toLowerCase()) {
             "ovrs_2400" -> Entry.ImageSize.`2400`
@@ -23,17 +23,17 @@ class EhUConfigBuilder {
             else -> Entry.ImageSize.AUTO
         }
 
-        configItems += if(prefs.useHentaiAtHome().getOrDefault())
+        configItems += if (prefs.useHentaiAtHome().getOrDefault())
             Entry.UseHentaiAtHome.YES
         else
             Entry.UseHentaiAtHome.NO
 
-        configItems += if(prefs.useJapaneseTitle().getOrDefault())
+        configItems += if (prefs.useJapaneseTitle().getOrDefault())
             Entry.TitleDisplayLanguage.JAPANESE
         else
             Entry.TitleDisplayLanguage.DEFAULT
 
-        configItems += if(prefs.eh_useOriginalImages().getOrDefault())
+        configItems += if (prefs.eh_useOriginalImages().getOrDefault())
             Entry.UseOriginalImages.YES
         else
             Entry.UseOriginalImages.NO
@@ -56,7 +56,7 @@ class EhUConfigBuilder {
         configItems += Entry.UseMPV()
         configItems += Entry.ShowPopularRightNowPane()
 
-        //Actually build form body
+        // Actually build form body
         val formBody = FormBody.Builder()
         configItems.forEach {
             formBody.add(it.key, it.value)
@@ -67,14 +67,14 @@ class EhUConfigBuilder {
 }
 
 object Entry {
-    enum class UseHentaiAtHome(override val value: String): ConfigItem {
+    enum class UseHentaiAtHome(override val value: String) : ConfigItem {
         YES("0"),
         NO("1");
 
         override val key = "uh"
     }
 
-    enum class ImageSize(override val value: String): ConfigItem {
+    enum class ImageSize(override val value: String) : ConfigItem {
         AUTO("0"),
         `2400`("5"),
         `1600`("4"),
@@ -85,20 +85,20 @@ object Entry {
         override val key = "xr"
     }
 
-    enum class TitleDisplayLanguage(override val value: String): ConfigItem {
+    enum class TitleDisplayLanguage(override val value: String) : ConfigItem {
         DEFAULT("0"),
         JAPANESE("1");
 
         override val key = "tl"
     }
 
-    //Locked to extended mode as that's what the parser and toplists use
-    class DisplayMode: ConfigItem {
+    // Locked to extended mode as that's what the parser and toplists use
+    class DisplayMode : ConfigItem {
         override val key = "dm"
         override val value = "2"
     }
 
-    enum class SearchResultsCount(override val value: String): ConfigItem {
+    enum class SearchResultsCount(override val value: String) : ConfigItem {
         `25`("0"),
         `50`("1"),
         `100`("2"),
@@ -107,7 +107,7 @@ object Entry {
         override val key = "rc"
     }
 
-    enum class ThumbnailRows(override val value: String): ConfigItem {
+    enum class ThumbnailRows(override val value: String) : ConfigItem {
         `4`("0"),
         `10`("1"),
         `20`("2"),
@@ -116,21 +116,21 @@ object Entry {
         override val key = "tr"
     }
 
-    enum class UseOriginalImages(override val value: String): ConfigItem {
+    enum class UseOriginalImages(override val value: String) : ConfigItem {
         NO("0"),
         YES("1");
 
         override val key = "oi"
     }
 
-    //Locked to no MPV as that's what the parser uses
-    class UseMPV: ConfigItem {
+    // Locked to no MPV as that's what the parser uses
+    class UseMPV : ConfigItem {
         override val key = "qb"
         override val value = "0"
     }
 
-    //Locked to no popular pane as we can't parse it
-    class ShowPopularRightNowPane: ConfigItem {
+    // Locked to no popular pane as we can't parse it
+    class ShowPopularRightNowPane : ConfigItem {
         override val key = "pp"
         override val value = "1"
     }

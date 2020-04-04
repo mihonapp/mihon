@@ -2,13 +2,19 @@ package exh.source
 
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 
-class EnhancedHttpSource(val originalSource: HttpSource,
-                         val enchancedSource: HttpSource): HttpSource() {
+class EnhancedHttpSource(
+    val originalSource: HttpSource,
+    val enchancedSource: HttpSource
+) : HttpSource() {
     private val prefs: PreferencesHelper by injectLazy()
 
     /**
@@ -16,16 +22,16 @@ class EnhancedHttpSource(val originalSource: HttpSource,
      *
      * @param page the page number to retrieve.
      */
-    override fun popularMangaRequest(page: Int)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun popularMangaRequest(page: Int) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
      *
      * @param response the response from the site.
      */
-    override fun popularMangaParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun popularMangaParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Returns the request for the search manga given the page.
@@ -34,64 +40,64 @@ class EnhancedHttpSource(val originalSource: HttpSource,
      * @param query the search query.
      * @param filters the list of filters to apply.
      */
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
      *
      * @param response the response from the site.
      */
-    override fun searchMangaParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun searchMangaParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Returns the request for latest manga given the page.
      *
      * @param page the page number to retrieve.
      */
-    override fun latestUpdatesRequest(page: Int)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun latestUpdatesRequest(page: Int) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
      *
      * @param response the response from the site.
      */
-    override fun latestUpdatesParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun latestUpdatesParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns the details of a manga.
      *
      * @param response the response from the site.
      */
-    override fun mangaDetailsParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun mangaDetailsParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a list of chapters.
      *
      * @param response the response from the site.
      */
-    override fun chapterListParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun chapterListParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a list of pages.
      *
      * @param response the response from the site.
      */
-    override fun pageListParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun pageListParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns the absolute url to the source image.
      *
      * @param response the response from the site.
      */
-    override fun imageUrlParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun imageUrlParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Base url of the website without the trailing slash, like: http://mysite.com
@@ -146,8 +152,8 @@ class EnhancedHttpSource(val originalSource: HttpSource,
      * @param query the search query.
      * @param filters the list of filters to apply.
      */
-    override fun fetchSearchManga(page: Int, query: String, filters: FilterList)
-            = source().fetchSearchManga(page, query, filters)
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
+            source().fetchSearchManga(page, query, filters)
 
     /**
      * Returns an observable containing a page with a list of latest manga updates.
@@ -202,8 +208,8 @@ class EnhancedHttpSource(val originalSource: HttpSource,
      * @param chapter the chapter to be added.
      * @param manga the manga of the chapter.
      */
-    override fun prepareNewChapter(chapter: SChapter, manga: SManga)
-            = source().prepareNewChapter(chapter, manga)
+    override fun prepareNewChapter(chapter: SChapter, manga: SManga) =
+            source().prepareNewChapter(chapter, manga)
 
     /**
      * Returns the list of filters for the source.
@@ -211,7 +217,7 @@ class EnhancedHttpSource(val originalSource: HttpSource,
     override fun getFilterList() = source().getFilterList()
 
     private fun source(): HttpSource {
-        return if(prefs.eh_delegateSources().getOrDefault()) {
+        return if (prefs.eh_delegateSources().getOrDefault()) {
             enchancedSource
         } else {
             originalSource

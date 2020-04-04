@@ -5,19 +5,19 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import exh.metadata.sql.models.SearchMetadata
 import exh.metadata.sql.models.SearchTag
 import exh.metadata.sql.models.SearchTitle
+import kotlin.reflect.KClass
 import rx.Completable
 import rx.Single
-import kotlin.reflect.KClass
 
 data class FlatMetadata(
-        val metadata: SearchMetadata,
-        val tags: List<SearchTag>,
-        val titles: List<SearchTitle>
+    val metadata: SearchMetadata,
+    val tags: List<SearchTag>,
+    val titles: List<SearchTitle>
 ) {
     inline fun <reified T : RaisedSearchMetadata> raise(): T = raise(T::class)
 
-    fun <T : RaisedSearchMetadata> raise(clazz: KClass<T>)
-        = RaisedSearchMetadata.raiseFlattenGson
+    fun <T : RaisedSearchMetadata> raise(clazz: KClass<T>) =
+        RaisedSearchMetadata.raiseFlattenGson
                 .fromJson(metadata.extra, clazz.java).apply {
                     fillBaseFields(this@FlatMetadata)
                 }
@@ -27,7 +27,7 @@ fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<Fla
     // We have to use fromCallable because StorIO messes up the thread scheduling if we use their rx functions
     val single = Single.fromCallable {
         val meta = getSearchMetadataForManga(mangaId).executeAsBlocking()
-        if(meta != null) {
+        if (meta != null) {
             val tags = getSearchTagsForManga(mangaId).executeAsBlocking()
             val titles = getSearchTitlesForManga(mangaId).executeAsBlocking()
 

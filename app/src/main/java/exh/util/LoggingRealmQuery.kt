@@ -1,7 +1,10 @@
 package exh.util
 
-import io.realm.*
-import java.util.*
+import io.realm.Case
+import io.realm.RealmModel
+import io.realm.RealmQuery
+import io.realm.RealmResults
+import java.util.Date
 
 /**
  * Realm query with logging
@@ -9,14 +12,16 @@ import java.util.*
  * @author nulldev
  */
 
-inline fun <reified E : RealmModel> RealmQuery<out E>.beginLog(clazz: Class<out E>? =
-                                                           E::class.java): LoggingRealmQuery<out E>
-    = LoggingRealmQuery.fromQuery(this, clazz)
+inline fun <reified E : RealmModel> RealmQuery<out E>.beginLog(
+    clazz: Class<out E>? =
+E::class.java
+): LoggingRealmQuery<out E> =
+    LoggingRealmQuery.fromQuery(this, clazz)
 
 class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     companion object {
-        fun <E : RealmModel> fromQuery(q: RealmQuery<out E>, clazz: Class<out E>?)
-                = LoggingRealmQuery(q).apply {
+        fun <E : RealmModel> fromQuery(q: RealmQuery<out E>, clazz: Class<out E>?) =
+                LoggingRealmQuery(q).apply {
             log += "SELECT * FROM ${clazz?.name ?: "???"} WHERE"
         }
     }

@@ -7,11 +7,13 @@ import android.webkit.WebView
 import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-open class HeadersInjectingWebViewClient(activity: BrowserActionActivity,
-                                         verifyComplete: (String) -> Boolean,
-                                         injectScript: String?,
-                                         private val headers: Map<String, String>)
-    : BasicWebViewClient(activity, verifyComplete, injectScript) {
+open class HeadersInjectingWebViewClient(
+    activity: BrowserActionActivity,
+    verifyComplete: (String) -> Boolean,
+    injectScript: String?,
+    private val headers: Map<String, String>
+) :
+    BasicWebViewClient(activity, verifyComplete, injectScript) {
 
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
         // Temp disabled as it's unreliable

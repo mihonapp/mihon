@@ -1,29 +1,32 @@
 package exh.source
 
-import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
-import java.lang.RuntimeException
 
-abstract class DelegatedHttpSource(val delegate: HttpSource): HttpSource() {
+abstract class DelegatedHttpSource(val delegate: HttpSource) : HttpSource() {
     /**
      * Returns the request for the popular manga given the page.
      *
      * @param page the page number to retrieve.
      */
-    override fun popularMangaRequest(page: Int)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun popularMangaRequest(page: Int) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
      *
      * @param response the response from the site.
      */
-    override fun popularMangaParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun popularMangaParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Returns the request for the search manga given the page.
@@ -32,64 +35,64 @@ abstract class DelegatedHttpSource(val delegate: HttpSource): HttpSource() {
      * @param query the search query.
      * @param filters the list of filters to apply.
      */
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
      *
      * @param response the response from the site.
      */
-    override fun searchMangaParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun searchMangaParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Returns the request for latest manga given the page.
      *
      * @param page the page number to retrieve.
      */
-    override fun latestUpdatesRequest(page: Int)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun latestUpdatesRequest(page: Int) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
      *
      * @param response the response from the site.
      */
-    override fun latestUpdatesParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun latestUpdatesParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns the details of a manga.
      *
      * @param response the response from the site.
      */
-    override fun mangaDetailsParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun mangaDetailsParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a list of chapters.
      *
      * @param response the response from the site.
      */
-    override fun chapterListParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun chapterListParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a list of pages.
      *
      * @param response the response from the site.
      */
-    override fun pageListParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun pageListParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns the absolute url to the source image.
      *
      * @param response the response from the site.
      */
-    override fun imageUrlParse(response: Response)
-            = throw UnsupportedOperationException("Should never be called!")
+    override fun imageUrlParse(response: Response) =
+            throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Base url of the website without the trailing slash, like: http://mysite.com
@@ -236,8 +239,8 @@ abstract class DelegatedHttpSource(val delegate: HttpSource): HttpSource() {
     override fun getFilterList() = delegate.getFilterList()
 
     private fun ensureDelegateCompatible() {
-        if(versionId != delegate.versionId
-                || lang != delegate.lang) {
+        if (versionId != delegate.versionId ||
+                lang != delegate.lang) {
             throw IncompatibleDelegateException("Delegate source is not compatible (versionId: $versionId <=> ${delegate.versionId}, lang: $lang <=> ${delegate.lang})!")
         }
     }

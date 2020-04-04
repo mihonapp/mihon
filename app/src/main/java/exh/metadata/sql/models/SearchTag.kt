@@ -2,17 +2,17 @@ package exh.metadata.sql.models
 
 data class SearchTag(
         // Tag identifier, unique
-        val id: Long?,
+    val id: Long?,
 
         // Metadata this tag is attached to
-        val mangaId: Long,
+    val mangaId: Long,
 
         // Tag namespace
-        val namespace: String?,
+    val namespace: String?,
 
         // Tag name
-        val name: String,
+    val name: String,
 
         // Tag type
-        val type: Int
+    val type: Int
 )

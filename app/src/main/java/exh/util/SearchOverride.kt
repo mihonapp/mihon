@@ -18,7 +18,7 @@ fun UrlImportableSource.urlImportFetchSearchManga(query: String, fail: () -> Obs
             query.startsWith("http://") || query.startsWith("https://") -> {
                 Observable.fromCallable {
                     val res = galleryAdder.addGallery(query, false, this)
-                    MangasPage((if(res is GalleryAddEvent.Success)
+                    MangasPage((if (res is GalleryAddEvent.Success)
                         listOf(res.manga)
                     else
                         emptyList()), false)

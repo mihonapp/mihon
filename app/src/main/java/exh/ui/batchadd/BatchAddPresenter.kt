@@ -8,7 +8,7 @@ import exh.GalleryAdder
 import exh.metadata.nullIfBlank
 import kotlin.concurrent.thread
 
-class BatchAddPresenter: BasePresenter<BatchAddController>() {
+class BatchAddPresenter : BasePresenter<BatchAddController>() {
 
     private val galleryAdder by lazy { GalleryAdder() }
 
@@ -34,7 +34,7 @@ class BatchAddPresenter: BasePresenter<BatchAddController>() {
 
             splitGalleries.forEachIndexed { i, s ->
                 val result = galleryAdder.addGallery(s, true)
-                if(result is GalleryAddEvent.Success) {
+                if (result is GalleryAddEvent.Success) {
                     succeeded.add(s)
                 } else {
                     failed.add(s)
@@ -46,7 +46,7 @@ class BatchAddPresenter: BasePresenter<BatchAddController>() {
                 }) + " " + result.logMessage)
             }
 
-            //Show report
+            // Show report
             val summary = "\nSummary:\nAdded: ${succeeded.size} gallerie(s)\nFailed: ${failed.size} gallerie(s)"
             eventRelay?.call(summary)
         }

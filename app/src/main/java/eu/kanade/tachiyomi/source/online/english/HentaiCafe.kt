@@ -30,7 +30,7 @@ class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
      */
     override val metaClass = HentaiCafeSearchMetadata::class
 
-    //Support direct URL importing
+    // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
             urlImportFetchSearchManga(query) {
                 super.fetchSearchManga(page, query, filters)

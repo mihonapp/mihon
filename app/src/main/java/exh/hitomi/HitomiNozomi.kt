@@ -4,42 +4,46 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservable
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import exh.metadata.metadata.HitomiSearchMetadata.Companion.LTN_BASE_URL
+import java.security.MessageDigest
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.vepta.vdm.ByteCursor
 import rx.Observable
 import rx.Single
-import java.security.MessageDigest
 
 private typealias HashedTerm = ByteArray
 
 private data class DataPair(val offset: Long, val length: Int)
-private data class Node(val keys: List<ByteArray>,
-                        val datas: List<DataPair>,
-                        val subnodeAddresses: List<Long>)
+private data class Node(
+    val keys: List<ByteArray>,
+    val datas: List<DataPair>,
+    val subnodeAddresses: List<Long>
+)
 
 /**
  * Kotlin port of the hitomi.la search algorithm
  * @author NerdNumber9
  */
-class HitomiNozomi(private val client: OkHttpClient,
-                   private val tagIndexVersion: Long,
-                   private val galleriesIndexVersion: Long) {
+class HitomiNozomi(
+    private val client: OkHttpClient,
+    private val tagIndexVersion: Long,
+    private val galleriesIndexVersion: Long
+) {
     fun getGalleryIdsForQuery(query: String): Single<List<Int>> {
         val replacedQuery = query.replace('_', ' ')
 
-        if(':' in replacedQuery) {
+        if (':' in replacedQuery) {
             val sides = replacedQuery.split(':')
             val namespace = sides[0]
             var tag = sides[1]
 
             var area: String? = namespace
             var language = "all"
-            if(namespace == "female" || namespace == "male") {
+            if (namespace == "female" || namespace == "male") {
                 area = "tag"
                 tag = replacedQuery
-            } else if(namespace == "language") {
+            } else if (namespace == "language") {
                 area = null
                 language = tag
                 tag = "index"
@@ -52,7 +56,7 @@ class HitomiNozomi(private val client: OkHttpClient,
         val field = "galleries"
 
         return getNodeAtAddress(field, 0).flatMap { node ->
-            if(node == null) {
+            if (node == null) {
                 Single.just(null)
             } else {
                 BSearch(field, key, node).flatMap { data ->
@@ -67,12 +71,12 @@ class HitomiNozomi(private val client: OkHttpClient,
     }
 
     private fun getGalleryIdsFromData(data: DataPair?): Single<List<Int>> {
-        if(data == null)
+        if (data == null)
             return Single.just(emptyList())
 
         val url = "$LTN_BASE_URL/$GALLERIES_INDEX_DIR/galleries.$galleriesIndexVersion.data"
         val (offset, length) = data
-        if(length > 100000000 || length <= 0)
+        if (length > 100000000 || length <= 0)
             return Single.just(emptyList())
 
         return client.newCall(rangedGet(url, offset, offset + length - 1))
@@ -82,7 +86,7 @@ class HitomiNozomi(private val client: OkHttpClient,
                 }
                 .onErrorReturn { ByteArray(0) }
                 .map { inbuf ->
-                    if(inbuf.isEmpty())
+                    if (inbuf.isEmpty())
                         return@map emptyList<Int>()
 
                     val view = ByteCursor(inbuf)
@@ -90,13 +94,13 @@ class HitomiNozomi(private val client: OkHttpClient,
 
                     val expectedLength = numberOfGalleryIds * 4 + 4
 
-                    if(numberOfGalleryIds > 10000000
-                            || numberOfGalleryIds <= 0
-                            || inbuf.size != expectedLength) {
+                    if (numberOfGalleryIds > 10000000 ||
+                            numberOfGalleryIds <= 0 ||
+                            inbuf.size != expectedLength) {
                         return@map emptyList<Int>()
                     }
 
-                    (1 .. numberOfGalleryIds).map {
+                    (1..numberOfGalleryIds).map {
                         view.nextInt()
                     }
                 }.toSingle()
@@ -105,12 +109,12 @@ class HitomiNozomi(private val client: OkHttpClient,
     private fun BSearch(field: String, key: ByteArray, node: Node?): Single<DataPair?> {
         fun compareByteArrays(dv1: ByteArray, dv2: ByteArray): Int {
             val top = Math.min(dv1.size, dv2.size)
-            for(i in 0 until top) {
+            for (i in 0 until top) {
                 val dv1i = dv1[i].toInt() and 0xFF
                 val dv2i = dv2[i].toInt() and 0xFF
-                if(dv1i < dv2i)
+                if (dv1i < dv2i)
                     return -1
-                else if(dv1i > dv2i)
+                else if (dv1i > dv2i)
                     return 1
             }
             return 0
@@ -119,9 +123,9 @@ class HitomiNozomi(private val client: OkHttpClient,
         fun locateKey(key: ByteArray, node: Node): Pair<Boolean, Int> {
             var cmpResult = -1
             var lastI = 0
-            for(nodeKey in node.keys) {
+            for (nodeKey in node.keys) {
                 cmpResult = compareByteArrays(key, nodeKey)
-                if(cmpResult <= 0) break
+                if (cmpResult <= 0) break
                 lastI++
             }
             return (cmpResult == 0) to lastI
@@ -133,14 +137,14 @@ class HitomiNozomi(private val client: OkHttpClient,
             }
         }
 
-        if(node == null || node.keys.isEmpty()) {
+        if (node == null || node.keys.isEmpty()) {
             return Single.just(null)
         }
 
         val (there, where) = locateKey(key, node)
-        if(there) {
+        if (there) {
             return Single.just(node.datas[where])
-        } else if(isLeaf(node)) {
+        } else if (isLeaf(node)) {
             return Single.just(null)
         }
 
@@ -154,20 +158,20 @@ class HitomiNozomi(private val client: OkHttpClient,
 
         val numberOfKeys = view.nextInt()
 
-        val keys = (1 .. numberOfKeys).map {
+        val keys = (1..numberOfKeys).map {
             val keySize = view.nextInt()
             view.next(keySize)
         }
 
         val numberOfDatas = view.nextInt()
-        val datas = (1 .. numberOfDatas).map {
+        val datas = (1..numberOfDatas).map {
             val offset = view.nextLong()
             val length = view.nextInt()
             DataPair(offset, length)
         }
 
         val numberOfSubnodeAddresses = B + 1
-        val subnodeAddresses = (1 .. numberOfSubnodeAddresses).map {
+        val subnodeAddresses = (1..numberOfSubnodeAddresses).map {
             view.nextLong()
         }
 
@@ -176,7 +180,7 @@ class HitomiNozomi(private val client: OkHttpClient,
 
     private fun getNodeAtAddress(field: String, address: Long): Single<Node?> {
         var url = "$LTN_BASE_URL/$INDEX_DIR/$field.$tagIndexVersion.index"
-        if(field == "galleries") {
+        if (field == "galleries") {
             url = "$LTN_BASE_URL/$GALLERIES_INDEX_DIR/galleries.$galleriesIndexVersion.index"
         }
 
@@ -187,7 +191,7 @@ class HitomiNozomi(private val client: OkHttpClient,
                 }
                 .onErrorReturn { ByteArray(0) }
                 .map { nodedata ->
-                    if(nodedata.isNotEmpty()) {
+                    if (nodedata.isNotEmpty()) {
                         decodeNode(nodedata)
                     } else null
                 }.toSingle()
@@ -195,7 +199,7 @@ class HitomiNozomi(private val client: OkHttpClient,
 
     fun getGalleryIdsFromNozomi(area: String?, tag: String, language: String): Single<List<Int>> {
         var nozomiAddress = "$LTN_BASE_URL/$COMPRESSED_NOZOMI_PREFIX/$tag-$language$NOZOMI_EXTENSION"
-        if(area != null) {
+        if (area != null) {
             nozomiAddress = "$LTN_BASE_URL/$COMPRESSED_NOZOMI_PREFIX/$area/$tag-$language$NOZOMI_EXTENSION"
         }
 
@@ -206,7 +210,7 @@ class HitomiNozomi(private val client: OkHttpClient,
                 .map { resp ->
                     val body = resp.body!!.bytes()
                     val cursor = ByteCursor(body)
-                    (1 .. body.size / 4).map {
+                    (1..body.size / 4).map {
                         cursor.nextInt()
                     }
                 }.toSingle()
@@ -233,7 +237,6 @@ class HitomiNozomi(private val client: OkHttpClient,
                     .add("Range", "bytes=$rangeBegin-${rangeEnd ?: ""}")
                     .build())
         }
-
 
         fun getIndexVersion(httpClient: OkHttpClient, name: String): Observable<Long> {
             return httpClient.newCall(GET("$LTN_BASE_URL/$name/version?_=${System.currentTimeMillis()}"))

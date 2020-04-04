@@ -1,6 +1,5 @@
 package exh.ui.lock
 
-import android.content.Intent
 import android.view.WindowManager
 import androidx.fragment.app.FragmentActivity
 import com.bluelinelabs.conductor.Router
@@ -8,7 +7,6 @@ import com.bluelinelabs.conductor.RouterTransaction
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import uy.kohesive.injekt.injectLazy
-import java.util.Date
 
 object LockActivityDelegate {
     private val preferences by injectLazy<PreferencesHelper>()
@@ -19,7 +17,6 @@ object LockActivityDelegate {
         router.pushController(RouterTransaction.with(LockController())
             .popChangeHandler(LockChangeHandler(animate)))
     }
-
 
     fun onCreate(activity: FragmentActivity) {
         preferences.secureScreen().asObservable()
@@ -42,5 +39,4 @@ object LockActivityDelegate {
     private fun isAppLocked(router: Router): Boolean {
         return router.backstack.lastOrNull()?.controller() is LockController
     }
-
 }

@@ -13,11 +13,10 @@ import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.security.MessageDigest
 import kotlin.experimental.and
-
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
  * Password hashing utils
@@ -40,22 +39,24 @@ fun sha512(passwordToHash: String, salt: String): String {
 /**
  * Check if lock is enabled
  */
-fun lockEnabled(prefs: PreferencesHelper = Injekt.get())
-    = prefs.eh_lockHash().get() != null
-            && prefs.eh_lockSalt().get() != null
-            && prefs.eh_lockLength().getOrDefault() != -1
+fun lockEnabled(prefs: PreferencesHelper = Injekt.get()) =
+    prefs.eh_lockHash().get() != null &&
+            prefs.eh_lockSalt().get() != null &&
+            prefs.eh_lockLength().getOrDefault() != -1
 
 /**
  * Check if the lock will function properly
  *
  * @return true if action is required, false if lock is working properly
  */
-fun notifyLockSecurity(context: Context,
-                       prefs: PreferencesHelper = Injekt.get()): Boolean {
+fun notifyLockSecurity(
+    context: Context,
+    prefs: PreferencesHelper = Injekt.get()
+): Boolean {
     return false
-    if (!prefs.eh_lockManually().getOrDefault()
-            && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-            && !hasAccessToUsageStats(context)) {
+    if (!prefs.eh_lockManually().getOrDefault() &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+            !hasAccessToUsageStats(context)) {
         MaterialDialog.Builder(context)
                 .title("Permission required")
                 .content("${context.getString(R.string.app_name)} requires the usage stats permission to detect when you leave the app. " +
@@ -66,7 +67,7 @@ fun notifyLockSecurity(context: Context,
                 .onPositive { _, _ ->
                     try {
                         context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-                    } catch(e: ActivityNotFoundException) {
+                    } catch (e: ActivityNotFoundException) {
                         XLog.e("Device does not support USAGE_ACCESS_SETTINGS shortcut!")
                         MaterialDialog.Builder(context)
                                 .title("Grant permission manually")

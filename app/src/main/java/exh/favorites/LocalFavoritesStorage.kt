@@ -20,8 +20,8 @@ class LocalFavoritesStorage {
 
     fun getRealm() = Realm.getInstance(realmConfig)
 
-    fun getChangedDbEntries(realm: Realm)
-            = getChangedEntries(realm,
+    fun getChangedDbEntries(realm: Realm) =
+            getChangedEntries(realm,
             parseToFavoriteEntries(
                     loadDbCategories(
                             db.getFavoriteMangas()
@@ -31,8 +31,8 @@ class LocalFavoritesStorage {
             )
     )
 
-    fun getChangedRemoteEntries(realm: Realm, entries: List<EHentai.ParsedManga>)
-            = getChangedEntries(realm,
+    fun getChangedRemoteEntries(realm: Realm, entries: List<EHentai.ParsedManga>) =
+            getChangedEntries(realm,
             parseToFavoriteEntries(
                     entries.asSequence().map {
                         Pair(it.fav, it.manga.apply {
@@ -51,10 +51,10 @@ class LocalFavoritesStorage {
                 )
         )
 
-        //Delete old snapshot
+        // Delete old snapshot
         realm.delete(FavoriteEntry::class.java)
 
-        //Insert new snapshots
+        // Insert new snapshots
         realm.copyToRealm(dbMangas.toList())
     }
 
@@ -80,18 +80,18 @@ class LocalFavoritesStorage {
         return ChangeSet(added, removed)
     }
 
-    private fun Realm.queryRealmForEntry(entry: FavoriteEntry)
-            = where(FavoriteEntry::class.java)
+    private fun Realm.queryRealmForEntry(entry: FavoriteEntry) =
+            where(FavoriteEntry::class.java)
             .equalTo(FavoriteEntry::gid.name, entry.gid)
             .equalTo(FavoriteEntry::token.name, entry.token)
             .equalTo(FavoriteEntry::category.name, entry.category)
             .findFirst()
 
-    private fun queryListForEntry(list: List<FavoriteEntry>, entry: FavoriteEntry)
-            = list.find {
-        it.gid == entry.gid
-                && it.token == entry.token
-                && it.category == entry.category
+    private fun queryListForEntry(list: List<FavoriteEntry>, entry: FavoriteEntry) =
+            list.find {
+        it.gid == entry.gid &&
+                it.token == entry.token &&
+                it.category == entry.category
     }
 
     private fun loadDbCategories(manga: Sequence<Manga>): Sequence<Pair<Int, Manga>> {
@@ -105,8 +105,8 @@ class LocalFavoritesStorage {
         }
     }
 
-    private fun parseToFavoriteEntries(manga: Sequence<Pair<Int, Manga>>)
-            = manga.filter {
+    private fun parseToFavoriteEntries(manga: Sequence<Pair<Int, Manga>>) =
+            manga.filter {
         validateDbManga(it.second)
     }.mapNotNull {
                 FavoriteEntry().apply {
@@ -115,18 +115,20 @@ class LocalFavoritesStorage {
                     token = EHentaiSearchMetadata.galleryToken(it.second.url)
                     category = it.first
 
-                    if(this.category > MAX_CATEGORIES)
+                    if (this.category > MAX_CATEGORIES)
                         return@mapNotNull null
                 }
             }
 
-    private fun validateDbManga(manga: Manga)
-            = manga.favorite && (manga.source == EH_SOURCE_ID || manga.source == EXH_SOURCE_ID)
+    private fun validateDbManga(manga: Manga) =
+            manga.favorite && (manga.source == EH_SOURCE_ID || manga.source == EXH_SOURCE_ID)
 
     companion object {
         const val MAX_CATEGORIES = 9
     }
 }
 
-data class ChangeSet(val added: List<FavoriteEntry>,
-                     val removed: List<FavoriteEntry>)
+data class ChangeSet(
+    val added: List<FavoriteEntry>,
+    val removed: List<FavoriteEntry>
+)

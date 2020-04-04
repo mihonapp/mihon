@@ -112,7 +112,6 @@ private inline class IteratorShim<E>(private val iterator: Iterator<E>) : FakeMu
     override fun next() = iterator.next()
 }
 
-
 interface FakeMutableIterator<E> : MutableIterator<E> {
     /**
      * Removes from the underlying collection the last element returned by this iterator.
@@ -122,7 +121,7 @@ interface FakeMutableIterator<E> : MutableIterator<E> {
     }
 
     companion object {
-        fun <E> fromIterator(iterator: Iterator<E>) : FakeMutableIterator<E> = IteratorShim(iterator)
+        fun <E> fromIterator(iterator: Iterator<E>): FakeMutableIterator<E> = IteratorShim(iterator)
     }
 }
 

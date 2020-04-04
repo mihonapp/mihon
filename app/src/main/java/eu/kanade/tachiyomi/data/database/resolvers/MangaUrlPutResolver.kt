@@ -29,6 +29,4 @@ class MangaUrlPutResolver : PutResolver<Manga>() {
     fun mapToContentValues(manga: Manga) = ContentValues(1).apply {
         put(MangaTable.COL_URL, manga.url)
     }
-
 }
-

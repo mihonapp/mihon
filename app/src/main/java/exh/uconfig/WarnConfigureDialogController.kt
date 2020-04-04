@@ -32,7 +32,7 @@ class WarnConfigureDialogController : DialogController() {
 
     companion object {
         fun uploadSettings(router: Router) {
-            if(Injekt.get<PreferencesHelper>().eh_showSettingsUploadWarning().getOrDefault())
+            if (Injekt.get<PreferencesHelper>().eh_showSettingsUploadWarning().getOrDefault())
                 WarnConfigureDialogController().showDialog(router)
             else
                 ConfiguringDialogController().showDialog(router)

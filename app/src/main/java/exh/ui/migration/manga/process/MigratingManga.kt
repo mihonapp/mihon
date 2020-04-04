@@ -6,14 +6,17 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import exh.util.DeferredField
 import exh.util.await
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 
-class MigratingManga(private val db: DatabaseHelper,
-                     private val sourceManager: SourceManager,
-                     val mangaId: Long,
-                     parentContext: CoroutineContext) {
+class MigratingManga(
+    private val db: DatabaseHelper,
+    private val sourceManager: SourceManager,
+    val mangaId: Long,
+    parentContext: CoroutineContext
+) {
     val searchResult = DeferredField<Long?>()
 
     // <MAX, PROGRESS>
@@ -24,7 +27,7 @@ class MigratingManga(private val db: DatabaseHelper,
     @Volatile
     private var manga: Manga? = null
     suspend fun manga(): Manga? {
-        if(manga == null) manga = db.getManga(mangaId).await()
+        if (manga == null) manga = db.getManga(mangaId).await()
         return manga
     }
 

@@ -1,6 +1,17 @@
 package xyz.nulldev.ts.api.http.serializer
 
-import com.github.salomonbrys.kotson.*
+import com.github.salomonbrys.kotson.bool
+import com.github.salomonbrys.kotson.byte
+import com.github.salomonbrys.kotson.char
+import com.github.salomonbrys.kotson.double
+import com.github.salomonbrys.kotson.float
+import com.github.salomonbrys.kotson.get
+import com.github.salomonbrys.kotson.int
+import com.github.salomonbrys.kotson.long
+import com.github.salomonbrys.kotson.obj
+import com.github.salomonbrys.kotson.set
+import com.github.salomonbrys.kotson.short
+import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import eu.kanade.tachiyomi.source.model.Filter
@@ -31,9 +42,9 @@ class FilterSerializer {
 
     fun serialize(filter: Filter<Any?>): JsonObject {
         val out = JsonObject()
-        for(serializer in serializers) {
-            if(filter::class.isSubclassOf(serializer.clazz)) {
-                //TODO Not sure how to deal with the mess of types here
+        for (serializer in serializers) {
+            if (filter::class.isSubclassOf(serializer.clazz)) {
+                // TODO Not sure how to deal with the mess of types here
                 serializer as Serializer<Filter<Any?>>
 
                 serializer.serialize(out, filter)
@@ -65,15 +76,15 @@ class FilterSerializer {
             it.type == json[TYPE].string
         } ?: throw IllegalArgumentException("Cannot deserialize this type!")
 
-        //TODO Not sure how to deal with the mess of types here
+        // TODO Not sure how to deal with the mess of types here
         serializer as Serializer<Filter<Any?>>
 
         serializer.deserialize(json, filter)
 
         serializer.mappings().forEach {
-            if(it.second is KMutableProperty1) {
+            if (it.second is KMutableProperty1) {
                 val obj = json[it.first]
-                val res: Any? = when(json[CLASS_MAPPINGS][it.first].string) {
+                val res: Any? = when (json[CLASS_MAPPINGS][it.first].string) {
                     java.lang.Integer::class.java.name -> obj.int
                     java.lang.Long::class.java.name -> obj.long
                     java.lang.Float::class.java.name -> obj.float

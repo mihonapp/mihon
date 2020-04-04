@@ -23,7 +23,7 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.eh_activity_intercept)
 
-        //Show back button
+        // Show back button
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -31,7 +31,7 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
     }
 
     private fun processLink() {
-        if(Intent.ACTION_VIEW == intent.action) {
+        if (Intent.ACTION_VIEW == intent.action) {
             intercept_progress.visible()
             intercept_status.text = "Loading gallery..."
             presenter.loadGallery(intent.dataString)
@@ -52,7 +52,7 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
         statusSubscription = presenter.status
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    when(it) {
+                    when (it) {
                         is InterceptResult.Success -> {
                             intercept_progress.gone()
                             intercept_status.text = "Launching app..."

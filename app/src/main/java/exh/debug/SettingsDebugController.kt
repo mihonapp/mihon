@@ -8,8 +8,12 @@ import android.widget.HorizontalScrollView
 import android.widget.TextView
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
-import eu.kanade.tachiyomi.ui.setting.*
-import eu.kanade.tachiyomi.util.preference.*
+import eu.kanade.tachiyomi.ui.setting.SettingsController
+import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.onClick
+import eu.kanade.tachiyomi.util.preference.preference
+import eu.kanade.tachiyomi.util.preference.preferenceCategory
+import eu.kanade.tachiyomi.util.preference.switchPreference
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredFunctions
 
@@ -41,7 +45,7 @@ class SettingsDebugController : SettingsController() {
                             view.text = "Function returned result:\n\n$result"
                             MaterialDialog.Builder(context)
                                     .customView(hView, true)
-                        } catch(t: Throwable) {
+                        } catch (t: Throwable) {
                             view.text = "Function threw exception:\n\n${Log.getStackTraceString(t)}"
                             MaterialDialog.Builder(context)
                                     .customView(hView, true)
@@ -59,8 +63,8 @@ class SettingsDebugController : SettingsController() {
                     title = it.name.replace('_', ' ').toLowerCase().capitalize()
                     key = it.prefKey
                     defaultValue = it.default
-                    summaryOn = if(it.default) "" else MODIFIED_TEXT
-                    summaryOff = if(it.default) MODIFIED_TEXT else ""
+                    summaryOn = if (it.default) "" else MODIFIED_TEXT
+                    summaryOff = if (it.default) MODIFIED_TEXT else ""
                 }
             }
         }

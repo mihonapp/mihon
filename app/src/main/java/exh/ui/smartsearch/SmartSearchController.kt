@@ -14,7 +14,13 @@ import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCatalogueController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.android.synthetic.main.eh_smart_search.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import uy.kohesive.injekt.injectLazy
 
 class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSearchPresenter>(), CoroutineScope {
@@ -37,7 +43,7 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
 
         appbar.bringToFront()
 
-        if(source == null || smartSearchConfig == null) {
+        if (source == null || smartSearchConfig == null) {
             router.popCurrentController()
             applicationContext?.toast("Missing data!")
             return
@@ -47,7 +53,7 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
         presenter
 
         launch(Dispatchers.Default) {
-            for(event in presenter.smartSearchChannel) {
+            for (event in presenter.smartSearchChannel) {
                 withContext(NonCancellable) {
                     if (event is SmartSearchPresenter.SearchResults.Found) {
                         val transaction = MangaController(event.manga, true, smartSearchConfig).withFadeTransaction()

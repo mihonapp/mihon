@@ -5,7 +5,7 @@ class MigrationStatus {
         val NOT_INITIALIZED = -1
         val COMPLETED = 0
 
-        //Migration process
+        // Migration process
         val NOTIFY_USER = 1
         val OPEN_BACKUP_MENU = 2
         val PERFORM_BACKUP = 3

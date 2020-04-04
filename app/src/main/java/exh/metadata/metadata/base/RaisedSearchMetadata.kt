@@ -30,18 +30,18 @@ abstract class RaisedSearchMetadata {
 
     fun replaceTitleOfType(type: Int, newTitle: String?) {
         titles.removeAll { it.type == type }
-        if(newTitle != null) titles += RaisedTitle(newTitle, type)
+        if (newTitle != null) titles += RaisedTitle(newTitle, type)
     }
 
     abstract fun copyTo(manga: SManga)
 
-    fun tagsToGenreString()
-            = tags.filter { it.type != TAG_TYPE_VIRTUAL }
-            .joinToString { (if(it.namespace != null) "${it.namespace}: " else "") + it.name }
+    fun tagsToGenreString() =
+            tags.filter { it.type != TAG_TYPE_VIRTUAL }
+            .joinToString { (if (it.namespace != null) "${it.namespace}: " else "") + it.name }
 
-    fun tagsToDescription()
-            = StringBuilder("Tags:\n").apply {
-        //BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
+    fun tagsToDescription() =
+            StringBuilder("Tags:\n").apply {
+        // BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
         val groupedTags = tags.filter { it.type != TAG_TYPE_VIRTUAL }.groupBy {
             it.namespace
         }.entries
@@ -49,7 +49,7 @@ abstract class RaisedSearchMetadata {
         groupedTags.forEach { namespace, tags ->
             if (tags.isNotEmpty()) {
                 val joinedTags = tags.joinToString(separator = " ", transform = { "<${it.name}>" })
-                if(namespace != null) {
+                if (namespace != null) {
                     this += "▪ "
                     this += namespace
                     this += ": "
@@ -125,8 +125,8 @@ abstract class RaisedSearchMetadata {
              * @param property the metadata for the property.
              * @return the property value.
              */
-            override fun getValue(thisRef: RaisedSearchMetadata, property: KProperty<*>)
-                    = thisRef.getTitleOfType(type)
+            override fun getValue(thisRef: RaisedSearchMetadata, property: KProperty<*>) =
+                    thisRef.getTitleOfType(type)
 
             /**
              * Sets the value of the property for the given object.
@@ -134,8 +134,8 @@ abstract class RaisedSearchMetadata {
              * @param property the metadata for the property.
              * @param value the value to set.
              */
-            override fun setValue(thisRef: RaisedSearchMetadata, property: KProperty<*>, value: String?)
-                    = thisRef.replaceTitleOfType(type, value)
+            override fun setValue(thisRef: RaisedSearchMetadata, property: KProperty<*>, value: String?) =
+                    thisRef.replaceTitleOfType(type, value)
         }
     }
 }

@@ -2,7 +2,7 @@ package exh.log
 
 import okhttp3.OkHttpClient
 
-fun OkHttpClient.Builder.maybeInjectEHLogger(): OkHttpClient.Builder { //TODO - un-break this
+fun OkHttpClient.Builder.maybeInjectEHLogger(): OkHttpClient.Builder { // TODO - un-break this
 /*    if(false &&EHLogLevel.shouldLog(EHLogLevel.EXTREME)) {
         val xLogger = XLog.tag("EHNetwork")
                 .nst()

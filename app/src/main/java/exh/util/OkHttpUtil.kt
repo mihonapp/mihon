@@ -8,8 +8,8 @@ import org.jsoup.nodes.Document
 
 fun Response.interceptAsHtml(block: (Document) -> Unit): Response {
     val body = body
-    if (body?.contentType()?.type == "text"
-            && body.contentType()?.subtype == "html") {
+    if (body?.contentType()?.type == "text" &&
+            body.contentType()?.subtype == "html") {
         val bodyString = body.string()
         val rebuiltResponse = newBuilder()
                 .body(ResponseBody.create(body.contentType(), bodyString))

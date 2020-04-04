@@ -6,7 +6,12 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.MotionEvent
-import android.webkit.*
+import android.webkit.CookieManager
+import android.webkit.CookieSyncManager
+import android.webkit.JavascriptInterface
+import android.webkit.JsResult
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
@@ -22,6 +27,9 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import exh.source.DelegatedHttpSource
 import exh.util.melt
+import java.io.Serializable
+import java.net.URL
+import java.util.UUID
 import kotlinx.android.synthetic.main.eh_activity_captcha.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -33,10 +41,6 @@ import rx.Single
 import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.io.Serializable
-import java.net.URL
-import java.util.*
-import kotlin.collections.HashMap
 
 class BrowserActionActivity : AppCompatActivity() {
     private val sourceManager: SourceManager by injectLazy()
@@ -58,8 +62,8 @@ class BrowserActionActivity : AppCompatActivity() {
         setContentView(eu.kanade.tachiyomi.R.layout.eh_activity_captcha)
 
         val sourceId = intent.getLongExtra(SOURCE_ID_EXTRA, -1)
-        val originalSource = if(sourceId != -1L) sourceManager.get(sourceId) else null
-        val source = if(originalSource != null) {
+        val originalSource = if (sourceId != -1L) sourceManager.get(sourceId) else null
+        val source = if (originalSource != null) {
             originalSource as? ActionCompletionVerifier
                     ?: run {
                         (originalSource as? HttpSource)?.let {
@@ -72,24 +76,24 @@ class BrowserActionActivity : AppCompatActivity() {
             it.value.joinToString(",")
         } ?: emptyMap()) + (intent.getSerializableExtra(HEADERS_EXTRA) as? HashMap<String, String> ?: emptyMap())
 
-        val cookies: HashMap<String, String>?
-                = intent.getSerializableExtra(COOKIES_EXTRA) as? HashMap<String, String>
+        val cookies: HashMap<String, String>? =
+                intent.getSerializableExtra(COOKIES_EXTRA) as? HashMap<String, String>
         val script: String? = intent.getStringExtra(SCRIPT_EXTRA)
         val url: String? = intent.getStringExtra(URL_EXTRA)
         val actionName = intent.getStringExtra(ACTION_NAME_EXTRA)
 
-        val verifyComplete = if(source != null) {
+        val verifyComplete = if (source != null) {
             source::verifyComplete!!
         } else intent.getSerializableExtra(VERIFY_LAMBDA_EXTRA) as? (String) -> Boolean
 
-        if(verifyComplete == null || url == null) {
+        if (verifyComplete == null || url == null) {
             finish()
             return
         }
 
         val actionStr = actionName ?: "Solve captcha"
 
-        toolbar.title = if(source != null) {
+        toolbar.title = if (source != null) {
             "${source.name}: $actionStr"
         } else actionStr
 
@@ -115,13 +119,13 @@ class BrowserActionActivity : AppCompatActivity() {
 
         webview.webChromeClient = object : WebChromeClient() {
             override fun onJsAlert(view: WebView?, url: String?, message: String, result: JsResult): Boolean {
-                if(message.startsWith("exh-")) {
+                if (message.startsWith("exh-")) {
                     loadedInners++
                     // Wait for both inner scripts to be loaded
-                    if(loadedInners >= 2) {
+                    if (loadedInners >= 2) {
                         // Attempt to autosolve captcha
-                        if(preferencesHelper.eh_autoSolveCaptchas().getOrDefault()
-                                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        if (preferencesHelper.eh_autoSolveCaptchas().getOrDefault() &&
+                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             webview.post {
                                 // 10 seconds to auto-solve captcha
                                 strictValidationStartTime = System.currentTimeMillis() + 1000 * 10
@@ -141,7 +145,7 @@ class BrowserActionActivity : AppCompatActivity() {
         }
 
         webview.webViewClient = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if(actionName == null && preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
+            if (actionName == null && preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
                 // Fetch auto-solve credentials early for speed
                 credentialsObservable = httpClient.newCall(Request.Builder()
                         // Rob demo credentials
@@ -196,11 +200,11 @@ class BrowserActionActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @JavascriptInterface
     fun callback(result: String?, loopId: String, stage: Int) {
-        if(loopId != currentLoopId) return
+        if (loopId != currentLoopId) return
 
-        when(stage) {
+        when (stage) {
             STAGE_CHECKBOX -> {
-                if(result!!.toBoolean()) {
+                if (result!!.toBoolean()) {
                     webview.postDelayed({
                         getAudioButtonLocation(loopId)
                     }, 250)
@@ -211,7 +215,7 @@ class BrowserActionActivity : AppCompatActivity() {
                 }
             }
             STAGE_GET_AUDIO_BTN_LOCATION -> {
-                if(result != null) {
+                if (result != null) {
                     val splitResult = result.split(" ").map { it.toFloat() }
                     val origX = splitResult[0]
                     val origY = splitResult[1]
@@ -231,11 +235,11 @@ class BrowserActionActivity : AppCompatActivity() {
                 }
             }
             STAGE_DOWNLOAD_AUDIO -> {
-                if(result != null) {
+                if (result != null) {
                     Timber.d("Got audio URL: $result")
                     performRecognize(result)
                             .observeOn(Schedulers.io())
-                            .subscribe ({
+                            .subscribe({
                                 Timber.d("Got audio transcript: $it")
                                 webview.post {
                                     typeResult(loopId, it!!
@@ -253,7 +257,7 @@ class BrowserActionActivity : AppCompatActivity() {
                 }
             }
             STAGE_TYPE_RESULT -> {
-                if(result!!.toBoolean()) {
+                if (result!!.toBoolean()) {
                     // Fail if captcha still not solved after 1.5s
                     strictValidationStartTime = System.currentTimeMillis() + 1500
                 } else {
@@ -293,7 +297,7 @@ class BrowserActionActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun doStageCheckbox(loopId: String) {
-        if(loopId != currentLoopId) return
+        if (loopId != currentLoopId) return
 
         webview.evaluateJavascript("""
             (function() {
@@ -415,27 +419,26 @@ class BrowserActionActivity : AppCompatActivity() {
         doStageCheckbox(loopId)
     }
 
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @JavascriptInterface
     fun validateCaptchaCallback(result: Boolean, loopId: String) {
-        if(loopId != validateCurrentLoopId) return
+        if (loopId != validateCurrentLoopId) return
 
-        if(result) {
+        if (result) {
             Timber.d("Captcha solved!")
             webview.post {
                 webview.evaluateJavascript(SOLVE_UI_SCRIPT_HIDE, null)
             }
             val asbtn = intent.getStringExtra(ASBTN_EXTRA)
-            if(asbtn != null) {
+            if (asbtn != null) {
                 webview.post {
                     webview.evaluateJavascript("(function() {document.querySelector('$asbtn').click();})();", null)
                 }
             }
         } else {
             val savedStrictValidationStartTime = strictValidationStartTime
-            if(savedStrictValidationStartTime != null
-                    && System.currentTimeMillis() > savedStrictValidationStartTime) {
+            if (savedStrictValidationStartTime != null &&
+                    System.currentTimeMillis() > savedStrictValidationStartTime) {
                 captchaSolveFail()
             } else {
                 webview.postDelayed({
@@ -447,7 +450,7 @@ class BrowserActionActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun runValidateCaptcha(loopId: String) {
-        if(loopId != validateCurrentLoopId) return
+        if (loopId != validateCurrentLoopId) return
 
         webview.evaluateJavascript("""
             (function() {
@@ -624,12 +627,14 @@ class BrowserActionActivity : AppCompatActivity() {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
 
-        fun launchCaptcha(context: Context,
-                          source: ActionCompletionVerifier,
-                          cookies: Map<String, String>,
-                          script: String?,
-                          url: String,
-                          autoSolveSubmitBtnSelector: String? = null) {
+        fun launchCaptcha(
+            context: Context,
+            source: ActionCompletionVerifier,
+            cookies: Map<String, String>,
+            script: String?,
+            url: String,
+            autoSolveSubmitBtnSelector: String? = null
+        ) {
             val intent = baseIntent(context).apply {
                 putExtra(SOURCE_ID_EXTRA, source.id)
                 putExtra(COOKIES_EXTRA, HashMap(cookies))
@@ -641,9 +646,11 @@ class BrowserActionActivity : AppCompatActivity() {
             context.startActivity(intent)
         }
 
-        fun launchUniversal(context: Context,
-                            source: HttpSource,
-                            url: String) {
+        fun launchUniversal(
+            context: Context,
+            source: HttpSource,
+            url: String
+        ) {
             val intent = baseIntent(context).apply {
                 putExtra(SOURCE_ID_EXTRA, source.id)
                 putExtra(URL_EXTRA, url)
@@ -652,9 +659,11 @@ class BrowserActionActivity : AppCompatActivity() {
             context.startActivity(intent)
         }
 
-        fun launchUniversal(context: Context,
-                            sourceId: Long,
-                            url: String) {
+        fun launchUniversal(
+            context: Context,
+            sourceId: Long,
+            url: String
+        ) {
             val intent = baseIntent(context).apply {
                 putExtra(SOURCE_ID_EXTRA, sourceId)
                 putExtra(URL_EXTRA, url)
@@ -663,11 +672,13 @@ class BrowserActionActivity : AppCompatActivity() {
             context.startActivity(intent)
         }
 
-        fun launchAction(context: Context,
-                         completionVerifier: ActionCompletionVerifier,
-                         script: String?,
-                         url: String,
-                         actionName: String) {
+        fun launchAction(
+            context: Context,
+            completionVerifier: ActionCompletionVerifier,
+            script: String?,
+            url: String,
+            actionName: String
+        ) {
             val intent = baseIntent(context).apply {
                 putExtra(SOURCE_ID_EXTRA, completionVerifier.id)
                 putExtra(SCRIPT_EXTRA, script)
@@ -678,12 +689,14 @@ class BrowserActionActivity : AppCompatActivity() {
             context.startActivity(intent)
         }
 
-        fun launchAction(context: Context,
-                         completionVerifier: (String) -> Boolean,
-                         script: String?,
-                         url: String,
-                         actionName: String,
-                         headers: Map<String, String>? = emptyMap()) {
+        fun launchAction(
+            context: Context,
+            completionVerifier: (String) -> Boolean,
+            script: String?,
+            url: String,
+            actionName: String,
+            headers: Map<String, String>? = emptyMap()
+        ) {
             val intent = baseIntent(context).apply {
                 putExtra(HEADERS_EXTRA, HashMap(headers))
                 putExtra(VERIFY_LAMBDA_EXTRA, completionVerifier as Serializable)
@@ -697,7 +710,7 @@ class BrowserActionActivity : AppCompatActivity() {
     }
 }
 
-class NoopActionCompletionVerifier(private val source: HttpSource): DelegatedHttpSource(source),
+class NoopActionCompletionVerifier(private val source: HttpSource) : DelegatedHttpSource(source),
         ActionCompletionVerifier {
     override val versionId get() = source.versionId
     override val lang: String get() = source.lang
@@ -708,4 +721,3 @@ class NoopActionCompletionVerifier(private val source: HttpSource): DelegatedHtt
 interface ActionCompletionVerifier : Source {
     fun verifyComplete(url: String): Boolean
 }
-

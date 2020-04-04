@@ -14,7 +14,7 @@ class CachedField<T>(private val expiresAfterMs: Long) {
 
     suspend fun obtain(producer: suspend () -> T): T {
         return mutex.withLock {
-            if(initTime < 0 || System.currentTimeMillis() - initTime > expiresAfterMs) {
+            if (initTime < 0 || System.currentTimeMillis() - initTime > expiresAfterMs) {
                 content = producer()
             }
 

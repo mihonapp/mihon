@@ -7,14 +7,14 @@ import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.toast
-import timber.log.Timber
 import kotlin.concurrent.thread
+import timber.log.Timber
 
 class ConfiguringDialogController : DialogController() {
     private var materialDialog: MaterialDialog? = null
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-        if(savedViewState == null)
+        if (savedViewState == null)
             thread {
                 try {
                     EHConfigurator().configureAll()
@@ -62,4 +62,3 @@ class ConfiguringDialogController : DialogController() {
         router.popController(this)
     }
 }
-

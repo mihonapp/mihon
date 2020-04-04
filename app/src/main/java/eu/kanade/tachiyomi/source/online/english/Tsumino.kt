@@ -4,32 +4,28 @@ import android.net.Uri
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.FilterList
-import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
 import eu.kanade.tachiyomi.util.system.asJsoup
 import exh.metadata.metadata.TsuminoSearchMetadata
-import exh.metadata.metadata.TsuminoSearchMetadata.Companion.BASE_URL
 import exh.metadata.metadata.TsuminoSearchMetadata.Companion.TAG_TYPE_DEFAULT
 import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUAL
 import exh.metadata.metadata.base.RaisedTag
 import exh.source.DelegatedHttpSource
-import exh.util.dropBlank
-import exh.util.trimAll
 import exh.util.urlImportFetchSearchManga
+import java.text.SimpleDateFormat
+import java.util.Locale
 import org.jsoup.nodes.Document
 import rx.Observable
-import java.text.SimpleDateFormat
-import java.util.*
 
 class Tsumino(delegate: HttpSource) : DelegatedHttpSource(delegate),
         LewdSource<TsuminoSearchMetadata, Document>, UrlImportableSource {
-    override val metaClass = TsuminoSearchMetadata::class;
+    override val metaClass = TsuminoSearchMetadata::class
     override val lang = "en"
 
-    //Support direct URL importing
+    // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
             urlImportFetchSearchManga(query) {
                 super.fetchSearchManga(page, query, filters)

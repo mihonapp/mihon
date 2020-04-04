@@ -5,7 +5,7 @@ import io.realm.RealmObject
 import io.realm.annotations.Index
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
-import java.util.*
+import java.util.UUID
 
 @RealmClass
 open class FavoriteEntry : RealmObject() {

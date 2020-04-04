@@ -21,7 +21,7 @@ class HBrowseSearchMetadata : RaisedSearchMetadata() {
         }
 
         // Guess thumbnail URL if manga does not have thumbnail URL
-        if(manga.thumbnail_url.isNullOrBlank()) {
+        if (manga.thumbnail_url.isNullOrBlank()) {
             manga.thumbnail_url = guessThumbnailUrl(hbId.toString())
         }
 

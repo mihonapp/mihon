@@ -2,10 +2,14 @@ package exh.util
 
 import com.pushtorefresh.storio.operations.PreparedOperation
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetObject
-import kotlinx.coroutines.suspendCancellableCoroutine
-import rx.*
-import rx.subjects.ReplaySubject
 import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.suspendCancellableCoroutine
+import rx.Completable
+import rx.Observable
+import rx.Scheduler
+import rx.Single
+import rx.Subscription
+import rx.subjects.ReplaySubject
 
 /**
  * Transform a cold single to a hot single

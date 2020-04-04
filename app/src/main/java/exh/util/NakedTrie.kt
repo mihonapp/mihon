@@ -1,7 +1,8 @@
 package exh.util
 
 import android.util.SparseArray
-import java.util.*
+import java.util.AbstractMap
+import java.util.LinkedList
 
 class NakedTrieNode<T>(val key: Int, var parent: NakedTrieNode<T>?) {
     val children = SparseArray<NakedTrieNode<T>>(1)
@@ -12,30 +13,30 @@ class NakedTrieNode<T>(val key: Int, var parent: NakedTrieNode<T>?) {
     // Consumer should return true to continue walking, false to stop walking
     inline fun walk(prefix: String, consumer: (String, T) -> Boolean, leavesOnly: Boolean) {
         // Special case root
-        if(hasData && (!leavesOnly || children.size() <= 0)) {
-            if(!consumer(prefix, data as T)) return
+        if (hasData && (!leavesOnly || children.size() <= 0)) {
+            if (!consumer(prefix, data as T)) return
         }
 
         val stack = LinkedList<Pair<String, NakedTrieNode<T>>>()
         SparseArrayValueCollection(children, true).forEach {
             stack += prefix + it.key.toChar() to it
         }
-        while(!stack.isEmpty()) {
+        while (!stack.isEmpty()) {
             val (key, bottom) = stack.removeLast()
             SparseArrayValueCollection(bottom.children, true).forEach {
                 stack += key + it.key.toChar() to it
             }
-            if(bottom.hasData && (!leavesOnly || bottom.children.size() <= 0)) {
-                if(!consumer(key, bottom.data as T)) return
+            if (bottom.hasData && (!leavesOnly || bottom.children.size() <= 0)) {
+                if (!consumer(key, bottom.data as T)) return
             }
         }
     }
 
     fun getAsNode(key: String): NakedTrieNode<T>? {
         var current = this
-        for(c in key) {
+        for (c in key) {
             current = current.children.get(c.toInt()) ?: return null
-            if(!current.hasData) return null
+            if (!current.hasData) return null
         }
         return current
     }
@@ -72,10 +73,10 @@ class NakedTrie<T> : MutableMap<String, T> {
     override fun put(key: String, value: T): T? {
         // Traverse to node location in tree, making parent nodes if required
         var current = root
-        for(c in key) {
+        for (c in key) {
             val castedC = c.toInt()
             var node = current.children.get(castedC)
-            if(node == null) {
+            if (node == null) {
                 node = NakedTrieNode(castedC, current)
                 current.children.put(castedC, node)
             }
@@ -83,7 +84,7 @@ class NakedTrie<T> : MutableMap<String, T> {
         }
 
         // Add data to node or replace existing data
-        val previous = if(current.hasData) {
+        val previous = if (current.hasData) {
             current.data
         } else {
             current.hasData = true
@@ -99,7 +100,7 @@ class NakedTrie<T> : MutableMap<String, T> {
 
     override fun get(key: String): T? {
         val current = getAsNode(key) ?: return null
-        return if(current.hasData) current.data else null
+        return if (current.hasData) current.data else null
     }
 
     fun getAsNode(key: String): NakedTrieNode<T>? {
@@ -108,9 +109,9 @@ class NakedTrie<T> : MutableMap<String, T> {
 
     override fun containsKey(key: String): Boolean {
         var current = root
-        for(c in key) {
+        for (c in key) {
             current = current.children.get(c.toInt()) ?: return false
-            if(!current.hasData) return false
+            if (!current.hasData) return false
         }
         return current.hasData
     }
@@ -123,10 +124,10 @@ class NakedTrie<T> : MutableMap<String, T> {
     override fun remove(key: String): T? {
         // Traverse node tree while keeping track of the nodes we have visited
         val nodeStack = LinkedList<NakedTrieNode<T>>()
-        for(c in key) {
+        for (c in key) {
             val bottomOfStack = nodeStack.last
             val current = bottomOfStack.children.get(c.toInt()) ?: return null
-            if(!current.hasData) return null
+            if (!current.hasData) return null
             nodeStack.add(bottomOfStack)
         }
 
@@ -137,9 +138,9 @@ class NakedTrie<T> : MutableMap<String, T> {
         bottomOfStack.data = null // Clear data field for GC
 
         // Remove nodes that we visited that are useless
-        for(curBottom in nodeStack.descendingIterator()) {
+        for (curBottom in nodeStack.descendingIterator()) {
             val parent = curBottom.parent ?: break
-            if(!curBottom.hasData && curBottom.children.size() <= 0) {
+            if (!curBottom.hasData && curBottom.children.size() <= 0) {
                 // No data or child nodes, this node is useless, discard
                 parent.children.remove(curBottom.key)
             } else break
@@ -176,10 +177,10 @@ class NakedTrie<T> : MutableMap<String, T> {
     fun getOrPut(key: String, producer: () -> T): T {
         // Traverse to node location in tree, making parent nodes if required
         var current = root
-        for(c in key) {
+        for (c in key) {
             val castedC = c.toInt()
             var node = current.children.get(castedC)
-            if(node == null) {
+            if (node == null) {
                 node = NakedTrieNode(castedC, current)
                 current.children.put(castedC, node)
             }
@@ -187,7 +188,7 @@ class NakedTrie<T> : MutableMap<String, T> {
         }
 
         // Add data to node or replace existing data
-        if(!current.hasData) {
+        if (!current.hasData) {
             current.hasData = true
             current.data = producer()
             size++
@@ -253,7 +254,7 @@ class NakedTrie<T> : MutableMap<String, T> {
              * Returns `true` if the map contains the specified [key].
              */
             override fun containsKey(key: String): Boolean {
-                if(!key.startsWith(prefix)) return false
+                if (!key.startsWith(prefix)) return false
 
                 val childNode = node.getAsNode(key.removePrefix(prefix)) ?: return false
                 return childNode.hasData && (!leavesOnly || childNode.children.size() <= 0)
@@ -264,7 +265,7 @@ class NakedTrie<T> : MutableMap<String, T> {
              */
             override fun containsValue(value: T): Boolean {
                 node.walk("", { _, v ->
-                    if(v == value) return true
+                    if (v == value) return true
                     true
                 }, leavesOnly)
                 return false
@@ -274,10 +275,10 @@ class NakedTrie<T> : MutableMap<String, T> {
              * Returns the value corresponding to the given [key], or `null` if such a key is not present in the map.
              */
             override fun get(key: String): T? {
-                if(!key.startsWith(prefix)) return null
+                if (!key.startsWith(prefix)) return null
 
                 val childNode = node.getAsNode(key.removePrefix(prefix)) ?: return null
-                if(!childNode.hasData || (leavesOnly && childNode.children.size() > 0)) return null
+                if (!childNode.hasData || (leavesOnly && childNode.children.size() > 0)) return null
                 return childNode.data
             }
 
@@ -285,8 +286,8 @@ class NakedTrie<T> : MutableMap<String, T> {
              * Returns `true` if the map is empty (contains no elements), `false` otherwise.
              */
             override fun isEmpty(): Boolean {
-                if(node.children.size() <= 0 && !root.hasData) return true
-                if(!leavesOnly) return false
+                if (node.children.size() <= 0 && !root.hasData) return true
+                if (!leavesOnly) return false
                 node.walk("", { _, _ -> return false }, leavesOnly)
                 return true
             }
@@ -300,7 +301,7 @@ class NakedTrie<T> : MutableMap<String, T> {
      */
     override fun containsValue(value: T): Boolean {
         walk { _, t ->
-            if(t == value) {
+            if (t == value) {
                 return true
             }
 

@@ -47,7 +47,7 @@ class PururinSearchMetadata : RaisedSearchMetadata() {
         altTitle?.let { titleDesc += "Japanese Title: $it\n" }
 
         val detailsDesc = StringBuilder()
-        (uploaderDisp ?: uploader)?.let { detailsDesc += "Uploader: $it\n"}
+        (uploaderDisp ?: uploader)?.let { detailsDesc += "Uploader: $it\n" }
         pages?.let { detailsDesc += "Length: $it pages\n" }
         fileSize?.let { detailsDesc += "Size: $it\n" }
         ratingCount?.let { detailsDesc += "Rating: $averageRating ($ratingCount)\n" }

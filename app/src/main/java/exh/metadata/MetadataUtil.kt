@@ -1,7 +1,7 @@
 package exh.metadata
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 /**
  * Metadata utils
@@ -35,13 +35,12 @@ fun parseHumanReadableByteCount(arg0: String): Double? {
     return null
 }
 
-
-fun String?.nullIfBlank(): String? = if(isNullOrBlank())
+fun String?.nullIfBlank(): String? = if (isNullOrBlank())
     null
 else
     this
 
-fun <K,V> Set<Map.Entry<K,V>>.forEach(action: (K, V) -> Unit) {
+fun <K, V> Set<Map.Entry<K, V>>.forEach(action: (K, V) -> Unit) {
     forEach { action(it.key, it.value) }
 }
 

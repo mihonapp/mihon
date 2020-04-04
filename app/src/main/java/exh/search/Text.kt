@@ -3,7 +3,7 @@ package exh.search
 import exh.plusAssign
 import exh.search.SearchEngine.Companion.escapeLike
 
-class Text: QueryComponent() {
+class Text : QueryComponent() {
     val components = mutableListOf<TextComponent>()
 
     private var query: String? = null
@@ -12,26 +12,26 @@ class Text: QueryComponent() {
     private var rawText: String? = null
 
     fun asQuery(): String {
-        if(query == null) {
+        if (query == null) {
             query = rBaseBuilder().toString()
         }
         return query!!
     }
 
     fun asLenientTitleQuery(): String {
-        if(lenientTitleQuery == null) {
+        if (lenientTitleQuery == null) {
             lenientTitleQuery = StringBuilder("%").append(rBaseBuilder()).append("%").toString()
         }
         return lenientTitleQuery!!
     }
 
     fun asLenientTagQueries(): List<String> {
-        if(lenientTagQueries == null) {
+        if (lenientTagQueries == null) {
             lenientTagQueries = listOf(
-                    //Match beginning of tag
+                    // Match beginning of tag
                     rBaseBuilder().append("%").toString(),
-                    //Tag word matcher (that matches multiple words)
-                    //Can't make it match a single word in Realm :(
+                    // Tag word matcher (that matches multiple words)
+                    // Can't make it match a single word in Realm :(
                     StringBuilder(" ").append(rBaseBuilder()).append(" ").toString(),
                     StringBuilder(" ").append(rBaseBuilder()).toString(),
                     rBaseBuilder().append(" ").toString()
@@ -42,8 +42,8 @@ class Text: QueryComponent() {
 
     fun rBaseBuilder(): StringBuilder {
         val builder = StringBuilder()
-        for(component in components) {
-            when(component) {
+        for (component in components) {
+            when (component) {
                 is StringTextComponent -> builder += escapeLike(component.value)
                 is SingleWildcard -> builder += "_"
                 is MultiWildcard -> builder += "%"
@@ -52,7 +52,7 @@ class Text: QueryComponent() {
         return builder
     }
 
-    fun rawTextOnly() = if(rawText != null)
+    fun rawTextOnly() = if (rawText != null)
         rawText!!
     else {
         rawText = components

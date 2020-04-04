@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler
-import java.util.*
+import java.util.ArrayList
 
 class LockChangeHandler : AnimatorChangeHandler {
-    constructor(): super()
+    constructor() : super()
 
     constructor(removesFromViewOnPush: Boolean) : super(removesFromViewOnPush)
 
@@ -36,6 +36,4 @@ class LockChangeHandler : AnimatorChangeHandler {
 
     override fun copy(): ControllerChangeHandler =
             LockChangeHandler(animationDuration, removesFromViewOnPush())
-
 }
-

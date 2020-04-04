@@ -5,21 +5,24 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
+import eu.kanade.tachiyomi.ui.category.CategoryAdapter
 import exh.isLewdSource
 import exh.metadata.sql.tables.SearchMetadataTable
 import exh.search.SearchEngine
 import exh.util.await
 import exh.util.cancellable
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import androidx.recyclerview.widget.RecyclerView
-import eu.davidea.flexibleadapter.SelectableAdapter
-import eu.davidea.flexibleadapter.items.IFlexible
-import eu.kanade.tachiyomi.ui.category.CategoryAdapter
 
 /**
  * Adapter storing a list of manga in a certain category.

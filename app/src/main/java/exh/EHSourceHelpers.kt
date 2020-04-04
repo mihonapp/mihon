@@ -53,7 +53,7 @@ private val lewdDelegatedSourceIds = SourceManager.DELEGATED_SOURCES.filter {
 }.map { it.value.sourceId }.sorted()
 
 // This method MUST be fast!
-fun isLewdSource(source: Long) = source in 6900..6999
-        || lewdDelegatedSourceIds.binarySearch(source) >= 0
+fun isLewdSource(source: Long) = source in 6900..6999 ||
+        lewdDelegatedSourceIds.binarySearch(source) >= 0
 
 fun Source.isEhBasedSource() = id == EH_SOURCE_ID || id == EXH_SOURCE_ID

@@ -1,6 +1,5 @@
 package exh.ui.batchadd
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,14 +43,14 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeUntilDestroy {
                         progressSubscriptions.clear()
-                        if(it == BatchAddPresenter.STATE_INPUT_TO_PROGRESS) {
+                        if (it == BatchAddPresenter.STATE_INPUT_TO_PROGRESS) {
                             showProgress(this)
                             progressSubscriptions += presenter.progressRelay
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .combineLatest(presenter.progressTotalRelay, { progress, total ->
-                                        //Show hide dismiss button
+                                        // Show hide dismiss button
                                         progress_dismiss_btn.visibility =
-                                                if(progress == total)
+                                                if (progress == total)
                                                     View.VISIBLE
                                                 else View.GONE
 
@@ -79,7 +78,7 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
                                     }?.let {
                                 progressSubscriptions += it
                             }
-                        } else if(it == BatchAddPresenter.STATE_PROGRESS_TO_INPUT) {
+                        } else if (it == BatchAddPresenter.STATE_PROGRESS_TO_INPUT) {
                             hideProgress(this)
                             presenter.currentlyAddingRelay.call(BatchAddPresenter.STATE_IDLE)
                         }
@@ -124,8 +123,8 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
     private fun formatProgress(progress: Int, total: Int) = "$progress/$total"
 
     private fun addGalleries(galleries: String) {
-        //Check text box has content
-        if(galleries.isBlank()) {
+        // Check text box has content
+        if (galleries.isBlank()) {
             noGalleriesSpecified()
             return
         }

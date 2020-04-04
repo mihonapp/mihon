@@ -3,12 +3,14 @@ package exh.metadata.metadata
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
-import exh.metadata.*
+import exh.metadata.EX_DATE_FORMAT
+import exh.metadata.ONGOING_SUFFIX
 import exh.metadata.metadata.base.RaisedSearchMetadata
+import exh.metadata.nullIfBlank
 import exh.plusAssign
+import java.util.Date
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.*
 
 class NHentaiSearchMetadata : RaisedSearchMetadata() {
     var url get() = nhId?.let { BASE_URL + nhIdToPath(it) }
@@ -39,10 +41,10 @@ class NHentaiSearchMetadata : RaisedSearchMetadata() {
     override fun copyTo(manga: SManga) {
         nhId?.let { manga.url = nhIdToPath(it) }
 
-        if(mediaId != null) {
+        if (mediaId != null) {
             val hqThumbs = Injekt.get<PreferencesHelper>().eh_nh_useHighQualityThumbs().getOrDefault()
-            typeToExtension(if(hqThumbs) coverImageType else thumbnailImageType)?.let {
-                manga.thumbnail_url = "https://t.nhentai.net/galleries/$mediaId/${if(hqThumbs)
+            typeToExtension(if (hqThumbs) coverImageType else thumbnailImageType)?.let {
+                manga.thumbnail_url = "https://t.nhentai.net/galleries/$mediaId/${if (hqThumbs)
                     "cover"
                 else "thumb"}.$it"
             }
@@ -50,21 +52,21 @@ class NHentaiSearchMetadata : RaisedSearchMetadata() {
 
         manga.title = englishTitle ?: japaneseTitle ?: shortTitle!!
 
-        //Set artist (if we can find one)
+        // Set artist (if we can find one)
         tags.filter { it.namespace == NHENTAI_ARTIST_NAMESPACE }.let {
-            if(it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name })
+            if (it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name })
         }
 
         var category: String? = null
         tags.filter { it.namespace == NHENTAI_CATEGORIES_NAMESPACE }.let {
-            if(it.isNotEmpty()) category = it.joinToString(transform = { it.name })
+            if (it.isNotEmpty()) category = it.joinToString(transform = { it.name })
         }
 
-        //Copy tags -> genres
+        // Copy tags -> genres
         manga.genre = tagsToGenreString()
 
-        //Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
-        //We default to completed
+        // Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
+        // We default to completed
         manga.status = SManga.COMPLETED
         englishTitle?.let { t ->
             ONGOING_SUFFIX.find {
@@ -106,14 +108,14 @@ class NHentaiSearchMetadata : RaisedSearchMetadata() {
         private const val NHENTAI_CATEGORIES_NAMESPACE = "category"
 
         fun typeToExtension(t: String?) =
-                when(t) {
+                when (t) {
                     "p" -> "png"
                     "j" -> "jpg"
                     else -> null
                 }
 
-        fun nhUrlToId(url: String)
-                = url.split("/").last { it.isNotBlank() }.toLong()
+        fun nhUrlToId(url: String) =
+                url.split("/").last { it.isNotBlank() }.toLong()
 
         fun nhIdToPath(id: Long) = "/g/$id/"
     }

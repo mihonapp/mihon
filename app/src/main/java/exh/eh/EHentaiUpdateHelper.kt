@@ -8,10 +8,10 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.base.getFlatMetadataForManga
+import java.io.File
 import rx.Observable
 import rx.Single
 import uy.kohesive.injekt.injectLazy
-import java.io.File
 
 data class ChapterChain(val manga: Manga, val chapters: List<Chapter>)
 
@@ -61,7 +61,7 @@ class EHentaiUpdateHelper(context: Context) {
 
             val chainsAsChapters = chains.flatMap { it.chapters }
 
-            if(toDiscard.isNotEmpty()) {
+            if (toDiscard.isNotEmpty()) {
                 var new = false
 
                 // Copy chain chapters to curChapters
@@ -75,9 +75,9 @@ class EHentaiUpdateHelper(context: Context) {
 
                             chain.chapters.map { chapter ->
                                 // Convert old style chapters to new style chapters if possible
-                                if(chapter.date_upload <= 0
-                                        && meta?.datePosted != null
-                                        && meta?.title != null) {
+                                if (chapter.date_upload <= 0 &&
+                                        meta?.datePosted != null &&
+                                        meta?.title != null) {
                                     chapter.name = meta!!.title!!
                                     chapter.date_upload = meta!!.datePosted!!
                                 }
@@ -92,7 +92,7 @@ class EHentaiUpdateHelper(context: Context) {
                             if (existing != null) {
                                 existing.read = existing.read || chapter.read
                                 existing.last_page_read = existing.last_page_read.coerceAtLeast(chapter.last_page_read)
-                                if(newLastPageRead != null && existing.last_page_read <= 0) {
+                                if (newLastPageRead != null && existing.last_page_read <= 0) {
                                     existing.last_page_read = newLastPageRead
                                 }
                                 existing.bookmark = existing.bookmark || chapter.bookmark
@@ -107,7 +107,7 @@ class EHentaiUpdateHelper(context: Context) {
                                     bookmark = chapter.bookmark
 
                                     last_page_read = chapter.last_page_read
-                                    if(newLastPageRead != null && last_page_read <= 0) {
+                                    if (newLastPageRead != null && last_page_read <= 0) {
                                         last_page_read = newLastPageRead
                                     }
 
@@ -153,7 +153,7 @@ class EHentaiUpdateHelper(context: Context) {
 }
 
 data class GalleryEntry(val gId: String, val gToken: String) {
-    class Serializer: MemAutoFlushingLookupTable.EntrySerializer<GalleryEntry> {
+    class Serializer : MemAutoFlushingLookupTable.EntrySerializer<GalleryEntry> {
         /**
          * Serialize an entry as a String.
          */

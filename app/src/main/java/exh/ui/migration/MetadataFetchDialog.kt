@@ -12,9 +12,9 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import exh.EXH_SOURCE_ID
 import exh.isLewdSource
+import kotlin.concurrent.thread
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import kotlin.concurrent.thread
 
 class MetadataFetchDialog {
 
@@ -25,7 +25,7 @@ class MetadataFetchDialog {
     val preferenceHelper: PreferencesHelper by injectLazy()
 
     fun show(context: Activity) {
-        //Too lazy to actually deal with orientation changes
+        // Too lazy to actually deal with orientation changes
         context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
 
         var running = true
@@ -55,7 +55,7 @@ class MetadataFetchDialog {
 
             val mangaWithMissingMetadata = libraryMangas
                     .filterIndexed { index, libraryManga ->
-                        if(index % 100 == 0) {
+                        if (index % 100 == 0) {
                             context.runOnUiThread {
                                 progressDialog.setContent("[Stage 1/2] Scanning for missing metadata...")
                                 progressDialog.setProgress(index + 1)
@@ -69,9 +69,9 @@ class MetadataFetchDialog {
                 progressDialog.maxProgress = mangaWithMissingMetadata.size
             }
 
-            //Actual metadata fetch code
-            for((i, manga) in mangaWithMissingMetadata.withIndex()) {
-                if(!running) break
+            // Actual metadata fetch code
+            for ((i, manga) in mangaWithMissingMetadata.withIndex()) {
+                if (!running) break
                 context.runOnUiThread {
                     progressDialog.setContent("[Stage 2/2] Processing: ${manga.title}")
                     progressDialog.setProgress(i + 1)
@@ -88,10 +88,10 @@ class MetadataFetchDialog {
 
             context.runOnUiThread {
                 // Ensure activity still exists before we do anything to the activity
-                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 || !context.isDestroyed) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 || !context.isDestroyed) {
                     progressDialog.dismiss()
 
-                    //Enable orientation changes again
+                    // Enable orientation changes again
                     context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
 
                     if (running) displayMigrationComplete(context)
@@ -103,12 +103,12 @@ class MetadataFetchDialog {
     fun askMigration(activity: Activity, explicit: Boolean) {
         var extra = ""
         db.getLibraryMangas().asRxSingle().subscribe {
-            if(!explicit && it.none { isLewdSource(it.source) }) {
+            if (!explicit && it.none { isLewdSource(it.source) }) {
                 // Do not open dialog on startup if no manga
                 // Also do not check again
                 preferenceHelper.migrateLibraryAsked().set(true)
             } else {
-                //Not logged in but have ExHentai galleries
+                // Not logged in but have ExHentai galleries
                 if (!preferenceHelper.enableExhentai().getOrDefault()) {
                     it.find { it.source == EXH_SOURCE_ID }?.let {
                         extra = "<b><font color='red'>If you use ExHentai, please log in first before fetching your library metadata!</font></b><br><br>"
@@ -132,7 +132,6 @@ class MetadataFetchDialog {
                 }
             }
         }
-
     }
 
     fun adviseMigrationLater(activity: Activity) {

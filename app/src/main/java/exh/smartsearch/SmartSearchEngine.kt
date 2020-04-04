@@ -8,13 +8,19 @@ import eu.kanade.tachiyomi.source.model.SManga
 import exh.ui.smartsearch.SmartSearchPresenter
 import exh.util.await
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein
-import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.supervisorScope
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
-import kotlin.coroutines.CoroutineContext
 
-class SmartSearchEngine(parentContext: CoroutineContext,
-                        val extraSearchParams: String? = null): CoroutineScope {
+class SmartSearchEngine(
+    parentContext: CoroutineContext,
+    val extraSearchParams: String? = null
+) : CoroutineScope {
     override val coroutineContext: CoroutineContext = parentContext + Job() + Dispatchers.Default
 
     private val db: DatabaseHelper by injectLazy()
@@ -29,7 +35,7 @@ class SmartSearchEngine(parentContext: CoroutineContext,
         val eligibleManga = supervisorScope {
             queries.map { query ->
                 async(Dispatchers.Default) {
-                    val builtQuery = if(extraSearchParams != null) {
+                    val builtQuery = if (extraSearchParams != null) {
                         "$query ${extraSearchParams.trim()}"
                     } else query
 
@@ -51,7 +57,7 @@ class SmartSearchEngine(parentContext: CoroutineContext,
 
     suspend fun normalSearch(source: CatalogueSource, title: String): SManga? {
         val eligibleManga = supervisorScope {
-            val searchQuery = if(extraSearchParams != null) {
+            val searchQuery = if (extraSearchParams != null) {
                 "$title ${extraSearchParams.trim()}"
             } else title
             val searchResults = source.fetchSearchManga(1, searchQuery, FilterList()).toSingle().await(Schedulers.io())
@@ -71,7 +77,7 @@ class SmartSearchEngine(parentContext: CoroutineContext,
         val splitCleanedTitle = cleanedTitle.split(" ")
         val splitSortedByLargest = splitCleanedTitle.sortedByDescending { it.length }
 
-        if(splitCleanedTitle.isEmpty()) {
+        if (splitCleanedTitle.isEmpty()) {
             return emptyList()
         }
 
@@ -99,7 +105,7 @@ class SmartSearchEngine(parentContext: CoroutineContext,
 
         // Remove text in brackets
         var cleanedTitle = removeTextInBrackets(preTitle, true)
-        if(cleanedTitle.length <= 5) { // Title is suspiciously short, try parsing it backwards
+        if (cleanedTitle.length <= 5) { // Title is suspiciously short, try parsing it backwards
             cleanedTitle = removeTextInBrackets(preTitle, false)
         }
 
@@ -127,7 +133,7 @@ class SmartSearchEngine(parentContext: CoroutineContext,
         }.toMap()
 
         // Reverse pairs if reading backwards
-        if(!readForward) {
+        if (!readForward) {
             val tmp = openingBracketPairs
             openingBracketPairs = closingBracketPairs
             closingBracketPairs = tmp
@@ -136,16 +142,16 @@ class SmartSearchEngine(parentContext: CoroutineContext,
         val depthPairs = bracketPairs.map { 0 }.toMutableList()
 
         val result = StringBuilder()
-        for(c in if(readForward) text else text.reversed()) {
+        for (c in if (readForward) text else text.reversed()) {
             val openingBracketDepthIndex = openingBracketPairs[c]
-            if(openingBracketDepthIndex != null) {
+            if (openingBracketDepthIndex != null) {
                 depthPairs[openingBracketDepthIndex]++
             } else {
                 val closingBracketDepthIndex = closingBracketPairs[c]
-                if(closingBracketDepthIndex != null) {
+                if (closingBracketDepthIndex != null) {
                     depthPairs[closingBracketDepthIndex]--
                 } else {
-                    if(depthPairs.all { it <= 0 }) {
+                    if (depthPairs.all { it <= 0 }) {
                         result.append(c)
                     } else {
                         // In brackets, do not append to result

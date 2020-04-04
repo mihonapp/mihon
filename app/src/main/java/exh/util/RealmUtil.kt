@@ -3,7 +3,7 @@ package exh.util
 import io.realm.Realm
 import io.realm.RealmModel
 import io.realm.log.RealmLog
-import java.util.*
+import java.util.UUID
 
 inline fun <T> realmTrans(block: (Realm) -> T): T {
     return defRealm {
@@ -25,7 +25,7 @@ inline fun <T> Realm.trans(block: () -> T): T {
         val res = block()
         commitTransaction()
         return res
-    } catch(t: Throwable) {
+    } catch (t: Throwable) {
         if (isInTransaction) {
             cancelTransaction()
         } else {
@@ -34,7 +34,7 @@ inline fun <T> Realm.trans(block: () -> T): T {
 
         throw t
     } finally {
-        //Just in case
+        // Just in case
         if (isInTransaction) {
             cancelTransaction()
         }
@@ -49,9 +49,8 @@ inline fun <T> Realm.useTrans(block: (Realm) -> T): T {
     }
 }
 
-fun <T : RealmModel> Realm.createUUIDObj(clazz: Class<T>)
-    = createObject(clazz, UUID.randomUUID().toString())!!
+fun <T : RealmModel> Realm.createUUIDObj(clazz: Class<T>) =
+    createObject(clazz, UUID.randomUUID().toString())!!
 
-inline fun <reified T : RealmModel> Realm.createUUIDObj()
-        = createUUIDObj(T::class.java)
-
+inline fun <reified T : RealmModel> Realm.createUUIDObj() =
+        createUUIDObj(T::class.java)

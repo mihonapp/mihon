@@ -7,7 +7,7 @@ inline fun <T> ignore(expr: () -> T): T? {
 fun <T : Throwable> T.withRootCause(cause: Throwable): T {
     val curCause = this.cause
 
-    if(curCause == null) {
+    if (curCause == null) {
         this.initCause(cause)
     } else {
         curCause.withRootCause(cause)

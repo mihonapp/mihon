@@ -10,7 +10,11 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
-import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
@@ -24,6 +28,8 @@ import exh.metadata.metadata.HitomiSearchMetadata.Companion.TAG_TYPE_DEFAULT
 import exh.metadata.metadata.base.RaisedSearchMetadata.Companion.TAG_TYPE_VIRTUAL
 import exh.metadata.metadata.base.RaisedTag
 import exh.util.urlImportFetchSearchManga
+import java.text.SimpleDateFormat
+import java.util.Locale
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
@@ -32,8 +38,6 @@ import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Man, I hate this source :(
@@ -61,8 +65,8 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     private var tagIndexVersionCacheTime: Long = 0
     private fun tagIndexVersion(): Single<Long> {
         val sCachedTagIndexVersion = cachedTagIndexVersion
-        return if (sCachedTagIndexVersion == null
-                || tagIndexVersionCacheTime + INDEX_VERSION_CACHE_TIME_MS < System.currentTimeMillis()) {
+        return if (sCachedTagIndexVersion == null ||
+                tagIndexVersionCacheTime + INDEX_VERSION_CACHE_TIME_MS < System.currentTimeMillis()) {
             HitomiNozomi.getIndexVersion(client, "tagindex").subscribeOn(Schedulers.io()).doOnNext {
                 cachedTagIndexVersion = it
                 tagIndexVersionCacheTime = System.currentTimeMillis()
@@ -76,8 +80,8 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     private var galleryIndexVersionCacheTime: Long = 0
     private fun galleryIndexVersion(): Single<Long> {
         val sCachedGalleryIndexVersion = cachedGalleryIndexVersion
-        return if (sCachedGalleryIndexVersion == null
-                || galleryIndexVersionCacheTime + INDEX_VERSION_CACHE_TIME_MS < System.currentTimeMillis()) {
+        return if (sCachedGalleryIndexVersion == null ||
+                galleryIndexVersionCacheTime + INDEX_VERSION_CACHE_TIME_MS < System.currentTimeMillis()) {
             HitomiNozomi.getIndexVersion(client, "galleriesindex").subscribeOn(Schedulers.io()).doOnNext {
                 cachedGalleryIndexVersion = it
                 galleryIndexVersionCacheTime = System.currentTimeMillis()
@@ -307,7 +311,6 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
         }
     }
 
-
     /**
      * Returns an observable with the updated details for a manga. Normally it's not needed to
      * override this method.
@@ -423,5 +426,4 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss'-05'", Locale.US)
         }
     }
-
 }

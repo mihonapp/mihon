@@ -3,7 +3,12 @@ package eu.kanade.tachiyomi.source.online.all
 import android.content.Context
 import android.net.Uri
 import com.elvishew.xlog.XLog
-import com.github.salomonbrys.kotson.*
+import com.github.salomonbrys.kotson.array
+import com.github.salomonbrys.kotson.get
+import com.github.salomonbrys.kotson.int
+import com.github.salomonbrys.kotson.obj
+import com.github.salomonbrys.kotson.set
+import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -13,7 +18,12 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.network.asObservableWithAsyncStacktrace
-import eu.kanade.tachiyomi.source.model.*
+import eu.kanade.tachiyomi.source.model.Filter
+import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.model.MangasPage
+import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.LewdSource
 import eu.kanade.tachiyomi.source.online.UrlImportableSource
@@ -36,23 +46,30 @@ import exh.util.UriFilter
 import exh.util.UriGroup
 import exh.util.ignore
 import exh.util.urlImportFetchSearchManga
+import java.net.URLEncoder
+import java.util.ArrayList
 import kotlinx.coroutines.runBlocking
-import okhttp3.*
+import okhttp3.CacheControl
+import okhttp3.CookieJar
+import okhttp3.Headers
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 import rx.Observable
 import rx.Single
 import uy.kohesive.injekt.injectLazy
-import java.net.URLEncoder
-import java.util.*
 
 // TODO Consider gallery updating when doing tabbed browsing
-class EHentai(override val id: Long,
-              val exh: Boolean,
-              val context: Context) : HttpSource(), LewdSource<EHentaiSearchMetadata, Document>, UrlImportableSource {
+class EHentai(
+    override val id: Long,
+    val exh: Boolean,
+    val context: Context
+) : HttpSource(), LewdSource<EHentaiSearchMetadata, Document>, UrlImportableSource {
     override val metaClass = EHentaiSearchMetadata::class
 
     val schema: String
@@ -98,10 +115,10 @@ class EHentai(override val id: Long,
                             favElement?.attr("style")?.substring(14, 17)
                     ),
                     manga = Manga.create(id).apply {
-                        //Get title
+                        // Get title
                         title = thumbnailElement.attr("title")
                         url = EHentaiSearchMetadata.normalizeUrl(linkElement.attr("href"))
-                        //Get image
+                        // Get image
                         thumbnail_url = thumbnailElement.attr("src")
 
                         // TODO Parse genre + uploader + tags
@@ -110,9 +127,9 @@ class EHentai(override val id: Long,
 
         val parsedLocation = doc.location().toHttpUrlOrNull()
 
-        //Add to page if required
-        val hasNextPage = if (parsedLocation == null
-                || !parsedLocation.queryParameterNames.contains(REVERSE_PARAM)) {
+        // Add to page if required
+        val hasNextPage = if (parsedLocation == null ||
+                !parsedLocation.queryParameterNames.contains(REVERSE_PARAM)) {
             select("a[onclick=return false]").last()?.let {
                 it.text() == ">"
             } ?: false
@@ -212,8 +229,11 @@ class EHentai(override val id: Long,
         }
     }!!
 
-    private fun fetchChapterPage(chapter: SChapter, np: String,
-                                 pastUrls: List<String> = emptyList()): Observable<List<String>> {
+    private fun fetchChapterPage(
+        chapter: SChapter,
+        np: String,
+        pastUrls: List<String> = emptyList()
+    ): Observable<List<String>> {
         val urls = ArrayList(pastUrls)
         return chapterPageCall(np).flatMap {
             val jsoup = it.asJsoup()
@@ -245,7 +265,7 @@ class EHentai(override val id: Long,
     else
         exGet("$baseUrl/toplist.php?tl=15&p=${page - 1}", null) // Custom page logic for toplists
 
-    //Support direct URL importing
+    // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
             urlImportFetchSearchManga(query) {
                 searchMangaRequestObservable(page, query, filters).flatMap {
@@ -377,7 +397,7 @@ class EHentai(override val id: Long,
 
                 uploader = select("#gdn").text().nullIfBlank()?.trim()
 
-                //Parse the table
+                // Parse the table
                 select("#gdd tr").forEach {
                     val left = it.select(".gdt1").text().nullIfBlank()?.trim()
                     val rightElement = it.selectFirst(".gdt2")
@@ -407,13 +427,13 @@ class EHentai(override val id: Long,
                 }
 
                 lastUpdateCheck = System.currentTimeMillis()
-                if (datePosted != null
-                        && lastUpdateCheck - datePosted!! > EHentaiUpdateWorkerConstants.GALLERY_AGE_TIME) {
+                if (datePosted != null &&
+                        lastUpdateCheck - datePosted!! > EHentaiUpdateWorkerConstants.GALLERY_AGE_TIME) {
                     aged = true
                     XLog.d("aged %s - too old", title)
                 }
 
-                //Parse ratings
+                // Parse ratings
                 ignore {
                     averageRating = select("#rating_label")
                             .text()
@@ -428,7 +448,7 @@ class EHentai(override val id: Long,
                             ?.toInt()
                 }
 
-                //Parse tags
+                // Parse tags
                 tags.clear()
                 select("#taglist tr").forEach {
                     val namespace = it.select(".tc").text().removeSuffix(":")
@@ -465,7 +485,7 @@ class EHentai(override val id: Long,
     fun realImageUrlParse(response: Response, page: Page): String {
         with(response.asJsoup()) {
             val currentImage = getElementById("img").attr("src")
-            //Each press of the retry button will choose another server
+            // Each press of the retry button will choose another server
             select("#loadfail").attr("onclick").nullIfBlank()?.let {
                 page.url = addParam(page.url, "nl", it.substring(it.indexOf('\'') + 1 until it.lastIndexOf('\'')))
             }
@@ -490,17 +510,17 @@ class EHentai(override val id: Long,
                     cache = false)).execute()
             val doc = response2.asJsoup()
 
-            //Parse favorites
+            // Parse favorites
             val parsed = extendedGenericMangaParse(doc)
             result += parsed.first
 
-            //Parse fav names
+            // Parse fav names
             if (favNames == null)
                 favNames = doc.select(".fp:not(.fps)").mapNotNull {
                     it.child(2).text()
                 }
 
-            //Next page
+            // Next page
             page++
         } while (parsed.second)
 
@@ -544,7 +564,7 @@ class EHentai(override val id: Long,
 
     fun cookiesHeader(sp: Int = spPref().getOrDefault()) = buildCookies(rawCookies(sp))
 
-    //Headers
+    // Headers
     override fun headersBuilder() = super.headersBuilder().add("Cookie", cookiesHeader())!!
 
     fun addParam(url: String, param: String, value: String) = Uri.parse(url)
@@ -565,7 +585,7 @@ class EHentai(override val id: Long,
                 chain.proceed(newReq)
             }.build()!!
 
-    //Filters
+    // Filters
     override fun getFilterList() = FilterList(
             Watched(),
             GenreGroup(),
@@ -673,11 +693,11 @@ class EHentai(override val id: Long,
     override fun mapUrlToMangaUrl(uri: Uri): String? {
         return when (uri.pathSegments.firstOrNull()) {
             "g" -> {
-                //Is already gallery page, do nothing
+                // Is already gallery page, do nothing
                 uri.toString()
             }
             "s" -> {
-                //Is page, fetch gallery token and use that
+                // Is page, fetch gallery token and use that
                 getGalleryUrlFromPage(uri)
             }
             else -> null
@@ -713,7 +733,6 @@ class EHentai(override val id: Long,
         return "${uri.scheme}://${uri.host}/g/${obj["gid"].int}/${obj["token"].string}/"
     }
 
-
     companion object {
         private const val QUERY_PREFIX = "?f_apply=Apply+Filter"
         private const val TR_SUFFIX = "TR"
@@ -738,6 +757,5 @@ class EHentai(override val id: Long,
         fun buildCookies(cookies: Map<String, String>) = cookies.entries.joinToString(separator = "; ") {
             "${URLEncoder.encode(it.key, "UTF-8")}=${URLEncoder.encode(it.value, "UTF-8")}"
         }
-
     }
 }

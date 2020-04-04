@@ -29,7 +29,7 @@ class Pururin(delegate: HttpSource) : DelegatedHttpSource(delegate),
      */
     override val metaClass = PururinSearchMetadata::class
 
-    //Support direct URL importing
+    // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
         val trimmedIdQuery = query.trim().removePrefix("id:")
         val newQuery = if (trimmedIdQuery.toIntOrNull() ?: -1 >= 0) {

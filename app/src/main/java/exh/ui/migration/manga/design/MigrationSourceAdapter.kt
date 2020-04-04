@@ -4,8 +4,10 @@ import android.os.Bundle
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import exh.debug.DebugFunctions.sourceManager
 
-class MigrationSourceAdapter(val items: List<MigrationSourceItem>,
-                             val controller: MigrationDesignController): FlexibleAdapter<MigrationSourceItem>(
+class MigrationSourceAdapter(
+    val items: List<MigrationSourceItem>,
+    val controller: MigrationDesignController
+) : FlexibleAdapter<MigrationSourceItem>(
         items,
         controller,
         true

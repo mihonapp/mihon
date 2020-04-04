@@ -22,20 +22,27 @@ import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.util.view.visible
 import exh.MERGED_SOURCE_ID
 import exh.util.await
-import kotlinx.android.synthetic.main.eh_manga_card.view.*
-import kotlinx.android.synthetic.main.eh_migration_process_item.view.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import uy.kohesive.injekt.injectLazy
 import java.text.DateFormat
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Date
 import kotlin.coroutines.CoroutineContext
+import kotlinx.android.synthetic.main.eh_manga_card.view.*
+import kotlinx.android.synthetic.main.eh_migration_process_item.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import uy.kohesive.injekt.injectLazy
 
-class MigrationProcedureAdapter(val controller: MigrationProcedureController,
-                                val migratingManga: List<MigratingManga>,
-                                override val coroutineContext: CoroutineContext) : androidx.viewpager.widget.PagerAdapter(), CoroutineScope {
+class MigrationProcedureAdapter(
+    val controller: MigrationProcedureController,
+    val migratingManga: List<MigratingManga>,
+    override val coroutineContext: CoroutineContext
+) : androidx.viewpager.widget.PagerAdapter(), CoroutineScope {
     private val db: DatabaseHelper by injectLazy()
     private val gson: Gson by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
@@ -69,7 +76,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
                         performMigration(item)
                     }
                     controller.nextMigration()
-                } catch(e: Exception) {
+                } catch (e: Exception) {
                     logger.e("Migration failure!", e)
                     controller.migrationFailure()
                 }
@@ -81,7 +88,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
     }
 
     suspend fun performMigration(manga: MigratingManga) {
-        if(!manga.searchResult.initialized) {
+        if (!manga.searchResult.initialized) {
             return
         }
 
@@ -96,9 +103,11 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
         }
     }
 
-    private fun migrateMangaInternal(prevManga: Manga,
-                                     manga: Manga,
-                                     replace: Boolean) {
+    private fun migrateMangaInternal(
+        prevManga: Manga,
+        manga: Manga,
+        replace: Boolean
+    ) {
         db.inTransaction {
             // Update chapters read
             if (MigrationFlags.hasChapters(controller.config.migrationFlags)) {
@@ -147,7 +156,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
         tag.launch {
             val manga = migratingManga.manga()
             val source = migratingManga.mangaSource()
-            if(manga != null) {
+            if (manga != null) {
                 withContext(Dispatchers.Main) {
                     eh_manga_card_from.loading_group.gone()
                     eh_manga_card_from.attachManga(tag, manga, source)
@@ -174,7 +183,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
                     sourceManager.get(it)
                 }
                 withContext(Dispatchers.Main) {
-                    if(searchResult != null && resultSource != null) {
+                    if (searchResult != null && resultSource != null) {
                         eh_manga_card_to.loading_group.gone()
                         eh_manga_card_to.attachManga(tag, searchResult, resultSource)
                         eh_manga_card_to.setOnClickListener {
@@ -263,7 +272,7 @@ class MigrationProcedureAdapter(val controller: MigrationProcedureController,
         (objectAsView.tag as? ViewTag)?.destroy()
     }
 
-    class ViewTag(parent: CoroutineContext): CoroutineScope {
+    class ViewTag(parent: CoroutineContext) : CoroutineScope {
         /**
          * The context of this scope.
          * Context is encapsulated by the scope and used for implementation of coroutine builders that are extensions on the scope.

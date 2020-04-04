@@ -76,16 +76,16 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
         updateOptionsState()
 
         begin_migration_btn.setOnClickListener {
-            if(!showingOptions) {
+            if (!showingOptions) {
                 showingOptions = true
                 updateOptionsState()
                 return@setOnClickListener
             }
 
             var flags = 0
-            if(mig_chapters.isChecked) flags = flags or MigrationFlags.CHAPTERS
-            if(mig_categories.isChecked) flags = flags or MigrationFlags.CATEGORIES
-            if(mig_categories.isChecked) flags = flags or MigrationFlags.TRACK
+            if (mig_chapters.isChecked) flags = flags or MigrationFlags.CHAPTERS
+            if (mig_categories.isChecked) flags = flags or MigrationFlags.CATEGORIES
+            if (mig_categories.isChecked) flags = flags or MigrationFlags.TRACK
 
             router.replaceTopController(MigrationProcedureController.create(
                     MigrationProcedureConfig(
@@ -97,7 +97,7 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
                             enableLenientSearch = use_smart_search.isChecked,
                             migrationFlags = flags,
                             copy = copy_manga.isChecked,
-                            extraSearchParams = if(extra_search_param.isChecked && extra_search_param_text.text.isNotBlank()) {
+                            extraSearchParams = if (extra_search_param.isChecked && extra_search_param_text.text.isNotBlank()) {
                                 extra_search_param_text.text.toString()
                             } else null
                     )
@@ -109,7 +109,7 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
         if (showingOptions) {
             begin_migration_btn.text = "Begin migration"
             options_group.visible()
-            if(extra_search_param.isChecked) {
+            if (extra_search_param.isChecked) {
                 extra_search_param_text.visible()
             } else {
                 extra_search_param_text.gone()
@@ -122,7 +122,7 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
     }
 
     override fun handleBack(): Boolean {
-        if(showingOptions) {
+        if (showingOptions) {
             showingOptions = false
             updateOptionsState()
             return true
@@ -142,7 +142,7 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
     }
 
     private fun updatePrioritizeChapterCount(migrationMode: Boolean) {
-        migration_mode.text = if(migrationMode) {
+        migration_mode.text = if (migrationMode) {
             "Currently using the source with the most chapters and the above list to break ties (slow with many sources or smart search)"
         } else {
             "Currently using the first source in the list that has the manga"

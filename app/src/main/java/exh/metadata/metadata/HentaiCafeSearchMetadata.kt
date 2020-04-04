@@ -27,7 +27,7 @@ class HentaiCafeSearchMetadata : RaisedSearchMetadata() {
         manga.artist = artist
         manga.author = artist
 
-        //Not available
+        // Not available
         manga.status = SManga.UNKNOWN
 
         val detailsDesc = "Title: $title\n" +
@@ -49,7 +49,7 @@ class HentaiCafeSearchMetadata : RaisedSearchMetadata() {
 
         const val BASE_URL = "https://hentai.cafe"
 
-        fun hcIdFromUrl(url: String)
-                = url.split("/").last { it.isNotBlank() }
+        fun hcIdFromUrl(url: String) =
+                url.split("/").last { it.isNotBlank() }
     }
 }

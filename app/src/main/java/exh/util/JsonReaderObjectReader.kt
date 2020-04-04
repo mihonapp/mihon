@@ -18,10 +18,10 @@ fun JsonReader.nextJsonObject(): JsonObject {
 
     val obj = JsonObject()
 
-    while(hasNext()) {
+    while (hasNext()) {
         val name = nextName()
 
-        when(peek()) {
+        when (peek()) {
             JsonToken.BEGIN_ARRAY -> obj.add(name, nextJsonArray())
             JsonToken.BEGIN_OBJECT -> obj.add(name, nextJsonObject())
             JsonToken.NULL -> {
@@ -45,8 +45,8 @@ fun JsonReader.nextJsonArray(): JsonArray {
 
     val arr = JsonArray()
 
-    while(hasNext()) {
-        when(peek()) {
+    while (hasNext()) {
+        when (peek()) {
             JsonToken.BEGIN_ARRAY -> arr.add(nextJsonArray())
             JsonToken.BEGIN_OBJECT -> arr.add(nextJsonObject())
             JsonToken.NULL -> {

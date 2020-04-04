@@ -15,13 +15,21 @@ import eu.kanade.tachiyomi.util.system.toast
 import exh.smartsearch.SmartSearchEngine
 import exh.ui.base.BaseExhController
 import exh.util.await
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.android.synthetic.main.eh_migration_process.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.withContext
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
-import java.util.concurrent.atomic.AtomicInteger
 
 // TODO Will probably implode if activity is fully destroyed
 class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(bundle), CoroutineScope {
@@ -70,7 +78,7 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
         pager.adapter = adapter
         pager.isEnabled = false
 
-        if(migrationsJob == null) {
+        if (migrationsJob == null) {
             migrationsJob = launch {
                 runMigrations(newMigratingManga)
             }
@@ -89,7 +97,7 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
 
     fun nextMigration() {
         adapter?.let { adapter ->
-            if(pager.currentItem >= adapter.count - 1) {
+            if (pager.currentItem >= adapter.count - 1) {
                 applicationContext?.toast("All migrations complete!")
                 router.popCurrentController()
             } else {
@@ -115,11 +123,11 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
     suspend fun runMigrations(mangas: List<MigratingManga>) {
         val sources = config.targetSourceIds.mapNotNull { sourceManager.get(it) as? CatalogueSource }
 
-        for(manga in mangas) {
-            if(!manga.searchResult.initialized && manga.migrationJob.isActive) {
+        for (manga in mangas) {
+            if (!manga.searchResult.initialized && manga.migrationJob.isActive) {
                 val mangaObj = manga.manga()
 
-                if(mangaObj == null) {
+                if (mangaObj == null) {
                     manga.searchResult.initialize(null)
                     continue
                 }
@@ -131,39 +139,39 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                         val validSources = sources.filter {
                             it.id != mangaSource.id
                         }
-                        if(config.useSourceWithMostChapters) {
+                        if (config.useSourceWithMostChapters) {
                             val sourceSemaphore = Semaphore(3)
                             val processedSources = AtomicInteger()
 
                             validSources.map { source ->
-                               async {
-                                   sourceSemaphore.withPermit {
-                                       try {
-                                           val searchResult = if (config.enableLenientSearch) {
-                                               smartSearchEngine.smartSearch(source, mangaObj.title)
-                                           } else {
-                                               smartSearchEngine.normalSearch(source, mangaObj.title)
-                                           }
+                                async {
+                                    sourceSemaphore.withPermit {
+                                        try {
+                                            val searchResult = if (config.enableLenientSearch) {
+                                                smartSearchEngine.smartSearch(source, mangaObj.title)
+                                            } else {
+                                                smartSearchEngine.normalSearch(source, mangaObj.title)
+                                            }
 
-                                           if(searchResult != null) {
-                                               val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
-                                               val chapters = source.fetchChapterList(localManga).toSingle().await(Schedulers.io())
-                                               withContext(Dispatchers.IO) {
-                                                   syncChaptersWithSource(db, chapters, localManga, source)
-                                               }
-                                               manga.progress.send(validSources.size to processedSources.incrementAndGet())
-                                               localManga to chapters.size
-                                           } else {
-                                               null
-                                           }
-                                       } catch(e: CancellationException) {
-                                           // Ignore cancellations
-                                           throw e
-                                       } catch(e: Exception) {
-                                           logger.e("Failed to search in source: ${source.id}!", e)
-                                           null
-                                       }
-                                   }
+                                            if (searchResult != null) {
+                                                val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
+                                                val chapters = source.fetchChapterList(localManga).toSingle().await(Schedulers.io())
+                                                withContext(Dispatchers.IO) {
+                                                    syncChaptersWithSource(db, chapters, localManga, source)
+                                                }
+                                                manga.progress.send(validSources.size to processedSources.incrementAndGet())
+                                                localManga to chapters.size
+                                            } else {
+                                                null
+                                            }
+                                        } catch (e: CancellationException) {
+                                            // Ignore cancellations
+                                            throw e
+                                        } catch (e: Exception) {
+                                            logger.e("Failed to search in source: ${source.id}!", e)
+                                            null
+                                        }
+                                    }
                                 }
                             }.mapNotNull { it.await() }.maxBy { it.second }?.first
                         } else {
@@ -183,28 +191,28 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                                         }
                                         localManga
                                     } else null
-                                } catch(e: CancellationException) {
+                                } catch (e: CancellationException) {
                                     // Ignore cancellations
                                     throw e
-                                } catch(e: Exception) {
+                                } catch (e: Exception) {
                                     logger.e("Failed to search in source: ${source.id}!", e)
                                     null
                                 }
 
                                 manga.progress.send(validSources.size to (index + 1))
 
-                                if(searchResult != null) return@async searchResult
+                                if (searchResult != null) return@async searchResult
                             }
 
                             null
                         }
                     }.await()
-                } catch(e: CancellationException) {
+                } catch (e: CancellationException) {
                     // Ignore canceled migrations
                     continue
                 }
 
-                if(result != null && result.thumbnail_url == null) {
+                if (result != null && result.thumbnail_url == null) {
                     try {
                         val newManga = sourceManager.getOrStub(result.source)
                                 .fetchMangaDetails(result)
@@ -213,10 +221,10 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                         result.copyFrom(newManga)
 
                         db.insertManga(result).await()
-                    } catch(e: CancellationException) {
+                    } catch (e: CancellationException) {
                         // Ignore cancellations
                         throw e
-                    } catch(e: Exception) {
+                    } catch (e: Exception) {
                         logger.e("Could not load search manga details", e)
                     }
                 }

@@ -5,7 +5,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.EX_DATE_FORMAT
 import exh.metadata.metadata.base.RaisedSearchMetadata
 import exh.plusAssign
-import java.util.*
+import java.util.Date
 
 class TsuminoSearchMetadata : RaisedSearchMetadata() {
     var tmId: Int? = null
@@ -51,15 +51,15 @@ class TsuminoSearchMetadata : RaisedSearchMetadata() {
         collection?.let { detailsDesc += "Collection: $it\n" }
         group?.let { detailsDesc += "Group: $it\n" }
         val parodiesString = parody.joinToString()
-        if(parodiesString.isNotEmpty()) {
+        if (parodiesString.isNotEmpty()) {
             detailsDesc += "Parody: $parodiesString\n"
         }
         val charactersString = character.joinToString()
-        if(charactersString.isNotEmpty()) {
+        if (charactersString.isNotEmpty()) {
             detailsDesc += "Character: $charactersString\n"
         }
 
-        //Copy tags -> genres
+        // Copy tags -> genres
         manga.genre = tagsToGenreString()
 
         val tagsDesc = tagsToDescription()
@@ -76,8 +76,8 @@ class TsuminoSearchMetadata : RaisedSearchMetadata() {
 
         val BASE_URL = "https://www.tsumino.com"
 
-        fun tmIdFromUrl(url: String)
-                = Uri.parse(url).lastPathSegment
+        fun tmIdFromUrl(url: String) =
+                Uri.parse(url).lastPathSegment
 
         fun mangaUrlFromId(id: String) = "/Book/Info/$id"
 

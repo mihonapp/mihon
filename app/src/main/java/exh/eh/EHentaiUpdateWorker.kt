@@ -20,8 +20,8 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
-import eu.kanade.tachiyomi.util.system.jobScheduler
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import eu.kanade.tachiyomi.util.system.jobScheduler
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.debug.DebugToggles
@@ -31,18 +31,23 @@ import exh.metadata.metadata.base.getFlatMetadataForManga
 import exh.metadata.metadata.base.insertFlatMetadata
 import exh.util.await
 import exh.util.cancellable
-import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import rx.schedulers.Schedulers
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import kotlin.coroutines.CoroutineContext
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class EHentaiUpdateWorker: JobService(), CoroutineScope {
+class EHentaiUpdateWorker : JobService(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + Job()
 
@@ -215,8 +220,8 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                 val (acceptedRoot, discardedRoots, hasNew) =
                         updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters).await()
 
-                if((new.isNotEmpty() && manga.id == acceptedRoot.manga.id)
-                        || (hasNew && updatedManga.none { it.id == acceptedRoot.manga.id })) {
+                if ((new.isNotEmpty() && manga.id == acceptedRoot.manga.id) ||
+                        (hasNew && updatedManga.none { it.id == acceptedRoot.manga.id })) {
                     updatedManga += acceptedRoot.manga
                 }
 
@@ -235,7 +240,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                     )
             )
 
-            if(updatedManga.isNotEmpty()) {
+            if (updatedManga.isNotEmpty()) {
                 updateNotifier.showResultNotification(updatedManga)
             }
         }
@@ -254,10 +259,10 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
             val newChapters = source.fetchChapterList(manga).toSingle().await(Schedulers.io())
             val (new, _) = syncChaptersWithSource(db, newChapters, manga, source) // Not suspending, but does block, maybe fix this?
             return new to db.getChapters(manga).await()
-        } catch(t: Throwable) {
-            if(t is EHentai.GalleryNotFoundException) {
+        } catch (t: Throwable) {
+            if (t is EHentai.GalleryNotFoundException) {
                 val meta = db.getFlatMetadataForManga(manga.id!!).await()?.raise<EHentaiSearchMetadata>()
-                if(meta != null) {
+                if (meta != null) {
                     // Age dead galleries
                     logger.d("Aged %s - notfound", manga.id)
                     meta.aged = true
@@ -286,18 +291,20 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
 
         private fun Context.baseBackgroundJobInfo(isTest: Boolean): JobInfo.Builder {
             return JobInfo.Builder(
-                    if(isTest) JOB_ID_UPDATE_BACKGROUND_TEST
+                    if (isTest) JOB_ID_UPDATE_BACKGROUND_TEST
                     else JOB_ID_UPDATE_BACKGROUND, componentName())
         }
 
-        private fun Context.periodicBackgroundJobInfo(period: Long,
-                                                      requireCharging: Boolean,
-                                                      requireUnmetered: Boolean): JobInfo {
+        private fun Context.periodicBackgroundJobInfo(
+            period: Long,
+            requireCharging: Boolean,
+            requireUnmetered: Boolean
+        ): JobInfo {
             return baseBackgroundJobInfo(false)
                     .setPeriodic(period)
                     .setPersisted(true)
                     .setRequiredNetworkType(
-                            if(requireUnmetered) JobInfo.NETWORK_TYPE_UNMETERED
+                            if (requireUnmetered) JobInfo.NETWORK_TYPE_UNMETERED
                             else JobInfo.NETWORK_TYPE_ANY)
                     .apply {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -321,7 +328,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
 
         fun launchBackgroundTest(context: Context) {
             val jobScheduler = context.jobScheduler
-            if(jobScheduler.schedule(context.testBackgroundJobInfo()) == JobScheduler.RESULT_FAILURE) {
+            if (jobScheduler.schedule(context.testBackgroundJobInfo()) == JobScheduler.RESULT_FAILURE) {
                 logger.e("Failed to schedule background test job!")
             } else {
                 logger.d("Successfully scheduled background test job!")
@@ -344,7 +351,7 @@ class EHentaiUpdateWorker: JobService(), CoroutineScope {
                         wifiRestriction
                 )
 
-                if(context.jobScheduler.schedule(jobInfo) == JobScheduler.RESULT_FAILURE) {
+                if (context.jobScheduler.schedule(jobInfo) == JobScheduler.RESULT_FAILURE) {
                     logger.e("Failed to schedule background update job!")
                 } else {
                     logger.d("Successfully scheduled background update job!")

@@ -235,4 +235,3 @@ class MangaInfoPresenter(
         return toInsert
     }
 }
-

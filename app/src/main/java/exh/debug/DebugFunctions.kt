@@ -9,20 +9,19 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.system.jobScheduler
 import exh.EH_SOURCE_ID
-import exh.EXH_SOURCE_ID
 import exh.EXHMigrations
+import exh.EXH_SOURCE_ID
 import exh.eh.EHentaiUpdateWorker
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.base.getFlatMetadataForManga
 import exh.metadata.metadata.base.insertFlatMetadata
 import exh.util.await
 import exh.util.cancellable
-import uy.kohesive.injekt.injectLazy
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.toList
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.runBlocking
+import uy.kohesive.injekt.injectLazy
 
 object DebugFunctions {
     val app: Application by injectLazy()
@@ -31,7 +30,7 @@ object DebugFunctions {
     val sourceManager: SourceManager by injectLazy()
 
     fun forceUpgradeMigration() {
-	prefs.eh_lastVersionCode().set(0)
+    prefs.eh_lastVersionCode().set(0)
         EXHMigrations.upgrade(prefs)
     }
 
@@ -47,7 +46,7 @@ object DebugFunctions {
 
             for (manga in allManga) {
                 val meta = db.getFlatMetadataForManga(manga.id!!).await()?.raise<EHentaiSearchMetadata>()
-                if(meta != null) {
+                if (meta != null) {
                     // remove age flag
                     meta.aged = false
                     db.insertFlatMetadata(meta.flatten()).await()

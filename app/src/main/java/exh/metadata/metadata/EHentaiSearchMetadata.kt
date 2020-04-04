@@ -4,12 +4,14 @@ import android.net.Uri
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
-import exh.metadata.*
+import exh.metadata.EX_DATE_FORMAT
+import exh.metadata.ONGOING_SUFFIX
+import exh.metadata.humanReadableByteCount
 import exh.metadata.metadata.base.RaisedSearchMetadata
 import exh.plusAssign
+import java.util.Date
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.*
 
 class EHentaiSearchMetadata : RaisedSearchMetadata() {
     var gId: String?
@@ -27,7 +29,7 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
 
     var datePosted: Long? = null
     var parent: String? = null
-    var visible: String? = null //Not a boolean
+    var visible: String? = null // Not a boolean
     var language: String? = null
     var translated: Boolean? = null
     var size: Long? = null
@@ -47,23 +49,23 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
         }
         thumbnailUrl?.let { manga.thumbnail_url = it }
 
-        //No title bug?
-        val titleObj = if(Injekt.get<PreferencesHelper>().useJapaneseTitle().getOrDefault())
+        // No title bug?
+        val titleObj = if (Injekt.get<PreferencesHelper>().useJapaneseTitle().getOrDefault())
             altTitle ?: title
         else
             title
         titleObj?.let { manga.title = it }
 
-        //Set artist (if we can find one)
+        // Set artist (if we can find one)
         tags.filter { it.namespace == EH_ARTIST_NAMESPACE }.let {
-            if(it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name })
+            if (it.isNotEmpty()) manga.artist = it.joinToString(transform = { it.name })
         }
 
-        //Copy tags -> genres
+        // Copy tags -> genres
         manga.genre = tagsToGenreString()
 
-        //Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
-        //We default to completed
+        // Try to automatically identify if it is ongoing, we try not to be too lenient here to avoid making mistakes
+        // We default to completed
         manga.status = SManga.COMPLETED
         title?.let { t ->
             ONGOING_SUFFIX.find {
@@ -73,7 +75,7 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
             }
         }
 
-        //Build a nice looking description out of what we know
+        // Build a nice looking description out of what we know
         val titleDesc = StringBuilder()
         title?.let { titleDesc += "Title: $it\n" }
         altTitle?.let { titleDesc += "Alternate Title: $it\n" }
@@ -85,7 +87,7 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
         visible?.let { detailsDesc += "Visible: $it\n" }
         language?.let {
             detailsDesc += "Language: $it"
-            if(translated == true) detailsDesc += " TR"
+            if (translated == true) detailsDesc += " TR"
             detailsDesc += "\n"
         }
         size?.let { detailsDesc += "File size: ${humanReadableByteCount(it, true)}\n" }
@@ -114,10 +116,10 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
         const val EH_GENRE_NAMESPACE = "genre"
         private const val EH_ARTIST_NAMESPACE = "artist"
 
-        private fun splitGalleryUrl(url: String)
-                = url.let {
-            //Only parse URL if is full URL
-            val pathSegments = if(it.startsWith("http"))
+        private fun splitGalleryUrl(url: String) =
+                url.let {
+            // Only parse URL if is full URL
+            val pathSegments = if (it.startsWith("http"))
                 Uri.parse(it).pathSegments
             else
                 it.split('/')
@@ -129,10 +131,10 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
         fun galleryToken(url: String) =
                 splitGalleryUrl(url)[2]
 
-        fun normalizeUrl(url: String)
-                = idAndTokenToUrl(galleryId(url), galleryToken(url))
+        fun normalizeUrl(url: String) =
+                idAndTokenToUrl(galleryId(url), galleryToken(url))
 
-        fun idAndTokenToUrl(id: String, token: String)
-                = "/g/$id/$token/?nw=always"
+        fun idAndTokenToUrl(id: String, token: String) =
+                "/g/$id/$token/?nw=always"
     }
 }

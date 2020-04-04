@@ -12,14 +12,14 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
-import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
 import exh.uconfig.WarnConfigureDialogController
+import java.net.HttpCookie
 import kotlinx.android.synthetic.main.eh_activity_login.view.*
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
-import java.net.HttpCookie
 
 /**
  * LoginController
@@ -104,17 +104,17 @@ class LoginController : NucleusController<LoginPresenter>() {
                     Timber.d(url)
                     val parsedUrl = Uri.parse(url)
                     if (parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
-                        //Hide distracting content
-                        if(!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT)
-                                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                        // Hide distracting content
+                        if (!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT) &&
+                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                             view.evaluateJavascript(HIDE_JS, null)
 
-                        //Check login result
+                        // Check login result
                         if (parsedUrl.getQueryParameter("code")?.toInt() != 0) {
                             if (checkLoginCookies(url)) view.loadUrl("https://exhentai.org/")
                         }
                     } else if (parsedUrl.host.equals("exhentai.org", ignoreCase = true)) {
-                        //At ExHentai, check that everything worked out...
+                        // At ExHentai, check that everything worked out...
                         if (applyExHentaiCookies(url)) {
                             preferenceManager.enableExhentai().set(true)
                             finishLogin()
@@ -128,7 +128,7 @@ class LoginController : NucleusController<LoginPresenter>() {
     fun finishLogin() {
         router.popCurrentController()
 
-        //Upload settings
+        // Upload settings
         WarnConfigureDialogController.uploadSettings(router)
     }
 
@@ -138,9 +138,9 @@ class LoginController : NucleusController<LoginPresenter>() {
     fun checkLoginCookies(url: String): Boolean {
         getCookies(url)?.let { parsed ->
             return parsed.filter {
-                (it.name.equals(MEMBER_ID_COOKIE, ignoreCase = true)
-                        || it.name.equals(PASS_HASH_COOKIE, ignoreCase = true))
-                        && it.value.isNotBlank()
+                (it.name.equals(MEMBER_ID_COOKIE, ignoreCase = true) ||
+                        it.name.equals(PASS_HASH_COOKIE, ignoreCase = true)) &&
+                        it.value.isNotBlank()
             }.count() >= 2
         }
         return false
@@ -164,10 +164,10 @@ class LoginController : NucleusController<LoginPresenter>() {
                 }
             }
 
-            //Missing a cookie
+            // Missing a cookie
             if (memberId == null || passHash == null || igneous == null) return false
 
-            //Update prefs
+            // Update prefs
             preferenceManager.memberIdVal().set(memberId)
             preferenceManager.passHashVal().set(passHash)
             preferenceManager.igneousVal().set(igneous)
@@ -177,8 +177,8 @@ class LoginController : NucleusController<LoginPresenter>() {
         return false
     }
 
-    fun getCookies(url: String): List<HttpCookie>?
-            = CookieManager.getInstance().getCookie(url)?.let {
+    fun getCookies(url: String): List<HttpCookie>? =
+            CookieManager.getInstance().getCookie(url)?.let {
         it.split("; ").flatMap {
             HttpCookie.parse(it)
         }
