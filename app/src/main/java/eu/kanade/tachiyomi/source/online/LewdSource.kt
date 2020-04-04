@@ -36,7 +36,8 @@ interface LewdSource<M : RaisedSearchMetadata, I> : CatalogueSource {
      */
     private fun newMetaInstance() = metaClass.constructors.find {
         it.parameters.isEmpty()
-    }?.call() ?: error("Could not find no-args constructor for meta class: ${metaClass.qualifiedName}!")
+    }?.call()
+            ?: error("Could not find no-args constructor for meta class: ${metaClass.qualifiedName}!")
 
     /**
      * Parses metadata from the input and then copies it into the manga
@@ -45,12 +46,12 @@ interface LewdSource<M : RaisedSearchMetadata, I> : CatalogueSource {
      */
     fun parseToManga(manga: SManga, input: I): Completable {
         val mangaId = (manga as? Manga)?.id
-        val metaObservable = if(mangaId != null) {
+        val metaObservable = if (mangaId != null) {
             // We have to use fromCallable because StorIO messes up the thread scheduling if we use their rx functions
             Single.fromCallable {
                 db.getFlatMetadataForManga(mangaId).executeAsBlocking()
-            } .map {
-                if(it != null) it.raise(metaClass)
+            }.map {
+                if (it != null) it.raise(metaClass)
                 else newMetaInstance()
             }
         } else {
@@ -62,7 +63,7 @@ interface LewdSource<M : RaisedSearchMetadata, I> : CatalogueSource {
             it.copyTo(manga)
             it
         }.flatMapCompletable {
-            if(mangaId != null) {
+            if (mangaId != null) {
                 it.mangaId = mangaId
                 db.insertFlatMetadata(it.flatten())
             } else Completable.complete()
@@ -77,7 +78,7 @@ interface LewdSource<M : RaisedSearchMetadata, I> : CatalogueSource {
      * also be saved to the DB.
      */
     fun getOrLoadMetadata(mangaId: Long?, inputProducer: () -> Single<I>): Single<M> {
-        val metaObservable = if(mangaId != null) {
+        val metaObservable = if (mangaId != null) {
             // We have to use fromCallable because StorIO messes up the thread scheduling if we use their rx functions
             Single.fromCallable {
                 db.getFlatMetadataForManga(mangaId).executeAsBlocking()
@@ -87,12 +88,12 @@ interface LewdSource<M : RaisedSearchMetadata, I> : CatalogueSource {
         } else Single.just(null)
 
         return metaObservable.flatMap { existingMeta ->
-            if(existingMeta == null) {
+            if (existingMeta == null) {
                 inputProducer().flatMap { input ->
                     val newMeta = newMetaInstance()
                     parseIntoMetadata(newMeta, input)
                     val newMetaSingle = Single.just(newMeta)
-                    if(mangaId != null) {
+                    if (mangaId != null) {
                         newMeta.mangaId = mangaId
                         db.insertFlatMetadata(newMeta.flatten()).andThen(newMetaSingle)
                     } else newMetaSingle

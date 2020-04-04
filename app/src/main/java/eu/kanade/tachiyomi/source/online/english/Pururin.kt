@@ -32,7 +32,7 @@ class Pururin(delegate: HttpSource) : DelegatedHttpSource(delegate),
     //Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
         val trimmedIdQuery = query.trim().removePrefix("id:")
-        val newQuery = if(trimmedIdQuery.toIntOrNull() ?: -1 >= 0) {
+        val newQuery = if (trimmedIdQuery.toIntOrNull() ?: -1 >= 0) {
             "$baseUrl/gallery/$trimmedIdQuery/-"
         } else query
 
@@ -68,7 +68,7 @@ class Pururin(delegate: HttpSource) : DelegatedHttpSource(delegate),
             contentWrapper.select(".table-gallery-info > tbody > tr").forEach { ele ->
                 val key = ele.child(0).text().toLowerCase()
                 val value = ele.child(1)
-                when(key) {
+                when (key) {
                     "pages" -> {
                         val split = value.text().split("(").trimAll().dropBlank()
 

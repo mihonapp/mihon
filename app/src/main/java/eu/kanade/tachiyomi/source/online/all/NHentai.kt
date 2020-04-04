@@ -42,7 +42,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
     //Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
         val trimmedIdQuery = query.trim().removePrefix("id:")
-        val newQuery = if(trimmedIdQuery.toIntOrNull() ?: -1 >= 0) {
+        val newQuery = if (trimmedIdQuery.toIntOrNull() ?: -1 >= 0) {
             "$baseUrl/g/$trimmedIdQuery/"
         } else query
 
@@ -56,15 +56,15 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
     }
 
     private fun searchMangaRequestObservable(page: Int, query: String, filters: FilterList): Observable<Request> {
-	val langFilter = filters.filterIsInstance<filterLang>().firstOrNull()
+        val langFilter = filters.filterIsInstance<filterLang>().firstOrNull()
         var langFilterString = ""
-	if (langFilter != null) {
-            langFilterString = SOURCE_LANG_LIST.first {it.first == langFilter!!.values[langFilter!!.state]}.second
+        if (langFilter != null) {
+            langFilterString = SOURCE_LANG_LIST.first { it.first == langFilter!!.values[langFilter!!.state] }.second
         }
 
-        val uri = if(query.isNotBlank()) {
+        val uri = if (query.isNotBlank()) {
             Uri.parse("$baseUrl/search/").buildUpon().apply {
-                appendQueryParameter("q", query+langFilterString)
+                appendQueryParameter("q", query + langFilterString)
             }
         } else {
             Uri.parse(baseUrl).buildUpon()
@@ -73,12 +73,12 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
         val sortFilter = filters.filterIsInstance<SortFilter>().firstOrNull()?.state
                 ?: defaultSortFilterSelection()
 
-        if(sortFilter.index == 1) {
-            if(query.isBlank()) error("You must specify a search query if you wish to sort by popularity!")
+        if (sortFilter.index == 1) {
+            if (query.isBlank()) error("You must specify a search query if you wish to sort by popularity!")
             uri.appendQueryParameter("sort", "popular")
         }
 
-        if(sortFilter.ascending) {
+        if (sortFilter.ascending) {
             return client.newCall(nhGet(uri.toString()))
                     .asObservableSuccess()
                     .map {
@@ -103,11 +103,9 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
         return Observable.just(nhGet(uri.toString(), page))
     }
 
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
-            = throw UnsupportedOperationException()
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = throw UnsupportedOperationException()
 
-    override fun searchMangaParse(response: Response)
-            = parseResultPage(response)
+    override fun searchMangaParse(response: Response) = parseResultPage(response)
 
     override fun latestUpdatesRequest(page: Int): Request {
         val uri = Uri.parse(baseUrl).buildUpon()
@@ -115,8 +113,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
         return nhGet(uri.toString(), page)
     }
 
-    override fun latestUpdatesParse(response: Response)
-            = parseResultPage(response)
+    override fun latestUpdatesParse(response: Response) = parseResultPage(response)
 
     override fun mangaDetailsParse(response: Response) = throw UnsupportedOperationException()
 
@@ -136,8 +133,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
                 }
     }
 
-    override fun mangaDetailsRequest(manga: SManga)
-            = nhGet(baseUrl + manga.url)
+    override fun mangaDetailsRequest(manga: SManga) = nhGet(baseUrl + manga.url)
 
     fun parseResultPage(response: Response): MangasPage {
         val doc = response.asJsoup()
@@ -153,7 +149,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
                 // last() is a hack to ignore the lazy-loader placeholder image on the front page
                 thumbnail_url = it.select("img").last().attr("src")
                 // In some pages, the thumbnail url does not include the protocol
-                if(!thumbnail_url!!.startsWith("https:")) thumbnail_url = "https:$thumbnail_url"
+                if (!thumbnail_url!!.startsWith("https:")) thumbnail_url = "https:$thumbnail_url"
             }
         }
 
@@ -215,16 +211,14 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
                 .toSingle()
     }
 
-    override fun fetchChapterList(manga: SManga)
-            = Observable.just(listOf(SChapter.create().apply {
+    override fun fetchChapterList(manga: SManga) = Observable.just(listOf(SChapter.create().apply {
         url = manga.url
         name = "Chapter"
         chapter_number = 1f
     }))
 
-    override fun fetchPageList(chapter: SChapter)
-            = getOrLoadMetadata(chapter.mangaId, NHentaiSearchMetadata.nhUrlToId(chapter.url)).map { metadata ->
-        if(metadata.mediaId == null) emptyList()
+    override fun fetchPageList(chapter: SChapter) = getOrLoadMetadata(chapter.mangaId, NHentaiSearchMetadata.nhUrlToId(chapter.url)).map { metadata ->
+        if (metadata.mediaId == null) emptyList()
         else
             metadata.pageImageTypes.mapIndexed { index, s ->
                 val imageUrl = imageUrlFromType(metadata.mediaId!!, index + 1, s)
@@ -264,6 +258,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
     val appName by lazy {
         context.getString(R.string.app_name)
     }
+
     fun nhGet(url: String, tag: Any? = null) = GET(url)
             .newBuilder()
             .header("User-Agent",
@@ -291,7 +286,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
     )
 
     override fun mapUrlToMangaUrl(uri: Uri): String? {
-        if(uri.pathSegments.firstOrNull()?.toLowerCase() != "g")
+        if (uri.pathSegments.firstOrNull()?.toLowerCase() != "g")
             return null
 
         return "$baseUrl/g/${uri.pathSegments[1]}/"
@@ -304,10 +299,10 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
         private fun defaultSortFilterSelection() = Filter.Sort.Selection(0, false)
 
         private val SOURCE_LANG_LIST = listOf(
-            Pair("All", ""),
-            Pair("English", " english"),
-            Pair("Japanese", " japanese"),
-            Pair("Chinese", " chinese")
+                Pair("All", ""),
+                Pair("English", " english"),
+                Pair("Japanese", " japanese"),
+                Pair("Chinese", " chinese")
         )
 
 

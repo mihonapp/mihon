@@ -73,7 +73,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
     override fun searchMangaNextPageSelector() = ".next"
 
     override fun popularMangaRequest(page: Int): Request {
-        val urlLang = if(lang == "en")
+        val urlLang = if (lang == "en")
             "eng"
         else "it"
         return GET("$baseUrl/$urlLang/")
@@ -106,7 +106,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
         uri.appendQueryParameter("page", page.toString())
         uri.appendQueryParameter("title", query)
         filters.forEach {
-            if(it is UriFilter) it.addToUri(uri)
+            if (it is UriFilter) it.addToUri(uri)
         }
         return GET(uri.toString())
     }
@@ -152,38 +152,38 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
             tags.clear()
             var inStatus: String? = null
             rightBoxElement.childNodes().forEach {
-                if(it is Element && it.tagName().toLowerCase() == "h4") {
+                if (it is Element && it.tagName().toLowerCase() == "h4") {
                     inStatus = it.text().trim()
                 } else {
-                    when(inStatus) {
+                    when (inStatus) {
                         "Alternative name(s)" -> {
-                            if(it is TextNode) {
+                            if (it is TextNode) {
                                 val text = it.text().trim()
-                                if(!text.isBlank())
+                                if (!text.isBlank())
                                     newAltTitles += text
                             }
                         }
                         "Artist" -> {
-                            if(it is Element && it.tagName() == "a") {
+                            if (it is Element && it.tagName() == "a") {
                                 artist = it.text()
                                 tags += RaisedTag("artist", it.text().toLowerCase(), TAG_TYPE_VIRTUAL)
                             }
                         }
                         "Genres" -> {
-                            if(it is Element && it.tagName() == "a")
+                            if (it is Element && it.tagName() == "a")
                                 tags += RaisedTag(null, it.text().toLowerCase(), TAG_TYPE_DEFAULT)
                         }
                         "Type" -> {
-                            if(it is TextNode) {
+                            if (it is TextNode) {
                                 val text = it.text().trim()
-                                if(!text.isBlank())
+                                if (!text.isBlank())
                                     type = text
                             }
                         }
                         "Status" -> {
-                            if(it is TextNode) {
+                            if (it is TextNode) {
                                 val text = it.text().trim()
-                                if(!text.isBlank())
+                                if (!text.isBlank())
                                     status = text
                             }
                         }
@@ -197,8 +197,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
         }
     }
 
-    override fun mangaDetailsParse(document: Document): SManga
-        = throw UnsupportedOperationException()
+    override fun mangaDetailsParse(document: Document): SManga = throw UnsupportedOperationException()
 
     override fun latestUpdatesRequest(page: Int): Request {
         val num = when (lang) {
@@ -226,18 +225,17 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
 
         try {
             date_upload = DATE_FORMAT.parse(element.getElementsByClass("chapterDate").first().text().trim()).time
-        } catch(ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
     }
 
-    override fun pageListParse(document: Document)
-            = document.getElementById("pageSelect").getElementsByTag("option").map {
+    override fun pageListParse(document: Document) = document.getElementById("pageSelect").getElementsByTag("option").map {
         Page(it.attr("data-page").toInt() - 1, baseUrl + it.attr("value"))
     }
 
-    override fun imageUrlParse(document: Document)
-            = "http:" + document.getElementById("mainImg").attr("src")!!
+    override fun imageUrlParse(document: Document) = "http:" + document.getElementById("mainImg").attr("src")!!
 
-    override fun getFilterList() = FilterList (
+    override fun getFilterList() = FilterList(
             AuthorFilter(),
             ArtistFilter(),
             TypeFilterGroup(),
@@ -253,7 +251,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
 
     class StatusFilter(n: String, val id: Int) : Filter.CheckBox(n, false), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if(state)
+            if (state)
                 builder.appendQueryParameter("status", id.toString())
         }
     }
@@ -302,7 +300,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
 
     class TypeFilter(n: String, val id: Int) : Filter.CheckBox(n, false), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if(state)
+            if (state)
                 builder.appendQueryParameter("type", id.toString())
         }
     }
@@ -310,7 +308,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
     override val matchingHosts = listOf("www.perveden.com")
 
     override fun matchesUri(uri: Uri): Boolean {
-        return super.matchesUri(uri) && uri.pathSegments.firstOrNull()?.toLowerCase() == when(pvLang) {
+        return super.matchesUri(uri) && uri.pathSegments.firstOrNull()?.toLowerCase() == when (pvLang) {
             PervEdenLang.en -> "en-manga"
             PervEdenLang.it -> "it-manga"
         }

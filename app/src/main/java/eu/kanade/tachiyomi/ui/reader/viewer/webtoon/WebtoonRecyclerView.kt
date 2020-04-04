@@ -146,13 +146,13 @@ open class WebtoonRecyclerView @JvmOverloads constructor(
         }
 
         animate()
-            .apply {
-                newX?.let { x(it) }
-                newY?.let { y(it) }
-            }
-            .setInterpolator(DecelerateInterpolator())
-            .setDuration(400)
-            .start()
+                .apply {
+                    newX?.let { x(it) }
+                    newY?.let { y(it) }
+                }
+                .setInterpolator(DecelerateInterpolator())
+                .setDuration(400)
+                .start()
 
         return true
     }

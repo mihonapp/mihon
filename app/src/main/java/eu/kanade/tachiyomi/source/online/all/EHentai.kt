@@ -56,13 +56,13 @@ class EHentai(override val id: Long,
     override val metaClass = EHentaiSearchMetadata::class
 
     val schema: String
-        get() = if(prefs.secureEXH().getOrDefault())
+        get() = if (prefs.secureEXH().getOrDefault())
             "https"
         else
             "http"
 
     val domain: String
-        get() = if(exh)
+        get() = if (exh)
             "exhentai.org"
         else
             "e-hentai.org"
@@ -81,8 +81,7 @@ class EHentai(override val id: Long,
      */
     data class ParsedManga(val fav: Int, val manga: Manga)
 
-    fun extendedGenericMangaParse(doc: Document)
-            = with(doc) {
+    fun extendedGenericMangaParse(doc: Document) = with(doc) {
         // Parse mangas (supports compact + extended layout)
         val parsedMangas = select(".itg > tbody > tr").filter {
             // Do not parse header and ads
@@ -112,7 +111,7 @@ class EHentai(override val id: Long,
         val parsedLocation = doc.location().toHttpUrlOrNull()
 
         //Add to page if required
-        val hasNextPage = if(parsedLocation == null
+        val hasNextPage = if (parsedLocation == null
                 || !parsedLocation.queryParameterNames.contains(REVERSE_PARAM)) {
             select("a[onclick=return false]").last()?.let {
                 it.text() == ">"
@@ -126,13 +125,11 @@ class EHentai(override val id: Long,
     /**
      * Parse a list of galleries
      */
-    fun genericMangaParse(response: Response)
-            = extendedGenericMangaParse(response.asJsoup()).let {
+    fun genericMangaParse(response: Response) = extendedGenericMangaParse(response.asJsoup()).let {
         MangasPage(it.first.map { it.manga }, it.second)
     }
 
-    override fun fetchChapterList(manga: SManga)
-            = fetchChapterList(manga) {}
+    override fun fetchChapterList(manga: SManga) = fetchChapterList(manga) {}
 
     fun fetchChapterList(manga: SManga, throttleFunc: () -> Unit): Observable<List<SChapter>> {
         return Single.fromCallable {
@@ -148,7 +145,7 @@ class EHentai(override val id: Long,
                     val cachedParent = updateHelper.parentLookupTable.get(
                             gid
                     )
-                    if(cachedParent == null) {
+                    if (cachedParent == null) {
                         throttleFunc()
 
                         val resp = client.newCall(exGet(baseUrl + url)).execute()
@@ -192,7 +189,7 @@ class EHentai(override val id: Long,
                 }!!.nextElementSibling().text()).time
             }
             // Build and append the rest of the galleries
-            if(DebugToggles.INCLUDE_ONLY_ROOT_WHEN_LOADING_EXH_VERSIONS.enabled) listOf(self)
+            if (DebugToggles.INCLUDE_ONLY_ROOT_WHEN_LOADING_EXH_VERSIONS.enabled) listOf(self)
             else {
                 newDisplay.mapIndexed { index, newGallery ->
                     val link = newGallery.attr("href")
@@ -209,8 +206,7 @@ class EHentai(override val id: Long,
         }.toObservable()
     }
 
-    override fun fetchPageList(chapter: SChapter)
-            = fetchChapterPage(chapter, baseUrl + chapter.url).map {
+    override fun fetchPageList(chapter: SChapter) = fetchChapterPage(chapter, baseUrl + chapter.url).map {
         it.mapIndexed { i, s ->
             Page(i, s)
         }
@@ -223,28 +219,28 @@ class EHentai(override val id: Long,
             val jsoup = it.asJsoup()
             urls += parseChapterPage(jsoup)
             val nextUrl = nextPageUrl(jsoup)
-            if(nextUrl != null) {
+            if (nextUrl != null) {
                 fetchChapterPage(chapter, nextUrl, urls)
             } else {
                 Observable.just(urls)
             }
         }
     }
-    private fun parseChapterPage(response: Element)
-            = with(response) {
+
+    private fun parseChapterPage(response: Element) = with(response) {
         select(".gdtm a").map {
             Pair(it.child(0).attr("alt").toInt(), it.attr("href"))
         }.sortedBy(Pair<Int, String>::first).map { it.second }
     }
+
     private fun chapterPageCall(np: String) = client.newCall(chapterPageRequest(np)).asObservableSuccess()
     private fun chapterPageRequest(np: String) = exGet(np, null, headers)
 
-    private fun nextPageUrl(element: Element): String?
-            = element.select("a[onclick=return false]").last()?.let {
+    private fun nextPageUrl(element: Element): String? = element.select("a[onclick=return false]").last()?.let {
         return if (it.text() == ">") it.attr("href") else null
     }
 
-    override fun popularMangaRequest(page: Int) = if(exh)
+    override fun popularMangaRequest(page: Int) = if (exh)
         latestUpdatesRequest(page)
     else
         exGet("$baseUrl/toplist.php?tl=15&p=${page - 1}", null) // Custom page logic for toplists
@@ -254,7 +250,7 @@ class EHentai(override val id: Long,
             urlImportFetchSearchManga(query) {
                 searchMangaRequestObservable(page, query, filters).flatMap {
                     client.newCall(it).asObservableSuccess()
-                } .map { response ->
+                }.map { response ->
                     searchMangaParse(response)
                 }
             }
@@ -263,13 +259,13 @@ class EHentai(override val id: Long,
         val uri = Uri.parse("$baseUrl$QUERY_PREFIX").buildUpon()
         uri.appendQueryParameter("f_search", query)
         filters.forEach {
-            if(it is UriFilter) it.addToUri(uri)
+            if (it is UriFilter) it.addToUri(uri)
         }
 
         val request = exGet(uri.toString(), page)
 
         // Reverse search results on filter
-        if(filters.any { it is ReverseFilter && it.state }) {
+        if (filters.any { it is ReverseFilter && it.state }) {
             return client.newCall(request)
                     .asObservableSuccess()
                     .map {
@@ -290,8 +286,7 @@ class EHentai(override val id: Long,
         }
     }
 
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
-            = throw UnsupportedOperationException()
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = throw UnsupportedOperationException()
 
     override fun latestUpdatesRequest(page: Int) = exGet(baseUrl, page)
 
@@ -299,8 +294,7 @@ class EHentai(override val id: Long,
     override fun searchMangaParse(response: Response) = genericMangaParse(response)
     override fun latestUpdatesParse(response: Response) = genericMangaParse(response)
 
-    fun exGet(url: String, page: Int? = null, additionalHeaders: Headers? = null, cache: Boolean = true)
-            = GET(page?.let {
+    fun exGet(url: String, page: Int? = null, additionalHeaders: Headers? = null, cache: Boolean = true) = GET(page?.let {
         addParam(url, "page", Integer.toString(page - 1))
     } ?: url, additionalHeaders?.let {
         val headers = headers.newBuilder()
@@ -311,7 +305,7 @@ class EHentai(override val id: Long,
         }
         headers.build()
     } ?: headers).let {
-        if(!cache)
+        if (!cache)
             it.newBuilder().cacheControl(CacheControl.FORCE_NETWORK).build()
         else
             it
@@ -327,11 +321,11 @@ class EHentai(override val id: Long,
         return client.newCall(mangaDetailsRequest(manga))
                 .asObservableWithAsyncStacktrace()
                 .flatMap { (stacktrace, response) ->
-                    if(response.isSuccessful) {
+                    if (response.isSuccessful) {
                         // Pull to most recent
                         val doc = response.asJsoup()
                         val newerGallery = doc.select("#gnd a").lastOrNull()
-                        val pre = if(newerGallery != null && DebugToggles.PULL_TO_ROOT_WHEN_LOADING_EXH_MANGA_DETAILS.enabled) {
+                        val pre = if (newerGallery != null && DebugToggles.PULL_TO_ROOT_WHEN_LOADING_EXH_MANGA_DETAILS.enabled) {
                             manga.url = EHentaiSearchMetadata.normalizeUrl(newerGallery.attr("href"))
                             client.newCall(mangaDetailsRequest(manga))
                                     .asObservableSuccess().map { it.asJsoup() }
@@ -388,7 +382,7 @@ class EHentai(override val id: Long,
                     val left = it.select(".gdt1").text().nullIfBlank()?.trim()
                     val rightElement = it.selectFirst(".gdt2")
                     val right = rightElement.text().nullIfBlank()?.trim()
-                    if(left != null && right != null) {
+                    if (left != null && right != null) {
                         ignore {
                             when (left.removeSuffix(":")
                                     .toLowerCase()) {
@@ -413,10 +407,10 @@ class EHentai(override val id: Long,
                 }
 
                 lastUpdateCheck = System.currentTimeMillis()
-                if(datePosted != null
+                if (datePosted != null
                         && lastUpdateCheck - datePosted!! > EHentaiUpdateWorkerConstants.GALLERY_AGE_TIME) {
                     aged = true
-                        XLog.d("aged %s - too old", title)
+                    XLog.d("aged %s - too old", title)
                 }
 
                 //Parse ratings
@@ -442,7 +436,7 @@ class EHentai(override val id: Long,
                         RaisedTag(
                                 namespace,
                                 element.text().trim(),
-                                if(element.hasClass("gtl"))
+                                if (element.hasClass("gtl"))
                                     TAG_TYPE_LIGHT
                                 else
                                     TAG_TYPE_NORMAL
@@ -458,11 +452,9 @@ class EHentai(override val id: Long,
         }
     }
 
-    override fun chapterListParse(response: Response)
-            = throw UnsupportedOperationException("Unused method was called somehow!")
+    override fun chapterListParse(response: Response) = throw UnsupportedOperationException("Unused method was called somehow!")
 
-    override fun pageListParse(response: Response)
-            = throw UnsupportedOperationException("Unused method was called somehow!")
+    override fun pageListParse(response: Response) = throw UnsupportedOperationException("Unused method was called somehow!")
 
     override fun fetchImageUrl(page: Page): Observable<String> {
         return client.newCall(imageUrlRequest(page))
@@ -515,29 +507,29 @@ class EHentai(override val id: Long,
         return Pair(result as List<ParsedManga>, favNames!!)
     }
 
-    fun spPref() = if(exh)
+    fun spPref() = if (exh)
         prefs.eh_exhSettingsProfile()
     else
         prefs.eh_ehSettingsProfile()
 
     fun rawCookies(sp: Int): Map<String, String> {
         val cookies: MutableMap<String, String> = mutableMapOf()
-        if(prefs.enableExhentai().getOrDefault()) {
+        if (prefs.enableExhentai().getOrDefault()) {
             cookies[LoginController.MEMBER_ID_COOKIE] = prefs.memberIdVal().get()!!
             cookies[LoginController.PASS_HASH_COOKIE] = prefs.passHashVal().get()!!
             cookies[LoginController.IGNEOUS_COOKIE] = prefs.igneousVal().get()!!
             cookies["sp"] = sp.toString()
 
             val sessionKey = prefs.eh_settingsKey().getOrDefault()
-            if(sessionKey != null)
+            if (sessionKey != null)
                 cookies["sk"] = sessionKey
 
             val sessionCookie = prefs.eh_sessionCookie().getOrDefault()
-            if(sessionCookie != null)
+            if (sessionCookie != null)
                 cookies["s"] = sessionCookie
 
             val hathPerksCookie = prefs.eh_hathPerksCookies().getOrDefault()
-            if(hathPerksCookie != null)
+            if (hathPerksCookie != null)
                 cookies["hath_perks"] = hathPerksCookie
         }
 
@@ -550,15 +542,12 @@ class EHentai(override val id: Long,
         return cookies
     }
 
-    fun cookiesHeader(sp: Int = spPref().getOrDefault())
-            = buildCookies(rawCookies(sp))
+    fun cookiesHeader(sp: Int = spPref().getOrDefault()) = buildCookies(rawCookies(sp))
 
     //Headers
-    override fun headersBuilder()
-            = super.headersBuilder().add("Cookie", cookiesHeader())!!
+    override fun headersBuilder() = super.headersBuilder().add("Cookie", cookiesHeader())!!
 
-    fun addParam(url: String, param: String, value: String)
-            = Uri.parse(url)
+    fun addParam(url: String, param: String, value: String) = Uri.parse(url)
             .buildUpon()
             .appendQueryParameter(param, value)
             .toString()
@@ -586,12 +575,12 @@ class EHentai(override val id: Long,
 
     class Watched : Filter.CheckBox("Watched List"), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if(state)
+            if (state)
                 builder.appendPath("watched")
         }
     }
 
-    class GenreOption(name: String, val genreId: Int): Filter.CheckBox(name, false)
+    class GenreOption(name: String, val genreId: Int) : Filter.CheckBox(name, false)
     class GenreGroup : Filter.Group<GenreOption>("Genres", listOf(
             GenreOption("Dōjinshi", 2),
             GenreOption("Manga", 4),
@@ -606,22 +595,22 @@ class EHentai(override val id: Long,
     )), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
             val bits = state.fold(0) { acc, genre ->
-                if(!genre.state) acc + genre.genreId else acc
+                if (!genre.state) acc + genre.genreId else acc
             }
             builder.appendQueryParameter("f_cats", bits.toString())
         }
     }
 
-    class AdvancedOption(name: String, val param: String, defValue: Boolean = false): Filter.CheckBox(name, defValue), UriFilter {
+    class AdvancedOption(name: String, val param: String, defValue: Boolean = false) : Filter.CheckBox(name, defValue), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if(state)
+            if (state)
                 builder.appendQueryParameter(param, "on")
         }
     }
 
     open class PageOption(name: String, private val queryKey: String) : Filter.Text(name), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if(state.isNotBlank()) {
+            if (state.isNotBlank()) {
                 if (builder.build().getQueryParameters("f_sp").isEmpty()) {
                     builder.appendQueryParameter("f_sp", "on")
                 }
@@ -630,6 +619,7 @@ class EHentai(override val id: Long,
             }
         }
     }
+
     class MinPagesOption : PageOption("Minimum Pages", "f_spf")
     class MaxPagesOption : PageOption("Maximum Pages", "f_spt")
 
@@ -641,7 +631,7 @@ class EHentai(override val id: Long,
             "5 stars"
     )), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if(state > 0) {
+            if (state > 0) {
                 builder.appendQueryParameter("f_srdd", Integer.toString(state + 1))
                 builder.appendQueryParameter("f_sr", "on")
             }
@@ -664,16 +654,16 @@ class EHentai(override val id: Long,
 
     class ReverseFilter : Filter.CheckBox("Reverse search results")
 
-    override val name = if(exh)
+    override val name = if (exh)
         "ExHentai"
     else
         "E-Hentai"
 
-    class GalleryNotFoundException(cause: Throwable): RuntimeException("Gallery not found!", cause)
+    class GalleryNotFoundException(cause: Throwable) : RuntimeException("Gallery not found!", cause)
 
-     // === URL IMPORT STUFF
+    // === URL IMPORT STUFF
 
-    override val matchingHosts: List<String> = if(exh) listOf(
+    override val matchingHosts: List<String> = if (exh) listOf(
             "exhentai.org"
     ) else listOf(
             "g.e-hentai.org",
@@ -745,8 +735,7 @@ class EHentai(override val id: Long,
                 "e8e"
         )
 
-        fun buildCookies(cookies: Map<String, String>)
-                = cookies.entries.joinToString(separator = "; ") {
+        fun buildCookies(cookies: Map<String, String>) = cookies.entries.joinToString(separator = "; ") {
             "${URLEncoder.encode(it.key, "UTF-8")}=${URLEncoder.encode(it.value, "UTF-8")}"
         }
 

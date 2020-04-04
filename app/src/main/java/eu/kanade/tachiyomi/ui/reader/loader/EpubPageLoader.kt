@@ -30,14 +30,14 @@ class EpubPageLoader(file: File) : PageLoader() {
      */
     override fun getPages(): Observable<List<ReaderPage>> {
         return epub.getImagesFromPages()
-            .mapIndexed { i, path ->
-                val streamFn = { epub.getInputStream(epub.getEntry(path)!!) }
-                ReaderPage(i).apply {
-                    stream = streamFn
-                    status = Page.READY
+                .mapIndexed { i, path ->
+                    val streamFn = { epub.getInputStream(epub.getEntry(path)!!) }
+                    ReaderPage(i).apply {
+                        stream = streamFn
+                        status = Page.READY
+                    }
                 }
-            }
-            .let { Observable.just(it) }
+                .let { Observable.just(it) }
     }
 
     /**

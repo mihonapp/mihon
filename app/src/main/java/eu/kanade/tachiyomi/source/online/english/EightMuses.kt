@@ -32,7 +32,7 @@ import rx.schedulers.Schedulers
 
 typealias SiteMap = NakedTrie<Unit>
 
-class EightMuses: HttpSource(),
+class EightMuses : HttpSource(),
         LewdSource<EightMusesSearchMetadata, Document>,
         UrlImportableSource {
     override val id = EIGHTMUSES_SOURCE_ID
@@ -118,7 +118,7 @@ class EightMuses: HttpSource(),
      * @param filters the list of filters to apply.
      */
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
-        val urlBuilder = if(!query.isBlank()) {
+        val urlBuilder = if (!query.isBlank()) {
             "$baseUrl/search".toHttpUrlOrNull()!!
                     .newBuilder()
                     .addQueryParameter("q", query)
@@ -161,11 +161,9 @@ class EightMuses: HttpSource(),
         throw UnsupportedOperationException("Should not be called!")
     }
 
-    override fun fetchLatestUpdates(page: Int)
-            = fetchListing(latestUpdatesRequest(page), false)
+    override fun fetchLatestUpdates(page: Int) = fetchListing(latestUpdatesRequest(page), false)
 
-    override fun fetchPopularManga(page: Int)
-            = fetchListing(popularMangaRequest(page), false) // TODO Dig
+    override fun fetchPopularManga(page: Int) = fetchListing(popularMangaRequest(page), false) // TODO Dig
 
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
         return urlImportFetchSearchManga(query) {
@@ -190,7 +188,7 @@ class EightMuses: HttpSource(),
         val onLastPage = doc.selectFirst(".current:nth-last-child(2)") != null
 
         return MangasPage(
-                if(dig) {
+                if (dig) {
                     contents.albums.flatMap {
                         val href = it.attr("href")
                         val splitHref = href.split('/')
@@ -265,14 +263,14 @@ class EightMuses: HttpSource(),
             val contents = parseSelf(response.asJsoup())
 
             val out = mutableListOf<SChapter>()
-            if(contents.images.isNotEmpty()) {
+            if (contents.images.isNotEmpty()) {
                 out += SChapter.create().apply {
                     this.url = url
-                    this.name = if(prefix.isBlank()) ">" else prefix
+                    this.name = if (prefix.isBlank()) ">" else prefix
                 }
             }
 
-            val builtPrefix = if(prefix.isBlank()) "> " else "$prefix > "
+            val builtPrefix = if (prefix.isBlank()) "> " else "$prefix > "
 
             out + contents.albums.flatMap { ele ->
                 fetchAndParseChapterList(builtPrefix + ele.selectFirst(".title-text").text(), ele.attr("href"))
@@ -281,6 +279,7 @@ class EightMuses: HttpSource(),
     }
 
     data class SelfContents(val albums: List<Element>, val images: List<Element>)
+
     private fun parseSelf(doc: Document): SelfContents {
         // Parse self
         val gc = doc.select(".gallery .c-tile")
@@ -377,7 +376,7 @@ class EightMuses: HttpSource(),
 
     override fun mapUrlToMangaUrl(uri: Uri): String? {
         var path = uri.pathSegments.drop(2)
-        if(uri.pathSegments[1].toLowerCase() == "picture") {
+        if (uri.pathSegments[1].toLowerCase() == "picture") {
             path = path.dropLast(1)
         }
         return "/comics/album/${path.joinToString("/")}"

@@ -98,7 +98,7 @@ class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
     override fun mapUrlToMangaUrl(uri: Uri): String? {
         val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
 
-        return if(lcFirstPathSegment == "manga")
+        return if (lcFirstPathSegment == "manga")
             "https://hentai.cafe/${uri.pathSegments[2]}"
         else
             "https://hentai.cafe/$lcFirstPathSegment"

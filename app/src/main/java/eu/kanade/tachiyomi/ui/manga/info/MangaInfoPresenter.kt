@@ -182,10 +182,10 @@ class MangaInfoPresenter(
     suspend fun smartSearchMerge(manga: Manga, originalMangaId: Long): Manga {
         val originalManga = db.getManga(originalMangaId).await()
                 ?: throw IllegalArgumentException("Unknown manga ID: $originalMangaId")
-        val toInsert = if(originalManga.source == MERGED_SOURCE_ID) {
+        val toInsert = if (originalManga.source == MERGED_SOURCE_ID) {
             originalManga.apply {
                 val originalChildren = MergedSource.MangaConfig.readFromUrl(gson, url).children
-                if(originalChildren.any { it.source == manga.source && it.url == manga.url })
+                if (originalChildren.any { it.source == manga.source && it.url == manga.url })
                     throw IllegalArgumentException("This manga is already merged with the current manga!")
 
                 url = MergedSource.MangaConfig(originalChildren + MergedSource.MangaSource(
@@ -216,9 +216,9 @@ class MangaInfoPresenter(
 
         // Note that if the manga are merged in a different order, this won't trigger, but I don't care lol
         val existingManga = db.getManga(toInsert.url, toInsert.source).await()
-        if(existingManga != null) {
+        if (existingManga != null) {
             withContext(NonCancellable) {
-                if(toInsert.id != null) {
+                if (toInsert.id != null) {
                     db.deleteManga(toInsert).await()
                 }
             }
@@ -230,7 +230,7 @@ class MangaInfoPresenter(
         toInsert.initialized = false
 
         val newId = db.insertManga(toInsert).await().insertedId()
-        if(newId != null) toInsert.id = newId
+        if (newId != null) toInsert.id = newId
 
         return toInsert
     }

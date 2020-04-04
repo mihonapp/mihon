@@ -85,7 +85,7 @@ class SettingsEhController : SettingsController() {
 
             onChange { newVal ->
                 newVal as Boolean
-                if(!newVal) {
+                if (!newVal) {
                     preferences.enableExhentai().set(false)
                     true
                 } else {
@@ -226,7 +226,7 @@ class SettingsEhController : SettingsController() {
                     defaultValue = "0"
 
                     preferences.eh_autoUpdateFrequency().asObservable().subscribeUntilDestroy { newVal ->
-                        summary = if(newVal == 0) {
+                        summary = if (newVal == 0) {
                             "${context.getString(R.string.app_name)} will currently never check galleries in your library for updates."
                         } else {
                             "${context.getString(R.string.app_name)} checks/updates galleries in batches. " +

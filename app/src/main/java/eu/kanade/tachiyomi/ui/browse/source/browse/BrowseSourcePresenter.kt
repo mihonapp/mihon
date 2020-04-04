@@ -427,14 +427,14 @@ open class BrowseSourcePresenter(
         return loaded.map {
             try {
                 val id = it.substringBefore(':').toLong()
-                if(id != source.id) return@map null
+                if (id != source.id) return@map null
                 val content = jsonParser.parse(it.substringAfter(':')).obj
                 val originalFilters = source.getFilterList()
                 filterSerializer.deserialize(originalFilters, content["filters"].array)
                 EXHSavedSearch(content["name"].string,
                         content["query"].string,
                         originalFilters)
-            } catch(t: RuntimeException) {
+            } catch (t: RuntimeException) {
                 // Load failed
                 Timber.e(t, "Failed to load saved search!")
                 t.printStackTrace()

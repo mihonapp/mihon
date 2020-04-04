@@ -25,105 +25,107 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Tsumino(delegate: HttpSource) : DelegatedHttpSource(delegate),
-LewdSource<TsuminoSearchMetadata, Document>, UrlImportableSource {
-	override val metaClass = TsuminoSearchMetadata::class;
-	override val lang = "en"
+        LewdSource<TsuminoSearchMetadata, Document>, UrlImportableSource {
+    override val metaClass = TsuminoSearchMetadata::class;
+    override val lang = "en"
 
-	//Support direct URL importing
-	override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-		urlImportFetchSearchManga(query) {
-			super.fetchSearchManga(page, query, filters)
-		}
-	override fun mapUrlToMangaUrl(uri: Uri): String? {
-		val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
-		if(lcFirstPathSegment != "read" && lcFirstPathSegment != "book" && lcFirstPathSegment != "entry")
-			return null
-		return "https://tsumino.com/Book/Info/${uri.lastPathSegment}"
-	}
+    //Support direct URL importing
+    override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
+            urlImportFetchSearchManga(query) {
+                super.fetchSearchManga(page, query, filters)
+            }
 
-	override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
-		return client.newCall(mangaDetailsRequest(manga))
-			.asObservableSuccess()
-			.flatMap {
-				parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga))
-			}
-	}
+    override fun mapUrlToMangaUrl(uri: Uri): String? {
+        val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
+        if (lcFirstPathSegment != "read" && lcFirstPathSegment != "book" && lcFirstPathSegment != "entry")
+            return null
+        return "https://tsumino.com/Book/Info/${uri.lastPathSegment}"
+    }
 
-	override fun parseIntoMetadata(metadata: TsuminoSearchMetadata, input: Document) {
-		with(metadata) {
-			tmId = TsuminoSearchMetadata.tmIdFromUrl(input.location()).toInt()
-			tags.clear()
+    override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
+        return client.newCall(mangaDetailsRequest(manga))
+                .asObservableSuccess()
+                .flatMap {
+                    parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga))
+                }
+    }
 
-			input.getElementById("Title")?.text()?.let {
-				title = it.trim()
-			}
+    override fun parseIntoMetadata(metadata: TsuminoSearchMetadata, input: Document) {
+        with(metadata) {
+            tmId = TsuminoSearchMetadata.tmIdFromUrl(input.location()).toInt()
+            tags.clear()
 
-			input.getElementById("Artist")?.children()?.first()?.text()?.trim()?.let {
-				tags.add(RaisedTag("artist", it, TAG_TYPE_VIRTUAL))
-				artist = it
-			}
+            input.getElementById("Title")?.text()?.let {
+                title = it.trim()
+            }
 
-			input.getElementById("Uploader")?.children()?.first()?.text()?.trim()?.let {
-				uploader = it
-			}
+            input.getElementById("Artist")?.children()?.first()?.text()?.trim()?.let {
+                tags.add(RaisedTag("artist", it, TAG_TYPE_VIRTUAL))
+                artist = it
+            }
 
-			input.getElementById("Uploaded")?.text()?.let {
-				uploadDate = TM_DATE_FORMAT.parse(it.trim()).time
-			}
+            input.getElementById("Uploader")?.children()?.first()?.text()?.trim()?.let {
+                uploader = it
+            }
 
-			input.getElementById("Pages")?.text()?.let {
-				length = it.trim().toIntOrNull()
-			}
+            input.getElementById("Uploaded")?.text()?.let {
+                uploadDate = TM_DATE_FORMAT.parse(it.trim()).time
+            }
 
-			input.getElementById("Rating")?.text()?.let {
-				ratingString = it.trim()
-			}
+            input.getElementById("Pages")?.text()?.let {
+                length = it.trim().toIntOrNull()
+            }
 
-			input.getElementById("Category")?.children()?.first()?.text()?.let {
-				category = it.trim()
-				tags.add(RaisedTag("genre", it, TAG_TYPE_VIRTUAL))
-			}
+            input.getElementById("Rating")?.text()?.let {
+                ratingString = it.trim()
+            }
 
-			input.getElementById("Collection")?.children()?.first()?.text()?.let {
-				collection = it.trim()
-			}
+            input.getElementById("Category")?.children()?.first()?.text()?.let {
+                category = it.trim()
+                tags.add(RaisedTag("genre", it, TAG_TYPE_VIRTUAL))
+            }
 
-			input.getElementById("Group")?.children()?.first()?.text()?.let {
-				group = it.trim()
-				tags.add(RaisedTag("group", it, TAG_TYPE_VIRTUAL))
-			}
+            input.getElementById("Collection")?.children()?.first()?.text()?.let {
+                collection = it.trim()
+            }
 
-			val newParody = mutableListOf<String>()
-			input.getElementById("Parody")?.children()?.forEach {
-				val entry = it.text().trim()
-				newParody.add(entry)
-				tags.add(RaisedTag("parody", entry, TAG_TYPE_VIRTUAL))
-			}
-			parody = newParody
+            input.getElementById("Group")?.children()?.first()?.text()?.let {
+                group = it.trim()
+                tags.add(RaisedTag("group", it, TAG_TYPE_VIRTUAL))
+            }
 
-			val newCharacter = mutableListOf<String>()
-			input.getElementById("Character")?.children()?.forEach {
-				val entry = it.text().trim()
-				newCharacter.add(entry)
-				tags.add(RaisedTag("character", entry, TAG_TYPE_VIRTUAL))
-			}
-			character = newCharacter
+            val newParody = mutableListOf<String>()
+            input.getElementById("Parody")?.children()?.forEach {
+                val entry = it.text().trim()
+                newParody.add(entry)
+                tags.add(RaisedTag("parody", entry, TAG_TYPE_VIRTUAL))
+            }
+            parody = newParody
 
-			input.getElementById("Tag")?.children()?.let {
-				tags.addAll(it.map {
-					RaisedTag(null, it.text().trim(), TAG_TYPE_DEFAULT)
-				})
-			}
-		}
-	}
-	override val matchingHosts = listOf(
-		"www.tsumino.com",
-		"tsumino.com"
-	)
+            val newCharacter = mutableListOf<String>()
+            input.getElementById("Character")?.children()?.forEach {
+                val entry = it.text().trim()
+                newCharacter.add(entry)
+                tags.add(RaisedTag("character", entry, TAG_TYPE_VIRTUAL))
+            }
+            character = newCharacter
 
-	companion object {
-		val jsonParser by lazy {JsonParser()}
-		val TM_DATE_FORMAT = SimpleDateFormat("yyyy MMM dd", Locale.US)
-		private val ASP_NET_COOKIE_NAME = "ASP.NET_SessionId"
-	}
+            input.getElementById("Tag")?.children()?.let {
+                tags.addAll(it.map {
+                    RaisedTag(null, it.text().trim(), TAG_TYPE_DEFAULT)
+                })
+            }
+        }
+    }
+
+    override val matchingHosts = listOf(
+            "www.tsumino.com",
+            "tsumino.com"
+    )
+
+    companion object {
+        val jsonParser by lazy { JsonParser() }
+        val TM_DATE_FORMAT = SimpleDateFormat("yyyy MMM dd", Locale.US)
+        private val ASP_NET_COOKIE_NAME = "ASP.NET_SessionId"
+    }
 }

@@ -124,9 +124,9 @@ fun syncChaptersWithSource(
             }
 
             // --> EXH (carry over reading progress)
-            if(manga.source == EH_SOURCE_ID || manga.source == EXH_SOURCE_ID) {
+            if (manga.source == EH_SOURCE_ID || manga.source == EXH_SOURCE_ID) {
                 val finalAdded = toAdd.subtract(readded)
-                if(finalAdded.isNotEmpty()) {
+                if (finalAdded.isNotEmpty()) {
                     val max = dbChapters.maxBy { it.last_page_read }
                     if (max != null && max.last_page_read > 0) {
                         for (chapter in finalAdded) {

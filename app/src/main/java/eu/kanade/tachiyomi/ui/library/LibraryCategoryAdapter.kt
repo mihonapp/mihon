@@ -36,7 +36,9 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
     // Keep compatibility as searchText field was replaced when we upgraded FlexibleAdapter
     var searchText
         get() = getFilter(String::class.java) ?: ""
-        set(value) { setFilter(value) }
+        set(value) {
+            setFilter(value)
+        }
     // EXH <--
 
     /**
@@ -73,7 +75,7 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
     //    we want to perform a no-op filter)
     suspend fun performFilter(cScope: CoroutineScope) {
         lastFilterJob?.cancel()
-        if(mangas.isNotEmpty() && searchText.isNotBlank()) {
+        if (mangas.isNotEmpty() && searchText.isNotBlank()) {
             val savedSearchText = searchText
 
             val job = cScope.launch(Dispatchers.IO) {
@@ -90,7 +92,7 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
 
                     val mangaWithMetaIdsQuery = db.getIdsOfFavoriteMangaWithMetadata().await()
                     val mangaWithMetaIds = LongArray(mangaWithMetaIdsQuery.count)
-                    if(mangaWithMetaIds.isNotEmpty()) {
+                    if (mangaWithMetaIds.isNotEmpty()) {
                         val mangaIdCol = mangaWithMetaIdsQuery.getColumnIndex(MangaTable.COL_ID)
                         mangaWithMetaIdsQuery.moveToFirst()
                         while (!mangaWithMetaIdsQuery.isAfterLast) {
@@ -104,7 +106,7 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
                     ensureActive() // Fail early when cancelled
 
                     val convertedResult = LongArray(queryResult.count)
-                    if(convertedResult.isNotEmpty()) {
+                    if (convertedResult.isNotEmpty()) {
                         val mangaIdCol = queryResult.getColumnIndex(SearchMetadataTable.COL_MANGA_ID)
                         queryResult.moveToFirst()
                         while (!queryResult.isAfterLast) {
@@ -119,11 +121,11 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
 
                     // Flow the mangas to allow cancellation of this filter operation
                     mangas.asFlow().cancellable().filter { item ->
-                        if(isLewdSource(item.manga.source)) {
+                        if (isLewdSource(item.manga.source)) {
                             val mangaId = item.manga.id ?: -1
-                            if(convertedResult.binarySearch(mangaId) < 0) {
+                            if (convertedResult.binarySearch(mangaId) < 0) {
                                 // Check if this manga even has metadata
-                                if(mangaWithMetaIds.binarySearch(mangaId) < 0) {
+                                if (mangaWithMetaIds.binarySearch(mangaId) < 0) {
                                     // No meta? Filter using title
                                     item.filter(savedSearchText)
                                 } else false
@@ -134,7 +136,7 @@ class LibraryCategoryAdapter(view: LibraryCategoryView) :
                     }.toList()
                 } catch (e: Exception) {
                     // Do not catch cancellations
-                    if(e is CancellationException) throw e
+                    if (e is CancellationException) throw e
 
                     Timber.w(e, "Could not filter mangas!")
                     mangas

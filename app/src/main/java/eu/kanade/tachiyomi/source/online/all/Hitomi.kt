@@ -61,7 +61,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     private var tagIndexVersionCacheTime: Long = 0
     private fun tagIndexVersion(): Single<Long> {
         val sCachedTagIndexVersion = cachedTagIndexVersion
-        return if(sCachedTagIndexVersion == null
+        return if (sCachedTagIndexVersion == null
                 || tagIndexVersionCacheTime + INDEX_VERSION_CACHE_TIME_MS < System.currentTimeMillis()) {
             HitomiNozomi.getIndexVersion(client, "tagindex").subscribeOn(Schedulers.io()).doOnNext {
                 cachedTagIndexVersion = it
@@ -76,7 +76,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     private var galleryIndexVersionCacheTime: Long = 0
     private fun galleryIndexVersion(): Single<Long> {
         val sCachedGalleryIndexVersion = cachedGalleryIndexVersion
-        return if(sCachedGalleryIndexVersion == null
+        return if (sCachedGalleryIndexVersion == null
                 || galleryIndexVersionCacheTime + INDEX_VERSION_CACHE_TIME_MS < System.currentTimeMillis()) {
             HitomiNozomi.getIndexVersion(client, "galleriesindex").subscribeOn(Schedulers.io()).doOnNext {
                 cachedGalleryIndexVersion = it
@@ -106,7 +106,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
 
             input.select(".gallery-info tr").forEach {
                 val content = it.child(1)
-                when(it.child(0).text().toLowerCase()) {
+                when (it.child(0).text().toLowerCase()) {
                     "group" -> {
                         group = content.text()
                         tags += RaisedTag("group", group!!, TAG_TYPE_VIRTUAL)
@@ -133,10 +133,10 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
                     }
                     "tags" -> {
                         tags += content.select("a").map {
-                            val ns = if(it.attr("href").startsWith("/tag/male")) "male"
-                                     else if (it.attr("href").startsWith("/tag/female")) "female"
-                                     else "misc"
-                            RaisedTag(ns, it.text().dropLast(if (ns=="misc") 0 else 2), TAG_TYPE_DEFAULT)
+                            val ns = if (it.attr("href").startsWith("/tag/male")) "male"
+                            else if (it.attr("href").startsWith("/tag/female")) "female"
+                            else "misc"
+                            RaisedTag(ns, it.text().dropLast(if (ns == "misc") 0 else 2), TAG_TYPE_DEFAULT)
                         }
                     }
                 }
@@ -178,8 +178,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
      * @param query the search query.
      * @param filters the list of filters to apply.
      */
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
-            = throw UnsupportedOperationException()
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = throw UnsupportedOperationException()
 
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
         return urlImportFetchSearchManga(query) {
@@ -192,7 +191,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
             val hn = Single.zip(tagIndexVersion(), galleryIndexVersion()) { tv, gv -> tv to gv }
                     .map { HitomiNozomi(client, it.first, it.second) }
 
-            var base = if(positive.isEmpty()) {
+            var base = if (positive.isEmpty()) {
                 hn.flatMap { n -> n.getGalleryIdsFromNozomi(null, "index", "all").map { n to it.toSet() } }
             } else {
                 val q = positive.removeAt(0)
@@ -275,7 +274,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
 
     private fun parseNozomiPage(array: ByteArray): Observable<List<SManga>> {
         val cursor = ByteCursor(array)
-        val ids = (1 .. array.size / 4).map {
+        val ids = (1..array.size / 4).map {
             cursor.nextInt()
         }
 
@@ -297,7 +296,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
         return SManga.create().apply {
             val titleElement = doc.selectFirst("h1")
             title = titleElement.text()
-            thumbnail_url = "https:" + if(prefs.eh_hl_useHighQualityThumbs().getOrDefault()) {
+            thumbnail_url = "https:" + if (prefs.eh_hl_useHighQualityThumbs().getOrDefault()) {
                 doc.selectFirst("img").attr("data-srcset").substringBefore(' ')
             } else {
                 doc.selectFirst("img").attr("data-src")
@@ -364,16 +363,16 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
         val hlId = response.request.url.pathSegments.last().removeSuffix(".js").toLong()
         val str = response.body!!.string()
         val json = jsonParser.parse(str.removePrefix("var galleryinfo = "))
-        return json["files"].array.mapIndexed { index, jsonElement -> 
+        return json["files"].array.mapIndexed { index, jsonElement ->
             val hash = jsonElement["hash"].string
-            val ext = if (jsonElement["haswebp"].string=="0") jsonElement["name"].string.split('.').last() else "webp"
-            val path = if (jsonElement["haswebp"].string=="0") "images" else "webp"
+            val ext = if (jsonElement["haswebp"].string == "0") jsonElement["name"].string.split('.').last() else "webp"
+            val path = if (jsonElement["haswebp"].string == "0") "images" else "webp"
             val hashPath1 = hash.takeLast(1)
             val hashPath2 = hash.takeLast(3).take(2)
             Page(
                     index,
                     "",
-            "https://${subdomainFromGalleryId(hlId)}a.hitomi.la/$path/$hashPath1/$hashPath2/$hash.$ext"
+                    "https://${subdomainFromGalleryId(hlId)}a.hitomi.la/$path/$hashPath1/$hashPath2/$hash.$ext"
             )
         }
     }
@@ -406,7 +405,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     override fun mapUrlToMangaUrl(uri: Uri): String? {
         val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
 
-        if(lcFirstPathSegment != "manga" && lcFirstPathSegment != "reader")
+        if (lcFirstPathSegment != "manga" && lcFirstPathSegment != "reader")
             return null
 
         return "https://hitomi.la/manga/${uri.pathSegments[1].substringBefore('.')}.html"
@@ -418,7 +417,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
         private val NUMBER_OF_FRONTENDS = 2
 
         private val DATE_FORMAT by lazy {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ssX", Locale.US)
             else
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss'-05'", Locale.US)

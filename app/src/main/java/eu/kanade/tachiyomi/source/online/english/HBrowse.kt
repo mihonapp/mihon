@@ -74,8 +74,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
      *
      * @param page the page number to retrieve.
      */
-    override fun popularMangaRequest(page: Int)
-            = GET("$baseUrl/browse/title/rank/DESC/$page", headers)
+    override fun popularMangaRequest(page: Int) = GET("$baseUrl/browse/title/rank/DESC/$page", headers)
 
     private fun parseListing(response: Response): MangasPage {
         val doc = response.asJsoup()
@@ -125,8 +124,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
      * @param query the search query.
      * @param filters the list of filters to apply.
      */
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList)
-            = throw UnsupportedOperationException("Should not be called!")
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = throw UnsupportedOperationException("Should not be called!")
 
     private fun fetchSearchMangaInternal(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
         return RxJavaInterop.toV1Single(GlobalScope.async(Dispatchers.IO) {
@@ -138,28 +136,28 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
             // <NS, VALUE, EXCLUDED>
             var tagQuery: List<Triple<String, String, Boolean>>? = null
 
-            if(sortFilter != null) {
+            if (sortFilter != null) {
                 sortFilter.state?.let { state ->
-                    if(query.isNotBlank()) {
+                    if (query.isNotBlank()) {
                         throw IllegalArgumentException("Cannot use sorting while text/tag search is active!")
                     }
 
                     isSortFilter = true
-                    base = "/browse/title/${SortFilter.SORT_OPTIONS[state.index].first}/${if(state.ascending) "ASC" else "DESC"}"
+                    base = "/browse/title/${SortFilter.SORT_OPTIONS[state.index].first}/${if (state.ascending) "ASC" else "DESC"}"
                 }
             }
 
-            if(base == null) {
-                base = if(modeFilter != null && modeFilter.state == 1) {
+            if (base == null) {
+                base = if (modeFilter != null && modeFilter.state == 1) {
                     tagQuery = searchEngine.parseQuery(query, false).map {
                         when (it) {
                             is Text -> {
                                 var minDist = Int.MAX_VALUE.toDouble()
                                 // ns, value
                                 var minContent: Pair<String, String> = "" to ""
-                                for(ns in ALL_TAGS) {
+                                for (ns in ALL_TAGS) {
                                     val (v, d) = ns.value.nearest(it.rawTextOnly(), minDist)
-                                    if(d < minDist) {
+                                    if (d < minDist) {
                                         minDist = d
                                         minContent = ns.key to v
                                     }
@@ -171,7 +169,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                                 val mappedNs = NS_MAPPINGS[it.namespace] ?: it.namespace
 
                                 var key = mappedNs
-                                if(!ALL_TAGS.containsKey(key)) key = ALL_TAGS.keys.sorted().nearest(mappedNs).first
+                                if (!ALL_TAGS.containsKey(key)) key = ALL_TAGS.keys.sorted().nearest(mappedNs).first
 
                                 // Find nearest NS
                                 val nsContents = ALL_TAGS[key]
@@ -193,18 +191,18 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
 
             base += "/$page"
 
-            if(isSortFilter) {
+            if (isSortFilter) {
                 parseListing(client.newCall(GET(baseUrl + base, headers))
                         .asObservableSuccess()
                         .toSingle()
                         .await(Schedulers.io()))
             } else {
-                val body = if(tagQuery != null) {
+                val body = if (tagQuery != null) {
                     FormBody.Builder()
                             .add("type", "advance")
                             .apply {
                                 tagQuery.forEach {
-                                    add(it.first + "_" + it.second, if(it.third) "n" else "y")
+                                    add(it.first + "_" + it.second, if (it.third) "n" else "y")
                                 }
                             }
                 } else {
@@ -222,7 +220,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                         .toSingle()
                         .await(Schedulers.io())
 
-                if(!processResponse.isRedirect)
+                if (!processResponse.isRedirect)
                     throw IllegalStateException("Unexpected process response code!")
 
                 val sessId = processResponse.headers("Set-Cookie").find {
@@ -258,13 +256,13 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
     // Collection must be sorted and cannot be sorted
     private fun List<String>.nearest(string: String, maxDist: Double = Int.MAX_VALUE.toDouble()): Pair<String, Double> {
         val idx = binarySearch(string)
-        return if(idx < 0) {
+        return if (idx < 0) {
             val l = Levenshtein()
             var minSoFar = maxDist
             var minIndexSoFar = 0
             forEachIndexed { index, s ->
                 val d = l.distance(string, s, ceil(minSoFar).toInt())
-                if(d < minSoFar) {
+                if (d < minSoFar) {
                     minSoFar = d
                     minIndexSoFar = index
                 }
@@ -312,7 +310,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
 
             tags.clear()
             (tables[""]!! + tables["categories"]!!).forEach { (k, v) ->
-                when(val lowercaseNs = k.toLowerCase()) {
+                when (val lowercaseNs = k.toLowerCase()) {
                     "title" -> title = v.text()
                     "length" -> length = v.text().substringBefore(" ").toInt()
                     else -> {
@@ -376,8 +374,9 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
         val doc = response.asJsoup()
         val basePath = listOf("data") + response.request.url.pathSegments
         val scripts = doc.getElementsByTag("script").map { it.data() }
-        for(script in scripts) {
-            val totalPages = TOTAL_PAGES_REGEX.find(script)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: continue
+        for (script in scripts) {
+            val totalPages = TOTAL_PAGES_REGEX.find(script)?.groupValues?.getOrNull(1)?.toIntOrNull()
+                    ?: continue
             val pageList = PAGE_LIST_REGEX.find(script)?.groupValues?.getOrNull(1) ?: continue
 
             return jsonParser.parse(pageList).array.take(totalPages).map {
@@ -956,6 +955,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
         ).mapValues { it.value.sorted() }
 
         private val TAGS_AS_MARKDOWN = ALL_TAGS.map { (ns, values) ->
-            "#### $ns\n" + values.map { "- $it" }.joinToString("\n") }.joinToString("\n\n")
+            "#### $ns\n" + values.map { "- $it" }.joinToString("\n")
+        }.joinToString("\n\n")
     }
 }
