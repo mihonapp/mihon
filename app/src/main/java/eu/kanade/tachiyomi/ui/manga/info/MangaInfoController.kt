@@ -43,6 +43,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCatalogueController
 import eu.kanade.tachiyomi.ui.catalogue.global_search.CatalogueSearchController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
@@ -223,7 +224,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
                 text = mangaSource
                 setOnClickListener {
                     val sourceManager = Injekt.get<SourceManager>()
-                    performLocalSearch(sourceManager.getOrStub(source.id).name)
+                    performSearch(sourceManager.getOrStub(source.id).name)
                 }
             } else {
                 text = view.context.getString(R.string.unknown)
@@ -237,7 +238,7 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
             manga.genre?.split(", ")?.forEach { genre ->
                 val chip = Chip(view.context).apply {
                     text = genre
-                    setOnClickListener { performLocalSearch(genre) }
+                    setOnClickListener { performSearch(genre) }
                 }
 
                 manga_genres_tags.addView(chip)
@@ -565,16 +566,27 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
     }
 
     /**
-     * Perform a local search using the provided query.
+     * Perform a search using the provided query.
      *
-     * @param query the search query to pass to the library controller
+     * @param query the search query to the parent controller
      */
-    private fun performLocalSearch(query: String) {
+    private fun performSearch(query: String) {
         val router = parentController?.router ?: return
-        val firstController = router.backstack.first()?.controller()
-        if (firstController is LibraryController && router.backstack.size == 2) {
-            router.handleBack()
-            firstController.search(query)
+
+        if (router.backstackSize < 2) {
+            return
+        }
+
+        val previousController = router.backstack[router.backstackSize - 2].controller()
+        when (previousController) {
+            is LibraryController -> {
+                router.handleBack()
+                previousController.search(query)
+            }
+            is BrowseCatalogueController -> {
+                router.handleBack()
+                previousController.searchWithQuery(query)
+            }
         }
     }
 
