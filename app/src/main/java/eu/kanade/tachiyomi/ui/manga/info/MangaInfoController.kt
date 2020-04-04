@@ -54,11 +54,11 @@ import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.snack
+import java.text.DateFormat
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.text.DateFormat
 
 /**
  * Fragment that shows manga information.
