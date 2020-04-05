@@ -383,7 +383,7 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
                     ?: continue
             val pageList = PAGE_LIST_REGEX.find(script)?.groupValues?.getOrNull(1) ?: continue
 
-            return jsonParser.parse(pageList).array.take(totalPages).map {
+            return JsonParser.parseString(pageList).array.take(totalPages).map {
                 it.string
             }.mapIndexed { index, pageName ->
                 Page(
@@ -461,8 +461,6 @@ class HBrowse : HttpSource(), LewdSource<HBrowseSearchMetadata, Document>, UrlIm
     companion object {
         private val PAGE_LIST_REGEX = Regex("list *= *(\\[.*]);")
         private val TOTAL_PAGES_REGEX = Regex("totalPages *= *([0-9]*);")
-
-        private val jsonParser by lazy { JsonParser() }
 
         private const val BASE_COOKIES = "thumbnails=1;"
 

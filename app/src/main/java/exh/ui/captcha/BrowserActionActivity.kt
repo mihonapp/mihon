@@ -49,7 +49,6 @@ class BrowserActionActivity : AppCompatActivity() {
     private val networkHelper: NetworkHelper by injectLazy()
 
     val httpClient = networkHelper.client
-    private val jsonParser = JsonParser()
 
     private var currentLoopId: String? = null
     private var validateCurrentLoopId: String? = null
@@ -155,7 +154,7 @@ class BrowserActionActivity : AppCompatActivity() {
                         .asObservableSuccess()
                         .subscribeOn(Schedulers.io())
                         .map {
-                            val json = jsonParser.parse(it.body!!.string())
+                            val json = JsonParser.parseString(it.body!!.string())
                             it.close()
                             json["token"].string
                         }.melt()
@@ -292,7 +291,7 @@ class BrowserActionActivity : AppCompatActivity() {
                             .build())
                     .build()).asObservableSuccess()
         }.map { response ->
-            jsonParser.parse(response.body!!.string())["results"][0]["alternatives"][0]["transcript"].string.trim()
+            JsonParser.parseString(response.body!!.string())["results"][0]["alternatives"][0]["transcript"].string.trim()
         }.toSingle()
     }
 

@@ -724,7 +724,7 @@ class EHentai(
             })
         }
 
-        val outJson = JsonParser().parse(client.newCall(Request.Builder()
+        val outJson = JsonParser.parseString(client.newCall(Request.Builder()
                 .url(EH_API_BASE)
                 .post(RequestBody.create(JSON, json.toString()))
                 .build()).execute().body!!.string()).obj

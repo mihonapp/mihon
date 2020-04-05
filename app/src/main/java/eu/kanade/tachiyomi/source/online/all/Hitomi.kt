@@ -44,7 +44,6 @@ import uy.kohesive.injekt.injectLazy
  */
 class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImportableSource {
     private val prefs: PreferencesHelper by injectLazy()
-    private val jsonParser by lazy { JsonParser() }
 
     override val id = HITOMI_SOURCE_ID
 
@@ -365,7 +364,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
     override fun pageListParse(response: Response): List<Page> {
         val hlId = response.request.url.pathSegments.last().removeSuffix(".js").toLong()
         val str = response.body!!.string()
-        val json = jsonParser.parse(str.removePrefix("var galleryinfo = "))
+        val json = JsonParser.parseString(str.removePrefix("var galleryinfo = "))
         return json["files"].array.mapIndexed { index, jsonElement ->
             val hash = jsonElement["hash"].string
             val ext = if (jsonElement["haswebp"].string == "0") jsonElement["name"].string.split('.').last() else "webp"

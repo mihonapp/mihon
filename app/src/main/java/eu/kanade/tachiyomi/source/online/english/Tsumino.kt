@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.source.online.english
 
 import android.net.Uri
-import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.SManga
@@ -120,7 +119,6 @@ class Tsumino(delegate: HttpSource) : DelegatedHttpSource(delegate),
     )
 
     companion object {
-        val jsonParser by lazy { JsonParser() }
         val TM_DATE_FORMAT = SimpleDateFormat("yyyy MMM dd", Locale.US)
         private val ASP_NET_COOKIE_NAME = "ASP.NET_SessionId"
     }

@@ -173,7 +173,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
 
     override fun parseIntoMetadata(metadata: NHentaiSearchMetadata, input: Response) {
         val json = GALLERY_JSON_REGEX.find(input.body!!.string())!!.groupValues[1]
-        val obj = jsonParser.parse(json).asJsonObject
+        val obj = JsonParser.parseString(json).asJsonObject
 
         with(metadata) {
             nhId = obj["id"].asLong
@@ -313,9 +313,5 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
                 Pair("Japanese", " japanese"),
                 Pair("Chinese", " chinese")
         )
-
-        val jsonParser by lazy {
-            JsonParser()
-        }
     }
 }
