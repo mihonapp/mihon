@@ -101,6 +101,11 @@ class LibraryController(
     val selectAllRelay: PublishRelay<Int> = PublishRelay.create()
 
     /**
+     * Relay to notify the library's viewpager to select the inverse
+     */
+    val selectInverseRelay: PublishRelay<Int> = PublishRelay.create()
+
+    /**
      * Number of manga per row in grid mode.
      */
     var mangaPerRow = 0
@@ -407,6 +412,7 @@ class LibraryController(
             R.id.action_move_to_category -> showChangeMangaCategoriesDialog()
             R.id.action_delete -> showDeleteMangaDialog()
             R.id.action_select_all -> selectAllCategoryManga()
+            R.id.action_select_inverse -> selectInverseCategoryManga()
             else -> return false
         }
         return true
@@ -442,6 +448,19 @@ class LibraryController(
             if (selectedMangas.remove(manga)) {
                 selectionRelay.call(LibrarySelectionEvent.Unselected(manga))
             }
+        }
+    }
+
+    /**
+     * Toggles the current selection state for a given manga.
+     *
+     * @param manga the manga whose selection to change.
+     */
+    fun toggleSelection(manga: Manga) {
+        if (selectedMangas.add(manga)) {
+            selectionRelay.call(LibrarySelectionEvent.Selected(manga))
+        } else if (selectedMangas.remove(manga)) {
+            selectionRelay.call(LibrarySelectionEvent.Unselected(manga))
         }
     }
 
@@ -498,6 +517,12 @@ class LibraryController(
     private fun selectAllCategoryManga() {
         adapter?.categories?.getOrNull(library_pager.currentItem)?.id?.let {
             selectAllRelay.call(it)
+        }
+    }
+
+    private fun selectInverseCategoryManga() {
+        adapter?.categories?.getOrNull(library_pager.currentItem)?.id?.let {
+            selectInverseRelay.call(it)
         }
     }
 

@@ -338,6 +338,7 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_select_all -> selectAll()
+            R.id.action_select_inverse -> selectInverse()
             R.id.action_download -> downloadChapters(getSelectedChapters())
             R.id.action_delete -> ConfirmDeleteChaptersDialog(this, getSelectedChapters())
                     .showDialog(router)
@@ -363,5 +364,14 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
         val adapter = adapter ?: return
         adapter.selectAll()
         actionMode?.invalidate()
+    }
+
+    private fun selectInverse() {
+        val adapter = adapter ?: return
+        for (i in 0..adapter.itemCount) {
+            adapter.toggleSelection(i)
+        }
+        actionMode?.invalidate()
+        adapter.notifyDataSetChanged()
     }
 }
