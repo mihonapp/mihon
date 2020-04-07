@@ -6,6 +6,7 @@ import com.elvishew.xlog.XLog
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.backup.models.DHistory
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -13,8 +14,10 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.database.resolvers.MangaUrlPutResolver
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
+import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.util.system.jobScheduler
 import exh.source.BlacklistedSources
 import rx.Observable
@@ -114,23 +117,33 @@ object EXHMigrations {
                     db.inTransaction {
                         // Migrate tsumino URLs
                         val tsuminoManga = db.db.get()
-                                .listOfObjects(Manga::class.java)
-                                .withQuery(Query.builder()
-                                        .table(MangaTable.TABLE)
-                                        .where("${MangaTable.COL_SOURCE} = $TSUMINO_SOURCE_ID")
-                                        .build())
-                                .prepare()
-                                .executeAsBlocking()
+                            .listOfObjects(Manga::class.java)
+                            .withQuery(
+                                Query.builder()
+                                    .table(MangaTable.TABLE)
+                                    .where("${MangaTable.COL_SOURCE} = $TSUMINO_SOURCE_ID")
+                                    .build()
+                            )
+                            .prepare()
+                            .executeAsBlocking()
                         tsuminoManga.forEach {
                             it.url = "/entry/"+it.url.split("/").last()
                         }
 
                         db.db.put()
-                                .objects(tsuminoManga)
-                                // Extremely slow without the resolver :/
-                                .withPutResolver(MangaUrlPutResolver())
-                                .prepare()
-                                .executeAsBlocking()
+                            .objects(tsuminoManga)
+                            // Extremely slow without the resolver :/
+                            .withPutResolver(MangaUrlPutResolver())
+                            .prepare()
+                            .executeAsBlocking()
+                    }
+                    if (oldVersion < 8410) {
+                        // Migrate to WorkManager
+                        if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
+                            UpdaterJob.setupTask(context)
+                        }
+                        LibraryUpdateJob.setupTask(context)
+                        BackupCreatorJob.setupTask(context)
                     }
                 }
 
