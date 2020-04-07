@@ -34,9 +34,9 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     override val name: String
         get() = "MyAnimeList"
 
-    override fun getLogo() = R.drawable.tracker_mal
+    override fun getLogo() = R.drawable.ic_tracker_mal
 
-    override fun getLogoColor() = Color.rgb(0x2E, 0x51, 0xA2)
+    override fun getLogoColor() = Color.rgb(46, 81, 162)
 
     override fun getStatusList(): List<Int> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
