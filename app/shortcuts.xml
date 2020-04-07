@@ -2,7 +2,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/sc_book_48dp"
+        android:icon="@drawable/sc_collections_bookmark_48dp"
         android:shortcutDisabledMessage="@string/app_not_available"
         android:shortcutId="show_library"
         android:shortcutLongLabel="@string/label_library"
