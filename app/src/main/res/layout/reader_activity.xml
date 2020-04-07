@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="8dp"
-                        android:text="Autoscroll" />
+                        android:text="@string/eh_autoscroll" />
 
                     <EditText
                         android:id="@+id/eh_autoscroll_freq"
@@ -113,7 +113,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Retry all" />
+                        android:text="@string/eh_retry_all" />
 
                     <Button
                         android:id="@+id/eh_retry_all_help"
@@ -128,7 +128,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Boost page" />
+                        android:text="@string/eh_boost_page" />
 
                     <Button
                         android:id="@+id/eh_boost_page_help"

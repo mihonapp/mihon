@@ -650,6 +650,12 @@
     <string name="pref_category_eh">E-Hentai</string>
     <string name="pref_category_nh">nhentai</string>
     <string name="pref_category_hl">hitomi.la</string>
-    <string name="batch_add">Batch Add</string>
+    <string name="eh_batch_add">Batch Add</string>
+    <string name="eh_settings_category">EH Settings</string>
+    <string name="eh_sync_favorites">Sync favorites</string>
+    <string name="eh_find_in_another_source">Find in another source</string>
+    <string name="eh_autoscroll">Autoscroll</string>
+    <string name="eh_retry_all">Retry all</string>
+    <string name="eh_boost_page">Boost page</string>
 
 </resources>
