@@ -256,14 +256,6 @@
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintTop_toBottomOf="@id/webtoon_prefs" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/pad_pages_vert_webtoon"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pref_webtoon_padding_vert"
-        android:textColor="?android:attr/textColorSecondary"
-        app:layout_constraintTop_toBottomOf="@id/crop_borders_webtoon" />
-
     <!-- Groups of preferences -->
 
     <androidx.constraintlayout.widget.Group
@@ -279,7 +271,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="webtoon_prefs,crop_borders_webtoon,pad_pages_vert_webtoon" />
+        app:constraint_referenced_ids="webtoon_prefs,crop_borders_webtoon" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verticalcenter"
