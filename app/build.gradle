@@ -108,6 +108,10 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
 
     // Modified dependencies
@@ -268,11 +272,14 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
     kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
 }
 
-androidExtensions {
-    experimental = true
+// Duplicating Hebrew string assets due to some locale code issues on different devices
+task copyResources(type: Copy) {
+    from './src/main/res/values-he'
+    into './src/main/res/values-iw'
+    include '**/*'
 }
 
-preBuild.dependsOn(lintKotlin)
+preBuild.dependsOn(lintKotlin, copyResources)
 lintKotlin.dependsOn(formatKotlin)
 
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Standard")) {
