@@ -126,4 +126,5 @@
         <item>@string/filter_mode_multiply</item>
         <item>@string/filter_mode_screen</item>
     </string-array>
+    
 </resources>
