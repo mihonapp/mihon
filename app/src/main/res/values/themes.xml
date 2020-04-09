@@ -113,6 +113,10 @@
         <item name="colorOnBackground">@color/textColorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccentDark</item>
 
+        <!-- Swirl (EH) -->
+        <item name="swirl_ridgeColor">?android:attr/textColorSecondary</item>
+        <item name="swirl_errorColor">?android:attr/colorAccent</item>
+
         <!-- Handles RTL text -->
         <item name="android:textAlignment">gravity</item>
         <item name="android:textDirection">locale</item>
