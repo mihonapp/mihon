@@ -238,6 +238,7 @@
     </style>
 
     <style name="Theme.Widget.TextInputLayout.OutlinedBox.Dense" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Widget.TextInputEditText.OutlinedBox</item>
         <item name="boxStrokeColor">@color/text_input_stroke</item>
         <item name="hintTextColor">?attr/colorSecondary</item>
     </style>
