@@ -147,13 +147,16 @@ class SettingsReaderController : SettingsController() {
                 defaultValue = false
             }
 
-            floatListPreference {
-                key = Keys.marginRatioWebtoon
-                titleRes = R.string.pref_reader_margin
-                entriesRes = arrayOf(R.string.webtoon_margin_ratio_0,
-                        R.string.webtoon_margin_ratio_10, R.string.webtoon_margin_ratio_15,
-                        R.string.webtoon_margin_ratio_20, R.string.webtoon_margin_ratio_25)
-                entryValues = arrayOf("0", "0.1", "0.15", "0.2", "0.25")
+            intListPreference {
+                key = Keys.webtoonSidePadding
+                titleRes = R.string.pref_webtoon_side_padding
+                entriesRes = arrayOf(
+                    R.string.webtoon_side_padding_0,
+                    R.string.webtoon_side_padding_10,
+                    R.string.webtoon_side_padding_15,
+                    R.string.webtoon_side_padding_20,
+                    R.string.webtoon_side_padding_25)
+                entryValues = arrayOf("0", "10", "15", "20", "25")
                 defaultValue = "0"
                 summary = "%s"
             }

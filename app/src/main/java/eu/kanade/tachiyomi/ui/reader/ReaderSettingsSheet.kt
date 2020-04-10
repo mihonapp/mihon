@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.reader_settings_sheet.cutout_short
 import kotlinx.android.synthetic.main.reader_settings_sheet.fullscreen
 import kotlinx.android.synthetic.main.reader_settings_sheet.keepscreen
 import kotlinx.android.synthetic.main.reader_settings_sheet.long_tap
-import kotlinx.android.synthetic.main.reader_settings_sheet.margin_ratio_webtoon
 import kotlinx.android.synthetic.main.reader_settings_sheet.page_transitions
 import kotlinx.android.synthetic.main.reader_settings_sheet.pager_prefs_group
 import kotlinx.android.synthetic.main.reader_settings_sheet.rotation_mode
@@ -32,6 +31,7 @@ import kotlinx.android.synthetic.main.reader_settings_sheet.scale_type
 import kotlinx.android.synthetic.main.reader_settings_sheet.show_page_number
 import kotlinx.android.synthetic.main.reader_settings_sheet.viewer
 import kotlinx.android.synthetic.main.reader_settings_sheet.webtoon_prefs_group
+import kotlinx.android.synthetic.main.reader_settings_sheet.webtoon_side_padding
 import kotlinx.android.synthetic.main.reader_settings_sheet.zoom_start
 import uy.kohesive.injekt.injectLazy
 
@@ -114,7 +114,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         webtoon_prefs_group.visible()
 
         crop_borders_webtoon.bindToPreference(preferences.cropBordersWebtoon())
-        margin_ratio_webtoon.bindToFloatPreference(preferences.marginRatioWebtoon(), R.array.webtoon_margin_ratio_values)
+        webtoon_side_padding.bindToIntPreference(preferences.webtoonSidePadding(), R.array.webtoon_side_padding_values)
     }
 
     /**
@@ -136,16 +136,15 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
     }
 
     /**
-     * Binds a spinner to a float preference. The position of the spinner item must
-     * correlate with the [floatValues] resource item (in arrays.xml), which is a <string-array>
-     * of float values that will be parsed here and applied to the preference.
+     * Binds a spinner to an int preference. The position of the spinner item must
+     * correlate with the [intValues] resource item (in arrays.xml), which is a <string-array>
+     * of int values that will be parsed here and applied to the preference.
      */
-    private fun Spinner.bindToFloatPreference(pref: Preference<Float>, @ArrayRes floatValuesResource: Int) {
-        val floatValues = resources.getStringArray(floatValuesResource).map { it.toFloatOrNull() }
+    private fun Spinner.bindToIntPreference(pref: Preference<Int>, @ArrayRes intValuesResource: Int) {
+        val intValues = resources.getStringArray(intValuesResource).map { it.toIntOrNull() }
         onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
-            pref.set(floatValues[position])
+            pref.set(intValues[position])
         }
-        setSelection(floatValues.indexOf(pref.getOrDefault()), false)
+        setSelection(intValues.indexOf(pref.getOrDefault()), false)
     }
-
 }

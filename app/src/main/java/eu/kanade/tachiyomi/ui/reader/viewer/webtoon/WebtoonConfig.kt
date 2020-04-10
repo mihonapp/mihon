@@ -37,7 +37,7 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
     var alwaysShowChapterTransition = true
         private set
 
-    var marginRatio = 0f
+    var sidePadding = 0
         private set
 
     init {
@@ -62,8 +62,8 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
         preferences.alwaysShowChapterTransition()
                 .register({ alwaysShowChapterTransition = it })
 
-        preferences.marginRatioWebtoon()
-            .register({ marginRatio = it }, { imagePropertyChangedListener?.invoke() })
+        preferences.webtoonSidePadding()
+            .register({ sidePadding = it }, { imagePropertyChangedListener?.invoke() })
     }
 
     fun unsubscribe() {
