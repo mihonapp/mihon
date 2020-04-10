@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -123,9 +122,10 @@ class WebViewActivity : BaseActivity() {
         backItem?.isEnabled = binding.webview.canGoBack()
         forwardItem?.isEnabled = binding.webview.canGoForward()
 
-        val translucentWhite = ColorUtils.setAlphaComponent(Color.WHITE, 127)
-        backItem.icon?.setTint(if (binding.webview.canGoBack()) Color.WHITE else translucentWhite)
-        forwardItem?.icon?.setTint(if (binding.webview.canGoForward()) Color.WHITE else translucentWhite)
+        val iconTintColor = getResourceColor(R.attr.colorOnSurface)
+        val translucentIconTintColor = ColorUtils.setAlphaComponent(iconTintColor, 127)
+        backItem.icon?.setTint(if (binding.webview.canGoBack()) iconTintColor else translucentIconTintColor)
+        forwardItem?.icon?.setTint(if (binding.webview.canGoForward()) iconTintColor else translucentIconTintColor)
 
         return super.onPrepareOptionsMenu(menu)
     }
