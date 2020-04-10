@@ -23,6 +23,5 @@ class LatestUpdatesController(bundle: Bundle) : BrowseCatalogueController(bundle
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         menu.findItem(R.id.action_search).isVisible = false
-        menu.findItem(R.id.action_set_filter).isVisible = false
     }
 }

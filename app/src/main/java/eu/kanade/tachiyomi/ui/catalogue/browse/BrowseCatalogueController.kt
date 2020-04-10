@@ -125,7 +125,12 @@ open class BrowseCatalogueController(bundle: Bundle) :
         setupRecycler(view)
 
         // Prepare filter sheet
-        initFilterSheet()
+        if (presenter.sourceFilters.isNotEmpty()) {
+            initFilterSheet()
+
+            binding.fabFilter.setOnClickListener { filterSheet?.show() }
+            binding.fabFilter.visible()
+        }
 
         binding.progress.visible()
     }
@@ -245,18 +250,6 @@ open class BrowseCatalogueController(bundle: Bundle) :
                 }
         )
 
-        // Setup filters button
-        menu.findItem(R.id.action_set_filter).apply {
-            icon.mutate()
-            if (presenter.sourceFilters.isEmpty()) {
-                isEnabled = false
-                icon.alpha = 128
-            } else {
-                isEnabled = true
-                icon.alpha = 255
-            }
-        }
-
         // Show next display mode
         menu.findItem(R.id.action_display_mode).apply {
             val icon = if (presenter.isListMode)
@@ -278,7 +271,6 @@ open class BrowseCatalogueController(bundle: Bundle) :
         when (item.itemId) {
             R.id.action_search -> expandActionViewFromInteraction = true
             R.id.action_display_mode -> swapDisplayMode()
-            R.id.action_set_filter -> filterSheet?.show()
             R.id.action_open_in_web_view -> openInWebView()
         }
         return super.onOptionsItemSelected(item)
