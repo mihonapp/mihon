@@ -202,6 +202,18 @@ open class BrowseCatalogueController(bundle: Bundle) :
                 }
             }
         }
+
+        // Add bottom padding if filter FAB is visible
+        if (presenter.sourceFilters.isNotEmpty()) {
+            recycler.setPadding(
+                0,
+                0,
+                0,
+                view.resources.getDimensionPixelOffset(R.dimen.fab_list_padding)
+            )
+            recycler.clipToPadding = false
+        }
+
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
 
