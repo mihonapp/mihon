@@ -85,6 +85,8 @@
     <string name="action_display_list">List</string>
     <string name="action_display_download_badge">Download badges</string>
     <string name="action_hide">Hide</string>
+    <string name="action_pin">Pin</string>
+    <string name="action_unpin">Unpin</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_cancel_all">Cancel all</string>
     <string name="action_sort">Sort</string>
@@ -388,6 +390,7 @@
     <string name="http_error_hint">Check website in WebView</string>
     <string name="local_source">Local manga</string>
     <string name="other_source">Other</string>
+    <string name="pinned_sources">Pinned</string>
     <string name="invalid_combination">Default can\'t be selected with other categories</string>
     <string name="added_to_library">The manga has been added to your library</string>
     <string name="action_global_search_hint">Global search…</string>
