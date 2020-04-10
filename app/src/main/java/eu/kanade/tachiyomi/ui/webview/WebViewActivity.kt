@@ -55,15 +55,17 @@ class WebViewActivity : BaseActivity() {
         }
 
         if (bundle == null) {
-            val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource
-                    ?: return
             val url = intent.extras!!.getString(URL_KEY) ?: return
-            val headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
+            var headers = emptyMap<String, String>()
+
+            val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource
+            if (source != null) {
+                headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
+                binding.webview.settings.userAgentString = source.headers["User-Agent"]
+            }
 
             supportActionBar?.subtitle = url
-
             binding.webview.settings.javaScriptEnabled = true
-            binding.webview.settings.userAgentString = source.headers["User-Agent"]
 
             binding.webview.webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
@@ -166,14 +168,14 @@ class WebViewActivity : BaseActivity() {
     }
 
     companion object {
-        private const val SOURCE_KEY = "source_key"
         private const val URL_KEY = "url_key"
+        private const val SOURCE_KEY = "source_key"
         private const val TITLE_KEY = "title_key"
 
-        fun newIntent(context: Context, sourceId: Long, url: String, title: String?): Intent {
+        fun newIntent(context: Context, url: String, sourceId: Long? = null, title: String? = null): Intent {
             val intent = Intent(context, WebViewActivity::class.java)
-            intent.putExtra(SOURCE_KEY, sourceId)
             intent.putExtra(URL_KEY, url)
+            intent.putExtra(SOURCE_KEY, sourceId)
             intent.putExtra(TITLE_KEY, title)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             return intent

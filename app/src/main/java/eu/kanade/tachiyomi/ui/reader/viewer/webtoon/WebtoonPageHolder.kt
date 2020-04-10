@@ -1,10 +1,8 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -30,6 +28,7 @@ import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressBar
+import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.view.gone
@@ -460,9 +459,9 @@ class WebtoonPageHolder(
                 layoutParams = FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
                     setMargins(0, margins, 0, margins)
                 }
-                setText(R.string.action_open_in_browser)
+                setText(R.string.action_open_in_web_view)
                 setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(imageUrl))
+                    val intent = WebViewActivity.newIntent(context, imageUrl!!)
                     context.startActivity(intent)
                 }
 

@@ -500,7 +500,7 @@
     <string name="chapter_subtitle">Chapter %1$s</string>
     <string name="no_next_chapter">Next chapter not found</string>
     <string name="no_previous_chapter">Previous chapter not found</string>
-    <string name="decode_image_error">The image could not be decoded</string>
+    <string name="decode_image_error">The image couldn\'t be loaded</string>
     <string name="confirm_set_image_as_cover">Use this image as cover art?</string>
     <string name="viewer_for_this_series">Viewer for this series</string>
     <string name="transition_finished">Finished:</string>
