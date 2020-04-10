@@ -146,6 +146,17 @@ class SettingsReaderController : SettingsController() {
                 titleRes = R.string.pref_crop_borders
                 defaultValue = false
             }
+
+            floatListPreference {
+                key = Keys.marginRatioWebtoon
+                titleRes = R.string.pref_reader_margin
+                entriesRes = arrayOf(R.string.webtoon_margin_ratio_0,
+                        R.string.webtoon_margin_ratio_10, R.string.webtoon_margin_ratio_15,
+                        R.string.webtoon_margin_ratio_20, R.string.webtoon_margin_ratio_25)
+                entryValues = arrayOf("0", "0.1", "0.15", "0.2", "0.25")
+                defaultValue = "0"
+                summary = "%s"
+            }
         }
 
         preferenceCategory {

@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.Spinner
+import androidx.annotation.ArrayRes
 import androidx.core.widget.NestedScrollView
 import com.f2prateek.rx.preferences.Preference
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.reader_settings_sheet.cutout_short
 import kotlinx.android.synthetic.main.reader_settings_sheet.fullscreen
 import kotlinx.android.synthetic.main.reader_settings_sheet.keepscreen
 import kotlinx.android.synthetic.main.reader_settings_sheet.long_tap
+import kotlinx.android.synthetic.main.reader_settings_sheet.margin_ratio_webtoon
 import kotlinx.android.synthetic.main.reader_settings_sheet.page_transitions
 import kotlinx.android.synthetic.main.reader_settings_sheet.pager_prefs_group
 import kotlinx.android.synthetic.main.reader_settings_sheet.rotation_mode
@@ -112,6 +114,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         webtoon_prefs_group.visible()
 
         crop_borders_webtoon.bindToPreference(preferences.cropBordersWebtoon())
+        margin_ratio_webtoon.bindToFloatPreference(preferences.marginRatioWebtoon(), R.array.webtoon_margin_ratio_values)
     }
 
     /**
@@ -131,4 +134,18 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         }
         setSelection(pref.getOrDefault() - offset, false)
     }
+
+    /**
+     * Binds a spinner to a float preference. The position of the spinner item must
+     * correlate with the [floatValues] resource item (in arrays.xml), which is a <string-array>
+     * of float values that will be parsed here and applied to the preference.
+     */
+    private fun Spinner.bindToFloatPreference(pref: Preference<Float>, @ArrayRes floatValuesResource: Int) {
+        val floatValues = resources.getStringArray(floatValuesResource).map { it.toFloatOrNull() }
+        onItemSelectedListener = IgnoreFirstSpinnerListener { position ->
+            pref.set(floatValues[position])
+        }
+        setSelection(floatValues.indexOf(pref.getOrDefault()), false)
+    }
+
 }
