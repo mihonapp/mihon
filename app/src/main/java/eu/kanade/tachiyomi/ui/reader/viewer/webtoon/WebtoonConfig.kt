@@ -37,6 +37,9 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
     var alwaysShowChapterTransition = true
         private set
 
+    var marginRatio = 0f
+        private set
+
     init {
         preferences.readWithTapping()
                 .register({ tappingEnabled = it })
@@ -58,6 +61,9 @@ class WebtoonConfig(preferences: PreferencesHelper = Injekt.get()) {
 
         preferences.alwaysShowChapterTransition()
                 .register({ alwaysShowChapterTransition = it })
+
+        preferences.marginRatioWebtoon()
+            .register({ marginRatio = it }, { imagePropertyChangedListener?.invoke() })
     }
 
     fun unsubscribe() {
