@@ -54,10 +54,6 @@ open class SimpleNavigationView @JvmOverloads constructor(
                     R.styleable.NavigationView_elevation, 0).toFloat())
         }
 
-        @Suppress("DEPRECATION")
-        ViewCompat.setFitsSystemWindows(this,
-                a.getBoolean(R.styleable.NavigationView_android_fitsSystemWindows, false))
-
         maxWidth = a.getDimensionPixelSize(R.styleable.NavigationView_android_maxWidth, 0)
 
         a.recycle()

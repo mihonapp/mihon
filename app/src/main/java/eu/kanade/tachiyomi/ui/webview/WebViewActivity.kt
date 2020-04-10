@@ -37,10 +37,6 @@ class WebViewActivity : BaseActivity() {
         binding = WebviewActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Manually override status bar color since it's normally transparent with the app themes
-        // This is needed to hide the app bar when it scrolls up
-        window.statusBarColor = getResourceColor(R.attr.colorPrimaryDark)
-
         title = intent.extras?.getString(TITLE_KEY)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
