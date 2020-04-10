@@ -36,6 +36,7 @@ import eu.kanade.tachiyomi.util.system.connectivityManager
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.inflate
+import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
@@ -203,8 +204,8 @@ open class BrowseCatalogueController(bundle: Bundle) :
             }
         }
 
-        // Add bottom padding if filter FAB is visible
         if (presenter.sourceFilters.isNotEmpty()) {
+            // Add bottom padding if filter FAB is visible
             recycler.setPadding(
                 0,
                 0,
@@ -212,6 +213,8 @@ open class BrowseCatalogueController(bundle: Bundle) :
                 view.resources.getDimensionPixelOffset(R.dimen.fab_list_padding)
             )
             recycler.clipToPadding = false
+
+            binding.fabFilter.shrinkOnScroll(recycler)
         }
 
         recycler.setHasFixedSize(true)
