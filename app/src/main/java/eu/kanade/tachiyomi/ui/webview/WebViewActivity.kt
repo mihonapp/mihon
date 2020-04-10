@@ -12,6 +12,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import androidx.core.graphics.ColorUtils
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.databinding.WebviewActivityBinding
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -21,11 +22,6 @@ import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.invisible
 import eu.kanade.tachiyomi.util.view.visible
-import kotlinx.android.synthetic.main.webview_activity.nested_view
-import kotlinx.android.synthetic.main.webview_activity.progress_bar
-import kotlinx.android.synthetic.main.webview_activity.swipe_refresh
-import kotlinx.android.synthetic.main.webview_activity.toolbar
-import kotlinx.android.synthetic.main.webview_activity.webview
 import uy.kohesive.injekt.injectLazy
 
 class WebViewActivity : BaseActivity() {
@@ -34,24 +30,27 @@ class WebViewActivity : BaseActivity() {
 
     private var bundle: Bundle? = null
 
+    private lateinit var binding: WebviewActivityBinding
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.webview_activity)
+        binding = WebviewActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Manually override status bar color since it's normally transparent with the app themes
         // This is needed to hide the app bar when it scrolls up
         window.statusBarColor = getResourceColor(R.attr.colorPrimaryDark)
 
         title = intent.extras?.getString(TITLE_KEY)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             super.onBackPressed()
         }
 
-        swipe_refresh.isEnabled = false
-        swipe_refresh.setOnRefreshListener {
+        binding.swipeRefresh.isEnabled = false
+        binding.swipeRefresh.setOnRefreshListener {
             refreshPage()
         }
 
@@ -63,21 +62,21 @@ class WebViewActivity : BaseActivity() {
 
             supportActionBar?.subtitle = url
 
-            webview.settings.javaScriptEnabled = true
-            webview.settings.userAgentString = source.headers["User-Agent"]
+            binding.webview.settings.javaScriptEnabled = true
+            binding.webview.settings.userAgentString = source.headers["User-Agent"]
 
-            webview.webChromeClient = object : WebChromeClient() {
+            binding.webview.webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                    progress_bar.visible()
-                    progress_bar.progress = newProgress
+                    binding.progressBar.visible()
+                    binding.progressBar.progress = newProgress
                     if (newProgress == 100) {
-                        progress_bar.invisible()
+                        binding.progressBar.invisible()
                     }
                     super.onProgressChanged(view, newProgress)
                 }
             }
 
-            webview.webViewClient = object : WebViewClientCompat() {
+            binding.webview.webViewClient = object : WebViewClientCompat() {
                 override fun shouldOverrideUrlCompat(view: WebView, url: String): Boolean {
                     view.loadUrl(url)
                     return true
@@ -88,8 +87,8 @@ class WebViewActivity : BaseActivity() {
                     invalidateOptionsMenu()
                     title = view?.title
                     supportActionBar?.subtitle = url
-                    swipe_refresh.isEnabled = true
-                    swipe_refresh?.isRefreshing = false
+                    binding.swipeRefresh.isEnabled = true
+                    binding.swipeRefresh.isRefreshing = false
                 }
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -101,13 +100,13 @@ class WebViewActivity : BaseActivity() {
                     super.onPageCommitVisible(view, url)
 
                     // Reset to top when page refreshes
-                    nested_view.scrollTo(0, 0)
+                    binding.nestedView.scrollTo(0, 0)
                 }
             }
 
-            webview.loadUrl(url, headers)
+            binding.webview.loadUrl(url, headers)
         } else {
-            webview.restoreState(bundle)
+            binding.webview.restoreState(bundle)
         }
     }
 
@@ -117,27 +116,27 @@ class WebViewActivity : BaseActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        val backItem = toolbar.menu.findItem(R.id.action_web_back)
-        val forwardItem = toolbar.menu.findItem(R.id.action_web_forward)
-        backItem?.isEnabled = webview.canGoBack()
-        forwardItem?.isEnabled = webview.canGoForward()
+        val backItem = binding.toolbar.menu.findItem(R.id.action_web_back)
+        val forwardItem = binding.toolbar.menu.findItem(R.id.action_web_forward)
+        backItem?.isEnabled = binding.webview.canGoBack()
+        forwardItem?.isEnabled = binding.webview.canGoForward()
 
         val translucentWhite = ColorUtils.setAlphaComponent(Color.WHITE, 127)
-        backItem.icon?.setTint(if (webview.canGoBack()) Color.WHITE else translucentWhite)
-        forwardItem?.icon?.setTint(if (webview.canGoForward()) Color.WHITE else translucentWhite)
+        backItem.icon?.setTint(if (binding.webview.canGoBack()) Color.WHITE else translucentWhite)
+        forwardItem?.icon?.setTint(if (binding.webview.canGoForward()) Color.WHITE else translucentWhite)
 
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onBackPressed() {
-        if (webview.canGoBack()) webview.goBack()
+        if (binding.webview.canGoBack()) binding.webview.goBack()
         else super.onBackPressed()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_web_back -> webview.goBack()
-            R.id.action_web_forward -> webview.goForward()
+            R.id.action_web_back -> binding.webview.goBack()
+            R.id.action_web_forward -> binding.webview.goForward()
             R.id.action_web_refresh -> refreshPage()
             R.id.action_web_share -> shareWebpage()
             R.id.action_web_browser -> openInBrowser()
@@ -146,15 +145,15 @@ class WebViewActivity : BaseActivity() {
     }
 
     private fun refreshPage() {
-        swipe_refresh.isRefreshing = true
-        webview.reload()
+        binding.swipeRefresh.isRefreshing = true
+        binding.webview.reload()
     }
 
     private fun shareWebpage() {
         try {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, webview.url)
+                putExtra(Intent.EXTRA_TEXT, binding.webview.url)
             }
             startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
         } catch (e: Exception) {
@@ -163,7 +162,7 @@ class WebViewActivity : BaseActivity() {
     }
 
     private fun openInBrowser() {
-        openInBrowser(webview.url)
+        openInBrowser(binding.webview.url)
     }
 
     companion object {
