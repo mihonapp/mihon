@@ -121,22 +121,21 @@ open class BrowseCatalogueController(bundle: Bundle) :
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
+        // Prepare filter sheet
+        initFilterSheet()
+
         // Initialize adapter, scroll listener and recycler views
         adapter = FlexibleAdapter(null, this)
         setupRecycler(view)
 
-        // Prepare filter sheet
-        if (presenter.sourceFilters.isNotEmpty()) {
-            initFilterSheet()
-
-            binding.fabFilter.setOnClickListener { filterSheet?.show() }
-            binding.fabFilter.visible()
-        }
-
         binding.progress.visible()
     }
 
-    private fun initFilterSheet() {
+    open fun initFilterSheet() {
+        if (presenter.sourceFilters.isEmpty()) {
+            return
+        }
+
         filterSheet = CatalogueFilterSheet(
             activity!!,
             onSearchClicked = {
@@ -153,6 +152,9 @@ open class BrowseCatalogueController(bundle: Bundle) :
             }
         )
         filterSheet?.setFilters(presenter.filterItems)
+
+        binding.fabFilter.setOnClickListener { filterSheet?.show() }
+        binding.fabFilter.visible()
     }
 
     override fun onDestroyView(view: View) {
@@ -204,7 +206,7 @@ open class BrowseCatalogueController(bundle: Bundle) :
             }
         }
 
-        if (presenter.sourceFilters.isNotEmpty()) {
+        if (filterSheet != null) {
             // Add bottom padding if filter FAB is visible
             recycler.setPadding(
                 0,

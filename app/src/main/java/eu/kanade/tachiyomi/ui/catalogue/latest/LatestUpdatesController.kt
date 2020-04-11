@@ -24,4 +24,8 @@ class LatestUpdatesController(bundle: Bundle) : BrowseCatalogueController(bundle
         super.onPrepareOptionsMenu(menu)
         menu.findItem(R.id.action_search).isVisible = false
     }
+
+    override fun initFilterSheet() {
+        // No-op: we don't allow filtering in latest
+    }
 }
