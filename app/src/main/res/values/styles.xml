@@ -223,6 +223,11 @@
     </style>
 
 
+    <style name="Theme.Widget.BasicSwitch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="useMaterialThemeColors">false</item>
+    </style>
+
+
     <!--=======================-->
     <!--Widgets.TextInputLayout-->
     <!--=======================-->
