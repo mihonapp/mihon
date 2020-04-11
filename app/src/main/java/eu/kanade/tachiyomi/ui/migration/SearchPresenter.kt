@@ -70,7 +70,7 @@ class SearchPresenter(
         manga: Manga,
         replace: Boolean
     ) {
-        val flags = preferencesHelper.migrateFlags().getOrDefault()
+        val flags = preferences.migrateFlags().getOrDefault()
         val migrateChapters = MigrationFlags.hasChapters(flags)
         val migrateCategories = MigrationFlags.hasCategories(flags)
         val migrateTracks = MigrationFlags.hasTracks(flags)

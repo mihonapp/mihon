@@ -30,14 +30,14 @@ import uy.kohesive.injekt.injectLazy
  *
  * @param sourceManager manages the different sources.
  * @param db manages the database calls.
- * @param preferencesHelper manages the preference calls.
+ * @param preferences manages the preference calls.
  */
 open class CatalogueSearchPresenter(
     val initialQuery: String? = "",
     val initialExtensionFilter: String? = null,
     val sourceManager: SourceManager = Injekt.get(),
     val db: DatabaseHelper = Injekt.get(),
-    val preferencesHelper: PreferencesHelper = Injekt.get()
+    val preferences: PreferencesHelper = Injekt.get()
 ) : BasePresenter<CatalogueSearchController>() {
 
     /**
@@ -94,18 +94,20 @@ open class CatalogueSearchPresenter(
     }
 
     /**
-     * Returns a list of enabled sources ordered by language and name.
+     * Returns a list of enabled sources ordered by language and name, with pinned catalogues
+     * prioritized.
      *
      * @return list containing enabled sources.
      */
     protected open fun getEnabledSources(): List<CatalogueSource> {
-        val languages = preferencesHelper.enabledLanguages().getOrDefault()
-        val hiddenCatalogues = preferencesHelper.hiddenCatalogues().getOrDefault()
+        val languages = preferences.enabledLanguages().getOrDefault()
+        val hiddenCatalogues = preferences.hiddenCatalogues().getOrDefault()
+        val pinnedCatalogues = preferences.pinnedCatalogues().getOrDefault()
 
         return sourceManager.getCatalogueSources()
                 .filter { it.lang in languages }
                 .filterNot { it.id.toString() in hiddenCatalogues }
-                .sortedBy { "(${it.lang}) ${it.name}" }
+                .sortedWith(compareBy({ it.id.toString() !in pinnedCatalogues }, { "(${it.lang}) ${it.name}" }))
     }
 
     private fun getSourcesToQuery(): List<CatalogueSource> {
