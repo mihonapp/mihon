@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.migration
+package eu.kanade.tachiyomi.ui.source
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -6,16 +6,16 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractSectionableItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.CatalogueSource
 
 /**
  * Item that contains source information.
  *
- * @param source Instance of [Source] containing source information.
+ * @param source Instance of [CatalogueSource] containing source information.
  * @param header The header for this item.
  */
-data class SourceItem(val source: Source, val header: SelectionHeader? = null) :
-        AbstractSectionableItem<SourceHolder, SelectionHeader>(header) {
+data class SourceItem(val source: CatalogueSource, val header: LangItem? = null) :
+        AbstractSectionableItem<SourceHolder, LangItem>(header) {
 
     /**
      * Returns the layout resource of this item.
@@ -38,9 +38,8 @@ data class SourceItem(val source: Source, val header: SelectionHeader? = null) :
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: SourceHolder,
         position: Int,
-        payloads: List<Any?>?
+        payloads: MutableList<Any>
     ) {
-
         holder.bind(this)
     }
 }

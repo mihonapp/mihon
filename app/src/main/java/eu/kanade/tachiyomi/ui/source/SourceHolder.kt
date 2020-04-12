@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.migration
+package eu.kanade.tachiyomi.ui.source
 
 import android.view.View
 import eu.kanade.tachiyomi.R
@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.holder.SlicedHolder
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.roundTextIcon
+import eu.kanade.tachiyomi.util.view.visible
 import io.github.mthli.slice.Slice
 import kotlinx.android.synthetic.main.source_main_controller_card_item.card
 import kotlinx.android.synthetic.main.source_main_controller_card_item.image
@@ -26,10 +27,12 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
         get() = card
 
     init {
-        source_latest.gone()
-        source_browse.setText(R.string.select)
         source_browse.setOnClickListener {
-            adapter.selectClickListener?.onSelectClick(adapterPosition)
+            adapter.browseClickListener.onBrowseClick(adapterPosition)
+        }
+
+        source_latest.setOnClickListener {
+            adapter.latestClickListener.onLatestClick(adapterPosition)
         }
     }
 
@@ -45,6 +48,13 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
             val icon = source.icon()
             if (icon != null) image.setImageDrawable(icon)
             else image.roundTextIcon(source.name)
+        }
+
+        source_browse.setText(R.string.browse)
+        if (source.supportsLatest) {
+            source_latest.visible()
+        } else {
+            source_latest.gone()
         }
     }
 }
