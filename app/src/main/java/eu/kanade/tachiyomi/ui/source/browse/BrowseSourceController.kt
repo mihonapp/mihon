@@ -270,9 +270,9 @@ open class BrowseSourceController(bundle: Bundle) :
         // Show next display mode
         menu.findItem(R.id.action_display_mode).apply {
             val icon = if (presenter.isListMode)
-                R.drawable.ic_view_module_white_24dp
+                R.drawable.ic_view_module_24dp
             else
-                R.drawable.ic_view_list_white_24dp
+                R.drawable.ic_view_list_24dp
             setIcon(icon)
         }
     }
