@@ -9,9 +9,9 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
-import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
-import eu.kanade.tachiyomi.ui.catalogue.browse.BrowseCatalogueController
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.source.SourceController
+import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.android.synthetic.main.eh_smart_search.appbar
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +29,7 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
     private val sourceManager: SourceManager by injectLazy()
 
     private val source = sourceManager.get(bundle?.getLong(ARG_SOURCE_ID, -1) ?: -1) as? CatalogueSource
-    private val smartSearchConfig: CatalogueController.SmartSearchConfig? = bundle?.getParcelable(ARG_SMART_SEARCH_CONFIG)
+    private val smartSearchConfig: SourceController.SmartSearchConfig? = bundle?.getParcelable(ARG_SMART_SEARCH_CONFIG)
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
             inflater.inflate(R.layout.eh_smart_search, container, false)!!
@@ -67,7 +67,7 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
                             applicationContext?.toast("Error performing automatic search!")
                         }
 
-                        val transaction = BrowseCatalogueController(source, smartSearchConfig.origTitle, smartSearchConfig).withFadeTransaction()
+                        val transaction = BrowseSourceController(source, smartSearchConfig.origTitle, smartSearchConfig).withFadeTransaction()
                         withContext(Dispatchers.Main) {
                             router.replaceTopController(transaction)
                         }

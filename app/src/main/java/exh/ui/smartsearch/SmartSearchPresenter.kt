@@ -6,7 +6,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
+import eu.kanade.tachiyomi.ui.source.SourceController
 import exh.smartsearch.SmartSearchEngine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +16,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
-class SmartSearchPresenter(private val source: CatalogueSource?, private val config: CatalogueController.SmartSearchConfig?) :
+class SmartSearchPresenter(private val source: CatalogueSource?, private val config: SourceController.SmartSearchConfig?) :
         BasePresenter<SmartSearchController>(), CoroutineScope {
     private val logger = XLog.tag("SmartSearchPresenter")
 
