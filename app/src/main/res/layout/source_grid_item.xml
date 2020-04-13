@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectable_library_drawable">
+    android:background="?selectable_library_drawable"
+    android:padding="4dp">
 
-    <FrameLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/card"
         android:layout_width="wrap_content"
         android:layout_height="220dp"
-        android:background="@drawable/card_background">
+        app:cardCornerRadius="4dp">
 
         <ImageView
             android:id="@+id/thumbnail"
@@ -87,6 +88,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -114,6 +116,6 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-    </FrameLayout>
+    </androidx.cardview.widget.CardView>
 
 </FrameLayout>
