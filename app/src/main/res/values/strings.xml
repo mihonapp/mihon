@@ -657,5 +657,19 @@
     <string name="eh_autoscroll">Autoscroll</string>
     <string name="eh_retry_all">Retry all</string>
     <string name="eh_boost_page">Boost page</string>
+    <string name="eh_rounded_corner_0">No Rounded Corners</string>
+    <string name="eh_rounded_corner_1">Radius of 1</string>
+    <string name="eh_rounded_corner_2">Radius of 2</string>
+    <string name="eh_rounded_corner_3">Radius of 3</string>
+    <string name="eh_rounded_corner_4">Radius of 4</string>
+    <string name="eh_rounded_corner_5">Radius of 5</string>
+    <string name="eh_rounded_corner_6">Radius of 6</string>
+    <string name="eh_rounded_corner_7">Radius of 7</string>
+    <string name="eh_rounded_corner_8">Radius of 8</string>
+    <string name="eh_rounded_corner_9">Radius of 9</string>
+    <string name="eh_rounded_corner_10">Radius of 10</string>
+    <string name="eh_rounded_corners_desc">The level of radius that the corners are rounded to. Current value is: %s</string>
+
+
 
 </resources>

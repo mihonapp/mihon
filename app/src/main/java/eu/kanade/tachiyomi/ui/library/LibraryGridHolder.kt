@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.library
 
+import android.util.TypedValue
 import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -7,13 +8,18 @@ import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.util.view.visibleIf
+import kotlinx.android.synthetic.main.source_grid_item.card
 import kotlinx.android.synthetic.main.source_grid_item.download_text
 import kotlinx.android.synthetic.main.source_grid_item.local_text
 import kotlinx.android.synthetic.main.source_grid_item.thumbnail
 import kotlinx.android.synthetic.main.source_grid_item.title
 import kotlinx.android.synthetic.main.source_grid_item.unread_text
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
  * Class used to hold the displayed data of a manga in the library, like the cover or the title.
@@ -28,7 +34,7 @@ class LibraryGridHolder(
     private val view: View,
     adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
 ) : LibraryHolder(view, adapter) {
-
+    private val preferences: PreferencesHelper = Injekt.get()
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this
      * holder with the given manga.
@@ -51,6 +57,12 @@ class LibraryGridHolder(
         }
         // set local visibility if its local manga
         local_text.visibleIf { item.manga.source == LocalSource.ID }
+
+        card.radius = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            preferences.eh_library_corner_radius().getOrDefault().toFloat(),
+            view.context.resources.displayMetrics
+        )
 
         // Update the cover.
         GlideApp.with(view.context).clear(thumbnail)
