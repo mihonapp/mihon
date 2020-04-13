@@ -89,7 +89,7 @@
                 tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <eu.kanade.tachiyomi.widget.PTSansTextView
+        <TextView
             android:id="@+id/title"
             style="@style/TextAppearance.Regular.Body1.Light"
             android:layout_width="match_parent"
@@ -103,7 +103,7 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="4"
-            app:typeface="ptsansNarrowBold"
+            android:fontFamily="@font/ptsans_narrow_bold"
             tools:text="Sample name" />
 
         <ProgressBar
