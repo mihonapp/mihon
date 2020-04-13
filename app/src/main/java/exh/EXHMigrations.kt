@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
+import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import eu.kanade.tachiyomi.util.system.jobScheduler
 import exh.source.BlacklistedSources
 import rx.Observable
@@ -137,14 +138,15 @@ object EXHMigrations {
                             .prepare()
                             .executeAsBlocking()
                     }
-                    if (oldVersion < 8410) {
-                        // Migrate to WorkManager
-                        if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
-                            UpdaterJob.setupTask(context)
-                        }
-                        LibraryUpdateJob.setupTask(context)
-                        BackupCreatorJob.setupTask(context)
+                }
+                if (oldVersion < 8410) {
+                    // Migrate to WorkManager
+                    if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
+                        UpdaterJob.setupTask(context)
                     }
+                    LibraryUpdateJob.setupTask(context)
+                    BackupCreatorJob.setupTask(context)
+                    ExtensionUpdateJob.setupTask(context)
                 }
 
 
