@@ -208,7 +208,8 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Crash reports
-    implementation 'ch.acra:acra:4.9.2'
+    final acra_version = '5.5.0'
+    implementation "ch.acra:acra-http:$acra_version"
 
     // UI
     implementation 'com.dmitrymalkovich.android:material-design-dimens:1.4'

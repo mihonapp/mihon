@@ -16,19 +16,22 @@ import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import org.acra.ACRA
-import org.acra.annotation.ReportsCrashes
+import org.acra.annotation.AcraCore
+import org.acra.annotation.AcraHttpSender
+import org.acra.sender.HttpSender
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektScope
 import uy.kohesive.injekt.injectLazy
 import uy.kohesive.injekt.registry.default.DefaultRegistrar
 
-@ReportsCrashes(
-        formUri = "http://tachiyomi.kanade.eu/crash_report",
-        reportType = org.acra.sender.HttpSender.Type.JSON,
-        httpMethod = org.acra.sender.HttpSender.Method.PUT,
+@AcraCore(
         buildConfigClass = BuildConfig::class,
         excludeMatchingSharedPreferencesKeys = [".*username.*", ".*password.*", ".*token.*"]
+)
+@AcraHttpSender(
+        uri = "http://tachiyomi.kanade.eu/crash_report",
+        httpMethod = HttpSender.Method.PUT
 )
 open class App : Application(), LifecycleObserver {
 
