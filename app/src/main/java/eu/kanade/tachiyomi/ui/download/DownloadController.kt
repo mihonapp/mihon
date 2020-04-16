@@ -285,18 +285,19 @@ class DownloadController : NucleusController<DownloadPresenter>(),
                     items.add(0, item)
                 else
                     items.add(item)
-                adapter?.updateDataSet(items)
-                val downloads = items.mapNotNull { it.download }
+
+                val adapter = adapter ?: return
+                adapter.updateDataSet(items)
+                val downloads = adapter.currentItems.mapNotNull { it?.download }
                 presenter.reorder(downloads)
             }
             R.id.cancel_download -> {
                 val download = adapter?.getItem(position)?.download ?: return
                 presenter.cancelDownload(download)
 
-                adapter?.removeItem(position)
                 val adapter = adapter ?: return
-                val downloads =
-                    (0 until adapter.itemCount).mapNotNull { adapter.getItem(it)?.download }
+                adapter.removeItem(position)
+                val downloads = adapter.currentItems.mapNotNull { it?.download }
                 presenter.reorder(downloads)
             }
         }
