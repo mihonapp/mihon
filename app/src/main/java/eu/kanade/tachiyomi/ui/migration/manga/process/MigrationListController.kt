@@ -78,7 +78,8 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
     }
 
     override fun getTitle(): String? {
-        return resources?.getString(R.string.migration)
+        return resources?.getString(R.string.migration) + " (${adapter?.items?.count { it.manga
+            .migrationStatus != MigrationStatus.RUNNUNG }}/${adapter?.itemCount ?: 0})"
     }
 
     override fun onViewCreated(view: View) {
@@ -240,6 +241,12 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
                 adapter?.sourceFinished()
                 manga.searchResult.initialize(result?.id)
             }
+        }
+    }
+
+    override fun updateCount() {
+        launchUI {
+            setTitle()
         }
     }
 

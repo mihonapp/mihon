@@ -36,9 +36,11 @@ class MigrationProcessAdapter(
         fun enableButtons()
         fun removeManga(item: MigrationProcessItem)
         fun noMigration()
+        fun updateCount()
     }
 
     fun sourceFinished() {
+        menuItemListener.updateCount()
         if (itemCount == 0) menuItemListener.noMigration()
         if (allMangasDone()) menuItemListener.enableButtons()
     }
