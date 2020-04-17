@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.smartsearch.SmartSearchEngine
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.migration.MigrationMangaDialog
@@ -46,6 +47,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import rx.schedulers.Schedulers
+import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
 class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
@@ -200,8 +202,13 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
 
                                     if (searchResult != null) {
                                         val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
-                                        val chapters = source.fetchChapterList(localManga).toSingle().await(
-                                            Schedulers.io())
+                                        val chapters = try {
+                                            source.fetchChapterList(localManga)
+                                            .toSingle().await(Schedulers.io()) }
+                                        catch (e: java.lang.Exception) {
+                                            Timber.e(e)
+                                            emptyList<SChapter>()
+                                        } ?: emptyList()
                                         withContext(Dispatchers.IO) {
                                             syncChaptersWithSource(db, chapters, localManga, source)
                                         }
