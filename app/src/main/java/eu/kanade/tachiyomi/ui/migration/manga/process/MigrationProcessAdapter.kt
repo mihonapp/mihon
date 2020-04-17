@@ -29,10 +29,6 @@ class MigrationProcessAdapter(
         super.updateDataSet(items)
     }
 
-    fun indexOf(item: MigrationProcessItem): Int {
-        return items.indexOf(item)
-    }
-
     interface MigrationProcessInterface {
         fun onMenuItemClick(position: Int, item: MenuItem)
         fun enableButtons()

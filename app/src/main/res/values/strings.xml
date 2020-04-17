@@ -660,6 +660,7 @@
     <string name="keep_old_manga">Keep old manga</string>
     <string name="use_intelligent_search">Use intelligent search algorithm</string>
     <string name="begin_migration">Begin migration</string>
+    <string name="migrating_to">migrating to</string>
 
     <!-- EXH -->
     <string name="label_login">Login</string>

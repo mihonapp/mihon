@@ -82,7 +82,6 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
         super.onViewCreated(view)
         setTitle()
         val config = this.config ?: return
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
 
         val newMigratingManga = migratingManga ?: run {
             val new = config.mangaIds.map {
