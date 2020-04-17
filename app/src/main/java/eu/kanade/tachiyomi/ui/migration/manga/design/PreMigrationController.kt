@@ -77,9 +77,11 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), F
                 val bottomSheet = dialog?.findViewById<FrameLayout>(
                     com.google.android.material.R.id.design_bottom_sheet
                 )
-                val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet!!)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.skipCollapsed = true
+                if (bottomSheet != null) {
+                    val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    behavior.skipCollapsed = true
+                }
             }
         }
     }
