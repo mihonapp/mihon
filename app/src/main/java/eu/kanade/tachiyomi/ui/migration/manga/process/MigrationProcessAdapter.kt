@@ -102,8 +102,8 @@ class MigrationProcessAdapter(
         // Update chapters read
         if (MigrationFlags.hasChapters(flags)) {
             val prevMangaChapters = db.getChapters(prevManga).executeAsBlocking()
-            val maxChapterRead = prevMangaChapters.filter { it.read }
-                .maxBy { it.chapter_number }?.chapter_number
+            val maxChapterRead =
+                prevMangaChapters.filter { it.read }.maxBy { it.chapter_number }?.chapter_number
             if (maxChapterRead != null) {
                 val dbChapters = db.getChapters(manga).executeAsBlocking()
                 for (chapter in dbChapters) {
@@ -135,8 +135,6 @@ class MigrationProcessAdapter(
             db.updateMangaFavorite(prevManga).executeAsBlocking()
         }
         manga.favorite = true
-        db.updateMangaFavorite(manga).executeAsBlocking()
-
         // SearchPresenter#networkToLocalManga may have updated the manga title, so ensure db gets updated title
         db.updateMangaTitle(manga).executeAsBlocking()
         // }

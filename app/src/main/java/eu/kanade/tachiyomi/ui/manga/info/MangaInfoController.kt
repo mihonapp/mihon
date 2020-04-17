@@ -30,6 +30,10 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
+import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
+import eu.kanade.tachiyomi.ui.source.SourceController
+import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
+import eu.kanade.tachiyomi.ui.source.global_search.GlobalSearchController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
@@ -218,6 +222,16 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         }
         // EXH <--
     }
+
+    // EXH -->
+    private fun openSmartSearch() {
+        val smartSearchConfig = SourceController.SmartSearchConfig(presenter.manga.title, presenter.manga.id!!)
+
+        parentController?.router?.pushController(SourceController(Bundle().apply {
+            putParcelable(SourceController.SMART_SEARCH_CONFIG, smartSearchConfig)
+        }).withFadeTransaction())
+    }
+    // EXH <--
 
     /**
      * Check if manga is initialized.

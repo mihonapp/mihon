@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bluelinelabs.conductor.Router
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -150,6 +151,18 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), F
 
     companion object {
         private const val MANGA_IDS_EXTRA = "manga_ids"
+
+        fun navigateToMigration(skipPre: Boolean, router: Router, mangaIds: List<Long>) {
+            router.pushController(
+                if (skipPre) {
+                    MigrationListController.create(
+                        MigrationProcedureConfig(mangaIds, null)
+                    )
+                } else {
+                    create(mangaIds)
+                }.withFadeTransaction().tag(if (skipPre) MigrationListController.TAG else null)
+            )
+        }
 
         fun create(mangaIds: List<Long>): PreMigrationController {
             return PreMigrationController(Bundle().apply {

@@ -14,6 +14,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.afollestad.materialdialogs.MaterialDialog
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -26,11 +27,14 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.migration.MigrationMangaDialog
 import eu.kanade.tachiyomi.ui.migration.SearchController
+import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
 import eu.kanade.tachiyomi.util.await
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.system.executeOnIO
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.RecyclerWindowInsetsListener
 import java.util.concurrent.atomic.AtomicInteger
@@ -204,8 +208,7 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
                                         val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
                                         val chapters = try {
                                             source.fetchChapterList(localManga)
-                                            .toSingle().await(Schedulers.io()) }
-                                        catch (e: java.lang.Exception) {
+                                            .toSingle().await(Schedulers.io()) } catch (e: java.lang.Exception) {
                                             Timber.e(e)
                                             emptyList<SChapter>()
                                         } ?: emptyList()
@@ -372,15 +375,38 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
     fun migrateMangas() {
         launchUI {
             adapter?.performMigrations(false)
-            router.popCurrentController()
+            navigateOut()
         }
     }
 
     fun copyMangas() {
         launchUI {
             adapter?.performMigrations(true)
-            router.popCurrentController()
+            navigateOut()
         }
+    }
+
+    private fun navigateOut() {
+        if (migratingManga?.size == 1) {
+            launchUI {
+                val hasDetails = router.backstack.any { it.controller() is MangaController }
+                if (hasDetails) {
+                    val manga = migratingManga?.firstOrNull()?.searchResult?.get()?.let {
+                        db.getManga(it).executeOnIO()
+                    }
+                    if (manga != null) {
+                        val newStack = router.backstack.filter {
+                            it.controller() !is MangaController &&
+                            it.controller() !is MigrationListController &&
+                            it.controller() !is PreMigrationController
+                        } + MangaController(manga).withFadeTransaction()
+                        router.setBackstack(newStack, FadeChangeHandler())
+                        return@launchUI
+                    }
+                }
+                router.popCurrentController()
+            }
+        } else router.popCurrentController()
     }
 
     override fun handleBack(): Boolean {
@@ -440,6 +466,7 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
 
     companion object {
         const val CONFIG_EXTRA = "config_extra"
+        const val TAG = "migration_list"
 
         fun create(config: MigrationProcedureConfig): MigrationListController {
             return MigrationListController(Bundle().apply {

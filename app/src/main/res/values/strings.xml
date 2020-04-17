@@ -573,6 +573,7 @@
     <string name="migration_selection_prompt">Select a source to migrate from</string>
     <string name="select">Select</string>
     <string name="migrate">Migrate</string>
+    <string name="migrate_">Migrate %1$s</string>
     <string name="copy">Copy</string>
     <string name="migrating">Migrating…</string>
     <string name="migration">Migration</string>
