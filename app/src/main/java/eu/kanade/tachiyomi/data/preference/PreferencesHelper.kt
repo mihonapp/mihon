@@ -260,6 +260,14 @@ class PreferencesHelper(val context: Context) {
 
     fun skipPreMigration() = flowPrefs.getBoolean(Keys.skipPreMigration, false)
 
+    fun migrationSources() = rxPrefs.getString("migrate_sources", "")
+
+    fun smartMigration() = rxPrefs.getBoolean("smart_migrate", false)
+
+    fun useSourceWithMost() = rxPrefs.getBoolean("use_source_with_most", false)
+
+    fun skipPreMigration() = rxPrefs.getBoolean(Keys.skipPreMigration, false)
+
     fun upgradeFilters() {
         val filterDl = rxPrefs.getBoolean(Keys.filterDownloaded, false).getOrDefault()
         val filterUn = rxPrefs.getBoolean(Keys.filterUnread, false).getOrDefault()

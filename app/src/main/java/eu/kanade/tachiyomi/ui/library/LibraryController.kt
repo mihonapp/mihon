@@ -11,6 +11,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
@@ -36,8 +38,9 @@ import eu.kanade.tachiyomi.ui.main.offsetFabAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.ui.migration.MigrationInterface
-import eu.kanade.tachiyomi.ui.migration.SearchController
 import eu.kanade.tachiyomi.ui.migration.manga.design.MigrationDesignController
+import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationListController
+import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationProcedureConfig
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.inflate
@@ -484,9 +487,15 @@ class LibraryController(
             R.id.action_select_inverse -> selectInverseCategoryManga()
             R.id.action_migrate -> {
                 router.pushController(
-                    MigrationDesignController.create(
-                        selectedMangas.mapNotNull { it.id }
-                    ).withFadeTransaction())
+                    if (preferences.skipPreMigration().getOrDefault()) {
+                        MigrationListController.create(
+                            MigrationProcedureConfig(
+                                selectedMangas.mapNotNull { it.id }, null)
+                        )
+                    } else {
+                        MigrationDesignController.create(selectedMangas.mapNotNull { it.id })
+                    }
+                    .withFadeTransaction())
                 destroyActionModeIfNeeded()
             }
             else -> return false
@@ -501,18 +510,6 @@ class LibraryController(
         val nextManga = migratingMangas.firstOrNull() ?: return null
         migratingMangas.remove(nextManga)
         return nextManga
-    }
-
-    private fun startMangaMigration() {
-        migratingMangas.clear()
-        migratingMangas.addAll(selectedMangas)
-        destroyActionModeIfNeeded()
-        val manga = migratingMangas.firstOrNull() ?: return
-        val searchController = SearchController(manga)
-        searchController.totalProgress = migratingMangas.size
-        searchController.targetController = this
-        router.pushController(searchController.withFadeTransaction())
-        migratingMangas.remove(manga)
     }
 
     override fun onDestroyActionMode(mode: ActionMode?) {
@@ -786,5 +783,17 @@ class LibraryController(
          * Key to change the cover of a manga in [onActivityResult].
          */
         const val REQUEST_IMAGE_OPEN = 101
+    }
+}
+
+object HeightTopWindowInsetsListener : View.OnApplyWindowInsetsListener {
+    override fun onApplyWindowInsets(v: View, insets: WindowInsets): WindowInsets {
+        val topInset = insets.systemWindowInsetTop
+        v.setPadding(0, topInset, 0, 0)
+        if (v.layoutParams.height != topInset) {
+            v.layoutParams.height = topInset
+            v.requestLayout()
+        }
+        return insets
     }
 }

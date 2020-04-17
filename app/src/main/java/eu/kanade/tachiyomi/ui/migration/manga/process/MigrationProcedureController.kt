@@ -9,27 +9,16 @@ import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.smartsearch.SmartSearchEngine
-import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
-import eu.kanade.tachiyomi.util.await
-import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.system.toast
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.CoroutineContext
 import kotlinx.android.synthetic.main.migration_process.pager
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
-import kotlinx.coroutines.withContext
-import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 
 // TODO Will probably implode if activity is fully destroyed
@@ -121,7 +110,7 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseController(bund
     }
 
     suspend fun runMigrations(mangas: List<MigratingManga>) {
-        val sources = config?.targetSourceIds?.mapNotNull { sourceManager.get(it) as?
+        /*  val sources = config?.targetSourceIds?.mapNotNull { sourceManager.get(it) as?
             CatalogueSource } ?: return
 
         for (manga in mangas) {
@@ -229,7 +218,7 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseController(bund
 
                 manga.searchResult.initialize(result?.id)
             }
-        }
+        }*/
     }
 
     override fun onDestroy() {

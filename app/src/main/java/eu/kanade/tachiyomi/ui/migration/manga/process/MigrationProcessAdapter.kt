@@ -6,6 +6,8 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.migration.MigrationFlags
 import eu.kanade.tachiyomi.util.lang.launchUI
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,7 @@ class MigrationProcessAdapter(
 
     private val db: DatabaseHelper by injectLazy()
     var items: List<MigrationProcessItem> = emptyList()
+    val preferences: PreferencesHelper by injectLazy()
 
     val menuItemListener: MigrationProcessInterface = controller
 
@@ -46,7 +49,7 @@ class MigrationProcessAdapter(
         .searchResult.content != null })
 
     fun mangasSkipped() = (items.count { (!it.manga.searchResult.initialized || it.manga
-        .searchResult.content == null) && !it.manga.migrationJob.isActive })
+        .searchResult.content == null) })
 
     suspend fun performMigrations(copy: Boolean) {
         withContext(Dispatchers.IO) {
@@ -95,9 +98,9 @@ class MigrationProcessAdapter(
         replace: Boolean
     ) {
         if (controller.config == null) return
-        // db.inTransaction {
+        val flags = preferences.migrateFlags().getOrDefault()
         // Update chapters read
-        if (MigrationFlags.hasChapters(controller.config.migrationFlags)) {
+        if (MigrationFlags.hasChapters(flags)) {
             val prevMangaChapters = db.getChapters(prevManga).executeAsBlocking()
             val maxChapterRead = prevMangaChapters.filter { it.read }
                 .maxBy { it.chapter_number }?.chapter_number
@@ -112,13 +115,13 @@ class MigrationProcessAdapter(
             }
         }
         // Update categories
-        if (MigrationFlags.hasCategories(controller.config.migrationFlags)) {
+        if (MigrationFlags.hasCategories(flags)) {
             val categories = db.getCategoriesForManga(prevManga).executeAsBlocking()
             val mangaCategories = categories.map { MangaCategory.create(manga, it) }
             db.setMangaCategories(mangaCategories, listOf(manga))
         }
         // Update track
-        if (MigrationFlags.hasTracks(controller.config.migrationFlags)) {
+        if (MigrationFlags.hasTracks(flags)) {
             val tracks = db.getTracks(prevManga).executeAsBlocking()
             for (track in tracks) {
                 track.id = null

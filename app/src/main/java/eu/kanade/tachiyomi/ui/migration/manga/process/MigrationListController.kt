@@ -16,6 +16,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.smartsearch.SmartSearchEngine
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
@@ -62,6 +64,7 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
     val config: MigrationProcedureConfig? = args.getParcelable(CONFIG_EXTRA)
 
     private val db: DatabaseHelper by injectLazy()
+    private val preferences: PreferencesHelper by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
 
     private val smartSearchEngine = SmartSearchEngine(coroutineContext, config?.extraSearchParams)
@@ -95,11 +98,8 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
 
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(view.context)
-        // recycler.addItemDecoration(DividerItemDecoration(view.context, DividerItemDecoration
-            // .VERTICAL))
         recycler.setHasFixedSize(true)
         recycler.setOnApplyWindowInsetsListener(RecyclerWindowInsetsListener)
-        // recycler.isEnabled = false
 
         adapter?.updateDataSet(newMigratingManga.map { it.toModal() })
 
@@ -109,21 +109,6 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
             }
         }
     }
-
-    /*fun nextMigration() {
-        adapter?.let { adapter ->
-            if(pager.currentItem >= adapter.count - 1) {
-                applicationContext?.toast("All migrations complete!")
-                router.popCurrentController()
-            } else {
-                adapter.migratingManga[pager.currentItem].migrationJob.cancel()
-                pager.setCurrentItem(pager.currentItem + 1, true)
-                launch(Dispatchers.Main) {
-                    updateTitle()
-                }
-            }
-        }
-    }*/
 
     fun migrationFailure() {
         activity?.let {
@@ -136,8 +121,13 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
     }
 
     suspend fun runMigrations(mangas: List<MigratingManga>) {
-        val sources = config?.targetSourceIds?.mapNotNull { sourceManager.get(it) as? CatalogueSource } ?: return
+        val useSourceWithMost = preferences.useSourceWithMost().getOrDefault()
+        val useSmartSearch = preferences.smartMigration().getOrDefault()
 
+        val sources = preferences.migrationSources().getOrDefault().split("/").mapNotNull {
+            val value = it.toLongOrNull() ?: return
+            sourceManager.get(value) as? CatalogueSource }
+        if (config == null) return
         for (manga in mangas) {
             if (!manga.searchResult.initialized && manga.migrationJob.isActive) {
                 val mangaObj = manga.manga()
@@ -154,7 +144,7 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
                         val validSources = sources.filter {
                             it.id != mangaSource.id
                         }
-                        if (config.useSourceWithMostChapters) {
+                        if (useSourceWithMost) {
                             val sourceSemaphore = Semaphore(3)
                             val processedSources = AtomicInteger()
 
@@ -162,7 +152,7 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
                                 async {
                                     sourceSemaphore.withPermit {
                                         try {
-                                            val searchResult = if (config.enableLenientSearch) {
+                                            val searchResult = if (useSmartSearch) {
                                                 smartSearchEngine.smartSearch(source, mangaObj.title)
                                             } else {
                                                 smartSearchEngine.normalSearch(source, mangaObj.title)
@@ -192,7 +182,7 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
                         } else {
                             validSources.forEachIndexed { index, source ->
                                 val searchResult = try {
-                                    val searchResult = if (config.enableLenientSearch) {
+                                    val searchResult = if (useSmartSearch) {
                                         smartSearchEngine.smartSearch(source, mangaObj.title)
                                     } else {
                                         smartSearchEngine.normalSearch(source, mangaObj.title)

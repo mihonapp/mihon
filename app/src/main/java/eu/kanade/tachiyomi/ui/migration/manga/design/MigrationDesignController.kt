@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -13,27 +15,18 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
-import eu.kanade.tachiyomi.ui.migration.MigrationFlags
 import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationListController
 import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationProcedureConfig
-import eu.kanade.tachiyomi.util.view.gone
-import eu.kanade.tachiyomi.util.view.visible
-import kotlinx.android.synthetic.main.migration_design_controller.begin_migration_btn
-import kotlinx.android.synthetic.main.migration_design_controller.extra_search_param
-import kotlinx.android.synthetic.main.migration_design_controller.extra_search_param_desc
-import kotlinx.android.synthetic.main.migration_design_controller.extra_search_param_text
-import kotlinx.android.synthetic.main.migration_design_controller.fuzzy_search
-import kotlinx.android.synthetic.main.migration_design_controller.mig_categories
-import kotlinx.android.synthetic.main.migration_design_controller.mig_chapters
-import kotlinx.android.synthetic.main.migration_design_controller.migration_mode
-import kotlinx.android.synthetic.main.migration_design_controller.options_group
-import kotlinx.android.synthetic.main.migration_design_controller.prioritize_chapter_count
+import eu.kanade.tachiyomi.util.view.doOnApplyWindowInsets
+import eu.kanade.tachiyomi.util.view.marginBottom
+import eu.kanade.tachiyomi.util.view.updateLayoutParams
+import eu.kanade.tachiyomi.util.view.updatePaddingRelative
+import kotlinx.android.synthetic.main.migration_design_controller.fab
 import kotlinx.android.synthetic.main.migration_design_controller.recycler
-import kotlinx.android.synthetic.main.migration_design_controller.use_smart_search
 import uy.kohesive.injekt.injectLazy
 
 class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle), FlexibleAdapter
-.OnItemClickListener {
+.OnItemClickListener, StartMigrationListener {
     private val sourceManager: SourceManager by injectLazy()
     private val prefs: PreferencesHelper by injectLazy()
 
@@ -53,7 +46,7 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle)
         super.onViewCreated(view)
 
         val ourAdapter = adapter ?: MigrationSourceAdapter(
-                getEnabledSources().map { MigrationSourceItem(it, true) },
+                getEnabledSources().map { MigrationSourceItem(it, isEnabled(it.id.toString())) },
                 this
         )
         adapter = ourAdapter
@@ -63,83 +56,42 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle)
         ourAdapter.itemTouchHelperCallback = null // Reset adapter touch adapter to fix drag after rotation
         ourAdapter.isHandleDragEnabled = true
 
-        migration_mode.setOnClickListener {
-            prioritize_chapter_count.toggle()
-        }
+        val fabBaseMarginBottom = fab?.marginBottom ?: 0
+        recycler.doOnApplyWindowInsets { v, insets, padding ->
 
-        fuzzy_search.setOnClickListener {
-            use_smart_search.toggle()
-        }
-
-        extra_search_param_desc.setOnClickListener {
-            extra_search_param.toggle()
-        }
-
-        prioritize_chapter_count.setOnCheckedChangeListener { _, b ->
-            updatePrioritizeChapterCount(b)
-        }
-
-        extra_search_param.setOnCheckedChangeListener { _, b ->
-            updateOptionsState()
-        }
-
-        updatePrioritizeChapterCount(prioritize_chapter_count.isChecked)
-
-        updateOptionsState()
-
-        begin_migration_btn.setOnClickListener {
-            if (!showingOptions) {
-                showingOptions = true
-                updateOptionsState()
-                return@setOnClickListener
+            fab?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = fabBaseMarginBottom + insets.systemWindowInsetBottom
             }
+            // offset the recycler by the fab's inset + some inset on top
+            v.updatePaddingRelative(bottom = padding.bottom + (fab?.marginBottom ?: 0) +
+                fabBaseMarginBottom + (fab?.height ?: 0))
+        }
 
-            var flags = 0
-            if (mig_chapters.isChecked) flags = flags or MigrationFlags.CHAPTERS
-            if (mig_categories.isChecked) flags = flags or MigrationFlags.CATEGORIES
-            if (mig_categories.isChecked) flags = flags or MigrationFlags.TRACK
+        fab.setOnClickListener {
+            val dialog = MigrationBottomSheetDialog(activity!!, R.style.SheetDialog, this)
+            dialog.show()
+            val bottomSheet =
+                dialog.findViewById<FrameLayout>(com.google.android.material.R.id
+                    .design_bottom_sheet)
+            val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet!!)
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            behavior.skipCollapsed = true
+        }
+    }
 
-            router.replaceTopController(
-                MigrationListController.create(
-                    MigrationProcedureConfig(
-                            config.toList(),
-                            ourAdapter.items.filter {
-                                it.sourceEnabled
-                            }.map { it.source.id },
-                            useSourceWithMostChapters = prioritize_chapter_count.isChecked,
-                            enableLenientSearch = use_smart_search.isChecked,
-                            migrationFlags = flags,
-                            extraSearchParams = if (extra_search_param.isChecked && extra_search_param_text.text.isNotBlank()) {
-                                extra_search_param_text.text.toString()
-                            } else null
-                    )
+    override fun startMigration(extraParam: String?) {
+        val listOfSources = adapter?.items?.filter {
+            it.sourceEnabled
+        }?.joinToString("/") { it.source.id.toString() }
+        prefs.migrationSources().set(listOfSources)
+
+        router.replaceTopController(
+            MigrationListController.create(
+                MigrationProcedureConfig(
+                    config.toList(),
+                    extraSearchParams = extraParam
+                )
             ).withFadeTransaction())
-        }
-    }
-
-    fun updateOptionsState() {
-        if (showingOptions) {
-            begin_migration_btn.text = "Begin migration"
-            options_group.visible()
-            if (extra_search_param.isChecked) {
-                extra_search_param_text.visible()
-            } else {
-                extra_search_param_text.gone()
-            }
-        } else {
-            begin_migration_btn.text = "Next step"
-            options_group.gone()
-            extra_search_param_text.gone()
-        }
-    }
-
-    override fun handleBack(): Boolean {
-        if (showingOptions) {
-            showingOptions = false
-            updateOptionsState()
-            return true
-        }
-        return super.handleBack()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -151,14 +103,6 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle)
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         adapter?.onRestoreInstanceState(savedInstanceState)
-    }
-
-    private fun updatePrioritizeChapterCount(migrationMode: Boolean) {
-        migration_mode.text = if (migrationMode) {
-            "Currently using the source with the most chapters and the above list to break ties (slow with many sources or smart search)"
-        } else {
-            "Currently using the first source in the list that has the manga"
-        }
     }
 
     override fun onItemClick(view: View, position: Int): Boolean {
@@ -176,13 +120,25 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle)
      */
     private fun getEnabledSources(): List<HttpSource> {
         val languages = prefs.enabledLanguages().getOrDefault()
-        val hiddenCatalogues = prefs.hiddenCatalogues().getOrDefault()
+        val sourcesSaved = prefs.migrationSources().getOrDefault().split("/")
+        var sources = sourceManager.getCatalogueSources()
+            .filterIsInstance<HttpSource>()
+            .filter { it.lang in languages }
+            .sortedBy { "(${it.lang}) ${it.name}" }
+        sources =
+            sources.filter { isEnabled(it.id.toString()) }.sortedBy { sourcesSaved.indexOf(it.id
+                .toString())
+            } +
+                sources.filterNot { isEnabled(it.id.toString()) }
 
-        return sourceManager.getVisibleCatalogueSources()
-                .filterIsInstance<HttpSource>()
-                .filter { it.lang in languages }
-                .filterNot { it.id.toString() in hiddenCatalogues }
-                .sortedBy { "(${it.lang}) ${it.name}" }
+        return sources
+    }
+
+    fun isEnabled(id: String): Boolean {
+        val sourcesSaved = prefs.migrationSources().getOrDefault()
+        val hiddenCatalogues = prefs.hiddenCatalogues().getOrDefault()
+        return if (sourcesSaved.isEmpty()) id !in hiddenCatalogues
+        else sourcesSaved.split("/").contains(id)
     }
 
     companion object {

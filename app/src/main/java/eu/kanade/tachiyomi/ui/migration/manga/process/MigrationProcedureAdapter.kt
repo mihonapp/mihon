@@ -8,7 +8,6 @@ import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
@@ -16,7 +15,6 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.migration.MigrationFlags
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.util.view.visible
@@ -123,7 +121,7 @@ class MigrationProcedureAdapter(
         val config = controller.config ?: return
         // db.inTransaction {
             // Update chapters read
-            if (MigrationFlags.hasChapters(controller.config.migrationFlags)) {
+            /* if (MigrationFlags.hasChapters(controller.config.migrationFlags)) {
                 val prevMangaChapters = db.getChapters(prevManga).executeAsBlocking()
                 val maxChapterRead = prevMangaChapters.filter { it.read }
                         .maxBy { it.chapter_number }?.chapter_number
@@ -162,7 +160,7 @@ class MigrationProcedureAdapter(
 
             // SearchPresenter#networkToLocalManga may have updated the manga title, so ensure db gets updated title
             db.updateMangaTitle(manga).executeAsBlocking()
-        // }
+        //}*/
     }
 
     fun View.setupView(tag: ViewTag, migratingManga: MigratingManga) {

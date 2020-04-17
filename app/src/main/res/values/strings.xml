@@ -192,7 +192,9 @@
     <string name="wifi">Wi-Fi</string>
     <string name="charging">Charging</string>
     <string name="pref_update_only_non_completed">Only update ongoing manga</string>
-
+    <string name="pref_skip_pre_migration">Skip pre-migration</string>
+    <string name="pref_skip_pre_migration_summary">Use last saved pre-migration preferences
+    and sources to mass migrate</string>
     <string name="pref_category_library_categories">Categories</string>
     <string name="default_category">Default category</string>
     <string name="default_category_summary">Always ask</string>
@@ -657,10 +659,12 @@
     <string name="data_to_include_in_migration">Data to include in migration</string>
     <string name="search_parameter">Search parameter (e.g. language:english)</string>
     <string name="include_extra_search_parameter">Include extra search parameter when searching</string>
-    <string name="keep_old_manga">Keep old manga</string>
-    <string name="use_intelligent_search">Use intelligent search algorithm</string>
-    <string name="begin_migration">Begin migration</string>
+    <string name="use_intelligent_search">Search title + keywords of title</string>
     <string name="migrating_to">migrating to</string>
+    <string name="use_most_chapters">Use source with the most chapters (slower)</string>
+    <string name="use_first_source">Use first source with alternative</string>
+    <string name="skip_this_step_next_time">Skip this step next time</string>
+    <string name="pre_migration_skip_toast">To show this screen again, go to Settings -> General.</string>
 
     <!-- EXH -->
     <string name="label_login">Login</string>

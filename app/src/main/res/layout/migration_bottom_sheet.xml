@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/dialog_rounded_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/data_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/data_to_include_in_migration"
+            android:textAppearance="@style/TextAppearance.Medium.Body2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/mig_chapters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:checked="true"
+            android:text="@string/chapters"
+            app:layout_constraintStart_toStartOf="@+id/data_label"
+            app:layout_constraintTop_toBottomOf="@+id/data_label" />
+
+        <CheckBox
+            android:id="@+id/mig_categories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:checked="true"
+            android:text="@string/categories"
+            app:layout_constraintBottom_toBottomOf="@+id/mig_chapters"
+            app:layout_constraintStart_toEndOf="@+id/mig_chapters"
+            app:layout_constraintTop_toTopOf="@+id/mig_chapters" />
+
+        <CheckBox
+            android:id="@+id/mig_tracking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:checked="true"
+            android:text="@string/track"
+            app:layout_constraintBottom_toBottomOf="@+id/mig_categories"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/mig_categories"
+            app:layout_constraintTop_toTopOf="@+id/mig_categories" />
+
+        <TextView
+            android:id="@+id/options_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/options"
+            android:textAppearance="@style/TextAppearance.Medium.Body2"
+            app:layout_constraintStart_toStartOf="@+id/mig_chapters"
+            app:layout_constraintTop_toBottomOf="@+id/mig_chapters" />
+
+        <RadioGroup
+            android:id="@+id/sourceGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/options_label"
+            app:layout_constraintTop_toBottomOf="@+id/options_label">
+
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingEnd="8dp"
+                android:text="@string/use_first_source" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/use_most_chapters" />
+        </RadioGroup>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/use_smart_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/use_intelligent_search"
+            app:layout_constraintEnd_toEndOf="@+id/sourceGroup"
+            app:layout_constraintStart_toStartOf="@+id/sourceGroup"
+            app:layout_constraintTop_toBottomOf="@+id/sourceGroup" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/extra_search_param"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/include_extra_search_parameter"
+            app:layout_constraintEnd_toEndOf="@+id/use_smart_search"
+            app:layout_constraintStart_toStartOf="@+id/use_smart_search"
+            app:layout_constraintTop_toBottomOf="@+id/use_smart_search" />
+
+        <EditText
+            android:id="@+id/extra_search_param_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="@string/search_parameter"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/extra_search_param"
+            app:layout_constraintTop_toBottomOf="@+id/extra_search_param" />
+
+        <Switch
+            android:id="@+id/skip_step"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/skip_this_step_next_time"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/extra_search_param"
+            app:layout_constraintStart_toStartOf="@+id/extra_search_param"
+            app:layout_constraintTop_toBottomOf="@+id/extra_search_param_text" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_arrow_forward_24dp"
+        app:layout_anchor="@id/constraintLayout"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
