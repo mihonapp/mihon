@@ -1,108 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:layout_height="wrap_content"
+    android:gravity="center">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include
+        android:id="@+id/migration_manga_card_from"
+        layout="@layout/migration_manga_card"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/migration_manga_card_from"
-            layout="@layout/migration_manga_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_max="450dp" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/migrating_to"
+        android:scaleType="center"
+        android:layout_marginBottom="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/migration_manga_card_to"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/migration_manga_card_from"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="migrating to"
-            android:scaleType="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/migration_manga_card_from"
-            app:srcCompat="@drawable/ic_arrow_down_white_32dp" />
+    <include
+        android:id="@+id/migration_manga_card_to"
+        layout="@layout/migration_manga_card"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/migration_menu"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/migration_manga_card_to"
-            layout="@layout/migration_manga_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
-            app:layout_constraintWidth_max="450dp" />
+    <ImageView
+        android:id="@+id/migration_menu"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/description_cover"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:layout_marginBottom="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/migration_manga_card_to"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp"
+        android:visibility="invisible"/>
 
-        <Button
-            android:id="@+id/skip_migration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:drawableStart="@drawable/ic_clear_grey"
-            android:drawablePadding="6dp"
-            android:text="Skip manga"
-            android:textColor="#ffffff"
-            app:backgroundTint="#E53935"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/accept_migration"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/accept_migration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.5"
-            android:drawableStart="@drawable/ic_check_box_24dp"
-            android:drawablePadding="6dp"
-            android:enabled="false"
-            android:text="Migrate manga"
-            android:textColor="#ffffff"
-            app:backgroundTint="#00C853"
-            app:layout_constraintBottom_toBottomOf="@+id/skip_migration"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/skip_migration" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-        android:id="@+id/migrating_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <View
-            android:id="@+id/migrating_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#E6FFFFFF" />
-
-        <ProgressBar
-            android:id="@+id/migrating_progress"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
-
-</FrameLayout>
+    <ImageView
+        android:id="@+id/skip_manga"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/migration_menu"
+        app:layout_constraintEnd_toEndOf="@+id/migration_menu"
+        app:layout_constraintStart_toStartOf="@+id/migration_menu"
+        app:layout_constraintTop_toTopOf="@+id/migration_menu"
+        app:srcCompat="@drawable/baseline_close_24" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:id="@+id/recycler"
-        tools:listitem="@layout/migration_new_process_item" />
+        tools:listitem="@layout/migration_process_item" />
 
 </FrameLayout>

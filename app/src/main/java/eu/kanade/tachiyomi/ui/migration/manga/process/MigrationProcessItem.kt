@@ -12,7 +12,7 @@ class MigrationProcessItem(val manga: MigratingManga) :
 
     var holder: MigrationProcessHolder? = null
     override fun getLayoutRes(): Int {
-        return R.layout.migration_new_process_item
+        return R.layout.migration_process_item
     }
 
     override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): MigrationProcessHolder {
