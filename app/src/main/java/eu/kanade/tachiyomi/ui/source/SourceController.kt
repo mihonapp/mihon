@@ -14,7 +14,6 @@ import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
-import com.jakewharton.rxbinding.support.v7.widget.queryTextChangeEvents
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
@@ -31,6 +30,13 @@ import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
 import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.source.global_search.GlobalSearchController
 import eu.kanade.tachiyomi.ui.source.latest.LatestUpdatesController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.appcompat.QueryTextEvent
+import reactivecircus.flowbinding.appcompat.queryTextEvents
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -53,6 +59,8 @@ class SourceController : NucleusController<SourcePresenter>(),
      * Adapter containing sources.
      */
     private var adapter: SourceAdapter? = null
+
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var binding: SourceMainControllerBinding
 
@@ -192,9 +200,10 @@ class SourceController : NucleusController<SourcePresenter>(),
         searchView.queryHint = applicationContext?.getString(R.string.action_global_search_hint)
 
         // Create query listener which opens the global search view.
-        searchView.queryTextChangeEvents()
-                .filter { it.isSubmitted }
-                .subscribeUntilDestroy { performGlobalSearch(it.queryText().toString()) }
+        searchView.queryTextEvents()
+            .filter { it is QueryTextEvent.QuerySubmitted }
+            .onEach { performGlobalSearch(it.queryText.toString()) }
+            .launchIn(uiScope)
     }
 
     fun performGlobalSearch(query: String) {

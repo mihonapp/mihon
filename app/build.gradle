@@ -232,10 +232,15 @@ dependencies {
 
     // RxBindings
     final rxbindings_version = '1.0.1'
-    implementation "com.jakewharton.rxbinding:rxbinding-kotlin:$rxbindings_version"
     implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7-kotlin:$rxbindings_version"
     implementation "com.jakewharton.rxbinding:rxbinding-support-v4-kotlin:$rxbindings_version"
-    implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7-kotlin:$rxbindings_version"
+
+    // FlowBinding
+    final flowbinding_version = '0.10.2'
+    implementation "io.github.reactivecircus.flowbinding:flowbinding-android:$flowbinding_version"
+    implementation "io.github.reactivecircus.flowbinding:flowbinding-appcompat:$flowbinding_version"
+    implementation "io.github.reactivecircus.flowbinding:flowbinding-recyclerview:$flowbinding_version"
+    implementation "io.github.reactivecircus.flowbinding:flowbinding-swiperefreshlayout:$flowbinding_version"
 
     // Tests
     testImplementation 'junit:junit:4.13'

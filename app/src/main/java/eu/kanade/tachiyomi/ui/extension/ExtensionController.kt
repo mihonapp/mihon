@@ -12,8 +12,6 @@ import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
-import com.jakewharton.rxbinding.support.v4.widget.refreshes
-import com.jakewharton.rxbinding.support.v7.widget.queryTextChanges
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
@@ -24,6 +22,13 @@ import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.appcompat.queryTextChanges
+import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -46,6 +51,8 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
     private var extensions: List<ExtensionItem> = emptyList()
 
     private var query = ""
+
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var binding: ExtensionControllerBinding
 
@@ -70,9 +77,9 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         super.onViewCreated(view)
 
         binding.extSwipeRefresh.isRefreshing = true
-        binding.extSwipeRefresh.refreshes().subscribeUntilDestroy {
-            presenter.findAvailableExtensions()
-        }
+        binding.extSwipeRefresh.refreshes()
+            .onEach { presenter.findAvailableExtensions() }
+            .launchIn(uiScope)
 
         // Initialize adapter, scroll listener and recycler views
         adapter = ExtensionAdapter(this)
@@ -146,11 +153,12 @@ open class ExtensionController : NucleusController<ExtensionPresenter>(),
         }
 
         searchView.queryTextChanges()
-                .filter { router.backstack.lastOrNull()?.controller() == this }
-                .subscribeUntilDestroy {
-                    query = it.toString()
-                    drawExtensions()
-                }
+            .filter { router.backstack.lastOrNull()?.controller() == this }
+            .onEach {
+                query = it.toString()
+                drawExtensions()
+            }
+            .launchIn(uiScope)
 
         // Fixes problem with the overflow icon showing up in lieu of search
         searchItem.fixExpand(onExpand = { invalidateMenuOnExpand() })

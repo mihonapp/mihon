@@ -16,8 +16,6 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.jakewharton.rxbinding.support.v4.widget.refreshes
-import com.jakewharton.rxbinding.view.clicks
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.kanade.tachiyomi.R
@@ -36,6 +34,12 @@ import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.android.view.clicks
+import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 
 class ChaptersController : NucleusController<ChaptersPresenter>(),
@@ -61,6 +65,8 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
     private val selectedItems = mutableSetOf<ChapterItem>()
 
     private var lastClickPosition = -1
+
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var binding: ChaptersControllerBinding
 
@@ -91,27 +97,32 @@ class ChaptersController : NucleusController<ChaptersPresenter>(),
         binding.recycler.setHasFixedSize(true)
         adapter?.fastScroller = binding.fastScroller
 
-        binding.swipeRefresh.refreshes().subscribeUntilDestroy { fetchChaptersFromSource() }
+        binding.swipeRefresh.refreshes()
+            .onEach { fetchChaptersFromSource() }
+            .launchIn(uiScope)
 
-        binding.fab.clicks().subscribeUntilDestroy {
-            val item = presenter.getNextUnreadChapter()
-            if (item != null) {
-                // Create animation listener
-                val revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
-                    override fun onAnimationStart(animation: Animator?) {
-                        openChapter(item.chapter, true)
+        binding.fab.clicks()
+            .onEach {
+                val item = presenter.getNextUnreadChapter()
+                if (item != null) {
+                    // Create animation listener
+                    val revealAnimationListener: Animator.AnimatorListener = object : AnimatorListenerAdapter() {
+                        override fun onAnimationStart(animation: Animator?) {
+                            openChapter(item.chapter, true)
+                        }
                     }
-                }
 
-                // Get coordinates and start animation
-                val coordinates = binding.fab.getCoordinates()
-                if (!binding.revealView.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
-                    openChapter(item.chapter)
+                    // Get coordinates and start animation
+                    val coordinates = binding.fab.getCoordinates()
+                    if (!binding.revealView.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
+                        openChapter(item.chapter)
+                    }
+                } else {
+                    view.context.toast(R.string.no_next_chapter)
                 }
-            } else {
-                view.context.toast(R.string.no_next_chapter)
             }
-        }
+            .launchIn(uiScope)
+
         binding.fab.shrinkOnScroll(binding.recycler)
     }
 

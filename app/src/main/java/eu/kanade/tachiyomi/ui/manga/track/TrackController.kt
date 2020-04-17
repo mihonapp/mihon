@@ -6,13 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding.support.v4.widget.refreshes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.databinding.TrackControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 
 class TrackController : NucleusController<TrackPresenter>(),
@@ -22,6 +26,8 @@ class TrackController : NucleusController<TrackPresenter>(),
         SetTrackScoreDialog.Listener {
 
     private var adapter: TrackAdapter? = null
+
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var binding: TrackControllerBinding
 
@@ -47,7 +53,9 @@ class TrackController : NucleusController<TrackPresenter>(),
         binding.trackRecycler.layoutManager = LinearLayoutManager(view.context)
         binding.trackRecycler.adapter = adapter
         binding.swipeRefresh.isEnabled = false
-        binding.swipeRefresh.refreshes().subscribeUntilDestroy { presenter.refresh() }
+        binding.swipeRefresh.refreshes()
+            .onEach { presenter.refresh() }
+            .launchIn(uiScope)
     }
 
     override fun onDestroyView(view: View) {

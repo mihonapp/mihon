@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding.support.v4.widget.refreshes
-import com.jakewharton.rxbinding.support.v7.widget.scrollStateChanges
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -29,6 +27,12 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.recyclerview.scrollStateChanges
+import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 
 /**
@@ -56,6 +60,8 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
      */
     var adapter: UpdatesAdapter? = null
         private set
+
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var binding: UpdatesControllerBinding
 
@@ -92,19 +98,23 @@ class UpdatesController : NucleusController<UpdatesPresenter>(),
         adapter = UpdatesAdapter(this@UpdatesController)
         binding.recycler.adapter = adapter
 
-        binding.recycler.scrollStateChanges().subscribeUntilDestroy {
-            // Disable swipe refresh when view is not at the top
-            val firstPos = layoutManager.findFirstCompletelyVisibleItemPosition()
-            binding.swipeRefresh.isEnabled = firstPos <= 0
-        }
+        binding.recycler.scrollStateChanges()
+            .onEach {
+                // Disable swipe refresh when view is not at the top
+                val firstPos = layoutManager.findFirstCompletelyVisibleItemPosition()
+                binding.swipeRefresh.isEnabled = firstPos <= 0
+            }
+            .launchIn(uiScope)
 
         binding.swipeRefresh.setDistanceToTriggerSync((2 * 64 * view.resources.displayMetrics.density).toInt())
-        binding.swipeRefresh.refreshes().subscribeUntilDestroy {
-            updateLibrary()
+        binding.swipeRefresh.refreshes()
+            .onEach {
+                updateLibrary()
 
-            // It can be a very long operation, so we disable swipe refresh and show a toast.
-            binding.swipeRefresh.isRefreshing = false
-        }
+                // It can be a very long operation, so we disable swipe refresh and show a toast.
+                binding.swipeRefresh.isRefreshing = false
+            }
+            .launchIn(uiScope)
     }
 
     override fun onDestroyView(view: View) {

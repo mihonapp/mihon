@@ -27,9 +27,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.chip.Chip
-import com.jakewharton.rxbinding.support.v4.widget.refreshes
-import com.jakewharton.rxbinding.view.clicks
-import com.jakewharton.rxbinding.view.longClicks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -56,6 +53,13 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import jp.wasabeef.glide.transformations.CropSquareTransformation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.android.view.clicks
+import reactivecircus.flowbinding.android.view.longClicks
+import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -69,6 +73,8 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         ChangeMangaCategoriesDialog.Listener {
 
     private val preferences: PreferencesHelper by injectLazy()
+
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var binding: MangaInfoControllerBinding
 
@@ -91,53 +97,79 @@ class MangaInfoController : NucleusController<MangaInfoPresenter>(),
         super.onViewCreated(view)
 
         // Set onclickListener to toggle favorite when favorite button clicked.
-        binding.btnFavorite.clicks().subscribeUntilDestroy { onFavoriteClick() }
+        binding.btnFavorite.clicks()
+            .onEach { onFavoriteClick() }
+            .launchIn(uiScope)
 
         // Set onLongClickListener to manage categories when favorite button is clicked.
-        binding.btnFavorite.longClicks().subscribeUntilDestroy { onFavoriteLongClick() }
+        binding.btnFavorite.longClicks()
+            .onEach { onFavoriteLongClick() }
+            .launchIn(uiScope)
 
         if (presenter.source is HttpSource) {
             binding.btnWebview.visible()
             binding.btnShare.visible()
 
-            binding.btnWebview.clicks().subscribeUntilDestroy { openInWebView() }
-            binding.btnShare.clicks().subscribeUntilDestroy { shareManga() }
+            binding.btnWebview.clicks()
+                .onEach { openInWebView() }
+                .launchIn(uiScope)
+            binding.btnShare.clicks()
+                .onEach { shareManga() }
+                .launchIn(uiScope)
         }
 
         // Set SwipeRefresh to refresh manga data.
-        binding.swipeRefresh.refreshes().subscribeUntilDestroy { fetchMangaFromSource() }
+        binding.swipeRefresh.refreshes()
+            .onEach { fetchMangaFromSource() }
+            .launchIn(uiScope)
 
-        binding.mangaFullTitle.longClicks().subscribeUntilDestroy {
-            copyToClipboard(view.context.getString(R.string.title), binding.mangaFullTitle.text.toString())
-        }
+        binding.mangaFullTitle.longClicks()
+            .onEach {
+                copyToClipboard(view.context.getString(R.string.title), binding.mangaFullTitle.text.toString())
+            }
+            .launchIn(uiScope)
 
-        binding.mangaFullTitle.clicks().subscribeUntilDestroy {
-            performGlobalSearch(binding.mangaFullTitle.text.toString())
-        }
+        binding.mangaFullTitle.clicks()
+            .onEach {
+                performGlobalSearch(binding.mangaFullTitle.text.toString())
+            }
+            .launchIn(uiScope)
 
-        binding.mangaArtist.longClicks().subscribeUntilDestroy {
-            copyToClipboard(binding.mangaArtistLabel.text.toString(), binding.mangaArtist.text.toString())
-        }
+        binding.mangaArtist.longClicks()
+            .onEach {
+                copyToClipboard(binding.mangaArtistLabel.text.toString(), binding.mangaArtist.text.toString())
+            }
+            .launchIn(uiScope)
 
-        binding.mangaArtist.clicks().subscribeUntilDestroy {
-            performGlobalSearch(binding.mangaArtist.text.toString())
-        }
+        binding.mangaArtist.clicks()
+            .onEach {
+                performGlobalSearch(binding.mangaArtist.text.toString())
+            }
+            .launchIn(uiScope)
 
-        binding.mangaAuthor.longClicks().subscribeUntilDestroy {
-            copyToClipboard(binding.mangaAuthor.text.toString(), binding.mangaAuthor.text.toString())
-        }
+        binding.mangaAuthor.longClicks()
+            .onEach {
+                copyToClipboard(binding.mangaAuthor.text.toString(), binding.mangaAuthor.text.toString())
+            }
+            .launchIn(uiScope)
 
-        binding.mangaAuthor.clicks().subscribeUntilDestroy {
-            performGlobalSearch(binding.mangaAuthor.text.toString())
-        }
+        binding.mangaAuthor.clicks()
+            .onEach {
+                performGlobalSearch(binding.mangaAuthor.text.toString())
+            }
+            .launchIn(uiScope)
 
-        binding.mangaSummary.longClicks().subscribeUntilDestroy {
-            copyToClipboard(view.context.getString(R.string.description), binding.mangaSummary.text.toString())
-        }
+        binding.mangaSummary.longClicks()
+            .onEach {
+                copyToClipboard(view.context.getString(R.string.description), binding.mangaSummary.text.toString())
+            }
+            .launchIn(uiScope)
 
-        binding.mangaCover.longClicks().subscribeUntilDestroy {
-            copyToClipboard(view.context.getString(R.string.title), presenter.manga.title)
-        }
+        binding.mangaCover.longClicks()
+            .onEach {
+                copyToClipboard(view.context.getString(R.string.title), presenter.manga.title)
+            }
+            .launchIn(uiScope)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

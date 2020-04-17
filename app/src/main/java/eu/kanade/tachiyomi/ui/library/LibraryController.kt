@@ -20,7 +20,6 @@ import com.bluelinelabs.conductor.ControllerChangeType
 import com.f2prateek.rx.preferences.Preference
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxbinding.support.v4.view.pageSelections
-import com.jakewharton.rxbinding.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.R
@@ -40,6 +39,12 @@ import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import java.io.IOException
 import kotlinx.android.synthetic.main.main_activity.tabs
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.appcompat.queryTextChanges
 import rx.Subscription
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
@@ -123,7 +128,7 @@ class LibraryController(
 
     private var tabsVisibilitySubscription: Subscription? = null
 
-    private var searchViewSubscription: Subscription? = null
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var binding: LibraryControllerBinding
 
@@ -335,14 +340,14 @@ class LibraryController(
         // Mutate the filter icon because it needs to be tinted and the resource is shared.
         menu.findItem(R.id.action_filter).icon.mutate()
 
-        searchViewSubscription?.unsubscribe()
-        searchViewSubscription = searchView.queryTextChanges()
-                // Ignore events if this controller isn't at the top
-                .filter { router.backstack.lastOrNull()?.controller() == this }
-                .subscribeUntilDestroy {
-                    query = it.toString()
-                    searchRelay.call(query)
-                }
+        searchView.queryTextChanges()
+            // Ignore events if this controller isn't at the top
+            .filter { router.backstack.lastOrNull()?.controller() == this }
+            .onEach {
+                query = it.toString()
+                searchRelay.call(query)
+            }
+            .launchIn(uiScope)
 
         searchItem.fixExpand(onExpand = { invalidateMenuOnExpand() })
     }
