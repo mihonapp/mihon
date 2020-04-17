@@ -168,11 +168,6 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
             }
 
             initWhenIdle {
-                // Migrate metadata if empty (EH)
-                if(!preferences.migrateLibraryAsked().getOrDefault()) {
-                    MetadataFetchDialog().askMigration(this, false)
-                }
-
                 // Upload settings
                 if(preferences.enableExhentai().getOrDefault()
                         && preferences.eh_showSettingsUploadWarning().getOrDefault())

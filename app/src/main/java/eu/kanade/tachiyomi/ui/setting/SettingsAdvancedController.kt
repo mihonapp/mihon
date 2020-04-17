@@ -23,7 +23,6 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateService.Target
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.library.LibraryController
-import eu.kanade.tachiyomi.ui.migration.MetadataFetchDialog
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
@@ -112,42 +111,7 @@ class SettingsAdvancedController : SettingsController() {
                 }
             }
         }
-
-        // --> EXH
-        preferenceCategory {
-            title = "Gallery metadata"
-            isPersistent = false
-
-            preference {
-                title = "Migrate library metadata"
-                isPersistent = false
-                key = "ex_migrate_library"
-                summary = "Fetch the library metadata to enable tag searching in the library. This button will be visible even if you have already fetched the metadata"
-
-                onClick {
-                    activity?.let {
-                        MetadataFetchDialog().askMigration(it, true)
-                    }
-                }
-            }
-
-            preference {
-                title = "Clear library metadata"
-                isPersistent = false
-                key = "ex_clear_metadata"
-                summary = "Clear all library metadata. Disables tag searching in the library"
-
-                onClick {
-                    db.inTransaction {
-                        db.deleteAllSearchMetadata().executeAsBlocking()
-                        db.deleteAllSearchTags().executeAsBlocking()
-                        db.deleteAllSearchTitle().executeAsBlocking()
-                    }
-
-                    context.toast("Library metadata cleared!")
-                }
-            }
-        }
+        // <-- EXH
         preferenceCategory {
             title = "Developer tools"
             isPersistent = false

@@ -10,7 +10,7 @@
         android:id="@+id/card"
         android:layout_width="wrap_content"
         android:layout_height="220dp"
-        android:background="@drawable/card_background"
+        android:background="?attr/colorSurface"
         app:layout_constraintDimensionRatio="0.75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="4dp"/>
 
-        <eu.kanade.tachiyomi.widget.PTSansTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
             style="@style/TextAppearance.Regular.Body1.Light"
             android:layout_width="match_parent"
@@ -72,7 +72,6 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="4"
-            app:typeface="ptsansNarrowBold"
             tools:text="Sample name" />
 
         <ProgressBar

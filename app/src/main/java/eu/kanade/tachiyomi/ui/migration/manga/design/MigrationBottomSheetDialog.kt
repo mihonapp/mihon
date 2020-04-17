@@ -104,9 +104,9 @@ class MigrationBottomSheetDialog(
 
     private fun setFlags() {
         var flags = 0
-        if(mig_chapters.isChecked) flags = flags or MigrationFlags.CHAPTERS
-        if(mig_categories.isChecked) flags = flags or MigrationFlags.CATEGORIES
-        if(mig_tracking.isChecked) flags = flags or MigrationFlags.TRACK
+        if (mig_chapters.isChecked) flags = flags or MigrationFlags.CHAPTERS
+        if (mig_categories.isChecked) flags = flags or MigrationFlags.CATEGORIES
+        if (mig_tracking.isChecked) flags = flags or MigrationFlags.TRACK
         preferences.migrateFlags().set(flags)
     }
 
