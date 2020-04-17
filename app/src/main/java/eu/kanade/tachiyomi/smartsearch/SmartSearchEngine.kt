@@ -62,6 +62,9 @@ class SmartSearchEngine(
             } else title
             val searchResults = source.fetchSearchManga(1, searchQuery, FilterList()).toSingle().await(Schedulers.io())
 
+            if (searchResults.mangas.size == 1)
+                return@supervisorScope listOf(SearchEntry(searchResults.mangas.first(), 0.0))
+
             searchResults.mangas.map {
                 val normalizedDistance = normalizedLevenshtein.similarity(title, it.title)
                 SearchEntry(it, normalizedDistance)
