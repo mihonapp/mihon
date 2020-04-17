@@ -34,7 +34,7 @@ class MigrationProcessAdapter(
     interface MigrationProcessInterface {
         fun onMenuItemClick(position: Int, item: MenuItem)
         fun enableButtons()
-        fun removeManga(position: Int)
+        fun removeManga(item: MigrationProcessItem)
         fun noMigration()
     }
 
@@ -82,8 +82,9 @@ class MigrationProcessAdapter(
     }
 
     fun removeManga(position: Int) {
-        menuItemListener.removeManga(position)
-        getItem(position)?.manga?.migrationJob?.cancel()
+        val item = getItem(position) ?: return
+        menuItemListener.removeManga(item)
+        item?.manga?.migrationJob?.cancel()
         removeItem(position)
         items = currentItems
         sourceFinished()

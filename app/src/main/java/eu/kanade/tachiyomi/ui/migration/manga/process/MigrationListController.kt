@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.smartsearch.SmartSearchEngine
@@ -254,11 +255,16 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
         activity?.invalidateOptionsMenu()
     }
 
-    override fun removeManga(position: Int) {
+    override fun removeManga(item: MigrationProcessItem) {
         val ids = config?.mangaIds?.toMutableList() ?: return
-        ids.removeAt(position)
-        migratingManga?.removeAt(position)
-        config.mangaIds = ids
+        val index = ids.indexOf(item.manga.mangaId)
+        if (index > -1) {
+            ids.removeAt(index)
+            config.mangaIds = ids
+            val index2 = migratingManga?.indexOf(item.manga) ?: return
+            if (index2 > -1)
+                migratingManga?.removeAt(index2)
+        }
     }
 
     override fun noMigration() {
