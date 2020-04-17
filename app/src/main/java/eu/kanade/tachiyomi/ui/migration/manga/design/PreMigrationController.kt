@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -21,11 +22,11 @@ import eu.kanade.tachiyomi.util.view.doOnApplyWindowInsets
 import eu.kanade.tachiyomi.util.view.marginBottom
 import eu.kanade.tachiyomi.util.view.updateLayoutParams
 import eu.kanade.tachiyomi.util.view.updatePaddingRelative
-import kotlinx.android.synthetic.main.migration_design_controller.fab
-import kotlinx.android.synthetic.main.migration_design_controller.recycler
+import kotlinx.android.synthetic.main.pre_migration_controller.fab
+import kotlinx.android.synthetic.main.pre_migration_controller.recycler
 import uy.kohesive.injekt.injectLazy
 
-class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle), FlexibleAdapter
+class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), FlexibleAdapter
 .OnItemClickListener, StartMigrationListener {
     private val sourceManager: SourceManager by injectLazy()
     private val prefs: PreferencesHelper by injectLazy()
@@ -36,10 +37,12 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle)
 
     private var showingOptions = false
 
+    private var dialog: BottomSheetDialog? = null
+
     override fun getTitle() = "Select target sources"
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.migration_design_controller, container, false)
+        return inflater.inflate(R.layout.pre_migration_controller, container, false)
     }
 
     override fun onViewCreated(view: View) {
@@ -55,7 +58,7 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle)
         recycler.adapter = ourAdapter
         ourAdapter.itemTouchHelperCallback = null // Reset adapter touch adapter to fix drag after rotation
         ourAdapter.isHandleDragEnabled = true
-
+        dialog = null
         val fabBaseMarginBottom = fab?.marginBottom ?: 0
         recycler.doOnApplyWindowInsets { v, insets, padding ->
 
@@ -68,14 +71,16 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle)
         }
 
         fab.setOnClickListener {
-            val dialog = MigrationBottomSheetDialog(activity!!, R.style.SheetDialog, this)
-            dialog.show()
-            val bottomSheet =
-                dialog.findViewById<FrameLayout>(com.google.android.material.R.id
-                    .design_bottom_sheet)
-            val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet!!)
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.skipCollapsed = true
+            if (dialog?.isShowing != true) {
+                dialog = MigrationBottomSheetDialog(activity!!, R.style.SheetDialog, this)
+                dialog?.show()
+                val bottomSheet = dialog?.findViewById<FrameLayout>(
+                    com.google.android.material.R.id.design_bottom_sheet
+                )
+                val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet!!)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
+            }
         }
     }
 
@@ -144,8 +149,8 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle)
     companion object {
         private const val MANGA_IDS_EXTRA = "manga_ids"
 
-        fun create(mangaIds: List<Long>): MigrationDesignController {
-            return MigrationDesignController(Bundle().apply {
+        fun create(mangaIds: List<Long>): PreMigrationController {
+            return PreMigrationController(Bundle().apply {
                 putLongArray(MANGA_IDS_EXTRA, mangaIds.toLongArray())
             })
         }

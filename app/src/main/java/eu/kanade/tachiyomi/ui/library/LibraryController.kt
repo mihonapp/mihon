@@ -38,7 +38,7 @@ import eu.kanade.tachiyomi.ui.main.offsetFabAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.ui.migration.MigrationInterface
-import eu.kanade.tachiyomi.ui.migration.manga.design.MigrationDesignController
+import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
 import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationListController
 import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationProcedureConfig
 import eu.kanade.tachiyomi.util.system.getResourceColor
@@ -493,7 +493,7 @@ class LibraryController(
                                 selectedMangas.mapNotNull { it.id }, null)
                         )
                     } else {
-                        MigrationDesignController.create(selectedMangas.mapNotNull { it.id })
+                        PreMigrationController.create(selectedMangas.mapNotNull { it.id })
                     }
                     .withFadeTransaction())
                 destroyActionModeIfNeeded()
