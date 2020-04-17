@@ -488,17 +488,6 @@
     <string name="download_unread">Unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
     <string name="invalid_download_dir">Invalid download location</string>
-    <string name="confirm_migration">Migrate %1$d%2$s manga?</string>
-    <string name="confirm_copy">Copy %1$d%2$s manga?</string>
-    <string name="skipping_x">(skipping %1$d)</string>
-    <plurals name="manga_migrated">
-        <item quantity="one">%d manga migrated</item>
-        <item quantity="other">%d manga migrated</item>
-    </plurals>
-    <string name="error_fetching_migration">No chapters found, this manga cannot be used for
-        migration</string>
-    <string name="no_alternatives_found">No Alternatives Found</string>
-    <string name="stop_migration">Stop migrating?</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
@@ -566,18 +555,6 @@
 
     <!-- History fragment -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
-
-    <!-- Source migration screen -->
-    <string name="migration_info">Tap to select the source to migrate from</string>
-    <string name="migration_dialog_what_to_include">Select data to include</string>
-    <string name="migration_selection_prompt">Select a source to migrate from</string>
-    <string name="select">Select</string>
-    <string name="migrate">Migrate</string>
-    <string name="migrate_">Migrate %1$s</string>
-    <string name="copy">Copy</string>
-    <string name="migrating">Migrating…</string>
-    <string name="migration">Migration</string>
-    <string name="latest_x">Latest: %1$s</string>
 
     <!-- Downloads activity and service -->
     <string name="download_queue_error">Could not download chapters. You can try again in the downloads section</string>
@@ -662,18 +639,50 @@
     <string name="channel_downloader">Downloader</string>
     <string name="channel_new_chapters">Chapter updates</string>
     <string name="channel_ext_updates">Extension updates</string>
-    <string name="channel_backup_restore">Backup and restore</string>
-    <string name="channel_backup_restore_progress">Progress</string>
-    <string name="channel_backup_restore_complete">Complete</string>
-    <string name="data_to_include_in_migration">Data to include in migration</string>
-    <string name="search_parameter">Search parameter (e.g. language:english)</string>
-    <string name="include_extra_search_parameter">Include extra search parameter when searching</string>
+    
+    <!-- Migration -->
+    <string name="source_migration">Source migration</string>
+    <string name="migration">Migration</string>
+    <string name="skip_pre_migration">Skip pre-migration</string>
+    <string name="pre_migration_skip_toast">To show this screen again, go to Settings -> Library.</string>
+    <string name="select_a_source_to_migrate_from">Select a source to migrate from</string>
     <string name="use_intelligent_search">Search title + keywords of title</string>
-    <string name="migrating_to">migrating to</string>
+    <string name="data_to_include_in_migration">Data to include in migration</string>
+    <string name="search_parameter_eg">Search parameter (e.g. language:english)</string>
+    <string name="include_extra_search_parameter">Include extra search parameter when searching</string>
     <string name="use_most_chapters">Use source with the most chapters (slower)</string>
     <string name="use_first_source">Use first source with alternative</string>
     <string name="skip_this_step_next_time">Skip this step next time</string>
-    <string name="pre_migration_skip_toast">To show this screen again, go to Settings -> Library.</string>
+    <string name="search_parameter">Search parameter (e.g. language:english)</string>
+    <string name="include_extra_search_parameter">Include extra search parameter when searching</string>
+    <string name="to_show_again_setting_library">To show this screen again, go to Settings -> Library.</string>
+    <string name="latest_">Latest: %1$s</string>
+    <string name="migrating_to">migrating to</string>
+    <string name="dont_migrate">Don\'t migrate</string>
+    <string name="search_manually">Search manually</string>
+    <string name="migrate_now">Migrate now</string>
+    <string name="copy_now">Copy now</string>
+    <string name="select">Select</string>
+    <string name="migrate">Migrate</string>
+    <string name="migrate_">Migrate %1$s</string>
+    <string name="copy_value">Copy</string>
+    <string name="no_chapters_found_for_migration">No chapters found, this manga cannot be used for
+        migration</string>
+    <string name="no_alternatives_found">No Alternatives Found</string>
+    <string name="stop_migrating">Stop migrating?</string>
+    <plurals name="migrate_manga">
+        <item quantity="one">Migrate %1$d%2$s manga?</item>
+        <item quantity="other">Migrate %1$d%2$s manga?</item>
+    </plurals>
+    <plurals name="copy_manga">
+        <item quantity="one">Copy %1$d%2$s manga?</item>
+        <item quantity="other">Copy %1$d%2$s manga?</item>
+    </plurals>
+    <string name="skipping_">(skipping %1$d)</string>
+    <plurals name="manga_migrated">
+        <item quantity="one">%d manga migrated</item>
+        <item quantity="other">%d manga migrated</item>
+    </plurals>
 
     <!-- EXH -->
     <string name="label_login">Login</string>
@@ -699,7 +708,8 @@
     <string name="eh_rounded_corner_9">Radius of 9</string>
     <string name="eh_rounded_corner_10">Radius of 10</string>
     <string name="eh_rounded_corners_desc">The level of radius that the corners are rounded to. Current value is: %s</string>
-
+    <string name="merge">Merge with current</string>
+    <string name="eh_merge_with_another_source">Merge With Another</string>
 
 
 </resources>

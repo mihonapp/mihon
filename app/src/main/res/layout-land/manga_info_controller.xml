@@ -333,12 +333,18 @@
                     app:layout_constraintTop_toBottomOf="@id/manga_genres_tags_wrapper" />
 
                 <Button
-                    android:id="@+id/smartsearch_merge_btn"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:id="@+id/merge_btn"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="Merge with current" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_info_toggle"
+                    android:text="@string/merge"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

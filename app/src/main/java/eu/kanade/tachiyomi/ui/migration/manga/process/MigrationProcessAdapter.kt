@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.migration.manga.process
 
-import android.content.Context
 import android.view.MenuItem
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -16,8 +15,7 @@ import kotlinx.coroutines.withContext
 import uy.kohesive.injekt.injectLazy
 
 class MigrationProcessAdapter(
-    val controller: MigrationListController,
-    context: Context
+    val controller: MigrationListController
 ) : FlexibleAdapter<MigrationProcessItem>(null, controller, true) {
 
     private val db: DatabaseHelper by injectLazy()
@@ -73,8 +71,9 @@ class MigrationProcessAdapter(
         launchUI {
             val manga = getItem(position)?.manga ?: return@launchUI
             db.inTransaction {
-                val toMangaObj = db.getManga(manga.searchResult.get() ?: return@launchUI).executeAsBlocking()
-                    ?: return@launchUI
+                val toMangaObj =
+                    db.getManga(manga.searchResult.get() ?: return@launchUI).executeAsBlocking()
+                        ?: return@launchUI
                 migrateMangaInternal(
                     manga.manga() ?: return@launchUI, toMangaObj, !copy
                 )
@@ -135,8 +134,8 @@ class MigrationProcessAdapter(
             db.updateMangaFavorite(prevManga).executeAsBlocking()
         }
         manga.favorite = true
-        // SearchPresenter#networkToLocalManga may have updated the manga title, so ensure db gets updated title
+
+        db.updateMangaFavorite(manga).executeAsBlocking()
         db.updateMangaTitle(manga).executeAsBlocking()
-        // }
     }
 }

@@ -357,12 +357,14 @@
                 android:textSize="12sp" />
 
             <Button
-                android:id="@+id/smartsearch_replace_btn"
-                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/merge_btn"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Migrate from current" />
+                android:text="@string/merge"
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
         </LinearLayout>
 

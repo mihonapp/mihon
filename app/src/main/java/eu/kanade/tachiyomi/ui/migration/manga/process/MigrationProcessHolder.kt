@@ -152,10 +152,10 @@ class MigrationProcessHolder(
         val latestChapter = mangaChapters.maxBy { it.chapter_number }?.chapter_number ?: -1f
 
         if (latestChapter > 0f) {
-            manga_last_chapter_label.text = context.getString(R.string.latest_x,
+            manga_last_chapter_label.text = context.getString(R.string.latest_,
                 DecimalFormat("#.#").format(latestChapter))
         } else {
-            manga_last_chapter_label.text = context.getString(R.string.latest_x,
+            manga_last_chapter_label.text = context.getString(R.string.latest_,
                 context.getString(R.string.unknown))
         }
     }

@@ -5,7 +5,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.util.await
+import exh.util.await
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope

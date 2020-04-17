@@ -19,12 +19,12 @@ import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationListController
 import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationProcedureConfig
-import eu.kanade.tachiyomi.util.view.doOnApplyWindowInsets
-import eu.kanade.tachiyomi.util.view.marginBottom
-import eu.kanade.tachiyomi.util.view.updateLayoutParams
-import eu.kanade.tachiyomi.util.view.updatePaddingRelative
-import kotlinx.android.synthetic.main.pre_migration_controller.fab
-import kotlinx.android.synthetic.main.pre_migration_controller.recycler
+import exh.util.applyWindowInsetsForController
+import exh.util.doOnApplyWindowInsets
+import exh.util.marginBottom
+import exh.util.updateLayoutParams
+import exh.util.updatePaddingRelative
+import kotlinx.android.synthetic.main.pre_migration_controller.*
 import uy.kohesive.injekt.injectLazy
 
 class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), FlexibleAdapter
@@ -48,10 +48,11 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), F
 
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
+        view.applyWindowInsetsForController()
 
         val ourAdapter = adapter ?: MigrationSourceAdapter(
-                getEnabledSources().map { MigrationSourceItem(it, isEnabled(it.id.toString())) },
-                this
+            getEnabledSources().map { MigrationSourceItem(it, isEnabled(it.id.toString())) },
+            this
         )
         adapter = ourAdapter
         recycler.layoutManager = LinearLayoutManager(view.context)
@@ -99,7 +100,7 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), F
                     config.toList(),
                     extraSearchParams = extraParam
                 )
-            ).withFadeTransaction())
+            ).withFadeTransaction().tag(MigrationListController.TAG))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -129,7 +130,7 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), F
     private fun getEnabledSources(): List<HttpSource> {
         val languages = prefs.enabledLanguages().getOrDefault()
         val sourcesSaved = prefs.migrationSources().getOrDefault().split("/")
-        var sources = sourceManager.getCatalogueSources()
+        var sources = sourceManager.getVisibleCatalogueSources()
             .filterIsInstance<HttpSource>()
             .filter { it.lang in languages }
             .sortedBy { "(${it.lang}) ${it.name}" }
