@@ -26,12 +26,12 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
 
     init {
         source_latest.text = "Auto"
-        source_latest.setOnClickListener {
-            adapter.autoClickListener?.onAutoClick(adapterPosition)
-        }
         source_browse.setText(R.string.select)
         source_browse.setOnClickListener {
             adapter.selectClickListener?.onSelectClick(bindingAdapterPosition)
+        }
+        source_latest.setOnClickListener {
+            adapter.autoClickListener?.onAutoClick(adapterPosition)
         }
     }
 

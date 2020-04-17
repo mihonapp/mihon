@@ -644,6 +644,12 @@
     <string name="channel_backup_restore">Backup and restore</string>
     <string name="channel_backup_restore_progress">Progress</string>
     <string name="channel_backup_restore_complete">Complete</string>
+    <string name="data_to_include_in_migration">Data to include in migration</string>
+    <string name="search_parameter">Search parameter (e.g. language:english)</string>
+    <string name="include_extra_search_parameter">Include extra search parameter when searching</string>
+    <string name="keep_old_manga">Keep old manga</string>
+    <string name="use_intelligent_search">Use intelligent search algorithm</string>
+    <string name="begin_migration">Begin migration</string>
 
     <!-- EXH -->
     <string name="label_login">Login</string>

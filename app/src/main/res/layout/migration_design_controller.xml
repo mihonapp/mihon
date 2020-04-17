@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/eh_source_item">
+        tools:listitem="@layout/migration_source_item">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Data to include in migration"
+        android:text="@string/data_to_include_in_migration"
         android:textAppearance="@style/TextAppearance.Medium.Body2"
         app:layout_constraintBottom_toTopOf="@+id/mig_chapters"
         app:layout_constraintStart_toStartOf="@+id/textView" />
@@ -45,7 +45,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:checked="true"
         android:text="@string/categories"
         app:layout_constraintBottom_toBottomOf="@+id/mig_chapters"
@@ -56,7 +55,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:checked="true"
         android:text="@string/track"
         app:layout_constraintBottom_toBottomOf="@+id/mig_categories"
@@ -67,9 +65,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Options"
+        android:text="@string/options"
         android:textAppearance="@style/TextAppearance.Medium.Body2"
         app:layout_constraintBottom_toTopOf="@+id/prioritize_chapter_count"
         app:layout_constraintStart_toStartOf="parent" />
@@ -95,7 +92,8 @@
         android:clickable="true"
         app:layout_constraintBottom_toTopOf="@+id/fuzzy_search"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />
+        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count"
+        android:focusable="true" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/use_smart_search"
@@ -114,11 +112,12 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="start|center_vertical"
-        android:text="Use intelligent search algorithm"
+        android:text="@string/use_intelligent_search"
         android:clickable="true"
         app:layout_constraintBottom_toTopOf="@+id/copy_manga"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />
+        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count"
+        android:focusable="true" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/copy_manga"
@@ -137,11 +136,12 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="start|center_vertical"
-        android:text="Keep old manga"
+        android:text="@string/keep_old_manga"
         android:clickable="true"
         app:layout_constraintBottom_toTopOf="@+id/extra_search_param"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />
+        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count"
+        android:focusable="true" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/extra_search_param"
@@ -160,11 +160,12 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="start|center_vertical"
-        android:text="Include extra search parameter when searching"
+        android:text="@string/include_extra_search_parameter"
         android:clickable="true"
         app:layout_constraintBottom_toTopOf="@+id/extra_search_param_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count" />
+        app:layout_constraintStart_toEndOf="@+id/prioritize_chapter_count"
+        android:focusable="true" />
 
     <EditText
         android:id="@+id/extra_search_param_text"
@@ -175,11 +176,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ems="10"
-        android:hint="Search parameter (e.g. language:english)"
+        android:hint="@string/search_parameter"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/begin_migration_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/begin_migration_btn"
@@ -191,7 +193,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Begin migration"
+        android:text="@string/begin_migration"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

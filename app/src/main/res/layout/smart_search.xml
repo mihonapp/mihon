@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -40,7 +42,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Searching source..."
                 android:textAppearance="@style/TextAppearance.Medium.Title"
-                android:textColor="@color/white" />
+                android:textColor="@android:color/white" />
 
             <ProgressBar
                 android:id="@+id/intercept_progress"
@@ -48,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminateTint="@color/white" />
+                android:indeterminateTint="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
 

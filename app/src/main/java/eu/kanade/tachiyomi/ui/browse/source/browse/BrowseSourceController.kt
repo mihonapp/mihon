@@ -614,9 +614,8 @@ open class BrowseSourceController(bundle: Bundle) :
 
     protected companion object {
         const val SOURCE_ID_KEY = "sourceId"
+
         const val SEARCH_QUERY_KEY = "searchQuery"
-        // EXH -->
         const val SMART_SEARCH_CONFIG_KEY = "smartSearchConfig"
-        // EXH <--
     }
 }

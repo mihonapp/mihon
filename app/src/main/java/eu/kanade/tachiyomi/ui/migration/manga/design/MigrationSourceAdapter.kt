@@ -1,8 +1,9 @@
-package exh.ui.migration.manga.design
+package eu.kanade.tachiyomi.ui.migration.manga.design
 
 import android.os.Bundle
 import eu.davidea.flexibleadapter.FlexibleAdapter
-import exh.debug.DebugFunctions.sourceManager
+import eu.kanade.tachiyomi.source.SourceManager
+import uy.kohesive.injekt.injectLazy
 
 class MigrationSourceAdapter(
     val items: List<MigrationSourceItem>,
@@ -21,7 +22,10 @@ class MigrationSourceAdapter(
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        savedInstanceState.getParcelableArrayList<MigrationSourceItem.ParcelableSI>(SELECTED_SOURCES_KEY)?.let {
+        val sourceManager: SourceManager by injectLazy()
+        savedInstanceState.getParcelableArrayList<MigrationSourceItem.ParcelableSI>(
+            SELECTED_SOURCES_KEY
+        )?.let {
             updateDataSet(it.map { MigrationSourceItem.fromParcelable(sourceManager, it) })
         }
 

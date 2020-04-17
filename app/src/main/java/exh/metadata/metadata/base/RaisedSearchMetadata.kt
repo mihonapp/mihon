@@ -1,9 +1,9 @@
 package exh.metadata.metadata.base
 
 import com.google.gson.GsonBuilder
+import eu.kanade.tachiyomi.data.database.models.SearchMetadata
 import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.forEach
-import exh.metadata.sql.models.SearchMetadata
 import exh.metadata.sql.models.SearchTag
 import exh.metadata.sql.models.SearchTitle
 import exh.plusAssign

@@ -1,12 +1,12 @@
-package exh.smartsearch
+package eu.kanade.tachiyomi.smartsearch
 
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.SManga
-import exh.ui.smartsearch.SmartSearchPresenter
-import exh.util.await
+import eu.kanade.tachiyomi.ui.smartsearch.SmartSearchPresenter
+import eu.kanade.tachiyomi.util.await
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +39,8 @@ class SmartSearchEngine(
                         "$query ${extraSearchParams.trim()}"
                     } else query
 
-                    val searchResults = source.fetchSearchManga(1, builtQuery, FilterList()).toSingle().await(Schedulers.io())
+                    val searchResults = source.fetchSearchManga(1, builtQuery, FilterList())
+                        .toSingle().await(Schedulers.io())
 
                     searchResults.mangas.map {
                         val cleanedMangaTitle = cleanSmartSearchTitle(it.title)
@@ -88,11 +89,11 @@ class SmartSearchEngine(
         // Search first word
 
         val searchQueries = listOf(
-                listOf(cleanedTitle),
-                splitSortedByLargest.take(2),
-                splitSortedByLargest.take(1),
-                splitCleanedTitle.take(2),
-                splitCleanedTitle.take(1)
+            listOf(cleanedTitle),
+            splitSortedByLargest.take(2),
+            splitSortedByLargest.take(1),
+            splitCleanedTitle.take(2),
+            splitCleanedTitle.take(1)
         )
 
         return searchQueries.map {
@@ -120,10 +121,10 @@ class SmartSearchEngine(
 
     private fun removeTextInBrackets(text: String, readForward: Boolean): String {
         val bracketPairs = listOf(
-                '(' to ')',
-                '[' to ']',
-                '<' to '>',
-                '{' to '}'
+            '(' to ')',
+            '[' to ']',
+            '<' to '>',
+            '{' to '}'
         )
         var openingBracketPairs = bracketPairs.mapIndexed { index, (opening, _) ->
             opening to index
@@ -171,11 +172,11 @@ class SmartSearchEngine(
      * @return a manga from the database.
      */
     suspend fun networkToLocalManga(sManga: SManga, sourceId: Long): Manga {
-        var localManga = db.getManga(sManga.url, sourceId).await()
+        var localManga = db.getManga(sManga.url, sourceId).executeAsBlocking()
         if (localManga == null) {
             val newManga = Manga.create(sManga.url, sManga.title, sourceId)
             newManga.copyFrom(sManga)
-            val result = db.insertManga(newManga).await()
+            val result = db.insertManga(newManga).executeAsBlocking()
             newManga.id = result.insertedId()
             localManga = newManga
         }

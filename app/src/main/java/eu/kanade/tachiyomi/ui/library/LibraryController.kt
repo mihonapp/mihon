@@ -34,9 +34,17 @@ import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.offsetFabAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.migration.MigrationController
+import eu.kanade.tachiyomi.ui.migration.MigrationInterface
+import eu.kanade.tachiyomi.ui.migration.SearchController
+import eu.kanade.tachiyomi.ui.migration.manga.design.MigrationDesignController
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.util.view.visible
+import exh.favorites.FavoritesIntroDialog
+import exh.favorites.FavoritesSyncStatus
+import exh.ui.LoaderManager
 import java.io.IOException
 import kotlinx.android.synthetic.main.main_activity.tabs
 import kotlinx.coroutines.flow.filter
@@ -57,7 +65,8 @@ class LibraryController(
     TabbedController,
     ActionMode.Callback,
     ChangeMangaCategoriesDialog.Listener,
-    DeleteLibraryMangasDialog.Listener {
+    DeleteLibraryMangasDialog.Listener,
+    MigrationInterface {
 
     /**
      * Position of the active category.
@@ -85,6 +94,11 @@ class LibraryController(
      * Relay to notify the UI of selection updates.
      */
     val selectionRelay: PublishRelay<LibrarySelectionEvent> = PublishRelay.create()
+
+    /**
+     * Current mangas to move.
+     */
+    private var migratingMangas = mutableSetOf<Manga>()
 
     /**
      * Relay to notify search query changes.
@@ -468,15 +482,37 @@ class LibraryController(
             R.id.action_delete -> showDeleteMangaDialog()
             R.id.action_select_all -> selectAllCategoryManga()
             R.id.action_select_inverse -> selectInverseCategoryManga()
-            R.id.action_auto_source_migration -> {
-                router.pushController(MigrationDesignController.create(
+            R.id.action_migrate -> {
+                router.pushController(
+                    MigrationDesignController.create(
                         selectedMangas.mapNotNull { it.id }
-                ).withFadeTransaction())
+                    ).withFadeTransaction())
                 destroyActionModeIfNeeded()
             }
             else -> return false
         }
         return true
+    }
+
+    override fun migrateManga(prevManga: Manga, manga: Manga, replace: Boolean): Manga? {
+        if (manga.id != prevManga.id) {
+            presenter.migrateManga(prevManga, manga, replace = replace)
+        }
+        val nextManga = migratingMangas.firstOrNull() ?: return null
+        migratingMangas.remove(nextManga)
+        return nextManga
+    }
+
+    private fun startMangaMigration() {
+        migratingMangas.clear()
+        migratingMangas.addAll(selectedMangas)
+        destroyActionModeIfNeeded()
+        val manga = migratingMangas.firstOrNull() ?: return
+        val searchController = SearchController(manga)
+        searchController.totalProgress = migratingMangas.size
+        searchController.targetController = this
+        router.pushController(searchController.withFadeTransaction())
+        migratingMangas.remove(manga)
     }
 
     override fun onDestroyActionMode(mode: ActionMode?) {

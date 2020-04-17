@@ -1,11 +1,10 @@
-package exh.ui.migration.manga.process
+package eu.kanade.tachiyomi.ui.migration.manga.process
 
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
-import exh.util.DeferredField
-import exh.util.await
+import eu.kanade.tachiyomi.util.DeferredField
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,7 +26,7 @@ class MigratingManga(
     @Volatile
     private var manga: Manga? = null
     suspend fun manga(): Manga? {
-        if (manga == null) manga = db.getManga(mangaId).await()
+        if (manga == null) manga = db.getManga(mangaId).executeAsBlocking()
         return manga
     }
 

@@ -1,4 +1,4 @@
-package exh.ui.smartsearch
+package eu.kanade.tachiyomi.ui.smartsearch
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.source.SourceController
 import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.android.synthetic.main.eh_smart_search.appbar
+import kotlinx.android.synthetic.main.smart_search.appbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,10 +29,12 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
     private val sourceManager: SourceManager by injectLazy()
 
     private val source = sourceManager.get(bundle?.getLong(ARG_SOURCE_ID, -1) ?: -1) as? CatalogueSource
-    private val smartSearchConfig: SourceController.SmartSearchConfig? = bundle?.getParcelable(ARG_SMART_SEARCH_CONFIG)
+    private val smartSearchConfig: SourceController.SmartSearchConfig? = bundle?.getParcelable(
+        ARG_SMART_SEARCH_CONFIG
+    )
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
-            inflater.inflate(R.layout.eh_smart_search, container, false)!!
+            inflater.inflate(R.layout.smart_search, container, false)!!
 
     override fun getTitle() = source?.name ?: ""
 

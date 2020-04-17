@@ -1,9 +1,9 @@
-package exh.ui.migration.manga.process
+package eu.kanade.tachiyomi.ui.migration.manga.process
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -21,29 +21,28 @@ import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.util.view.visible
 import exh.MERGED_SOURCE_ID
-import exh.util.await
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.util.Date
 import kotlin.coroutines.CoroutineContext
-import kotlinx.android.synthetic.main.eh_manga_card.view.loading_group
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_artist
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_author
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_chapters
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_cover
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_full_title
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_last_chapter
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_last_update
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_source
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_source_label
-import kotlinx.android.synthetic.main.eh_manga_card.view.manga_status
-import kotlinx.android.synthetic.main.eh_manga_card.view.search_progress
-import kotlinx.android.synthetic.main.eh_manga_card.view.search_status
-import kotlinx.android.synthetic.main.eh_migration_process_item.view.accept_migration
-import kotlinx.android.synthetic.main.eh_migration_process_item.view.eh_manga_card_from
-import kotlinx.android.synthetic.main.eh_migration_process_item.view.eh_manga_card_to
-import kotlinx.android.synthetic.main.eh_migration_process_item.view.migrating_frame
-import kotlinx.android.synthetic.main.eh_migration_process_item.view.skip_migration
+import kotlinx.android.synthetic.main.migration_manga_card.view.loading_group
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_artist
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_author
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_chapters
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_cover
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_full_title
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_last_chapter
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_last_update
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_source
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_source_label
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_status
+import kotlinx.android.synthetic.main.migration_manga_card.view.search_progress
+import kotlinx.android.synthetic.main.migration_manga_card.view.search_status
+import kotlinx.android.synthetic.main.migration_process_item.view.accept_migration
+import kotlinx.android.synthetic.main.migration_process_item.view.migrating_frame
+import kotlinx.android.synthetic.main.migration_process_item.view.migration_manga_card_from
+import kotlinx.android.synthetic.main.migration_process_item.view.migration_manga_card_to
+import kotlinx.android.synthetic.main.migration_process_item.view.skip_migration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -58,12 +57,10 @@ class MigrationProcedureAdapter(
     val controller: MigrationProcedureController,
     val migratingManga: List<MigratingManga>,
     override val coroutineContext: CoroutineContext
-) : androidx.viewpager.widget.PagerAdapter(), CoroutineScope {
+) : PagerAdapter(), CoroutineScope {
     private val db: DatabaseHelper by injectLazy()
     private val gson: Gson by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
-
-    private val logger = XLog.tag(this::class.simpleName)
 
     override fun isViewFromObject(p0: View, p1: Any): Boolean {
         return p0 == p1
@@ -73,7 +70,7 @@ class MigrationProcedureAdapter(
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val item = migratingManga[position]
-        val view = container.inflate(R.layout.eh_migration_process_item)
+        val view = container.inflate(R.layout.migration_process_item)
         container.addView(view)
 
         view.skip_migration.setOnClickListener {
@@ -93,7 +90,6 @@ class MigrationProcedureAdapter(
                     }
                     controller.nextMigration()
                 } catch (e: Exception) {
-                    logger.e("Migration failure!", e)
                     controller.migrationFailure()
                 }
                 view.migrating_frame.gone()
@@ -108,13 +104,13 @@ class MigrationProcedureAdapter(
             return
         }
 
-        val toMangaObj = db.getManga(manga.searchResult.get() ?: return).await() ?: return
+        val toMangaObj = db.getManga(manga.searchResult.get() ?: return).executeAsBlocking() ?: return
 
         withContext(Dispatchers.IO) {
             migrateMangaInternal(
                     manga.manga() ?: return@withContext,
                     toMangaObj,
-                    !controller.config.copy
+                    !(controller.config?.copy ?: false)
             )
         }
     }
@@ -124,6 +120,7 @@ class MigrationProcedureAdapter(
         manga: Manga,
         replace: Boolean
     ) {
+        val config = controller.config ?: return
         db.inTransaction {
             // Update chapters read
             if (MigrationFlags.hasChapters(controller.config.migrationFlags)) {
@@ -174,9 +171,9 @@ class MigrationProcedureAdapter(
             val source = migratingManga.mangaSource()
             if (manga != null) {
                 withContext(Dispatchers.Main) {
-                    eh_manga_card_from.loading_group.gone()
-                    eh_manga_card_from.attachManga(tag, manga, source)
-                    eh_manga_card_from.setOnClickListener {
+                    migration_manga_card_from.loading_group.gone()
+                    migration_manga_card_from.attachManga(tag, manga, source)
+                    migration_manga_card_from.setOnClickListener {
                         controller.router.pushController(MangaController(manga, true).withFadeTransaction())
                     }
                 }
@@ -184,7 +181,7 @@ class MigrationProcedureAdapter(
                 tag.launch {
                     migratingManga.progress.asFlow().collect { (max, progress) ->
                         withContext(Dispatchers.Main) {
-                            eh_manga_card_to.search_progress.let { progressBar ->
+                            migration_manga_card_to.search_progress.let { progressBar ->
                                 progressBar.max = max
                                 progressBar.progress = progress
                             }
@@ -193,23 +190,23 @@ class MigrationProcedureAdapter(
                 }
 
                 val searchResult = migratingManga.searchResult.get()?.let {
-                    db.getManga(it).await()
+                    db.getManga(it).executeAsBlocking()
                 }
                 val resultSource = searchResult?.source?.let {
                     sourceManager.get(it)
                 }
                 withContext(Dispatchers.Main) {
                     if (searchResult != null && resultSource != null) {
-                        eh_manga_card_to.loading_group.gone()
-                        eh_manga_card_to.attachManga(tag, searchResult, resultSource)
-                        eh_manga_card_to.setOnClickListener {
+                        migration_manga_card_to.loading_group.gone()
+                        migration_manga_card_to.attachManga(tag, searchResult, resultSource)
+                        migration_manga_card_to.setOnClickListener {
                             controller.router.pushController(MangaController(searchResult, true).withFadeTransaction())
                         }
                         accept_migration.isEnabled = true
                         accept_migration.alpha = 1.0f
                     } else {
-                        eh_manga_card_to.search_progress.gone()
-                        eh_manga_card_to.search_status.text = "Found no manga"
+                        migration_manga_card_to.search_progress.gone()
+                        migration_manga_card_to.search_status.text = "Found no manga"
                     }
                 }
             }
@@ -264,7 +261,7 @@ class MigrationProcedureAdapter(
             else -> R.string.unknown
         })
 
-        val mangaChapters = db.getChapters(manga).await()
+        val mangaChapters = db.getChapters(manga).executeAsBlocking()
         manga_chapters.text = mangaChapters.size.toString()
         val latestChapter = mangaChapters.maxBy { it.chapter_number }?.chapter_number ?: -1f
         val lastUpdate = Date(mangaChapters.maxBy { it.date_upload }?.date_upload ?: 0)

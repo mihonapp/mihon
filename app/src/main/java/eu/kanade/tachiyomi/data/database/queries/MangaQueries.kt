@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.data.database.tables.CategoryTable
 import eu.kanade.tachiyomi.data.database.tables.ChapterTable
 import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
-import exh.metadata.sql.tables.SearchMetadataTable
+import eu.kanade.tachiyomi.data.database.tables.SearchMetadataTable
 
 interface MangaQueries : DbProvider {
 

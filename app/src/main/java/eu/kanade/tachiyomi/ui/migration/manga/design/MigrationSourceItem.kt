@@ -1,7 +1,8 @@
-package exh.ui.migration.manga.design
+package eu.kanade.tachiyomi.ui.migration.manga.design
 
 import android.os.Parcelable
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -11,9 +12,9 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.android.parcel.Parcelize
 
 class MigrationSourceItem(val source: HttpSource, var sourceEnabled: Boolean) : AbstractFlexibleItem<MigrationSourceHolder>() {
-    override fun getLayoutRes() = R.layout.eh_source_item
+    override fun getLayoutRes() = R.layout.migration_source_item
 
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>): MigrationSourceHolder {
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): MigrationSourceHolder {
         return MigrationSourceHolder(view, adapter as MigrationSourceAdapter)
     }
 
@@ -26,7 +27,7 @@ class MigrationSourceItem(val source: HttpSource, var sourceEnabled: Boolean) : 
      * @param payloads List of partial changes.
      */
     override fun bindViewHolder(
-        adapter: FlexibleAdapter<IFlexible<androidx.recyclerview.widget.RecyclerView.ViewHolder>>,
+        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: MigrationSourceHolder,
         position: Int,
         payloads: List<Any?>?

@@ -1,42 +1,43 @@
-package exh.ui.migration.manga.design
+package eu.kanade.tachiyomi.ui.migration.manga.design
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.migration.MigrationFlags
+import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationProcedureConfig
+import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationProcedureController
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
-import exh.ui.base.BaseExhController
-import exh.ui.migration.manga.process.MigrationProcedureConfig
-import exh.ui.migration.manga.process.MigrationProcedureController
-import kotlinx.android.synthetic.main.eh_migration_design.begin_migration_btn
-import kotlinx.android.synthetic.main.eh_migration_design.copy_manga
-import kotlinx.android.synthetic.main.eh_migration_design.copy_manga_desc
-import kotlinx.android.synthetic.main.eh_migration_design.extra_search_param
-import kotlinx.android.synthetic.main.eh_migration_design.extra_search_param_desc
-import kotlinx.android.synthetic.main.eh_migration_design.extra_search_param_text
-import kotlinx.android.synthetic.main.eh_migration_design.fuzzy_search
-import kotlinx.android.synthetic.main.eh_migration_design.mig_categories
-import kotlinx.android.synthetic.main.eh_migration_design.mig_chapters
-import kotlinx.android.synthetic.main.eh_migration_design.migration_mode
-import kotlinx.android.synthetic.main.eh_migration_design.options_group
-import kotlinx.android.synthetic.main.eh_migration_design.prioritize_chapter_count
-import kotlinx.android.synthetic.main.eh_migration_design.recycler
-import kotlinx.android.synthetic.main.eh_migration_design.use_smart_search
+import kotlinx.android.synthetic.main.migration_design_controller.begin_migration_btn
+import kotlinx.android.synthetic.main.migration_design_controller.copy_manga
+import kotlinx.android.synthetic.main.migration_design_controller.copy_manga_desc
+import kotlinx.android.synthetic.main.migration_design_controller.extra_search_param
+import kotlinx.android.synthetic.main.migration_design_controller.extra_search_param_desc
+import kotlinx.android.synthetic.main.migration_design_controller.extra_search_param_text
+import kotlinx.android.synthetic.main.migration_design_controller.fuzzy_search
+import kotlinx.android.synthetic.main.migration_design_controller.mig_categories
+import kotlinx.android.synthetic.main.migration_design_controller.mig_chapters
+import kotlinx.android.synthetic.main.migration_design_controller.migration_mode
+import kotlinx.android.synthetic.main.migration_design_controller.options_group
+import kotlinx.android.synthetic.main.migration_design_controller.prioritize_chapter_count
+import kotlinx.android.synthetic.main.migration_design_controller.recycler
+import kotlinx.android.synthetic.main.migration_design_controller.use_smart_search
 import uy.kohesive.injekt.injectLazy
 
-// TODO Select all in library
-class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bundle), FlexibleAdapter.OnItemClickListener {
+class MigrationDesignController(bundle: Bundle? = null) : BaseController(bundle), FlexibleAdapter
+.OnItemClickListener {
     private val sourceManager: SourceManager by injectLazy()
     private val prefs: PreferencesHelper by injectLazy()
-
-    override val layoutId: Int = R.layout.eh_migration_design
 
     private var adapter: MigrationSourceAdapter? = null
 
@@ -46,6 +47,10 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
 
     override fun getTitle() = "Select target sources"
 
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.migration_design_controller, container, false)
+    }
+
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
@@ -54,7 +59,7 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
                 this
         )
         adapter = ourAdapter
-        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(view.context)
+        recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
         recycler.adapter = ourAdapter
         ourAdapter.itemTouchHelperCallback = null // Reset adapter touch adapter to fix drag after rotation
@@ -100,7 +105,8 @@ class MigrationDesignController(bundle: Bundle? = null) : BaseExhController(bund
             if (mig_categories.isChecked) flags = flags or MigrationFlags.CATEGORIES
             if (mig_categories.isChecked) flags = flags or MigrationFlags.TRACK
 
-            router.replaceTopController(MigrationProcedureController.create(
+            router.replaceTopController(
+                MigrationProcedureController.create(
                     MigrationProcedureConfig(
                             config.toList(),
                             ourAdapter.items.filter {

@@ -21,20 +21,6 @@ class SourceAdapter(val controller: MigrationController) :
         setDisplayHeadersAtStartUp(true)
     }
 
-    // EXH -->
-    /**
-     * Listener for auto item clicks.
-     */
-    val autoClickListener: OnAutoClickListener? = controller
-
-    /**
-     * Listener which should be called when user clicks select.
-     */
-    interface OnAutoClickListener {
-        fun onAutoClick(position: Int)
-    }
-    // EXH <--
-
     /**
      * Listener for browse item clicks.
      */
@@ -45,6 +31,18 @@ class SourceAdapter(val controller: MigrationController) :
      */
     interface OnSelectClickListener {
         fun onSelectClick(position: Int)
+    }
+
+    /**
+     * Listener for auto item clicks.
+     */
+    val autoClickListener: OnAutoClickListener? = controller
+
+    /**
+     * Listener which should be called when user clicks select.
+     */
+    interface OnAutoClickListener {
+        fun onAutoClick(position: Int)
     }
 
     override fun updateDataSet(items: MutableList<IFlexible<*>>?) {

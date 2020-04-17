@@ -1,4 +1,4 @@
-package exh.ui.migration
+package eu.kanade.tachiyomi.ui.migration
 
 class MigrationStatus {
     companion object {

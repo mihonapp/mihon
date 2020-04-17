@@ -1,22 +1,23 @@
-package exh.ui.migration.manga.process
+package eu.kanade.tachiyomi.ui.migration.manga.process
 
 import android.content.pm.ActivityInfo
-import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
-import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
+import eu.kanade.tachiyomi.smartsearch.SmartSearchEngine
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.ui.base.controller.BaseController
+import eu.kanade.tachiyomi.util.await
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.system.toast
-import exh.smartsearch.SmartSearchEngine
-import exh.ui.base.BaseExhController
-import exh.util.await
 import java.util.concurrent.atomic.AtomicInteger
-import kotlinx.android.synthetic.main.eh_migration_process.pager
+import kotlin.coroutines.CoroutineContext
+import kotlinx.android.synthetic.main.migration_process.pager
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,24 +33,27 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 
 // TODO Will probably implode if activity is fully destroyed
-class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(bundle), CoroutineScope {
-    override val layoutId = R.layout.eh_migration_process
+class MigrationProcedureController(bundle: Bundle? = null) : BaseController(bundle), CoroutineScope {
 
     private var titleText = "Migrate manga"
 
     private var adapter: MigrationProcedureAdapter? = null
 
-    val config: MigrationProcedureConfig = args.getParcelable(CONFIG_EXTRA)
+    override val coroutineContext: CoroutineContext = Job() + Dispatchers.Default
+
+    val config: MigrationProcedureConfig? = args.getParcelable(CONFIG_EXTRA)
 
     private val db: DatabaseHelper by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
 
-    private val smartSearchEngine = SmartSearchEngine(coroutineContext, config.extraSearchParams)
-
-    private val logger = XLog.tag("MigrationProcedureController")
+    private val smartSearchEngine = SmartSearchEngine(coroutineContext, config?.extraSearchParams)
 
     private var migrationsJob: Job? = null
     private var migratingManga: List<MigratingManga>? = null
+
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.migration_process, container, false)
+    }
 
     override fun getTitle(): String {
         return titleText
@@ -58,12 +62,8 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
         setTitle()
-
-        activity?.requestedOrientation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
-        } else {
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
+        val config = this.config ?: return
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
 
         val newMigratingManga = migratingManga ?: run {
             val new = config.mangaIds.map {
@@ -121,7 +121,8 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
     }
 
     suspend fun runMigrations(mangas: List<MigratingManga>) {
-        val sources = config.targetSourceIds.mapNotNull { sourceManager.get(it) as? CatalogueSource }
+        val sources = config?.targetSourceIds?.mapNotNull { sourceManager.get(it) as?
+            CatalogueSource } ?: return
 
         for (manga in mangas) {
             if (!manga.searchResult.initialized && manga.migrationJob.isActive) {
@@ -147,7 +148,8 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                                 async {
                                     sourceSemaphore.withPermit {
                                         try {
-                                            val searchResult = if (config.enableLenientSearch) {
+                                            val searchResult = if (config?.enableLenientSearch ==
+                                                true) {
                                                 smartSearchEngine.smartSearch(source, mangaObj.title)
                                             } else {
                                                 smartSearchEngine.normalSearch(source, mangaObj.title)
@@ -168,7 +170,6 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                                             // Ignore cancellations
                                             throw e
                                         } catch (e: Exception) {
-                                            logger.e("Failed to search in source: ${source.id}!", e)
                                             null
                                         }
                                     }
@@ -195,7 +196,6 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                                     // Ignore cancellations
                                     throw e
                                 } catch (e: Exception) {
-                                    logger.e("Failed to search in source: ${source.id}!", e)
                                     null
                                 }
 
@@ -220,12 +220,11 @@ class MigrationProcedureController(bundle: Bundle? = null) : BaseExhController(b
                                 .await()
                         result.copyFrom(newManga)
 
-                        db.insertManga(result).await()
+                        db.insertManga(result).executeAsBlocking()
                     } catch (e: CancellationException) {
                         // Ignore cancellations
                         throw e
                     } catch (e: Exception) {
-                        logger.e("Could not load search manga details", e)
                     }
                 }
 

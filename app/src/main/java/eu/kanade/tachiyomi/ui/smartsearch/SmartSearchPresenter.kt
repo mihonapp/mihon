@@ -1,13 +1,12 @@
-package exh.ui.smartsearch
+package eu.kanade.tachiyomi.ui.smartsearch
 
 import android.os.Bundle
-import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.smartsearch.SmartSearchEngine
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.source.SourceController
-import exh.smartsearch.SmartSearchEngine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 
 class SmartSearchPresenter(private val source: CatalogueSource?, private val config: SourceController.SmartSearchConfig?) :
         BasePresenter<SmartSearchController>(), CoroutineScope {
-    private val logger = XLog.tag("SmartSearchPresenter")
 
     override val coroutineContext = Job() + Dispatchers.Main
 
@@ -43,7 +41,6 @@ class SmartSearchPresenter(private val source: CatalogueSource?, private val con
                     if (e is CancellationException) {
                         throw e
                     } else {
-                        logger.e("Smart search error", e)
                         SearchResults.Error
                     }
                 }

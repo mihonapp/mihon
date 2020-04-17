@@ -28,6 +28,11 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
+import eu.kanade.tachiyomi.ui.smartsearch.SmartSearchController
+import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
+import eu.kanade.tachiyomi.ui.source.global_search.GlobalSearchController
+import eu.kanade.tachiyomi.ui.source.latest.LatestUpdatesController
+import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -56,16 +61,22 @@ class SourceController :
      */
     private var adapter: SourceAdapter? = null
 
+    // EXH -->
+    private val mode = if (smartSearchConfig == null) Mode.CATALOGUE else Mode.SMART_SEARCH
+    // EXH <--
+
     init {
-        setHasOptionsMenu(true)
+        // Enable the option menu
+        setHasOptionsMenu(mode == Mode.CATALOGUE)
     }
 
     override fun getTitle(): String? {
-        return applicationContext?.getString(R.string.label_sources)
-    }
-
+        returnwhen (mode) {
+            Mode.CATALOGUE -> applicationContext?.getString(R.string.label_sources)
+            Mode.SMART_SEARCH -> "Find in another source"
+        }
     override fun createPresenter(): SourcePresenter {
-        return SourcePresenter()
+        return SourcePresenter(controllerMode = mode)
     }
 
     /**
@@ -115,7 +126,16 @@ class SourceController :
     override fun onItemClick(view: View, position: Int): Boolean {
         val item = adapter?.getItem(position) as? SourceItem ?: return false
         val source = item.source
-        openCatalogue(source, BrowseSourceController(source))
+        when (mode) {
+            Mode.CATALOGUE -> {
+                // Open the catalogue view.
+                openCatalogue(source, BrowseSourceController(source))
+            }
+            Mode.SMART_SEARCH -> router.pushController(SmartSearchController(Bundle().apply {
+                putLong(SmartSearchController.ARG_SOURCE_ID, source.id)
+                putParcelable(SmartSearchController.ARG_SMART_SEARCH_CONFIG, smartSearchConfig)
+            }).withFadeTransaction())
+        }
         return false
     }
 
@@ -249,5 +269,17 @@ class SourceController :
             adapter?.addScrollableHeader(item)
             adapter?.addScrollableHeader(LangItem(SourcePresenter.LAST_USED_KEY))
         }
+    }
+
+    @Parcelize
+    data class SmartSearchConfig(val origTitle: String, val origMangaId: Long) : Parcelable
+
+    enum class Mode {
+        CATALOGUE,
+        SMART_SEARCH
+    }
+
+    companion object {
+        const val SMART_SEARCH_CONFIG = "SMART_SEARCH_CONFIG"
     }
 }
