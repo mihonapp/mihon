@@ -86,7 +86,8 @@ class MigrationProcessHolder(
                     sourceManager.get(it)
                 }
                 withContext(Dispatchers.Main) {
-                    if (item.manga.mangaId != this@MigrationProcessHolder.item?.manga?.mangaId) {
+                    if (item.manga.mangaId != this@MigrationProcessHolder.item?.manga?.mangaId ||
+                        item.manga.migrationStatus == MigrationStatus.RUNNUNG) {
                         return@withContext
                     }
                     if (searchResult != null && resultSource != null) {
@@ -100,7 +101,8 @@ class MigrationProcessHolder(
                         }
                     } else {
                         migration_manga_card_to.loading_group.gone()
-                        migration_manga_card_to.title.text = "No Alternatives Found"
+                        migration_manga_card_to.title.text = view.context.applicationContext
+                            .getString(R.string.no_alternatives_found)
                     }
                     migration_menu.visible()
                     skip_manga.gone()
@@ -108,10 +110,6 @@ class MigrationProcessHolder(
                 }
             }
         }
-    }
-
-    fun showSpinner() {
-        migration_manga_card_to.loading_group.visible()
     }
 
     private fun View.resetManga() {

@@ -492,6 +492,9 @@
     <string name="confirm_copy">Copy %1$d%2$s mangas?</string>
     <string name="skipping_x">(skipping %1$d)</string>
     <string name="no_migrations">No manga migrated</string>
+    <string name="error_fetching_migration">No chapters found, this manga cannot be used for
+        migration</string>
+    <string name="no_alternatives_found">No Alternatives Found</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>

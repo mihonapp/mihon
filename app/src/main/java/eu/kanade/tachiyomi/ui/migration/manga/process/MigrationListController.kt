@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
@@ -233,6 +234,9 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
                     }
                 }
 
+                manga.migrationStatus = if (result == null) MigrationStatus.MANGA_NOT_FOUND else
+                    MigrationStatus.MANGA_FOUND
+                adapter?.sourceFinished()
                 manga.searchResult.initialize(result?.id)
             }
         }
@@ -281,34 +285,44 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
     fun useMangaForMigration(manga: Manga, source: Source) {
         val firstIndex = selectedPosition ?: return
         val migratingManga = adapter?.getItem(firstIndex) ?: return
-        migratingManga.showSpinner()
+        migratingManga.manga.migrationStatus = MigrationStatus.RUNNUNG
+        adapter?.notifyItemChanged(firstIndex)
         launchUI {
             val result = CoroutineScope(migratingManga.manga.migrationJob).async {
                 val localManga = smartSearchEngine.networkToLocalManga(manga, source.id)
                 val chapters = source.fetchChapterList(localManga).toSingle().await(
                     Schedulers.io()
                 )
-                withContext(Dispatchers.IO) {
+                try {
                     syncChaptersWithSource(db, chapters, localManga, source)
+                } catch (e: Exception) {
+                    return@async null
                 }
                 localManga
             }.await()
 
-            try {
-                val newManga =
-                    sourceManager.getOrStub(result.source).fetchMangaDetails(result).toSingle()
-                        .await()
-                result.copyFrom(newManga)
+            if (result != null) {
+                try {
+                    val newManga =
+                        sourceManager.getOrStub(result.source).fetchMangaDetails(result).toSingle()
+                            .await()
+                    result.copyFrom(newManga)
 
-                db.insertManga(result).executeAsBlocking()
-            } catch (e: CancellationException) {
-                // Ignore cancellations
-                throw e
-            } catch (e: Exception) {
+                    db.insertManga(result).executeAsBlocking()
+                } catch (e: CancellationException) {
+                    // Ignore cancellations
+                    throw e
+                } catch (e: Exception) {
+                }
+
+                migratingManga.manga.migrationStatus = MigrationStatus.MANGA_FOUND
+                migratingManga.manga.searchResult.set(result.id)
+                adapter?.notifyDataSetChanged()
+            } else {
+                migratingManga.manga.migrationStatus = MigrationStatus.MANGA_NOT_FOUND
+                activity?.toast(R.string.error_fetching_migration, Toast.LENGTH_LONG)
+                adapter?.notifyDataSetChanged()
             }
-
-            migratingManga.manga.searchResult.set(result.id)
-            adapter?.notifyDataSetChanged()
         }
     }
 
