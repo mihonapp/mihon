@@ -29,7 +29,7 @@ class MigrationMangaDialog<T>(bundle: Bundle? = null) : DialogController(bundle)
             else "")) ?: ""
         return MaterialDialog.Builder(activity!!)
             .content(confirmString)
-            .positiveText(android.R.string.yes)
+            .positiveText(if (copy) R.string.copy else R.string.migrate)
             .negativeText(android.R.string.no)
             .onPositive { _, _ ->
                 if (copy)

@@ -286,11 +286,8 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
             val res = resources
             if (res != null) {
                 activity?.toast(
-                    res.getString(
-                        R.string.x_migrations,
-                        if (manaulMigrations == 0) res.getString(R.string.no)
-                        else "$manaulMigrations"
-                    )
+                    res.getQuantityString(R.plurals.manga_migrated,
+                        manaulMigrations, manaulMigrations)
                 )
             }
             router.popCurrentController()
@@ -382,8 +379,8 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
     override fun handleBack(): Boolean {
         activity?.let {
             MaterialDialog.Builder(it).title(R.string.stop_migration)
-                .positiveText(R.string.yes)
-                .negativeText(R.string.no)
+                .positiveText(R.string.action_stop)
+                .negativeText(android.R.string.cancel)
                 .onPositive { _, _ ->
                     router.popCurrentController()
                     migrationsJob?.cancel()

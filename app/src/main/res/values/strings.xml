@@ -491,9 +491,10 @@
     <string name="confirm_migration">Migrate %1$d%2$s manga?</string>
     <string name="confirm_copy">Copy %1$d%2$s manga?</string>
     <string name="skipping_x">(skipping %1$d)</string>
-    <string name="x_migrations">%1$s manga migrated</string>
-    <string name="no">No</string>
-    <string name="yes">Yes</string>
+    <plurals name="manga_migrated">
+        <item quantity="one">%d manga migrated</item>
+        <item quantity="other">%d manga migrated</item>
+    </plurals>
     <string name="error_fetching_migration">No chapters found, this manga cannot be used for
         migration</string>
     <string name="no_alternatives_found">No Alternatives Found</string>
