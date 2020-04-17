@@ -39,7 +39,7 @@ class MigrationProcessAdapter(
     }
 
     fun sourceFinished() {
-        if (mangasSkipped() == itemCount || itemCount == 0) menuItemListener.noMigration()
+        if (itemCount == 0) menuItemListener.noMigration()
         if (allMangasDone()) menuItemListener.enableButtons()
     }
 

@@ -163,8 +163,10 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
                                                 val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
                                                 val chapters = source.fetchChapterList(localManga).toSingle().await(
                                                     Schedulers.io())
-                                                withContext(Dispatchers.IO) {
+                                                try {
                                                     syncChaptersWithSource(db, chapters, localManga, source)
+                                                } catch (e: Exception) {
+                                                    return@async null
                                                 }
                                                 manga.progress.send(validSources.size to processedSources.incrementAndGet())
                                                 localManga to chapters.size
@@ -260,8 +262,10 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
     }
 
     override fun noMigration() {
-        activity?.toast(R.string.no_migrations)
-        router.popCurrentController()
+        launchUI {
+            activity?.toast(R.string.no_migrations)
+            router.popCurrentController()
+        }
     }
 
     override fun onMenuItemClick(position: Int, item: MenuItem) {
