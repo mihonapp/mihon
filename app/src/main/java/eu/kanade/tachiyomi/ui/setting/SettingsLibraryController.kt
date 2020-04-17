@@ -210,6 +210,15 @@ class SettingsLibraryController : SettingsController() {
                     true
                 }
             }
+            if (preferences.skipPreMigration().getOrDefault() || preferences.migrationSources()
+                    .getOrDefault().isNotEmpty()) {
+                switchPreference {
+                    key = Keys.skipPreMigration
+                    titleRes = R.string.pref_skip_pre_migration
+                    summaryRes = R.string.pref_skip_pre_migration_summary
+                    defaultValue = false
+                }
+            }
         }
     }
 

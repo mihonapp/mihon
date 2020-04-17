@@ -21,8 +21,8 @@
     <string name="label_categories">Categories</string>
     <string name="label_backup">Backup</string>
     <string name="label_migration">Source migration</string>
-    <string name="label_reorganize_by">Re-order</string>
-    <string name="label_alpha_reverse">Alphabetically (descending)</string>
+    <string name="label_reorganize_by">Reorder</string>
+    <string name="label_alpha_reverse">Alpha. (descending)</string>
     <string name="label_hide_title">Hide title</string>
     <string name="label_show_title">Show title</string>
     <string name="label_extensions">Extensions</string>
@@ -48,8 +48,8 @@
     <string name="action_sort_latest_chapter">Latest chapter</string>
     <string name="action_sort_drag_and_drop">Drag &amp; Drop</string>
     <string name="action_search">Search</string>
+    <string name="action_skip_manga">Don\'t migrate</string>
     <string name="action_global_search">Global search</string>
-    <string name="action_skip_manga">Skip manga</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_inverse">Select inverse</string>
     <string name="action_mark_as_read">Mark as read</string>
@@ -488,10 +488,11 @@
     <string name="download_unread">Unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
     <string name="invalid_download_dir">Invalid download location</string>
-    <string name="confirm_migration">Migrate %1$d%2$s mangas?</string>
-    <string name="confirm_copy">Copy %1$d%2$s mangas?</string>
+    <string name="confirm_migration">Migrate %1$d%2$s manga?</string>
+    <string name="confirm_copy">Copy %1$d%2$s manga?</string>
     <string name="skipping_x">(skipping %1$d)</string>
-    <string name="no_migrations">No manga migrated</string>
+    <string name="x_migrations">%1$s manga migrated</string>
+    <string name="no">No</string>
     <string name="error_fetching_migration">No chapters found, this manga cannot be used for
         migration</string>
     <string name="no_alternatives_found">No Alternatives Found</string>
@@ -571,6 +572,7 @@
     <string name="migrate">Migrate</string>
     <string name="copy">Copy</string>
     <string name="migrating">Migrating…</string>
+    <string name="migration">Migration</string>
     <string name="latest_x">Latest: %1$s</string>
 
     <!-- Downloads activity and service -->
@@ -667,7 +669,7 @@
     <string name="use_most_chapters">Use source with the most chapters (slower)</string>
     <string name="use_first_source">Use first source with alternative</string>
     <string name="skip_this_step_next_time">Skip this step next time</string>
-    <string name="pre_migration_skip_toast">To show this screen again, go to Settings -> General.</string>
+    <string name="pre_migration_skip_toast">To show this screen again, go to Settings -> Library.</string>
 
     <!-- EXH -->
     <string name="label_login">Login</string>

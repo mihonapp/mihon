@@ -16,7 +16,6 @@ import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
-import eu.kanade.tachiyomi.util.preference.summaryRes
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -189,16 +188,6 @@ class SettingsGeneralController : SettingsController() {
                     }
                     true
                 }
-            }
-        }
-
-        if (preferences.skipPreMigration().getOrDefault() || preferences.migrationSources()
-                .getOrDefault().isNotEmpty()) {
-            switchPreference {
-                key = Keys.skipPreMigration
-                titleRes = R.string.pref_skip_pre_migration
-                summaryRes = R.string.pref_skip_pre_migration_summary
-                defaultValue = false
             }
         }
 
