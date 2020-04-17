@@ -33,4 +33,9 @@ class MigratingManga(
     suspend fun mangaSource(): Source {
         return sourceManager.getOrStub(manga()?.source ?: -1)
     }
+
+    fun toModal(): MigrationProcessItem {
+        // Create the model object.
+        return MigrationProcessItem(this)
+    }
 }

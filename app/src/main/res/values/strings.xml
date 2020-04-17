@@ -49,6 +49,7 @@
     <string name="action_sort_drag_and_drop">Drag &amp; Drop</string>
     <string name="action_search">Search</string>
     <string name="action_global_search">Global search</string>
+    <string name="action_skip_manga">Skip manga</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_inverse">Select inverse</string>
     <string name="action_mark_as_read">Mark as read</string>
@@ -112,6 +113,9 @@
     <string name="action_webview_back">Back</string>
     <string name="action_webview_forward">Forward</string>
     <string name="action_webview_refresh">Refresh</string>
+    <string name="action_search_manually">Search manually</string>
+    <string name="action_migrate_now">Migrate now</string>
+    <string name="action_copy_now">Copy now</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
@@ -482,6 +486,10 @@
     <string name="download_unread">Unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
     <string name="invalid_download_dir">Invalid download location</string>
+    <string name="confirm_migration">Migrate %1$d%2$s mangas?</string>
+    <string name="confirm_copy">Copy %1$d%2$s mangas?</string>
+    <string name="skipping_x">(skipping %1$d)</string>
+    <string name="no_migrations">No manga migrated</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
@@ -557,6 +565,8 @@
     <string name="select">Select</string>
     <string name="migrate">Migrate</string>
     <string name="copy">Copy</string>
+    <string name="migrating">Migrating…</string>
+    <string name="latest_x">Latest: %1$s</string>
 
     <!-- Downloads activity and service -->
     <string name="download_queue_error">Could not download chapters. You can try again in the downloads section</string>

@@ -11,7 +11,7 @@ import kotlinx.coroutines.sync.withLock
 class DeferredField<T> {
 
     @Volatile
-    private var content: T? = null
+    var content: T? = null
 
     @Volatile
     var initialized = false
@@ -27,6 +27,14 @@ class DeferredField<T> {
         this.content = content
         initialized = true
 
+        // Notify current listeners
+        mutex.unlock()
+    }
+
+    fun set(content: T) {
+        mutex.tryLock()
+        this.content = content
+        initialized = true
         // Notify current listeners
         mutex.unlock()
     }

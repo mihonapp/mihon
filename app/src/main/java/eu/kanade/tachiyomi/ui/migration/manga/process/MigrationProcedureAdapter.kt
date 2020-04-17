@@ -74,7 +74,7 @@ class MigrationProcedureAdapter(
         container.addView(view)
 
         view.skip_migration.setOnClickListener {
-            controller.nextMigration()
+            // controller.nextMigration()
         }
 
         val viewTag = ViewTag(coroutineContext)
@@ -100,19 +100,19 @@ class MigrationProcedureAdapter(
     }
 
     suspend fun performMigration(manga: MigratingManga) {
-        if (!manga.searchResult.initialized) {
-            return
-        }
+            if (!manga.searchResult.initialized) {
+                return
+            }
 
-        val toMangaObj = db.getManga(manga.searchResult.get() ?: return).executeAsBlocking() ?: return
+            val toMangaObj = db.getManga(manga.searchResult.get() ?: return).executeAsBlocking() ?: return
 
-        withContext(Dispatchers.IO) {
-            migrateMangaInternal(
+            withContext(Dispatchers.IO) {
+                migrateMangaInternal(
                     manga.manga() ?: return@withContext,
                     toMangaObj,
-                    !(controller.config?.copy ?: false)
-            )
-        }
+                    false
+                )
+            }
     }
 
     private fun migrateMangaInternal(
@@ -121,7 +121,7 @@ class MigrationProcedureAdapter(
         replace: Boolean
     ) {
         val config = controller.config ?: return
-        db.inTransaction {
+        // db.inTransaction {
             // Update chapters read
             if (MigrationFlags.hasChapters(controller.config.migrationFlags)) {
                 val prevMangaChapters = db.getChapters(prevManga).executeAsBlocking()
@@ -162,7 +162,7 @@ class MigrationProcedureAdapter(
 
             // SearchPresenter#networkToLocalManga may have updated the manga title, so ensure db gets updated title
             db.updateMangaTitle(manga).executeAsBlocking()
-        }
+        // }
     }
 
     fun View.setupView(tag: ViewTag, migratingManga: MigratingManga) {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/action_search_manually"
+        android:title="@string/action_search_manually"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/action_skip"
+        android:title="@string/action_skip_manga"
+        android:visible="true"/>
+
+    <item android:id="@+id/action_migrate_now"
+        android:title="@string/action_migrate_now"
+        android:visible="false" />
+
+    <item android:id="@+id/action_copy_now"
+        android:title="@string/action_copy_now"
+        android:visible="false" />
+</menu>
