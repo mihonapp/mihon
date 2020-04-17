@@ -493,9 +493,11 @@
     <string name="skipping_x">(skipping %1$d)</string>
     <string name="x_migrations">%1$s manga migrated</string>
     <string name="no">No</string>
+    <string name="yes">Yes</string>
     <string name="error_fetching_migration">No chapters found, this manga cannot be used for
         migration</string>
     <string name="no_alternatives_found">No Alternatives Found</string>
+    <string name="stop_migration">Stop migrating?</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
