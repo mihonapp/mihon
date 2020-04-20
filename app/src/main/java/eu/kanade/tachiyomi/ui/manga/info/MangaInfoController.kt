@@ -328,6 +328,12 @@ class MangaInfoController(private val fromSource: Boolean = false) :
             thumbnailUrl = manga.thumbnail_url
             val mangaThumbnail = manga.toMangaThumbnail()
 
+            binding.mangaCoverCard.radius = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                preferences.eh_library_corner_radius().getOrDefault().toFloat(),
+                view.context.resources.displayMetrics
+            )
+
             GlideApp.with(view.context)
                 .load(mangaThumbnail)
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
