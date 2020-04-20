@@ -6,10 +6,16 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.injectLazy
 
 object LockActivityDelegate {
     private val preferences by injectLazy<PreferencesHelper>()
+
+    val uiScope = CoroutineScope(Dispatchers.Main)
 
     var willLock: Boolean = true
 
@@ -19,14 +25,15 @@ object LockActivityDelegate {
     }
 
     fun onCreate(activity: FragmentActivity) {
-        preferences.secureScreen().asObservable()
-                .subscribe {
+        preferences.secureScreen().asFlow()
+                .onEach {
                     if (it) {
                         activity.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
                     } else {
                         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
                     }
                 }
+            .launchIn(uiScope)
     }
 
     fun onResume(activity: FragmentActivity, router: Router) {
