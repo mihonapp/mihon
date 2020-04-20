@@ -47,7 +47,7 @@ class SettingsAdvancedController : SettingsController() {
     @SuppressLint("BatteryLife")
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.pref_category_advanced
-        
+
         preference {
             key = CLEAR_CACHE_KEY
             titleRes = R.string.pref_clear_chapter_cache
