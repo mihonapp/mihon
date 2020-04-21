@@ -28,9 +28,9 @@ import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
-import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
 import eu.kanade.tachiyomi.ui.source.SourceController
 import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.source.global_search.GlobalSearchController
@@ -327,6 +327,12 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         if (binding.mangaCover.drawable == null || manga.thumbnail_url != thumbnailUrl) {
             thumbnailUrl = manga.thumbnail_url
             val mangaThumbnail = manga.toMangaThumbnail()
+
+            binding.mangaCoverCard.radius = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                preferences.eh_library_corner_radius().getOrDefault().toFloat(),
+                view.context.resources.displayMetrics
+            )
 
             GlideApp.with(view.context)
                 .load(mangaThumbnail)

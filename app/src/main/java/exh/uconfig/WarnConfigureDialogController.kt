@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.Router
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -32,7 +31,7 @@ class WarnConfigureDialogController : DialogController() {
 
     companion object {
         fun uploadSettings(router: Router) {
-            if (Injekt.get<PreferencesHelper>().eh_showSettingsUploadWarning().getOrDefault())
+            if (Injekt.get<PreferencesHelper>().eh_showSettingsUploadWarning().get())
                 WarnConfigureDialogController().showDialog(router)
             else
                 ConfiguringDialogController().showDialog(router)

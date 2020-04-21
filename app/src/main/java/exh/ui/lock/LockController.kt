@@ -13,20 +13,20 @@ import com.mattprecious.swirl.SwirlView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.databinding.ActivityLockBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import exh.util.dpToPx
-import kotlinx.android.synthetic.main.activity_lock.view.indicator_dots
-import kotlinx.android.synthetic.main.activity_lock.view.pin_lock_view
 import kotlinx.android.synthetic.main.activity_lock.view.swirl_container
 import uy.kohesive.injekt.injectLazy
 
-class LockController : NucleusController<LockPresenter>() {
+class LockController : NucleusController<ActivityLockBinding, LockPresenter>() {
 
     val prefs: PreferencesHelper by injectLazy()
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
-        inflater.inflate(R.layout.activity_lock, container, false)!!
-
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+        binding = ActivityLockBinding.inflate(inflater)
+        return binding.root
+    }
     override fun createPresenter() = LockPresenter()
 
     override fun getTitle() = "Application locked"
@@ -41,10 +41,10 @@ class LockController : NucleusController<LockPresenter>() {
 
         with(view) {
             // Setup pin lock
-            pin_lock_view.attachIndicatorDots(indicator_dots)
+            binding.pinLockView.attachIndicatorDots(binding.indicatorDots)
 
-            pin_lock_view.pinLength = prefs.eh_lockLength().getOrDefault()
-            pin_lock_view.setPinLockListener(object : PinLockListener {
+            binding.pinLockView.pinLength = prefs.eh_lockLength().getOrDefault()
+            binding.pinLockView.setPinLockListener(object : PinLockListener {
                 override fun onEmpty() {}
 
                 override fun onComplete(pin: String) {
@@ -60,7 +60,7 @@ class LockController : NucleusController<LockPresenter>() {
                                 .positiveText("Ok")
                                 .autoDismiss(true)
                                 .show()
-                        pin_lock_view.resetPinLockView()
+                        binding.pinLockView.resetPinLockView()
                     }
                 }
 
@@ -76,8 +76,8 @@ class LockController : NucleusController<LockPresenter>() {
         with(view) {
             // Fingerprint
             if (presenter.useFingerprint) {
-                swirl_container.visibility = View.VISIBLE
-                swirl_container.removeAllViews()
+                binding.swirlContainer.visibility = View.VISIBLE
+                binding.swirlContainer.removeAllViews()
                 val icon = SwirlView(context).apply {
                     val size = dpToPx(context, 60)
                     layoutParams = (layoutParams ?: ViewGroup.LayoutParams(
@@ -97,7 +97,7 @@ class LockController : NucleusController<LockPresenter>() {
                         this@with.swirl_container.cardElevation = 0f
                     setState(SwirlView.State.OFF, true)
                 }
-                swirl_container.addView(icon)
+                binding.swirlContainer.addView(icon)
                 icon.setState(SwirlView.State.ON)
                 RxReprint.authenticate()
                         .subscribeUntilDetach {
@@ -118,7 +118,7 @@ class LockController : NucleusController<LockPresenter>() {
                             }
                         }
             } else {
-                swirl_container.visibility = View.GONE
+                binding.swirlContainer.visibility = View.GONE
             }
         }
     }

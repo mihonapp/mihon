@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.databinding.EhActivityLoginBinding
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.lang.launchUI
@@ -17,14 +17,6 @@ import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
 import exh.uconfig.WarnConfigureDialogController
 import java.net.HttpCookie
-import kotlinx.android.synthetic.main.eh_activity_login.view.advanced_options
-import kotlinx.android.synthetic.main.eh_activity_login.view.btn_advanced
-import kotlinx.android.synthetic.main.eh_activity_login.view.btn_alt_login
-import kotlinx.android.synthetic.main.eh_activity_login.view.btn_cancel
-import kotlinx.android.synthetic.main.eh_activity_login.view.btn_close
-import kotlinx.android.synthetic.main.eh_activity_login.view.btn_recheck
-import kotlinx.android.synthetic.main.eh_activity_login.view.btn_skip_restyle
-import kotlinx.android.synthetic.main.eh_activity_login.view.webview
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
@@ -32,7 +24,7 @@ import uy.kohesive.injekt.injectLazy
  * LoginController
  */
 
-class LoginController : NucleusController<LoginPresenter>() {
+class LoginController : NucleusController<EhActivityLoginBinding, LoginPresenter>() {
     val preferenceManager: PreferencesHelper by injectLazy()
 
     val sourceManager: SourceManager by injectLazy()
@@ -41,39 +33,41 @@ class LoginController : NucleusController<LoginPresenter>() {
 
     override fun createPresenter() = LoginPresenter()
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
-            inflater.inflate(R.layout.eh_activity_login, container, false)!!
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+        binding = EhActivityLoginBinding.inflate(inflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
         with(view) {
-            btn_cancel.setOnClickListener { router.popCurrentController() }
+            binding.btnCancel.setOnClickListener { router.popCurrentController() }
 
-            btn_advanced.setOnClickListener {
-                advanced_options.visible()
-                webview.gone()
-                btn_advanced.isEnabled = false
-                btn_cancel.isEnabled = false
+            binding.btnAdvanced.setOnClickListener {
+                binding.advancedOptions.visible()
+                binding.webview.gone()
+                binding.btnAdvanced.isEnabled = false
+                binding.btnCancel.isEnabled = false
             }
 
-            btn_close.setOnClickListener {
+            binding.btnClose.setOnClickListener {
                 hideAdvancedOptions(this)
             }
 
-            btn_recheck.setOnClickListener {
+            binding.btnRecheck.setOnClickListener {
                 hideAdvancedOptions(this)
-                webview.loadUrl("https://exhentai.org/")
+                binding.webview.loadUrl("https://exhentai.org/")
             }
 
-            btn_alt_login.setOnClickListener {
+            binding.btnAltLogin.setOnClickListener {
                 hideAdvancedOptions(this)
-                webview.loadUrl("https://e-hentai.org/bounce_login.php")
+                binding.webview.loadUrl("https://e-hentai.org/bounce_login.php")
             }
 
-            btn_skip_restyle.setOnClickListener {
+            binding.btnSkipRestyle.setOnClickListener {
                 hideAdvancedOptions(this)
-                webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login&$PARAM_SKIP_INJECT=true")
+                binding.webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login&$PARAM_SKIP_INJECT=true")
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -91,29 +85,28 @@ class LoginController : NucleusController<LoginPresenter>() {
 
     private fun hideAdvancedOptions(view: View) {
         with(view) {
-            advanced_options.gone()
-            webview.visible()
-            btn_advanced.isEnabled = true
-            btn_cancel.isEnabled = true
+            binding.advancedOptions.gone()
+            binding.webview.visible()
+            binding.btnAdvanced.isEnabled = true
+            binding.btnCancel.isEnabled = true
         }
     }
 
     fun startWebview(view: View) {
         with(view) {
-            webview.settings.javaScriptEnabled = true
-            webview.settings.domStorageEnabled = true
+            binding.webview.settings.javaScriptEnabled = true
+            binding.webview.settings.domStorageEnabled = true
 
-            webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login")
+            binding.webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login")
 
-            webview.webViewClient = object : WebViewClient() {
+            binding.webview.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
                     Timber.d(url)
                     val parsedUrl = Uri.parse(url)
                     if (parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
                         // Hide distracting content
-                        if (!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT) &&
-                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                        if (!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT))
                             view.evaluateJavascript(HIDE_JS, null)
 
                         // Check login result

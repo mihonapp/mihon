@@ -5,29 +5,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.jakewharton.rxbinding.view.clicks
-import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.databinding.EhFragmentBatchAddBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.lang.combineLatest
+import eu.kanade.tachiyomi.util.lang.launchInUI
 import eu.kanade.tachiyomi.util.lang.plusAssign
-import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.btn_add_galleries
 import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.galleries_box
-import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.input_title_view
-import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_bar
-import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_dismiss_btn
 import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_log
-import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_log_wrapper
-import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_text
-import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_title_view
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.android.view.clicks
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 
 /**
  * Batch add screen
  */
-class BatchAddController : NucleusController<BatchAddPresenter>() {
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
-            inflater.inflate(R.layout.eh_fragment_batch_add, container, false)!!
+class BatchAddController : NucleusController<EhFragmentBatchAddBinding, BatchAddPresenter>() {
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+        binding = EhFragmentBatchAddBinding.inflate(inflater)
+        return binding.root
+    }
 
     override fun getTitle() = "Batch add"
 
@@ -37,13 +34,17 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
         super.onViewCreated(view)
 
         with(view) {
-            btn_add_galleries.clicks().subscribeUntilDestroy {
-                addGalleries(galleries_box.text.toString())
-            }
+            binding.btnAddGalleries.clicks()
+                .onEach {
+                    addGalleries(binding.galleriesBox.text.toString())
+                }
+                .launchInUI()
 
-            progress_dismiss_btn.clicks().subscribeUntilDestroy {
-                presenter.currentlyAddingRelay.call(BatchAddPresenter.STATE_PROGRESS_TO_INPUT)
-            }
+            binding.progressDismissBtn.clicks()
+                .onEach {
+                    presenter.currentlyAddingRelay.call(BatchAddPresenter.STATE_PROGRESS_TO_INPUT)
+                }
+                .launchInUI()
 
             val progressSubscriptions = CompositeSubscription()
 
@@ -55,34 +56,34 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
                             showProgress(this)
                             progressSubscriptions += presenter.progressRelay
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .combineLatest(presenter.progressTotalRelay, { progress, total ->
+                                    .combineLatest(presenter.progressTotalRelay) { progress, total ->
                                         // Show hide dismiss button
-                                        progress_dismiss_btn.visibility =
-                                                if (progress == total)
-                                                    View.VISIBLE
-                                                else View.GONE
+                                        binding.progressDismissBtn.visibility =
+                                            if (progress == total)
+                                                View.VISIBLE
+                                            else View.GONE
 
                                         formatProgress(progress, total)
-                                    }).subscribeUntilDestroy {
-                                progress_text.text = it
+                                    }.subscribeUntilDestroy {
+                                binding.progressText.text = it
                             }
 
                             progressSubscriptions += presenter.progressTotalRelay
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribeUntilDestroy {
-                                        progress_bar.max = it
+                                        binding.progressBar.max = it
                                     }
 
                             progressSubscriptions += presenter.progressRelay
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribeUntilDestroy {
-                                        progress_bar.progress = it
+                                        binding.progressBar.progress = it
                                     }
 
                             presenter.eventRelay
                                     ?.observeOn(AndroidSchedulers.mainThread())
                                     ?.subscribeUntilDestroy {
-                                        progress_log.append("$it\n")
+                                        binding.progressLog.append("$it\n")
                                     }?.let {
                                 progressSubscriptions += it
                             }
@@ -96,18 +97,18 @@ class BatchAddController : NucleusController<BatchAddPresenter>() {
 
     private val View.progressViews
         get() = listOf(
-                progress_title_view,
-                progress_log_wrapper,
-                progress_bar,
-                progress_text,
-                progress_dismiss_btn
+                binding.progressTitleView,
+                binding.progressLogWrapper,
+                binding.progressBar,
+                binding.progressText,
+                binding.progressDismissBtn
         )
 
     private val View.inputViews
         get() = listOf(
-                input_title_view,
-                galleries_box,
-                btn_add_galleries
+                binding.inputTitleView,
+                binding.galleriesBox,
+                binding.btnAddGalleries
         )
 
     private var List<View>.visibility: Int

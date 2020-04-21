@@ -11,7 +11,6 @@ import com.ms_square.debugoverlay.OverlayModule
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.system.dpToPx
 import uy.kohesive.injekt.injectLazy
 
@@ -58,7 +57,7 @@ class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(n
         <b>Version code:</b> ${BuildConfig.VERSION_CODE}<br>
         <b>Commit SHA:</b> ${BuildConfig.COMMIT_SHA}<br>
         <b>Log level:</b> ${EHLogLevel.currentLogLevel.name.toLowerCase()}<br>
-        <b>Source blacklist:</b> ${prefs.eh_enableSourceBlacklist().getOrDefault().asEnabledString()}
+        <b>Source blacklist:</b> ${prefs.eh_enableSourceBlacklist().get().asEnabledString()}
     """.trimIndent()
 
     private fun Boolean.asEnabledString() = if (this) "enabled" else "disabled"

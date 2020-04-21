@@ -73,7 +73,7 @@ class MigrationBottomSheetDialog(
      * Init general reader preferences.
      */
     private fun initPreferences() {
-        val flags = preferences.migrateFlags().getOrDefault()
+        val flags = preferences.migrateFlags().get()
 
         mig_chapters.isChecked = MigrationFlags.hasChapters(flags)
         mig_categories.isChecked = MigrationFlags.hasCategories(flags)
