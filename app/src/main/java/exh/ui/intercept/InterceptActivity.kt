@@ -5,28 +5,28 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.databinding.EhActivityInterceptBinding
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
-import kotlinx.android.synthetic.main.eh_activity_intercept.intercept_progress
-import kotlinx.android.synthetic.main.eh_activity_intercept.intercept_status
-import kotlinx.android.synthetic.main.eh_activity_intercept.toolbar
 import nucleus.factory.RequiresPresenter
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
 @RequiresPresenter(InterceptActivityPresenter::class)
-class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
+class InterceptActivity : BaseRxActivity<EhActivityInterceptBinding, InterceptActivityPresenter>() {
     private var statusSubscription: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.eh_activity_intercept)
+
+        binding = EhActivityInterceptBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Show back button
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         processLink()
@@ -34,8 +34,8 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
 
     private fun processLink() {
         if (Intent.ACTION_VIEW == intent.action) {
-            intercept_progress.visible()
-            intercept_status.text = "Loading gallery..."
+            binding.interceptProgress.visible()
+            binding.interceptStatus.text = "Loading gallery..."
             presenter.loadGallery(intent.dataString)
         }
     }
@@ -56,8 +56,8 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
                 .subscribe {
                     when (it) {
                         is InterceptResult.Success -> {
-                            intercept_progress.gone()
-                            intercept_status.text = "Launching app..."
+                            binding.interceptProgress.gone()
+                            binding.interceptStatus.text = "Launching app..."
                             onBackPressed()
                             startActivity(Intent(this, MainActivity::class.java)
                                     .setAction(MainActivity.SHORTCUT_MANGA)
@@ -65,8 +65,8 @@ class InterceptActivity : BaseRxActivity<InterceptActivityPresenter>() {
                                     .putExtra(MangaController.MANGA_EXTRA, it.mangaId))
                         }
                         is InterceptResult.Failure -> {
-                            intercept_progress.gone()
-                            intercept_status.text = "Error: ${it.reason}"
+                            binding.interceptProgress.gone()
+                            binding.interceptStatus.text = "Error: ${it.reason}"
                             MaterialDialog.Builder(this)
                                     .title("Error")
                                     .content("Could not open this gallery:\n\n${it.reason}")

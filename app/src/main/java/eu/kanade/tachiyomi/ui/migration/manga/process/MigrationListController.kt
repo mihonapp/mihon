@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.databinding.MigrationListControllerBinding
 import eu.kanade.tachiyomi.smartsearch.SmartSearchEngine
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
@@ -41,7 +42,6 @@ import exh.util.await
 import exh.util.executeOnIO
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.CoroutineContext
-import kotlinx.android.synthetic.main.chapters_controller.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +56,7 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
-class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
+class MigrationListController(bundle: Bundle? = null) : BaseController<MigrationListControllerBinding>(bundle),
     MigrationProcessAdapter.MigrationProcessInterface, CoroutineScope {
 
     init {
@@ -82,7 +82,8 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
     private var manaulMigrations = 0
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.migration_list_controller, container, false)
+        binding = MigrationListControllerBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun getTitle(): String? {
@@ -108,10 +109,10 @@ class MigrationListController(bundle: Bundle? = null) : BaseController(bundle),
 
         adapter = MigrationProcessAdapter(this)
 
-        recycler.adapter = adapter
-        recycler.layoutManager = LinearLayoutManager(view.context)
-        recycler.setHasFixedSize(true)
-        recycler.setOnApplyWindowInsetsListener(RecyclerWindowInsetsListener)
+        binding.recycler.adapter = adapter
+        binding.recycler.layoutManager = LinearLayoutManager(view.context)
+        binding.recycler.setHasFixedSize(true)
+        binding.recycler.setOnApplyWindowInsetsListener(RecyclerWindowInsetsListener)
 
         adapter?.updateDataSet(newMigratingManga.map { it.toModal() })
 

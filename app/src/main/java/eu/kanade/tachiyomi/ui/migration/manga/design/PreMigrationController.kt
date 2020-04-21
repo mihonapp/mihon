@@ -13,6 +13,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.databinding.PreMigrationControllerBinding
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
@@ -24,10 +25,9 @@ import exh.util.doOnApplyWindowInsets
 import exh.util.marginBottom
 import exh.util.updateLayoutParams
 import exh.util.updatePaddingRelative
-import kotlinx.android.synthetic.main.pre_migration_controller.*
 import uy.kohesive.injekt.injectLazy
 
-class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), FlexibleAdapter
+class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrationControllerBinding>(bundle), FlexibleAdapter
 .OnItemClickListener, StartMigrationListener {
     private val sourceManager: SourceManager by injectLazy()
     private val prefs: PreferencesHelper by injectLazy()
@@ -43,7 +43,8 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), F
     override fun getTitle() = "Select target sources"
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.pre_migration_controller, container, false)
+        binding = PreMigrationControllerBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View) {
@@ -55,24 +56,24 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController(bundle), F
             this
         )
         adapter = ourAdapter
-        recycler.layoutManager = LinearLayoutManager(view.context)
-        recycler.setHasFixedSize(true)
-        recycler.adapter = ourAdapter
+        binding.recycler.layoutManager = LinearLayoutManager(view.context)
+        binding.recycler.setHasFixedSize(true)
+        binding.recycler.adapter = ourAdapter
         ourAdapter.itemTouchHelperCallback = null // Reset adapter touch adapter to fix drag after rotation
         ourAdapter.isHandleDragEnabled = true
         dialog = null
-        val fabBaseMarginBottom = fab?.marginBottom ?: 0
-        recycler.doOnApplyWindowInsets { v, insets, padding ->
+        val fabBaseMarginBottom = binding.fab?.marginBottom ?: 0
+        binding.recycler.doOnApplyWindowInsets { v, insets, padding ->
 
-            fab?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            binding.fab?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomMargin = fabBaseMarginBottom + insets.systemWindowInsetBottom
             }
             // offset the recycler by the fab's inset + some inset on top
-            v.updatePaddingRelative(bottom = padding.bottom + (fab?.marginBottom ?: 0) +
-                fabBaseMarginBottom + (fab?.height ?: 0))
+            v.updatePaddingRelative(bottom = padding.bottom + (binding.fab?.marginBottom ?: 0) +
+                fabBaseMarginBottom + (binding.fab?.height ?: 0))
         }
 
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             if (dialog?.isShowing != true) {
                 dialog = MigrationBottomSheetDialog(activity!!, R.style.SheetDialog, this)
                 dialog?.show()

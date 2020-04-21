@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.databinding.SmartSearchBinding
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.source.SourceController
 import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.android.synthetic.main.smart_search.appbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uy.kohesive.injekt.injectLazy
 
-class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSearchPresenter>(), CoroutineScope {
+class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSearchBinding, SmartSearchPresenter>(), CoroutineScope {
     override val coroutineContext = Job() + Dispatchers.Main
 
     private val sourceManager: SourceManager by injectLazy()
@@ -33,8 +32,10 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
         ARG_SMART_SEARCH_CONFIG
     )
 
-    override fun inflateView(inflater: LayoutInflater, container: ViewGroup) =
-            inflater.inflate(R.layout.smart_search, container, false)!!
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
+        binding = SmartSearchBinding.inflate(inflater)
+        return binding.root
+    }
 
     override fun getTitle() = source?.name ?: ""
 
@@ -43,7 +44,7 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        appbar.bringToFront()
+        binding.appbar.bringToFront()
 
         if (source == null || smartSearchConfig == null) {
             router.popCurrentController()
