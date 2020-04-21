@@ -5,13 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.jakewharton.rxbinding.view.clicks
 import eu.kanade.tachiyomi.databinding.EhFragmentBatchAddBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.lang.combineLatest
+import eu.kanade.tachiyomi.util.lang.launchInUI
 import eu.kanade.tachiyomi.util.lang.plusAssign
 import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.galleries_box
 import kotlinx.android.synthetic.main.eh_fragment_batch_add.view.progress_log
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.android.view.clicks
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 
@@ -32,13 +34,17 @@ class BatchAddController : NucleusController<EhFragmentBatchAddBinding, BatchAdd
         super.onViewCreated(view)
 
         with(view) {
-            binding.btnAddGalleries.clicks().subscribeUntilDestroy {
-                addGalleries(binding.galleriesBox.text.toString())
-            }
+            binding.btnAddGalleries.clicks()
+                .onEach {
+                    addGalleries(binding.galleriesBox.text.toString())
+                }
+                .launchInUI()
 
-            binding.progressDismissBtn.clicks().subscribeUntilDestroy {
-                presenter.currentlyAddingRelay.call(BatchAddPresenter.STATE_PROGRESS_TO_INPUT)
-            }
+            binding.progressDismissBtn.clicks()
+                .onEach {
+                    presenter.currentlyAddingRelay.call(BatchAddPresenter.STATE_PROGRESS_TO_INPUT)
+                }
+                .launchInUI()
 
             val progressSubscriptions = CompositeSubscription()
 
