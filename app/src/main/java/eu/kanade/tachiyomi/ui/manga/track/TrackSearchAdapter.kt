@@ -37,7 +37,7 @@ class TrackSearchAdapter(context: Context) :
         } else {
             holder = v.tag as TrackSearchHolder
         }
-        holder.onSetValues(track)
+        holder.onSetValues(track!!)
         return v
     }
 

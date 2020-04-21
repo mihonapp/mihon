@@ -6,6 +6,7 @@ import android.text.Html
 import android.util.Log
 import android.widget.HorizontalScrollView
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.ui.setting.SettingsController
@@ -76,6 +77,6 @@ class SettingsDebugController : SettingsController() {
     }
 
     companion object {
-        private val MODIFIED_TEXT = Html.fromHtml("<font color='red'>MODIFIED</font>")
+        private val MODIFIED_TEXT = HtmlCompat.fromHtml("<font color='red'>MODIFIED</font>", HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 }

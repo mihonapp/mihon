@@ -84,7 +84,7 @@ class MigrationProcessAdapter(
     fun removeManga(position: Int) {
         val item = getItem(position) ?: return
         menuItemListener.removeManga(item)
-        item?.manga?.migrationJob?.cancel()
+        item.manga.migrationJob.cancel()
         removeItem(position)
         items = currentItems
         sourceFinished()

@@ -62,15 +62,15 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrati
         ourAdapter.itemTouchHelperCallback = null // Reset adapter touch adapter to fix drag after rotation
         ourAdapter.isHandleDragEnabled = true
         dialog = null
-        val fabBaseMarginBottom = binding.fab?.marginBottom ?: 0
+        val fabBaseMarginBottom = binding.fab.marginBottom
         binding.recycler.doOnApplyWindowInsets { v, insets, padding ->
 
-            binding.fab?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            binding.fab.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomMargin = fabBaseMarginBottom + insets.systemWindowInsetBottom
             }
             // offset the recycler by the fab's inset + some inset on top
-            v.updatePaddingRelative(bottom = padding.bottom + (binding.fab?.marginBottom ?: 0) +
-                fabBaseMarginBottom + (binding.fab?.height ?: 0))
+            v.updatePaddingRelative(bottom = padding.bottom + (binding.fab.marginBottom) +
+                fabBaseMarginBottom + (binding.fab.height))
         }
 
         binding.fab.setOnClickListener {

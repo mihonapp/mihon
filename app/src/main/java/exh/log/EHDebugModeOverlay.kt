@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import com.ms_square.debugoverlay.DataObserver
 import com.ms_square.debugoverlay.OverlayModule
 import eu.kanade.tachiyomi.BuildConfig
@@ -26,7 +27,7 @@ class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(n
     }
     override fun removeObserver(observer: DataObserver<Any>) {}
     override fun onDataAvailable(data: String?) {
-        textView?.text = Html.fromHtml(data)
+        textView?.text = HtmlCompat.fromHtml(data!!, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
     override fun createView(root: ViewGroup, textColor: Int, textSize: Float, textAlpha: Float): View {
@@ -40,7 +41,7 @@ class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(n
         textView.setTextColor(textColor)
         textView.textSize = textSize
         textView.alpha = textAlpha
-        textView.text = Html.fromHtml(buildInfo())
+        textView.text = HtmlCompat.fromHtml(buildInfo(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         textView.layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT

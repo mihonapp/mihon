@@ -2,6 +2,7 @@ package exh.favorites
 
 import android.content.Context
 import android.text.Html
+import androidx.core.text.HtmlCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import uy.kohesive.injekt.injectLazy
@@ -11,7 +12,7 @@ class FavoritesIntroDialog {
 
     fun show(context: Context) = MaterialDialog.Builder(context)
             .title("IMPORTANT FAVORITES SYNC NOTES")
-            .content(Html.fromHtml(FAVORITES_INTRO_TEXT))
+            .content(HtmlCompat.fromHtml(FAVORITES_INTRO_TEXT, HtmlCompat.FROM_HTML_MODE_LEGACY))
             .positiveText("Ok")
             .onPositive { _, _ ->
                 prefs.eh_showSyncIntro().set(false)
