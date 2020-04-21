@@ -74,6 +74,13 @@ interface MangaQueries : DbProvider {
         )
         .prepare()
 
+    fun getMergedMangas(id: Long) = db.get()
+            .listOfObjects(Manga::class.java)
+            .withQuery(RawQuery.builder()
+                    .query(getMergedMangaQuery(id))
+                    .build())
+            .prepare()
+
     fun insertManga(manga: Manga) = db.put().`object`(manga).prepare()
 
     fun insertMangas(mangas: List<Manga>) = db.put().objects(mangas).prepare()

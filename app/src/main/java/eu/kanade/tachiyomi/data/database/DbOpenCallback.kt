@@ -7,6 +7,8 @@ import eu.kanade.tachiyomi.data.database.tables.ChapterTable
 import eu.kanade.tachiyomi.data.database.tables.HistoryTable
 import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
+import eu.kanade.tachiyomi.data.database.tables.MergedTable
+import eu.kanade.tachiyomi.data.database.tables.SearchMetadataTable
 import eu.kanade.tachiyomi.data.database.tables.TrackTable
 import exh.metadata.sql.tables.SearchMetadataTable
 import exh.metadata.sql.tables.SearchTagTable
@@ -38,6 +40,9 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
         execSQL(SearchTagTable.createTableQuery)
         execSQL(SearchTitleTable.createTableQuery)
         // EXH <--
+        // AZ -->
+        execSQL(MergedTable.createTableQuery)
+        // AZ <--
 
         // DB indexes
         execSQL(MangaTable.createUrlIndexQuery)
@@ -53,6 +58,9 @@ class DbOpenCallback : SupportSQLiteOpenHelper.Callback(DATABASE_VERSION) {
         db.execSQL(SearchTitleTable.createMangaIdIndexQuery)
         db.execSQL(SearchTitleTable.createTitleIndexQuery)
         // EXH <--
+        // AZ -->
+        execSQL(MergedTable.createIndexQuery)
+        // AZ <--
     }
 
     override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) {
