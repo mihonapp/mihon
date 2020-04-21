@@ -21,6 +21,15 @@ import eu.kanade.tachiyomi.data.database.queries.HistoryQueries
 import eu.kanade.tachiyomi.data.database.queries.MangaCategoryQueries
 import eu.kanade.tachiyomi.data.database.queries.MangaQueries
 import eu.kanade.tachiyomi.data.database.queries.TrackQueries
+import exh.metadata.sql.mappers.SearchMetadataTypeMapping
+import exh.metadata.sql.mappers.SearchTagTypeMapping
+import exh.metadata.sql.mappers.SearchTitleTypeMapping
+import exh.metadata.sql.models.SearchMetadata
+import exh.metadata.sql.models.SearchTag
+import exh.metadata.sql.models.SearchTitle
+import exh.metadata.sql.queries.SearchMetadataQueries
+import exh.metadata.sql.queries.SearchTagQueries
+import exh.metadata.sql.queries.SearchTitleQueries
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 
 /**

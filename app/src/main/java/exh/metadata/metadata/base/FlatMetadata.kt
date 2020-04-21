@@ -2,7 +2,7 @@ package exh.metadata.metadata.base
 
 import com.pushtorefresh.storio.operations.PreparedOperation
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
-import eu.kanade.tachiyomi.data.database.models.SearchMetadata
+import exh.metadata.sql.models.SearchMetadata
 import exh.metadata.sql.models.SearchTag
 import exh.metadata.sql.models.SearchTitle
 import kotlin.reflect.KClass

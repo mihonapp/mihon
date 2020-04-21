@@ -2,7 +2,6 @@ package exh.debug
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.text.Html
 import android.util.Log
 import android.widget.HorizontalScrollView
 import android.widget.TextView

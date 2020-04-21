@@ -18,22 +18,22 @@ import exh.metadata.sql.tables.SearchMetadataTable.COL_UPLOADER
 import exh.metadata.sql.tables.SearchMetadataTable.TABLE
 
 class SearchMetadataTypeMapping : SQLiteTypeMapping<SearchMetadata>(
-        SearchMetadataPutResolver(),
-        SearchMetadataGetResolver(),
-        SearchMetadataDeleteResolver()
+    SearchMetadataPutResolver(),
+    SearchMetadataGetResolver(),
+    SearchMetadataDeleteResolver()
 )
 
 class SearchMetadataPutResolver : DefaultPutResolver<SearchMetadata>() {
 
     override fun mapToInsertQuery(obj: SearchMetadata) = InsertQuery.builder()
-            .table(TABLE)
-            .build()
+        .table(TABLE)
+        .build()
 
     override fun mapToUpdateQuery(obj: SearchMetadata) = UpdateQuery.builder()
-            .table(TABLE)
-            .where("$COL_MANGA_ID = ?")
-            .whereArgs(obj.mangaId)
-            .build()
+        .table(TABLE)
+        .where("$COL_MANGA_ID = ?")
+        .whereArgs(obj.mangaId)
+        .build()
 
     override fun mapToContentValues(obj: SearchMetadata) = ContentValues(5).apply {
         put(COL_MANGA_ID, obj.mangaId)
@@ -46,20 +46,21 @@ class SearchMetadataPutResolver : DefaultPutResolver<SearchMetadata>() {
 
 class SearchMetadataGetResolver : DefaultGetResolver<SearchMetadata>() {
 
-    override fun mapFromCursor(cursor: Cursor): SearchMetadata = SearchMetadata(
+    override fun mapFromCursor(cursor: Cursor): SearchMetadata =
+        SearchMetadata(
             mangaId = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID)),
             uploader = cursor.getString(cursor.getColumnIndex(COL_UPLOADER)),
             extra = cursor.getString(cursor.getColumnIndex(COL_EXTRA)),
             indexedExtra = cursor.getString(cursor.getColumnIndex(COL_INDEXED_EXTRA)),
             extraVersion = cursor.getInt(cursor.getColumnIndex(COL_EXTRA_VERSION))
-    )
+        )
 }
 
 class SearchMetadataDeleteResolver : DefaultDeleteResolver<SearchMetadata>() {
 
     override fun mapToDeleteQuery(obj: SearchMetadata) = DeleteQuery.builder()
-            .table(TABLE)
-            .where("$COL_MANGA_ID = ?")
-            .whereArgs(obj.mangaId)
-            .build()
+        .table(TABLE)
+        .where("$COL_MANGA_ID = ?")
+        .whereArgs(obj.mangaId)
+        .build()
 }

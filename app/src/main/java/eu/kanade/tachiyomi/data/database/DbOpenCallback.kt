@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.data.database.tables.HistoryTable
 import eu.kanade.tachiyomi.data.database.tables.MangaCategoryTable
 import eu.kanade.tachiyomi.data.database.tables.MangaTable
 import eu.kanade.tachiyomi.data.database.tables.MergedTable
-import eu.kanade.tachiyomi.data.database.tables.SearchMetadataTable
 import eu.kanade.tachiyomi.data.database.tables.TrackTable
 import exh.metadata.sql.tables.SearchMetadataTable
 import exh.metadata.sql.tables.SearchTagTable

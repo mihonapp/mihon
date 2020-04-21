@@ -1,7 +1,6 @@
 package exh.favorites
 
 import android.content.Context
-import android.text.Html
 import androidx.core.text.HtmlCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper

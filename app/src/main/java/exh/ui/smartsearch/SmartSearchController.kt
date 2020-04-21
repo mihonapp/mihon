@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.smartsearch
+package exh.ui.smartsearch
 
 import android.os.Bundle
 import android.view.LayoutInflater

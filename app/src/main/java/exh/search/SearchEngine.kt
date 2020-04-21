@@ -1,6 +1,6 @@
 package exh.search
 
-import eu.kanade.tachiyomi.data.database.tables.SearchMetadataTable
+import exh.metadata.sql.tables.SearchMetadataTable
 import exh.metadata.sql.tables.SearchTagTable
 import exh.metadata.sql.tables.SearchTitleTable
 

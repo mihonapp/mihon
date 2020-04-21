@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.smartsearch
+package exh.smartsearch
 
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
