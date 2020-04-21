@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?selectable_library_drawable">
+    android:background="@drawable/library_item_selector">
 
     <FrameLayout
         android:id="@+id/card"
