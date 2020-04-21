@@ -42,7 +42,7 @@
 
         <TextView
             android:id="@+id/manga_chapters"
-            style="@style/TextAppearance.Regular.Caption.Light"
+            style="@style/TextAppearance.Regular.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/md_teal_500"
@@ -60,7 +60,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
-            style="@style/TextAppearance.Regular.Body1.Light"
+            style="@style/TextAppearance.Regular.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
