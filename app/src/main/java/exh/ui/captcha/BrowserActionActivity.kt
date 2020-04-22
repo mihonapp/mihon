@@ -2,17 +2,14 @@ package exh.ui.captcha
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.MotionEvent
 import android.webkit.CookieManager
-import android.webkit.CookieSyncManager
 import android.webkit.JavascriptInterface
 import android.webkit.JsResult
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.github.salomonbrys.kotson.get
@@ -82,7 +79,7 @@ class BrowserActionActivity : AppCompatActivity() {
         val url: String? = intent.getStringExtra(URL_EXTRA)
         val actionName = intent.getStringExtra(ACTION_NAME_EXTRA)
 
-        val verifyComplete = if (source != null) {
+        @Suppress("NOT_NULL_ASSERTION_ON_CALLABLE_REFERENCE") val verifyComplete = if (source != null) {
             source::verifyComplete!!
         } else intent.getSerializableExtra(VERIFY_LAMBDA_EXTRA) as? (String) -> Boolean
 
@@ -106,9 +103,6 @@ class BrowserActionActivity : AppCompatActivity() {
             cm.setCookie(url, cookieString)
         }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            CookieSyncManager.createInstance(this).sync()
-
         webview.settings.javaScriptEnabled = true
         webview.settings.domStorageEnabled = true
         headers.entries.find { it.key.equals("user-agent", true) }?.let {
@@ -124,8 +118,7 @@ class BrowserActionActivity : AppCompatActivity() {
                     // Wait for both inner scripts to be loaded
                     if (loadedInners >= 2) {
                         // Attempt to autosolve captcha
-                        if (preferencesHelper.eh_autoSolveCaptchas().getOrDefault() &&
-                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        if (preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
                             webview.post {
                                 // 10 seconds to auto-solve captcha
                                 strictValidationStartTime = System.currentTimeMillis() + 1000 * 10
@@ -144,28 +137,24 @@ class BrowserActionActivity : AppCompatActivity() {
             }
         }
 
-        webview.webViewClient = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (actionName == null && preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
-                // Fetch auto-solve credentials early for speed
-                credentialsObservable = httpClient.newCall(Request.Builder()
-                        // Rob demo credentials
-                        .url("https://speech-to-text-demo.ng.bluemix.net/api/v1/credentials")
-                        .build())
-                        .asObservableSuccess()
-                        .subscribeOn(Schedulers.io())
-                        .map {
-                            val json = JsonParser.parseString(it.body!!.string())
-                            it.close()
-                            json["token"].string
-                        }.melt()
+        webview.webViewClient = if (actionName == null && preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
+            // Fetch auto-solve credentials early for speed
+            credentialsObservable = httpClient.newCall(Request.Builder()
+                // Rob demo credentials
+                .url("https://speech-to-text-demo.ng.bluemix.net/api/v1/credentials")
+                .build())
+                .asObservableSuccess()
+                .subscribeOn(Schedulers.io())
+                .map {
+                    val json = JsonParser.parseString(it.body!!.string())
+                    it.close()
+                    json["token"].string
+                }.melt()
 
-                webview.addJavascriptInterface(this@BrowserActionActivity, "exh")
-                AutoSolvingWebViewClient(this, verifyComplete, script, headers)
-            } else {
-                HeadersInjectingWebViewClient(this, verifyComplete, script, headers)
-            }
+            webview.addJavascriptInterface(this@BrowserActionActivity, "exh")
+            AutoSolvingWebViewClient(this, verifyComplete, script, headers)
         } else {
-            BasicWebViewClient(this, verifyComplete, script)
+            HeadersInjectingWebViewClient(this, verifyComplete, script, headers)
         }
 
         webview.loadUrl(url, headers)
@@ -180,7 +169,6 @@ class BrowserActionActivity : AppCompatActivity() {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun captchaSolveFail() {
         currentLoopId = null
         validateCurrentLoopId = null
@@ -197,7 +185,6 @@ class BrowserActionActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @JavascriptInterface
     fun callback(result: String?, loopId: String, stage: Int) {
         if (loopId != currentLoopId) return
@@ -295,7 +282,6 @@ class BrowserActionActivity : AppCompatActivity() {
         }.toSingle()
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun doStageCheckbox(loopId: String) {
         if (loopId != currentLoopId) return
 
@@ -324,7 +310,6 @@ class BrowserActionActivity : AppCompatActivity() {
         """.trimIndent().replace("\n", ""), null)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun getAudioButtonLocation(loopId: String) {
         webview.evaluateJavascript("""
             (function() {
@@ -357,7 +342,6 @@ class BrowserActionActivity : AppCompatActivity() {
         """.trimIndent().replace("\n", ""), null)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun doStageDownloadAudio(loopId: String) {
         webview.evaluateJavascript("""
             (function() {
@@ -383,7 +367,6 @@ class BrowserActionActivity : AppCompatActivity() {
         """.trimIndent().replace("\n", ""), null)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun typeResult(loopId: String, result: String) {
         webview.evaluateJavascript("""
             (function() {
@@ -412,14 +395,12 @@ class BrowserActionActivity : AppCompatActivity() {
         """.trimIndent().replace("\n", ""), null)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun beginSolveLoop() {
         val loopId = UUID.randomUUID().toString()
         currentLoopId = loopId
         doStageCheckbox(loopId)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @JavascriptInterface
     fun validateCaptchaCallback(result: Boolean, loopId: String) {
         if (loopId != validateCurrentLoopId) return
@@ -448,7 +429,6 @@ class BrowserActionActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun runValidateCaptcha(loopId: String) {
         if (loopId != validateCurrentLoopId) return
 
@@ -476,7 +456,6 @@ class BrowserActionActivity : AppCompatActivity() {
         """.trimIndent().replace("\n", ""), null)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun beginValidateCaptchaLoop() {
         val loopId = UUID.randomUUID().toString()
         validateCurrentLoopId = loopId

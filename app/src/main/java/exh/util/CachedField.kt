@@ -18,7 +18,7 @@ class CachedField<T>(private val expiresAfterMs: Long) {
                 content = producer()
             }
 
-            content as T
+            content!!
         }
     }
 }

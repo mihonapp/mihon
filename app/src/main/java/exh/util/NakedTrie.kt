@@ -14,7 +14,7 @@ class NakedTrieNode<T>(val key: Int, var parent: NakedTrieNode<T>?) {
     inline fun walk(prefix: String, consumer: (String, T) -> Boolean, leavesOnly: Boolean) {
         // Special case root
         if (hasData && (!leavesOnly || children.size() <= 0)) {
-            if (!consumer(prefix, data as T)) return
+            if (!consumer(prefix, data!! as T)) return
         }
 
         val stack = LinkedList<Pair<String, NakedTrieNode<T>>>()
@@ -27,7 +27,7 @@ class NakedTrieNode<T>(val key: Int, var parent: NakedTrieNode<T>?) {
                 stack += key + it.key.toChar() to it
             }
             if (bottom.hasData && (!leavesOnly || bottom.children.size() <= 0)) {
-                if (!consumer(key, bottom.data as T)) return
+                if (!consumer(key, bottom.data!! as T)) return
             }
         }
     }
@@ -195,7 +195,7 @@ class NakedTrie<T> : MutableMap<String, T> {
             version++
         }
 
-        return current.data as T
+        return current.data!!
     }
 
     // Includes root

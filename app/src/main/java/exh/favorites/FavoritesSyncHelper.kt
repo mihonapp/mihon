@@ -118,9 +118,8 @@ class FavoritesSyncHelper(val context: Context) {
             }
 
             // Do not update galleries while syncing favorites
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                EHentaiUpdateWorker.cancelBackground(context)
-            }
+            EHentaiUpdateWorker.cancelBackground(context)
+
 
             storage.getRealm().use { realm ->
                 realm.trans {
@@ -173,9 +172,8 @@ class FavoritesSyncHelper(val context: Context) {
             }
 
             // Update galleries again!
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                EHentaiUpdateWorker.scheduleBackground(context)
-            }
+            EHentaiUpdateWorker.scheduleBackground(context)
+
         }
 
         if (errorList.isEmpty())

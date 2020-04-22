@@ -90,41 +90,25 @@ object DebugFunctions {
     fun convertAllExhentaiGalleriesToEhentai() = convertSources(EXH_SOURCE_ID, EH_SOURCE_ID)
 
     fun testLaunchEhentaiBackgroundUpdater() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            EHentaiUpdateWorker.launchBackgroundTest(app)
-        } else {
-            error("OS/SDK version too old!")
-        }
+        EHentaiUpdateWorker.launchBackgroundTest(app)
     }
 
     fun rescheduleEhentaiBackgroundUpdater() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            EHentaiUpdateWorker.scheduleBackground(app)
-        } else {
-            error("OS/SDK version too old!")
-        }
+        EHentaiUpdateWorker.scheduleBackground(app)
     }
 
-    fun listScheduledJobs() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        app.jobScheduler.allPendingJobs.map { j ->
-            """
-                {
-                    info: ${j.id},
-                    isPeriod: ${j.isPeriodic},
-                    isPersisted: ${j.isPersisted},
-                    intervalMillis: ${j.intervalMillis},
-                }
-            """.trimIndent()
-        }.joinToString(",\n")
-    } else {
-        error("OS/SDK version too old!")
-    }
+    fun listScheduledJobs() = app.jobScheduler.allPendingJobs.map { j ->
+        """
+            {
+                info: ${j.id},
+                isPeriod: ${j.isPeriodic},
+                isPersisted: ${j.isPersisted},
+                intervalMillis: ${j.intervalMillis},
+            }
+        """.trimIndent()
+    }.joinToString(",\n")
 
-    fun cancelAllScheduledJobs() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        app.jobScheduler.cancelAll()
-    } else {
-        error("OS/SDK version too old!")
-    }
+    fun cancelAllScheduledJobs() = app.jobScheduler.cancelAll()
 
     private fun convertSources(from: Long, to: Long) {
         db.lowLevel().executeSQL(RawQuery.builder()

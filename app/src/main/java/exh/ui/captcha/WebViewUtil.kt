@@ -5,7 +5,6 @@ import android.webkit.WebResourceRequest
 import androidx.annotation.RequiresApi
 import okhttp3.Request
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun WebResourceRequest.toOkHttpRequest(): Request {
     val request = Request.Builder()
             .url(url.toString())

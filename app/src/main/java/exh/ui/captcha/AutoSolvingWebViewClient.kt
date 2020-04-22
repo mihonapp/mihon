@@ -11,7 +11,6 @@ import java.nio.charset.Charset
 import org.jsoup.nodes.DataNode
 import org.jsoup.nodes.Element
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class AutoSolvingWebViewClient(
     activity: BrowserActionActivity,
     verifyComplete: (String) -> Boolean,

@@ -46,7 +46,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class EHentaiUpdateWorker : JobService(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + Job()
@@ -274,7 +273,6 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     companion object {
         private const val MAX_UPDATE_FAILURES = 5
 

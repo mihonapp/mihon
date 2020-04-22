@@ -1,7 +1,6 @@
 package exh.ui.login
 
 import android.net.Uri
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,55 +69,46 @@ class LoginController : NucleusController<EhActivityLoginBinding, LoginPresenter
                 binding.webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login&$PARAM_SKIP_INJECT=true")
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                CookieManager.getInstance().removeAllCookies {
-                    launchUI {
-                        startWebview(view)
-                    }
+            CookieManager.getInstance().removeAllCookies {
+                launchUI {
+                    startWebview(view)
                 }
-            } else {
-                CookieManager.getInstance().removeAllCookie()
-                startWebview(view)
             }
         }
     }
 
     private fun hideAdvancedOptions(view: View) {
-        with(view) {
-            binding.advancedOptions.gone()
-            binding.webview.visible()
-            binding.btnAdvanced.isEnabled = true
-            binding.btnCancel.isEnabled = true
-        }
+        binding.advancedOptions.gone()
+        binding.webview.visible()
+        binding.btnAdvanced.isEnabled = true
+        binding.btnCancel.isEnabled = true
     }
 
     fun startWebview(view: View) {
-        with(view) {
-            binding.webview.settings.javaScriptEnabled = true
-            binding.webview.settings.domStorageEnabled = true
+        binding.webview.settings.javaScriptEnabled = true
+        binding.webview.settings.domStorageEnabled = true
 
-            binding.webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login")
+        binding.webview.loadUrl("https://forums.e-hentai.org/index.php?act=Login")
 
-            binding.webview.webViewClient = object : WebViewClient() {
-                override fun onPageFinished(view: WebView, url: String) {
-                    super.onPageFinished(view, url)
-                    Timber.d(url)
-                    val parsedUrl = Uri.parse(url)
-                    if (parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
-                        // Hide distracting content
-                        if (!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT))
-                            view.evaluateJavascript(HIDE_JS, null)
+        binding.webview.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url)
+                Timber.d(url)
+                val parsedUrl = Uri.parse(url)
+                if (parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
+                    // Hide distracting content
+                    if (!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT))
+                        view.evaluateJavascript(HIDE_JS, null)
 
-                        // Check login result
-                        if (parsedUrl.getQueryParameter("code")?.toInt() != 0) {
-                            if (checkLoginCookies(url)) view.loadUrl("https://exhentai.org/")
-                        }
-                    } else if (parsedUrl.host.equals("exhentai.org", ignoreCase = true)) {
-                        // At ExHentai, check that everything worked out...
-                        if (applyExHentaiCookies(url)) {
-                            preferenceManager.enableExhentai().set(true)
-                            finishLogin()
-                        }
+                    // Check login result
+                    if (parsedUrl.getQueryParameter("code")?.toInt() != 0) {
+                        if (checkLoginCookies(url)) view.loadUrl("https://exhentai.org/")
+                    }
+                } else if (parsedUrl.host.equals("exhentai.org", ignoreCase = true)) {
+                    // At ExHentai, check that everything worked out...
+                    if (applyExHentaiCookies(url)) {
+                        preferenceManager.enableExhentai().set(true)
+                        finishLogin()
                     }
                 }
             }

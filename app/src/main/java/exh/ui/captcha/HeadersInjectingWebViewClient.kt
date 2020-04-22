@@ -6,7 +6,6 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 open class HeadersInjectingWebViewClient(
     activity: BrowserActionActivity,
     verifyComplete: (String) -> Boolean,

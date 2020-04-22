@@ -97,9 +97,8 @@ object EXHMigrations {
                     }
 
                     // Cancel old scheduler jobs with old ids
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        context.jobScheduler.cancelAll()
-                    }
+                    context.jobScheduler.cancelAll()
+
                 }
                 if (oldVersion < 8408) {
                     db.inTransaction {

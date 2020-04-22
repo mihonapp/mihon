@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.setting
 
-import android.os.Build
 import android.os.Handler
 import android.widget.Toast
 import androidx.preference.PreferenceScreen
@@ -224,108 +223,118 @@ class SettingsEhController : SettingsController() {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            preferenceCategory {
-                title = "Gallery update checker"
+        preferenceCategory {
+            title = "Gallery update checker"
 
-                intListPreference {
-                    key = PreferenceKeys.eh_autoUpdateFrequency
-                    title = "Time between update batches"
-                    entries = arrayOf("Never update galleries", "1 hour", "2 hours", "3 hours", "6 hours", "12 hours", "24 hours", "48 hours")
-                    entryValues = arrayOf("0", "1", "2", "3", "6", "12", "24", "48")
-                    defaultValue = "0"
+            intListPreference {
+                key = PreferenceKeys.eh_autoUpdateFrequency
+                title = "Time between update batches"
+                entries = arrayOf(
+                    "Never update galleries",
+                    "1 hour",
+                    "2 hours",
+                    "3 hours",
+                    "6 hours",
+                    "12 hours",
+                    "24 hours",
+                    "48 hours"
+                )
+                entryValues = arrayOf("0", "1", "2", "3", "6", "12", "24", "48")
+                defaultValue = "0"
 
-                    preferences.eh_autoUpdateFrequency().asObservable().subscribeUntilDestroy { newVal ->
+                preferences.eh_autoUpdateFrequency().asObservable()
+                    .subscribeUntilDestroy { newVal ->
                         summary = if (newVal == 0) {
                             "${context.getString(R.string.app_name)} will currently never check galleries in your library for updates."
                         } else {
                             "${context.getString(R.string.app_name)} checks/updates galleries in batches. " +
-                                    "This means it will wait $newVal hour(s), check ${EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION} galleries," +
-                                    " wait $newVal hour(s), check ${EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION} and so on..."
+                                "This means it will wait $newVal hour(s), check ${EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION} galleries," +
+                                " wait $newVal hour(s), check ${EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION} and so on..."
                         }
                     }
 
-                    onChange { newValue ->
-                        val interval = (newValue as String).toInt()
-                        EHentaiUpdateWorker.scheduleBackground(context, interval)
-                        true
-                    }
+                onChange { newValue ->
+                    val interval = (newValue as String).toInt()
+                    EHentaiUpdateWorker.scheduleBackground(context, interval)
+                    true
                 }
+            }
 
-                multiSelectListPreference {
-                    key = PreferenceKeys.eh_autoUpdateRestrictions
-                    title = "Auto update restrictions"
-                    entriesRes = arrayOf(R.string.wifi, R.string.charging)
-                    entryValues = arrayOf("wifi", "ac")
-                    summaryRes = R.string.pref_library_update_restriction_summary
+            multiSelectListPreference {
+                key = PreferenceKeys.eh_autoUpdateRestrictions
+                title = "Auto update restrictions"
+                entriesRes = arrayOf(R.string.wifi, R.string.charging)
+                entryValues = arrayOf("wifi", "ac")
+                summaryRes = R.string.pref_library_update_restriction_summary
 
-                    preferences.eh_autoUpdateFrequency().asObservable()
-                            .subscribeUntilDestroy { isVisible = it > 0 }
+                preferences.eh_autoUpdateFrequency().asObservable()
+                    .subscribeUntilDestroy { isVisible = it > 0 }
 
-                    onChange {
-                        // Post to event looper to allow the preference to be updated.
-                        Handler().post { EHentaiUpdateWorker.scheduleBackground(context) }
-                        true
-                    }
+                onChange {
+                    // Post to event looper to allow the preference to be updated.
+                    Handler().post { EHentaiUpdateWorker.scheduleBackground(context) }
+                    true
                 }
+            }
 
-                preference {
-                    title = "Show updater statistics"
+            preference {
+                title = "Show updater statistics"
 
-                    onClick {
-                        val progress = MaterialDialog.Builder(context)
-                                .progress(true, 0)
-                                .content("Collecting statistics...")
-                                .cancelable(false)
-                                .show()
+                onClick {
+                    val progress = MaterialDialog.Builder(context)
+                        .progress(true, 0)
+                        .content("Collecting statistics...")
+                        .cancelable(false)
+                        .show()
 
-                        GlobalScope.launch(Dispatchers.IO) {
-                            val updateInfo = try {
-                                val stats = preferences.eh_autoUpdateStats().getOrDefault().nullIfBlank()?.let {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val updateInfo = try {
+                            val stats =
+                                preferences.eh_autoUpdateStats().getOrDefault().nullIfBlank()?.let {
                                     gson.fromJson<EHentaiUpdaterStats>(it)
                                 }
 
-                                val statsText = if (stats != null) {
-                                    "The updater last ran ${Humanize.naturalTime(Date(stats.startTime))}, and checked ${stats.updateCount} out of the ${stats.possibleUpdates} galleries that were ready for checking."
-                                } else "The updater has not ran yet."
+                            val statsText = if (stats != null) {
+                                "The updater last ran ${Humanize.naturalTime(Date(stats.startTime))}, and checked ${stats.updateCount} out of the ${stats.possibleUpdates} galleries that were ready for checking."
+                            } else "The updater has not ran yet."
 
-                                val allMeta = db.getFavoriteMangaWithMetadata().await().filter {
-                                    it.source == EH_SOURCE_ID || it.source == EXH_SOURCE_ID
-                                }.mapNotNull {
-                                    db.getFlatMetadataForManga(it.id!!).await()?.raise<EHentaiSearchMetadata>()
-                                }.toList()
+                            val allMeta = db.getFavoriteMangaWithMetadata().await().filter {
+                                it.source == EH_SOURCE_ID || it.source == EXH_SOURCE_ID
+                            }.mapNotNull {
+                                db.getFlatMetadataForManga(it.id!!).await()
+                                    ?.raise<EHentaiSearchMetadata>()
+                            }.toList()
 
-                                fun metaInRelativeDuration(duration: Interval<*>): Int {
-                                    val durationMs = duration.inMilliseconds.longValue
-                                    return allMeta.asSequence().filter {
-                                        System.currentTimeMillis() - it.lastUpdateCheck < durationMs
-                                    }.count()
-                                }
+                            fun metaInRelativeDuration(duration: Interval<*>): Int {
+                                val durationMs = duration.inMilliseconds.longValue
+                                return allMeta.asSequence().filter {
+                                    System.currentTimeMillis() - it.lastUpdateCheck < durationMs
+                                }.count()
+                            }
 
-                                """
-                                    $statsText
+                            """
+                                $statsText
 
-                                    Galleries that were checked in the last:
-                                    - hour: ${metaInRelativeDuration(1.hours)}
-                                    - 6 hours: ${metaInRelativeDuration(6.hours)}
-                                    - 12 hours: ${metaInRelativeDuration(12.hours)}
-                                    - day: ${metaInRelativeDuration(1.days)}
-                                    - 2 days: ${metaInRelativeDuration(2.days)}
-                                    - week: ${metaInRelativeDuration(7.days)}
-                                    - month: ${metaInRelativeDuration(30.days)}
-                                    - year: ${metaInRelativeDuration(365.days)}
+                                Galleries that were checked in the last:
+                                - hour: ${metaInRelativeDuration(1.hours)}
+                                - 6 hours: ${metaInRelativeDuration(6.hours)}
+                                - 12 hours: ${metaInRelativeDuration(12.hours)}
+                                - day: ${metaInRelativeDuration(1.days)}
+                                - 2 days: ${metaInRelativeDuration(2.days)}
+                                - week: ${metaInRelativeDuration(7.days)}
+                                - month: ${metaInRelativeDuration(30.days)}
+                                - year: ${metaInRelativeDuration(365.days)}
                                 """.trimIndent()
-                            } finally {
-                                progress.dismiss()
-                            }
+                        } finally {
+                            progress.dismiss()
+                        }
 
-                            withContext(Dispatchers.Main) {
-                                MaterialDialog.Builder(context)
-                                        .title("Gallery updater statistics")
-                                        .content(updateInfo)
-                                        .positiveText("Ok")
-                                        .show()
-                            }
+                        withContext(Dispatchers.Main) {
+                            MaterialDialog.Builder(context)
+                                .title("Gallery updater statistics")
+                                .content(updateInfo)
+                                .positiveText("Ok")
+                                .show()
                         }
                     }
                 }

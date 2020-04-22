@@ -1,6 +1,5 @@
 package exh.ui.captcha
 
-import android.os.Build
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
@@ -15,7 +14,7 @@ open class BasicWebViewClient(
         if (verifyComplete(url)) {
             activity.finish()
         } else {
-            if (injectScript != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            if (injectScript != null)
                 view.evaluateJavascript("(function() {$injectScript})();", null)
         }
     }

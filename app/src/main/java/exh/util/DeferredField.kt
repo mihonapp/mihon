@@ -35,12 +35,12 @@ class DeferredField<T> {
      */
     suspend fun get(): T {
         // Check if field is initialized and return immediately if it is
-        if (initialized) return content as T
+        if (initialized) return content!!
 
         // Wait for field to initialize
         mutex.withLock {}
 
         // Field is initialized, return value
-        return content as T
+        return content!!
     }
 }

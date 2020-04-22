@@ -1,12 +1,10 @@
 package exh.ui.lock
 
-import android.annotation.TargetApi
 import android.app.AppOpsManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.provider.Settings
 import com.afollestad.materialdialogs.MaterialDialog
 import com.elvishew.xlog.XLog
@@ -55,7 +53,6 @@ fun notifyLockSecurity(
 ): Boolean {
     return false
     if (!prefs.eh_lockManually().getOrDefault() &&
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
             !hasAccessToUsageStats(context)) {
         MaterialDialog.Builder(context)
                 .title("Permission required")
@@ -89,7 +86,6 @@ fun notifyLockSecurity(
     }
 }
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 fun hasAccessToUsageStats(context: Context): Boolean {
     return try {
         val packageManager = context.packageManager
