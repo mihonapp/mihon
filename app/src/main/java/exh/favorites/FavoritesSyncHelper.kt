@@ -2,7 +2,6 @@ package exh.favorites
 
 import android.content.Context
 import android.net.wifi.WifiManager
-import android.os.Build
 import android.os.PowerManager
 import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
@@ -120,7 +119,6 @@ class FavoritesSyncHelper(val context: Context) {
             // Do not update galleries while syncing favorites
             EHentaiUpdateWorker.cancelBackground(context)
 
-
             storage.getRealm().use { realm ->
                 realm.trans {
                     db.inTransaction {
@@ -173,7 +171,6 @@ class FavoritesSyncHelper(val context: Context) {
 
             // Update galleries again!
             EHentaiUpdateWorker.scheduleBackground(context)
-
         }
 
         if (errorList.isEmpty())

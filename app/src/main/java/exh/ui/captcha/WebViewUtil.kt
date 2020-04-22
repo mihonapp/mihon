@@ -1,8 +1,6 @@
 package exh.ui.captcha
 
-import android.os.Build
 import android.webkit.WebResourceRequest
-import androidx.annotation.RequiresApi
 import okhttp3.Request
 
 fun WebResourceRequest.toOkHttpRequest(): Request {

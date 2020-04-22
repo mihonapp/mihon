@@ -1,7 +1,6 @@
 package exh
 
 import android.content.Context
-import android.os.Build
 import com.elvishew.xlog.XLog
 import com.pushtorefresh.storio.sqlite.queries.Query
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
@@ -98,7 +97,6 @@ object EXHMigrations {
 
                     // Cancel old scheduler jobs with old ids
                     context.jobScheduler.cancelAll()
-
                 }
                 if (oldVersion < 8408) {
                     db.inTransaction {

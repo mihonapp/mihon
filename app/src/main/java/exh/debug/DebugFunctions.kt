@@ -1,7 +1,6 @@
 package exh.debug
 
 import android.app.Application
-import android.os.Build
 import com.pushtorefresh.storio.sqlite.queries.RawQuery
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.tables.MangaTable

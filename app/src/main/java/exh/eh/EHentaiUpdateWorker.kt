@@ -7,7 +7,6 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
-import androidx.annotation.RequiresApi
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.kizitonwose.time.days
