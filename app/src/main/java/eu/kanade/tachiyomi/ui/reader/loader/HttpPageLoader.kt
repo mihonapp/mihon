@@ -47,7 +47,7 @@ class HttpPageLoader(
      */
     private val subscriptions = CompositeSubscription()
 
-    private val preloadSize = 4
+    private val preloadSize = prefs.eh_preload_size().getOrDefault()
 
     init {
         // EXH -->
