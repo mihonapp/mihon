@@ -36,7 +36,7 @@ class InterceptActivity : BaseRxActivity<EhActivityInterceptBinding, InterceptAc
         if (Intent.ACTION_VIEW == intent.action) {
             binding.interceptProgress.visible()
             binding.interceptStatus.text = "Loading gallery..."
-            presenter.loadGallery(intent.dataString)
+            presenter.loadGallery(intent.dataString!!)
         }
     }
 

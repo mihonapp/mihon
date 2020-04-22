@@ -698,7 +698,7 @@ class BrowserActionActivity : AppCompatActivity() {
             headers: Map<String, String>? = emptyMap()
         ) {
             val intent = baseIntent(context).apply {
-                putExtra(HEADERS_EXTRA, HashMap(headers))
+                putExtra(HEADERS_EXTRA, HashMap(headers!!))
                 putExtra(VERIFY_LAMBDA_EXTRA, completionVerifier as Serializable)
                 putExtra(SCRIPT_EXTRA, script)
                 putExtra(URL_EXTRA, url)

@@ -47,7 +47,7 @@ class Tsumino(delegate: HttpSource) : DelegatedHttpSource(delegate),
 
     override fun parseIntoMetadata(metadata: TsuminoSearchMetadata, input: Document) {
         with(metadata) {
-            tmId = TsuminoSearchMetadata.tmIdFromUrl(input.location()).toInt()
+            tmId = TsuminoSearchMetadata.tmIdFromUrl(input.location())!!.toInt()
             tags.clear()
 
             input.getElementById("Title")?.text()?.let {
