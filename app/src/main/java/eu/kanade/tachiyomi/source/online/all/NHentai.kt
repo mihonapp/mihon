@@ -68,7 +68,7 @@ class NHentai(context: Context) : HttpSource(), LewdSource<NHentaiSearchMetadata
         val langFilter = filters.filterIsInstance<filterLang>().firstOrNull()
         var langFilterString = ""
         if (langFilter != null) {
-            langFilterString = SOURCE_LANG_LIST.first { it.first == langFilter!!.values[langFilter!!.state] }.second
+            langFilterString = SOURCE_LANG_LIST.first { it.first == langFilter.values[langFilter.state] }.second
         }
 
         val uri = if (query.isNotBlank()) {
