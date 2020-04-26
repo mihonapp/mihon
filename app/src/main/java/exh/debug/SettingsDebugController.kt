@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.onClick
@@ -43,12 +44,12 @@ class SettingsDebugController : SettingsController() {
                         try {
                             val result = it.call(DebugFunctions)
                             view.text = "Function returned result:\n\n$result"
-                            MaterialDialog.Builder(context)
-                                    .customView(hView, true)
+                            MaterialDialog(context)
+                                    .customView(view = hView, scrollable = true)
                         } catch (t: Throwable) {
                             view.text = "Function threw exception:\n\n${Log.getStackTraceString(t)}"
-                            MaterialDialog.Builder(context)
-                                    .customView(hView, true)
+                            MaterialDialog(context)
+                                    .customView(view = hView, scrollable = true)
                         }.show()
                     }
                 }

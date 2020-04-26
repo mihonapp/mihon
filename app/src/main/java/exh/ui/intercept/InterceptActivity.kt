@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onCancel
+import com.afollestad.materialdialogs.callbacks.onDismiss
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.EhActivityInterceptBinding
 import eu.kanade.tachiyomi.ui.base.activity.BaseRxActivity
@@ -67,14 +69,14 @@ class InterceptActivity : BaseRxActivity<EhActivityInterceptBinding, InterceptAc
                         is InterceptResult.Failure -> {
                             binding.interceptProgress.gone()
                             binding.interceptStatus.text = "Error: ${it.reason}"
-                            MaterialDialog.Builder(this)
-                                    .title("Error")
-                                    .content("Could not open this gallery:\n\n${it.reason}")
+                            MaterialDialog(this)
+                                    .title(text = "Error")
+                                    .message(text = "Could not open this gallery:\n\n${it.reason}")
                                     .cancelable(true)
-                                    .canceledOnTouchOutside(true)
-                                    .positiveText("Ok")
-                                    .cancelListener { onBackPressed() }
-                                    .dismissListener { onBackPressed() }
+                                    .cancelOnTouchOutside(true)
+                                    .positiveButton(android.R.string.ok)
+                                    .onCancel { onBackPressed() }
+                                    .onDismiss { onBackPressed() }
                                     .show()
                         }
                     }
