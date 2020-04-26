@@ -24,10 +24,10 @@ class ConfiguringDialogController : DialogController() {
                 } catch (e: Exception) {
                     activity?.let {
                         it.runOnUiThread {
-                            MaterialDialog.Builder(it)
-                                    .title("Configuration failed!")
-                                    .content("An error occurred during the configuration process: " + e.message)
-                                    .positiveText("Ok")
+                            MaterialDialog(it)
+                                    .title(text = "Configuration failed!")
+                                    .message(text = "An error occurred during the configuration process: " + e.message)
+                                    .positiveButton(android.R.string.ok)
                                     .show()
                         }
                     }
@@ -38,12 +38,11 @@ class ConfiguringDialogController : DialogController() {
                 }
             }
 
-        return MaterialDialog.Builder(activity!!)
-                .title("Uploading settings to server")
-                .content("Please wait, this may take some time...")
-                .progress(true, 0)
+        return MaterialDialog(activity!!)
+                .title(text = "Uploading settings to server")
+                .message(text = "Please wait, this may take some time...")
                 .cancelable(false)
-                .build().also {
+                .also {
             materialDialog = it
         }
     }

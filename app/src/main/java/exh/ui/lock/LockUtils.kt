@@ -54,30 +54,27 @@ fun notifyLockSecurity(
     return false
     if (!prefs.eh_lockManually().getOrDefault() &&
             !hasAccessToUsageStats(context)) {
-        MaterialDialog.Builder(context)
-                .title("Permission required")
-                .content("${context.getString(R.string.app_name)} requires the usage stats permission to detect when you leave the app. " +
+        MaterialDialog(context)
+                .title(text = "Permission required")
+                .message(text = "${context.getString(R.string.app_name)} requires the usage stats permission to detect when you leave the app. " +
                         "This is required for the application lock to function properly. " +
                         "Press OK to grant this permission now.")
-                .negativeText("Cancel")
-                .positiveText("Ok")
-                .onPositive { _, _ ->
+                .negativeButton(R.string.action_cancel)
+                .positiveButton(android.R.string.ok) {
                     try {
                         context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
                     } catch (e: ActivityNotFoundException) {
                         XLog.e("Device does not support USAGE_ACCESS_SETTINGS shortcut!")
-                        MaterialDialog.Builder(context)
-                                .title("Grant permission manually")
-                                .content("Failed to launch the window used to grant the usage stats permission. " +
+                        MaterialDialog(context)
+                                .title(text = "Grant permission manually")
+                                .message(text = "Failed to launch the window used to grant the usage stats permission. " +
                                         "You can still grant this permission manually: go to your phone's settings and search for 'usage access'.")
-                                .positiveText("Ok")
-                                .onPositive { dialog, _ -> dialog.dismiss() }
+                                .positiveButton(android.R.string.ok) { it.dismiss() }
                                 .cancelable(true)
-                                .canceledOnTouchOutside(false)
+                                .cancelOnTouchOutside(false)
                                 .show()
                     }
                 }
-                .autoDismiss(true)
                 .cancelable(false)
                 .show()
         return true

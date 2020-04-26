@@ -175,12 +175,12 @@ class BrowserActionActivity : AppCompatActivity() {
         Timber.e(IllegalStateException("Captcha solve failure!"))
         runOnUiThread {
             webview.evaluateJavascript(SOLVE_UI_SCRIPT_HIDE, null)
-            MaterialDialog.Builder(this)
-                    .title("Captcha solve failure")
-                    .content("Failed to auto-solve the captcha!")
+            MaterialDialog(this)
+                    .title(text = "Captcha solve failure")
+                    .message(text = "Failed to auto-solve the captcha!")
                     .cancelable(true)
-                    .canceledOnTouchOutside(true)
-                    .positiveText("Ok")
+                    .cancelOnTouchOutside(true)
+                    .positiveButton(android.R.string.ok)
                     .show()
         }
     }

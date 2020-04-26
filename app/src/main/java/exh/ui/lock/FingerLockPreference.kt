@@ -11,10 +11,12 @@ import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.github.ajalt.reprint.core.AuthenticationResult
 import com.github.ajalt.reprint.core.Reprint
 import com.github.ajalt.reprint.rxjava.RxReprint
 import com.mattprecious.swirl.SwirlView
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.preference.onChange
@@ -106,14 +108,13 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
             addView(statusTextView)
             addView(iconView)
         }
-        val dialog = MaterialDialog.Builder(context)
-                .title("Fingerprint verification")
-                .customView(linearLayout, false)
-                .negativeText("Cancel")
-                .autoDismiss(true)
+        val dialog = MaterialDialog(context)
+                .title(text = "Fingerprint verification")
+                .customView(view = linearLayout)
+                .negativeButton(R.string.action_cancel)
                 .cancelable(true)
-                .canceledOnTouchOutside(true)
-                .show()
+                .cancelOnTouchOutside(true)
+        dialog.show()
         iconView.setState(SwirlView.State.ON)
         val subscription = RxReprint.authenticate()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -130,13 +131,12 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
                             statusTextView.text = result.errorMessage
                         }
                         AuthenticationResult.Status.FATAL_FAILURE, null -> {
-                            MaterialDialog.Builder(context)
-                                    .title("Fingerprint verification failed!")
-                                    .content(result.errorMessage)
-                                    .positiveText("Ok")
-                                    .autoDismiss(true)
+                            MaterialDialog(context)
+                                    .title(text = "Fingerprint verification failed!")
+                                    .message(text = result.errorMessage)
+                                    .positiveButton(android.R.string.ok)
                                     .cancelable(true)
-                                    .canceledOnTouchOutside(false)
+                                    .cancelOnTouchOutside(false)
                                     .show()
                             dialog.dismiss()
                         }

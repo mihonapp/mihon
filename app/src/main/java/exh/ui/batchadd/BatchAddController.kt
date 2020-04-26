@@ -143,13 +143,12 @@ class BatchAddController : NucleusController<EhFragmentBatchAddBinding, BatchAdd
 
     private fun noGalleriesSpecified() {
         activity?.let {
-            MaterialDialog.Builder(it)
-                    .title("No galleries to add!")
-                    .content("You must specify at least one gallery to add!")
-                    .positiveText("Ok")
-                    .onPositive { materialDialog, _ -> materialDialog.dismiss() }
+            MaterialDialog(it)
+                    .title(text = "No galleries to add!")
+                    .message(text = "You must specify at least one gallery to add!")
+                    .positiveButton(android.R.string.ok) { materialDialog -> materialDialog.dismiss() }
                     .cancelable(true)
-                    .canceledOnTouchOutside(true)
+                    .cancelOnTouchOutside(true)
                     .show()
         }
     }

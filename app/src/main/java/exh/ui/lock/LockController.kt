@@ -52,13 +52,12 @@ class LockController : NucleusController<ActivityLockBinding, LockPresenter>() {
                         // Yay!
                         closeLock()
                     } else {
-                        MaterialDialog.Builder(context)
-                                .title("PIN code incorrect")
-                                .content("The PIN code you entered is incorrect. Please try again.")
+                        MaterialDialog(context)
+                                .title(text = "PIN code incorrect")
+                                .message(text = "The PIN code you entered is incorrect. Please try again.")
                                 .cancelable(true)
-                                .canceledOnTouchOutside(true)
-                                .positiveText("Ok")
-                                .autoDismiss(true)
+                                .cancelOnTouchOutside(true)
+                                .positiveButton(android.R.string.ok)
                                 .show()
                         binding.pinLockView.resetPinLockView()
                     }
@@ -105,13 +104,12 @@ class LockController : NucleusController<ActivityLockBinding, LockPresenter>() {
                                 AuthenticationResult.Status.SUCCESS -> closeLock()
                                 AuthenticationResult.Status.NONFATAL_FAILURE -> icon.setState(SwirlView.State.ERROR)
                                 AuthenticationResult.Status.FATAL_FAILURE, null -> {
-                                    MaterialDialog.Builder(context)
-                                            .title("Fingerprint error!")
-                                            .content(it.errorMessage)
+                                    MaterialDialog(context)
+                                            .title(text = "Fingerprint error!")
+                                            .message(text = it.errorMessage)
                                             .cancelable(false)
-                                            .canceledOnTouchOutside(false)
-                                            .positiveText("Ok")
-                                            .autoDismiss(true)
+                                            .cancelOnTouchOutside(false)
+                                            .positiveButton(android.R.string.ok)
                                             .show()
                                     icon.setState(SwirlView.State.OFF)
                                 }

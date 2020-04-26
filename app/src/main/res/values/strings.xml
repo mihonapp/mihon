@@ -710,6 +710,14 @@
     <string name="eh_rounded_corners_desc">The level of radius that the corners are rounded to. Current value is: %s</string>
     <string name="merge">Merge with current</string>
     <string name="eh_merge_with_another_source">Merge With Another</string>
-
+    <string name="eh_autoscroll_help">Autoscroll help</string>
+    <string name="eh_autoscroll_help_message">Automatically scroll to the next page in the specified interval. Interval is specified in seconds.</string>
+    <string name="eh_retry_all_help">Retry all help</string>
+    <string name="eh_retry_all_help_message">Re-add all failed pages to the download queue.</string>
+    <string name="eh_boost_page_help">Boost page help</string>
+    <string name="eh_boost_page_help_message">Normally the downloader can only download a specific amount of pages at the same time. This means you can be waiting for a page to download but the downloader will not start downloading the page until it has a free download slot. Pressing \'Boost page\' will force the downloader to begin downloading the current page, regardless of whether or not there is an available slot.</string>
+    <string name="eh_force_sync_reset_title">Are you sure?</string>
+    <string name="eh_force_sync_reset_message">Resetting the sync state can cause your next sync to be extremely slow.</string>
+    <string name="eh_show_update_statistics_dialog">Collecting statistics…</string>
 
 </resources>
