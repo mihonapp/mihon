@@ -210,7 +210,7 @@ class SettingsLibraryController : SettingsController() {
                     true
                 }
             }
-            if (preferences.skipPreMigration().getOrDefault() || preferences.migrationSources()
+            if (preferences.skipPreMigration().get() || preferences.migrationSources()
                     .getOrDefault().isNotEmpty()) {
                 switchPreference {
                     key = Keys.skipPreMigration

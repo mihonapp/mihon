@@ -6,7 +6,9 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
-import eu.kanade.tachiyomi.util.lang.launchInUI
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.injectLazy
 
@@ -14,6 +16,8 @@ object LockActivityDelegate {
     private val preferences by injectLazy<PreferencesHelper>()
 
     var willLock: Boolean = true
+
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     fun doLock(router: Router, animate: Boolean = false) {
         router.pushController(RouterTransaction.with(LockController())
@@ -29,7 +33,7 @@ object LockActivityDelegate {
                         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
                     }
                 }
-            .launchInUI()
+            .launchIn(uiScope)
     }
 
     fun onResume(activity: FragmentActivity, router: Router) {

@@ -129,7 +129,7 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrati
      * @return list containing enabled sources.
      */
     private fun getEnabledSources(): List<HttpSource> {
-        val languages = prefs.enabledLanguages().getOrDefault()
+        val languages = prefs.enabledLanguages().get()
         val sourcesSaved = prefs.migrationSources().getOrDefault().split("/")
         var sources = sourceManager.getVisibleCatalogueSources()
             .filterIsInstance<HttpSource>()
@@ -146,7 +146,7 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrati
 
     fun isEnabled(id: String): Boolean {
         val sourcesSaved = prefs.migrationSources().getOrDefault()
-        val hiddenCatalogues = prefs.hiddenCatalogues().getOrDefault()
+        val hiddenCatalogues = prefs.hiddenCatalogues().get()
         return if (sourcesSaved.isEmpty()) id !in hiddenCatalogues
         else sourcesSaved.split("/").contains(id)
     }

@@ -94,7 +94,7 @@ class MigrationBottomSheetDialog(
         }
         sourceGroup.bindToPreference(preferences.useSourceWithMost())
 
-        skip_step.isChecked = preferences.skipPreMigration().getOrDefault()
+        skip_step.isChecked = preferences.skipPreMigration().get()
         skip_step.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
                 (listener as? Controller)?.activity?.toast(R.string.pre_migration_skip_toast,
