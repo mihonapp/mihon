@@ -73,16 +73,18 @@ class EHentai(
     override val metaClass = EHentaiSearchMetadata::class
 
     val schema: String
-        get() = if (prefs.secureEXH().getOrDefault())
+        get() = if (prefs.secureEXH().getOrDefault()) {
             "https"
-        else
+        } else {
             "http"
+        }
 
     val domain: String
-        get() = if (exh)
+        get() = if (exh) {
             "exhentai.org"
-        else
+        } else {
             "e-hentai.org"
+        }
 
     override val baseUrl: String
         get() = "$schema://$domain"
@@ -111,25 +113,27 @@ class EHentai(
             val favElement = column2.children().find { it.attr("style").startsWith("border-color") }
 
             ParsedManga(
-                    fav = FAVORITES_BORDER_HEX_COLORS.indexOf(
-                            favElement?.attr("style")?.substring(14, 17)
-                    ),
-                    manga = Manga.create(id).apply {
-                        // Get title
-                        title = thumbnailElement.attr("title")
-                        url = EHentaiSearchMetadata.normalizeUrl(linkElement.attr("href"))
-                        // Get image
-                        thumbnail_url = thumbnailElement.attr("src")
+                fav = FAVORITES_BORDER_HEX_COLORS.indexOf(
+                    favElement?.attr("style")?.substring(14, 17)
+                ),
+                manga = Manga.create(id).apply {
+                    // Get title
+                    title = thumbnailElement.attr("title")
+                    url = EHentaiSearchMetadata.normalizeUrl(linkElement.attr("href"))
+                    // Get image
+                    thumbnail_url = thumbnailElement.attr("src")
 
-                        // TODO Parse genre + uploader + tags
-                    })
+                    // TODO Parse genre + uploader + tags
+                }
+            )
         }
 
         val parsedLocation = doc.location().toHttpUrlOrNull()
 
         // Add to page if required
         val hasNextPage = if (parsedLocation == null ||
-                !parsedLocation.queryParameterNames.contains(REVERSE_PARAM)) {
+            !parsedLocation.queryParameterNames.contains(REVERSE_PARAM)
+        ) {
             select("a[onclick=return false]").last()?.let {
                 it.text() == ">"
             } ?: false
@@ -160,7 +164,7 @@ class EHentai(
                 while (true) {
                     val gid = EHentaiSearchMetadata.galleryId(url).toInt()
                     val cachedParent = updateHelper.parentLookupTable.get(
-                            gid
+                        gid
                     )
                     if (cachedParent == null) {
                         throttleFunc()
@@ -175,19 +179,19 @@ class EHentai(
 
                         if (parentLink != null) {
                             updateHelper.parentLookupTable.put(
-                                    gid,
-                                    GalleryEntry(
-                                            EHentaiSearchMetadata.galleryId(parentLink),
-                                            EHentaiSearchMetadata.galleryToken(parentLink)
-                                    )
+                                gid,
+                                GalleryEntry(
+                                    EHentaiSearchMetadata.galleryId(parentLink),
+                                    EHentaiSearchMetadata.galleryToken(parentLink)
+                                )
                             )
                             url = EHentaiSearchMetadata.normalizeUrl(parentLink)
                         } else break
                     } else {
                         XLog.d("Parent cache hit: %s!", gid)
                         url = EHentaiSearchMetadata.idAndTokenToUrl(
-                                cachedParent.gId,
-                                cachedParent.gToken
+                            cachedParent.gId,
+                            cachedParent.gToken
                         )
                     }
                 }
@@ -201,9 +205,11 @@ class EHentai(
                 url = EHentaiSearchMetadata.normalizeUrl(d.location())
                 name = "v1: " + d.selectFirst("#gn").text()
                 chapter_number = 1f
-                date_upload = EX_DATE_FORMAT.parse(d.select("#gdd .gdt1").find { el ->
-                    el.text().toLowerCase() == "posted:"
-                }!!.nextElementSibling().text()).time
+                date_upload = EX_DATE_FORMAT.parse(
+                    d.select("#gdd .gdt1").find { el ->
+                        el.text().toLowerCase() == "posted:"
+                    }!!.nextElementSibling().text()
+                ).time
             }
             // Build and append the rest of the galleries
             if (DebugToggles.INCLUDE_ONLY_ROOT_WHEN_LOADING_EXH_VERSIONS.enabled) listOf(self)
@@ -253,27 +259,32 @@ class EHentai(
         }.sortedBy(Pair<Int, String>::first).map { it.second }
     }
 
-    private fun chapterPageCall(np: String) = client.newCall(chapterPageRequest(np)).asObservableSuccess()
-    private fun chapterPageRequest(np: String) = exGet(np, null, headers)
+    private fun chapterPageCall(np: String): Observable<Response> {
+        return client.newCall(chapterPageRequest(np)).asObservableSuccess()
+    }
+    private fun chapterPageRequest(np: String): Request {
+        return exGet(np, null, headers)
+    }
 
     private fun nextPageUrl(element: Element): String? = element.select("a[onclick=return false]").last()?.let {
         return if (it.text() == ">") it.attr("href") else null
     }
 
-    override fun popularMangaRequest(page: Int) = if (exh)
+    override fun popularMangaRequest(page: Int) = if (exh) {
         latestUpdatesRequest(page)
-    else
+    } else {
         exGet("$baseUrl/toplist.php?tl=15&p=${page - 1}", null) // Custom page logic for toplists
+    }
 
     // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-            urlImportFetchSearchManga(query) {
-                searchMangaRequestObservable(page, query, filters).flatMap {
-                    client.newCall(it).asObservableSuccess()
-                }.map { response ->
-                    searchMangaParse(response)
-                }
+        urlImportFetchSearchManga(query) {
+            searchMangaRequestObservable(page, query, filters).flatMap {
+                client.newCall(it).asObservableSuccess()
+            }.map { response ->
+                searchMangaParse(response)
             }
+        }
 
     private fun searchMangaRequestObservable(page: Int, query: String, filters: FilterList): Observable<Request> {
         val uri = Uri.parse("$baseUrl$QUERY_PREFIX").buildUpon()
@@ -287,20 +298,20 @@ class EHentai(
         // Reverse search results on filter
         if (filters.any { it is ReverseFilter && it.state }) {
             return client.newCall(request)
-                    .asObservableSuccess()
-                    .map {
-                        val doc = it.asJsoup()
+                .asObservableSuccess()
+                .map {
+                    val doc = it.asJsoup()
 
-                        val elements = doc.select(".ptt > tbody > tr > td")
+                    val elements = doc.select(".ptt > tbody > tr > td")
 
-                        val totalElement = elements[elements.size - 2]
+                    val totalElement = elements[elements.size - 2]
 
-                        val thisPage = totalElement.text().toInt() - (page - 1)
+                    val thisPage = totalElement.text().toInt() - (page - 1)
 
-                        uri.appendQueryParameter(REVERSE_PARAM, (thisPage > 1).toString())
+                    uri.appendQueryParameter(REVERSE_PARAM, (thisPage > 1).toString())
 
-                        exGet(uri.toString(), thisPage)
-                    }
+                    exGet(uri.toString(), thisPage)
+                }
         } else {
             return Observable.just(request)
         }
@@ -314,22 +325,28 @@ class EHentai(
     override fun searchMangaParse(response: Response) = genericMangaParse(response)
     override fun latestUpdatesParse(response: Response) = genericMangaParse(response)
 
-    fun exGet(url: String, page: Int? = null, additionalHeaders: Headers? = null, cache: Boolean = true) = GET(page?.let {
-        addParam(url, "page", Integer.toString(page - 1))
-    } ?: url, additionalHeaders?.let {
-        val headers = headers.newBuilder()
-        it.toMultimap().forEach { (t, u) ->
-            u.forEach {
-                headers.add(t, it)
+    fun exGet(url: String, page: Int? = null, additionalHeaders: Headers? = null, cache: Boolean = true): Request {
+        return GET(
+            page?.let {
+                addParam(url, "page", Integer.toString(page - 1))
+            } ?: url,
+            additionalHeaders?.let {
+                val headers = headers.newBuilder()
+                it.toMultimap().forEach { (t, u) ->
+                    u.forEach {
+                        headers.add(t, it)
+                    }
+                }
+                headers.build()
+            } ?: headers
+        ).let {
+            if (!cache) {
+                it.newBuilder().cacheControl(CacheControl.FORCE_NETWORK).build()
+            } else {
+                it
             }
         }
-        headers.build()
-    } ?: headers).let {
-        if (!cache)
-            it.newBuilder().cacheControl(CacheControl.FORCE_NETWORK).build()
-        else
-            it
-    }!!
+    }
 
     /**
      * Returns an observable with the updated details for a manga. Normally it's not needed to
@@ -339,33 +356,37 @@ class EHentai(
      */
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return client.newCall(mangaDetailsRequest(manga))
-                .asObservableWithAsyncStacktrace()
-                .flatMap { (stacktrace, response) ->
-                    if (response.isSuccessful) {
-                        // Pull to most recent
-                        val doc = response.asJsoup()
-                        val newerGallery = doc.select("#gnd a").lastOrNull()
-                        val pre = if (newerGallery != null && DebugToggles.PULL_TO_ROOT_WHEN_LOADING_EXH_MANGA_DETAILS.enabled) {
-                            manga.url = EHentaiSearchMetadata.normalizeUrl(newerGallery.attr("href"))
-                            client.newCall(mangaDetailsRequest(manga))
-                                    .asObservableSuccess().map { it.asJsoup() }
-                        } else Observable.just(doc)
+            .asObservableWithAsyncStacktrace()
+            .flatMap { (stacktrace, response) ->
+                if (response.isSuccessful) {
+                    // Pull to most recent
+                    val doc = response.asJsoup()
+                    val newerGallery = doc.select("#gnd a").lastOrNull()
+                    val pre = if (newerGallery != null && DebugToggles.PULL_TO_ROOT_WHEN_LOADING_EXH_MANGA_DETAILS.enabled) {
+                        manga.url = EHentaiSearchMetadata.normalizeUrl(newerGallery.attr("href"))
+                        client.newCall(mangaDetailsRequest(manga))
+                            .asObservableSuccess().map { it.asJsoup() }
+                    } else Observable.just(doc)
 
-                        pre.flatMap {
-                            parseToManga(manga, it).andThen(Observable.just(manga.apply {
-                                initialized = true
-                            }))
-                        }
+                    pre.flatMap {
+                        parseToManga(manga, it).andThen(
+                            Observable.just(
+                                manga.apply {
+                                    initialized = true
+                                }
+                            )
+                        )
+                    }
+                } else {
+                    response.close()
+
+                    if (response.code == 404) {
+                        throw GalleryNotFoundException(stacktrace)
                     } else {
-                        response.close()
-
-                        if (response.code == 404) {
-                            throw GalleryNotFoundException(stacktrace)
-                        } else {
-                            throw Exception("HTTP error ${response.code}", stacktrace)
-                        }
+                        throw Exception("HTTP error ${response.code}", stacktrace)
                     }
                 }
+            }
     }
 
     /**
@@ -389,11 +410,11 @@ class EHentai(
                     it.substring(it.indexOf('(') + 1 until it.lastIndexOf(')'))
                 }
                 genre = select(".cs")
-                        .attr("onclick")
-                        .nullIfBlank()
-                        ?.trim()
-                        ?.substringAfterLast('/')
-                        ?.removeSuffix("'")
+                    .attr("onclick")
+                    .nullIfBlank()
+                    ?.trim()
+                    ?.substringAfterLast('/')
+                    ?.removeSuffix("'")
 
                 uploader = select("#gdn").text().nullIfBlank()?.trim()
 
@@ -404,8 +425,10 @@ class EHentai(
                     val right = rightElement.text().nullIfBlank()?.trim()
                     if (left != null && right != null) {
                         ignore {
-                            when (left.removeSuffix(":")
-                                    .toLowerCase()) {
+                            when (
+                                left.removeSuffix(":")
+                                    .toLowerCase()
+                            ) {
                                 "posted" -> datePosted = EX_DATE_FORMAT.parse(right).time
                                 // Example gallery with parent: https://e-hentai.org/g/1390451/7f181c2426/
                                 // Example JP gallery: https://exhentai.org/g/1375385/03519d541b/
@@ -428,7 +451,8 @@ class EHentai(
 
                 lastUpdateCheck = System.currentTimeMillis()
                 if (datePosted != null &&
-                        lastUpdateCheck - datePosted!! > EHentaiUpdateWorkerConstants.GALLERY_AGE_TIME) {
+                    lastUpdateCheck - datePosted!! > EHentaiUpdateWorkerConstants.GALLERY_AGE_TIME
+                ) {
                     aged = true
                     XLog.d("aged %s - too old", title)
                 }
@@ -436,32 +460,35 @@ class EHentai(
                 // Parse ratings
                 ignore {
                     averageRating = select("#rating_label")
-                            .text()
-                            .removePrefix("Average:")
-                            .trim()
-                            .nullIfBlank()
-                            ?.toDouble()
+                        .text()
+                        .removePrefix("Average:")
+                        .trim()
+                        .nullIfBlank()
+                        ?.toDouble()
                     ratingCount = select("#rating_count")
-                            .text()
-                            .trim()
-                            .nullIfBlank()
-                            ?.toInt()
+                        .text()
+                        .trim()
+                        .nullIfBlank()
+                        ?.toInt()
                 }
 
                 // Parse tags
                 tags.clear()
                 select("#taglist tr").forEach {
                     val namespace = it.select(".tc").text().removeSuffix(":")
-                    tags.addAll(it.select("div").map { element ->
-                        RaisedTag(
+                    tags.addAll(
+                        it.select("div").map { element ->
+                            RaisedTag(
                                 namespace,
                                 element.text().trim(),
-                                if (element.hasClass("gtl"))
+                                if (element.hasClass("gtl")) {
                                     TAG_TYPE_LIGHT
-                                else
+                                } else {
                                     TAG_TYPE_NORMAL
-                        )
-                    })
+                                }
+                            )
+                        }
+                    )
                 }
 
                 // Add genre as virtual tag
@@ -478,8 +505,8 @@ class EHentai(
 
     override fun fetchImageUrl(page: Page): Observable<String> {
         return client.newCall(imageUrlRequest(page))
-                .asObservableSuccess()
-                .map { realImageUrlParse(it, page) }
+            .asObservableSuccess()
+            .map { realImageUrlParse(it, page) }
     }
 
     fun realImageUrlParse(response: Response, page: Page): String {
@@ -505,9 +532,13 @@ class EHentai(
         var favNames: List<String>? = null
 
         do {
-            val response2 = client.newCall(exGet(favoriteUrl,
+            val response2 = client.newCall(
+                exGet(
+                    favoriteUrl,
                     page = page,
-                    cache = false)).execute()
+                    cache = false
+                )
+            ).execute()
             val doc = response2.asJsoup()
 
             // Parse favorites
@@ -515,22 +546,24 @@ class EHentai(
             result += parsed.first
 
             // Parse fav names
-            if (favNames == null)
+            if (favNames == null) {
                 favNames = doc.select(".fp:not(.fps)").mapNotNull {
                     it.child(2).text()
                 }
-
+            }
             // Next page
+
             page++
         } while (parsed.second)
 
         return Pair(result as List<ParsedManga>, favNames!!)
     }
 
-    fun spPref() = if (exh)
+    fun spPref() = if (exh) {
         prefs.eh_exhSettingsProfile()
-    else
+    } else {
         prefs.eh_ehSettingsProfile()
+    }
 
     fun rawCookies(sp: Int): Map<String, String> {
         val cookies: MutableMap<String, String> = mutableMapOf()
@@ -541,16 +574,19 @@ class EHentai(
             cookies["sp"] = sp.toString()
 
             val sessionKey = prefs.eh_settingsKey().getOrDefault()
-            if (sessionKey != null)
+            if (sessionKey != null) {
                 cookies["sk"] = sessionKey
+            }
 
             val sessionCookie = prefs.eh_sessionCookie().getOrDefault()
-            if (sessionCookie != null)
+            if (sessionCookie != null) {
                 cookies["s"] = sessionCookie
+            }
 
             val hathPerksCookie = prefs.eh_hathPerksCookies().getOrDefault()
-            if (hathPerksCookie != null)
+            if (hathPerksCookie != null) {
                 cookies["hath_perks"] = hathPerksCookie
+            }
         }
 
         // Session-less extended display mode (for users without ExHentai)
@@ -568,51 +604,57 @@ class EHentai(
     override fun headersBuilder() = super.headersBuilder().add("Cookie", cookiesHeader())!!
 
     fun addParam(url: String, param: String, value: String) = Uri.parse(url)
-            .buildUpon()
-            .appendQueryParameter(param, value)
-            .toString()
+        .buildUpon()
+        .appendQueryParameter(param, value)
+        .toString()
 
     override val client = network.client.newBuilder()
-            .cookieJar(CookieJar.NO_COOKIES)
-            .addInterceptor { chain ->
-                val newReq = chain
-                        .request()
-                        .newBuilder()
-                        .removeHeader("Cookie")
-                        .addHeader("Cookie", cookiesHeader())
-                        .build()
+        .cookieJar(CookieJar.NO_COOKIES)
+        .addInterceptor { chain ->
+            val newReq = chain
+                .request()
+                .newBuilder()
+                .removeHeader("Cookie")
+                .addHeader("Cookie", cookiesHeader())
+                .build()
 
-                chain.proceed(newReq)
-            }.build()!!
+            chain.proceed(newReq)
+        }.build()!!
 
     // Filters
     override fun getFilterList() = FilterList(
-            Watched(),
-            GenreGroup(),
-            AdvancedGroup(),
-            ReverseFilter()
+        Watched(),
+        GenreGroup(),
+        AdvancedGroup(),
+        ReverseFilter()
     )
 
     class Watched : Filter.CheckBox("Watched List"), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if (state)
+            if (state) {
                 builder.appendPath("watched")
+            }
         }
     }
 
     class GenreOption(name: String, val genreId: Int) : Filter.CheckBox(name, false)
-    class GenreGroup : Filter.Group<GenreOption>("Genres", listOf(
-            GenreOption("Dōjinshi", 2),
-            GenreOption("Manga", 4),
-            GenreOption("Artist CG", 8),
-            GenreOption("Game CG", 16),
-            GenreOption("Western", 512),
-            GenreOption("Non-H", 256),
-            GenreOption("Image Set", 32),
-            GenreOption("Cosplay", 64),
-            GenreOption("Asian Porn", 128),
-            GenreOption("Misc", 1)
-    )), UriFilter {
+    class GenreGroup :
+        Filter.Group<GenreOption>(
+            "Genres",
+            listOf(
+                GenreOption("Dōjinshi", 2),
+                GenreOption("Manga", 4),
+                GenreOption("Artist CG", 8),
+                GenreOption("Game CG", 16),
+                GenreOption("Western", 512),
+                GenreOption("Non-H", 256),
+                GenreOption("Image Set", 32),
+                GenreOption("Cosplay", 64),
+                GenreOption("Asian Porn", 128),
+                GenreOption("Misc", 1)
+            )
+        ),
+        UriFilter {
         override fun addToUri(builder: Uri.Builder) {
             val bits = state.fold(0) { acc, genre ->
                 if (!genre.state) acc + genre.genreId else acc
@@ -623,8 +665,9 @@ class EHentai(
 
     class AdvancedOption(name: String, val param: String, defValue: Boolean = false) : Filter.CheckBox(name, defValue), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if (state)
+            if (state) {
                 builder.appendQueryParameter(param, "on")
+            }
         }
     }
 
@@ -643,13 +686,18 @@ class EHentai(
     class MinPagesOption : PageOption("Minimum Pages", "f_spf")
     class MaxPagesOption : PageOption("Maximum Pages", "f_spt")
 
-    class RatingOption : Filter.Select<String>("Minimum Rating", arrayOf(
-            "Any",
-            "2 stars",
-            "3 stars",
-            "4 stars",
-            "5 stars"
-    )), UriFilter {
+    class RatingOption :
+        Filter.Select<String>(
+            "Minimum Rating",
+            arrayOf(
+                "Any",
+                "2 stars",
+                "3 stars",
+                "4 stars",
+                "5 stars"
+            )
+        ),
+        UriFilter {
         override fun addToUri(builder: Uri.Builder) {
             if (state > 0) {
                 builder.appendQueryParameter("f_srdd", Integer.toString(state + 1))
@@ -658,7 +706,9 @@ class EHentai(
         }
     }
 
-    class AdvancedGroup : UriGroup<Filter<*>>("Advanced Options", listOf(
+    class AdvancedGroup : UriGroup<Filter<*>>(
+        "Advanced Options",
+        listOf(
             AdvancedOption("Search Gallery Name", "f_sname", true),
             AdvancedOption("Search Gallery Tags", "f_stags", true),
             AdvancedOption("Search Gallery Description", "f_sdesc"),
@@ -670,24 +720,26 @@ class EHentai(
             RatingOption(),
             MinPagesOption(),
             MaxPagesOption()
-    ))
+        )
+    )
 
     class ReverseFilter : Filter.CheckBox("Reverse search results")
 
-    override val name = if (exh)
+    override val name = if (exh) {
         "ExHentai"
-    else
+    } else {
         "E-Hentai"
+    }
 
     class GalleryNotFoundException(cause: Throwable) : RuntimeException("Gallery not found!", cause)
 
     // === URL IMPORT STUFF
 
     override val matchingHosts: List<String> = if (exh) listOf(
-            "exhentai.org"
+        "exhentai.org"
     ) else listOf(
-            "g.e-hentai.org",
-            "e-hentai.org"
+        "g.e-hentai.org",
+        "e-hentai.org"
     )
 
     override fun mapUrlToMangaUrl(uri: Uri): String? {
@@ -717,17 +769,23 @@ class EHentai(
         val json = JsonObject()
         json["method"] = "gtoken"
         json["pagelist"] = JsonArray().apply {
-            add(JsonArray().apply {
-                add(gallery.toInt())
-                add(pageToken)
-                add(pageNum.toInt())
-            })
+            add(
+                JsonArray().apply {
+                    add(gallery.toInt())
+                    add(pageToken)
+                    add(pageNum.toInt())
+                }
+            )
         }
 
-        val outJson = JsonParser.parseString(client.newCall(Request.Builder()
-                .url(EH_API_BASE)
-                .post(RequestBody.create(JSON, json.toString()))
-                .build()).execute().body!!.string()).obj
+        val outJson = JsonParser.parseString(
+            client.newCall(
+                Request.Builder()
+                    .url(EH_API_BASE)
+                    .post(RequestBody.create(JSON, json.toString()))
+                    .build()
+            ).execute().body!!.string()
+        ).obj
 
         val obj = outJson["tokenlist"].array.first()
         return "${uri.scheme}://${uri.host}/g/${obj["gid"].int}/${obj["token"].string}/"
@@ -742,16 +800,16 @@ class EHentai(
         private val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()!!
 
         private val FAVORITES_BORDER_HEX_COLORS = listOf(
-                "000",
-                "f00",
-                "fa0",
-                "dd0",
-                "080",
-                "9f4",
-                "4bf",
-                "00f",
-                "508",
-                "e8e"
+            "000",
+            "f00",
+            "fa0",
+            "dd0",
+            "080",
+            "9f4",
+            "4bf",
+            "00f",
+            "508",
+            "e8e"
         )
 
         fun buildCookies(cookies: Map<String, String>) = cookies.entries.joinToString(separator = "; ") {

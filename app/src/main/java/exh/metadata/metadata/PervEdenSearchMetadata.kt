@@ -41,11 +41,12 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
             manga.title = it
             titleDesc += "Title: $it\n"
         }
-        if (altTitles.isNotEmpty())
+        if (altTitles.isNotEmpty()) {
             titleDesc += "Alternate Titles: \n" + altTitles
-                    .joinToString(separator = "\n", postfix = "\n") {
-                "▪ $it"
-            }
+                .joinToString(separator = "\n", postfix = "\n") {
+                    "▪ $it"
+                }
+        }
 
         val detailsDesc = StringBuilder()
         artist?.let {
@@ -76,8 +77,8 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
         val tagsDesc = tagsToDescription()
 
         manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
-                .filter(String::isNotBlank)
-                .joinToString(separator = "\n")
+            .filter(String::isNotBlank)
+            .joinToString(separator = "\n")
     }
 
     companion object {
@@ -87,9 +88,9 @@ class PervEdenSearchMetadata : RaisedSearchMetadata() {
         const val TAG_TYPE_DEFAULT = 0
 
         private fun splitGalleryUrl(url: String) =
-                url.let {
-            Uri.parse(it).pathSegments.filterNot(String::isNullOrBlank)
-        }
+            url.let {
+                Uri.parse(it).pathSegments.filterNot(String::isNullOrBlank)
+            }
 
         fun pvIdFromUrl(url: String) = splitGalleryUrl(url).last()
     }
@@ -102,7 +103,7 @@ enum class PervEdenLang(val id: Long) {
 
     companion object {
         fun source(id: Long) =
-                values().find { it.id == id }
+            values().find { it.id == id }
                 ?: throw IllegalArgumentException("Unknown source ID: $id!")
     }
 }

@@ -41,9 +41,10 @@ import rx.schedulers.Schedulers
 
 typealias SiteMap = NakedTrie<Unit>
 
-class EightMuses : HttpSource(),
-        LewdSource<EightMusesSearchMetadata, Document>,
-        UrlImportableSource {
+class EightMuses :
+    HttpSource(),
+    LewdSource<EightMusesSearchMetadata, Document>,
+    UrlImportableSource {
     override val id = EIGHTMUSES_SOURCE_ID
 
     /**
@@ -74,10 +75,10 @@ class EightMuses : HttpSource(),
     private suspend fun obtainSiteMap() = siteMapCache.obtain {
         withContext(Dispatchers.IO) {
             val result = client.newCall(eightMusesGet("$baseUrl/sitemap/1.xml"))
-                    .asObservableSuccess()
-                    .toSingle()
-                    .await(Schedulers.io())
-                    .body!!.string()
+                .asObservableSuccess()
+                .toSingle()
+                .await(Schedulers.io())
+                .body!!.string()
 
             val parsed = Jsoup.parse(result)
 
@@ -93,10 +94,10 @@ class EightMuses : HttpSource(),
 
     override fun headersBuilder(): Headers.Builder {
         return Headers.Builder()
-                .add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;")
-                .add("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8")
-                .add("Referer", "https://www.8muses.com")
-                .add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36")
+            .add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;")
+            .add("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8")
+            .add("Referer", "https://www.8muses.com")
+            .add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36")
     }
 
     private fun eightMusesGet(url: String): Request {
@@ -129,11 +130,11 @@ class EightMuses : HttpSource(),
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         val urlBuilder = if (!query.isBlank()) {
             "$baseUrl/search".toHttpUrlOrNull()!!
-                    .newBuilder()
-                    .addQueryParameter("q", query)
+                .newBuilder()
+                .addQueryParameter("q", query)
         } else {
             "$baseUrl/comics".toHttpUrlOrNull()!!
-                    .newBuilder()
+                .newBuilder()
         }
 
         urlBuilder.addQueryParameter("page", page.toString())
@@ -182,12 +183,14 @@ class EightMuses : HttpSource(),
 
     private fun fetchListing(request: Request, dig: Boolean): Observable<MangasPage> {
         return client.newCall(request)
-                .asObservableSuccess()
-                .flatMapSingle { response ->
-                    RxJavaInterop.toV1Single(GlobalScope.async(Dispatchers.IO) {
+            .asObservableSuccess()
+            .flatMapSingle { response ->
+                RxJavaInterop.toV1Single(
+                    GlobalScope.async(Dispatchers.IO) {
                         parseResultsPage(response, dig)
-                    }.asSingle(GlobalScope.coroutineContext))
-                }
+                    }.asSingle(GlobalScope.coroutineContext)
+                )
+            }
     }
 
     private suspend fun parseResultsPage(response: Response, dig: Boolean): MangasPage {
@@ -197,32 +200,32 @@ class EightMuses : HttpSource(),
         val onLastPage = doc.selectFirst(".current:nth-last-child(2)") != null
 
         return MangasPage(
-                if (dig) {
-                    contents.albums.flatMap {
-                        val href = it.attr("href")
-                        val splitHref = href.split('/')
-                        obtainSiteMap().subMap(href).filter {
-                            it.key.split('/').size - splitHref.size == 1
-                        }.map { (key, _) ->
-                            SManga.create().apply {
-                                url = key
-
-                                title = key.substringAfterLast('/').replace('-', ' ')
-                            }
-                        }
-                    }
-                } else {
-                    contents.albums.map {
+            if (dig) {
+                contents.albums.flatMap {
+                    val href = it.attr("href")
+                    val splitHref = href.split('/')
+                    obtainSiteMap().subMap(href).filter {
+                        it.key.split('/').size - splitHref.size == 1
+                    }.map { (key, _) ->
                         SManga.create().apply {
-                            url = it.attr("href")
+                            url = key
 
-                            title = it.select(".title-text").text()
-
-                            thumbnail_url = baseUrl + it.select(".lazyload").attr("data-src")
+                            title = key.substringAfterLast('/').replace('-', ' ')
                         }
                     }
-                },
-                !onLastPage
+                }
+            } else {
+                contents.albums.map {
+                    SManga.create().apply {
+                        url = it.attr("href")
+
+                        title = it.select(".title-text").text()
+
+                        thumbnail_url = baseUrl + it.select(".lazyload").attr("data-src")
+                    }
+                }
+            },
+            !onLastPage
         )
     }
 
@@ -243,10 +246,10 @@ class EightMuses : HttpSource(),
      */
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return client.newCall(mangaDetailsRequest(manga))
-                .asObservableSuccess()
-                .flatMap {
-                    parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga))
-                }
+            .asObservableSuccess()
+            .flatMap {
+                parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga))
+            }
     }
 
     /**
@@ -259,9 +262,11 @@ class EightMuses : HttpSource(),
     }
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
-        return RxJavaInterop.toV1Single(GlobalScope.async(Dispatchers.IO) {
-            fetchAndParseChapterList("", manga.url)
-        }.asSingle(GlobalScope.coroutineContext)).toObservable()
+        return RxJavaInterop.toV1Single(
+            GlobalScope.async(Dispatchers.IO) {
+                fetchAndParseChapterList("", manga.url)
+            }.asSingle(GlobalScope.coroutineContext)
+        ).toObservable()
     }
 
     private suspend fun fetchAndParseChapterList(prefix: String, url: String): List<SChapter> {
@@ -309,9 +314,9 @@ class EightMuses : HttpSource(),
         val contents = parseSelf(response.asJsoup())
         return contents.images.mapIndexed { index, element ->
             Page(
-                    index,
-                    element.attr("href"),
-                    "$baseUrl/image/fl" + element.select(".lazyload").attr("data-src").substring(9)
+                index,
+                element.attr("href"),
+                "$baseUrl/image/fl" + element.select(".lazyload").attr("data-src").substring(9)
             )
         }
     }
@@ -325,30 +330,30 @@ class EightMuses : HttpSource(),
             title = breadcrumbs.selectFirst("li:nth-last-child(1) > a").text()
 
             thumbnailUrl = parseSelf(input).let { it.albums + it.images }.firstOrNull()
-                    ?.selectFirst(".lazyload")
-                    ?.attr("data-src")?.let {
-                        baseUrl + it
-                    }
+                ?.selectFirst(".lazyload")
+                ?.attr("data-src")?.let {
+                baseUrl + it
+            }
 
             tags.clear()
             tags += RaisedTag(
-                    EightMusesSearchMetadata.ARTIST_NAMESPACE,
-                    breadcrumbs.selectFirst("li:nth-child(2) > a").text(),
-                    EightMusesSearchMetadata.TAG_TYPE_DEFAULT
+                EightMusesSearchMetadata.ARTIST_NAMESPACE,
+                breadcrumbs.selectFirst("li:nth-child(2) > a").text(),
+                EightMusesSearchMetadata.TAG_TYPE_DEFAULT
             )
             tags += input.select(".album-tags a").map {
                 RaisedTag(
-                        EightMusesSearchMetadata.TAGS_NAMESPACE,
-                        it.text(),
-                        EightMusesSearchMetadata.TAG_TYPE_DEFAULT
+                    EightMusesSearchMetadata.TAGS_NAMESPACE,
+                    it.text(),
+                    EightMusesSearchMetadata.TAG_TYPE_DEFAULT
                 )
             }
         }
     }
 
     class SortFilter : Filter.Select<String>(
-            "Sort",
-            SORT_OPTIONS.map { it.second }.toTypedArray()
+        "Sort",
+        SORT_OPTIONS.map { it.second }.toTypedArray()
     ) {
         fun addToUri(url: HttpUrl.Builder) {
             url.addQueryParameter("sort", SORT_OPTIONS[state].first)
@@ -357,16 +362,16 @@ class EightMuses : HttpSource(),
         companion object {
             // <Internal, Display>
             private val SORT_OPTIONS = listOf(
-                    "" to "Views",
-                    "like" to "Likes",
-                    "date" to "Date",
-                    "az" to "A-Z"
+                "" to "Views",
+                "like" to "Likes",
+                "date" to "Date",
+                "az" to "A-Z"
             )
         }
     }
 
     override fun getFilterList() = FilterList(
-            SortFilter()
+        SortFilter()
     )
 
     /**
@@ -379,8 +384,8 @@ class EightMuses : HttpSource(),
     }
 
     override val matchingHosts = listOf(
-            "www.8muses.com",
-            "8muses.com"
+        "www.8muses.com",
+        "8muses.com"
     )
 
     override fun mapUrlToMangaUrl(uri: Uri): String? {

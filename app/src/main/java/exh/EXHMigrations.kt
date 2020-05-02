@@ -45,35 +45,41 @@ object EXHMigrations {
                 if (oldVersion < 1) {
                     db.inTransaction {
                         // Migrate HentaiCafe source IDs
-                        db.lowLevel().executeSQL(RawQuery.builder()
-                                .query("""
-                            UPDATE ${MangaTable.TABLE}
-                                SET ${MangaTable.COL_SOURCE} = $HENTAI_CAFE_SOURCE_ID
-                                WHERE ${MangaTable.COL_SOURCE} = 6908
-                        """.trimIndent())
+                        db.lowLevel().executeSQL(
+                            RawQuery.builder()
+                                .query(
+                                    """
+                                    UPDATE ${MangaTable.TABLE}
+                                        SET ${MangaTable.COL_SOURCE} = $HENTAI_CAFE_SOURCE_ID
+                                        WHERE ${MangaTable.COL_SOURCE} = 6908
+                                    """.trimIndent()
+                                )
                                 .affectsTables(MangaTable.TABLE)
-                                .build())
+                                .build()
+                        )
 
                         // Migrate nhentai URLs
                         val nhentaiManga = db.db.get()
-                                .listOfObjects(Manga::class.java)
-                                .withQuery(Query.builder()
-                                        .table(MangaTable.TABLE)
-                                        .where("${MangaTable.COL_SOURCE} = $NHENTAI_SOURCE_ID")
-                                        .build())
-                                .prepare()
-                                .executeAsBlocking()
+                            .listOfObjects(Manga::class.java)
+                            .withQuery(
+                                Query.builder()
+                                    .table(MangaTable.TABLE)
+                                    .where("${MangaTable.COL_SOURCE} = $NHENTAI_SOURCE_ID")
+                                    .build()
+                            )
+                            .prepare()
+                            .executeAsBlocking()
 
                         nhentaiManga.forEach {
                             it.url = getUrlWithoutDomain(it.url)
                         }
 
                         db.db.put()
-                                .objects(nhentaiManga)
-                                // Extremely slow without the resolver :/
-                                .withPutResolver(MangaUrlPutResolver())
-                                .prepare()
-                                .executeAsBlocking()
+                            .objects(nhentaiManga)
+                            // Extremely slow without the resolver :/
+                            .withPutResolver(MangaUrlPutResolver())
+                            .prepare()
+                            .executeAsBlocking()
                     }
                 }
 
@@ -85,14 +91,18 @@ object EXHMigrations {
                 if (oldVersion < 8405) {
                     db.inTransaction {
                         // Migrate HBrowse source IDs
-                        db.lowLevel().executeSQL(RawQuery.builder()
-                                .query("""
-                            UPDATE ${MangaTable.TABLE}
-                                SET ${MangaTable.COL_SOURCE} = $HBROWSE_SOURCE_ID
-                                WHERE ${MangaTable.COL_SOURCE} = 1401584337232758222
-                        """.trimIndent())
+                        db.lowLevel().executeSQL(
+                            RawQuery.builder()
+                                .query(
+                                    """
+                                    UPDATE ${MangaTable.TABLE}
+                                        SET ${MangaTable.COL_SOURCE} = $HBROWSE_SOURCE_ID
+                                        WHERE ${MangaTable.COL_SOURCE} = 1401584337232758222
+                                    """.trimIndent()
+                                )
                                 .affectsTables(MangaTable.TABLE)
-                                .build())
+                                .build()
+                        )
                     }
 
                     // Cancel old scheduler jobs with old ids
@@ -101,14 +111,18 @@ object EXHMigrations {
                 if (oldVersion < 8408) {
                     db.inTransaction {
                         // Migrate Tsumino source IDs
-                        db.lowLevel().executeSQL(RawQuery.builder()
-                                .query("""
-                            UPDATE ${MangaTable.TABLE}
-                                SET ${MangaTable.COL_SOURCE} = $TSUMINO_SOURCE_ID
-                                WHERE ${MangaTable.COL_SOURCE} = 6909
-                        """.trimIndent())
+                        db.lowLevel().executeSQL(
+                            RawQuery.builder()
+                                .query(
+                                    """
+                                    UPDATE ${MangaTable.TABLE}
+                                        SET ${MangaTable.COL_SOURCE} = $TSUMINO_SOURCE_ID
+                                        WHERE ${MangaTable.COL_SOURCE} = 6909
+                                    """.trimIndent()
+                                )
                                 .affectsTables(MangaTable.TABLE)
-                                .build())
+                                .build()
+                        )
                     }
                 }
                 if (oldVersion < 8409) {
@@ -214,10 +228,12 @@ object EXHMigrations {
         return try {
             val uri = URI(orig)
             var out = uri.path
-            if (uri.query != null)
+            if (uri.query != null) {
                 out += "?" + uri.query
-            if (uri.fragment != null)
+            }
+            if (uri.fragment != null) {
                 out += "#" + uri.fragment
+            }
             out
         } catch (e: URISyntaxException) {
             orig

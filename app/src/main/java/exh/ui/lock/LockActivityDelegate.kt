@@ -20,19 +20,21 @@ object LockActivityDelegate {
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
     fun doLock(router: Router, animate: Boolean = false) {
-        router.pushController(RouterTransaction.with(LockController())
-            .popChangeHandler(LockChangeHandler(animate)))
+        router.pushController(
+            RouterTransaction.with(LockController())
+                .popChangeHandler(LockChangeHandler(animate))
+        )
     }
 
     fun onCreate(activity: FragmentActivity) {
         preferences.secureScreen().asFlow()
-                .onEach {
-                    if (it) {
-                        activity.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-                    } else {
-                        activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
-                    }
+            .onEach {
+                if (it) {
+                    activity.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+                } else {
+                    activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 }
+            }
             .launchIn(uiScope)
     }
 

@@ -9,21 +9,25 @@ import exh.metadata.sql.tables.SearchTitleTable
 
 interface SearchTitleQueries : DbProvider {
     fun getSearchTitlesForManga(mangaId: Long) = db.get()
-            .listOfObjects(SearchTitle::class.java)
-            .withQuery(Query.builder()
-                    .table(SearchTitleTable.TABLE)
-                    .where("${SearchTitleTable.COL_MANGA_ID} = ?")
-                    .whereArgs(mangaId)
-                    .build())
-            .prepare()
+        .listOfObjects(SearchTitle::class.java)
+        .withQuery(
+            Query.builder()
+                .table(SearchTitleTable.TABLE)
+                .where("${SearchTitleTable.COL_MANGA_ID} = ?")
+                .whereArgs(mangaId)
+                .build()
+        )
+        .prepare()
 
     fun deleteSearchTitlesForManga(mangaId: Long) = db.delete()
-            .byQuery(DeleteQuery.builder()
-                    .table(SearchTitleTable.TABLE)
-                    .where("${SearchTitleTable.COL_MANGA_ID} = ?")
-                    .whereArgs(mangaId)
-                    .build())
-            .prepare()
+        .byQuery(
+            DeleteQuery.builder()
+                .table(SearchTitleTable.TABLE)
+                .where("${SearchTitleTable.COL_MANGA_ID} = ?")
+                .whereArgs(mangaId)
+                .build()
+        )
+        .prepare()
 
     fun insertSearchTitle(searchTitle: SearchTitle) = db.put().`object`(searchTitle).prepare()
 
@@ -31,10 +35,12 @@ interface SearchTitleQueries : DbProvider {
 
     fun deleteSearchTitle(searchTitle: SearchTitle) = db.delete().`object`(searchTitle).prepare()
 
-    fun deleteAllSearchTitle() = db.delete().byQuery(DeleteQuery.builder()
+    fun deleteAllSearchTitle() = db.delete().byQuery(
+        DeleteQuery.builder()
             .table(SearchTitleTable.TABLE)
-            .build())
-            .prepare()
+            .build()
+    )
+        .prepare()
 
     fun setSearchTitlesForManga(mangaId: Long, titles: List<SearchTitle>) {
         db.inTransaction {

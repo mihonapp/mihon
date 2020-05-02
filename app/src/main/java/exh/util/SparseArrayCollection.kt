@@ -65,8 +65,8 @@ class SparseArrayCollection<E>(val sparseArray: SparseArray<E>, var reverse: Boo
             var idx = index++
             if (reverse) idx = sparseArray.size() - 1 - idx
             return AbstractMap.SimpleImmutableEntry(
-                    sparseArray.keyAt(idx),
-                    sparseArray.valueAt(idx)
+                sparseArray.keyAt(idx),
+                sparseArray.valueAt(idx)
             )
         }
     }

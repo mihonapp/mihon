@@ -66,8 +66,8 @@ class MigrationSourceItem(val source: HttpSource, var sourceEnabled: Boolean) : 
             val source = sourceManager.get(si.sourceId) as? HttpSource ?: return null
 
             return MigrationSourceItem(
-                    source,
-                    si.sourceEnabled
+                source,
+                si.sourceEnabled
             )
         }
     }

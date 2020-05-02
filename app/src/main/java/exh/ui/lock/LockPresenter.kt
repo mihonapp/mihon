@@ -12,7 +12,7 @@ class LockPresenter : BasePresenter<LockController>() {
 
     val useFingerprint
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                Reprint.isHardwarePresent() &&
-                Reprint.hasFingerprintRegistered() &&
-                prefs.eh_lockUseFingerprint().getOrDefault()
+            Reprint.isHardwarePresent() &&
+            Reprint.hasFingerprintRegistered() &&
+            prefs.eh_lockUseFingerprint().getOrDefault()
 }

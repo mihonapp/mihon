@@ -147,7 +147,7 @@ class ExtensionManager(
 
     fun Extension.isBlacklisted(
         blacklistEnabled: Boolean =
-                preferences.eh_enableSourceBlacklist().get()
+            preferences.eh_enableSourceBlacklist().get()
     ): Boolean {
         return pkgName in BlacklistedSources.BLACKLISTED_EXTENSIONS && blacklistEnabled
     }

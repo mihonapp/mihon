@@ -28,13 +28,13 @@ class Text : QueryComponent() {
     fun asLenientTagQueries(): List<String> {
         if (lenientTagQueries == null) {
             lenientTagQueries = listOf(
-                    // Match beginning of tag
-                    rBaseBuilder().append("%").toString(),
-                    // Tag word matcher (that matches multiple words)
-                    // Can't make it match a single word in Realm :(
-                    StringBuilder(" ").append(rBaseBuilder()).append(" ").toString(),
-                    StringBuilder(" ").append(rBaseBuilder()).toString(),
-                    rBaseBuilder().append(" ").toString()
+                // Match beginning of tag
+                rBaseBuilder().append("%").toString(),
+                // Tag word matcher (that matches multiple words)
+                // Can't make it match a single word in Realm :(
+                StringBuilder(" ").append(rBaseBuilder()).append(" ").toString(),
+                StringBuilder(" ").append(rBaseBuilder()).toString(),
+                rBaseBuilder().append(" ").toString()
             )
         }
         return lenientTagQueries!!
@@ -52,11 +52,11 @@ class Text : QueryComponent() {
         return builder
     }
 
-    fun rawTextOnly() = if (rawText != null)
+    fun rawTextOnly() = if (rawText != null) {
         rawText!!
-    else {
+    } else {
         rawText = components
-                .joinToString(separator = "", transform = { it.rawText })
+            .joinToString(separator = "", transform = { it.rawText })
         rawText!!
     }
 

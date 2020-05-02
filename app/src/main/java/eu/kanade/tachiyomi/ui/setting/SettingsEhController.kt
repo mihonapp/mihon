@@ -63,13 +63,13 @@ class SettingsEhController : SettingsController() {
     private fun Preference<*>.reconfigure(): Boolean {
         // Listen for change commit
         asObservable()
-                .skip(1) // Skip first as it is emitted immediately
-                .take(1) // Only listen for first commit
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeUntilDestroy {
-                    // Only listen for first change commit
-                    WarnConfigureDialogController.uploadSettings(router)
-                }
+            .skip(1) // Skip first as it is emitted immediately
+            .take(1) // Only listen for first commit
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeUntilDestroy {
+                // Only listen for first change commit
+                WarnConfigureDialogController.uploadSettings(router)
+            }
 
         // Always return true to save changes
         return true
@@ -85,12 +85,12 @@ class SettingsEhController : SettingsController() {
             isPersistent = false
             defaultValue = false
             preferences.enableExhentai()
-                    .asObservable()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeUntilDestroy {
-                        isChecked = it
-                    }
+                .asObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeUntilDestroy {
+                    isChecked = it
+                }
 
             onChange { newVal ->
                 newVal as Boolean
@@ -98,9 +98,11 @@ class SettingsEhController : SettingsController() {
                     preferences.enableExhentai().set(false)
                     true
                 } else {
-                    router.pushController(RouterTransaction.with(LoginController())
+                    router.pushController(
+                        RouterTransaction.with(LoginController())
                             .pushChangeHandler(FadeChangeHandler())
-                            .popChangeHandler(FadeChangeHandler()))
+                            .popChangeHandler(FadeChangeHandler())
+                    )
                     false
                 }
             }
@@ -148,20 +150,20 @@ class SettingsEhController : SettingsController() {
             summary = "The quality of the downloaded images"
             title = "Image quality"
             entries = arrayOf(
-                    "Auto",
-                    "2400x",
-                    "1600x",
-                    "1280x",
-                    "980x",
-                    "780x"
+                "Auto",
+                "2400x",
+                "1600x",
+                "1280x",
+                "980x",
+                "780x"
             )
             entryValues = arrayOf(
-                    "auto",
-                    "ovrs_2400",
-                    "ovrs_1600",
-                    "high",
-                    "med",
-                    "low"
+                "auto",
+                "ovrs_2400",
+                "ovrs_1600",
+                "high",
+                "med",
+                "low"
             )
 
             onChange { preferences.imageQuality().reconfigure() }
@@ -202,21 +204,21 @@ class SettingsEhController : SettingsController() {
                 onClick {
                     activity?.let { activity ->
                         MaterialDialog(activity)
-                                .title(R.string.eh_force_sync_reset_title)
-                                .message(R.string.eh_force_sync_reset_message)
-                                .positiveButton(android.R.string.yes) {
-                                    LocalFavoritesStorage().apply {
-                                        getRealm().use {
-                                            it.trans {
-                                                clearSnapshots(it)
-                                            }
+                            .title(R.string.eh_force_sync_reset_title)
+                            .message(R.string.eh_force_sync_reset_message)
+                            .positiveButton(android.R.string.yes) {
+                                LocalFavoritesStorage().apply {
+                                    getRealm().use {
+                                        it.trans {
+                                            clearSnapshots(it)
                                         }
                                     }
-                                    activity.toast("Sync state reset", Toast.LENGTH_LONG)
                                 }
-                                .negativeButton(android.R.string.no)
-                                .cancelable(false)
-                                .show()
+                                activity.toast("Sync state reset", Toast.LENGTH_LONG)
+                            }
+                            .negativeButton(android.R.string.no)
+                            .cancelable(false)
+                            .show()
                     }
                 }
             }
@@ -311,18 +313,18 @@ class SettingsEhController : SettingsController() {
                             }
 
                             """
-                                $statsText
+                            $statsText
 
-                                Galleries that were checked in the last:
-                                - hour: ${metaInRelativeDuration(1.hours)}
-                                - 6 hours: ${metaInRelativeDuration(6.hours)}
-                                - 12 hours: ${metaInRelativeDuration(12.hours)}
-                                - day: ${metaInRelativeDuration(1.days)}
-                                - 2 days: ${metaInRelativeDuration(2.days)}
-                                - week: ${metaInRelativeDuration(7.days)}
-                                - month: ${metaInRelativeDuration(30.days)}
-                                - year: ${metaInRelativeDuration(365.days)}
-                                """.trimIndent()
+                            Galleries that were checked in the last:
+                            - hour: ${metaInRelativeDuration(1.hours)}
+                            - 6 hours: ${metaInRelativeDuration(6.hours)}
+                            - 12 hours: ${metaInRelativeDuration(12.hours)}
+                            - day: ${metaInRelativeDuration(1.days)}
+                            - 2 days: ${metaInRelativeDuration(2.days)}
+                            - week: ${metaInRelativeDuration(7.days)}
+                            - month: ${metaInRelativeDuration(30.days)}
+                            - year: ${metaInRelativeDuration(365.days)}
+                            """.trimIndent()
                         } finally {
                             progress.dismiss()
                         }

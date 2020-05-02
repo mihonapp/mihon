@@ -39,8 +39,8 @@ fun sha512(passwordToHash: String, salt: String): String {
  */
 fun lockEnabled(prefs: PreferencesHelper = Injekt.get()) =
     prefs.eh_lockHash().get() != null &&
-            prefs.eh_lockSalt().get() != null &&
-            prefs.eh_lockLength().getOrDefault() != -1
+        prefs.eh_lockSalt().get() != null &&
+        prefs.eh_lockLength().getOrDefault() != -1
 
 /**
  * Check if the lock will function properly
@@ -53,30 +53,35 @@ fun notifyLockSecurity(
 ): Boolean {
     return false
     if (!prefs.eh_lockManually().getOrDefault() &&
-            !hasAccessToUsageStats(context)) {
+        !hasAccessToUsageStats(context)
+    ) {
         MaterialDialog(context)
-                .title(text = "Permission required")
-                .message(text = "${context.getString(R.string.app_name)} requires the usage stats permission to detect when you leave the app. " +
-                        "This is required for the application lock to function properly. " +
-                        "Press OK to grant this permission now.")
-                .negativeButton(R.string.action_cancel)
-                .positiveButton(android.R.string.ok) {
-                    try {
-                        context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-                    } catch (e: ActivityNotFoundException) {
-                        XLog.e("Device does not support USAGE_ACCESS_SETTINGS shortcut!")
-                        MaterialDialog(context)
-                                .title(text = "Grant permission manually")
-                                .message(text = "Failed to launch the window used to grant the usage stats permission. " +
-                                        "You can still grant this permission manually: go to your phone's settings and search for 'usage access'.")
-                                .positiveButton(android.R.string.ok) { it.dismiss() }
-                                .cancelable(true)
-                                .cancelOnTouchOutside(false)
-                                .show()
-                    }
+            .title(text = "Permission required")
+            .message(
+                text = "${context.getString(R.string.app_name)} requires the usage stats permission to detect when you leave the app. " +
+                    "This is required for the application lock to function properly. " +
+                    "Press OK to grant this permission now."
+            )
+            .negativeButton(R.string.action_cancel)
+            .positiveButton(android.R.string.ok) {
+                try {
+                    context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                } catch (e: ActivityNotFoundException) {
+                    XLog.e("Device does not support USAGE_ACCESS_SETTINGS shortcut!")
+                    MaterialDialog(context)
+                        .title(text = "Grant permission manually")
+                        .message(
+                            text = "Failed to launch the window used to grant the usage stats permission. " +
+                                "You can still grant this permission manually: go to your phone's settings and search for 'usage access'."
+                        )
+                        .positiveButton(android.R.string.ok) { it.dismiss() }
+                        .cancelable(true)
+                        .cancelOnTouchOutside(false)
+                        .show()
                 }
-                .cancelable(false)
-                .show()
+            }
+            .cancelable(false)
+            .show()
         return true
     } else {
         return false

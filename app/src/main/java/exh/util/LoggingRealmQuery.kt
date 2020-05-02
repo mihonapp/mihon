@@ -14,16 +14,16 @@ import java.util.Date
 
 inline fun <reified E : RealmModel> RealmQuery<out E>.beginLog(
     clazz: Class<out E>? =
-E::class.java
+        E::class.java
 ): LoggingRealmQuery<out E> =
     LoggingRealmQuery.fromQuery(this, clazz)
 
 class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     companion object {
         fun <E : RealmModel> fromQuery(q: RealmQuery<out E>, clazz: Class<out E>?) =
-                LoggingRealmQuery(q).apply {
-            log += "SELECT * FROM ${clazz?.name ?: "???"} WHERE"
-        }
+            LoggingRealmQuery(q).apply {
+                log += "SELECT * FROM ${clazz?.name ?: "???"} WHERE"
+            }
     }
 
     private val log = mutableListOf<String>()
@@ -47,9 +47,13 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     }
 
     private fun appendEqualTo(fieldName: String, value: String, casing: Case? = null) {
-        log += sec("\"$fieldName\" == \"$value\"" + (casing?.let {
-            " CASE ${casing.name}"
-        } ?: ""))
+        log += sec(
+            "\"$fieldName\" == \"$value\"" + (
+                casing?.let {
+                    " CASE ${casing.name}"
+                } ?: ""
+                )
+        )
     }
 
     fun equalTo(fieldName: String, value: String): RealmQuery<E> {
@@ -108,11 +112,18 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     }
 
     fun appendIn(fieldName: String, values: Array<out Any?>, casing: Case? = null) {
-        log += sec("[${values.joinToString(separator = ", ", transform = {
-            "\"$it\""
-        })}] IN \"$fieldName\"" + (casing?.let {
-            " CASE ${casing.name}"
-        } ?: ""))
+        log += sec(
+            "[${values.joinToString(
+                separator = ", ",
+                transform = {
+                    "\"$it\""
+                }
+            )}] IN \"$fieldName\"" + (
+                casing?.let {
+                    " CASE ${casing.name}"
+                } ?: ""
+                )
+        )
     }
 
     fun `in`(fieldName: String, values: Array<String>): RealmQuery<E> {
@@ -166,9 +177,13 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     }
 
     private fun appendNotEqualTo(fieldName: String, value: Any?, casing: Case? = null) {
-        log += sec("\"$fieldName\" != \"$value\"" + (casing?.let {
-            " CASE ${casing.name}"
-        } ?: ""))
+        log += sec(
+            "\"$fieldName\" != \"$value\"" + (
+                casing?.let {
+                    " CASE ${casing.name}"
+                } ?: ""
+                )
+        )
     }
 
     fun notEqualTo(fieldName: String, value: String): RealmQuery<E> {
@@ -372,9 +387,13 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     }
 
     private fun appendContains(fieldName: String, value: Any?, casing: Case? = null) {
-        log += sec("\"$fieldName\" CONTAINS \"$value\"" + (casing?.let {
-            " CASE ${casing.name}"
-        } ?: ""))
+        log += sec(
+            "\"$fieldName\" CONTAINS \"$value\"" + (
+                casing?.let {
+                    " CASE ${casing.name}"
+                } ?: ""
+                )
+        )
     }
 
     fun contains(fieldName: String, value: String): RealmQuery<E> {
@@ -388,9 +407,13 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     }
 
     private fun appendBeginsWith(fieldName: String, value: Any?, casing: Case? = null) {
-        log += sec("\"$fieldName\" BEGINS WITH \"$value\"" + (casing?.let {
-            " CASE ${casing.name}"
-        } ?: ""))
+        log += sec(
+            "\"$fieldName\" BEGINS WITH \"$value\"" + (
+                casing?.let {
+                    " CASE ${casing.name}"
+                } ?: ""
+                )
+        )
     }
 
     fun beginsWith(fieldName: String, value: String): RealmQuery<E> {
@@ -404,9 +427,13 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     }
 
     private fun appendEndsWith(fieldName: String, value: Any?, casing: Case? = null) {
-        log += sec("\"$fieldName\" ENDS WITH \"$value\"" + (casing?.let {
-            " CASE ${casing.name}"
-        } ?: ""))
+        log += sec(
+            "\"$fieldName\" ENDS WITH \"$value\"" + (
+                casing?.let {
+                    " CASE ${casing.name}"
+                } ?: ""
+                )
+        )
     }
 
     fun endsWith(fieldName: String, value: String): RealmQuery<E> {
@@ -420,9 +447,13 @@ class LoggingRealmQuery<E : RealmModel>(val query: RealmQuery<E>) {
     }
 
     private fun appendLike(fieldName: String, value: Any?, casing: Case? = null) {
-        log += sec("\"$fieldName\" LIKE \"$value\"" + (casing?.let {
-            " CASE ${casing.name}"
-        } ?: ""))
+        log += sec(
+            "\"$fieldName\" LIKE \"$value\"" + (
+                casing?.let {
+                    " CASE ${casing.name}"
+                } ?: ""
+                )
+        )
     }
 
     fun like(fieldName: String, value: String): RealmQuery<E> {

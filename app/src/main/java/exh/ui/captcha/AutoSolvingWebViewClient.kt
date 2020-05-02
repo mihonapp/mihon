@@ -26,9 +26,9 @@ class AutoSolvingWebViewClient(
             val doc = response.asJsoup()
             doc.body().appendChild(Element("script").appendChild(DataNode(CROSS_WINDOW_SCRIPT_INNER)))
             return WebResourceResponse(
-                    "text/html",
-                    "UTF-8",
-                    doc.toString().byteInputStream(Charset.forName("UTF-8")).buffered()
+                "text/html",
+                "UTF-8",
+                doc.toString().byteInputStream(Charset.forName("UTF-8")).buffered()
             )
         }
         return super.shouldInterceptRequest(view, request)

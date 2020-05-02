@@ -393,7 +393,6 @@ class LibraryPresenter(
         manga: Manga,
         replace: Boolean
     ) {
-
         val flags = preferences.migrateFlags().get()
         val migrateChapters = MigrationFlags.hasChapters(flags)
         val migrateCategories = MigrationFlags.hasCategories(flags)

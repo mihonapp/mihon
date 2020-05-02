@@ -19,30 +19,33 @@ import java.util.Locale
 import org.jsoup.nodes.Document
 import rx.Observable
 
-class Tsumino(delegate: HttpSource) : DelegatedHttpSource(delegate),
-        LewdSource<TsuminoSearchMetadata, Document>, UrlImportableSource {
+class Tsumino(delegate: HttpSource) :
+    DelegatedHttpSource(delegate),
+    LewdSource<TsuminoSearchMetadata, Document>,
+    UrlImportableSource {
     override val metaClass = TsuminoSearchMetadata::class
     override val lang = "en"
 
     // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-            urlImportFetchSearchManga(query) {
-                super.fetchSearchManga(page, query, filters)
-            }
+        urlImportFetchSearchManga(query) {
+            super.fetchSearchManga(page, query, filters)
+        }
 
     override fun mapUrlToMangaUrl(uri: Uri): String? {
         val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
-        if (lcFirstPathSegment != "read" && lcFirstPathSegment != "book" && lcFirstPathSegment != "entry")
+        if (lcFirstPathSegment != "read" && lcFirstPathSegment != "book" && lcFirstPathSegment != "entry") {
             return null
+        }
         return "https://tsumino.com/Book/Info/${uri.lastPathSegment}"
     }
 
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return client.newCall(mangaDetailsRequest(manga))
-                .asObservableSuccess()
-                .flatMap {
-                    parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga))
-                }
+            .asObservableSuccess()
+            .flatMap {
+                parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga))
+            }
     }
 
     override fun parseIntoMetadata(metadata: TsuminoSearchMetadata, input: Document) {
@@ -106,16 +109,18 @@ class Tsumino(delegate: HttpSource) : DelegatedHttpSource(delegate),
             character = newCharacter
 
             input.getElementById("Tag")?.children()?.let {
-                tags.addAll(it.map {
-                    RaisedTag(null, it.text().trim(), TAG_TYPE_DEFAULT)
-                })
+                tags.addAll(
+                    it.map {
+                        RaisedTag(null, it.text().trim(), TAG_TYPE_DEFAULT)
+                    }
+                )
             }
         }
     }
 
     override val matchingHosts = listOf(
-            "www.tsumino.com",
-            "tsumino.com"
+        "www.tsumino.com",
+        "tsumino.com"
     )
 
     companion object {

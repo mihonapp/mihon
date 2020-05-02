@@ -75,10 +75,12 @@ class SettingsLibraryController : SettingsController() {
             intListPreference {
                 key = Keys.eh_library_rounded_corners
                 title = "Rounded Corner Radius"
-                entriesRes = arrayOf(R.string.eh_rounded_corner_0, R.string.eh_rounded_corner_1,
+                entriesRes = arrayOf(
+                    R.string.eh_rounded_corner_0, R.string.eh_rounded_corner_1,
                     R.string.eh_rounded_corner_2, R.string.eh_rounded_corner_3, R.string.eh_rounded_corner_4,
                     R.string.eh_rounded_corner_5, R.string.eh_rounded_corner_6, R.string.eh_rounded_corner_7,
-                    R.string.eh_rounded_corner_8, R.string.eh_rounded_corner_9, R.string.eh_rounded_corner_10)
+                    R.string.eh_rounded_corner_8, R.string.eh_rounded_corner_9, R.string.eh_rounded_corner_10
+                )
                 entryValues = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
                 defaultValue = "4"
                 summaryRes = R.string.eh_rounded_corners_desc
@@ -211,7 +213,8 @@ class SettingsLibraryController : SettingsController() {
                 }
             }
             if (preferences.skipPreMigration().get() || preferences.migrationSources()
-                    .getOrDefault().isNotEmpty()) {
+                .getOrDefault().isNotEmpty()
+            ) {
                 switchPreference {
                     key = Keys.skipPreMigration
                     titleRes = R.string.pref_skip_pre_migration

@@ -18,11 +18,11 @@ class EHConfigurator {
     private val sources: SourceManager by injectLazy()
 
     private val configuratorClient = OkHttpClient.Builder()
-            .maybeInjectEHLogger()
-            .build()
+        .maybeInjectEHLogger()
+        .build()
 
     private fun EHentai.requestWithCreds(sp: Int = 1) = Request.Builder()
-            .addHeader("Cookie", cookiesHeader(sp))
+        .addHeader("Cookie", cookiesHeader(sp))
 
     private fun EHentai.execProfileActions(
         action: String,
@@ -30,15 +30,19 @@ class EHConfigurator {
         set: String,
         sp: Int
     ) =
-        configuratorClient.newCall(requestWithCreds(sp)
+        configuratorClient.newCall(
+            requestWithCreds(sp)
                 .url(uconfigUrl)
-                .post(FormBody.Builder()
+                .post(
+                    FormBody.Builder()
                         .add("profile_action", action)
                         .add("profile_name", name)
                         .add("profile_set", set)
-                        .build())
-                .build())
-                .execute()
+                        .build()
+                )
+                .build()
+        )
+            .execute()
 
     private val EHentai.uconfigUrl get() = baseUrl + UCONFIG_URL
 
@@ -47,10 +51,12 @@ class EHConfigurator {
         val exhSource = sources.get(EXH_SOURCE_ID) as EHentai
 
         // Get hath perks
-        val perksPage = configuratorClient.newCall(ehSource.requestWithCreds()
+        val perksPage = configuratorClient.newCall(
+            ehSource.requestWithCreds()
                 .url(HATH_PERKS_URL)
-                .build())
-                .execute().asJsoup()
+                .build()
+        )
+            .execute().asJsoup()
 
         val hathPerks = EHHathPerksResponse()
 
@@ -97,24 +103,29 @@ class EHConfigurator {
         }
 
         // No profile slots left :(
-        if (availableProfiles.isEmpty())
+        if (availableProfiles.isEmpty()) {
             throw IllegalStateException("You are out of profile slots on ${source.name}, please delete a profile!")
-
+        }
         // Create profile in available slot
+
         val slot = availableProfiles.first()
-        val response = source.execProfileActions("create",
-                PROFILE_NAME,
-                slot.toString(),
-                1)
+        val response = source.execProfileActions(
+            "create",
+            PROFILE_NAME,
+            slot.toString(),
+            1
+        )
 
         // Build new profile
         val form = EhUConfigBuilder().build(hathPerks)
 
         // Send new profile to server
-        configuratorClient.newCall(source.requestWithCreds(sp = slot)
+        configuratorClient.newCall(
+            source.requestWithCreds(sp = slot)
                 .url(source.uconfigUrl)
                 .post(form)
-                .build()).execute()
+                .build()
+        ).execute()
 
         // Persist slot + sk
         source.spPref().set(slot)
@@ -129,12 +140,15 @@ class EHConfigurator {
             it.startsWith("hath_perks=")
         }?.removePrefix("hath_perks=")?.substringBefore(';')
 
-        if (keyCookie != null)
+        if (keyCookie != null) {
             prefs.eh_settingsKey().set(keyCookie)
-        if (sessionCookie != null)
+        }
+        if (sessionCookie != null) {
             prefs.eh_sessionCookie().set(sessionCookie)
-        if (hathPerksCookie != null)
+        }
+        if (hathPerksCookie != null) {
             prefs.eh_hathPerksCookies().set(hathPerksCookie)
+        }
     }
 
     companion object {

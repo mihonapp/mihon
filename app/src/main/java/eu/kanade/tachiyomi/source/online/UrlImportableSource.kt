@@ -19,10 +19,12 @@ interface UrlImportableSource : Source {
         return try {
             val uri = URI(url)
             var out = uri.path
-            if (uri.query != null)
+            if (uri.query != null) {
                 out += "?" + uri.query
-            if (uri.fragment != null)
+            }
+            if (uri.fragment != null) {
                 out += "#" + uri.fragment
+            }
             out
         } catch (e: URISyntaxException) {
             url

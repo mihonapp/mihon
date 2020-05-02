@@ -48,10 +48,18 @@ class MigrationProcessHolder(
             val manga = item.manga.manga()
             val source = item.manga.mangaSource()
 
-            migration_menu.setVectorCompat(R.drawable.ic_more_vert_24dp, view.context
-                .getResourceColor(R.attr.colorOnPrimary))
-            skip_manga.setVectorCompat(R.drawable.ic_close_24dp, view.context.getResourceColor(R
-                .attr.colorOnPrimary))
+            migration_menu.setVectorCompat(
+                R.drawable.ic_more_vert_24dp,
+                view.context
+                    .getResourceColor(R.attr.colorOnPrimary)
+            )
+            skip_manga.setVectorCompat(
+                R.drawable.ic_close_24dp,
+                view.context.getResourceColor(
+                    R
+                        .attr.colorOnPrimary
+                )
+            )
             migration_menu.invisible()
             skip_manga.visible()
             migration_manga_card_to.resetManga()
@@ -87,7 +95,8 @@ class MigrationProcessHolder(
                 }
                 withContext(Dispatchers.Main) {
                     if (item.manga.mangaId != this@MigrationProcessHolder.item?.manga?.mangaId ||
-                        item.manga.migrationStatus == MigrationStatus.RUNNUNG) {
+                        item.manga.migrationStatus == MigrationStatus.RUNNUNG
+                    ) {
                         return@withContext
                     }
                     if (searchResult != null && resultSource != null) {
@@ -152,11 +161,15 @@ class MigrationProcessHolder(
         val latestChapter = mangaChapters.maxBy { it.chapter_number }?.chapter_number ?: -1f
 
         if (latestChapter > 0f) {
-            manga_last_chapter_label.text = context.getString(R.string.latest_,
-                DecimalFormat("#.#").format(latestChapter))
+            manga_last_chapter_label.text = context.getString(
+                R.string.latest_,
+                DecimalFormat("#.#").format(latestChapter)
+            )
         } else {
-            manga_last_chapter_label.text = context.getString(R.string.latest_,
-                context.getString(R.string.unknown))
+            manga_last_chapter_label.text = context.getString(
+                R.string.latest_,
+                context.getString(R.string.unknown)
+            )
         }
     }
 

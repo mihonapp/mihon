@@ -18,8 +18,10 @@ import exh.util.urlImportFetchSearchManga
 import org.jsoup.nodes.Document
 import rx.Observable
 
-class Pururin(delegate: HttpSource) : DelegatedHttpSource(delegate),
-        LewdSource<PururinSearchMetadata, Document>, UrlImportableSource {
+class Pururin(delegate: HttpSource) :
+    DelegatedHttpSource(delegate),
+    LewdSource<PururinSearchMetadata, Document>,
+    UrlImportableSource {
     /**
      * An ISO 639-1 compliant language code (two letters in lower case).
      */
@@ -43,11 +45,11 @@ class Pururin(delegate: HttpSource) : DelegatedHttpSource(delegate),
 
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return client.newCall(mangaDetailsRequest(manga))
-                .asObservableSuccess()
-                .flatMap {
-                    parseToManga(manga, it.asJsoup())
-                            .andThen(Observable.just(manga))
-                }
+            .asObservableSuccess()
+            .flatMap {
+                parseToManga(manga, it.asJsoup())
+                    .andThen(Observable.just(manga))
+            }
     }
 
     override fun parseIntoMetadata(metadata: PururinSearchMetadata, input: Document) {
@@ -87,9 +89,9 @@ class Pururin(delegate: HttpSource) : DelegatedHttpSource(delegate),
                         value.select("a").forEach { link ->
                             val searchUrl = Uri.parse(link.attr("href"))
                             tags += RaisedTag(
-                                    searchUrl.pathSegments[searchUrl.pathSegments.lastIndex - 2],
-                                    searchUrl.lastPathSegment!!.substringBefore("."),
-                                    PururinSearchMetadata.TAG_TYPE_DEFAULT
+                                searchUrl.pathSegments[searchUrl.pathSegments.lastIndex - 2],
+                                searchUrl.lastPathSegment!!.substringBefore("."),
+                                PururinSearchMetadata.TAG_TYPE_DEFAULT
                             )
                         }
                     }
@@ -99,8 +101,8 @@ class Pururin(delegate: HttpSource) : DelegatedHttpSource(delegate),
     }
 
     override val matchingHosts = listOf(
-            "pururin.io",
-            "www.pururin.io"
+        "pururin.io",
+        "www.pururin.io"
     )
 
     override fun mapUrlToMangaUrl(uri: Uri): String? {

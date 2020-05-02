@@ -54,30 +54,34 @@ class ByteCursor(val content: ByteArray) {
     }
 
     fun expect(vararg bytes: Byte) {
-        if (bytes.size > remaining())
+        if (bytes.size > remaining()) {
             throw IllegalStateException("Unexpected end of content!")
+        }
 
         for (i in 0..bytes.lastIndex) {
             val expected = bytes[i]
             val actual = content[index + i + 1]
 
-            if (expected != actual)
+            if (expected != actual) {
                 throw IllegalStateException("Unexpected content (expected: $expected, actual: $actual)!")
+            }
         }
 
         index += bytes.size
     }
 
     fun checkEqual(vararg bytes: Byte): Boolean {
-        if (bytes.size > remaining())
+        if (bytes.size > remaining()) {
             return false
+        }
 
         for (i in 0..bytes.lastIndex) {
             val expected = bytes[i]
             val actual = content[index + i + 1]
 
-            if (expected != actual)
+            if (expected != actual) {
                 return false
+            }
         }
 
         return true

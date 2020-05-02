@@ -44,9 +44,11 @@ class NHentaiSearchMetadata : RaisedSearchMetadata() {
         if (mediaId != null) {
             val hqThumbs = Injekt.get<PreferencesHelper>().eh_nh_useHighQualityThumbs().getOrDefault()
             typeToExtension(if (hqThumbs) coverImageType else thumbnailImageType)?.let {
-                manga.thumbnail_url = "https://t.nhentai.net/galleries/$mediaId/${if (hqThumbs)
+                manga.thumbnail_url = "https://t.nhentai.net/galleries/$mediaId/${if (hqThumbs) {
                     "cover"
-                else "thumb"}.$it"
+                } else {
+                    "thumb"
+                }}.$it"
             }
         }
 
@@ -91,8 +93,8 @@ class NHentaiSearchMetadata : RaisedSearchMetadata() {
         val tagsDesc = tagsToDescription()
 
         manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
-                .filter(String::isNotBlank)
-                .joinToString(separator = "\n")
+            .filter(String::isNotBlank)
+            .joinToString(separator = "\n")
     }
 
     companion object {
@@ -108,14 +110,14 @@ class NHentaiSearchMetadata : RaisedSearchMetadata() {
         private const val NHENTAI_CATEGORIES_NAMESPACE = "category"
 
         fun typeToExtension(t: String?) =
-                when (t) {
-                    "p" -> "png"
-                    "j" -> "jpg"
-                    else -> null
-                }
+            when (t) {
+                "p" -> "png"
+                "j" -> "jpg"
+                else -> null
+            }
 
         fun nhUrlToId(url: String) =
-                url.split("/").last { it.isNotBlank() }.toLong()
+            url.split("/").last { it.isNotBlank() }.toLong()
 
         fun nhIdToPath(id: Long) = "/g/$id/"
     }

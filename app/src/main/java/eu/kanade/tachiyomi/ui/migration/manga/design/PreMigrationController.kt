@@ -27,8 +27,11 @@ import exh.util.updateLayoutParams
 import exh.util.updatePaddingRelative
 import uy.kohesive.injekt.injectLazy
 
-class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrationControllerBinding>(bundle), FlexibleAdapter
-.OnItemClickListener, StartMigrationListener {
+class PreMigrationController(bundle: Bundle? = null) :
+    BaseController<PreMigrationControllerBinding>(bundle),
+    FlexibleAdapter
+    .OnItemClickListener,
+    StartMigrationListener {
     private val sourceManager: SourceManager by injectLazy()
     private val prefs: PreferencesHelper by injectLazy()
 
@@ -69,8 +72,10 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrati
                 bottomMargin = fabBaseMarginBottom + insets.systemWindowInsetBottom
             }
             // offset the recycler by the fab's inset + some inset on top
-            v.updatePaddingRelative(bottom = padding.bottom + (binding.fab.marginBottom) +
-                fabBaseMarginBottom + (binding.fab.height))
+            v.updatePaddingRelative(
+                bottom = padding.bottom + (binding.fab.marginBottom) +
+                    fabBaseMarginBottom + (binding.fab.height)
+            )
         }
 
         binding.fab.setOnClickListener {
@@ -101,7 +106,8 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrati
                     config.toList(),
                     extraSearchParams = extraParam
                 )
-            ).withFadeTransaction().tag(MigrationListController.TAG))
+            ).withFadeTransaction().tag(MigrationListController.TAG)
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -136,10 +142,13 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrati
             .filter { it.lang in languages }
             .sortedBy { "(${it.lang}) ${it.name}" }
         sources =
-            sources.filter { isEnabled(it.id.toString()) }.sortedBy { sourcesSaved.indexOf(it.id
-                .toString())
-            } +
-                sources.filterNot { isEnabled(it.id.toString()) }
+            sources.filter { isEnabled(it.id.toString()) }.sortedBy {
+            sourcesSaved.indexOf(
+                it.id
+                    .toString()
+            )
+        } +
+            sources.filterNot { isEnabled(it.id.toString()) }
 
         return sources
     }
@@ -167,9 +176,11 @@ class PreMigrationController(bundle: Bundle? = null) : BaseController<PreMigrati
         }
 
         fun create(mangaIds: List<Long>): PreMigrationController {
-            return PreMigrationController(Bundle().apply {
-                putLongArray(MANGA_IDS_EXTRA, mangaIds.toLongArray())
-            })
+            return PreMigrationController(
+                Bundle().apply {
+                    putLongArray(MANGA_IDS_EXTRA, mangaIds.toLongArray())
+                }
+            )
         }
     }
 }

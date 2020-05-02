@@ -54,33 +54,35 @@ class InterceptActivity : BaseRxActivity<EhActivityInterceptBinding, InterceptAc
         super.onStart()
         statusSubscription?.unsubscribe()
         statusSubscription = presenter.status
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    when (it) {
-                        is InterceptResult.Success -> {
-                            binding.interceptProgress.gone()
-                            binding.interceptStatus.text = "Launching app..."
-                            onBackPressed()
-                            startActivity(Intent(this, MainActivity::class.java)
-                                    .setAction(MainActivity.SHORTCUT_MANGA)
-                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    .putExtra(MangaController.MANGA_EXTRA, it.mangaId))
-                        }
-                        is InterceptResult.Failure -> {
-                            binding.interceptProgress.gone()
-                            binding.interceptStatus.text = "Error: ${it.reason}"
-                            MaterialDialog(this)
-                                    .title(text = "Error")
-                                    .message(text = "Could not open this gallery:\n\n${it.reason}")
-                                    .cancelable(true)
-                                    .cancelOnTouchOutside(true)
-                                    .positiveButton(android.R.string.ok)
-                                    .onCancel { onBackPressed() }
-                                    .onDismiss { onBackPressed() }
-                                    .show()
-                        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                when (it) {
+                    is InterceptResult.Success -> {
+                        binding.interceptProgress.gone()
+                        binding.interceptStatus.text = "Launching app..."
+                        onBackPressed()
+                        startActivity(
+                            Intent(this, MainActivity::class.java)
+                                .setAction(MainActivity.SHORTCUT_MANGA)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                .putExtra(MangaController.MANGA_EXTRA, it.mangaId)
+                        )
+                    }
+                    is InterceptResult.Failure -> {
+                        binding.interceptProgress.gone()
+                        binding.interceptStatus.text = "Error: ${it.reason}"
+                        MaterialDialog(this)
+                            .title(text = "Error")
+                            .message(text = "Could not open this gallery:\n\n${it.reason}")
+                            .cancelable(true)
+                            .cancelOnTouchOutside(true)
+                            .positiveButton(android.R.string.ok)
+                            .onCancel { onBackPressed() }
+                            .onDismiss { onBackPressed() }
+                            .show()
                     }
                 }
+            }
     }
 
     override fun onStop() {

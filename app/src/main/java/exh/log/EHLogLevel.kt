@@ -16,7 +16,7 @@ enum class EHLogLevel(val description: String) {
 
         fun init(context: Context) {
             curLogLevel = PreferenceManager.getDefaultSharedPreferences(context)
-                    .getInt(PreferenceKeys.eh_logLevel, 0)
+                .getInt(PreferenceKeys.eh_logLevel, 0)
         }
 
         fun shouldLog(requiredLogLevel: EHLogLevel): Boolean {

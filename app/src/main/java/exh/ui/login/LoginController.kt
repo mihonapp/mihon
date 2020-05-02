@@ -97,10 +97,11 @@ class LoginController : NucleusController<EhActivityLoginBinding, LoginPresenter
                 val parsedUrl = Uri.parse(url)
                 if (parsedUrl.host.equals("forums.e-hentai.org", ignoreCase = true)) {
                     // Hide distracting content
-                    if (!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT))
+                    if (!parsedUrl.queryParameterNames.contains(PARAM_SKIP_INJECT)) {
                         view.evaluateJavascript(HIDE_JS, null)
-
+                    }
                     // Check login result
+
                     if (parsedUrl.getQueryParameter("code")?.toInt() != 0) {
                         if (checkLoginCookies(url)) view.loadUrl("https://exhentai.org/")
                     }
@@ -128,9 +129,11 @@ class LoginController : NucleusController<EhActivityLoginBinding, LoginPresenter
     fun checkLoginCookies(url: String): Boolean {
         getCookies(url)?.let { parsed ->
             return parsed.filter {
-                (it.name.equals(MEMBER_ID_COOKIE, ignoreCase = true) ||
-                        it.name.equals(PASS_HASH_COOKIE, ignoreCase = true)) &&
-                        it.value.isNotBlank()
+                (
+                    it.name.equals(MEMBER_ID_COOKIE, ignoreCase = true) ||
+                        it.name.equals(PASS_HASH_COOKIE, ignoreCase = true)
+                    ) &&
+                    it.value.isNotBlank()
             }.count() >= 2
         }
         return false
@@ -168,11 +171,11 @@ class LoginController : NucleusController<EhActivityLoginBinding, LoginPresenter
     }
 
     fun getCookies(url: String): List<HttpCookie>? =
-            CookieManager.getInstance().getCookie(url)?.let {
-        it.split("; ").flatMap {
-            HttpCookie.parse(it)
+        CookieManager.getInstance().getCookie(url)?.let {
+            it.split("; ").flatMap {
+                HttpCookie.parse(it)
+            }
         }
-    }
 
     companion object {
         const val PARAM_SKIP_INJECT = "TEH_SKIP_INJECT"
@@ -181,7 +184,8 @@ class LoginController : NucleusController<EhActivityLoginBinding, LoginPresenter
         const val PASS_HASH_COOKIE = "ipb_pass_hash"
         const val IGNEOUS_COOKIE = "igneous"
 
-        const val HIDE_JS = """
+        const val HIDE_JS =
+            """
                     javascript:(function () {
                         document.getElementsByTagName('body')[0].style.visibility = 'hidden';
                         document.getElementsByName('submit')[0].style.visibility = 'visible';

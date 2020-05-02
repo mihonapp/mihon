@@ -62,11 +62,13 @@ class HitomiSearchMetadata : RaisedSearchMetadata() {
             detailsDesc += "Language: ${it.capitalize()}\n"
         }
 
-        if (series.isNotEmpty())
+        if (series.isNotEmpty()) {
             detailsDesc += "Series: ${series.joinToString()}\n"
+        }
 
-        if (characters.isNotEmpty())
+        if (characters.isNotEmpty()) {
             detailsDesc += "Characters: ${characters.joinToString()}\n"
+        }
 
         uploadDate?.let {
             detailsDesc += "Upload date: ${EX_DATE_FORMAT.format(Date(it))}\n"
@@ -80,8 +82,8 @@ class HitomiSearchMetadata : RaisedSearchMetadata() {
         val tagsDesc = tagsToDescription()
 
         manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
-                .filter(String::isNotBlank)
-                .joinToString(separator = "\n")
+            .filter(String::isNotBlank)
+            .joinToString(separator = "\n")
     }
 
     companion object {
@@ -93,9 +95,9 @@ class HitomiSearchMetadata : RaisedSearchMetadata() {
         const val BASE_URL = "https://hitomi.la"
 
         fun hlIdFromUrl(url: String) =
-                url.split('/').last().split('-').last().substringBeforeLast('.')
+            url.split('/').last().split('-').last().substringBeforeLast('.')
 
         fun urlFromHlId(id: String) =
-                "$BASE_URL/galleries/$id.html"
+            "$BASE_URL/galleries/$id.html"
     }
 }

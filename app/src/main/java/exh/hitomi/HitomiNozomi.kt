@@ -71,39 +71,43 @@ class HitomiNozomi(
     }
 
     private fun getGalleryIdsFromData(data: DataPair?): Single<List<Int>> {
-        if (data == null)
+        if (data == null) {
             return Single.just(emptyList())
+        }
 
         val url = "$LTN_BASE_URL/$GALLERIES_INDEX_DIR/galleries.$galleriesIndexVersion.data"
         val (offset, length) = data
-        if (length > 100000000 || length <= 0)
+        if (length > 100000000 || length <= 0) {
             return Single.just(emptyList())
+        }
 
         return client.newCall(rangedGet(url, offset, offset + length - 1))
-                .asObservable()
-                .map {
-                    it.body?.bytes() ?: ByteArray(0)
+            .asObservable()
+            .map {
+                it.body?.bytes() ?: ByteArray(0)
+            }
+            .onErrorReturn { ByteArray(0) }
+            .map { inbuf ->
+                if (inbuf.isEmpty()) {
+                    return@map emptyList<Int>()
                 }
-                .onErrorReturn { ByteArray(0) }
-                .map { inbuf ->
-                    if (inbuf.isEmpty())
-                        return@map emptyList<Int>()
 
-                    val view = ByteCursor(inbuf)
-                    val numberOfGalleryIds = view.nextInt()
+                val view = ByteCursor(inbuf)
+                val numberOfGalleryIds = view.nextInt()
 
-                    val expectedLength = numberOfGalleryIds * 4 + 4
+                val expectedLength = numberOfGalleryIds * 4 + 4
 
-                    if (numberOfGalleryIds > 10000000 ||
-                            numberOfGalleryIds <= 0 ||
-                            inbuf.size != expectedLength) {
-                        return@map emptyList<Int>()
-                    }
+                if (numberOfGalleryIds > 10000000 ||
+                    numberOfGalleryIds <= 0 ||
+                    inbuf.size != expectedLength
+                ) {
+                    return@map emptyList<Int>()
+                }
 
-                    (1..numberOfGalleryIds).map {
-                        view.nextInt()
-                    }
-                }.toSingle()
+                (1..numberOfGalleryIds).map {
+                    view.nextInt()
+                }
+            }.toSingle()
     }
 
     private fun BSearch(field: String, key: ByteArray, node: Node?): Single<DataPair?> {
@@ -112,10 +116,11 @@ class HitomiNozomi(
             for (i in 0 until top) {
                 val dv1i = dv1[i].toInt() and 0xFF
                 val dv2i = dv2[i].toInt() and 0xFF
-                if (dv1i < dv2i)
+                if (dv1i < dv2i) {
                     return -1
-                else if (dv1i > dv2i)
+                } else if (dv1i > dv2i) {
                     return 1
+                }
             }
             return 0
         }
@@ -185,16 +190,16 @@ class HitomiNozomi(
         }
 
         return client.newCall(rangedGet(url, address, address + MAX_NODE_SIZE - 1))
-                .asObservableSuccess()
-                .map {
-                    it.body?.bytes() ?: ByteArray(0)
-                }
-                .onErrorReturn { ByteArray(0) }
-                .map { nodedata ->
-                    if (nodedata.isNotEmpty()) {
-                        decodeNode(nodedata)
-                    } else null
-                }.toSingle()
+            .asObservableSuccess()
+            .map {
+                it.body?.bytes() ?: ByteArray(0)
+            }
+            .onErrorReturn { ByteArray(0) }
+            .map { nodedata ->
+                if (nodedata.isNotEmpty()) {
+                    decodeNode(nodedata)
+                } else null
+            }.toSingle()
     }
 
     fun getGalleryIdsFromNozomi(area: String?, tag: String, language: String): Single<List<Int>> {
@@ -203,17 +208,19 @@ class HitomiNozomi(
             nozomiAddress = "$LTN_BASE_URL/$COMPRESSED_NOZOMI_PREFIX/$area/$tag-$language$NOZOMI_EXTENSION"
         }
 
-        return client.newCall(Request.Builder()
+        return client.newCall(
+            Request.Builder()
                 .url(nozomiAddress)
-                .build())
-                .asObservableSuccess()
-                .map { resp ->
-                    val body = resp.body!!.bytes()
-                    val cursor = ByteCursor(body)
-                    (1..body.size / 4).map {
-                        cursor.nextInt()
-                    }
-                }.toSingle()
+                .build()
+        )
+            .asObservableSuccess()
+            .map { resp ->
+                val body = resp.body!!.bytes()
+                val cursor = ByteCursor(body)
+                (1..body.size / 4).map {
+                    cursor.nextInt()
+                }
+            }.toSingle()
     }
 
     private fun hashTerm(query: String): HashedTerm {
@@ -233,15 +240,18 @@ class HitomiNozomi(
         private val HASH_CHARSET = Charsets.UTF_8
 
         fun rangedGet(url: String, rangeBegin: Long, rangeEnd: Long?): Request {
-            return GET(url, Headers.Builder()
+            return GET(
+                url,
+                Headers.Builder()
                     .add("Range", "bytes=$rangeBegin-${rangeEnd ?: ""}")
-                    .build())
+                    .build()
+            )
         }
 
         fun getIndexVersion(httpClient: OkHttpClient, name: String): Observable<Long> {
             return httpClient.newCall(GET("$LTN_BASE_URL/$name/version?_=${System.currentTimeMillis()}"))
-                    .asObservableSuccess()
-                    .map { it.body!!.string().toLong() }
+                .asObservableSuccess()
+                .map { it.body!!.string().toLong() }
         }
     }
 }

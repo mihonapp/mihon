@@ -10,7 +10,8 @@ import eu.kanade.tachiyomi.data.database.tables.MergedTable as Merged
 /**
  * Query to get the manga merged into a merged manga
  */
-fun getMergedMangaQuery(id: Long) = """
+fun getMergedMangaQuery(id: Long) =
+    """
     SELECT ${Manga.TABLE}.*
     FROM (
         SELECT ${Merged.COL_MANGA_ID} FROM ${Merged.TABLE} WHERE $(Merged.COL_MERGE_ID} = $id
@@ -22,7 +23,8 @@ fun getMergedMangaQuery(id: Long) = """
 /**
  * Query to get the chapters of all manga in a merged manga
  */
-fun getMergedChaptersQuery(id: Long) = """
+fun getMergedChaptersQuery(id: Long) =
+    """
     SELECT ${Chapter.TABLE}.*
     FROM (
         SELECT ${Merged.COL_MANGA_ID} FROM ${Merged.TABLE} WHERE $(Merged.COL_MERGE_ID} = $id

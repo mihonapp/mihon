@@ -65,8 +65,8 @@ class TsuminoSearchMetadata : RaisedSearchMetadata() {
         val tagsDesc = tagsToDescription()
 
         manga.description = listOf(titleDesc, detailsDesc.toString(), tagsDesc.toString())
-                .filter(String::isNotBlank)
-                .joinToString(separator = "\n")
+            .filter(String::isNotBlank)
+            .joinToString(separator = "\n")
     }
 
     companion object {
@@ -77,7 +77,7 @@ class TsuminoSearchMetadata : RaisedSearchMetadata() {
         val BASE_URL = "https://www.tsumino.com"
 
         fun tmIdFromUrl(url: String) =
-                Uri.parse(url).lastPathSegment
+            Uri.parse(url).lastPathSegment
 
         fun mangaUrlFromId(id: String) = "/Book/Info/$id"
 

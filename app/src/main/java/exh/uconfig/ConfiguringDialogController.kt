@@ -14,7 +14,7 @@ class ConfiguringDialogController : DialogController() {
     private var materialDialog: MaterialDialog? = null
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {
-        if (savedViewState == null)
+        if (savedViewState == null) {
             thread {
                 try {
                     EHConfigurator().configureAll()
@@ -25,10 +25,10 @@ class ConfiguringDialogController : DialogController() {
                     activity?.let {
                         it.runOnUiThread {
                             MaterialDialog(it)
-                                    .title(text = "Configuration failed!")
-                                    .message(text = "An error occurred during the configuration process: " + e.message)
-                                    .positiveButton(android.R.string.ok)
-                                    .show()
+                                .title(text = "Configuration failed!")
+                                .message(text = "An error occurred during the configuration process: " + e.message)
+                                .positiveButton(android.R.string.ok)
+                                .show()
                         }
                     }
                     Timber.e(e, "Configuration error!")
@@ -37,14 +37,15 @@ class ConfiguringDialogController : DialogController() {
                     finish()
                 }
             }
+        }
 
         return MaterialDialog(activity!!)
-                .title(text = "Uploading settings to server")
-                .message(text = "Please wait, this may take some time...")
-                .cancelable(false)
-                .also {
-            materialDialog = it
-        }
+            .title(text = "Uploading settings to server")
+            .message(text = "Please wait, this may take some time...")
+            .cancelable(false)
+            .also {
+                materialDialog = it
+            }
     }
 
     override fun onDestroyView(view: View) {

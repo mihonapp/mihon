@@ -12,11 +12,13 @@ class EHentaiThrottleManager(
         // Throttle requests if necessary
         val now = System.currentTimeMillis()
         val timeDiff = now - lastThrottleTime
-        if (timeDiff < throttleTime)
+        if (timeDiff < throttleTime) {
             Thread.sleep(throttleTime - timeDiff)
+        }
 
-        if (throttleTime < max)
+        if (throttleTime < max) {
             throttleTime += inc
+        }
 
         lastThrottleTime = System.currentTimeMillis()
     }

@@ -31,10 +31,12 @@ class MigrationBottomSheetDialog(
     activity: Activity,
     theme: Int,
     private val listener:
-    StartMigrationListener
+        StartMigrationListener
 ) :
-    BottomSheetDialog(activity,
-    theme) {
+    BottomSheetDialog(
+        activity,
+        theme
+    ) {
     /**
      * Preferences helper.
      */
@@ -47,8 +49,9 @@ class MigrationBottomSheetDialog(
         // scroll.addView(view)
 
         setContentView(view)
-        if (activity.resources.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        if (activity.resources.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             sourceGroup.orientation = LinearLayout.HORIZONTAL
+        }
         window?.setBackgroundDrawable(null)
     }
 
@@ -63,8 +66,10 @@ class MigrationBottomSheetDialog(
         fab.setOnClickListener {
             preferences.skipPreMigration().set(skip_step.isChecked)
             listener.startMigration(
-                if (use_smart_search.isChecked && extra_search_param_text.text.isNotBlank())
-                    extra_search_param_text.text.toString() else null)
+                if (use_smart_search.isChecked && extra_search_param_text.text.isNotBlank()) {
+                    extra_search_param_text.text.toString()
+                } else null
+            )
             dismiss()
         }
     }
@@ -96,9 +101,12 @@ class MigrationBottomSheetDialog(
 
         skip_step.isChecked = preferences.skipPreMigration().get()
         skip_step.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
-                (listener as? Controller)?.activity?.toast(R.string.pre_migration_skip_toast,
-                    Toast.LENGTH_LONG)
+            if (isChecked) {
+                (listener as? Controller)?.activity?.toast(
+                    R.string.pre_migration_skip_toast,
+                    Toast.LENGTH_LONG
+                )
+            }
         }
     }
 

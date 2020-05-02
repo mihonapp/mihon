@@ -25,18 +25,18 @@ import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
 
 class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        SwitchPreferenceCompat(context, attrs) {
+    SwitchPreferenceCompat(context, attrs) {
 
     val prefs: PreferencesHelper by injectLazy()
 
     val fingerprintSupported
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                Reprint.isHardwarePresent() &&
-                Reprint.hasFingerprintRegistered()
+            Reprint.isHardwarePresent() &&
+            Reprint.hasFingerprintRegistered()
 
     val useFingerprint
         get() = fingerprintSupported &&
-                prefs.eh_lockUseFingerprint().getOrDefault()
+            prefs.eh_lockUseFingerprint().getOrDefault()
 
     @SuppressLint("NewApi")
     override fun onAttached() {
@@ -44,29 +44,32 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
         if (fingerprintSupported) {
             updateSummary()
             onChange {
-                if (it as Boolean)
+                if (it as Boolean) {
                     tryChange()
-                else
+                } else {
                     prefs.eh_lockUseFingerprint().set(false)
+                }
                 !it
             }
         } else {
             title = "Fingerprint unsupported"
             shouldDisableView = true
-            summary = if (!Reprint.hasFingerprintRegistered())
+            summary = if (!Reprint.hasFingerprintRegistered()) {
                 "No fingerprints enrolled!"
-            else
+            } else {
                 "Fingerprint unlock is unsupported on this device!"
+            }
             onChange { false }
         }
     }
 
     private fun updateSummary() {
         isChecked = useFingerprint
-        title = if (isChecked)
+        title = if (isChecked) {
             "Fingerprint enabled"
-        else
+        } else {
             "Fingerprint disabled"
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -74,9 +77,11 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
         val statusTextView = TextView(context).apply {
             text = "Please touch the fingerprint sensor"
             val size = ViewGroup.LayoutParams.WRAP_CONTENT
-            layoutParams = (layoutParams ?: ViewGroup.LayoutParams(
+            layoutParams = (
+                layoutParams ?: ViewGroup.LayoutParams(
                     size, size
-            )).apply {
+                )
+                ).apply {
                 width = size
                 height = size
                 setPadding(0, 0, dpToPx(context, 8), 0)
@@ -84,9 +89,11 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
         }
         val iconView = SwirlView(context).apply {
             val size = dpToPx(context, 30)
-            layoutParams = (layoutParams ?: ViewGroup.LayoutParams(
+            layoutParams = (
+                layoutParams ?: ViewGroup.LayoutParams(
                     size, size
-            )).apply {
+                )
+                ).apply {
                 width = size
                 height = size
             }
@@ -96,9 +103,11 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
             orientation = LinearLayoutCompat.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             val size = LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-            layoutParams = (layoutParams ?: LinearLayoutCompat.LayoutParams(
+            layoutParams = (
+                layoutParams ?: LinearLayoutCompat.LayoutParams(
                     size, size
-            )).apply {
+                )
+                ).apply {
                 width = size
                 height = size
                 val pSize = dpToPx(context, 24)
@@ -109,39 +118,39 @@ class FingerLockPreference @JvmOverloads constructor(context: Context, attrs: At
             addView(iconView)
         }
         val dialog = MaterialDialog(context)
-                .title(text = "Fingerprint verification")
-                .customView(view = linearLayout)
-                .negativeButton(R.string.action_cancel)
-                .cancelable(true)
-                .cancelOnTouchOutside(true)
+            .title(text = "Fingerprint verification")
+            .customView(view = linearLayout)
+            .negativeButton(R.string.action_cancel)
+            .cancelable(true)
+            .cancelOnTouchOutside(true)
         dialog.show()
         iconView.setState(SwirlView.State.ON)
         val subscription = RxReprint.authenticate()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { result ->
-                    when (result.status) {
-                        AuthenticationResult.Status.SUCCESS -> {
-                            iconView.setState(SwirlView.State.ON)
-                            prefs.eh_lockUseFingerprint().set(true)
-                            dialog.dismiss()
-                            updateSummary()
-                        }
-                        AuthenticationResult.Status.NONFATAL_FAILURE -> {
-                            iconView.setState(SwirlView.State.ERROR)
-                            statusTextView.text = result.errorMessage
-                        }
-                        AuthenticationResult.Status.FATAL_FAILURE, null -> {
-                            MaterialDialog(context)
-                                    .title(text = "Fingerprint verification failed!")
-                                    .message(text = result.errorMessage)
-                                    .positiveButton(android.R.string.ok)
-                                    .cancelable(true)
-                                    .cancelOnTouchOutside(false)
-                                    .show()
-                            dialog.dismiss()
-                        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { result ->
+                when (result.status) {
+                    AuthenticationResult.Status.SUCCESS -> {
+                        iconView.setState(SwirlView.State.ON)
+                        prefs.eh_lockUseFingerprint().set(true)
+                        dialog.dismiss()
+                        updateSummary()
+                    }
+                    AuthenticationResult.Status.NONFATAL_FAILURE -> {
+                        iconView.setState(SwirlView.State.ERROR)
+                        statusTextView.text = result.errorMessage
+                    }
+                    AuthenticationResult.Status.FATAL_FAILURE, null -> {
+                        MaterialDialog(context)
+                            .title(text = "Fingerprint verification failed!")
+                            .message(text = result.errorMessage)
+                            .positiveButton(android.R.string.ok)
+                            .cancelable(true)
+                            .cancelOnTouchOutside(false)
+                            .show()
+                        dialog.dismiss()
                     }
                 }
+            }
         dialog.setOnDismissListener {
             subscription.unsubscribe()
         }

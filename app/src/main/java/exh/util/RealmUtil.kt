@@ -53,4 +53,4 @@ fun <T : RealmModel> Realm.createUUIDObj(clazz: Class<T>) =
     createObject(clazz, UUID.randomUUID().toString())!!
 
 inline fun <reified T : RealmModel> Realm.createUUIDObj() =
-        createUUIDObj(T::class.java)
+    createUUIDObj(T::class.java)

@@ -26,19 +26,19 @@ const val HBROWSE_SOURCE_ID = LEWD_SOURCE_SERIES + 12
 const val MERGED_SOURCE_ID = LEWD_SOURCE_SERIES + 69
 
 private val DELEGATED_LEWD_SOURCES = listOf(
-        HentaiCafe::class,
-        Pururin::class,
-        Tsumino::class
+    HentaiCafe::class,
+    Pururin::class,
+    Tsumino::class
 )
 
 val LIBRARY_UPDATE_EXCLUDED_SOURCES = listOf(
-        EH_SOURCE_ID,
-        EXH_SOURCE_ID,
-        NHENTAI_SOURCE_ID,
-        HENTAI_CAFE_SOURCE_ID,
-        TSUMINO_SOURCE_ID,
-        HITOMI_SOURCE_ID,
-        PURURIN_SOURCE_ID
+    EH_SOURCE_ID,
+    EXH_SOURCE_ID,
+    NHENTAI_SOURCE_ID,
+    HENTAI_CAFE_SOURCE_ID,
+    TSUMINO_SOURCE_ID,
+    HITOMI_SOURCE_ID,
+    PURURIN_SOURCE_ID
 )
 
 private inline fun <reified T> delegatedSourceId(): Long {
@@ -54,6 +54,6 @@ private val lewdDelegatedSourceIds = SourceManager.DELEGATED_SOURCES.filter {
 
 // This method MUST be fast!
 fun isLewdSource(source: Long) = source in 6900..6999 ||
-        lewdDelegatedSourceIds.binarySearch(source) >= 0
+    lewdDelegatedSourceIds.binarySearch(source) >= 0
 
 fun Source.isEhBasedSource() = id == EH_SOURCE_ID || id == EXH_SOURCE_ID

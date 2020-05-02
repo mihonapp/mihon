@@ -32,8 +32,8 @@ class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(n
     override fun createView(root: ViewGroup, textColor: Int, textSize: Float, textAlpha: Float): View {
         val view = LinearLayout(root.context)
         view.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
         view.setPadding(4.dpToPx, 0, 4.dpToPx, 4.dpToPx)
         val textView = TextView(view.context)
@@ -42,15 +42,16 @@ class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(n
         textView.alpha = textAlpha
         textView.text = HtmlCompat.fromHtml(buildInfo(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         textView.layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
         view.addView(textView)
         this.textView = textView
         return view
     }
 
-    fun buildInfo() = """
+    fun buildInfo() =
+        """
         <font color='green'>===[ ${context.getString(R.string.app_name)} ]===</font><br>
         <b>Build type:</b> ${BuildConfig.BUILD_TYPE}<br>
         <b>Debug mode:</b> ${BuildConfig.DEBUG.asEnabledString()}<br>
@@ -58,7 +59,7 @@ class EHDebugModeOverlay(private val context: Context) : OverlayModule<String>(n
         <b>Commit SHA:</b> ${BuildConfig.COMMIT_SHA}<br>
         <b>Log level:</b> ${EHLogLevel.currentLogLevel.name.toLowerCase()}<br>
         <b>Source blacklist:</b> ${prefs.eh_enableSourceBlacklist().get().asEnabledString()}
-    """.trimIndent()
+        """.trimIndent()
 
     private fun Boolean.asEnabledString() = if (this) "enabled" else "disabled"
 }

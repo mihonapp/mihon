@@ -33,8 +33,10 @@ import org.jsoup.nodes.TextNode
 import rx.Observable
 
 // TODO Transform into delegated source
-class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSource(),
-        LewdSource<PervEdenSearchMetadata, Document>, UrlImportableSource {
+class PervEden(override val id: Long, val pvLang: PervEdenLang) :
+    ParsedHttpSource(),
+    LewdSource<PervEdenSearchMetadata, Document>,
+    UrlImportableSource {
     /**
      * The class of the metadata used by this source
      */
@@ -62,9 +64,9 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
 
     // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-            urlImportFetchSearchManga(query) {
-                super.fetchSearchManga(page, query, filters)
-            }
+        urlImportFetchSearchManga(query) {
+            super.fetchSearchManga(page, query, filters)
+        }
 
     override fun searchMangaSelector() = "#mangaList > tbody > tr"
 
@@ -79,9 +81,11 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
     override fun searchMangaNextPageSelector() = ".next"
 
     override fun popularMangaRequest(page: Int): Request {
-        val urlLang = if (lang == "en")
+        val urlLang = if (lang == "en") {
             "eng"
-        else "it"
+        } else {
+            "it"
+        }
         return GET("$baseUrl/$urlLang/")
     }
 
@@ -129,12 +133,16 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
      */
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return client.newCall(mangaDetailsRequest(manga))
-                .asObservableSuccess()
-                .flatMap {
-                    parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga.apply {
-                        initialized = true
-                    }))
-                }
+            .asObservableSuccess()
+            .flatMap {
+                parseToManga(manga, it.asJsoup()).andThen(
+                    Observable.just(
+                        manga.apply {
+                            initialized = true
+                        }
+                    )
+                )
+            }
     }
 
     /**
@@ -165,8 +173,9 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
                         "Alternative name(s)" -> {
                             if (it is TextNode) {
                                 val text = it.text().trim()
-                                if (!text.isBlank())
+                                if (!text.isBlank()) {
                                     newAltTitles += text
+                                }
                             }
                         }
                         "Artist" -> {
@@ -176,21 +185,24 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
                             }
                         }
                         "Genres" -> {
-                            if (it is Element && it.tagName() == "a")
+                            if (it is Element && it.tagName() == "a") {
                                 tags += RaisedTag(null, it.text().toLowerCase(), TAG_TYPE_DEFAULT)
+                            }
                         }
                         "Type" -> {
                             if (it is TextNode) {
                                 val text = it.text().trim()
-                                if (!text.isBlank())
+                                if (!text.isBlank()) {
                                     type = text
+                                }
                             }
                         }
                         "Status" -> {
                             if (it is TextNode) {
                                 val text = it.text().trim()
-                                if (!text.isBlank())
+                                if (!text.isBlank()) {
                                     status = text
+                                }
                             }
                         }
                     }
@@ -224,10 +236,11 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
         name = "Chapter " + linkElement.getElementsByTag("b").text()
 
         ChapterRecognition.parseChapterNumber(
-                this,
-                SManga.create().apply {
-                    title = ""
-                })
+            this,
+            SManga.create().apply {
+                title = ""
+            }
+        )
 
         try {
             date_upload = DATE_FORMAT.parse(element.getElementsByClass("chapterDate").first().text().trim())!!.time
@@ -242,37 +255,49 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
     override fun imageUrlParse(document: Document) = "http:" + document.getElementById("mainImg").attr("src")!!
 
     override fun getFilterList() = FilterList(
-            AuthorFilter(),
-            ArtistFilter(),
-            TypeFilterGroup(),
-            ReleaseYearGroup(),
-            StatusFilterGroup()
+        AuthorFilter(),
+        ArtistFilter(),
+        TypeFilterGroup(),
+        ReleaseYearGroup(),
+        StatusFilterGroup()
     )
 
-    class StatusFilterGroup : UriGroup<StatusFilter>("Status", listOf(
+    class StatusFilterGroup : UriGroup<StatusFilter>(
+        "Status",
+        listOf(
             StatusFilter("Ongoing", 1),
             StatusFilter("Completed", 2),
             StatusFilter("Suspended", 0)
-    ))
+        )
+    )
 
     class StatusFilter(n: String, val id: Int) : Filter.CheckBox(n, false), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if (state)
+            if (state) {
                 builder.appendQueryParameter("status", id.toString())
+            }
         }
     }
 
     // Explicit type arg for listOf() to workaround this: KT-16570
-    class ReleaseYearGroup : UriGroup<Filter<*>>("Release Year", listOf(
+    class ReleaseYearGroup : UriGroup<Filter<*>>(
+        "Release Year",
+        listOf(
             ReleaseYearRangeFilter(),
             ReleaseYearYearFilter()
-    ))
+        )
+    )
 
-    class ReleaseYearRangeFilter : Filter.Select<String>("Range", arrayOf(
-            "on",
-            "after",
-            "before"
-    )), UriFilter {
+    class ReleaseYearRangeFilter :
+        Filter.Select<String>(
+            "Range",
+            arrayOf(
+                "on",
+                "after",
+                "before"
+            )
+        ),
+        UriFilter {
         override fun addToUri(builder: Uri.Builder) {
             builder.appendQueryParameter("releasedType", state.toString())
         }
@@ -296,18 +321,22 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
         }
     }
 
-    class TypeFilterGroup : UriGroup<TypeFilter>("Type", listOf(
+    class TypeFilterGroup : UriGroup<TypeFilter>(
+        "Type",
+        listOf(
             TypeFilter("Japanese Manga", 0),
             TypeFilter("Korean Manhwa", 1),
             TypeFilter("Chinese Manhua", 2),
             TypeFilter("Comic", 3),
             TypeFilter("Doujinshi", 4)
-    ))
+        )
+    )
 
     class TypeFilter(n: String, val id: Int) : Filter.CheckBox(n, false), UriFilter {
         override fun addToUri(builder: Uri.Builder) {
-            if (state)
+            if (state) {
                 builder.appendQueryParameter("type", id.toString())
+            }
         }
     }
 

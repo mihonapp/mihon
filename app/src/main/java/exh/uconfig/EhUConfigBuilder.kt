@@ -11,9 +11,11 @@ class EhUConfigBuilder {
     fun build(hathPerks: EHHathPerksResponse): FormBody {
         val configItems = mutableListOf<ConfigItem>()
 
-        configItems += when (prefs.imageQuality()
+        configItems += when (
+            prefs.imageQuality()
                 .getOrDefault()
-                .toLowerCase()) {
+                .toLowerCase()
+        ) {
             "ovrs_2400" -> Entry.ImageSize.`2400`
             "ovrs_1600" -> Entry.ImageSize.`1600`
             "high" -> Entry.ImageSize.`1280`
@@ -23,20 +25,23 @@ class EhUConfigBuilder {
             else -> Entry.ImageSize.AUTO
         }
 
-        configItems += if (prefs.useHentaiAtHome().getOrDefault())
+        configItems += if (prefs.useHentaiAtHome().getOrDefault()) {
             Entry.UseHentaiAtHome.YES
-        else
+        } else {
             Entry.UseHentaiAtHome.NO
+        }
 
-        configItems += if (prefs.useJapaneseTitle().getOrDefault())
+        configItems += if (prefs.useJapaneseTitle().getOrDefault()) {
             Entry.TitleDisplayLanguage.JAPANESE
-        else
+        } else {
             Entry.TitleDisplayLanguage.DEFAULT
+        }
 
-        configItems += if (prefs.eh_useOriginalImages().getOrDefault())
+        configItems += if (prefs.eh_useOriginalImages().getOrDefault()) {
             Entry.UseOriginalImages.YES
-        else
+        } else {
             Entry.UseOriginalImages.NO
+        }
 
         configItems += when {
             hathPerks.allThumbs -> Entry.ThumbnailRows.`40`

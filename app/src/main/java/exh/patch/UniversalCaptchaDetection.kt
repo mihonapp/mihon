@@ -13,9 +13,9 @@ val CAPTCHA_DETECTION_PATCH: EHInterceptor = { request, response, sourceId ->
             if (doc.getElementsByClass("g-recaptcha").isNotEmpty()) {
                 // Found it, allow the user to solve this thing
                 BrowserActionActivity.launchUniversal(
-                        Injekt.get<Application>(),
-                        sourceId,
-                        request.url.toString()
+                    Injekt.get<Application>(),
+                    sourceId,
+                    request.url.toString()
                 )
             }
         }

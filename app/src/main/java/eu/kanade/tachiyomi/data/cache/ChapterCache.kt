@@ -83,10 +83,12 @@ class ChapterCache(private val context: Context) {
     // --> EH
     // Cache size is in MB
     private fun setupDiskCache(cacheSize: Long): DiskLruCache {
-        return DiskLruCache.open(File(context.cacheDir, PARAMETER_CACHE_DIRECTORY),
-                PARAMETER_APP_VERSION,
-                PARAMETER_VALUE_COUNT,
-                cacheSize * 1024 * 1024)
+        return DiskLruCache.open(
+            File(context.cacheDir, PARAMETER_CACHE_DIRECTORY),
+            PARAMETER_APP_VERSION,
+            PARAMETER_VALUE_COUNT,
+            cacheSize * 1024 * 1024
+        )
     }
     // <-- EH
 

@@ -56,8 +56,10 @@ import rx.schedulers.Schedulers
 import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
-class MigrationListController(bundle: Bundle? = null) : BaseController<MigrationListControllerBinding>(bundle),
-    MigrationProcessAdapter.MigrationProcessInterface, CoroutineScope {
+class MigrationListController(bundle: Bundle? = null) :
+    BaseController<MigrationListControllerBinding>(bundle),
+    MigrationProcessAdapter.MigrationProcessInterface,
+    CoroutineScope {
 
     init {
         setHasOptionsMenu(true)
@@ -93,7 +95,6 @@ class MigrationListController(bundle: Bundle? = null) : BaseController<Migration
     }
 
     override fun onViewCreated(view: View) {
-
         super.onViewCreated(view)
         view.applyWindowInsetsForController()
         setTitle()
@@ -217,7 +218,8 @@ class MigrationListController(bundle: Bundle? = null) : BaseController<Migration
                                         val localManga = smartSearchEngine.networkToLocalManga(searchResult, source.id)
                                         val chapters = try {
                                             source.fetchChapterList(localManga)
-                                                .toSingle().await(Schedulers.io()) } catch (e: java.lang.Exception) {
+                                                .toSingle().await(Schedulers.io())
+                                        } catch (e: java.lang.Exception) {
                                             Timber.e(e)
                                             emptyList<SChapter>()
                                         } ?: emptyList()
@@ -313,7 +315,6 @@ class MigrationListController(bundle: Bundle? = null) : BaseController<Migration
     }
 
     override fun onMenuItemClick(position: Int, item: MenuItem) {
-
         when (item.itemId) {
             R.id.action_search_manually -> {
                 launchUI {
@@ -488,9 +489,11 @@ class MigrationListController(bundle: Bundle? = null) : BaseController<Migration
         const val TAG = "migration_list"
 
         fun create(config: MigrationProcedureConfig): MigrationListController {
-            return MigrationListController(Bundle().apply {
-                putParcelable(CONFIG_EXTRA, config)
-            })
+            return MigrationListController(
+                Bundle().apply {
+                    putParcelable(CONFIG_EXTRA, config)
+                }
+            )
         }
     }
 }

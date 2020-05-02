@@ -10,15 +10,16 @@ class FavoritesIntroDialog {
     private val prefs: PreferencesHelper by injectLazy()
 
     fun show(context: Context) = MaterialDialog(context)
-            .title(text = "IMPORTANT FAVORITES SYNC NOTES")
-            .message(text = HtmlCompat.fromHtml(FAVORITES_INTRO_TEXT, HtmlCompat.FROM_HTML_MODE_LEGACY))
-            .positiveButton(android.R.string.ok) {
-                prefs.eh_showSyncIntro().set(false)
-            }
-            .cancelable(false)
-            .show()
+        .title(text = "IMPORTANT FAVORITES SYNC NOTES")
+        .message(text = HtmlCompat.fromHtml(FAVORITES_INTRO_TEXT, HtmlCompat.FROM_HTML_MODE_LEGACY))
+        .positiveButton(android.R.string.ok) {
+            prefs.eh_showSyncIntro().set(false)
+        }
+        .cancelable(false)
+        .show()
 
-    private val FAVORITES_INTRO_TEXT = """
+    private val FAVORITES_INTRO_TEXT =
+        """
         1. Changes to category names in the app are <b>NOT</b> synced! Please <i>change the category names on ExHentai instead</i>. The category names will be copied from the ExHentai servers every sync.
         <br><br>
         2. The favorite categories on ExHentai correspond to the <b>first 10 categories in the app</b> (excluding the 'Default' category). <i>Galleries in other categories will <b>NOT</b> be synced!</i>
@@ -30,5 +31,5 @@ class FavoritesIntroDialog {
         5. <b>Do NOT put favorites in multiple categories</b> (the app supports this). This can confuse the sync algorithm as ExHentai only allows each favorite to be in one category.
         <br><br>
         This dialog will only popup once. You can read these notes again by going to 'Settings > E-Hentai > Show favorites sync notes'.
-""".trimIndent()
+        """.trimIndent()
 }

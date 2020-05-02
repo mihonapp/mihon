@@ -19,18 +19,22 @@ interface ChapterQueries : DbProvider {
 
     fun getChaptersByMangaId(mangaId: Long?) = db.get()
         .listOfObjects(Chapter::class.java)
-        .withQuery(Query.builder()
+        .withQuery(
+            Query.builder()
                 .table(ChapterTable.TABLE)
                 .where("${ChapterTable.COL_MANGA_ID} = ?")
                 .whereArgs(mangaId)
-                .build())
+                .build()
+        )
         .prepare()
 
     fun getChaptersByMergedMangaId(mangaId: Long) = db.get()
         .listOfObjects(Chapter::class.java)
-        .withQuery(RawQuery.builder()
+        .withQuery(
+            RawQuery.builder()
                 .query(getMergedChaptersQuery(mangaId))
-                .build())
+                .build()
+        )
         .prepare()
 
     fun getRecentChapters(date: Date) = db.get()
@@ -80,11 +84,13 @@ interface ChapterQueries : DbProvider {
 
     fun getChapters(url: String) = db.get()
         .listOfObjects(Chapter::class.java)
-        .withQuery(Query.builder()
+        .withQuery(
+            Query.builder()
                 .table(ChapterTable.TABLE)
                 .where("${ChapterTable.COL_URL} = ?")
                 .whereArgs(url)
-                .build())
+                .build()
+        )
         .prepare()
 
 

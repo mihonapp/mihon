@@ -16,7 +16,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
 class SmartSearchPresenter(private val source: CatalogueSource?, private val config: SourceController.SmartSearchConfig?) :
-        BasePresenter<SmartSearchController>(), CoroutineScope {
+    BasePresenter<SmartSearchController>(), CoroutineScope {
 
     override val coroutineContext = Job() + Dispatchers.Main
 

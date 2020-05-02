@@ -16,8 +16,10 @@ fun OkHttpClient.Builder.injectPatches(sourceIdProducer: () -> Long): OkHttpClie
 }
 
 fun findAndApplyPatches(sourceId: Long): EHInterceptor {
-    return ((EH_INTERCEPTORS[sourceId] ?: emptyList()) +
-            (EH_INTERCEPTORS[EH_UNIVERSAL_INTERCEPTOR] ?: emptyList())).merge()
+    return (
+        (EH_INTERCEPTORS[sourceId] ?: emptyList()) +
+            (EH_INTERCEPTORS[EH_UNIVERSAL_INTERCEPTOR] ?: emptyList())
+        ).merge()
 }
 
 fun List<EHInterceptor>.merge(): EHInterceptor {
@@ -30,12 +32,12 @@ fun List<EHInterceptor>.merge(): EHInterceptor {
 
 private const val EH_UNIVERSAL_INTERCEPTOR = -1L
 private val EH_INTERCEPTORS: Map<Long, List<EHInterceptor>> = mapOf(
-        EH_UNIVERSAL_INTERCEPTOR to listOf(
-                CAPTCHA_DETECTION_PATCH // Auto captcha detection
-        ),
+    EH_UNIVERSAL_INTERCEPTOR to listOf(
+        CAPTCHA_DETECTION_PATCH // Auto captcha detection
+    ),
 
-        // MangaDex login support
-        *MANGADEX_SOURCE_IDS.map { id ->
-            id to listOf(MANGADEX_LOGIN_PATCH)
-        }.toTypedArray()
+    // MangaDex login support
+    *MANGADEX_SOURCE_IDS.map { id ->
+        id to listOf(MANGADEX_LOGIN_PATCH)
+    }.toTypedArray()
 )

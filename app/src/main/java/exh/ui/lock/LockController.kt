@@ -53,12 +53,12 @@ class LockController : NucleusController<ActivityLockBinding, LockPresenter>() {
                         closeLock()
                     } else {
                         MaterialDialog(context)
-                                .title(text = "PIN code incorrect")
-                                .message(text = "The PIN code you entered is incorrect. Please try again.")
-                                .cancelable(true)
-                                .cancelOnTouchOutside(true)
-                                .positiveButton(android.R.string.ok)
-                                .show()
+                            .title(text = "PIN code incorrect")
+                            .message(text = "The PIN code you entered is incorrect. Please try again.")
+                            .cancelable(true)
+                            .cancelOnTouchOutside(true)
+                            .positiveButton(android.R.string.ok)
+                            .show()
                         binding.pinLockView.resetPinLockView()
                     }
                 }
@@ -79,9 +79,11 @@ class LockController : NucleusController<ActivityLockBinding, LockPresenter>() {
                 binding.swirlContainer.removeAllViews()
                 val icon = SwirlView(context).apply {
                     val size = dpToPx(context, 60)
-                    layoutParams = (layoutParams ?: ViewGroup.LayoutParams(
+                    layoutParams = (
+                        layoutParams ?: ViewGroup.LayoutParams(
                             size, size
-                    )).apply {
+                        )
+                        ).apply {
                         width = size
                         height = size
 
@@ -92,29 +94,30 @@ class LockController : NucleusController<ActivityLockBinding, LockPresenter>() {
                     setBackgroundColor(lockColor)
                     val bgColor = resolvColor(android.R.attr.colorBackground)
                     // Disable elevation if lock color is same as background color
-                    if (lockColor == bgColor)
+                    if (lockColor == bgColor) {
                         this@with.swirl_container.cardElevation = 0f
+                    }
                     setState(SwirlView.State.OFF, true)
                 }
                 binding.swirlContainer.addView(icon)
                 icon.setState(SwirlView.State.ON)
                 RxReprint.authenticate()
-                        .subscribeUntilDetach {
-                            when (it.status) {
-                                AuthenticationResult.Status.SUCCESS -> closeLock()
-                                AuthenticationResult.Status.NONFATAL_FAILURE -> icon.setState(SwirlView.State.ERROR)
-                                AuthenticationResult.Status.FATAL_FAILURE, null -> {
-                                    MaterialDialog(context)
-                                            .title(text = "Fingerprint error!")
-                                            .message(text = it.errorMessage)
-                                            .cancelable(false)
-                                            .cancelOnTouchOutside(false)
-                                            .positiveButton(android.R.string.ok)
-                                            .show()
-                                    icon.setState(SwirlView.State.OFF)
-                                }
+                    .subscribeUntilDetach {
+                        when (it.status) {
+                            AuthenticationResult.Status.SUCCESS -> closeLock()
+                            AuthenticationResult.Status.NONFATAL_FAILURE -> icon.setState(SwirlView.State.ERROR)
+                            AuthenticationResult.Status.FATAL_FAILURE, null -> {
+                                MaterialDialog(context)
+                                    .title(text = "Fingerprint error!")
+                                    .message(text = it.errorMessage)
+                                    .cancelable(false)
+                                    .cancelOnTouchOutside(false)
+                                    .positiveButton(android.R.string.ok)
+                                    .show()
+                                icon.setState(SwirlView.State.OFF)
                             }
                         }
+                    }
             } else {
                 binding.swirlContainer.visibility = View.GONE
             }

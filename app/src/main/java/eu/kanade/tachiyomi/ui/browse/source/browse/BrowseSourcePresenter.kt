@@ -413,9 +413,9 @@ open class BrowseSourcePresenter(
         }
         val newSerialized = searches.map {
             "${source.id}:" + jsonObject(
-                    "name" to it.name,
-                    "query" to it.query,
-                    "filters" to filterSerializer.serialize(it.filterList)
+                "name" to it.name,
+                "query" to it.query,
+                "filters" to filterSerializer.serialize(it.filterList)
             ).toString()
         }
         prefs.eh_savedSearches().set((otherSerialized + newSerialized).toSet())
@@ -430,9 +430,11 @@ open class BrowseSourcePresenter(
                 val content = JsonParser.parseString(it.substringAfter(':')).obj
                 val originalFilters = source.getFilterList()
                 filterSerializer.deserialize(originalFilters, content["filters"].array)
-                EXHSavedSearch(content["name"].string,
-                        content["query"].string,
-                        originalFilters)
+                EXHSavedSearch(
+                    content["name"].string,
+                    content["query"].string,
+                    originalFilters
+                )
             } catch (t: RuntimeException) {
                 // Load failed
                 Timber.e(t, "Failed to load saved search!")

@@ -137,17 +137,19 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
         logger.d("Filtering manga and raising metadata...")
         val curTime = System.currentTimeMillis()
         val allMeta = metadataManga.asFlow().cancellable().mapNotNull { manga ->
-            if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID)
+            if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID) {
                 return@mapNotNull null
+            }
 
             val meta = db.getFlatMetadataForManga(manga.id!!).asRxSingle().await()
-                    ?: return@mapNotNull null
+                ?: return@mapNotNull null
 
             val raisedMeta = meta.raise<EHentaiSearchMetadata>()
 
             // Don't update galleries too frequently
-            if (raisedMeta.aged || (curTime - raisedMeta.lastUpdateCheck < MIN_BACKGROUND_UPDATE_FREQ && DebugToggles.RESTRICT_EXH_GALLERY_UPDATE_CHECK_FREQUENCY.enabled))
+            if (raisedMeta.aged || (curTime - raisedMeta.lastUpdateCheck < MIN_BACKGROUND_UPDATE_FREQ && DebugToggles.RESTRICT_EXH_GALLERY_UPDATE_CHECK_FREQUENCY.enabled)) {
                 return@mapNotNull null
+            }
 
             val chapter = db.getChaptersByMangaId(manga.id!!).asRxSingle().await().minBy {
                 it.date_upload
@@ -172,13 +174,15 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
                     break
                 }
 
-                logger.d("Updating gallery (index: %s, manga.id: %s, meta.gId: %s, meta.gToken: %s, failures-so-far: %s, modifiedThisIteration.size: %s)...",
-                        index,
-                        manga.id,
-                        meta.gId,
-                        meta.gToken,
-                        failuresThisIteration,
-                        modifiedThisIteration.size)
+                logger.d(
+                    "Updating gallery (index: %s, manga.id: %s, meta.gId: %s, meta.gToken: %s, failures-so-far: %s, modifiedThisIteration.size: %s)...",
+                    index,
+                    manga.id,
+                    meta.gId,
+                    meta.gToken,
+                    failuresThisIteration,
+                    modifiedThisIteration.size
+                )
 
                 if (manga.id in modifiedThisIteration) {
                     // We already processed this manga!
@@ -194,32 +198,37 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
                         failuresThisIteration++
 
                         logger.e("> Network error while updating gallery!", e)
-                        logger.e("> (manga.id: %s, meta.gId: %s, meta.gToken: %s, failures-so-far: %s)",
-                                manga.id,
-                                meta.gId,
-                                meta.gToken,
-                                failuresThisIteration)
+                        logger.e(
+                            "> (manga.id: %s, meta.gId: %s, meta.gToken: %s, failures-so-far: %s)",
+                            manga.id,
+                            meta.gId,
+                            meta.gToken,
+                            failuresThisIteration
+                        )
                     }
 
                     continue
                 }
 
                 if (chapters.isEmpty()) {
-                    logger.e("No chapters found for gallery (manga.id: %s, meta.gId: %s, meta.gToken: %s, failures-so-far: %s)!",
-                            manga.id,
-                            meta.gId,
-                            meta.gToken,
-                            failuresThisIteration)
+                    logger.e(
+                        "No chapters found for gallery (manga.id: %s, meta.gId: %s, meta.gToken: %s, failures-so-far: %s)!",
+                        manga.id,
+                        meta.gId,
+                        meta.gToken,
+                        failuresThisIteration
+                    )
 
                     continue
                 }
 
                 // Find accepted root and discard others
                 val (acceptedRoot, discardedRoots, hasNew) =
-                        updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters).await()
+                    updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters).await()
 
                 if ((new.isNotEmpty() && manga.id == acceptedRoot.manga.id) ||
-                        (hasNew && updatedManga.none { it.id == acceptedRoot.manga.id })) {
+                    (hasNew && updatedManga.none { it.id == acceptedRoot.manga.id })
+                ) {
                     updatedManga += acceptedRoot.manga
                 }
 
@@ -229,13 +238,13 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
             }
         } finally {
             prefs.eh_autoUpdateStats().set(
-                    gson.toJson(
-                            EHentaiUpdaterStats(
-                                    startTime,
-                                    allMeta.size,
-                                    updatedThisIteration
-                            )
+                gson.toJson(
+                    EHentaiUpdaterStats(
+                        startTime,
+                        allMeta.size,
+                        updatedThisIteration
                     )
+                )
             )
 
             if (updatedManga.isNotEmpty()) {
@@ -247,7 +256,7 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
     // New, current
     suspend fun updateEntryAndGetChapters(manga: Manga): Pair<List<Chapter>, List<Chapter>> {
         val source = sourceManager.get(manga.source) as? EHentai
-                ?: throw GalleryNotUpdatedException(false, IllegalStateException("Missing EH-based source (${manga.source})!"))
+            ?: throw GalleryNotUpdatedException(false, IllegalStateException("Missing EH-based source (${manga.source})!"))
 
         try {
             val updatedManga = source.fetchMangaDetails(manga).toSingle().await(Schedulers.io())
@@ -288,8 +297,10 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
 
         private fun Context.baseBackgroundJobInfo(isTest: Boolean): JobInfo.Builder {
             return JobInfo.Builder(
-                    if (isTest) JOB_ID_UPDATE_BACKGROUND_TEST
-                    else JOB_ID_UPDATE_BACKGROUND, componentName())
+                if (isTest) JOB_ID_UPDATE_BACKGROUND_TEST
+                else JOB_ID_UPDATE_BACKGROUND,
+                componentName()
+            )
         }
 
         private fun Context.periodicBackgroundJobInfo(
@@ -298,29 +309,32 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
             requireUnmetered: Boolean
         ): JobInfo {
             return baseBackgroundJobInfo(false)
-                    .setPeriodic(period)
-                    .setPersisted(true)
-                    .setRequiredNetworkType(
-                            if (requireUnmetered) JobInfo.NETWORK_TYPE_UNMETERED
-                            else JobInfo.NETWORK_TYPE_ANY)
-                    .apply {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            setRequiresBatteryNotLow(true)
-                        }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            setEstimatedNetworkBytes(15000L * UPDATES_PER_ITERATION,
-                                    1000L * UPDATES_PER_ITERATION)
-                        }
+                .setPeriodic(period)
+                .setPersisted(true)
+                .setRequiredNetworkType(
+                    if (requireUnmetered) JobInfo.NETWORK_TYPE_UNMETERED
+                    else JobInfo.NETWORK_TYPE_ANY
+                )
+                .apply {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        setRequiresBatteryNotLow(true)
                     }
-                    .setRequiresCharging(requireCharging)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        setEstimatedNetworkBytes(
+                            15000L * UPDATES_PER_ITERATION,
+                            1000L * UPDATES_PER_ITERATION
+                        )
+                    }
+                }
+                .setRequiresCharging(requireCharging)
 //                    .setRequiresDeviceIdle(true) Job never seems to run with this
-                    .build()
+                .build()
         }
 
         private fun Context.testBackgroundJobInfo(): JobInfo {
             return baseBackgroundJobInfo(true)
-                    .setOverrideDeadline(1)
-                    .build()
+                .setOverrideDeadline(1)
+                .build()
         }
 
         fun launchBackgroundTest(context: Context) {
@@ -343,9 +357,9 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
                 val wifiRestriction = "wifi" in restrictions
 
                 val jobInfo = context.periodicBackgroundJobInfo(
-                        interval.hours.inMilliseconds.longValue,
-                        acRestriction,
-                        wifiRestriction
+                    interval.hours.inMilliseconds.longValue,
+                    acRestriction,
+                    wifiRestriction
                 )
 
                 if (context.jobScheduler.schedule(jobInfo) == JobScheduler.RESULT_FAILURE) {

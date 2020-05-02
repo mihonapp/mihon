@@ -31,9 +31,9 @@ class HelpDialogSerializer(override val serializer: FilterSerializer) : Serializ
     override val clazz = Filter.HelpDialog::class
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.HelpDialog::name),
-            Pair(DIALOG_TITLE, Filter.HelpDialog::dialogTitle),
-            Pair(MARKDOWN, Filter.HelpDialog::markdown)
+        Pair(NAME, Filter.HelpDialog::name),
+        Pair(DIALOG_TITLE, Filter.HelpDialog::dialogTitle),
+        Pair(MARKDOWN, Filter.HelpDialog::markdown)
     )
 
     companion object {
@@ -49,7 +49,7 @@ class HeaderSerializer(override val serializer: FilterSerializer) : Serializer<F
     override val clazz = Filter.Header::class
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.Header::name)
+        Pair(NAME, Filter.Header::name)
     )
 
     companion object {
@@ -62,7 +62,7 @@ class SeparatorSerializer(override val serializer: FilterSerializer) : Serialize
     override val clazz = Filter.Separator::class
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.Separator::name)
+        Pair(NAME, Filter.Separator::name)
     )
 
     companion object {
@@ -84,8 +84,8 @@ class SelectSerializer(override val serializer: FilterSerializer) : Serializer<F
     }
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.Select<Any>::name),
-            Pair(STATE, Filter.Select<Any>::state)
+        Pair(NAME, Filter.Select<Any>::name),
+        Pair(STATE, Filter.Select<Any>::state)
     )
 
     companion object {
@@ -100,8 +100,8 @@ class TextSerializer(override val serializer: FilterSerializer) : Serializer<Fil
     override val clazz = Filter.Text::class
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.Text::name),
-            Pair(STATE, Filter.Text::state)
+        Pair(NAME, Filter.Text::name),
+        Pair(STATE, Filter.Text::state)
     )
 
     companion object {
@@ -115,8 +115,8 @@ class CheckboxSerializer(override val serializer: FilterSerializer) : Serializer
     override val clazz = Filter.CheckBox::class
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.CheckBox::name),
-            Pair(STATE, Filter.CheckBox::state)
+        Pair(NAME, Filter.CheckBox::name),
+        Pair(STATE, Filter.CheckBox::state)
     )
 
     companion object {
@@ -130,8 +130,8 @@ class TriStateSerializer(override val serializer: FilterSerializer) : Serializer
     override val clazz = Filter.TriState::class
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.TriState::name),
-            Pair(STATE, Filter.TriState::state)
+        Pair(NAME, Filter.TriState::name),
+        Pair(STATE, Filter.TriState::state)
     )
 
     companion object {
@@ -147,10 +147,12 @@ class GroupSerializer(override val serializer: FilterSerializer) : Serializer<Fi
     override fun serialize(json: JsonObject, filter: Filter.Group<Any?>) {
         json[STATE] = JsonArray().apply {
             filter.state.forEach {
-                add(if (it is Filter<*>)
-                    serializer.serialize(it as Filter<Any?>)
-                else
-                    JsonNull.INSTANCE
+                add(
+                    if (it is Filter<*>) {
+                        serializer.serialize(it as Filter<Any?>)
+                    } else {
+                        JsonNull.INSTANCE
+                    }
                 )
             }
         }
@@ -158,13 +160,14 @@ class GroupSerializer(override val serializer: FilterSerializer) : Serializer<Fi
 
     override fun deserialize(json: JsonObject, filter: Filter.Group<Any?>) {
         json[STATE].asJsonArray.forEachIndexed { index, jsonElement ->
-            if (!jsonElement.isJsonNull)
+            if (!jsonElement.isJsonNull) {
                 serializer.deserialize(filter.state[index] as Filter<Any?>, jsonElement.asJsonObject)
+            }
         }
     }
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.Group<Any?>::name)
+        Pair(NAME, Filter.Group<Any?>::name)
     )
 
     companion object {
@@ -195,13 +198,15 @@ class SortSerializer(override val serializer: FilterSerializer) : Serializer<Fil
     override fun deserialize(json: JsonObject, filter: Filter.Sort) {
         // Deserialize state
         filter.state = json[STATE].nullObj?.let {
-            Filter.Sort.Selection(it[STATE_INDEX].int,
-                    it[STATE_ASCENDING].bool)
+            Filter.Sort.Selection(
+                it[STATE_INDEX].int,
+                it[STATE_ASCENDING].bool
+            )
         }
     }
 
     override fun mappings() = listOf(
-            Pair(NAME, Filter.Sort::name)
+        Pair(NAME, Filter.Sort::name)
     )
 
     companion object {

@@ -50,10 +50,11 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
         thumbnailUrl?.let { manga.thumbnail_url = it }
 
         // No title bug?
-        val titleObj = if (Injekt.get<PreferencesHelper>().useJapaneseTitle().getOrDefault())
+        val titleObj = if (Injekt.get<PreferencesHelper>().useJapaneseTitle().getOrDefault()) {
             altTitle ?: title
-        else
+        } else {
             title
+        }
         titleObj?.let { manga.title = it }
 
         // Set artist (if we can find one)
@@ -102,8 +103,8 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
         val tagsDesc = tagsToDescription()
 
         manga.description = listOf(titleDesc.toString(), detailsDesc.toString(), tagsDesc.toString())
-                .filter(String::isNotBlank)
-                .joinToString(separator = "\n")
+            .filter(String::isNotBlank)
+            .joinToString(separator = "\n")
     }
 
     companion object {
@@ -117,24 +118,25 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
         private const val EH_ARTIST_NAMESPACE = "artist"
 
         private fun splitGalleryUrl(url: String) =
-                url.let {
-            // Only parse URL if is full URL
-            val pathSegments = if (it.startsWith("http"))
-                Uri.parse(it).pathSegments
-            else
-                it.split('/')
-            pathSegments.filterNot(String::isNullOrBlank)
-        }
+            url.let {
+                // Only parse URL if is full URL
+                val pathSegments = if (it.startsWith("http")) {
+                    Uri.parse(it).pathSegments
+                } else {
+                    it.split('/')
+                }
+                pathSegments.filterNot(String::isNullOrBlank)
+            }
 
         fun galleryId(url: String) = splitGalleryUrl(url)[1]
 
         fun galleryToken(url: String) =
-                splitGalleryUrl(url)[2]
+            splitGalleryUrl(url)[2]
 
         fun normalizeUrl(url: String) =
-                idAndTokenToUrl(galleryId(url), galleryToken(url))
+            idAndTokenToUrl(galleryId(url), galleryToken(url))
 
         fun idAndTokenToUrl(id: String, token: String) =
-                "/g/$id/$token/?nw=always"
+            "/g/$id/$token/?nw=always"
     }
 }

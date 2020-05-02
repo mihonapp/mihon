@@ -12,10 +12,11 @@ class SearchEngine {
         component: Text?
     ): Pair<String, List<String>>? {
         val maybeLenientComponent = component?.let {
-            if (!it.exact)
-                    it.asLenientTagQueries()
-                else
-                    listOf(it.asQuery())
+            if (!it.exact) {
+                it.asLenientTagQueries()
+            } else {
+                listOf(it.asQuery())
+            }
         }
         val componentTagQuery = maybeLenientComponent?.let {
             val params = mutableListOf<String>()
@@ -25,11 +26,12 @@ class SearchEngine {
             }.joinToString(separator = " OR ", prefix = "(", postfix = ")") to params
         }
         return if (namespace != null) {
-            var query = """
+            var query =
+                """
                 (SELECT ${SearchTagTable.COL_MANGA_ID} AS $COL_MANGA_ID FROM ${SearchTagTable.TABLE}
                     WHERE ${SearchTagTable.COL_NAMESPACE} IS NOT NULL
                     AND ${SearchTagTable.COL_NAMESPACE} LIKE ?
-            """.trimIndent()
+                """.trimIndent()
             val params = mutableListOf(escapeLike(namespace))
             if (componentTagQuery != null) {
                 query += "\n    AND ${componentTagQuery.first}"
@@ -39,18 +41,20 @@ class SearchEngine {
             "$query)" to params
         } else if (component != null) {
             // Match title + tags
-            val tagQuery = """
+            val tagQuery =
+                """
                 SELECT ${SearchTagTable.COL_MANGA_ID} AS $COL_MANGA_ID FROM ${SearchTagTable.TABLE}
                     WHERE ${componentTagQuery!!.first}
-            """.trimIndent() to componentTagQuery.second
+                """.trimIndent() to componentTagQuery.second
 
-            val titleQuery = """
+            val titleQuery =
+                """
                 SELECT ${SearchTitleTable.COL_MANGA_ID} AS $COL_MANGA_ID FROM ${SearchTitleTable.TABLE}
                     WHERE ${SearchTitleTable.COL_TITLE} LIKE ?
-            """.trimIndent() to listOf(component.asLenientTitleQuery())
+                """.trimIndent() to listOf(component.asLenientTitleQuery())
 
             "(${tagQuery.first} UNION ${titleQuery.first})".trimIndent() to
-                    (tagQuery.second + titleQuery.second)
+                (tagQuery.second + titleQuery.second)
         } else null
     }
 
@@ -86,22 +90,25 @@ class SearchEngine {
         }
 
         val completeParams = mutableListOf<String>()
-        var baseQuery = """
+        var baseQuery =
+            """
             SELECT ${SearchMetadataTable.COL_MANGA_ID}
             FROM ${SearchMetadataTable.TABLE} meta
-        """.trimIndent()
+            """.trimIndent()
 
         include.forEachIndexed { index, pair ->
-            baseQuery += "\n" + ("""
+            baseQuery += "\n" + (
+                """
                 INNER JOIN ${pair.first} i$index
                 ON i$index.$COL_MANGA_ID = meta.${SearchMetadataTable.COL_MANGA_ID}
-            """.trimIndent())
+                """.trimIndent()
+                )
             completeParams += pair.second
         }
 
         exclude.forEach {
             wheres += """
-                (meta.${SearchMetadataTable.COL_MANGA_ID} NOT IN ${it.first})
+            (meta.${SearchMetadataTable.COL_MANGA_ID} NOT IN ${it.first})
             """.trimIndent()
             whereParams += it.second
         }
@@ -196,8 +203,8 @@ class SearchEngine {
 
         fun escapeLike(string: String): String {
             return string.replace("\\", "\\\\")
-                    .replace("_", "\\_")
-                    .replace("%", "\\%")
+                .replace("_", "\\_")
+                .replace("%", "\\%")
         }
     }
 }

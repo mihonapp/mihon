@@ -209,10 +209,14 @@ class NakedTrie<T> : MutableMap<String, T> {
             override val entries: Set<Map.Entry<String, T>>
                 get() {
                     val out = mutableSetOf<Map.Entry<String, T>>()
-                    node.walk("", { k, v ->
-                        out.add(AbstractMap.SimpleImmutableEntry(k, v))
-                        true
-                    }, leavesOnly)
+                    node.walk(
+                        "",
+                        { k, v ->
+                            out.add(AbstractMap.SimpleImmutableEntry(k, v))
+                            true
+                        },
+                        leavesOnly
+                    )
                     return out
                 }
             /**
@@ -221,10 +225,14 @@ class NakedTrie<T> : MutableMap<String, T> {
             override val keys: Set<String>
                 get() {
                     val out = mutableSetOf<String>()
-                    node.walk("", { k, _ ->
-                        out.add(k)
-                        true
-                    }, leavesOnly)
+                    node.walk(
+                        "",
+                        { k, _ ->
+                            out.add(k)
+                            true
+                        },
+                        leavesOnly
+                    )
                     return out
                 }
 
@@ -243,10 +251,14 @@ class NakedTrie<T> : MutableMap<String, T> {
             override val values: Collection<T>
                 get() {
                     val out = mutableSetOf<T>()
-                    node.walk("", { _, v ->
-                        out.add(v)
-                        true
-                    }, leavesOnly)
+                    node.walk(
+                        "",
+                        { _, v ->
+                            out.add(v)
+                            true
+                        },
+                        leavesOnly
+                    )
                     return out
                 }
 
@@ -264,10 +276,14 @@ class NakedTrie<T> : MutableMap<String, T> {
              * Returns `true` if the map maps one or more keys to the specified [value].
              */
             override fun containsValue(value: T): Boolean {
-                node.walk("", { _, v ->
-                    if (v == value) return true
-                    true
-                }, leavesOnly)
+                node.walk(
+                    "",
+                    { _, v ->
+                        if (v == value) return true
+                        true
+                    },
+                    leavesOnly
+                )
                 return false
             }
 
@@ -315,32 +331,38 @@ class NakedTrie<T> : MutableMap<String, T> {
      * Returns a [MutableSet] of all key/value pairs in this map.
      */
     override val entries: MutableSet<MutableMap.MutableEntry<String, T>>
-        get() = FakeMutableSet.fromSet(mutableSetOf<MutableMap.MutableEntry<String, T>>().apply {
-            walk { k, v ->
-                this += FakeMutableEntry.fromPair(k, v)
-                true
+        get() = FakeMutableSet.fromSet(
+            mutableSetOf<MutableMap.MutableEntry<String, T>>().apply {
+                walk { k, v ->
+                    this += FakeMutableEntry.fromPair(k, v)
+                    true
+                }
             }
-        })
+        )
 
     /**
      * Returns a [MutableSet] of all keys in this map.
      */
     override val keys: MutableSet<String>
-        get() = FakeMutableSet.fromSet(mutableSetOf<String>().apply {
-            walk { k, _ ->
-                this += k
-                true
+        get() = FakeMutableSet.fromSet(
+            mutableSetOf<String>().apply {
+                walk { k, _ ->
+                    this += k
+                    true
+                }
             }
-        })
+        )
 
     /**
      * Returns a [MutableCollection] of all values in this map. Note that this collection may contain duplicate values.
      */
     override val values: MutableCollection<T>
-        get() = FakeMutableCollection.fromCollection(mutableListOf<T>().apply {
-            walk { _, v ->
-                this += v
-                true
+        get() = FakeMutableCollection.fromCollection(
+            mutableListOf<T>().apply {
+                walk { _, v ->
+                    this += v
+                    true
+                }
             }
-        })
+        )
 }

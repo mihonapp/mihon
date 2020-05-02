@@ -37,7 +37,7 @@ interface LewdSource<M : RaisedSearchMetadata, I> : CatalogueSource {
     private fun newMetaInstance() = metaClass.constructors.find {
         it.parameters.isEmpty()
     }?.call()
-            ?: error("Could not find no-args constructor for meta class: ${metaClass.qualifiedName}!")
+        ?: error("Could not find no-args constructor for meta class: ${metaClass.qualifiedName}!")
 
     /**
      * Parses metadata from the input and then copies it into the manga

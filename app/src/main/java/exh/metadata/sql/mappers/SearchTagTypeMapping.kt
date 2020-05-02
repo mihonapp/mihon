@@ -18,22 +18,22 @@ import exh.metadata.sql.tables.SearchTagTable.COL_TYPE
 import exh.metadata.sql.tables.SearchTagTable.TABLE
 
 class SearchTagTypeMapping : SQLiteTypeMapping<SearchTag>(
-        SearchTagPutResolver(),
-        SearchTagGetResolver(),
-        SearchTagDeleteResolver()
+    SearchTagPutResolver(),
+    SearchTagGetResolver(),
+    SearchTagDeleteResolver()
 )
 
 class SearchTagPutResolver : DefaultPutResolver<SearchTag>() {
 
     override fun mapToInsertQuery(obj: SearchTag) = InsertQuery.builder()
-            .table(TABLE)
-            .build()
+        .table(TABLE)
+        .build()
 
     override fun mapToUpdateQuery(obj: SearchTag) = UpdateQuery.builder()
-            .table(TABLE)
-            .where("$COL_ID = ?")
-            .whereArgs(obj.id)
-            .build()
+        .table(TABLE)
+        .where("$COL_ID = ?")
+        .whereArgs(obj.id)
+        .build()
 
     override fun mapToContentValues(obj: SearchTag) = ContentValues(5).apply {
         put(COL_ID, obj.id)
@@ -47,19 +47,19 @@ class SearchTagPutResolver : DefaultPutResolver<SearchTag>() {
 class SearchTagGetResolver : DefaultGetResolver<SearchTag>() {
 
     override fun mapFromCursor(cursor: Cursor): SearchTag = SearchTag(
-            id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
-            mangaId = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID)),
-            namespace = cursor.getString(cursor.getColumnIndex(COL_NAMESPACE)),
-            name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
-            type = cursor.getInt(cursor.getColumnIndex(COL_TYPE))
+        id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
+        mangaId = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID)),
+        namespace = cursor.getString(cursor.getColumnIndex(COL_NAMESPACE)),
+        name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
+        type = cursor.getInt(cursor.getColumnIndex(COL_TYPE))
     )
 }
 
 class SearchTagDeleteResolver : DefaultDeleteResolver<SearchTag>() {
 
     override fun mapToDeleteQuery(obj: SearchTag) = DeleteQuery.builder()
-            .table(TABLE)
-            .where("$COL_ID = ?")
-            .whereArgs(obj.id)
-            .build()
+        .table(TABLE)
+        .where("$COL_ID = ?")
+        .whereArgs(obj.id)
+        .build()
 }

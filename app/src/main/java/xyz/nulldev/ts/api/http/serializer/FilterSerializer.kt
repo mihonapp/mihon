@@ -21,17 +21,17 @@ import kotlin.reflect.full.isSubclassOf
 
 class FilterSerializer {
     val serializers = listOf<Serializer<*>>(
-            // EXH -->
-            HelpDialogSerializer(this),
-            // EXH <--
-            HeaderSerializer(this),
-            SeparatorSerializer(this),
-            SelectSerializer(this),
-            TextSerializer(this),
-            CheckboxSerializer(this),
-            TriStateSerializer(this),
-            GroupSerializer(this),
-            SortSerializer(this)
+        // EXH -->
+        HelpDialogSerializer(this),
+        // EXH <--
+        HeaderSerializer(this),
+        SeparatorSerializer(this),
+        SelectSerializer(this),
+        TextSerializer(this),
+        CheckboxSerializer(this),
+        TriStateSerializer(this),
+        GroupSerializer(this),
+        SortSerializer(this)
     )
 
     fun serialize(filters: FilterList) = JsonArray().apply {

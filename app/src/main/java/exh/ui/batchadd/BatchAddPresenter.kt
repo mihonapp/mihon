@@ -40,10 +40,14 @@ class BatchAddPresenter : BasePresenter<BatchAddController>() {
                     failed.add(s)
                 }
                 progressRelay.call(i + 1)
-                eventRelay?.call((when (result) {
-                    is GalleryAddEvent.Success -> "[OK]"
-                    is GalleryAddEvent.Fail -> "[ERROR]"
-                }) + " " + result.logMessage)
+                eventRelay?.call(
+                    (
+                        when (result) {
+                            is GalleryAddEvent.Success -> "[OK]"
+                            is GalleryAddEvent.Fail -> "[ERROR]"
+                        }
+                        ) + " " + result.logMessage
+                )
             }
 
             // Show report

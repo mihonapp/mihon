@@ -17,7 +17,7 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 
 class LockPreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        SwitchPreferenceCompat(context, attrs) {
+    SwitchPreferenceCompat(context, attrs) {
 
     private val secureRandom by lazy { SecureRandom() }
 
@@ -46,28 +46,28 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
     fun tryChange() {
         if (!notifyLockSecurity(context)) {
             MaterialDialog(context)
-                    .title(text = "Lock application")
-                    .message(text = "Enter a pin to lock the application. Enter nothing to disable the pin lock.")
-                    // .inputRangeRes(0, 10, R.color.material_red_500)
-                    // .inputType(InputType.TYPE_CLASS_NUMBER)
-                    .input(maxLength = 10, inputType = InputType.TYPE_CLASS_NUMBER, allowEmpty = true) { _, c ->
-                        val progressDialog = MaterialDialog(context)
-                                .title(text = "Saving password")
-                                .cancelable(false)
-                        progressDialog.show()
-                        Observable.fromCallable {
-                            savePassword(c.toString())
-                        }.subscribeOn(Schedulers.computation())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
-                                    progressDialog.dismiss()
-                                    updateSummary()
-                                }
-                    }
-                    .negativeButton(R.string.action_cancel)
-                    .cancelable(true)
-                    .cancelOnTouchOutside(true)
-                    .show()
+                .title(text = "Lock application")
+                .message(text = "Enter a pin to lock the application. Enter nothing to disable the pin lock.")
+                // .inputRangeRes(0, 10, R.color.material_red_500)
+                // .inputType(InputType.TYPE_CLASS_NUMBER)
+                .input(maxLength = 10, inputType = InputType.TYPE_CLASS_NUMBER, allowEmpty = true) { _, c ->
+                    val progressDialog = MaterialDialog(context)
+                        .title(text = "Saving password")
+                        .cancelable(false)
+                    progressDialog.show()
+                    Observable.fromCallable {
+                        savePassword(c.toString())
+                    }.subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            progressDialog.dismiss()
+                            updateSummary()
+                        }
+                }
+                .negativeButton(R.string.action_cancel)
+                .cancelable(true)
+                .cancelOnTouchOutside(true)
+                .show()
         }
     }
 

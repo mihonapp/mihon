@@ -29,7 +29,7 @@ object DebugFunctions {
     val sourceManager: SourceManager by injectLazy()
 
     fun forceUpgradeMigration() {
-    prefs.eh_lastVersionCode().set(0)
+        prefs.eh_lastVersionCode().set(0)
         EXHMigrations.upgrade(prefs)
     }
 
@@ -38,8 +38,9 @@ object DebugFunctions {
             val metadataManga = db.getFavoriteMangaWithMetadata().await()
 
             val allManga = metadataManga.asFlow().cancellable().mapNotNull { manga ->
-                if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID)
+                if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID) {
                     return@mapNotNull null
+                }
                 manga
             }.toList()
 
@@ -56,13 +57,17 @@ object DebugFunctions {
 
     fun addAllMangaInDatabaseToLibrary() {
         db.inTransaction {
-            db.lowLevel().executeSQL(RawQuery.builder()
-                    .query("""
-                            UPDATE ${MangaTable.TABLE}
-                                SET ${MangaTable.COL_FAVORITE} = 1
-                        """.trimIndent())
+            db.lowLevel().executeSQL(
+                RawQuery.builder()
+                    .query(
+                        """
+                        UPDATE ${MangaTable.TABLE}
+                            SET ${MangaTable.COL_FAVORITE} = 1
+                        """.trimIndent()
+                    )
                     .affectsTables(MangaTable.TABLE)
-                    .build())
+                    .build()
+            )
         }
     }
 
@@ -98,25 +103,29 @@ object DebugFunctions {
 
     fun listScheduledJobs() = app.jobScheduler.allPendingJobs.map { j ->
         """
-            {
-                info: ${j.id},
-                isPeriod: ${j.isPeriodic},
-                isPersisted: ${j.isPersisted},
-                intervalMillis: ${j.intervalMillis},
-            }
+        {
+            info: ${j.id},
+            isPeriod: ${j.isPeriodic},
+            isPersisted: ${j.isPersisted},
+            intervalMillis: ${j.intervalMillis},
+        }
         """.trimIndent()
     }.joinToString(",\n")
 
     fun cancelAllScheduledJobs() = app.jobScheduler.cancelAll()
 
     private fun convertSources(from: Long, to: Long) {
-        db.lowLevel().executeSQL(RawQuery.builder()
-                .query("""
-                            UPDATE ${MangaTable.TABLE}
-                                SET ${MangaTable.COL_SOURCE} = $to
-                                WHERE ${MangaTable.COL_SOURCE} = $from
-                        """.trimIndent())
+        db.lowLevel().executeSQL(
+            RawQuery.builder()
+                .query(
+                    """
+                    UPDATE ${MangaTable.TABLE}
+                        SET ${MangaTable.COL_SOURCE} = $to
+                        WHERE ${MangaTable.COL_SOURCE} = $from
+                    """.trimIndent()
+                )
                 .affectsTables(MangaTable.TABLE)
-                .build())
+                .build()
+        )
     }
 }

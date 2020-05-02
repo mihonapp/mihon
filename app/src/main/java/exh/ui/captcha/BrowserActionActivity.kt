@@ -62,24 +62,27 @@ class BrowserActionActivity : AppCompatActivity() {
         val originalSource = if (sourceId != -1L) sourceManager.get(sourceId) else null
         val source = if (originalSource != null) {
             originalSource as? ActionCompletionVerifier
-                    ?: run {
-                        (originalSource as? HttpSource)?.let {
-                            NoopActionCompletionVerifier(it)
-                        }
+                ?: run {
+                    (originalSource as? HttpSource)?.let {
+                        NoopActionCompletionVerifier(it)
                     }
+                }
         } else null
 
-        val headers = ((source as? HttpSource)?.headers?.toMultimap()?.mapValues {
-            it.value.joinToString(",")
-        } ?: emptyMap()) + (intent.getSerializableExtra(HEADERS_EXTRA) as? HashMap<String, String> ?: emptyMap())
+        val headers = (
+            (source as? HttpSource)?.headers?.toMultimap()?.mapValues {
+                it.value.joinToString(",")
+            } ?: emptyMap()
+            ) + (intent.getSerializableExtra(HEADERS_EXTRA) as? HashMap<String, String> ?: emptyMap())
 
         val cookies: HashMap<String, String>? =
-                intent.getSerializableExtra(COOKIES_EXTRA) as? HashMap<String, String>
+            intent.getSerializableExtra(COOKIES_EXTRA) as? HashMap<String, String>
         val script: String? = intent.getStringExtra(SCRIPT_EXTRA)
         val url: String? = intent.getStringExtra(URL_EXTRA)
         val actionName = intent.getStringExtra(ACTION_NAME_EXTRA)
 
-        @Suppress("NOT_NULL_ASSERTION_ON_CALLABLE_REFERENCE") val verifyComplete = if (source != null) {
+        @Suppress("NOT_NULL_ASSERTION_ON_CALLABLE_REFERENCE")
+        val verifyComplete = if (source != null) {
             source::verifyComplete!!
         } else intent.getSerializableExtra(VERIFY_LAMBDA_EXTRA) as? (String) -> Boolean
 
@@ -139,10 +142,12 @@ class BrowserActionActivity : AppCompatActivity() {
 
         webview.webViewClient = if (actionName == null && preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
             // Fetch auto-solve credentials early for speed
-            credentialsObservable = httpClient.newCall(Request.Builder()
-                // Rob demo credentials
-                .url("https://speech-to-text-demo.ng.bluemix.net/api/v1/credentials")
-                .build())
+            credentialsObservable = httpClient.newCall(
+                Request.Builder()
+                    // Rob demo credentials
+                    .url("https://speech-to-text-demo.ng.bluemix.net/api/v1/credentials")
+                    .build()
+            )
                 .asObservableSuccess()
                 .subscribeOn(Schedulers.io())
                 .map {
@@ -176,12 +181,12 @@ class BrowserActionActivity : AppCompatActivity() {
         runOnUiThread {
             webview.evaluateJavascript(SOLVE_UI_SCRIPT_HIDE, null)
             MaterialDialog(this)
-                    .title(text = "Captcha solve failure")
-                    .message(text = "Failed to auto-solve the captcha!")
-                    .cancelable(true)
-                    .cancelOnTouchOutside(true)
-                    .positiveButton(android.R.string.ok)
-                    .show()
+                .title(text = "Captcha solve failure")
+                .message(text = "Failed to auto-solve the captcha!")
+                .cancelable(true)
+                .cancelOnTouchOutside(true)
+                .positiveButton(android.R.string.ok)
+                .show()
         }
     }
 
@@ -192,13 +197,19 @@ class BrowserActionActivity : AppCompatActivity() {
         when (stage) {
             STAGE_CHECKBOX -> {
                 if (result!!.toBoolean()) {
-                    webview.postDelayed({
-                        getAudioButtonLocation(loopId)
-                    }, 250)
+                    webview.postDelayed(
+                        {
+                            getAudioButtonLocation(loopId)
+                        },
+                        250
+                    )
                 } else {
-                    webview.postDelayed({
-                        doStageCheckbox(loopId)
-                    }, 250)
+                    webview.postDelayed(
+                        {
+                            doStageCheckbox(loopId)
+                        },
+                        250
+                    )
                 }
             }
             STAGE_GET_AUDIO_BTN_LOCATION -> {
@@ -216,31 +227,43 @@ class BrowserActionActivity : AppCompatActivity() {
                         doStageDownloadAudio(loopId)
                     }
                 } else {
-                    webview.postDelayed({
-                        getAudioButtonLocation(loopId)
-                    }, 250)
+                    webview.postDelayed(
+                        {
+                            getAudioButtonLocation(loopId)
+                        },
+                        250
+                    )
                 }
             }
             STAGE_DOWNLOAD_AUDIO -> {
                 if (result != null) {
                     Timber.d("Got audio URL: $result")
                     performRecognize(result)
-                            .observeOn(Schedulers.io())
-                            .subscribe({
+                        .observeOn(Schedulers.io())
+                        .subscribe(
+                            {
                                 Timber.d("Got audio transcript: $it")
                                 webview.post {
-                                    typeResult(loopId, it!!
+                                    typeResult(
+                                        loopId,
+                                        it!!
                                             .replace(TRANSCRIPT_CLEANER_REGEX, "")
                                             .replace(SPACE_DEDUPE_REGEX, " ")
-                                            .trim())
+                                            .trim()
+                                    )
                                 }
-                            }, {
+                            },
+                            {
                                 captchaSolveFail()
-                            })
+                            }
+                        )
                 } else {
-                    webview.postDelayed({
-                        doStageDownloadAudio(loopId)
-                    }, 250)
+                    webview.postDelayed(
+                        {
+                            doStageDownloadAudio(loopId)
+                        },
+                        250
+                    )
                 }
             }
             STAGE_TYPE_RESULT -> {
@@ -256,27 +279,37 @@ class BrowserActionActivity : AppCompatActivity() {
 
     fun performRecognize(url: String): Single<String> {
         return credentialsObservable.flatMap { token ->
-            httpClient.newCall(Request.Builder()
+            httpClient.newCall(
+                Request.Builder()
                     .url(url)
-                    .build()).asObservableSuccess().map {
+                    .build()
+            ).asObservableSuccess().map {
                 token to it
             }
         }.flatMap { (token, response) ->
             val audioFile = response.body!!.bytes()
 
-            httpClient.newCall(Request.Builder()
-                    .url("https://stream.watsonplatform.net/speech-to-text/api/v1/recognize".toHttpUrlOrNull()!!
+            httpClient.newCall(
+                Request.Builder()
+                    .url(
+                        "https://stream.watsonplatform.net/speech-to-text/api/v1/recognize".toHttpUrlOrNull()!!
                             .newBuilder()
                             .addQueryParameter("watson-token", token)
-                            .build())
-                    .post(MultipartBody.Builder()
+                            .build()
+                    )
+                    .post(
+                        MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
                             .addFormDataPart("jsonDescription", RECOGNIZE_JSON)
-                            .addFormDataPart("audio.mp3",
-                                    "audio.mp3",
-                                    RequestBody.create("audio/mp3".toMediaTypeOrNull(), audioFile))
-                            .build())
-                    .build()).asObservableSuccess()
+                            .addFormDataPart(
+                                "audio.mp3",
+                                "audio.mp3",
+                                RequestBody.create("audio/mp3".toMediaTypeOrNull(), audioFile)
+                            )
+                            .build()
+                    )
+                    .build()
+            ).asObservableSuccess()
         }.map { response ->
             JsonParser.parseString(response.body!!.string())["results"][0]["alternatives"][0]["transcript"].string.trim()
         }.toSingle()
@@ -285,7 +318,8 @@ class BrowserActionActivity : AppCompatActivity() {
     fun doStageCheckbox(loopId: String) {
         if (loopId != currentLoopId) return
 
-        webview.evaluateJavascript("""
+        webview.evaluateJavascript(
+            """
             (function() {
                 $CROSS_WINDOW_SCRIPT_OUTER
 
@@ -307,11 +341,14 @@ class BrowserActionActivity : AppCompatActivity() {
                     exh.callback("false", '$loopId', $STAGE_CHECKBOX);
                 }
             })();
-        """.trimIndent().replace("\n", ""), null)
+            """.trimIndent().replace("\n", ""),
+            null
+        )
     }
 
     fun getAudioButtonLocation(loopId: String) {
-        webview.evaluateJavascript("""
+        webview.evaluateJavascript(
+            """
             (function() {
                 $CROSS_WINDOW_SCRIPT_OUTER
 
@@ -339,11 +376,14 @@ class BrowserActionActivity : AppCompatActivity() {
                     exh.callback(null, '$loopId', $STAGE_GET_AUDIO_BTN_LOCATION);
                 }
             })();
-        """.trimIndent().replace("\n", ""), null)
+            """.trimIndent().replace("\n", ""),
+            null
+        )
     }
 
     fun doStageDownloadAudio(loopId: String) {
-        webview.evaluateJavascript("""
+        webview.evaluateJavascript(
+            """
             (function() {
                 $CROSS_WINDOW_SCRIPT_OUTER
 
@@ -364,11 +404,14 @@ class BrowserActionActivity : AppCompatActivity() {
                     exh.callback(null, '$loopId', $STAGE_DOWNLOAD_AUDIO);
                 }
             })();
-        """.trimIndent().replace("\n", ""), null)
+            """.trimIndent().replace("\n", ""),
+            null
+        )
     }
 
     fun typeResult(loopId: String, result: String) {
-        webview.evaluateJavascript("""
+        webview.evaluateJavascript(
+            """
             (function() {
                 $CROSS_WINDOW_SCRIPT_OUTER
 
@@ -392,7 +435,9 @@ class BrowserActionActivity : AppCompatActivity() {
                     exh.callback("false", '$loopId', $STAGE_TYPE_RESULT);
                 }
             })();
-        """.trimIndent().replace("\n", ""), null)
+            """.trimIndent().replace("\n", ""),
+            null
+        )
     }
 
     fun beginSolveLoop() {
@@ -419,12 +464,16 @@ class BrowserActionActivity : AppCompatActivity() {
         } else {
             val savedStrictValidationStartTime = strictValidationStartTime
             if (savedStrictValidationStartTime != null &&
-                    System.currentTimeMillis() > savedStrictValidationStartTime) {
+                System.currentTimeMillis() > savedStrictValidationStartTime
+            ) {
                 captchaSolveFail()
             } else {
-                webview.postDelayed({
-                    runValidateCaptcha(loopId)
-                }, 250)
+                webview.postDelayed(
+                    {
+                        runValidateCaptcha(loopId)
+                    },
+                    250
+                )
             }
         }
     }
@@ -432,7 +481,8 @@ class BrowserActionActivity : AppCompatActivity() {
     fun runValidateCaptcha(loopId: String) {
         if (loopId != validateCurrentLoopId) return
 
-        webview.evaluateJavascript("""
+        webview.evaluateJavascript(
+            """
             (function() {
                 $CROSS_WINDOW_SCRIPT_OUTER
 
@@ -453,7 +503,9 @@ class BrowserActionActivity : AppCompatActivity() {
                     exh.validateCaptchaCallback(false, '$loopId');
                 }
             })();
-        """.trimIndent().replace("\n", ""), null)
+            """.trimIndent().replace("\n", ""),
+            null
+        )
     }
 
     fun beginValidateCaptchaLoop() {
@@ -502,7 +554,8 @@ class BrowserActionActivity : AppCompatActivity() {
         const val STAGE_DOWNLOAD_AUDIO = 2
         const val STAGE_TYPE_RESULT = 3
 
-        val CROSS_WINDOW_SCRIPT_OUTER = """
+        val CROSS_WINDOW_SCRIPT_OUTER =
+            """
             function cwmExec(element, code, cb) {
                 console.log(">>> [CWM-Outer] Running: " + code);
                 let runId = Math.random();
@@ -523,9 +576,10 @@ class BrowserActionActivity : AppCompatActivity() {
                 let runRequest = { id: runId, code: code };
                 element.contentWindow.postMessage("exh-" + JSON.stringify(runRequest), "*");
             }
-        """.trimIndent().replace("\n", "")
+            """.trimIndent().replace("\n", "")
 
-        val CROSS_WINDOW_SCRIPT_INNER = """
+        val CROSS_WINDOW_SCRIPT_INNER =
+            """
             window.addEventListener('message', function(event) {
                 if(typeof event.data === "string" && event.data.startsWith("exh-")) {
                     let request = JSON.parse(event.data.substring(4));
@@ -538,9 +592,10 @@ class BrowserActionActivity : AppCompatActivity() {
             }, false);
             console.log(">>> [CWM-Inner] Loaded!");
             alert("exh-");
-        """.trimIndent()
+            """.trimIndent()
 
-        val SOLVE_UI_SCRIPT_SHOW = """
+        val SOLVE_UI_SCRIPT_SHOW =
+            """
             (function() {
                 let exh_overlay = document.createElement("div");
                 exh_overlay.id = "exh_overlay";
@@ -568,18 +623,20 @@ class BrowserActionActivity : AppCompatActivity() {
                 exh_otext.textContent = "Solving captcha..."
                 document.body.appendChild(exh_otext);
             })();
-        """.trimIndent()
+            """.trimIndent()
 
-        val SOLVE_UI_SCRIPT_HIDE = """
+        val SOLVE_UI_SCRIPT_HIDE =
+            """
             (function() {
                 let exh_overlay = document.getElementById("exh_overlay");
                 let exh_otext = document.getElementById("exh_otext");
                 if(exh_overlay != null) exh_overlay.remove();
                 if(exh_otext != null) exh_otext.remove();
             })();
-        """.trimIndent()
+            """.trimIndent()
 
-        val RECOGNIZE_JSON = """
+        val RECOGNIZE_JSON =
+            """
             {
                "part_content_type": "audio/mp3",
                "keywords": [],
@@ -596,15 +653,15 @@ class BrowserActionActivity : AppCompatActivity() {
                "customGrammarWords": [],
                "action": "recognize"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val TRANSCRIPT_CLEANER_REGEX = Regex("[^0-9a-zA-Z_ -]")
         val SPACE_DEDUPE_REGEX = Regex(" +")
 
         private fun baseIntent(context: Context) =
-                Intent(context, BrowserActionActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
+            Intent(context, BrowserActionActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
 
         fun launchCaptcha(
             context: Context,
@@ -689,8 +746,9 @@ class BrowserActionActivity : AppCompatActivity() {
     }
 }
 
-class NoopActionCompletionVerifier(private val source: HttpSource) : DelegatedHttpSource(source),
-        ActionCompletionVerifier {
+class NoopActionCompletionVerifier(private val source: HttpSource) :
+    DelegatedHttpSource(source),
+    ActionCompletionVerifier {
     override val versionId get() = source.versionId
     override val lang: String get() = source.lang
 

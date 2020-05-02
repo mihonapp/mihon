@@ -17,22 +17,22 @@ import exh.metadata.sql.tables.SearchTitleTable.COL_TYPE
 import exh.metadata.sql.tables.SearchTitleTable.TABLE
 
 class SearchTitleTypeMapping : SQLiteTypeMapping<SearchTitle>(
-        SearchTitlePutResolver(),
-        SearchTitleGetResolver(),
-        SearchTitleDeleteResolver()
+    SearchTitlePutResolver(),
+    SearchTitleGetResolver(),
+    SearchTitleDeleteResolver()
 )
 
 class SearchTitlePutResolver : DefaultPutResolver<SearchTitle>() {
 
     override fun mapToInsertQuery(obj: SearchTitle) = InsertQuery.builder()
-            .table(TABLE)
-            .build()
+        .table(TABLE)
+        .build()
 
     override fun mapToUpdateQuery(obj: SearchTitle) = UpdateQuery.builder()
-            .table(TABLE)
-            .where("$COL_ID = ?")
-            .whereArgs(obj.id)
-            .build()
+        .table(TABLE)
+        .where("$COL_ID = ?")
+        .whereArgs(obj.id)
+        .build()
 
     override fun mapToContentValues(obj: SearchTitle) = ContentValues(4).apply {
         put(COL_ID, obj.id)
@@ -45,18 +45,18 @@ class SearchTitlePutResolver : DefaultPutResolver<SearchTitle>() {
 class SearchTitleGetResolver : DefaultGetResolver<SearchTitle>() {
 
     override fun mapFromCursor(cursor: Cursor): SearchTitle = SearchTitle(
-            id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
-            mangaId = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID)),
-            title = cursor.getString(cursor.getColumnIndex(COL_TITLE)),
-            type = cursor.getInt(cursor.getColumnIndex(COL_TYPE))
+        id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
+        mangaId = cursor.getLong(cursor.getColumnIndex(COL_MANGA_ID)),
+        title = cursor.getString(cursor.getColumnIndex(COL_TITLE)),
+        type = cursor.getInt(cursor.getColumnIndex(COL_TYPE))
     )
 }
 
 class SearchTitleDeleteResolver : DefaultDeleteResolver<SearchTitle>() {
 
     override fun mapToDeleteQuery(obj: SearchTitle) = DeleteQuery.builder()
-            .table(TABLE)
-            .where("$COL_ID = ?")
-            .whereArgs(obj.id)
-            .build()
+        .table(TABLE)
+        .where("$COL_ID = ?")
+        .whereArgs(obj.id)
+        .build()
 }

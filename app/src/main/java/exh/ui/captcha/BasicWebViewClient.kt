@@ -14,8 +14,9 @@ open class BasicWebViewClient(
         if (verifyComplete(url)) {
             activity.finish()
         } else {
-            if (injectScript != null)
+            if (injectScript != null) {
                 view.evaluateJavascript("(function() {$injectScript})();", null)
+            }
         }
     }
 }

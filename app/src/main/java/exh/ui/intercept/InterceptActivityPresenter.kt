@@ -21,12 +21,14 @@ class InterceptActivityPresenter : BasePresenter<InterceptActivity>() {
             thread {
                 val result = galleryAdder.addGallery(gallery)
 
-                status.onNext(when (result) {
-                    is GalleryAddEvent.Success -> result.manga.id?.let {
-                        InterceptResult.Success(it)
-                    } ?: InterceptResult.Failure("Manga ID is null!")
-                    is GalleryAddEvent.Fail -> InterceptResult.Failure(result.logMessage)
-                })
+                status.onNext(
+                    when (result) {
+                        is GalleryAddEvent.Success -> result.manga.id?.let {
+                            InterceptResult.Success(it)
+                        } ?: InterceptResult.Failure("Manga ID is null!")
+                        is GalleryAddEvent.Fail -> InterceptResult.Failure(result.logMessage)
+                    }
+                )
             }
         }
     }

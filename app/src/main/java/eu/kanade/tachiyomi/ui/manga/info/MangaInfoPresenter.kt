@@ -181,29 +181,34 @@ class MangaInfoPresenter(
 
     suspend fun smartSearchMerge(manga: Manga, originalMangaId: Long): Manga {
         val originalManga = db.getManga(originalMangaId).await()
-                ?: throw IllegalArgumentException("Unknown manga ID: $originalMangaId")
+            ?: throw IllegalArgumentException("Unknown manga ID: $originalMangaId")
         val toInsert = if (originalManga.source == MERGED_SOURCE_ID) {
             originalManga.apply {
                 val originalChildren = MergedSource.MangaConfig.readFromUrl(gson, url).children
-                if (originalChildren.any { it.source == manga.source && it.url == manga.url })
+                if (originalChildren.any { it.source == manga.source && it.url == manga.url }) {
                     throw IllegalArgumentException("This manga is already merged with the current manga!")
+                }
 
-                url = MergedSource.MangaConfig(originalChildren + MergedSource.MangaSource(
+                url = MergedSource.MangaConfig(
+                    originalChildren + MergedSource.MangaSource(
                         manga.source,
                         manga.url
-                )).writeAsUrl(gson)
+                    )
+                ).writeAsUrl(gson)
             }
         } else {
-            val newMangaConfig = MergedSource.MangaConfig(listOf(
+            val newMangaConfig = MergedSource.MangaConfig(
+                listOf(
                     MergedSource.MangaSource(
-                            originalManga.source,
-                            originalManga.url
+                        originalManga.source,
+                        originalManga.url
                     ),
                     MergedSource.MangaSource(
-                            manga.source,
-                            manga.url
+                        manga.source,
+                        manga.url
                     )
-            ))
+                )
+            )
             Manga.create(newMangaConfig.writeAsUrl(gson), originalManga.title, MERGED_SOURCE_ID).apply {
                 copyFrom(originalManga)
                 favorite = true

@@ -23,7 +23,7 @@ class EnhancedHttpSource(
      * @param page the page number to retrieve.
      */
     override fun popularMangaRequest(page: Int) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
@@ -31,7 +31,7 @@ class EnhancedHttpSource(
      * @param response the response from the site.
      */
     override fun popularMangaParse(response: Response) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Returns the request for the search manga given the page.
@@ -41,7 +41,7 @@ class EnhancedHttpSource(
      * @param filters the list of filters to apply.
      */
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
@@ -49,7 +49,7 @@ class EnhancedHttpSource(
      * @param response the response from the site.
      */
     override fun searchMangaParse(response: Response) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Returns the request for latest manga given the page.
@@ -57,7 +57,7 @@ class EnhancedHttpSource(
      * @param page the page number to retrieve.
      */
     override fun latestUpdatesRequest(page: Int) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.
@@ -65,7 +65,7 @@ class EnhancedHttpSource(
      * @param response the response from the site.
      */
     override fun latestUpdatesParse(response: Response) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns the details of a manga.
@@ -73,7 +73,7 @@ class EnhancedHttpSource(
      * @param response the response from the site.
      */
     override fun mangaDetailsParse(response: Response) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a list of chapters.
@@ -81,7 +81,7 @@ class EnhancedHttpSource(
      * @param response the response from the site.
      */
     override fun chapterListParse(response: Response) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns a list of pages.
@@ -89,7 +89,7 @@ class EnhancedHttpSource(
      * @param response the response from the site.
      */
     override fun pageListParse(response: Response) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Parses the response from the site and returns the absolute url to the source image.
@@ -97,7 +97,7 @@ class EnhancedHttpSource(
      * @param response the response from the site.
      */
     override fun imageUrlParse(response: Response) =
-            throw UnsupportedOperationException("Should never be called!")
+        throw UnsupportedOperationException("Should never be called!")
 
     /**
      * Base url of the website without the trailing slash, like: http://mysite.com
@@ -153,7 +153,7 @@ class EnhancedHttpSource(
      * @param filters the list of filters to apply.
      */
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-            source().fetchSearchManga(page, query, filters)
+        source().fetchSearchManga(page, query, filters)
 
     /**
      * Returns an observable containing a page with a list of latest manga updates.
@@ -209,7 +209,7 @@ class EnhancedHttpSource(
      * @param manga the manga of the chapter.
      */
     override fun prepareNewChapter(chapter: SChapter, manga: SManga) =
-            source().prepareNewChapter(chapter, manga)
+        source().prepareNewChapter(chapter, manga)
 
     /**
      * Returns the list of filters for the source.

@@ -17,7 +17,8 @@ object SearchMetadataTable {
 
     // Insane foreign, primary key to avoid touch manga table
     val createTableQuery: String
-        get() = """CREATE TABLE $TABLE(
+        get() =
+            """CREATE TABLE $TABLE(
             $COL_MANGA_ID INTEGER NOT NULL PRIMARY KEY,
             $COL_UPLOADER TEXT,
             $COL_EXTRA TEXT NOT NULL,

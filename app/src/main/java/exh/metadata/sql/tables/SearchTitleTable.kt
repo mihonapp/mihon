@@ -14,7 +14,8 @@ object SearchTitleTable {
     const val COL_TYPE = "type"
 
     val createTableQuery: String
-        get() = """CREATE TABLE $TABLE(
+        get() =
+            """CREATE TABLE $TABLE(
             $COL_ID INTEGER NOT NULL PRIMARY KEY,
             $COL_MANGA_ID INTEGER NOT NULL,
             $COL_TITLE TEXT NOT NULL,

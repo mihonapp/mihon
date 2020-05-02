@@ -18,9 +18,9 @@ data class FlatMetadata(
 
     fun <T : RaisedSearchMetadata> raise(clazz: KClass<T>) =
         RaisedSearchMetadata.raiseFlattenGson
-                .fromJson(metadata.extra, clazz.java).apply {
-                    fillBaseFields(this@FlatMetadata)
-                }
+            .fromJson(metadata.extra, clazz.java).apply {
+                fillBaseFields(this@FlatMetadata)
+            }
 }
 
 fun DatabaseHelper.getFlatMetadataForManga(mangaId: Long): PreparedOperation<FlatMetadata?> {

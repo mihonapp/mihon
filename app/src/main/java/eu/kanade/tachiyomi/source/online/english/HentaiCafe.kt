@@ -19,8 +19,10 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.jsoup.nodes.Document
 import rx.Observable
 
-class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
-        LewdSource<HentaiCafeSearchMetadata, Document>, UrlImportableSource {
+class HentaiCafe(delegate: HttpSource) :
+    DelegatedHttpSource(delegate),
+    LewdSource<HentaiCafeSearchMetadata, Document>,
+    UrlImportableSource {
     /**
      * An ISO 639-1 compliant language code (two letters in lower case).
      */
@@ -32,18 +34,22 @@ class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
 
     // Support direct URL importing
     override fun fetchSearchManga(page: Int, query: String, filters: FilterList) =
-            urlImportFetchSearchManga(query) {
-                super.fetchSearchManga(page, query, filters)
-            }
+        urlImportFetchSearchManga(query) {
+            super.fetchSearchManga(page, query, filters)
+        }
 
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return client.newCall(mangaDetailsRequest(manga))
-                .asObservableSuccess()
-                .flatMap {
-                    parseToManga(manga, it.asJsoup()).andThen(Observable.just(manga.apply {
-                        initialized = true
-                    }))
-                }
+            .asObservableSuccess()
+            .flatMap {
+                parseToManga(manga, it.asJsoup()).andThen(
+                    Observable.just(
+                        manga.apply {
+                            initialized = true
+                        }
+                    )
+                )
+            }
     }
 
     /**
@@ -57,8 +63,8 @@ class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
             thumbnailUrl = contentElement.child(0).child(0).attr("src")
 
             fun filterableTagsOfType(type: String) = contentElement.select("a")
-                    .filter { "$baseUrl/hc.fyi/$type/" in it.attr("href") }
-                    .map { it.text() }
+                .filter { "$baseUrl/hc.fyi/$type/" in it.attr("href") }
+                .map { it.text() }
 
             tags.clear()
             tags += filterableTagsOfType("tag").map {
@@ -78,29 +84,30 @@ class HentaiCafe(delegate: HttpSource) : DelegatedHttpSource(delegate),
 
     override fun fetchChapterList(manga: SManga) = getOrLoadMetadata(manga.id) {
         client.newCall(mangaDetailsRequest(manga))
-                .asObservableSuccess()
-                .map { it.asJsoup() }
-                .toSingle()
+            .asObservableSuccess()
+            .map { it.asJsoup() }
+            .toSingle()
     }.map {
         listOf(
-                SChapter.create().apply {
-                    setUrlWithoutDomain("/manga/read/${it.readerId}/en/0/1/")
-                    name = "Chapter"
-                    chapter_number = 0.0f
-                }
+            SChapter.create().apply {
+                setUrlWithoutDomain("/manga/read/${it.readerId}/en/0/1/")
+                name = "Chapter"
+                chapter_number = 0.0f
+            }
         )
     }.toObservable()
 
     override val matchingHosts = listOf(
-            "hentai.cafe"
+        "hentai.cafe"
     )
 
     override fun mapUrlToMangaUrl(uri: Uri): String? {
         val lcFirstPathSegment = uri.pathSegments.firstOrNull()?.toLowerCase() ?: return null
 
-        return if (lcFirstPathSegment == "manga")
+        return if (lcFirstPathSegment == "manga") {
             "https://hentai.cafe/${uri.pathSegments[2]}"
-        else
+        } else {
             "https://hentai.cafe/$lcFirstPathSegment"
+        }
     }
 }

@@ -45,11 +45,11 @@ class SettingsDebugController : SettingsController() {
                             val result = it.call(DebugFunctions)
                             view.text = "Function returned result:\n\n$result"
                             MaterialDialog(context)
-                                    .customView(view = hView, scrollable = true)
+                                .customView(view = hView, scrollable = true)
                         } catch (t: Throwable) {
                             view.text = "Function threw exception:\n\n${Log.getStackTraceString(t)}"
                             MaterialDialog(context)
-                                    .customView(view = hView, scrollable = true)
+                                .customView(view = hView, scrollable = true)
                         }.show()
                     }
                 }

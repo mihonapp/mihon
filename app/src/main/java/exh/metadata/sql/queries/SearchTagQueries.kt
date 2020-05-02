@@ -9,21 +9,25 @@ import exh.metadata.sql.tables.SearchTagTable
 
 interface SearchTagQueries : DbProvider {
     fun getSearchTagsForManga(mangaId: Long) = db.get()
-            .listOfObjects(SearchTag::class.java)
-            .withQuery(Query.builder()
-                    .table(SearchTagTable.TABLE)
-                    .where("${SearchTagTable.COL_MANGA_ID} = ?")
-                    .whereArgs(mangaId)
-                    .build())
-            .prepare()
+        .listOfObjects(SearchTag::class.java)
+        .withQuery(
+            Query.builder()
+                .table(SearchTagTable.TABLE)
+                .where("${SearchTagTable.COL_MANGA_ID} = ?")
+                .whereArgs(mangaId)
+                .build()
+        )
+        .prepare()
 
     fun deleteSearchTagsForManga(mangaId: Long) = db.delete()
-            .byQuery(DeleteQuery.builder()
-                    .table(SearchTagTable.TABLE)
-                    .where("${SearchTagTable.COL_MANGA_ID} = ?")
-                    .whereArgs(mangaId)
-                    .build())
-            .prepare()
+        .byQuery(
+            DeleteQuery.builder()
+                .table(SearchTagTable.TABLE)
+                .where("${SearchTagTable.COL_MANGA_ID} = ?")
+                .whereArgs(mangaId)
+                .build()
+        )
+        .prepare()
 
     fun insertSearchTag(searchTag: SearchTag) = db.put().`object`(searchTag).prepare()
 
@@ -31,10 +35,12 @@ interface SearchTagQueries : DbProvider {
 
     fun deleteSearchTag(searchTag: SearchTag) = db.delete().`object`(searchTag).prepare()
 
-    fun deleteAllSearchTags() = db.delete().byQuery(DeleteQuery.builder()
+    fun deleteAllSearchTags() = db.delete().byQuery(
+        DeleteQuery.builder()
             .table(SearchTagTable.TABLE)
-            .build())
-            .prepare()
+            .build()
+    )
+        .prepare()
 
     fun setSearchTagsForManga(mangaId: Long, tags: List<SearchTag>) {
         db.inTransaction {

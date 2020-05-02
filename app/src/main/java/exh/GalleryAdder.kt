@@ -37,15 +37,15 @@ class GalleryAdder {
                 }
             } else {
                 sourceManager.getVisibleCatalogueSources()
-                        .filterIsInstance<UrlImportableSource>()
-                        .find {
-                            try {
-                                it.matchesUri(uri)
-                            } catch (e: Exception) {
-                                XLog.e("Source URI match check error!", e)
-                                false
-                            }
-                        } ?: return GalleryAddEvent.Fail.UnknownType(url)
+                    .filterIsInstance<UrlImportableSource>()
+                    .find {
+                        try {
+                            it.matchesUri(uri)
+                        } catch (e: Exception) {
+                            XLog.e("Source URI match check error!", e)
+                            false
+                        }
+                    } ?: return GalleryAddEvent.Fail.UnknownType(url)
             }
 
             // Map URL to manga URL
@@ -66,10 +66,10 @@ class GalleryAdder {
 
             // Use manga in DB if possible, otherwise, make a new manga
             val manga = db.getManga(cleanedUrl, source.id).executeAsBlocking()
-                    ?: Manga.create(source.id).apply {
-                this.url = cleanedUrl
-                title = realUrl
-            }
+                ?: Manga.create(source.id).apply {
+                    this.url = cleanedUrl
+                    title = realUrl
+                }
 
             // Insert created manga if not in DB before fetching details
             // This allows us to keep the metadata when fetching details
@@ -111,8 +111,10 @@ class GalleryAdder {
                 return GalleryAddEvent.Fail.NotFound(url)
             }
 
-            return GalleryAddEvent.Fail.Error(url,
-                    ((e.message ?: "Unknown error!") + " (Gallery: $url)").trim())
+            return GalleryAddEvent.Fail.Error(
+                url,
+                ((e.message ?: "Unknown error!") + " (Gallery: $url)").trim()
+            )
         }
     }
 }
@@ -141,6 +143,6 @@ sealed class GalleryAddEvent {
         ) : Fail()
 
         class NotFound(galleryUrl: String) :
-                Error(galleryUrl, "Gallery does not exist: $galleryUrl")
+            Error(galleryUrl, "Gallery does not exist: $galleryUrl")
     }
 }

@@ -9,16 +9,21 @@ class MigrationSourceAdapter(
     var items: List<MigrationSourceItem>,
     val controllerPre: PreMigrationController
 ) : FlexibleAdapter<MigrationSourceItem>(
-        items,
-        controllerPre,
-        true
+    items,
+    controllerPre,
+    true
 ) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putParcelableArrayList(SELECTED_SOURCES_KEY, ArrayList(currentItems.map {
-            it.asParcelable()
-        }))
+        outState.putParcelableArrayList(
+            SELECTED_SOURCES_KEY,
+            ArrayList(
+                currentItems.map {
+                    it.asParcelable()
+                }
+            )
+        )
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

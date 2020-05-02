@@ -35,5 +35,5 @@ class LockChangeHandler : AnimatorChangeHandler {
     override fun resetFromView(from: View) {}
 
     override fun copy(): ControllerChangeHandler =
-            LockChangeHandler(animationDuration, removesFromViewOnPush())
+        LockChangeHandler(animationDuration, removesFromViewOnPush())
 }

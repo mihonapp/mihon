@@ -36,29 +36,29 @@ abstract class RaisedSearchMetadata {
     abstract fun copyTo(manga: SManga)
 
     fun tagsToGenreString() =
-            tags.filter { it.type != TAG_TYPE_VIRTUAL }
+        tags.filter { it.type != TAG_TYPE_VIRTUAL }
             .joinToString { (if (it.namespace != null) "${it.namespace}: " else "") + it.name }
 
     fun tagsToDescription() =
-            StringBuilder("Tags:\n").apply {
-        // BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
-        val groupedTags = tags.filter { it.type != TAG_TYPE_VIRTUAL }.groupBy {
-            it.namespace
-        }.entries
+        StringBuilder("Tags:\n").apply {
+            // BiConsumer only available in Java 8, don't bother calling forEach directly on 'tags'
+            val groupedTags = tags.filter { it.type != TAG_TYPE_VIRTUAL }.groupBy {
+                it.namespace
+            }.entries
 
-        groupedTags.forEach { namespace, tags ->
-            if (tags.isNotEmpty()) {
-                val joinedTags = tags.joinToString(separator = " ", transform = { "<${it.name}>" })
-                if (namespace != null) {
-                    this += "▪ "
-                    this += namespace
-                    this += ": "
+            groupedTags.forEach { namespace, tags ->
+                if (tags.isNotEmpty()) {
+                    val joinedTags = tags.joinToString(separator = " ", transform = { "<${it.name}>" })
+                    if (namespace != null) {
+                        this += "▪ "
+                        this += namespace
+                        this += ": "
+                    }
+                    this += joinedTags
+                    this += "\n"
                 }
-                this += joinedTags
-                this += "\n"
             }
         }
-    }
 
     fun List<RaisedTag>.ofNamespace(ns: String): List<RaisedTag> {
         return filter { it.namespace == ns }
@@ -76,23 +76,23 @@ abstract class RaisedSearchMetadata {
                 indexedExtra,
                 0
             ),
-                tags.map {
-                    SearchTag(
-                            null,
-                            mangaId,
-                            it.namespace,
-                            it.name,
-                            it.type
-                    )
-                },
-                titles.map {
-                    SearchTitle(
-                            null,
-                            mangaId,
-                            it.title,
-                            it.type
-                    )
-                }
+            tags.map {
+                SearchTag(
+                    null,
+                    mangaId,
+                    it.namespace,
+                    it.name,
+                    it.type
+                )
+            },
+            titles.map {
+                SearchTitle(
+                    null,
+                    mangaId,
+                    it.title,
+                    it.type
+                )
+            }
         )
     }
 
@@ -126,7 +126,7 @@ abstract class RaisedSearchMetadata {
              * @return the property value.
              */
             override fun getValue(thisRef: RaisedSearchMetadata, property: KProperty<*>) =
-                    thisRef.getTitleOfType(type)
+                thisRef.getTitleOfType(type)
 
             /**
              * Sets the value of the property for the given object.
@@ -135,7 +135,7 @@ abstract class RaisedSearchMetadata {
              * @param value the value to set.
              */
             override fun setValue(thisRef: RaisedSearchMetadata, property: KProperty<*>, value: String?) =
-                    thisRef.replaceTitleOfType(type, value)
+                thisRef.replaceTitleOfType(type, value)
         }
     }
 }
