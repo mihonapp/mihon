@@ -31,7 +31,7 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
             adapter.selectClickListener?.onSelectClick(bindingAdapterPosition)
         }
         source_latest.setOnClickListener {
-            adapter.autoClickListener?.onAutoClick(adapterPosition)
+            adapter.autoClickListener?.onAutoClick(bindingAdapterPosition)
         }
     }
 
