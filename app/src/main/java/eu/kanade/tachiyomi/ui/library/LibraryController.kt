@@ -642,16 +642,16 @@ class LibraryController(
     }
 
     private fun buildDialog() = activity?.let {
-        MaterialDialog.Builder(it)
+        MaterialDialog(it)
     }
 
     private fun showSyncProgressDialog() {
         favSyncDialog?.dismiss()
         favSyncDialog = buildDialog()
-                ?.title("Favorites syncing")
+                ?.title(text = "Favorites syncing")
                 ?.cancelable(false)
-                ?.progress(true, 0)
-                ?.show()
+                // ?.progress(true, 0)
+        favSyncDialog?.show()
     }
 
     private fun takeSyncLocks() {
@@ -675,47 +675,43 @@ class LibraryController(
 
                 favSyncDialog?.dismiss()
                 favSyncDialog = buildDialog()
-                        ?.title("Favorites sync error")
-                        ?.content(status.message + " Sync will not start until the gallery is in only one category.")
+                        ?.title(text = "Favorites sync error")
+                        ?.message(text = status.message + " Sync will not start until the gallery is in only one category.")
                         ?.cancelable(false)
-                        ?.positiveText("Show gallery")
-                        ?.onPositive { _, _ ->
+                        ?.positiveButton(text = "Show gallery") {
                             openManga(status.manga)
                             presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
                         }
-                        ?.negativeText("Ok")
-                        ?.onNegative { _, _ ->
+                        ?.negativeButton(android.R.string.ok) {
                             presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
                         }
-                        ?.show()
+                favSyncDialog?.show()
             }
             is FavoritesSyncStatus.Error -> {
                 releaseSyncLocks()
 
                 favSyncDialog?.dismiss()
                 favSyncDialog = buildDialog()
-                        ?.title("Favorites sync error")
-                        ?.content("An error occurred during the sync process: ${status.message}")
+                        ?.title(text = "Favorites sync error")
+                        ?.message(text = "An error occurred during the sync process: ${status.message}")
                         ?.cancelable(false)
-                        ?.positiveText("Ok")
-                        ?.onPositive { _, _ ->
+                        ?.positiveButton(android.R.string.ok) {
                             presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
                         }
-                        ?.show()
+                favSyncDialog?.show()
             }
             is FavoritesSyncStatus.CompleteWithErrors -> {
                 releaseSyncLocks()
 
                 favSyncDialog?.dismiss()
                 favSyncDialog = buildDialog()
-                        ?.title("Favorites sync complete with errors")
-                        ?.content("Errors occurred during the sync process that were ignored:\n${status.message}")
+                        ?.title(text = "Favorites sync complete with errors")
+                        ?.message(text = "Errors occurred during the sync process that were ignored:\n${status.message}")
                         ?.cancelable(false)
-                        ?.positiveText("Ok")
-                        ?.onPositive { _, _ ->
+                        ?.positiveButton(android.R.string.ok) {
                             presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
                         }
-                        ?.show()
+                favSyncDialog?.show()
             }
             is FavoritesSyncStatus.Processing,
             is FavoritesSyncStatus.Initializing -> {
@@ -726,7 +722,7 @@ class LibraryController(
                         && oldSyncStatus !is FavoritesSyncStatus.Processing))
                     showSyncProgressDialog()
 
-                favSyncDialog?.setContent(status.message)
+                favSyncDialog?.message(text = status.message)
             }
         }
         oldSyncStatus = status

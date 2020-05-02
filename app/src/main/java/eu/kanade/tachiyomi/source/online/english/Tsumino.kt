@@ -64,7 +64,7 @@ class Tsumino(delegate: HttpSource) : DelegatedHttpSource(delegate),
             }
 
             input.getElementById("Uploaded")?.text()?.let {
-                uploadDate = TM_DATE_FORMAT.parse(it.trim()).time
+                uploadDate = TM_DATE_FORMAT.parse(it.trim())!!.time
             }
 
             input.getElementById("Pages")?.text()?.let {

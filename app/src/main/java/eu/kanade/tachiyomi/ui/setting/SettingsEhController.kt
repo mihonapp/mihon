@@ -200,12 +200,11 @@ class SettingsEhController : SettingsController() {
                 summary = "Performs a full resynchronization on the next sync. Removals will not be synced. All favorites in the app will be re-uploaded to ExHentai and all favorites on ExHentai will be re-downloaded into the app. Useful for repairing sync after sync has been interrupted."
 
                 onClick {
-                    activity?.let {
-                        MaterialDialog.Builder(it)
-                                .title("Are you sure?")
-                                .content("Resetting the sync state can cause your next sync to be extremely slow.")
-                                .positiveText("Yes")
-                                .onPositive { _, _ ->
+                    activity?.let { activity ->
+                        MaterialDialog(activity)
+                                .title(R.string.eh_force_sync_reset_title)
+                                .message(R.string.eh_force_sync_reset_message)
+                                .positiveButton(android.R.string.yes) {
                                     LocalFavoritesStorage().apply {
                                         getRealm().use {
                                             it.trans {
@@ -213,9 +212,9 @@ class SettingsEhController : SettingsController() {
                                             }
                                         }
                                     }
-                                    it.toast("Sync state reset", Toast.LENGTH_LONG)
+                                    activity.toast("Sync state reset", Toast.LENGTH_LONG)
                                 }
-                                .negativeText("No")
+                                .negativeButton(android.R.string.no)
                                 .cancelable(false)
                                 .show()
                     }
@@ -281,11 +280,10 @@ class SettingsEhController : SettingsController() {
                 title = "Show updater statistics"
 
                 onClick {
-                    val progress = MaterialDialog.Builder(context)
-                        .progress(true, 0)
-                        .content("Collecting statistics...")
+                    val progress = MaterialDialog(context)
+                        .message(R.string.eh_show_update_statistics_dialog)
                         .cancelable(false)
-                        .show()
+                    progress.show()
 
                     GlobalScope.launch(Dispatchers.IO) {
                         val updateInfo = try {
@@ -330,10 +328,10 @@ class SettingsEhController : SettingsController() {
                         }
 
                         withContext(Dispatchers.Main) {
-                            MaterialDialog.Builder(context)
-                                .title("Gallery updater statistics")
-                                .content(updateInfo)
-                                .positiveText("Ok")
+                            MaterialDialog(context)
+                                .title(text = "Gallery updater statistics")
+                                .message(text = updateInfo)
+                                .positiveButton(android.R.string.ok)
                                 .show()
                         }
                     }

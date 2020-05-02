@@ -5,6 +5,7 @@ import android.text.InputType
 import android.util.AttributeSet
 import androidx.preference.SwitchPreferenceCompat
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.input
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.preference.onChange
@@ -44,17 +45,16 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
 
     fun tryChange() {
         if (!notifyLockSecurity(context)) {
-            MaterialDialog.Builder(context)
-                    .title("Lock application")
-                    .content("Enter a pin to lock the application. Enter nothing to disable the pin lock.")
-                    .inputRangeRes(0, 10, R.color.material_red_500)
-                    .inputType(InputType.TYPE_CLASS_NUMBER)
-                    .input("", "", { _, c ->
-                        val progressDialog = MaterialDialog.Builder(context)
-                                .title("Saving password")
-                                .progress(true, 0)
+            MaterialDialog(context)
+                    .title(text = "Lock application")
+                    .message(text = "Enter a pin to lock the application. Enter nothing to disable the pin lock.")
+                    // .inputRangeRes(0, 10, R.color.material_red_500)
+                    // .inputType(InputType.TYPE_CLASS_NUMBER)
+                    .input(maxLength = 10, inputType = InputType.TYPE_CLASS_NUMBER, allowEmpty = true) { _, c ->
+                        val progressDialog = MaterialDialog(context)
+                                .title(text = "Saving password")
                                 .cancelable(false)
-                                .show()
+                        progressDialog.show()
                         Observable.fromCallable {
                             savePassword(c.toString())
                         }.subscribeOn(Schedulers.computation())
@@ -63,11 +63,10 @@ class LockPreference @JvmOverloads constructor(context: Context, attrs: Attribut
                                     progressDialog.dismiss()
                                     updateSummary()
                                 }
-                    })
-                    .negativeText("Cancel")
-                    .autoDismiss(true)
+                    }
+                    .negativeButton(R.string.action_cancel)
                     .cancelable(true)
-                    .canceledOnTouchOutside(true)
+                    .cancelOnTouchOutside(true)
                     .show()
         }
     }

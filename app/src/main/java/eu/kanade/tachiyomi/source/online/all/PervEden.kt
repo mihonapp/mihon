@@ -230,7 +230,7 @@ class PervEden(override val id: Long, val pvLang: PervEdenLang) : ParsedHttpSour
                 })
 
         try {
-            date_upload = DATE_FORMAT.parse(element.getElementsByClass("chapterDate").first().text().trim()).time
+            date_upload = DATE_FORMAT.parse(element.getElementsByClass("chapterDate").first().text().trim())!!.time
         } catch (ignored: Exception) {
         }
     }

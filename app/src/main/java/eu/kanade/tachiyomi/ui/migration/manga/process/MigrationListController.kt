@@ -419,13 +419,12 @@ class MigrationListController(bundle: Bundle? = null) : BaseController<Migration
 
     override fun handleBack(): Boolean {
         activity?.let {
-            MaterialDialog.Builder(it).title(R.string.stop_migrating)
-                .positiveText(R.string.action_stop)
-                .negativeText(android.R.string.cancel)
-                .onPositive { _, _ ->
+            MaterialDialog(it).title(R.string.stop_migrating)
+                .positiveButton(R.string.action_stop) {
                     router.popCurrentController()
                     migrationsJob?.cancel()
                 }
+                .negativeButton(android.R.string.cancel)
                 .show()
         }
         return true

@@ -145,7 +145,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
                 }
             }
 
-            uploadDate = DATE_FORMAT.parse(input.selectFirst(".gallery-info .date").text()).time
+            uploadDate = DATE_FORMAT.parse(input.selectFirst(".gallery-info .date").text())!!.time
         }
     }
 
