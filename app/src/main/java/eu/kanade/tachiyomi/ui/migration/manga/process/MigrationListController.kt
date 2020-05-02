@@ -128,7 +128,7 @@ class MigrationListController(bundle: Bundle? = null) :
         val useSourceWithMost = preferences.useSourceWithMost().getOrDefault()
         val useSmartSearch = preferences.smartMigration().getOrDefault()
 
-        val sources = preferences.migrationSources().getOrDefault().split("/").mapNotNull {
+        val sources = preferences.migrationSources().get().split("/").mapNotNull {
             val value = it.toLongOrNull() ?: return
             sourceManager.get(value) as? CatalogueSource
         }

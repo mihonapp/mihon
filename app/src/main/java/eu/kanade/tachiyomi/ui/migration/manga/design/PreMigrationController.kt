@@ -12,7 +12,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.databinding.PreMigrationControllerBinding
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -98,7 +97,7 @@ class PreMigrationController(bundle: Bundle? = null) :
         val listOfSources = adapter?.items?.filter {
             it.sourceEnabled
         }?.joinToString("/") { it.source.id.toString() }
-        prefs.migrationSources().set(listOfSources)
+        prefs.migrationSources().set(listOfSources!!)
 
         router.replaceTopController(
             MigrationListController.create(
@@ -136,7 +135,7 @@ class PreMigrationController(bundle: Bundle? = null) :
      */
     private fun getEnabledSources(): List<HttpSource> {
         val languages = prefs.enabledLanguages().get()
-        val sourcesSaved = prefs.migrationSources().getOrDefault().split("/")
+        val sourcesSaved = prefs.migrationSources().get().split("/")
         var sources = sourceManager.getVisibleCatalogueSources()
             .filterIsInstance<HttpSource>()
             .filter { it.lang in languages }
@@ -154,7 +153,7 @@ class PreMigrationController(bundle: Bundle? = null) :
     }
 
     fun isEnabled(id: String): Boolean {
-        val sourcesSaved = prefs.migrationSources().getOrDefault()
+        val sourcesSaved = prefs.migrationSources().get()
         val hiddenCatalogues = prefs.hiddenCatalogues().get()
         return if (sourcesSaved.isEmpty()) id !in hiddenCatalogues
         else sourcesSaved.split("/").contains(id)
