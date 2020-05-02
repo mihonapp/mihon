@@ -138,9 +138,7 @@ object EXHMigrations {
                 }
                 if (oldVersion < 8410) {
                     // Migrate to WorkManager
-                    if (BuildConfig.INCLUDE_UPDATER && preferences.automaticUpdates()) {
-                        UpdaterJob.setupTask(context)
-                    }
+                    UpdaterJob.setupTask(context)
                     LibraryUpdateJob.setupTask(context)
                     BackupCreatorJob.setupTask(context)
                     ExtensionUpdateJob.setupTask(context)
