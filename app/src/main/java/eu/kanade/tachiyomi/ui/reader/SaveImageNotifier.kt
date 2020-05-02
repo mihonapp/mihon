@@ -37,12 +37,12 @@ class SaveImageNotifier(private val context: Context) {
      */
     fun onComplete(file: File) {
         val bitmap = GlideApp.with(context)
-                .asBitmap()
-                .load(file)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .submit(720, 1280)
-                .get()
+            .asBitmap()
+            .load(file)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .submit(720, 1280)
+            .get()
 
         if (bitmap != null) {
             showCompleteNotification(file, bitmap)
