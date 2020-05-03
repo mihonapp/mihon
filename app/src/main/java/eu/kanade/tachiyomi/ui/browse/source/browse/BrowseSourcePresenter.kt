@@ -51,9 +51,9 @@ import xyz.nulldev.ts.api.http.serializer.FilterSerializer
  * Presenter of [BrowseSourceController].
  */
 open class BrowseSourcePresenter(
-    sourceId: Long,
+    private val sourceId: Long,
     searchQuery: String? = null,
-    sourceManager: SourceManager = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
     private val db: DatabaseHelper = Injekt.get(),
     private val prefs: PreferencesHelper = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get()
@@ -62,7 +62,7 @@ open class BrowseSourcePresenter(
     /**
      * Selected source.
      */
-    val source = sourceManager.get(sourceId) as CatalogueSource
+    lateinit var source: CatalogueSource
 
     /**
      * Query from the view.
@@ -119,6 +119,8 @@ open class BrowseSourcePresenter(
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
+
+        source = sourceManager.get(sourceId) as? CatalogueSource ?: return
 
         sourceFilters = source.getFilterList()
 

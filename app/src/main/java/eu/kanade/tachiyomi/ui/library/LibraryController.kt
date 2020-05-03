@@ -350,7 +350,7 @@ class LibraryController(
             binding.actionToolbar.show(
                 actionMode!!,
                 R.menu.library_selection
-            ) { onActionItemClicked(actionMode!!, it!!) }
+            ) { onActionItemClicked(it!!) }
             (activity as? MainActivity)?.showBottomNav(visible = false, collapse = true)
         }
     }
@@ -476,6 +476,10 @@ class LibraryController(
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        return onActionItemClicked(item)
+    }
+
+    private fun onActionItemClicked(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit_cover -> {
                 changeSelectedCover()

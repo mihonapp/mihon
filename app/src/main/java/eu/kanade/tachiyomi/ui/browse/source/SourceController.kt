@@ -128,7 +128,12 @@ class SourceController(bundle: Bundle? = null) :
     }
 
     override fun onItemClick(view: View, position: Int): Boolean {
-        val item = adapter?.getItem(position) as? SourceItem ?: return false
+        onItemClick(position)
+        return false
+    }
+
+    private fun onItemClick(position: Int) {
+        val item = adapter?.getItem(position) as? SourceItem ?: return
         val source = item.source
         when (mode) {
             Mode.CATALOGUE -> {
@@ -144,7 +149,6 @@ class SourceController(bundle: Bundle? = null) :
                 ).withFadeTransaction()
             )
         }
-        return false
     }
 
     override fun onItemLongClick(position: Int) {
@@ -193,7 +197,7 @@ class SourceController(bundle: Bundle? = null) :
      * Called when browse is clicked in [SourceAdapter]
      */
     override fun onBrowseClick(position: Int) {
-        onItemClick(view!!, position)
+        onItemClick(position)
     }
 
     /**
