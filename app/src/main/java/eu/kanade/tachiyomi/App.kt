@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
-<<<<<<< HEAD
 import android.graphics.Color
 import android.os.Build
 import android.os.Environment
@@ -28,7 +27,7 @@ import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
-import eu.kanade.tachiyomi.util.LocaleHelper
+import eu.kanade.tachiyomi.util.lang.LocaleHelper
 import exh.debug.DebugToggles
 import exh.log.CrashlyticsPrinter
 import exh.log.EHDebugModeOverlay
@@ -41,8 +40,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.multidex.MultiDex
-import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -71,7 +68,7 @@ open class App : Application(), LifecycleObserver {
 
         setupNotificationChannels()
         GlobalScope.launch { deleteOldMetadataRealm() } // Delete old metadata DB (EH)
-        Reprint.initialize(this) //Setup fingerprint (EH)
+        //Reprint.initialize(this) //Setup fingerprint (EH)
         if((BuildConfig.DEBUG || BuildConfig.BUILD_TYPE == "releaseTest") && DebugToggles.ENABLE_DEBUG_OVERLAY.enabled) {
             setupDebugOverlay()
         }

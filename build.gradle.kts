@@ -10,6 +10,8 @@ allprojects {
     repositories {
         google()
         maven { setUrl("https://www.jitpack.io") }
+        maven { setUrl("https://oss.sonatype.org/content/repositories/snapshots/") }
+        maven { setUrl("https://dl.bintray.com/ibm-cloud-sdks/ibm-cloud-sdk-repo") }
         maven { setUrl("https://plugins.gradle.org/m2/") }
         jcenter()
     }
@@ -37,9 +39,15 @@ subprojects {
 
 buildscript {
     dependencies {
+        classpath("com.github.ben-manes:gradle-versions-plugin:0.28.0")
         classpath("com.github.zellius:android-shortcut-gradle-plugin:0.1.2")
         classpath("com.google.gms:google-services:4.3.3")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.2")
+        // Realm (EH)
+        classpath("io.realm:realm-gradle-plugin:5.13.1")
+
+        // Firebase (EH)
+        classpath("io.fabric.tools:gradle:1.31.0")
     }
     repositories {
         google()

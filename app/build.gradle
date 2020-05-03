@@ -80,11 +80,6 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 
     flavorDimensions "default"
@@ -239,9 +234,6 @@ dependencies {
     // Crash reports
     final acra_version = '5.5.0'
     implementation "ch.acra:acra-http:$acra_version"
-
-    // Sort
-    implementation 'com.github.gpanther:java-nat-sort:natural-comparator-1.1'
 
     // Sort
     implementation 'com.github.gpanther:java-nat-sort:natural-comparator-1.1'
