@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import exh.ui.batchadd.BatchAddController
 import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
 
@@ -80,7 +81,7 @@ class MoreController :
                 iconRes = R.drawable.ic_playlist_add_black_24dp
                 iconTint = tintColor
                 onClick {
-                    router.pushController(MigrationController().withFadeTransaction())
+                    router.pushController(BatchAddController().withFadeTransaction())
                 }
             }
         }

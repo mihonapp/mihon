@@ -8,8 +8,11 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
+import eu.kanade.tachiyomi.data.updater.UpdaterJob
+import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import exh.source.BlacklistedSources
 import java.io.File
 import java.net.URI
@@ -32,6 +35,15 @@ object EXHMigrations {
         val oldVersion = preferences.eh_lastVersionCode().getOrDefault()
         try {
             if (oldVersion < BuildConfig.VERSION_CODE) {
+                // Fresh install
+                if (oldVersion == 0) {
+                    // Set up default background tasks
+                    UpdaterJob.setupTask(context)
+                    ExtensionUpdateJob.setupTask(context)
+                    LibraryUpdateJob.setupTask(context)
+                    return false
+                }
+
                 // if (oldVersion < 1) { }
                 // do stuff here when releasing changed crap
 

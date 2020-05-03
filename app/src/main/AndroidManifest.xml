@@ -21,7 +21,6 @@
         tools:ignore="ProtectedPermissions" />
     <!-- Lock vibrate -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".App"
