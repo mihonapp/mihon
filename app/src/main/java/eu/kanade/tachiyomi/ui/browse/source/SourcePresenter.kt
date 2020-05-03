@@ -23,7 +23,8 @@ import uy.kohesive.injekt.api.get
  */
 class SourcePresenter(
     val sourceManager: SourceManager = Injekt.get(),
-    private val preferences: PreferencesHelper = Injekt.get()
+    private val preferences: PreferencesHelper = Injekt.get(),
+    private val controllerMode: SourceController.Mode
 ) : BasePresenter<SourceController>() {
 
     var sources = getEnabledSources()
@@ -63,10 +64,10 @@ class SourcePresenter(
             val langItem = LangItem(it.key)
             it.value.map { source ->
                 if (source.id.toString() in pinnedCatalogues) {
-                    pinnedSources.add(SourceItem(source, LangItem(PINNED_KEY)))
+                    pinnedSources.add(SourceItem(source, LangItem(PINNED_KEY), controllerMode == SourceController.Mode.CATALOGUE))
                 }
 
-                SourceItem(source, langItem)
+                SourceItem(source, langItem, controllerMode == SourceController.Mode.CATALOGUE)
             }
         }
 
@@ -87,7 +88,7 @@ class SourcePresenter(
             sharedObs.skip(1).delay(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
         )
             .distinctUntilChanged()
-            .map { item -> (sourceManager.get(item) as? CatalogueSource)?.let { SourceItem(it) } }
+            .map { item -> (sourceManager.get(item) as? CatalogueSource)?.let { SourceItem(it, showButtons = controllerMode == SourceController.Mode.CATALOGUE) } }
             .subscribeLatestCache(SourceController::setLastUsedSource)
     }
 

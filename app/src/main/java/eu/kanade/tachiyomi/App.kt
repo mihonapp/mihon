@@ -6,6 +6,10 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Environment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
@@ -16,43 +20,33 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
-import com.github.ajalt.reprint.core.Reprint
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.security.ProviderInstaller
 import com.kizitonwose.time.days
 import com.ms_square.debugoverlay.DebugOverlay
 import com.ms_square.debugoverlay.modules.FpsModule
-import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.updater.UpdaterJob
-import eu.kanade.tachiyomi.util.lang.LocaleHelper
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
+import eu.kanade.tachiyomi.util.system.LocaleHelper
 import exh.debug.DebugToggles
 import exh.log.CrashlyticsPrinter
 import exh.log.EHDebugModeOverlay
 import exh.log.EHLogLevel
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import java.io.File
+import java.security.NoSuchAlgorithmException
+import javax.net.ssl.SSLContext
+import kotlin.concurrent.thread
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.ProcessLifecycleOwner
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
-import eu.kanade.tachiyomi.util.system.LocaleHelper
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektScope
 import uy.kohesive.injekt.injectLazy
 import uy.kohesive.injekt.registry.default.DefaultRegistrar
-import java.io.File
-import java.security.NoSuchAlgorithmException
-import javax.net.ssl.SSLContext
-import kotlin.concurrent.thread
-
 
 open class App : Application(), LifecycleObserver {
 
@@ -68,8 +62,8 @@ open class App : Application(), LifecycleObserver {
 
         setupNotificationChannels()
         GlobalScope.launch { deleteOldMetadataRealm() } // Delete old metadata DB (EH)
-        //Reprint.initialize(this) //Setup fingerprint (EH)
-        if((BuildConfig.DEBUG || BuildConfig.BUILD_TYPE == "releaseTest") && DebugToggles.ENABLE_DEBUG_OVERLAY.enabled) {
+        // Reprint.initialize(this) //Setup fingerprint (EH)
+        if ((BuildConfig.DEBUG || BuildConfig.BUILD_TYPE == "releaseTest") && DebugToggles.ENABLE_DEBUG_OVERLAY.enabled) {
             setupDebugOverlay()
         }
 
@@ -89,8 +83,9 @@ open class App : Application(), LifecycleObserver {
     }
 
     private fun workaroundAndroid7BrokenSSL() {
-        if(Build.VERSION.SDK_INT == Build.VERSION_CODES.N
-                || Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N ||
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1
+        ) {
             try {
                 SSLContext.getInstance("TLSv1.2")
             } catch (e: NoSuchAlgorithmException) {
@@ -124,19 +119,19 @@ open class App : Application(), LifecycleObserver {
     private fun deleteOldMetadataRealm() {
         Realm.init(this)
         val config = RealmConfiguration.Builder()
-                .name("gallery-metadata.realm")
-                .schemaVersion(3)
-                .deleteRealmIfMigrationNeeded()
-                .build()
+            .name("gallery-metadata.realm")
+            .schemaVersion(3)
+            .deleteRealmIfMigrationNeeded()
+            .build()
         Realm.deleteRealm(config)
 
-        //Delete old paper db files
+        // Delete old paper db files
         listOf(
-                File(filesDir, "gallery-ex"),
-                File(filesDir, "gallery-perveden"),
-                File(filesDir, "gallery-nhentai")
+            File(filesDir, "gallery-ex"),
+            File(filesDir, "gallery-perveden"),
+            File(filesDir, "gallery-nhentai")
         ).forEach {
-            if(it.exists()) {
+            if (it.exists()) {
                 thread {
                     it.deleteRecursively()
                 }
@@ -148,43 +143,46 @@ open class App : Application(), LifecycleObserver {
     private fun setupExhLogging() {
         EHLogLevel.init(this)
 
-        val logLevel = if(EHLogLevel.shouldLog(EHLogLevel.EXTRA)) {
+        val logLevel = if (EHLogLevel.shouldLog(EHLogLevel.EXTRA)) {
             LogLevel.ALL
         } else {
             LogLevel.WARN
         }
 
         val logConfig = LogConfiguration.Builder()
-                .logLevel(logLevel)
-                .t()
-                .st(2)
-                .nb()
-                .build()
+            .logLevel(logLevel)
+            .t()
+            .st(2)
+            .nb()
+            .build()
 
         val printers = mutableListOf<Printer>(AndroidPrinter())
 
-        val logFolder = File(Environment.getExternalStorageDirectory().absolutePath + File.separator +
-                getString(R.string.app_name), "logs")
+        val logFolder = File(
+            Environment.getExternalStorageDirectory().absolutePath + File.separator +
+                getString(R.string.app_name),
+            "logs"
+        )
 
         printers += FilePrinter
-                .Builder(logFolder.absolutePath)
-                .fileNameGenerator(object : DateFileNameGenerator() {
-                    override fun generateFileName(logLevel: Int, timestamp: Long): String {
-                        return super.generateFileName(logLevel, timestamp) + "-${BuildConfig.BUILD_TYPE}"
-                    }
-                })
-                .cleanStrategy(FileLastModifiedCleanStrategy(7.days.inMilliseconds.longValue))
-                .backupStrategy(NeverBackupStrategy())
-                .build()
+            .Builder(logFolder.absolutePath)
+            .fileNameGenerator(object : DateFileNameGenerator() {
+                override fun generateFileName(logLevel: Int, timestamp: Long): String {
+                    return super.generateFileName(logLevel, timestamp) + "-${BuildConfig.BUILD_TYPE}"
+                }
+            })
+            .cleanStrategy(FileLastModifiedCleanStrategy(7.days.inMilliseconds.longValue))
+            .backupStrategy(NeverBackupStrategy())
+            .build()
 
         // Install Crashlytics in prod
-        if(!BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             printers += CrashlyticsPrinter(LogLevel.ERROR)
         }
 
         XLog.init(
-                logConfig,
-                *printers.toTypedArray()
+            logConfig,
+            *printers.toTypedArray()
         )
 
         XLog.d("Application booting...")
@@ -194,13 +192,13 @@ open class App : Application(), LifecycleObserver {
     private fun setupDebugOverlay() {
         try {
             DebugOverlay.Builder(this)
-                    .modules(FpsModule(), EHDebugModeOverlay(this))
-                    .bgColor(Color.parseColor("#7F000000"))
-                    .notification(false)
-                    .allowSystemLayer(false)
-                    .build()
-                    .install()
-        } catch(e: IllegalStateException) {
+                .modules(FpsModule(), EHDebugModeOverlay(this))
+                .bgColor(Color.parseColor("#7F000000"))
+                .notification(false)
+                .allowSystemLayer(false)
+                .build()
+                .install()
+        } catch (e: IllegalStateException) {
             // Crashes if app is in background
             XLog.e("Failed to initialize debug overlay, app in background?", e)
         }

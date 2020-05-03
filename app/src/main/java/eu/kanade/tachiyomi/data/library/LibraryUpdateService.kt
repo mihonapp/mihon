@@ -84,7 +84,12 @@ class LibraryUpdateService(
         NotificationReceiver.cancelLibraryUpdatePendingBroadcast(this)
     }
 
-    private val updateNotifier by lazy { LibraryUpdateNotifier(this) }
+    /**
+     * Bitmap of the app for notifications.
+     */
+    private val notificationBitmap by lazy {
+        BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+    }
 
     /**
      * Cached progress notification to avoid creating a lot.
@@ -308,34 +313,35 @@ class LibraryUpdateService(
             .doOnNext { showProgressNotification(it, count.andIncrement, mangaToUpdate.size) }
             // Update the chapters of the manga.
             .concatMap { manga ->
-            if(manga.source in LIBRARY_UPDATE_EXCLUDED_SOURCES) {
-                        // Ignore EXH manga, updating chapters for every manga will get you banned
-                        Observable.empty()
-                    } else {
-                        updateManga(manga)
-                            // If there's any error, return empty update and continue.
-                            .onErrorReturn {
-                                failedUpdates.add(manga)
-                                Pair(emptyList(), emptyList())
-                            }
-                            // Filter out mangas without new chapters (or failed).
-                            .filter { pair -> pair.first.isNotEmpty() }
-                            .doOnNext {
-                                if (downloadNew && (
-                                    categoriesToDownload.isEmpty() ||
-                                        manga.category in categoriesToDownload
-                                    )
-                                ) {
-                                    downloadChapters(manga, it.first)
-                                    hasDownloads = true
-                                }
-                            }
-                            // Convert to the manga that contains new chapters.
-                            .map {
-                                Pair(
-                                    manga,
-                                    (it.first.sortedByDescending { ch -> ch.source_order }.toTypedArray())
+                if (manga.source in LIBRARY_UPDATE_EXCLUDED_SOURCES) {
+                    // Ignore EXH manga, updating chapters for every manga will get you banned
+                    Observable.empty()
+                } else {
+                    updateManga(manga)
+                        // If there's any error, return empty update and continue.
+                        .onErrorReturn {
+                            failedUpdates.add(manga)
+                            Pair(emptyList(), emptyList())
+                        }
+                        // Filter out mangas without new chapters (or failed).
+                        .filter { pair -> pair.first.isNotEmpty() }
+                        .doOnNext {
+                            if (downloadNew && (
+                                categoriesToDownload.isEmpty() ||
+                                    manga.category in categoriesToDownload
                                 )
+                            ) {
+                                downloadChapters(manga, it.first)
+                                hasDownloads = true
+                            }
+                        }
+                }
+                    // Convert to the manga that contains new chapters.
+                    .map {
+                        Pair(
+                            manga,
+                            (it.first.sortedByDescending { ch -> ch.source_order }.toTypedArray())
+                        )
                     }
             }
             // Add manga with new chapters to the list.

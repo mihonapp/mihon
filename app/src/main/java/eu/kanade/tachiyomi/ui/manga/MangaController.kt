@@ -24,7 +24,9 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.RxController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
+import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersController
+import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.ui.manga.info.MangaInfoController
 import eu.kanade.tachiyomi.ui.manga.track.TrackController
 import eu.kanade.tachiyomi.util.system.toast
@@ -51,10 +53,12 @@ class MangaController : RxController<PagerControllerBinding>, TabbedController {
     }
 
     // EXH -->
-    constructor(redirect: ChaptersPresenter.EXHRedirect) : super(Bundle().apply {
-        putLong(MANGA_EXTRA, redirect.manga.id!!)
-        putBoolean(UPDATE_EXTRA, redirect.update)
-    }) {
+    constructor(redirect: ChaptersPresenter.EXHRedirect) : super(
+        Bundle().apply {
+            putLong(MANGA_EXTRA, redirect.manga.id!!)
+            putBoolean(UPDATE_EXTRA, redirect.update)
+        }
+    ) {
         this.manga = redirect.manga
         if (manga != null) {
             source = Injekt.get<SourceManager>().getOrStub(redirect.manga.source)
@@ -63,7 +67,8 @@ class MangaController : RxController<PagerControllerBinding>, TabbedController {
     // EXH <--
 
     constructor(mangaId: Long) : this(
-        Injekt.get<DatabaseHelper>().getManga(mangaId).executeAsBlocking())
+        Injekt.get<DatabaseHelper>().getManga(mangaId).executeAsBlocking()
+    )
 
     @Suppress("unused")
     constructor(bundle: Bundle) : this(bundle.getLong(MANGA_EXTRA))

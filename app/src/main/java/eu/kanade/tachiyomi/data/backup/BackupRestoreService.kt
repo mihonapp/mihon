@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
-import com.elvishew.xlog.XLog
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
@@ -35,19 +34,13 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import exh.BackupEntry
-import exh.EH_SOURCE_ID
 import exh.EXHMigrations
-import exh.EXH_SOURCE_ID
 import exh.eh.EHentaiThrottleManager
-import exh.eh.EHentaiUpdateWorker
-import rx.Observable
-import rx.Subscription
-import rx.schedulers.Schedulers
-import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.ExecutorService
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -132,7 +125,6 @@ class BackupRestoreService : Service() {
 
     private val trackManager: TrackManager by injectLazy()
 
-
     private lateinit var executor: ExecutorService
 
     private val throttleManager = EHentaiThrottleManager()
@@ -184,6 +176,8 @@ class BackupRestoreService : Service() {
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val uri = intent?.getParcelableExtra<Uri>(BackupConst.EXTRA_URI) ?: return START_NOT_STICKY
+
+        throttleManager.resetThrottle()
 
         // Cancel any previous job if needed.
         job?.cancel()
@@ -255,23 +249,37 @@ class BackupRestoreService : Service() {
 
     private fun restoreManga(mangaJson: JsonObject) {
         db.inTransaction {
-            val manga = backupManager.parser.fromJson<MangaImpl>(mangaJson.get(MANGA))
-            val chapters = backupManager.parser.fromJson<List<ChapterImpl>>(
+            val tmanga = backupManager.parser.fromJson<MangaImpl>(mangaJson.get(MANGA))
+            val tchapters = backupManager.parser.fromJson<List<ChapterImpl>>(
                 mangaJson.get(CHAPTERS)
                     ?: JsonArray()
             )
-            val categories = backupManager.parser.fromJson<List<String>>(
+            val tcategories = backupManager.parser.fromJson<List<String>>(
                 mangaJson.get(CATEGORIES)
                     ?: JsonArray()
             )
-            val history = backupManager.parser.fromJson<List<DHistory>>(
+            val thistory = backupManager.parser.fromJson<List<DHistory>>(
                 mangaJson.get(HISTORY)
                     ?: JsonArray()
             )
-            val tracks = backupManager.parser.fromJson<List<TrackImpl>>(
+            val ttracks = backupManager.parser.fromJson<List<TrackImpl>>(
                 mangaJson.get(TRACK)
                     ?: JsonArray()
             )
+
+            // EXH -->
+            val migrated = EXHMigrations.migrateBackupEntry(
+                BackupEntry(
+                    tmanga,
+                    tchapters,
+                    tcategories,
+                    thistory,
+                    ttracks
+                )
+            )
+            val (manga, chapters, categories, history, tracks) = migrated
+            val source = backupManager.sourceManager.getOrStub(manga.source)
+            // <-- EXH
 
             if (job?.isActive != true) {
                 throw Exception(getString(R.string.restoring_backup_canceled))
@@ -399,7 +407,7 @@ class BackupRestoreService : Service() {
      * @return [Observable] that contains manga
      */
     private fun chapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>): Observable<Pair<List<Chapter>, List<Chapter>>> {
-        return backupManager.restoreChapterFetchObservable(source, manga, chapters)
+        return backupManager.restoreChapterFetchObservable(source, manga, chapters, throttleManager)
             // If there's any error, return empty update and continue.
             .onErrorReturn {
                 errors.add(Date() to "${manga.title} - ${it.message}")

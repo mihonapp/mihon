@@ -84,8 +84,6 @@ class PreferencesHelper(val context: Context) {
 
     fun hideNotificationContent() = prefs.getBoolean(Keys.hideNotificationContent, false)
 
-    fun hideNotificationContent() = prefs.getBoolean(Keys.hideNotificationContent, false)
-
     fun clear() = prefs.edit().clear().apply()
 
     fun themeMode() = flowPrefs.getString(Keys.themeMode, Values.THEME_MODE_SYSTEM)
@@ -260,14 +258,6 @@ class PreferencesHelper(val context: Context) {
 
     fun skipPreMigration() = flowPrefs.getBoolean(Keys.skipPreMigration, false)
 
-    fun migrationSources() = rxPrefs.getString("migrate_sources", "")
-
-    fun smartMigration() = rxPrefs.getBoolean("smart_migrate", false)
-
-    fun useSourceWithMost() = rxPrefs.getBoolean("use_source_with_most", false)
-
-    fun skipPreMigration() = rxPrefs.getBoolean(Keys.skipPreMigration, false)
-
     fun upgradeFilters() {
         val filterDl = rxPrefs.getBoolean(Keys.filterDownloaded, false).getOrDefault()
         val filterUn = rxPrefs.getBoolean(Keys.filterUnread, false).getOrDefault()
@@ -342,7 +332,7 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_cacheSize() = rxPrefs.getString(Keys.eh_cacheSize, "75")
 
-    fun eh_preserveReadingPosition() = rxPrefs.getBoolean(Keys.eh_preserveReadingPosition, false)
+    fun eh_preserveReadingPosition() = flowPrefs.getBoolean(Keys.eh_preserveReadingPosition, false)
 
     fun eh_autoSolveCaptchas() = rxPrefs.getBoolean(Keys.eh_autoSolveCaptchas, false)
 

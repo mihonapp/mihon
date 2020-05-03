@@ -162,8 +162,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         binding = ReaderActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setNotchCutoutMode()
-
         if (presenter.needsInit()) {
             val manga = intent.extras!!.getLong("manga", -1)
             val chapter = intent.extras!!.getLong("chapter", -1)
@@ -847,37 +845,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 Error -> R.string.notification_cover_update_failed
             }
         )
-    }
-
-    /**
-     * Sets notch cutout mode to "NEVER", if mobile is in a landscape view
-     */
-    private fun setNotchCutoutMode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val currentOrientation = resources.configuration.orientation
-
-            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                val params = window.attributes
-                params.layoutInDisplayCutoutMode =
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
-            }
-        }
-    }
-
-    /**
-     * Sets notch cutout mode to "NEVER", if mobile is in a landscape view
-     */
-    private fun setNotchCutoutMode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-
-            val currentOrientation = resources.configuration.orientation
-
-            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                val params = window.attributes
-                params.layoutInDisplayCutoutMode =
-                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
-            }
-        }
     }
 
     /**

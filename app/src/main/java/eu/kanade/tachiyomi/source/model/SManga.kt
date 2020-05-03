@@ -24,10 +24,11 @@ interface SManga : Serializable {
 
     fun copyFrom(other: SManga) {
         // EXH -->
-        if (other.title.isNotBlank())
+        if (other.title.isNotBlank()) {
             title = other.title
+        }
         // EXH <--
-        
+
         if (other.author != null) {
             author = other.author
         }

@@ -50,22 +50,21 @@ class WebtoonTransitionHolder(
         gravity = Gravity.CENTER
     }
 
-    private val layoutPaddingVertical = 48.dpToPx
-    private val layoutPaddingHorizontal = 32.dpToPx
-
     init {
         layout.layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
         layout.orientation = LinearLayout.VERTICAL
         layout.gravity = Gravity.CENTER
+
+        val paddingVertical = 48.dpToPx
+        val paddingHorizontal = 32.dpToPx
+        layout.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
 
         val childMargins = 16.dpToPx
         val childParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
             setMargins(0, childMargins, 0, childMargins)
         }
 
-        if(viewer.activity.showTransitionPages) {
-            layout.addView(textView, childParams)
-        }
+        layout.addView(textView, childParams)
         layout.addView(pagesContainer, childParams)
     }
 
@@ -92,15 +91,6 @@ class WebtoonTransitionHolder(
     private fun bindNextChapterTransition(transition: ChapterTransition.Next) {
         val nextChapter = transition.to
 
-        if(viewer.activity.showTransitionPages) {
-            layout.setPadding(
-                    layoutPaddingHorizontal,
-                    layoutPaddingVertical,
-                    layoutPaddingHorizontal,
-                    layoutPaddingVertical
-            )
-        }
-
         textView.text = if (nextChapter != null) {
             SpannableStringBuilder().apply {
                 append(context.getString(R.string.transition_finished))
@@ -125,13 +115,6 @@ class WebtoonTransitionHolder(
      */
     private fun bindPrevChapterTransition(transition: ChapterTransition.Prev) {
         val prevChapter = transition.to
-
-        layout.setPadding(
-                layoutPaddingHorizontal,
-                layoutPaddingVertical,
-                layoutPaddingHorizontal,
-                layoutPaddingVertical
-        )
 
         textView.text = if (prevChapter != null) {
             SpannableStringBuilder().apply {
@@ -195,9 +178,7 @@ class WebtoonTransitionHolder(
             setText(R.string.transition_pages_loading)
         }
 
-        if(viewer.activity.showTransitionPages) {
-            pagesContainer.addView(progress)
-        }
+        pagesContainer.addView(progress)
         pagesContainer.addView(textView)
     }
 

@@ -50,10 +50,10 @@
                 android:title="@string/label_alpha_reverse"/>
             <item
                 android:id="@+id/action_update_asc"
-                android:title="@string/action_sort_last_updated"/>
+                android:title="@string/action_sort_last_checked"/>
             <item
                 android:id="@+id/action_update_dsc"
-                android:title="@string/action_sort_first_updated"/>
+                android:title="@string/action_sort_first_checked"/>
         </menu>
     </item>
 

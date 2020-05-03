@@ -17,7 +17,6 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
-import eu.kanade.tachiyomi.network.asObservableWithAsyncStacktrace
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
@@ -44,6 +43,7 @@ import exh.metadata.parseHumanReadableByteCount
 import exh.ui.login.LoginController
 import exh.util.UriFilter
 import exh.util.UriGroup
+import exh.util.asObservableWithAsyncStacktrace
 import exh.util.ignore
 import exh.util.urlImportFetchSearchManga
 import java.net.URLEncoder

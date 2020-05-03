@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.source.online
 
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
@@ -10,6 +12,7 @@ import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
+import exh.source.DelegatedHttpSource
 import java.net.URI
 import java.net.URISyntaxException
 import java.security.MessageDigest
@@ -18,6 +21,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -68,7 +73,7 @@ abstract class HttpSource : CatalogueSource {
      * Default network client for doing requests.
      */
     open val client: OkHttpClient
-        get() = network.client
+        get() = delegate?.baseHttpClient ?: network.client
 
     /**
      * Headers builder for requests. Implementations can override this method for custom headers.
@@ -299,7 +304,7 @@ abstract class HttpSource : CatalogueSource {
      *
      * @param page the page whose source image has to be downloaded.
      */
-    fun fetchImage(page: Page): Observable<Response> {
+    open fun fetchImage(page: Page): Observable<Response> {
         return client.newCallWithProgress(imageRequest(page), page)
             .asObservableSuccess()
     }
@@ -372,9 +377,12 @@ abstract class HttpSource : CatalogueSource {
 
     // EXH -->
     private var delegate: DelegatedHttpSource? = null
-        get() = if(Injekt.get<PreferencesHelper>().eh_delegateSources().getOrDefault())
+        get() = if (Injekt.get<PreferencesHelper>().eh_delegateSources().getOrDefault()) {
             field
-        else null
+        } else {
+            null
+        }
+
     fun bindDelegate(delegate: DelegatedHttpSource) {
         this.delegate = delegate
     }

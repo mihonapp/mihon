@@ -12,6 +12,9 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_EXCLUDE
+import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_IGNORE
+import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_INCLUDE
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -20,6 +23,7 @@ import eu.kanade.tachiyomi.ui.migration.MigrationFlags
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
+import exh.favorites.FavoritesSyncHelper
 import java.io.IOException
 import java.io.InputStream
 import java.util.ArrayList
@@ -118,32 +122,33 @@ class LibraryPresenter(
      * @param map the map to filter.
      */
     private fun applyFilters(map: LibraryMap): LibraryMap {
-        val filterDownloaded = preferences.downloadedOnly().get() || preferences.filterDownloaded().get()
+        val filterDownloaded = preferences.filterDownloaded().get()
+        val filterDownloadedOnly = preferences.downloadedOnly().get()
         val filterUnread = preferences.filterUnread().get()
         val filterCompleted = preferences.filterCompleted().get()
 
         val filterFn: (LibraryItem) -> Boolean = f@{ item ->
             // Filter when there isn't unread chapters.
-            if (filterUnread && item.manga.unread == 0) {
+            if (filterUnread == STATE_INCLUDE && item.manga.unread == 0) {
                 return@f false
             }
-
-            if (filterCompleted && item.manga.status != SManga.COMPLETED) {
+            if (filterUnread == STATE_EXCLUDE && item.manga.unread > 0) {
                 return@f false
             }
-
+            if (filterCompleted == STATE_INCLUDE && item.manga.status != SManga.COMPLETED) {
+                return@f false
+            }
+            if (filterCompleted == STATE_EXCLUDE && item.manga.status == SManga.COMPLETED) {
+                return@f false
+            }
             // Filter when there are no downloads.
-            if (filterDownloaded) {
-                // Local manga are always downloaded
-                if (item.manga.source == LocalSource.ID) {
-                    return@f true
+            if (filterDownloaded != STATE_IGNORE || filterDownloadedOnly) {
+                val isDownloaded = when {
+                    item.manga.source == LocalSource.ID -> true
+                    item.downloadCount != -1 -> item.downloadCount > 0
+                    else -> downloadManager.getDownloadCount(item.manga) > 0
                 }
-                // Don't bother with directory checking if download count has been set.
-                if (item.downloadCount != -1) {
-                    return@f item.downloadCount > 0
-                }
-
-                return@f downloadManager.getDownloadCount(item.manga) > 0
+                return@f if (filterDownloaded == STATE_INCLUDE) isDownloaded else !isDownloaded
             }
             true
         }
@@ -234,11 +239,11 @@ class LibraryPresenter(
         return map.mapValues { entry -> entry.value.sortedWith(comparator) }
     }
 
-    private fun sortAlphabetical(i1: LibraryItem, i2: LibraryItem): Int {
-        //return if (preferences.removeArticles().getOrDefault())
-            return i1.manga.title.removeArticles().compareTo(i2.manga.title.removeArticles(), true)
-        //else i1.manga.title.compareTo(i2.manga.title, true)
-    }
+    /*private fun sortAlphabetical(i1: LibraryItem, i2: LibraryItem): Int {
+        // return if (preferences.removeArticles().getOrDefault())
+        return i1.manga.title.removeArticles().compareTo(i2.manga.title.removeArticles(), true)
+        // else i1.manga.title.compareTo(i2.manga.title, true)
+    }*/
 
     /**
      * Get the categories and all its manga from the database.

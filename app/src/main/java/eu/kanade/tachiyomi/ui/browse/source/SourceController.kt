@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -28,9 +30,6 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
-import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
-import eu.kanade.tachiyomi.ui.source.global_search.GlobalSearchController
-import eu.kanade.tachiyomi.ui.source.latest.LatestUpdatesController
 import exh.ui.smartsearch.SmartSearchController
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.flow.filter
@@ -47,7 +46,7 @@ import uy.kohesive.injekt.api.get
  * [SourceAdapter.OnBrowseClickListener] call function data on browse item click.
  * [SourceAdapter.OnLatestClickListener] call function data on latest item click
  */
-class SourceController :
+class SourceController(bundle: Bundle? = null) :
     NucleusController<SourceMainControllerBinding, SourcePresenter>(),
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
@@ -62,6 +61,8 @@ class SourceController :
     private var adapter: SourceAdapter? = null
 
     // EXH -->
+    private val smartSearchConfig: SmartSearchConfig? = args.getParcelable(SMART_SEARCH_CONFIG)
+
     private val mode = if (smartSearchConfig == null) Mode.CATALOGUE else Mode.SMART_SEARCH
     // EXH <--
 
@@ -71,10 +72,11 @@ class SourceController :
     }
 
     override fun getTitle(): String? {
-        returnwhen (mode) {
+        return when (mode) {
             Mode.CATALOGUE -> applicationContext?.getString(R.string.label_sources)
             Mode.SMART_SEARCH -> "Find in another source"
         }
+    }
     override fun createPresenter(): SourcePresenter {
         return SourcePresenter(controllerMode = mode)
     }

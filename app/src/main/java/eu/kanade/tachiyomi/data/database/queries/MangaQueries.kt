@@ -75,11 +75,13 @@ interface MangaQueries : DbProvider {
         .prepare()
 
     fun getMergedMangas(id: Long) = db.get()
-            .listOfObjects(Manga::class.java)
-            .withQuery(RawQuery.builder()
-                    .query(getMergedMangaQuery(id))
-                    .build())
-            .prepare()
+        .listOfObjects(Manga::class.java)
+        .withQuery(
+            RawQuery.builder()
+                .query(getMergedMangaQuery(id))
+                .build()
+        )
+        .prepare()
 
     fun insertManga(manga: Manga) = db.put().`object`(manga).prepare()
 
@@ -161,42 +163,54 @@ interface MangaQueries : DbProvider {
                 .build()
         )
         .prepare()
-        
+
     fun getMangaWithMetadata() = db.get()
-            .listOfObjects(Manga::class.java)
-            .withQuery(RawQuery.builder()
-                    .query("""
-                        SELECT ${MangaTable.TABLE}.* FROM ${MangaTable.TABLE}
-                        INNER JOIN ${SearchMetadataTable.TABLE}
-                            ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
-                        ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
-                    """.trimIndent())
-                    .build())
-            .prepare()
+        .listOfObjects(Manga::class.java)
+        .withQuery(
+            RawQuery.builder()
+                .query(
+                    """
+                    SELECT ${MangaTable.TABLE}.* FROM ${MangaTable.TABLE}
+                    INNER JOIN ${SearchMetadataTable.TABLE}
+                        ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
+                    ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
+                    """.trimIndent()
+                )
+                .build()
+        )
+        .prepare()
 
     fun getFavoriteMangaWithMetadata() = db.get()
-            .listOfObjects(Manga::class.java)
-            .withQuery(RawQuery.builder()
-                    .query("""
-                        SELECT ${MangaTable.TABLE}.* FROM ${MangaTable.TABLE}
-                        INNER JOIN ${SearchMetadataTable.TABLE}
-                            ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
-                        WHERE ${MangaTable.TABLE}.${MangaTable.COL_FAVORITE} = 1
-                        ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
-                    """.trimIndent())
-                    .build())
-            .prepare()
+        .listOfObjects(Manga::class.java)
+        .withQuery(
+            RawQuery.builder()
+                .query(
+                    """
+                    SELECT ${MangaTable.TABLE}.* FROM ${MangaTable.TABLE}
+                    INNER JOIN ${SearchMetadataTable.TABLE}
+                        ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
+                    WHERE ${MangaTable.TABLE}.${MangaTable.COL_FAVORITE} = 1
+                    ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
+                    """.trimIndent()
+                )
+                .build()
+        )
+        .prepare()
 
     fun getIdsOfFavoriteMangaWithMetadata() = db.get()
-            .cursor()
-            .withQuery(RawQuery.builder()
-                    .query("""
-                        SELECT ${MangaTable.TABLE}.${MangaTable.COL_ID} FROM ${MangaTable.TABLE}
-                        INNER JOIN ${SearchMetadataTable.TABLE}
-                            ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
-                        WHERE ${MangaTable.TABLE}.${MangaTable.COL_FAVORITE} = 1
-                        ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
-                    """.trimIndent())
-                    .build())
-            .prepare()
+        .cursor()
+        .withQuery(
+            RawQuery.builder()
+                .query(
+                    """
+                    SELECT ${MangaTable.TABLE}.${MangaTable.COL_ID} FROM ${MangaTable.TABLE}
+                    INNER JOIN ${SearchMetadataTable.TABLE}
+                        ON ${MangaTable.TABLE}.${MangaTable.COL_ID} = ${SearchMetadataTable.TABLE}.${SearchMetadataTable.COL_MANGA_ID}
+                    WHERE ${MangaTable.TABLE}.${MangaTable.COL_FAVORITE} = 1
+                    ORDER BY ${MangaTable.TABLE}.${MangaTable.COL_ID}
+                    """.trimIndent()
+                )
+                .build()
+        )
+        .prepare()
 }

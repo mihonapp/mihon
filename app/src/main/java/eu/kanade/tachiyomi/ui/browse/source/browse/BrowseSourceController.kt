@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
+import com.elvishew.xlog.XLog
 import com.f2prateek.rx.preferences.Preference
 import com.google.android.material.snackbar.Snackbar
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -30,7 +31,7 @@ import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
-import eu.kanade.tachiyomi.ui.catalogue.CatalogueController
+import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.main.offsetFabAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -51,7 +52,6 @@ import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.QueryTextEvent
 import reactivecircus.flowbinding.appcompat.queryTextEvents
 import rx.Subscription
-import timber.log.Timber
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -64,17 +64,21 @@ open class BrowseSourceController(bundle: Bundle) :
     FlexibleAdapter.EndlessScrollListener,
     ChangeMangaCategoriesDialog.Listener {
 
-    constructor(source: CatalogueSource,
-                searchQuery: String? = null,
-                smartSearchConfig: CatalogueController.SmartSearchConfig? = null) : this(
+    constructor(
+        source: CatalogueSource,
+        searchQuery: String? = null,
+        smartSearchConfig: SourceController.SmartSearchConfig? = null
+    ) : this(
         Bundle().apply {
             putLong(SOURCE_ID_KEY, source.id)
 
-            if(searchQuery != null)
+            if (searchQuery != null) {
                 putString(SEARCH_QUERY_KEY, searchQuery)
+            }
 
-            if (smartSearchConfig != null)
+            if (smartSearchConfig != null) {
                 putParcelable(SMART_SEARCH_CONFIG_KEY, smartSearchConfig)
+            }
         }
     )
 
@@ -119,8 +123,10 @@ open class BrowseSourceController(bundle: Bundle) :
     }
 
     override fun createPresenter(): BrowseSourcePresenter {
-        return BrowseSourcePresenter(args.getLong(SOURCE_ID_KEY),
-                args.getString(SEARCH_QUERY_KEY))
+        return BrowseSourcePresenter(
+            args.getLong(SOURCE_ID_KEY),
+            args.getString(SEARCH_QUERY_KEY)
+        )
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -356,9 +362,11 @@ open class BrowseSourceController(bundle: Bundle) :
      */
     fun onAddPageError(error: Throwable) {
         XLog.w("> Failed to load next catalogue page!", error)
-        XLog.w("> (source.id: %s, source.name: %s)",
-                presenter.source.id,
-                presenter.source.name)
+        XLog.w(
+            "> (source.id: %s, source.name: %s)",
+            presenter.source.id,
+            presenter.source.name
+        )
 
         val adapter = adapter ?: return
         adapter.onLoadMoreComplete(null)
@@ -521,8 +529,12 @@ open class BrowseSourceController(bundle: Bundle) :
      */
     override fun onItemClick(view: View, position: Int): Boolean {
         val item = adapter?.getItem(position) as? SourceItem ?: return false
-        router.pushController(MangaController(item.manga, true,
-                args.getParcelable(SMART_SEARCH_CONFIG_KEY)).withFadeTransaction())
+        router.pushController(
+            MangaController(
+                item.manga, true,
+                args.getParcelable(SMART_SEARCH_CONFIG_KEY)
+            ).withFadeTransaction()
+        )
 
         return false
     }

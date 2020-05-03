@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -16,9 +17,9 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.tabs.TabLayout
-import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.databinding.MainActivityBinding
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -38,7 +39,11 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.toast
+import exh.EXHMigrations
+import exh.eh.EHentaiUpdateWorker
+import exh.uconfig.WarnConfigureDialogController
 import java.util.Date
+import java.util.LinkedList
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -65,6 +70,23 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
     private var isConfirmingExit: Boolean = false
     private var isHandlingShortcut: Boolean = false
+
+    // Idle-until-urgent
+    private var firstPaint = false
+    private val iuuQueue = LinkedList<() -> Unit>()
+
+    private fun initWhenIdle(task: () -> Unit) {
+        // Avoid sync issues by enforcing main thread
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            throw IllegalStateException("Can only be called on main thread!")
+        }
+
+        if (firstPaint) {
+            task()
+        } else {
+            iuuQueue += task
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,9 +124,6 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
                     R.id.nav_history -> setRoot(HistoryController(), id)
                     R.id.nav_browse -> setRoot(BrowseController(), id)
                     R.id.nav_more -> setRoot(MoreController(), id)
-                    // --> EXH
-                    R.id.nav_batch_add -> setRoot(BatchAddController(), id)
-                    // <-- EHX
                 }
             } else if (!isHandlingShortcut) {
                 when (id) {
@@ -156,26 +175,27 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
         if (savedInstanceState == null) {
             // Show changelog if needed
-              // TODO
+            // TODO
 //            if (Migrations.upgrade(preferences)) {
 //                ChangelogDialogController().showDialog(router)
 //            }
 
             // EXH -->
             // Perform EXH specific migrations
-            if(EXHMigrations.upgrade(preferences)) {
+            if (EXHMigrations.upgrade(preferences)) {
                 ChangelogDialogController().showDialog(router)
             }
 
             initWhenIdle {
                 // Upload settings
-                if(preferences.enableExhentai().getOrDefault()
-                        && preferences.eh_showSettingsUploadWarning().getOrDefault())
+                if (preferences.enableExhentai().getOrDefault() &&
+                    preferences.eh_showSettingsUploadWarning().get()
+                ) {
                     WarnConfigureDialogController.uploadSettings(router)
-
+                }
                 // Scheduler uploader job if required
+
                 EHentaiUpdateWorker.scheduleBackground(this)
-                
             }
             // EXH <--
         }

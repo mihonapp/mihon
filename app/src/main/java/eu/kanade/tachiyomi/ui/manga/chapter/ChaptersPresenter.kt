@@ -14,6 +14,10 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
+import exh.debug.DebugToggles
+import exh.eh.EHentaiUpdateHelper
 import java.util.Date
 import rx.Observable
 import rx.Subscription
@@ -114,26 +118,28 @@ class ChaptersPresenter(
                         )
                     )
                     // EXH -->
-                    if(chapters.isNotEmpty()
-                            && (source.id == EXH_SOURCE_ID || source.id == EH_SOURCE_ID)
-                            && DebugToggles.ENABLE_EXH_ROOT_REDIRECT.enabled) {
+                    if (chapters.isNotEmpty() &&
+                        (source.id == EXH_SOURCE_ID || source.id == EH_SOURCE_ID) &&
+                        DebugToggles.ENABLE_EXH_ROOT_REDIRECT.enabled
+                    ) {
                         // Check for gallery in library and accept manga with lowest id
                         // Find chapters sharing same root
-                        add(updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters)
+                        add(
+                            updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters)
                                 .subscribeOn(Schedulers.io())
                                 .subscribe { (acceptedChain, _) ->
                                     // Redirect if we are not the accepted root
-                                    if(manga.id != acceptedChain.manga.id) {
+                                    if (manga.id != acceptedChain.manga.id) {
                                         // Update if any of our chapters are not in accepted manga's chapters
                                         val ourChapterUrls = chapters.map { it.url }.toSet()
                                         val acceptedChapterUrls = acceptedChain.chapters.map { it.url }.toSet()
                                         val update = (ourChapterUrls - acceptedChapterUrls).isNotEmpty()
                                         redirectUserRelay.call(EXHRedirect(acceptedChain.manga, update))
                                     }
-                                })
+                                }
+                        )
                     }
                     // EXH <--
-                }
                 }
                 .subscribe { chaptersRelay.call(it) }
         )
@@ -275,8 +281,9 @@ class ChaptersPresenter(
             .doOnNext { chapter ->
                 chapter.read = read
                 if (!read /* --> EH */ && !preferences
-                                    .eh_preserveReadingPosition()
-                                    .getOrDefault() /* <-- EH */) {
+                    .eh_preserveReadingPosition()
+                    .get() /* <-- EH */
+                ) {
                     chapter.last_page_read = 0
                 }
             }

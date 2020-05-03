@@ -5,7 +5,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.ui.source.SourceController
+import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import exh.smartsearch.SmartSearchEngine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope

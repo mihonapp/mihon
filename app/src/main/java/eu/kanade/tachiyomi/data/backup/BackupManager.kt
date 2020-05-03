@@ -48,7 +48,9 @@ import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
+import exh.eh.EHentaiThrottleManager
 import kotlin.math.max
 import rx.Observable
 import timber.log.Timber
@@ -294,18 +296,20 @@ class BackupManager(val context: Context, version: Int = CURRENT_VERSION) {
      * @param manga manga that needs updating
      * @return [Observable] that contains manga
      */
-    fun restoreChapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>): Observable<Pair<List<Chapter>, List<Chapter>>> {
-        return (if(source is EHentai) {
-            source.fetchChapterList(manga, throttleManager::throttle)
-        } else {
-            source.fetchChapterList(manga)
-            .map { syncChaptersWithSource(databaseHelper, it, manga, source) }
-            .doOnNext { pair ->
-                if (pair.first.isNotEmpty()) {
-                    chapters.forEach { it.manga_id = manga.id }
-                    insertChapters(chapters)
+    fun restoreChapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>, throttleManager: EHentaiThrottleManager): Observable<Pair<List<Chapter>, List<Chapter>>> {
+        return (
+            if (source is EHentai) {
+                source.fetchChapterList(manga, throttleManager::throttle)
+            } else {
+                source.fetchChapterList(manga)
+            }.map { syncChaptersWithSource(databaseHelper, it, manga, source) }
+                .doOnNext { pair ->
+                    if (pair.first.isNotEmpty()) {
+                        chapters.forEach { it.manga_id = manga.id }
+                        insertChapters(chapters)
+                    }
                 }
-            }
+            )
     }
 
     /**

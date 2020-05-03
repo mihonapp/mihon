@@ -71,9 +71,9 @@ open class ExtendedNavigationView @JvmOverloads constructor(
              * @param context any context.
              * @param resId the vector resource to load and tint
              */
-            fun tintVector(context: Context, resId: Int): Drawable {
+            fun tintVector(context: Context, resId: Int, colorId: Int = R.attr.colorAccent): Drawable {
                 return VectorDrawableCompat.create(context.resources, resId, context.theme)!!.apply {
-                    setTint(context.getResourceColor(R.attr.colorAccent))
+                    setTint(context.getResourceColor(colorId))
                 }
             }
         }
@@ -102,6 +102,29 @@ open class ExtendedNavigationView @JvmOverloads constructor(
                     SORT_DESC -> tintVector(context, R.drawable.ic_arrow_down_white_32dp)
                     SORT_NONE -> ContextCompat.getDrawable(context, R.drawable.empty_drawable_32dp)
                     else -> null
+                }
+            }
+        }
+
+        class TriStateGroup(resId: Int, group: Group) : MultiStateGroup(resId, group) {
+
+            companion object {
+                const val STATE_IGNORE = 0
+                const val STATE_INCLUDE = 1
+                const val STATE_EXCLUDE = 2
+            }
+
+            override fun getStateDrawable(context: Context): Drawable? {
+                return when (state) {
+                    STATE_INCLUDE -> tintVector(context, R.drawable.ic_check_box_24dp)
+                    STATE_EXCLUDE -> tintVector(
+                        context, R.drawable.ic_check_box_x_24dp,
+                        android.R.attr.textColorSecondary
+                    )
+                    else -> tintVector(
+                        context, R.drawable.ic_check_box_outline_blank_24dp,
+                        android.R.attr.textColorSecondary
+                    )
                 }
             }
         }

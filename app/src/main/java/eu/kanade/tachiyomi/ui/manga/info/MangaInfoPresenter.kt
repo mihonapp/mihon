@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
 import android.os.Bundle
+import com.google.gson.Gson
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -10,7 +11,9 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import exh.MERGED_SOURCE_ID
 import exh.util.await
@@ -32,10 +35,10 @@ import uy.kohesive.injekt.api.get
 class MangaInfoPresenter(
     val manga: Manga,
     val source: Source,
-    val smartSearchConfig: CatalogueController.SmartSearchConfig?,
     private val chapterCountRelay: BehaviorRelay<Float>,
     private val lastUpdateRelay: BehaviorRelay<Date>,
     private val mangaFavoriteRelay: PublishRelay<Boolean>,
+    val smartSearchConfig: SourceController.SmartSearchConfig?,
     private val db: DatabaseHelper = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),

@@ -25,6 +25,7 @@ object Notifications {
      */
     const val CHANNEL_LIBRARY = "library_channel"
     const val ID_LIBRARY_PROGRESS = -101
+    const val ID_OLD_LIBRARY_RESULT = -101
 
     /**
      * Notification channel and ids used by the downloader.

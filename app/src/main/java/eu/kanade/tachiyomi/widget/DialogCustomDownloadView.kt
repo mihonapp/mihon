@@ -28,8 +28,6 @@ class DialogCustomDownloadView @JvmOverloads constructor(context: Context, attrs
 
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
 
-    private val scope = CoroutineScope(Job() + Dispatchers.Main)
-
     /**
      * Current amount of custom download chooser.
      */

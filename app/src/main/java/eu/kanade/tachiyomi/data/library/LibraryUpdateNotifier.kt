@@ -34,11 +34,11 @@ class LibraryUpdateNotifier(private val context: Context) {
         // Append new chapters from a previous, existing notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val previousNotification = context.notificationManager.activeNotifications
-                    .find { it.id == Notifications.ID_LIBRARY_RESULT }
+                .find { it.id == Notifications.ID_OLD_LIBRARY_RESULT }
 
             if (previousNotification != null) {
                 val oldUpdates = previousNotification.notification.extras
-                        .getString(Notification.EXTRA_BIG_TEXT)
+                    .getString(Notification.EXTRA_BIG_TEXT)
 
                 if (!oldUpdates.isNullOrEmpty()) {
                     newUpdates += oldUpdates.split("\n")
@@ -46,21 +46,24 @@ class LibraryUpdateNotifier(private val context: Context) {
             }
         }
 
-        context.notificationManager.notify(Notifications.ID_LIBRARY_RESULT, context.notification(Notifications.CHANNEL_LIBRARY) {
-            setSmallIcon(R.drawable.ic_book_white_24dp)
-            setLargeIcon(notificationBitmap)
-            setContentTitle(context.getString(R.string.notification_new_chapters))
-            if (newUpdates.size > 1) {
-                setContentText(context.getString(R.string.notification_new_chapters_text, newUpdates.size))
-                setStyle(NotificationCompat.BigTextStyle().bigText(newUpdates.joinToString("\n")))
-                setNumber(newUpdates.size)
-            } else {
-                setContentText(newUpdates.first())
+        context.notificationManager.notify(
+            Notifications.ID_OLD_LIBRARY_RESULT,
+            context.notification(Notifications.CHANNEL_LIBRARY) {
+                setSmallIcon(R.drawable.ic_book_24dp)
+                setLargeIcon(notificationBitmap)
+                setContentTitle(context.getString(R.string.notification_new_chapters))
+                if (newUpdates.size > 1) {
+                    setContentText(context.getString(R.string.notification_new_chapters_text_old, newUpdates.size))
+                    setStyle(NotificationCompat.BigTextStyle().bigText(newUpdates.joinToString("\n")))
+                    setNumber(newUpdates.size)
+                } else {
+                    setContentText(newUpdates.first())
+                }
+                priority = NotificationCompat.PRIORITY_HIGH
+                setContentIntent(getNotificationIntent(context))
+                setAutoCancel(true)
             }
-            priority = NotificationCompat.PRIORITY_HIGH
-            setContentIntent(getNotificationIntent(context))
-            setAutoCancel(true)
-        })
+        )
     }
 
     /**

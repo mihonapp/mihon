@@ -39,9 +39,9 @@ open class DatabaseHelper(context: Context) :
     MangaQueries, ChapterQueries, TrackQueries, CategoryQueries, MangaCategoryQueries, HistoryQueries, /* EXH --> */ SearchMetadataQueries, SearchTagQueries, SearchTitleQueries /* EXH <-- */ {
 
     private val configuration = SupportSQLiteOpenHelper.Configuration.builder(context)
-            .name(DbOpenCallback.DATABASE_NAME)
-            .callback(DbOpenCallback())
-            .build()
+        .name(DbOpenCallback.DATABASE_NAME)
+        .callback(DbOpenCallback())
+        .build()
 
     override val db = DefaultStorIOSQLite.builder()
         .sqliteOpenHelper(RequerySQLiteOpenHelperFactory().create(configuration))
@@ -61,5 +61,4 @@ open class DatabaseHelper(context: Context) :
     inline fun inTransaction(block: () -> Unit) = db.inTransaction(block)
 
     fun lowLevel() = db.lowLevel()
-
 }

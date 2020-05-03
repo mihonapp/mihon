@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
 import androidx.core.graphics.drawable.DrawableCompat
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.f2prateek.rx.preferences.Preference
@@ -46,6 +47,7 @@ import exh.favorites.FavoritesIntroDialog
 import exh.favorites.FavoritesSyncStatus
 import exh.ui.LoaderManager
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 import kotlinx.android.synthetic.main.main_activity.tabs
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
@@ -53,6 +55,7 @@ import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.queryTextChanges
 import reactivecircus.flowbinding.viewpager.pageSelections
 import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -145,11 +148,11 @@ class LibraryController(
     private var tabsVisibilitySubscription: Subscription? = null
 
     // --> EH
-    //Sync dialog
+    // Sync dialog
     private var favSyncDialog: MaterialDialog? = null
-    //Old sync status
+    // Old sync status
     private var oldSyncStatus: FavoritesSyncStatus? = null
-    //Favorites
+    // Favorites
     private var favoritesSyncSubscription: Subscription? = null
     val loaderManager = LoaderManager()
     // <-- EH
@@ -363,7 +366,7 @@ class LibraryController(
         inflater.inflate(R.menu.library, menu)
 
         val reorganizeItem = menu.findItem(R.id.action_reorganize)
-        reorganizeItem.isVisible = preferences.librarySortingMode().getOrDefault() == LibrarySort.DRAG_AND_DROP
+        reorganizeItem.isVisible = preferences.librarySortingMode().get() == LibrarySort.DRAG_AND_DROP
 
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
@@ -425,13 +428,14 @@ class LibraryController(
             }
             // --> EXH
             R.id.action_sync_favorites -> {
-                if(preferences.eh_showSyncIntro().getOrDefault())
+                if (preferences.eh_showSyncIntro().get()) {
                     activity?.let { FavoritesIntroDialog().show(it) }
-                else
+                } else {
                     presenter.favoritesSync.runSync()
+                }
             }
             // <-- EXH
-			R.id.action_alpha_asc -> reOrder(1)
+            R.id.action_alpha_asc -> reOrder(1)
             R.id.action_alpha_dsc -> reOrder(2)
             R.id.action_update_asc -> reOrder(3)
             R.id.action_update_dsc -> reOrder(4)
@@ -441,7 +445,7 @@ class LibraryController(
     }
 
     private fun reOrder(type: Int) {
-        adapter?.categories?.getOrNull(library_pager.currentItem)?.id?.let {
+        adapter?.categories?.getOrNull(binding.libraryPager.currentItem)?.id?.let {
             reorganizeRelay.call(it to type)
         }
     }
@@ -482,7 +486,7 @@ class LibraryController(
             R.id.action_select_all -> selectAllCategoryManga()
             R.id.action_select_inverse -> selectInverseCategoryManga()
             R.id.action_migrate -> {
-                val skipPre = preferences.skipPreMigration().getOrDefault()
+                val skipPre = preferences.skipPreMigration().get()
                 PreMigrationController.navigateToMigration(skipPre, router, selectedMangas.mapNotNull { it.id })
                 destroyActionModeIfNeeded()
             }
@@ -601,19 +605,19 @@ class LibraryController(
         // --> EXH
         cleanupSyncState()
         favoritesSyncSubscription =
-                presenter.favoritesSync.status
-                        .sample(100, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
+            presenter.favoritesSync.status
+                .sample(100, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
                     updateSyncStatus(it)
-        }
+                }
         // <-- EXH
     }
 
     override fun onDetach(view: View) {
         super.onDetach(view)
 
-        //EXH
+        // EXH
         cleanupSyncState()
     }
 
@@ -633,11 +637,11 @@ class LibraryController(
     private fun cleanupSyncState() {
         favoritesSyncSubscription?.unsubscribe()
         favoritesSyncSubscription = null
-        //Close sync status
+        // Close sync status
         favSyncDialog?.dismiss()
         favSyncDialog = null
         oldSyncStatus = null
-        //Clear flags
+        // Clear flags
         releaseSyncLocks()
     }
 
@@ -648,9 +652,9 @@ class LibraryController(
     private fun showSyncProgressDialog() {
         favSyncDialog?.dismiss()
         favSyncDialog = buildDialog()
-                ?.title(text = "Favorites syncing")
-                ?.cancelable(false)
-                // ?.progress(true, 0)
+            ?.title(text = "Favorites syncing")
+            ?.cancelable(false)
+        // ?.progress(true, 0)
         favSyncDialog?.show()
     }
 
@@ -663,7 +667,7 @@ class LibraryController(
     }
 
     private fun updateSyncStatus(status: FavoritesSyncStatus) {
-        when(status) {
+        when (status) {
             is FavoritesSyncStatus.Idle -> {
                 releaseSyncLocks()
 
@@ -675,16 +679,16 @@ class LibraryController(
 
                 favSyncDialog?.dismiss()
                 favSyncDialog = buildDialog()
-                        ?.title(text = "Favorites sync error")
-                        ?.message(text = status.message + " Sync will not start until the gallery is in only one category.")
-                        ?.cancelable(false)
-                        ?.positiveButton(text = "Show gallery") {
-                            openManga(status.manga)
-                            presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
-                        }
-                        ?.negativeButton(android.R.string.ok) {
-                            presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
-                        }
+                    ?.title(text = "Favorites sync error")
+                    ?.message(text = status.message + " Sync will not start until the gallery is in only one category.")
+                    ?.cancelable(false)
+                    ?.positiveButton(text = "Show gallery") {
+                        openManga(status.manga)
+                        presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                    }
+                    ?.negativeButton(android.R.string.ok) {
+                        presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                    }
                 favSyncDialog?.show()
             }
             is FavoritesSyncStatus.Error -> {
@@ -692,12 +696,12 @@ class LibraryController(
 
                 favSyncDialog?.dismiss()
                 favSyncDialog = buildDialog()
-                        ?.title(text = "Favorites sync error")
-                        ?.message(text = "An error occurred during the sync process: ${status.message}")
-                        ?.cancelable(false)
-                        ?.positiveButton(android.R.string.ok) {
-                            presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
-                        }
+                    ?.title(text = "Favorites sync error")
+                    ?.message(text = "An error occurred during the sync process: ${status.message}")
+                    ?.cancelable(false)
+                    ?.positiveButton(android.R.string.ok) {
+                        presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                    }
                 favSyncDialog?.show()
             }
             is FavoritesSyncStatus.CompleteWithErrors -> {
@@ -705,22 +709,26 @@ class LibraryController(
 
                 favSyncDialog?.dismiss()
                 favSyncDialog = buildDialog()
-                        ?.title(text = "Favorites sync complete with errors")
-                        ?.message(text = "Errors occurred during the sync process that were ignored:\n${status.message}")
-                        ?.cancelable(false)
-                        ?.positiveButton(android.R.string.ok) {
-                            presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
-                        }
+                    ?.title(text = "Favorites sync complete with errors")
+                    ?.message(text = "Errors occurred during the sync process that were ignored:\n${status.message}")
+                    ?.cancelable(false)
+                    ?.positiveButton(android.R.string.ok) {
+                        presenter.favoritesSync.status.onNext(FavoritesSyncStatus.Idle())
+                    }
                 favSyncDialog?.show()
             }
             is FavoritesSyncStatus.Processing,
             is FavoritesSyncStatus.Initializing -> {
                 takeSyncLocks()
 
-                if(favSyncDialog == null || (oldSyncStatus != null
-                        && oldSyncStatus !is FavoritesSyncStatus.Initializing
-                        && oldSyncStatus !is FavoritesSyncStatus.Processing))
+                if (favSyncDialog == null || (
+                    oldSyncStatus != null &&
+                        oldSyncStatus !is FavoritesSyncStatus.Initializing &&
+                        oldSyncStatus !is FavoritesSyncStatus.Processing
+                    )
+                ) {
                     showSyncProgressDialog()
+                }
 
                 favSyncDialog?.message(text = status.message)
             }

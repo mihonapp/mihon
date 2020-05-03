@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
-import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.preference.getOrDefault
@@ -9,6 +8,8 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.plusAssign
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
 import java.util.concurrent.PriorityBlockingQueue
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.min
@@ -22,8 +23,6 @@ import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.util.concurrent.PriorityBlockingQueue
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Loader used to load chapters from an online source.
@@ -54,12 +53,14 @@ class HttpPageLoader(
         repeat(prefs.eh_readerThreads().getOrDefault()) {
             // EXH <--
             subscriptions += Observable.defer { Observable.just(queue.take().page) }
-                    .filter { it.status == Page.QUEUE }
-                    .concatMap { source.fetchImageFromCacheThenNet(it) }
-                    .repeat()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                    }, { error ->
+                .filter { it.status == Page.QUEUE }
+                .concatMap { source.fetchImageFromCacheThenNet(it) }
+                .repeat()
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    {
+                    },
+                    { error ->
                         if (error !is InterruptedException) {
                             Timber.e(error)
                         }
@@ -106,7 +107,7 @@ class HttpPageLoader(
                     // Don't trust sources and use our own indexing
                     ReaderPage(index, page.url, page.imageUrl)
                 }
-                if(prefs.eh_aggressivePageLoading().getOrDefault()) {
+                if (prefs.eh_aggressivePageLoading().getOrDefault()) {
                     rp.mapNotNull {
                         if (it.status == Page.QUEUE) {
                             PriorityPage(it, 0)
@@ -184,12 +185,17 @@ class HttpPageLoader(
         }
         // EXH -->
         // Grab a new image URL on EXH sources
-        if(source.id == EH_SOURCE_ID || source.id == EXH_SOURCE_ID)
+        if (source.id == EH_SOURCE_ID || source.id == EXH_SOURCE_ID) {
             page.imageUrl = null
+        }
 
-        if(prefs.eh_readerInstantRetry().getOrDefault()) boostPage(page)
-        else // EXH <--
-        queue.offer(PriorityPage(page, 2))
+        if (prefs.eh_readerInstantRetry().getOrDefault()) // EXH <--
+        {
+            boostPage(page)
+        } else {
+            // EXH <--
+            queue.offer(PriorityPage(page, 2))
+        }
     }
 
     /**
@@ -272,16 +278,19 @@ class HttpPageLoader(
 
     // EXH -->
     fun boostPage(page: ReaderPage) {
-        if(page.status == Page.QUEUE) {
+        if (page.status == Page.QUEUE) {
             subscriptions += Observable.just(page)
-                    .concatMap { source.fetchImageFromCacheThenNet(it) }
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                    }, { error ->
+                .concatMap { source.fetchImageFromCacheThenNet(it) }
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    {
+                    },
+                    { error ->
                         if (error !is InterruptedException) {
                             Timber.e(error)
                         }
-                    })
+                    }
+                )
         }
     }
     // EXH <--

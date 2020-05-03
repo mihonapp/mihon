@@ -8,8 +8,8 @@ object LibrarySort {
     const val UNREAD = 3
     const val TOTAL = 4
     const val LATEST_CHAPTER = 6
+    const val DRAG_AND_DROP = 7
 
     @Deprecated("Removed in favor of searching by source")
     const val SOURCE = 5
-    const val DRAG_AND_DROP = 6
 }

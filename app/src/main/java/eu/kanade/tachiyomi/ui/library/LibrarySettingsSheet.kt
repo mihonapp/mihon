@@ -6,6 +6,10 @@ import android.util.AttributeSet
 import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.source.model.Filter
+import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_EXCLUDE
+import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_IGNORE
+import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_INCLUDE
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import eu.kanade.tachiyomi.widget.TabbedBottomSheetDialog
 import uy.kohesive.injekt.injectLazy
@@ -58,33 +62,41 @@ class LibrarySettingsSheet(
          * Returns true if there's at least one filter from [FilterGroup] active.
          */
         fun hasActiveFilters(): Boolean {
-            return filterGroup.items.any { it.checked }
+            return filterGroup.items.any { it.state != STATE_IGNORE }
         }
 
         inner class FilterGroup : Group {
 
-            private val downloaded = Item.CheckboxGroup(R.string.action_filter_downloaded, this)
-            private val unread = Item.CheckboxGroup(R.string.action_filter_unread, this)
-            private val completed = Item.CheckboxGroup(R.string.completed, this)
+            private val downloaded = Item.TriStateGroup(R.string.action_filter_downloaded, this)
+            private val unread = Item.TriStateGroup(R.string.action_filter_unread, this)
+            private val completed = Item.TriStateGroup(R.string.completed, this)
 
             override val header = null
             override val items = listOf(downloaded, unread, completed)
             override val footer = null
 
-            override fun initModels() {
-                downloaded.checked = preferences.downloadedOnly().get() || preferences.filterDownloaded().get()
-                downloaded.enabled = !preferences.downloadedOnly().get()
-                unread.checked = preferences.filterUnread().get()
-                completed.checked = preferences.filterCompleted().get()
+            override fun initModels() { // j2k changes
+                try {
+                    downloaded.state = preferences.filterDownloaded().get()
+                    unread.state = preferences.filterUnread().get()
+                    completed.state = preferences.filterCompleted().get()
+                } catch (e: Exception) {
+                    preferences.upgradeFilters()
+                }
             }
 
-            override fun onItemClicked(item: Item) {
-                item as Item.CheckboxGroup
-                item.checked = !item.checked
+            override fun onItemClicked(item: Item) { // j2k changes
+                item as Item.TriStateGroup
+                val newState = when (item.state) {
+                    STATE_IGNORE -> STATE_INCLUDE
+                    STATE_INCLUDE -> STATE_EXCLUDE
+                    else -> STATE_IGNORE
+                }
+                item.state = newState
                 when (item) {
-                    downloaded -> preferences.filterDownloaded().set(item.checked)
-                    unread -> preferences.filterUnread().set(item.checked)
-                    completed -> preferences.filterCompleted().set(item.checked)
+                    downloaded -> preferences.filterDownloaded().set(item.state)
+                    unread -> preferences.filterUnread().set(item.state)
+                    completed -> preferences.filterCompleted().set(item.state)
                 }
 
                 adapter.notifyItemChanged(item)
@@ -110,7 +122,7 @@ class LibrarySettingsSheet(
             private val lastChecked = Item.MultiSort(R.string.action_sort_last_checked, this)
             private val unread = Item.MultiSort(R.string.action_filter_unread, this)
             private val latestChapter = Item.MultiSort(R.string.action_sort_latest_chapter, this)
-			private val dragAndDrop = Item.MultiSort(R.string.action_sort_drag_and_drop, this)
+            private val dragAndDrop = Item.MultiSort(R.string.action_sort_drag_and_drop, this)
 
             override val header = null
             override val items =
@@ -136,7 +148,7 @@ class LibrarySettingsSheet(
                 total.state = if (sorting == LibrarySort.TOTAL) order else Item.MultiSort.SORT_NONE
                 latestChapter.state =
                     if (sorting == LibrarySort.LATEST_CHAPTER) order else Item.MultiSort.SORT_NONE
-                dragAndDrop.state = if (sorting == LibrarySort.DRAG_AND_DROP) order else SORT_NONE
+                dragAndDrop.state = if (sorting == LibrarySort.DRAG_AND_DROP) order else Item.MultiSort.SORT_NONE
             }
 
             override fun onItemClicked(item: Item) {
@@ -147,14 +159,15 @@ class LibrarySettingsSheet(
                     (it as Item.MultiStateGroup).state =
                         Item.MultiSort.SORT_NONE
                 }
-                if (item == dragAndDrop)
-                    item.state = SORT_ASC
-                else
+                if (item == dragAndDrop) {
+                    item.state = Item.MultiSort.SORT_ASC
+                } else {
                     item.state = when (prevState) {
-                        SORT_NONE -> SORT_ASC
-                        SORT_ASC -> SORT_DESC
-                        SORT_DESC -> SORT_ASC
+                        Item.MultiSort.SORT_NONE -> Item.MultiSort.SORT_ASC
+                        Item.MultiSort.SORT_ASC -> Item.MultiSort.SORT_DESC
+                        Item.MultiSort.SORT_DESC -> Item.MultiSort.SORT_ASC
                         else -> throw Exception("Unknown state")
+                    }
                 }
 
                 preferences.librarySortingMode().set(
@@ -165,7 +178,7 @@ class LibrarySettingsSheet(
                         unread -> LibrarySort.UNREAD
                         total -> LibrarySort.TOTAL
                         latestChapter -> LibrarySort.LATEST_CHAPTER
-						dragAndDrop -> LibrarySort.DRAG_AND_DROP
+                        dragAndDrop -> LibrarySort.DRAG_AND_DROP
                         else -> throw Exception("Unknown sorting")
                     }
                 )

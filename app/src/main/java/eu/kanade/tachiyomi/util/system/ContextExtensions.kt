@@ -3,7 +3,9 @@ package eu.kanade.tachiyomi.util.system
 import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.job.JobScheduler
 import android.content.BroadcastReceiver
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -13,7 +15,6 @@ import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.net.wifi.WifiManager
-import android.os.Build
 import android.os.PowerManager
 import android.widget.Toast
 import androidx.annotation.AttrRes
@@ -27,6 +28,9 @@ import com.nononsenseapps.filepicker.FilePickerActivity
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.widget.CustomLayoutPickerActivity
 import kotlin.math.roundToInt
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Display a toast in this context.

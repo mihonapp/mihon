@@ -2,9 +2,9 @@ package eu.kanade.tachiyomi.ui.migration
 
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.ui.source.globalsearch.GlobalSearchCardItem
-import eu.kanade.tachiyomi.ui.source.globalsearch.GlobalSearchItem
-import eu.kanade.tachiyomi.ui.source.globalsearch.GlobalSearchPresenter
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchCardItem
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchItem
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchPresenter
 
 class SearchPresenter(
     initialQuery: String? = "",

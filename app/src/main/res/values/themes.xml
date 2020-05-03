@@ -94,7 +94,7 @@
         <item name="actionBarTheme">@style/Theme.Toolbar.Light</item>
     </style>
 
-    <style name="Theme.EHActivity" parent="Theme.Tachiyomi">
+    <style name="Theme.EHActivity" parent="Theme.Tachiyomi.Light">
         <!-- Attributes specific for SDK 16 to SDK 20 -->
     </style>
 

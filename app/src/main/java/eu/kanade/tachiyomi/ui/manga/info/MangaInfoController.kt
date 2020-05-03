@@ -2,12 +2,15 @@ package eu.kanade.tachiyomi.ui.manga.info
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -20,20 +23,18 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
-import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
-import eu.kanade.tachiyomi.ui.source.SourceController
-import eu.kanade.tachiyomi.ui.source.browse.BrowseSourceController
-import eu.kanade.tachiyomi.ui.source.global_search.GlobalSearchController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
@@ -42,11 +43,22 @@ import eu.kanade.tachiyomi.util.view.setChips
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.util.view.visibleIf
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
+import exh.MERGED_SOURCE_ID
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.util.Date
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.android.view.longClicks
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
@@ -61,7 +73,8 @@ import uy.kohesive.injekt.injectLazy
  */
 class MangaInfoController(private val fromSource: Boolean = false) :
     NucleusController<MangaInfoControllerBinding, MangaInfoPresenter>(),
-    ChangeMangaCategoriesDialog.Listener {
+    ChangeMangaCategoriesDialog.Listener,
+    CoroutineScope {
 
     private val preferences: PreferencesHelper by injectLazy()
 
@@ -89,7 +102,7 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         val ctrl = parentController as MangaController
         return MangaInfoPresenter(
             ctrl.manga!!, ctrl.source!!,
-            ctrl.chapterCountRelay, ctrl.lastUpdateRelay, ctrl.mangaFavoriteRelay
+            ctrl.chapterCountRelay, ctrl.lastUpdateRelay, ctrl.mangaFavoriteRelay, ctrl.smartSearchConfig
         )
     }
 
@@ -227,9 +240,13 @@ class MangaInfoController(private val fromSource: Boolean = false) :
     private fun openSmartSearch() {
         val smartSearchConfig = SourceController.SmartSearchConfig(presenter.manga.title, presenter.manga.id!!)
 
-        parentController?.router?.pushController(SourceController(Bundle().apply {
-            putParcelable(SourceController.SMART_SEARCH_CONFIG, smartSearchConfig)
-        }).withFadeTransaction())
+        parentController?.router?.pushController(
+            SourceController(
+                Bundle().apply {
+                    putParcelable(SourceController.SMART_SEARCH_CONFIG, smartSearchConfig)
+                }
+            ).withFadeTransaction()
+        )
     }
     // EXH <--
 
@@ -291,7 +308,6 @@ class MangaInfoController(private val fromSource: Boolean = false) :
                 text = MergedSource.MangaConfig.readFromUrl(gson, manga.url).children.map {
                     sourceManager.getOrStub(it.source).toString()
                 }.distinct().joinToString()
-            
             } else {
                 text = mangaSource
                 setOnClickListener {
@@ -303,10 +319,10 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         }
 
         // EXH -->
-        if(source?.id == MERGED_SOURCE_ID) {
-            binding.sourceLabel.text = "Sources"
+        if (source?.id == MERGED_SOURCE_ID) {
+            binding.mangaSourceLabel.text = "Sources"
         } else {
-            binding.sourceLabel.setText(R.string.manga_info_source_label)
+            binding.mangaSourceLabel.setText(R.string.manga_info_source_label)
         }
         // EXH <--
 
@@ -372,9 +388,7 @@ class MangaInfoController(private val fromSource: Boolean = false) :
             binding.mangaSummary.clicks()
                 .onEach { toggleMangaInfo(view.context) }
                 .launchIn(scope)
-    override fun onDestroyView(view: View) {
-        manga_genres_tags.setOnTagClickListener(null)
-        super.onDestroyView(view)
+        }
     }
 
     private fun hideMangaInfo() {
@@ -383,13 +397,6 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         binding.mangaGenresTagsWrapper.gone()
         binding.mangaInfoToggle.gone()
     }
-
-    // EXH -->
-    override fun onDestroy() {
-        super.onDestroy()
-        cancel()
-    }
-    // EXH <--
 
     private fun toggleMangaInfo(context: Context) {
         val isExpanded = binding.mangaInfoToggle.text == context.getString(R.string.manga_info_collapse)
@@ -616,18 +623,19 @@ class MangaInfoController(private val fromSource: Boolean = false) :
     }
 
     // --> EH
-    private fun wrapTag(namespace: String, tag: String)
-            = if(tag.contains(' '))
-        "$namespace:\"$tag$\""
-    else
-        "$namespace:$tag$"
+    private fun wrapTag(namespace: String, tag: String) =
+        if (tag.contains(' ')) {
+            "$namespace:\"$tag$\""
+        } else {
+            "$namespace:$tag$"
+        }
 
     private fun parseTag(tag: String) = tag.substringBefore(':').trim() to tag.substringAfter(':').trim()
 
     private fun isEHentaiBasedSource(): Boolean {
         val sourceId = presenter.source.id
-        return sourceId == EH_SOURCE_ID
-                || sourceId == EXH_SOURCE_ID
+        return sourceId == EH_SOURCE_ID ||
+            sourceId == EXH_SOURCE_ID
     }
     // <-- EH
 

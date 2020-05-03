@@ -1,18 +1,15 @@
 package eu.kanade.tachiyomi.ui.setting
 
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.more.AboutController
 import eu.kanade.tachiyomi.util.preference.iconRes
 import eu.kanade.tachiyomi.util.preference.iconTint
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.getResourceColor
-import eu.kanade.tachiyomi.util.system.openInBrowser
 
 class SettingsMainController : SettingsController() {
 
@@ -97,7 +94,7 @@ class SettingsMainController : SettingsController() {
             iconRes = R.drawable.ic_info_24dp
             iconTint = tintColor
             titleRes = R.string.pref_category_about
-            onClick { navigateTo(SettingsAboutController()) }
+            onClick { navigateTo(AboutController()) }
         }
     }
 

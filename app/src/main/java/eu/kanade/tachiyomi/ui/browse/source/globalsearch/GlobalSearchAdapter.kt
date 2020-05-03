@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.util.SparseArray
 import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.kanade.tachiyomi.source.CatalogueSource
 
 /**
  * Adapter that holds the search cards.
@@ -17,7 +18,7 @@ class GlobalSearchAdapter(val controller: GlobalSearchController) :
     /**
      * Listen for more button clicks.
      */
-    val moreClickListener: OnMoreClickListener = controller
+    // val moreClickListener: OnMoreClickListener = controller
 
     /**
      * Bundle where the view state of the holders is saved.
