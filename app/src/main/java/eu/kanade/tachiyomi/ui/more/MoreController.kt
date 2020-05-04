@@ -70,7 +70,7 @@ class MoreController :
             }
             preference {
                 titleRes = R.string.label_migration
-                iconRes = R.drawable.ic_compare_arrows_black_24dp
+                iconRes = R.drawable.baseline_swap_calls_24
                 iconTint = tintColor
                 onClick {
                     router.pushController(MigrationController().withFadeTransaction())
