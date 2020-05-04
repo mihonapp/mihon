@@ -148,7 +148,7 @@ class LibraryPresenter(
                     item.downloadCount != -1 -> item.downloadCount > 0
                     else -> downloadManager.getDownloadCount(item.manga) > 0
                 }
-                return@f if (filterDownloaded == STATE_INCLUDE) isDownloaded else !isDownloaded
+                return@f if (filterDownloaded == STATE_INCLUDE || filterDownloadedOnly) isDownloaded else !isDownloaded
             }
             true
         }
