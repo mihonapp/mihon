@@ -284,6 +284,28 @@
                     app:icon="@drawable/ic_public_24dp"
                     tools:visibility="visible" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_migrate"
+                    style="@style/Theme.Widget.Button.Icon.Textless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/migrate"
+                    android:visibility="gone"
+                    app:icon="@drawable/baseline_swap_calls_24"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_smart_search"
+                    style="@style/Theme.Widget.Button.Icon.Textless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/eh_merge_with_another_source"
+                    android:visibility="gone"
+                    app:icon="@drawable/eh_ic_find_replace_white_24dp"
+                    tools:visibility="visible" />
+
             </LinearLayout>
 
             <TextView

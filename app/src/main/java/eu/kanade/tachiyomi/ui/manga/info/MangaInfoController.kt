@@ -33,6 +33,7 @@ import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
+import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
@@ -136,6 +137,20 @@ class MangaInfoController(private val fromSource: Boolean = false) :
                 .onEach { shareManga() }
                 .launchIn(scope)
         }
+
+        binding.btnMigrate.clicks()
+            .onEach {
+                PreMigrationController.navigateToMigration(
+                    preferences.skipPreMigration().get(),
+                    router,
+                    listOf(presenter.manga.id!!)
+                )
+            }
+            .launchIn(scope)
+
+        binding.btnSmartSearch.clicks()
+            .onEach { openSmartSearch() }
+            .launchIn(scope)
 
         // Set SwipeRefresh to refresh manga data.
         binding.swipeRefresh.refreshes()
