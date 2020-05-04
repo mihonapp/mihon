@@ -106,11 +106,13 @@ class SourceController(bundle: Bundle? = null) :
 
         requestPermissionsSafe(arrayOf(WRITE_EXTERNAL_STORAGE), 301)
 
-        // Update list on extension changes (e.g. new installation)
-        (parentController as BrowseController).extensionListUpdateRelay
-            .subscribeUntilDestroy {
-                presenter.updateSources()
-            }
+        if (mode == Mode.CATALOGUE) {
+            // Update list on extension changes (e.g. new installation)
+            (parentController as BrowseController).extensionListUpdateRelay
+                .subscribeUntilDestroy {
+                    presenter.updateSources()
+                }
+        }
     }
 
     override fun onDestroyView(view: View) {
