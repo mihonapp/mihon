@@ -114,6 +114,15 @@ class AboutController : SettingsController() {
             }
             preference {
                 title = "GitHub"
+                val url = "https://github.com/jobobby04/TachiyomiSY"
+                summary = url
+                onClick {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(intent)
+                }
+            }
+            preference {
+                title = "Original Tachiyomi GitHub "
                 val url = "https://github.com/inorichi/tachiyomi"
                 summary = url
                 onClick {
