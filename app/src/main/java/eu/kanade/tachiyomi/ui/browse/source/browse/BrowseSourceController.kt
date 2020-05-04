@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
 import com.elvishew.xlog.XLog
 import com.f2prateek.rx.preferences.Preference
@@ -46,6 +47,7 @@ import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import eu.kanade.tachiyomi.widget.EmptyView
+import exh.EXHSavedSearch
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -165,7 +167,94 @@ open class BrowseSourceController(bundle: Bundle) :
                 val newFilters = presenter.source.getFilterList()
                 presenter.sourceFilters = newFilters
                 filterSheet?.setFilters(presenter.filterItems)
+            },
+            onSaveClicked = {
+                filterSheet?.context?.let {
+                    MaterialDialog(it)
+                        .title(text = "Save current search query?")
+                        .input("My search name", hintRes = null) { _, searchName ->
+                            val oldSavedSearches = presenter.loadSearches()
+                            if (searchName.isNotBlank() &&
+                                oldSavedSearches.size < SourceFilterSheet.MAX_SAVED_SEARCHES
+                            ) {
+                                val newSearches = oldSavedSearches + EXHSavedSearch(
+                                    searchName.toString().trim(),
+                                    presenter.query,
+                                    presenter.sourceFilters
+                                )
+                                presenter.saveSearches(newSearches)
+                                filterSheet?.setSavedSearches(newSearches)
+                            }
+                        }
+                        .positiveButton(R.string.action_save)
+                        .negativeButton(R.string.action_cancel)
+                        .cancelable(true)
+                        .cancelOnTouchOutside(true)
+                        .show()
+                }
+            },
+            onSavedSearchClicked = cb@{ indexToSearch ->
+                val savedSearches = presenter.loadSearches()
+
+                val search = savedSearches.getOrNull(indexToSearch)
+
+                if (search == null) {
+                    filterSheet?.context?.let {
+                        MaterialDialog(it)
+                            .title(text = "Failed to load saved searches!")
+                            .message(text = "An error occurred while loading your saved searches.")
+                            .cancelable(true)
+                            .cancelOnTouchOutside(true)
+                            .show()
+                    }
+                    return@cb
+                }
+
+                presenter.sourceFilters = FilterList(search.filterList)
+                filterSheet?.setFilters(presenter.filterItems)
+                val allDefault = presenter.sourceFilters == presenter.source.getFilterList()
+
+                showProgressBar()
+                adapter?.clear()
+                filterSheet?.dismiss()
+                presenter.restartPager(search.query, if (allDefault) FilterList() else presenter.sourceFilters)
+                activity?.invalidateOptionsMenu()
+            },
+            onSavedSearchDeleteClicked = cb@{ indexToDelete, name ->
+                val savedSearches = presenter.loadSearches()
+
+                val search = savedSearches.getOrNull(indexToDelete)
+
+                if (search == null || search.name != name) {
+                    filterSheet?.context?.let {
+                        MaterialDialog(it)
+                            .title(text = "Failed to delete saved search!")
+                            .message(text = "An error occurred while deleting the search.")
+                            .cancelable(true)
+                            .cancelOnTouchOutside(true)
+                            .show()
+                    }
+                    return@cb
+                }
+
+                filterSheet?.context?.let {
+                    MaterialDialog(it)
+                        .title(text = "Delete saved search query?")
+                        .message(text = "Are you sure you wish to delete your saved search query: '${search.name}'?")
+                        .positiveButton(R.string.action_cancel)
+                        .negativeButton(text = "Confirm") {
+                            val newSearches = savedSearches.filterIndexed { index, _ ->
+                                index != indexToDelete
+                            }
+                            presenter.saveSearches(newSearches)
+                            filterSheet!!.setSavedSearches(newSearches)
+                        }
+                        .cancelable(true)
+                        .cancelOnTouchOutside(true)
+                        .show()
+                }
             }
+            // EXH <--
         )
         filterSheet?.setFilters(presenter.filterItems)
 
