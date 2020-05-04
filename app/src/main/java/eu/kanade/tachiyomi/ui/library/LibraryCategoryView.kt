@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.library_category.view.fast_scroller
 import kotlinx.android.synthetic.main.library_category.view.swipe_refresh
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
@@ -47,6 +48,8 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     FlexibleAdapter.OnItemLongClickListener,
     FlexibleAdapter.OnItemMoveListener,
     CategoryAdapter.OnItemReleaseListener {
+
+    private val scope = CoroutineScope(Job() + Dispatchers.Main)
 
     private val preferences: PreferencesHelper by injectLazy()
 
@@ -80,7 +83,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
 
     // EXH -->
     private var initialLoadHandle: LoadingHandle? = null
-    lateinit var scope: CoroutineScope
+    lateinit var scope2: CoroutineScope
 
     private fun newScope() = object : CoroutineScope {
         override val coroutineContext = SupervisorJob() + Dispatchers.Main
@@ -142,7 +145,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         adapter.isLongPressDragEnabled = sortingMode == LibrarySort.DRAG_AND_DROP
 
         // EXH -->
-        scope = newScope()
+        scope2 = newScope()
         initialLoadHandle = controller.loaderManager.openProgressBar()
         // EXH <--
 
@@ -153,7 +156,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 // EXH -->
-                scope.launch {
+                scope2.launch {
                     val handle = controller.loaderManager.openProgressBar()
                     try {
                         // EXH <--
@@ -169,7 +172,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         subscriptions += controller.libraryMangaRelay
             .subscribe {
                 // EXH -->
-                scope.launch {
+                scope2.launch {
                     try {
                         // EXH <--
                         onNextLibraryManga(this, it)
@@ -237,7 +240,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
     fun unsubscribe() {
         subscriptions.clear()
         // EXH -->
-        scope.cancel()
+        scope2.cancel()
         controller.loaderManager.closeProgressBar(initialLoadHandle)
         // EXH <--
     }
