@@ -302,7 +302,8 @@ class BackupManager(val context: Context, version: Int = CURRENT_VERSION) {
                 source.fetchChapterList(manga, throttleManager::throttle)
             } else {
                 source.fetchChapterList(manga)
-            }.map { syncChaptersWithSource(databaseHelper, it, manga, source) }
+            }
+                .map { syncChaptersWithSource(databaseHelper, it, manga, source) }
                 .doOnNext { pair ->
                     if (pair.first.isNotEmpty()) {
                         chapters.forEach { it.manga_id = manga.id }

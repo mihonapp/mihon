@@ -40,7 +40,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.ExecutorService
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -103,6 +102,8 @@ class BackupRestoreService : Service() {
 
     private var job: Job? = null
 
+    private val throttleManager = EHentaiThrottleManager()
+
     /**
      * The progress of a backup restore
      */
@@ -112,6 +113,10 @@ class BackupRestoreService : Service() {
      * Amount of manga in Json file (needed for restore)
      */
     private var restoreAmount = 0
+
+    private var skippedAmount = 0
+
+    private var totalAmount = 0
 
     /**
      * List containing errors
@@ -125,13 +130,6 @@ class BackupRestoreService : Service() {
 
     private val trackManager: TrackManager by injectLazy()
 
-    private lateinit var executor: ExecutorService
-
-    private val throttleManager = EHentaiThrottleManager()
-
-    /**
-     * Method called when the service is created. It injects dependencies and acquire the wake lock.
-     */
     override fun onCreate() {
         super.onCreate()
         notifier = BackupNotifier(this)
@@ -218,7 +216,29 @@ class BackupRestoreService : Service() {
 
         val mangasJson = json.get(MANGAS).asJsonArray
 
-        restoreAmount = mangasJson.size() + 1 // +1 for categories
+        val validManga = mangasJson.filter {
+            val tmanga = backupManager.parser.fromJson<MangaImpl>(it.asJsonObject.get(MANGA))
+            // EXH -->
+            val migrated = EXHMigrations.migrateBackupEntry(
+                BackupEntry(
+                    tmanga,
+                    backupManager.parser.fromJson<List<ChapterImpl>>(JsonArray()),
+                    backupManager.parser.fromJson<List<String>>(JsonArray()),
+                    backupManager.parser.fromJson<List<DHistory>>(JsonArray()),
+                    backupManager.parser.fromJson<List<TrackImpl>>(JsonArray())
+                )
+            )
+            val (manga, _, _, _, _) = migrated
+            val sourced = backupManager.sourceManager.get(manga.source) != null
+            if (!sourced) {
+                restoreAmount -= 1
+            }
+            sourced
+        }
+
+        totalAmount = mangasJson.size()
+        restoreAmount = validManga.count() + 1 // +1 for categories
+        skippedAmount = mangasJson.size() - validManga.count()
         restoreProgress = 0
         errors.clear()
 
@@ -267,6 +287,10 @@ class BackupRestoreService : Service() {
                     ?: JsonArray()
             )
 
+            if (job?.isActive != true) {
+                throw Exception(getString(R.string.restoring_backup_canceled))
+            }
+
             // EXH -->
             val migrated = EXHMigrations.migrateBackupEntry(
                 BackupEntry(
@@ -279,10 +303,6 @@ class BackupRestoreService : Service() {
             )
             val (manga, chapters, categories, history, tracks) = migrated
             // <-- EXH
-
-            if (job?.isActive != true) {
-                throw Exception(getString(R.string.restoring_backup_canceled))
-            }
 
             try {
                 restoreMangaData(manga, chapters, categories, history, tracks)
