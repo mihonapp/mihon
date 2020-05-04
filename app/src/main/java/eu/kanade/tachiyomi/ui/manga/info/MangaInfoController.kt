@@ -138,6 +138,7 @@ class MangaInfoController(private val fromSource: Boolean = false) :
                 .launchIn(scope)
         }
 
+        binding.btnMigrate.visible()
         binding.btnMigrate.clicks()
             .onEach {
                 PreMigrationController.navigateToMigration(
@@ -148,6 +149,7 @@ class MangaInfoController(private val fromSource: Boolean = false) :
             }
             .launchIn(scope)
 
+        binding.btnSmartSearch.visible()
         binding.btnSmartSearch.clicks()
             .onEach { openSmartSearch() }
             .launchIn(scope)
