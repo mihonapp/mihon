@@ -106,7 +106,7 @@ class SourcePresenter(
         val languages = preferences.enabledLanguages().get()
         val hiddenCatalogues = preferences.hiddenCatalogues().get()
 
-        return sourceManager.getCatalogueSources()
+        return sourceManager.getVisibleCatalogueSources()
             .filter { it.lang in languages }
             .filterNot { it.id.toString() in hiddenCatalogues }
             .sortedBy { "(${it.lang}) ${it.name}" } +
