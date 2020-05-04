@@ -40,13 +40,13 @@ import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.gone
-import eu.kanade.tachiyomi.util.view.setChips
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.util.view.visibleIf
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.MERGED_SOURCE_ID
+import exh.util.setChipsExtended
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.util.Date
@@ -395,8 +395,8 @@ class MangaInfoController(private val fromSource: Boolean = false) :
 
             // Update genres list
             if (!manga.genre.isNullOrBlank()) {
-                binding.mangaGenresTagsCompactChips.setChips(manga.getGenres(), this::performSearch, this::performGlobalSearch)
-                binding.mangaGenresTagsFullChips.setChips(manga.getGenres(), this::performSearch, this::performGlobalSearch)
+                binding.mangaGenresTagsCompactChips.setChipsExtended(manga.getGenres(), this::performSearch, this::performGlobalSearch, manga.source)
+                binding.mangaGenresTagsFullChips.setChipsExtended(manga.getGenres(), this::performSearch, this::performGlobalSearch, manga.source)
             } else {
                 binding.mangaGenresTagsWrapper.gone()
             }

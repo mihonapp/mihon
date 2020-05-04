@@ -5,6 +5,12 @@ import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.FrameLayout
 import androidx.annotation.Px
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import exh.EH_SOURCE_ID
+import exh.EXH_SOURCE_ID
+import exh.HITOMI_SOURCE_ID
+import exh.NHENTAI_SOURCE_ID
 
 inline val View.marginTop: Int
     get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.topMargin ?: 0
@@ -98,4 +104,42 @@ object RecyclerWindowInsetsListener : View.OnApplyWindowInsetsListener {
         // v.updatePaddingRelative(bottom = v.paddingBottom + insets.systemWindowInsetBottom)
         return insets
     }
+}
+
+/**
+ * Replaces chips in a ChipGroup.
+ *
+ * @param items List of strings that are shown as individual chips.
+ * @param onClick Optional on click listener for each chip.
+ * @param onLongClick Optional long click listener for each chip.
+ * @param sourceId Optional source check to determine if we need special search functions for each chip.
+ */
+fun ChipGroup.setChipsExtended(items: List<String>?, onClick: (item: String) -> Unit = {}, onLongClick: (item: String) -> Unit = {}, sourceId: Long = 0L) {
+    removeAllViews()
+
+    items?.forEach { item ->
+        val chip = Chip(context).apply {
+            text = item
+            var search = item
+            if (sourceId == EXH_SOURCE_ID || sourceId == EH_SOURCE_ID || sourceId == NHENTAI_SOURCE_ID || sourceId == HITOMI_SOURCE_ID) {
+                val parsed = parseTag(search)
+                search = wrapTag(parsed.first, parsed.second.substringBefore('|').trim())
+            }
+            setOnClickListener { onClick(search) }
+            setOnLongClickListener {
+                onLongClick(search)
+                false
+            }
+        }
+
+        addView(chip)
+    }
+}
+
+private fun parseTag(tag: String) = tag.substringBefore(':').trim() to tag.substringAfter(':').trim()
+
+private fun wrapTag(namespace: String, tag: String) = if (tag.contains(' ')) {
+    "$namespace:\"$tag$\""
+} else {
+    "$namespace:$tag$"
 }
