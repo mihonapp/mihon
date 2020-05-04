@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Activities and fragments labels (toolbar title) -->
+    <string name="label_reorganize_by">Reorder</string>
+    <string name="label_alpha_reverse">Alpha. (descending)</string>
+    <string name="label_hide_title">Hide title</string>
+    <string name="label_show_title">Show title</string>
+
+    <!-- Actions -->
+    <string name="action_sort_first_checked">First checked</string>
+    <string name="action_sort_drag_and_drop">Drag &amp; Drop</string>
+    <string name="action_sort_enabled">Enabled</string>
+    <string name="action_skip_manga">Don\'t migrate</string>
+    <string name="action_search_manually">Search manually</string>
+    <string name="action_migrate_now">Migrate now</string>
+    <string name="action_copy_now">Copy now</string>
+
+    <!-- Preferences -->
+    <!-- Subsections -->
+    <string name="pref_category_all_sources">All Sources</string>
+
+    <!-- Library section -->
+    <string name="pref_skip_pre_migration">Skip pre-migration</string>
+    <string name="pref_skip_pre_migration_summary">Use last saved pre-migration preferences
+    and sources to mass migrate</string>
+
+    <!-- Library update service notifications -->
+    <string name="notification_new_chapters_text_old">For %1$d titles</string>
+
+
+    <!-- Migration -->
+    <string name="source_migration">Source migration</string>
+    <string name="migration">Migration</string>
+    <string name="skip_pre_migration">Skip pre-migration</string>
+    <string name="pre_migration_skip_toast">To show this screen again, go to Settings -> Library.</string>
+    <string name="select_a_source_to_migrate_from">Select a source to migrate from</string>
+    <string name="use_intelligent_search">Search title + keywords of title</string>
+    <string name="data_to_include_in_migration">Data to include in migration</string>
+    <string name="search_parameter_eg">Search parameter (e.g. language:english)</string>
+    <string name="include_extra_search_parameter">Include extra search parameter when searching</string>
+    <string name="use_most_chapters">Use source with the most chapters (slower)</string>
+    <string name="use_first_source">Use first source with alternative</string>
+    <string name="skip_this_step_next_time">Skip this step next time</string>
+    <string name="search_parameter">Search parameter (e.g. language:english)</string>
+    <string name="to_show_again_setting_library">To show this screen again, go to Settings -> Library.</string>
+    <string name="latest_">Latest: %1$s</string>
+    <string name="migrating_to">migrating to</string>
+    <string name="dont_migrate">Don\'t migrate</string>
+    <string name="search_manually">Search manually</string>
+    <string name="migrate_now">Migrate now</string>
+    <string name="copy_now">Copy now</string>
+    <!--<string name="select">Select</string>-->
+    <!--<string name="migrate">Migrate</string>-->
+    <string name="migrate_">Migrate %1$s</string>
+    <string name="copy_value">Copy</string>
+    <string name="no_chapters_found_for_migration">No chapters found, this manga cannot be used for
+        migration</string>
+    <string name="no_alternatives_found">No Alternatives Found</string>
+    <string name="stop_migrating">Stop migrating?</string>
+    <plurals name="migrate_manga">
+        <item quantity="one">Migrate %1$d%2$s manga?</item>
+        <item quantity="other">Migrate %1$d%2$s manga?</item>
+    </plurals>
+    <plurals name="copy_manga">
+        <item quantity="one">Copy %1$d%2$s manga?</item>
+        <item quantity="other">Copy %1$d%2$s manga?</item>
+    </plurals>
+    <string name="skipping_">(skipping %1$d)</string>
+    <plurals name="manga_migrated">
+        <item quantity="one">%d manga migrated</item>
+        <item quantity="other">%d manga migrated</item>
+    </plurals>
+
+    <!-- EXH -->
+    <string name="label_login">Login</string>
+    <string name="pref_category_eh">E-Hentai</string>
+    <string name="pref_category_nh">nhentai</string>
+    <string name="pref_category_hl">hitomi.la</string>
+    <string name="eh_batch_add">Batch Add</string>
+    <string name="eh_settings_category">EH Settings</string>
+    <string name="eh_sync_favorites">Sync favorites</string>
+    <string name="eh_find_in_another_source">Find in another source</string>
+    <string name="eh_autoscroll">Autoscroll</string>
+    <string name="eh_retry_all">Retry all</string>
+    <string name="eh_boost_page">Boost page</string>
+    <string name="eh_rounded_corner_0">No Rounded Corners</string>
+    <string name="eh_rounded_corner_1">Radius of 1</string>
+    <string name="eh_rounded_corner_2">Radius of 2</string>
+    <string name="eh_rounded_corner_3">Radius of 3</string>
+    <string name="eh_rounded_corner_4">Radius of 4</string>
+    <string name="eh_rounded_corner_5">Radius of 5</string>
+    <string name="eh_rounded_corner_6">Radius of 6</string>
+    <string name="eh_rounded_corner_7">Radius of 7</string>
+    <string name="eh_rounded_corner_8">Radius of 8</string>
+    <string name="eh_rounded_corner_9">Radius of 9</string>
+    <string name="eh_rounded_corner_10">Radius of 10</string>
+    <string name="eh_rounded_corners_desc">The level of radius that the corners are rounded to. Current value is: %s</string>
+    <string name="merge">Merge with current</string>
+    <string name="eh_merge_with_another_source">Merge With Another</string>
+    <string name="eh_autoscroll_help">Autoscroll help</string>
+    <string name="eh_autoscroll_help_message">Automatically scroll to the next page in the specified interval. Interval is specified in seconds.</string>
+    <string name="eh_retry_all_help">Retry all help</string>
+    <string name="eh_retry_all_help_message">Re-add all failed pages to the download queue.</string>
+    <string name="eh_boost_page_help">Boost page help</string>
+    <string name="eh_boost_page_help_message">Normally the downloader can only download a specific amount of pages at the same time. This means you can be waiting for a page to download but the downloader will not start downloading the page until it has a free download slot. Pressing \'Boost page\' will force the downloader to begin downloading the current page, regardless of whether or not there is an available slot.</string>
+    <string name="eh_force_sync_reset_title">Are you sure?</string>
+    <string name="eh_force_sync_reset_message">Resetting the sync state can cause your next sync to be extremely slow.</string>
+    <string name="eh_show_update_statistics_dialog">Collecting statistics…</string>
+
+</resources>
