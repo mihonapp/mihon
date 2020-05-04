@@ -278,7 +278,6 @@ class BackupRestoreService : Service() {
                 )
             )
             val (manga, chapters, categories, history, tracks) = migrated
-            val source = backupManager.sourceManager.getOrStub(manga.source)
             // <-- EXH
 
             if (job?.isActive != true) {
