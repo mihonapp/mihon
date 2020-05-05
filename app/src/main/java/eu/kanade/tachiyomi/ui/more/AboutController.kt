@@ -75,23 +75,10 @@ class AboutController : SettingsController() {
             titleRes = R.string.changelog
 
             onClick {
-                if (BuildConfig.DEBUG) {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/inorichi/tachiyomi/commits/master"))
-                    startActivity(intent)
-                } else {
-                    ChangelogDialogController().showDialog(router)
-                }
+                ChangelogDialogController().showDialog(router)
             }
         }
-        if (BuildConfig.DEBUG) {
-            preference {
-                titleRes = R.string.notices
 
-                onClick {
-                    ChangelogDialogController().showDialog(router)
-                }
-            }
-        }
 
         preferenceCategory {
             preference {
