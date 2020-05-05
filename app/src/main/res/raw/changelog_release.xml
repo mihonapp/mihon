@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="0.9.2.4" changeDate="">
+        <changelogtext>Fixed All Sources in Filter list</changelogtext>
+        <changelogtext>Remove dev update checker(so it doesnt break when I release a regular build)</changelogtext>
+        <changelogtext>Change source migration icon</changelogtext>
+        <changelogtext>Add my github to the about page</changelogtext>
+        <changelogtext>Implement not really working saved searches</changelogtext>
+        <changelogtext>Fix downloaded only</changelogtext>
+        <changelogtext>Remove unneeded backup changes, now all backups should work</changelogtext>
+    </changelogversion>
     <changelogversion versionName="0.9.2.3" changeDate="">
         <changelogtext>Add EH and similar specific tag formatting for global and local search</changelogtext>
         <changelogtext>Fix the issue where it was showing hidden sources like the merged source</changelogtext>
@@ -8,6 +17,7 @@
         <changelogtext>Fix "merge with another" button crash</changelogtext>
         <changelogtext>(From preview) Bunch of crash fixes</changelogtext>
         <changelogtext>(From preview) More extreme method for enforcing WebView availability</changelogtext>
+        <changelogtext>(From preview) Fix anilist jsonnull issue</changelogtext>
         <changelogtext>Finally figured out how to properly make a release build with check for updates and changelogs</changelogtext>
     </changelogversion>
     <changelogversion versionName="0.9.2.2" changeDate="">

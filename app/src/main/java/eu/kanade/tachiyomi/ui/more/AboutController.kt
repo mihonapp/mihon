@@ -79,7 +79,6 @@ class AboutController : SettingsController() {
             }
         }
 
-
         preferenceCategory {
             preference {
                 titleRes = R.string.website
