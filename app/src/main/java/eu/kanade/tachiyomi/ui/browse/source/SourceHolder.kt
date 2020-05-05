@@ -76,7 +76,7 @@ class SourceHolder(view: View, override val adapter: SourceAdapter, val showButt
         }
 
         source_browse.setText(R.string.browse)
-        if (source.supportsLatest) {
+        if (source.supportsLatest && showButtons) {
             source_latest.visible()
         } else {
             source_latest.gone()
