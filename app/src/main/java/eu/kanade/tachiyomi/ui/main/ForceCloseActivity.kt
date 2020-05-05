@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.main
 
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
