@@ -303,14 +303,13 @@ class BackupManager(val context: Context, version: Int = CURRENT_VERSION) {
             } else {
                 source.fetchChapterList(manga)
             }
-                .map { syncChaptersWithSource(databaseHelper, it, manga, source) }
-                .doOnNext { pair ->
-                    if (pair.first.isNotEmpty()) {
-                        chapters.forEach { it.manga_id = manga.id }
-                        insertChapters(chapters)
-                    }
+            ).map { syncChaptersWithSource(databaseHelper, it, manga, source) }
+            .doOnNext { pair ->
+                if (pair.first.isNotEmpty()) {
+                    chapters.forEach { it.manga_id = manga.id }
+                    insertChapters(chapters)
                 }
-            )
+            }
     }
 
     /**
