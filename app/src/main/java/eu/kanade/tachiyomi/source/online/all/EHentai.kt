@@ -55,7 +55,7 @@ import okhttp3.Headers
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -209,7 +209,7 @@ class EHentai(
                     d.select("#gdd .gdt1").find { el ->
                         el.text().toLowerCase() == "posted:"
                     }!!.nextElementSibling().text()
-                ).time
+                )!!.time
             }
             // Build and append the rest of the galleries
             if (DebugToggles.INCLUDE_ONLY_ROOT_WHEN_LOADING_EXH_VERSIONS.enabled) listOf(self)
@@ -222,7 +222,7 @@ class EHentai(
                         this.url = EHentaiSearchMetadata.normalizeUrl(link)
                         this.name = "v${index + 2}: $name"
                         this.chapter_number = index + 2f
-                        this.date_upload = EX_DATE_FORMAT.parse(posted).time
+                        this.date_upload = EX_DATE_FORMAT.parse(posted)!!.time
                     }
                 }.reversed() + self
             }
@@ -429,7 +429,7 @@ class EHentai(
                                 left.removeSuffix(":")
                                     .toLowerCase()
                             ) {
-                                "posted" -> datePosted = EX_DATE_FORMAT.parse(right).time
+                                "posted" -> datePosted = EX_DATE_FORMAT.parse(right)!!.time
                                 // Example gallery with parent: https://e-hentai.org/g/1390451/7f181c2426/
                                 // Example JP gallery: https://exhentai.org/g/1375385/03519d541b/
                                 // Parent is older variation of the gallery
@@ -601,7 +601,7 @@ class EHentai(
     fun cookiesHeader(sp: Int = spPref().getOrDefault()) = buildCookies(rawCookies(sp))
 
     // Headers
-    override fun headersBuilder() = super.headersBuilder().add("Cookie", cookiesHeader())!!
+    override fun headersBuilder() = super.headersBuilder().add("Cookie", cookiesHeader())
 
     fun addParam(url: String, param: String, value: String) = Uri.parse(url)
         .buildUpon()
@@ -619,7 +619,7 @@ class EHentai(
                 .build()
 
             chain.proceed(newReq)
-        }.build()!!
+        }.build()
 
     // Filters
     override fun getFilterList() = FilterList(
@@ -782,7 +782,7 @@ class EHentai(
             client.newCall(
                 Request.Builder()
                     .url(EH_API_BASE)
-                    .post(RequestBody.create(JSON, json.toString()))
+                    .post(json.toString().toRequestBody(JSON))
                     .build()
             ).execute().body!!.string()
         ).obj

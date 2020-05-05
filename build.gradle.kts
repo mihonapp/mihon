@@ -44,7 +44,7 @@ buildscript {
         classpath("com.google.gms:google-services:4.3.3")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.2")
         // Realm (EH)
-        classpath("io.realm:realm-gradle-plugin:5.13.1")
+        classpath("io.realm:realm-gradle-plugin:6.0.2")
 
         // Firebase (EH)
         classpath("io.fabric.tools:gradle:1.31.0")

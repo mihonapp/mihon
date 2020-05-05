@@ -31,7 +31,7 @@ class SourceFilterSheet(
     // EXH -->
     onSaveClicked: () -> Unit,
     var onSavedSearchClicked: (Int) -> Unit = {},
-    var onSavedSearchDeleteClicked: (Int, String) -> Unit = { index, name -> }
+    var onSavedSearchDeleteClicked: (Int, String) -> Unit = { _, _ -> }
     // EXH <--
 ) : BottomSheetDialog(activity) {
 
