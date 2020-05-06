@@ -33,6 +33,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.source.SourceController
+import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterSheet.FilterNavigationView.Companion.MAX_SAVED_SEARCHES
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.main.offsetFabAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -168,6 +169,7 @@ open class BrowseSourceController(bundle: Bundle) :
                 presenter.sourceFilters = newFilters
                 filterSheet?.setFilters(presenter.filterItems)
             },
+            // EXH -->
             onSaveClicked = {
                 filterSheet?.context?.let {
                     MaterialDialog(it)
@@ -175,7 +177,7 @@ open class BrowseSourceController(bundle: Bundle) :
                         .input("My search name", hintRes = null) { _, searchName ->
                             val oldSavedSearches = presenter.loadSearches()
                             if (searchName.isNotBlank() &&
-                                oldSavedSearches.size < SourceFilterSheet.MAX_SAVED_SEARCHES
+                                oldSavedSearches.size < MAX_SAVED_SEARCHES
                             ) {
                                 val newSearches = oldSavedSearches + EXHSavedSearch(
                                     searchName.toString().trim(),
@@ -247,7 +249,7 @@ open class BrowseSourceController(bundle: Bundle) :
                                 index != indexToDelete
                             }
                             presenter.saveSearches(newSearches)
-                            filterSheet!!.setSavedSearches(newSearches)
+                            filterSheet?.setSavedSearches(newSearches)
                         }
                         .cancelable(true)
                         .cancelOnTouchOutside(true)
@@ -256,6 +258,10 @@ open class BrowseSourceController(bundle: Bundle) :
             }
             // EXH <--
         )
+        // EXH -->
+        filterSheet?.setSavedSearches(presenter.loadSearches())
+        // EXH <--
+
         filterSheet?.setFilters(presenter.filterItems)
 
         // TODO: [ExtendedFloatingActionButton] hide/show methods don't work properly
