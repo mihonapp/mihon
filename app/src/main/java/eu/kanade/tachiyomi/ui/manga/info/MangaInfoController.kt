@@ -220,9 +220,14 @@ class MangaInfoController(private val fromSource: Boolean = false) :
             .launchIn(scope)
 
         // EXH -->
+        if (smartSearchConfig == null) {
+            binding.recommendBtn.visible()
+            binding.recommendBtn.clicks()
+                .onEach { openRecommends() }
+                .launchIn(scope)
+        }
         smartSearchConfig?.let { smartSearchConfig ->
             binding.mergeBtn.visible()
-
             binding.mergeBtn.clicks()
                 .onEach {
                     // Init presenter here to avoid threading issues
@@ -268,6 +273,20 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         )
     }
     // EXH <--
+
+    // AZ -->
+    private fun openRecommends() {
+        val recommendsConfig = BrowseSourceController.RecommendsConfig(presenter.manga.title, presenter.manga.source)
+
+        parentController?.router?.pushController(
+            BrowseSourceController(
+                Bundle().apply {
+                    putParcelable(BrowseSourceController.RECOMMENDS_CONFIG, recommendsConfig)
+                }
+            ).withFadeTransaction()
+        )
+    }
+    // AZ <--
 
     /**
      * Check if manga is initialized.

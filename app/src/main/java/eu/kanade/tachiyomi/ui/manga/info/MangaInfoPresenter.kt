@@ -177,7 +177,12 @@ class MangaInfoPresenter(
     fun moveMangaToCategory(manga: Manga, category: Category?) {
         moveMangaToCategories(manga, listOfNotNull(category))
     }
+    /*
+    suspend fun recommendationView(manga: Manga): Manga {
+        val title = manga.title
+        val source = manga.source
 
+    }*/
     suspend fun smartSearchMerge(manga: Manga, originalMangaId: Long): Manga {
         val originalManga = db.getManga(originalMangaId).await()
             ?: throw IllegalArgumentException("Unknown manga ID: $originalMangaId")

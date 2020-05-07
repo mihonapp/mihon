@@ -381,9 +381,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/merge"
+                android:text="@string/eh_merge_with_another_source"
                 android:visibility="gone"
                 tools:visibility="visible"/>
+
+            <Button
+                android:id="@+id/recommend_btn"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/az_recommends"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
 

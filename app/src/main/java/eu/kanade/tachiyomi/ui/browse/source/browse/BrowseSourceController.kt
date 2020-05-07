@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.source.browse
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -49,6 +50,7 @@ import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import eu.kanade.tachiyomi.widget.EmptyView
 import exh.EXHSavedSearch
+import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -87,6 +89,11 @@ open class BrowseSourceController(bundle: Bundle) :
 
     private val preferences: PreferencesHelper by injectLazy()
 
+    private val recommendsConfig: RecommendsConfig? = args.getParcelable(RECOMMENDS_CONFIG)
+
+    // AZ -->
+    private val mode = if (recommendsConfig == null) Mode.CATALOGUE else Mode.RECOMMENDS
+    // AZ <--
     /**
      * Adapter containing the list of manga from the catalogue.
      */
@@ -122,7 +129,10 @@ open class BrowseSourceController(bundle: Bundle) :
     }
 
     override fun getTitle(): String? {
-        return presenter.source.name
+        return when (mode) {
+            Mode.CATALOGUE -> presenter.source.name
+            Mode.RECOMMENDS -> recommendsConfig!!.origTitle
+        }
     }
 
     override fun createPresenter(): BrowseSourcePresenter {
@@ -151,7 +161,7 @@ open class BrowseSourceController(bundle: Bundle) :
     }
 
     open fun initFilterSheet() {
-        if (presenter.sourceFilters.isEmpty()) {
+        if (presenter.sourceFilters.isEmpty() || mode == Mode.RECOMMENDS) {
             return
         }
 
@@ -348,6 +358,11 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.source_browse, menu)
 
+        if (mode == Mode.RECOMMENDS) {
+            menu.findItem(R.id.action_set_filter).isVisible = false
+            menu.findItem(R.id.action_search).isVisible = false
+        }
+
         // Initialize search menu
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
@@ -389,10 +404,10 @@ open class BrowseSourceController(bundle: Bundle) :
         super.onPrepareOptionsMenu(menu)
 
         val isHttpSource = presenter.source is HttpSource
-        menu.findItem(R.id.action_open_in_web_view).isVisible = isHttpSource
+        menu.findItem(R.id.action_open_in_web_view).isVisible = isHttpSource && mode == Mode.CATALOGUE
 
         val isLocalSource = presenter.source is LocalSource
-        menu.findItem(R.id.action_local_source_help).isVisible = isLocalSource
+        menu.findItem(R.id.action_local_source_help).isVisible = isLocalSource && mode == Mode.CATALOGUE
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -483,7 +498,7 @@ open class BrowseSourceController(bundle: Bundle) :
         if (adapter.isEmpty) {
             val actions = emptyList<EmptyView.Action>().toMutableList()
 
-            if (presenter.source is LocalSource) {
+            if (presenter.source is LocalSource && mode == Mode.CATALOGUE) {
                 actions += EmptyView.Action(R.string.local_source_help_guide, View.OnClickListener { openLocalSourceHelpGuide() })
             } else {
                 actions += EmptyView.Action(R.string.action_retry, retryAction)
@@ -718,11 +733,20 @@ open class BrowseSourceController(bundle: Bundle) :
         }
         activity?.toast(activity?.getString(R.string.manga_added_library))
     }
+    @Parcelize
+    data class RecommendsConfig(val origTitle: String, val origSource: Long) : Parcelable
 
-    protected companion object {
+    enum class Mode {
+        CATALOGUE,
+        RECOMMENDS
+    }
+
+    companion object {
         const val SOURCE_ID_KEY = "sourceId"
 
         const val SEARCH_QUERY_KEY = "searchQuery"
         const val SMART_SEARCH_CONFIG_KEY = "smartSearchConfig"
+
+        const val RECOMMENDS_CONFIG = "RECOMMENDS_CONFIG"
     }
 }
