@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.ui.migration.MigrationFlags
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
+import eu.kanade.tachiyomi.util.lang.launchIO
 import exh.favorites.FavoritesSyncHelper
 import java.io.IOException
 import java.io.InputStream
@@ -338,12 +339,9 @@ class LibraryPresenter(
         val mangaToDelete = mangas.distinctBy { it.id }
         mangaToDelete.forEach { it.favorite = false }
 
-        Observable.fromCallable { db.insertMangas(mangaToDelete).executeAsBlocking() }
-            .onErrorResumeNext { Observable.empty() }
-            .subscribeOn(Schedulers.io())
-            .subscribe()
+        launchIO {
+            db.insertMangas(mangaToDelete).executeAsBlocking()
 
-        Observable.fromCallable {
             mangaToDelete.forEach { manga ->
                 coverCache.deleteFromCache(manga.thumbnail_url)
                 if (deleteChapters) {
@@ -354,8 +352,6 @@ class LibraryPresenter(
                 }
             }
         }
-            .subscribeOn(Schedulers.io())
-            .subscribe()
     }
 
     /**
