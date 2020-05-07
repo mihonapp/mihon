@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="0.9.2.6" changeDate="">
+        <changelogtext>Re-Implemented history features from AZ, includes year long history, endless scrolling, and searching history</changelogtext>
+        <changelogtext>Saved searches now fully work, and increased the limit to 500 instead of 5 saved searches per sources</changelogtext>
+        <changelogtext>(From AZ) hide 'latest' when merging sources </changelogtext>
+    </changelogversion>
     <changelogversion versionName="0.9.2.5" changeDate="">
         <changelogtext>Fixed issue where some sources wouldn't work at all (like Toonily and Dynasty)</changelogtext>
     </changelogversion>
