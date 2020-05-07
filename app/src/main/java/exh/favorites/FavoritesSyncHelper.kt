@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.util.system.wifiManager
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
 import exh.GalleryAddEvent
@@ -24,6 +23,7 @@ import exh.eh.EHentaiThrottleManager
 import exh.eh.EHentaiUpdateWorker
 import exh.util.ignore
 import exh.util.trans
+import exh.util.wifiManager
 import kotlin.concurrent.thread
 import okhttp3.FormBody
 import okhttp3.Request

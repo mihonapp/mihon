@@ -3,9 +3,7 @@ package eu.kanade.tachiyomi.util.system
 import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationManager
-import android.app.job.JobScheduler
 import android.content.BroadcastReceiver
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -14,7 +12,6 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.net.wifi.WifiManager
 import android.os.PowerManager
 import android.widget.Toast
 import androidx.annotation.AttrRes
@@ -158,18 +155,13 @@ val Context.powerManager: PowerManager
     get() = getSystemService(Context.POWER_SERVICE) as PowerManager
 
 /**
- * Property to get the wifi manager from the context.
+ * Convenience method to acquire a partial wake lock.
  */
-val Context.wifiManager: WifiManager
-    get() = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-
-// --> EH
-val Context.clipboardManager: ClipboardManager
-    get() = applicationContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-
-val Context.jobScheduler: JobScheduler
-    get() = applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-// <-- EH
+fun Context.acquireWakeLock(tag: String): PowerManager.WakeLock {
+    val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$tag:WakeLock")
+    wakeLock.acquire()
+    return wakeLock
+}
 
 /**
  * Function used to send a local broadcast asynchronous
