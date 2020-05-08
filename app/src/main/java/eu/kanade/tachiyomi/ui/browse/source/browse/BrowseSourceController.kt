@@ -138,7 +138,8 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun createPresenter(): BrowseSourcePresenter {
         return BrowseSourcePresenter(
             args.getLong(SOURCE_ID_KEY),
-            args.getString(SEARCH_QUERY_KEY)
+            if (mode == Mode.RECOMMENDS) recommendsConfig!!.origTitle else args.getString(SEARCH_QUERY_KEY),
+            recommends = (mode == Mode.RECOMMENDS)
         )
     }
 

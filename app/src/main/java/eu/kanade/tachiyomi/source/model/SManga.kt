@@ -61,6 +61,7 @@ interface SManga : Serializable {
         const val ONGOING = 1
         const val COMPLETED = 2
         const val LICENSED = 3
+        const val RECOMMENDS = 69 // nice
 
         fun create(): SManga {
             return SMangaImpl()
