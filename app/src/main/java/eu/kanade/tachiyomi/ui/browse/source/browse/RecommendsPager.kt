@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.source.browse
+package eu.kanade.tachiyomi.ui.browse.source.browse
 
 import android.util.Log
 import com.github.salomonbrys.kotson.array
@@ -82,11 +82,7 @@ open class RecommendsPager(val title: String) : Pager() {
             }.map {
                 MangasPage(it, false)
             }.doOnNext {
-                if (it.mangas.isNotEmpty()) {
-                    onPageReceived(it)
-                } else {
-                    throw NoResultsException()
-                }
+                onPageReceived(it)
             }
     }
     companion object {

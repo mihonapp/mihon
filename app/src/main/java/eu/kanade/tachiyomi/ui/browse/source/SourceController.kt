@@ -284,7 +284,7 @@ class SourceController(bundle: Bundle? = null) :
     }
 
     @Parcelize
-    data class SmartSearchConfig(val origTitle: String, val origMangaId: Long) : Parcelable
+    data class SmartSearchConfig(val origTitle: String, val origMangaId: Long? = null) : Parcelable
 
     enum class Mode {
         CATALOGUE,

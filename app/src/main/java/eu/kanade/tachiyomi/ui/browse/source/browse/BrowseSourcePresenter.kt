@@ -154,7 +154,9 @@ open class BrowseSourcePresenter(
         subscribeToMangaInitializer()
 
         // Create a new pager.
-        pager = if (recommends) RecommendsPager(searchQuery!!) else createPager(query, filters)
+        pager = if (recommends) RecommendsPager(
+            query
+        ) else createPager(query, filters)
 
         val sourceId = source.id
 
