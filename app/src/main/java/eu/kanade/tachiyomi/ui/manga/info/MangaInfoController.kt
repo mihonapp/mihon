@@ -138,7 +138,11 @@ class MangaInfoController(private val fromSource: Boolean = false) :
                 .launchIn(scope)
         }
 
-        binding.btnMigrate.visible()
+        if (presenter.manga.favorite) {
+            binding.btnMigrate.visible()
+            binding.btnSmartSearch.visible()
+        }
+
         binding.btnMigrate.clicks()
             .onEach {
                 PreMigrationController.navigateToMigration(
@@ -149,7 +153,6 @@ class MangaInfoController(private val fromSource: Boolean = false) :
             }
             .launchIn(scope)
 
-        binding.btnSmartSearch.visible()
         binding.btnSmartSearch.clicks()
             .onEach { openSmartSearch() }
             .launchIn(scope)
@@ -482,6 +485,13 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         }
 
         binding.btnCategories.visibleIf { isNowFavorite && presenter.getCategories().isNotEmpty() }
+        if (isNowFavorite) {
+            binding.btnSmartSearch.visible()
+            binding.btnMigrate.visible()
+        } else {
+            binding.btnSmartSearch.gone()
+            binding.btnMigrate.gone()
+        }
     }
 
     private fun openInWebView() {
