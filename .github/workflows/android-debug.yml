@@ -42,20 +42,20 @@ jobs:
           force: true # optional, default is false
           # Add toolchain to the path
           add-to-path: true # optional, default is true
-      - name: base64-to-file
+      - name: Create google-services.json
         uses: timheuer/base64-to-file@v1.0.3
         with:
           # Name of the file when written to temp location
           fileName: google-services.json # default is decoded-file.file
           # The base64 encoded string
           encodedString: ${{ secrets.GOOGLE_SERVICES }}
-      - name: Copy file
+      - name: Copy google-services.json to app
         uses: canastro/copy-action@0.0.2
         with:
           # Source file
-          source: temp/google-services.json
+          source: ${{ steps.write_file.outputs.filePath }}
           # Target file
-          target: app/google-services.json
+          target: $GITHUB_WORKSPACE/app/google-services.json
       - name: Build Release APK
         run: bash ./gradlew assembleStandard --stacktrace
       - name: Sign Android release
