@@ -404,6 +404,15 @@ class MangaInfoController(private val fromSource: Boolean = false) :
             binding.mangaSummary.clicks()
                 .onEach { toggleMangaInfo(view.context) }
                 .launchIn(scope)
+            binding.mangaInfoToggle.clicks()
+                .onEach { toggleMangaInfo(view.context) }
+                .launchIn(scope)
+
+            // Expand manga info if navigated from source listing
+            if (initialLoad && fromSource) {
+                toggleMangaInfo(view.context)
+                initialLoad = false
+            }
         }
     }
 
