@@ -1,4 +1,4 @@
-name: Android Pull Request & Master CI
+name: Android Master CI
 
 on:
   push:
@@ -29,8 +29,21 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build debug APK
-        run: bash ./gradlew assembleRelease --stacktrace
+      - name: Android NDK toolchain Setup
+        uses: ravinderjangra/android-ndk-toolchain-setup@0.2
+        with:
+          # Android API
+          api: 20 # default is 21
+          # Platform arch
+          arch: x86
+          # Path to use for NDK toolchain
+          install-location: toolchains
+          # Force install toolchain
+          force: true # optional, default is false
+          # Add toolchain to the path
+          add-to-path: true # optional, default is true
+      - name: Build Release APK
+        run: bash ./gradlew assembleStandard --stacktrace
       - name: Sign Android release
         uses: r0adkll/sign-android-release@v1
         with:
