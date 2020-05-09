@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
+    <changelogversion versionName="0.9.2.7" changeDate="">
+        <changelogtext>Re-Implemented the more button inside global search</changelogtext>
+        <changelogtext>Made migrate and merge with another only visible if the manga is favourited</changelogtext>
+        <changelogtext>Remove library rounded corners option</changelogtext>
+        <changelogtext>(From Preview) Refresh page on 32-bit color setting change</changelogtext>
+        <changelogtext>(From Preview) Fix updates/history section headers in RTL locales</changelogtext>
+        <changelogtext>(From Preview) Tweak about manga heading</changelogtext>
+        <changelogtext>(From Preview) Increase webtoon setting change page refresh range</changelogtext>
+        <changelogtext>(From Preview) Adopt MaterialFastScroll from J2K fork</changelogtext>
+        <changelogtext>(From Preview) Use borderless buttons everywhere for consistency</changelogtext>
+        <changelogtext>(From Preview) Show icon when chapter is bookmarked</changelogtext>
+        <changelogtext>(From Preview) Concurrently download up to 5 pages at a time</changelogtext>
+        <changelogtext>(From Preview) Download from up to 5 different sources concurrently</changelogtext>
+        <changelogtext>(From Preview) Do library checks from up to 5 sources concurrently</changelogtext>
+        <changelogtext>(From Preview) Concurrently refresh trackers</changelogtext>
+        <changelogtext>(From Preview) Fix backup restore lag</changelogtext>
+        <changelogtext>(From Preview) Option to hide unread badges</changelogtext>
+        <changelogtext>(From Preview) Fix reader opening in the wrong place</changelogtext>
+    </changelogversion>
     <changelogversion versionName="0.9.2.6" changeDate="">
         <changelogtext>Re-Implemented history features from AZ, includes year long history, endless scrolling, and searching history</changelogtext>
         <changelogtext>Saved searches now fully work, and increased the limit to 500 instead of 5 saved searches per sources</changelogtext>
