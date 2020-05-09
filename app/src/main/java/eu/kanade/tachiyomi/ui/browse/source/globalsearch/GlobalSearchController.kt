@@ -11,16 +11,19 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.databinding.GlobalSearchControllerBinding
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.QueryTextEvent
 import reactivecircus.flowbinding.appcompat.queryTextEvents
+import uy.kohesive.injekt.injectLazy
 
 /**
  * This controller shows and manages the different search result in global search.
@@ -31,7 +34,13 @@ open class GlobalSearchController(
     protected val initialQuery: String? = null,
     protected val extensionFilter: String? = null
 ) : NucleusController<GlobalSearchControllerBinding, GlobalSearchPresenter>(),
-    GlobalSearchCardAdapter.OnMangaClickListener {
+    GlobalSearchCardAdapter.OnMangaClickListener,
+    GlobalSearchAdapter.OnMoreClickListener {
+
+    /**
+     * Application preferences.
+     */
+    private val preferences: PreferencesHelper by injectLazy()
 
     /**
      * Adapter containing search results grouped by lang.
@@ -189,5 +198,17 @@ open class GlobalSearchController(
      */
     fun onMangaInitialized(source: CatalogueSource, manga: Manga) {
         getHolder(source)?.setImage(manga)
+    }
+
+    override fun onMoreClick(source: CatalogueSource) {
+        openCatalogue(source, BrowseSourceController(source, presenter.query))
+    }
+
+    /**
+     * Opens a catalogue with the given controller.
+     */
+    private fun openCatalogue(source: CatalogueSource, controller: BrowseSourceController) {
+        preferences.lastUsedCatalogueSource().set(source.id)
+        router.pushController(controller.withFadeTransaction())
     }
 }

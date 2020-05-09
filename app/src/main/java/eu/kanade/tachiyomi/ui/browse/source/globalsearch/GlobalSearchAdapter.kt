@@ -18,7 +18,7 @@ class GlobalSearchAdapter(val controller: GlobalSearchController) :
     /**
      * Listen for more button clicks.
      */
-    // val moreClickListener: OnMoreClickListener = controller
+    val moreClickListener: OnMoreClickListener = controller
 
     /**
      * Bundle where the view state of the holders is saved.
