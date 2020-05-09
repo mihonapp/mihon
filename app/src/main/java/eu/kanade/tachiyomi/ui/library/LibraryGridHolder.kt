@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.library
 
-import android.util.TypedValue
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -9,10 +8,8 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.util.view.visibleIf
-import kotlinx.android.synthetic.main.source_grid_item.card
 import kotlinx.android.synthetic.main.source_grid_item.download_text
 import kotlinx.android.synthetic.main.source_grid_item.local_text
 import kotlinx.android.synthetic.main.source_grid_item.thumbnail
@@ -57,12 +54,6 @@ class LibraryGridHolder(
         }
         // set local visibility if its local manga
         local_text.visibleIf { item.manga.source == LocalSource.ID }
-
-        card.radius = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            preferences.eh_library_corner_radius().getOrDefault().toFloat(),
-            view.context.resources.displayMetrics
-        )
 
         // Update the cover.
         GlideApp.with(view.context).clear(thumbnail)

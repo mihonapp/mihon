@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
-import android.util.TypedValue
 import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -8,9 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.widget.StateImageViewTarget
-import kotlinx.android.synthetic.main.source_grid_item.card
 import kotlinx.android.synthetic.main.source_grid_item.progress
 import kotlinx.android.synthetic.main.source_grid_item.thumbnail
 import kotlinx.android.synthetic.main.source_grid_item.title
@@ -46,12 +43,6 @@ class SourceGridHolder(private val view: View, private val adapter: FlexibleAdap
     override fun setImage(manga: Manga) {
         // Set manga title
         title.text = manga.title
-
-        card.radius = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            preferences.eh_library_corner_radius().getOrDefault().toFloat(),
-            view.context.resources.displayMetrics
-        )
 
         GlideApp.with(view.context).clear(thumbnail)
         if (!manga.thumbnail_url.isNullOrEmpty()) {

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -114,6 +113,9 @@ class MangaInfoController(private val fromSource: Boolean = false) :
 
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
+
+        // Setting this via XML doesn't work
+        binding.mangaCover.clipToOutline = true
 
         binding.btnFavorite.clicks()
             .onEach { onFavoriteClick() }
@@ -363,12 +365,6 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         if (binding.mangaCover.drawable == null || manga.thumbnail_url != thumbnailUrl) {
             thumbnailUrl = manga.thumbnail_url
             val mangaThumbnail = manga.toMangaThumbnail()
-
-            binding.mangaCoverCard.radius = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                preferences.eh_library_corner_radius().getOrDefault().toFloat(),
-                view.context.resources.displayMetrics
-            )
 
             GlideApp.with(view.context)
                 .load(mangaThumbnail)

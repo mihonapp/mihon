@@ -356,7 +356,5 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_hl_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_hl_useHighQualityThumbs, false)
 
-    fun eh_library_corner_radius() = rxPrefs.getInteger(Keys.eh_library_rounded_corners, 4)
-
     fun eh_preload_size() = rxPrefs.getInteger(Keys.eh_preload_size, 4)
 }
