@@ -31,7 +31,7 @@ jobs:
           # Add toolchain to the path
           add-to-path: true # optional, default is true
       - name: Create google-services.json
-      - uses: finnp/create-file-action@1.0.0
+        uses: finnp/create-file-action@1.0.0
         env:
           FILE_NAME: "app/google-services.json"
           FILE_BASE64: ${{ secrets.GOOGLE_SERVICES }}
