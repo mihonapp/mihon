@@ -207,6 +207,8 @@ class PreferencesHelper(val context: Context) {
 
     fun downloadedOnly() = flowPrefs.getBoolean(Keys.downloadedOnly, false)
 
+    fun unreadBadge() = flowPrefs.getBoolean(Keys.unreadBadge, false)
+
     // J2K converted from boolean to integer
     fun filterDownloaded() = flowPrefs.getInt(Keys.filterDownloaded, 0)
 

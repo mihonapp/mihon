@@ -143,6 +143,8 @@ object PreferenceKeys {
 
     const val downloadBadge = "display_download_badge"
 
+    const val unreadBadge = "display_unread_badge"
+
     const val skipPreMigration = "skip_pre_migration"
 
     const val alwaysShowChapterTransition = "always_show_chapter_transition"
