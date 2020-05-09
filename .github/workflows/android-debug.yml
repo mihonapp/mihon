@@ -6,19 +6,6 @@ on:
       - 'master'
 
 jobs:
-  test:
-    name: Run Unit Tests
-    runs-on: ubuntu-18.04
-
-    steps:
-      - uses: actions/checkout@v1
-      - name: set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Unit tests
-        run: bash ./gradlew test --stacktrace
-
   apk:
     name: Generate APK
     runs-on: ubuntu-18.04
@@ -55,7 +42,7 @@ jobs:
           # Source file
           source: ${{ steps.write_file.outputs.filePath }}
           # Target file
-          target: $GITHUB_WORKSPACE/app/google-services.json
+          target: ${{ GITHUB_WORKSPACE }}/app/google-services.json
       - name: Build Release APK
         run: bash ./gradlew assembleStandard --stacktrace
       - name: Sign Android release
@@ -75,4 +62,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: TachiyomiSY-${{ github.sha }}
-          path: $SIGNED_RELEASE_FILE
+          path: ${{ SIGNED_RELEASE_FILE }}
