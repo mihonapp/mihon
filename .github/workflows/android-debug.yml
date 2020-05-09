@@ -35,10 +35,6 @@ jobs:
         env:
           FILE_NAME: "app/google-services.json"
           FILE_DATA: ${{ secrets.GOOGLE_SERVICES_TEXT }}
-      - name: Validate JSON
-        uses: OrRosenblatt/validate-json-action@0.1.0
-        with:
-          json: app/google-services.json
       - name: Build Release APK
         run: bash ./gradlew assembleStandard --stacktrace
       - name: Sign Android release
