@@ -104,10 +104,12 @@ class GlobalSearchHolder(view: View, val adapter: GlobalSearchAdapter) :
     private fun showHolder() {
         title.visible()
         source_card.visible()
+        more.visible() // EXH
     }
 
     private fun hideHolder() {
         title.gone()
         source_card.gone()
+        more.gone() // EXH
     }
 }
