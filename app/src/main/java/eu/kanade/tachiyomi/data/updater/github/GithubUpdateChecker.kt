@@ -18,7 +18,7 @@ class GithubUpdateChecker(val debug: Boolean = false) : UpdateChecker() {
 
         val newVersion = release.version
         // Check if latest version is different from current version
-        return if ((newVersion != BuildConfig.VERSION_NAME && (syDebugVersion != "0")) || ((syDebugVersion != "0") && newVersion != syDebugVersion)) {
+        return if ((newVersion != BuildConfig.VERSION_NAME && (syDebugVersion == "0")) || ((syDebugVersion != "0") && newVersion != syDebugVersion)) {
             GithubUpdateResult.NewUpdate(release)
         } else {
             GithubUpdateResult.NoNewUpdate()
