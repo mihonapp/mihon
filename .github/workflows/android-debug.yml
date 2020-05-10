@@ -46,5 +46,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: TachiyomiSY-${{ github.sha }}
+          name: TachiyomiSY-${{ github.sha }}.apk
           path: ${{ env.SIGNED_RELEASE_FILE }}
