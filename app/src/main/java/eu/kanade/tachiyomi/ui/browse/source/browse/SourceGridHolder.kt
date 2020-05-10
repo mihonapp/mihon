@@ -6,13 +6,10 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
-import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.widget.StateImageViewTarget
 import kotlinx.android.synthetic.main.source_grid_item.progress
 import kotlinx.android.synthetic.main.source_grid_item.thumbnail
 import kotlinx.android.synthetic.main.source_grid_item.title
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 /**
  * Class used to hold the displayed data of a manga in the catalogue, like the cover or the title.
@@ -24,8 +21,6 @@ import uy.kohesive.injekt.api.get
  */
 class SourceGridHolder(private val view: View, private val adapter: FlexibleAdapter<*>) :
     SourceHolder(view, adapter) {
-
-    private val preferences: PreferencesHelper = Injekt.get()
 
     /**
      * Method called from [CatalogueAdapter.onBindViewHolder]. It updates the data for this

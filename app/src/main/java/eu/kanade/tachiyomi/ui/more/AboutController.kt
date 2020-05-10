@@ -54,7 +54,7 @@ class AboutController : SettingsController() {
         preference {
             titleRes = R.string.version
             summary = if (syDebugVersion != "0") {
-                "Preview r${syDebugVersion} (${BuildConfig.COMMIT_SHA})"
+                "Preview r$syDebugVersion (${BuildConfig.COMMIT_SHA})"
             } else {
                 "Stable ${BuildConfig.VERSION_NAME}"
             }
