@@ -19,8 +19,6 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import exh.ui.lock.FingerLockPreference
-import exh.ui.lock.LockPreference
 import kotlinx.coroutines.flow.launchIn
 
 class SettingsGeneralController : SettingsController() {
@@ -206,7 +204,7 @@ class SettingsGeneralController : SettingsController() {
             defaultValue = false
         }
 
-        preferenceCategory {
+        /*preferenceCategory {
             title = "Application lock"
 
             LockPreference(context).apply {
@@ -244,7 +242,7 @@ class SettingsGeneralController : SettingsController() {
                 titleRes = R.string.hide_notification_content
                 defaultValue = false
             }
-        }
+        }*/
         // <-- EXH
     }
 }

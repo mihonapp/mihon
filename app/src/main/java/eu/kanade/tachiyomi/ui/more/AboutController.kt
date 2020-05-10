@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
+import exh.syDebugVersion
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -52,8 +53,8 @@ class AboutController : SettingsController() {
 
         preference {
             titleRes = R.string.version
-            summary = if (BuildConfig.DEBUG) {
-                "Preview r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA})"
+            summary = if (syDebugVersion != "0") {
+                "Preview r${syDebugVersion} (${BuildConfig.COMMIT_SHA})"
             } else {
                 "Stable ${BuildConfig.VERSION_NAME}"
             }

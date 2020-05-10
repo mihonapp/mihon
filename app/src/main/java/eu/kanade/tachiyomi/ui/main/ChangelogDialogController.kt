@@ -9,6 +9,7 @@ import com.afollestad.materialdialogs.customview.customView
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
+import exh.syDebugVersion
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView
 
 class ChangelogDialogController : DialogController() {
@@ -17,7 +18,7 @@ class ChangelogDialogController : DialogController() {
         val activity = activity!!
         val view = WhatsNewRecyclerView(activity)
         return MaterialDialog(activity)
-            .title(res = if (BuildConfig.DEBUG) R.string.notices else R.string.changelog)
+            .title(res = if (BuildConfig.DEBUG || syDebugVersion != "0") R.string.notices else R.string.changelog)
             .customView(view = view)
             .positiveButton(R.string.action_close)
     }
@@ -26,7 +27,7 @@ class ChangelogDialogController : DialogController() {
         override fun initAttrs(attrs: AttributeSet?, defStyle: Int) {
             mRowLayoutId = R.layout.changelog_row_layout
             mRowHeaderLayoutId = R.layout.changelog_header_layout
-            mChangeLogFileResourceId = if (BuildConfig.DEBUG) R.raw.changelog_debug else R.raw.changelog_release
+            mChangeLogFileResourceId = if (BuildConfig.DEBUG || syDebugVersion != "0") R.raw.changelog_debug else R.raw.changelog_release
         }
     }
 }
