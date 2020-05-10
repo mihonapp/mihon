@@ -44,7 +44,7 @@ jobs:
           # The password for the key
           keyPassword: ${{ secrets.KEY_PASSWORD }}
       - name: Upload APK
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: TachiyomiSY-${{ github.sha }}
-          path: ${SIGNED_RELEASE_FILE}
+          path: ${{ env.SIGNED_RELEASE_FILE }}
