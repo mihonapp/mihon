@@ -9,11 +9,10 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
-import com.f2prateek.rx.preferences.Preference
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.ui.migration.MigrationFlags
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.gone
@@ -122,7 +121,7 @@ class MigrationBottomSheetDialog(
      * Binds a checkbox or switch view with a boolean preference.
      */
     private fun CompoundButton.bindToPreference(pref: Preference<Boolean>) {
-        isChecked = pref.getOrDefault()
+        isChecked = pref.get()
         setOnCheckedChangeListener { _, isChecked -> pref.set(isChecked) }
     }
 
@@ -130,7 +129,7 @@ class MigrationBottomSheetDialog(
      * Binds a radio group with a boolean preference.
      */
     private fun RadioGroup.bindToPreference(pref: Preference<Boolean>) {
-        (getChildAt(pref.getOrDefault().toInt()) as RadioButton).isChecked = true
+        (getChildAt(pref.get().toInt()) as RadioButton).isChecked = true
         setOnCheckedChangeListener { _, value ->
             val index = indexOfChild(findViewById(value))
             pref.set(index == 1)

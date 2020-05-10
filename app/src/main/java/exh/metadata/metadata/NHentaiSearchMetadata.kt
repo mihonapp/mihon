@@ -1,7 +1,6 @@
 package exh.metadata.metadata
 
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.EX_DATE_FORMAT
 import exh.metadata.ONGOING_SUFFIX
@@ -42,7 +41,7 @@ class NHentaiSearchMetadata : RaisedSearchMetadata() {
         nhId?.let { manga.url = nhIdToPath(it) }
 
         if (mediaId != null) {
-            val hqThumbs = Injekt.get<PreferencesHelper>().eh_nh_useHighQualityThumbs().getOrDefault()
+            val hqThumbs = Injekt.get<PreferencesHelper>().eh_nh_useHighQualityThumbs().get()
             typeToExtension(if (hqThumbs) coverImageType else thumbnailImageType)?.let {
                 manga.thumbnail_url = "https://t.nhentai.net/galleries/$mediaId/${if (hqThumbs) {
                     "cover"

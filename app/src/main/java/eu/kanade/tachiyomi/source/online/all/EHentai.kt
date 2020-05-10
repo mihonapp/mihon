@@ -14,7 +14,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.Filter
@@ -73,7 +72,7 @@ class EHentai(
     override val metaClass = EHentaiSearchMetadata::class
 
     val schema: String
-        get() = if (prefs.secureEXH().getOrDefault()) {
+        get() = if (prefs.secureEXH().get()) {
             "https"
         } else {
             "http"
@@ -567,23 +566,23 @@ class EHentai(
 
     fun rawCookies(sp: Int): Map<String, String> {
         val cookies: MutableMap<String, String> = mutableMapOf()
-        if (prefs.enableExhentai().getOrDefault()) {
+        if (prefs.enableExhentai().get()) {
             cookies[LoginController.MEMBER_ID_COOKIE] = prefs.memberIdVal().get()!!
             cookies[LoginController.PASS_HASH_COOKIE] = prefs.passHashVal().get()!!
             cookies[LoginController.IGNEOUS_COOKIE] = prefs.igneousVal().get()!!
             cookies["sp"] = sp.toString()
 
-            val sessionKey = prefs.eh_settingsKey().getOrDefault()
+            val sessionKey = prefs.eh_settingsKey().get()
             if (sessionKey != null) {
                 cookies["sk"] = sessionKey
             }
 
-            val sessionCookie = prefs.eh_sessionCookie().getOrDefault()
+            val sessionCookie = prefs.eh_sessionCookie().get()
             if (sessionCookie != null) {
                 cookies["s"] = sessionCookie
             }
 
-            val hathPerksCookie = prefs.eh_hathPerksCookies().getOrDefault()
+            val hathPerksCookie = prefs.eh_hathPerksCookies().get()
             if (hathPerksCookie != null) {
                 cookies["hath_perks"] = hathPerksCookie
             }
@@ -598,7 +597,7 @@ class EHentai(
         return cookies
     }
 
-    fun cookiesHeader(sp: Int = spPref().getOrDefault()) = buildCookies(rawCookies(sp))
+    fun cookiesHeader(sp: Int = spPref().get()) = buildCookies(rawCookies(sp))
 
     // Headers
     override fun headersBuilder() = super.headersBuilder().add("Cookie", cookiesHeader())

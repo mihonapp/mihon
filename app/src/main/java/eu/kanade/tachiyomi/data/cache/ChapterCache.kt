@@ -7,12 +7,16 @@ import com.google.gson.Gson
 import com.jakewharton.disklrucache.DiskLruCache
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.saveTo
 import java.io.File
 import java.io.IOException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import okhttp3.Response
 import okio.buffer
 import okio.sink
@@ -41,6 +45,8 @@ class ChapterCache(private val context: Context) {
         const val PARAMETER_VALUE_COUNT = 1
     }
 
+    private val scope = CoroutineScope(Job() + Dispatchers.Main)
+
     /** Google Json class used for parsing JSON files.  */
     private val gson: Gson by injectLazy()
 
@@ -50,15 +56,17 @@ class ChapterCache(private val context: Context) {
 
     /** Cache class used for cache management.  */
     // --> EH
-    private var diskCache = setupDiskCache(prefs.eh_cacheSize().getOrDefault().toLong())
+    private var diskCache = setupDiskCache(prefs.eh_cacheSize().get().toLong())
 
     init {
-        prefs.eh_cacheSize().asObservable().skip(1).subscribe {
-            // Save old cache for destruction later
-            val oldCache = diskCache
-            diskCache = setupDiskCache(it.toLong())
-            oldCache.close()
-        }
+        prefs.eh_cacheSize().asFlow()
+            .onEach {
+                // Save old cache for destruction later
+                val oldCache = diskCache
+                diskCache = setupDiskCache(it.toLong())
+                oldCache.close()
+            }
+            .launchIn(scope)
     }
     // <-- EH
 

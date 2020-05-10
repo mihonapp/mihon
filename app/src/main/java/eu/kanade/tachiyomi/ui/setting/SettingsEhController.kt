@@ -6,16 +6,15 @@ import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
-import com.f2prateek.rx.preferences.Preference
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.kizitonwose.time.Interval
 import com.kizitonwose.time.days
 import com.kizitonwose.time.hours
+import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.intListPreference
@@ -46,10 +45,11 @@ import humanize.Humanize
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -62,14 +62,13 @@ class SettingsEhController : SettingsController() {
 
     private fun Preference<*>.reconfigure(): Boolean {
         // Listen for change commit
-        asObservable()
-            .skip(1) // Skip first as it is emitted immediately
+        asFlow()
             .take(1) // Only listen for first commit
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeUntilDestroy {
+            .onEach {
                 // Only listen for first change commit
                 WarnConfigureDialogController.uploadSettings(router)
             }
+            .launchIn(scope)
 
         // Always return true to save changes
         return true
@@ -85,12 +84,11 @@ class SettingsEhController : SettingsController() {
             isPersistent = false
             defaultValue = false
             preferences.enableExhentai()
-                .asObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeUntilDestroy {
+                .asFlow()
+                .onEach {
                     isChecked = it
                 }
+                .launchIn(scope)
 
             onChange { newVal ->
                 newVal as Boolean
@@ -243,8 +241,8 @@ class SettingsEhController : SettingsController() {
                 entryValues = arrayOf("0", "1", "2", "3", "6", "12", "24", "48")
                 defaultValue = "0"
 
-                preferences.eh_autoUpdateFrequency().asObservable()
-                    .subscribeUntilDestroy { newVal ->
+                preferences.eh_autoUpdateFrequency().asFlow()
+                    .onEach { newVal ->
                         summary = if (newVal == 0) {
                             "${context.getString(R.string.app_name)} will currently never check galleries in your library for updates."
                         } else {
@@ -253,6 +251,7 @@ class SettingsEhController : SettingsController() {
                                 " wait $newVal hour(s), check ${EHentaiUpdateWorkerConstants.UPDATES_PER_ITERATION} and so on..."
                         }
                     }
+                    .launchIn(scope)
 
                 onChange { newValue ->
                     val interval = (newValue as String).toInt()
@@ -268,8 +267,9 @@ class SettingsEhController : SettingsController() {
                 entryValues = arrayOf("wifi", "ac")
                 summaryRes = R.string.pref_library_update_restriction_summary
 
-                preferences.eh_autoUpdateFrequency().asObservable()
-                    .subscribeUntilDestroy { isVisible = it > 0 }
+                preferences.eh_autoUpdateFrequency().asFlow()
+                    .onEach { isVisible = it > 0 }
+                    .launchIn(scope)
 
                 onChange {
                     // Post to event looper to allow the preference to be updated.
@@ -290,7 +290,7 @@ class SettingsEhController : SettingsController() {
                     GlobalScope.launch(Dispatchers.IO) {
                         val updateInfo = try {
                             val stats =
-                                preferences.eh_autoUpdateStats().getOrDefault().nullIfBlank()?.let {
+                                preferences.eh_autoUpdateStats().get().nullIfBlank()?.let {
                                     gson.fromJson<EHentaiUpdaterStats>(it)
                                 }
 

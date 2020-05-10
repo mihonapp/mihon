@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.source.online
 
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
@@ -377,7 +376,7 @@ abstract class HttpSource : CatalogueSource {
 
     // EXH -->
     private var delegate: DelegatedHttpSource? = null
-        get() = if (Injekt.get<PreferencesHelper>().eh_delegateSources().getOrDefault()) {
+        get() = if (Injekt.get<PreferencesHelper>().eh_delegateSources().get()) {
             field
         } else {
             null

@@ -1,7 +1,6 @@
 package exh.source
 
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.Page
@@ -217,7 +216,7 @@ class EnhancedHttpSource(
     override fun getFilterList() = source().getFilterList()
 
     private fun source(): HttpSource {
-        return if (prefs.eh_delegateSources().getOrDefault()) {
+        return if (prefs.eh_delegateSources().get()) {
             enchancedSource
         } else {
             originalSource

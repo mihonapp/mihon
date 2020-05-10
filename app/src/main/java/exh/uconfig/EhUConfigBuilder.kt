@@ -1,7 +1,6 @@
 package exh.uconfig
 
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import okhttp3.FormBody
 import uy.kohesive.injekt.injectLazy
 
@@ -13,7 +12,7 @@ class EhUConfigBuilder {
 
         configItems += when (
             prefs.imageQuality()
-                .getOrDefault()
+                .get()
                 .toLowerCase()
         ) {
             "ovrs_2400" -> Entry.ImageSize.`2400`
@@ -25,19 +24,19 @@ class EhUConfigBuilder {
             else -> Entry.ImageSize.AUTO
         }
 
-        configItems += if (prefs.useHentaiAtHome().getOrDefault()) {
+        configItems += if (prefs.useHentaiAtHome().get()) {
             Entry.UseHentaiAtHome.YES
         } else {
             Entry.UseHentaiAtHome.NO
         }
 
-        configItems += if (prefs.useJapaneseTitle().getOrDefault()) {
+        configItems += if (prefs.useJapaneseTitle().get()) {
             Entry.TitleDisplayLanguage.JAPANESE
         } else {
             Entry.TitleDisplayLanguage.DEFAULT
         }
 
-        configItems += if (prefs.eh_useOriginalImages().getOrDefault()) {
+        configItems += if (prefs.eh_useOriginalImages().get()) {
             Entry.UseOriginalImages.YES
         } else {
             Entry.UseOriginalImages.NO

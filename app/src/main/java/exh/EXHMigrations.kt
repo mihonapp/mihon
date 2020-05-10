@@ -11,7 +11,6 @@ import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import exh.source.BlacklistedSources
@@ -33,7 +32,7 @@ object EXHMigrations {
      */
     fun upgrade(preferences: PreferencesHelper): Boolean {
         val context = preferences.context
-        val oldVersion = preferences.eh_lastVersionCode().getOrDefault()
+        val oldVersion = preferences.eh_lastVersionCode().get()
         try {
             if (oldVersion < BuildConfig.VERSION_CODE) {
                 // Fresh install

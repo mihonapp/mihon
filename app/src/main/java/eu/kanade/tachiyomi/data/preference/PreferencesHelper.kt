@@ -240,16 +240,16 @@ class PreferencesHelper(val context: Context) {
 
     fun migrationSources() = flowPrefs.getString("migrate_sources", "")
 
-    fun smartMigration() = rxPrefs.getBoolean("smart_migrate", false)
+    fun smartMigration() = flowPrefs.getBoolean("smart_migrate", false)
 
-    fun useSourceWithMost() = rxPrefs.getBoolean("use_source_with_most", false)
+    fun useSourceWithMost() = flowPrefs.getBoolean("use_source_with_most", false)
 
     fun skipPreMigration() = flowPrefs.getBoolean(Keys.skipPreMigration, false)
 
     fun upgradeFilters() {
-        val filterDl = rxPrefs.getBoolean(Keys.filterDownloaded, false).getOrDefault()
-        val filterUn = rxPrefs.getBoolean(Keys.filterUnread, false).getOrDefault()
-        val filterCm = rxPrefs.getBoolean(Keys.filterCompleted, false).getOrDefault()
+        val filterDl = flowPrefs.getBoolean(Keys.filterDownloaded, false).get()
+        val filterUn = flowPrefs.getBoolean(Keys.filterUnread, false).get()
+        val filterCm = flowPrefs.getBoolean(Keys.filterCompleted, false).get()
         filterDownloaded().set(if (filterDl) 1 else 0)
         filterUnread().set(if (filterUn) 1 else 0)
         filterCompleted().set(if (filterCm) 1 else 0)
@@ -258,91 +258,80 @@ class PreferencesHelper(val context: Context) {
     // <--
 
     // --> EH
-    fun enableExhentai() = rxPrefs.getBoolean(Keys.eh_enableExHentai, false)
+    fun enableExhentai() = flowPrefs.getBoolean(Keys.eh_enableExHentai, false)
 
-    fun secureEXH() = rxPrefs.getBoolean("secure_exh", true)
+    fun secureEXH() = flowPrefs.getBoolean("secure_exh", true)
 
-    fun imageQuality() = rxPrefs.getString("ehentai_quality", "auto")
+    fun imageQuality() = flowPrefs.getString("ehentai_quality", "auto")
 
-    fun useHentaiAtHome() = rxPrefs.getBoolean("enable_hah", true)
+    fun useHentaiAtHome() = flowPrefs.getBoolean("enable_hah", true)
 
-    fun useJapaneseTitle() = rxPrefs.getBoolean("use_jp_title", false)
+    fun useJapaneseTitle() = flowPrefs.getBoolean("use_jp_title", false)
 
-    fun eh_useOriginalImages() = rxPrefs.getBoolean(Keys.eh_useOrigImages, false)
+    fun eh_useOriginalImages() = flowPrefs.getBoolean(Keys.eh_useOrigImages, false)
 
-    fun ehSearchSize() = rxPrefs.getString("ex_search_size", "rc_0")
+    fun ehSearchSize() = flowPrefs.getString("ex_search_size", "rc_0")
 
-    fun thumbnailRows() = rxPrefs.getString("ex_thumb_rows", "tr_2")
+    fun thumbnailRows() = flowPrefs.getString("ex_thumb_rows", "tr_2")
 
-    fun hasPerformedURLMigration() = rxPrefs.getBoolean("performed_url_migration", false)
+    fun hasPerformedURLMigration() = flowPrefs.getBoolean("performed_url_migration", false)
 
     // EH Cookies
-    fun memberIdVal() = rxPrefs.getString("eh_ipb_member_id", "")
+    fun memberIdVal() = flowPrefs.getString("eh_ipb_member_id", "")
 
-    fun passHashVal() = rxPrefs.getString("eh_ipb_pass_hash", "")
-    fun igneousVal() = rxPrefs.getString("eh_igneous", "")
-    fun eh_ehSettingsProfile() = rxPrefs.getInteger(Keys.eh_ehSettingsProfile, -1)
-    fun eh_exhSettingsProfile() = rxPrefs.getInteger(Keys.eh_exhSettingsProfile, -1)
-    fun eh_settingsKey() = rxPrefs.getString(Keys.eh_settingsKey, "")
-    fun eh_sessionCookie() = rxPrefs.getString(Keys.eh_sessionCookie, "")
-    fun eh_hathPerksCookies() = rxPrefs.getString(Keys.eh_hathPerksCookie, "")
+    fun passHashVal() = flowPrefs.getString("eh_ipb_pass_hash", "")
+    fun igneousVal() = flowPrefs.getString("eh_igneous", "")
+    fun eh_ehSettingsProfile() = flowPrefs.getInt(Keys.eh_ehSettingsProfile, -1)
+    fun eh_exhSettingsProfile() = flowPrefs.getInt(Keys.eh_exhSettingsProfile, -1)
+    fun eh_settingsKey() = flowPrefs.getString(Keys.eh_settingsKey, "")
+    fun eh_sessionCookie() = flowPrefs.getString(Keys.eh_sessionCookie, "")
+    fun eh_hathPerksCookies() = flowPrefs.getString(Keys.eh_hathPerksCookie, "")
 
-    // Lock
-    fun eh_lockHash() = rxPrefs.getString(Keys.eh_lock_hash, null)
-
-    fun eh_lockSalt() = rxPrefs.getString(Keys.eh_lock_salt, null)
-
-    fun eh_lockLength() = rxPrefs.getInteger(Keys.eh_lock_length, -1)
-
-    fun eh_lockUseFingerprint() = rxPrefs.getBoolean(Keys.eh_lock_finger, false)
-
-    fun eh_lockManually() = rxPrefs.getBoolean(Keys.eh_lock_manually, false)
-
-    fun eh_nh_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_nh_useHighQualityThumbs, false)
+    fun eh_nh_useHighQualityThumbs() = flowPrefs.getBoolean(Keys.eh_nh_useHighQualityThumbs, false)
 
     fun eh_showSyncIntro() = flowPrefs.getBoolean(Keys.eh_showSyncIntro, true)
 
-    fun eh_readOnlySync() = rxPrefs.getBoolean(Keys.eh_readOnlySync, false)
+    fun eh_readOnlySync() = flowPrefs.getBoolean(Keys.eh_readOnlySync, false)
 
-    fun eh_lenientSync() = rxPrefs.getBoolean(Keys.eh_lenientSync, false)
+    fun eh_lenientSync() = flowPrefs.getBoolean(Keys.eh_lenientSync, false)
 
-    fun eh_ts_aspNetCookie() = rxPrefs.getString(Keys.eh_ts_aspNetCookie, "")
+    fun eh_ts_aspNetCookie() = flowPrefs.getString(Keys.eh_ts_aspNetCookie, "")
 
     fun eh_showSettingsUploadWarning() = flowPrefs.getBoolean(Keys.eh_showSettingsUploadWarning, true)
 
-    fun eh_expandFilters() = rxPrefs.getBoolean(Keys.eh_expandFilters, false)
+    fun eh_expandFilters() = flowPrefs.getBoolean(Keys.eh_expandFilters, false)
 
-    fun eh_readerThreads() = rxPrefs.getInteger(Keys.eh_readerThreads, 2)
+    fun eh_readerThreads() = flowPrefs.getInt(Keys.eh_readerThreads, 2)
 
-    fun eh_readerInstantRetry() = rxPrefs.getBoolean(Keys.eh_readerInstantRetry, true)
+    fun eh_readerInstantRetry() = flowPrefs.getBoolean(Keys.eh_readerInstantRetry, true)
 
     fun eh_utilAutoscrollInterval() = flowPrefs.getFloat(Keys.eh_utilAutoscrollInterval, 3f)
 
-    fun eh_cacheSize() = rxPrefs.getString(Keys.eh_cacheSize, "75")
+    fun eh_cacheSize() = flowPrefs.getString(Keys.eh_cacheSize, "75")
 
     fun eh_preserveReadingPosition() = flowPrefs.getBoolean(Keys.eh_preserveReadingPosition, false)
 
-    fun eh_autoSolveCaptchas() = rxPrefs.getBoolean(Keys.eh_autoSolveCaptchas, false)
+    fun eh_autoSolveCaptchas() = flowPrefs.getBoolean(Keys.eh_autoSolveCaptchas, false)
 
-    fun eh_delegateSources() = rxPrefs.getBoolean(Keys.eh_delegateSources, true)
+    fun eh_delegateSources() = flowPrefs.getBoolean(Keys.eh_delegateSources, true)
 
-    fun eh_lastVersionCode() = rxPrefs.getInteger("eh_last_version_code", 0)
+    fun eh_lastVersionCode() = flowPrefs.getInt("eh_last_version_code", 0)
 
-    fun eh_savedSearches() = rxPrefs.getStringSet("eh_saved_searches", emptySet())
+    fun eh_savedSearches() = flowPrefs.getStringSet("eh_saved_searches", emptySet())
 
-    fun eh_logLevel() = rxPrefs.getInteger(Keys.eh_logLevel, 0)
+    fun eh_logLevel() = flowPrefs.getInt(Keys.eh_logLevel, 0)
 
     fun eh_enableSourceBlacklist() = flowPrefs.getBoolean(Keys.eh_enableSourceBlacklist, true)
 
-    fun eh_autoUpdateFrequency() = rxPrefs.getInteger(Keys.eh_autoUpdateFrequency, 1)
+    fun eh_autoUpdateFrequency() = flowPrefs.getInt(Keys.eh_autoUpdateFrequency, 1)
 
     fun eh_autoUpdateRequirements() = prefs.getStringSet(Keys.eh_autoUpdateRestrictions, emptySet())
 
-    fun eh_autoUpdateStats() = rxPrefs.getString(Keys.eh_autoUpdateStats, "")
+    fun eh_autoUpdateStats() = flowPrefs.getString(Keys.eh_autoUpdateStats, "")
 
-    fun eh_aggressivePageLoading() = rxPrefs.getBoolean(Keys.eh_aggressivePageLoading, false)
+    fun eh_aggressivePageLoading() = flowPrefs.getBoolean(Keys.eh_aggressivePageLoading, false)
 
-    fun eh_hl_useHighQualityThumbs() = rxPrefs.getBoolean(Keys.eh_hl_useHighQualityThumbs, false)
+    fun eh_hl_useHighQualityThumbs() = flowPrefs.getBoolean(Keys.eh_hl_useHighQualityThumbs, false)
 
-    fun eh_preload_size() = rxPrefs.getInteger(Keys.eh_preload_size, 4)
+    fun eh_preload_size() = flowPrefs.getInt(Keys.eh_preload_size, 4)
 }

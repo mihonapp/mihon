@@ -19,7 +19,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.databinding.MigrationListControllerBinding
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
@@ -125,8 +124,8 @@ class MigrationListController(bundle: Bundle? = null) :
     }
 
     private suspend fun runMigrations(mangas: List<MigratingManga>) {
-        val useSourceWithMost = preferences.useSourceWithMost().getOrDefault()
-        val useSmartSearch = preferences.smartMigration().getOrDefault()
+        val useSourceWithMost = preferences.useSourceWithMost().get()
+        val useSmartSearch = preferences.smartMigration().get()
 
         val sources = preferences.migrationSources().get().split("/").mapNotNull {
             val value = it.toLongOrNull() ?: return

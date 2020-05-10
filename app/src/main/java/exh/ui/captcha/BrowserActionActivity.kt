@@ -16,7 +16,6 @@ import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.Source
@@ -121,7 +120,7 @@ class BrowserActionActivity : AppCompatActivity() {
                     // Wait for both inner scripts to be loaded
                     if (loadedInners >= 2) {
                         // Attempt to autosolve captcha
-                        if (preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
+                        if (preferencesHelper.eh_autoSolveCaptchas().get()) {
                             webview.post {
                                 // 10 seconds to auto-solve captcha
                                 strictValidationStartTime = System.currentTimeMillis() + 1000 * 10
@@ -140,7 +139,7 @@ class BrowserActionActivity : AppCompatActivity() {
             }
         }
 
-        webview.webViewClient = if (actionName == null && preferencesHelper.eh_autoSolveCaptchas().getOrDefault()) {
+        webview.webViewClient = if (actionName == null && preferencesHelper.eh_autoSolveCaptchas().get()) {
             // Fetch auto-solve credentials early for speed
             credentialsObservable = httpClient.newCall(
                 Request.Builder()

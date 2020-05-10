@@ -2,7 +2,6 @@ package exh.metadata.metadata
 
 import android.net.Uri
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.SManga
 import exh.metadata.EX_DATE_FORMAT
 import exh.metadata.ONGOING_SUFFIX
@@ -50,7 +49,7 @@ class EHentaiSearchMetadata : RaisedSearchMetadata() {
         thumbnailUrl?.let { manga.thumbnail_url = it }
 
         // No title bug?
-        val titleObj = if (Injekt.get<PreferencesHelper>().useJapaneseTitle().getOrDefault()) {
+        val titleObj = if (Injekt.get<PreferencesHelper>().useJapaneseTitle().get()) {
             altTitle ?: title
         } else {
             title

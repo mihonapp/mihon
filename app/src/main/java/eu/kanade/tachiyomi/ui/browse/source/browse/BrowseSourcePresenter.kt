@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Filter
@@ -413,7 +412,7 @@ open class BrowseSourcePresenter(
     // EXH -->
     private val filterSerializer = FilterSerializer()
     fun saveSearches(searches: List<EXHSavedSearch>) {
-        val otherSerialized = prefs.eh_savedSearches().getOrDefault().filter {
+        val otherSerialized = prefs.eh_savedSearches().get().filter {
             !it.startsWith("${source.id}:")
         }
         val newSerialized = searches.map {
@@ -427,7 +426,7 @@ open class BrowseSourcePresenter(
     }
 
     fun loadSearches(): List<EXHSavedSearch> {
-        val loaded = prefs.eh_savedSearches().getOrDefault()
+        val loaded = prefs.eh_savedSearches().get()
         return loaded.map {
             try {
                 val id = it.substringBefore(':').toLong()

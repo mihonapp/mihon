@@ -161,9 +161,9 @@ class LoginController : NucleusController<EhActivityLoginBinding, LoginPresenter
             if (memberId == null || passHash == null || igneous == null) return false
 
             // Update prefs
-            preferenceManager.memberIdVal().set(memberId)
-            preferenceManager.passHashVal().set(passHash)
-            preferenceManager.igneousVal().set(igneous)
+            preferenceManager.memberIdVal().set(memberId!!)
+            preferenceManager.passHashVal().set(passHash!!)
+            preferenceManager.igneousVal().set(igneous!!)
 
             return true
         }

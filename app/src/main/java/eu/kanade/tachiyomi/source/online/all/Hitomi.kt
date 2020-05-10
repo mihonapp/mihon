@@ -7,7 +7,6 @@ import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.FilterList
@@ -303,7 +302,7 @@ class Hitomi : HttpSource(), LewdSource<HitomiSearchMetadata, Document>, UrlImpo
         return SManga.create().apply {
             val titleElement = doc.selectFirst("h1")
             title = titleElement.text()
-            thumbnail_url = "https:" + if (prefs.eh_hl_useHighQualityThumbs().getOrDefault()) {
+            thumbnail_url = "https:" + if (prefs.eh_hl_useHighQualityThumbs().get()) {
                 doc.selectFirst("img").attr("data-srcset").substringBefore(' ')
             } else {
                 doc.selectFirst("img").attr("data-src")

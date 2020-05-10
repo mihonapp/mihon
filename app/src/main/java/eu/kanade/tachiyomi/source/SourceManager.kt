@@ -4,7 +4,6 @@ import android.content.Context
 import com.elvishew.xlog.XLog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
@@ -28,6 +27,11 @@ import exh.source.BlacklistedSources
 import exh.source.DelegatedHttpSource
 import exh.source.EnhancedHttpSource
 import kotlin.reflect.KClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 
@@ -39,22 +43,15 @@ open class SourceManager(private val context: Context) {
 
     private val stubSourcesMap = mutableMapOf<Long, StubSource>()
 
+    private val scope = CoroutineScope(Job() + Dispatchers.Main)
+
     init {
         createInternalSources().forEach { registerSource(it) }
 
         // Recreate sources when they change
-        val prefEntries = arrayOf(
-            prefs.enableExhentai(),
-            prefs.imageQuality(),
-            prefs.useHentaiAtHome(),
-            prefs.useJapaneseTitle(),
-            prefs.ehSearchSize(),
-            prefs.thumbnailRows()
-        ).map { it.asObservable() }
-
-        Observable.merge(prefEntries).skip(prefEntries.size - 1).subscribe {
+        prefs.enableExhentai().asFlow().onEach {
             createEHSources().forEach { registerSource(it) }
-        }
+        }.launchIn(scope)
 
         registerSource(MergedSource())
     }
@@ -112,7 +109,7 @@ open class SourceManager(private val context: Context) {
         val exSrcs = mutableListOf<HttpSource>(
             EHentai(EH_SOURCE_ID, false, context)
         )
-        if (prefs.enableExhentai().getOrDefault()) {
+        if (prefs.enableExhentai().get()) {
             exSrcs += EHentai(EXH_SOURCE_ID, true, context)
         }
         exSrcs += PervEden(PERV_EDEN_EN_SOURCE_ID, PervEdenLang.en)

@@ -19,7 +19,6 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.tabs.TabLayout
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.databinding.MainActivityBinding
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
@@ -181,7 +180,7 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
             initWhenIdle {
                 // Upload settings
-                if (preferences.enableExhentai().getOrDefault() &&
+                if (preferences.enableExhentai().get() &&
                     preferences.eh_showSettingsUploadWarning().get()
                 ) {
                     WarnConfigureDialogController.uploadSettings(router)

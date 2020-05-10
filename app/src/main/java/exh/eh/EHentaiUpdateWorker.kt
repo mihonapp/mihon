@@ -16,7 +16,6 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
@@ -350,7 +349,7 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
             cancelBackground(context)
 
             val preferences = Injekt.get<PreferencesHelper>()
-            val interval = prefInterval ?: preferences.eh_autoUpdateFrequency().getOrDefault()
+            val interval = prefInterval ?: preferences.eh_autoUpdateFrequency().get()
             if (interval > 0) {
                 val restrictions = preferences.eh_autoUpdateRequirements()!!
                 val acRestriction = "ac" in restrictions

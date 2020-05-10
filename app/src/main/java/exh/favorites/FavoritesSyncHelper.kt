@@ -9,7 +9,6 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.preference.getOrDefault
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
 import eu.kanade.tachiyomi.util.lang.launchUI
@@ -68,7 +67,7 @@ class FavoritesSyncHelper(val context: Context) {
 
     private fun beginSync() {
         // Check if logged in
-        if (!prefs.enableExhentai().getOrDefault()) {
+        if (!prefs.enableExhentai().get()) {
             status.onNext(FavoritesSyncStatus.Error("Please log in!"))
             return
         }
@@ -130,7 +129,7 @@ class FavoritesSyncHelper(val context: Context) {
                     db.inTransaction {
                         status.onNext(FavoritesSyncStatus.Processing("Calculating remote changes"))
                         val remoteChanges = storage.getChangedRemoteEntries(realm, favorites.first)
-                        val localChanges = if (prefs.eh_readOnlySync().getOrDefault()) {
+                        val localChanges = if (prefs.eh_readOnlySync().get()) {
                             null // Do not build local changes if they are not going to be applied
                         } else {
                             status.onNext(FavoritesSyncStatus.Processing("Calculating local changes"))
@@ -248,7 +247,7 @@ class FavoritesSyncHelper(val context: Context) {
         if (!explicitlyRetryExhRequest(10, request)) {
             val errorString = "Unable to add gallery to remote server: '${gallery.title}' (GID: ${gallery.gid})!"
 
-            if (prefs.eh_lenientSync().getOrDefault()) {
+            if (prefs.eh_lenientSync().get()) {
                 errorList += errorString
             } else {
                 status.onNext(FavoritesSyncStatus.Error(errorString))
@@ -298,7 +297,7 @@ class FavoritesSyncHelper(val context: Context) {
             if (!explicitlyRetryExhRequest(10, request)) {
                 val errorString = "Unable to delete galleries from the remote servers!"
 
-                if (prefs.eh_lenientSync().getOrDefault()) {
+                if (prefs.eh_lenientSync().get()) {
                     errorList += errorString
                 } else {
                     status.onNext(FavoritesSyncStatus.Error(errorString))
@@ -386,7 +385,7 @@ class FavoritesSyncHelper(val context: Context) {
                     is GalleryAddEvent.Fail.UnknownType -> "'${it.title}' (${result.galleryUrl}) is not a valid gallery!"
                 }
 
-                if (prefs.eh_lenientSync().getOrDefault()) {
+                if (prefs.eh_lenientSync().get()) {
                     errorList += errorString
                 } else {
                     status.onNext(FavoritesSyncStatus.Error(errorString))
