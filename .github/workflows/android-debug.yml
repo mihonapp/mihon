@@ -36,7 +36,7 @@ jobs:
           FILE_NAME: "app/google-services.json"
           FILE_DATA: ${{ secrets.GOOGLE_SERVICES_TEXT }}
       - name: Build Release APK
-        run: bash ./gradlew assembleStandard --stacktrace
+        run: bash ./gradlew assembleRelease --stacktrace
       - name: Sign Android release
         uses: r0adkll/sign-android-release@v1
         with:
