@@ -19,7 +19,6 @@ jobs:
           java-version: 1.8
       - name: Get NDK 
         run: sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;20.0.5594570"
-      - name: Create 
       - name: Write google-services.json
         uses: DamianReeves/write-file-action@v1.0
         with:
