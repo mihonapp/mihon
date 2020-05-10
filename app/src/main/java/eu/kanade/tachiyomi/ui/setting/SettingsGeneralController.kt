@@ -193,7 +193,7 @@ class SettingsGeneralController : SettingsController() {
         switchPreference {
             key = Keys.eh_expandFilters
             title = "Expand all search filters by default"
-            defaultValue = false
+            defaultValue = false 
         }
 
         switchPreference {
