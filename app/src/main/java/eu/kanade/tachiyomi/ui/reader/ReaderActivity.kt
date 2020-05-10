@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
@@ -64,6 +65,7 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.roundToLong
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.observeOn
@@ -226,7 +228,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         super.onDestroy()
         viewer?.destroy()
         viewer = null
-        config?.destroy()
         config = null
         progressDialog?.dismiss()
         progressDialog = null
@@ -853,21 +854,16 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
     private inner class ReaderConfig {
 
         /**
-         * List of subscriptions to keep while the reader is alive.
-         */
-        private val subscriptions = CompositeSubscription()
-
-        /**
          * Initializes the reader subscriptions.
          */
         init {
-            val sharedRotation = preferences.rotation().asObservable().share()
-            val initialRotation = sharedRotation.take(1)
-            val rotationUpdates = sharedRotation.skip(1)
-                .delay(250, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-
-            subscriptions += Observable.merge(initialRotation, rotationUpdates)
-                .subscribe { setOrientation(it) }
+            preferences.rotation().asImmediateFlow { setOrientation(it) }
+                .drop(1)
+                .onEach {
+                    delay(250)
+                    setOrientation(it)
+                }
+                .launchIn(scope)
 
             preferences.readerTheme().asFlow()
                 .drop(1) // We only care about updates
@@ -903,13 +899,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             preferences.colorFilterMode().asFlow()
                 .onEach { setColorFilter(preferences.colorFilter().get()) }
                 .launchIn(scope)
-        }
-
-        /**
-         * Called when the reader is being destroyed. It cleans up all the subscriptions.
-         */
-        fun destroy() {
-            subscriptions.unsubscribe()
         }
 
         /**
