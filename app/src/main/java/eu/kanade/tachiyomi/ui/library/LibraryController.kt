@@ -40,6 +40,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaAllInOneController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
+import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.inflate
@@ -556,7 +557,7 @@ class LibraryController(
     private fun handleChangeCover() {
         val manga = selectedMangas.firstOrNull() ?: return
 
-        if (coverCache.getCustomCoverFile(manga).exists()) {
+        if (manga.hasCustomCover(coverCache)) {
             showEditCoverDialog(manga)
         } else {
             openMangaCoverPicker(manga)

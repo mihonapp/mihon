@@ -206,9 +206,7 @@ class MangaAllInOnePresenter(
         if (!fetchMangaSubscription.isNullOrUnsubscribed()) return
         fetchMangaSubscription = Observable.defer { source.fetchMangaDetails(manga) }
             .map { networkManga ->
-                if (manualFetch || manga.thumbnail_url != networkManga.thumbnail_url) {
-                    manga.prepUpdateCover(coverCache)
-                }
+                manga.prepUpdateCover(coverCache, networkManga, manualFetch)
                 manga.copyFrom(networkManga)
                 manga.initialized = true
                 db.insertManga(manga).executeAsBlocking()
