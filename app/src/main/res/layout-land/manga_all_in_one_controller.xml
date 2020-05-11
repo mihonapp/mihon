@@ -357,7 +357,7 @@
 
                     <Button
                         android:id="@+id/merge_btn"
-                        style="@style/Widget.MaterialComponents.Button"
+                        style="@style/Theme.Widget.Button.FilledAccent"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -370,7 +370,7 @@
 
                     <Button
                         android:id="@+id/recommend_btn"
-                        style="@style/Widget.MaterialComponents.Button"
+                        style="@style/Theme.Widget.Button.FilledAccent"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
