@@ -263,46 +263,39 @@ class LibraryUpdateService(
 
         // Emit each manga and update it sequentially.
         return Observable.from(mangaToUpdate)
-            // Update the chapters of the manga concurrently from 5 different sources
-            .groupBy { it.source }
-            .flatMap(
-                { bySource ->
-                    bySource
-                        // Notify manga that will update.
-                        .doOnNext { notifier.showProgressNotification(it, count.andIncrement, mangaToUpdate.size) }
-                        .concatMap { manga ->
-                            updateManga(manga)
-                                // If there's any error, return empty update and continue.
-                                .onErrorReturn {
-                                    failedUpdates.add(manga)
-                                    Pair(emptyList(), emptyList())
-                                }
-                                // Filter out mangas without new chapters (or failed).
-                                .filter { pair -> pair.first.isNotEmpty() }
-                                .doOnNext {
-                                    if (downloadNew && (
-                                        categoriesToDownload.isEmpty() ||
-                                            manga.category in categoriesToDownload
-                                        )
-                                    ) {
-                                        downloadChapters(manga, it.first)
-                                        hasDownloads = true
-                                    }
-                                }
-                                // Convert to the manga that contains new chapters.
-                                .map {
-                                    Pair(
-                                        manga,
-                                        (
-                                            it.first.sortedByDescending { ch -> ch.source_order }
-                                                .toTypedArray()
-                                            )
-                                    )
-                                }
+            // Notify manga that will update.
+            .doOnNext { notifier.showProgressNotification(it, count.andIncrement, mangaToUpdate.size) }
+            // Update the chapters of the manga
+            .concatMap { manga ->
+                updateManga(manga)
+                    // If there's any error, return empty update and continue.
+                    .onErrorReturn {
+                        failedUpdates.add(manga)
+                        Pair(emptyList(), emptyList())
+                    }
+                    // Filter out mangas without new chapters (or failed).
+                    .filter { pair -> pair.first.isNotEmpty() }
+                    .doOnNext {
+                        if (downloadNew && (
+                            categoriesToDownload.isEmpty() ||
+                                manga.category in categoriesToDownload
+                            )
+                        ) {
+                            downloadChapters(manga, it.first)
+                            hasDownloads = true
                         }
-                },
-                5
-            )
+                    }
+                    // Convert to the manga that contains new chapters.
+                    .map {
+                        Pair(
+                            manga,
+                            (
+                                it.first.sortedByDescending { ch -> ch.source_order }
+                                    .toTypedArray()
+                                )
+                        )
+                    }
+            }
             // Add manga with new chapters to the list.
             .doOnNext { manga ->
                 // Add to the list
@@ -326,7 +319,7 @@ class LibraryUpdateService(
             .map { manga -> manga.first }
     }
 
-    fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
+    private fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
         // we need to get the chapters from the db so we have chapter ids
         val mangaChapters = db.getChapters(manga).executeAsBlocking()
         val dbChapters = chapters.map {
