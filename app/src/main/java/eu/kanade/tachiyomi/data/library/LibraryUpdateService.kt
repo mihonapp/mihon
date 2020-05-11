@@ -396,9 +396,7 @@ class LibraryUpdateService(
         // Update manga details metadata in the background
         source.fetchMangaDetails(manga)
             .map { networkManga ->
-                if (manga.thumbnail_url != networkManga.thumbnail_url) {
-                    manga.prepUpdateCover(coverCache)
-                }
+                manga.prepUpdateCover(coverCache, networkManga, false)
                 manga.copyFrom(networkManga)
                 db.insertManga(manga).executeAsBlocking()
                 manga
@@ -415,11 +413,23 @@ class LibraryUpdateService(
         var count = 0
 
         return Observable.from(mangaToUpdate)
-            .doOnNext { showProgressNotification(it, count++, mangaToUpdate.size) }
-            .map { manga ->
-                manga.prepUpdateCover(coverCache)
-                db.insertManga(manga).executeAsBlocking()
-                manga
+            .doOnNext {
+                showProgressNotification(it, count++, mangaToUpdate.size)
+            }
+            .flatMap { manga ->
+                val source = sourceManager.get(manga.source)
+                    ?: return@flatMap Observable.empty<LibraryManga>()
+
+                source.fetchMangaDetails(manga)
+                    .map { networkManga ->
+                        manga.prepUpdateCover(coverCache, networkManga, true)
+                        networkManga.thumbnail_url?.let {
+                            manga.thumbnail_url = it
+                            db.insertManga(manga).executeAsBlocking()
+                        }
+                        manga
+                    }
+                    .onErrorReturn { manga }
             }
             .doOnCompleted {
                 cancelProgressNotification()
