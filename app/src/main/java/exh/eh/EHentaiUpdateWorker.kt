@@ -14,7 +14,7 @@ import com.kizitonwose.time.hours
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifierEH
+import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
@@ -29,6 +29,7 @@ import exh.metadata.metadata.base.insertFlatMetadata
 import exh.util.await
 import exh.util.cancellable
 import exh.util.jobScheduler
+import java.util.ArrayList
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +56,7 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
     private val updateHelper: EHentaiUpdateHelper by injectLazy()
     private val logger = XLog.tag("EHUpdater")
 
-    private val updateNotifier by lazy { LibraryUpdateNotifierEH(this) }
+    private val updateNotifier by lazy { LibraryUpdateNotifier(this) }
 
     /**
      * This method is called if the system has determined that you must stop execution of your job
@@ -162,7 +163,7 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
 
         var failuresThisIteration = 0
         var updatedThisIteration = 0
-        val updatedManga = mutableListOf<Manga>()
+        val updatedManga = ArrayList<Pair<Manga, Array<Chapter>>>()
         val modifiedThisIteration = mutableSetOf<Long>()
 
         try {
@@ -226,9 +227,9 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
                     updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters).await()
 
                 if ((new.isNotEmpty() && manga.id == acceptedRoot.manga.id) ||
-                    (hasNew && updatedManga.none { it.id == acceptedRoot.manga.id })
+                    (hasNew && updatedManga.none { it.first.id == acceptedRoot.manga.id })
                 ) {
-                    updatedManga += acceptedRoot.manga
+                    updatedManga += Pair(acceptedRoot.manga, new.toTypedArray())
                 }
 
                 modifiedThisIteration += acceptedRoot.manga.id!!
@@ -247,7 +248,7 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
             )
 
             if (updatedManga.isNotEmpty()) {
-                updateNotifier.showResultNotification(updatedManga)
+                updateNotifier.showUpdateNotifications(updatedManga)
             }
         }
     }
