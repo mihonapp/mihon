@@ -429,7 +429,7 @@ class MangaAllInOneController :
     private fun openRecommends() {
         val recommendsConfig = BrowseSourceController.RecommendsConfig(presenter.manga.title, presenter.manga.source)
 
-        parentController?.router?.pushController(
+        router?.pushController(
             BrowseSourceController(
                 Bundle().apply {
                     putParcelable(BrowseSourceController.RECOMMENDS_CONFIG, recommendsConfig)
@@ -818,7 +818,7 @@ class MangaAllInOneController :
      * @param query the search query to pass to the search controller
      */
     private fun performGlobalSearch(query: String) {
-        val router = parentController?.router ?: return
+        val router = router ?: return
         router.pushController(GlobalSearchController(query).withFadeTransaction())
     }
 
@@ -845,7 +845,7 @@ class MangaAllInOneController :
      * @param query the search query to the parent controller
      */
     private fun performSearch(query: String) {
-        val router = parentController?.router ?: return
+        val router = router ?: return
 
         if (router.backstackSize < 2) {
             return
