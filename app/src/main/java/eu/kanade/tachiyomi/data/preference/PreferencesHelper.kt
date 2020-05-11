@@ -258,6 +258,8 @@ class PreferencesHelper(val context: Context) {
     // <--
 
     // --> EH
+    fun eh_isHentaiEnabled() = flowPrefs.getBoolean(Keys.eh_is_hentai_enabled, true)
+
     fun enableExhentai() = flowPrefs.getBoolean(Keys.eh_enableExHentai, false)
 
     fun secureEXH() = flowPrefs.getBoolean("secure_exh", true)

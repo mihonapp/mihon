@@ -228,4 +228,6 @@ object PreferenceKeys {
     const val eh_tag_filtering_value = "eh_tag_filtering_value"
 
     const val eh_tag_watching_value = "eh_tag_watching_value"
+
+    const val eh_is_hentai_enabled = "eh_is_hentai_enabled"
 }

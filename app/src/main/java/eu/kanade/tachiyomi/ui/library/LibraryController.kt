@@ -395,6 +395,8 @@ class LibraryController(
 
         // Mutate the filter icon because it needs to be tinted and the resource is shared.
         menu.findItem(R.id.action_filter).icon.mutate()
+
+        menu.findItem(R.id.action_sync_favorites).isEnabled = preferences.eh_isHentaiEnabled().get()
     }
 
     fun search(query: String) {

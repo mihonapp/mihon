@@ -76,12 +76,14 @@ class MoreController :
                     router.pushController(MigrationController().withFadeTransaction())
                 }
             }
-            preference {
-                titleRes = R.string.eh_batch_add
-                iconRes = R.drawable.ic_playlist_add_black_24dp
-                iconTint = tintColor
-                onClick {
-                    router.pushController(BatchAddController().withFadeTransaction())
+            if (preferences.eh_isHentaiEnabled().get()) {
+                preference {
+                    titleRes = R.string.eh_batch_add
+                    iconRes = R.drawable.ic_playlist_add_black_24dp
+                    iconTint = tintColor
+                    onClick {
+                        router.pushController(BatchAddController().withFadeTransaction())
+                    }
                 }
             }
         }

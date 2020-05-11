@@ -38,7 +38,7 @@ object BlacklistedSources {
         "eu.kanade.tachiyomi.extension.it.perveden"
     )
 
-    val HIDDEN_SOURCES = listOf(
+    var HIDDEN_SOURCES = listOf(
         MERGED_SOURCE_ID
     )
 }

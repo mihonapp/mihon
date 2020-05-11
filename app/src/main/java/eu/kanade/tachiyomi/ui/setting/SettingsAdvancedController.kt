@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.intListPreference
+import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
@@ -34,8 +35,17 @@ import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.toast
+import exh.EH_SOURCE_ID
+import exh.EIGHTMUSES_SOURCE_ID
+import exh.EXH_SOURCE_ID
+import exh.HBROWSE_SOURCE_ID
+import exh.HITOMI_SOURCE_ID
+import exh.NHENTAI_SOURCE_ID
+import exh.PERV_EDEN_EN_SOURCE_ID
+import exh.PERV_EDEN_IT_SOURCE_ID
 import exh.debug.SettingsDebugController
 import exh.log.EHLogLevel
+import exh.source.BlacklistedSources
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -116,6 +126,68 @@ class SettingsAdvancedController : SettingsController() {
         preferenceCategory {
             title = "Developer tools"
             isPersistent = false
+
+            switchPreference {
+                title = "Enable integrated hentai features"
+                summary = "This is a experimental feature that will disable all hentai features if toggled off"
+                key = PreferenceKeys.eh_is_hentai_enabled
+                defaultValue = true
+
+                onChange {
+                    if (preferences.eh_isHentaiEnabled().get()) {
+                        if (EH_SOURCE_ID !in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES += EH_SOURCE_ID
+                        }
+                        if (EXH_SOURCE_ID !in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES += EXH_SOURCE_ID
+                        }
+                        if (PERV_EDEN_EN_SOURCE_ID !in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES += PERV_EDEN_EN_SOURCE_ID
+                        }
+                        if (PERV_EDEN_IT_SOURCE_ID !in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES += PERV_EDEN_IT_SOURCE_ID
+                        }
+                        if (NHENTAI_SOURCE_ID !in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES += NHENTAI_SOURCE_ID
+                        }
+                        if (HITOMI_SOURCE_ID !in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES += HITOMI_SOURCE_ID
+                        }
+                        if (EIGHTMUSES_SOURCE_ID !in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES += EIGHTMUSES_SOURCE_ID
+                        }
+                        if (HBROWSE_SOURCE_ID !in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES += HBROWSE_SOURCE_ID
+                        }
+                    } else {
+                        if (EH_SOURCE_ID in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES -= EH_SOURCE_ID
+                        }
+                        if (EXH_SOURCE_ID in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES -= EXH_SOURCE_ID
+                        }
+                        if (PERV_EDEN_EN_SOURCE_ID in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES -= PERV_EDEN_EN_SOURCE_ID
+                        }
+                        if (PERV_EDEN_IT_SOURCE_ID in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES -= PERV_EDEN_IT_SOURCE_ID
+                        }
+                        if (NHENTAI_SOURCE_ID in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES -= NHENTAI_SOURCE_ID
+                        }
+                        if (HITOMI_SOURCE_ID in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES -= HITOMI_SOURCE_ID
+                        }
+                        if (EIGHTMUSES_SOURCE_ID in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES -= EIGHTMUSES_SOURCE_ID
+                        }
+                        if (HBROWSE_SOURCE_ID in BlacklistedSources.HIDDEN_SOURCES) {
+                            BlacklistedSources.HIDDEN_SOURCES -= HBROWSE_SOURCE_ID
+                        }
+                    }
+                    true
+                }
+            }
 
             switchPreference {
                 title = "Enable delegated sources"
