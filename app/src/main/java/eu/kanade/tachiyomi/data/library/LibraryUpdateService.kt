@@ -282,9 +282,9 @@ class LibraryUpdateService(
                         .filter { pair -> pair.first.isNotEmpty() }
                         .doOnNext {
                             if (downloadNew && (
-                                    categoriesToDownload.isEmpty() ||
-                                        manga.category in categoriesToDownload
-                                    )
+                                categoriesToDownload.isEmpty() ||
+                                    manga.category in categoriesToDownload
+                                )
                             ) {
                                 downloadChapters(manga, it.first)
                                 hasDownloads = true
@@ -321,7 +321,6 @@ class LibraryUpdateService(
             }
             .map { manga -> manga.first }
     }
-
 
     private fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
         // we need to get the chapters from the db so we have chapter ids
