@@ -14,7 +14,7 @@ import com.kizitonwose.time.hours
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
+import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifierEH
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.all.EHentai
@@ -55,7 +55,7 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
     private val updateHelper: EHentaiUpdateHelper by injectLazy()
     private val logger = XLog.tag("EHUpdater")
 
-    private val updateNotifier by lazy { LibraryUpdateNotifier(this) }
+    private val updateNotifier by lazy { LibraryUpdateNotifierEH(this) }
 
     /**
      * This method is called if the system has determined that you must stop execution of your job

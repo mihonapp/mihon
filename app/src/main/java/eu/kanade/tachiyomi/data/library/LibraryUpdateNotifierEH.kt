@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.util.lang.chop
 import eu.kanade.tachiyomi.util.system.notification
 import eu.kanade.tachiyomi.util.system.notificationManager
 
-class LibraryUpdateNotifier(private val context: Context) {
+class LibraryUpdateNotifierEH(private val context: Context) {
     /**
      * Bitmap of the app for notifications.
      */
