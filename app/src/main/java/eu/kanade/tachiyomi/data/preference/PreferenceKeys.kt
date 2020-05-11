@@ -224,4 +224,8 @@ object PreferenceKeys {
     const val eh_hl_useHighQualityThumbs = "eh_hl_hq_thumbs"
 
     const val eh_preload_size = "eh_preload_size"
+
+    const val eh_tag_filtering_value = "eh_tag_filtering_value"
+
+    const val eh_tag_watching_value = "eh_tag_watching_value"
 }

@@ -1,9 +1,14 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.os.Handler
+import android.text.InputType
 import android.widget.Toast
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.github.salomonbrys.kotson.fromJson
@@ -15,6 +20,7 @@ import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys
+import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.entriesRes
 import eu.kanade.tachiyomi.util.preference.intListPreference
@@ -133,6 +139,94 @@ class SettingsEhController : SettingsController() {
             defaultValue = false
 
             onChange { preferences.eh_useOriginalImages().reconfigure() }
+        }.dependency = PreferenceKeys.eh_enableExHentai
+
+        preference {
+            title = "Watched Tags"
+            summary = "Opens a webview to your E/ExHentai watched tags page"
+            onClick {
+                val intent = if (preferences.enableExhentai().get()) {
+                    WebViewActivity.newIntent(activity!!, url = "https://exhentai.org/mytags", title = "ExHentai Watched Tags")
+                } else {
+                    WebViewActivity.newIntent(activity!!, url = "https://e-hentai.org/mytags", title = "E-Hentai Watched Tags")
+                }
+                startActivity(intent)
+            }
+        }.dependency = PreferenceKeys.eh_enableExHentai
+
+        preference {
+            title = "Tag Filtering Threshold"
+            key = PreferenceKeys.eh_tag_filtering_value
+            defaultValue = 0
+
+            var value = preferences.ehTagFilterValue().get()
+
+            summary = "You can soft filter tags by adding them to the \"My Tags\" E/ExHentai page with a negative weight. If a gallery has tags that add up to weight below this value, it is filtered from view. This threshold can be set between -9999 and 0. Currently: $value"
+
+            onClick {
+                MaterialDialog(activity!!)
+                    .title(text = "Tag Filtering Threshold")
+                    .input(
+                        inputType = InputType.TYPE_NUMBER_FLAG_SIGNED,
+                        waitForPositiveButton = false,
+                        allowEmpty = false
+                    ) { dialog, number ->
+                        val inputField = dialog.getInputField()
+                        val tempValue = number.toString().toIntOrNull()
+
+                        if (tempValue != null && tempValue in -9999..0) {
+                            inputField.error = null
+                            value = tempValue
+                        } else {
+                            inputField.error = "Must be between -9999 and 0!"
+                        }
+                        dialog.setActionButtonEnabled(WhichButton.POSITIVE, value in -9999..0)
+                    }
+                    .positiveButton(android.R.string.ok) {
+                        preferences.ehTagFilterValue().set(value)
+                        summary = "You can soft filter tags by adding them to the \"My Tags\" E/ExHentai page with a negative weight. If a gallery has tags that add up to weight below this value, it is filtered from view. This threshold can be set between 0 and -9999. Currently: $value"
+                        preferences.ehTagFilterValue().reconfigure()
+                    }
+                    .show()
+            }
+        }.dependency = PreferenceKeys.eh_enableExHentai
+
+        preference {
+            title = "Tag Watching Threshold"
+            key = PreferenceKeys.eh_tag_watching_value
+            defaultValue = 0
+
+            var value = preferences.ehTagWatchingValue().get()
+
+            summary = "Recently uploaded galleries will be included on the watched screen if it has at least one watched tag with positive weight, and the sum of weights on its watched tags add up to this value or higher. This threshold can be set between 0 and 9999. Currently: $value"
+
+            onClick {
+                MaterialDialog(activity!!)
+                    .title(text = "Tag Watching Threshold")
+                    .input(
+                        inputType = InputType.TYPE_NUMBER_FLAG_SIGNED,
+                        maxLength = 4,
+                        waitForPositiveButton = false,
+                        allowEmpty = false
+                    ) { dialog, number ->
+                        val inputField = dialog.getInputField()
+                        val tempValue = number.toString().toIntOrNull()
+
+                        if (tempValue != null && tempValue in 0..9999) {
+                            inputField.error = null
+                            value = tempValue
+                        } else {
+                            inputField.error = "Must be between 0 and 9999!"
+                        }
+                        dialog.setActionButtonEnabled(WhichButton.POSITIVE, value in 0..9999)
+                    }
+                    .positiveButton(android.R.string.ok) {
+                        preferences.ehTagWatchingValue().set(value)
+                        summary = "Recently uploaded galleries will be included on the watched screen if it has at least one watched tag with positive weight, and the sum of weights on its watched tags add up to this value or higher. This threshold can be set between 0 and 9999. Currently: $value"
+                        preferences.ehTagWatchingValue().reconfigure()
+                    }
+                    .show()
+            }
         }.dependency = PreferenceKeys.eh_enableExHentai
 
         switchPreference {

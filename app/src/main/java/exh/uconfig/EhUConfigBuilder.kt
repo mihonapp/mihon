@@ -60,6 +60,9 @@ class EhUConfigBuilder {
         configItems += Entry.UseMPV()
         configItems += Entry.ShowPopularRightNowPane()
 
+        configItems += Entry.TagFilteringThreshold(prefs.ehTagFilterValue().get())
+        configItems += Entry.TagWatchingThreshold(prefs.ehTagWatchingValue().get())
+
         // Actually build form body
         val formBody = FormBody.Builder()
         configItems.forEach {
@@ -137,6 +140,16 @@ object Entry {
     class ShowPopularRightNowPane : ConfigItem {
         override val key = "pp"
         override val value = "1"
+    }
+
+    class TagFilteringThreshold(value: Int) : ConfigItem {
+        override val key = "tf"
+        override val value = "$value"
+    }
+
+    class TagWatchingThreshold(value: Int) : ConfigItem {
+        override val key = "wt"
+        override val value = "$value"
     }
 }
 

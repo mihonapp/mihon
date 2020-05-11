@@ -270,6 +270,10 @@ class PreferencesHelper(val context: Context) {
 
     fun eh_useOriginalImages() = flowPrefs.getBoolean(Keys.eh_useOrigImages, false)
 
+    fun ehTagFilterValue() = flowPrefs.getInt(Keys.eh_tag_filtering_value, 0)
+
+    fun ehTagWatchingValue() = flowPrefs.getInt(Keys.eh_tag_watching_value, 0)
+
     fun ehSearchSize() = flowPrefs.getString("ex_search_size", "rc_0")
 
     fun thumbnailRows() = flowPrefs.getString("ex_thumb_rows", "tr_2")
