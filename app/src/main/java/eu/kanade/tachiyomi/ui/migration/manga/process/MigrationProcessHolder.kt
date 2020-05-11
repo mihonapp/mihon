@@ -43,7 +43,7 @@ class MigrationProcessHolder(
         // correctly positioned. The reason being that the view may change position before the
         // PopupMenu is shown.
         migration_menu.setOnClickListener { it.post { showPopupMenu(it) } }
-        skip_manga.setOnClickListener { it.post { adapter.removeManga(adapterPosition) } }
+        skip_manga.setOnClickListener { it.post { adapter.removeManga(bindingAdapterPosition) } }
     }
 
     fun bind(item: MigrationProcessItem) {
@@ -187,7 +187,7 @@ class MigrationProcessHolder(
     }
 
     private fun showPopupMenu(view: View) {
-        val item = adapter.getItem(adapterPosition) ?: return
+        val item = adapter.getItem(bindingAdapterPosition) ?: return
 
         // Create a PopupMenu, giving it the clicked view for an anchor
         val popup = PopupMenu(view.context, view)
@@ -206,7 +206,7 @@ class MigrationProcessHolder(
 
         // Set a listener so we are notified if a menu item is clicked
         popup.setOnMenuItemClickListener { menuItem ->
-            adapter.menuItemListener.onMenuItemClick(adapterPosition, menuItem)
+            adapter.menuItemListener.onMenuItemClick(bindingAdapterPosition, menuItem)
             true
         }
 
