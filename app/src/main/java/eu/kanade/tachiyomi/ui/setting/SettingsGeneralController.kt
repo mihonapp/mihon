@@ -193,61 +193,31 @@ class SettingsGeneralController : SettingsController() {
                 }
             }
         }
-
         // --> EXH
-        switchPreference {
-            key = Keys.eh_expandFilters
-            title = "Expand all search filters by default"
-            defaultValue = false
-        }
+        preferenceCategory {
+            title = "EH Settings"
 
-        switchPreference {
-            key = Keys.eh_autoSolveCaptchas
-            title = "Automatically solve captcha"
-            summary =
-                "Use HIGHLY EXPERIMENTAL automatic ReCAPTCHA solver. Will be grayed out if unsupported by your device."
-            defaultValue = false
-        }
-
-        /*preferenceCategory {
-            title = "Application lock"
-
-            LockPreference(context).apply {
-                key = "pref_app_lock" // Not persistent so use random key
-                isPersistent = false
-
-                addPreference(this)
-            }
-
-            FingerLockPreference(context).apply {
-                key = "pref_lock_finger" // Not persistent so use random key
-                isPersistent = false
-
-                addPreference(this)
-
-                // Call after addPreference
-                dependency = "pref_app_lock"
+            switchPreference {
+                key = Keys.eh_expandFilters
+                title = "Expand all search filters by default"
+                defaultValue = false
             }
 
             switchPreference {
-                key = Keys.eh_lock_manually
-
-                title = "Lock manually only"
+                key = Keys.eh_autoSolveCaptchas
+                title = "Automatically solve captcha"
                 summary =
-                    "Disable automatic app locking. The app can still be locked manually by long-pressing the three-lines/back button in the top left corner."
+                    "Use HIGHLY EXPERIMENTAL automatic ReCAPTCHA solver. Will be grayed out if unsupported by your device."
                 defaultValue = false
             }
+
             switchPreference {
-                key = Keys.secureScreen
-                title = "Enable Secure Screen"
-                defaultValue = false
+                key = Keys.eh_use_new_manga_interface
+                title = "Use New Manga Interface"
+                summary = "Use new all in one manga interface"
+                defaultValue = true
             }
-            switchPreference {
-                key = Keys.hideNotificationContent
-                titleRes = R.string.hide_notification_content
-                defaultValue = false
-            }
-        }*/
+        }
         // <-- EXH
     }
 }

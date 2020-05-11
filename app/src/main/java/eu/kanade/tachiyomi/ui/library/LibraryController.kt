@@ -36,6 +36,7 @@ import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
+import eu.kanade.tachiyomi.ui.manga.MangaAllInOneController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.migration.MigrationController
 import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
@@ -514,7 +515,11 @@ class LibraryController(
         // Notify the presenter a manga is being opened.
         presenter.onOpenManga()
 
-        router.pushController(MangaController(manga).withFadeTransaction())
+        if (preferences.eh_useNewMangaInterface().get()) {
+            router.pushController(MangaAllInOneController(manga).withFadeTransaction())
+        } else {
+            router.pushController(MangaController(manga).withFadeTransaction())
+        }
     }
 
     /**

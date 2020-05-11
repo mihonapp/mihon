@@ -340,4 +340,6 @@ class PreferencesHelper(val context: Context) {
     fun eh_hl_useHighQualityThumbs() = flowPrefs.getBoolean(Keys.eh_hl_useHighQualityThumbs, false)
 
     fun eh_preload_size() = flowPrefs.getInt(Keys.eh_preload_size, 4)
+
+    fun eh_useNewMangaInterface() = flowPrefs.getBoolean(Keys.eh_use_new_manga_interface, true)
 }

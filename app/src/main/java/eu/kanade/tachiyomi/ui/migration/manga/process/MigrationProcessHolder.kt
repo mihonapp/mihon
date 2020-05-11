@@ -7,10 +7,12 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
+import eu.kanade.tachiyomi.ui.manga.MangaAllInOneController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.getResourceColor
@@ -23,6 +25,8 @@ import kotlinx.android.synthetic.main.migration_manga_card.view.*
 import kotlinx.android.synthetic.main.migration_process_item.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 class MigrationProcessHolder(
@@ -67,12 +71,21 @@ class MigrationProcessHolder(
                 withContext(Dispatchers.Main) {
                     migration_manga_card_from.attachManga(manga, source)
                     migration_manga_card_from.setOnClickListener {
-                        adapter.controller.router.pushController(
-                            MangaController(
-                                manga,
-                                true
-                            ).withFadeTransaction()
-                        )
+                        if (Injekt.get<PreferencesHelper>().eh_useNewMangaInterface().get()) {
+                            adapter.controller.router.pushController(
+                                MangaAllInOneController(
+                                    manga,
+                                    true
+                                ).withFadeTransaction()
+                            )
+                        } else {
+                            adapter.controller.router.pushController(
+                                MangaController(
+                                    manga,
+                                    true
+                                ).withFadeTransaction()
+                            )
+                        }
                     }
                 }
 

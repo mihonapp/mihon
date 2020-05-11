@@ -31,6 +31,7 @@ import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.download.DownloadController
 import eu.kanade.tachiyomi.ui.library.LibraryController
+import eu.kanade.tachiyomi.ui.manga.MangaAllInOneController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
@@ -296,7 +297,11 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
                     router.popToRoot()
                 }
                 setSelectedNavItem(R.id.nav_library)
-                router.pushController(RouterTransaction.with(MangaController(extras)))
+                if (preferences.eh_useNewMangaInterface().get()) {
+                    router.pushController(RouterTransaction.with(MangaAllInOneController(extras)))
+                } else {
+                    router.pushController(RouterTransaction.with(MangaController(extras)))
+                }
             }
             SHORTCUT_DOWNLOADS -> {
                 if (router.backstackSize > 1) {

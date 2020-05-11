@@ -38,6 +38,7 @@ import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterSheet.FilterNavigationView.Companion.MAX_SAVED_SEARCHES
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
+import eu.kanade.tachiyomi.ui.manga.MangaAllInOneController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.connectivityManager
@@ -648,13 +649,25 @@ open class BrowseSourceController(bundle: Bundle) :
         val item = adapter?.getItem(position) as? SourceItem ?: return false
 
         when (mode) {
-            Mode.CATALOGUE -> router.pushController(
-                MangaController(
-                    item.manga,
-                    true,
-                    args.getParcelable(SMART_SEARCH_CONFIG_KEY)
-                ).withFadeTransaction()
-            )
+            Mode.CATALOGUE -> {
+                if (preferences.eh_useNewMangaInterface().get()) {
+                    router.pushController(
+                        MangaAllInOneController(
+                            item.manga,
+                            true,
+                            args.getParcelable(SMART_SEARCH_CONFIG_KEY)
+                        ).withFadeTransaction()
+                    )
+                } else {
+                    router.pushController(
+                        MangaController(
+                            item.manga,
+                            true,
+                            args.getParcelable(SMART_SEARCH_CONFIG_KEY)
+                        ).withFadeTransaction()
+                    )
+                }
+            }
             Mode.RECOMMENDS -> openSmartSearch(item.manga.title)
         }
         return false

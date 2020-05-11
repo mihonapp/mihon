@@ -26,6 +26,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.manga.MangaAllInOneController
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.ui.migration.MigrationMangaDialog
 import eu.kanade.tachiyomi.ui.migration.SearchController
@@ -397,7 +398,7 @@ class MigrationListController(bundle: Bundle? = null) :
     private fun navigateOut() {
         if (migratingManga?.size == 1) {
             launchUI {
-                val hasDetails = router.backstack.any { it.controller() is MangaController }
+                val hasDetails = router.backstack.any { it.controller() is MangaController } || router.backstack.any { it.controller() is MangaAllInOneController }
                 if (hasDetails) {
                     val manga = migratingManga?.firstOrNull()?.searchResult?.get()?.let {
                         db.getManga(it).executeOnIO()
@@ -405,9 +406,10 @@ class MigrationListController(bundle: Bundle? = null) :
                     if (manga != null) {
                         val newStack = router.backstack.filter {
                             it.controller() !is MangaController &&
+                                it.controller() !is MangaAllInOneController &&
                                 it.controller() !is MigrationListController &&
                                 it.controller() !is PreMigrationController
-                        } + MangaController(manga).withFadeTransaction()
+                        } + MangaController(manga).withFadeTransaction() // TODO MangaAllInOneController
                         router.setBackstack(newStack, FadeChangeHandler())
                         return@launchUI
                     }
