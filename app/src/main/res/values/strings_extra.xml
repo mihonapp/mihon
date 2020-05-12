@@ -17,6 +17,9 @@
     <string name="action_copy_now">Copy now</string>
 
     <!-- Preferences -->
+    <!-- Filter -->
+    <string name="tracked">Tracked</string>
+
     <!-- Subsections -->
     <string name="pref_category_all_sources">All Sources</string>
 

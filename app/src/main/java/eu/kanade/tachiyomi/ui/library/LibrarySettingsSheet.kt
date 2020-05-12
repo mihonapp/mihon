@@ -70,9 +70,10 @@ class LibrarySettingsSheet(
             private val downloaded = Item.TriStateGroup(R.string.action_filter_downloaded, this)
             private val unread = Item.TriStateGroup(R.string.action_filter_unread, this)
             private val completed = Item.TriStateGroup(R.string.completed, this)
+            private val tracked = Item.TriStateGroup(R.string.tracked, this)
 
             override val header = null
-            override val items = listOf(downloaded, unread, completed)
+            override val items = listOf(downloaded, unread, completed, tracked)
             override val footer = null
 
             override fun initModels() { // j2k changes
@@ -80,6 +81,7 @@ class LibrarySettingsSheet(
                     downloaded.state = preferences.filterDownloaded().get()
                     unread.state = preferences.filterUnread().get()
                     completed.state = preferences.filterCompleted().get()
+                    tracked.state = preferences.filterTracked().get()
                 } catch (e: Exception) {
                     preferences.upgradeFilters()
                 }
@@ -97,6 +99,7 @@ class LibrarySettingsSheet(
                     downloaded -> preferences.filterDownloaded().set(item.state)
                     unread -> preferences.filterUnread().set(item.state)
                     completed -> preferences.filterCompleted().set(item.state)
+                    tracked -> preferences.filterTracked().set(item.state)
                 }
 
                 adapter.notifyItemChanged(item)
