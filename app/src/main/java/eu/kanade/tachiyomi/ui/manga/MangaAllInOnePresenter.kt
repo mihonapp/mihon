@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
+import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.prepUpdateCover
@@ -91,9 +92,7 @@ class MangaAllInOnePresenter(
     // EXH -->
     private val updateHelper: EHentaiUpdateHelper by injectLazy()
 
-    val redirectUserRelay = BehaviorRelay.create<EXHRedirect>()
-
-    data class EXHRedirect(val manga: Manga, val update: Boolean)
+    val redirectUserRelay = BehaviorRelay.create<ChaptersPresenter.EXHRedirect>()
     // EXH <--
 
     /**
@@ -170,7 +169,7 @@ class MangaAllInOnePresenter(
                                         val acceptedChapterUrls = acceptedChain.chapters.map { it.url }.toSet()
                                         val update = (ourChapterUrls - acceptedChapterUrls).isNotEmpty()
                                         redirectUserRelay.call(
-                                            MangaAllInOnePresenter.EXHRedirect(
+                                            ChaptersPresenter.EXHRedirect(
                                                 acceptedChain.manga,
                                                 update
                                             )

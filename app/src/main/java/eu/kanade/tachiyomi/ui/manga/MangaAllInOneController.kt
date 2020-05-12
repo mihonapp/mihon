@@ -2,12 +2,14 @@ package eu.kanade.tachiyomi.ui.manga
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +53,7 @@ import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterHolder
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersAdapter
+import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.ui.manga.chapter.DeleteChaptersDialog
 import eu.kanade.tachiyomi.ui.manga.chapter.DownloadCustomChaptersDialog
 import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
@@ -124,7 +127,7 @@ class MangaAllInOneController :
     }
 
     // EXH -->
-    constructor(redirect: MangaAllInOnePresenter.EXHRedirect) : super(
+    constructor(redirect: ChaptersPresenter.EXHRedirect) : super(
         Bundle().apply {
             putLong(MANGA_EXTRA, redirect.manga.id!!)
             putBoolean(UPDATE_EXTRA, redirect.update)
@@ -201,7 +204,6 @@ class MangaAllInOneController :
 
     init {
         setHasOptionsMenu(true)
-        setOptionsMenuHidden(true)
     }
 
     override fun getTitle(): String? {
@@ -209,7 +211,6 @@ class MangaAllInOneController :
     }
 
     override fun createPresenter(): MangaAllInOnePresenter {
-        // val ctrl = parentController as MangaController
         return MangaAllInOnePresenter(
             manga!!, source!!,
             chapterCountRelay, lastUpdateRelay, mangaFavoriteRelay, smartSearchConfig
@@ -415,7 +416,7 @@ class MangaAllInOneController :
     private fun openSmartSearch() {
         val smartSearchConfig = SourceController.SmartSearchConfig(presenter.manga.title, presenter.manga.id!!)
 
-        parentController?.router?.pushController(
+        router?.pushController(
             SourceController(
                 Bundle().apply {
                     putParcelable(SourceController.SMART_SEARCH_CONFIG, smartSearchConfig)
@@ -842,7 +843,7 @@ class MangaAllInOneController :
     /**
      * Perform a search using the provided query.
      *
-     * @param query the search query to the parent controller
+     * @param query the search query to the previous controller
      */
     private fun performSearch(query: String) {
         val router = router ?: return
@@ -872,6 +873,30 @@ class MangaAllInOneController :
     }
 
     // CHAPTER FUNCTIONS START HERE
+    override fun onDestroyView(view: View) {
+        destroyActionModeIfNeeded()
+        binding.actionToolbar.destroy()
+        adapter = null
+        super.onDestroyView(view)
+    }
+
+    override fun onActivityResumed(activity: Activity) {
+        if (view == null) return
+
+        // Check if animation view is visible
+        if (binding.revealView.visibility == View.VISIBLE) {
+            // Show the unreveal effect
+            val coordinates = binding.fab.getCoordinates()
+            binding.revealView.hideRevealEffect(coordinates.x, coordinates.y, 1920)
+        }
+
+        super.onActivityResumed(activity)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.chapters, menu)
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         // Initialize menu items.
         val menuFilterRead = menu.findItem(R.id.action_filter_read) ?: return
