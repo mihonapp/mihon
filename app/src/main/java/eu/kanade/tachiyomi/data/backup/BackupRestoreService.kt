@@ -185,7 +185,9 @@ class BackupRestoreService : Service() {
             stopSelf(startId)
         }
         job = GlobalScope.launch(handler) {
-            restoreBackup(uri)
+            if (!restoreBackup(uri)) {
+                notifier.showRestoreError(getString(R.string.restoring_backup_canceled))
+            }
         }
         job?.invokeOnCompletion {
             stopSelf(startId)
@@ -199,7 +201,7 @@ class BackupRestoreService : Service() {
      *
      * @param uri backup file to restore
      */
-    private fun restoreBackup(uri: Uri) {
+    private fun restoreBackup(uri: Uri): Boolean {
         val startTime = System.currentTimeMillis()
 
         val reader = JsonReader(contentResolver.openInputStream(uri)!!.bufferedReader())
@@ -236,7 +238,7 @@ class BackupRestoreService : Service() {
         // Restore individual manga
         mangasJson.forEach {
             if (job?.isActive != true) {
-                throw Exception(getString(R.string.restoring_backup_canceled))
+                return false
             }
 
             restoreManga(it.asJsonObject)
@@ -248,6 +250,7 @@ class BackupRestoreService : Service() {
         val logFile = writeErrorLog()
 
         notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
+        return true
     }
 
     private fun restoreCategories(categoriesJson: JsonElement) {
