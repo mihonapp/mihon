@@ -95,6 +95,7 @@ class SourcePresenter(
     fun updateSources() {
         sources = getEnabledSources()
         loadSources()
+        loadLastUsedSource()
     }
 
     /**
