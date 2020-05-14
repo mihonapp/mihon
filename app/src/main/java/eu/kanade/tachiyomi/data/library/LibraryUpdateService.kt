@@ -23,9 +23,11 @@ import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.prepUpdateCover
+import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isServiceRunning
 import exh.LIBRARY_UPDATE_EXCLUDED_SOURCES
+import java.io.File
 import java.util.ArrayList
 import java.util.concurrent.atomic.AtomicInteger
 import rx.Observable
@@ -254,7 +256,7 @@ class LibraryUpdateService(
         // List containing new updates
         val newUpdates = ArrayList<Pair<LibraryManga, Array<Chapter>>>()
         // List containing failed updates
-        val failedUpdates = ArrayList<Manga>()
+        val failedUpdates = ArrayList<Pair<Manga, String?>>()
         // List containing categories that get included in downloads.
         val categoriesToDownload = preferences.downloadNewCategories().get().map(String::toInt)
         // Boolean to determine if user wants to automatically download new chapters.
@@ -266,7 +268,7 @@ class LibraryUpdateService(
         return Observable.from(mangaToUpdate)
             // Notify manga that will update.
             .doOnNext { notifier.showProgressNotification(it, count.andIncrement, mangaToUpdate.size) }
-            // Update the chapters of the manga.
+            // Update the chapters of the manga
             .concatMap { manga ->
                 if (manga.source in LIBRARY_UPDATE_EXCLUDED_SOURCES) {
                     // Ignore EXH manga, updating chapters for every manga will get you banned
@@ -275,7 +277,7 @@ class LibraryUpdateService(
                     updateManga(manga)
                         // If there's any error, return empty update and continue.
                         .onErrorReturn {
-                            failedUpdates.add(manga)
+                            failedUpdates.add(Pair(manga, it.message))
                             Pair(emptyList(), emptyList())
                         }
                         // Filter out mangas without new chapters (or failed).
@@ -295,7 +297,10 @@ class LibraryUpdateService(
                     .map {
                         Pair(
                             manga,
-                            (it.first.sortedByDescending { ch -> ch.source_order }.toTypedArray())
+                            (
+                                it.first.sortedByDescending { ch -> ch.source_order }
+                                    .toTypedArray()
+                                )
                         )
                     }
             }
@@ -306,6 +311,8 @@ class LibraryUpdateService(
             }
             // Notify result of the overall update.
             .doOnCompleted {
+                notifier.cancelProgressNotification()
+
                 if (newUpdates.isNotEmpty()) {
                     notifier.showUpdateNotifications(newUpdates)
                     if (downloadNew && hasDownloads) {
@@ -314,10 +321,12 @@ class LibraryUpdateService(
                 }
 
                 if (failedUpdates.isNotEmpty()) {
-                    Timber.e("Failed updating: ${failedUpdates.map { it.title }}")
+                    val errorFile = writeErrorFile(failedUpdates)
+                    notifier.showUpdateErrorNotification(
+                        failedUpdates.map { it.first.title },
+                        errorFile.getUriCompat(this)
+                    )
                 }
-
-                notifier.cancelProgressNotification()
             }
             .map { manga -> manga.first }
     }
@@ -419,5 +428,26 @@ class LibraryUpdateService(
             .doOnCompleted {
                 notifier.cancelProgressNotification()
             }
+    }
+
+    /**
+     * Writes basic file of update errors to cache dir.
+     */
+    private fun writeErrorFile(errors: List<Pair<Manga, String?>>): File {
+        try {
+            if (errors.isNotEmpty()) {
+                val destFile = File(externalCacheDir, "tachiyomi_update_errors.txt")
+
+                destFile.bufferedWriter().use { out ->
+                    errors.forEach { (manga, error) ->
+                        out.write("${manga.title}: $error\n")
+                    }
+                }
+                return destFile
+            }
+        } catch (e: Exception) {
+            // Empty
+        }
+        return File("")
     }
 }
