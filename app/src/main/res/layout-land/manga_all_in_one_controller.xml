@@ -204,16 +204,25 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/manga_source_label" />
 
+                    <HorizontalScrollView
+                        android:id="@+id/actions_bar_scroll_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:requiresFadingEdge="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/manga_source" >
+
                     <LinearLayout
                         android:id="@+id/actions_bar"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/manga_source">
+                        app:layout_constraintTop_toBottomOf="parent">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_favorite"
@@ -222,6 +231,17 @@
                             android:layout_height="wrap_content"
                             android:text="@string/add_to_library"
                             app:icon="@drawable/ic_favorite_border_24dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_tracking"
+                            style="@style/Theme.Widget.Button.Icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/track"
+                            android:visibility="gone"
+                            tools:visibility="visible"
+                            app:icon="@drawable/ic_cloud_off_24dp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_categories"
@@ -280,6 +300,8 @@
 
                     </LinearLayout>
 
+                    </HorizontalScrollView>
+
                     <TextView
                         android:id="@+id/manga_summary_label"
                         style="@style/TextAppearance.Regular.SubHeading"
@@ -290,7 +312,7 @@
                         android:textIsSelectable="false"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/actions_bar" />
+                        app:layout_constraintTop_toBottomOf="@+id/actions_bar_scroll_view" />
 
                     <TextView
                         android:id="@+id/manga_summary"

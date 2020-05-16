@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.manga
 import android.os.Bundle
 import com.google.gson.Gson
 import com.jakewharton.rxrelay.BehaviorRelay
-import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
@@ -15,23 +14,27 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
-import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
+import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
-import exh.EH_SOURCE_ID
-import exh.EXH_SOURCE_ID
 import exh.MERGED_SOURCE_ID
 import exh.debug.DebugToggles
 import exh.eh.EHentaiUpdateHelper
+import exh.isEhBasedSource
 import exh.util.await
 import java.util.Date
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import rx.Observable
 import rx.Subscription
@@ -48,11 +51,9 @@ import uy.kohesive.injekt.injectLazy
  * Observable updates should be called from here.
  */
 class MangaAllInOnePresenter(
+    val controller: MangaAllInOneController,
     val manga: Manga,
     val source: Source,
-    private val chapterCountRelay: BehaviorRelay<Float>,
-    private val lastUpdateRelay: BehaviorRelay<Date>,
-    private val mangaFavoriteRelay: PublishRelay<Boolean>,
     val smartSearchConfig: SourceController.SmartSearchConfig?,
     private val db: DatabaseHelper = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
@@ -67,22 +68,13 @@ class MangaAllInOnePresenter(
     var chapters: List<ChapterItem> = emptyList()
         private set
 
-    /**
-     * Subject of list of chapters to allow updating the view without going to DB.
-     */
-    val chaptersRelay: PublishRelay<List<ChapterItem>>
-    by lazy { PublishRelay.create<List<ChapterItem>>() }
+    private val scope = CoroutineScope(Job() + Dispatchers.Default)
 
     /**
      * Whether the chapter list has been requested to the source.
      */
     var hasRequested = false
         private set
-
-    /**
-     * Subscription to retrieve the new list of chapters from the source.
-     */
-    private var fetchChaptersSubscription: Subscription? = null
 
     /**
      * Subscription to observe download status changes.
@@ -95,130 +87,136 @@ class MangaAllInOnePresenter(
     val redirectUserRelay = BehaviorRelay.create<ChaptersPresenter.EXHRedirect>()
     // EXH <--
 
-    /**
-     * Subscription to send the manga to the view.
-     */
-    private var viewMangaSubscription: Subscription? = null
-
-    /**
-     * Subscription to update the manga from the source.
-     */
-    private var fetchMangaSubscription: Subscription? = null
-
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        getMangaObservable()
-            .subscribeLatestCache({ view, manga -> view.onNextManga(manga, source) })
+        if (manga.isLocal()) {
+            controller.setRefreshing(true)
+            fetchMangaFromSource()
+        } else if (!manga.initialized) {
+            controller.setRefreshing(true)
+            fetchMangaFromSource()
+        } else {
+            updateManga()
+        }
 
-        // Update chapter count
-        chapterCountRelay.observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(MangaAllInOneController::setChapterCount)
-
-        // Prepare the relay.
-        chaptersRelay.flatMap { applyChapterFilters(it) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(MangaAllInOneController::onNextChapters) { _, error -> Timber.e(error) }
-
-        // Add the subscription that retrieves the chapters from the database, keeps subscribed to
-        // changes, and sends the list of chapters to the relay.
-        add(
-            db.getChapters(manga).asRxObservable()
-                .map { chapters ->
-                    // Convert every chapter to a model.
-                    chapters.map { it.toModel() }
-                }
-                .doOnNext { chapters ->
-                    // Find downloaded chapters
-                    setDownloadedChapters(chapters)
-
-                    // Store the last emission
-                    this.chapters = chapters
-
-                    // Listen for download status changes
-                    observeDownloads()
-
-                    // Emit the number of chapters to the info tab.
-                    chapterCountRelay.call(
-                        chapters.maxBy { it.chapter_number }?.chapter_number
-                            ?: 0f
-                    )
-
-                    // Emit the upload date of the most recent chapter
-                    lastUpdateRelay.call(
-                        Date(
-                            chapters.maxBy { it.date_upload }?.date_upload
-                                ?: 0
-                        )
-                    )
-                    // EXH -->
-                    if (chapters.isNotEmpty() &&
-                        (source.id == EXH_SOURCE_ID || source.id == EH_SOURCE_ID) &&
-                        DebugToggles.ENABLE_EXH_ROOT_REDIRECT.enabled
-                    ) {
-                        // Check for gallery in library and accept manga with lowest id
-                        // Find chapters sharing same root
-                        add(
-                            updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters)
-                                .subscribeOn(Schedulers.io())
-                                .subscribe { (acceptedChain, _) ->
-                                    // Redirect if we are not the accepted root
-                                    if (manga.id != acceptedChain.manga.id) {
-                                        // Update if any of our chapters are not in accepted manga's chapters
-                                        val ourChapterUrls = chapters.map { it.url }.toSet()
-                                        val acceptedChapterUrls = acceptedChain.chapters.map { it.url }.toSet()
-                                        val update = (ourChapterUrls - acceptedChapterUrls).isNotEmpty()
-                                        redirectUserRelay.call(
-                                            ChaptersPresenter.EXHRedirect(
-                                                acceptedChain.manga,
-                                                update
-                                            )
-                                        )
-                                    }
-                                }
-                        )
-                    }
-                    // EXH <--
-                }
-                .subscribe { chaptersRelay.call(it) }
-        )
-
-        // Update favorite status
-        mangaFavoriteRelay.observeOn(AndroidSchedulers.mainThread())
-            .subscribe { setFavorite(it) }
-            .apply { add(this) }
-
-        // update last update date
-        lastUpdateRelay.observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(MangaAllInOneController::setLastUpdateDate)
+        // Listen for download status changes
+        observeDownloads()
     }
 
-    private fun getMangaObservable(): Observable<Manga> {
-        return db.getManga(manga.url, manga.source).asRxObservable()
-            .observeOn(AndroidSchedulers.mainThread())
+    private fun updateChapters() {
+        val chapters = db.getChapters(manga).executeAsBlocking().map { it.toModel() }
+
+        // Find downloaded chapters
+        setDownloadedChapters(chapters)
+
+        // EXH -->
+        if (chapters.isNotEmpty() && (source.isEhBasedSource()) && DebugToggles.ENABLE_EXH_ROOT_REDIRECT.enabled) {
+            // Check for gallery in library and accept manga with lowest id
+            // Find chapters sharing same root
+            add(
+                updateHelper.findAcceptedRootAndDiscardOthers(manga.source, chapters)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe { (acceptedChain, _) ->
+                        // Redirect if we are not the accepted root
+                        if (manga.id != acceptedChain.manga.id) {
+                            // Update if any of our chapters are not in accepted manga's chapters
+                            val ourChapterUrls = chapters.map { it.url }.toSet()
+                            val acceptedChapterUrls = acceptedChain.chapters.map { it.url }.toSet()
+                            val update = (ourChapterUrls - acceptedChapterUrls).isNotEmpty()
+                            redirectUserRelay.call(
+                                ChaptersPresenter.EXHRedirect(
+                                    acceptedChain.manga,
+                                    update
+                                )
+                            )
+                        }
+                    }
+            )
+        }
+        // EXH <--
+
+        this.chapters = applyChapterFilters(chapters)
+    }
+
+    private fun updateChapterInfo() {
+        scope.launch(Dispatchers.IO) {
+            val lastUpdateDate = Date(
+                chapters.maxBy { it.date_upload }?.date_upload ?: 0
+            )
+
+            val chapterCount = chapters.maxBy { it.chapter_number }?.chapter_number ?: 0f
+
+            withContext(Dispatchers.Main) {
+                // set chapter count
+                controller.setChapterCount(chapterCount)
+                // update last update date
+                controller.setLastUpdateDate(lastUpdateDate)
+            }
+        }
+    }
+
+    private fun updateManga() {
+        scope.launch(Dispatchers.IO) {
+            val manga = db.getManga(manga.url, manga.source).executeAsBlocking()!!
+            updateChapters()
+            updateChapterInfo()
+
+            withContext(Dispatchers.Main) {
+                controller.onNextManga(
+                    manga, source, chapters
+                )
+            }
+        }
     }
 
     /**
      * Fetch manga information from source.
      */
-    fun fetchMangaFromSource(manualFetch: Boolean = false) {
-        if (!fetchMangaSubscription.isNullOrUnsubscribed()) return
-        fetchMangaSubscription = Observable.defer { source.fetchMangaDetails(manga) }
-            .map { networkManga ->
-                manga.prepUpdateCover(coverCache, networkManga, manualFetch)
-                manga.copyFrom(networkManga)
-                manga.initialized = true
-                db.insertManga(manga).executeAsBlocking()
-                manga
+    fun fetchMangaFromSource(manualFetch: Boolean = false, FetchManga: Boolean = true, FetchChapters: Boolean = true) {
+        hasRequested = true
+
+        scope.launch(Dispatchers.IO) {
+            if (FetchManga) {
+                val networkManga = try {
+                    source.fetchMangaDetails(manga).toBlocking().single()
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) { controller.onFetchMangaError(e) }
+                    return@launch
+                }
+                if (networkManga != null) {
+                    manga.prepUpdateCover(coverCache, networkManga, manualFetch)
+                    manga.copyFrom(networkManga)
+                    manga.initialized = true
+                    db.insertManga(manga).executeAsBlocking()
+                }
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeFirst(
-                { view, _ ->
-                    view.onFetchMangaDone()
-                },
-                MangaAllInOneController::onFetchMangaError
-            )
+            var chapters: List<SChapter> = listOf()
+            if (FetchChapters) {
+                try {
+                    chapters = source.fetchChapterList(manga).toBlocking().single()
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) { controller.onFetchMangaError(e) }
+                    return@launch
+                }
+            }
+            try {
+                if (FetchChapters) {
+                    syncChaptersWithSource(db, chapters, manga, source)
+
+                    updateChapters()
+                    updateChapterInfo()
+                }
+                withContext(Dispatchers.Main) {
+                    controller.onNextManga(this@MangaAllInOnePresenter.manga, this@MangaAllInOnePresenter.source, this@MangaAllInOnePresenter.chapters)
+                    controller.onFetchMangaDone()
+                }
+            } catch (e: java.lang.Exception) {
+                withContext(Dispatchers.Main) {
+                    controller.onFetchMangaError(e)
+                }
+            }
+        }
     }
 
     /**
@@ -405,48 +403,22 @@ class MangaAllInOnePresenter(
     }
 
     /**
-     * Requests an updated list of chapters from the source.
-     */
-    fun fetchChaptersFromSource() {
-        hasRequested = true
-
-        if (!fetchChaptersSubscription.isNullOrUnsubscribed()) return
-        fetchChaptersSubscription = Observable.defer { source.fetchChapterList(manga) }
-            .subscribeOn(Schedulers.io())
-            .map { syncChaptersWithSource(db, it, manga, source) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeFirst(
-                { view, _ ->
-                    view.onFetchChaptersDone()
-                },
-                MangaAllInOneController::onFetchChaptersError
-            )
-    }
-
-    /**
-     * Updates the UI after applying the filters.
-     */
-    private fun refreshChapters() {
-        chaptersRelay.call(chapters)
-    }
-
-    /**
      * Applies the view filters to the list of chapters obtained from the database.
      * @param chapters the list of chapters from the database
      * @return an observable of the list of chapters filtered and sorted.
      */
-    private fun applyChapterFilters(chapters: List<ChapterItem>): Observable<List<ChapterItem>> {
-        var observable = Observable.from(chapters).subscribeOn(Schedulers.io())
+    private fun applyChapterFilters(chapterList: List<ChapterItem>): List<ChapterItem> {
+        var chapters = chapterList
         if (onlyUnread()) {
-            observable = observable.filter { !it.read }
+            chapters = chapters.filter { !it.read }
         } else if (onlyRead()) {
-            observable = observable.filter { it.read }
+            chapters = chapters.filter { it.read }
         }
         if (onlyDownloaded()) {
-            observable = observable.filter { it.isDownloaded || it.manga.source == LocalSource.ID }
+            chapters = chapters.filter { it.isDownloaded || it.manga.source == LocalSource.ID }
         }
         if (onlyBookmarked()) {
-            observable = observable.filter { it.bookmark }
+            chapters = chapters.filter { it.bookmark }
         }
         val sortFunction: (Chapter, Chapter) -> Int = when (manga.sorting) {
             Manga.SORTING_SOURCE -> when (sortDescending()) {
@@ -457,9 +429,10 @@ class MangaAllInOnePresenter(
                 true -> { c1, c2 -> c2.chapter_number.compareTo(c1.chapter_number) }
                 false -> { c1, c2 -> c1.chapter_number.compareTo(c2.chapter_number) }
             }
-            else -> throw NotImplementedError("Unimplemented sorting method")
+            else -> { c1, c2 -> c1.source_order.compareTo(c2.source_order) }
         }
-        return observable.toSortedList(sortFunction)
+        chapters = chapters.sortedWith(Comparator(sortFunction))
+        return chapters
     }
 
     /**
@@ -478,7 +451,7 @@ class MangaAllInOnePresenter(
 
         // Force UI update if downloaded filter active and download finished.
         if (onlyDownloaded() && download.status == Download.DOWNLOADED) {
-            refreshChapters()
+            updateChapters()
         }
     }
 
@@ -541,7 +514,7 @@ class MangaAllInOnePresenter(
     fun deleteChapters(chapters: List<ChapterItem>) {
         Observable.just(chapters)
             .doOnNext { deleteChaptersInternal(chapters) }
-            .doOnNext { if (onlyDownloaded()) refreshChapters() }
+            .doOnNext { if (onlyDownloaded()) updateChapters() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeFirst(
@@ -570,7 +543,7 @@ class MangaAllInOnePresenter(
     fun revertSortOrder() {
         manga.setChapterOrder(if (sortDescending()) Manga.SORT_ASC else Manga.SORT_DESC)
         db.updateFlags(manga).executeAsBlocking()
-        refreshChapters()
+        updateChapters()
     }
 
     /**
@@ -580,7 +553,7 @@ class MangaAllInOnePresenter(
     fun setUnreadFilter(onlyUnread: Boolean) {
         manga.readFilter = if (onlyUnread) Manga.SHOW_UNREAD else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        refreshChapters()
+        updateChapters()
     }
 
     /**
@@ -590,7 +563,7 @@ class MangaAllInOnePresenter(
     fun setReadFilter(onlyRead: Boolean) {
         manga.readFilter = if (onlyRead) Manga.SHOW_READ else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        refreshChapters()
+        updateChapters()
     }
 
     /**
@@ -600,7 +573,7 @@ class MangaAllInOnePresenter(
     fun setDownloadedFilter(onlyDownloaded: Boolean) {
         manga.downloadedFilter = if (onlyDownloaded) Manga.SHOW_DOWNLOADED else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        refreshChapters()
+        updateChapters()
     }
 
     /**
@@ -610,7 +583,7 @@ class MangaAllInOnePresenter(
     fun setBookmarkedFilter(onlyBookmarked: Boolean) {
         manga.bookmarkedFilter = if (onlyBookmarked) Manga.SHOW_BOOKMARKED else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        refreshChapters()
+        updateChapters()
     }
 
     /**
@@ -621,14 +594,14 @@ class MangaAllInOnePresenter(
         manga.downloadedFilter = Manga.SHOW_ALL
         manga.bookmarkedFilter = Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        refreshChapters()
+        updateChapters()
     }
 
     /**
      * Adds manga to library
      */
     fun addToLibrary() {
-        mangaFavoriteRelay.call(true)
+        setFavorite(true)
     }
 
     /**
@@ -647,7 +620,7 @@ class MangaAllInOnePresenter(
     fun setSorting(sort: Int) {
         manga.sorting = sort
         db.updateFlags(manga).executeAsBlocking()
-        refreshChapters()
+        updateChapters()
     }
 
     /**

@@ -22,8 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.jakewharton.rxrelay.BehaviorRelay
-import com.jakewharton.rxrelay.PublishRelay
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.kanade.tachiyomi.R
@@ -35,6 +33,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.MangaAllInOneControllerBinding
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
@@ -56,6 +55,7 @@ import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersAdapter
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.ui.manga.chapter.DeleteChaptersDialog
 import eu.kanade.tachiyomi.ui.manga.chapter.DownloadCustomChaptersDialog
+import eu.kanade.tachiyomi.ui.manga.track.TrackController
 import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
@@ -179,11 +179,7 @@ class MangaAllInOneController :
     private var initialLoad: Boolean = true
 
     // EXH -->
-    private var lastMangaThumbnail: String? = null
-
-    // EXH -->
     val smartSearchConfig: SourceController.SmartSearchConfig? = args.getParcelable(SMART_SEARCH_CONFIG_EXTRA)
-    // EXH <--
 
     override val coroutineContext: CoroutineContext = Job() + Dispatchers.Main
 
@@ -191,12 +187,6 @@ class MangaAllInOneController :
 
     private val sourceManager: SourceManager by injectLazy()
     // EXH <--
-
-    val lastUpdateRelay: BehaviorRelay<Date> = BehaviorRelay.create()
-
-    val chapterCountRelay: BehaviorRelay<Float> = BehaviorRelay.create()
-
-    val mangaFavoriteRelay: PublishRelay<Boolean> = PublishRelay.create()
 
     val fromSource = args.getBoolean(FROM_SOURCE_EXTRA, false)
 
@@ -212,8 +202,7 @@ class MangaAllInOneController :
 
     override fun createPresenter(): MangaAllInOnePresenter {
         return MangaAllInOnePresenter(
-            manga!!, source!!,
-            chapterCountRelay, lastUpdateRelay, mangaFavoriteRelay, smartSearchConfig
+            this, manga!!, source!!, smartSearchConfig
         )
     }
 
@@ -230,6 +219,26 @@ class MangaAllInOneController :
 
         binding.btnFavorite.clicks()
             .onEach { onFavoriteClick() }
+            .launchIn(scope)
+
+        if ((Injekt.get<TrackManager>().hasLoggedServices()) && presenter.manga.favorite) {
+            binding.btnTracking.visible()
+        }
+
+        scope.launch(Dispatchers.IO) {
+            if (Injekt.get<DatabaseHelper>().getTracks(presenter.manga).executeAsBlocking().any {
+                val status = Injekt.get<TrackManager>().getService(it.sync_id)?.getStatus(it.status)
+                status != null
+            }
+            ) {
+                withContext(Dispatchers.Main) {
+                    binding.btnTracking.icon = resources!!.getDrawable(R.drawable.ic_cloud_white_24dp, null)
+                }
+            }
+        }
+
+        binding.btnTracking.clicks()
+            .onEach { openTracking() }
             .launchIn(scope)
 
         if (presenter.manga.favorite && presenter.getCategories().isNotEmpty()) {
@@ -440,6 +449,12 @@ class MangaAllInOneController :
     }
     // AZ <--
 
+    private fun openTracking() {
+        router?.pushController(
+            TrackController(fromAllInOne = true, manga = manga).withFadeTransaction()
+        )
+    }
+
     /**
      * Check if manga is initialized.
      * If true update view with manga information,
@@ -448,10 +463,10 @@ class MangaAllInOneController :
      * @param manga manga object containing information about manga.
      * @param source the source of the manga.
      */
-    fun onNextManga(manga: Manga, source: Source) {
+    fun onNextManga(manga: Manga, source: Source, chapters: List<ChapterItem>) {
         if (manga.initialized) {
             // Update view.
-            setMangaInfo(manga, source)
+            setMangaInfo(manga, source, chapters)
         } else {
             // Initialize manga.
             fetchMangaFromSource()
@@ -464,7 +479,7 @@ class MangaAllInOneController :
      * @param manga manga object containing information about manga.
      * @param source the source of the manga.
      */
-    private fun setMangaInfo(manga: Manga, source: Source?) {
+    private fun setMangaInfo(manga: Manga, source: Source?, chapters: List<ChapterItem>) {
         val view = view ?: return
 
         // update full title TextView.
@@ -579,6 +594,35 @@ class MangaAllInOneController :
                 initialLoad = false
             }
         }
+        if (update ||
+            // Auto-update old format galleries
+            (
+                (presenter.manga.source == EH_SOURCE_ID || presenter.manga.source == EXH_SOURCE_ID) &&
+                    chapters.size == 1 && chapters.first().date_upload == 0L
+                )
+        ) {
+            update = false
+            fetchMangaFromSource()
+        }
+
+        val adapter = adapter ?: return
+        adapter.updateDataSet(chapters)
+
+        if (selectedItems.isNotEmpty()) {
+            adapter.clearSelection() // we need to start from a clean state, index may have changed
+            createActionModeIfNeeded()
+            selectedItems.forEach { item ->
+                val position = adapter.indexOf(item)
+                if (position != -1 && !adapter.isSelected(position)) {
+                    adapter.toggleSelection(position)
+                }
+            }
+            actionMode?.invalidate()
+        }
+    }
+
+    fun setTracking() {
+        binding.btnTracking.icon = resources!!.getDrawable(R.drawable.ic_cloud_white_24dp, null)
     }
 
     private fun hideMangaInfo() {
@@ -721,14 +765,7 @@ class MangaAllInOneController :
         presenter.fetchMangaFromSource(manualFetch)
     }
 
-    /**
-     * Update swipe refresh to stop showing refresh in progress spinner.
-     */
     fun onFetchMangaDone() {
-        fetchChaptersFromSource()
-    }
-
-    fun onFetchChaptersDone() {
         setRefreshing(false)
     }
 
@@ -745,7 +782,7 @@ class MangaAllInOneController :
      *
      * @param value whether it should be refreshing or not.
      */
-    private fun setRefreshing(value: Boolean) {
+    fun setRefreshing(value: Boolean) {
         binding.swipeRefresh.isRefreshing = value
     }
 
@@ -997,56 +1034,6 @@ class MangaAllInOneController :
             R.id.action_sort -> presenter.revertSortOrder()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    fun onNextChapters(chapters: List<ChapterItem>) {
-        // If the list is empty, fetch chapters from source if the conditions are met
-        // We use presenter chapters instead because they are always unfiltered
-        if (presenter.chapters.isEmpty()) {
-            initialFetchChapters()
-        }
-
-        if (update ||
-            // Auto-update old format galleries
-            (
-                (presenter.manga.source == EH_SOURCE_ID || presenter.manga.source == EXH_SOURCE_ID) &&
-                    chapters.size == 1 && chapters.first().date_upload == 0L
-                )
-        ) {
-            update = false
-            fetchChaptersFromSource()
-        }
-
-        val adapter = adapter ?: return
-        adapter.updateDataSet(chapters)
-
-        if (selectedItems.isNotEmpty()) {
-            adapter.clearSelection() // we need to start from a clean state, index may have changed
-            createActionModeIfNeeded()
-            selectedItems.forEach { item ->
-                val position = adapter.indexOf(item)
-                if (position != -1 && !adapter.isSelected(position)) {
-                    adapter.toggleSelection(position)
-                }
-            }
-            actionMode?.invalidate()
-        }
-    }
-
-    private fun initialFetchChapters() {
-        // Only fetch if this view is from the catalog and it hasn't requested previously
-        if (fromSource && !presenter.hasRequested) {
-            fetchChaptersFromSource()
-        }
-    }
-
-    private fun fetchChaptersFromSource() {
-        presenter.fetchChaptersFromSource()
-    }
-
-    fun onFetchChaptersError(error: Throwable) {
-        onFetchChaptersDone()
-        activity?.toast(error.message)
     }
 
     fun onChapterStatusChange(download: Download) {

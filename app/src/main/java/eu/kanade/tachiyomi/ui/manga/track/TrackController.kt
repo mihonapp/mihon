@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.databinding.TrackControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 
-class TrackController :
+class TrackController(val fromAllInOne: Boolean = false, val manga: Manga? = null) :
     NucleusController<TrackControllerBinding, TrackPresenter>(),
     TrackAdapter.OnClickListener,
     SetTrackStatusDialog.Listener,
@@ -34,7 +35,13 @@ class TrackController :
     }
 
     override fun createPresenter(): TrackPresenter {
-        return TrackPresenter((parentController as MangaController).manga!!)
+        return (
+            if (fromAllInOne && manga != null) {
+                TrackPresenter(manga)
+            } else {
+                TrackPresenter((parentController as MangaController).manga!!)
+            }
+            )
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -63,7 +70,9 @@ class TrackController :
         val atLeastOneLink = trackings.any { it.track != null }
         adapter?.items = trackings
         binding.swipeRefresh.isEnabled = atLeastOneLink
-        (parentController as? MangaController)?.setTrackingIcon(atLeastOneLink)
+        if (!fromAllInOne) {
+            (parentController as? MangaController)?.setTrackingIcon(atLeastOneLink)
+        }
     }
 
     fun onSearchResults(results: List<TrackSearch>) {
