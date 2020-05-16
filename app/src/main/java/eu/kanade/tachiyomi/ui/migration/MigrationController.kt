@@ -58,10 +58,10 @@ class MigrationController :
         view.applyWindowInsetsForController()
 
         adapter = FlexibleAdapter(null, this)
-        binding.migrationRecycler.layoutManager =
+        binding.recycler.layoutManager =
             androidx.recyclerview.widget.LinearLayoutManager(view.context)
-        binding.migrationRecycler.adapter = adapter
-        binding.migrationRecycler.setOnApplyWindowInsetsListener(RecyclerWindowInsetsListener)
+        binding.recycler.adapter = adapter
+        binding.recycler.setOnApplyWindowInsetsListener(RecyclerWindowInsetsListener)
     }
 
     override fun onDestroyView(view: View) {
@@ -87,7 +87,8 @@ class MigrationController :
             title = resources?.getString(R.string.source_migration)
             if (adapter !is SourceAdapter) {
                 adapter = SourceAdapter(this)
-                binding.migrationRecycler.adapter = adapter
+                binding.recycler.adapter = adapter
+                adapter?.fastScroller = binding.fastScroller
             }
             adapter?.updateDataSet(state.sourcesWithManga)
         } else {
@@ -95,7 +96,8 @@ class MigrationController :
             title = state.selectedSource.toString()
             if (adapter !is MangaAdapter) {
                 adapter = MangaAdapter(this)
-                binding.migrationRecycler.adapter = adapter
+                binding.recycler.adapter = adapter
+                adapter?.fastScroller = binding.fastScroller
             }
             adapter?.updateDataSet(state.mangaForSource, true)
             /*if (switching) launchUI {
