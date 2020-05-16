@@ -86,7 +86,7 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
             (manga.author?.contains(constraint, true) ?: false) ||
             (manga.artist?.contains(constraint, true) ?: false) ||
             sourceManager.getOrStub(manga.source).name.contains(constraint, true) ||
-            filterTracks(constraint, db.getTracks(manga).executeAsBlocking()) ||
+            (Injekt.get<TrackManager>().hasLoggedServices() && filterTracks(constraint, db.getTracks(manga).executeAsBlocking())) ||
             if (constraint.contains(" ") || constraint.contains("\"")) {
                 val genres = manga.genre?.split(", ")?.map {
                     it.drop(it.indexOfFirst { it == ':' } + 1).toLowerCase().trim() // tachiEH tag namespaces

@@ -6,12 +6,15 @@ import android.util.AttributeSet
 import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_EXCLUDE
 import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_IGNORE
 import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_INCLUDE
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import eu.kanade.tachiyomi.widget.TabbedBottomSheetDialog
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 class LibrarySettingsSheet(
@@ -73,7 +76,13 @@ class LibrarySettingsSheet(
             private val tracked = Item.TriStateGroup(R.string.tracked, this)
 
             override val header = null
-            override val items = listOf(downloaded, unread, completed, tracked)
+            override val items = (
+                if (Injekt.get<TrackManager>().hasLoggedServices()) {
+                    listOf(downloaded, unread, completed, tracked)
+                } else {
+                    listOf(downloaded, unread, completed)
+                }
+                )
             override val footer = null
 
             override fun initModels() { // j2k changes
@@ -81,7 +90,11 @@ class LibrarySettingsSheet(
                     downloaded.state = preferences.filterDownloaded().get()
                     unread.state = preferences.filterUnread().get()
                     completed.state = preferences.filterCompleted().get()
-                    tracked.state = preferences.filterTracked().get()
+                    if (Injekt.get<TrackManager>().hasLoggedServices()) {
+                        tracked.state = preferences.filterTracked().get()
+                    } else {
+                        tracked.state = STATE_IGNORE
+                    }
                 } catch (e: Exception) {
                     preferences.upgradeFilters()
                 }
