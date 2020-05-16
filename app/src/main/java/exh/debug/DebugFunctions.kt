@@ -55,6 +55,52 @@ object DebugFunctions {
         }
     }
 
+    fun getEHMangaListForEHUpdater(): String {
+        val galleries = mutableListOf(String())
+        runBlocking {
+            val metadataManga = db.getFavoriteMangaWithMetadata().await()
+
+            val allManga = metadataManga.asFlow().cancellable().mapNotNull { manga ->
+                if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID) {
+                    return@mapNotNull null
+                }
+                manga
+            }.toList()
+
+            for (manga in allManga) {
+                val meta = db.getFlatMetadataForManga(manga.id!!).await()?.raise<EHentaiSearchMetadata>()
+                if (meta != null) {
+                    // remove age flag
+                    galleries += "Aged: ${meta.aged}\t Title: ${manga.title}"
+                }
+            }
+        }
+        return galleries.joinToString(",\n")
+    }
+
+    fun countAgedFlagInEXHManga(): Int {
+        var agedAmount = 0
+        runBlocking {
+            val metadataManga = db.getFavoriteMangaWithMetadata().await()
+
+            val allManga = metadataManga.asFlow().cancellable().mapNotNull { manga ->
+                if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID) {
+                    return@mapNotNull null
+                }
+                manga
+            }.toList()
+
+            for (manga in allManga) {
+                val meta = db.getFlatMetadataForManga(manga.id!!).await()?.raise<EHentaiSearchMetadata>()
+                if (meta != null && meta.aged) {
+                    // remove age flag
+                    agedAmount++
+                }
+            }
+        }
+        return agedAmount
+    }
+
     fun addAllMangaInDatabaseToLibrary() {
         db.inTransaction {
             db.lowLevel().executeSQL(
@@ -93,8 +139,8 @@ object DebugFunctions {
 
     fun convertAllExhentaiGalleriesToEhentai() = convertSources(EXH_SOURCE_ID, EH_SOURCE_ID)
 
-    fun testLaunchEhentaiBackgroundUpdater() {
-        EHentaiUpdateWorker.launchBackgroundTest(app)
+    fun testLaunchEhentaiBackgroundUpdater(): String {
+        return EHentaiUpdateWorker.launchBackgroundTest(app)
     }
 
     fun rescheduleEhentaiBackgroundUpdater() {

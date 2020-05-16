@@ -337,12 +337,14 @@ class EHentaiUpdateWorker : JobService(), CoroutineScope {
                 .build()
         }
 
-        fun launchBackgroundTest(context: Context) {
+        fun launchBackgroundTest(context: Context): String {
             val jobScheduler = context.jobScheduler
             if (jobScheduler.schedule(context.testBackgroundJobInfo()) == JobScheduler.RESULT_FAILURE) {
                 logger.e("Failed to schedule background test job!")
+                return "Failed"
             } else {
                 logger.d("Successfully scheduled background test job!")
+                return "Success"
             }
         }
 
