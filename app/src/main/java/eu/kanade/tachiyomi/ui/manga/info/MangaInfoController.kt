@@ -163,7 +163,10 @@ class MangaInfoController(private val fromSource: Boolean = false) :
 
         binding.mangaFullTitle.longClicks()
             .onEach {
-                activity?.copyToClipboard(view.context.getString(R.string.title), binding.mangaFullTitle.text.toString())
+                activity?.copyToClipboard(
+                    view.context.getString(R.string.title),
+                    binding.mangaFullTitle.text.toString()
+                )
             }
             .launchIn(scope)
 
@@ -175,7 +178,10 @@ class MangaInfoController(private val fromSource: Boolean = false) :
 
         binding.mangaArtist.longClicks()
             .onEach {
-                activity?.copyToClipboard(binding.mangaArtistLabel.text.toString(), binding.mangaArtist.text.toString())
+                activity?.copyToClipboard(
+                    binding.mangaArtistLabel.text.toString(),
+                    binding.mangaArtist.text.toString()
+                )
             }
             .launchIn(scope)
 
@@ -193,7 +199,10 @@ class MangaInfoController(private val fromSource: Boolean = false) :
             .onEach {
                 // EXH Special case E-Hentai/ExHentai to ignore author field (unused)
                 if (!isEHentaiBasedSource()) {
-                    activity?.copyToClipboard(binding.mangaAuthor.text.toString(), binding.mangaAuthor.text.toString())
+                    activity?.copyToClipboard(
+                        binding.mangaAuthor.text.toString(),
+                        binding.mangaAuthor.text.toString()
+                    )
                 }
             }
             .launchIn(scope)
@@ -209,13 +218,19 @@ class MangaInfoController(private val fromSource: Boolean = false) :
 
         binding.mangaSummary.longClicks()
             .onEach {
-                activity?.copyToClipboard(view.context.getString(R.string.description), binding.mangaSummary.text.toString())
+                activity?.copyToClipboard(
+                    view.context.getString(R.string.description),
+                    binding.mangaSummary.text.toString()
+                )
             }
             .launchIn(scope)
 
         binding.mangaCover.longClicks()
             .onEach {
-                activity?.copyToClipboard(view.context.getString(R.string.title), presenter.manga.title)
+                activity?.copyToClipboard(
+                    view.context.getString(R.string.title),
+                    presenter.manga.title
+                )
             }
             .launchIn(scope)
 
@@ -437,7 +452,8 @@ class MangaInfoController(private val fromSource: Boolean = false) :
     }
 
     private fun toggleMangaInfo(context: Context) {
-        val isExpanded = binding.mangaInfoToggle.text == context.getString(R.string.manga_info_collapse)
+        val isExpanded =
+            binding.mangaInfoToggle.text == context.getString(R.string.manga_info_collapse)
 
         binding.mangaInfoToggle.text =
             if (isExpanded) {
@@ -554,8 +570,12 @@ class MangaInfoController(private val fromSource: Boolean = false) :
         // Set the Favorite drawable to the correct one.
         // Border drawable if false, filled drawable if true.
         binding.btnFavorite.apply {
-            icon = ContextCompat.getDrawable(context, if (isFavorite) R.drawable.ic_favorite_24dp else R.drawable.ic_favorite_border_24dp)
-            text = context.getString(if (isFavorite) R.string.in_library else R.string.add_to_library)
+            icon = ContextCompat.getDrawable(
+                context,
+                if (isFavorite) R.drawable.ic_favorite_24dp else R.drawable.ic_favorite_border_24dp
+            )
+            text =
+                context.getString(if (isFavorite) R.string.in_library else R.string.add_to_library)
             isChecked = isFavorite
         }
     }
