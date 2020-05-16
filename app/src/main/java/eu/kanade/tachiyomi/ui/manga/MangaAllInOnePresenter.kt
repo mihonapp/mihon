@@ -139,6 +139,15 @@ class MangaAllInOnePresenter(
         this.chapters = applyChapterFilters(chapters)
     }
 
+    fun updateChaptersView() {
+        scope.launch(Dispatchers.IO) {
+            updateChapters()
+            withContext(Dispatchers.Main) {
+                controller.onNextManga(manga, source, chapters)
+            }
+        }
+    }
+
     private fun updateChapterInfo() {
         scope.launch(Dispatchers.IO) {
             val lastUpdateDate = Date(
@@ -451,7 +460,7 @@ class MangaAllInOnePresenter(
 
         // Force UI update if downloaded filter active and download finished.
         if (onlyDownloaded() && download.status == Download.DOWNLOADED) {
-            updateChapters()
+            updateChaptersView()
         }
     }
 
@@ -514,7 +523,7 @@ class MangaAllInOnePresenter(
     fun deleteChapters(chapters: List<ChapterItem>) {
         Observable.just(chapters)
             .doOnNext { deleteChaptersInternal(chapters) }
-            .doOnNext { if (onlyDownloaded()) updateChapters() }
+            .doOnNext { if (onlyDownloaded()) updateChaptersView() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeFirst(
@@ -543,7 +552,7 @@ class MangaAllInOnePresenter(
     fun revertSortOrder() {
         manga.setChapterOrder(if (sortDescending()) Manga.SORT_ASC else Manga.SORT_DESC)
         db.updateFlags(manga).executeAsBlocking()
-        updateChapters()
+        updateChaptersView()
     }
 
     /**
@@ -553,7 +562,7 @@ class MangaAllInOnePresenter(
     fun setUnreadFilter(onlyUnread: Boolean) {
         manga.readFilter = if (onlyUnread) Manga.SHOW_UNREAD else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        updateChapters()
+        updateChaptersView()
     }
 
     /**
@@ -563,7 +572,7 @@ class MangaAllInOnePresenter(
     fun setReadFilter(onlyRead: Boolean) {
         manga.readFilter = if (onlyRead) Manga.SHOW_READ else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        updateChapters()
+        updateChaptersView()
     }
 
     /**
@@ -573,7 +582,7 @@ class MangaAllInOnePresenter(
     fun setDownloadedFilter(onlyDownloaded: Boolean) {
         manga.downloadedFilter = if (onlyDownloaded) Manga.SHOW_DOWNLOADED else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        updateChapters()
+        updateChaptersView()
     }
 
     /**
@@ -583,7 +592,7 @@ class MangaAllInOnePresenter(
     fun setBookmarkedFilter(onlyBookmarked: Boolean) {
         manga.bookmarkedFilter = if (onlyBookmarked) Manga.SHOW_BOOKMARKED else Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        updateChapters()
+        updateChaptersView()
     }
 
     /**
@@ -594,7 +603,7 @@ class MangaAllInOnePresenter(
         manga.downloadedFilter = Manga.SHOW_ALL
         manga.bookmarkedFilter = Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
-        updateChapters()
+        updateChaptersView()
     }
 
     /**
@@ -620,7 +629,7 @@ class MangaAllInOnePresenter(
     fun setSorting(sort: Int) {
         manga.sorting = sort
         db.updateFlags(manga).executeAsBlocking()
-        updateChapters()
+        updateChaptersView()
     }
 
     /**
