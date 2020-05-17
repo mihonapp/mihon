@@ -33,8 +33,8 @@ fun <T> Preference<T>.asImmediateFlow(block: (value: T) -> Unit): Flow<T> {
 @OptIn(ExperimentalCoroutinesApi::class)
 class PreferencesHelper(val context: Context) {
 
-    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-    val rxPrefs = RxSharedPreferences.create(prefs)
+    private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    private val rxPrefs = RxSharedPreferences.create(prefs)
     val flowPrefs = FlowSharedPreferences(prefs)
 
     private val defaultDownloadsDir = Uri.fromFile(

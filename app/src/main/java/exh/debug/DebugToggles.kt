@@ -18,9 +18,9 @@ enum class DebugToggles(val default: Boolean) {
     val prefKey = "eh_debug_toggle_${name.toLowerCase()}"
 
     var enabled: Boolean
-        get() = prefs.rxPrefs.getBoolean(prefKey, default).get()!!
+        get() = prefs.flowPrefs.getBoolean(prefKey, default).get()
         set(value) {
-            prefs.rxPrefs.getBoolean(prefKey).set(value)
+            prefs.flowPrefs.getBoolean(prefKey).set(value)
         }
 
     companion object {
