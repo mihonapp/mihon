@@ -32,7 +32,7 @@ import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.setting.SettingsSourcesController
 import exh.ui.smartsearch.SmartSearchController
 import kotlinx.android.parcel.Parcelize
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.QueryTextEvent
@@ -236,7 +236,7 @@ class SourceController(bundle: Bundle? = null) :
 
         // Create query listener which opens the global search view.
         searchView.queryTextEvents()
-            .filter { it is QueryTextEvent.QuerySubmitted }
+            .filterIsInstance<QueryTextEvent.QuerySubmitted>()
             .onEach { performGlobalSearch(it.queryText.toString()) }
             .launchIn(scope)
     }
