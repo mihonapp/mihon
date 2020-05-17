@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.source.SourceManager
 import exh.EH_SOURCE_ID
 import exh.EXHMigrations
 import exh.EXH_SOURCE_ID
+import exh.eh.EHentaiThrottleManager
 import exh.eh.EHentaiUpdateWorker
 import exh.metadata.metadata.EHentaiSearchMetadata
 import exh.metadata.metadata.base.getFlatMetadataForManga
@@ -54,8 +55,42 @@ object DebugFunctions {
             }
         }
     }
+    private val throttleManager = EHentaiThrottleManager()
 
-    fun getEHMangaListForEHUpdater(): String {
+    fun ResetEHGalleriesForUpdater() {
+        throttleManager.resetThrottle()
+        runBlocking {
+            val metadataManga = db.getFavoriteMangaWithMetadata().await()
+
+            val allManga = metadataManga.asFlow().cancellable().mapNotNull { manga ->
+                if (manga.source != EH_SOURCE_ID && manga.source != EXH_SOURCE_ID) {
+                    return@mapNotNull null
+                }
+                manga
+            }.toList()
+            val eh = sourceManager.getOrStub(EH_SOURCE_ID)
+            val ex = sourceManager.getOrStub(EXH_SOURCE_ID)
+
+            for (manga in allManga) {
+                throttleManager.throttle()
+                if (manga.source == EH_SOURCE_ID) {
+                    eh.fetchMangaDetails(manga).map { networkManga ->
+                        manga.copyFrom(networkManga)
+                        manga.initialized = true
+                        db.insertManga(manga).executeAsBlocking()
+                    }
+                } else if (manga.source == EXH_SOURCE_ID) {
+                    ex.fetchMangaDetails(manga).map { networkManga ->
+                        manga.copyFrom(networkManga)
+                        manga.initialized = true
+                        db.insertManga(manga).executeAsBlocking()
+                    }
+                }
+            }
+        }
+    }
+
+    fun getEHMangaListWithAgedFlagInfo(): String {
         val galleries = mutableListOf(String())
         runBlocking {
             val metadataManga = db.getFavoriteMangaWithMetadata().await()
