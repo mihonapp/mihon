@@ -21,7 +21,6 @@ import eu.kanade.tachiyomi.ui.browse.source.SourceController
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
-import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import exh.MERGED_SOURCE_ID
@@ -84,21 +83,13 @@ class MangaAllInOnePresenter(
     // EXH -->
     private val updateHelper: EHentaiUpdateHelper by injectLazy()
 
-    val redirectUserRelay = BehaviorRelay.create<ChaptersPresenter.EXHRedirect>()
+    private val redirectUserRelay = BehaviorRelay.create<ChaptersPresenter.EXHRedirect>()
     // EXH <--
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        if (manga.isLocal()) {
-            controller.setRefreshing(true)
-            fetchMangaFromSource()
-        } else if (!manga.initialized) {
-            controller.setRefreshing(true)
-            fetchMangaFromSource()
-        } else {
-            updateManga()
-        }
+        updateManga()
 
         // Listen for download status changes
         observeDownloads()
@@ -139,7 +130,7 @@ class MangaAllInOnePresenter(
         this.chapters = applyChapterFilters(chapters)
     }
 
-    fun updateChaptersView() {
+    private fun updateChaptersView() {
         scope.launch(Dispatchers.IO) {
             updateChapters()
             withContext(Dispatchers.Main) {
@@ -182,11 +173,13 @@ class MangaAllInOnePresenter(
     /**
      * Fetch manga information from source.
      */
-    fun fetchMangaFromSource(manualFetch: Boolean = false, FetchManga: Boolean = true, FetchChapters: Boolean = true) {
-        hasRequested = true
+    fun fetchMangaFromSource(manualFetch: Boolean = false, fetchManga: Boolean = true, fetchChapters: Boolean = true) {
+        if (fetchChapters) {
+            hasRequested = true
+        }
 
         scope.launch(Dispatchers.IO) {
-            if (FetchManga) {
+            if (fetchManga) {
                 val networkManga = try {
                     source.fetchMangaDetails(manga).toBlocking().single()
                 } catch (e: Exception) {
@@ -201,7 +194,7 @@ class MangaAllInOnePresenter(
                 }
             }
             var chapters: List<SChapter> = listOf()
-            if (FetchChapters) {
+            if (fetchChapters) {
                 try {
                     chapters = source.fetchChapterList(manga).toBlocking().single()
                 } catch (e: Exception) {
@@ -210,7 +203,7 @@ class MangaAllInOnePresenter(
                 }
             }
             try {
-                if (FetchChapters) {
+                if (fetchChapters) {
                     syncChaptersWithSource(db, chapters, manga, source)
 
                     updateChapters()
@@ -303,12 +296,7 @@ class MangaAllInOnePresenter(
     fun moveMangaToCategory(manga: Manga, category: Category?) {
         moveMangaToCategories(manga, listOfNotNull(category))
     }
-    /*
-    suspend fun recommendationView(manga: Manga): Manga {
-        val title = manga.title
-        val source = manga.source
 
-    }*/
     suspend fun smartSearchMerge(manga: Manga, originalMangaId: Long): Manga {
         val originalManga = db.getManga(originalMangaId).await()
             ?: throw IllegalArgumentException("Unknown manga ID: $originalMangaId")

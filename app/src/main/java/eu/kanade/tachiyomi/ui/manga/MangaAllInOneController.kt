@@ -467,6 +467,9 @@ class MangaAllInOneController :
         if (manga.initialized) {
             // Update view.
             setMangaInfo(manga, source, chapters)
+            if (fromSource && !presenter.hasRequested) {
+                fetchMangaFromSource(fetchManga = false)
+            }
         } else {
             // Initialize manga.
             fetchMangaFromSource()
@@ -621,10 +624,6 @@ class MangaAllInOneController :
         }
     }
 
-    fun setTracking() {
-        binding.btnTracking.icon = resources!!.getDrawable(R.drawable.ic_cloud_white_24dp, null)
-    }
-
     private fun hideMangaInfo() {
         binding.mangaSummaryLabel.gone()
         binding.mangaSummary.gone()
@@ -759,10 +758,10 @@ class MangaAllInOneController :
     /**
      * Start fetching manga information from source.
      */
-    private fun fetchMangaFromSource(manualFetch: Boolean = false) {
+    private fun fetchMangaFromSource(manualFetch: Boolean = false, fetchManga: Boolean = true, fetchChapters: Boolean = true) {
         setRefreshing(true)
         // Call presenter and start fetching manga information
-        presenter.fetchMangaFromSource(manualFetch)
+        presenter.fetchMangaFromSource(manualFetch, fetchManga, fetchChapters)
     }
 
     fun onFetchMangaDone() {
@@ -911,10 +910,10 @@ class MangaAllInOneController :
 
     // CHAPTER FUNCTIONS START HERE
     override fun onDestroyView(view: View) {
+        super.onDestroyView(view)
         destroyActionModeIfNeeded()
         binding.actionToolbar.destroy()
         adapter = null
-        super.onDestroyView(view)
     }
 
     override fun onActivityResumed(activity: Activity) {
