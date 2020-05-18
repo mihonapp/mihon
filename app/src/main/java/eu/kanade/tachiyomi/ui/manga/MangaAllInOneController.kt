@@ -467,7 +467,7 @@ class MangaAllInOneController :
         if (manga.initialized) {
             // Update view.
             setMangaInfo(manga, source, chapters)
-            if (fromSource && !presenter.hasRequested) {
+            if (fromSource && !presenter.hasRequested && chapters.isNullOrEmpty()) {
                 fetchMangaFromSource(fetchManga = false)
             }
         } else {

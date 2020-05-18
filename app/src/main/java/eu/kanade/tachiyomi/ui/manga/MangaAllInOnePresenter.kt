@@ -134,7 +134,9 @@ class MangaAllInOnePresenter(
         scope.launch(Dispatchers.IO) {
             updateChapters()
             withContext(Dispatchers.Main) {
-                controller.onNextManga(manga, source, chapters)
+                Observable.just(manga)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeLatestCache({ view, manga -> view.onNextManga(manga, source, chapters) })
             }
         }
     }
@@ -149,23 +151,33 @@ class MangaAllInOnePresenter(
 
             withContext(Dispatchers.Main) {
                 // set chapter count
-                controller.setChapterCount(chapterCount)
+                Observable.just(chapterCount)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeLatestCache({ view, chapterCount -> view.setChapterCount(chapterCount) })
                 // update last update date
-                controller.setLastUpdateDate(lastUpdateDate)
+                Observable.just(lastUpdateDate)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeLatestCache({ view, lastUpdateDate -> view.setLastUpdateDate(lastUpdateDate) })
             }
         }
     }
 
-    private fun updateManga() {
+    private fun updateManga(updateInfo: Boolean = true) {
         scope.launch(Dispatchers.IO) {
-            val manga = db.getManga(manga.url, manga.source).executeAsBlocking()!!
-            updateChapters()
-            updateChapterInfo()
+            var manga2: Manga? = null
+            if (updateInfo) {
+                manga2 = db.getManga(manga.url, manga.source).executeAsBlocking()!!
+                updateChapters()
+                updateChapterInfo()
+            }
 
             withContext(Dispatchers.Main) {
-                controller.onNextManga(
-                    manga, source, chapters
-                )
+                if (manga2 != null) {
+                    Observable.just(manga2)
+                } else {
+                    Observable.just(manga)
+                }.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeLatestCache({ view, manga -> view.onNextManga(manga, source, chapters) })
             }
         }
     }
@@ -210,7 +222,7 @@ class MangaAllInOnePresenter(
                     updateChapterInfo()
                 }
                 withContext(Dispatchers.Main) {
-                    controller.onNextManga(this@MangaAllInOnePresenter.manga, this@MangaAllInOnePresenter.source, this@MangaAllInOnePresenter.chapters)
+                    updateManga(updateInfo = false)
                     controller.onFetchMangaDone()
                 }
             } catch (e: java.lang.Exception) {
