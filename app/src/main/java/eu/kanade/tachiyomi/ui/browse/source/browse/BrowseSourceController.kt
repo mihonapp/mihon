@@ -164,8 +164,13 @@ open class BrowseSourceController(bundle: Bundle) :
     }
 
     open fun initFilterSheet() {
-        if (presenter.sourceFilters.isEmpty() || mode == Mode.RECOMMENDS) {
+        if (mode == Mode.RECOMMENDS) {
             return
+        }
+
+        if (presenter.sourceFilters.isEmpty()) {
+            filterSheet?.hideFilterButton()
+            binding.fabFilter.text = activity!!.getString(R.string.eh_saved_searches)
         }
 
         filterSheet = SourceFilterSheet(

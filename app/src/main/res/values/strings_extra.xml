@@ -98,6 +98,7 @@
     <string name="eh_force_sync_reset_title">Are you sure?</string>
     <string name="eh_force_sync_reset_message">Resetting the sync state can cause your next sync to be extremely slow.</string>
     <string name="eh_show_update_statistics_dialog">Collecting statistics…</string>
+    <string name="eh_saved_searches">Saved Searches</string>
 
     <!-- AZ -->
     <string name="az_recommends">See Recommendations</string>

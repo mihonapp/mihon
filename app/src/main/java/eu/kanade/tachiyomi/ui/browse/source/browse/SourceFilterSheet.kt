@@ -14,6 +14,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.dpToPx
+import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.inflate
 import eu.kanade.tachiyomi.widget.SimpleNavigationView
 import exh.EXHSavedSearch
@@ -64,6 +65,10 @@ class SourceFilterSheet(
 
     fun setSavedSearches(searches: List<EXHSavedSearch>) {
         filterNavView.setSavedSearches(searches)
+    }
+
+    fun hideFilterButton() {
+        filterNavView.hideFilterButton()
     }
 
     class FilterNavigationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
@@ -124,6 +129,10 @@ class SourceFilterSheet(
                 restoreBtn.setOnLongClickListener { onSavedSearchDeleteClicked(index, search.name); true }
                 saved_searches.addView(restoreBtn)
             }
+        }
+
+        fun hideFilterButton() {
+            filter_btn.gone()
         }
 
         companion object {
