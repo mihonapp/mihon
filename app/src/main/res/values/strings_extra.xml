@@ -99,6 +99,11 @@
     <string name="eh_force_sync_reset_message">Resetting the sync state can cause your next sync to be extremely slow.</string>
     <string name="eh_show_update_statistics_dialog">Collecting statistics…</string>
     <string name="eh_saved_searches">Saved Searches</string>
+    <string name="eh_batch_add_description">Example:\n\nhttp://e-hentai.org/g/12345/1a2b3c4e\nhttp://g.e-hentai.org/g/67890/6f7g8h9i\nhttp://exhentai.org/g/13579/1a3b5c7e\nhttps://exhentai.org/g/24680/2f4g6h8i\n\nIt also supports E-H Visited exported data\n</string>
+    <string name="eh_batch_add_title">Enter the galleries to add (separated by a new line):</string>
+    <string name="eh_batch_add_button">Add Galleries</string>
+    <string name="eh_batch_add_adding_galleries">Adding galleries…</string>
+    <string name="eh_batch_add_finish">Finish</string>
 
     <!-- AZ -->
     <string name="az_recommends">See Recommendations</string>

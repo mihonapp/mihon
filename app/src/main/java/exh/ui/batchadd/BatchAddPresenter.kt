@@ -1,12 +1,16 @@
 package exh.ui.batchadd
 
+import android.util.Log
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.ReplayRelay
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import exh.GalleryAddEvent
 import exh.GalleryAdder
 import exh.metadata.nullIfBlank
 import kotlin.concurrent.thread
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class BatchAddPresenter : BasePresenter<BatchAddController>() {
 
@@ -19,7 +23,25 @@ class BatchAddPresenter : BasePresenter<BatchAddController>() {
 
     fun addGalleries(galleries: String) {
         eventRelay = ReplayRelay.create()
-        val splitGalleries = galleries.split("\n").mapNotNull {
+        val regex =
+            """[0-9]*?\.[a-z0-9]*?:""".toRegex()
+        val testedGalleries: String
+
+        testedGalleries = if (regex.containsMatchIn(galleries)) {
+            regex.findAll(galleries).map { galleryKeys ->
+                val LinkParts = galleryKeys.value.split(".")
+                val Link = "${if (Injekt.get<PreferencesHelper>().enableExhentai().get()) {
+                    "https://exhentai.org/g/"
+                } else {
+                    "https://e-hentai.org/g/"
+                }}${LinkParts[0]}/${LinkParts[1].replace(":", "")}"
+                Log.d("Batch Add", Link)
+                Link
+            }.joinToString(separator = "\n")
+        } else {
+            galleries
+        }
+        val splitGalleries = testedGalleries.split("\n").mapNotNull {
             it.trim().nullIfBlank()
         }
 
