@@ -5,123 +5,130 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/input_title_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Enter the galleries to add (separated by a new line):"
-            android:textAppearance="@style/TextAppearance.Medium.Title"
-            android:visibility="visible"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/galleries_box"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:ems="10"
-            android:hint="Example:\n\nhttp://e-hentai.org/g/12345/1a2b3c4e\nhttp://g.e-hentai.org/g/67890/6f7g8h9i\nhttp://exhentai.org/g/13579/1a3b5c7e\nhttps://exhentai.org/g/24680/2f4g6h8i\n"
-            android:inputType="textMultiLine"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/btn_add_galleries"
-            app:layout_constraintLeft_toLeftOf="@+id/input_title_view"
-            app:layout_constraintRight_toRightOf="@+id/input_title_view"
-            app:layout_constraintTop_toBottomOf="@+id/input_title_view" />
-
-        <Button
-            android:id="@+id/btn_add_galleries"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Add Galleries"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/galleries_box"
-            app:layout_constraintRight_toRightOf="@+id/galleries_box" />
-
-        <TextView
-            android:id="@+id/progress_title_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="0dp"
-            android:text="Adding galleries..."
-            android:textAppearance="@style/TextAppearance.Medium.Title"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/progress_dismiss_btn"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="@+id/progress_log_wrapper"
-            app:layout_constraintRight_toLeftOf="@+id/progress_text" />
-
-        <TextView
-            android:id="@+id/progress_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:singleLine="true"
-            android:text=""
-            android:textAlignment="textEnd"
-            android:visibility="gone"
-            app:layout_constraintRight_toRightOf="@+id/progress_log_wrapper"
-            app:layout_constraintTop_toTopOf="@+id/progress_bar" />
-
-        <Button
-            android:id="@+id/progress_dismiss_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:text="Finish"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_add_galleries"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="@+id/progress_log_wrapper"
-            app:layout_constraintRight_toRightOf="@+id/progress_log_wrapper" />
-
-        <ScrollView
-            android:id="@+id/progress_log_wrapper"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/progress_bar"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="@+id/progress_title_view"
-            app:layout_constraintRight_toRightOf="@+id/progress_title_view"
-            app:layout_constraintTop_toBottomOf="@+id/progress_title_view"
-            app:layout_constraintVertical_bias="0.0">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:padding="16dp">
 
             <TextView
-                android:id="@+id/progress_log"
+                android:id="@+id/input_title_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Regular.Body1"
-                android:visibility="visible" />
-        </ScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:text="Enter the galleries to add (separated by a new line):"
+                android:textAppearance="@style/TextAppearance.Medium.Title"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/galleries_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Example:\n\nhttp://e-hentai.org/g/12345/1a2b3c4e\nhttp://g.e-hentai.org/g/67890/6f7g8h9i\nhttp://exhentai.org/g/13579/1a3b5c7e\nhttps://exhentai.org/g/24680/2f4g6h8i\n"
+                android:inputType="textMultiLine"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/btn_add_galleries"
+                app:layout_constraintLeft_toLeftOf="@+id/input_title_view"
+                app:layout_constraintRight_toRightOf="@+id/input_title_view"
+                app:layout_constraintTop_toBottomOf="@+id/input_title_view" />
+
+            <Button
+                android:id="@+id/btn_add_galleries"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Add Galleries"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@+id/galleries_box"
+                app:layout_constraintRight_toRightOf="@+id/galleries_box" />
+
+            <TextView
+                android:id="@+id/progress_title_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="0dp"
+                android:text="Adding galleries..."
+                android:textAppearance="@style/TextAppearance.Medium.Title"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="0dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/progress_dismiss_btn"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="@+id/progress_log_wrapper"
+                app:layout_constraintRight_toLeftOf="@+id/progress_text" />
+
+            <TextView
+                android:id="@+id/progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:singleLine="true"
+                android:text=""
+                android:textAlignment="textEnd"
+                android:visibility="gone"
+                app:layout_constraintRight_toRightOf="@+id/progress_log_wrapper"
+                app:layout_constraintTop_toTopOf="@+id/progress_bar" />
+
+            <Button
+                android:id="@+id/progress_dismiss_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="0dp"
+                android:text="Finish"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_add_galleries"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="@+id/progress_log_wrapper"
+                app:layout_constraintRight_toRightOf="@+id/progress_log_wrapper" />
+
+            <ScrollView
+                android:id="@+id/progress_log_wrapper"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/progress_bar"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="@+id/progress_title_view"
+                app:layout_constraintRight_toRightOf="@+id/progress_title_view"
+                app:layout_constraintTop_toBottomOf="@+id/progress_title_view"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/progress_log"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Regular.Body1"
+                    android:visibility="visible" />
+            </ScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
