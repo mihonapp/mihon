@@ -48,7 +48,7 @@ private inline fun <reified T> delegatedSourceId(): Long {
 }
 
 // Used to speed up isLewdSource
-private val lewdDelegatedSourceIds = SourceManager.DELEGATED_SOURCES.filter {
+val lewdDelegatedSourceIds = SourceManager.DELEGATED_SOURCES.filter {
     it.value.newSourceClass in DELEGATED_LEWD_SOURCES
 }.map { it.value.sourceId }.sorted()
 

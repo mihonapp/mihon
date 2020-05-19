@@ -30,7 +30,7 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.updateCoverLastModified
 import exh.favorites.FavoritesSyncHelper
-import exh.isLewdSource
+import exh.util.isLewd
 import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
@@ -154,7 +154,7 @@ class LibraryPresenter(
                 else if (filterTracked == STATE_EXCLUDE && tracks.isNotEmpty()) return@f false
             }
             if (filterLewd != STATE_IGNORE) {
-                val isLewd = isLewdSource(item.manga.source)
+                val isLewd = item.manga.isLewd()
                 if (filterLewd == STATE_INCLUDE && !isLewd) return@f false
                 else if (filterLewd == STATE_EXCLUDE && isLewd) return@f false
             }
