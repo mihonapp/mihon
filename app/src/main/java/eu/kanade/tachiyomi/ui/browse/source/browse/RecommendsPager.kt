@@ -38,7 +38,7 @@ open class RecommendsPager(
     }
 
     private fun myAnimeList(): Observable<List<SMangaImpl>>? {
-        fun getId(): Observable<String> {
+        fun getId(): Observable<String?> {
             val endpoint =
                 myAnimeListEndpoint.toHttpUrlOrNull()
                     ?: throw Exception("Could not convert endpoint url")
@@ -69,17 +69,16 @@ open class RecommendsPager(
                     val result = results.last()
                     val title = result["title"].string
                     if (!title.contains(manga.title, true)) {
-                        throw Exception("Not found")
+                        return@map null
                     }
-                    val id = result["mal_id"].string
-                    if (id.isEmpty()) {
-                        throw Exception("Not found")
-                    }
-                    id
+                    result["mal_id"].string
                 }
         }
 
         return getId().map { id ->
+            if (id == null) {
+                return@map listOf<SMangaImpl>()
+            }
             val endpoint =
                 myAnimeListEndpoint.toHttpUrlOrNull()
                     ?: throw Exception("Could not convert endpoint url")
@@ -184,7 +183,7 @@ open class RecommendsPager(
                     title["native"].nullString?.contains("", true) != true &&
                     countOccurrence(synonyms, manga.title) <= 0
                 ) {
-                    throw Exception("Not found")
+                    return@map listOf<SMangaImpl>()
                 }
                 val recommendations = result["recommendations"].obj
                 val edges = recommendations["edges"].array
@@ -215,19 +214,24 @@ open class RecommendsPager(
 
         var recommendations: Observable<List<SMangaImpl>>? = null
         for (api in apiList) {
-            recommendations = when (api) {
+            val currentRecommendations = when (api) {
                 API.MYANIMELIST -> myAnimeList()
                 API.ANILIST -> anilist()
             }
-                ?: throw Exception("Could not get recommendations")
 
-            val recommendationsBlocking = recommendations.toBlocking().first()
-            if (recommendationsBlocking.isNotEmpty()) {
+            if (currentRecommendations != null &&
+                currentRecommendations.toBlocking().first().isNotEmpty()
+            ) {
+                recommendations = currentRecommendations
                 break
             }
         }
 
-        return recommendations!!.map {
+        if (recommendations == null) {
+            throw Exception("No recommendations found")
+        }
+
+        return recommendations.map {
             MangasPage(it, false)
         }.doOnNext {
             onPageReceived(it)
