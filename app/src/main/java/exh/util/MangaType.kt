@@ -1,6 +1,7 @@
 package exh.util
 
 import android.content.Context
+import android.util.Log
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.source.SourceManager
@@ -28,17 +29,24 @@ fun Manga.mangaType(): MangaType {
     val sourceName = Injekt.get<SourceManager>().getOrStub(source).name
     val currentTags =
         genre?.split(",")?.map { it.trim().toLowerCase(Locale.US) } ?: emptyList()
+    Log.d("MangaType", currentTags.joinToString(separator = "\n"))
     return if (currentTags.any { tag -> tag.contains("japanese", ignoreCase = true) || isMangaTag(tag) }) {
+        Log.d("MangaType", "isManga")
         MangaType.TYPE_MANGA
     } else if (currentTags.any { tag -> tag.contains("english", ignoreCase = true) || isComicTag(tag) } || isComicSource(sourceName)) {
+        Log.d("MangaType", "isComic")
         MangaType.TYPE_COMIC
     } else if (currentTags.any { tag -> tag.contains("chinese", ignoreCase = true) || isManhuaTag(tag) } || isManhuaSource(sourceName)) {
+        Log.d("MangaType", "isManhua")
         MangaType.TYPE_MANHUA
     } else if (currentTags.any { tag -> tag.contains("korean", ignoreCase = true) || isManhwaTag(tag) } || isManhwaSource(sourceName)) {
+        Log.d("MangaType", "isManhwa")
         MangaType.TYPE_MANHWA
     } else if (currentTags.any { tag -> isWebtoonTag(tag) } || isWebtoonSource(sourceName)) {
+        Log.d("MangaType", "isWebtoon")
         MangaType.TYPE_WEBTOON
     } else {
+        Log.d("MangaType", "ended up as isManga")
         MangaType.TYPE_MANGA
     }
 }
@@ -58,23 +66,28 @@ fun Manga.defaultReaderType(): Int {
 }
 
 private fun isMangaTag(tag: String): Boolean {
-    return tag.toLowerCase() in listOf("manga", "манга")
+    return tag.contains("manga") ||
+        tag.contains("манга")
 }
 
 private fun isManhuaTag(tag: String): Boolean {
-    return tag.toLowerCase() in listOf("manhua", "маньхуа")
+    return tag.contains("manhua") ||
+        tag.contains("маньхуа")
 }
 
 private fun isManhwaTag(tag: String): Boolean {
-    return tag.toLowerCase() in listOf("manhwa", "манхва")
+    return tag.contains("manhwa") ||
+        tag.contains("манхва")
 }
 
 private fun isComicTag(tag: String): Boolean {
-    return tag.toLowerCase() in listOf("comic", "комикс")
+    return tag.contains("comic") ||
+        tag.contains("комикс")
 }
 
 private fun isWebtoonTag(tag: String): Boolean {
-    return tag.toLowerCase() in listOf("long strip", "webtoon")
+    return tag.contains("long strip") ||
+        tag.contains("webtoon")
 }
 
 /*private fun isMangaSource(sourceName: String): Boolean {
