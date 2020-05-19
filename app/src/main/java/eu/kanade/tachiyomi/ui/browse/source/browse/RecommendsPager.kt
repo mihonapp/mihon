@@ -61,16 +61,12 @@ open class RecommendsPager(
                         throw Exception("Null Response")
                     }
                     val response = JsonParser.parseString(responseBody).obj
-                    val results = response["results"].array
-                        .sortedBy {
+                    val result = response["results"].array
+                        .find {
                             val title = it["title"].string
                             title.contains(manga.title, true)
                         }
-                    val result = results.last()
-                    val title = result["title"].string
-                    if (!title.contains(manga.title, true)) {
-                        return@map null
-                    }
+                        ?: return@map null
                     result["mal_id"].string
                 }
         }
@@ -170,21 +166,23 @@ open class RecommendsPager(
                 val data = response["data"]!!.obj
                 val page = data["Page"].obj
                 val media = page["media"].array
-                val results = media.sortedBy {
-                    val synonyms = it["synonyms"].array
-                    countOccurrence(synonyms, manga.title)
+                val result = media.find {
+                    val title = it["title"].obj
+                    if (title["romaji"].nullString?.contains(manga.title, true) == true) {
+                        return@find true
+                    }
+                    if (title["english"].nullString?.contains(manga.title, true) == true) {
+                        return@find true
+                    }
+                    if (title["native"].nullString?.contains(manga.title, true) == true) {
+                        return@find true
+                    }
+                    if (countOccurrence(it["synonyms"].array, manga.title) <= 0) {
+                        return@find true
+                    }
+                    false
                 }
-                val result = results.last()
-                val title = result["title"].obj
-                val synonyms = result["synonyms"].array
-                if (
-                    title["romaji"].nullString?.contains("", true) != true &&
-                    title["english"].nullString?.contains("", true) != true &&
-                    title["native"].nullString?.contains("", true) != true &&
-                    countOccurrence(synonyms, manga.title) <= 0
-                ) {
-                    return@map listOf<SMangaImpl>()
-                }
+                    ?: return@map listOf<SMangaImpl>()
                 val recommendations = result["recommendations"].obj
                 val edges = recommendations["edges"].array
                 edges.map {
