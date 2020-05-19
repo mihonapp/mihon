@@ -30,7 +30,7 @@ open class RecommendsPager(
 ) : Pager() {
     private val client = OkHttpClient.Builder().build()
 
-    private fun countOccurance(array: JsonArray, search: String): Int {
+    private fun countOccurrence(array: JsonArray, search: String): Int {
         return array.count {
             val synonym = it.string
             synonym.contains(search, true)
@@ -173,7 +173,7 @@ open class RecommendsPager(
                 val media = page["media"].array
                 val results = media.sortedBy {
                     val synonyms = it["synonyms"].array
-                    countOccurance(synonyms, manga.title)
+                    countOccurrence(synonyms, manga.title)
                 }
                 val result = results.last()
                 val title = result["title"].obj
@@ -182,7 +182,7 @@ open class RecommendsPager(
                     title["romaji"].nullString?.contains("", true) != true &&
                     title["english"].nullString?.contains("", true) != true &&
                     title["native"].nullString?.contains("", true) != true &&
-                    countOccurance(synonyms, manga.title) <= 0
+                    countOccurrence(synonyms, manga.title) <= 0
                 ) {
                     throw Exception("Not found")
                 }
