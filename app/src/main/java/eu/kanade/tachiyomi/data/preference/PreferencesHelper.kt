@@ -204,6 +204,8 @@ class PreferencesHelper(val context: Context) {
 
     fun filterTracked() = flowPrefs.getInt(Keys.filterTracked, 0)
 
+    fun filterLewd() = flowPrefs.getInt(Keys.filterLewd, 0)
+
     fun librarySortingMode() = flowPrefs.getInt(Keys.librarySortingMode, 0)
 
     fun librarySortingAscending() = flowPrefs.getBoolean("library_sorting_ascending", true)

@@ -7,7 +7,6 @@ import android.view.View
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
-import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_EXCLUDE
 import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_IGNORE
 import eu.kanade.tachiyomi.source.model.Filter.TriState.Companion.STATE_INCLUDE
@@ -74,13 +73,14 @@ class LibrarySettingsSheet(
             private val unread = Item.TriStateGroup(R.string.action_filter_unread, this)
             private val completed = Item.TriStateGroup(R.string.completed, this)
             private val tracked = Item.TriStateGroup(R.string.tracked, this)
+            private val lewd = Item.TriStateGroup(R.string.lewd, this)
 
             override val header = null
             override val items = (
                 if (Injekt.get<TrackManager>().hasLoggedServices()) {
-                    listOf(downloaded, unread, completed, tracked)
+                    listOf(downloaded, unread, completed, tracked, lewd)
                 } else {
-                    listOf(downloaded, unread, completed)
+                    listOf(downloaded, unread, completed, lewd)
                 }
                 )
             override val footer = null
@@ -95,6 +95,7 @@ class LibrarySettingsSheet(
                     } else {
                         tracked.state = STATE_IGNORE
                     }
+                    lewd.state = preferences.filterLewd().get()
                 } catch (e: Exception) {
                     preferences.upgradeFilters()
                 }
@@ -113,6 +114,7 @@ class LibrarySettingsSheet(
                     unread -> preferences.filterUnread().set(item.state)
                     completed -> preferences.filterCompleted().set(item.state)
                     tracked -> preferences.filterTracked().set(item.state)
+                    lewd -> preferences.filterLewd().set(item.state)
                 }
 
                 adapter.notifyItemChanged(item)

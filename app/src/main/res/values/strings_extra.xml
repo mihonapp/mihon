@@ -19,6 +19,7 @@
     <!-- Preferences -->
     <!-- Filter -->
     <string name="tracked">Tracked</string>
+    <string name="lewd">Lewd</string>
 
     <!-- Subsections -->
     <string name="pref_category_all_sources">All Sources</string>

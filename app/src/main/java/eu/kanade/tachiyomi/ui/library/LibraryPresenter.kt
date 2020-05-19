@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.updateCoverLastModified
 import exh.favorites.FavoritesSyncHelper
+import exh.isLewdSource
 import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
@@ -131,6 +132,7 @@ class LibraryPresenter(
         val filterUnread = preferences.filterUnread().get()
         val filterCompleted = preferences.filterCompleted().get()
         val filterTracked = preferences.filterTracked().get()
+        val filterLewd = preferences.filterLewd().get()
 
         val filterFn: (LibraryItem) -> Boolean = f@{ item ->
             // Filter when there isn't unread chapters.
@@ -150,6 +152,11 @@ class LibraryPresenter(
                 val tracks = db.getTracks(item.manga).executeAsBlocking()
                 if (filterTracked == STATE_INCLUDE && tracks.isEmpty()) return@f false
                 else if (filterTracked == STATE_EXCLUDE && tracks.isNotEmpty()) return@f false
+            }
+            if (filterLewd != STATE_IGNORE) {
+                val isLewd = isLewdSource(item.manga.source)
+                if (filterLewd == STATE_INCLUDE && !isLewd) return@f false
+                else if (filterLewd == STATE_EXCLUDE && isLewd) return@f false
             }
             // Filter when there are no downloads.
             if (filterDownloaded != STATE_IGNORE || filterDownloadedOnly) {
