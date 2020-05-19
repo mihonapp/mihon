@@ -12,7 +12,8 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SMangaImpl
-import java.util.Locale
+import exh.util.MangaType
+import exh.util.mangaType
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -156,7 +157,7 @@ open class RecommendsPager(
                     SMangaImpl().apply {
                         this.title = rec["title"].obj["romaji"].nullString
                             ?: rec["title"].obj["english"].nullString
-                                ?: rec["title"].obj["native"].string
+                            ?: rec["title"].obj["native"].string
                         this.thumbnail_url = rec["coverImage"].obj["large"].string
                         this.initialized = true
                         this.url = rec["siteUrl"].string
@@ -167,19 +168,7 @@ open class RecommendsPager(
 
     override fun requestNext(): Observable<MangasPage> {
         if (smart) {
-            val myAnimeListPoints = 0
-            val anilistPoints =
-                anilistSmart.count { manga.genre!!.toLowerCase(Locale.ROOT).contains(it) }
-            val apiPoints = listOf(
-                API.MYANIMELIST to myAnimeListPoints,
-                API.ANILIST to anilistPoints
-            ).sortedWith(
-                compareBy(
-                    { (_, value) -> value },
-                    { (key, _) -> key == preferredApi }
-                )
-            )
-            preferredApi = apiPoints.last().first
+            preferredApi = if (manga.mangaType() != MangaType.TYPE_MANGA) API.ANILIST else preferredApi
             Log.d("SMART RECOMMEND", preferredApi.toString())
         }
 
