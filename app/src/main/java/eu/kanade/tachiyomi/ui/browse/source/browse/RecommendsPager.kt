@@ -7,6 +7,7 @@ import com.github.salomonbrys.kotson.jsonObject
 import com.github.salomonbrys.kotson.nullString
 import com.github.salomonbrys.kotson.obj
 import com.github.salomonbrys.kotson.string
+import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.asObservableSuccess
@@ -28,6 +29,13 @@ open class RecommendsPager(
     var preferredApi: API = API.MYANIMELIST
 ) : Pager() {
     private val client = OkHttpClient.Builder().build()
+
+    private fun countOccurance(array: JsonArray, search: String): Int {
+        return array.count {
+            val synonym = it.string
+            synonym.contains(search, true)
+        }
+    }
 
     private fun myAnimeList(): Observable<List<SMangaImpl>>? {
         fun getId(): Observable<String> {
@@ -54,8 +62,16 @@ open class RecommendsPager(
                     }
                     val response = JsonParser.parseString(responseBody).obj
                     val results = response["results"].array
-                    val firstResult = results[0].obj
-                    val id = firstResult["mal_id"].string
+                        .sortedBy {
+                            val title = it["title"].string
+                            title.contains(manga.title, true)
+                        }
+                    val result = results.last()
+                    val title = result["title"].string
+                    if (!title.contains(manga.title, true)) {
+                        throw Exception("Not found")
+                    }
+                    val id = result["mal_id"].string
                     if (id.isEmpty()) {
                         throw Exception("Not found")
                     }
@@ -104,22 +120,27 @@ open class RecommendsPager(
         val query =
             """
             {
-                Media(search: "$manga.title", type: MANGA) {
-                    title{
-                        romaji
-                        english
-                        native
-                    }
-                    recommendations {
-                        edges {
-                            node {
-                                mediaRecommendation {
-                                    siteUrl
-                                    title {
-                                        romaji
-                                    }
-                                    coverImage {
-                                        large
+                Page {
+                    media(search: "${manga.title}", type: MANGA) {
+                        title {
+                            romaji
+                            english
+                            native
+                        }
+                        synonyms
+                        recommendations {
+                            edges {
+                                node {
+                                    mediaRecommendation {
+                                        siteUrl
+                                        title {
+                                            romaji
+                                            english
+                                            native
+                                        }
+                                        coverImage {
+                                            large
+                                        }
                                     }
                                 }
                             }
@@ -148,8 +169,24 @@ open class RecommendsPager(
                 }
                 val response = JsonParser.parseString(responseBody).obj
                 val data = response["data"]!!.obj
-                val media = data["Media"].obj
-                val recommendations = media["recommendations"].obj
+                val page = data["Page"].obj
+                val media = page["media"].array
+                val results = media.sortedBy {
+                    val synonyms = it["synonyms"].array
+                    countOccurance(synonyms, manga.title)
+                }
+                val result = results.last()
+                val title = result["title"].obj
+                val synonyms = result["synonyms"].array
+                if (
+                    title["romaji"].nullString?.contains("", true) != true &&
+                    title["english"].nullString?.contains("", true) != true &&
+                    title["native"].nullString?.contains("", true) != true &&
+                    countOccurance(synonyms, manga.title) <= 0
+                ) {
+                    throw Exception("Not found")
+                }
+                val recommendations = result["recommendations"].obj
                 val edges = recommendations["edges"].array
                 edges.map {
                     val rec = it["node"]["mediaRecommendation"].obj
