@@ -200,8 +200,6 @@ open class RecommendsPager(
     companion object {
         private const val myAnimeListEndpoint = "https://api.jikan.moe/v3/"
         private const val anilistEndpoint = "https://graphql.anilist.co/"
-        private val anilistSmart =
-            listOf("manhua", "manhwa", "webtoon", "long strip", "korean", "chinese")
 
         enum class API { MYANIMELIST, ANILIST }
     }
