@@ -4,12 +4,15 @@ import android.util.Log
 import com.github.salomonbrys.kotson.array
 import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.jsonObject
+import com.github.salomonbrys.kotson.nullString
 import com.github.salomonbrys.kotson.obj
 import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonParser
+import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.asObservableSuccess
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SMangaImpl
+import java.util.Locale
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -18,7 +21,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import rx.Observable
 import rx.schedulers.Schedulers
 
-open class RecommendsPager(val title: String, val preferredApi: API = API.MYANIMELIST) : Pager() {
+open class RecommendsPager(
+    val manga: Manga,
+    val smart: Boolean = true,
+    var preferredApi: API = API.MYANIMELIST
+) : Pager() {
     private val client = OkHttpClient.Builder().build()
 
     private fun myAnimeList(): Observable<List<SMangaImpl>>? {
@@ -29,7 +36,7 @@ open class RecommendsPager(val title: String, val preferredApi: API = API.MYANIM
             val urlBuilder = endpoint.newBuilder()
             urlBuilder.addPathSegment("search")
             urlBuilder.addPathSegment("manga")
-            urlBuilder.addQueryParameter("q", title)
+            urlBuilder.addQueryParameter("q", manga.title)
             val url = urlBuilder.build().toUrl()
 
             val request = Request.Builder()
@@ -96,9 +103,11 @@ open class RecommendsPager(val title: String, val preferredApi: API = API.MYANIM
         val query =
             """
             {
-                Media(search: "$title", type: MANGA) {
+                Media(search: "$manga.title", type: MANGA) {
                     title{
                         romaji
+                        english
+                        native
                     }
                     recommendations {
                         edges {
@@ -145,7 +154,9 @@ open class RecommendsPager(val title: String, val preferredApi: API = API.MYANIM
                     val rec = it["node"]["mediaRecommendation"].obj
                     Log.d("ANILIST RECOMMEND", "${rec["title"].obj["romaji"].string}")
                     SMangaImpl().apply {
-                        this.title = rec["title"].obj["romaji"].string
+                        this.title = rec["title"].obj["romaji"].nullString
+                            ?: rec["title"].obj["english"].nullString
+                                ?: rec["title"].obj["native"].string
                         this.thumbnail_url = rec["coverImage"].obj["large"].string
                         this.initialized = true
                         this.url = rec["siteUrl"].string
@@ -155,6 +166,23 @@ open class RecommendsPager(val title: String, val preferredApi: API = API.MYANIM
     }
 
     override fun requestNext(): Observable<MangasPage> {
+        if (smart) {
+            val myAnimeListPoints = 0
+            val anilistPoints =
+                anilistSmart.count { manga.genre!!.toLowerCase(Locale.ROOT).contains(it) }
+            val apiPoints = listOf(
+                API.MYANIMELIST to myAnimeListPoints,
+                API.ANILIST to anilistPoints
+            ).sortedWith(
+                compareBy(
+                    { (_, value) -> value },
+                    { (key, _) -> key == preferredApi }
+                )
+            )
+            preferredApi = apiPoints.last().first
+            Log.d("SMART RECOMMEND", preferredApi.toString())
+        }
+
         val apiList = API.values().toMutableList()
         apiList.removeAt(apiList.indexOf(preferredApi))
         apiList.add(0, preferredApi)
@@ -183,6 +211,8 @@ open class RecommendsPager(val title: String, val preferredApi: API = API.MYANIM
     companion object {
         private const val myAnimeListEndpoint = "https://api.jikan.moe/v3/"
         private const val anilistEndpoint = "https://graphql.anilist.co/"
+        private val anilistSmart =
+            listOf("manhua", "manhwa", "webtoon", "long strip", "korean", "chinese")
 
         enum class API { MYANIMELIST, ANILIST }
     }

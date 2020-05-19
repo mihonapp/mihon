@@ -133,14 +133,15 @@ open class BrowseSourceController(bundle: Bundle) :
     override fun getTitle(): String? {
         return when (mode) {
             Mode.CATALOGUE -> presenter.source.name
-            Mode.RECOMMENDS -> recommendsConfig!!.origTitle
+            Mode.RECOMMENDS -> recommendsConfig!!.manga.title
         }
     }
 
     override fun createPresenter(): BrowseSourcePresenter {
         return BrowseSourcePresenter(
             args.getLong(SOURCE_ID_KEY),
-            if (mode == Mode.RECOMMENDS) recommendsConfig!!.origTitle else args.getString(SEARCH_QUERY_KEY),
+            args.getString(SEARCH_QUERY_KEY),
+            searchManga = if (mode == Mode.RECOMMENDS) recommendsConfig?.manga else null,
             recommends = (mode == Mode.RECOMMENDS)
         )
     }
@@ -776,8 +777,9 @@ open class BrowseSourceController(bundle: Bundle) :
         }
         activity?.toast(activity?.getString(R.string.manga_added_library))
     }
+
     @Parcelize
-    data class RecommendsConfig(val origTitle: String, val origSource: Long) : Parcelable
+    data class RecommendsConfig(val manga: Manga) : Parcelable
 
     enum class Mode {
         CATALOGUE,
