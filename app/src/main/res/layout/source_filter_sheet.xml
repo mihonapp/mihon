@@ -47,7 +47,6 @@
             android:tint="?attr/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/filter_btn"
-            tools:layout_constraintEnd_toStartf="parent"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toEndOf="@+id/reset_btn"
             app:layout_constraintTop_toTopOf="parent"
@@ -60,8 +59,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/action_filter"
-            android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

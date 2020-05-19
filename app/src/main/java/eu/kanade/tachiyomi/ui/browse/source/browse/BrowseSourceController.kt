@@ -170,7 +170,6 @@ open class BrowseSourceController(bundle: Bundle) :
         }
 
         if (presenter.sourceFilters.isEmpty()) {
-            filterSheet?.hideFilterButton()
             binding.fabFilter.text = activity!!.getString(R.string.eh_saved_searches)
         }
 
