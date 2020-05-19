@@ -108,4 +108,11 @@
     <!-- AZ -->
     <string name="az_recommends">See Recommendations</string>
 
+    <!-- Manga Type -->
+    <!--<string name="manga">Manga</string>-->
+    <string name="manhwa">Manhwa</string>
+    <string name="manhua">Manhua</string>
+    <string name="comic">Comic</string>
+    <string name="webtoon">Webtoon</string>
+
 </resources>
