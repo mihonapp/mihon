@@ -184,7 +184,7 @@ open class RecommendsPager(
                     SMangaImpl().apply {
                         this.title = rec["title"].obj["romaji"].nullString
                             ?: rec["title"].obj["english"].nullString
-                                ?: rec["title"].obj["native"].string
+                            ?: rec["title"].obj["native"].string
                         this.thumbnail_url = rec["coverImage"].obj["large"].string
                         this.initialized = true
                         this.url = rec["siteUrl"].string
