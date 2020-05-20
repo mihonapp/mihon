@@ -210,6 +210,12 @@ class SettingsReaderController : SettingsController() {
                 title = "Preserve reading position on read manga"
                 defaultValue = false
             }
+            switchPreference {
+                key = Keys.eh_use_auto_webtoon
+                title = "Auto Webtoon Mode"
+                summary = "Use auto webtoon mode for manga that are detected to likely use the long strip format"
+                defaultValue = true
+            }
         }
 
         preferenceCategory {

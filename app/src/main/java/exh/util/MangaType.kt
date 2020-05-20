@@ -33,6 +33,9 @@ fun Manga.mangaType(): MangaType {
     return if (currentTags.any { tag -> tag.contains("japanese", ignoreCase = true) || isMangaTag(tag) }) {
         Log.d("MangaType", "isManga")
         MangaType.TYPE_MANGA
+    } else if (currentTags.any { tag -> isWebtoonTag(tag) } || isWebtoonSource(sourceName)) {
+        Log.d("MangaType", "isWebtoon")
+        MangaType.TYPE_WEBTOON
     } else if (currentTags.any { tag -> tag.contains("english", ignoreCase = true) || isComicTag(tag) } || isComicSource(sourceName)) {
         Log.d("MangaType", "isComic")
         MangaType.TYPE_COMIC
@@ -42,9 +45,6 @@ fun Manga.mangaType(): MangaType {
     } else if (currentTags.any { tag -> tag.contains("korean", ignoreCase = true) || isManhwaTag(tag) } || isManhwaSource(sourceName)) {
         Log.d("MangaType", "isManhwa")
         MangaType.TYPE_MANHWA
-    } else if (currentTags.any { tag -> isWebtoonTag(tag) } || isWebtoonSource(sourceName)) {
-        Log.d("MangaType", "isWebtoon")
-        MangaType.TYPE_WEBTOON
     } else {
         Log.d("MangaType", "ended up as isManga")
         MangaType.TYPE_MANGA
@@ -55,14 +55,14 @@ fun Manga.mangaType(): MangaType {
  * The type the reader should use. Different from manga type as certain manga has different
  * read types
  */
-fun Manga.defaultReaderType(): Int {
-    val sourceName = Injekt.get<SourceManager>().getOrStub(source).name
+fun Manga.defaultReaderType(): Int? {
+    // val sourceName = Injekt.get<SourceManager>().getOrStub(source).name
     val type = mangaType()
     return if (type == MangaType.TYPE_MANHWA || type == MangaType.TYPE_WEBTOON) {
         ReaderActivity.WEBTOON
-    } else if (type == MangaType.TYPE_MANHUA || (type == MangaType.TYPE_COMIC && !sourceName.contains("tapastic", ignoreCase = true))) {
-        ReaderActivity.LEFT_TO_RIGHT
-    } else 0
+    /* } else if (type == MangaType.TYPE_MANHUA || (type == MangaType.TYPE_COMIC && !sourceName.contains("tapastic", ignoreCase = true))) {
+             ReaderActivity.LEFT_TO_RIGHT*/
+    } else null
 }
 
 private fun isMangaTag(tag: String): Boolean {

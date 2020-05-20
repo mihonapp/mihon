@@ -236,4 +236,6 @@ object PreferenceKeys {
     const val eh_is_hentai_enabled = "eh_is_hentai_enabled"
 
     const val eh_use_new_manga_interface = "eh_use_new_manga_interface"
+
+    const val eh_use_auto_webtoon = "eh_use_auto_webtoon"
 }

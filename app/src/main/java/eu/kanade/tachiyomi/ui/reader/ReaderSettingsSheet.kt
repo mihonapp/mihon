@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.util.view.invisible
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import kotlinx.android.synthetic.main.reader_settings_sheet.always_show_chapter_transition
+import kotlinx.android.synthetic.main.reader_settings_sheet.auto_webtoon_mode
 import kotlinx.android.synthetic.main.reader_settings_sheet.background_color
 import kotlinx.android.synthetic.main.reader_settings_sheet.crop_borders
 import kotlinx.android.synthetic.main.reader_settings_sheet.crop_borders_webtoon
@@ -90,6 +91,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         keepscreen.bindToPreference(preferences.keepScreenOn())
         long_tap.bindToPreference(preferences.readWithLongTap())
         always_show_chapter_transition.bindToPreference(preferences.alwaysShowChapterTransition())
+        auto_webtoon_mode.bindToPreference(preferences.eh_useAutoWebtoon())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             true_color.visible()

@@ -115,7 +115,6 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
     private var autoscrollSubscription: Subscription? = null
     private val sourceManager: SourceManager by injectLazy()
-    private val prefs: PreferencesHelper by injectLazy()
 
     private val logger = XLog.tag("ReaderActivity")
     // <-- EH

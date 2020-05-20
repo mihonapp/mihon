@@ -171,11 +171,19 @@
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintTop_toBottomOf="@id/true_color" />
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/auto_webtoon_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/eh_auto_webtoon_mode"
+        android:textColor="?android:attr/textColorSecondary"
+        app:layout_constraintTop_toBottomOf="@id/always_show_chapter_transition" />
+
     <android.widget.Space
         android:id="@+id/end_general_preferences"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/always_show_chapter_transition" />
+        app:layout_constraintBottom_toBottomOf="@id/auto_webtoon_mode" />
 
     <!-- Pager preferences -->
 

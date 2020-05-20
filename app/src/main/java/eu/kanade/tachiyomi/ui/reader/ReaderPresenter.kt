@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.util.lang.takeBytes
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.ImageUtil
 import eu.kanade.tachiyomi.util.updateCoverLastModified
+import exh.util.defaultReaderType
 import java.io.File
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -447,7 +448,13 @@ class ReaderPresenter(
      */
     fun getMangaViewer(): Int {
         val manga = manga ?: return preferences.defaultViewer()
-        return if (manga.viewer == 0) preferences.defaultViewer() else manga.viewer
+        return if (manga.viewer == 0 && preferences.eh_useAutoWebtoon().get()) {
+            manga.defaultReaderType() ?: if (manga.viewer == 0) preferences.defaultViewer() else manga.viewer
+        } else if (manga.viewer == 0) {
+            preferences.defaultViewer()
+        } else {
+            manga.viewer
+        }
     }
 
     /**

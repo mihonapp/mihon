@@ -105,6 +105,7 @@
     <string name="eh_batch_add_button">Add Galleries</string>
     <string name="eh_batch_add_adding_galleries">Adding galleries…</string>
     <string name="eh_batch_add_finish">Finish</string>
+    <string name="eh_auto_webtoon_mode">Auto Webtoon Mode Detection</string>
 
     <!-- AZ -->
     <string name="az_recommends">See Recommendations</string>
