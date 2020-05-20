@@ -745,7 +745,7 @@ class MangaAllInOneController :
      *
      * @param isFavorite determines if manga is favorite or not.
      */
-    private fun setFavoriteButtonState(isFavorite: Boolean) {
+    fun setFavoriteButtonState(isFavorite: Boolean) {
         // Set the Favorite drawable to the correct one.
         // Border drawable if false, filled drawable if true.
         binding.btnFavorite.apply {

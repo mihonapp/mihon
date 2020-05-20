@@ -240,6 +240,7 @@ class MangaAllInOnePresenter(
      */
     fun toggleFavorite(): Boolean {
         manga.favorite = !manga.favorite
+        controller.setFavoriteButtonState(manga.favorite)
         if (!manga.favorite) {
             manga.removeCovers(coverCache)
         }
