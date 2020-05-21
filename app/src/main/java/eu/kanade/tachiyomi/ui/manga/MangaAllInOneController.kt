@@ -72,6 +72,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import reactivecircus.flowbinding.android.view.clicks
+import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -191,6 +192,11 @@ class MangaAllInOneController :
         super.onViewCreated(view)
 
         if (manga == null || source == null) return
+
+        // Set SwipeRefresh to refresh manga data.
+        binding.swipeRefresh.refreshes()
+            .onEach { fetchMangaFromSource(manualFetch = true) }
+            .launchIn(scope)
 
         // Init RecyclerView and adapter
         adapter = MangaAllInOneAdapter(this, view.context)
@@ -329,10 +335,10 @@ class MangaAllInOneController :
      * @param manga manga object containing information about manga.
      * @param source the source of the manga.
      */
-    override fun onNextManga(manga: Manga, source: Source, chapters: List<MangaAllInOneChapterItem>) {
+    override fun onNextManga(manga: Manga, source: Source, chapters: List<MangaAllInOneChapterItem>, lastUpdateDate: Date, chapterCount: Float) {
         if (manga.initialized) {
             // Update view.
-            setMangaInfo(manga, source, chapters)
+            setMangaInfo(manga, source, chapters, lastUpdateDate, chapterCount)
             if (fromSource && !presenter.hasRequested && chapters.isNullOrEmpty()) {
                 fetchMangaFromSource(fetchManga = false)
             }
@@ -348,7 +354,7 @@ class MangaAllInOneController :
      * @param manga manga object containing information about manga.
      * @param source the source of the manga.
      */
-    override fun setMangaInfo(manga: Manga, source: Source?, chapters: List<MangaAllInOneChapterItem>) {
+    override fun setMangaInfo(manga: Manga, source: Source?, chapters: List<MangaAllInOneChapterItem>, lastUpdateDate: Date, chapterCount: Float) {
         val view = view ?: return
 
         if (update ||

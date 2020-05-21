@@ -67,6 +67,10 @@ class MangaAllInOnePresenter(
     var chapters: List<MangaAllInOneChapterItem> = emptyList()
         private set
 
+    lateinit var lastUpdateDate: Date
+
+    var chapterCount: Float = 0F
+
     private val scope = CoroutineScope(Job() + Dispatchers.Default)
 
     /**
@@ -138,29 +142,18 @@ class MangaAllInOnePresenter(
             withContext(Dispatchers.Main) {
                 Observable.just(manga)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeLatestCache({ view, manga -> view.onNextManga(manga, source, chapters) })
+                    .subscribeLatestCache({ view, manga -> view.onNextManga(manga, source, chapters, lastUpdateDate, chapterCount) })
             }
         }
     }
 
     private fun updateChapterInfo() {
         scope.launch(Dispatchers.IO) {
-            val lastUpdateDate = Date(
+            lastUpdateDate = Date(
                 chapters.maxBy { it.date_upload }?.date_upload ?: 0
             )
 
-            val chapterCount = chapters.maxBy { it.chapter_number }?.chapter_number ?: 0f
-
-            withContext(Dispatchers.Main) {
-                // set chapter count
-                Observable.just(chapterCount)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeLatestCache({ view, chapterCount -> view.setChapterCount(chapterCount) })
-                // update last update date
-                Observable.just(lastUpdateDate)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeLatestCache({ view, lastUpdateDate -> view.setLastUpdateDate(lastUpdateDate) })
-            }
+            chapterCount = chapters.maxBy { it.chapter_number }?.chapter_number ?: 0f
         }
     }
 
@@ -179,7 +172,7 @@ class MangaAllInOnePresenter(
                 } else {
                     Observable.just(manga)
                 }.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeLatestCache({ view, manga -> view.onNextManga(manga, source, chapters) })
+                    .subscribeLatestCache({ view, manga -> view.onNextManga(manga, source, chapters, lastUpdateDate, chapterCount) })
             }
         }
     }

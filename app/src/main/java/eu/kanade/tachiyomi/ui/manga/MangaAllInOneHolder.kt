@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -283,6 +284,9 @@ class MangaAllInOneHolder(
                 else -> R.string.unknown
             }
         )
+
+        setChapterCount(0F)
+        setLastUpdateDate(Date(0L))
 
         // Set the favorite drawable to the correct one.
         setFavoriteButtonState(manga.favorite)

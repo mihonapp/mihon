@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.util.system.getResourceColor
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.util.Date
 import kotlinx.coroutines.CoroutineScope
 import uy.kohesive.injekt.injectLazy
 
@@ -55,8 +56,8 @@ class MangaAllInOneAdapter(
         fun openSmartSearch()
         fun mangaPresenter(): MangaAllInOnePresenter
         fun openRecommends()
-        fun onNextManga(manga: Manga, source: Source, chapters: List<MangaAllInOneChapterItem>)
-        fun setMangaInfo(manga: Manga, source: Source?, chapters: List<MangaAllInOneChapterItem>)
+        fun onNextManga(manga: Manga, source: Source, chapters: List<MangaAllInOneChapterItem>, lastUpdateDate: Date, chapterCount: Float)
+        fun setMangaInfo(manga: Manga, source: Source?, chapters: List<MangaAllInOneChapterItem>, lastUpdateDate: Date, chapterCount: Float)
         fun openInWebView()
         fun shareManga()
         fun fetchMangaFromSource(manualFetch: Boolean = false, fetchManga: Boolean = true, fetchChapters: Boolean = true)
