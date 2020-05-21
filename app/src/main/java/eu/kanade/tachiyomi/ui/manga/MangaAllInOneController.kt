@@ -17,7 +17,6 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.kanade.tachiyomi.R
@@ -61,7 +60,6 @@ import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
-import java.text.DateFormat
 import java.util.Date
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CancellationException
@@ -156,20 +154,12 @@ class MangaAllInOneController :
 
     private var lastClickPosition = -1
 
-    private val dateFormat: DateFormat by lazy {
-        preferences.dateFormat()
-    }
-
     private var initialLoad: Boolean = true
 
     // EXH -->
     val smartSearchConfig: SourceController.SmartSearchConfig? = args.getParcelable(SMART_SEARCH_CONFIG_EXTRA)
 
     override val coroutineContext: CoroutineContext = Job() + Dispatchers.Main
-
-    private val gson: Gson by injectLazy()
-
-    private val sourceManager: SourceManager by injectLazy()
     // EXH <--
 
     val fromSource = args.getBoolean(FROM_SOURCE_EXTRA, false)

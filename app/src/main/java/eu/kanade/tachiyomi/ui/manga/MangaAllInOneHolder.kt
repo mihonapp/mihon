@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.manga
 import android.content.Context
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
@@ -11,7 +10,7 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys.dateFormat
+import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
@@ -24,8 +23,8 @@ import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.util.view.visibleIf
 import exh.MERGED_SOURCE_ID
-import exh.debug.DebugFunctions.sourceManager
 import exh.util.setChipsExtended
+import java.text.DateFormat
 import java.text.DecimalFormat
 import java.util.Date
 import kotlinx.android.synthetic.main.manga_all_in_one_header.backdrop
@@ -73,7 +72,15 @@ class MangaAllInOneHolder(
     smartSearchConfig: SourceController.SmartSearchConfig? = null
 ) : BaseFlexibleViewHolder(view, adapter) {
 
+    private val preferences: PreferencesHelper by injectLazy()
+
     private val gson: Gson by injectLazy()
+
+    private val dateFormat: DateFormat by lazy {
+        preferences.dateFormat()
+    }
+
+    private val sourceManager: SourceManager by injectLazy()
 
     init {
         val presenter = adapter.delegate.mangaPresenter()
