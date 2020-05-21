@@ -3,10 +3,8 @@ package eu.kanade.tachiyomi.ui.manga
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,11 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -30,16 +26,11 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.glide.GlideApp
-import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.MangaAllInOneControllerBinding
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.source.SourceController
@@ -49,12 +40,11 @@ import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
-import eu.kanade.tachiyomi.ui.manga.chapter.ChapterHolder
-import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
-import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersAdapter
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
 import eu.kanade.tachiyomi.ui.manga.chapter.DeleteChaptersDialog
 import eu.kanade.tachiyomi.ui.manga.chapter.DownloadCustomChaptersDialog
+import eu.kanade.tachiyomi.ui.manga.chapter.MangaAllInOneChapterHolder
+import eu.kanade.tachiyomi.ui.manga.chapter.MangaAllInOneChapterItem
 import eu.kanade.tachiyomi.ui.manga.track.TrackController
 import eu.kanade.tachiyomi.ui.migration.manga.design.PreMigrationController
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -69,13 +59,9 @@ import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
-import eu.kanade.tachiyomi.util.view.visibleIf
 import exh.EH_SOURCE_ID
 import exh.EXH_SOURCE_ID
-import exh.MERGED_SOURCE_ID
-import exh.util.setChipsExtended
 import java.text.DateFormat
-import java.text.DecimalFormat
 import java.util.Date
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CancellationException
@@ -86,11 +72,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import reactivecircus.flowbinding.android.view.clicks
-import reactivecircus.flowbinding.android.view.longClicks
-import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -110,7 +93,8 @@ class MangaAllInOneController :
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
     DownloadCustomChaptersDialog.Listener,
-    DeleteChaptersDialog.Listener {
+    DeleteChaptersDialog.Listener,
+    MangaAllInOneAdapter.MangaAllInOneInterface {
 
     constructor(manga: Manga?, fromSource: Boolean = false, smartSearchConfig: SourceController.SmartSearchConfig? = null, update: Boolean = false) : super(
         Bundle().apply {
@@ -158,7 +142,7 @@ class MangaAllInOneController :
     /**
      * Adapter containing a list of chapters.
      */
-    private var adapter: ChaptersAdapter? = null
+    private var adapter: MangaAllInOneAdapter? = null
 
     /**
      * Action mode for multiple selection.
@@ -168,7 +152,7 @@ class MangaAllInOneController :
     /**
      * Selected items. Used to restore selections after a rotation.
      */
-    private val selectedItems = mutableSetOf<ChapterItem>()
+    private val selectedItems = mutableSetOf<MangaAllInOneChapterItem>()
 
     private var lastClickPosition = -1
 
@@ -192,6 +176,8 @@ class MangaAllInOneController :
 
     var update = args.getBoolean(UPDATE_EXTRA, false)
 
+    override val controllerScope = scope
+
     init {
         setHasOptionsMenu(true)
     }
@@ -214,178 +200,10 @@ class MangaAllInOneController :
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
-        // Setting this via XML doesn't work
-        binding.mangaCover.clipToOutline = true
-
-        binding.btnFavorite.clicks()
-            .onEach { onFavoriteClick() }
-            .launchIn(scope)
-
-        if ((Injekt.get<TrackManager>().hasLoggedServices()) && presenter.manga.favorite) {
-            binding.btnTracking.visible()
-        }
-
-        scope.launch(Dispatchers.IO) {
-            if (Injekt.get<DatabaseHelper>().getTracks(presenter.manga).executeAsBlocking().any {
-                val status = Injekt.get<TrackManager>().getService(it.sync_id)?.getStatus(it.status)
-                status != null
-            }
-            ) {
-                withContext(Dispatchers.Main) {
-                    binding.btnTracking.icon = resources!!.getDrawable(R.drawable.ic_cloud_white_24dp, null)
-                }
-            }
-        }
-
-        binding.btnTracking.clicks()
-            .onEach { openTracking() }
-            .launchIn(scope)
-
-        if (presenter.manga.favorite && presenter.getCategories().isNotEmpty()) {
-            binding.btnCategories.visible()
-        }
-        binding.btnCategories.clicks()
-            .onEach { onCategoriesClick() }
-            .launchIn(scope)
-
-        if (presenter.source is HttpSource) {
-            binding.btnWebview.visible()
-            binding.btnShare.visible()
-
-            binding.btnWebview.clicks()
-                .onEach { openInWebView() }
-                .launchIn(scope)
-            binding.btnShare.clicks()
-                .onEach { shareManga() }
-                .launchIn(scope)
-        }
-
-        if (presenter.manga.favorite) {
-            binding.btnMigrate.visible()
-            binding.btnSmartSearch.visible()
-        }
-
-        binding.btnMigrate.clicks()
-            .onEach {
-                PreMigrationController.navigateToMigration(
-                    preferences.skipPreMigration().get(),
-                    router,
-                    listOf(presenter.manga.id!!)
-                )
-            }
-            .launchIn(scope)
-
-        binding.btnSmartSearch.clicks()
-            .onEach { openSmartSearch() }
-            .launchIn(scope)
-
-        // Set SwipeRefresh to refresh manga data.
-        binding.swipeRefresh.refreshes()
-            .onEach { fetchMangaFromSource(manualFetch = true) }
-            .launchIn(scope)
-
-        binding.mangaFullTitle.longClicks()
-            .onEach {
-                activity?.copyToClipboard(view.context.getString(R.string.title), binding.mangaFullTitle.text.toString())
-            }
-            .launchIn(scope)
-
-        binding.mangaFullTitle.clicks()
-            .onEach {
-                performGlobalSearch(binding.mangaFullTitle.text.toString())
-            }
-            .launchIn(scope)
-
-        binding.mangaArtist.longClicks()
-            .onEach {
-                activity?.copyToClipboard(binding.mangaArtistLabel.text.toString(), binding.mangaArtist.text.toString())
-            }
-            .launchIn(scope)
-
-        binding.mangaArtist.clicks()
-            .onEach {
-                var text = binding.mangaArtist.text.toString()
-                if (isEHentaiBasedSource()) {
-                    text = wrapTag("artist", text)
-                }
-                performGlobalSearch(text)
-            }
-            .launchIn(scope)
-
-        binding.mangaAuthor.longClicks()
-            .onEach {
-                // EXH Special case E-Hentai/ExHentai to ignore author field (unused)
-                if (!isEHentaiBasedSource()) {
-                    activity?.copyToClipboard(binding.mangaAuthor.text.toString(), binding.mangaAuthor.text.toString())
-                }
-            }
-            .launchIn(scope)
-
-        binding.mangaAuthor.clicks()
-            .onEach {
-                // EXH Special case E-Hentai/ExHentai to ignore author field (unused)
-                if (!isEHentaiBasedSource()) {
-                    performGlobalSearch(binding.mangaAuthor.text.toString())
-                }
-            }
-            .launchIn(scope)
-
-        binding.mangaSummary.longClicks()
-            .onEach {
-                activity?.copyToClipboard(view.context.getString(R.string.description), binding.mangaSummary.text.toString())
-            }
-            .launchIn(scope)
-
-        binding.mangaCover.longClicks()
-            .onEach {
-                activity?.copyToClipboard(view.context.getString(R.string.title), presenter.manga.title)
-            }
-            .launchIn(scope)
-
-        // EXH -->
-        if (smartSearchConfig == null) {
-            binding.recommendBtn.visible()
-            binding.recommendBtn.clicks()
-                .onEach { openRecommends() }
-                .launchIn(scope)
-        }
-        smartSearchConfig?.let { smartSearchConfig ->
-            if (smartSearchConfig.origMangaId != null) { binding.mergeBtn.visible() }
-            binding.mergeBtn.clicks()
-                .onEach {
-                    // Init presenter here to avoid threading issues
-                    presenter
-
-                    launch {
-                        try {
-                            val mergedManga = withContext(Dispatchers.IO + NonCancellable) {
-                                presenter.smartSearchMerge(presenter.manga, smartSearchConfig.origMangaId!!)
-                            }
-
-                            router?.pushController(
-                                MangaAllInOneController(
-                                    mergedManga,
-                                    true,
-                                    update = true
-                                ).withFadeTransaction()
-                            )
-                            applicationContext?.toast("Manga merged!")
-                        } catch (e: Exception) {
-                            if (e is CancellationException) throw e
-                            else {
-                                applicationContext?.toast("Failed to merge manga: ${e.message}")
-                            }
-                        }
-                    }
-                }
-                .launchIn(scope)
-        }
-        // EXH <--
-
         if (manga == null || source == null) return
 
         // Init RecyclerView and adapter
-        adapter = ChaptersAdapter(this, view.context)
+        adapter = MangaAllInOneAdapter(this, view.context)
 
         binding.recycler.adapter = adapter
         binding.recycler.layoutManager = LinearLayoutManager(view.context)
@@ -421,8 +239,28 @@ class MangaAllInOneController :
         binding.fab.offsetAppbarHeight(activity!!)
     }
 
+    private fun getHeader(): MangaAllInOneHolder? {
+        return binding.recycler.findViewHolderForAdapterPosition(0) as? MangaAllInOneHolder
+    }
+
+    private fun addMangaHeader() {
+        if (adapter?.scrollableHeaders?.isEmpty() == true) {
+            adapter?.removeAllScrollableHeaders()
+            adapter?.addScrollableHeader(presenter.headerItem)
+        }
+    }
+
+    fun updateHeader() {
+        // binding.swipeRefresh?.isRefreshing = presenter.isLoading
+        adapter?.updateDataSet(presenter.chapters)
+        addMangaHeader()
+        activity?.invalidateOptionsMenu()
+    }
+
+    fun refreshAdapter() = adapter?.notifyDataSetChanged()
+
     // EXH -->
-    private fun openSmartSearch() {
+    override fun openSmartSearch() {
         val smartSearchConfig = SourceController.SmartSearchConfig(presenter.manga.title, presenter.manga.id!!)
 
         router?.pushController(
@@ -433,10 +271,48 @@ class MangaAllInOneController :
             ).withFadeTransaction()
         )
     }
+
+    override suspend fun mergeWithAnother() {
+        try {
+            val mergedManga = withContext(Dispatchers.IO + NonCancellable) {
+                presenter.smartSearchMerge(presenter.manga, smartSearchConfig?.origMangaId!!)
+            }
+
+            router?.pushController(
+                MangaAllInOneController(
+                    mergedManga,
+                    true,
+                    update = true
+                ).withFadeTransaction()
+            )
+            applicationContext?.toast("Manga merged!")
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            else {
+                applicationContext?.toast("Failed to merge manga: ${e.message}")
+            }
+        }
+    }
+
+    override fun copyToClipboard(label: String, text: String) {
+        activity!!.copyToClipboard(label, text)
+    }
+
+    override fun migrateManga() {
+        PreMigrationController.navigateToMigration(
+            preferences.skipPreMigration().get(),
+            router,
+            listOf(presenter.manga.id!!)
+        )
+    }
+
+    override fun mangaPresenter(): MangaAllInOnePresenter {
+        return presenter
+    }
     // EXH <--
 
     // AZ -->
-    private fun openRecommends() {
+    override fun openRecommends() {
         val recommendsConfig = BrowseSourceController.RecommendsConfig(presenter.manga)
 
         router?.pushController(
@@ -449,7 +325,7 @@ class MangaAllInOneController :
     }
     // AZ <--
 
-    private fun openTracking() {
+    override fun openTracking() {
         router?.pushController(
             TrackController(fromAllInOne = true, manga = manga).withFadeTransaction()
         )
@@ -463,7 +339,7 @@ class MangaAllInOneController :
      * @param manga manga object containing information about manga.
      * @param source the source of the manga.
      */
-    fun onNextManga(manga: Manga, source: Source, chapters: List<ChapterItem>) {
+    override fun onNextManga(manga: Manga, source: Source, chapters: List<MangaAllInOneChapterItem>) {
         if (manga.initialized) {
             // Update view.
             setMangaInfo(manga, source, chapters)
@@ -482,121 +358,9 @@ class MangaAllInOneController :
      * @param manga manga object containing information about manga.
      * @param source the source of the manga.
      */
-    private fun setMangaInfo(manga: Manga, source: Source?, chapters: List<ChapterItem>) {
+    override fun setMangaInfo(manga: Manga, source: Source?, chapters: List<MangaAllInOneChapterItem>) {
         val view = view ?: return
 
-        // update full title TextView.
-        binding.mangaFullTitle.text = if (manga.title.isBlank()) {
-            view.context.getString(R.string.unknown)
-        } else {
-            manga.title
-        }
-
-        // Update artist TextView.
-        binding.mangaArtist.text = if (manga.artist.isNullOrBlank()) {
-            view.context.getString(R.string.unknown)
-        } else {
-            manga.artist
-        }
-
-        // Update author TextView.
-        binding.mangaAuthor.text = if (manga.author.isNullOrBlank()) {
-            view.context.getString(R.string.unknown)
-        } else {
-            manga.author
-        }
-
-        // If manga source is known update source TextView.
-        val mangaSource = source?.toString()
-        with(binding.mangaSource) {
-            // EXH -->
-            if (mangaSource == null) {
-                text = view.context.getString(R.string.unknown)
-            } else if (source.id == MERGED_SOURCE_ID) {
-                text = MergedSource.MangaConfig.readFromUrl(gson, manga.url).children.map {
-                    sourceManager.getOrStub(it.source).toString()
-                }.distinct().joinToString()
-            } else {
-                text = mangaSource
-                setOnClickListener {
-                    val sourceManager = Injekt.get<SourceManager>()
-                    performSearch(sourceManager.getOrStub(source.id).name)
-                }
-            }
-            // EXH <--
-        }
-
-        // EXH -->
-        if (source?.id == MERGED_SOURCE_ID) {
-            binding.mangaSourceLabel.text = "Sources"
-        } else {
-            binding.mangaSourceLabel.setText(R.string.manga_info_source_label)
-        }
-        // EXH <--
-
-        // Update status TextView.
-        binding.mangaStatus.setText(
-            when (manga.status) {
-                SManga.ONGOING -> R.string.ongoing
-                SManga.COMPLETED -> R.string.completed
-                SManga.LICENSED -> R.string.licensed
-                else -> R.string.unknown
-            }
-        )
-
-        // Set the favorite drawable to the correct one.
-        setFavoriteButtonState(manga.favorite)
-
-        // Set cover if it wasn't already.
-        val mangaThumbnail = manga.toMangaThumbnail()
-
-        GlideApp.with(view.context)
-            .load(mangaThumbnail)
-            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            .centerCrop()
-            .into(binding.mangaCover)
-
-        binding.backdrop?.let {
-            GlideApp.with(view.context)
-                .load(mangaThumbnail)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .centerCrop()
-                .into(it)
-        }
-
-        // Manga info section
-        if (manga.description.isNullOrBlank() && manga.genre.isNullOrBlank()) {
-            hideMangaInfo()
-        } else {
-            // Update description TextView.
-            binding.mangaSummary.text = if (manga.description.isNullOrBlank()) {
-                view.context.getString(R.string.unknown)
-            } else {
-                manga.description
-            }
-
-            // Update genres list
-            if (!manga.genre.isNullOrBlank()) {
-                binding.mangaGenresTagsCompactChips.setChipsExtended(manga.getGenres(), this::performSearch, this::performGlobalSearch, manga.source)
-                binding.mangaGenresTagsFullChips.setChipsExtended(manga.getGenres(), this::performSearch, this::performGlobalSearch, manga.source)
-            } else {
-                binding.mangaGenresTagsWrapper.gone()
-            }
-
-            // Handle showing more or less info
-            binding.mangaSummary.clicks()
-                .onEach { toggleMangaInfo(view.context) }
-                .launchIn(scope)
-            binding.mangaInfoToggle.clicks()
-                .onEach { toggleMangaInfo(view.context) }
-                .launchIn(scope)
-
-            // Expand manga info if navigated from source listing
-            if (initialLoad && fromSource) {
-                toggleMangaInfo(view.context)
-                initialLoad = false
-            }
-        }
         if (update ||
             // Auto-update old format galleries
             (
@@ -610,6 +374,7 @@ class MangaAllInOneController :
 
         val adapter = adapter ?: return
         adapter.updateDataSet(chapters)
+        addMangaHeader()
 
         if (selectedItems.isNotEmpty()) {
             adapter.clearSelection() // we need to start from a clean state, index may have changed
@@ -624,90 +389,7 @@ class MangaAllInOneController :
         }
     }
 
-    private fun hideMangaInfo() {
-        binding.mangaSummaryLabel.gone()
-        binding.mangaSummary.gone()
-        binding.mangaGenresTagsWrapper.gone()
-        binding.mangaInfoToggle.gone()
-    }
-
-    private fun toggleMangaInfo(context: Context) {
-        val isExpanded = binding.mangaInfoToggle.text == context.getString(R.string.manga_info_collapse)
-
-        binding.mangaInfoToggle.text =
-            if (isExpanded) {
-                context.getString(R.string.manga_info_expand)
-            } else {
-                context.getString(R.string.manga_info_collapse)
-            }
-
-        with(binding.mangaSummary) {
-            maxLines =
-                if (isExpanded) {
-                    3
-                } else {
-                    Int.MAX_VALUE
-                }
-
-            ellipsize =
-                if (isExpanded) {
-                    TextUtils.TruncateAt.END
-                } else {
-                    null
-                }
-        }
-
-        binding.mangaGenresTagsCompact.visibleIf { isExpanded }
-        binding.mangaGenresTagsFullChips.visibleIf { !isExpanded }
-    }
-
-    /**
-     * Update chapter count TextView.
-     *
-     * @param count number of chapters.
-     */
-    fun setChapterCount(count: Float) {
-        if (count > 0f) {
-            binding.mangaChapters.text = DecimalFormat("#.#").format(count)
-        } else {
-            binding.mangaChapters.text = resources?.getString(R.string.unknown)
-        }
-    }
-
-    fun setLastUpdateDate(date: Date) {
-        if (date.time != 0L) {
-            binding.mangaLastUpdate.text = dateFormat.format(date)
-        } else {
-            binding.mangaLastUpdate.text = resources?.getString(R.string.unknown)
-        }
-    }
-
-    /**
-     * Toggles the favorite status and asks for confirmation to delete downloaded chapters.
-     */
-    private fun toggleFavorite() {
-        val view = view
-
-        val isNowFavorite = presenter.toggleFavorite()
-        if (view != null && !isNowFavorite && presenter.hasDownloads()) {
-            view.snack(view.context.getString(R.string.delete_downloads_for_manga)) {
-                setAction(R.string.action_delete) {
-                    presenter.deleteDownloads()
-                }
-            }
-        }
-
-        binding.btnCategories.visibleIf { isNowFavorite && presenter.getCategories().isNotEmpty() }
-        if (isNowFavorite) {
-            binding.btnSmartSearch.visible()
-            binding.btnMigrate.visible()
-        } else {
-            binding.btnSmartSearch.gone()
-            binding.btnMigrate.gone()
-        }
-    }
-
-    private fun openInWebView() {
+    override fun openInWebView() {
         val source = presenter.source as? HttpSource ?: return
 
         val url = try {
@@ -724,7 +406,7 @@ class MangaAllInOneController :
     /**
      * Called to run Intent with [Intent.ACTION_SEND], which show share dialog.
      */
-    private fun shareManga() {
+    override fun shareManga() {
         val context = view?.context ?: return
 
         val source = presenter.source as? HttpSource ?: return
@@ -741,37 +423,22 @@ class MangaAllInOneController :
     }
 
     /**
-     * Update favorite button with correct drawable and text.
-     *
-     * @param isFavorite determines if manga is favorite or not.
-     */
-    fun setFavoriteButtonState(isFavorite: Boolean) {
-        // Set the Favorite drawable to the correct one.
-        // Border drawable if false, filled drawable if true.
-        binding.btnFavorite.apply {
-            icon = ContextCompat.getDrawable(context, if (isFavorite) R.drawable.ic_favorite_24dp else R.drawable.ic_favorite_border_24dp)
-            text = context.getString(if (isFavorite) R.string.in_library else R.string.add_to_library)
-            isChecked = isFavorite
-        }
-    }
-
-    /**
      * Start fetching manga information from source.
      */
-    private fun fetchMangaFromSource(manualFetch: Boolean = false, fetchManga: Boolean = true, fetchChapters: Boolean = true) {
+    override fun fetchMangaFromSource(manualFetch: Boolean, fetchManga: Boolean, fetchChapters: Boolean) {
         setRefreshing(true)
         // Call presenter and start fetching manga information
         presenter.fetchMangaFromSource(manualFetch, fetchManga, fetchChapters)
     }
 
-    fun onFetchMangaDone() {
+    override fun onFetchMangaDone() {
         setRefreshing(false)
     }
 
     /**
      * Update swipe refresh to start showing refresh in progress spinner.
      */
-    fun onFetchMangaError(error: Throwable) {
+    override fun onFetchMangaError(error: Throwable) {
         setRefreshing(false)
         activity?.toast(error.message)
     }
@@ -781,15 +448,15 @@ class MangaAllInOneController :
      *
      * @param value whether it should be refreshing or not.
      */
-    fun setRefreshing(value: Boolean) {
+    override fun setRefreshing(value: Boolean) {
         binding.swipeRefresh.isRefreshing = value
     }
 
-    private fun onFavoriteClick() {
+    override fun onFavoriteClick() {
         val manga = presenter.manga
 
         if (manga.favorite) {
-            toggleFavorite()
+            getHeader()?.toggleFavorite()
             activity?.toast(activity?.getString(R.string.manga_removed_library))
         } else {
             val categories = presenter.getCategories()
@@ -799,14 +466,14 @@ class MangaAllInOneController :
             when {
                 // Default category set
                 defaultCategory != null -> {
-                    toggleFavorite()
+                    getHeader()?.toggleFavorite()
                     presenter.moveMangaToCategory(manga, defaultCategory)
                     activity?.toast(activity?.getString(R.string.manga_added_library))
                 }
 
                 // Automatic 'Default' or no categories
                 defaultCategoryId == 0 || categories.isEmpty() -> {
-                    toggleFavorite()
+                    getHeader()?.toggleFavorite()
                     presenter.moveMangaToCategory(manga, null)
                     activity?.toast(activity?.getString(R.string.manga_added_library))
                 }
@@ -825,7 +492,7 @@ class MangaAllInOneController :
         }
     }
 
-    private fun onCategoriesClick() {
+    override fun onCategoriesClick() {
         val manga = presenter.manga
         val categories = presenter.getCategories()
 
@@ -842,7 +509,7 @@ class MangaAllInOneController :
         val manga = mangas.firstOrNull() ?: return
 
         if (!manga.favorite) {
-            toggleFavorite()
+            getHeader()?.toggleFavorite()
             activity?.toast(activity?.getString(R.string.manga_added_library))
         }
 
@@ -854,13 +521,31 @@ class MangaAllInOneController :
      *
      * @param query the search query to pass to the search controller
      */
-    private fun performGlobalSearch(query: String) {
+    override fun performGlobalSearch(query: String) {
         val router = router ?: return
         router.pushController(GlobalSearchController(query).withFadeTransaction())
     }
 
+    fun setChapterCount(count: Float) {
+        getHeader()?.setChapterCount(count)
+    }
+
+    fun setLastUpdateDate(date: Date) {
+        getHeader()?.setLastUpdateDate(date)
+    }
+
+    fun setFavoriteButtonState(isFavorite: Boolean) {
+        getHeader()?.setFavoriteButtonState(isFavorite)
+    }
+
+    override fun isInitialLoadAndFromSource() = fromSource && initialLoad
+
+    override fun removeInitialLoad() {
+        initialLoad = false
+    }
+
     // --> EH
-    private fun wrapTag(namespace: String, tag: String) =
+    override fun wrapTag(namespace: String, tag: String) =
         if (tag.contains(' ')) {
             "$namespace:\"$tag$\""
         } else {
@@ -869,7 +554,7 @@ class MangaAllInOneController :
 
     private fun parseTag(tag: String) = tag.substringBefore(':').trim() to tag.substringAfter(':').trim()
 
-    private fun isEHentaiBasedSource(): Boolean {
+    override fun isEHentaiBasedSource(): Boolean {
         val sourceId = presenter.source.id
         return sourceId == EH_SOURCE_ID ||
             sourceId == EXH_SOURCE_ID
@@ -881,7 +566,7 @@ class MangaAllInOneController :
      *
      * @param query the search query to the previous controller
      */
-    private fun performSearch(query: String) {
+    override fun performSearch(query: String) {
         val router = router ?: return
 
         if (router.backstackSize < 2) {
@@ -1039,8 +724,8 @@ class MangaAllInOneController :
         getHolder(download.chapter)?.notifyStatus(download.status)
     }
 
-    private fun getHolder(chapter: Chapter): ChapterHolder? {
-        return binding.recycler.findViewHolderForItemId(chapter.id!!) as? ChapterHolder
+    private fun getHolder(chapter: Chapter): MangaAllInOneChapterHolder? {
+        return binding.recycler.findViewHolderForItemId(chapter.id!!) as? MangaAllInOneChapterHolder
     }
 
     fun openChapter(chapter: Chapter, hasAnimation: Boolean = false) {
@@ -1054,7 +739,7 @@ class MangaAllInOneController :
 
     override fun onItemClick(view: View?, position: Int): Boolean {
         val adapter = adapter ?: return false
-        val item = adapter.getItem(position) ?: return false
+        val item = adapter.getItem(position) as MangaAllInOneChapterItem? ?: return false
         return if (actionMode != null && adapter.mode == SelectableAdapter.Mode.MULTI) {
             lastClickPosition = position
             toggleSelection(position)
@@ -1089,7 +774,7 @@ class MangaAllInOneController :
         adapter.toggleSelection(position)
         adapter.notifyDataSetChanged()
         if (adapter.isSelected(position)) {
-            selectedItems.add(item)
+            selectedItems.add(item as MangaAllInOneChapterItem)
         } else {
             selectedItems.remove(item)
         }
@@ -1101,14 +786,14 @@ class MangaAllInOneController :
         val item = adapter.getItem(position) ?: return
         if (!adapter.isSelected(position)) {
             adapter.toggleSelection(position)
-            selectedItems.add(item)
+            selectedItems.add(item as MangaAllInOneChapterItem)
             actionMode?.invalidate()
         }
     }
 
-    private fun getSelectedChapters(): List<ChapterItem> {
+    private fun getSelectedChapters(): List<MangaAllInOneChapterItem> {
         val adapter = adapter ?: return emptyList()
-        return adapter.selectedPositions.mapNotNull { adapter.getItem(it) }
+        return adapter.selectedPositions.mapNotNull { adapter.getItem(it) as MangaAllInOneChapterItem }
     }
 
     private fun createActionModeIfNeeded() {
@@ -1209,24 +894,24 @@ class MangaAllInOneController :
         for (i in 0..adapter.itemCount) {
             adapter.toggleSelection(i)
         }
-        selectedItems.addAll(adapter.selectedPositions.mapNotNull { adapter.getItem(it) })
+        selectedItems.addAll(adapter.selectedPositions.mapNotNull { adapter.getItem(it) as MangaAllInOneChapterItem })
 
         actionMode?.invalidate()
         adapter.notifyDataSetChanged()
     }
 
-    private fun markAsRead(chapters: List<ChapterItem>) {
+    private fun markAsRead(chapters: List<MangaAllInOneChapterItem>) {
         presenter.markChaptersRead(chapters, true)
         if (presenter.preferences.removeAfterMarkedAsRead()) {
             deleteChapters(chapters)
         }
     }
 
-    private fun markAsUnread(chapters: List<ChapterItem>) {
+    private fun markAsUnread(chapters: List<MangaAllInOneChapterItem>) {
         presenter.markChaptersRead(chapters, false)
     }
 
-    private fun downloadChapters(chapters: List<ChapterItem>) {
+    private fun downloadChapters(chapters: List<MangaAllInOneChapterItem>) {
         val view = view
         presenter.downloadChapters(chapters)
         if (view != null && !presenter.manga.favorite) {
@@ -1246,7 +931,7 @@ class MangaAllInOneController :
         deleteChapters(getSelectedChapters())
     }
 
-    private fun markPreviousAsRead(chapters: List<ChapterItem>) {
+    private fun markPreviousAsRead(chapters: List<MangaAllInOneChapterItem>) {
         val adapter = adapter ?: return
         val prevChapters = if (presenter.sortDescending()) adapter.items.reversed() else adapter.items
         val chapterPos = prevChapters.indexOf(chapters.last())
@@ -1255,17 +940,17 @@ class MangaAllInOneController :
         }
     }
 
-    private fun bookmarkChapters(chapters: List<ChapterItem>, bookmarked: Boolean) {
+    private fun bookmarkChapters(chapters: List<MangaAllInOneChapterItem>, bookmarked: Boolean) {
         presenter.bookmarkChapters(chapters, bookmarked)
     }
 
-    fun deleteChapters(chapters: List<ChapterItem>) {
+    fun deleteChapters(chapters: List<MangaAllInOneChapterItem>) {
         if (chapters.isEmpty()) return
 
         presenter.deleteChapters(chapters)
     }
 
-    fun onChaptersDeleted(chapters: List<ChapterItem>) {
+    fun onChaptersDeleted(chapters: List<MangaAllInOneChapterItem>) {
         // this is needed so the downloaded text gets removed from the item
         chapters.forEach {
             adapter?.updateItem(it)

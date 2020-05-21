@@ -18,8 +18,8 @@ import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.browse.source.SourceController
-import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersPresenter
+import eu.kanade.tachiyomi.ui.manga.chapter.MangaAllInOneChapterItem
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
@@ -64,7 +64,7 @@ class MangaAllInOnePresenter(
     /**
      * List of chapters of the manga. It's always unfiltered and unsorted.
      */
-    var chapters: List<ChapterItem> = emptyList()
+    var chapters: List<MangaAllInOneChapterItem> = emptyList()
         private set
 
     private val scope = CoroutineScope(Job() + Dispatchers.Default)
@@ -85,6 +85,8 @@ class MangaAllInOnePresenter(
 
     private val redirectUserRelay = BehaviorRelay.create<ChaptersPresenter.EXHRedirect>()
     // EXH <--
+
+    var headerItem = MangaAllInOneHeaderItem(manga, source, smartSearchConfig)
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -385,9 +387,9 @@ class MangaAllInOnePresenter(
     /**
      * Converts a chapter from the database to an extended model, allowing to store new fields.
      */
-    private fun Chapter.toModel(): ChapterItem {
+    private fun Chapter.toModel(): MangaAllInOneChapterItem {
         // Create the model object.
-        val model = ChapterItem(this, manga)
+        val model = MangaAllInOneChapterItem(this, manga)
 
         // Find an active download for this chapter.
         val download = downloadManager.queue.find { it.chapter.id == id }
@@ -404,7 +406,7 @@ class MangaAllInOnePresenter(
      *
      * @param chapters the list of chapter from the database.
      */
-    private fun setDownloadedChapters(chapters: List<ChapterItem>) {
+    private fun setDownloadedChapters(chapters: List<MangaAllInOneChapterItem>) {
         for (chapter in chapters) {
             if (downloadManager.isChapterDownloaded(chapter, manga)) {
                 chapter.status = Download.DOWNLOADED
@@ -417,7 +419,7 @@ class MangaAllInOnePresenter(
      * @param chapters the list of chapters from the database
      * @return an observable of the list of chapters filtered and sorted.
      */
-    private fun applyChapterFilters(chapterList: List<ChapterItem>): List<ChapterItem> {
+    private fun applyChapterFilters(chapterList: List<MangaAllInOneChapterItem>): List<MangaAllInOneChapterItem> {
         var chapters = chapterList
         if (onlyUnread()) {
             chapters = chapters.filter { !it.read }
@@ -468,7 +470,7 @@ class MangaAllInOnePresenter(
     /**
      * Returns the next unread chapter or null if everything is read.
      */
-    fun getNextUnreadChapter(): ChapterItem? {
+    fun getNextUnreadChapter(): MangaAllInOneChapterItem? {
         return chapters.sortedByDescending { it.source_order }.find { !it.read }
     }
 
@@ -477,7 +479,7 @@ class MangaAllInOnePresenter(
      * @param selectedChapters the list of selected chapters.
      * @param read whether to mark chapters as read or unread.
      */
-    fun markChaptersRead(selectedChapters: List<ChapterItem>, read: Boolean) {
+    fun markChaptersRead(selectedChapters: List<MangaAllInOneChapterItem>, read: Boolean) {
         Observable.from(selectedChapters)
             .doOnNext { chapter ->
                 chapter.read = read
@@ -498,7 +500,7 @@ class MangaAllInOnePresenter(
      * Downloads the given list of chapters with the manager.
      * @param chapters the list of chapters to download.
      */
-    fun downloadChapters(chapters: List<ChapterItem>) {
+    fun downloadChapters(chapters: List<MangaAllInOneChapterItem>) {
         downloadManager.downloadChapters(manga, chapters)
     }
 
@@ -506,7 +508,7 @@ class MangaAllInOnePresenter(
      * Bookmarks the given list of chapters.
      * @param selectedChapters the list of chapters to bookmark.
      */
-    fun bookmarkChapters(selectedChapters: List<ChapterItem>, bookmarked: Boolean) {
+    fun bookmarkChapters(selectedChapters: List<MangaAllInOneChapterItem>, bookmarked: Boolean) {
         Observable.from(selectedChapters)
             .doOnNext { chapter ->
                 chapter.bookmark = bookmarked
@@ -521,7 +523,7 @@ class MangaAllInOnePresenter(
      * Deletes the given list of chapter.
      * @param chapters the list of chapters to delete.
      */
-    fun deleteChapters(chapters: List<ChapterItem>) {
+    fun deleteChapters(chapters: List<MangaAllInOneChapterItem>) {
         Observable.just(chapters)
             .doOnNext { deleteChaptersInternal(chapters) }
             .doOnNext { if (onlyDownloaded()) updateChaptersView() }
@@ -539,7 +541,7 @@ class MangaAllInOnePresenter(
      * Deletes a list of chapters from disk. This method is called in a background thread.
      * @param chapters the chapters to delete.
      */
-    private fun deleteChaptersInternal(chapters: List<ChapterItem>) {
+    private fun deleteChaptersInternal(chapters: List<MangaAllInOneChapterItem>) {
         downloadManager.deleteChapters(chapters, manga, source)
         chapters.forEach {
             it.status = Download.NOT_DOWNLOADED

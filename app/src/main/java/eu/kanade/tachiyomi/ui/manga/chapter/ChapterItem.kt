@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.ui.manga.MangaAllInOneAdapter
 
 class ChapterItem(val chapter: Chapter, val manga: Manga) :
     AbstractFlexibleItem<ChapterHolder>(),
@@ -48,6 +49,54 @@ class ChapterItem(val chapter: Chapter, val manga: Manga) :
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other is ChapterItem) {
+            return chapter.id!! == other.chapter.id!!
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return chapter.id!!.hashCode()
+    }
+}
+
+class MangaAllInOneChapterItem(val chapter: Chapter, val manga: Manga) :
+    AbstractFlexibleItem<MangaAllInOneChapterHolder>(),
+    Chapter by chapter {
+
+    private var _status: Int = 0
+
+    var status: Int
+        get() = download?.status ?: _status
+        set(value) {
+            _status = value
+        }
+
+    @Transient
+    var download: Download? = null
+
+    val isDownloaded: Boolean
+        get() = status == Download.DOWNLOADED
+
+    override fun getLayoutRes(): Int {
+        return R.layout.chapters_item
+    }
+
+    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): MangaAllInOneChapterHolder {
+        return MangaAllInOneChapterHolder(view, adapter as MangaAllInOneAdapter)
+    }
+
+    override fun bindViewHolder(
+        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
+        holder: MangaAllInOneChapterHolder,
+        position: Int,
+        payloads: List<Any?>?
+    ) {
+        holder.bind(this, manga)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other is MangaAllInOneChapterItem) {
             return chapter.id!! == other.chapter.id!!
         }
         return false
