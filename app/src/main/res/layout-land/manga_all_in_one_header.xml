@@ -4,12 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ui.browse.source.browse.BrowseSourceController">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.21" />
+
+        <ImageView
+            android:id="@+id/backdrop"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/material_grey_700" />
 
         <ImageView
             android:id="@+id/manga_cover"
@@ -19,18 +37,22 @@
             android:background="@drawable/rounded_rectangle"
             android:contentDescription="@string/description_cover"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="h,3:2"
+            app:layout_constraintDimensionRatio="h,2:3"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/manga_info_section"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/manga_cover"
-            app:layout_constraintTop_toTopOf="parent"
-            android:padding="16dp">
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/manga_full_title"
@@ -38,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
+                android:paddingBottom="8dp"
                 android:text="@string/manga_info_full_title_label"
                 android:textIsSelectable="false"
                 app:autoSizeMaxTextSize="20sp"
@@ -54,6 +77,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/manga_info_author_label"
                 android:textIsSelectable="false"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/manga_full_title" />
 
@@ -185,208 +209,200 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/manga_source_label" />
 
-            <HorizontalScrollView
-                android:id="@+id/actions_bar_scroll_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:requiresFadingEdge="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/manga_source">
-
-                <LinearLayout
-                    android:id="@+id/actions_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="parent">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_favorite"
-                        style="@style/Theme.Widget.Button.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_to_library"
-                        app:icon="@drawable/ic_favorite_border_24dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_tracking"
-                        style="@style/Theme.Widget.Button.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/track"
-                        android:visibility="gone"
-                        app:icon="@drawable/ic_cloud_off_24dp"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_categories"
-                        style="@style/Theme.Widget.Button.Icon.Textless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@string/action_edit_categories"
-                        android:visibility="gone"
-                        app:icon="@drawable/ic_label_24dp"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_share"
-                        style="@style/Theme.Widget.Button.Icon.Textless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@string/action_share"
-                        android:visibility="gone"
-                        app:icon="@drawable/ic_share_24dp"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_webview"
-                        style="@style/Theme.Widget.Button.Icon.Textless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@string/action_open_in_web_view"
-                        android:visibility="gone"
-                        app:icon="@drawable/ic_public_24dp"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_migrate"
-                        style="@style/Theme.Widget.Button.Icon.Textless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@string/migrate"
-                        android:visibility="gone"
-                        app:icon="@drawable/baseline_swap_calls_24"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_smart_search"
-                        style="@style/Theme.Widget.Button.Icon.Textless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@string/eh_merge_with_another_source"
-                        android:visibility="gone"
-                        app:icon="@drawable/eh_ic_find_replace_white_24dp"
-                        tools:visibility="visible" />
-
-                </LinearLayout>
-
-            </HorizontalScrollView>
-
-            <TextView
-                android:id="@+id/manga_summary_label"
-                style="@style/TextAppearance.Regular.SubHeading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/manga_info_about_label"
-                android:textIsSelectable="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/actions_bar_scroll_view" />
-
-            <TextView
-                android:id="@+id/manga_summary"
-                style="@style/TextAppearance.Regular.Body1.Secondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:ellipsize="end"
-                android:focusable="true"
-                android:maxLines="3"
-                android:textIsSelectable="false"
-                app:layout_constraintBottom_toTopOf="@id/manga_genres_tags_wrapper"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/manga_summary_label" />
-
-            <FrameLayout
-                android:id="@+id/manga_genres_tags_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constrainedHeight="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/manga_summary">
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/manga_genres_tags_full_chips"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:chipSpacingHorizontal="4dp" />
-
-                <HorizontalScrollView
-                    android:id="@+id/manga_genres_tags_compact"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:requiresFadingEdge="horizontal">
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/manga_genres_tags_compact_chips"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:chipSpacingHorizontal="4dp"
-                        app:singleLine="true" />
-
-                </HorizontalScrollView>
-
-            </FrameLayout>
-
-            <Button
-                android:id="@+id/manga_info_toggle"
-                style="@style/Theme.Widget.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/manga_info_expand"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/manga_genres_tags_wrapper" />
-
-            <Button
-                android:id="@+id/merge_btn"
-                style="@style/Theme.Widget.Button.FilledAccent"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="@string/merge"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/manga_info_toggle"
-                tools:visibility="visible" />
-
-            <Button
-                android:id="@+id/recommend_btn"
-                style="@style/Theme.Widget.Button.FilledAccent"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="@string/az_recommends"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/manga_info_toggle"
-                tools:layout_constraintTop_toBottomOf="@+id/merge_btn"
-                tools:visibility="visible" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/actions_bar_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:requiresFadingEdge="horizontal">
+
+        <LinearLayout
+            android:id="@+id/actions_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_favorite"
+                style="@style/Theme.Widget.Button.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_to_library"
+                app:icon="@drawable/ic_favorite_border_24dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_tracking"
+                style="@style/Theme.Widget.Button.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/track"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:icon="@drawable/ic_cloud_off_24dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_categories"
+                style="@style/Theme.Widget.Button.Icon.Textless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/action_edit_categories"
+                android:visibility="gone"
+                app:icon="@drawable/ic_label_24dp"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_share"
+                style="@style/Theme.Widget.Button.Icon.Textless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/action_share"
+                android:visibility="gone"
+                app:icon="@drawable/ic_share_24dp"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_webview"
+                style="@style/Theme.Widget.Button.Icon.Textless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/action_open_in_web_view"
+                android:visibility="gone"
+                app:icon="@drawable/ic_public_24dp"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_migrate"
+                style="@style/Theme.Widget.Button.Icon.Textless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/migrate"
+                android:visibility="gone"
+                app:icon="@drawable/baseline_swap_calls_24"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_smart_search"
+                style="@style/Theme.Widget.Button.Icon.Textless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/eh_merge_with_another_source"
+                android:visibility="gone"
+                app:icon="@drawable/eh_ic_find_replace_white_24dp"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/manga_summary_label"
+        style="@style/TextAppearance.Regular.SubHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/manga_info_about_label"
+        android:textIsSelectable="false" />
+
+    <TextView
+        android:id="@+id/manga_summary"
+        style="@style/TextAppearance.Regular.Body1.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:focusable="true"
+        android:maxLines="3"
+        android:textIsSelectable="false" />
+
+    <FrameLayout
+        android:id="@+id/manga_genres_tags_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/manga_genres_tags_full_chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            app:chipSpacingHorizontal="4dp" />
+
+        <HorizontalScrollView
+            android:id="@+id/manga_genres_tags_compact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:requiresFadingEdge="horizontal">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/manga_genres_tags_compact_chips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:chipSpacingHorizontal="4dp"
+                app:singleLine="true" />
+
+        </HorizontalScrollView>
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/manga_info_toggle"
+        style="@style/Theme.Widget.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/manga_info_expand"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/merge_btn"
+        style="@style/Theme.Widget.Button.FilledAccent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/eh_merge_with_another_source"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/recommend_btn"
+        style="@style/Theme.Widget.Button.FilledAccent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/az_recommends"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>
