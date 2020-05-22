@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import com.elvishew.xlog.XLog
 import com.jakewharton.rxrelay.BehaviorRelay
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -16,6 +17,15 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.system.toast
+import exh.EH_SOURCE_ID
+import exh.EIGHTMUSES_SOURCE_ID
+import exh.EXH_SOURCE_ID
+import exh.HBROWSE_SOURCE_ID
+import exh.HITOMI_SOURCE_ID
+import exh.MERGED_SOURCE_ID
+import exh.NHENTAI_SOURCE_ID
+import exh.PERV_EDEN_EN_SOURCE_ID
+import exh.PERV_EDEN_IT_SOURCE_ID
 import exh.source.BlacklistedSources
 import kotlinx.coroutines.async
 import rx.Observable
@@ -68,7 +78,19 @@ class ExtensionManager(
         if (pkgName != null) {
             return iconMap[pkgName] ?: iconMap.getOrPut(pkgName) { context.packageManager.getApplicationIcon(pkgName) }
         }
-        return null
+        
+        return when (source.id) {
+            EH_SOURCE_ID -> context.getDrawable(R.mipmap.ic_ehentai_source)
+            EXH_SOURCE_ID -> context.getDrawable(R.mipmap.ic_ehentai_source)
+            PERV_EDEN_EN_SOURCE_ID -> context.getDrawable(R.mipmap.ic_perveden_source)
+            PERV_EDEN_IT_SOURCE_ID -> context.getDrawable(R.mipmap.ic_perveden_source)
+            NHENTAI_SOURCE_ID -> context.getDrawable(R.mipmap.ic_nhentai_source)
+            HITOMI_SOURCE_ID -> context.getDrawable(R.mipmap.ic_hitomi_source)
+            EIGHTMUSES_SOURCE_ID -> context.getDrawable(R.mipmap.ic_8muses_source)
+            HBROWSE_SOURCE_ID -> context.getDrawable(R.mipmap.ic_hbrowse_source)
+            MERGED_SOURCE_ID -> context.getDrawable(R.mipmap.ic_merged_source)
+            else -> null
+        }
     }
 
     /**
