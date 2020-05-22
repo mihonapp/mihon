@@ -8,6 +8,15 @@ jobs:
   ping-pong:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: '0'
+      - name: TAG - Bump version and push tag
+        uses: anothrNick/github-tag-action@1.17.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          RELEASE_BRANCHES: master
       - name: PING - Dispatch initiating repository event
         if: github.event.action != 'pong'
         run: |
