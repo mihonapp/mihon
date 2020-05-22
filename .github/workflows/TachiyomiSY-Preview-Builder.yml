@@ -13,6 +13,7 @@ jobs:
           fetch-depth: '0'
       - name: TAG - Bump version and push tag
         uses: anothrNick/github-tag-action@1.17.2
+        if: github.event.action != 'pong'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
