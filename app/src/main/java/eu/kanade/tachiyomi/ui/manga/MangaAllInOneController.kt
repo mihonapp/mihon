@@ -246,15 +246,6 @@ class MangaAllInOneController :
         }
     }
 
-    fun updateHeader() {
-        // binding.swipeRefresh?.isRefreshing = presenter.isLoading
-        adapter?.updateDataSet(presenter.chapters)
-        addMangaHeader()
-        activity?.invalidateOptionsMenu()
-    }
-
-    fun refreshAdapter() = adapter?.notifyDataSetChanged()
-
     // EXH -->
     override fun openSmartSearch() {
         val smartSearchConfig = SourceController.SmartSearchConfig(presenter.manga.title, presenter.manga.id!!)
@@ -371,6 +362,10 @@ class MangaAllInOneController :
         val adapter = adapter ?: return
         adapter.updateDataSet(chapters)
         addMangaHeader()
+        adapter.recyclerView?.post {
+            setChapterCount(chapterCount)
+            setLastUpdateDate(lastUpdateDate)
+        }
 
         if (selectedItems.isNotEmpty()) {
             adapter.clearSelection() // we need to start from a clean state, index may have changed
@@ -522,11 +517,11 @@ class MangaAllInOneController :
         router.pushController(GlobalSearchController(query).withFadeTransaction())
     }
 
-    fun setChapterCount(count: Float) {
+    private fun setChapterCount(count: Float) {
         getHeader()?.setChapterCount(count)
     }
 
-    fun setLastUpdateDate(date: Date) {
+    private fun setLastUpdateDate(date: Date) {
         getHeader()?.setLastUpdateDate(date)
     }
 

@@ -67,9 +67,9 @@ class MangaAllInOnePresenter(
     var chapters: List<MangaAllInOneChapterItem> = emptyList()
         private set
 
-    lateinit var lastUpdateDate: Date
+    private var lastUpdateDate: Date = Date(0L)
 
-    var chapterCount: Float = 0F
+    private var chapterCount: Float = 0F
 
     private val scope = CoroutineScope(Job() + Dispatchers.Default)
 
