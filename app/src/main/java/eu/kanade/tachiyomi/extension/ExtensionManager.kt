@@ -78,7 +78,7 @@ class ExtensionManager(
         if (pkgName != null) {
             return iconMap[pkgName] ?: iconMap.getOrPut(pkgName) { context.packageManager.getApplicationIcon(pkgName) }
         }
-        
+
         return when (source.id) {
             EH_SOURCE_ID -> context.getDrawable(R.mipmap.ic_ehentai_source)
             EXH_SOURCE_ID -> context.getDrawable(R.mipmap.ic_ehentai_source)
