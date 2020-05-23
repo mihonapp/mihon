@@ -63,42 +63,6 @@ class SettingsAdvancedController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.pref_category_advanced
 
-        preference {
-            key = CLEAR_CACHE_KEY
-            titleRes = R.string.pref_clear_chapter_cache
-            summary = context.getString(R.string.used_cache, chapterCache.readableSize)
-
-            onClick { clearChapterCache() }
-        }
-        preference {
-            titleRes = R.string.pref_clear_cookies
-
-            onClick {
-                network.cookieManager.removeAll()
-                activity?.toast(R.string.cookies_cleared)
-            }
-        }
-        preference {
-            titleRes = R.string.pref_clear_database
-            summaryRes = R.string.pref_clear_database_summary
-
-            onClick {
-                val ctrl = ClearDatabaseDialogController()
-                ctrl.targetController = this@SettingsAdvancedController
-                ctrl.showDialog(router)
-            }
-        }
-        preference {
-            titleRes = R.string.pref_refresh_library_covers
-
-            onClick { LibraryUpdateService.start(context, target = Target.COVERS) }
-        }
-        preference {
-            titleRes = R.string.pref_refresh_library_tracking
-            summaryRes = R.string.pref_refresh_library_tracking_summary
-
-            onClick { LibraryUpdateService.start(context, target = Target.TRACKING) }
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             preference {
                 titleRes = R.string.pref_disable_battery_optimization
@@ -122,6 +86,53 @@ class SettingsAdvancedController : SettingsController() {
                 }
             }
         }
+
+        preferenceCategory {
+            titleRes = R.string.label_data
+
+            preference {
+                key = CLEAR_CACHE_KEY
+                titleRes = R.string.pref_clear_chapter_cache
+                summary = context.getString(R.string.used_cache, chapterCache.readableSize)
+
+                onClick { clearChapterCache() }
+            }
+            preference {
+                titleRes = R.string.pref_clear_cookies
+
+                onClick {
+                    network.cookieManager.removeAll()
+                    activity?.toast(R.string.cookies_cleared)
+                }
+            }
+            preference {
+                titleRes = R.string.pref_clear_database
+                summaryRes = R.string.pref_clear_database_summary
+
+                onClick {
+                    val ctrl = ClearDatabaseDialogController()
+                    ctrl.targetController = this@SettingsAdvancedController
+                    ctrl.showDialog(router)
+                }
+            }
+        }
+
+        preferenceCategory {
+            titleRes = R.string.label_library
+
+            preference {
+                titleRes = R.string.pref_refresh_library_covers
+
+                onClick { LibraryUpdateService.start(context, target = Target.COVERS) }
+            }
+            preference {
+                titleRes = R.string.pref_refresh_library_tracking
+                summaryRes = R.string.pref_refresh_library_tracking_summary
+
+                onClick { LibraryUpdateService.start(context, target = Target.TRACKING) }
+            }
+        }
+
         // <-- EXH
         preferenceCategory {
             title = "Developer tools"
