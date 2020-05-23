@@ -314,7 +314,7 @@ open class BrowseSourceController(bundle: Bundle) :
             binding.catalogueView.removeView(oldRecycler)
         }
 
-        val recycler = if (presenter.isListMode) {
+        val recycler = if (presenter.mode == 1) {
             RecyclerView(view.context).apply {
                 id = R.id.recycler
                 layoutManager = LinearLayoutManager(context)
@@ -332,7 +332,7 @@ open class BrowseSourceController(bundle: Bundle) :
                 (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
                         return when (adapter?.getItemViewType(position)) {
-                            R.layout.source_grid_item, null -> 1
+                            R.layout.source_grid_item, R.layout.source_comfortable_grid_item, null -> 1
                             else -> spanCount
                         }
                     }
@@ -399,10 +399,10 @@ open class BrowseSourceController(bundle: Bundle) :
 
         // Show next display mode
         menu.findItem(R.id.action_display_mode).apply {
-            val icon = if (presenter.isListMode) {
-                R.drawable.ic_view_module_24dp
-            } else {
+            val icon = if (presenter.mode == 0) {
                 R.drawable.ic_view_list_24dp
+            } else {
+                R.drawable.ic_view_module_24dp
             }
             setIcon(icon)
         }
@@ -583,7 +583,7 @@ open class BrowseSourceController(bundle: Bundle) :
         val adapter = adapter ?: return
 
         presenter.swapDisplayMode()
-        val isListMode = presenter.isListMode
+        val isListMode = presenter.mode == 1
         activity?.invalidateOptionsMenu()
         setupRecycler(view)
         if (!isListMode || !view.context.connectivityManager.isActiveNetworkMetered) {

@@ -3,7 +3,10 @@ package eu.kanade.tachiyomi.ui.library
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.tfcporciuncula.flow.Preference
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -16,13 +19,17 @@ import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
+import exh.util.updateLayoutParams
+import kotlinx.android.synthetic.main.source_comfortable_grid_item.view.constraint_layout
 import kotlinx.android.synthetic.main.source_grid_item.view.card
 import kotlinx.android.synthetic.main.source_grid_item.view.gradient
+import kotlinx.android.synthetic.main.source_grid_item.view.thumbnail
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference<Boolean>) :
+class LibraryItem(val manga: LibraryManga, private val libraryViewSetting: Preference<Int>) :
     AbstractFlexibleItem<LibraryHolder>(), IFilterable<String> {
 
     private val sourceManager: SourceManager = Injekt.get()
@@ -33,24 +40,58 @@ class LibraryItem(val manga: LibraryManga, private val libraryAsList: Preference
     var unreadCount = -1
 
     override fun getLayoutRes(): Int {
-        return if (libraryAsList.get()) {
-            R.layout.source_list_item
-        } else {
-            R.layout.source_grid_item
+        return when (libraryViewSetting.get()) {
+            0 -> R.layout.source_grid_item
+            1 -> R.layout.source_list_item
+            else -> R.layout.source_comfortable_grid_item
         }
     }
 
     override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): LibraryHolder {
         val parent = adapter.recyclerView
         return if (parent is AutofitRecyclerView) {
-            view.apply {
-                val coverHeight = parent.itemWidth / 3 * 4
-                card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
-                gradient.layoutParams = FrameLayout.LayoutParams(
-                    MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM
-                )
+            if (libraryViewSetting.get() == 0) {
+                view.apply {
+                    val coverHeight = parent.itemWidth / 3 * 4
+                    card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
+                    gradient.layoutParams = FrameLayout.LayoutParams(
+                        MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM
+                    )
+                }
+                LibraryGridHolder(view, adapter)
+            } else {
+                view.apply {
+                    val coverHeight = parent.itemWidth / 3 * 4
+
+                    gradient.layoutParams = FrameLayout.LayoutParams(
+                        MATCH_PARENT,
+                        coverHeight * (66 / 100),
+                        Gravity.BOTTOM
+                    )
+                    card.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                        bottomMargin = 6.dpToPx
+                    }
+
+                    constraint_layout.layoutParams = FrameLayout.LayoutParams(
+                        MATCH_PARENT, WRAP_CONTENT
+                    )
+                    thumbnail.maxHeight = Int.MAX_VALUE
+                    thumbnail.minimumHeight = 0
+                    constraint_layout.minHeight = 0
+                    thumbnail.scaleType = ImageView.ScaleType.CENTER_CROP
+                    thumbnail.adjustViewBounds = false
+                    thumbnail.layoutParams = FrameLayout.LayoutParams(
+                        MATCH_PARENT,
+                        (parent.itemWidth / 3f * 3.7f).toInt()
+                    )
+                    // .layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
+
+                    // gradient.layoutParams = FrameLayout.LayoutParams(
+                    // MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM
+                    // )
+                }
+                LibraryComfortableGridHolder(view, adapter)
             }
-            LibraryGridHolder(view, adapter)
         } else {
             LibraryListHolder(view, adapter)
         }

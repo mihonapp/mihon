@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -178,9 +179,11 @@ class MangaAllInOneController :
     }
 
     override fun createPresenter(): MangaAllInOnePresenter {
+        Log.d("Adapter", "Tester8")
         return MangaAllInOnePresenter(
             this, manga!!, source!!, smartSearchConfig
         )
+        Log.d("Adapter", "Tester9")
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -198,6 +201,8 @@ class MangaAllInOneController :
             .onEach { fetchMangaFromSource(manualFetch = true) }
             .launchIn(scope)
 
+        Log.d("Controller", "Tester1")
+
         // Init RecyclerView and adapter
         adapter = MangaAllInOneAdapter(this, view.context)
 
@@ -206,6 +211,7 @@ class MangaAllInOneController :
         binding.recycler.addItemDecoration(DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL))
         binding.recycler.setHasFixedSize(true)
         adapter?.fastScroller = binding.fastScroller
+        Log.d("Adapter", "Tester2")
 
         binding.fab.clicks()
             .onEach {
@@ -233,22 +239,27 @@ class MangaAllInOneController :
 
         binding.actionToolbar.offsetAppbarHeight(activity!!)
         binding.fab.offsetAppbarHeight(activity!!)
+        Log.d("Adapter", "Tester3")
     }
 
     private fun getHeader(): MangaAllInOneHolder? {
+        Log.d("Adapter", "Tester4")
         return binding.recycler.findViewHolderForAdapterPosition(0) as? MangaAllInOneHolder
+        Log.d("Adapter", "Tester5")
     }
 
     private fun addMangaHeader() {
+        Log.d("Adapter", "Tester6")
         if (adapter?.scrollableHeaders?.isEmpty() == true) {
             adapter?.removeAllScrollableHeaders()
             adapter?.addScrollableHeader(presenter.headerItem)
         }
+        Log.d("Adapter", "Tester7")
     }
 
     // EXH -->
     override fun openSmartSearch() {
-        val smartSearchConfig = SourceController.SmartSearchConfig(presenter.manga.title, presenter.manga.id!!)
+        val smartSearchConfig = SourceController.SmartSearchConfig(presenter.manga.title, presenter.manga.id)
 
         router?.pushController(
             SourceController(
@@ -329,12 +340,16 @@ class MangaAllInOneController :
     override fun onNextManga(manga: Manga, source: Source, chapters: List<MangaAllInOneChapterItem>, lastUpdateDate: Date, chapterCount: Float) {
         if (manga.initialized) {
             // Update view.
+            Log.d("Controller", "Tester1")
             setMangaInfo(manga, source, chapters, lastUpdateDate, chapterCount)
+            Log.d("Controller", "Tester2")
             if (fromSource && !presenter.hasRequested && chapters.isNullOrEmpty()) {
+                Log.d("Controller", "Tester3")
                 fetchMangaFromSource(fetchManga = false)
             }
         } else {
             // Initialize manga.
+            Log.d("Controller", "Tester4")
             fetchMangaFromSource()
         }
     }
