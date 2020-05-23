@@ -37,7 +37,6 @@ import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import exh.smartsearch.SmartSearchEngine
 import exh.util.RecyclerWindowInsetsListener
-import exh.util.applyWindowInsetsForController
 import exh.util.await
 import exh.util.executeOnIO
 import java.util.concurrent.atomic.AtomicInteger
@@ -96,7 +95,6 @@ class MigrationListController(bundle: Bundle? = null) :
 
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
-        view.applyWindowInsetsForController()
         setTitle()
         val config = this.config ?: return
 

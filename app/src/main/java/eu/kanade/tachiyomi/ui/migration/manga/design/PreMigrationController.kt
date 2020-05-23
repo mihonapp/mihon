@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.ui.migration.manga.design
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -19,7 +22,6 @@ import eu.kanade.tachiyomi.ui.base.controller.BaseController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationListController
 import eu.kanade.tachiyomi.ui.migration.manga.process.MigrationProcedureConfig
-import exh.util.applyWindowInsetsForController
 import exh.util.doOnApplyWindowInsets
 import exh.util.marginBottom
 import exh.util.updateLayoutParams
@@ -42,7 +44,7 @@ class PreMigrationController(bundle: Bundle? = null) :
 
     private var dialog: BottomSheetDialog? = null
 
-    override fun getTitle() = "Select target sources"
+    override fun getTitle() = view?.context?.getString(R.string.select_sources)
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = PreMigrationControllerBinding.inflate(inflater)
@@ -51,7 +53,6 @@ class PreMigrationController(bundle: Bundle? = null) :
 
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
-        view.applyWindowInsetsForController()
 
         val ourAdapter = adapter ?: MigrationSourceAdapter(
             getEnabledSources().map { MigrationSourceItem(it, isEnabled(it.id.toString())) },
@@ -70,11 +71,15 @@ class PreMigrationController(bundle: Bundle? = null) :
             binding.fab.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomMargin = fabBaseMarginBottom + insets.systemWindowInsetBottom
             }
-            // offset the recycler by the fab's inset + some inset on top
-            v.updatePaddingRelative(
-                bottom = padding.bottom + (binding.fab.marginBottom) +
-                    fabBaseMarginBottom + (binding.fab.height)
-            )
+            v.post {
+                // offset the recycler by the fab's inset + some inset on top
+                v.updatePaddingRelative(
+                    bottom = insets.systemWindowInsetBottom + (
+                        binding.fab.marginBottom
+                            ?: 0
+                        ) + (binding.fab.height ?: 0)
+                )
+            }
         }
 
         binding.fab.setOnClickListener {
@@ -157,6 +162,40 @@ class PreMigrationController(bundle: Bundle? = null) :
         val hiddenCatalogues = prefs.hiddenCatalogues().get()
         return if (sourcesSaved.isEmpty()) id !in hiddenCatalogues
         else sourcesSaved.split("/").contains(id)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.pre_migration, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_select_all, R.id.action_select_none -> {
+                adapter?.currentItems?.forEach {
+                    it.sourceEnabled = item.itemId == R.id.action_select_all
+                }
+                adapter?.notifyDataSetChanged()
+            }
+            R.id.action_match_enabled, R.id.action_match_pinned -> {
+                val enabledSources = if (item.itemId == R.id.action_match_enabled) {
+                    prefs.hiddenCatalogues().get().mapNotNull { it.toLongOrNull() }
+                } else {
+                    prefs.pinnedCatalogues().get().mapNotNull { it.toLongOrNull() }
+                }
+                val items = adapter?.currentItems?.toList() ?: return true
+                items.forEach {
+                    it.sourceEnabled = if (item.itemId == R.id.action_match_enabled) {
+                        it.source.id !in enabledSources
+                    } else {
+                        it.source.id in enabledSources
+                    }
+                }
+                val sortedItems = items.sortedBy { it.source.name }.sortedBy { !it.sourceEnabled }
+                adapter?.updateDataSet(sortedItems)
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     companion object {

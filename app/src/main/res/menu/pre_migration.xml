@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_select_none"
+        android:icon="@drawable/ic_select_none_24dp"
+        android:title="@string/select_none"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_select_all"
+        android:icon="@drawable/ic_select_all_24dp"
+        android:title="@string/action_select_all"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_match_enabled"
+        android:icon="@drawable/ic_explore_24dp"
+        android:title="@string/match_enabled_sources"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_match_pinned"
+        android:icon="@drawable/ic_pin_24dp"
+        android:title="@string/match_pinned_sources"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -6,10 +6,10 @@
         android:id="@+id/action_copy_manga"
         android:icon="@drawable/ic_copy"
         android:title="@string/copy"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_migrate_manga"
         android:icon="@drawable/ic_done_all"
         android:title="@string/migrate"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>

@@ -34,6 +34,8 @@
 
 
     <!-- Migration -->
+    <string name="select_sources">Select sources</string>
+    <string name="select_none">Select none</string>
     <string name="source_migration">Source migration</string>
     <string name="migration">Migration</string>
     <string name="skip_pre_migration">Skip pre-migration</string>
@@ -58,6 +60,8 @@
     <!--<string name="migrate">Migrate</string>-->
     <string name="migrate_">Migrate %1$s</string>
     <string name="copy_value">Copy</string>
+    <string name="match_pinned_sources">Match pinned sources</string>
+    <string name="match_enabled_sources">Match enabled sources</string>
     <string name="no_chapters_found_for_migration">No chapters found, this manga cannot be used for
         migration</string>
     <string name="no_alternatives_found">No Alternatives Found</string>
@@ -75,7 +79,6 @@
         <item quantity="one">%d manga migrated</item>
         <item quantity="other">%d manga migrated</item>
     </plurals>
-    <string name="select_sources">Select target sources</string>
 
     <!-- EXH -->
     <string name="label_login">Login</string>

@@ -150,12 +150,14 @@
             app:layout_constraintTop_toBottomOf="@+id/extra_search_param_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
+        style="@style/Theme.Widget.FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_arrow_forward_24dp"
+        android:text="@string/action_migrate"
+        app:icon="@drawable/ic_arrow_forward_24dp"
         app:layout_anchor="@id/constraintLayout"
         app:layout_anchorGravity="bottom|end"
         app:layout_constraintEnd_toEndOf="parent"
