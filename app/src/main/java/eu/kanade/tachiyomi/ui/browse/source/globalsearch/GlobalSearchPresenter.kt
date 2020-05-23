@@ -32,11 +32,12 @@ import uy.kohesive.injekt.injectLazy
  * @param preferences manages the preference calls.
  */
 open class GlobalSearchPresenter(
-    val initialQuery: String? = "",
-    val initialExtensionFilter: String? = null,
+    private val initialQuery: String? = "",
+    private val initialExtensionFilter: String? = null,
+    private val sourcesToUse: List<CatalogueSource>? = null,
     val sourceManager: SourceManager = Injekt.get(),
     val db: DatabaseHelper = Injekt.get(),
-    val preferences: PreferencesHelper = Injekt.get()
+    private val preferences: PreferencesHelper = Injekt.get()
 ) : BasePresenter<GlobalSearchController>() {
 
     /**
@@ -105,13 +106,20 @@ open class GlobalSearchPresenter(
         val hiddenCatalogues = preferences.hiddenCatalogues().get()
         val pinnedCatalogues = preferences.pinnedCatalogues().get()
 
-        return sourceManager.getVisibleCatalogueSources()
+        val list = sourceManager.getVisibleCatalogueSources()
             .filter { it.lang in languages }
             .filterNot { it.id.toString() in hiddenCatalogues }
-            .sortedWith(compareBy({ it.id.toString() !in pinnedCatalogues }, { "(${it.lang}) ${it.name}" }))
+            .sortedBy { "(${it.lang}) ${it.name}" }
+
+        return if (preferences.searchPinnedSourcesOnly()) {
+            list.filter { it.id.toString() in pinnedCatalogues }
+        } else {
+            list.sortedBy { it.id.toString() !in pinnedCatalogues }
+        }
     }
 
     private fun getSourcesToQuery(): List<CatalogueSource> {
+        if (sourcesToUse != null) return sourcesToUse
         val filter = extensionFilter
         val enabledSources = getEnabledSources()
         var filteredSources: List<CatalogueSource>? = null

@@ -75,6 +75,7 @@
         <item quantity="one">%d manga migrated</item>
         <item quantity="other">%d manga migrated</item>
     </plurals>
+    <string name="select_sources">Select target sources</string>
 
     <!-- EXH -->
     <string name="label_login">Login</string>

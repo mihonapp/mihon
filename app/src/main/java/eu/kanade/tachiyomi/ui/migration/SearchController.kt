@@ -11,6 +11,7 @@ import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
@@ -25,7 +26,8 @@ import reactivecircus.flowbinding.appcompat.queryTextEvents
 import uy.kohesive.injekt.injectLazy
 
 class SearchController(
-    private var manga: Manga? = null
+    private var manga: Manga? = null,
+    private var sources: List<CatalogueSource>? = null
 ) : GlobalSearchController(manga?.title) {
 
     private var newManga: Manga? = null
@@ -48,7 +50,7 @@ class SearchController(
     }
 
     override fun createPresenter(): GlobalSearchPresenter {
-        return SearchPresenter(initialQuery, manga!!)
+        return SearchPresenter(initialQuery, manga!!, sources = sources)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -71,6 +73,7 @@ class SearchController(
             menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             1 -> {
@@ -142,10 +145,10 @@ class SearchController(
             return MaterialDialog(activity!!)
                 .message(R.string.data_to_include_in_migration)
                 .listItemsMultiChoice(
-                    items = MigrationFlags.titles.map { resources?.getString(it) as CharSequence },
+                    items = MigrationFlags.titles.map
+                    { resources?.getString(it) as CharSequence },
                     initialSelection = preselected.toIntArray()
                 ) { _, positions, _ ->
-                    // Save current settings for the next time
                     val newValue = MigrationFlags.getFlagsFromPositions(positions.toTypedArray())
                     preferences.migrateFlags().set(newValue)
                 }
@@ -155,7 +158,6 @@ class SearchController(
                 .negativeButton(R.string.copy) {
                     (targetController as? SearchController)?.copyManga()
                 }
-                .neutralButton(android.R.string.cancel)
         }
     }
 
