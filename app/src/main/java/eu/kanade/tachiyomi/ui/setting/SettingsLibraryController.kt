@@ -44,6 +44,9 @@ class SettingsLibraryController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.pref_category_library
 
+        val dbCategories = db.getCategories().executeAsBlocking()
+        val categories = listOf(Category.createDefault()) + dbCategories
+
         preferenceCategory {
             titleRes = R.string.pref_category_display
 
@@ -74,8 +77,40 @@ class SettingsLibraryController : SettingsController() {
             }
         }
 
-        val dbCategories = db.getCategories().executeAsBlocking()
-        val categories = listOf(Category.createDefault()) + dbCategories
+        preferenceCategory {
+            titleRes = R.string.pref_category_library_categories
+
+            preference {
+                titleRes = R.string.action_edit_categories
+
+                val catCount = dbCategories.size
+                summary = context.resources.getQuantityString(R.plurals.num_categories, catCount, catCount)
+
+                onClick {
+                    router.pushController(CategoryController().withFadeTransaction())
+                }
+            }
+
+            intListPreference {
+                key = Keys.defaultCategory
+                titleRes = R.string.default_category
+
+                entries = arrayOf(context.getString(R.string.default_category_summary)) +
+                    categories.map { it.name }.toTypedArray()
+                entryValues = arrayOf("-1") + categories.map { it.id.toString() }.toTypedArray()
+                defaultValue = "-1"
+
+                val selectedCategory = categories.find { it.id == preferences.defaultCategory() }
+                summary = selectedCategory?.name
+                    ?: context.getString(R.string.default_category_summary)
+                onChange { newValue ->
+                    summary = categories.find {
+                        it.id == (newValue as String).toInt()
+                    }?.name ?: context.getString(R.string.default_category_summary)
+                    true
+                }
+            }
+        }
 
         preferenceCategory {
             titleRes = R.string.pref_category_library_update
@@ -171,42 +206,12 @@ class SettingsLibraryController : SettingsController() {
             }
         }
 
-        preferenceCategory {
-            titleRes = R.string.pref_category_library_categories
+        if (preferences.skipPreMigration().get() || preferences.migrationSources().get()
+                .isNotEmpty()
+        ) {
+            preferenceCategory {
+                title = "Migration"
 
-            preference {
-                titleRes = R.string.action_edit_categories
-
-                val catCount = dbCategories.size
-                summary = context.resources.getQuantityString(R.plurals.num_categories, catCount, catCount)
-
-                onClick {
-                    router.pushController(CategoryController().withFadeTransaction())
-                }
-            }
-
-            intListPreference {
-                key = Keys.defaultCategory
-                titleRes = R.string.default_category
-
-                entries = arrayOf(context.getString(R.string.default_category_summary)) +
-                    categories.map { it.name }.toTypedArray()
-                entryValues = arrayOf("-1") + categories.map { it.id.toString() }.toTypedArray()
-                defaultValue = "-1"
-
-                val selectedCategory = categories.find { it.id == preferences.defaultCategory() }
-                summary = selectedCategory?.name
-                    ?: context.getString(R.string.default_category_summary)
-                onChange { newValue ->
-                    summary = categories.find {
-                        it.id == (newValue as String).toInt()
-                    }?.name ?: context.getString(R.string.default_category_summary)
-                    true
-                }
-            }
-            if (preferences.skipPreMigration().get() || preferences.migrationSources()
-                .get().isNotEmpty()
-            ) {
                 switchPreference {
                     key = Keys.skipPreMigration
                     titleRes = R.string.pref_skip_pre_migration
