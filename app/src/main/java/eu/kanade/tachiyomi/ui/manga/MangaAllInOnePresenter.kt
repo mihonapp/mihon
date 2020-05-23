@@ -161,7 +161,7 @@ class MangaAllInOnePresenter(
         scope.launch(Dispatchers.IO) {
             var manga2: Manga? = null
             if (updateInfo) {
-                manga2 = db.getManga(manga.url, manga.source).executeAsBlocking()!!
+                manga2 = db.getManga(manga.url, manga.source).executeAsBlocking()
                 updateChapters()
                 updateChapterInfo()
             }
@@ -190,7 +190,7 @@ class MangaAllInOnePresenter(
                 val networkManga = try {
                     source.fetchMangaDetails(manga).toBlocking().single()
                 } catch (e: Exception) {
-                    withContext(Dispatchers.Main) { controller.onFetchMangaError(e) }
+                    controller.onFetchMangaError(e)
                     return@launch
                 }
                 if (networkManga != null) {
@@ -205,7 +205,7 @@ class MangaAllInOnePresenter(
                 try {
                     chapters = source.fetchChapterList(manga).toBlocking().single()
                 } catch (e: Exception) {
-                    withContext(Dispatchers.Main) { controller.onFetchMangaError(e) }
+                    controller.onFetchMangaError(e)
                     return@launch
                 }
             }
@@ -220,10 +220,8 @@ class MangaAllInOnePresenter(
                     updateManga(updateInfo = false)
                     controller.onFetchMangaDone()
                 }
-            } catch (e: java.lang.Exception) {
-                withContext(Dispatchers.Main) {
-                    controller.onFetchMangaError(e)
-                }
+            } catch (e: Exception) {
+                controller.onFetchMangaError(e)
             }
         }
     }
