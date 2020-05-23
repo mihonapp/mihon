@@ -48,7 +48,7 @@ class SourceHolder(view: View, override val adapter: SourceAdapter, val showButt
         // Set source name
         title.text = source.name
 
-        // Set circle letter image.
+        // Set source icon
         itemView.post {
             val icon = source.icon()
             when {
