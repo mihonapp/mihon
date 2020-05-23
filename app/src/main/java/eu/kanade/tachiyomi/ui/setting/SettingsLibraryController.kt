@@ -213,7 +213,7 @@ class SettingsLibraryController : SettingsController() {
         }
 
         if (preferences.skipPreMigration().get() || preferences.migrationSources().get()
-                .isNotEmpty()
+            .isNotEmpty()
         ) {
             preferenceCategory {
                 title = "Migration"
