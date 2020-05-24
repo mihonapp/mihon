@@ -195,7 +195,7 @@ class SettingsGeneralController : SettingsController() {
         }
         // --> EXH
         preferenceCategory {
-            title = "EH Settings"
+            titleRes = R.string.eh_settings_category
 
             switchPreference {
                 key = Keys.eh_expandFilters
