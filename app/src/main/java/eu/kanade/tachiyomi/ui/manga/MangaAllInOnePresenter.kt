@@ -494,11 +494,6 @@ class MangaAllInOnePresenter(
             }
             .toList()
             .flatMap { db.updateChaptersProgress(it).asRxObservable() }
-            .doOnNext {
-                scope.launch {
-                    updateChaptersView()
-                }
-            }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
