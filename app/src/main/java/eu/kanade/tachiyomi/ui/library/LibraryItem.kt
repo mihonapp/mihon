@@ -3,10 +3,7 @@ package eu.kanade.tachiyomi.ui.library
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
-import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.tfcporciuncula.flow.Preference
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -19,13 +16,10 @@ import eu.kanade.tachiyomi.data.database.models.LibraryManga
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.SourceManager
-import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
-import exh.util.updateLayoutParams
-import kotlinx.android.synthetic.main.source_comfortable_grid_item.view.constraint_layout
+import kotlinx.android.synthetic.main.source_comfortable_grid_item.view.outside
 import kotlinx.android.synthetic.main.source_grid_item.view.card
 import kotlinx.android.synthetic.main.source_grid_item.view.gradient
-import kotlinx.android.synthetic.main.source_grid_item.view.thumbnail
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -62,33 +56,11 @@ class LibraryItem(val manga: LibraryManga, private val libraryViewSetting: Prefe
             } else {
                 view.apply {
                     val coverHeight = parent.itemWidth / 3 * 4
-
+                    card.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
                     gradient.layoutParams = FrameLayout.LayoutParams(
-                        MATCH_PARENT,
-                        coverHeight * (66 / 100),
-                        Gravity.BOTTOM
+                        MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM
                     )
-                    card.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        bottomMargin = 6.dpToPx
-                    }
-
-                    constraint_layout.layoutParams = FrameLayout.LayoutParams(
-                        MATCH_PARENT, WRAP_CONTENT
-                    )
-                    thumbnail.maxHeight = Int.MAX_VALUE
-                    thumbnail.minimumHeight = 0
-                    constraint_layout.minHeight = 0
-                    thumbnail.scaleType = ImageView.ScaleType.CENTER_CROP
-                    thumbnail.adjustViewBounds = false
-                    thumbnail.layoutParams = FrameLayout.LayoutParams(
-                        MATCH_PARENT,
-                        (parent.itemWidth / 3f * 3.7f).toInt()
-                    )
-                    // .layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight)
-
-                    // gradient.layoutParams = FrameLayout.LayoutParams(
-                    // MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM
-                    // )
+                    outside.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, coverHeight + 200)
                 }
                 LibraryComfortableGridHolder(view, adapter)
             }
