@@ -96,8 +96,8 @@ class PreMigrationController(bundle: Bundle? = null) :
     override fun startMigration(extraParam: String?) {
         val listOfSources = adapter?.items?.filter {
             it.sourceEnabled
-        }?.joinToString("/") { it.source.id.toString() }
-        prefs.migrationSources().set(listOfSources!!)
+        }?.joinToString("/") { it.source.id.toString() }  ?: ""
+        prefs.migrationSources().set(listOfSources)
 
         router.replaceTopController(
             MigrationListController.create(
