@@ -30,7 +30,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/migration_manga_card_from"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
+        app:srcCompat="@drawable/ic_arrow_forward_24dp" />
 
     <include
         android:id="@+id/migration_manga_card_to"

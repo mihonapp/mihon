@@ -3,13 +3,16 @@ package eu.kanade.tachiyomi.ui.migration.manga.process
 import android.view.View
 import android.widget.PopupMenu
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
+import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.ui.manga.MangaAllInOneController
@@ -20,9 +23,20 @@ import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.invisible
 import eu.kanade.tachiyomi.util.view.setVectorCompat
 import eu.kanade.tachiyomi.util.view.visible
+import exh.MERGED_SOURCE_ID
 import java.text.DecimalFormat
-import kotlinx.android.synthetic.main.migration_manga_card.view.*
-import kotlinx.android.synthetic.main.migration_process_item.*
+import kotlinx.android.synthetic.main.migration_manga_card.gradient
+import kotlinx.android.synthetic.main.migration_manga_card.loading_group
+import kotlinx.android.synthetic.main.migration_manga_card.manga_chapters
+import kotlinx.android.synthetic.main.migration_manga_card.manga_last_chapter_label
+import kotlinx.android.synthetic.main.migration_manga_card.manga_source_label
+import kotlinx.android.synthetic.main.migration_manga_card.thumbnail
+import kotlinx.android.synthetic.main.migration_manga_card.view.loading_group
+import kotlinx.android.synthetic.main.migration_manga_card.view.title
+import kotlinx.android.synthetic.main.migration_process_item.migration_manga_card_from
+import kotlinx.android.synthetic.main.migration_process_item.migration_manga_card_to
+import kotlinx.android.synthetic.main.migration_process_item.migration_menu
+import kotlinx.android.synthetic.main.migration_process_item.skip_manga
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import uy.kohesive.injekt.Injekt
@@ -37,6 +51,7 @@ class MigrationProcessHolder(
     private val db: DatabaseHelper by injectLazy()
     private val sourceManager: SourceManager by injectLazy()
     private var item: MigrationProcessItem? = null
+    private val gson: Gson by injectLazy()
 
     init {
         // We need to post a Runnable to show the popup to make sure that the PopupMenu is
@@ -147,10 +162,12 @@ class MigrationProcessHolder(
 
     private fun View.attachManga(manga: Manga, source: Source) {
         loading_group.gone()
-        GlideApp.with(view.context.applicationContext)
-            .load(manga)
+        GlideApp.with(view.context).clear(thumbnail)
+        GlideApp.with(view.context)
+            .load(manga.toMangaThumbnail())
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             .centerCrop()
+            .dontAnimate()
             .into(thumbnail)
 
         title.text = if (manga.title.isBlank()) {
@@ -160,13 +177,13 @@ class MigrationProcessHolder(
         }
 
         gradient.visible()
-        manga_source_label.text = /*if (source.id == MERGED_SOURCE_ID) {
+        manga_source_label.text = if (source.id == MERGED_SOURCE_ID) {
             MergedSource.MangaConfig.readFromUrl(gson, manga.url).children.map {
                 sourceManager.getOrStub(it.source).toString()
             }.distinct().joinToString()
-        } else {*/
+        } else {
             source.toString()
-        // }
+        }
 
         val mangaChapters = db.getChapters(manga).executeAsBlocking()
         manga_chapters.visible()
