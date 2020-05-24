@@ -12,6 +12,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
+import kotlinx.android.synthetic.main.source_comfortable_grid_item.view.outside
 import kotlinx.android.synthetic.main.source_grid_item.view.card
 import kotlinx.android.synthetic.main.source_grid_item.view.gradient
 
@@ -32,24 +33,27 @@ class SourceItem(val manga: Manga, private val catalogueAsList: Preference<Int>)
     ): SourceHolder {
         val parent = adapter.recyclerView
         return if (parent is AutofitRecyclerView) {
+            val coverHeight = parent.itemWidth / 3 * 4
             if (catalogueAsList.get() == 0) {
                 view.apply {
                     card.layoutParams = FrameLayout.LayoutParams(
-                        MATCH_PARENT, parent.itemWidth / 3 * 4
+                        MATCH_PARENT, coverHeight
                     )
                     gradient.layoutParams = FrameLayout.LayoutParams(
-                        MATCH_PARENT, parent.itemWidth / 3 * 4 / 2, Gravity.BOTTOM
+                        MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM
                     )
                 }
                 SourceGridHolder(view, adapter)
             } else {
                 view.apply {
                     card.layoutParams = FrameLayout.LayoutParams(
-                        MATCH_PARENT, parent.itemWidth / 3 * 5
+                        MATCH_PARENT, coverHeight
                     )
-                    // inside.layoutParams = FrameLayout.LayoutParams(parent.height / 3 * 4, MATCH_PARENT)
                     gradient.layoutParams = FrameLayout.LayoutParams(
-                        MATCH_PARENT, parent.itemWidth / 3 * 4 / 2, Gravity.BOTTOM
+                        MATCH_PARENT, coverHeight / 2, Gravity.BOTTOM
+                    )
+                    outside.layoutParams = FrameLayout.LayoutParams(
+                        MATCH_PARENT, coverHeight + 200
                     )
                 }
                 SourceComfortableGridHolder(view, adapter)
