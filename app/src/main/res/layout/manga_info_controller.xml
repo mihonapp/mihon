@@ -213,7 +213,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:ellipsize="end"
-                        android:maxLines="1"
+                        android:maxLines="4"
                         android:textIsSelectable="false"
                         app:layout_constraintBaseline_toBaselineOf="@+id/manga_source_label"
                         app:layout_constraintEnd_toEndOf="parent"
