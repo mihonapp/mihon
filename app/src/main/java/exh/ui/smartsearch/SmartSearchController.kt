@@ -18,7 +18,6 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -61,27 +60,25 @@ class SmartSearchController(bundle: Bundle? = null) : NucleusController<SmartSea
 
         launch(Dispatchers.Default) {
             for (event in presenter.smartSearchChannel) {
-                withContext(NonCancellable) {
-                    if (event is SmartSearchPresenter.SearchResults.Found) {
-                        val transaction = if (Injekt.get<PreferencesHelper>().eh_useNewMangaInterface().get()) {
-                            MangaAllInOneController(event.manga, true, smartSearchConfig).withFadeTransaction()
-                        } else {
-                            MangaController(event.manga, true, smartSearchConfig).withFadeTransaction()
-                        }
-                        withContext(Dispatchers.Main) {
-                            router.replaceTopController(transaction)
-                        }
+                if (event is SmartSearchPresenter.SearchResults.Found) {
+                    val transaction = if (Injekt.get<PreferencesHelper>().eh_useNewMangaInterface().get()) {
+                        MangaAllInOneController(event.manga, true, smartSearchConfig).withFadeTransaction()
                     } else {
-                        if (event is SmartSearchPresenter.SearchResults.NotFound) {
-                            applicationContext?.toast("Couldn't find the manga in the source!")
-                        } else {
-                            applicationContext?.toast("Error performing automatic search!")
-                        }
+                        MangaController(event.manga, true, smartSearchConfig).withFadeTransaction()
+                    }
+                    withContext(Dispatchers.Main) {
+                        router.replaceTopController(transaction)
+                    }
+                } else {
+                    if (event is SmartSearchPresenter.SearchResults.NotFound) {
+                        applicationContext?.toast("Couldn't find the manga in the source!")
+                    } else {
+                        applicationContext?.toast("Error performing automatic search!")
+                    }
 
-                        val transaction = BrowseSourceController(source, smartSearchConfig.origTitle, smartSearchConfig).withFadeTransaction()
-                        withContext(Dispatchers.Main) {
-                            router.replaceTopController(transaction)
-                        }
+                    val transaction = BrowseSourceController(source, smartSearchConfig.origTitle, smartSearchConfig).withFadeTransaction()
+                    withContext(Dispatchers.Main) {
+                        router.replaceTopController(transaction)
                     }
                 }
             }
