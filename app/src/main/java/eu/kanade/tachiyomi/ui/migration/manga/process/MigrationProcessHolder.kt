@@ -25,13 +25,12 @@ import eu.kanade.tachiyomi.util.view.setVectorCompat
 import eu.kanade.tachiyomi.util.view.visible
 import exh.MERGED_SOURCE_ID
 import java.text.DecimalFormat
-import kotlinx.android.synthetic.main.migration_manga_card.gradient
-import kotlinx.android.synthetic.main.migration_manga_card.loading_group
-import kotlinx.android.synthetic.main.migration_manga_card.manga_chapters
-import kotlinx.android.synthetic.main.migration_manga_card.manga_last_chapter_label
-import kotlinx.android.synthetic.main.migration_manga_card.manga_source_label
-import kotlinx.android.synthetic.main.migration_manga_card.thumbnail
+import kotlinx.android.synthetic.main.migration_manga_card.view.gradient
 import kotlinx.android.synthetic.main.migration_manga_card.view.loading_group
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_chapters
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_last_chapter_label
+import kotlinx.android.synthetic.main.migration_manga_card.view.manga_source_label
+import kotlinx.android.synthetic.main.migration_manga_card.view.thumbnail
 import kotlinx.android.synthetic.main.migration_manga_card.view.title
 import kotlinx.android.synthetic.main.migration_process_item.migration_manga_card_from
 import kotlinx.android.synthetic.main.migration_process_item.migration_manga_card_to
@@ -162,8 +161,7 @@ class MigrationProcessHolder(
 
     private fun View.attachManga(manga: Manga, source: Source) {
         loading_group.gone()
-        GlideApp.with(view.context).clear(thumbnail)
-        GlideApp.with(view.context)
+        GlideApp.with(view.context.applicationContext)
             .load(manga.toMangaThumbnail())
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             .centerCrop()
