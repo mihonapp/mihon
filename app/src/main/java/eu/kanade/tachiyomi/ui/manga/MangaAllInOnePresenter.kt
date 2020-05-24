@@ -99,10 +99,18 @@ class MangaAllInOnePresenter(
 
         // Listen for download status changes
         observeDownloads()
+
+        add(
+            db.getChapters(manga).asRxObservable().subscribe {
+                scope.launch(Dispatchers.IO) {
+                    updateChaptersView(updateInfo = true)
+                }
+            }
+        )
     }
 
-    private fun updateChapters() {
-        val chapters = db.getChapters(manga).executeAsBlocking().map { it.toModel() }
+    private suspend fun updateChapters() {
+        val chapters = db.getChapters(manga).await().map { it.toModel() }
 
         // Find downloaded chapters
         setDownloadedChapters(chapters)
@@ -136,9 +144,12 @@ class MangaAllInOnePresenter(
         this.chapters = applyChapterFilters(chapters)
     }
 
-    private fun updateChaptersView() {
+    private fun updateChaptersView(updateInfo: Boolean = false) {
         scope.launch(Dispatchers.IO) {
             updateChapters()
+            if (updateInfo) {
+                updateChapterInfo()
+            }
             withContext(Dispatchers.Main) {
                 Observable.just(manga)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -161,7 +172,7 @@ class MangaAllInOnePresenter(
         scope.launch(Dispatchers.IO) {
             var manga2: Manga? = null
             if (updateInfo) {
-                manga2 = db.getManga(manga.url, manga.source).executeAsBlocking()
+                manga2 = db.getManga(manga.url, manga.source).await()
                 updateChapters()
                 updateChapterInfo()
             }
@@ -197,7 +208,7 @@ class MangaAllInOnePresenter(
                     manga.prepUpdateCover(coverCache, networkManga, manualFetch)
                     manga.copyFrom(networkManga)
                     manga.initialized = true
-                    db.insertManga(manga).executeAsBlocking()
+                    db.insertManga(manga).await()
                 }
             }
             var chapters: List<SChapter> = listOf()
@@ -483,6 +494,11 @@ class MangaAllInOnePresenter(
             }
             .toList()
             .flatMap { db.updateChaptersProgress(it).asRxObservable() }
+            .doOnNext {
+                scope.launch {
+                    updateChaptersView()
+                }
+            }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
