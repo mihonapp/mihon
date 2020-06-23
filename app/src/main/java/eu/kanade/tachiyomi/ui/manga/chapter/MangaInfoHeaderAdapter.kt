@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.kanade.tachiyomi.R
@@ -39,8 +40,8 @@ class MangaInfoHeaderAdapter(
 ) :
     RecyclerView.Adapter<MangaInfoHeaderAdapter.HeaderViewHolder>() {
 
-    private var manga: Manga? = null
-    private var source: Source? = null
+    private var manga: Manga = controller.presenter.manga
+    private var source: Source = controller.presenter.source
     private var numChapters: Int? = null
 
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
@@ -65,7 +66,7 @@ class MangaInfoHeaderAdapter(
      * @param manga manga object containing information about manga.
      * @param source the source of the manga.
      */
-    fun update(manga: Manga, source: Source?) {
+    fun update(manga: Manga, source: Source) {
         this.manga = manga
         this.source = source
 
@@ -80,10 +81,6 @@ class MangaInfoHeaderAdapter(
 
     inner class HeaderViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind() {
-            if (manga == null) {
-                return
-            }
-
             // For rounded corners
             binding.mangaCover.clipToOutline = true
 
@@ -143,6 +140,21 @@ class MangaInfoHeaderAdapter(
                 }
                 .launchIn(scope)
 
+            binding.mangaArtist.longClicks()
+                .onEach {
+                    controller.activity?.copyToClipboard(
+                        binding.mangaArtist.text.toString(),
+                        binding.mangaArtist.text.toString()
+                    )
+                }
+                .launchIn(scope)
+
+            binding.mangaArtist.clicks()
+                .onEach {
+                    controller.performGlobalSearch(binding.mangaArtist.text.toString())
+                }
+                .launchIn(scope)
+
             binding.mangaSummary.longClicks()
                 .onEach {
                     controller.activity?.copyToClipboard(
@@ -161,7 +173,7 @@ class MangaInfoHeaderAdapter(
                 }
                 .launchIn(scope)
 
-            setMangaInfo(manga!!, source)
+            setMangaInfo(manga, source)
             setChapterInfo()
         }
 
@@ -172,19 +184,25 @@ class MangaInfoHeaderAdapter(
          * @param source the source of the manga.
          */
         private fun setMangaInfo(manga: Manga, source: Source?) {
-            // update full title TextView.
+            // Update full title TextView.
             binding.mangaFullTitle.text = if (manga.title.isBlank()) {
                 view.context.getString(R.string.unknown)
             } else {
                 manga.title
             }
 
-            // Update author/artist TextView.
-            val authors = listOf(manga.author, manga.artist).filter { !it.isNullOrBlank() }.distinct()
-            binding.mangaAuthor.text = if (authors.isEmpty()) {
+            // Update author TextView.
+            binding.mangaAuthor.text = if (manga.author.isNullOrBlank()) {
                 view.context.getString(R.string.unknown)
             } else {
-                authors.joinToString(", ")
+                manga.author
+            }
+
+            // Update artist TextView.
+            val hasArtist = !manga.artist.isNullOrBlank() && manga.artist != manga.author
+            binding.mangaArtist.isVisible = hasArtist
+            if (hasArtist) {
+                binding.mangaArtist.text = manga.artist
             }
 
             // If manga source is known update source TextView.
@@ -215,20 +233,16 @@ class MangaInfoHeaderAdapter(
             setFavoriteButtonState(manga.favorite)
 
             // Set cover if it wasn't already.
-            val mangaThumbnail = manga.toMangaThumbnail()
-
-            GlideApp.with(view.context)
-                .load(mangaThumbnail)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .centerCrop()
-                .into(binding.mangaCover)
-
-            binding.backdrop?.let {
-                GlideApp.with(view.context)
-                    .load(mangaThumbnail)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .centerCrop()
-                    .into(it)
+            if (binding.mangaCover.drawable == null) {
+                val mangaThumbnail = manga.toMangaThumbnail()
+                listOf(binding.mangaCover, binding.backdrop)
+                    .forEach {
+                        GlideApp.with(view.context)
+                            .load(mangaThumbnail)
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                            .centerCrop()
+                            .into(it)
+                    }
             }
 
             // Manga info section
