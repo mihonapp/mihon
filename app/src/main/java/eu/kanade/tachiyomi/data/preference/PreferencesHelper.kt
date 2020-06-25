@@ -121,6 +121,8 @@ class PreferencesHelper(val context: Context) {
 
     fun readWithTapping() = flowPrefs.getBoolean(Keys.readWithTapping, true)
 
+    fun readWithTappingInverted() = flowPrefs.getEnum(Keys.readWithTappingInverted, Values.TappingInvertMode.NONE)
+
     fun readWithLongTap() = flowPrefs.getBoolean(Keys.readWithLongTap, true)
 
     fun readWithVolumeKeys() = flowPrefs.getBoolean(Keys.readWithVolumeKeys, false)

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.WebtoonLayoutManager
+import eu.kanade.tachiyomi.data.preference.PreferenceValues.TappingInvertMode
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
@@ -94,9 +95,15 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         })
         recycler.tapListener = { event ->
             val positionY = event.rawY
+            val invertMode = config.tappingInverted
+            val topSideTap = positionY < recycler.height * 0.33f && config.tappingEnabled
+            val bottomSideTap = positionY > recycler.height * 0.66f && config.tappingEnabled
+
+            val tappingInverted = invertMode == TappingInvertMode.VERTICAL || invertMode == TappingInvertMode.BOTH
+
             when {
-                positionY < recycler.height * 0.33f && config.tappingEnabled -> scrollUp()
-                positionY > recycler.height * 0.66f && config.tappingEnabled -> scrollDown()
+                topSideTap && !tappingInverted || bottomSideTap && tappingInverted -> scrollUp()
+                bottomSideTap && !tappingInverted || topSideTap && tappingInverted -> scrollDown()
                 else -> activity.toggleMenu()
             }
         }
