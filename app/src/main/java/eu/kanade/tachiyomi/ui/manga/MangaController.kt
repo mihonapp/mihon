@@ -13,7 +13,6 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.support.RouterPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxrelay.BehaviorRelay
-import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -62,8 +61,6 @@ class MangaController : RxController<PagerControllerBinding>, TabbedController {
     private var adapter: MangaDetailAdapter? = null
 
     val fromSource = args.getBoolean(FROM_SOURCE_EXTRA, false)
-
-    val mangaFavoriteRelay: PublishRelay<Boolean> = PublishRelay.create()
 
     private val trackingIconRelay: BehaviorRelay<Boolean> = BehaviorRelay.create()
 

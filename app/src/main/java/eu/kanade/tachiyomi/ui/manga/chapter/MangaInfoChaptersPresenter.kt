@@ -30,7 +30,6 @@ import uy.kohesive.injekt.api.get
 class MangaInfoChaptersPresenter(
     val manga: Manga,
     val source: Source,
-    private val mangaFavoriteRelay: PublishRelay<Boolean>,
     val preferences: PreferencesHelper = Injekt.get(),
     private val db: DatabaseHelper = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
@@ -78,11 +77,6 @@ class MangaInfoChaptersPresenter(
 
         getMangaObservable()
             .subscribeLatestCache({ view, manga -> view.onNextMangaInfo(manga, source) })
-
-        // Update favorite status
-        mangaFavoriteRelay.observeOn(AndroidSchedulers.mainThread())
-            .subscribe { setFavorite(it) }
-            .apply { add(this) }
 
         // Prepare the relay.
         chaptersRelay.flatMap { applyChapterFilters(it) }
@@ -159,13 +153,6 @@ class MangaInfoChaptersPresenter(
         }
         db.insertManga(manga).executeAsBlocking()
         return manga.favorite
-    }
-
-    private fun setFavorite(favorite: Boolean) {
-        if (manga.favorite == favorite) {
-            return
-        }
-        toggleFavorite()
     }
 
     /**
@@ -496,13 +483,6 @@ class MangaInfoChaptersPresenter(
         manga.bookmarkedFilter = Manga.SHOW_ALL
         db.updateFlags(manga).executeAsBlocking()
         refreshChapters()
-    }
-
-    /**
-     * Adds manga to library
-     */
-    fun addToLibrary() {
-        mangaFavoriteRelay.call(true)
     }
 
     /**
