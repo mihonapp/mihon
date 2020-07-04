@@ -97,7 +97,7 @@ class MangaInfoChaptersController(private val fromSource: Boolean = false) :
     override fun createPresenter(): MangaInfoChaptersPresenter {
         val ctrl = parentController as MangaController
         return MangaInfoChaptersPresenter(
-            ctrl.manga!!, ctrl.source!!, ctrl.mangaFavoriteRelay
+            ctrl.manga!!, ctrl.source!!
         )
     }
 
@@ -381,35 +381,39 @@ class MangaInfoChaptersController(private val fromSource: Boolean = false) :
             toggleFavorite()
             activity?.toast(activity?.getString(R.string.manga_removed_library))
         } else {
-            val categories = presenter.getCategories()
-            val defaultCategoryId = preferences.defaultCategory()
-            val defaultCategory = categories.find { it.id == defaultCategoryId }
+            addToLibrary(manga)
+        }
+    }
 
-            when {
-                // Default category set
-                defaultCategory != null -> {
-                    toggleFavorite()
-                    presenter.moveMangaToCategory(manga, defaultCategory)
-                    activity?.toast(activity?.getString(R.string.manga_added_library))
-                }
+    private fun addToLibrary(manga: Manga) {
+        val categories = presenter.getCategories()
+        val defaultCategoryId = preferences.defaultCategory()
+        val defaultCategory = categories.find { it.id == defaultCategoryId }
 
-                // Automatic 'Default' or no categories
-                defaultCategoryId == 0 || categories.isEmpty() -> {
-                    toggleFavorite()
-                    presenter.moveMangaToCategory(manga, null)
-                    activity?.toast(activity?.getString(R.string.manga_added_library))
-                }
+        when {
+            // Default category set
+            defaultCategory != null -> {
+                toggleFavorite()
+                presenter.moveMangaToCategory(manga, defaultCategory)
+                activity?.toast(activity?.getString(R.string.manga_added_library))
+            }
 
-                // Choose a category
-                else -> {
-                    val ids = presenter.getMangaCategoryIds(manga)
-                    val preselected = ids.mapNotNull { id ->
-                        categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
-                    }.toTypedArray()
+            // Automatic 'Default' or no categories
+            defaultCategoryId == 0 || categories.isEmpty() -> {
+                toggleFavorite()
+                presenter.moveMangaToCategory(manga, null)
+                activity?.toast(activity?.getString(R.string.manga_added_library))
+            }
 
-                    ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
-                        .showDialog(router)
-                }
+            // Choose a category
+            else -> {
+                val ids = presenter.getMangaCategoryIds(manga)
+                val preselected = ids.mapNotNull { id ->
+                    categories.indexOfFirst { it.id == id }.takeIf { it != -1 }
+                }.toTypedArray()
+
+                ChangeMangaCategoriesDialog(this, listOf(manga), categories, preselected)
+                    .showDialog(router)
             }
         }
     }
@@ -755,11 +759,12 @@ class MangaInfoChaptersController(private val fromSource: Boolean = false) :
 
     private fun downloadChapters(chapters: List<ChapterItem>) {
         val view = view
+        val manga = presenter.manga
         presenter.downloadChapters(chapters)
-        if (view != null && !presenter.manga.favorite) {
+        if (view != null && !manga.favorite) {
             binding.recycler.snack(view.context.getString(R.string.snack_add_to_library), Snackbar.LENGTH_INDEFINITE) {
                 setAction(R.string.action_add) {
-                    presenter.addToLibrary()
+                    addToLibrary(manga)
                 }
             }
         }
