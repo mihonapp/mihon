@@ -566,8 +566,7 @@
     <string name="action_disable">禁用</string>
     <string name="action_sort_descending">降序</string>
     <plurals name="manga_num_chapters">
-        <item quantity="one">%1$s 个章节</item>
-        <item quantity="other"/>
+        <item quantity="other">%1$s 个章节</item>
     </plurals>
     <string name="action_open_in_settings">在设置中打开</string>
     <string name="pref_dns_over_https_summary">需要重启应用才能生效</string>
