@@ -83,7 +83,8 @@ class AboutController : SettingsController() {
                 titleRes = R.string.notices
 
                 onClick {
-                    ChangelogDialogController().showDialog(router)
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/inorichi/tachiyomi/blob/dev/PREVIEW_RELEASE_NOTES.md"))
+                    startActivity(intent)
                 }
             }
         }

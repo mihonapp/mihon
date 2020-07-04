@@ -89,7 +89,7 @@ object Migrations {
                     preferences.librarySortingMode().set(LibrarySort.ALPHA)
                 }
             }
-            return true
+            return !BuildConfig.DEBUG
         }
         return false
     }
