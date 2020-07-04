@@ -3,7 +3,9 @@ package eu.kanade.tachiyomi.ui.main
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -15,7 +17,9 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -38,6 +42,7 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.snack
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.delay
@@ -144,9 +149,22 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         syncActivityViewWithController(router.backstack.lastOrNull()?.controller())
 
         if (savedInstanceState == null) {
-            // Show changelog if needed
-            if (Migrations.upgrade(preferences)) {
-                ChangelogDialogController().showDialog(router)
+            // Show changelog prompt on update
+            if (Migrations.upgrade(preferences) && !BuildConfig.DEBUG) {
+                binding.controllerContainer.snack(getString(R.string.updated_version, BuildConfig.VERSION_NAME), Snackbar.LENGTH_INDEFINITE) {
+                    setAction(R.string.whats_new) {
+                        val url = "https://github.com/inorichi/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(intent)
+                    }
+
+                    // Ensure the snackbar sits above the bottom nav
+                    val layoutParams = view.layoutParams as CoordinatorLayout.LayoutParams
+                    layoutParams.anchorId = binding.bottomNav.id
+                    layoutParams.anchorGravity = Gravity.TOP
+                    layoutParams.gravity = Gravity.TOP
+                    view.layoutParams = layoutParams
+                }
             }
         }
 

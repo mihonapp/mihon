@@ -192,9 +192,6 @@ dependencies {
     // HTML parser
     implementation 'org.jsoup:jsoup:1.13.1'
 
-    // Changelog
-    implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
-
     // Database
     implementation 'androidx.sqlite:sqlite:2.1.0'
     implementation 'com.github.inorichi.storio:storio-common:8be19de@aar'

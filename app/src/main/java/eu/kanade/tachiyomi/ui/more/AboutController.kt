@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.data.updater.UpdateChecker
 import eu.kanade.tachiyomi.data.updater.UpdateResult
 import eu.kanade.tachiyomi.data.updater.UpdaterService
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
-import eu.kanade.tachiyomi.ui.main.ChangelogDialogController
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
@@ -67,15 +66,17 @@ class AboutController : SettingsController() {
             }
         }
         preference {
-            titleRes = R.string.changelog
+            titleRes = R.string.whats_new
 
             onClick {
-                if (BuildConfig.DEBUG) {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/inorichi/tachiyomi/commits/dev"))
-                    startActivity(intent)
+                val url = if (BuildConfig.DEBUG) {
+                    "https://github.com/inorichi/tachiyomi/commits/dev"
                 } else {
-                    ChangelogDialogController().showDialog(router)
+                    "https://github.com/inorichi/tachiyomi/releases/tag/v${BuildConfig.VERSION_NAME}"
                 }
+
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
             }
         }
         if (BuildConfig.DEBUG) {
