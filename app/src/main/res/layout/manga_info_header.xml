@@ -28,44 +28,31 @@
             android:background="@drawable/manga_info_gradient"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/manga_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.33" />
-
-            <ImageView
+            <eu.kanade.tachiyomi.ui.manga.chapter.MangaCoverImageView
                 android:id="@+id/manga_cover"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxWidth="220dp"
                 android:background="@drawable/rounded_rectangle"
                 android:contentDescription="@string/description_cover"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="h,2:3"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:src="@mipmap/ic_launcher" />
 
             <LinearLayout
                 android:id="@+id/manga_info_section"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:orientation="vertical"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toEndOf="@+id/manga_cover"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -120,7 +107,7 @@
 
             </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/actions_bar"
