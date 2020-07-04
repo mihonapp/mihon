@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
+import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
@@ -366,17 +367,21 @@ class MangaInfoChaptersPresenter(
      * @param read whether to mark chapters as read or unread.
      */
     fun markChaptersRead(selectedChapters: List<ChapterItem>, read: Boolean) {
-        Observable.from(selectedChapters)
-            .doOnNext { chapter ->
-                chapter.read = read
-                if (!read) {
-                    chapter.last_page_read = 0
-                }
+        val chapters = selectedChapters.map { chapter ->
+            chapter.read = read
+            if (!read) {
+                chapter.last_page_read = 0
             }
-            .toList()
-            .flatMap { db.updateChaptersProgress(it).asRxObservable() }
-            .subscribeOn(Schedulers.io())
-            .subscribe()
+            chapter
+        }
+
+        launchIO {
+            db.updateChaptersProgress(chapters).executeAsBlocking()
+
+            if (preferences.removeAfterMarkedAsRead()) {
+                deleteChapters(chapters)
+            }
+        }
     }
 
     /**
