@@ -64,8 +64,9 @@ abstract class BaseController<VB : ViewBinding>(bundle: Bundle? = null) :
     override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
         if (type.isEnter) {
             setTitle()
+            setHasOptionsMenu(true)
         }
-        setHasOptionsMenu(type.isEnter)
+        
         super.onChangeStarted(handler, type)
     }
 
