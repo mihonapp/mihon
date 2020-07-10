@@ -448,6 +448,7 @@
     <string name="invalid_combination">Default can\'t be selected with other categories</string>
     <string name="added_to_library">The manga has been added to your library</string>
     <string name="action_global_search_hint">Global search…</string>
+    <string name="action_global_search_query">Search for \"%1$s\" globally</string>
     <string name="latest">Latest</string>
     <string name="browse">Browse</string>
     <string name="local_source_help_guide">Local source guide</string>

@@ -33,18 +33,22 @@ import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.visible
 import kotlinx.android.synthetic.main.main_activity.tabs
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.appcompat.queryTextChanges
 import reactivecircus.flowbinding.viewpager.pageSelections
 import rx.Subscription
@@ -77,7 +81,7 @@ class LibraryController(
     /**
      * Library search query.
      */
-    private var query = ""
+    private var query: String? = ""
 
     /**
      * Currently selected mangas.
@@ -203,6 +207,14 @@ class LibraryController(
         if (preferences.downloadedOnly().get()) {
             binding.downloadedOnly.visible()
         }
+
+        binding.btnGlobalSearch.clicks()
+            .onEach {
+                router.pushController(
+                    GlobalSearchController(query).withFadeTransaction()
+                )
+            }
+            .launchIn(scope)
 
         binding.actionToolbar.offsetAppbarHeight(activity!!)
     }
@@ -364,33 +376,48 @@ class LibraryController(
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
         searchView.maxWidth = Int.MAX_VALUE
+        searchItem.fixExpand(onExpand = { invalidateMenuOnExpand() })
 
-        searchView.queryTextChanges()
-            // Ignore events if this controller isn't at the top
-            .filter { router.backstack.lastOrNull()?.controller() == this }
-            .onEach {
-                query = it.toString()
-                searchRelay.call(query)
-            }
-            .launchIn(scope)
-
-        if (query.isNotEmpty()) {
+        if (!query.isNullOrEmpty()) {
             searchItem.expandActionView()
             searchView.setQuery(query, true)
             searchView.clearFocus()
 
-            // Manually trigger the search since the binding doesn't trigger for some reason
-            searchRelay.call(query)
+            // If we re-enter the controller with a prior search still active
+            view?.post {
+                performSearch()
+            }
         }
 
-        searchItem.fixExpand(onExpand = { invalidateMenuOnExpand() })
+        searchView.queryTextChanges()
+            .distinctUntilChanged()
+            .onEach {
+                query = it.toString()
+                performSearch()
+            }
+            .launchIn(scope)
 
         // Mutate the filter icon because it needs to be tinted and the resource is shared.
         menu.findItem(R.id.action_filter).icon.mutate()
     }
 
-    fun search(query: String) {
-        this.query = query
+    fun search(query: String?) {
+        // Delay to let contents load first for searches from manga info
+        view?.post {
+            this.query = query
+            performSearch()
+        }
+    }
+
+    private fun performSearch() {
+        searchRelay.call(query)
+        if (!query.isNullOrEmpty()) {
+            binding.btnGlobalSearch.visible()
+            binding.btnGlobalSearch.text =
+                resources?.getString(R.string.action_global_search_query, query)
+        } else {
+            binding.btnGlobalSearch.gone()
+        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
