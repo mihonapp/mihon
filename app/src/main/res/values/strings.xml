@@ -584,7 +584,8 @@
     <string name="copy">Copy</string>
 
     <!-- Downloads activity and service -->
-    <string name="download_queue_error">Could not download chapters. You can try again in the downloads section</string>
+    <string name="download_queue_error">Couldn\'t download chapters. You can try again in the downloads section</string>
+    <string name="download_insufficient_space">Couldn\'t download chapters due to low disk space</string>
 
     <!-- Library update service notifications -->
     <string name="notification_check_updates">Checking for new chapters</string>
