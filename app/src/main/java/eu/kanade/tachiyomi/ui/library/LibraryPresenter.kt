@@ -218,6 +218,7 @@ class LibraryPresenter(
                         ?: latestChapterManga.size
                     manga1latestChapter.compareTo(manga2latestChapter)
                 }
+                LibrarySort.DATE_ADDED -> i2.manga.date_added.compareTo(i1.manga.date_added)
                 else -> throw Exception("Unknown sorting mode")
             }
         }

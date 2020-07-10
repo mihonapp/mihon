@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
+import java.util.Date
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -149,6 +150,10 @@ class MangaInfoChaptersPresenter(
      */
     fun toggleFavorite(): Boolean {
         manga.favorite = !manga.favorite
+        manga.date_added = when (manga.favorite) {
+            true -> Date().time
+            false -> 0
+        }
         if (!manga.favorite) {
             manga.removeCovers(coverCache)
         }

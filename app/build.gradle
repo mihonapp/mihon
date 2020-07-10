@@ -284,6 +284,10 @@ dependencies {
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+
+    // Debug tool; see https://fbflipper.com/
+//    debugImplementation 'com.facebook.flipper:flipper:0.49.0'
+//    debugImplementation 'com.facebook.soloader:soloader:0.9.0'
 }
 
 buildscript {
