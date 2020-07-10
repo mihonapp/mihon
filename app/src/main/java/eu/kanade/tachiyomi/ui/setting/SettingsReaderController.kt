@@ -228,7 +228,9 @@ class SettingsReaderController : SettingsController() {
                 key = Keys.readWithVolumeKeysInverted
                 titleRes = R.string.pref_read_with_volume_keys_inverted
                 defaultValue = false
-            }.apply { dependency = Keys.readWithVolumeKeys }
+
+                preferences.readWithVolumeKeys().asImmediateFlow { isVisible = it }.launchIn(scope)
+            }
         }
     }
 }
