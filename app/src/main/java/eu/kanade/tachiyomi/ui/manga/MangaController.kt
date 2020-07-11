@@ -13,12 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
@@ -34,6 +37,7 @@ import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.migration.search.SearchController
@@ -73,6 +77,7 @@ import uy.kohesive.injekt.injectLazy
 
 class MangaController :
     NucleusController<ChaptersControllerBinding, MangaPresenter>,
+    FabController,
     ActionMode.Callback,
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
@@ -113,6 +118,9 @@ class MangaController :
     private var chaptersHeaderAdapter: MangaChaptersHeaderAdapter? = null
     private var chaptersAdapter: ChaptersAdapter? = null
 
+    private var actionFab: ExtendedFloatingActionButton? = null
+    private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
+
     /**
      * Action mode for multiple selection.
      */
@@ -136,6 +144,14 @@ class MangaController :
 
     override fun getTitle(): String? {
         return manga?.title
+    }
+
+    override fun onChangeEnded(handler: ControllerChangeHandler, type: ControllerChangeType) {
+        super.onChangeEnded(handler, type)
+        if (manga == null || source == null) {
+            activity?.toast(R.string.manga_not_in_db)
+            router.popController(this)
+        }
     }
 
     override fun createPresenter(): MangaPresenter {
@@ -174,6 +190,8 @@ class MangaController :
         binding.recycler.setHasFixedSize(true)
         chaptersAdapter?.fastScroller = binding.fastScroller
 
+        actionFabScrollListener = actionFab?.shrinkOnScroll(binding.recycler)
+
         // Skips directly to chapters list if navigated to from the library
         binding.recycler.post {
             if (!fromSource && preferences.jumpToChapters()) {
@@ -188,7 +206,14 @@ class MangaController :
             }
             .launchIn(scope)
 
-        binding.fab.clicks()
+        binding.actionToolbar.offsetAppbarHeight(activity!!)
+    }
+
+    override fun configureFab(fab: ExtendedFloatingActionButton) {
+        actionFab = fab
+        fab.setText(R.string.action_start)
+        fab.setIconResource(R.drawable.ic_play_arrow_24dp)
+        fab.clicks()
             .onEach {
                 val item = presenter.getNextUnreadChapter()
                 if (item != null) {
@@ -200,28 +225,26 @@ class MangaController :
                     }
 
                     // Get coordinates and start animation
-                    val coordinates = binding.fab.getCoordinates()
-                    if (!binding.revealView.showRevealEffect(coordinates.x, coordinates.y, revealAnimationListener)) {
-                        openChapter(item.chapter)
+                    actionFab?.getCoordinates()?.let { coordinates ->
+                        if (!binding.revealView.showRevealEffect(
+                            coordinates.x,
+                            coordinates.y,
+                            revealAnimationListener
+                        )
+                        ) {
+                            openChapter(item.chapter)
+                        }
                     }
                 } else {
-                    view.context.toast(R.string.no_next_chapter)
+                    view?.context?.toast(R.string.no_next_chapter)
                 }
             }
             .launchIn(scope)
-
-        binding.fab.shrinkOnScroll(binding.recycler)
-
-        binding.actionToolbar.offsetAppbarHeight(activity!!)
-        binding.fab.offsetAppbarHeight(activity!!)
     }
 
-    override fun onChangeEnded(handler: ControllerChangeHandler, type: ControllerChangeType) {
-        super.onChangeEnded(handler, type)
-        if (manga == null || source == null) {
-            activity?.toast(R.string.manga_not_in_db)
-            router.popController(this)
-        }
+    override fun cleanupFab(fab: ExtendedFloatingActionButton) {
+        actionFabScrollListener?.let { binding.recycler.removeOnScrollListener(it) }
+        actionFab = null
     }
 
     override fun onDestroyView(view: View) {
@@ -239,8 +262,9 @@ class MangaController :
         // Check if animation view is visible
         if (binding.revealView.visibility == View.VISIBLE) {
             // Show the unreveal effect
-            val coordinates = binding.fab.getCoordinates()
-            binding.revealView.hideRevealEffect(coordinates.x, coordinates.y, 1920)
+            actionFab?.getCoordinates()?.let { coordinates ->
+                binding.revealView.hideRevealEffect(coordinates.x, coordinates.y, 1920)
+            }
         }
 
         super.onActivityResumed(activity)
@@ -485,11 +509,9 @@ class MangaController :
      * Toggles the favorite status and asks for confirmation to delete downloaded chapters.
      */
     private fun toggleFavorite() {
-        val view = view
-
         val isNowFavorite = presenter.toggleFavorite()
-        if (view != null && !isNowFavorite && presenter.hasDownloads()) {
-            view.snack(view.context.getString(R.string.delete_downloads_for_manga)) {
+        if (activity != null && !isNowFavorite && presenter.hasDownloads()) {
+            activity!!.findViewById<CoordinatorLayout>(R.id.root_coordinator)?.snack(activity!!.getString(R.string.delete_downloads_for_manga)) {
                 setAction(R.string.action_delete) {
                     presenter.deleteDownloads()
                 }
@@ -605,7 +627,7 @@ class MangaController :
 
         val context = view?.context
         if (context != null && chapters.any { it.read }) {
-            binding.fab.text = context.getString(R.string.action_resume)
+            actionFab?.text = context.getString(R.string.action_resume)
         }
     }
 
@@ -741,8 +763,8 @@ class MangaController :
             binding.actionToolbar.findItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
 
             // Hide FAB to avoid interfering with the bottom action toolbar
-            // binding.fab.hide()
-            binding.fab.gone()
+            // actionFab?.hide()
+            actionFab?.gone()
         }
         return false
     }
@@ -776,8 +798,8 @@ class MangaController :
 
         // TODO: there seems to be a bug in MaterialComponents where the [ExtendedFloatingActionButton]
         // fails to show up properly
-        // binding.fab.show()
-        binding.fab.visible()
+        // actionFab?.show()
+        actionFab?.visible()
     }
 
     override fun onDetach(view: View) {
