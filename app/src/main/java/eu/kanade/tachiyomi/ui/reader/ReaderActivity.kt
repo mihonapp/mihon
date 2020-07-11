@@ -232,7 +232,12 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 invalidateOptionsMenu()
             }
             R.id.action_settings -> ReaderSettingsSheet(this).show()
-            R.id.action_custom_filter -> ReaderColorFilterSheet(this).show()
+            R.id.action_custom_filter -> {
+                ReaderColorFilterSheet(this)
+                    // Remove dimmed backdrop so changes can be previewd
+                    .apply { window?.setDimAmount(0f) }
+                    .show()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

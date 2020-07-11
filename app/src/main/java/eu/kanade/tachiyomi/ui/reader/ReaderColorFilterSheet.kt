@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader
 
-import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
@@ -9,11 +8,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.util.view.gone
-import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.IgnoreFirstSpinnerListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
-import kotlin.math.abs
 import kotlinx.android.synthetic.main.reader_color_filter.brightness_seekbar
 import kotlinx.android.synthetic.main.reader_color_filter.color_filter_mode
 import kotlinx.android.synthetic.main.reader_color_filter.custom_brightness
@@ -27,8 +23,6 @@ import kotlinx.android.synthetic.main.reader_color_filter.txt_color_filter_alpha
 import kotlinx.android.synthetic.main.reader_color_filter.txt_color_filter_blue_value
 import kotlinx.android.synthetic.main.reader_color_filter.txt_color_filter_green_value
 import kotlinx.android.synthetic.main.reader_color_filter.txt_color_filter_red_value
-import kotlinx.android.synthetic.main.reader_color_filter_sheet.brightness_overlay
-import kotlinx.android.synthetic.main.reader_color_filter_sheet.color_overlay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
@@ -39,7 +33,7 @@ import uy.kohesive.injekt.injectLazy
  */
 class ReaderColorFilterSheet(private val activity: ReaderActivity) : BottomSheetDialog(activity) {
 
-    private val preferences by injectLazy<PreferencesHelper>()
+    private val preferences: PreferencesHelper by injectLazy()
 
     private var sheetBehavior: BottomSheetBehavior<*>? = null
 
@@ -205,15 +199,6 @@ class ReaderColorFilterSheet(private val activity: ReaderActivity) : BottomSheet
      * 0 sets system brightness and hides the overlay.
      */
     private fun setCustomBrightnessValue(value: Int, view: View, isDisabled: Boolean = false) = with(view) {
-        // Set black overlay visibility.
-        if (value < 0) {
-            brightness_overlay.visible()
-            val alpha = (abs(value) * 2.56).toInt()
-            brightness_overlay.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
-        } else {
-            brightness_overlay.gone()
-        }
-
         if (!isDisabled) {
             txt_brightness_seekbar_value.text = value.toString()
         }
@@ -230,8 +215,6 @@ class ReaderColorFilterSheet(private val activity: ReaderActivity) : BottomSheet
                 .sample(100)
                 .onEach { setColorFilterValue(it, view) }
                 .launchIn(activity.scope)
-        } else {
-            color_overlay.gone()
         }
         setColorFilterSeekBar(enabled, view)
     }
@@ -242,8 +225,6 @@ class ReaderColorFilterSheet(private val activity: ReaderActivity) : BottomSheet
      * @param view view of the dialog
      */
     private fun setColorFilterValue(@ColorInt color: Int, view: View) = with(view) {
-        color_overlay.visible()
-        color_overlay.setFilterColor(color, preferences.colorFilterMode().get())
         setValues(color, view)
     }
 
