@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.manga.chapter
+package eu.kanade.tachiyomi.ui.manga
 
 import android.os.Bundle
 import com.jakewharton.rxrelay.PublishRelay
@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
@@ -29,14 +30,14 @@ import timber.log.Timber
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class MangaInfoChaptersPresenter(
+class MangaPresenter(
     val manga: Manga,
     val source: Source,
     val preferences: PreferencesHelper = Injekt.get(),
     private val db: DatabaseHelper = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get()
-) : BasePresenter<MangaInfoChaptersController>() {
+) : BasePresenter<MangaController>() {
 
     /**
      * Subscription to update the manga from the source.
@@ -83,7 +84,7 @@ class MangaInfoChaptersPresenter(
         // Prepare the relay.
         chaptersRelay.flatMap { applyChapterFilters(it) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeLatestCache(MangaInfoChaptersController::onNextChapters) { _, error -> Timber.e(error) }
+            .subscribeLatestCache(MangaController::onNextChapters) { _, error -> Timber.e(error) }
 
         // Manga info - end
 
@@ -139,7 +140,7 @@ class MangaInfoChaptersPresenter(
                 { view, _ ->
                     view.onFetchMangaInfoDone()
                 },
-                MangaInfoChaptersController::onFetchMangaInfoError
+                MangaController::onFetchMangaInfoError
             )
     }
 
@@ -226,7 +227,7 @@ class MangaInfoChaptersPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .filter { download -> download.manga.id == manga.id }
             .doOnNext { onDownloadStatusChange(it) }
-            .subscribeLatestCache(MangaInfoChaptersController::onChapterStatusChange) { _, error ->
+            .subscribeLatestCache(MangaController::onChapterStatusChange) { _, error ->
                 Timber.e(error)
             }
     }
@@ -279,7 +280,7 @@ class MangaInfoChaptersPresenter(
                 { view, _ ->
                     view.onFetchChaptersDone()
                 },
-                MangaInfoChaptersController::onFetchChaptersError
+                MangaController::onFetchChaptersError
             )
     }
 
@@ -413,7 +414,7 @@ class MangaInfoChaptersPresenter(
                 { view, _ ->
                     view.onChaptersDeleted(chapters)
                 },
-                MangaInfoChaptersController::onChaptersDeletedError
+                MangaController::onChaptersDeletedError
             )
     }
 
