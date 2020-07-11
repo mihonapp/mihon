@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader
 
-import android.os.Build
 import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.Spinner
@@ -30,7 +29,6 @@ import kotlinx.android.synthetic.main.reader_settings_sheet.rotation_mode
 import kotlinx.android.synthetic.main.reader_settings_sheet.scale_type
 import kotlinx.android.synthetic.main.reader_settings_sheet.show_page_number
 import kotlinx.android.synthetic.main.reader_settings_sheet.tapping_inverted
-import kotlinx.android.synthetic.main.reader_settings_sheet.true_color
 import kotlinx.android.synthetic.main.reader_settings_sheet.viewer
 import kotlinx.android.synthetic.main.reader_settings_sheet.webtoon_prefs_group
 import kotlinx.android.synthetic.main.reader_settings_sheet.webtoon_side_padding
@@ -93,11 +91,6 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         always_show_chapter_transition.bindToPreference(preferences.alwaysShowChapterTransition())
         crop_borders.bindToPreference(preferences.cropBorders())
         page_transitions.bindToPreference(preferences.pageTransitions())
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            true_color.visible()
-            true_color.bindToPreference(preferences.trueColor())
-        }
     }
 
     /**
