@@ -20,9 +20,6 @@ class PagerConfig(private val viewer: PagerViewer, preferences: PreferencesHelpe
     var imageZoomType = ZoomType.Left
         private set
 
-    var imageCropBorders = false
-        private set
-
     init {
         preferences.pageTransitions()
             .register({ usePageTransitions = it })
@@ -32,9 +29,6 @@ class PagerConfig(private val viewer: PagerViewer, preferences: PreferencesHelpe
 
         preferences.zoomStart()
             .register({ zoomTypeFromPreference(it) }, { imagePropertyChangedListener?.invoke() })
-
-        preferences.cropBorders()
-            .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
     }
 
     private fun zoomTypeFromPreference(value: Int) {
