@@ -172,17 +172,9 @@ class MangaController :
         if (manga == null || source == null) return
 
         // Init RecyclerView and adapter
-        mangaInfoAdapter =
-            MangaInfoHeaderAdapter(
-                this,
-                fromSource
-            )
-        chaptersHeaderAdapter =
-            MangaChaptersHeaderAdapter()
-        chaptersAdapter = ChaptersAdapter(
-            this,
-            view.context
-        )
+        mangaInfoAdapter = MangaInfoHeaderAdapter(this, fromSource)
+        chaptersHeaderAdapter = MangaChaptersHeaderAdapter()
+        chaptersAdapter = ChaptersAdapter(this, view.context)
 
         binding.recycler.adapter = ConcatAdapter(mangaInfoAdapter, chaptersHeaderAdapter, chaptersAdapter)
         binding.recycler.layoutManager = LinearLayoutManager(view.context)
@@ -317,6 +309,9 @@ class MangaController :
 
         // Hide download options for local manga
         menu.findItem(R.id.download_group).isVisible = !isLocalSource
+
+        // Hide migrate option for non-library manga
+        menu.findItem(R.id.action_migrate).isVisible = presenter.manga.favorite
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -466,6 +461,9 @@ class MangaController :
         } else {
             addToLibrary(manga)
         }
+
+        // Update menu to show migrate option
+        activity?.invalidateOptionsMenu()
     }
 
     fun onTrackingClick() {
