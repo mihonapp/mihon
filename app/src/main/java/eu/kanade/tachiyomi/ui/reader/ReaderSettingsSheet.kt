@@ -92,6 +92,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         long_tap.bindToPreference(preferences.readWithLongTap())
         always_show_chapter_transition.bindToPreference(preferences.alwaysShowChapterTransition())
         crop_borders.bindToPreference(preferences.cropBorders())
+        page_transitions.bindToPreference(preferences.pageTransitions())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             true_color.visible()
@@ -108,7 +109,6 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
 
         scale_type.bindToPreference(preferences.imageScaleType(), 1)
         zoom_start.bindToPreference(preferences.zoomStart(), 1)
-        page_transitions.bindToPreference(preferences.pageTransitions())
     }
 
     /**

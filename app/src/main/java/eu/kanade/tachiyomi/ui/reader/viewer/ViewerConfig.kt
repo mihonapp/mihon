@@ -20,8 +20,9 @@ abstract class ViewerConfig(preferences: PreferencesHelper) {
     var imagePropertyChangedListener: (() -> Unit)? = null
 
     var tappingEnabled = true
-    var longTapEnabled = true
     var tappingInverted = TappingInvertMode.NONE
+    var longTapEnabled = true
+    var usePageTransitions = false
     var doubleTapAnimDuration = 500
     var volumeKeysEnabled = false
     var volumeKeysInverted = false
@@ -38,6 +39,9 @@ abstract class ViewerConfig(preferences: PreferencesHelper) {
 
         preferences.readWithLongTap()
             .register({ longTapEnabled = it })
+
+        preferences.pageTransitions()
+            .register({ usePageTransitions = it })
 
         preferences.doubleTapAnimSpeed()
             .register({ doubleTapAnimDuration = it })

@@ -106,6 +106,11 @@ class SettingsReaderController : SettingsController() {
                 titleRes = R.string.pref_crop_borders
                 defaultValue = false
             }
+            switchPreference {
+                key = Keys.enableTransitions
+                titleRes = R.string.pref_page_transitions
+                defaultValue = true
+            }
         }
 
         preferenceCategory {
@@ -153,11 +158,6 @@ class SettingsReaderController : SettingsController() {
                 entryValues = arrayOf("1", "2", "3", "4")
                 defaultValue = "1"
                 summary = "%s"
-            }
-            switchPreference {
-                key = Keys.enableTransitions
-                titleRes = R.string.pref_page_transitions
-                defaultValue = true
             }
         }
 
