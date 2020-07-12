@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
+import eu.kanade.tachiyomi.data.glide.MangaThumbnail
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.MangaInfoHeaderBinding
@@ -49,6 +50,7 @@ class MangaInfoHeaderAdapter(
     private lateinit var binding: MangaInfoHeaderBinding
 
     private var initialLoad: Boolean = true
+    private var currentMangaThumbnail: MangaThumbnail? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
         binding = MangaInfoHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -237,9 +239,10 @@ class MangaInfoHeaderAdapter(
             // Set the favorite drawable to the correct one.
             setFavoriteButtonState(manga.favorite)
 
-            // Set cover if it wasn't already.
-            if (binding.mangaCover.drawable == null) {
-                val mangaThumbnail = manga.toMangaThumbnail()
+            // Set cover if changed.
+            val mangaThumbnail = manga.toMangaThumbnail()
+            if (mangaThumbnail != currentMangaThumbnail) {
+                currentMangaThumbnail = mangaThumbnail
                 listOf(binding.mangaCover, binding.backdrop)
                     .forEach {
                         GlideApp.with(view.context)

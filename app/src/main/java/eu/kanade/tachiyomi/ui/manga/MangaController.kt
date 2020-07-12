@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.Chapter
@@ -44,6 +45,7 @@ import eu.kanade.tachiyomi.ui.browse.migration.search.SearchController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
+import eu.kanade.tachiyomi.ui.library.ChangeMangaCoverDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
@@ -59,6 +61,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
@@ -81,6 +84,7 @@ class MangaController :
     ActionMode.Callback,
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
+    ChangeMangaCoverDialog.Listener,
     ChangeMangaCategoriesDialog.Listener,
     DownloadCustomChaptersDialog.Listener,
     DeleteChaptersDialog.Listener {
@@ -113,6 +117,7 @@ class MangaController :
     private val fromSource = args.getBoolean(FROM_SOURCE_EXTRA, false)
 
     private val preferences: PreferencesHelper by injectLazy()
+    private val coverCache: CoverCache by injectLazy()
 
     private var mangaInfoAdapter: MangaInfoHeaderAdapter? = null
     private var chaptersHeaderAdapter: MangaChaptersHeaderAdapter? = null
@@ -310,7 +315,8 @@ class MangaController :
         // Hide download options for local manga
         menu.findItem(R.id.download_group).isVisible = !isLocalSource
 
-        // Hide migrate option for non-library manga
+        // Hide edit cover and migrate options for non-library manga
+        menu.findItem(R.id.action_edit_cover).isVisible = presenter.manga.favorite
         menu.findItem(R.id.action_migrate).isVisible = presenter.manga.favorite
     }
 
@@ -371,6 +377,7 @@ class MangaController :
                 activity?.invalidateOptionsMenu()
             }
 
+            R.id.action_edit_cover -> handleChangeCover()
             R.id.action_migrate -> migrateManga()
         }
         return super.onOptionsItemSelected(item)
@@ -582,21 +589,77 @@ class MangaController :
         }
     }
 
-    // Manga info - end
+    private fun handleChangeCover() {
+        val manga = manga ?: return
+        if (manga.hasCustomCover(coverCache)) {
+            showEditCoverDialog(manga)
+        } else {
+            openMangaCoverPicker(manga)
+        }
+    }
 
-    // Chapters list - start
+    /**
+     * Edit custom cover for selected manga.
+     */
+    private fun showEditCoverDialog(manga: Manga) {
+        ChangeMangaCoverDialog(this, manga).showDialog(router)
+    }
+
+    override fun openMangaCoverPicker(manga: Manga) {
+        if (manga.favorite) {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            startActivityForResult(
+                Intent.createChooser(
+                    intent,
+                    resources?.getString(R.string.file_select_cover)
+                ),
+                REQUEST_IMAGE_OPEN
+            )
+        } else {
+            activity?.toast(R.string.notification_first_add_to_library)
+        }
+
+        destroyActionModeIfNeeded()
+    }
+
+    override fun deleteMangaCover(manga: Manga) {
+        presenter.deleteCustomCover(manga)
+        mangaInfoAdapter?.notifyDataSetChanged()
+        destroyActionModeIfNeeded()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_OPEN) {
+            val dataUri = data?.data
+            if (dataUri == null || resultCode != Activity.RESULT_OK) return
+            val activity = activity ?: return
+            presenter.editCover(manga!!, activity, dataUri)
+        }
+    }
+
+    fun onSetCoverSuccess() {
+        mangaInfoAdapter?.notifyDataSetChanged()
+        activity?.toast(R.string.cover_updated)
+    }
+
+    fun onSetCoverError(error: Throwable) {
+        activity?.toast(R.string.notification_cover_update_failed)
+        Timber.e(error)
+    }
 
     /**
      * Initiates source migration for the specific manga.
      */
     private fun migrateManga() {
-        val controller =
-            SearchController(
-                presenter.manga
-            )
+        val controller = SearchController(presenter.manga)
         controller.targetController = this
         router.pushController(controller.withFadeTransaction())
     }
+
+    // Manga info - end
+
+    // Chapters list - start
 
     fun onNextChapters(chapters: List<ChapterItem>) {
         // If the list is empty and it hasn't requested previously, fetch chapters from source
@@ -943,5 +1006,10 @@ class MangaController :
     companion object {
         const val FROM_SOURCE_EXTRA = "from_source"
         const val MANGA_EXTRA = "manga"
+
+        /**
+         * Key to change the cover of a manga in [onActivityResult].
+         */
+        const val REQUEST_IMAGE_OPEN = 101
     }
 }

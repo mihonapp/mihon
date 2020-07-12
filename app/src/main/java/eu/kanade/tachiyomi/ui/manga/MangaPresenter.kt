@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -11,6 +13,7 @@ import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
@@ -21,6 +24,7 @@ import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.prepUpdateCover
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
+import eu.kanade.tachiyomi.util.updateCoverLastModified
 import java.util.Date
 import rx.Observable
 import rx.Subscription
@@ -215,6 +219,48 @@ class MangaPresenter(
      */
     fun moveMangaToCategory(manga: Manga, category: Category?) {
         moveMangaToCategories(manga, listOfNotNull(category))
+    }
+
+    /**
+     * Update cover with local file.
+     *
+     * @param manga the manga edited.
+     * @param context Context.
+     * @param data uri of the cover resource.
+     */
+    fun editCover(manga: Manga, context: Context, data: Uri) {
+        Observable
+            .fromCallable {
+                context.contentResolver.openInputStream(data)?.use {
+                    if (manga.isLocal()) {
+                        LocalSource.updateCover(context, manga, it)
+                        manga.updateCoverLastModified(db)
+                    } else if (manga.favorite) {
+                        coverCache.setCustomCoverToCache(manga, it)
+                        manga.updateCoverLastModified(db)
+                    }
+                }
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeFirst(
+                { view, _ -> view.onSetCoverSuccess() },
+                { view, e -> view.onSetCoverError(e) }
+            )
+    }
+
+    fun deleteCustomCover(manga: Manga) {
+        Observable
+            .fromCallable {
+                coverCache.deleteCustomCover(manga)
+                manga.updateCoverLastModified(db)
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeFirst(
+                { view, _ -> view.onSetCoverSuccess() },
+                { view, e -> view.onSetCoverError(e) }
+            )
     }
 
     // Manga info - end
