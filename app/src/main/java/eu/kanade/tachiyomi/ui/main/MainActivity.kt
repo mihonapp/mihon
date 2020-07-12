@@ -48,6 +48,8 @@ import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.main_activity.appbar
+import kotlinx.android.synthetic.main.main_activity.tabs
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -114,8 +116,7 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
             true
         }
 
-        val container: ViewGroup = findViewById(R.id.controller_container)
-
+        val container: ViewGroup = binding.controllerContainer
         router = Conductor.attachRouter(this, container, savedInstanceState)
         if (!router.hasRootController()) {
             // Set start screen
@@ -428,8 +429,8 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
  * collapsing AppBarLayout.
  */
 fun View.offsetAppbarHeight(activity: Activity) {
-    val appbar: AppBarLayout = activity.findViewById(R.id.appbar)
-    val tabs: TabLayout = activity.findViewById(R.id.tabs)
+    val appbar: AppBarLayout = activity.appbar
+    val tabs: TabLayout = activity.tabs
     appbar.addOnOffsetChangedListener(
         AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxAbsOffset = appBarLayout.measuredHeight - tabs.measuredHeight
