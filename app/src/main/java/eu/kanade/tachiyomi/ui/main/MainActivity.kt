@@ -315,7 +315,7 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
     }
 
     private fun setRoot(controller: Controller, id: Int) {
-        router.setRoot(controller.withFadeTransaction().tag(id.toString()))
+        router.setRoot(RouterTransaction.with(controller).tag(id.toString()))
     }
 
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
