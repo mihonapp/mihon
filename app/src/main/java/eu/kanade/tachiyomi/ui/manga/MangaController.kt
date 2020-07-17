@@ -69,6 +69,7 @@ import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import kotlinx.android.synthetic.main.main_activity.root_coordinator
+import kotlinx.android.synthetic.main.main_activity.root_fab
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.clicks
@@ -123,7 +124,6 @@ class MangaController :
     private var chaptersHeaderAdapter: MangaChaptersHeaderAdapter? = null
     private var chaptersAdapter: ChaptersAdapter? = null
 
-    private var actionFab: ExtendedFloatingActionButton? = null
     private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
 
     /**
@@ -187,7 +187,8 @@ class MangaController :
         binding.recycler.setHasFixedSize(true)
         chaptersAdapter?.fastScroller = binding.fastScroller
 
-        actionFabScrollListener = actionFab?.shrinkOnScroll(binding.recycler)
+        activity!!.root_fab.visible()
+        actionFabScrollListener = activity!!.root_fab.shrinkOnScroll(binding.recycler)
 
         // Skips directly to chapters list if navigated to from the library
         binding.recycler.post {
@@ -207,7 +208,6 @@ class MangaController :
     }
 
     override fun configureFab(fab: ExtendedFloatingActionButton) {
-        actionFab = fab
         fab.setText(R.string.action_start)
         fab.setIconResource(R.drawable.ic_play_arrow_24dp)
         fab.clicks()
@@ -222,15 +222,14 @@ class MangaController :
                     }
 
                     // Get coordinates and start animation
-                    actionFab?.getCoordinates()?.let { coordinates ->
-                        if (!binding.revealView.showRevealEffect(
-                            coordinates.x,
-                            coordinates.y,
-                            revealAnimationListener
-                        )
-                        ) {
-                            openChapter(item.chapter)
-                        }
+                    val coordinates = fab.getCoordinates()
+                    if (!binding.revealView.showRevealEffect(
+                        coordinates.x,
+                        coordinates.y,
+                        revealAnimationListener
+                    )
+                    ) {
+                        openChapter(item.chapter)
                     }
                 } else {
                     view?.context?.toast(R.string.no_next_chapter)
@@ -241,12 +240,12 @@ class MangaController :
 
     override fun cleanupFab(fab: ExtendedFloatingActionButton) {
         actionFabScrollListener?.let { binding.recycler.removeOnScrollListener(it) }
-        actionFab = null
     }
 
     override fun onDestroyView(view: View) {
         destroyActionModeIfNeeded()
         binding.actionToolbar.destroy()
+        activity!!.root_fab.gone()
         mangaInfoAdapter = null
         chaptersHeaderAdapter = null
         chaptersAdapter = null
@@ -259,9 +258,8 @@ class MangaController :
         // Check if animation view is visible
         if (binding.revealView.visibility == View.VISIBLE) {
             // Show the unreveal effect
-            actionFab?.getCoordinates()?.let { coordinates ->
-                binding.revealView.hideRevealEffect(coordinates.x, coordinates.y, 1920)
-            }
+            val coordinates = activity.root_fab.getCoordinates()
+            binding.revealView.hideRevealEffect(coordinates.x, coordinates.y, 1920)
         }
 
         super.onActivityResumed(activity)
@@ -690,7 +688,7 @@ class MangaController :
 
         val context = view?.context
         if (context != null && chapters.any { it.read }) {
-            actionFab?.text = context.getString(R.string.action_resume)
+            activity!!.root_fab.text = context.getString(R.string.action_resume)
         }
     }
 
@@ -826,8 +824,8 @@ class MangaController :
             binding.actionToolbar.findItem(R.id.action_mark_as_unread)?.isVisible = chapters.all { it.chapter.read }
 
             // Hide FAB to avoid interfering with the bottom action toolbar
-            // actionFab?.hide()
-            actionFab?.gone()
+            // activity!!.root_fab.hide()
+            activity!!.root_fab.gone()
         }
         return false
     }
@@ -861,8 +859,8 @@ class MangaController :
 
         // TODO: there seems to be a bug in MaterialComponents where the [ExtendedFloatingActionButton]
         // fails to show up properly
-        // actionFab?.show()
-        actionFab?.visible()
+        // activity!!.root_fab.show()
+        activity!!.root_fab.visible()
     }
 
     override fun onDetach(view: View) {

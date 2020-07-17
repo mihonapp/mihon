@@ -47,6 +47,7 @@ import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.AutofitRecyclerView
 import eu.kanade.tachiyomi.widget.EmptyView
+import kotlinx.android.synthetic.main.main_activity.root_fab
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
@@ -86,7 +87,6 @@ open class BrowseSourceController(bundle: Bundle) :
      */
     private var adapter: FlexibleAdapter<IFlexible<*>>? = null
 
-    private var actionFab: ExtendedFloatingActionButton? = null
     private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
 
     /**
@@ -167,27 +167,21 @@ open class BrowseSourceController(bundle: Bundle) :
         filterSheet?.setFilters(presenter.filterItems)
 
         // TODO: [ExtendedFloatingActionButton] hide/show methods don't work properly
-        filterSheet?.setOnShowListener { actionFab?.gone() }
-        filterSheet?.setOnDismissListener { actionFab?.visible() }
+        filterSheet?.setOnShowListener { activity!!.root_fab.gone() }
+        filterSheet?.setOnDismissListener { activity!!.root_fab.visible() }
 
-        actionFab?.setOnClickListener { filterSheet?.show() }
+        activity!!.root_fab.setOnClickListener { filterSheet?.show() }
 
-        actionFab?.visible()
+        activity!!.root_fab.visible()
     }
 
     override fun configureFab(fab: ExtendedFloatingActionButton) {
-        actionFab = fab
-
-        // Controlled by initFilterSheet()
-        fab.gone()
-
         fab.setText(R.string.action_filter)
         fab.setIconResource(R.drawable.ic_filter_list_24dp)
     }
 
     override fun cleanupFab(fab: ExtendedFloatingActionButton) {
         actionFabScrollListener?.let { recycler?.removeOnScrollListener(it) }
-        actionFab = null
     }
 
     override fun onDestroyView(view: View) {
@@ -196,6 +190,7 @@ open class BrowseSourceController(bundle: Bundle) :
         adapter = null
         snack = null
         recycler = null
+        activity!!.root_fab.gone()
         super.onDestroyView(view)
     }
 
@@ -247,7 +242,7 @@ open class BrowseSourceController(bundle: Bundle) :
             )
             recycler.clipToPadding = false
 
-            actionFab?.shrinkOnScroll(recycler)
+            activity!!.root_fab.shrinkOnScroll(recycler)
         }
 
         recycler.setHasFixedSize(true)

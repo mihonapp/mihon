@@ -20,8 +20,11 @@ import eu.kanade.tachiyomi.databinding.CategoriesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
+import eu.kanade.tachiyomi.util.view.visible
 import kotlinx.android.synthetic.main.main_activity.root_coordinator
+import kotlinx.android.synthetic.main.main_activity.root_fab
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.clicks
@@ -50,7 +53,6 @@ class CategoryController :
      */
     private var adapter: CategoryAdapter? = null
 
-    private var actionFab: ExtendedFloatingActionButton? = null
     private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
 
     /**
@@ -96,11 +98,11 @@ class CategoryController :
         adapter?.isHandleDragEnabled = true
         adapter?.isPermanentDelete = false
 
-        actionFabScrollListener = actionFab?.shrinkOnScroll(binding.recycler)
+        activity!!.root_fab.visible()
+        actionFabScrollListener = activity!!.root_fab.shrinkOnScroll(binding.recycler)
     }
 
     override fun configureFab(fab: ExtendedFloatingActionButton) {
-        actionFab = fab
         fab.setText(R.string.action_add)
         fab.setIconResource(R.drawable.ic_add_24dp)
         fab.clicks()
@@ -112,7 +114,6 @@ class CategoryController :
 
     override fun cleanupFab(fab: ExtendedFloatingActionButton) {
         actionFabScrollListener?.let { binding.recycler.removeOnScrollListener(it) }
-        actionFab = null
     }
 
     /**
@@ -126,6 +127,7 @@ class CategoryController :
         undoHelper = null
         actionMode = null
         adapter = null
+        activity!!.root_fab.gone()
         super.onDestroyView(view)
     }
 
