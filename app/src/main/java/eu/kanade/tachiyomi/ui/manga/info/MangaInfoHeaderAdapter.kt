@@ -94,16 +94,6 @@ class MangaInfoHeaderAdapter(
                 binding.btnTracking.gone()
             }
 
-            if (controller.presenter.manga.favorite && controller.presenter.getCategories().isNotEmpty()) {
-                binding.btnCategories.visible()
-                binding.btnCategories.clicks()
-                    .onEach { controller.onCategoriesClick() }
-                    .launchIn(scope)
-                binding.btnCategories.setTooltip(R.string.action_move_category)
-            } else {
-                binding.btnCategories.gone()
-            }
-
             if (controller.presenter.source is HttpSource) {
                 binding.btnWebview.visible()
                 binding.btnWebview.clicks()
@@ -286,8 +276,6 @@ class MangaInfoHeaderAdapter(
                     initialLoad = false
                 }
             }
-
-            binding.btnCategories.visibleIf { manga.favorite && controller.presenter.getCategories().isNotEmpty() }
         }
 
         private fun showMangaInfo(visible: Boolean) {

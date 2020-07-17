@@ -255,6 +255,8 @@
     <style name="Theme.Widget.Button.Icon" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
         <item name="android:minHeight">0dp</item>
         <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">16dp</item>
 
         <item name="elevation">0dp</item>
 
