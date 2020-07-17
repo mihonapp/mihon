@@ -17,10 +17,10 @@ import java.util.concurrent.TimeUnit
 import kotlinx.android.synthetic.main.track_search_dialog.view.progress
 import kotlinx.android.synthetic.main.track_search_dialog.view.track_search
 import kotlinx.android.synthetic.main.track_search_dialog.view.track_search_list
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.widget.itemClicks
 import reactivecircus.flowbinding.android.widget.textChanges
@@ -96,13 +96,13 @@ class TrackSearchDialog : DialogController {
         adapter = null
     }
 
+    @FlowPreview
     override fun onAttach(view: View) {
         super.onAttach(view)
         dialogView!!.track_search.textChanges()
             .debounce(TimeUnit.SECONDS.toMillis(1))
-            .map { it.toString() }
             .filter { it.isNotBlank() }
-            .onEach { search(it) }
+            .onEach { search(it.toString()) }
             .launchIn(trackController.scope)
     }
 
