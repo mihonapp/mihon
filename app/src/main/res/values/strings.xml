@@ -342,7 +342,6 @@
     <string name="pref_backup_service_category">Automatic backups</string>
     <string name="pref_backup_interval">Backup frequency</string>
     <string name="pref_backup_slots">Maximum backups</string>
-    <string name="source_not_found">Source not found</string>
     <string name="source_not_found_name">Source not found: %1$s</string>
     <string name="tracker_not_logged_in">Not logged in: %1$s</string>
     <string name="backup_created">Backup created</string>
