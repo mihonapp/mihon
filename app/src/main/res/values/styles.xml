@@ -264,9 +264,12 @@
         <item name="textAllCaps">false</item>
         <item name="cornerRadius">16dp</item>
 
-        <item name="iconTint">?colorAccent</item>
-        <item name="rippleColor">?colorAccent</item>
+        <item name="iconTint">?attr/colorAccent</item>
+        <item name="rippleColor">?attr/colorAccent</item>
         <item name="android:textColor">?attr/colorOnBackground</item>
+
+        <item name="backgroundTint">@color/outlined_button_bg</item>
+        <item name="strokeColor">@color/outlined_button_stroke</item>
     </style>
 
     <style name="Theme.Widget.Button.Icon.Textless">
