@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,6 +50,7 @@ import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterHolder
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersAdapter
+import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersSettingsSheet
 import eu.kanade.tachiyomi.ui.manga.chapter.DeleteChaptersDialog
 import eu.kanade.tachiyomi.ui.manga.chapter.DownloadCustomChaptersDialog
 import eu.kanade.tachiyomi.ui.manga.chapter.MangaChaptersHeaderAdapter
@@ -61,7 +61,6 @@ import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.hasCustomCover
-import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
 import eu.kanade.tachiyomi.util.view.gone
@@ -124,6 +123,11 @@ class MangaController :
     private var chaptersHeaderAdapter: MangaChaptersHeaderAdapter? = null
     private var chaptersAdapter: ChaptersAdapter? = null
 
+    /**
+     * Sheet containing filter/sort/display items.
+     */
+    private var settingsSheet: ChaptersSettingsSheet? = null
+
     private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
 
     /**
@@ -178,7 +182,7 @@ class MangaController :
 
         // Init RecyclerView and adapter
         mangaInfoAdapter = MangaInfoHeaderAdapter(this, fromSource)
-        chaptersHeaderAdapter = MangaChaptersHeaderAdapter()
+        chaptersHeaderAdapter = MangaChaptersHeaderAdapter(this)
         chaptersAdapter = ChaptersAdapter(this, view.context)
 
         binding.recycler.adapter = ConcatAdapter(mangaInfoAdapter, chaptersHeaderAdapter, chaptersAdapter)
@@ -205,6 +209,19 @@ class MangaController :
             .launchIn(scope)
 
         binding.actionToolbar.offsetAppbarHeight(activity!!)
+
+        settingsSheet = ChaptersSettingsSheet(activity!!, presenter) { group ->
+            if (group is ChaptersSettingsSheet.Filter.FilterGroup) {
+                updateFilterIconState()
+                chaptersAdapter?.notifyDataSetChanged()
+            }
+        }
+
+        updateFilterIconState()
+    }
+
+    private fun updateFilterIconState() {
+        chaptersHeaderAdapter?.setHasActiveFilters(settingsSheet?.filters?.hasActiveFilters() == true)
     }
 
     override fun configureFab(fab: ExtendedFloatingActionButton) {
@@ -249,6 +266,7 @@ class MangaController :
         mangaInfoAdapter = null
         chaptersHeaderAdapter = null
         chaptersAdapter = null
+        settingsSheet = null
         super.onDestroyView(view)
     }
 
@@ -266,50 +284,10 @@ class MangaController :
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.chapters, menu)
+        inflater.inflate(R.menu.manga, menu)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        // Initialize menu items.
-        val menuFilterRead = menu.findItem(R.id.action_filter_read) ?: return
-        val menuFilterUnread = menu.findItem(R.id.action_filter_unread)
-        val menuFilterDownloaded = menu.findItem(R.id.action_filter_downloaded)
-        val menuFilterBookmarked = menu.findItem(R.id.action_filter_bookmarked)
-        val menuFilterEmpty = menu.findItem(R.id.action_filter_empty)
-
-        // Set correct checkbox values.
-        menuFilterRead.isChecked = presenter.onlyRead()
-        menuFilterUnread.isChecked = presenter.onlyUnread()
-        menuFilterDownloaded.isChecked = presenter.onlyDownloaded()
-        menuFilterDownloaded.isEnabled = !presenter.forceDownloaded()
-        menuFilterBookmarked.isChecked = presenter.onlyBookmarked()
-
-        val filterSet = presenter.onlyRead() || presenter.onlyUnread() || presenter.onlyDownloaded() || presenter.onlyBookmarked()
-        if (filterSet) {
-            val filterColor = activity!!.getResourceColor(R.attr.colorFilterActive)
-            DrawableCompat.setTint(menu.findItem(R.id.action_filter).icon, filterColor)
-        }
-
-        // Only show remove filter option if there's a filter set.
-        menuFilterEmpty.isVisible = filterSet
-
-        // Display mode submenu
-        if (presenter.manga.displayMode == Manga.DISPLAY_NAME) {
-            menu.findItem(R.id.display_title).isChecked = true
-        } else {
-            menu.findItem(R.id.display_chapter_number).isChecked = true
-        }
-
-        // Sorting mode submenu
-        val sortingItem = when (presenter.manga.sorting) {
-            Manga.SORTING_SOURCE -> R.id.sort_by_source
-            Manga.SORTING_NUMBER -> R.id.sort_by_number
-            Manga.SORTING_UPLOAD_DATE -> R.id.sort_by_upload_date
-            else -> throw NotImplementedError("Unimplemented sorting method")
-        }
-        menu.findItem(sortingItem).isChecked = true
-        menu.findItem(R.id.action_sort_descending).isChecked = presenter.manga.sortDescending()
-
         // Hide download options for local manga
         menu.findItem(R.id.download_group).isVisible = !isLocalSource
 
@@ -321,60 +299,9 @@ class MangaController :
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.display_title -> {
-                item.isChecked = true
-                setDisplayMode(Manga.DISPLAY_NAME)
-            }
-            R.id.display_chapter_number -> {
-                item.isChecked = true
-                setDisplayMode(Manga.DISPLAY_NUMBER)
-            }
-
-            R.id.sort_by_source -> {
-                item.isChecked = true
-                presenter.setSorting(Manga.SORTING_SOURCE)
-            }
-            R.id.sort_by_number -> {
-                item.isChecked = true
-                presenter.setSorting(Manga.SORTING_NUMBER)
-            }
-            R.id.sort_by_upload_date -> {
-                item.isChecked = true
-                presenter.setSorting(Manga.SORTING_UPLOAD_DATE)
-            }
-            R.id.action_sort_descending -> {
-                presenter.reverseSortOrder()
-                activity?.invalidateOptionsMenu()
-            }
-
             R.id.download_next, R.id.download_next_5, R.id.download_next_10,
             R.id.download_custom, R.id.download_unread, R.id.download_all
             -> downloadChapters(item.itemId)
-
-            R.id.action_filter_unread -> {
-                item.isChecked = !item.isChecked
-                presenter.setUnreadFilter(item.isChecked)
-                activity?.invalidateOptionsMenu()
-            }
-            R.id.action_filter_read -> {
-                item.isChecked = !item.isChecked
-                presenter.setReadFilter(item.isChecked)
-                activity?.invalidateOptionsMenu()
-            }
-            R.id.action_filter_downloaded -> {
-                item.isChecked = !item.isChecked
-                presenter.setDownloadedFilter(item.isChecked)
-                activity?.invalidateOptionsMenu()
-            }
-            R.id.action_filter_bookmarked -> {
-                item.isChecked = !item.isChecked
-                presenter.setBookmarkedFilter(item.isChecked)
-                activity?.invalidateOptionsMenu()
-            }
-            R.id.action_filter_empty -> {
-                presenter.removeFilters()
-                activity?.invalidateOptionsMenu()
-            }
 
             R.id.action_edit_categories -> onCategoriesClick()
             R.id.action_edit_cover -> handleChangeCover()
@@ -756,6 +683,10 @@ class MangaController :
         chaptersAdapter?.notifyDataSetChanged()
     }
 
+    fun showSettingsSheet() {
+        settingsSheet?.show()
+    }
+
     // SELECTIONS & ACTION MODE
 
     private fun toggleSelection(position: Int) {
@@ -957,11 +888,6 @@ class MangaController :
     }
 
     // OVERFLOW MENU DIALOGS
-
-    private fun setDisplayMode(id: Int) {
-        presenter.setDisplayMode(id)
-        chaptersAdapter?.notifyDataSetChanged()
-    }
 
     private fun getUnreadChaptersSorted() = presenter.chapters
         .filter { !it.read && it.status == Download.NOT_DOWNLOADED }

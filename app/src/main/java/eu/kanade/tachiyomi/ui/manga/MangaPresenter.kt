@@ -532,17 +532,6 @@ class MangaPresenter(
     }
 
     /**
-     * Removes all filters and requests an UI update.
-     */
-    fun removeFilters() {
-        manga.readFilter = Manga.SHOW_ALL
-        manga.downloadedFilter = Manga.SHOW_ALL
-        manga.bookmarkedFilter = Manga.SHOW_ALL
-        db.updateFlags(manga).executeAsBlocking()
-        refreshChapters()
-    }
-
-    /**
      * Sets the active display mode.
      * @param mode the mode to set.
      */
