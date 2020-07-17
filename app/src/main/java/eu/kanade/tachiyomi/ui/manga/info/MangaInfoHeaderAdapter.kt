@@ -85,6 +85,12 @@ class MangaInfoHeaderAdapter(
                 .onEach { controller.onFavoriteClick() }
                 .launchIn(scope)
 
+            if (controller.presenter.manga.favorite && controller.presenter.getCategories().isNotEmpty()) {
+                binding.btnFavorite.longClicks()
+                    .onEach { controller.onCategoriesClick() }
+                    .launchIn(scope)
+            }
+
             if (controller.presenter.manga.favorite && Injekt.get<TrackManager>().hasLoggedServices()) {
                 binding.btnTracking.visible()
                 binding.btnTracking.clicks()

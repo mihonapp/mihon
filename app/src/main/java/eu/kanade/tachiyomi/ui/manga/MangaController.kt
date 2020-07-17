@@ -526,7 +526,7 @@ class MangaController :
         mangaInfoAdapter?.notifyDataSetChanged()
     }
 
-    private fun onCategoriesClick() {
+    fun onCategoriesClick() {
         val manga = presenter.manga
         val categories = presenter.getCategories()
 
