@@ -29,8 +29,10 @@ import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.util.view.visibleIf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.android.view.longClicks
@@ -186,6 +188,7 @@ class MangaInfoHeaderAdapter(
          * @param manga manga object containing information about manga.
          * @param source the source of the manga.
          */
+        @ExperimentalCoroutinesApi
         private fun setMangaInfo(manga: Manga, source: Source?) {
             // Update full title TextView.
             binding.mangaFullTitle.text = if (manga.title.isBlank()) {
@@ -269,10 +272,7 @@ class MangaInfoHeaderAdapter(
                 }
 
                 // Handle showing more or less info
-                binding.mangaSummary.clicks()
-                    .onEach { toggleMangaInfo(view.context) }
-                    .launchIn(scope)
-                binding.mangaInfoToggle.clicks()
+                merge(view.clicks(), binding.mangaSummary.clicks(), binding.mangaInfoToggle.clicks())
                     .onEach { toggleMangaInfo(view.context) }
                     .launchIn(scope)
 
