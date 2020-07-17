@@ -22,52 +22,48 @@ class SettingsReaderController : SettingsController() {
     override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
         titleRes = R.string.pref_category_reader
 
-        preferenceCategory {
-            titleRes = R.string.pref_category_reading_mode
-
-            intListPreference {
-                key = Keys.defaultViewer
-                titleRes = R.string.pref_viewer_type
-                entriesRes = arrayOf(
-                    R.string.left_to_right_viewer, R.string.right_to_left_viewer,
-                    R.string.vertical_viewer, R.string.webtoon_viewer, R.string.vertical_plus_viewer
-                )
-                entryValues = arrayOf("1", "2", "3", "4", "5")
-                defaultValue = "2"
-                summary = "%s"
-            }
-            intListPreference {
-                key = Keys.doubleTapAnimationSpeed
-                titleRes = R.string.pref_double_tap_anim_speed
-                entries = arrayOf(context.getString(R.string.double_tap_anim_speed_0), context.getString(R.string.double_tap_anim_speed_normal), context.getString(R.string.double_tap_anim_speed_fast))
-                entryValues = arrayOf("1", "500", "250") // using a value of 0 breaks the image viewer, so min is 1
-                defaultValue = "500"
-                summary = "%s"
-            }
+        intListPreference {
+            key = Keys.defaultViewer
+            titleRes = R.string.pref_viewer_type
+            entriesRes = arrayOf(
+                R.string.left_to_right_viewer, R.string.right_to_left_viewer,
+                R.string.vertical_viewer, R.string.webtoon_viewer, R.string.vertical_plus_viewer
+            )
+            entryValues = arrayOf("1", "2", "3", "4", "5")
+            defaultValue = "2"
+            summary = "%s"
+        }
+        intListPreference {
+            key = Keys.doubleTapAnimationSpeed
+            titleRes = R.string.pref_double_tap_anim_speed
+            entries = arrayOf(context.getString(R.string.double_tap_anim_speed_0), context.getString(R.string.double_tap_anim_speed_normal), context.getString(R.string.double_tap_anim_speed_fast))
+            entryValues = arrayOf("1", "500", "250") // using a value of 0 breaks the image viewer, so min is 1
+            defaultValue = "500"
+            summary = "%s"
+        }
+        switchPreference {
+            key = Keys.showReadingMode
+            titleRes = R.string.pref_show_reading_mode
+            summaryRes = R.string.pref_show_reading_mode_summary
+            defaultValue = true
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             switchPreference {
-                key = Keys.showReadingMode
-                titleRes = R.string.pref_show_reading_mode
-                summaryRes = R.string.pref_show_reading_mode_summary
-                defaultValue = true
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                switchPreference {
-                    key = Keys.trueColor
-                    titleRes = R.string.pref_true_color
-                    summaryRes = R.string.pref_true_color_summary
-                    defaultValue = false
-                }
-            }
-            switchPreference {
-                key = Keys.cropBorders
-                titleRes = R.string.pref_crop_borders
+                key = Keys.trueColor
+                titleRes = R.string.pref_true_color
+                summaryRes = R.string.pref_true_color_summary
                 defaultValue = false
             }
-            switchPreference {
-                key = Keys.enableTransitions
-                titleRes = R.string.pref_page_transitions
-                defaultValue = true
-            }
+        }
+        switchPreference {
+            key = Keys.cropBorders
+            titleRes = R.string.pref_crop_borders
+            defaultValue = false
+        }
+        switchPreference {
+            key = Keys.enableTransitions
+            titleRes = R.string.pref_page_transitions
+            defaultValue = true
         }
 
         preferenceCategory {
