@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.visible
 import java.util.concurrent.TimeUnit
-import kotlinx.android.synthetic.main.main_activity.root_fab
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.clicks
@@ -42,6 +41,7 @@ class DownloadController :
      */
     private var adapter: DownloadAdapter? = null
 
+    private var actionFab: ExtendedFloatingActionButton? = null
     private var actionFabScrollListener: RecyclerView.OnScrollListener? = null
 
     /**
@@ -87,8 +87,7 @@ class DownloadController :
         binding.recycler.layoutManager = LinearLayoutManager(view.context)
         binding.recycler.setHasFixedSize(true)
 
-        activity!!.root_fab.visible()
-        actionFabScrollListener = activity!!.root_fab.shrinkOnScroll(binding.recycler)
+        actionFabScrollListener = actionFab?.shrinkOnScroll(binding.recycler)
 
         // Subscribe to changes
         DownloadService.runningRelay
@@ -105,6 +104,7 @@ class DownloadController :
     }
 
     override fun configureFab(fab: ExtendedFloatingActionButton) {
+        actionFab = fab
         fab.clicks()
             .onEach {
                 val context = applicationContext ?: return@onEach
@@ -123,6 +123,7 @@ class DownloadController :
 
     override fun cleanupFab(fab: ExtendedFloatingActionButton) {
         actionFabScrollListener?.let { binding.recycler.removeOnScrollListener(it) }
+        actionFab = null
     }
 
     override fun onDestroyView(view: View) {
@@ -130,7 +131,6 @@ class DownloadController :
             subscription.unsubscribe()
         }
         progressSubscriptions.clear()
-        activity!!.root_fab.gone()
         adapter = null
         super.onDestroyView(view)
     }
@@ -284,10 +284,10 @@ class DownloadController :
     private fun setInformationView() {
         if (presenter.downloadQueue.isEmpty()) {
             binding.emptyView.show(R.string.information_no_downloads)
-            activity!!.root_fab.gone()
+            actionFab?.gone()
         } else {
             binding.emptyView.hide()
-            activity!!.root_fab.apply {
+            actionFab?.apply {
                 visible()
 
                 setText(

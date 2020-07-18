@@ -43,6 +43,7 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
 import java.util.Date
@@ -348,9 +349,11 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         }
 
         if (from is FabController) {
+            binding.rootFab.gone()
             from.cleanupFab(binding.rootFab)
         }
         if (to is FabController) {
+            binding.rootFab.visible()
             to.configureFab(binding.rootFab)
         }
 
