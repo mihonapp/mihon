@@ -514,6 +514,10 @@
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
+    <plurals name="num_trackers">
+        <item quantity="one">1 tracker</item>
+        <item quantity="other">%d trackers</item>
+    </plurals>
     <string name="add_tracking">Add tracking</string>
     <string name="reading">Reading</string>
     <string name="currently_reading">Currently reading</string>

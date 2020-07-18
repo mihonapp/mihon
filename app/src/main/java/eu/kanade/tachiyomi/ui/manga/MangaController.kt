@@ -356,6 +356,10 @@ class MangaController :
         activity?.toast(error.message)
     }
 
+    fun onTrackingCount(trackCount: Int) {
+        mangaInfoAdapter?.setTrackingCount(trackCount)
+    }
+
     fun openMangaInWebView() {
         val source = presenter.source as? HttpSource ?: return
 

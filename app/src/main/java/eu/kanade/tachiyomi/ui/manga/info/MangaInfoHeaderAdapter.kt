@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.MangaThumbnail
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
-import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.MangaInfoHeaderBinding
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
@@ -47,6 +46,7 @@ class MangaInfoHeaderAdapter(
 
     private var manga: Manga = controller.presenter.manga
     private var source: Source = controller.presenter.source
+    private var trackCount: Int = 0
 
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
     private lateinit var binding: MangaInfoHeaderBinding
@@ -78,6 +78,12 @@ class MangaInfoHeaderAdapter(
         notifyDataSetChanged()
     }
 
+    fun setTrackingCount(trackCount: Int) {
+        this.trackCount = trackCount
+
+        notifyDataSetChanged()
+    }
+
     inner class HeaderViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind() {
             // For rounded corners
@@ -93,13 +99,26 @@ class MangaInfoHeaderAdapter(
                     .launchIn(scope)
             }
 
-            if (controller.presenter.manga.favorite && Injekt.get<TrackManager>().hasLoggedServices()) {
-                binding.btnTracking.visible()
-                binding.btnTracking.clicks()
-                    .onEach { controller.onTrackingClick() }
-                    .launchIn(scope)
-            } else {
-                binding.btnTracking.gone()
+            with(binding.btnTracking) {
+                if (controller.presenter.manga.favorite) {
+                    visible()
+
+                    if (trackCount > 0) {
+                        setIconResource(R.drawable.ic_done_24dp)
+                        text = view.context.resources.getQuantityString(R.plurals.num_trackers, trackCount, trackCount)
+                        isChecked = true
+                    } else {
+                        setIconResource(R.drawable.ic_sync_24dp)
+                        text = view.context.getString(R.string.manga_tracking_tab)
+                        isChecked = false
+                    }
+
+                    clicks()
+                        .onEach { controller.onTrackingClick() }
+                        .launchIn(scope)
+                } else {
+                    gone()
+                }
             }
 
             if (controller.presenter.source is HttpSource) {
