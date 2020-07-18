@@ -172,80 +172,95 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:background="?attr/selectableItemBackground"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:id="@+id/manga_summary_label"
+                style="@style/TextAppearance.Regular.SubHeading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/manga_info_about_label"
+                android:textIsSelectable="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/manga_info_toggle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/manga_info_toggle"
+                style="@style/Theme.Widget.Button.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/manga_info_expand"
+                app:icon="@drawable/ic_baseline_expand_more_24dp"
+                app:iconTint="?attr/colorOnPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/manga_summary_label"
-            style="@style/TextAppearance.Regular.SubHeading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/manga_info_about_label"
-            android:textIsSelectable="false" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/manga_info_toggle"
-            style="@style/Theme.Widget.Button.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="@string/manga_info_expand"
-            app:icon="@drawable/ic_baseline_expand_more_24dp"
-            app:iconTint="?attr/colorOnPrimary" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/manga_summary"
-        style="@style/TextAppearance.Regular.Body1.Secondary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:clickable="true"
-        android:ellipsize="end"
-        android:focusable="true"
-        android:maxLines="2"
-        android:textIsSelectable="false"
-        tools:text="Summary" />
-
-    <FrameLayout
-        android:id="@+id/manga_genres_tags_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/manga_genres_tags_full_chips"
+            android:id="@+id/manga_summary"
+            style="@style/TextAppearance.Regular.Body1.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:visibility="gone"
-            app:chipSpacingHorizontal="4dp" />
+            android:clickable="true"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:maxLines="2"
+            android:textIsSelectable="false"
+            tools:text="Summary" />
 
-        <HorizontalScrollView
-            android:id="@+id/manga_genres_tags_compact"
+        <FrameLayout
+            android:id="@+id/manga_genres_tags_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:requiresFadingEdge="horizontal">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/manga_genres_tags_compact_chips"
-                android:layout_width="wrap_content"
+                android:id="@+id/manga_genres_tags_full_chips"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                app:chipSpacingHorizontal="4dp"
-                app:singleLine="true" />
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="gone"
+                app:chipSpacingHorizontal="4dp" />
 
-        </HorizontalScrollView>
+            <HorizontalScrollView
+                android:id="@+id/manga_genres_tags_compact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:requiresFadingEdge="horizontal">
 
-    </FrameLayout>
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/manga_genres_tags_compact_chips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:chipSpacingHorizontal="4dp"
+                    app:singleLine="true" />
+
+            </HorizontalScrollView>
+
+        </FrameLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
