@@ -38,6 +38,16 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/no_results_found"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/material_component_text_fields_padding_above_and_below_label"
+        android:paddingEnd="@dimen/material_component_text_fields_padding_above_and_below_label"
+        android:paddingBottom="@dimen/material_component_text_fields_padding_above_and_below_label"
+        android:text="@string/no_results_found"
+        android:visibility="gone" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/source_card"
         style="@style/Theme.Widget.CardView.Item"
