@@ -31,7 +31,7 @@ import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.databinding.ChaptersControllerBinding
+import eu.kanade.tachiyomi.databinding.MangaControllerBinding
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
@@ -78,7 +78,7 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 class MangaController :
-    NucleusController<ChaptersControllerBinding, MangaPresenter>,
+    NucleusController<MangaControllerBinding, MangaPresenter>,
     FabController,
     ActionMode.Callback,
     FlexibleAdapter.OnItemClickListener,
@@ -171,7 +171,7 @@ class MangaController :
     }
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
-        binding = ChaptersControllerBinding.inflate(inflater)
+        binding = MangaControllerBinding.inflate(inflater)
         return binding.root
     }
 
