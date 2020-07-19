@@ -468,8 +468,9 @@ open class BrowseSourceController(bundle: Bundle) :
         presenter.refreshDisplayMode()
         activity?.invalidateOptionsMenu()
         setupRecycler(view)
-        if (mode == DisplayMode.LIST || !view.context.connectivityManager.isActiveNetworkMetered) {
-            // Initialize mangas if going to grid view or if over wifi when going to list view
+
+        // Initialize mangas if not on a metered connection
+        if (!view.context.connectivityManager.isActiveNetworkMetered) {
             val mangas = (0 until adapter.itemCount).mapNotNull {
                 (adapter.getItem(it) as? SourceItem)?.manga
             }
