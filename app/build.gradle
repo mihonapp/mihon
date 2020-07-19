@@ -143,6 +143,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha04'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.webkit:webkit:1.3.0-rc01'
 
     final lifecycle_version = '2.3.0-alpha05'
@@ -259,7 +260,7 @@ dependencies {
     implementation "io.github.reactivecircus.flowbinding:flowbinding-appcompat:$flowbinding_version"
     implementation "io.github.reactivecircus.flowbinding:flowbinding-recyclerview:$flowbinding_version"
     implementation "io.github.reactivecircus.flowbinding:flowbinding-swiperefreshlayout:$flowbinding_version"
-    implementation "io.github.reactivecircus.flowbinding:flowbinding-viewpager:$flowbinding_version"
+    implementation "io.github.reactivecircus.flowbinding:flowbinding-viewpager2:$flowbinding_version"
 
     // Licenses
     final aboutlibraries_version = '8.2.0'

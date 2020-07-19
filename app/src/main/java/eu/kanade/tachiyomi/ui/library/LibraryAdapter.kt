@@ -1,18 +1,20 @@
 package eu.kanade.tachiyomi.ui.library
 
+import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import eu.kanade.tachiyomi.R
+import androidx.recyclerview.widget.RecyclerView
 import eu.kanade.tachiyomi.data.database.models.Category
-import eu.kanade.tachiyomi.util.view.inflate
-import eu.kanade.tachiyomi.widget.RecyclerViewPagerAdapter
+import eu.kanade.tachiyomi.databinding.LibraryCategoryBinding
 
 /**
  * This adapter stores the categories from the library, used with a ViewPager.
- *
- * @constructor creates an instance of the adapter.
  */
-class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPagerAdapter() {
+class LibraryAdapter(
+    private val context: Context,
+    private val controller: LibraryController
+) : RecyclerView.Adapter<LibraryAdapter.ViewHolder>() {
 
     /**
      * The categories to bind in the adapter.
@@ -28,45 +30,25 @@ class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPa
 
     private var boundViews = arrayListOf<View>()
 
-    /**
-     * Creates a new view for this adapter.
-     *
-     * @return a new view.
-     */
-    override fun createView(container: ViewGroup): View {
-        val view = container.inflate(R.layout.library_category) as LibraryCategoryView
-        view.onCreate(controller)
-        return view
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = LibraryCategoryBinding.inflate(LayoutInflater.from(context), parent, false)
+        binding.root.onCreate(controller)
+        return ViewHolder(binding)
     }
 
-    /**
-     * Binds a view with a position.
-     *
-     * @param view the view to bind.
-     * @param position the position in the adapter.
-     */
-    override fun bindView(view: View, position: Int) {
-        (view as LibraryCategoryView).onBind(categories[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val view = (holder.itemView as LibraryCategoryView)
+        view.onBind(categories[position])
         boundViews.add(view)
     }
 
-    /**
-     * Recycles a view.
-     *
-     * @param view the view to recycle.
-     * @param position the position in the adapter.
-     */
-    override fun recycleView(view: View, position: Int) {
-        (view as LibraryCategoryView).onRecycle()
+    override fun onViewRecycled(holder: ViewHolder) {
+        val view = (holder.itemView as LibraryCategoryView)
+        view.onRecycle()
         boundViews.remove(view)
     }
 
-    /**
-     * Returns the number of categories.
-     *
-     * @return the number of categories or 0 if the list is null.
-     */
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return categories.size
     }
 
@@ -76,17 +58,8 @@ class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPa
      * @param position the position of the element.
      * @return the title to display.
      */
-    override fun getPageTitle(position: Int): CharSequence {
+    fun getPageTitle(position: Int): CharSequence {
         return categories[position].name
-    }
-
-    /**
-     * Returns the position of the view.
-     */
-    override fun getItemPosition(obj: Any): Int {
-        val view = obj as? LibraryCategoryView ?: return POSITION_NONE
-        val index = categories.indexOfFirst { it.id == view.category.id }
-        return if (index == -1) POSITION_NONE else index
     }
 
     /**
@@ -99,4 +72,6 @@ class LibraryAdapter(private val controller: LibraryController) : RecyclerViewPa
             }
         }
     }
+
+    class ViewHolder(binding: LibraryCategoryBinding) : RecyclerView.ViewHolder(binding.root)
 }
