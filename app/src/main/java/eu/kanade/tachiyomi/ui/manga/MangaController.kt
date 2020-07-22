@@ -398,12 +398,10 @@ class MangaController :
         if (manga.favorite) {
             toggleFavorite()
             activity?.toast(activity?.getString(R.string.manga_removed_library))
+            activity?.invalidateOptionsMenu()
         } else {
             addToLibrary(manga)
         }
-
-        // Update menu to show migrate option
-        activity?.invalidateOptionsMenu()
     }
 
     fun onTrackingClick() {
@@ -421,6 +419,7 @@ class MangaController :
                 toggleFavorite()
                 presenter.moveMangaToCategory(manga, defaultCategory)
                 activity?.toast(activity?.getString(R.string.manga_added_library))
+                activity?.invalidateOptionsMenu()
             }
 
             // Automatic 'Default' or no categories
@@ -428,6 +427,7 @@ class MangaController :
                 toggleFavorite()
                 presenter.moveMangaToCategory(manga, null)
                 activity?.toast(activity?.getString(R.string.manga_added_library))
+                activity?.invalidateOptionsMenu()
             }
 
             // Choose a category
@@ -478,6 +478,7 @@ class MangaController :
         if (!manga.favorite) {
             toggleFavorite()
             activity?.toast(activity?.getString(R.string.manga_added_library))
+            activity?.invalidateOptionsMenu()
         }
 
         presenter.moveMangaToCategories(manga, categories)
