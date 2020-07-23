@@ -141,17 +141,17 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha04'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha05'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
     implementation 'androidx.webkit:webkit:1.3.0-rc01'
 
-    final lifecycle_version = '2.3.0-alpha05'
+    final lifecycle_version = '2.3.0-alpha06'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     // Job scheduling
-    final work_version = '2.4.0-rc01'
+    final work_version = '2.4.0'
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
@@ -167,11 +167,11 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork:0.13.0'
 
     // Network client
-    final okhttp_version = '4.7.2'
+    final okhttp_version = '4.8.0'
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     implementation "com.squareup.okhttp3:okhttp-dnsoverhttps:$okhttp_version"
-    implementation 'com.squareup.okio:okio:2.6.0'
+    implementation 'com.squareup.okio:okio:2.7.0'
 
     // TLS 1.3 support for Android < 10
     implementation 'org.conscrypt:conscrypt-android:2.4.0'
@@ -200,7 +200,7 @@ dependencies {
     implementation 'androidx.sqlite:sqlite:2.1.0'
     implementation 'com.github.inorichi.storio:storio-common:8be19de@aar'
     implementation 'com.github.inorichi.storio:storio-sqlite:8be19de@aar'
-    implementation 'io.requery:sqlite-android:3.31.0'
+    implementation 'io.requery:sqlite-android:3.32.2'
 
     // Preferences
     implementation 'com.github.tfcporciuncula:flow-preferences:1.1.1'
@@ -223,8 +223,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Crash reports
-    final acra_version = '5.5.0'
-    implementation "ch.acra:acra-http:$acra_version"
+    implementation 'ch.acra:acra-http:5.7.0'
 
     // Sort
     implementation 'com.github.gpanther:java-nat-sort:natural-comparator-1.1'
@@ -262,7 +261,7 @@ dependencies {
     implementation "io.github.reactivecircus.flowbinding:flowbinding-viewpager:$flowbinding_version"
 
     // Licenses
-    final aboutlibraries_version = '8.2.0'
+    final aboutlibraries_version = '8.3.0'
     implementation "com.mikepenz:aboutlibraries-core:$aboutlibraries_version"
     implementation "com.mikepenz:aboutlibraries:$aboutlibraries_version"
 
@@ -278,15 +277,15 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    final coroutines_version = '1.3.7'
+    final coroutines_version = '1.3.8'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     // Debug tool; see https://fbflipper.com/
-//    debugImplementation 'com.facebook.flipper:flipper:0.49.0'
+//    debugImplementation 'com.facebook.flipper:flipper:0.50.0'
 //    debugImplementation 'com.facebook.soloader:soloader:0.9.0'
 }
 
