@@ -229,9 +229,7 @@
         <FrameLayout
             android:id="@+id/manga_genres_tags_wrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/manga_genres_tags_full_chips"
@@ -239,6 +237,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:visibility="gone"
                 app:chipSpacingHorizontal="4dp" />
 
@@ -253,7 +253,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
+                    android:paddingTop="8dp"
                     android:paddingEnd="16dp"
+                    android:paddingBottom="8dp"
                     app:chipSpacingHorizontal="4dp"
                     app:singleLine="true" />
 
