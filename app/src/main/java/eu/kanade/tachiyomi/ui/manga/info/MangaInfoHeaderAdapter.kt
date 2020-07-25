@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.MangaThumbnail
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
+import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.databinding.MangaInfoHeaderBinding
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
@@ -37,12 +38,15 @@ import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.android.view.longClicks
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 
 class MangaInfoHeaderAdapter(
     private val controller: MangaController,
     private val fromSource: Boolean
 ) :
     RecyclerView.Adapter<MangaInfoHeaderAdapter.HeaderViewHolder>() {
+
+    private val trackManager: TrackManager by injectLazy()
 
     private var manga: Manga = controller.presenter.manga
     private var source: Source = controller.presenter.source
@@ -100,7 +104,7 @@ class MangaInfoHeaderAdapter(
             }
 
             with(binding.btnTracking) {
-                if (controller.presenter.manga.favorite) {
+                if (trackManager.hasLoggedServices()) {
                     visible()
 
                     if (trackCount > 0) {
