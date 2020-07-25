@@ -130,7 +130,7 @@ class LibraryController(
         retainViewMode = RetainViewMode.RETAIN_DETACH
     }
 
-    private var title: String? = null
+    private var currentTitle: String? = null
         set(value) {
             if (field != value) {
                 field = value
@@ -139,15 +139,15 @@ class LibraryController(
         }
 
     override fun getTitle(): String? {
-        return title ?: resources?.getString(R.string.label_library)
+        return currentTitle ?: resources?.getString(R.string.label_library)
     }
 
     private fun updateTitle() {
         if (preferences.categoryTabs().get()) {
-            title = resources?.getString(R.string.label_library)
+            currentTitle = resources?.getString(R.string.label_library)
         } else {
             adapter?.categories?.get(binding.libraryPager.currentItem)?.let {
-                title = it.name
+                currentTitle = it.name
             }
         }
     }

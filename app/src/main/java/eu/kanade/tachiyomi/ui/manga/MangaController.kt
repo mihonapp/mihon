@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -61,16 +62,20 @@ import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.hasCustomCover
+import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
 import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
 import eu.kanade.tachiyomi.util.view.visible
+import kotlin.math.min
 import kotlinx.android.synthetic.main.main_activity.root_coordinator
+import kotlinx.android.synthetic.main.main_activity.toolbar
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.android.view.clicks
+import reactivecircus.flowbinding.recyclerview.scrollEvents
 import reactivecircus.flowbinding.swiperefreshlayout.refreshes
 import timber.log.Timber
 import uy.kohesive.injekt.Injekt
@@ -118,6 +123,9 @@ class MangaController :
     private val preferences: PreferencesHelper by injectLazy()
     private val coverCache: CoverCache by injectLazy()
 
+    private val toolbarTextColor by lazy { view!!.context.getResourceColor(R.attr.colorOnPrimary) }
+    private var toolbarTextAlpha = 255
+
     private var mangaInfoAdapter: MangaInfoHeaderAdapter? = null
     private var chaptersHeaderAdapter: MangaChaptersHeaderAdapter? = null
     private var chaptersAdapter: ChaptersAdapter? = null
@@ -149,10 +157,6 @@ class MangaController :
 
     init {
         setHasOptionsMenu(true)
-    }
-
-    override fun getTitle(): String? {
-        return manga?.title
     }
 
     override fun onChangeEnded(handler: ControllerChangeHandler, type: ControllerChangeType) {
@@ -198,7 +202,17 @@ class MangaController :
             if (!fromSource && preferences.jumpToChapters()) {
                 (binding.recycler.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(1, 0)
             }
+
+            // Delayed in case we need to jump to chapters
+            binding.recycler.post {
+                updateToolbarTitleAlpha()
+                setTitle(manga?.title)
+            }
         }
+
+        binding.recycler.scrollEvents()
+            .onEach { updateToolbarTitleAlpha() }
+            .launchIn(scope)
 
         binding.swipeRefresh.refreshes()
             .onEach {
@@ -217,6 +231,32 @@ class MangaController :
         }
 
         updateFilterIconState()
+    }
+
+    private fun updateToolbarTitleAlpha(alpha: Int? = null) {
+        val calculatedAlpha = when {
+            // Specific alpha provided
+            alpha != null -> alpha
+
+            // First item isn't in view, full opacity
+            ((binding.recycler.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() > 0) -> 255
+
+            // Based on scroll amount when first item is in view
+            else -> min(binding.recycler.computeVerticalScrollOffset(), 255)
+        }
+
+        if (calculatedAlpha != toolbarTextAlpha) {
+            toolbarTextAlpha = calculatedAlpha
+
+            activity?.toolbar?.setTitleTextColor(
+                Color.argb(
+                    toolbarTextAlpha,
+                    Color.red(toolbarTextColor),
+                    Color.green(toolbarTextColor),
+                    Color.blue(toolbarTextColor)
+                )
+            )
+        }
     }
 
     private fun updateFilterIconState() {
@@ -268,6 +308,7 @@ class MangaController :
         chaptersHeaderAdapter = null
         chaptersAdapter = null
         settingsSheet = null
+        updateToolbarTitleAlpha(255)
         super.onDestroyView(view)
     }
 
