@@ -27,6 +27,14 @@ fun <T> Preference<T>.asImmediateFlow(block: (value: T) -> Unit): Flow<T> {
         .onEach { block(it) }
 }
 
+operator fun <T> Preference<Set<T>>.plusAssign(item: T) {
+    set(get() + item)
+}
+
+operator fun <T> Preference<Set<T>>.minusAssign(item: T) {
+    set(get() - item)
+}
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class PreferencesHelper(val context: Context) {
 

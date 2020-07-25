@@ -17,6 +17,8 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.data.preference.minusAssign
+import eu.kanade.tachiyomi.data.preference.plusAssign
 import eu.kanade.tachiyomi.databinding.SourceMainControllerBinding
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.LocalSource
@@ -152,8 +154,7 @@ class SourceController :
     }
 
     private fun disableSource(source: Source) {
-        val current = preferences.disabledSources().get()
-        preferences.disabledSources().set(current + source.id.toString())
+        preferences.disabledSources() += source.id.toString()
 
         presenter.updateSources()
     }
