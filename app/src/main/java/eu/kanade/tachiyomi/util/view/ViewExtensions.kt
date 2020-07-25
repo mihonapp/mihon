@@ -68,26 +68,6 @@ fun View.popupMenu(@MenuRes menuRes: Int, initMenu: (Menu.() -> Unit)? = null, o
     popup.show()
 }
 
-inline fun View.visible() {
-    visibility = View.VISIBLE
-}
-
-inline fun View.invisible() {
-    visibility = View.INVISIBLE
-}
-
-inline fun View.gone() {
-    visibility = View.GONE
-}
-
-inline fun View.visibleIf(block: () -> Boolean) {
-    visibility = if (block()) View.VISIBLE else View.GONE
-}
-
-inline fun View.toggle() {
-    visibleIf { visibility == View.GONE }
-}
-
 /**
  * Shrink an ExtendedFloatingActionButton when the associated RecyclerView is scrolled down.
  *

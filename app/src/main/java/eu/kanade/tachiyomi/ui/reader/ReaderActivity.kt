@@ -21,6 +21,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.snackbar.Snackbar
 import eu.kanade.tachiyomi.R
@@ -47,12 +48,10 @@ import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.defaultBar
-import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.hideBar
 import eu.kanade.tachiyomi.util.view.isDefaultBar
 import eu.kanade.tachiyomi.util.view.showBar
 import eu.kanade.tachiyomi.util.view.snack
-import eu.kanade.tachiyomi.util.view.visible
 import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import java.io.File
@@ -339,7 +338,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             } else {
                 resetDefaultMenuAndBar()
             }
-            binding.readerMenu.visible()
+            binding.readerMenu.isVisible = true
 
             if (animate) {
                 val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
@@ -369,7 +368,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
                 toolbarAnimation.setAnimationListener(object : SimpleAnimationListener() {
                     override fun onAnimationEnd(animation: Animation) {
-                        binding.readerMenu.gone()
+                        binding.readerMenu.isVisible = false
                     }
                 })
                 binding.toolbar.startAnimation(toolbarAnimation)
@@ -422,7 +421,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
         binding.pageSeekbar.isRTL = newViewer is R2LPagerViewer
 
-        binding.pleaseWait.visible()
+        binding.pleaseWait.isVisible = true
         binding.pleaseWait.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_long))
     }
 
@@ -436,7 +435,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      * method to the current viewer, but also set the subtitle on the toolbar.
      */
     fun setChapters(viewerChapters: ViewerChapters) {
-        binding.pleaseWait.gone()
+        binding.pleaseWait.isVisible = false
         viewer?.setChapters(viewerChapters)
         binding.toolbar.subtitle = viewerChapters.currChapter.chapter.name
 
@@ -764,7 +763,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                     .onEach { setColorFilterValue(it) }
                     .launchIn(scope)
             } else {
-                binding.colorOverlay.gone()
+                binding.colorOverlay.isVisible = false
             }
         }
 
@@ -790,11 +789,11 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
             // Set black overlay visibility.
             if (value < 0) {
-                binding.brightnessOverlay.visible()
+                binding.brightnessOverlay.isVisible = true
                 val alpha = (abs(value) * 2.56).toInt()
                 binding.brightnessOverlay.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
             } else {
-                binding.brightnessOverlay.gone()
+                binding.brightnessOverlay.isVisible = false
             }
         }
 
@@ -802,7 +801,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
          * Sets the color filter [value].
          */
         private fun setColorFilterValue(value: Int) {
-            binding.colorOverlay.visible()
+            binding.colorOverlay.isVisible = true
             binding.colorOverlay.setFilterColor(value, preferences.colorFilterMode().get())
         }
     }

@@ -12,6 +12,8 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.webkit.WebViewClientCompat
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
@@ -24,8 +26,6 @@ import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.util.view.invisible
-import eu.kanade.tachiyomi.util.view.visible
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import reactivecircus.flowbinding.appcompat.navigationClicks
@@ -83,10 +83,10 @@ class WebViewActivity : BaseActivity<WebviewActivityBinding>() {
 
             binding.webview.webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                    binding.progressBar.visible()
+                    binding.progressBar.isVisible = true
                     binding.progressBar.progress = newProgress
                     if (newProgress == 100) {
-                        binding.progressBar.invisible()
+                        binding.progressBar.isInvisible = true
                     }
                     super.onProgressChanged(view, newProgress)
                 }

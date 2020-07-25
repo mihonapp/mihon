@@ -1,13 +1,12 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
 import android.view.View
+import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.icon
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.holder.SlicedHolder
-import eu.kanade.tachiyomi.util.view.gone
-import eu.kanade.tachiyomi.util.view.visible
 import io.github.mthli.slice.Slice
 import kotlinx.android.synthetic.main.source_main_controller_card_item.card
 import kotlinx.android.synthetic.main.source_main_controller_card_item.image
@@ -53,10 +52,6 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
         }
 
         source_browse.setText(R.string.browse)
-        if (source.supportsLatest) {
-            source_latest.visible()
-        } else {
-            source_latest.gone()
-        }
+        source_latest.isVisible = source.supportsLatest
     }
 }

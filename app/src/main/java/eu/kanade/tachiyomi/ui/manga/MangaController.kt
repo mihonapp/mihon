@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,10 +66,8 @@ import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.getCoordinates
-import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import eu.kanade.tachiyomi.util.view.snack
-import eu.kanade.tachiyomi.util.view.visible
 import kotlin.math.min
 import kotlinx.android.synthetic.main.main_activity.root_coordinator
 import kotlinx.android.synthetic.main.main_activity.toolbar
@@ -316,7 +315,7 @@ class MangaController :
         if (view == null) return
 
         // Check if animation view is visible
-        if (binding.revealView.visibility == View.VISIBLE) {
+        if (binding.revealView.isVisible) {
             // Show the unreveal effect
             actionFab?.getCoordinates()?.let { coordinates ->
                 binding.revealView.hideRevealEffect(coordinates.x, coordinates.y, 1920)
@@ -804,7 +803,7 @@ class MangaController :
 
             // Hide FAB to avoid interfering with the bottom action toolbar
             // actionFab?.hide()
-            actionFab?.gone()
+            actionFab?.isVisible = false
         }
         return false
     }
@@ -839,7 +838,7 @@ class MangaController :
         // TODO: there seems to be a bug in MaterialComponents where the [ExtendedFloatingActionButton]
         // fails to show up properly
         // actionFab?.show()
-        actionFab?.visible()
+        actionFab?.isVisible = true
     }
 
     override fun onDetach(view: View) {

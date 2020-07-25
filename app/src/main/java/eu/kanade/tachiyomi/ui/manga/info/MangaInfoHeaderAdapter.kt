@@ -22,11 +22,8 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.copyToClipboard
-import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.setChips
 import eu.kanade.tachiyomi.util.view.setTooltip
-import eu.kanade.tachiyomi.util.view.visible
-import eu.kanade.tachiyomi.util.view.visibleIf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -105,7 +102,7 @@ class MangaInfoHeaderAdapter(
 
             with(binding.btnTracking) {
                 if (trackManager.hasLoggedServices()) {
-                    visible()
+                    isVisible = true
 
                     if (trackCount > 0) {
                         setIconResource(R.drawable.ic_done_24dp)
@@ -121,18 +118,18 @@ class MangaInfoHeaderAdapter(
                         .onEach { controller.onTrackingClick() }
                         .launchIn(scope)
                 } else {
-                    gone()
+                    isVisible = false
                 }
             }
 
             if (controller.presenter.source is HttpSource) {
-                binding.btnWebview.visible()
+                binding.btnWebview.isVisible = true
                 binding.btnWebview.clicks()
                     .onEach { controller.openMangaInWebView() }
                     .launchIn(scope)
                 binding.btnWebview.setTooltip(R.string.action_open_in_web_view)
 
-                binding.btnShare.visible()
+                binding.btnShare.isVisible = true
                 binding.btnShare.clicks()
                     .onEach { controller.shareManga() }
                     .launchIn(scope)
@@ -291,7 +288,7 @@ class MangaInfoHeaderAdapter(
                     binding.mangaGenresTagsCompactChips.setChips(manga.getGenres(), controller::performSearch)
                     binding.mangaGenresTagsFullChips.setChips(manga.getGenres(), controller::performSearch)
                 } else {
-                    binding.mangaGenresTagsWrapper.gone()
+                    binding.mangaGenresTagsWrapper.isVisible = false
                 }
 
                 // Handle showing more or less info
@@ -308,10 +305,10 @@ class MangaInfoHeaderAdapter(
         }
 
         private fun showMangaInfo(visible: Boolean) {
-            binding.mangaSummaryLabel.visibleIf { visible }
-            binding.mangaSummary.visibleIf { visible }
-            binding.mangaGenresTagsWrapper.visibleIf { visible }
-            binding.mangaInfoToggle.visibleIf { visible }
+            binding.mangaSummaryLabel.isVisible = visible
+            binding.mangaSummary.isVisible = visible
+            binding.mangaGenresTagsWrapper.isVisible = visible
+            binding.mangaInfoToggle.isVisible = visible
         }
 
         private fun toggleMangaInfo(context: Context) {
@@ -348,8 +345,8 @@ class MangaInfoHeaderAdapter(
                     }
             }
 
-            binding.mangaGenresTagsCompact.visibleIf { isExpanded }
-            binding.mangaGenresTagsFullChips.visibleIf { !isExpanded }
+            binding.mangaGenresTagsCompact.isVisible = isExpanded
+            binding.mangaGenresTagsFullChips.isVisible = !isExpanded
         }
 
         /**

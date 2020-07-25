@@ -12,11 +12,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.util.system.dpToPx
-import eu.kanade.tachiyomi.util.view.visibleIf
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
@@ -153,7 +153,7 @@ class WebtoonTransitionHolder(
                     is ReaderChapter.State.Error -> setError(state.error, transition)
                     is ReaderChapter.State.Loaded -> setLoaded()
                 }
-                pagesContainer.visibleIf { pagesContainer.childCount > 0 }
+                pagesContainer.isVisible = pagesContainer.childCount > 0
             }
 
         addSubscription(statusSubscription)

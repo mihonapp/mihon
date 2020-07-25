@@ -14,9 +14,10 @@ import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getResourceColor
-import eu.kanade.tachiyomi.util.view.gone
 import kotlin.math.min
 
 /**
@@ -154,17 +155,17 @@ class ReaderProgressBar @JvmOverloads constructor(
      * Hides this progress bar with an optional fade out if [animate] is true.
      */
     fun hide(animate: Boolean = false) {
-        if (visibility == GONE) return
+        if (isGone) return
 
         if (!animate) {
-            gone()
+            isVisible = false
         } else {
             ObjectAnimator.ofFloat(this, "alpha", 1f, 0f).apply {
                 interpolator = DecelerateInterpolator()
                 duration = 1000
                 addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator?) {
-                        gone()
+                        isVisible = false
                         alpha = 1f
                     }
 

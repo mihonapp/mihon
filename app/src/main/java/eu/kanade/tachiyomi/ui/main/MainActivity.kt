@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
@@ -43,9 +44,7 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.util.view.gone
 import eu.kanade.tachiyomi.util.view.snack
-import eu.kanade.tachiyomi.util.view.visible
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlinx.android.synthetic.main.main_activity.appbar
@@ -349,11 +348,11 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         }
 
         if (from is FabController) {
-            binding.rootFab.gone()
+            binding.rootFab.isVisible = false
             from.cleanupFab(binding.rootFab)
         }
         if (to is FabController) {
-            binding.rootFab.visible()
+            binding.rootFab.isVisible = true
             to.configureFab(binding.rootFab)
         }
 
