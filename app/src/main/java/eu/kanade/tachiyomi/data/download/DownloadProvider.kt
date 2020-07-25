@@ -88,7 +88,9 @@ class DownloadProvider(private val context: Context) {
      */
     fun findChapterDir(chapter: Chapter, manga: Manga, source: Source): UniFile? {
         val mangaDir = findMangaDir(manga, source)
-        return getValidChapterDirNames(chapter).mapNotNull { mangaDir?.findFile(it) }.firstOrNull()
+        return getValidChapterDirNames(chapter).asSequence()
+            .mapNotNull { mangaDir?.findFile(it) }
+            .firstOrNull()
     }
 
     /**
@@ -100,8 +102,10 @@ class DownloadProvider(private val context: Context) {
      */
     fun findChapterDirs(chapters: List<Chapter>, manga: Manga, source: Source): List<UniFile> {
         val mangaDir = findMangaDir(manga, source) ?: return emptyList()
-        return chapters.mapNotNull { chp ->
-            getValidChapterDirNames(chp).mapNotNull { mangaDir.findFile(it) }.firstOrNull()
+        return chapters.mapNotNull { chapter ->
+            getValidChapterDirNames(chapter).asSequence()
+                .mapNotNull { mangaDir.findFile(it) }
+                .firstOrNull()
         }
     }
 
@@ -130,8 +134,10 @@ class DownloadProvider(private val context: Context) {
      */
     fun getChapterDirName(chapter: Chapter): String {
         return DiskUtil.buildValidFilename(
-            if (chapter.scanlator != null) "${chapter.scanlator}_${chapter.name}"
-            else chapter.name
+            when {
+                chapter.scanlator != null -> "${chapter.scanlator}_${chapter.name}"
+                else -> chapter.name
+            }
         )
     }
 
@@ -142,10 +148,10 @@ class DownloadProvider(private val context: Context) {
      */
     fun getValidChapterDirNames(chapter: Chapter): List<String> {
         return listOf(
+            getChapterDirName(chapter),
+
             // Legacy chapter directory name used in v0.9.2 and before
-            DiskUtil.buildValidFilename(chapter.name),
-            // New chapter chapter directory name
-            getChapterDirName(chapter)
+            DiskUtil.buildValidFilename(chapter.name)
         )
     }
 }

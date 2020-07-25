@@ -255,8 +255,11 @@ class DownloadManager(private val context: Context) {
         val newName = provider.getChapterDirName(newChapter)
         val mangaDir = provider.getMangaDir(manga, source)
 
-        // There should only be one folder with the chapter
-        val oldFolder = oldNames.mapNotNull { mangaDir.findFile(it) }.firstOrNull()
+        // Assume there's only 1 version of the chapter name formats present
+        val oldFolder = oldNames.asSequence()
+            .mapNotNull { mangaDir.findFile(it) }
+            .firstOrNull()
+
         if (oldFolder?.renameTo(newName) == true) {
             cache.removeChapter(oldChapter, manga)
             cache.addChapter(newName, mangaDir, manga)
