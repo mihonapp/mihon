@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.View
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -32,8 +33,7 @@ class ChapterDividerItemDecoration(context: Context) : RecyclerView.ItemDecorati
         val childCount = parent.childCount
         for (i in 1 until childCount) {
             val child = parent.getChildAt(i)
-            val params = child.layoutParams as RecyclerView.LayoutParams
-            val top = child.bottom + params.bottomMargin
+            val top = child.bottom + child.marginBottom
             val bottom = top + divider.intrinsicHeight
             val left = parent.paddingStart
             val right = parent.width - parent.paddingEnd

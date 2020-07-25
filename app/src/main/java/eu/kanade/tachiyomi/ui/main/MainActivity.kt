@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
@@ -393,11 +394,11 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
             }
 
             // Ensure the snackbar sits above the bottom nav
-            val layoutParams = view.layoutParams as CoordinatorLayout.LayoutParams
-            layoutParams.anchorId = binding.bottomNav.id
-            layoutParams.anchorGravity = Gravity.TOP
-            layoutParams.gravity = Gravity.TOP
-            view.layoutParams = layoutParams
+            view.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                anchorId = binding.bottomNav.id
+                anchorGravity = Gravity.TOP
+                gravity = Gravity.TOP
+            }
         }
 
         // Manually handle dismiss delay since Snackbar.LENGTH_LONG is a too short

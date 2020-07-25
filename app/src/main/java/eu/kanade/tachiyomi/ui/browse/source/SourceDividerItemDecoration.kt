@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.View
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 
 class SourceDividerItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
@@ -25,8 +26,7 @@ class SourceDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
             if (holder is SourceHolder &&
                 parent.getChildViewHolder(parent.getChildAt(i + 1)) is SourceHolder
             ) {
-                val params = child.layoutParams as RecyclerView.LayoutParams
-                val top = child.bottom + params.bottomMargin
+                val top = child.bottom + child.marginBottom
                 val bottom = top + divider.intrinsicHeight
                 val left = parent.paddingStart + holder.margin
                 val right = parent.width - parent.paddingEnd - holder.margin
