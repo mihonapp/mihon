@@ -251,16 +251,17 @@ class DownloadManager(private val context: Context) {
      * @param newChapter the target chapter with the new name.
      */
     fun renameChapter(source: Source, manga: Manga, oldChapter: Chapter, newChapter: Chapter) {
-        val oldName = provider.getChapterDirName(oldChapter)
+        val oldNames = provider.getValidChapterDirNames(oldChapter)
         val newName = provider.getChapterDirName(newChapter)
         val mangaDir = provider.getMangaDir(manga, source)
 
-        val oldFolder = mangaDir.findFile(oldName)
+        // There should only be one folder with the chapter
+        val oldFolder = oldNames.mapNotNull { mangaDir.findFile(it) }.firstOrNull()
         if (oldFolder?.renameTo(newName) == true) {
             cache.removeChapter(oldChapter, manga)
             cache.addChapter(newName, mangaDir, manga)
         } else {
-            Timber.e("Could not rename downloaded chapter: %s.", oldName)
+            Timber.e("Could not rename downloaded chapter: %s.", oldNames.joinToString())
         }
     }
 }
