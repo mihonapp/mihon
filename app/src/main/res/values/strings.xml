@@ -454,6 +454,7 @@
     <string name="latest">Latest</string>
     <string name="browse">Browse</string>
     <string name="local_source_help_guide">Local source guide</string>
+    <string name="no_pinned_sources">You have no pinned sources</string>
 
     <!-- Manga activity -->
     <string name="manga_not_in_db">This manga has been removed from the database.</string>
