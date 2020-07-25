@@ -72,11 +72,12 @@ class SourcePresenter(
         var sourceItems = byLang.flatMap {
             val langItem = LangItem(it.key)
             it.value.map { source ->
-                if (source.id.toString() in pinnedSourceIds) {
-                    pinnedSources.add(SourceItem(source, LangItem(PINNED_KEY)))
+                val isPinned = source.id.toString() in pinnedSourceIds
+                if (isPinned) {
+                    pinnedSources.add(SourceItem(source, LangItem(PINNED_KEY), isPinned))
                 }
 
-                SourceItem(source, langItem)
+                SourceItem(source, langItem, isPinned)
             }
         }
 

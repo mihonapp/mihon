@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.ui.base.holder.SlicedHolder
 import io.github.mthli.slice.Slice
 import kotlinx.android.synthetic.main.source_main_controller_card_item.card
 import kotlinx.android.synthetic.main.source_main_controller_card_item.image
+import kotlinx.android.synthetic.main.source_main_controller_card_item.pin
 import kotlinx.android.synthetic.main.source_main_controller_card_item.source_browse
 import kotlinx.android.synthetic.main.source_main_controller_card_item.source_latest
 import kotlinx.android.synthetic.main.source_main_controller_card_item.title
@@ -27,11 +28,15 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
 
     init {
         source_browse.setOnClickListener {
-            adapter.browseClickListener.onBrowseClick(bindingAdapterPosition)
+            adapter.clickListener.onBrowseClick(bindingAdapterPosition)
         }
 
         source_latest.setOnClickListener {
-            adapter.latestClickListener.onLatestClick(bindingAdapterPosition)
+            adapter.clickListener.onLatestClick(bindingAdapterPosition)
+        }
+
+        pin.setOnClickListener {
+            adapter.clickListener.onPinClick(bindingAdapterPosition)
         }
     }
 
@@ -53,5 +58,14 @@ class SourceHolder(view: View, override val adapter: SourceAdapter) :
 
         source_browse.setText(R.string.browse)
         source_latest.isVisible = source.supportsLatest
+
+        pin.isVisible = true
+        pin.setImageResource(
+            if (item.isPinned) {
+                R.drawable.ic_push_pin_filled_24dp
+            } else {
+                R.drawable.ic_push_pin_24dp
+            }
+        )
     }
 }

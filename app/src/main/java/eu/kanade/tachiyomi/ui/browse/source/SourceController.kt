@@ -41,15 +41,14 @@ import uy.kohesive.injekt.api.get
 /**
  * This controller shows and manages the different catalogues enabled by the user.
  * This controller should only handle UI actions, IO actions should be done by [SourcePresenter]
- * [SourceAdapter.OnBrowseClickListener] call function data on browse item click.
+ * [SourceAdapter.OnSourceClickListener] call function data on browse item click.
  * [SourceAdapter.OnLatestClickListener] call function data on latest item click
  */
 class SourceController :
     NucleusController<SourceMainControllerBinding, SourcePresenter>(),
     FlexibleAdapter.OnItemClickListener,
     FlexibleAdapter.OnItemLongClickListener,
-    SourceAdapter.OnBrowseClickListener,
-    SourceAdapter.OnLatestClickListener {
+    SourceAdapter.OnSourceClickListener {
 
     private val preferences: PreferencesHelper = Injekt.get()
 
@@ -134,7 +133,7 @@ class SourceController :
         val items = mutableListOf(
             Pair(
                 activity.getString(if (isPinned) R.string.action_unpin else R.string.action_pin),
-                { pinSource(item.source, isPinned) }
+                { toggleSourcePin(item.source) }
             )
         )
         if (item.source !is LocalSource) {
@@ -159,12 +158,12 @@ class SourceController :
         presenter.updateSources()
     }
 
-    private fun pinSource(source: Source, isPinned: Boolean) {
-        val current = preferences.pinnedSources().get()
+    private fun toggleSourcePin(source: Source) {
+        val isPinned = source.id.toString() in preferences.pinnedSources().get()
         if (isPinned) {
-            preferences.pinnedSources().set(current - source.id.toString())
+            preferences.pinnedSources() -= source.id.toString()
         } else {
-            preferences.pinnedSources().set(current + source.id.toString())
+            preferences.pinnedSources() += source.id.toString()
         }
 
         presenter.updateSources()
@@ -183,6 +182,14 @@ class SourceController :
     override fun onLatestClick(position: Int) {
         val item = adapter?.getItem(position) as? SourceItem ?: return
         openSource(item.source, LatestUpdatesController(item.source))
+    }
+
+    /**
+     * Called when pin icon is clicked in [SourceAdapter]
+     */
+    override fun onPinClick(position: Int) {
+        val item = adapter?.getItem(position) as? SourceItem ?: return
+        toggleSourcePin(item.source)
     }
 
     /**
