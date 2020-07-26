@@ -141,7 +141,7 @@ class SourceController :
         }
 
         MaterialDialog(activity)
-            .title(text = item.source.name)
+            .title(text = item.source.toString())
             .listItems(
                 items = items.map { it.first },
                 waitForPositiveButton = false
