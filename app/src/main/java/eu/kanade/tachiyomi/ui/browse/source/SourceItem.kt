@@ -46,4 +46,15 @@ data class SourceItem(
     ) {
         holder.bind(this)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is SourceItem) {
+            return source.id == other.source.id && getHeader()?.code == other.getHeader()?.code
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return source.id.hashCode() + (getHeader()?.code?.hashCode() ?: 0).toInt()
+    }
 }
