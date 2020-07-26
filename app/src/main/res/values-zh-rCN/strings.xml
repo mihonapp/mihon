@@ -534,8 +534,7 @@
     <string name="pref_refresh_library_covers">刷新书架漫画封面</string>
     <string name="tracking_info">单向同步以更新同步服务中的章节进度。在「同步」选项卡中为单个漫画设置同步。</string>
     <plurals name="notification_update_error">
-        <item quantity="one">%1$d 本漫画更新失败</item>
-        <item quantity="other"/>
+        <item quantity="other">%1$d 本漫画更新失败</item>
     </plurals>
     <string name="unofficial_extension_message">此扩展插件的来源不是官方 Tachiyomi 扩展插件列表。</string>
     <string name="ext_unofficial">非官方</string>
@@ -588,8 +587,7 @@
     <string name="pref_category_theme">主题</string>
     <string name="action_sort_date_added">添加日期</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d 个漫画同步源</item>
-        <item quantity="other"></item>
+        <item quantity="other">%d 个漫画同步源</item>
     </plurals>
     <string name="pref_read_with_tapping_inverted">反转轻触方向</string>
     <string name="no_pinned_sources">你没有已置顶的图源</string>
