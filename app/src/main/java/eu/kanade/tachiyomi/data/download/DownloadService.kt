@@ -188,7 +188,7 @@ class DownloadService : Service() {
     }
 
     private fun getPlaceholderNotification(): Notification {
-        return notification(Notifications.CHANNEL_DOWNLOADER) {
+        return notification(Notifications.CHANNEL_DOWNLOADER_PROGRESS) {
             setContentTitle(getString(R.string.download_notifier_downloader_title))
         }
     }
