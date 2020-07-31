@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -21,7 +22,7 @@ import eu.kanade.tachiyomi.databinding.WebviewActivityBinding
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.ui.main.ForceCloseActivity
+import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
@@ -42,12 +43,18 @@ class WebViewActivity : BaseActivity<WebviewActivityBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (!WebViewUtil.supportsWebView(this)) {
+            toast(R.string.information_webview_required, Toast.LENGTH_LONG)
+            finish()
+        }
+
         try {
             binding = WebviewActivityBinding.inflate(layoutInflater)
             setContentView(binding.root)
         } catch (e: Exception) {
             // Potentially throws errors like "Error inflating class android.webkit.WebView"
-            ForceCloseActivity.closeApp(this)
+            toast(R.string.information_webview_required, Toast.LENGTH_LONG)
+            finish()
         }
 
         title = intent.extras?.getString(TITLE_KEY)
