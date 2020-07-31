@@ -181,11 +181,11 @@ class MangaInfoHeaderAdapter(
                 }
                 .launchIn(scope)
 
-            binding.mangaSummary.longClicks()
+            binding.mangaSummaryText.longClicks()
                 .onEach {
                     controller.activity?.copyToClipboard(
                         view.context.getString(R.string.description),
-                        binding.mangaSummary.text.toString()
+                        binding.mangaSummaryText.text.toString()
                     )
                 }
                 .launchIn(scope)
@@ -277,7 +277,7 @@ class MangaInfoHeaderAdapter(
             showMangaInfo(hasInfoContent)
             if (hasInfoContent) {
                 // Update description TextView.
-                binding.mangaSummary.text = if (manga.description.isNullOrBlank()) {
+                binding.mangaSummaryText.text = if (manga.description.isNullOrBlank()) {
                     view.context.getString(R.string.unknown)
                 } else {
                     manga.description
@@ -292,7 +292,7 @@ class MangaInfoHeaderAdapter(
                 }
 
                 // Handle showing more or less info
-                merge(view.clicks(), binding.mangaSummary.clicks(), binding.mangaInfoToggle.clicks())
+                merge(binding.mangaSummarySection.clicks(), binding.mangaSummaryText.clicks(), binding.mangaInfoToggle.clicks())
                     .onEach { toggleMangaInfo(view.context) }
                     .launchIn(scope)
 
@@ -305,10 +305,7 @@ class MangaInfoHeaderAdapter(
         }
 
         private fun showMangaInfo(visible: Boolean) {
-            binding.mangaSummaryLabel.isVisible = visible
-            binding.mangaSummary.isVisible = visible
-            binding.mangaGenresTagsWrapper.isVisible = visible
-            binding.mangaInfoToggle.isVisible = visible
+            binding.mangaSummarySection.isVisible = visible
         }
 
         private fun toggleMangaInfo(context: Context) {
@@ -329,7 +326,7 @@ class MangaInfoHeaderAdapter(
                 }
             }
 
-            with(binding.mangaSummary) {
+            with(binding.mangaSummaryText) {
                 maxLines =
                     if (isExpanded) {
                         2
