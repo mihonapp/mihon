@@ -39,7 +39,6 @@ import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.android.synthetic.main.main_activity.tabs
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -374,19 +373,13 @@ class LibraryController(
             searchView.clearFocus()
 
             performSearch()
-        }
 
-        searchView.queryTextChanges()
-            // Ignore events if this controller isn't at the top to avoid query being reset
-            .filter { router.backstack.lastOrNull()?.controller() == this }
-            // If we re-enter the controller with a prior search still active, but searchview
-            // content sometimes appears empty.
-            .dropWhile { query.isNotEmpty() && query != it.toString() }
-            .onEach {
-                query = it.toString()
-                performSearch()
-            }
-            .launchIn(scope)
+            // Workaround for weird behavior where searchview gets empty text change despite
+            // query being set already
+            searchView.postDelayed({ initSearchHandler(searchView) }, 500)
+        } else {
+            initSearchHandler(searchView)
+        }
 
         // Mutate the filter icon because it needs to be tinted and the resource is shared.
         menu.findItem(R.id.action_filter).icon.mutate()
@@ -394,7 +387,17 @@ class LibraryController(
 
     fun search(query: String) {
         this.query = query
-        performSearch()
+    }
+
+    private fun initSearchHandler(searchView: SearchView) {
+        searchView.queryTextChanges()
+            // Ignore events if this controller isn't at the top to avoid query being reset
+            .filter { router.backstack.lastOrNull()?.controller() == this }
+            .onEach {
+                query = it.toString()
+                performSearch()
+            }
+            .launchIn(scope)
     }
 
     private fun performSearch() {
