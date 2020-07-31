@@ -71,7 +71,6 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         binding.keepscreen.bindToPreference(preferences.keepScreenOn())
         binding.longTap.bindToPreference(preferences.readWithLongTap())
         binding.alwaysShowChapterTransition.bindToPreference(preferences.alwaysShowChapterTransition())
-        binding.cropBorders.bindToPreference(preferences.cropBorders())
         binding.pageTransitions.bindToPreference(preferences.pageTransitions())
 
         // If the preference is explicitly disabled, that means the setting was configured since there is a cutout
@@ -90,6 +89,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
 
         binding.scaleType.bindToPreference(preferences.imageScaleType(), 1)
         binding.zoomStart.bindToPreference(preferences.zoomStart(), 1)
+        binding.cropBorders.bindToPreference(preferences.cropBorders())
     }
 
     /**
@@ -99,6 +99,7 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         binding.pagerPrefsGroup.isInvisible = true
         binding.webtoonPrefsGroup.isVisible = true
 
+        binding.cropBordersWebtoon.bindToPreference(preferences.cropBordersWebtoon())
         binding.webtoonSidePadding.bindToIntPreference(preferences.webtoonSidePadding(), R.array.webtoon_side_padding_values)
     }
 
