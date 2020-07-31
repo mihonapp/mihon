@@ -49,7 +49,6 @@ import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterDividerItemDecoration
-import eu.kanade.tachiyomi.ui.manga.chapter.ChapterHolder
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersAdapter
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersSettingsSheet
@@ -685,11 +684,10 @@ class MangaController :
     }
 
     fun onChapterStatusChange(download: Download) {
-        getHolder(download.chapter)?.notifyStatus(download.status)
-    }
-
-    private fun getHolder(chapter: Chapter): ChapterHolder? {
-        return binding.recycler.findViewHolderForItemId(chapter.id!!) as? ChapterHolder
+        chaptersAdapter?.currentItems?.find { it.id == download.chapter.id }?.let {
+            chaptersAdapter?.updateItem(it)
+            chaptersAdapter?.notifyDataSetChanged()
+        }
     }
 
     fun openChapter(chapter: Chapter, hasAnimation: Boolean = false) {

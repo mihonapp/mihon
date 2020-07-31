@@ -176,14 +176,14 @@ class DownloadService : Service() {
     /**
      * Releases the wake lock if it's held.
      */
-    fun PowerManager.WakeLock.releaseIfNeeded() {
+    private fun PowerManager.WakeLock.releaseIfNeeded() {
         if (isHeld) release()
     }
 
     /**
      * Acquires the wake lock if it's not held.
      */
-    fun PowerManager.WakeLock.acquireIfNeeded() {
+    private fun PowerManager.WakeLock.acquireIfNeeded() {
         if (!isHeld) acquire()
     }
 
