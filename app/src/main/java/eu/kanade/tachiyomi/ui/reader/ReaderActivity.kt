@@ -46,6 +46,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.GLUtil
+import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.defaultBar
 import eu.kanade.tachiyomi.util.view.hideBar
@@ -56,6 +57,7 @@ import eu.kanade.tachiyomi.widget.SimpleAnimationListener
 import eu.kanade.tachiyomi.widget.SimpleSeekBarListener
 import java.io.File
 import kotlin.math.abs
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -78,6 +80,8 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      * The maximum bitmap size supported by the device.
      */
     val maxBitmapSize by lazy { GLUtil.maxTextureSize }
+
+    val hasCutout by lazy { hasDisplayCutout() }
 
     /**
      * Viewer used to display the pages (pager, webtoon, ...).
@@ -625,6 +629,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
     /**
      * Class that handles the user preferences of the reader.
      */
+    @FlowPreview
     private inner class ReaderConfig {
 
         /**
@@ -652,11 +657,9 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 .onEach { setTrueColor(it) }
                 .launchIn(scope)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                preferences.cutoutShort().asFlow()
-                    .onEach { setCutoutShort(it) }
-                    .launchIn(scope)
-            }
+            preferences.cutoutShort().asFlow()
+                .onEach { setCutoutShort(it) }
+                .launchIn(scope)
 
             preferences.keepScreenOn().asFlow()
                 .onEach { setKeepScreenOn(it) }
@@ -726,6 +729,9 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 true -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
                 false -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
             }
+
+            // Trigger relayout
+            setMenuVisibility(menuVisible)
         }
 
         /**
@@ -742,6 +748,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         /**
          * Sets the custom brightness overlay according to [enabled].
          */
+        @FlowPreview
         private fun setCustomBrightness(enabled: Boolean) {
             if (enabled) {
                 preferences.customBrightnessValue().asFlow()
@@ -756,6 +763,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         /**
          * Sets the color filter overlay according to [enabled].
          */
+        @FlowPreview
         private fun setColorFilter(enabled: Boolean) {
             if (enabled) {
                 preferences.colorFilterValue().asFlow()

@@ -67,12 +67,17 @@ class ReaderSettingsSheet(private val activity: ReaderActivity) : BottomSheetDia
         binding.backgroundColor.bindToIntPreference(preferences.readerTheme(), R.array.reader_themes_values)
         binding.showPageNumber.bindToPreference(preferences.showPageNumber())
         binding.fullscreen.bindToPreference(preferences.fullscreen())
-        binding.cutoutShort.bindToPreference(preferences.cutoutShort())
         binding.keepscreen.bindToPreference(preferences.keepScreenOn())
         binding.longTap.bindToPreference(preferences.readWithLongTap())
         binding.alwaysShowChapterTransition.bindToPreference(preferences.alwaysShowChapterTransition())
         binding.cropBorders.bindToPreference(preferences.cropBorders())
         binding.pageTransitions.bindToPreference(preferences.pageTransitions())
+
+        // If the preference is explicitly disabled, that means the setting was configured since there is a cutout
+        if (activity.hasCutout || !preferences.cutoutShort().get()) {
+            binding.cutoutShort.isVisible = true
+            binding.cutoutShort.bindToPreference(preferences.cutoutShort())
+        }
     }
 
     /**
