@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.data.preference
 
 import android.content.Context
-import android.net.Uri
 import android.os.Environment
+import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import com.tfcporciuncula.flow.FlowSharedPreferences
 import com.tfcporciuncula.flow.Preference
@@ -41,21 +41,17 @@ class PreferencesHelper(val context: Context) {
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     private val flowPrefs = FlowSharedPreferences(prefs)
 
-    private val defaultDownloadsDir = Uri.fromFile(
-        File(
-            Environment.getExternalStorageDirectory().absolutePath + File.separator +
-                context.getString(R.string.app_name),
-            "downloads"
-        )
-    )
+    private val defaultDownloadsDir = File(
+        Environment.getExternalStorageDirectory().absolutePath + File.separator +
+            context.getString(R.string.app_name),
+        "downloads"
+    ).toUri()
 
-    private val defaultBackupDir = Uri.fromFile(
-        File(
-            Environment.getExternalStorageDirectory().absolutePath + File.separator +
-                context.getString(R.string.app_name),
-            "backup"
-        )
-    )
+    private val defaultBackupDir = File(
+        Environment.getExternalStorageDirectory().absolutePath + File.separator +
+            context.getString(R.string.app_name),
+        "backup"
+    ).toUri()
 
     fun startScreen() = prefs.getInt(Keys.startScreen, 1)
 

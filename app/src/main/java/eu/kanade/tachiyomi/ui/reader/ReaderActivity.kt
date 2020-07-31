@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.snackbar.Snackbar
 import eu.kanade.tachiyomi.R
@@ -391,7 +392,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      * Reset menu padding and system bar
      */
     private fun resetDefaultMenuAndBar() {
-        binding.readerMenu.setPadding(0, 0, 0, 0)
+        binding.readerMenu.setPadding(0)
         window.defaultBar()
     }
 

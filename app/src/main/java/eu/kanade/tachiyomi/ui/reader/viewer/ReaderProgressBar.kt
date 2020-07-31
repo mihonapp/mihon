@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
@@ -14,6 +12,8 @@ import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import androidx.core.animation.doOnCancel
+import androidx.core.animation.doOnEnd
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
@@ -163,16 +163,13 @@ class ReaderProgressBar @JvmOverloads constructor(
             ObjectAnimator.ofFloat(this, "alpha", 1f, 0f).apply {
                 interpolator = DecelerateInterpolator()
                 duration = 1000
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator?) {
-                        isVisible = false
-                        alpha = 1f
-                    }
-
-                    override fun onAnimationCancel(animation: Animator?) {
-                        alpha = 1f
-                    }
-                })
+                doOnEnd {
+                    isVisible = false
+                    alpha = 1f
+                }
+                doOnCancel {
+                    alpha = 1f
+                }
                 start()
             }
         }

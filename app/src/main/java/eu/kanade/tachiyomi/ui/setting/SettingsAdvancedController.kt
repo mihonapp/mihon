@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import androidx.core.net.toUri
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import eu.kanade.tachiyomi.R
@@ -62,7 +62,7 @@ class SettingsAdvancedController : SettingsController() {
                         try {
                             val intent = Intent().apply {
                                 action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                                data = Uri.parse("package:$packageName")
+                                data = "package:$packageName".toUri()
                             }
                             startActivity(intent)
                         } catch (e: ActivityNotFoundException) {

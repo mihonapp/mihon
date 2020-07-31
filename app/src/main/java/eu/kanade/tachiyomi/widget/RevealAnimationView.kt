@@ -1,11 +1,11 @@
 package eu.kanade.tachiyomi.widget
 
 import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewAnimationUtils
+import androidx.core.animation.doOnEnd
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 
@@ -32,12 +32,9 @@ class RevealAnimationView @JvmOverloads constructor(context: Context, attrs: Att
         anim.duration = 500
 
         // make the view invisible when the animation is done
-        anim.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                super.onAnimationEnd(animation)
-                this@RevealAnimationView.isInvisible = true
-            }
-        })
+        anim.doOnEnd {
+            this@RevealAnimationView.isInvisible = true
+        }
 
         anim.start()
     }
