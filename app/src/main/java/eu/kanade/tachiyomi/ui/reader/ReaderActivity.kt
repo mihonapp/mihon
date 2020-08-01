@@ -658,9 +658,11 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 .onEach { setTrueColor(it) }
                 .launchIn(scope)
 
-            preferences.cutoutShort().asFlow()
-                .onEach { setCutoutShort(it) }
-                .launchIn(scope)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                preferences.cutoutShort().asFlow()
+                    .onEach { setCutoutShort(it) }
+                    .launchIn(scope)
+            }
 
             preferences.keepScreenOn().asFlow()
                 .onEach { setKeepScreenOn(it) }
