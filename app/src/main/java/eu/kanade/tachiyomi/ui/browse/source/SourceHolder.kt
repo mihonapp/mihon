@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.icon
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.ui.base.holder.SlicedHolder
+import eu.kanade.tachiyomi.ui.browse.SourceListItem
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.view.setVectorCompat
 import io.github.mthli.slice.Slice
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.source_main_controller_card_item.title
 
 class SourceHolder(private val view: View, override val adapter: SourceAdapter) :
     BaseFlexibleViewHolder(view, adapter),
+    SourceListItem,
     SlicedHolder {
 
     override val slice = Slice(card).apply {

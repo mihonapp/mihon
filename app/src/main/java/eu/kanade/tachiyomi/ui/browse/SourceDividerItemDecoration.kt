@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.browse.source
+package eu.kanade.tachiyomi.ui.browse
 
 import android.content.Context
 import android.graphics.Canvas
@@ -23,8 +23,8 @@ class SourceDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
         for (i in 0 until childCount - 1) {
             val child = parent.getChildAt(i)
             val holder = parent.getChildViewHolder(child)
-            if (holder is SourceHolder &&
-                parent.getChildViewHolder(parent.getChildAt(i + 1)) is SourceHolder
+            if (holder is SourceListItem &&
+                parent.getChildViewHolder(parent.getChildAt(i + 1)) is SourceListItem
             ) {
                 val top = child.bottom + child.marginBottom
                 val bottom = top + divider.intrinsicHeight
