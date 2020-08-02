@@ -14,6 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -122,7 +125,6 @@ class MangaController :
     private val coverCache: CoverCache by injectLazy()
 
     private val toolbarTextColor by lazy { view!!.context.getResourceColor(R.attr.colorOnPrimary) }
-    private var toolbarTextAlpha = 255
 
     private var mangaInfoAdapter: MangaInfoHeaderAdapter? = null
     private var chaptersHeaderAdapter: MangaChaptersHeaderAdapter? = null
@@ -155,6 +157,19 @@ class MangaController :
 
     init {
         setHasOptionsMenu(true)
+    }
+
+    override fun getTitle(): String? {
+        return manga?.title
+    }
+
+    override fun onChangeStarted(handler: ControllerChangeHandler, type: ControllerChangeType) {
+        super.onChangeStarted(handler, type)
+
+        // Hide toolbar title on enter
+        if (type.isEnter) {
+            updateToolbarTitleAlpha()
+        }
     }
 
     override fun onChangeEnded(handler: ControllerChangeHandler, type: ControllerChangeType) {
@@ -204,7 +219,6 @@ class MangaController :
             // Delayed in case we need to jump to chapters
             binding.recycler.post {
                 updateToolbarTitleAlpha()
-                setTitle(manga?.title)
             }
         }
 
@@ -243,18 +257,14 @@ class MangaController :
             else -> min(binding.recycler.computeVerticalScrollOffset(), 255)
         }
 
-        if (calculatedAlpha != toolbarTextAlpha) {
-            toolbarTextAlpha = calculatedAlpha
-
-            activity?.toolbar?.setTitleTextColor(
-                Color.argb(
-                    toolbarTextAlpha,
-                    Color.red(toolbarTextColor),
-                    Color.green(toolbarTextColor),
-                    Color.blue(toolbarTextColor)
-                )
+        activity?.toolbar?.setTitleTextColor(
+            Color.argb(
+                calculatedAlpha,
+                toolbarTextColor.red,
+                toolbarTextColor.green,
+                toolbarTextColor.blue
             )
-        }
+        )
     }
 
     private fun updateFilterIconState() {
