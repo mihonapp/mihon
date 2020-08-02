@@ -238,7 +238,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             R.id.action_settings -> ReaderSettingsSheet(this).show()
             R.id.action_custom_filter -> {
                 val sheet = ReaderColorFilterSheet(this)
-                    // Remove dimmed backdrop so changes can be previewd
+                    // Remove dimmed backdrop so changes can be previewed
                     .apply { window?.setDimAmount(0f) }
 
                 // Hide toolbars while sheet is open for better preview

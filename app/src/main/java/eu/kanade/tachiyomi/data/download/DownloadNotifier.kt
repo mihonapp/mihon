@@ -119,7 +119,7 @@ internal class DownloadNotifier(private val context: Context) {
     /**
      * Show notification when download is paused.
      */
-    fun onDownloadPaused() {
+    fun onPaused() {
         with(progressNotificationBuilder) {
             setContentTitle(context.getString(R.string.chapter_paused))
             setContentText(context.getString(R.string.download_notifier_download_paused))
@@ -151,18 +151,20 @@ internal class DownloadNotifier(private val context: Context) {
     /**
      *  This function shows a notification to inform download tasks are done.
      */
-    fun downloadFinished() {
-        // Create notification
-        with(completeNotificationBuilder) {
-            setContentTitle(context.getString(R.string.download_notifier_downloader_title))
-            setContentText(context.getString(R.string.download_notifier_download_finish))
-            setSmallIcon(android.R.drawable.stat_sys_download_done)
-            clearActions()
-            setAutoCancel(true)
-            setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
-            setProgress(0, 0, false)
+    fun onComplete() {
+        if (!errorThrown) {
+            // Create notification
+            with(completeNotificationBuilder) {
+                setContentTitle(context.getString(R.string.download_notifier_downloader_title))
+                setContentText(context.getString(R.string.download_notifier_download_finish))
+                setSmallIcon(android.R.drawable.stat_sys_download_done)
+                clearActions()
+                setAutoCancel(true)
+                setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
+                setProgress(0, 0, false)
+            }
+            completeNotificationBuilder.show(Notifications.ID_DOWNLOAD_CHAPTER_COMPLETE)
         }
-        completeNotificationBuilder.show(Notifications.ID_DOWNLOAD_CHAPTER_COMPLETE)
 
         // Reset states to default
         errorThrown = false

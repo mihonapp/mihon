@@ -137,9 +137,9 @@ class Downloader(
         } else {
             if (notifier.paused) {
                 notifier.paused = false
-                notifier.onDownloadPaused()
+                notifier.onPaused()
             } else {
-                notifier.downloadFinished()
+                notifier.onComplete()
             }
         }
     }
