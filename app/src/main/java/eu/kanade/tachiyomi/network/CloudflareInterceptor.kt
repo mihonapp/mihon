@@ -2,18 +2,16 @@ package eu.kanade.tachiyomi.network
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Toast
-import androidx.webkit.WebViewClientCompat
-import androidx.webkit.WebViewFeature
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.isOutdated
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
@@ -116,7 +114,7 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
                     }
 
                     // HTTP error codes are only received since M
-                    if (WebViewFeature.isFeatureSupported(WebViewFeature.RECEIVE_WEB_RESOURCE_ERROR) &&
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                         url == origRequestUrl && !challengeFound
                     ) {
                         // The first request didn't return the challenge, abort.
@@ -124,13 +122,15 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
                     }
                 }
 
-                override fun onReceivedHttpError(
+                override fun onReceivedErrorCompat(
                     view: WebView,
-                    request: WebResourceRequest,
-                    errorResponse: WebResourceResponse
+                    errorCode: Int,
+                    description: String?,
+                    failingUrl: String,
+                    isMainFrame: Boolean
                 ) {
-                    if (request.isForMainFrame) {
-                        if (errorResponse.statusCode == 503) {
+                    if (isMainFrame) {
+                        if (errorCode == 503) {
                             // Found the Cloudflare challenge page.
                             challengeFound = true
                         } else {
