@@ -678,6 +678,7 @@
     <string name="channel_common">Common</string>
     <string name="channel_progress">Progress</string>
     <string name="channel_complete">Complete</string>
+    <string name="channel_errors">Errors</string>
     <string name="channel_library">Library</string>
     <string name="group_downloader">Downloads</string>
     <string name="group_backup_restore">Backup and restore</string>

@@ -32,10 +32,11 @@ object Notifications {
      */
     private const val GROUP_DOWNLOADER = "group_downloader"
     const val CHANNEL_DOWNLOADER_PROGRESS = "downloader_progress_channel"
-    const val ID_DOWNLOAD_CHAPTER = -201
+    const val ID_DOWNLOAD_CHAPTER_PROGRESS = -201
     const val CHANNEL_DOWNLOADER_COMPLETE = "downloader_complete_channel"
-    const val ID_DOWNLOAD_CHAPTER_ERROR = -202
     const val ID_DOWNLOAD_CHAPTER_COMPLETE = -203
+    const val CHANNEL_DOWNLOADER_ERROR = "downloader_error_channel"
+    const val ID_DOWNLOAD_CHAPTER_ERROR = -202
 
     /**
      * Notification channel and ids used by the library updater.
@@ -99,6 +100,13 @@ object Notifications {
             },
             NotificationChannel(
                 CHANNEL_DOWNLOADER_COMPLETE, context.getString(R.string.channel_complete),
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                group = GROUP_DOWNLOADER
+                setShowBadge(false)
+            },
+            NotificationChannel(
+                CHANNEL_DOWNLOADER_ERROR, context.getString(R.string.channel_errors),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
                 group = GROUP_DOWNLOADER
