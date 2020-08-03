@@ -152,8 +152,6 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
             if (Migrations.upgrade(preferences) && !BuildConfig.DEBUG) {
                 WhatsNewDialogController().showDialog(router)
             }
-
-            WhatsNewDialogController().showDialog(router)
         }
 
         preferences.extensionUpdatesCount()
