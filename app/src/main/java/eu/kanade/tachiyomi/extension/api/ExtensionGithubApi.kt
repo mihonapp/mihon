@@ -76,6 +76,6 @@ internal class ExtensionGithubApi {
 
     companion object {
         const val BASE_URL = "https://raw.githubusercontent.com/"
-        private const val REPO_URL_PREFIX = "${BASE_URL}inorichi/tachiyomi-extensions/repo/"
+        const val REPO_URL_PREFIX = "${BASE_URL}inorichi/tachiyomi-extensions/repo/"
     }
 }

@@ -14,7 +14,7 @@
             android:id="@+id/downloaded_only"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/pale_green"
+            android:background="@color/green"
             android:visibility="gone"
             tools:visibility="visible">
 
@@ -24,7 +24,7 @@
                 android:layout_gravity="center"
                 android:padding="4dp"
                 android:text="@string/label_downloaded_only"
-                android:textColor="@color/md_black_1000" />
+                android:textColor="@color/md_white_1000" />
 
         </FrameLayout>
 

@@ -37,6 +37,6 @@ interface ExtensionGithubService {
         }
     }
 
-    @GET("/inorichi/tachiyomi-extensions/repo/index.json.gz")
+    @GET("${ExtensionGithubApi.REPO_URL_PREFIX}index.json.gz")
     suspend fun getRepo(): JsonArray
 }
