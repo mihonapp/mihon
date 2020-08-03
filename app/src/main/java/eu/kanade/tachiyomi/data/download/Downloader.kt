@@ -139,6 +139,7 @@ class Downloader(
                 notifier.paused = false
                 notifier.onPaused()
             } else {
+                notifier.dismissProgress()
                 notifier.onComplete()
             }
         }
@@ -170,7 +171,7 @@ class Downloader(
                 .forEach { it.status = Download.NOT_DOWNLOADED }
         }
         queue.clear()
-        notifier.dismiss()
+        notifier.dismissProgress()
     }
 
     /**

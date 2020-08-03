@@ -79,7 +79,7 @@ internal class DownloadNotifier(private val context: Context) {
      * Dismiss the downloader's notification. Downloader error notifications use a different id, so
      * those can only be dismissed by the user.
      */
-    fun dismiss() {
+    fun dismissProgress() {
         context.notificationManager.cancel(Notifications.ID_DOWNLOAD_CHAPTER_PROGRESS)
     }
 
