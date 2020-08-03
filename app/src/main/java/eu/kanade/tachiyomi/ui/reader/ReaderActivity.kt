@@ -20,11 +20,11 @@ import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.snackbar.Snackbar
+import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -288,16 +288,13 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             onBackPressed()
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.readerMenu) { _, insets ->
-            if (!window.isDefaultBar()) {
-                binding.readerMenu.setPadding(
-                    insets.systemWindowInsetLeft,
-                    insets.systemWindowInsetTop,
-                    insets.systemWindowInsetRight,
-                    insets.systemWindowInsetBottom
-                )
-            }
-            insets
+        if (!window.isDefaultBar()) {
+            binding.readerMenu.applySystemWindowInsetsToPadding(
+                left = true,
+                top = true,
+                right = true,
+                bottom = true
+            )
         }
 
         // Init listeners on bottom menu
