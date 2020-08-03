@@ -93,17 +93,30 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                 }
             }
         })
-        recycler.tapListener = { event ->
-            val positionY = event.rawY
-            val invertMode = config.tappingInverted
-            val topSideTap = positionY < recycler.height * 0.33f && config.tappingEnabled
-            val bottomSideTap = positionY > recycler.height * 0.66f && config.tappingEnabled
+        recycler.tapListener = f@{ event ->
+            if (!config.tappingEnabled) {
+                activity.toggleMenu()
+                return@f
+            }
 
-            val tappingInverted = invertMode == TappingInvertMode.VERTICAL || invertMode == TappingInvertMode.BOTH
+            val positionX = event.rawX
+            val positionY = event.rawY
+            val topSideTap = positionY < recycler.height * 0.25f
+            val bottomSideTap = positionY > recycler.height * 0.75f
+            val leftSideTap = positionX < recycler.width * 0.33f
+            val rightSideTap = positionX > recycler.width * 0.66f
+
+            val invertMode = config.tappingInverted
+            val invertVertical = invertMode == TappingInvertMode.VERTICAL || invertMode == TappingInvertMode.BOTH
+            val invertHorizontal = invertMode == TappingInvertMode.HORIZONTAL || invertMode == TappingInvertMode.BOTH
 
             when {
-                topSideTap && !tappingInverted || bottomSideTap && tappingInverted -> scrollUp()
-                bottomSideTap && !tappingInverted || topSideTap && tappingInverted -> scrollDown()
+                topSideTap && !invertVertical || bottomSideTap && invertVertical -> scrollUp()
+                bottomSideTap && !invertVertical || topSideTap && invertVertical -> scrollDown()
+
+                leftSideTap && !invertHorizontal || rightSideTap && invertHorizontal -> scrollUp()
+                rightSideTap && !invertHorizontal || leftSideTap && invertHorizontal -> scrollDown()
+
                 else -> activity.toggleMenu()
             }
         }

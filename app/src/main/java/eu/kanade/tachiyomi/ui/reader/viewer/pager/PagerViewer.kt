@@ -80,29 +80,38 @@ abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
                 isIdle = state == ViewPager.SCROLL_STATE_IDLE
             }
         })
-        pager.tapListener = { event ->
+        pager.tapListener = f@{ event ->
+            if (!config.tappingEnabled) {
+                activity.toggleMenu()
+                return@f
+            }
+
+            val positionX = event.x
+            val positionY = event.y
+            val topSideTap = positionY < pager.height * 0.25f
+            val bottomSideTap = positionY > pager.height * 0.75f
+            val leftSideTap = positionX < pager.width * 0.33f
+            val rightSideTap = positionX > pager.width * 0.66f
+
             val invertMode = config.tappingInverted
+            val invertVertical = invertMode == TappingInvertMode.VERTICAL || invertMode == TappingInvertMode.BOTH
+            val invertHorizontal = invertMode == TappingInvertMode.HORIZONTAL || invertMode == TappingInvertMode.BOTH
 
             if (this is VerticalPagerViewer) {
-                val positionY = event.y
-                val tappingInverted = invertMode == TappingInvertMode.VERTICAL || invertMode == TappingInvertMode.BOTH
-                val topSideTap = positionY < pager.height * 0.33f && config.tappingEnabled
-                val bottomSideTap = positionY > pager.height * 0.66f && config.tappingEnabled
-
                 when {
-                    topSideTap && !tappingInverted || bottomSideTap && tappingInverted -> moveLeft()
-                    bottomSideTap && !tappingInverted || topSideTap && tappingInverted -> moveRight()
+                    topSideTap && !invertVertical || bottomSideTap && invertVertical -> moveLeft()
+                    bottomSideTap && !invertVertical || topSideTap && invertVertical -> moveRight()
+
+                    leftSideTap && !invertHorizontal || rightSideTap && invertHorizontal -> moveLeft()
+                    rightSideTap && !invertHorizontal || leftSideTap && invertHorizontal -> moveRight()
+
                     else -> activity.toggleMenu()
                 }
             } else {
-                val positionX = event.x
-                val tappingInverted = invertMode == TappingInvertMode.HORIZONTAL || invertMode == TappingInvertMode.BOTH
-                val leftSideTap = positionX < pager.width * 0.33f && config.tappingEnabled
-                val rightSideTap = positionX > pager.width * 0.66f && config.tappingEnabled
-
                 when {
-                    leftSideTap && !tappingInverted || rightSideTap && tappingInverted -> moveLeft()
-                    rightSideTap && !tappingInverted || leftSideTap && tappingInverted -> moveRight()
+                    leftSideTap && !invertHorizontal || rightSideTap && invertHorizontal -> moveLeft()
+                    rightSideTap && !invertHorizontal || leftSideTap && invertHorizontal -> moveRight()
+
                     else -> activity.toggleMenu()
                 }
             }
