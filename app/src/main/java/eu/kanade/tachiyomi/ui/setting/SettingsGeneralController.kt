@@ -204,7 +204,6 @@ class SettingsGeneralController : SettingsController() {
                     "sr",
                     "sv",
                     "th",
-                    "tl",
                     "tr",
                     "uk",
                     "ur-rPK",
