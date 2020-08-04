@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
+import androidx.preference.PreferenceDialogController
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.ControllerChangeHandler
@@ -315,6 +316,9 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
         if (from is DialogController || to is DialogController) {
+            return
+        }
+        if (from is PreferenceDialogController || to is PreferenceDialogController) {
             return
         }
 

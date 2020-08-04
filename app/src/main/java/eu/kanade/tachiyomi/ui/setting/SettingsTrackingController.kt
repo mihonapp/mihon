@@ -11,6 +11,8 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.anilist.AnilistApi
 import eu.kanade.tachiyomi.data.track.bangumi.BangumiApi
 import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
+import eu.kanade.tachiyomi.ui.setting.track.TrackLoginDialog
+import eu.kanade.tachiyomi.ui.setting.track.TrackLogoutDialog
 import eu.kanade.tachiyomi.util.preference.defaultValue
 import eu.kanade.tachiyomi.util.preference.infoPreference
 import eu.kanade.tachiyomi.util.preference.initThenAdd
@@ -20,8 +22,6 @@ import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
-import eu.kanade.tachiyomi.ui.setting.track.TrackLoginDialog
-import eu.kanade.tachiyomi.ui.setting.track.TrackLogoutDialog
 import uy.kohesive.injekt.injectLazy
 
 class SettingsTrackingController :
