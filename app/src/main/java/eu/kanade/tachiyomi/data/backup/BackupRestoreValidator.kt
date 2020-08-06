@@ -7,16 +7,22 @@ import com.google.gson.JsonParser
 import com.google.gson.stream.JsonReader
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.Backup
+import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.source.SourceManager
+import uy.kohesive.injekt.injectLazy
 
 object BackupRestoreValidator {
+
+    private val sourceManager: SourceManager by injectLazy()
+    private val trackManager: TrackManager by injectLazy()
 
     /**
      * Checks for critical backup file data.
      *
      * @throws Exception if version or manga cannot be found.
-     * @return List of required sources.
+     * @return List of missing sources or missing trackers.
      */
-    fun validate(context: Context, uri: Uri): Map<Long, String> {
+    fun validate(context: Context, uri: Uri): Results {
         val reader = JsonReader(context.contentResolver.openInputStream(uri)!!.bufferedReader())
         val json = JsonParser.parseReader(reader).asJsonObject
 
@@ -26,11 +32,29 @@ object BackupRestoreValidator {
             throw Exception(context.getString(R.string.invalid_backup_file_missing_data))
         }
 
-        if (mangasJson.asJsonArray.size() == 0) {
+        val mangas = mangasJson.asJsonArray
+        if (mangas.size() == 0) {
             throw Exception(context.getString(R.string.invalid_backup_file_missing_manga))
         }
 
-        return getSourceMapping(json)
+        val sources = getSourceMapping(json)
+        val missingSources = sources
+            .filter { sourceManager.get(it.key) == null }
+            .values
+            .sorted()
+
+        val trackers = mangas
+            .filter { it.asJsonObject.has("track") }
+            .flatMap { it.asJsonObject["track"].asJsonArray }
+            .map { it.asJsonObject["s"].asInt }
+            .distinct()
+        val missingTrackers = trackers
+            .mapNotNull { trackManager.getService(it) }
+            .filter { !it.isLogged }
+            .map { it.name }
+            .sorted()
+
+        return Results(missingSources, missingTrackers)
     }
 
     fun getSourceMapping(json: JsonObject): Map<Long, String> {
@@ -43,4 +67,6 @@ object BackupRestoreValidator {
             }
             .toMap()
     }
+
+    data class Results(val missingSources: List<String>, val missingTrackers: List<String>)
 }

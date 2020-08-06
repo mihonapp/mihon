@@ -21,7 +21,6 @@ import eu.kanade.tachiyomi.data.backup.BackupRestoreValidator
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.ui.base.controller.requestPermissionsSafe
 import eu.kanade.tachiyomi.util.preference.defaultValue
@@ -37,8 +36,6 @@ import eu.kanade.tachiyomi.util.system.getFilePicker
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class SettingsBackupController : SettingsController() {
 
@@ -258,16 +255,12 @@ class SettingsBackupController : SettingsController() {
             return try {
                 var message = activity.getString(R.string.backup_restore_content)
 
-                val sources = BackupRestoreValidator.validate(activity, uri)
-                if (sources.isNotEmpty()) {
-                    val sourceManager = Injekt.get<SourceManager>()
-                    val missingSources = sources
-                        .filter { sourceManager.get(it.key) == null }
-                        .values
-                        .sorted()
-                    if (missingSources.isNotEmpty()) {
-                        message += "\n\n${activity.getString(R.string.backup_restore_missing_sources)}\n${missingSources.joinToString("\n") { "- $it" }}"
-                    }
+                val results = BackupRestoreValidator.validate(activity, uri)
+                if (results.missingSources.isNotEmpty()) {
+                    message += "\n\n${activity.getString(R.string.backup_restore_missing_sources)}\n${results.missingSources.joinToString("\n") { "- $it" }}"
+                }
+                if (results.missingTrackers.isNotEmpty()) {
+                    message += "\n\n${activity.getString(R.string.backup_restore_missing_trackers)}\n${results.missingTrackers.joinToString("\n") { "- $it" }}"
                 }
 
                 MaterialDialog(activity)
