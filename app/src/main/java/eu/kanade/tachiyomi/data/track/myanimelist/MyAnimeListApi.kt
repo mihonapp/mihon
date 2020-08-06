@@ -476,7 +476,9 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         fun copyPersonalFrom(track: Track) {
             num_read_chapters = track.last_chapter_read.toString()
             val numScore = track.score.toInt()
-            if (numScore in 1..9) {
+            if (numScore == 0) {
+                score = ""
+            } else if (numScore in 1..10) {
                 score = numScore.toString()
             }
             status = track.status.toString()
