@@ -3,8 +3,11 @@ package eu.kanade.tachiyomi.ui.setting
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import eu.kanade.tachiyomi.util.preference.defaultValue
+import eu.kanade.tachiyomi.util.preference.entriesRes
+import eu.kanade.tachiyomi.util.preference.listPreference
 import eu.kanade.tachiyomi.util.preference.onChange
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.switchPreference
@@ -29,10 +32,21 @@ class SettingsBrowseController : SettingsController() {
                     true
                 }
             }
-            switchPreference {
-                key = Keys.allowNsfwSources
+            listPreference {
+                key = Keys.allowNsfwSource
                 titleRes = R.string.pref_allow_nsfw_sources
-                defaultValue = true
+                entriesRes = arrayOf(
+                    R.string.pref_allow_nsfw_sources_allowed,
+                    R.string.pref_allow_nsfw_sources_allowed_multisource,
+                    R.string.pref_allow_nsfw_sources_blocked
+                )
+                entryValues = arrayOf(
+                    Values.NsfwAllowance.ALLOWED.name,
+                    Values.NsfwAllowance.PARTIAL.name,
+                    Values.NsfwAllowance.BLOCKED.name
+                )
+                defaultValue = Values.NsfwAllowance.ALLOWED.name
+                summary = "%s"
             }
         }
 

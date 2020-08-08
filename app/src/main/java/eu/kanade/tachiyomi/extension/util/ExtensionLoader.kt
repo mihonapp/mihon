@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import dalvik.system.PathClassLoader
+import eu.kanade.tachiyomi.annoations.Nsfw
+import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
@@ -15,7 +17,6 @@ import eu.kanade.tachiyomi.util.lang.Hash
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -128,7 +129,7 @@ internal object ExtensionLoader {
         }
 
         val isNsfw = appInfo.metaData.getInt(METADATA_NSFW) == 1
-        if (!preferences.allowNsfwSources() && isNsfw) {
+        if (preferences.allowNsfwSource().get() == PreferenceValues.NsfwAllowance.BLOCKED && isNsfw) {
             return LoadResult.Error("NSFW extension $pkgName not allowed")
         }
 
@@ -156,10 +157,11 @@ internal object ExtensionLoader {
                     return LoadResult.Error(e)
                 }
             }
+            .filter { preferences.allowNsfwSource().get() == PreferenceValues.NsfwAllowance.ALLOWED || !isSourceNsfw(it) }
+
         val langs = sources.filterIsInstance<CatalogueSource>()
             .map { it.lang }
             .toSet()
-
         val lang = when (langs.size) {
             0 -> ""
             1 -> langs.first()
@@ -194,5 +196,15 @@ internal object ExtensionLoader {
         } else {
             null
         }
+    }
+
+    /**
+     * Checks whether a source is annotated with @Nsfw.
+     */
+    private fun isSourceNsfw(source: Source): Boolean {
+        // Annotations are proxied, hence this janky way of checking for them
+        return source.javaClass.annotations
+            .flatMap { it.javaClass.interfaces.map { it.simpleName } }
+            .firstOrNull { it == Nsfw::class.java.simpleName } != null
     }
 }
