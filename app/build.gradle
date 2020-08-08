@@ -135,6 +135,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    implementation 'androidx.core:core-ktx:1.4.0-alpha01'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha05'
