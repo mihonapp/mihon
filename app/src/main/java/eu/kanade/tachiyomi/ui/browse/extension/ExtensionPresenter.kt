@@ -55,20 +55,22 @@ open class ExtensionPresenter(
     private fun toItems(tuple: ExtensionTuple): List<ExtensionItem> {
         val context = Injekt.get<Application>()
         val activeLangs = preferences.enabledLanguages().get()
+        val allowNsfw = preferences.allowNsfwSources()
 
         val (installed, untrusted, available) = tuple
 
         val items = mutableListOf<ExtensionItem>()
 
-        val updatesSorted = installed.filter { it.hasUpdate }.sortedBy { it.pkgName }
-        val installedSorted = installed.filter { !it.hasUpdate }.sortedWith(compareBy({ !it.isObsolete }, { it.pkgName }))
+        val updatesSorted = installed.filter { it.hasUpdate && (allowNsfw || !it.isNsfw) }.sortedBy { it.pkgName }
+        val installedSorted = installed.filter { !it.hasUpdate && (allowNsfw || !it.isNsfw) }.sortedWith(compareBy({ !it.isObsolete }, { it.pkgName }))
         val untrustedSorted = untrusted.sortedBy { it.pkgName }
         val availableSorted = available
             // Filter out already installed extensions and disabled languages
             .filter { avail ->
                 installed.none { it.pkgName == avail.pkgName } &&
                     untrusted.none { it.pkgName == avail.pkgName } &&
-                    (avail.lang in activeLangs || avail.lang == "all")
+                    (avail.lang in activeLangs || avail.lang == "all") &&
+                    (allowNsfw || !avail.isNsfw)
             }
             .sortedBy { it.pkgName }
 

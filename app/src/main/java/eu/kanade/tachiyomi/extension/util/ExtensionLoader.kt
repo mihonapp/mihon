@@ -15,8 +15,8 @@ import eu.kanade.tachiyomi.util.lang.Hash
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 
 /**
  * Class that handles the loading of the extensions installed in the system.
@@ -24,8 +24,11 @@ import uy.kohesive.injekt.api.get
 @SuppressLint("PackageManagerGetSignatures")
 internal object ExtensionLoader {
 
+    private val preferences: PreferencesHelper by injectLazy()
+
     private const val EXTENSION_FEATURE = "tachiyomi.extension"
     private const val METADATA_SOURCE_CLASS = "tachiyomi.extension.class"
+    private const val METADATA_NSFW = "tachiyomi.extension.nsfw"
     const val LIB_VERSION_MIN = 1.2
     const val LIB_VERSION_MAX = 1.2
 
@@ -36,8 +39,7 @@ internal object ExtensionLoader {
     /**
      * List of the trusted signatures.
      */
-    var trustedSignatures = mutableSetOf<String>() +
-        Injekt.get<PreferencesHelper>().trustedSignatures().get() + officialSignature
+    var trustedSignatures = mutableSetOf<String>() + preferences.trustedSignatures().get() + officialSignature
 
     /**
      * Return a list of all the installed extensions initialized concurrently.
@@ -125,6 +127,11 @@ internal object ExtensionLoader {
             return LoadResult.Untrusted(extension)
         }
 
+        val isNsfw = appInfo.metaData.getInt(METADATA_NSFW) == 1
+        if (!preferences.allowNsfwSources() && isNsfw) {
+            return LoadResult.Error("NSFW extension $pkgName not allowed")
+        }
+
         val classLoader = PathClassLoader(appInfo.sourceDir, null, context.classLoader)
 
         val sources = appInfo.metaData.getString(METADATA_SOURCE_CLASS)!!
@@ -160,7 +167,7 @@ internal object ExtensionLoader {
         }
 
         val extension = Extension.Installed(
-            extName, pkgName, versionName, versionCode, sources, lang,
+            extName, pkgName, versionName, versionCode, lang, isNsfw, sources,
             isUnofficial = signatureHash != officialSignature
         )
         return LoadResult.Success(extension)

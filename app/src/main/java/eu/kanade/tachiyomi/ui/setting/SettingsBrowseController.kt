@@ -29,6 +29,11 @@ class SettingsBrowseController : SettingsController() {
                     true
                 }
             }
+            switchPreference {
+                key = Keys.allowNsfwSources
+                titleRes = R.string.pref_allow_nsfw_sources
+                defaultValue = true
+            }
         }
 
         preferenceCategory {
