@@ -267,15 +267,16 @@ class Downloader(
      * @param download the chapter to be downloaded.
      */
     private fun downloadChapter(download: Download): Observable<Download> = Observable.defer {
-        val chapterDirname = provider.getChapterDirName(download.chapter)
         val mangaDir = provider.getMangaDir(download.manga, download.source)
 
-        if (DiskUtil.getAvailableStorageSpace(mangaDir) < MIN_DISK_SPACE) {
+        val availSpace = DiskUtil.getAvailableStorageSpace(mangaDir)
+        if (availSpace != -1L && availSpace < MIN_DISK_SPACE) {
             download.status = Download.ERROR
             notifier.onError(context.getString(R.string.download_insufficient_space), download.chapter.name)
             return@defer Observable.just(download)
         }
 
+        val chapterDirname = provider.getChapterDirName(download.chapter)
         val tmpDir = mangaDir.createDirectory(chapterDirname + TMP_DIR_SUFFIX)
 
         val pageListObservable = if (download.pages == null) {
