@@ -583,8 +583,7 @@
     <string name="pref_category_theme">主题</string>
     <string name="action_sort_date_added">添加日期</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d 个同步源</item>
-        <item quantity="other"/>
+        <item quantity="other">%d 个同步源</item>
     </plurals>
     <string name="pref_read_with_tapping_inverted">反转轻触方向</string>
     <string name="no_pinned_sources">你没有已置顶的图源</string>
