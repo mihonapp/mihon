@@ -31,6 +31,7 @@ import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
 import eu.kanade.tachiyomi.ui.base.controller.TabbedController
+import eu.kanade.tachiyomi.ui.base.controller.ToolbarLiftOnScrollController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
@@ -355,10 +356,16 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
             to.configureFab(binding.rootFab)
         }
 
-        if (to is NoToolbarElevationController) {
-            binding.appbar.disableElevation()
-        } else {
-            binding.appbar.enableElevation()
+        when (to) {
+            is NoToolbarElevationController -> {
+                binding.appbar.disableElevation()
+            }
+            is ToolbarLiftOnScrollController -> {
+                binding.appbar.enableElevation(true)
+            }
+            else -> {
+                binding.appbar.enableElevation(false)
+            }
         }
     }
 

@@ -34,8 +34,8 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.getPreferenceKey
-import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.ToolbarLiftOnScrollController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.util.preference.DSL
 import eu.kanade.tachiyomi.util.preference.onChange
@@ -50,7 +50,7 @@ import uy.kohesive.injekt.injectLazy
 @SuppressLint("RestrictedApi")
 class ExtensionDetailsController(bundle: Bundle? = null) :
     NucleusController<ExtensionDetailControllerBinding, ExtensionDetailsPresenter>(bundle),
-    NoToolbarElevationController {
+    ToolbarLiftOnScrollController {
 
     private val preferences: PreferencesHelper by injectLazy()
 
