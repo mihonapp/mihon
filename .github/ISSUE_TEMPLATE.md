@@ -10,7 +10,7 @@ I acknowledge that:
 
 ---
 
-### Device information
+## Device information
 * Tachiyomi version: ?
 * Android version: ?
 * Device: ?

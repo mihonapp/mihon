@@ -17,8 +17,8 @@ I acknowledge that:
 
 ---
 
-### Why/User Benefit/User Problem
+## Why/User Benefit/User Problem
 (explain why this feature should be added)
 
-### What/Requirements
+## What/Requirements
 (explain how this feature would behave)

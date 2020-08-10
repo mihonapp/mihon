@@ -17,7 +17,7 @@ I acknowledge that:
 
 ---
 
-### Device information
+## Device information
 * Tachiyomi version: ?
 * Android version: ?
 * Device: ?
@@ -32,5 +32,5 @@ This should happen.
 ### Actual behavior
 This happened instead.
 
-### Other details
+## Other details
 Additional details and attachments.
