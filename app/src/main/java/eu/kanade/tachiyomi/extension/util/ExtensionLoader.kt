@@ -152,7 +152,13 @@ internal object ExtensionLoader {
                 try {
                     when (val obj = Class.forName(it, false, classLoader).newInstance()) {
                         is Source -> listOf(obj)
-                        is SourceFactory -> obj.createSources()
+                        is SourceFactory -> {
+                            if (isSourceNsfw(obj)) {
+                                emptyList()
+                            } else {
+                                obj.createSources()
+                            }
+                        }
                         else -> throw Exception("Unknown source class type! ${obj.javaClass}")
                     }
                 } catch (e: Throwable) {
@@ -160,7 +166,7 @@ internal object ExtensionLoader {
                     return LoadResult.Error(e)
                 }
             }
-            .filter { allowNsfwSource == PreferenceValues.NsfwAllowance.ALLOWED || !isSourceNsfw(it) }
+            .filter { !isSourceNsfw(it) }
 
         val langs = sources.filterIsInstance<CatalogueSource>()
             .map { it.lang }
@@ -202,11 +208,19 @@ internal object ExtensionLoader {
     }
 
     /**
-     * Checks whether a source is annotated with @Nsfw.
+     * Checks whether a Source or SourceFactory is annotated with @Nsfw.
      */
-    private fun isSourceNsfw(source: Source): Boolean {
+    private fun isSourceNsfw(clazz: Any): Boolean {
+        if (allowNsfwSource == PreferenceValues.NsfwAllowance.ALLOWED) {
+            return false
+        }
+
+        if (clazz !is Source && clazz !is SourceFactory) {
+            return false
+        }
+
         // Annotations are proxied, hence this janky way of checking for them
-        return source.javaClass.annotations
+        return clazz.javaClass.annotations
             .flatMap { it.javaClass.interfaces.map { it.simpleName } }
             .firstOrNull { it == Nsfw::class.java.simpleName } != null
     }
