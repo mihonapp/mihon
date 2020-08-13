@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.setting
 import android.os.Build
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.TappingInvertMode
 import eu.kanade.tachiyomi.data.preference.asImmediateFlow
 import eu.kanade.tachiyomi.util.preference.defaultValue
@@ -16,6 +15,7 @@ import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import kotlinx.coroutines.flow.launchIn
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 
 class SettingsReaderController : SettingsController() {
 
