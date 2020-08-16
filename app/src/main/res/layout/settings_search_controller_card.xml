@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/title_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground">
+
+        <TextView
+            android:id="@+id/setting"
+            style="@style/TextAppearance.Regular.SubHeading"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/material_component_text_fields_padding_above_and_below_label"
+            app:layout_constraintBottom_toTopOf="@+id/location"
+            app:layout_constraintEnd_toStartOf="@+id/goto_icon"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/location"
+            style="@style/TextAppearance.Regular.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="@dimen/material_component_text_fields_padding_above_and_below_label"
+            app:layout_constraintEnd_toStartOf="@+id/goto_icon"
+            app:layout_constraintStart_toStartOf="@+id/setting"
+            app:layout_constraintTop_toBottomOf="@+id/setting"
+            tools:text="Location" />
+
+        <ImageView
+            android:id="@+id/goto_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/label_more"
+            android:padding="@dimen/material_component_text_fields_padding_above_and_below_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_forward_24dp"
+            app:tint="?android:attr/textColorPrimary" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
