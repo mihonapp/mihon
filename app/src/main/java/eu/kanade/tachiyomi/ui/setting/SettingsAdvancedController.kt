@@ -41,7 +41,7 @@ class SettingsAdvancedController : SettingsController() {
     private val db: DatabaseHelper by injectLazy()
 
     @SuppressLint("BatteryLife")
-    override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
+    override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_advanced
 
         switchPreference {

@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.launchIn
 
 class SettingsReaderController : SettingsController() {
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
+    override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_reader
 
         intListPreference {

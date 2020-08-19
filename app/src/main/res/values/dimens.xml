@@ -23,4 +23,8 @@
     <dimen name="text_small_body">14sp</dimen>
 
     <dimen name="bottom_sheet_width">0dp</dimen>
+
+    <dimen name="search_result_wrapper_margin_start">50dp</dimen>
+    <dimen name="search_result_wrapper_margin_top">20dp</dimen>
+    <dimen name="search_result_wrapper_margin_bottom">20dp</dimen>
 </resources>

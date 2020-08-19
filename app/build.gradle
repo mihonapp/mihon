@@ -202,7 +202,6 @@ dependencies {
     // Preferences
     implementation 'com.github.tfcporciuncula:flow-preferences:1.3.0'
     implementation 'com.github.ByteHamster:SearchPreference:v1.0.3'
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Model View Presenter
     final nucleus_version = '3.0.0'
@@ -276,6 +275,7 @@ dependencies {
     testImplementation "org.robolectric:shadows-play-services:$robolectric_version"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$BuildPluginsVersion.KOTLIN"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$BuildPluginsVersion.KOTLIN"
 
     final coroutines_version = '1.3.8'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"

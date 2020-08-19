@@ -8,18 +8,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.preference.Preference
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.SettingsSearchControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
+import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.ui.setting.SettingsControllerFactory
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import reactivecircus.flowbinding.appcompat.QueryTextEvent
-import reactivecircus.flowbinding.appcompat.queryTextEvents
 
 /**
  * This controller shows and manages the different search result in settings search.
@@ -83,10 +78,13 @@ open class SettingsSearchController(
         val searchView = searchItem.actionView as SearchView
         searchView.maxWidth = Int.MAX_VALUE
 
+        searchItem.expandActionView()
+        setItems(getResultSet())
+
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 searchView.onActionViewExpanded() // Required to show the query in the view
-                searchView.setQuery(presenter.query, false)
+                setItems(getResultSet())
                 return true
             }
 
@@ -95,14 +93,19 @@ open class SettingsSearchController(
             }
         })
 
-        searchView.queryTextEvents()
-            .filterIsInstance<QueryTextEvent.QuerySubmitted>()
-            .onEach {
-                presenter.search(it.queryText.toString())
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
                 searchItem.collapseActionView()
-                setTitle() // Update toolbar title
+                setTitle(query) // Update toolbar title
+                setItems(getResultSet(query))
+                return false
             }
-            .launchIn(scope)
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                setItems(getResultSet(newText))
+                return false
+            }
+        })
     }
 
     /**
@@ -141,17 +144,44 @@ open class SettingsSearchController(
      * @param pref used to find holder containing source
      * @return the holder of the preference or null if it's not bound.
      */
-    private fun getHolder(pref: Preference): SettingsSearchHolder? {
-        val adapter = adapter ?: return null
+//    private fun getHolder(pref: Preference): SettingsSearchHolder? {
+//        val adapter = adapter ?: return null
+//
+//        adapter.allBoundViewHolders.forEach { holder ->
+//            val item = adapter.getItem(holder.bindingAdapterPosition)
+//            if (item != null && pref.key == item.pref.key) {
+//                return holder as SettingsSearchHolder
+//            }
+//        }
+//
+//        return null
+//    }
 
-        adapter.allBoundViewHolders.forEach { holder ->
-            val item = adapter.getItem(holder.bindingAdapterPosition)
-            if (item != null && pref.key == item.pref.key) {
-                return holder as SettingsSearchHolder
+    /**
+     * returns a list of `SettingsSearchItem` to be shown as search results
+     */
+    fun getResultSet(query: String? = null): List<SettingsSearchItem> {
+        val list = mutableListOf<SettingsSearchItem>()
+
+        if (query.isNullOrBlank()) {
+            SettingsSearchHelper.prefSearchResultList.forEach {
+                list.add(SettingsSearchItem(it, null))
             }
+        } else {
+            SettingsSearchHelper.prefSearchResultList
+                .filter {
+                    val inTitle = it.title.contains(query, true)
+                    val inSummary = it.summary.contains(query, true)
+                    val inBreadcrumb = it.breadcrumb.contains(query, true)
+
+                    return@filter inTitle || inSummary || inBreadcrumb
+                }
+                .forEach {
+                    list.add(SettingsSearchItem(it, null))
+                }
         }
 
-        return null
+        return list
     }
 
     /**
@@ -166,12 +196,7 @@ open class SettingsSearchController(
     /**
      * Opens a catalogue with the given search.
      */
-    override fun onTitleClick(pref: Preference) {
-        // TODO - These asserts will be the death of me, fix them.
-        for (ctrl in this!!.controllers!!) {
-            if (ctrl.findPreference(pref.key) != null) {
-                router.pushController(ctrl.withFadeTransaction())
-            }
-        }
+    override fun onTitleClick(ctrl: SettingsController) {
+        router.replaceTopController(ctrl.withFadeTransaction())
     }
 }

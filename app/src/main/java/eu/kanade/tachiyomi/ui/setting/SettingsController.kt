@@ -50,7 +50,7 @@ abstract class SettingsController : PreferenceController() {
         setupPreferenceScreen(screen)
     }
 
-    abstract fun setupPreferenceScreen(screen: PreferenceScreen): Any?
+    abstract fun setupPreferenceScreen(screen: PreferenceScreen): PreferenceScreen
 
     private fun getThemedContext(): Context {
         val tv = TypedValue()
