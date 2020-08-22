@@ -86,7 +86,7 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
         setSupportActionBar(binding.toolbar)
 
-        tabAnimator = ViewHeightAnimator(binding.tabs)
+        tabAnimator = ViewHeightAnimator(binding.tabs, 0L)
         bottomNavAnimator = ViewHeightAnimator(binding.bottomNav)
 
         // Set behavior of bottom nav
@@ -312,7 +312,7 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
     }
 
     private fun setRoot(controller: Controller, id: Int) {
-        router.setRoot(RouterTransaction.with(controller).tag(id.toString()))
+        router.setRoot(controller.withFadeTransaction().tag(id.toString()))
     }
 
     private fun syncActivityViewWithController(to: Controller?, from: Controller? = null) {
