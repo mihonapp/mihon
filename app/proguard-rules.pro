@@ -23,12 +23,6 @@
     <init>();
 }
 
-# OkHttp
--dontwarn okhttp3.**
--dontwarn okio.**
--dontwarn javax.annotation.**
--dontwarn retrofit2.Platform$Java8
-
 # RxJava 1.1.0
 -dontwarn sun.misc.**
 
