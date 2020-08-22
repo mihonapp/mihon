@@ -89,7 +89,8 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
         var isWebViewOutdated = false
 
         val origRequestUrl = request.url.toString()
-        val headers = request.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
+        val headers = request.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }.toMutableMap()
+        headers["X-Requested-With"] = WebViewUtil.REQUESTED_WITH
 
         handler.post {
             val webview = WebView(context)
