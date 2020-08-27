@@ -44,6 +44,7 @@
     <string name="action_sort_latest_chapter">Latest chapter</string>
     <string name="action_sort_date_added">Date added</string>
     <string name="action_search">Search</string>
+    <string name="action_search_settings">Search settings</string>
     <string name="action_global_search">Global search</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_inverse">Select inverse</string>

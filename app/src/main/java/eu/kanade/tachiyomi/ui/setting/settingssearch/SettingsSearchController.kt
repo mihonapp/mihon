@@ -75,6 +75,9 @@ open class SettingsSearchController(
         val searchView = searchItem.actionView as SearchView
         searchView.maxWidth = Int.MAX_VALUE
 
+        // Change hint to show "search settings."
+        searchView.queryHint = applicationContext?.getString(R.string.action_search_settings)
+
         searchItem.expandActionView()
         setItems(getResultSet())
 
