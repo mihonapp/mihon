@@ -8,7 +8,6 @@ import androidx.preference.PreferenceManager
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterController
 import eu.kanade.tachiyomi.ui.browse.source.SourceFilterController
 import eu.kanade.tachiyomi.ui.more.AboutController
-import eu.kanade.tachiyomi.ui.more.MoreController
 import eu.kanade.tachiyomi.ui.setting.SettingsAdvancedController
 import eu.kanade.tachiyomi.ui.setting.SettingsBackupController
 import eu.kanade.tachiyomi.ui.setting.SettingsBrowseController
@@ -43,8 +42,7 @@ object SettingsSearchHelper {
         SettingsTrackingController::class,
         ExtensionFilterController::class,
         SourceFilterController::class,
-        AboutController::class,
-        MoreController::class
+        AboutController::class
     )
 
     /**

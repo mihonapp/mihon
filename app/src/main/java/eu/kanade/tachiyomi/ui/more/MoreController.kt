@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.ui.more
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Menu
+import android.view.MenuInflater
+import androidx.appcompat.widget.SearchView
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
@@ -15,6 +18,8 @@ import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.download.DownloadController
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
+import eu.kanade.tachiyomi.ui.setting.settingssearch.SettingsSearchController
+import eu.kanade.tachiyomi.ui.setting.settingssearch.SettingsSearchHelper
 import eu.kanade.tachiyomi.util.preference.add
 import eu.kanade.tachiyomi.util.preference.iconRes
 import eu.kanade.tachiyomi.util.preference.iconTint
@@ -26,6 +31,11 @@ import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import reactivecircus.flowbinding.appcompat.QueryTextEvent
+import reactivecircus.flowbinding.appcompat.queryTextEvents
 import rx.android.schedulers.AndroidSchedulers
 import uy.kohesive.injekt.injectLazy
 
@@ -39,6 +49,7 @@ class MoreController :
     private var downloadQueueSize: Int = 0
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
+        SettingsSearchHelper.initPreferenceSearchResultCollection(context, preferenceManager)
         titleRes = R.string.label_more
 
         val tintColor = context.getResourceColor(R.attr.colorAccent)
@@ -138,6 +149,33 @@ class MoreController :
             layoutResource = R.layout.pref_more_header
             isSelectable = false
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate menu
+        inflater.inflate(R.menu.settings_main, menu)
+
+        // Initialize search option.
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.maxWidth = Int.MAX_VALUE
+
+        // Change hint to show global search.
+        searchView.queryHint = applicationContext?.getString(R.string.action_search_settings)
+
+        // Create query listener which opens the global search view.
+        searchView.queryTextEvents()
+            .filterIsInstance<QueryTextEvent.QueryChanged>()
+            .onEach {
+                performSettingsSearch(it.queryText.toString())
+            }
+            .launchIn(scope)
+    }
+
+    private fun performSettingsSearch(query: String) {
+        router.pushController(
+            SettingsSearchController(query).withFadeTransaction()
+        )
     }
 
     companion object {

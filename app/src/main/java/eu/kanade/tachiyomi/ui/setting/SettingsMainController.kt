@@ -105,7 +105,7 @@ class SettingsMainController : SettingsController() {
         searchView.maxWidth = Int.MAX_VALUE
 
         // Change hint to show global search.
-        searchView.queryHint = applicationContext?.getString(R.string.action_global_search_hint)
+        searchView.queryHint = applicationContext?.getString(R.string.action_search_settings)
 
         // Create query listener which opens the global search view.
         searchView.queryTextEvents()
