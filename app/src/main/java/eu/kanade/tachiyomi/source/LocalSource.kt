@@ -80,6 +80,7 @@ class LocalSource(private val context: Context) : CatalogueSource {
             .mapNotNull { it.listFiles()?.toList() }
             .flatten()
             .filter { it.isDirectory }
+            .filterNot { it.name.startsWith('.') }
             .filter { if (time == 0L) it.name.contains(query, ignoreCase = true) else it.lastModified() >= time }
             .distinctBy { it.name }
 
