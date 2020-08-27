@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.databinding.SettingsSearchControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.setting.SettingsController
-import eu.kanade.tachiyomi.ui.setting.SettingsControllerFactory
 
 /**
  * This controller shows and manages the different search result in settings search.
@@ -31,8 +30,6 @@ open class SettingsSearchController(
      * Adapter containing search results grouped by lang.
      */
     protected var adapter: SettingsSearchAdapter? = null
-
-    protected var controllers = SettingsControllerFactory.controllers
 
     init {
         setHasOptionsMenu(true)

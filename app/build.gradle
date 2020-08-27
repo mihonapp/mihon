@@ -201,7 +201,6 @@ dependencies {
 
     // Preferences
     implementation 'com.github.tfcporciuncula:flow-preferences:1.3.0'
-    implementation 'com.github.ByteHamster:SearchPreference:v1.0.3'
 
     // Model View Presenter
     final nucleus_version = '3.0.0'
