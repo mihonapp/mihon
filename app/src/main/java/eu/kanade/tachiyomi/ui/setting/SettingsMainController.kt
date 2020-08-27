@@ -7,7 +7,6 @@ import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.setting.settingssearch.SettingsSearchController
-import eu.kanade.tachiyomi.ui.setting.settingssearch.SettingsSearchHelper
 import eu.kanade.tachiyomi.util.preference.iconRes
 import eu.kanade.tachiyomi.util.preference.iconTint
 import eu.kanade.tachiyomi.util.preference.onClick
@@ -23,8 +22,6 @@ import reactivecircus.flowbinding.appcompat.queryTextEvents
 class SettingsMainController : SettingsController() {
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
-        SettingsSearchHelper.initPreferenceSearchResultCollection(context, preferenceManager)
-
         titleRes = R.string.label_settings
 
         val tintColor = context.getResourceColor(R.attr.colorAccent)

@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.setting.settingssearch
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
@@ -48,7 +49,10 @@ object SettingsSearchHelper {
     /**
      * Must be called to populate `prefSearchResultList`
      */
-    fun initPreferenceSearchResultCollection(context: Context, preferenceManager: PreferenceManager) {
+    @SuppressLint("RestrictedApi")
+    fun initPreferenceSearchResultCollection(context: Context) {
+        val preferenceManager = PreferenceManager(context)
+
         prefSearchResultList.clear()
 
         settingControllersList.forEach { kClass ->
