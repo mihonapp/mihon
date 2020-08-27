@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.setting.settingssearch
 
 import android.view.View
-import androidx.preference.Preference
 import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
@@ -13,9 +12,8 @@ import eu.kanade.tachiyomi.R
  *
  * @param pref the source for the search results.
  * @param results the search results.
- * @param highlighted whether this search item should be highlighted/marked in the catalogue search view.
  */
-class SettingsSearchItem(val pref: Preference, val results: List<SettingsSearchItem>?, val highlighted: Boolean = false) :
+class SettingsSearchItem(val settingsSearchResult: SettingsSearchHelper.SettingsSearchResult, val results: List<SettingsSearchItem>?) :
     AbstractFlexibleItem<SettingsSearchHolder>() {
 
     /**
@@ -55,7 +53,7 @@ class SettingsSearchItem(val pref: Preference, val results: List<SettingsSearchI
      */
     override fun equals(other: Any?): Boolean {
         if (other is SettingsSearchItem) {
-            return pref.key == other.pref.key
+            return settingsSearchResult == settingsSearchResult
         }
         return false
     }
@@ -66,6 +64,6 @@ class SettingsSearchItem(val pref: Preference, val results: List<SettingsSearchI
      * @return hashcode
      */
     override fun hashCode(): Int {
-        return pref.key.toInt()
+        return settingsSearchResult.hashCode()
     }
 }

@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.ui.setting.settingssearch
 
 import android.view.View
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
-import kotlinx.android.synthetic.main.settings_search_controller_card.setting
-import kotlinx.android.synthetic.main.settings_search_controller_card.title_wrapper
+import kotlin.reflect.full.createInstance
+import kotlinx.android.synthetic.main.settings_search_controller_card.*
 
 /**
  * Holder that binds the [SettingsSearchItem] containing catalogue cards.
@@ -14,17 +14,12 @@ import kotlinx.android.synthetic.main.settings_search_controller_card.title_wrap
 class SettingsSearchHolder(view: View, val adapter: SettingsSearchAdapter) :
     BaseFlexibleViewHolder(view, adapter) {
 
-    /**
-     * Adapter containing preference from search results.
-     */
-    private val settingsAdapter = SettingsSearchAdapter(adapter.controller)
-
-    private var lastBoundResults: List<SettingsSearchItem>? = null
-
     init {
         title_wrapper.setOnClickListener {
             adapter.getItem(bindingAdapterPosition)?.let {
-                adapter.titleClickListener.onTitleClick(it.pref)
+                val ctrl = it.settingsSearchResult.searchController
+                // needs to be a new instance to avoid this error https://github.com/bluelinelabs/Conductor/issues/446
+                adapter.titleClickListener.onTitleClick(ctrl::class.createInstance())
             }
         }
     }
@@ -35,17 +30,8 @@ class SettingsSearchHolder(view: View, val adapter: SettingsSearchAdapter) :
      * @param item item of card.
      */
     fun bind(item: SettingsSearchItem) {
-        val preference = item.pref
-        val results = item.results
-
-        val titlePrefix = if (item.highlighted) "▶ " else ""
-
-        // Set Title with country code if available.
-        setting.text = titlePrefix + preference.key
-
-        if (results !== lastBoundResults) {
-            settingsAdapter.updateDataSet(results)
-            lastBoundResults = results
-        }
+        search_result_pref_title.text = item.settingsSearchResult.title
+        search_result_pref_summary.text = item.settingsSearchResult.summary
+        search_result_pref_breadcrumb.text = item.settingsSearchResult.breadcrumb
     }
 }

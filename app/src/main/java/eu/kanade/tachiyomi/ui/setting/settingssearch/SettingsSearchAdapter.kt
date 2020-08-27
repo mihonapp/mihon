@@ -3,9 +3,9 @@ package eu.kanade.tachiyomi.ui.setting.settingssearch
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.SparseArray
-import androidx.preference.Preference
 import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.kanade.tachiyomi.ui.setting.SettingsController
 
 /**
  * Adapter that holds the search cards.
@@ -72,7 +72,7 @@ class SettingsSearchAdapter(val controller: SettingsSearchController) :
     }
 
     interface OnTitleClickListener {
-        fun onTitleClick(pref: Preference)
+        fun onTitleClick(ctrl: SettingsController)
     }
 
     private companion object {

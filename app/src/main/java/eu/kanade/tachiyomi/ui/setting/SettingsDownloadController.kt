@@ -40,7 +40,7 @@ class SettingsDownloadController : SettingsController() {
 
     private val db: DatabaseHelper by injectLazy()
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
+    override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_downloads
 
         preference {

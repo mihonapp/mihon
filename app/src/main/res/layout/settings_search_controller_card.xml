@@ -10,46 +10,41 @@
         android:id="@+id/title_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/search_result_wrapper_margin_start"
+        android:layout_marginTop="@dimen/search_result_wrapper_margin_top"
+        android:layout_marginBottom="@dimen/search_result_wrapper_margin_bottom"
         android:background="?attr/selectableItemBackground">
 
         <TextView
-            android:id="@+id/setting"
+            android:id="@+id/search_result_pref_title"
             style="@style/TextAppearance.Regular.SubHeading"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="@dimen/material_component_text_fields_padding_above_and_below_label"
-            app:layout_constraintBottom_toTopOf="@+id/location"
-            app:layout_constraintEnd_toStartOf="@+id/goto_icon"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="Title" />
 
         <TextView
-            android:id="@+id/location"
+            android:id="@+id/search_result_pref_summary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_result_pref_title"
+            tools:text="Summary" />
+
+        <TextView
+            android:id="@+id/search_result_pref_breadcrumb"
             style="@style/TextAppearance.Regular.Caption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:padding="@dimen/material_component_text_fields_padding_above_and_below_label"
-            app:layout_constraintEnd_toStartOf="@+id/goto_icon"
-            app:layout_constraintStart_toStartOf="@+id/setting"
-            app:layout_constraintTop_toBottomOf="@+id/setting"
-            tools:text="Location" />
-
-        <ImageView
-            android:id="@+id/goto_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/label_more"
-            android:padding="@dimen/material_component_text_fields_padding_above_and_below_label"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_forward_24dp"
-            app:tint="?android:attr/textColorPrimary" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_result_pref_summary"
+            tools:text="Location" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
