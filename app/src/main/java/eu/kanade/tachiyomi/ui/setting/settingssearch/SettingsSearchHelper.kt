@@ -94,12 +94,21 @@ object SettingsSearchHelper {
                 val summary = if (pref.summary != null) pref.summary.toString() else ""
                 val breadcrumbsStr = breadcrumbs + " > ${pref.title}"
 
-                prefSearchResultList.add(SettingsSearchResult(title, summary, breadcrumbsStr, ctrl))
+                prefSearchResultList.add(
+                    SettingsSearchResult(
+                        key = pref.key,
+                        title = title,
+                        summary = summary,
+                        breadcrumb = breadcrumbsStr,
+                        searchController = ctrl
+                    )
+                )
             }
         }
     }
 
     data class SettingsSearchResult(
+        val key: String?,
         val title: String,
         val summary: String,
         val breadcrumb: String,

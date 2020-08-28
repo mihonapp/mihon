@@ -17,9 +17,11 @@ class SettingsSearchHolder(view: View, val adapter: SettingsSearchAdapter) :
     init {
         title_wrapper.setOnClickListener {
             adapter.getItem(bindingAdapterPosition)?.let {
-                val ctrl = it.settingsSearchResult.searchController
-                // needs to be a new instance to avoid this error https://github.com/bluelinelabs/Conductor/issues/446
-                adapter.titleClickListener.onTitleClick(ctrl::class.createInstance())
+                val ctrl = it.settingsSearchResult.searchController::class.createInstance()
+                ctrl.preferenceKey = it.settingsSearchResult.key
+
+                // must pass a new Controller instance to avoid this error https://github.com/bluelinelabs/Conductor/issues/446
+                adapter.titleClickListener.onTitleClick(ctrl)
             }
         }
     }
