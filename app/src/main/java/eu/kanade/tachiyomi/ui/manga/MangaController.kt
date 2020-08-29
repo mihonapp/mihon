@@ -343,7 +343,8 @@ class MangaController :
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        // Hide download options for local manga
+        // Hide options for local manga
+        menu.findItem(R.id.action_share).isVisible = !isLocalSource
         menu.findItem(R.id.download_group).isVisible = !isLocalSource
 
         // Hide options for non-library manga
@@ -354,6 +355,7 @@ class MangaController :
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_share -> shareManga()
             R.id.download_next, R.id.download_next_5, R.id.download_next_10,
             R.id.download_custom, R.id.download_unread, R.id.download_all
             -> downloadChapters(item.itemId)
