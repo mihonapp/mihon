@@ -53,6 +53,7 @@ class SettingsBackupController : SettingsController() {
         titleRes = R.string.backup
 
         preference {
+            key = Keys.createBackup
             titleRes = R.string.pref_create_backup
             summaryRes = R.string.pref_create_backup_summ
 
@@ -67,6 +68,7 @@ class SettingsBackupController : SettingsController() {
             }
         }
         preference {
+            key = Keys.restoreBackup
             titleRes = R.string.pref_restore_backup
             summaryRes = R.string.pref_restore_backup_summ
 

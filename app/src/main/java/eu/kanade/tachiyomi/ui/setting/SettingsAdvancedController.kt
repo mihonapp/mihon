@@ -33,7 +33,6 @@ import rx.schedulers.Schedulers
 import uy.kohesive.injekt.injectLazy
 
 class SettingsAdvancedController : SettingsController() {
-
     private val network: NetworkHelper by injectLazy()
 
     private val chapterCache: ChapterCache by injectLazy()
@@ -43,7 +42,6 @@ class SettingsAdvancedController : SettingsController() {
     @SuppressLint("BatteryLife")
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_advanced
-
         switchPreference {
             key = "acra.enable"
             titleRes = R.string.pref_enable_acra
@@ -53,6 +51,7 @@ class SettingsAdvancedController : SettingsController() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             preference {
+                key = Keys.disableBatteryOptimization
                 titleRes = R.string.pref_disable_battery_optimization
                 summaryRes = R.string.pref_disable_battery_optimization_summary
 
@@ -86,6 +85,7 @@ class SettingsAdvancedController : SettingsController() {
                 onClick { clearChapterCache() }
             }
             preference {
+                key = Keys.clearDatabase
                 titleRes = R.string.pref_clear_database
                 summaryRes = R.string.pref_clear_database_summary
 
@@ -101,6 +101,7 @@ class SettingsAdvancedController : SettingsController() {
             titleRes = R.string.label_network
 
             preference {
+                key = Keys.clearCookies
                 titleRes = R.string.pref_clear_cookies
 
                 onClick {
@@ -120,11 +121,13 @@ class SettingsAdvancedController : SettingsController() {
             titleRes = R.string.label_library
 
             preference {
+                key = Keys.refreshLibraryCovers
                 titleRes = R.string.pref_refresh_library_covers
 
                 onClick { LibraryUpdateService.start(context, target = Target.COVERS) }
             }
             preference {
+                key = Keys.refreshLibraryTracking
                 titleRes = R.string.pref_refresh_library_tracking
                 summaryRes = R.string.pref_refresh_library_tracking_summary
 
