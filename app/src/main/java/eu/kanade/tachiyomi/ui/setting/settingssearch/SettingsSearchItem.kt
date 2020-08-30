@@ -16,11 +16,6 @@ import eu.kanade.tachiyomi.R
 class SettingsSearchItem(val settingsSearchResult: SettingsSearchHelper.SettingsSearchResult, val results: List<SettingsSearchItem>?) :
     AbstractFlexibleItem<SettingsSearchHolder>() {
 
-    /**
-     * Set view.
-     *
-     * @return id of view
-     */
     override fun getLayoutRes(): Int {
         return R.layout.settings_search_controller_card
     }
@@ -34,9 +29,6 @@ class SettingsSearchItem(val settingsSearchResult: SettingsSearchHelper.Settings
         return SettingsSearchHolder(view, adapter as SettingsSearchAdapter)
     }
 
-    /**
-     * Bind item to view.
-     */
     override fun bindViewHolder(
         adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>,
         holder: SettingsSearchHolder,
@@ -46,11 +38,6 @@ class SettingsSearchItem(val settingsSearchResult: SettingsSearchHelper.Settings
         holder.bind(this)
     }
 
-    /**
-     * Used to check if two items are equal.
-     *
-     * @return items are equal?
-     */
     override fun equals(other: Any?): Boolean {
         if (other is SettingsSearchItem) {
             return settingsSearchResult == settingsSearchResult
@@ -58,11 +45,6 @@ class SettingsSearchItem(val settingsSearchResult: SettingsSearchHelper.Settings
         return false
     }
 
-    /**
-     * Return hash code of item.
-     *
-     * @return hashcode
-     */
     override fun hashCode(): Int {
         return settingsSearchResult.hashCode()
     }

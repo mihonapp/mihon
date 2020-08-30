@@ -3,7 +3,10 @@ package eu.kanade.tachiyomi.ui.setting.settingssearch
 import android.view.View
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import kotlin.reflect.full.createInstance
-import kotlinx.android.synthetic.main.settings_search_controller_card.*
+import kotlinx.android.synthetic.main.settings_search_controller_card.search_result_pref_breadcrumb
+import kotlinx.android.synthetic.main.settings_search_controller_card.search_result_pref_summary
+import kotlinx.android.synthetic.main.settings_search_controller_card.search_result_pref_title
+import kotlinx.android.synthetic.main.settings_search_controller_card.title_wrapper
 
 /**
  * Holder that binds the [SettingsSearchItem] containing catalogue cards.

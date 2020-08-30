@@ -115,7 +115,7 @@ class SettingsMainController : SettingsController() {
 
     private fun performSettingsSearch(query: String) {
         router.pushController(
-            SettingsSearchController(query).withFadeTransaction()
+            SettingsSearchController().withFadeTransaction()
         )
     }
 }

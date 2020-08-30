@@ -17,13 +17,10 @@ import eu.kanade.tachiyomi.ui.setting.SettingsController
 
 /**
  * This controller shows and manages the different search result in settings search.
- * This controller should only handle UI actions, IO actions should be done by [SettingsSearchPresenter]
- * [SettingsSearchAdapter.WhatListener] called when preference is clicked in settings search
+ * [SettingsSearchAdapter.OnTitleClickListener] called when preference is clicked in settings search
  */
-open class SettingsSearchController(
-    protected val initialQuery: String? = null,
-    protected val extensionFilter: String? = null
-) : NucleusController<SettingsSearchControllerBinding, SettingsSearchPresenter>(),
+class SettingsSearchController :
+    NucleusController<SettingsSearchControllerBinding, SettingsSearchPresenter>(),
     SettingsSearchAdapter.OnTitleClickListener {
 
     /**
@@ -57,7 +54,7 @@ open class SettingsSearchController(
      * @return instance of [SettingsSearchPresenter]
      */
     override fun createPresenter(): SettingsSearchPresenter {
-        return SettingsSearchPresenter(initialQuery, extensionFilter)
+        return SettingsSearchPresenter()
     }
 
     /**
@@ -108,11 +105,6 @@ open class SettingsSearchController(
         })
     }
 
-    /**
-     * Called when the view is created
-     *
-     * @param view view of controller
-     */
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 
@@ -139,43 +131,13 @@ open class SettingsSearchController(
     }
 
     /**
-     * Returns the view holder for the given preference.
-     *
-     * @param pref used to find holder containing source
-     * @return the holder of the preference or null if it's not bound.
-     */
-//    private fun getHolder(pref: Preference): SettingsSearchHolder? {
-//        val adapter = adapter ?: return null
-//
-//        adapter.allBoundViewHolders.forEach { holder ->
-//            val item = adapter.getItem(holder.bindingAdapterPosition)
-//            if (item != null && pref.key == item.pref.key) {
-//                return holder as SettingsSearchHolder
-//            }
-//        }
-//
-//        return null
-//    }
-
-    /**
      * returns a list of `SettingsSearchItem` to be shown as search results
      */
     fun getResultSet(query: String? = null): List<SettingsSearchItem> {
         val list = mutableListOf<SettingsSearchItem>()
 
-        if (query.isNullOrBlank()) {
-            SettingsSearchHelper.prefSearchResultList.forEach {
-                list.add(SettingsSearchItem(it, null))
-            }
-        } else {
-            SettingsSearchHelper.prefSearchResultList
-                .filter {
-                    val inTitle = it.title.contains(query, true)
-                    val inSummary = it.summary.contains(query, true)
-                    val inBreadcrumb = it.breadcrumb.contains(query, true)
-
-                    return@filter inTitle || inSummary || inBreadcrumb
-                }
+        if (!query.isNullOrBlank()) {
+            SettingsSearchHelper.getFilteredResults(query)
                 .forEach {
                     list.add(SettingsSearchItem(it, null))
                 }
@@ -197,6 +159,6 @@ open class SettingsSearchController(
      * Opens a catalogue with the given search.
      */
     override fun onTitleClick(ctrl: SettingsController) {
-        router.replaceTopController(ctrl.withFadeTransaction())
+        router.pushController(ctrl.withFadeTransaction())
     }
 }

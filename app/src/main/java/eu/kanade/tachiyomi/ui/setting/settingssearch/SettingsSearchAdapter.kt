@@ -64,9 +64,8 @@ class SettingsSearchAdapter(val controller: SettingsSearchController) :
      */
     private fun restoreHolderState(holder: RecyclerView.ViewHolder) {
         val key = "holder_${holder.bindingAdapterPosition}"
-        val holderState = bundle.getSparseParcelableArray<Parcelable>(key)
-        if (holderState != null) {
-            holder.itemView.restoreHierarchyState(holderState)
+        bundle.getSparseParcelableArray<Parcelable>(key)?.let {
+            holder.itemView.restoreHierarchyState(it)
             bundle.remove(key)
         }
     }
