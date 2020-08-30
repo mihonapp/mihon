@@ -10,6 +10,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
+import eu.kanade.tachiyomi.ui.setting.settingssearch.SettingsSearchHelper
+import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import uy.kohesive.injekt.injectLazy
 
@@ -76,6 +78,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         secureActivityDelegate.onCreate()
+
+        launchNow { SettingsSearchHelper.initPreferenceSearchResultCollection(this@BaseActivity) }
     }
 
     override fun onResume() {

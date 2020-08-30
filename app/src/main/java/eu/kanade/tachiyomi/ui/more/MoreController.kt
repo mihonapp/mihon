@@ -19,7 +19,6 @@ import eu.kanade.tachiyomi.ui.download.DownloadController
 import eu.kanade.tachiyomi.ui.setting.SettingsController
 import eu.kanade.tachiyomi.ui.setting.SettingsMainController
 import eu.kanade.tachiyomi.ui.setting.settingssearch.SettingsSearchController
-import eu.kanade.tachiyomi.ui.setting.settingssearch.SettingsSearchHelper
 import eu.kanade.tachiyomi.util.preference.add
 import eu.kanade.tachiyomi.util.preference.iconRes
 import eu.kanade.tachiyomi.util.preference.iconTint
@@ -49,7 +48,6 @@ class MoreController :
     private var downloadQueueSize: Int = 0
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
-        SettingsSearchHelper.initPreferenceSearchResultCollection(context, preferenceManager)
         titleRes = R.string.label_more
 
         val tintColor = context.getResourceColor(R.attr.colorAccent)
