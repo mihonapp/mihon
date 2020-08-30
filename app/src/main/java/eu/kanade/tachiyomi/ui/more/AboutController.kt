@@ -10,6 +10,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.aboutlibraries.LibsBuilder
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
 import eu.kanade.tachiyomi.data.updater.UpdateChecker
 import eu.kanade.tachiyomi.data.updater.UpdateResult
 import eu.kanade.tachiyomi.data.updater.UpdaterService
@@ -45,6 +46,7 @@ class AboutController : SettingsController() {
         titleRes = R.string.pref_category_about
 
         preference {
+            key = Keys.aboutVersion
             titleRes = R.string.version
             summary = if (BuildConfig.DEBUG) {
                 "Preview r${BuildConfig.COMMIT_COUNT} (${BuildConfig.COMMIT_SHA})"
@@ -55,17 +57,20 @@ class AboutController : SettingsController() {
             onClick { copyDebugInfo() }
         }
         preference {
+            key = Keys.aboutBuildTime
             titleRes = R.string.build_time
             summary = getFormattedBuildTime()
         }
         if (isUpdaterEnabled) {
             preference {
+                key = Keys.aboutCheckForUpdates
                 titleRes = R.string.check_for_updates
 
                 onClick { checkVersion() }
             }
         }
         preference {
+            key = Keys.aboutWhatsNew
             titleRes = R.string.whats_new
 
             onClick {
@@ -81,6 +86,7 @@ class AboutController : SettingsController() {
         }
         if (BuildConfig.DEBUG) {
             preference {
+                key = Keys.aboutNotices
                 titleRes = R.string.notices
 
                 onClick {
@@ -91,7 +97,10 @@ class AboutController : SettingsController() {
         }
 
         preferenceCategory {
+            titleRes = R.string.about_resources
+
             preference {
+                key = Keys.aboutWebsite
                 titleRes = R.string.website
                 val url = "https://tachiyomi.org"
                 summary = url
@@ -101,6 +110,7 @@ class AboutController : SettingsController() {
                 }
             }
             preference {
+                key = Keys.aboutDiscord
                 title = "Discord"
                 val url = "https://discord.gg/tachiyomi"
                 summary = url
@@ -110,6 +120,7 @@ class AboutController : SettingsController() {
                 }
             }
             preference {
+                key = Keys.aboutGitHub
                 title = "GitHub"
                 val url = "https://github.com/inorichi/tachiyomi"
                 summary = url
@@ -119,6 +130,7 @@ class AboutController : SettingsController() {
                 }
             }
             preference {
+                key = Keys.aboutLabelExtensions
                 titleRes = R.string.label_extensions
                 val url = "https://github.com/inorichi/tachiyomi-extensions"
                 summary = url
@@ -128,6 +140,7 @@ class AboutController : SettingsController() {
                 }
             }
             preference {
+                key = Keys.aboutLicenses
                 titleRes = R.string.licenses
 
                 onClick {

@@ -6,8 +6,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceManager
-import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterController
-import eu.kanade.tachiyomi.ui.browse.source.SourceFilterController
 import eu.kanade.tachiyomi.ui.more.AboutController
 import eu.kanade.tachiyomi.ui.setting.SettingsAdvancedController
 import eu.kanade.tachiyomi.ui.setting.SettingsBackupController
@@ -41,8 +39,6 @@ object SettingsSearchHelper {
         SettingsReaderController::class,
         SettingsSecurityController::class,
         SettingsTrackingController::class,
-        ExtensionFilterController::class,
-        SourceFilterController::class,
         AboutController::class
     )
 
@@ -94,12 +90,21 @@ object SettingsSearchHelper {
                 val summary = if (pref.summary != null) pref.summary.toString() else ""
                 val breadcrumbsStr = breadcrumbs + " > ${pref.title}"
 
-                prefSearchResultList.add(SettingsSearchResult(title, summary, breadcrumbsStr, ctrl))
+                prefSearchResultList.add(
+                    SettingsSearchResult(
+                        key = pref.key,
+                        title = title,
+                        summary = summary,
+                        breadcrumb = breadcrumbsStr,
+                        searchController = ctrl
+                    )
+                )
             }
         }
     }
 
     data class SettingsSearchResult(
+        val key: String?,
         val title: String,
         val summary: String,
         val breadcrumb: String,
