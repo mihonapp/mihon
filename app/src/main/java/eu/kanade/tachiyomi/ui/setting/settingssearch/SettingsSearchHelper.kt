@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.ui.setting.SettingsParentalControlsController
 import eu.kanade.tachiyomi.ui.setting.SettingsReaderController
 import eu.kanade.tachiyomi.ui.setting.SettingsSecurityController
 import eu.kanade.tachiyomi.ui.setting.SettingsTrackingController
+import eu.kanade.tachiyomi.util.lang.launchNow
 import eu.kanade.tachiyomi.util.system.isLTR
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -48,17 +49,18 @@ object SettingsSearchHelper {
     @SuppressLint("RestrictedApi")
     fun initPreferenceSearchResultCollection(context: Context) {
         val preferenceManager = PreferenceManager(context)
-
         prefSearchResultList.clear()
 
-        settingControllersList.forEach { kClass ->
-            val ctrl = kClass.createInstance()
-            val settingsPrefScreen = ctrl.setupPreferenceScreen(preferenceManager.createPreferenceScreen(context))
-            val prefCount = settingsPrefScreen.preferenceCount
-            for (i in 0 until prefCount) {
-                val rootPref = settingsPrefScreen.getPreference(i)
-                if (rootPref.title == null) continue // no title, not a preference. (note: only info notes appear to not have titles)
-                getSettingSearchResult(ctrl, rootPref, "${settingsPrefScreen.title}")
+        launchNow {
+            settingControllersList.forEach { kClass ->
+                val ctrl = kClass.createInstance()
+                val settingsPrefScreen = ctrl.setupPreferenceScreen(preferenceManager.createPreferenceScreen(context))
+                val prefCount = settingsPrefScreen.preferenceCount
+                for (i in 0 until prefCount) {
+                    val rootPref = settingsPrefScreen.getPreference(i)
+                    if (rootPref.title == null) continue // no title, not a preference. (note: only info notes appear to not have titles)
+                    getSettingSearchResult(ctrl, rootPref, "${settingsPrefScreen.title}")
+                }
             }
         }
     }
