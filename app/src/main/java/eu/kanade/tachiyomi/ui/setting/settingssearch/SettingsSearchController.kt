@@ -113,6 +113,9 @@ class SettingsSearchController :
         // Create recycler and set adapter.
         binding.recycler.layoutManager = LinearLayoutManager(view.context)
         binding.recycler.adapter = adapter
+
+        // load all search results
+        SettingsSearchHelper.initPreferenceSearchResultCollection(presenter.preferences.context)
     }
 
     override fun onDestroyView(view: View) {
