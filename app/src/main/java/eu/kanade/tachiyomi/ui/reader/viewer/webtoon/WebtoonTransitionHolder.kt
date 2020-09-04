@@ -3,23 +3,17 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 import android.view.Gravity
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.text.bold
-import androidx.core.text.buildSpannedString
 import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.ui.reader.viewer.TransitionView
 import eu.kanade.tachiyomi.util.system.dpToPx
-import eu.kanade.tachiyomi.util.system.getResourceColor
-import eu.kanade.tachiyomi.util.view.setVectorCompat
-import kotlin.math.floor
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
@@ -36,38 +30,7 @@ class WebtoonTransitionHolder(
      */
     private var statusSubscription: Subscription? = null
 
-    private var warningContainer: LinearLayout = LinearLayout(context).apply {
-        val layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-        layoutParams.bottomMargin = 16.dpToPx
-        setLayoutParams(layoutParams)
-        orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.CENTER_VERTICAL
-    }
-
-    private var warningImageView: ImageView = ImageView(context).apply {
-        val tintColor = context.getResourceColor(R.attr.colorOnBackground)
-        setVectorCompat(R.drawable.ic_warning_white_24dp, tintColor)
-        wrapContent()
-    }
-
-    private var warningTextView: TextView = TextView(context).apply {
-        wrapContent()
-    }
-
-    private var upperTextView: TextView = TextView(context).apply {
-        val layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-        layoutParams.topMargin = 16.dpToPx
-        layoutParams.bottomMargin = 16.dpToPx
-        setLayoutParams(layoutParams)
-        textSize = 17.5F
-    }
-
-    private var lowerTextView: TextView = TextView(context).apply {
-        val layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-        layoutParams.bottomMargin = 16.dpToPx
-        setLayoutParams(layoutParams)
-        textSize = 17.5F
-    }
+    private val transitionView = TransitionView(context)
 
     /**
      * View container of the current status of the transition page. Child views will be added
@@ -92,11 +55,7 @@ class WebtoonTransitionHolder(
             setMargins(0, childMargins, 0, childMargins)
         }
 
-        layout.addView(upperTextView)
-        warningContainer.addView(warningImageView)
-        warningContainer.addView(warningTextView)
-        layout.addView(warningContainer)
-        layout.addView(lowerTextView)
+        layout.addView(transitionView)
         layout.addView(pagesContainer, childParams)
     }
 
@@ -104,37 +63,9 @@ class WebtoonTransitionHolder(
      * Binds the given [transition] with this view holder, subscribing to its state.
      */
     fun bind(transition: ChapterTransition) {
-        when (transition) {
-            is ChapterTransition.Prev -> bindPrevChapterTransition(transition)
-            is ChapterTransition.Next -> bindNextChapterTransition(transition)
-        }
+        transitionView.bind(transition)
 
-        missingChapterWarning(transition)
-    }
-
-    private fun missingChapterWarning(transition: ChapterTransition) {
-        if (transition.to == null) {
-            showMissingChapterWarning(false)
-            return
-        }
-
-        val fromChapterNumber: Float = floor(transition.from.chapter.chapter_number)
-        val toChapterNumber: Float = floor(transition.to!!.chapter.chapter_number)
-
-        val chapterDifference = when (transition) {
-            is ChapterTransition.Prev -> fromChapterNumber - toChapterNumber - 1f
-            is ChapterTransition.Next -> toChapterNumber - fromChapterNumber - 1f
-        }
-
-        val hasMissingChapters = chapterDifference > 0f
-
-        warningTextView.text = itemView.resources.getQuantityString(R.plurals.missing_chapters_warning, chapterDifference.toInt(), chapterDifference.toInt())
-        showMissingChapterWarning(hasMissingChapters)
-    }
-
-    private fun showMissingChapterWarning(visible: Boolean) {
-        warningImageView.isVisible = visible
-        warningTextView.isVisible = visible
+        transition.to?.let { observeStatus(it, transition) }
     }
 
     /**
@@ -142,62 +73,6 @@ class WebtoonTransitionHolder(
      */
     override fun recycle() {
         unsubscribeStatus()
-    }
-
-    /**
-     * Binds a next chapter transition on this view and subscribes to the load status.
-     */
-    private fun bindNextChapterTransition(transition: ChapterTransition.Next) {
-        val nextChapter = transition.to
-
-        val hasNextChapter = nextChapter != null
-        lowerTextView.isVisible = hasNextChapter
-        if (hasNextChapter) {
-            layout.gravity = Gravity.CENTER_VERTICAL
-            upperTextView.text = buildSpannedString {
-                bold { append(context.getString(R.string.transition_finished)) }
-                append("\n${transition.from.chapter.name}")
-            }
-            lowerTextView.text = buildSpannedString {
-                bold { append(context.getString(R.string.transition_next)) }
-                append("\n${nextChapter!!.chapter.name}")
-            }
-        } else {
-            layout.gravity = Gravity.CENTER
-            upperTextView.text = context.getString(R.string.transition_no_next)
-        }
-
-        if (nextChapter != null) {
-            observeStatus(nextChapter, transition)
-        }
-    }
-
-    /**
-     * Binds a previous chapter transition on this view and subscribes to the page load status.
-     */
-    private fun bindPrevChapterTransition(transition: ChapterTransition.Prev) {
-        val prevChapter = transition.to
-
-        val hasPrevChapter = prevChapter != null
-        lowerTextView.isVisible = hasPrevChapter
-        if (hasPrevChapter) {
-            layout.gravity = Gravity.CENTER_VERTICAL
-            upperTextView.text = buildSpannedString {
-                bold { append(context.getString(R.string.transition_current)) }
-                append("\n${transition.from.chapter.name}")
-            }
-            lowerTextView.text = buildSpannedString {
-                bold { append(context.getString(R.string.transition_previous)) }
-                append("\n${prevChapter!!.chapter.name}")
-            }
-        } else {
-            layout.gravity = Gravity.CENTER
-            upperTextView.text = context.getString(R.string.transition_no_previous)
-        }
-
-        if (prevChapter != null) {
-            observeStatus(prevChapter, transition)
-        }
     }
 
     /**
