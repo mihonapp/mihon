@@ -524,6 +524,7 @@
     <string name="download_unread">Unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
     <string name="invalid_download_dir">Invalid download location</string>
+    <string name="no_chapters_error">No chapters found</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
@@ -590,6 +591,10 @@
     <string name="transition_pages_error">Failed to load pages: %1$s</string>
     <string name="page_list_empty_error">No pages found</string>
     <string name="loader_not_implemented_error">Source not found</string>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">There is 1 missing chapter</item>
+        <item quantity="other">There are %d missing chapters</item>
+    </plurals>
 
     <!-- Updates fragment -->
     <string name="updating_library">Updating library</string>
@@ -700,9 +705,4 @@
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_both">Both</string>
-
-    <plurals name="missing_chapters_warning">
-        <item quantity="one">There is 1 missing chapter</item>
-        <item quantity="other">There are %d missing chapters</item>
-    </plurals>
 </resources>

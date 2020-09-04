@@ -65,6 +65,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.chapter.NoChaptersException
 import eu.kanade.tachiyomi.util.hasCustomCover
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.system.toast
@@ -696,7 +697,11 @@ class MangaController :
     fun onFetchChaptersError(error: Throwable) {
         isRefreshingChapters = false
         updateRefreshing()
-        activity?.toast(error.message)
+        if (error is NoChaptersException) {
+            activity?.toast(activity?.getString(R.string.no_chapters_error))
+        } else {
+            activity?.toast(error.message)
+        }
     }
 
     fun onChapterStatusChange(download: Download) {
