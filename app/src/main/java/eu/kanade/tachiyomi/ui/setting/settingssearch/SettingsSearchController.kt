@@ -137,16 +137,12 @@ class SettingsSearchController :
      * returns a list of `SettingsSearchItem` to be shown as search results
      */
     fun getResultSet(query: String? = null): List<SettingsSearchItem> {
-        val list = mutableListOf<SettingsSearchItem>()
-
-        if (!query.isNullOrBlank()) {
-            SettingsSearchHelper.getFilteredResults(query)
-                .forEach {
-                    list.add(SettingsSearchItem(it, null))
-                }
+        if (!query.isNullOrBlank() && query.length >= 3) {
+            return SettingsSearchHelper.getFilteredResults(query)
+                .map { SettingsSearchItem(it, null) }
         }
 
-        return list
+        return mutableListOf()
     }
 
     /**

@@ -108,14 +108,10 @@ class SettingsMainController : SettingsController() {
         searchView.queryTextEvents()
             .filterIsInstance<QueryTextEvent.QueryChanged>()
             .onEach {
-                performSettingsSearch(it.queryText.toString())
+                router.pushController(
+                    SettingsSearchController().withFadeTransaction()
+                )
             }
             .launchIn(scope)
-    }
-
-    private fun performSettingsSearch(query: String) {
-        router.pushController(
-            SettingsSearchController().withFadeTransaction()
-        )
     }
 }
