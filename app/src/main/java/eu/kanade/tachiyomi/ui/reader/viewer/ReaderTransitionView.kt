@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader.viewer
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
@@ -15,7 +14,7 @@ import kotlinx.android.synthetic.main.reader_transition_view.view.upper_text
 import kotlinx.android.synthetic.main.reader_transition_view.view.warning
 import kotlinx.android.synthetic.main.reader_transition_view.view.warning_text
 
-class TransitionView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     LinearLayout(context, attrs) {
 
     init {
@@ -40,7 +39,7 @@ class TransitionView @JvmOverloads constructor(context: Context, attrs: Attribut
         val hasPrevChapter = prevChapter != null
         lower_text.isVisible = hasPrevChapter
         if (hasPrevChapter) {
-            gravity = Gravity.CENTER_VERTICAL
+            upper_text.textAlignment = TEXT_ALIGNMENT_TEXT_START
             upper_text.text = buildSpannedString {
                 bold { append(context.getString(R.string.transition_current)) }
                 append("\n${transition.from.chapter.name}")
@@ -50,7 +49,7 @@ class TransitionView @JvmOverloads constructor(context: Context, attrs: Attribut
                 append("\n${prevChapter!!.chapter.name}")
             }
         } else {
-            gravity = Gravity.CENTER
+            upper_text.textAlignment = TEXT_ALIGNMENT_CENTER
             upper_text.text = context.getString(R.string.transition_no_previous)
         }
     }
@@ -64,7 +63,7 @@ class TransitionView @JvmOverloads constructor(context: Context, attrs: Attribut
         val hasNextChapter = nextChapter != null
         lower_text.isVisible = hasNextChapter
         if (hasNextChapter) {
-            gravity = Gravity.CENTER_VERTICAL
+            upper_text.textAlignment = TEXT_ALIGNMENT_TEXT_START
             upper_text.text = buildSpannedString {
                 bold { append(context.getString(R.string.transition_finished)) }
                 append("\n${transition.from.chapter.name}")
@@ -74,7 +73,7 @@ class TransitionView @JvmOverloads constructor(context: Context, attrs: Attribut
                 append("\n${nextChapter!!.chapter.name}")
             }
         } else {
-            gravity = Gravity.CENTER
+            upper_text.textAlignment = TEXT_ALIGNMENT_CENTER
             upper_text.text = context.getString(R.string.transition_no_next)
         }
     }

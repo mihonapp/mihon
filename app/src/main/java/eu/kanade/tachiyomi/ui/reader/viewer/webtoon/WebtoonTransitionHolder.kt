@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
-import eu.kanade.tachiyomi.ui.reader.viewer.TransitionView
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionView
 import eu.kanade.tachiyomi.util.system.dpToPx
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -30,7 +30,7 @@ class WebtoonTransitionHolder(
      */
     private var statusSubscription: Subscription? = null
 
-    private val transitionView = TransitionView(context)
+    private val transitionView = ReaderTransitionView(context)
 
     /**
      * View container of the current status of the transition page. Child views will be added
