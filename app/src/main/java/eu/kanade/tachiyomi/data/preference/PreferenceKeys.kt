@@ -165,48 +165,6 @@ object PreferenceKeys {
 
     const val enableDoh = "enable_doh"
 
-    const val disableBatteryOptimization = "pref_disable_battery_optimization"
-
-    const val clearDatabase = "pref_clear_database"
-
-    const val clearCookies = "pref_clear_cookies"
-
-    const val refreshLibraryCovers = "pref_refresh_library_covers"
-
-    const val refreshLibraryTracking = "pref_refresh_library_tracking"
-
-    const val createBackup = "pref_create_backup"
-
-    const val restoreBackup = "pref_restore_backup"
-
-    const val manageNotifications = "pref_manage_notifications"
-
-    const val libraryColumns = "pref_library_columns"
-
-    const val actionEditCategories = "pref_action_edit_categories"
-
-    const val parentalControlsInfo = "pref_parental_controls_info"
-
-    const val aboutVersion = "pref_about_version"
-
-    const val aboutBuildTime = "pref_about_build_time"
-
-    const val aboutCheckForUpdates = "pref_about_check_for_updates"
-
-    const val aboutWhatsNew = "pref_about_whats_new"
-
-    const val aboutNotices = "pref_about_notices"
-
-    const val aboutWebsite = "pref_about_website"
-
-    const val aboutDiscord = "pref_about_discord"
-
-    const val aboutGitHub = "pref_about_github"
-
-    const val aboutLabelExtensions = "pref_about_label_extensions"
-
-    const val aboutLicenses = "pref_about_licenses"
-
     fun trackUsername(syncId: Int) = "pref_mangasync_username_$syncId"
 
     fun trackPassword(syncId: Int) = "pref_mangasync_password_$syncId"

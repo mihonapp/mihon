@@ -51,7 +51,7 @@ class SettingsAdvancedController : SettingsController() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             preference {
-                key = Keys.disableBatteryOptimization
+                key = "pref_disable_battery_optimization"
                 titleRes = R.string.pref_disable_battery_optimization
                 summaryRes = R.string.pref_disable_battery_optimization_summary
 
@@ -85,7 +85,7 @@ class SettingsAdvancedController : SettingsController() {
                 onClick { clearChapterCache() }
             }
             preference {
-                key = Keys.clearDatabase
+                key = "pref_clear_database"
                 titleRes = R.string.pref_clear_database
                 summaryRes = R.string.pref_clear_database_summary
 
@@ -101,7 +101,7 @@ class SettingsAdvancedController : SettingsController() {
             titleRes = R.string.label_network
 
             preference {
-                key = Keys.clearCookies
+                key = "pref_clear_cookies"
                 titleRes = R.string.pref_clear_cookies
 
                 onClick {
@@ -121,13 +121,13 @@ class SettingsAdvancedController : SettingsController() {
             titleRes = R.string.label_library
 
             preference {
-                key = Keys.refreshLibraryCovers
+                key = "pref_refresh_library_covers"
                 titleRes = R.string.pref_refresh_library_covers
 
                 onClick { LibraryUpdateService.start(context, target = Target.COVERS) }
             }
             preference {
-                key = Keys.refreshLibraryTracking
+                key = "pref_refresh_library_tracking"
                 titleRes = R.string.pref_refresh_library_tracking
                 summaryRes = R.string.pref_refresh_library_tracking_summary
 

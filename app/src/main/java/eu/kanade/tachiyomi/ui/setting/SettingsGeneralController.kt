@@ -47,7 +47,7 @@ class SettingsGeneralController : SettingsController() {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             preference {
-                key = Keys.manageNotifications
+                key = "pref_manage_notifications"
                 titleRes = R.string.pref_manage_notifications
                 onClick {
                     val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {

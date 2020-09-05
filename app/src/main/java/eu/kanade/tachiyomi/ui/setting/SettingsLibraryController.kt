@@ -50,7 +50,7 @@ class SettingsLibraryController : SettingsController() {
             titleRes = R.string.pref_category_display
 
             preference {
-                key = Keys.libraryColumns
+                key = "pref_library_columns"
                 titleRes = R.string.pref_library_columns
                 onClick {
                     LibraryColumnsDialog().showDialog(router)
@@ -84,7 +84,7 @@ class SettingsLibraryController : SettingsController() {
             titleRes = R.string.pref_category_library_categories
 
             preference {
-                key = Keys.actionEditCategories
+                key = "pref_action_edit_categories"
                 titleRes = R.string.action_edit_categories
 
                 val catCount = dbCategories.size
