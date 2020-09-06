@@ -86,6 +86,8 @@ class SettingsSearchController :
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                searchView.onActionViewCollapsed() // Required to show the query in the view
+                router.popCurrentController()
                 return true
             }
         })
@@ -135,9 +137,10 @@ class SettingsSearchController :
 
     /**
      * returns a list of `SettingsSearchItem` to be shown as search results
+     * Future update: should we add a minimum length to the query before displaying results? Consider other languages.
      */
     fun getResultSet(query: String? = null): List<SettingsSearchItem> {
-        if (!query.isNullOrBlank() && query.length >= 3) {
+        if (!query.isNullOrBlank()) {
             return SettingsSearchHelper.getFilteredResults(query)
                 .map { SettingsSearchItem(it, null) }
         }

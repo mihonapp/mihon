@@ -96,8 +96,6 @@ class AboutController : SettingsController() {
         }
 
         preferenceCategory {
-            titleRes = R.string.about_resources
-
             preference {
                 key = "pref_about_website"
                 titleRes = R.string.website

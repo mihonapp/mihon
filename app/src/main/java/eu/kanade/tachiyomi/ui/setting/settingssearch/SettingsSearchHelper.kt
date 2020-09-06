@@ -77,6 +77,7 @@ object SettingsSearchHelper {
 
     /**
      * Extracts the data needed from a `Preference` to create a `SettingsSearchResult`, and then adds it to `prefSearchResultList`
+     * Future enhancement: make bold the text matched by the search query.
      */
     private fun getSettingSearchResult(ctrl: SettingsController, pref: Preference, breadcrumbs: String = "") {
         when (pref) {
