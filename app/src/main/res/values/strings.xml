@@ -83,6 +83,7 @@
     <string name="action_move">Move</string>
     <string name="action_open_in_browser">Open in browser</string>
     <string name="action_open_in_web_view">Open in WebView</string>
+    <string name="action_web_view">WebView</string>
     <string name="action_open_in_settings">Open in Settings</string>
     <string name="action_migrate">Migrate</string>
     <string name="action_display_mode">Display mode</string>
@@ -485,7 +486,6 @@
     <string name="manga_info_full_title_label">Title</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
-    <string name="manga_info_about_label">About</string>
     <string name="manga_info_expand">More</string>
     <string name="manga_info_collapse">Less</string>
     <plurals name="manga_num_chapters">
