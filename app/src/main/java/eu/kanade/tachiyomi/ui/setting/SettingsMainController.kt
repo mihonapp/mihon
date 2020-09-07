@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
@@ -13,11 +14,6 @@ import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preference
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.getResourceColor
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import reactivecircus.flowbinding.appcompat.QueryTextEvent
-import reactivecircus.flowbinding.appcompat.queryTextEvents
 
 class SettingsMainController : SettingsController() {
 
@@ -104,14 +100,16 @@ class SettingsMainController : SettingsController() {
         // Change hint to show global search.
         searchView.queryHint = applicationContext?.getString(R.string.action_search_settings)
 
-        // Create query listener which opens the global search view.
-        searchView.queryTextEvents()
-            .filterIsInstance<QueryTextEvent.QueryChanged>()
-            .onEach {
-                router.pushController(
-                    SettingsSearchController().withFadeTransaction()
-                )
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                preferences.lastSearchQuerySearchSettings("") // reset saved search query
+                router.pushController(SettingsSearchController().withFadeTransaction())
+                return true
             }
-            .launchIn(scope)
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                return true
+            }
+        })
     }
 }
