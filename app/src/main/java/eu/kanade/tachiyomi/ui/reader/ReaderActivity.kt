@@ -21,6 +21,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -290,11 +291,12 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.readerMenu) { _, insets ->
             if (!window.isDefaultBar()) {
+                val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
                 binding.readerMenu.setPadding(
-                    insets.systemWindowInsetLeft,
-                    insets.systemWindowInsetTop,
-                    insets.systemWindowInsetRight,
-                    insets.systemWindowInsetBottom
+                    systemInsets.left,
+                    systemInsets.top,
+                    systemInsets.right,
+                    systemInsets.bottom
                 )
             }
             insets
