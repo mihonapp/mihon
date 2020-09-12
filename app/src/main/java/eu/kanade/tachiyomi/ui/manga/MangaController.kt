@@ -52,7 +52,6 @@ import eu.kanade.tachiyomi.ui.library.ChangeMangaCoverDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
-import eu.kanade.tachiyomi.ui.manga.chapter.ChapterDividerItemDecoration
 import eu.kanade.tachiyomi.ui.manga.chapter.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersAdapter
 import eu.kanade.tachiyomi.ui.manga.chapter.ChaptersSettingsSheet
@@ -208,7 +207,6 @@ class MangaController :
 
         binding.recycler.adapter = ConcatAdapter(mangaInfoAdapter, chaptersHeaderAdapter, chaptersAdapter)
         binding.recycler.layoutManager = LinearLayoutManager(view.context)
-        binding.recycler.addItemDecoration(ChapterDividerItemDecoration(view.context))
         binding.recycler.setHasFixedSize(true)
         chaptersAdapter?.fastScroller = binding.fastScroller
 
