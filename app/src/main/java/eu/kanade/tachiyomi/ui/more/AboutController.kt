@@ -23,12 +23,12 @@ import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.titleRes
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
+import timber.log.Timber
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
-import timber.log.Timber
 
 class AboutController : SettingsController() {
 
@@ -224,7 +224,9 @@ class AboutController : SettingsController() {
             val buildTime = inputDf.parse(BuildConfig.BUILD_TIME)
 
             val outputDf = DateFormat.getDateTimeInstance(
-                DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault()
+                DateFormat.MEDIUM,
+                DateFormat.SHORT,
+                Locale.getDefault()
             )
             outputDf.timeZone = TimeZone.getDefault()
 
