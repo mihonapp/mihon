@@ -40,8 +40,8 @@ android {
         minSdkVersion AndroidConfig.minSdk
         targetSdkVersion AndroidConfig.targetSdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        versionCode 50
-        versionName "0.10.4"
+        versionCode 51
+        versionName "0.10.5"
 
         buildConfigField "String", "COMMIT_COUNT", "\"${getCommitCount()}\""
         buildConfigField "String", "COMMIT_SHA", "\"${getGitSha()}\""
