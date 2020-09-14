@@ -9,8 +9,6 @@ import com.tfcporciuncula.flow.FlowSharedPreferences
 import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
-import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.DisplayMode
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.NsfwAllowance
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -22,6 +20,8 @@ import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
 @OptIn(ExperimentalCoroutinesApi::class)
 fun <T> Preference<T>.asImmediateFlow(block: (value: T) -> Unit): Flow<T> {
@@ -264,16 +264,14 @@ class PreferencesHelper(val context: Context) {
 
     fun sortChapterByAscendingOrDescending() = prefs.getInt(Keys.defaultChapterSortByAscendingOrDescending, Manga.SORT_DESC)
 
-    fun setChapterSettingsDefault(m: Manga) {
+    fun setChapterSettingsDefault(manga: Manga) {
         prefs.edit {
-            putInt(Keys.defaultChapterFilterByRead, m.readFilter)
-            putInt(Keys.defaultChapterFilterByDownloaded, m.downloadedFilter)
-            putInt(Keys.defaultChapterFilterByBookmarked, m.bookmarkedFilter)
-            putInt(Keys.defaultChapterSortBySourceOrNumber, m.sorting)
-            putInt(Keys.defaultChapterDisplayByNameOrNumber, m.displayMode)
+            putInt(Keys.defaultChapterFilterByRead, manga.readFilter)
+            putInt(Keys.defaultChapterFilterByDownloaded, manga.downloadedFilter)
+            putInt(Keys.defaultChapterFilterByBookmarked, manga.bookmarkedFilter)
+            putInt(Keys.defaultChapterSortBySourceOrNumber, manga.sorting)
+            putInt(Keys.defaultChapterDisplayByNameOrNumber, manga.displayMode)
+            putInt(Keys.defaultChapterSortByAscendingOrDescending, if (manga.sortDescending()) Manga.SORT_DESC else Manga.SORT_ASC)
         }
-
-        if (m.sortDescending()) prefs.edit { putInt(Keys.defaultChapterSortByAscendingOrDescending, Manga.SORT_DESC) }
-        else prefs.edit { putInt(Keys.defaultChapterSortByAscendingOrDescending, Manga.SORT_ASC) }
     }
 }

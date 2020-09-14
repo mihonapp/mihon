@@ -1,46 +1,48 @@
 package eu.kanade.tachiyomi.ui.manga.chapter
 
 import android.app.Dialog
-import android.content.Context
+import android.os.Bundle
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.DialogCheckboxView
 
-class SetChapterSettingsDialog(val context: Context, val manga: Manga) {
-    private var dialog: Dialog
+class SetChapterSettingsDialog(bundle: Bundle? = null) : DialogController(bundle) {
 
-    init {
-        this.dialog = buildDialog()
-    }
+    constructor(manga: Manga) : this(
+        Bundle().apply {
+            putSerializable(MANGA_KEY, manga)
+        }
+    )
 
-    private fun buildDialog(): Dialog {
-        val view = DialogCheckboxView(context).apply {
+    override fun onCreateDialog(savedViewState: Bundle?): Dialog {
+        val view = DialogCheckboxView(activity!!).apply {
             setDescription(R.string.confirm_set_chapter_settings)
             setOptionDescription(R.string.also_set_chapter_settings_for_library)
         }
 
-        return MaterialDialog(context)
-            .title(R.string.action_chapter_settings)
+        return MaterialDialog(activity!!)
+            .title(R.string.chapter_settings)
             .customView(
                 view = view,
                 horizontalPadding = true
             )
             .positiveButton(android.R.string.ok) {
-                ChapterSettingsHelper.setNewSettingDefaults(manga)
+                ChapterSettingsHelper.setGlobalSettings(args.getSerializable(MANGA_KEY)!! as Manga)
                 if (view.isChecked()) {
-                    ChapterSettingsHelper.updateAllMangasWithDefaultsFromPreferences()
+                    ChapterSettingsHelper.updateAllMangasWithGlobalDefaults()
                 }
 
-                context.toast(context.getString(R.string.chapter_settings_updated))
+                activity?.toast(activity!!.getString(R.string.chapter_settings_updated))
             }
             .negativeButton(android.R.string.cancel)
     }
 
-    fun showDialog() = dialog.show()
-
-    fun dismissDialog() = dialog.dismiss()
+    private companion object {
+        const val MANGA_KEY = "manga"
+    }
 }

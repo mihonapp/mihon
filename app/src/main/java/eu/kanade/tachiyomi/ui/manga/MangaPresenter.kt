@@ -84,7 +84,7 @@ class MangaPresenter(
         super.onCreate(savedState)
 
         if (!manga.favorite) {
-            ChapterSettingsHelper.applySettingDefaultsFromPreferences(manga)
+            ChapterSettingsHelper.applySettingDefaults(manga)
         }
 
         // Manga info - start

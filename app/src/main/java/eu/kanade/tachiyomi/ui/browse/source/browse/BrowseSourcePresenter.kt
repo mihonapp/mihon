@@ -30,7 +30,6 @@ import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateItem
 import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateSectionItem
 import eu.kanade.tachiyomi.util.chapter.ChapterSettingsHelper
 import eu.kanade.tachiyomi.util.removeCovers
-import kotlinx.coroutines.flow.subscribe
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -270,7 +269,7 @@ open class BrowseSourcePresenter(
         if (!manga.favorite) {
             manga.removeCovers(coverCache)
         } else {
-            ChapterSettingsHelper.applySettingDefaultsFromPreferences(manga)
+            ChapterSettingsHelper.applySettingDefaults(manga)
         }
 
         db.insertManga(manga).executeAsBlocking()

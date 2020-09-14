@@ -237,7 +237,7 @@ class MangaController :
 
         binding.actionToolbar.offsetAppbarHeight(activity!!)
 
-        settingsSheet = ChaptersSettingsSheet(activity!!, presenter) { group ->
+        settingsSheet = ChaptersSettingsSheet(router, presenter) { group ->
             if (group is ChaptersSettingsSheet.Filter.FilterGroup) {
                 updateFilterIconState()
                 chaptersAdapter?.notifyDataSetChanged()

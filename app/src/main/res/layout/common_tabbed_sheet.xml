@@ -30,11 +30,13 @@
             android:contentDescription="@string/action_menu"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_more_vert_24dp"
-            app:tint="?attr/colorOnBackground" />
+            app:tint="?attr/colorOnBackground"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

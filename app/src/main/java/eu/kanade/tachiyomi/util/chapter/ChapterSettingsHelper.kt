@@ -4,52 +4,55 @@ import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.util.lang.launchIO
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 
 object ChapterSettingsHelper {
-    private val prefs = Injekt.get<PreferencesHelper>()
-    private val db: DatabaseHelper = Injekt.get()
+
+    private val prefs: PreferencesHelper by injectLazy()
+    private val db: DatabaseHelper by injectLazy()
 
     /**
-     * updates the Chapter Settings in Preferences
+     * Updates the global Chapter Settings in Preferences.
      */
-    fun setNewSettingDefaults(m: Manga?) {
-        m?.let {
+    fun setGlobalSettings(manga: Manga?) {
+        manga?.let {
             prefs.setChapterSettingsDefault(it)
             db.updateFlags(it).executeAsBlocking()
         }
     }
 
     /**
-     * updates a single manga's Chapter Settings to match what's set in Preferences
+     * Updates a single manga's Chapter Settings to match what's set in Preferences.
      */
-    fun applySettingDefaultsFromPreferences(m: Manga) {
-        m.readFilter = prefs.filterChapterByRead()
-        m.downloadedFilter = prefs.filterChapterByDownloaded()
-        m.bookmarkedFilter = prefs.filterChapterByBookmarked()
-        m.sorting = prefs.sortChapterBySourceOrNumber()
-        m.displayMode = prefs.displayChapterByNameOrNumber()
-        m.setChapterOrder(prefs.sortChapterByAscendingOrDescending())
-        db.updateFlags(m).executeAsBlocking()
+    fun applySettingDefaults(manga: Manga) {
+        with(manga) {
+            readFilter = prefs.filterChapterByRead()
+            downloadedFilter = prefs.filterChapterByDownloaded()
+            bookmarkedFilter = prefs.filterChapterByBookmarked()
+            sorting = prefs.sortChapterBySourceOrNumber()
+            displayMode = prefs.displayChapterByNameOrNumber()
+            setChapterOrder(prefs.sortChapterByAscendingOrDescending())
+        }
+
+        db.updateFlags(manga).executeAsBlocking()
     }
 
     /**
-     * updates all mangas in database Chapter Settings to match what's set in Preferences
+     * Updates all mangas in library with global Chapter Settings.
      */
-    fun updateAllMangasWithDefaultsFromPreferences() {
+    fun updateAllMangasWithGlobalDefaults() {
         launchIO {
-            val dbMangas = db.getMangas().executeAsBlocking().toMutableList()
-
-            val updatedMangas = dbMangas.map { m ->
-                m.readFilter = prefs.filterChapterByRead()
-                m.downloadedFilter = prefs.filterChapterByDownloaded()
-                m.bookmarkedFilter = prefs.filterChapterByBookmarked()
-                m.sorting = prefs.sortChapterBySourceOrNumber()
-                m.displayMode = prefs.displayChapterByNameOrNumber()
-                m.setChapterOrder(prefs.sortChapterByAscendingOrDescending())
-                m
-            }.toList()
+            val updatedMangas = db.getMangas().executeAsBlocking().map { manga ->
+                with(manga) {
+                    readFilter = prefs.filterChapterByRead()
+                    downloadedFilter = prefs.filterChapterByDownloaded()
+                    bookmarkedFilter = prefs.filterChapterByBookmarked()
+                    sorting = prefs.sortChapterBySourceOrNumber()
+                    displayMode = prefs.displayChapterByNameOrNumber()
+                    setChapterOrder(prefs.sortChapterByAscendingOrDescending())
+                }
+                manga
+            }
 
             db.updateFlags(updatedMangas).executeAsBlocking()
         }
