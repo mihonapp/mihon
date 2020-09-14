@@ -30,6 +30,7 @@
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
+    <string name="action_chapter_settings">Chapter Settings</string>
     <string name="action_menu">Menu</string>
     <string name="action_filter">Filter</string>
     <string name="action_filter_downloaded">Downloaded</string>
@@ -524,6 +525,9 @@
     <string name="download_unread">Unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
     <string name="invalid_download_dir">Invalid download location</string>
+    <string name="confirm_set_chapter_settings">Are you sure you want to save these settings as default?</string>
+    <string name="also_set_chapter_settings_for_library">Also apply to all manga in my Library</string>
+    <string name="set_chapter_settings_as_default">Set as Default</string>
     <string name="no_chapters_error">No chapters found</string>
 
     <!-- Tracking Screen -->
@@ -678,6 +682,7 @@
     <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare</string>
     <string name="information_webview_required">WebView is required for Tachiyomi</string>
     <string name="information_webview_outdated">Please update the WebView app for better compatibility</string>
+    <string name="chapter_settings_updated">Updated default chapter settings</string>
 
     <!-- Download Notification -->
     <string name="download_notifier_downloader_title">Downloader</string>
@@ -705,4 +710,5 @@
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_both">Both</string>
+ 
 </resources>

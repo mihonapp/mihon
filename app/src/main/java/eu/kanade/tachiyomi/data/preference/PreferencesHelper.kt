@@ -2,11 +2,15 @@ package eu.kanade.tachiyomi.data.preference
 
 import android.content.Context
 import android.os.Environment
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import com.tfcporciuncula.flow.FlowSharedPreferences
 import com.tfcporciuncula.flow.Preference
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
+import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.DisplayMode
 import eu.kanade.tachiyomi.data.preference.PreferenceValues.NsfwAllowance
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -18,8 +22,6 @@ import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
-import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
-import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
 @OptIn(ExperimentalCoroutinesApi::class)
 fun <T> Preference<T>.asImmediateFlow(block: (value: T) -> Unit): Flow<T> {
@@ -249,4 +251,29 @@ class PreferencesHelper(val context: Context) {
     fun trustedSignatures() = flowPrefs.getStringSet("trusted_signatures", emptySet())
 
     fun enableDoh() = prefs.getBoolean(Keys.enableDoh, false)
+
+    fun filterChapterByRead() = prefs.getInt(Keys.defaultChapterFilterByRead, Manga.SHOW_ALL)
+
+    fun filterChapterByDownloaded() = prefs.getInt(Keys.defaultChapterFilterByDownloaded, Manga.SHOW_ALL)
+
+    fun filterChapterByBookmarked() = prefs.getInt(Keys.defaultChapterFilterByBookmarked, Manga.SHOW_ALL)
+
+    fun sortChapterBySourceOrNumber() = prefs.getInt(Keys.defaultChapterSortBySourceOrNumber, Manga.SORTING_SOURCE)
+
+    fun displayChapterByNameOrNumber() = prefs.getInt(Keys.defaultChapterDisplayByNameOrNumber, Manga.DISPLAY_NAME)
+
+    fun sortChapterByAscendingOrDescending() = prefs.getInt(Keys.defaultChapterSortByAscendingOrDescending, Manga.SORT_DESC)
+
+    fun setChapterSettingsDefault(m: Manga) {
+        prefs.edit {
+            putInt(Keys.defaultChapterFilterByRead, m.readFilter)
+            putInt(Keys.defaultChapterFilterByDownloaded, m.downloadedFilter)
+            putInt(Keys.defaultChapterFilterByBookmarked, m.bookmarkedFilter)
+            putInt(Keys.defaultChapterSortBySourceOrNumber, m.sorting)
+            putInt(Keys.defaultChapterDisplayByNameOrNumber, m.displayMode)
+        }
+
+        if (m.sortDescending()) prefs.edit { putInt(Keys.defaultChapterSortByAscendingOrDescending, Manga.SORT_DESC) }
+        else prefs.edit { putInt(Keys.defaultChapterSortByAscendingOrDescending, Manga.SORT_ASC) }
+    }
 }
