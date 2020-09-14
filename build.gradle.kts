@@ -2,7 +2,7 @@ plugins {
     id("com.android.application") version BuildPluginsVersion.AGP apply false
     id("com.android.library") version BuildPluginsVersion.AGP apply false
     kotlin("android") version BuildPluginsVersion.KOTLIN apply false
-    id("org.jmailen.kotlinter") version BuildPluginsVersion.KOLINTER
+    id("org.jmailen.kotlinter") version BuildPluginsVersion.KOTLINTER
     id("com.github.ben-manes.versions") version BuildPluginsVersion.VERSIONS_PLUGIN
 }
 
