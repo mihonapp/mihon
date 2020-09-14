@@ -109,11 +109,11 @@ object PreferenceKeys {
 
     const val downloadedOnly = "pref_downloaded_only"
 
-    const val filterDownloaded = "pref_filter_downloaded_key"
+    const val filterDownloaded = "pref_filter_library_downloaded"
 
-    const val filterUnread = "pref_filter_unread_key"
+    const val filterUnread = "pref_filter_library_unread"
 
-    const val filterCompleted = "pref_filter_completed_key"
+    const val filterCompleted = "pref_filter_library_completed"
 
     const val librarySortingMode = "library_sorting_mode"
 

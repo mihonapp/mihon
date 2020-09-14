@@ -10,15 +10,17 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
+import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
-import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.removeCovers
+import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.Companion.STATE_IGNORE
+import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.Companion.STATE_INCLUDE
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -110,34 +112,45 @@ class LibraryPresenter(
      * @param map the map to filter.
      */
     private fun applyFilters(map: LibraryMap): LibraryMap {
-        val filterDownloaded = preferences.downloadedOnly().get() || preferences.filterDownloaded().get()
+        val downloadedOnly = preferences.downloadedOnly().get()
+        val filterDownloaded = preferences.filterDownloaded().get()
         val filterUnread = preferences.filterUnread().get()
         val filterCompleted = preferences.filterCompleted().get()
 
-        val filterFn: (LibraryItem) -> Boolean = f@{ item ->
-            // Filter when there isn't unread chapters.
-            if (filterUnread && item.manga.unread == 0) {
-                return@f false
+        val filterFnUnread: (LibraryItem) -> Boolean = unread@{ item ->
+            if (filterUnread == STATE_IGNORE) return@unread true
+            val isUnread = item.manga.unread != 0
+
+            return@unread if (filterUnread == STATE_INCLUDE) isUnread
+            else !isUnread
+        }
+
+        val filterFnCompleted: (LibraryItem) -> Boolean = completed@{ item ->
+            if (filterCompleted == STATE_IGNORE) return@completed true
+            val isCompleted = item.manga.status == SManga.COMPLETED
+
+            return@completed if (filterCompleted == STATE_INCLUDE) isCompleted
+            else !isCompleted
+        }
+
+        val filterFnDownloaded: (LibraryItem) -> Boolean = downloaded@{ item ->
+            if (filterDownloaded == STATE_IGNORE) return@downloaded true
+            val isDownloaded = when {
+                item.manga.source == LocalSource.ID -> true
+                item.downloadCount != -1 -> item.downloadCount > 0
+                else -> downloadManager.getDownloadCount(item.manga) > 0
             }
 
-            if (filterCompleted && item.manga.status != SManga.COMPLETED) {
-                return@f false
-            }
+            return@downloaded if (downloadedOnly || filterDownloaded == STATE_INCLUDE) isDownloaded
+            else !isDownloaded
+        }
 
-            // Filter when there are no downloads.
-            if (filterDownloaded) {
-                // Local manga are always downloaded
-                if (item.manga.isLocal()) {
-                    return@f true
-                }
-                // Don't bother with directory checking if download count has been set.
-                if (item.downloadCount != -1) {
-                    return@f item.downloadCount > 0
-                }
-
-                return@f downloadManager.getDownloadCount(item.manga) > 0
-            }
-            true
+        val filterFn: (LibraryItem) -> Boolean = filter@{ item ->
+            return@filter !(
+                !filterFnUnread(item) ||
+                    !filterFnCompleted(item) ||
+                    !filterFnDownloaded(item)
+                )
         }
 
         return map.mapValues { entry -> entry.value.filter(filterFn) }

@@ -1,11 +1,14 @@
 package eu.kanade.tachiyomi
 
+import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import eu.kanade.tachiyomi.ui.library.LibrarySort
+import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import java.io.File
 
 object Migrations {
@@ -87,6 +90,23 @@ object Migrations {
                 // Reset sorting preference if using removed sort by source
                 if (preferences.librarySortingMode().get() == LibrarySort.SOURCE) {
                     preferences.librarySortingMode().set(LibrarySort.ALPHA)
+                }
+            }
+            if (oldVersion < 52) {
+                // Migrate library filters to tri-state versions
+                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                fun convertBooleanPrefToTriState(key: String): Int {
+                    val oldPrefValue = prefs.getBoolean(key, false)
+                    return if (oldPrefValue) ExtendedNavigationView.Item.TriStateGroup.STATE_INCLUDE
+                    else ExtendedNavigationView.Item.TriStateGroup.STATE_IGNORE
+                }
+                preferences.filterDownloaded().set(convertBooleanPrefToTriState("pref_filter_downloaded_key"))
+                preferences.filterUnread().set(convertBooleanPrefToTriState("pref_filter_unread_key"))
+                preferences.filterCompleted().set(convertBooleanPrefToTriState("pref_filter_completed_key"))
+                prefs.edit {
+                    remove("pref_filter_downloaded_key")
+                    remove("pref_filter_unread_key")
+                    remove("pref_filter_completed_key")
                 }
             }
             return true
