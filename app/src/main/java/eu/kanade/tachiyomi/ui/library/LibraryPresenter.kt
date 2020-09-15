@@ -10,11 +10,11 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
-import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.presenter.BasePresenter
+import eu.kanade.tachiyomi.util.isLocal
 import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.lang.launchIO
@@ -134,9 +134,9 @@ class LibraryPresenter(
         }
 
         val filterFnDownloaded: (LibraryItem) -> Boolean = downloaded@{ item ->
-            if (filterDownloaded == STATE_IGNORE) return@downloaded true
+            if (!downloadedOnly && filterDownloaded == STATE_IGNORE) return@downloaded true
             val isDownloaded = when {
-                item.manga.source == LocalSource.ID -> true
+                item.manga.isLocal() -> true
                 item.downloadCount != -1 -> item.downloadCount > 0
                 else -> downloadManager.getDownloadCount(item.manga) > 0
             }

@@ -4,6 +4,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.preference.PreferenceKeys
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
@@ -100,12 +101,14 @@ object Migrations {
                     return if (oldPrefValue) ExtendedNavigationView.Item.TriStateGroup.STATE_INCLUDE
                     else ExtendedNavigationView.Item.TriStateGroup.STATE_IGNORE
                 }
-                preferences.filterDownloaded().set(convertBooleanPrefToTriState("pref_filter_downloaded_key"))
-                preferences.filterUnread().set(convertBooleanPrefToTriState("pref_filter_unread_key"))
-                preferences.filterCompleted().set(convertBooleanPrefToTriState("pref_filter_completed_key"))
                 prefs.edit {
+                    putInt(PreferenceKeys.filterDownloaded, convertBooleanPrefToTriState("pref_filter_downloaded_key"))
                     remove("pref_filter_downloaded_key")
+
+                    putInt(PreferenceKeys.filterUnread, convertBooleanPrefToTriState("pref_filter_unread_key"))
                     remove("pref_filter_unread_key")
+
+                    putInt(PreferenceKeys.filterCompleted, convertBooleanPrefToTriState("pref_filter_completed_key"))
                     remove("pref_filter_completed_key")
                 }
             }
