@@ -183,7 +183,7 @@ class LibraryController(
             createActionModeIfNeeded()
         }
 
-        settingsSheet = LibrarySettingsSheet(activity!!) { group ->
+        settingsSheet = LibrarySettingsSheet(router) { group ->
             when (group) {
                 is LibrarySettingsSheet.Filter.FilterGroup -> onFilterChanged()
                 is LibrarySettingsSheet.Sort.SortGroup -> onSortChanged()

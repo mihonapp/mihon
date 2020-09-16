@@ -84,6 +84,7 @@
     <string name="action_move">Move</string>
     <string name="action_open_in_browser">Open in browser</string>
     <string name="action_open_in_web_view">Open in WebView</string>
+    <string name="action_web_view">WebView</string>
     <string name="action_open_in_settings">Open in Settings</string>
     <string name="action_migrate">Migrate</string>
     <string name="action_display_mode">Display mode</string>
@@ -487,7 +488,6 @@
     <string name="manga_info_full_title_label">Title</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
-    <string name="manga_info_about_label">About</string>
     <string name="manga_info_expand">More</string>
     <string name="manga_info_collapse">Less</string>
     <plurals name="manga_num_chapters">
@@ -526,6 +526,11 @@
     <string name="download_unread">Unread</string>
     <string name="confirm_delete_chapters">Are you sure you want to delete the selected chapters?</string>
     <string name="invalid_download_dir">Invalid download location</string>
+    <string name="chapter_settings">Chapter settings</string>
+    <string name="confirm_set_chapter_settings">Are you sure you want to save these settings as default?</string>
+    <string name="also_set_chapter_settings_for_library">Also apply to all manga in my library</string>
+    <string name="set_chapter_settings_as_default">Set as default</string>
+    <string name="no_chapters_error">No chapters found</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
@@ -571,6 +576,7 @@
     <string name="custom_filter">Custom filter</string>
     <string name="set_as_cover">Set as cover</string>
     <string name="cover_updated">Cover updated</string>
+    <string name="share_page_info">%1$s: %2$s, page %3$d</string>
     <string name="page_downloaded">Page copied to %1$s</string>
     <string name="downloading">Downloading…</string>
     <string name="download_progress">Downloaded %1$d%%</string>
@@ -592,6 +598,10 @@
     <string name="transition_pages_error">Failed to load pages: %1$s</string>
     <string name="page_list_empty_error">No pages found</string>
     <string name="loader_not_implemented_error">Source not found</string>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">There is 1 missing chapter</item>
+        <item quantity="other">There are %d missing chapters</item>
+    </plurals>
 
     <!-- Updates fragment -->
     <string name="updating_library">Updating library</string>
@@ -643,7 +653,6 @@
     <!-- File Picker Titles -->
     <string name="file_select_cover">Select cover image</string>
     <string name="file_select_backup">Select backup file</string>
-    <string name="file_select_icon">Select shortcut icon</string>
 
     <!--UpdateCheck-->
     <string name="update_check_confirm">Download</string>
@@ -676,6 +685,7 @@
     <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare</string>
     <string name="information_webview_required">WebView is required for Tachiyomi</string>
     <string name="information_webview_outdated">Please update the WebView app for better compatibility</string>
+    <string name="chapter_settings_updated">Updated default chapter settings</string>
 
     <!-- Download Notification -->
     <string name="download_notifier_downloader_title">Downloader</string>
