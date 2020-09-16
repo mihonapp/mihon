@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.preference
 
 import android.content.Context
 import android.os.Environment
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import com.tfcporciuncula.flow.FlowSharedPreferences
@@ -249,4 +250,8 @@ class PreferencesHelper(val context: Context) {
     fun trustedSignatures() = flowPrefs.getStringSet("trusted_signatures", emptySet())
 
     fun enableDoh() = prefs.getBoolean(Keys.enableDoh, false)
+
+    fun lastSearchQuerySearchSettings() = prefs.getString("last_search_query", "")
+    
+    fun lastSearchQuerySearchSettings(query: String) = prefs.edit { putString("last_search_query", query) }
 }
