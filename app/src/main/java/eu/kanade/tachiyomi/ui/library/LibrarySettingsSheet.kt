@@ -62,7 +62,7 @@ class LibrarySettingsSheet(
          * Returns true if there's at least one filter from [FilterGroup] active.
          */
         fun hasActiveFilters(): Boolean {
-            return filterGroup.items.any { it.state != Item.TriStateGroup.STATE_IGNORE }
+            return filterGroup.items.any { it.state != STATE_IGNORE }
         }
 
         inner class FilterGroup : Group {

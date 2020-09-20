@@ -147,7 +147,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     // Job scheduling
-    final work_version = '2.5.0-alpha01'
+    final work_version = '2.5.0-alpha02'
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
