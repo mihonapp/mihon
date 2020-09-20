@@ -19,6 +19,7 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
 
     init {
         inflate(context, R.layout.reader_transition_view, this)
+        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     }
 
     fun bind(transition: ChapterTransition) {
