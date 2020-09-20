@@ -84,7 +84,6 @@ class BackupManager(val context: Context, version: Int = CURRENT_VERSION) {
     }
 
     private fun initParser(): Gson = when (version) {
-        1 -> GsonBuilder().create()
         2 ->
             GsonBuilder()
                 .registerTypeAdapter<MangaImpl>(MangaTypeAdapter.build())
@@ -93,7 +92,7 @@ class BackupManager(val context: Context, version: Int = CURRENT_VERSION) {
                 .registerTypeAdapter<DHistory>(HistoryTypeAdapter.build())
                 .registerTypeHierarchyAdapter<TrackImpl>(TrackTypeAdapter.build())
                 .create()
-        else -> throw Exception("Json version unknown")
+        else -> throw Exception("Unknown backup version")
     }
 
     /**
