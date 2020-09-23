@@ -40,7 +40,7 @@ class SettingsLibraryController : SettingsController() {
 
     private val db: DatabaseHelper = Injekt.get()
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
+    override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_library
 
         val dbCategories = db.getCategories().executeAsBlocking()
@@ -50,6 +50,7 @@ class SettingsLibraryController : SettingsController() {
             titleRes = R.string.pref_category_display
 
             preference {
+                key = "pref_library_columns"
                 titleRes = R.string.pref_library_columns
                 onClick {
                     LibraryColumnsDialog().showDialog(router)
@@ -83,6 +84,7 @@ class SettingsLibraryController : SettingsController() {
             titleRes = R.string.pref_category_library_categories
 
             preference {
+                key = "pref_action_edit_categories"
                 titleRes = R.string.action_edit_categories
 
                 val catCount = dbCategories.size

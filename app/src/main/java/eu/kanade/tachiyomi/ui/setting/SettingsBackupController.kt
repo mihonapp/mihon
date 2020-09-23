@@ -49,10 +49,11 @@ class SettingsBackupController : SettingsController() {
         requestPermissionsSafe(arrayOf(WRITE_EXTERNAL_STORAGE), 500)
     }
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
+    override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.backup
 
         preference {
+            key = "pref_create_backup"
             titleRes = R.string.pref_create_backup
             summaryRes = R.string.pref_create_backup_summ
 
@@ -67,6 +68,7 @@ class SettingsBackupController : SettingsController() {
             }
         }
         preference {
+            key = "pref_restore_backup"
             titleRes = R.string.pref_restore_backup
             summaryRes = R.string.pref_restore_backup_summ
 

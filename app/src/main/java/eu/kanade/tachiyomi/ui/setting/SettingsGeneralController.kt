@@ -24,7 +24,7 @@ import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
 class SettingsGeneralController : SettingsController() {
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) = with(screen) {
+    override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.pref_category_general
 
         intListPreference {
@@ -47,6 +47,7 @@ class SettingsGeneralController : SettingsController() {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             preference {
+                key = "pref_manage_notifications"
                 titleRes = R.string.pref_manage_notifications
                 onClick {
                     val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {

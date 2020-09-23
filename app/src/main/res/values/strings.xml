@@ -44,6 +44,7 @@
     <string name="action_sort_latest_chapter">Latest chapter</string>
     <string name="action_sort_date_added">Date added</string>
     <string name="action_search">Search</string>
+    <string name="action_search_settings">Search settings</string>
     <string name="action_global_search">Global search</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_inverse">Select inverse</string>
@@ -411,6 +412,7 @@
     <string name="licenses">Open source licenses</string>
     <string name="check_for_updates">Check for updates</string>
     <string name="updated_version">Updated to v%1$s</string>
+    <string name="about_resources">Resources</string>
 
     <!-- ACRA -->
     <string name="pref_enable_acra">Send crash reports</string>
