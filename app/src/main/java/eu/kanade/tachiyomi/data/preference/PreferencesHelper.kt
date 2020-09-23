@@ -253,9 +253,7 @@ class PreferencesHelper(val context: Context) {
 
     fun enableDoh() = prefs.getBoolean(Keys.enableDoh, false)
 
-    fun lastSearchQuerySearchSettings() = prefs.getString("last_search_query", "")
-    
-    fun lastSearchQuerySearchSettings(query: String) = prefs.edit { putString("last_search_query", query) }
+    fun lastSearchQuerySearchSettings() = flowPrefs.getString("last_search_query", "")
 
     fun filterChapterByRead() = prefs.getInt(Keys.defaultChapterFilterByRead, Manga.SHOW_ALL)
 

@@ -100,16 +100,18 @@ class SettingsMainController : SettingsController() {
         // Change hint to show global search.
         searchView.queryHint = applicationContext?.getString(R.string.action_search_settings)
 
-        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                preferences.lastSearchQuerySearchSettings("") // reset saved search query
-                router.pushController(SettingsSearchController().withFadeTransaction())
-                return true
-            }
+        searchItem.setOnActionExpandListener(
+            object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    preferences.lastSearchQuerySearchSettings().set("") // reset saved search query
+                    router.pushController(SettingsSearchController().withFadeTransaction())
+                    return true
+                }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                return true
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    return true
+                }
             }
-        })
+        )
     }
 }

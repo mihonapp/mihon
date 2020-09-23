@@ -24,8 +24,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
 object SettingsSearchHelper {
-    var prefSearchResultList: MutableList<SettingsSearchResult> = mutableListOf()
-        private set
+    private var prefSearchResultList: MutableList<SettingsSearchResult> = mutableListOf()
 
     /**
      * All subclasses of `SettingsController` should be listed here, in order to have their preferences searchable.
@@ -79,7 +78,11 @@ object SettingsSearchHelper {
      * Extracts the data needed from a `Preference` to create a `SettingsSearchResult`, and then adds it to `prefSearchResultList`
      * Future enhancement: make bold the text matched by the search query.
      */
-    private fun getSettingSearchResult(ctrl: SettingsController, pref: Preference, breadcrumbs: String = "") {
+    private fun getSettingSearchResult(
+        ctrl: SettingsController,
+        pref: Preference,
+        breadcrumbs: String = ""
+    ) {
         when (pref) {
             is PreferenceGroup -> {
                 val breadcrumbsStr = addLocalizedBreadcrumb(breadcrumbs, "${pref.title}")

@@ -27,7 +27,7 @@ class SettingsSearchController :
      * Adapter containing search results grouped by lang.
      */
     protected var adapter: SettingsSearchAdapter? = null
-    lateinit var searchView: SearchView
+    private lateinit var searchView: SearchView
 
     init {
         setHasOptionsMenu(true)
@@ -79,30 +79,34 @@ class SettingsSearchController :
         searchItem.expandActionView()
         setItems(getResultSet())
 
-        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return true
-            }
+        searchItem.setOnActionExpandListener(
+            object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    return true
+                }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                router.popCurrentController()
-                return false
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    router.popCurrentController()
+                    return false
+                }
             }
-        })
+        )
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                setItems(getResultSet(query))
-                return false
+        searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    setItems(getResultSet(query))
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    setItems(getResultSet(newText))
+                    return false
+                }
             }
+        )
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                setItems(getResultSet(newText))
-                return false
-            }
-        })
-
-        searchView.setQuery(presenter.preferences.lastSearchQuerySearchSettings(), true)
+        searchView.setQuery(presenter.preferences.lastSearchQuerySearchSettings().get(), true)
     }
 
     override fun onViewCreated(view: View) {
@@ -160,7 +164,7 @@ class SettingsSearchController :
      */
     override fun onTitleClick(ctrl: SettingsController) {
         searchView.query.let {
-            presenter.preferences.lastSearchQuerySearchSettings(it.toString())
+            presenter.preferences.lastSearchQuerySearchSettings().set(it.toString())
         }
 
         router.pushController(ctrl.withFadeTransaction())

@@ -13,7 +13,10 @@ import eu.kanade.tachiyomi.R
  * @param pref the source for the search results.
  * @param results the search results.
  */
-class SettingsSearchItem(val settingsSearchResult: SettingsSearchHelper.SettingsSearchResult, val results: List<SettingsSearchItem>?) :
+class SettingsSearchItem(
+    val settingsSearchResult: SettingsSearchHelper.SettingsSearchResult,
+    val results: List<SettingsSearchItem>?
+) :
     AbstractFlexibleItem<SettingsSearchHolder>() {
 
     override fun getLayoutRes(): Int {
@@ -25,7 +28,10 @@ class SettingsSearchItem(val settingsSearchResult: SettingsSearchHelper.Settings
      *
      * @return holder of view.
      */
-    override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>): SettingsSearchHolder {
+    override fun createViewHolder(
+        view: View,
+        adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
+    ): SettingsSearchHolder {
         return SettingsSearchHolder(view, adapter as SettingsSearchAdapter)
     }
 
