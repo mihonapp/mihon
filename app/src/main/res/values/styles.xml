@@ -80,11 +80,7 @@
     </style>
 
     <style name="TextAppearance.Regular.SubHeading">
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="TextAppearance.Regular.SubHeading.Upper">
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="TextAppearance.Regular.SubHeading.Secondary">
