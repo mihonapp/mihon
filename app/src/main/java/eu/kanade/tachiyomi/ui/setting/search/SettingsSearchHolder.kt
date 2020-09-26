@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.setting.settingssearch
+package eu.kanade.tachiyomi.ui.setting.search
 
 import android.view.View
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder

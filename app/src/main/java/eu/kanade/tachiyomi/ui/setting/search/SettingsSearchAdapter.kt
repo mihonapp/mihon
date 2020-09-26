@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.setting.settingssearch
+package eu.kanade.tachiyomi.ui.setting.search
 
 import android.os.Bundle
 import android.os.Parcelable
