@@ -285,6 +285,8 @@
     <style name="Theme.Widget.Tabs" parent="Widget.MaterialComponents.TabLayout.Colored">
         <item name="tabGravity">center</item>
         <item name="tabIndicator">@drawable/tab_indicator</item>
+        <item name="tabIndicatorColor">?attr/colorAccentOnPrimary</item>
+        <item name="tabTextColor">@color/tabs_selector</item>
         <item name="tabIndicatorFullWidth">false</item>
         <item name="tabIndicatorHeight">3dp</item>
         <item name="tabInlineLabel">true</item>
