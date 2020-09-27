@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
@@ -35,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_more_vert_24dp"
-            app:tint="?attr/colorOnBackground"
+            app:tint="?attr/colorOnPrimary"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
