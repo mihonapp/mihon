@@ -19,8 +19,7 @@ import eu.kanade.tachiyomi.util.lang.combineLatest
 import eu.kanade.tachiyomi.util.lang.isNullOrUnsubscribed
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.removeCovers
-import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.Companion.STATE_IGNORE
-import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.Companion.STATE_INCLUDE
+import eu.kanade.tachiyomi.widget.ExtendedNavigationView.Item.TriStateGroup.State
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -118,30 +117,30 @@ class LibraryPresenter(
         val filterCompleted = preferences.filterCompleted().get()
 
         val filterFnUnread: (LibraryItem) -> Boolean = unread@{ item ->
-            if (filterUnread == STATE_IGNORE) return@unread true
+            if (filterUnread == State.IGNORE.value) return@unread true
             val isUnread = item.manga.unread != 0
 
-            return@unread if (filterUnread == STATE_INCLUDE) isUnread
+            return@unread if (filterUnread == State.INCLUDE.value) isUnread
             else !isUnread
         }
 
         val filterFnCompleted: (LibraryItem) -> Boolean = completed@{ item ->
-            if (filterCompleted == STATE_IGNORE) return@completed true
+            if (filterCompleted == State.IGNORE.value) return@completed true
             val isCompleted = item.manga.status == SManga.COMPLETED
 
-            return@completed if (filterCompleted == STATE_INCLUDE) isCompleted
+            return@completed if (filterCompleted == State.INCLUDE.value) isCompleted
             else !isCompleted
         }
 
         val filterFnDownloaded: (LibraryItem) -> Boolean = downloaded@{ item ->
-            if (!downloadedOnly && filterDownloaded == STATE_IGNORE) return@downloaded true
+            if (!downloadedOnly && filterDownloaded == State.IGNORE.value) return@downloaded true
             val isDownloaded = when {
                 item.manga.isLocal() -> true
                 item.downloadCount != -1 -> item.downloadCount > 0
                 else -> downloadManager.getDownloadCount(item.manga) > 0
             }
 
-            return@downloaded if (downloadedOnly || filterDownloaded == STATE_INCLUDE) isDownloaded
+            return@downloaded if (downloadedOnly || filterDownloaded == State.INCLUDE.value) isDownloaded
             else !isDownloaded
         }
 

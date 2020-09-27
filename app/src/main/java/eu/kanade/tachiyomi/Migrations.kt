@@ -98,8 +98,8 @@ object Migrations {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
                 fun convertBooleanPrefToTriState(key: String): Int {
                     val oldPrefValue = prefs.getBoolean(key, false)
-                    return if (oldPrefValue) ExtendedNavigationView.Item.TriStateGroup.STATE_INCLUDE
-                    else ExtendedNavigationView.Item.TriStateGroup.STATE_IGNORE
+                    return if (oldPrefValue) ExtendedNavigationView.Item.TriStateGroup.State.INCLUDE.value
+                    else ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value
                 }
                 prefs.edit {
                     putInt(PreferenceKeys.filterDownloaded, convertBooleanPrefToTriState("pref_filter_downloaded_key"))

@@ -213,11 +213,11 @@ class PreferencesHelper(val context: Context) {
 
     fun categoryTabs() = flowPrefs.getBoolean(Keys.categoryTabs, true)
 
-    fun filterDownloaded() = flowPrefs.getInt(Keys.filterDownloaded, ExtendedNavigationView.Item.TriStateGroup.STATE_IGNORE)
+    fun filterDownloaded() = flowPrefs.getInt(Keys.filterDownloaded, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
 
-    fun filterUnread() = flowPrefs.getInt(Keys.filterUnread, ExtendedNavigationView.Item.TriStateGroup.STATE_IGNORE)
+    fun filterUnread() = flowPrefs.getInt(Keys.filterUnread, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
 
-    fun filterCompleted() = flowPrefs.getInt(Keys.filterCompleted, ExtendedNavigationView.Item.TriStateGroup.STATE_IGNORE)
+    fun filterCompleted() = flowPrefs.getInt(Keys.filterCompleted, ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
 
     fun librarySortingMode() = flowPrefs.getInt(Keys.librarySortingMode, 0)
 
