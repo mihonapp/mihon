@@ -83,10 +83,6 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="TextAppearance.Regular.SubHeading.Secondary">
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
-    </style>
-
     <style name="TextAppearance.Medium">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
@@ -101,6 +97,12 @@
 
     <style name="TextAppearance.Medium.Body2.Hint">
         <item name="android:textColor">?android:attr/textColorHint</item>
+    </style>
+
+    <style name="TextAppearance.Medium.SubHeading">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="TextAppearance.Widget.Button" parent="TextAppearance.MaterialComponents.Button">
