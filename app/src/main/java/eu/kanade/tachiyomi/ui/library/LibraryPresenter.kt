@@ -371,20 +371,23 @@ class LibraryPresenter(
     }
 
     /**
-     * Remove the selected manga from the library.
+     * Remove the selected manga.
      *
      * @param mangas the list of manga to delete.
-     * @param deleteChapters whether to also delete downloaded chapters.
+     * @param deleteFromLibrary whether to delete manga from library.
+     * @param deleteChapters whether to delete downloaded chapters.
      */
-    fun removeMangaFromLibrary(mangas: List<Manga>, deleteChapters: Boolean) {
+    fun removeMangas(mangas: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
         launchIO {
             val mangaToDelete = mangas.distinctBy { it.id }
 
-            mangaToDelete.forEach {
-                it.favorite = false
-                it.removeCovers(coverCache)
+            if (deleteFromLibrary) {
+                mangaToDelete.forEach {
+                    it.favorite = false
+                    it.removeCovers(coverCache)
+                }
+                db.insertMangas(mangaToDelete).executeAsBlocking()
             }
-            db.insertMangas(mangaToDelete).executeAsBlocking()
 
             if (deleteChapters) {
                 mangaToDelete.forEach { manga ->
