@@ -250,17 +250,16 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Theme.Widget.Button.Action" parent="Widget.MaterialComponents.Button.Icon">
-        <item name="elevation">0dp</item>
-
+    <style name="Theme.Widget.Button.Action" parent="Widget.MaterialComponents.Button.UnelevatedButton.Icon">
         <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">false</item>
 
-        <item name="drawableTint">?attr/colorOnBackground</item>
-        <item name="android:drawablePadding">4dp</item>
-        <item name="rippleColor">?attr/colorAccent</item>
-        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="backgroundTint">@android:color/transparent</item>
 
-        <item name="backgroundTint">@color/outlined_button_bg</item>
+        <item name="iconGravity">top</item>
+        <item name="iconTint">@color/button_action_selector</item>
+        <item name="iconPadding">4dp</item>
+        <item name="android:textColor">@color/button_action_selector</item>
     </style>
 
     <style name="Theme.Widget.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
