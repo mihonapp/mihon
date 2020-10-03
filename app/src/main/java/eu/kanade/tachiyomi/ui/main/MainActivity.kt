@@ -165,6 +165,10 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         preferences.extensionUpdatesCount()
             .asImmediateFlow { setExtensionsBadge() }
             .launchIn(scope)
+
+        preferences.downloadedOnly()
+            .asImmediateFlow { binding.downloadedOnly.isVisible = it }
+            .launchIn(scope)
     }
 
     override fun onNewIntent(intent: Intent) {
