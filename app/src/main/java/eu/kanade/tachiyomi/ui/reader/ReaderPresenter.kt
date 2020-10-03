@@ -409,7 +409,7 @@ class ReaderPresenter(
      * Saves this [chapter] last read history.
      */
     private fun saveChapterHistory(chapter: ReaderChapter) {
-        if (!preferences.incognitoMode()) {
+        if (!preferences.incognitoMode().get()) {
             val history = History.create(chapter.chapter).apply { last_read = Date().time }
             db.updateHistoryLastRead(history).asRxCompletable()
                 .onErrorComplete()
