@@ -47,6 +47,7 @@ import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.migration.search.SearchController
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceController
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchController
+import eu.kanade.tachiyomi.ui.browse.source.latest.LatestUpdatesController
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCategoriesDialog
 import eu.kanade.tachiyomi.ui.library.ChangeMangaCoverDialog
 import eu.kanade.tachiyomi.ui.library.LibraryController
@@ -569,6 +570,10 @@ class MangaController :
                 (router.activity as MainActivity).setSelectedNavItem(R.id.nav_library)
                 val controller = router.getControllerWithTag(R.id.nav_library.toString()) as LibraryController
                 controller.search(query)
+            }
+            is LatestUpdatesController -> {
+                // Search doesn't currently work in source Latest view
+                return
             }
             is BrowseSourceController -> {
                 router.handleBack()
