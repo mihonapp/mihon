@@ -16,8 +16,24 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Install NDK
-        run: sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;21.0.6113669" &> /dev/null
+
+      - name: Copy CI gradle.properties
+        run: |
+          mkdir -p ~/.gradle
+          cp .github/runner-files/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: Generate Gradle cache key
+        run: ./.github/runner-files/checksum.sh checksum.txt
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        continue-on-error: true # continue if the cache restore/upload fails
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-*
+            ~/.gradle/caches/jars-*
+            ~/.gradle/caches/modules-*
+          key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
 
       - name: Build app
         run: ./gradlew assembleStandardDebug
