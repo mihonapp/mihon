@@ -302,13 +302,13 @@ tasks.withType(AbstractKotlinCompile).all {
 }
 
 // Duplicating Hebrew string assets due to some locale code issues on different devices
-task copyResources(type: Copy) {
+task copyHebrewStrings(type: Copy) {
     from './src/main/res/values-he'
     into './src/main/res/values-iw'
     include '**/*'
 }
 
-preBuild.dependsOn(formatKotlin, copyResources)
+preBuild.dependsOn(formatKotlin, copyHebrewStrings)
 
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Standard")) {
     apply plugin: 'com.google.gms.google-services'
