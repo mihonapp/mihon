@@ -25,6 +25,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ github.token }}
+
       - name: Clone repo
         uses: actions/checkout@v2
 
