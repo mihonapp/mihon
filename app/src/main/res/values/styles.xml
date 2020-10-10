@@ -107,6 +107,7 @@
 
     <style name="TextAppearance.Widget.Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="android:letterSpacing">0</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="TextAppearance.Widget.Menu" parent="TextAppearance.AppCompat.Menu">
@@ -124,7 +125,7 @@
     <!--=======-->
     <style name="Theme.Widget" />
 
-    <style name="Theme.Widget.FAB" parent="@style/Widget.MaterialComponents.FloatingActionButton">
+    <style name="Theme.Widget.FAB" parent="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="fabCustomSize">@dimen/fab_size</item>
