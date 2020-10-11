@@ -7,6 +7,7 @@ apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.github.zellius.shortcut-helper'
 
 shortcutHelper.filePath = './shortcuts.xml'
@@ -176,10 +177,12 @@ dependencies {
     // REST
     final retrofit_version = '2.9.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
     // JSON
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.0"
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.github.salomonbrys.kotson:kotson:2.5.0'
 
