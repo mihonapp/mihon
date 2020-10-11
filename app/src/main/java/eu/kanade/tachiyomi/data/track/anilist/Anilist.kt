@@ -2,14 +2,15 @@ package eu.kanade.tachiyomi.data.track.anilist
 
 import android.content.Context
 import android.graphics.Color
-import com.google.gson.Gson
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import rx.Completable
 import rx.Observable
-import uy.kohesive.injekt.injectLazy
 
 class Anilist(private val context: Context, id: Int) : TrackService(id) {
 
@@ -32,8 +33,6 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
     }
 
     override val name = "AniList"
-
-    private val gson: Gson by injectLazy()
 
     private val interceptor by lazy { AnilistInterceptor(this, getPassword()) }
 
@@ -197,12 +196,12 @@ class Anilist(private val context: Context, id: Int) : TrackService(id) {
     }
 
     fun saveOAuth(oAuth: OAuth?) {
-        preferences.trackToken(this).set(gson.toJson(oAuth))
+        preferences.trackToken(this).set(Json.encodeToString(oAuth))
     }
 
     fun loadOAuth(): OAuth? {
         return try {
-            gson.fromJson(preferences.trackToken(this).get(), OAuth::class.java)
+            Json.decodeFromString<OAuth>(preferences.trackToken(this).get())
         } catch (e: Exception) {
             null
         }
