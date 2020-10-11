@@ -2,27 +2,28 @@ package eu.kanade.tachiyomi.data.track.bangumi
 
 import android.net.Uri
 import androidx.core.net.toUri
-import com.github.salomonbrys.kotson.array
-import com.github.salomonbrys.kotson.obj
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.asObservableSuccess
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.float
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.CacheControl
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import rx.Observable
-import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 
 class BangumiApi(private val client: OkHttpClient, interceptor: BangumiInterceptor) {
 
-    private val gson: Gson by injectLazy()
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     fun addLibManga(track: Track): Observable<Track> {
@@ -92,36 +93,32 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
                 if (responseBody.contains("\"code\":404")) {
                     responseBody = "{\"results\":0,\"list\":[]}"
                 }
-                val response = JsonParser.parseString(responseBody).obj["list"]?.array
-                response?.filter { it.obj["type"].asInt == 1 }?.map { jsonToSearch(it.obj) }
+                val response = Json.decodeFromString<JsonObject>(responseBody)["list"]?.jsonArray
+                response?.filter { it.jsonObject["type"]?.jsonPrimitive?.int == 1 }?.map { jsonToSearch(it.jsonObject) }
             }
     }
 
     private fun jsonToSearch(obj: JsonObject): TrackSearch {
         return TrackSearch.create(TrackManager.BANGUMI).apply {
-            media_id = obj["id"].asInt
-            title = obj["name_cn"].asString
-            cover_url = obj["images"].obj["common"].asString
-            summary = obj["name"].asString
-            tracking_url = obj["url"].asString
+            media_id = obj["id"]!!.jsonPrimitive.int
+            title = obj["name_cn"]!!.jsonPrimitive.content
+            cover_url = obj["images"]!!.jsonObject["common"]!!.jsonPrimitive.content
+            summary = obj["name"]!!.jsonPrimitive.content
+            tracking_url = obj["url"]!!.jsonPrimitive.content
         }
     }
 
     private fun jsonToTrack(mangas: JsonObject): Track {
         return Track.create(TrackManager.BANGUMI).apply {
-            title = mangas["name"].asString
-            media_id = mangas["id"].asInt
-            score = if (mangas["rating"] != null) {
-                if (mangas["rating"].isJsonObject) {
-                    mangas["rating"].obj["score"].asFloat
-                } else {
-                    0f
-                }
-            } else {
+            title = mangas["name"]!!.jsonPrimitive.content
+            media_id = mangas["id"]!!.jsonPrimitive.int
+            score = try {
+                mangas["rating"]!!.jsonObject["score"]!!.jsonPrimitive.float
+            } catch (_: Exception) {
                 0f
             }
             status = Bangumi.DEFAULT_STATUS
-            tracking_url = mangas["url"].asString
+            tracking_url = mangas["url"]!!.jsonPrimitive.content
         }
     }
 
@@ -137,7 +134,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             .map { netResponse ->
                 // get comic info
                 val responseBody = netResponse.body?.string().orEmpty()
-                jsonToTrack(JsonParser.parseString(responseBody).obj)
+                jsonToTrack(Json.decodeFromString(responseBody))
             }
     }
 
@@ -154,7 +151,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             .asObservableSuccess()
             .map { netResponse ->
                 val resp = netResponse.body?.string()
-                val coll = gson.fromJson(resp, Collection::class.java)
+                val coll = Json.decodeFromString<Collection>(resp!!)
                 track.status = coll.status?.id!!
                 track.last_chapter_read = coll.ep_status!!
                 track
@@ -167,7 +164,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             if (responseBody.isEmpty()) {
                 throw Exception("Null Response")
             }
-            gson.fromJson(responseBody, OAuth::class.java)
+            Json.decodeFromString<OAuth>(responseBody)
         }
     }
 
