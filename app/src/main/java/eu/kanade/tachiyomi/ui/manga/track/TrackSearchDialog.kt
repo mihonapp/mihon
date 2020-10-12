@@ -42,7 +42,7 @@ class TrackSearchDialog : DialogController {
         get() = targetController as TrackController
 
     constructor(target: TrackController, service: TrackService) : super(
-            bundleOf(KEY_SERVICE to service.id)
+        bundleOf(KEY_SERVICE to service.id)
     ) {
         targetController = target
         this.service = service

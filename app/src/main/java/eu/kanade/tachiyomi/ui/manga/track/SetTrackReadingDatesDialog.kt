@@ -22,7 +22,7 @@ class SetTrackReadingDatesDialog<T> : DialogController
     private val dateToUpdate: ReadingDate
 
     constructor(target: T, dateToUpdate: ReadingDate, item: TrackItem) : super(
-            bundleOf(KEY_ITEM_TRACK to item.track)
+        bundleOf(KEY_ITEM_TRACK to item.track)
     ) {
         targetController = target
         this.item = item

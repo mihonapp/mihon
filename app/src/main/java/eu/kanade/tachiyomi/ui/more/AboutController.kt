@@ -185,7 +185,7 @@ class AboutController : SettingsController() {
     class NewUpdateDialogController(bundle: Bundle? = null) : DialogController(bundle) {
 
         constructor(body: String, url: String) : this(
-                bundleOf(BODY_KEY to body, URL_KEY to url)
+            bundleOf(BODY_KEY to body, URL_KEY to url)
         )
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {

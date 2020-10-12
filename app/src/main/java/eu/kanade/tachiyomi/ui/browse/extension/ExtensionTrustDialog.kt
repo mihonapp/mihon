@@ -12,10 +12,10 @@ class ExtensionTrustDialog<T>(bundle: Bundle? = null) : DialogController(bundle)
         where T : Controller, T : ExtensionTrustDialog.Listener {
 
     constructor(target: T, signatureHash: String, pkgName: String) : this(
-            bundleOf(
-                    SIGNATURE_KEY to signatureHash,
-                    PKGNAME_KEY to pkgName
-            )
+        bundleOf(
+            SIGNATURE_KEY to signatureHash,
+            PKGNAME_KEY to pkgName
+        )
     ) {
         targetController = target
     }

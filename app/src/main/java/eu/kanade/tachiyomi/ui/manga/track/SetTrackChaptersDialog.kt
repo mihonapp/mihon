@@ -21,7 +21,7 @@ class SetTrackChaptersDialog<T> : DialogController
     private val item: TrackItem
 
     constructor(target: T, item: TrackItem) : super(
-            bundleOf(KEY_ITEM_TRACK to item.track)
+        bundleOf(KEY_ITEM_TRACK to item.track)
     ) {
         targetController = target
         this.item = item

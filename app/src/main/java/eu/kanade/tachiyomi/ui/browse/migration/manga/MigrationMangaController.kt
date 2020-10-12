@@ -20,10 +20,10 @@ class MigrationMangaController :
     private var adapter: FlexibleAdapter<IFlexible<*>>? = null
 
     constructor(sourceId: Long, sourceName: String?) : super(
-            bundleOf(
-                    SOURCE_ID_EXTRA to sourceId,
-                    SOURCE_NAME_EXTRA to sourceName
-            )
+        bundleOf(
+            SOURCE_ID_EXTRA to sourceId,
+            SOURCE_NAME_EXTRA to sourceName
+        )
     )
 
     @Suppress("unused")

@@ -26,8 +26,8 @@ class DownloadCustomChaptersDialog<T> : DialogController
      * @param maxChapters maximal number of chapters that user can download.
      */
     constructor(target: T, maxChapters: Int) : super(
-            // Add maximum number of chapters to download value to bundle.
-            bundleOf(KEY_ITEM_MAX to maxChapters)
+        // Add maximum number of chapters to download value to bundle.
+        bundleOf(KEY_ITEM_MAX to maxChapters)
     ) {
         targetController = target
         this.maxChapters = maxChapters

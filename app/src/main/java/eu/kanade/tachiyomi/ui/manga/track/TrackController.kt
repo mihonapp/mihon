@@ -31,7 +31,7 @@ class TrackController :
     SetTrackReadingDatesDialog.Listener {
 
     constructor(manga: Manga?) : super(
-            bundleOf(MANGA_EXTRA to (manga?.id ?: 0))
+        bundleOf(MANGA_EXTRA to (manga?.id ?: 0))
     ) {
         this.manga = manga
     }

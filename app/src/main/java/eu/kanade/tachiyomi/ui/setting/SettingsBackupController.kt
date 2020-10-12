@@ -252,7 +252,7 @@ class SettingsBackupController : SettingsController() {
 
     class RestoreBackupDialog(bundle: Bundle? = null) : DialogController(bundle) {
         constructor(uri: Uri) : this(
-                bundleOf(KEY_URI to uri)
+            bundleOf(KEY_URI to uri)
         )
 
         override fun onCreateDialog(savedViewState: Bundle?): Dialog {

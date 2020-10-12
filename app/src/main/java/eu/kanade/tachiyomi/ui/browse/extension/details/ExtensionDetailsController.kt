@@ -56,7 +56,7 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
     private var preferenceScreen: PreferenceScreen? = null
 
     constructor(pkgName: String) : this(
-            bundleOf(PKGNAME_KEY to pkgName)
+        bundleOf(PKGNAME_KEY to pkgName)
     )
 
     init {

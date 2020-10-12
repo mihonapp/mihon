@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.widget.DialogCheckboxView
 class SetChapterSettingsDialog(bundle: Bundle? = null) : DialogController(bundle) {
 
     constructor(manga: Manga) : this(
-            bundleOf(MANGA_KEY to manga)
+        bundleOf(MANGA_KEY to manga)
     )
 
     override fun onCreateDialog(savedViewState: Bundle?): Dialog {

@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourcePresenter
 class LatestUpdatesController(bundle: Bundle) : BrowseSourceController(bundle) {
 
     constructor(source: CatalogueSource) : this(
-            bundleOf(SOURCE_ID_KEY to source.id)
+        bundleOf(SOURCE_ID_KEY to source.id)
     )
 
     override fun createPresenter(): BrowseSourcePresenter {

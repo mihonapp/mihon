@@ -42,7 +42,7 @@ class SourcePreferencesController(bundle: Bundle? = null) :
     private var preferenceScreen: PreferenceScreen? = null
 
     constructor(sourceId: Long) : this(
-            bundleOf(SOURCE_ID to sourceId)
+        bundleOf(SOURCE_ID to sourceId)
     )
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {

@@ -99,10 +99,10 @@ class MangaController :
     DeleteChaptersDialog.Listener {
 
     constructor(manga: Manga?, fromSource: Boolean = false) : super(
-            bundleOf(
-                    MANGA_EXTRA to (manga?.id ?: 0),
-                    FROM_SOURCE_EXTRA to fromSource
-            )
+        bundleOf(
+            MANGA_EXTRA to (manga?.id ?: 0),
+            FROM_SOURCE_EXTRA to fromSource
+        )
     ) {
         this.manga = manga
         if (manga != null) {

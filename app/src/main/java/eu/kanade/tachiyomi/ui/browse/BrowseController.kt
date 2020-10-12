@@ -32,7 +32,7 @@ class BrowseController :
     TabbedController {
 
     constructor(toExtensions: Boolean = false) : super(
-            bundleOf(TO_EXTENSIONS_EXTRA to toExtensions)
+        bundleOf(TO_EXTENSIONS_EXTRA to toExtensions)
     )
 
     @Suppress("unused")
