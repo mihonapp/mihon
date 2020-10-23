@@ -157,7 +157,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
             if (responseBody.isEmpty()) {
                 throw Exception("Null Response")
             }
-            Json.decodeFromString<OAuth>(responseBody)
+            Json { ignoreUnknownKeys = true }.decodeFromString<OAuth>(responseBody)
         }
     }
 
@@ -177,9 +177,9 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
         private const val clientSecret = "229942c742dd4cde803125d17d64501d91c0b12e14cb1e5120184d77d67024c0"
 
         private const val baseUrl = "https://shikimori.one"
-        private const val apiUrl = "https://shikimori.one/api"
-        private const val oauthUrl = "https://shikimori.one/oauth/token"
-        private const val loginUrl = "https://shikimori.one/oauth/authorize"
+        private const val apiUrl = "$baseUrl/api"
+        private const val oauthUrl = "$baseUrl/oauth/token"
+        private const val loginUrl = "$baseUrl/oauth/authorize"
 
         private const val redirectUrl = "tachiyomi://shikimori-auth"
         private const val baseMangaUrl = "$apiUrl/mangas"
