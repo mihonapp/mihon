@@ -139,7 +139,7 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'androidx.core:core-ktx:1.4.0-alpha01'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha06'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
 
@@ -149,7 +149,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     // Job scheduling
-    final work_version = '2.5.0-alpha02'
+    final work_version = '2.5.0-alpha03'
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
@@ -198,7 +198,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
 
     // Database
-    implementation 'androidx.sqlite:sqlite:2.1.0'
+    implementation 'androidx.sqlite:sqlite-ktx:2.1.0'
     implementation 'com.github.inorichi.storio:storio-common:8be19de@aar'
     implementation 'com.github.inorichi.storio:storio-sqlite:8be19de@aar'
     implementation 'io.requery:sqlite-android:3.33.0'
