@@ -129,6 +129,9 @@ androidExtensions {
 
 dependencies {
 
+    // Source models and interfaces from Tachiyomi 1.x
+    implementation 'tachiyomi.sourceapi:source-api:1.1'
+
     // AndroidX libraries
     implementation 'androidx.annotation:annotation:1.2.0-alpha01'
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
@@ -297,6 +300,9 @@ buildscript {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://dl.bintray.com/tachiyomiorg/maven"
+    }
 }
 
 // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api-markers

@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.source.model
 import android.net.Uri
 import eu.kanade.tachiyomi.network.ProgressListener
 import rx.subjects.Subject
+import tachiyomi.source.model.PageUrl
 
 open class Page(
     val index: Int,
@@ -60,4 +61,10 @@ open class Page(
         const val READY = 3
         const val ERROR = 4
     }
+}
+
+fun Page.toPageInfo(): PageUrl {
+    return PageUrl(
+        url = this.imageUrl ?: this.url
+    )
 }
