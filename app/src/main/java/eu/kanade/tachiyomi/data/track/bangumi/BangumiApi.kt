@@ -151,7 +151,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             .asObservableSuccess()
             .map { netResponse ->
                 val resp = netResponse.body?.string()
-                val coll = Json.decodeFromString<Collection>(resp!!)
+                val coll = Json { ignoreUnknownKeys = true }.decodeFromString<Collection>(resp!!)
                 track.status = coll.status?.id!!
                 track.last_chapter_read = coll.ep_status!!
                 track
