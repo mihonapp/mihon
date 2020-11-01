@@ -164,7 +164,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
             if (responseBody.isEmpty()) {
                 throw Exception("Null Response")
             }
-            Json.decodeFromString<OAuth>(responseBody)
+            Json { ignoreUnknownKeys = true }.decodeFromString<OAuth>(responseBody)
         }
     }
 

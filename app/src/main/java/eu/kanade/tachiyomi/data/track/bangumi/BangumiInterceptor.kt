@@ -30,7 +30,7 @@ class BangumiInterceptor(val bangumi: Bangumi) : Interceptor {
         if (currAuth.isExpired()) {
             val response = chain.proceed(BangumiApi.refreshTokenRequest(currAuth.refresh_token!!))
             if (response.isSuccessful) {
-                newAuth(Json.decodeFromString<OAuth>(response.body!!.string()))
+                newAuth(Json { ignoreUnknownKeys = true }.decodeFromString<OAuth>(response.body!!.string()))
             } else {
                 response.close()
             }
