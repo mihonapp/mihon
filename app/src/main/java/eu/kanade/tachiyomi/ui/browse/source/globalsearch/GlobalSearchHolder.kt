@@ -4,6 +4,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.android.synthetic.main.global_search_controller_card.no_results_found
@@ -53,7 +54,7 @@ class GlobalSearchHolder(view: View, val adapter: GlobalSearchAdapter) :
         val titlePrefix = if (item.highlighted) "▶ " else ""
 
         title.text = titlePrefix + source.name
-        subtitle.isVisible = true
+        subtitle.isVisible = source !is LocalSource
         subtitle.text = LocaleHelper.getDisplayName(source.lang)
 
         when {

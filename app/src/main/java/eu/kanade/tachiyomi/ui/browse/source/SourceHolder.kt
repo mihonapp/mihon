@@ -32,7 +32,7 @@ class SourceHolder(private val view: View, val adapter: SourceAdapter) :
         val source = item.source
 
         title.text = source.name
-        subtitle.isVisible = true
+        subtitle.isVisible = source !is LocalSource
         subtitle.text = LocaleHelper.getDisplayName(source.lang)
 
         // Set source icon
