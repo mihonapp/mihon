@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import eu.kanade.tachiyomi.util.view.edgeToEdge
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
@@ -22,6 +23,15 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     @Suppress("LeakingThis")
     private val secureActivityDelegate = SecureActivityDelegate(this)
+
+    private val isDarkMode: Boolean by lazy {
+        val themeMode = preferences.themeMode().get()
+        (themeMode == Values.ThemeMode.dark) ||
+            (
+                themeMode == Values.ThemeMode.system &&
+                    (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+                )
+    }
 
     private val lightTheme: Int by lazy {
         when (preferences.themeLight().get()) {
@@ -60,15 +70,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(
-            when (preferences.themeMode().get()) {
-                Values.ThemeMode.system -> {
-                    if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
-                        darkTheme
-                    } else {
-                        lightTheme
-                    }
-                }
-                Values.ThemeMode.dark -> darkTheme
+            when {
+                isDarkMode -> darkTheme
                 else -> lightTheme
             }
         )
@@ -76,6 +79,10 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         secureActivityDelegate.onCreate()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.edgeToEdge(!isDarkMode && lightTheme != R.style.Theme_Tachiyomi_LightBlue)
+        }
     }
 
     override fun onResume() {

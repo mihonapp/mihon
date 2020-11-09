@@ -3,13 +3,16 @@ package eu.kanade.tachiyomi.ui.main
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
+import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.preference.PreferenceDialogController
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
@@ -83,8 +86,23 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         }
 
         setContentView(binding.root)
-
         setSupportActionBar(binding.toolbar)
+
+        // Inset paddings when drawing edge-to-edge in Android 9+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            binding.bottomNav.setOnApplyWindowInsetsListener { view, insets ->
+                view.updatePadding(bottom = insets.systemWindowInsetBottom)
+                insets
+            }
+
+            val initialFabBottomMargin = binding.rootFab.marginBottom
+            binding.rootFab.setOnApplyWindowInsetsListener { view, insets ->
+                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin = initialFabBottomMargin + insets.systemWindowInsetBottom
+                }
+                insets
+            }
+        }
 
         tabAnimator = ViewHeightAnimator(binding.tabs, 0L)
         bottomNavAnimator = ViewHeightAnimator(binding.bottomNav)
