@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.manga.info
 
+import android.graphics.PorterDuff
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +21,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.manga.MangaController
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import eu.kanade.tachiyomi.util.system.getResourceColor
 import eu.kanade.tachiyomi.util.view.setChips
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -306,6 +309,14 @@ class MangaInfoHeaderAdapter(
                     toggleMangaInfo()
                     initialLoad = false
                 }
+            }
+
+            // backgroundTint attribute doesn't work properly on Android 5
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+                binding.mangaInfoToggleMoreScrim.background.setColorFilter(
+                    view.context.getResourceColor(android.R.attr.colorBackground),
+                    PorterDuff.Mode.SRC_ATOP
+                )
             }
         }
 
