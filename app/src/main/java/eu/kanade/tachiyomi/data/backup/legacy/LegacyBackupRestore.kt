@@ -10,7 +10,6 @@ import com.google.gson.JsonParser
 import com.google.gson.stream.JsonReader
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.AbstractBackupRestore
-import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.legacy.models.Backup
 import eu.kanade.tachiyomi.data.backup.legacy.models.Backup.MANGAS
@@ -22,13 +21,10 @@ import eu.kanade.tachiyomi.data.database.models.MangaImpl
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.database.models.TrackImpl
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.util.chapter.NoChaptersException
 import rx.Observable
 import java.util.Date
 
-class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBackupRestore(context, notifier) {
-
-    private lateinit var backupManager: LegacyBackupManager
+class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBackupRestore<LegacyBackupManager>(context, notifier) {
 
     /**
      * Restores data from backup file.
@@ -228,65 +224,5 @@ class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : Abstract
 
         // Restore tracking
         backupManager.restoreTrackForManga(manga, tracks)
-    }
-
-    /**
-     * [Observable] that fetches chapter information
-     *
-     * @param source source of manga
-     * @param manga manga that needs updating
-     * @return [Observable] that contains manga
-     */
-    private fun chapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>): Observable<Pair<List<Chapter>, List<Chapter>>> {
-        return backupManager.restoreChapterFetchObservable(source, manga, chapters)
-            // If there's any error, return empty update and continue.
-            .onErrorReturn {
-                val errorMessage = if (it is NoChaptersException) {
-                    context.getString(R.string.no_chapters_error)
-                } else {
-                    it.message
-                }
-                errors.add(Date() to "${manga.title} - $errorMessage")
-                Pair(emptyList(), emptyList())
-            }
-    }
-
-    /**
-     * [Observable] that refreshes tracking information
-     * @param manga manga that needs updating.
-     * @param tracks list containing tracks from restore file.
-     * @return [Observable] that contains updated track item
-     */
-    private fun trackingFetchObservable(manga: Manga, tracks: List<Track>): Observable<Track> {
-        return Observable.from(tracks)
-            .flatMap { track ->
-                val service = trackManager.getService(track.sync_id)
-                if (service != null && service.isLogged) {
-                    service.refresh(track)
-                        .doOnNext { db.insertTrack(it).executeAsBlocking() }
-                        .onErrorReturn {
-                            errors.add(Date() to "${manga.title} - ${it.message}")
-                            track
-                        }
-                } else {
-                    errors.add(Date() to "${manga.title} - ${context.getString(R.string.tracker_not_logged_in, service?.name)}")
-                    Observable.empty()
-                }
-            }
-    }
-
-    /**
-     * Called to update dialog in [BackupConst]
-     *
-     * @param progress restore progress
-     * @param amount total restoreAmount of manga
-     * @param title title of restored manga
-     */
-    private fun showRestoreProgress(
-        progress: Int,
-        amount: Int,
-        title: String
-    ) {
-        notifier.showRestoreProgress(title, progress, amount)
     }
 }

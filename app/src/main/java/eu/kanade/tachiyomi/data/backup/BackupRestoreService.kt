@@ -68,7 +68,7 @@ class BackupRestoreService : Service() {
      */
     private lateinit var wakeLock: PowerManager.WakeLock
 
-    private var backupRestore: AbstractBackupRestore? = null
+    private var backupRestore: AbstractBackupRestore<*>? = null
     private lateinit var notifier: BackupNotifier
 
     override fun onCreate() {

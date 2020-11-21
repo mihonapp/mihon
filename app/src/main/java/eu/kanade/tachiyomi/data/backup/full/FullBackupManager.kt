@@ -27,7 +27,6 @@ import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.database.models.MangaCategory
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
 import okio.buffer
@@ -207,25 +206,6 @@ class FullBackupManager(context: Context) : AbstractBackupManager(context) {
                     it
                 }
         }
-    }
-
-    /**
-     * [Observable] that fetches chapter information
-     *
-     * @param source source of manga
-     * @param manga manga that needs updating
-     * @param chapters list of chapters in the backup
-     * @return [Observable] that contains manga
-     */
-    fun restoreChapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>): Observable<Pair<List<Chapter>, List<Chapter>>> {
-        return source.fetchChapterList(manga)
-            .map { syncChaptersWithSource(databaseHelper, it, manga, source) }
-            .doOnNext { pair ->
-                if (pair.first.isNotEmpty()) {
-                    chapters.forEach { it.manga_id = manga.id }
-                    updateChapters(chapters)
-                }
-            }
     }
 
     /**

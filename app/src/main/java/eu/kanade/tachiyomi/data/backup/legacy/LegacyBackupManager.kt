@@ -46,16 +46,13 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.database.models.TrackImpl
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.util.chapter.syncChaptersWithSource
 import rx.Observable
 import timber.log.Timber
 import kotlin.math.max
 
 class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : AbstractBackupManager(context) {
-    /**
-     * Version of parser
-     */
-    var version: Int = version
+
+    var parserVersion: Int = version
         private set
 
     var parser: Gson = initParser()
@@ -66,11 +63,11 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
      * @param version version of parser
      */
     internal fun setVersion(version: Int) {
-        this.version = version
+        this.parserVersion = version
         parser = initParser()
     }
 
-    private fun initParser(): Gson = when (version) {
+    private fun initParser(): Gson = when (parserVersion) {
         2 ->
             GsonBuilder()
                 .registerTypeAdapter<MangaImpl>(MangaTypeAdapter.build())
@@ -266,24 +263,6 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
                 manga.initialized = true
                 manga.id = insertManga(manga)
                 manga
-            }
-    }
-
-    /**
-     * [Observable] that fetches chapter information
-     *
-     * @param source source of manga
-     * @param manga manga that needs updating
-     * @return [Observable] that contains manga
-     */
-    fun restoreChapterFetchObservable(source: Source, manga: Manga, chapters: List<Chapter>): Observable<Pair<List<Chapter>, List<Chapter>>> {
-        return source.fetchChapterList(manga)
-            .map { syncChaptersWithSource(databaseHelper, it, manga, source) }
-            .doOnNext { pair ->
-                if (pair.first.isNotEmpty()) {
-                    chapters.forEach { it.manga_id = manga.id }
-                    updateChapters(chapters)
-                }
             }
     }
 
