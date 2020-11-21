@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.backup.models
+package eu.kanade.tachiyomi.data.backup
 
 import android.content.Context
 import android.net.Uri

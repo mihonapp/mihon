@@ -1,8 +1,7 @@
-package eu.kanade.tachiyomi.data.backup.models
+package eu.kanade.tachiyomi.data.backup
 
 import android.content.Context
 import android.net.Uri
-import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.database.DatabaseHelper
 import eu.kanade.tachiyomi.data.track.TrackManager
 import kotlinx.coroutines.Job

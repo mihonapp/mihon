@@ -6,8 +6,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.stream.JsonReader
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.backup.AbstractBackupRestoreValidator
 import eu.kanade.tachiyomi.data.backup.legacy.models.Backup
-import eu.kanade.tachiyomi.data.backup.models.AbstractBackupRestoreValidator
 
 class LegacyBackupRestoreValidator : AbstractBackupRestoreValidator() {
     /**

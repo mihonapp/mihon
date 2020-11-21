@@ -156,88 +156,73 @@ class SettingsBackupController : SettingsController() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            CODE_BACKUP_DIR -> if (data != null && resultCode == Activity.RESULT_OK) {
-                val activity = activity ?: return
-                // Get uri of backup folder.
-                val uri = data.data
+        if (data != null && resultCode == Activity.RESULT_OK) {
+            val activity = activity ?: return
+            val uri = data.data
 
-                // Get UriPermission so it's possible to write files
-                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            when (requestCode) {
+                CODE_BACKUP_DIR -> {
+                    // Get UriPermission so it's possible to write files
+                    val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
-                if (uri != null) {
-                    activity.contentResolver.takePersistableUriPermission(uri, flags)
+                    if (uri != null) {
+                        activity.contentResolver.takePersistableUriPermission(uri, flags)
+                    }
+
+                    // Set backup Uri
+                    preferences.backupsDirectory().set(uri.toString())
                 }
+                CODE_FULL_BACKUP_CREATE, CODE_LEGACY_BACKUP_CREATE -> {
+                    val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
-                // Set backup Uri
-                preferences.backupsDirectory().set(uri.toString())
-            }
-            CODE_LEGACY_BACKUP_CREATE -> if (data != null && resultCode == Activity.RESULT_OK) {
-                val activity = activity ?: return
+                    if (uri != null) {
+                        activity.contentResolver.takePersistableUriPermission(uri, flags)
+                    }
 
-                val uri = data.data
-                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    val file = UniFile.fromUri(activity, uri)
 
-                if (uri != null) {
-                    activity.contentResolver.takePersistableUriPermission(uri, flags)
+                    activity.toast(R.string.creating_backup)
+
+                    BackupCreateService.start(
+                        activity,
+                        file.uri,
+                        backupFlags,
+                        if (requestCode == CODE_FULL_BACKUP_CREATE) BackupConst.BACKUP_TYPE_FULL else BackupConst.BACKUP_TYPE_LEGACY
+                    )
                 }
-
-                val file = UniFile.fromUri(activity, uri)
-
-                activity.toast(R.string.creating_backup)
-
-                BackupCreateService.start(activity, file.uri, backupFlags, BackupConst.BACKUP_TYPE_LEGACY)
-            }
-            CODE_BACKUP_RESTORE -> if (data != null && resultCode == Activity.RESULT_OK) {
-                val uri = data.data
-                if (uri?.path != null) {
-                    if (uri.path!!.endsWith(".proto.gz")) {
-                        val options = arrayOf(
-                            R.string.full_restore_offline,
-                            R.string.full_restore_online
-                        )
-                            .map { activity!!.getString(it) }
-                        MaterialDialog(activity!!)
-                            .title(R.string.full_restore_mode)
-                            .listItemsSingleChoice(
-                                items = options,
-                                initialSelection = 0
-                            ) { _, index, _ ->
-                                RestoreBackupDialog(
-                                    uri,
-                                    BackupConst.BACKUP_TYPE_FULL,
-                                    isOnline = index != 0
-                                ).showDialog(router)
-                            }
-                            .positiveButton(R.string.action_restore)
-                            .show()
-                    } else if (uri.path!!.endsWith(".json")) {
-                        RestoreBackupDialog(
-                            uri,
-                            BackupConst.BACKUP_TYPE_LEGACY,
-                            isOnline = true
-                        ).showDialog(router)
+                CODE_BACKUP_RESTORE -> {
+                    if (uri?.path != null) {
+                        if (uri.path!!.endsWith(".proto.gz")) {
+                            val options = arrayOf(
+                                R.string.full_restore_offline,
+                                R.string.full_restore_online
+                            )
+                                .map { activity.getString(it) }
+                            MaterialDialog(activity)
+                                .title(R.string.full_restore_mode)
+                                .listItemsSingleChoice(
+                                    items = options,
+                                    initialSelection = 0
+                                ) { _, index, _ ->
+                                    RestoreBackupDialog(
+                                        uri,
+                                        BackupConst.BACKUP_TYPE_FULL,
+                                        isOnline = index != 0
+                                    ).showDialog(router)
+                                }
+                                .positiveButton(R.string.action_restore)
+                                .show()
+                        } else if (uri.path!!.endsWith(".json")) {
+                            RestoreBackupDialog(
+                                uri,
+                                BackupConst.BACKUP_TYPE_LEGACY,
+                                isOnline = true
+                            ).showDialog(router)
+                        }
                     }
                 }
-            }
-            CODE_FULL_BACKUP_CREATE -> if (data != null && resultCode == Activity.RESULT_OK) {
-                val activity = activity ?: return
-
-                val uri = data.data
-                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-
-                if (uri != null) {
-                    activity.contentResolver.takePersistableUriPermission(uri, flags)
-                }
-
-                val file = UniFile.fromUri(activity, uri)
-
-                activity.toast(R.string.creating_backup)
-
-                BackupCreateService.start(activity, file.uri, backupFlags, BackupConst.BACKUP_TYPE_FULL)
             }
         }
     }
@@ -268,10 +253,16 @@ class SettingsBackupController : SettingsController() {
     fun createBackup(flags: Int, type: Int) {
         backupFlags = flags
         val currentDir = preferences.backupsDirectory().get()
-        val code = if (type == BackupConst.BACKUP_TYPE_FULL) CODE_FULL_BACKUP_CREATE else CODE_LEGACY_BACKUP_CREATE
+        val code = when (type) {
+            BackupConst.BACKUP_TYPE_FULL -> CODE_FULL_BACKUP_CREATE
+            else -> CODE_LEGACY_BACKUP_CREATE
+        }
+        val fileName = when (type) {
+            BackupConst.BACKUP_TYPE_FULL -> BackupFull.getDefaultFilename()
+            else -> Backup.getDefaultFilename()
+        }
 
         try {
-            val fileName = if (type == BackupConst.BACKUP_TYPE_FULL) BackupFull.getDefaultFilename() else Backup.getDefaultFilename()
             // Use Android's built-in file creator
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
                 .addCategory(Intent.CATEGORY_OPENABLE)

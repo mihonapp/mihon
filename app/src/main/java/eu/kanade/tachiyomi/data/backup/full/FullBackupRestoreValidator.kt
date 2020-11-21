@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.data.backup.full
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.backup.AbstractBackupRestoreValidator
 import eu.kanade.tachiyomi.data.backup.full.models.BackupSerializer
-import eu.kanade.tachiyomi.data.backup.models.AbstractBackupRestoreValidator
 import kotlinx.serialization.ExperimentalSerializationApi
 import okio.buffer
 import okio.gzip

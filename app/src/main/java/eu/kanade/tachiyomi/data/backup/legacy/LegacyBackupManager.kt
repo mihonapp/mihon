@@ -12,6 +12,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.hippo.unifile.UniFile
+import eu.kanade.tachiyomi.data.backup.AbstractBackupManager
 import eu.kanade.tachiyomi.data.backup.BackupCreateService.Companion.BACKUP_CATEGORY
 import eu.kanade.tachiyomi.data.backup.BackupCreateService.Companion.BACKUP_CATEGORY_MASK
 import eu.kanade.tachiyomi.data.backup.BackupCreateService.Companion.BACKUP_CHAPTER
@@ -34,7 +35,6 @@ import eu.kanade.tachiyomi.data.backup.legacy.serializer.ChapterTypeAdapter
 import eu.kanade.tachiyomi.data.backup.legacy.serializer.HistoryTypeAdapter
 import eu.kanade.tachiyomi.data.backup.legacy.serializer.MangaTypeAdapter
 import eu.kanade.tachiyomi.data.backup.legacy.serializer.TrackTypeAdapter
-import eu.kanade.tachiyomi.data.backup.models.AbstractBackupManager
 import eu.kanade.tachiyomi.data.database.models.CategoryImpl
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
@@ -108,7 +108,6 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
         root[EXTENSIONS] = extensionEntries
 
         databaseHelper.inTransaction {
-            // Get manga from database
             val mangas = getFavoriteManga()
 
             val extensions: MutableSet<String> = mutableSetOf()
@@ -135,39 +134,33 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
         }
 
         try {
-            // When BackupCreatorJob
-            if (isJob) {
-                // Get dir of file and create
-                var dir = UniFile.fromUri(context, uri)
-                dir = dir.createDirectory("automatic")
+            val file: UniFile = (
+                if (isJob) {
+                    // Get dir of file and create
+                    var dir = UniFile.fromUri(context, uri)
+                    dir = dir.createDirectory("automatic")
 
-                // Delete older backups
-                val numberOfBackups = numberOfBackups()
-                val backupRegex = Regex("""tachiyomi_\d+-\d+-\d+_\d+-\d+.json""")
-                dir.listFiles { _, filename -> backupRegex.matches(filename) }
-                    .orEmpty()
-                    .sortedByDescending { it.name }
-                    .drop(numberOfBackups - 1)
-                    .forEach { it.delete() }
+                    // Delete older backups
+                    val numberOfBackups = numberOfBackups()
+                    val backupRegex = Regex("""tachiyomi_\d+-\d+-\d+_\d+-\d+.json""")
+                    dir.listFiles { _, filename -> backupRegex.matches(filename) }
+                        .orEmpty()
+                        .sortedByDescending { it.name }
+                        .drop(numberOfBackups - 1)
+                        .forEach { it.delete() }
 
-                // Create new file to place backup
-                val newFile = dir.createFile(Backup.getDefaultFilename())
-                    ?: throw Exception("Couldn't create backup file")
-
-                newFile.openOutputStream().bufferedWriter().use {
-                    parser.toJson(root, it)
+                    // Create new file to place backup
+                    dir.createFile(Backup.getDefaultFilename())
+                } else {
+                    UniFile.fromUri(context, uri)
                 }
+                )
+                ?: throw Exception("Couldn't create backup file")
 
-                return newFile.uri.toString()
-            } else {
-                val file = UniFile.fromUri(context, uri)
-                    ?: throw Exception("Couldn't create backup file")
-                file.openOutputStream().bufferedWriter().use {
-                    parser.toJson(root, it)
-                }
-
-                return file.uri.toString()
+            file.openOutputStream().bufferedWriter().use {
+                parser.toJson(root, it)
             }
+            return file.uri.toString()
         } catch (e: Exception) {
             Timber.e(e)
             throw e

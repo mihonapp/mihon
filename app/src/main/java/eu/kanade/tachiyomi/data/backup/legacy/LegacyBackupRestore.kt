@@ -9,12 +9,12 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.stream.JsonReader
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.backup.AbstractBackupRestore
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.legacy.models.Backup
 import eu.kanade.tachiyomi.data.backup.legacy.models.Backup.MANGAS
 import eu.kanade.tachiyomi.data.backup.legacy.models.DHistory
-import eu.kanade.tachiyomi.data.backup.models.AbstractBackupRestore
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import eu.kanade.tachiyomi.data.database.models.Manga
