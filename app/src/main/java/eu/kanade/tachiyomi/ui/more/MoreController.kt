@@ -1,7 +1,12 @@
 package eu.kanade.tachiyomi.ui.more
 
 import android.content.Context
+import android.os.Bundle
 import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
@@ -38,6 +43,15 @@ class MoreController :
     private val downloadManager: DownloadManager by injectLazy()
     private var isDownloading: Boolean = false
     private var downloadQueueSize: Int = 0
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+
+        // Padding for bottom nav
+        view.updatePadding(bottom = view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding))
+
+        return view
+    }
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) = screen.apply {
         titleRes = R.string.label_more
