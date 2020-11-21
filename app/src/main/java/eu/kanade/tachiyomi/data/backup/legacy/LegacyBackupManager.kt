@@ -58,9 +58,6 @@ class LegacyBackupManager(context: Context, version: Int = CURRENT_VERSION) : Ab
     var version: Int = version
         private set
 
-    /**
-     * Json Parser
-     */
     var parser: Gson = initParser()
 
     /**

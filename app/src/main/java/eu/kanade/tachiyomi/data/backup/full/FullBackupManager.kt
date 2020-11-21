@@ -39,9 +39,7 @@ import kotlin.math.max
 
 @OptIn(ExperimentalSerializationApi::class)
 class FullBackupManager(context: Context) : AbstractBackupManager(context) {
-    /**
-     * Parser
-     */
+
     val parser = ProtoBuf
 
     /**
