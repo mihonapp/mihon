@@ -147,7 +147,7 @@ class SettingsBackupController : SettingsController() {
             switchPreference {
                 key = Keys.createLegacyBackup
                 titleRes = R.string.pref_backup_auto_create_legacy
-                defaultValue = false
+                defaultValue = true
 
                 preferences.backupInterval().asImmediateFlow { isVisible = it > 0 }
                     .launchIn(scope)

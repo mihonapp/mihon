@@ -271,7 +271,7 @@ class PreferencesHelper(val context: Context) {
 
     fun incognitoMode() = flowPrefs.getBoolean(Keys.incognitoMode, false)
 
-    fun createLegacyBackup() = flowPrefs.getBoolean(Keys.createLegacyBackup, false)
+    fun createLegacyBackup() = flowPrefs.getBoolean(Keys.createLegacyBackup, true)
 
     fun setChapterSettingsDefault(manga: Manga) {
         prefs.edit {
