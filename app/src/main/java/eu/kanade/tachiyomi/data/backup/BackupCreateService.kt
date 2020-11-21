@@ -11,7 +11,6 @@ import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.full.FullBackupManager
 import eu.kanade.tachiyomi.data.backup.legacy.LegacyBackupManager
-import eu.kanade.tachiyomi.data.backup.models.AbstractBackupManager
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isServiceRunning
@@ -66,7 +65,6 @@ class BackupCreateService : Service() {
      */
     private lateinit var wakeLock: PowerManager.WakeLock
 
-    private lateinit var backupManager: AbstractBackupManager
     private lateinit var notifier: BackupNotifier
 
     override fun onCreate() {
@@ -106,7 +104,10 @@ class BackupCreateService : Service() {
             val uri = intent.getParcelableExtra<Uri>(BackupConst.EXTRA_URI)
             val backupFlags = intent.getIntExtra(BackupConst.EXTRA_FLAGS, 0)
             val backupType = intent.getIntExtra(BackupConst.EXTRA_TYPE, BackupConst.BACKUP_TYPE_LEGACY)
-            backupManager = if (backupType == BackupConst.BACKUP_TYPE_FULL) FullBackupManager(this) else LegacyBackupManager(this)
+            val backupManager = when (backupType) {
+                BackupConst.BACKUP_TYPE_FULL -> FullBackupManager(this)
+                else -> LegacyBackupManager(this)
+            }
 
             val backupFileUri = backupManager.createBackup(uri, backupFlags, false)?.toUri()
             val unifile = UniFile.fromUri(this, backupFileUri)

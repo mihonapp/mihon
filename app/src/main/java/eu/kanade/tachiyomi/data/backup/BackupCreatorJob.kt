@@ -19,13 +19,13 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
 
     override fun doWork(): Result {
         val preferences = Injekt.get<PreferencesHelper>()
-        val backupManager = FullBackupManager(context)
-        val legacyBackupManager = if (preferences.createLegacyBackup().get()) LegacyBackupManager(context) else null
         val uri = preferences.backupsDirectory().get().toUri()
         val flags = BackupCreateService.BACKUP_ALL
         return try {
-            backupManager.createBackup(uri, flags, true)
-            legacyBackupManager?.createBackup(uri, flags, true)
+            FullBackupManager(context).createBackup(uri, flags, true)
+            if (preferences.createLegacyBackup().get()) {
+                LegacyBackupManager(context).createBackup(uri, flags, true)
+            }
             Result.success()
         } catch (e: Exception) {
             Result.failure()
