@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
@@ -90,15 +92,17 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
         // Inset paddings when drawing edge-to-edge in Android 9+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            binding.bottomNav.setOnApplyWindowInsetsListener { view, insets ->
-                view.updatePadding(bottom = insets.systemWindowInsetBottom)
+            ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNav) { view, insets ->
+                val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                view.updatePadding(bottom = systemInsets.bottom)
                 insets
             }
 
             val initialFabBottomMargin = binding.rootFab.marginBottom
-            binding.rootFab.setOnApplyWindowInsetsListener { view, insets ->
+            ViewCompat.setOnApplyWindowInsetsListener(binding.rootFab) { view, insets ->
+                val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
                 view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    bottomMargin = initialFabBottomMargin + insets.systemWindowInsetBottom
+                    bottomMargin = initialFabBottomMargin + systemInsets.bottom
                 }
                 insets
             }
