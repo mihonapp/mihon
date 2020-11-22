@@ -621,6 +621,7 @@
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
 
     <!-- Source migration screen -->
+    <string name="migration_help_guide">Source migration guide</string>
     <string name="migration_info">Tap to select the source to migrate from</string>
     <string name="migration_dialog_what_to_include">Select data to include</string>
     <string name="migration_selection_prompt">Select a source to migrate from</string>
