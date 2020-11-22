@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.chapter.NoChaptersException
 import kotlinx.coroutines.Job
+import okio.source
 import rx.Observable
 import uy.kohesive.injekt.injectLazy
 import java.io.File
@@ -23,52 +24,38 @@ abstract class AbstractBackupRestore<T : AbstractBackupManager>(protected val co
     protected val db: DatabaseHelper by injectLazy()
     protected val trackManager: TrackManager by injectLazy()
 
-    protected lateinit var backupManager: T
-
     var job: Job? = null
 
-    /**
-     * The progress of a backup restore
-     */
-    protected var restoreProgress = 0
+    protected lateinit var backupManager: T
 
-    /**
-     * Amount of manga in Json file (needed for restore)
-     */
     protected var restoreAmount = 0
+    protected var restoreProgress = 0
 
     /**
      * Mapping of source ID to source name from backup data
      */
     protected var sourceMapping: Map<Long, String> = emptyMap()
 
-    /**
-     * List containing errors
-     */
     protected val errors = mutableListOf<Pair<Date, String>>()
 
-    abstract fun restoreBackup(uri: Uri): Boolean
+    abstract fun performRestore(uri: Uri): Boolean
 
-    /**
-     * Write errors to error log
-     */
-    internal fun writeErrorLog(): File {
-        try {
-            if (errors.isNotEmpty()) {
-                val destFile = File(context.externalCacheDir, "tachiyomi_restore.txt")
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
+    fun restoreBackup(uri: Uri): Boolean {
+        val startTime = System.currentTimeMillis()
+        restoreProgress = 0
+        errors.clear()
 
-                destFile.bufferedWriter().use { out ->
-                    errors.forEach { (date, message) ->
-                        out.write("[${sdf.format(date)}] $message\n")
-                    }
-                }
-                return destFile
-            }
-        } catch (e: Exception) {
-            // Empty
+        if (!performRestore(uri)) {
+            return false
         }
-        return File("")
+
+        val endTime = System.currentTimeMillis()
+        val time = endTime - startTime
+
+        val logFile = writeErrorLog()
+
+        notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
+        return true
     }
 
     /**
@@ -129,5 +116,24 @@ abstract class AbstractBackupRestore<T : AbstractBackupManager>(protected val co
         title: String
     ) {
         notifier.showRestoreProgress(title, progress, amount)
+    }
+
+    internal fun writeErrorLog(): File {
+        try {
+            if (errors.isNotEmpty()) {
+                val destFile = File(context.externalCacheDir, "tachiyomi_restore.txt")
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
+
+                destFile.bufferedWriter().use { out ->
+                    errors.forEach { (date, message) ->
+                        out.write("[${sdf.format(date)}] $message\n")
+                    }
+                }
+                return destFile
+            }
+        } catch (e: Exception) {
+            // Empty
+        }
+        return File("")
     }
 }

@@ -26,28 +26,15 @@ import java.util.Date
 
 class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : AbstractBackupRestore<LegacyBackupManager>(context, notifier) {
 
-    /**
-     * Restores data from backup file.
-     *
-     * @param uri backup file to restore
-     */
-    override fun restoreBackup(uri: Uri): Boolean {
-        val startTime = System.currentTimeMillis()
-
+    override fun performRestore(uri: Uri): Boolean {
         val reader = JsonReader(context.contentResolver.openInputStream(uri)!!.bufferedReader())
         val json = JsonParser.parseReader(reader).asJsonObject
 
-        // Get parser version
         val version = json.get(Backup.VERSION)?.asInt ?: 1
-
-        // Initialize manager
         backupManager = LegacyBackupManager(context, version)
 
         val mangasJson = json.get(MANGAS).asJsonArray
-
-        restoreAmount = mangasJson.size() + 3 // +1 for categories, +1 for saved searches, +1 for merged manga references
-        restoreProgress = 0
-        errors.clear()
+        restoreAmount = mangasJson.size() + 1 // +1 for categories
 
         // Restore categories
         json.get(Backup.CATEGORIES)?.let { restoreCategories(it) }
@@ -64,12 +51,6 @@ class LegacyBackupRestore(context: Context, notifier: BackupNotifier) : Abstract
             restoreManga(it.asJsonObject)
         }
 
-        val endTime = System.currentTimeMillis()
-        val time = endTime - startTime
-
-        val logFile = writeErrorLog()
-
-        notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
         return true
     }
 

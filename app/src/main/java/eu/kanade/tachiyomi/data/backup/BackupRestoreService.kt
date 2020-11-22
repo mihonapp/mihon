@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
- * Restores backup from a JSON file.
+ * Restores backup.
  */
 class BackupRestoreService : Service() {
 
@@ -118,13 +118,15 @@ class BackupRestoreService : Service() {
         // Cancel any previous job if needed.
         backupRestore?.job?.cancel()
 
-        backupRestore = if (mode == BackupConst.BACKUP_TYPE_FULL) FullBackupRestore(this, notifier, online) else LegacyBackupRestore(this, notifier)
+        backupRestore = when (mode) {
+            BackupConst.BACKUP_TYPE_FULL -> FullBackupRestore(this, notifier, online)
+            else -> LegacyBackupRestore(this, notifier)
+        }
         val handler = CoroutineExceptionHandler { _, exception ->
             Timber.e(exception)
             backupRestore?.writeErrorLog()
 
             notifier.showRestoreError(exception.message)
-
             stopSelf(startId)
         }
         backupRestore?.job = GlobalScope.launch(handler) {

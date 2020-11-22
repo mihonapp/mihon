@@ -23,23 +23,13 @@ import java.util.Date
 @OptIn(ExperimentalSerializationApi::class)
 class FullBackupRestore(context: Context, notifier: BackupNotifier, private val online: Boolean) : AbstractBackupRestore<FullBackupManager>(context, notifier) {
 
-    /**
-     * Restores data from backup file.
-     *
-     * @param uri backup file to restore
-     */
-    override fun restoreBackup(uri: Uri): Boolean {
-        val startTime = System.currentTimeMillis()
-
-        // Initialize manager
+    override fun performRestore(uri: Uri): Boolean {
         backupManager = FullBackupManager(context)
 
         val backupString = context.contentResolver.openInputStream(uri)!!.source().gzip().buffer().use { it.readByteArray() }
         val backup = backupManager.parser.decodeFromByteArray(BackupSerializer, backupString)
 
         restoreAmount = backup.backupManga.size + 1 // +1 for categories
-        restoreProgress = 0
-        errors.clear()
 
         // Restore categories
         if (backup.backupCategories.isNotEmpty()) {
@@ -49,7 +39,7 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier, private val 
         // Store source mapping for error messages
         sourceMapping = backup.backupSources.map { it.sourceId to it.name }.toMap()
 
-        // Restore individual manga, sort by merged source so that merged source manga go last and merged references get the proper ids
+        // Restore individual manga
         backup.backupManga.forEach {
             if (job?.isActive != true) {
                 return false
@@ -58,12 +48,6 @@ class FullBackupRestore(context: Context, notifier: BackupNotifier, private val 
             restoreManga(it, backup.backupCategories, online)
         }
 
-        val endTime = System.currentTimeMillis()
-        val time = endTime - startTime
-
-        val logFile = writeErrorLog()
-
-        notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
         return true
     }
 
