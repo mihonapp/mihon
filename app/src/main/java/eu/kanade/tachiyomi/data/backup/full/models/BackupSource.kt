@@ -1,11 +1,9 @@
 package eu.kanade.tachiyomi.data.backup.full.models
 
 import eu.kanade.tachiyomi.source.Source
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
-@ExperimentalSerializationApi
 @Serializable
 data class BackupSource(
     @ProtoNumber(0) var name: String = "",

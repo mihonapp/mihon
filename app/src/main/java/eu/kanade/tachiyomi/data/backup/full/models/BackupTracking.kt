@@ -2,11 +2,9 @@ package eu.kanade.tachiyomi.data.backup.full.models
 
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.database.models.TrackImpl
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
-@ExperimentalSerializationApi
 @Serializable
 data class BackupTracking(
     // in 1.x some of these values have different types or names

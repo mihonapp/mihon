@@ -2,11 +2,9 @@ package eu.kanade.tachiyomi.data.backup.full.models
 
 import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.data.database.models.CategoryImpl
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
-@ExperimentalSerializationApi
 @Serializable
 class BackupCategory(
     @ProtoNumber(1) var name: String,

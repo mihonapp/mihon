@@ -309,7 +309,14 @@ repositories {
 
 // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api-markers
 tasks.withType(AbstractKotlinCompile).all {
-    kotlinOptions.freeCompilerArgs += ["-Xopt-in=kotlin.Experimental"]
+    kotlinOptions.freeCompilerArgs += [
+            "-Xopt-in=kotlin.Experimental",
+            "-Xopt-in=kotlin.RequiresOptIn",
+            "-Xuse-experimental=kotlin.ExperimentalStdlibApi",
+            "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xuse-experimental=kotlinx.serialization.ExperimentalSerializationApi",
+    ]
 }
 
 // Duplicating Hebrew string assets due to some locale code issues on different devices

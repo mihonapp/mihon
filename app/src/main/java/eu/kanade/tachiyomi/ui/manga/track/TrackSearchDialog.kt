@@ -17,7 +17,6 @@ import eu.kanade.tachiyomi.ui.base.controller.DialogController
 import kotlinx.android.synthetic.main.track_search_dialog.view.progress
 import kotlinx.android.synthetic.main.track_search_dialog.view.track_search
 import kotlinx.android.synthetic.main.track_search_dialog.view.track_search_list
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
@@ -95,7 +94,6 @@ class TrackSearchDialog : DialogController {
         adapter = null
     }
 
-    @FlowPreview
     override fun onAttach(view: View) {
         super.onAttach(view)
         dialogView!!.track_search.textChanges()
