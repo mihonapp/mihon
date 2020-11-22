@@ -13,6 +13,16 @@
         android:paddingBottom="4dp"
         tools:listitem="@layout/global_search_controller_card" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:max="100"
+        android:visibility="gone"
+        tools:progress="50"
+        tools:visibility="visible" />
+
     <FrameLayout
         android:id="@+id/progress"
         android:layout_width="match_parent"
