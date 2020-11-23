@@ -11,6 +11,9 @@ import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -115,5 +118,13 @@ inline fun ChipGroup.setChips(
         }
 
         addView(chip)
+    }
+}
+
+inline fun View.applyInsets(noinline block: (view: View, systemInsets: Insets) -> Unit) {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        block(view, systemInsets)
+        insets
     }
 }

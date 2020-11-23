@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
@@ -49,6 +47,7 @@ import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
+import eu.kanade.tachiyomi.util.view.applyInsets
 import kotlinx.android.synthetic.main.main_activity.appbar
 import kotlinx.android.synthetic.main.main_activity.tabs
 import kotlinx.coroutines.delay
@@ -92,19 +91,15 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
         // Inset paddings when drawing edge-to-edge in Android 9+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNav) { view, insets ->
-                val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.bottomNav.applyInsets { view, systemInsets ->
                 view.updatePadding(bottom = systemInsets.bottom)
-                insets
             }
 
             val initialFabBottomMargin = binding.rootFab.marginBottom
-            ViewCompat.setOnApplyWindowInsetsListener(binding.rootFab) { view, insets ->
-                val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.rootFab.applyInsets { view, systemInsets ->
                 view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = initialFabBottomMargin + systemInsets.bottom
                 }
-                insets
             }
         }
 

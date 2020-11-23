@@ -71,11 +71,6 @@ class HistoryController :
         return binding.root
     }
 
-    /**
-     * Called when view is created
-     *
-     * @param view created view
-     */
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
 

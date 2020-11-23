@@ -77,10 +77,6 @@ class UpdatesController :
         return binding.root
     }
 
-    /**
-     * Called when view is created
-     * @param view created view
-     */
     override fun onViewCreated(view: View) {
         super.onViewCreated(view)
         view.context.notificationManager.cancel(Notifications.ID_NEW_CHAPTERS)
