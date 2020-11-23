@@ -2,8 +2,10 @@ package eu.kanade.tachiyomi.ui.base.controller
 
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
+import android.view.View
 import android.view.WindowInsets
 import androidx.core.content.ContextCompat
+import androidx.core.view.updatePadding
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -40,3 +42,11 @@ val Controller.insets: WindowInsets?
     } else {
         null
     }
+
+inline fun Controller.applyBottomInsetPadding(view: View, paddingBottom: Int = view.paddingBottom) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        view.updatePadding(bottom = paddingBottom + insets!!.systemWindowInsetBottom)
+    } else {
+        view.updatePadding(bottom = paddingBottom)
+    }
+}

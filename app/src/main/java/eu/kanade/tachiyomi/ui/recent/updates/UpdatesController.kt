@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.recent.updates
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.SelectableAdapter
@@ -22,7 +20,7 @@ import eu.kanade.tachiyomi.databinding.UpdatesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.insets
+import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.main.offsetAppbarHeight
@@ -78,9 +76,7 @@ class UpdatesController :
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = UpdatesControllerBinding.inflate(inflater)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            binding.recycler.updatePadding(bottom = binding.recycler.paddingBottom + insets!!.systemWindowInsetBottom)
-        }
+        applyBottomInsetPadding(binding.recycler)
 
         return binding.root
     }

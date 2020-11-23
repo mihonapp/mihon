@@ -1,13 +1,11 @@
 package eu.kanade.tachiyomi.ui.more
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.updatePadding
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
@@ -15,7 +13,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.insets
+import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.download.DownloadController
@@ -49,13 +47,7 @@ class MoreController :
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
-        // Padding for bottom nav
-        val paddingBottom = view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            view.updatePadding(bottom = paddingBottom + insets!!.systemWindowInsetBottom)
-        } else {
-            view.updatePadding(bottom = paddingBottom)
-        }
+        applyBottomInsetPadding(view, view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding))
 
         return view
     }

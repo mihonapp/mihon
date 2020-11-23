@@ -1,13 +1,11 @@
 package eu.kanade.tachiyomi.ui.recent.history
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
@@ -18,7 +16,7 @@ import eu.kanade.tachiyomi.databinding.HistoryControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.insets
+import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.source.browse.ProgressItem
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -71,6 +69,9 @@ class HistoryController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = HistoryControllerBinding.inflate(inflater)
+
+        applyBottomInsetPadding(binding.recycler)
+
         return binding.root
     }
 
@@ -83,10 +84,6 @@ class HistoryController :
         binding.recycler.setHasFixedSize(true)
         binding.recycler.adapter = adapter
         adapter?.fastScroller = binding.fastScroller
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            binding.recycler.updatePadding(bottom = binding.recycler.paddingBottom + insets!!.systemWindowInsetBottom)
-        }
     }
 
     override fun onDestroyView(view: View) {
