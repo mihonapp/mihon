@@ -1,16 +1,19 @@
 package eu.kanade.tachiyomi.ui.browse.migration.sources
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.MigrationSourcesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.insets
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrationMangaController
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -31,6 +34,11 @@ class MigrationSourcesController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = MigrationSourcesControllerBinding.inflate(inflater)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            binding.recycler.updatePadding(bottom = binding.recycler.paddingBottom + insets!!.systemWindowInsetBottom)
+        }
+
         return binding.root
     }
 

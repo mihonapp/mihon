@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.more
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
+import eu.kanade.tachiyomi.ui.base.controller.insets
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.category.CategoryController
 import eu.kanade.tachiyomi.ui.download.DownloadController
@@ -48,7 +50,12 @@ class MoreController :
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
         // Padding for bottom nav
-        view.updatePadding(bottom = view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding))
+        val paddingBottom = view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            view.updatePadding(bottom = paddingBottom + insets!!.systemWindowInsetBottom)
+        } else {
+            view.updatePadding(bottom = paddingBottom)
+        }
 
         return view
     }

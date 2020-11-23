@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -7,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
@@ -16,6 +18,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.ExtensionControllerBinding
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.insets
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.BrowseController
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsController
@@ -59,6 +62,11 @@ open class ExtensionController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = ExtensionControllerBinding.inflate(inflater)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            binding.recycler.updatePadding(bottom = binding.recycler.paddingBottom + insets!!.systemWindowInsetBottom)
+        }
+
         return binding.root
     }
 

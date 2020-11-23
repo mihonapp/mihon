@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.base.controller
 
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
+import android.view.WindowInsets
 import androidx.core.content.ContextCompat
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
@@ -32,3 +33,10 @@ fun Controller.withFadeTransaction(): RouterTransaction {
         .pushChangeHandler(OneWayFadeChangeHandler())
         .popChangeHandler(OneWayFadeChangeHandler())
 }
+
+val Controller.insets: WindowInsets?
+    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        activity!!.window.decorView.rootWindowInsets
+    } else {
+        null
+    }
