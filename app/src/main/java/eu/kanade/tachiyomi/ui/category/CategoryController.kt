@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.data.database.models.Category
 import eu.kanade.tachiyomi.databinding.CategoriesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import kotlinx.android.synthetic.main.main_activity.root_coordinator
@@ -78,6 +79,9 @@ class CategoryController :
      */
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = CategoriesControllerBinding.inflate(inflater)
+
+        applyBottomInsetPadding(binding.recycler)
+
         return binding.root
     }
 

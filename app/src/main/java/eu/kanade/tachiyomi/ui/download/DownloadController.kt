@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.databinding.DownloadControllerBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.base.controller.FabController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
+import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.util.view.shrinkOnScroll
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -59,6 +60,9 @@ class DownloadController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = DownloadControllerBinding.inflate(inflater)
+
+        applyBottomInsetPadding(binding.recycler)
+
         return binding.root
     }
 
