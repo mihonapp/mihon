@@ -302,9 +302,7 @@ buildscript {
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://dl.bintray.com/tachiyomiorg/maven"
-    }
+    jcenter()
 }
 
 // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api-markers
