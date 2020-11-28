@@ -60,9 +60,7 @@ open class ExtensionController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = ExtensionControllerBinding.inflate(inflater)
-
         applyBottomInsetPadding(binding.recycler)
-
         return binding.root
     }
 

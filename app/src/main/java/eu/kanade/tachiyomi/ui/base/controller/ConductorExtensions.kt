@@ -38,15 +38,12 @@ fun Controller.withFadeTransaction(): RouterTransaction {
 
 val Controller.insets: WindowInsets?
     get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        activity!!.window.decorView.rootWindowInsets
+        activity?.window?.decorView?.rootWindowInsets
     } else {
         null
     }
 
-inline fun Controller.applyBottomInsetPadding(view: View, paddingBottom: Int = view.paddingBottom) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        view.updatePadding(bottom = paddingBottom + insets!!.systemWindowInsetBottom)
-    } else {
-        view.updatePadding(bottom = paddingBottom)
-    }
+fun Controller.applyBottomInsetPadding(view: View, paddingBottom: Int = view.paddingBottom) {
+    val bottomInset = insets?.systemWindowInsetBottom ?: 0
+    view.updatePadding(bottom = paddingBottom + bottomInset)
 }

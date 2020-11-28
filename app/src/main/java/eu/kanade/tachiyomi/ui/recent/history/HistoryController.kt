@@ -69,9 +69,7 @@ class HistoryController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = HistoryControllerBinding.inflate(inflater)
-
         applyBottomInsetPadding(binding.recycler)
-
         return binding.root
     }
 

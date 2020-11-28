@@ -19,6 +19,8 @@ import com.bluelinelabs.conductor.ControllerChangeType
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.base.controller.BaseController
+import eu.kanade.tachiyomi.ui.base.controller.RootController
+import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.util.system.getResourceColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +44,19 @@ abstract class SettingsController : PreferenceController() {
         if (untilDestroySubscriptions.isUnsubscribed) {
             untilDestroySubscriptions = CompositeSubscription()
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
+
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+
+        if (this is RootController) {
+            applyBottomInsetPadding(
+                view,
+                view.context.resources.getDimensionPixelSize(R.dimen.action_toolbar_list_padding)
+            )
+        } else {
+            applyBottomInsetPadding(view)
+        }
+
+        return view
     }
 
     override fun onAttach(view: View) {

@@ -60,9 +60,7 @@ class DownloadController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = DownloadControllerBinding.inflate(inflater)
-
         applyBottomInsetPadding(binding.recycler)
-
         return binding.root
     }
 

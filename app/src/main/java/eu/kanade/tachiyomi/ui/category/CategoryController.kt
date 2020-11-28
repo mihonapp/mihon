@@ -79,9 +79,7 @@ class CategoryController :
      */
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = CategoriesControllerBinding.inflate(inflater)
-
         applyBottomInsetPadding(binding.recycler)
-
         return binding.root
     }
 
