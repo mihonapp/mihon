@@ -185,7 +185,8 @@ open class GlobalSearchPresenter(
                     .sortedWith(
                         compareBy(
                             // Bubble up sources that actually have results
-                            { it.results.isNullOrEmpty() },
+                            { it.results?.isEmpty() },
+                            { it.results == null },
                             // Same as initial sort, i.e. pinned first then alphabetically
                             { it.source.id.toString() !in pinnedSourceIds },
                             { "${it.source.name.toLowerCase()} (${it.source.lang})" }
