@@ -415,8 +415,8 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
     }
 
     /**
-     * Used to manually offset a view within the activity's child views that might be cut off due to the
-     * collapsing AppBarLayout.
+     * Used to manually offset a view within the activity's child views that might be cut off due to
+     * the collapsing AppBarLayout.
      */
     fun fixViewToBottom(view: View) {
         binding.appbar.addOnOffsetChangedListener(

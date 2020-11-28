@@ -3,16 +3,11 @@ package eu.kanade.tachiyomi.ui.browse.source.globalsearch
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.data.database.models.Manga
+import eu.kanade.tachiyomi.databinding.GlobalSearchControllerCardBinding
 import eu.kanade.tachiyomi.source.LocalSource
-import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import kotlinx.android.synthetic.main.global_search_controller_card.no_results_found
-import kotlinx.android.synthetic.main.global_search_controller_card.progress
-import kotlinx.android.synthetic.main.global_search_controller_card.recycler
-import kotlinx.android.synthetic.main.global_search_controller_card.subtitle
-import kotlinx.android.synthetic.main.global_search_controller_card.title
-import kotlinx.android.synthetic.main.global_search_controller_card.title_wrapper
 
 /**
  * Holder that binds the [GlobalSearchItem] containing catalogue cards.
@@ -21,7 +16,9 @@ import kotlinx.android.synthetic.main.global_search_controller_card.title_wrappe
  * @param adapter instance of [GlobalSearchAdapter]
  */
 class GlobalSearchHolder(view: View, val adapter: GlobalSearchAdapter) :
-    BaseFlexibleViewHolder(view, adapter) {
+    FlexibleViewHolder(view, adapter) {
+
+    private val binding = GlobalSearchControllerCardBinding.bind(view)
 
     /**
      * Adapter containing manga from search results.
@@ -32,10 +29,10 @@ class GlobalSearchHolder(view: View, val adapter: GlobalSearchAdapter) :
 
     init {
         // Set layout horizontal.
-        recycler.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
-        recycler.adapter = mangaAdapter
+        binding.recycler.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
+        binding.recycler.adapter = mangaAdapter
 
-        title_wrapper.setOnClickListener {
+        binding.titleWrapper.setOnClickListener {
             adapter.getItem(bindingAdapterPosition)?.let {
                 adapter.titleClickListener.onTitleClick(it.source)
             }
@@ -53,21 +50,21 @@ class GlobalSearchHolder(view: View, val adapter: GlobalSearchAdapter) :
 
         val titlePrefix = if (item.highlighted) "▶ " else ""
 
-        title.text = titlePrefix + source.name
-        subtitle.isVisible = source !is LocalSource
-        subtitle.text = LocaleHelper.getDisplayName(source.lang)
+        binding.title.text = titlePrefix + source.name
+        binding.subtitle.isVisible = source !is LocalSource
+        binding.subtitle.text = LocaleHelper.getDisplayName(source.lang)
 
         when {
             results == null -> {
-                progress.isVisible = true
+                binding.progress.isVisible = true
                 showResultsHolder()
             }
             results.isEmpty() -> {
-                progress.isVisible = false
+                binding.progress.isVisible = false
                 showNoResults()
             }
             else -> {
-                progress.isVisible = false
+                binding.progress.isVisible = false
                 showResultsHolder()
             }
         }
@@ -104,10 +101,10 @@ class GlobalSearchHolder(view: View, val adapter: GlobalSearchAdapter) :
     }
 
     private fun showResultsHolder() {
-        no_results_found.isVisible = false
+        binding.noResultsFound.isVisible = false
     }
 
     private fun showNoResults() {
-        no_results_found.isVisible = true
+        binding.noResultsFound.isVisible = true
     }
 }

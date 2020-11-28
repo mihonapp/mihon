@@ -2,18 +2,17 @@ package eu.kanade.tachiyomi.ui.browse.source.globalsearch
 
 import android.view.View
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.data.glide.GlideApp
 import eu.kanade.tachiyomi.data.glide.toMangaThumbnail
-import eu.kanade.tachiyomi.ui.base.holder.BaseFlexibleViewHolder
+import eu.kanade.tachiyomi.databinding.GlobalSearchControllerCardItemBinding
 import eu.kanade.tachiyomi.widget.StateImageViewTarget
-import kotlinx.android.synthetic.main.global_search_controller_card_item.card
-import kotlinx.android.synthetic.main.global_search_controller_card_item.cover
-import kotlinx.android.synthetic.main.global_search_controller_card_item.progress
-import kotlinx.android.synthetic.main.global_search_controller_card_item.title
 
 class GlobalSearchCardHolder(view: View, adapter: GlobalSearchCardAdapter) :
-    BaseFlexibleViewHolder(view, adapter) {
+    FlexibleViewHolder(view, adapter) {
+
+    private val binding = GlobalSearchControllerCardItemBinding.bind(view)
 
     init {
         // Call onMangaClickListener when item is pressed.
@@ -33,17 +32,17 @@ class GlobalSearchCardHolder(view: View, adapter: GlobalSearchCardAdapter) :
     }
 
     fun bind(manga: Manga) {
-        card.clipToOutline = true
+        binding.card.clipToOutline = true
 
-        title.text = manga.title
+        binding.title.text = manga.title
         // Set alpha of thumbnail.
-        cover.alpha = if (manga.favorite) 0.3f else 1.0f
+        binding.cover.alpha = if (manga.favorite) 0.3f else 1.0f
 
         setImage(manga)
     }
 
     fun setImage(manga: Manga) {
-        GlideApp.with(itemView.context).clear(cover)
+        GlideApp.with(itemView.context).clear(binding.cover)
         if (!manga.thumbnail_url.isNullOrEmpty()) {
             GlideApp.with(itemView.context)
                 .load(manga.toMangaThumbnail())
@@ -51,7 +50,7 @@ class GlobalSearchCardHolder(view: View, adapter: GlobalSearchCardAdapter) :
                 .centerCrop()
                 .skipMemoryCache(true)
                 .placeholder(android.R.color.transparent)
-                .into(StateImageViewTarget(cover, progress))
+                .into(StateImageViewTarget(binding.cover, binding.progress))
         }
     }
 }
