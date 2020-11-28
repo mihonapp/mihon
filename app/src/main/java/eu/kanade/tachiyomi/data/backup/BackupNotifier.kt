@@ -68,6 +68,8 @@ class BackupNotifier(private val context: Context) {
 
             if (unifile.filePath != null) {
                 setContentText(unifile.filePath)
+            } else {
+                setContentText(unifile.name)
             }
 
             // Clear old actions if they exist
