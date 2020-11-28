@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.main
 
-import android.app.Activity
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Build
@@ -21,7 +20,6 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.tabs.TabLayout
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
@@ -48,8 +46,6 @@ import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
 import eu.kanade.tachiyomi.util.view.applyInsets
-import kotlinx.android.synthetic.main.main_activity.appbar
-import kotlinx.android.synthetic.main.main_activity.tabs
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import timber.log.Timber
@@ -418,6 +414,19 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         }
     }
 
+    /**
+     * Used to manually offset a view within the activity's child views that might be cut off due to the
+     * collapsing AppBarLayout.
+     */
+    fun fixViewToBottom(view: View) {
+        binding.appbar.addOnOffsetChangedListener(
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                val maxAbsOffset = appBarLayout.measuredHeight - binding.tabs.measuredHeight
+                view.translationY = -maxAbsOffset - verticalOffset.toFloat()
+            }
+        )
+    }
+
     private fun setBottomNavBehaviorOnScroll() {
         showBottomNav(visible = true)
 
@@ -443,19 +452,4 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         const val INTENT_SEARCH_QUERY = "query"
         const val INTENT_SEARCH_FILTER = "filter"
     }
-}
-
-/**
- * Used to manually offset a view within the activity's child views that might be cut off due to the
- * collapsing AppBarLayout.
- */
-fun View.offsetAppbarHeight(activity: Activity) {
-    val appbar: AppBarLayout = activity.appbar
-    val tabs: TabLayout = activity.tabs
-    appbar.addOnOffsetChangedListener(
-        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val maxAbsOffset = appBarLayout.measuredHeight - tabs.measuredHeight
-            translationY = -maxAbsOffset - verticalOffset.toFloat()
-        }
-    )
 }
