@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceScreen
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
@@ -81,7 +82,18 @@ class SettingsBackupController : SettingsController() {
                 titleRes = R.string.pref_restore_backup
                 summaryRes = R.string.pref_restore_backup_summ
 
-                onClick { restore(context) }
+                onClick {
+                    if (!BackupRestoreService.isRunning(context)) {
+                        val intent = Intent(Intent.ACTION_GET_CONTENT)
+                        intent.addCategory(Intent.CATEGORY_OPENABLE)
+                        intent.type = "application/*"
+                        val title = resources?.getString(R.string.file_select_backup)
+                        val chooser = Intent.createChooser(intent, title)
+                        startActivityForResult(chooser, CODE_BACKUP_RESTORE)
+                    } else {
+                        context.toast(R.string.restore_in_progress)
+                    }
+                }
             }
         }
         preferenceCategory {
@@ -193,33 +205,40 @@ class SettingsBackupController : SettingsController() {
                     )
                 }
                 CODE_BACKUP_RESTORE -> {
-                    if (uri?.path != null) {
-                        if (uri.path!!.endsWith(".proto.gz")) {
-                            val options = arrayOf(
-                                R.string.full_restore_offline,
-                                R.string.full_restore_online
-                            )
-                                .map { activity.getString(it) }
-                            MaterialDialog(activity)
-                                .title(R.string.full_restore_mode)
-                                .listItemsSingleChoice(
-                                    items = options,
-                                    initialSelection = 0
-                                ) { _, index, _ ->
-                                    RestoreBackupDialog(
-                                        uri,
-                                        BackupConst.BACKUP_TYPE_FULL,
-                                        isOnline = index != 0
-                                    ).showDialog(router)
-                                }
-                                .positiveButton(R.string.action_restore)
-                                .show()
-                        } else if (uri.path!!.endsWith(".json")) {
-                            RestoreBackupDialog(
-                                uri,
-                                BackupConst.BACKUP_TYPE_LEGACY,
-                                isOnline = true
-                            ).showDialog(router)
+                    uri?.path?.let { path ->
+                        val fileName = DocumentFile.fromSingleUri(activity, uri)!!.name!!
+                        when {
+                            fileName.endsWith(".proto.gz") -> {
+                                val options = arrayOf(
+                                    R.string.full_restore_offline,
+                                    R.string.full_restore_online
+                                )
+                                    .map { activity.getString(it) }
+                                MaterialDialog(activity)
+                                    .title(R.string.full_restore_mode)
+                                    .listItemsSingleChoice(
+                                        items = options,
+                                        initialSelection = 0
+                                    ) { _, index, _ ->
+                                        RestoreBackupDialog(
+                                            uri,
+                                            BackupConst.BACKUP_TYPE_FULL,
+                                            isOnline = index != 0
+                                        ).showDialog(router)
+                                    }
+                                    .positiveButton(R.string.action_restore)
+                                    .show()
+                            }
+                            fileName.endsWith(".json") -> {
+                                RestoreBackupDialog(
+                                    uri,
+                                    BackupConst.BACKUP_TYPE_LEGACY,
+                                    isOnline = true
+                                ).showDialog(router)
+                            }
+                            else -> {
+                                activity.toast(activity.getString(R.string.invalid_backup_file_type, fileName))
+                            }
                         }
                     }
                 }
@@ -234,19 +253,6 @@ class SettingsBackupController : SettingsController() {
             ctrl.showDialog(router)
         } else {
             context.toast(R.string.backup_in_progress)
-        }
-    }
-
-    private fun restore(context: Context) {
-        if (!BackupRestoreService.isRunning(context)) {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            intent.type = "application/*"
-            val title = resources?.getString(R.string.file_select_backup)
-            val chooser = Intent.createChooser(intent, title)
-            startActivityForResult(chooser, CODE_BACKUP_RESTORE)
-        } else {
-            context.toast(R.string.restore_in_progress)
         }
     }
 
