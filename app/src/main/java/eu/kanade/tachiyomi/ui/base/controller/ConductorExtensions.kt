@@ -44,6 +44,6 @@ val Controller.insets: WindowInsets?
     }
 
 fun Controller.applyBottomInsetPadding(view: View, paddingBottom: Int = view.paddingBottom) {
-    val bottomInset = insets?.systemWindowInsetBottom ?: 0
+    val bottomInset = insets?.stableInsetBottom ?: 0
     view.updatePadding(bottom = paddingBottom + bottomInset)
 }
