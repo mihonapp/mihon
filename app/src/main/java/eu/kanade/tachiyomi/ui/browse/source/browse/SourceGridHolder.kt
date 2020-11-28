@@ -18,9 +18,9 @@ import eu.kanade.tachiyomi.widget.StateImageViewTarget
  * @constructor creates a new catalogue holder.
  */
 open class SourceGridHolder(private val view: View, private val adapter: FlexibleAdapter<*>) :
-    SourceHolder(view, adapter) {
+    SourceHolder<SourceComfortableGridItemBinding>(view, adapter) {
 
-    private val binding = SourceComfortableGridItemBinding.bind(view)
+    override val binding = SourceComfortableGridItemBinding.bind(view)
 
     /**
      * Method called from [CatalogueAdapter.onBindViewHolder]. It updates the data for this

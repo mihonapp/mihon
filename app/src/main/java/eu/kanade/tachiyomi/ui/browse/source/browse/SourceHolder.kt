@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
 import android.view.View
+import androidx.viewbinding.ViewBinding
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.viewholders.FlexibleViewHolder
 import eu.kanade.tachiyomi.data.database.models.Manga
@@ -11,8 +12,10 @@ import eu.kanade.tachiyomi.data.database.models.Manga
  * @param view the inflated view for this holder.
  * @param adapter the adapter handling this holder.
  */
-abstract class SourceHolder(view: View, adapter: FlexibleAdapter<*>) :
+abstract class SourceHolder<VB : ViewBinding>(view: View, adapter: FlexibleAdapter<*>) :
     FlexibleViewHolder(view, adapter) {
+
+    abstract val binding: VB
 
     /**
      * Method called from [CatalogueAdapter.onBindViewHolder]. It updates the data for this

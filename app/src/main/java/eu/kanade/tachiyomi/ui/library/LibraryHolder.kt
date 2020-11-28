@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.library
 
 import android.view.View
+import androidx.viewbinding.ViewBinding
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.viewholders.FlexibleViewHolder
 
@@ -11,10 +12,12 @@ import eu.davidea.viewholders.FlexibleViewHolder
  * @param listener a listener to react to the single tap and long tap events.
  */
 
-abstract class LibraryHolder(
+abstract class LibraryHolder<VB : ViewBinding>(
     view: View,
     adapter: FlexibleAdapter<*>
 ) : FlexibleViewHolder(view, adapter) {
+
+    abstract val binding: VB
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this

@@ -21,9 +21,9 @@ import eu.kanade.tachiyomi.util.isLocal
 open class LibraryCompactGridHolder(
     private val view: View,
     private val adapter: FlexibleAdapter<*>
-) : LibraryHolder(view, adapter) {
+) : LibraryHolder<SourceCompactGridItemBinding>(view, adapter) {
 
-    private val binding = SourceCompactGridItemBinding.bind(view)
+    override val binding = SourceCompactGridItemBinding.bind(view)
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this

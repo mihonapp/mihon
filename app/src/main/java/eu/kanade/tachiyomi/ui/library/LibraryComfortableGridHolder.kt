@@ -23,9 +23,9 @@ import eu.kanade.tachiyomi.util.isLocal
 class LibraryComfortableGridHolder(
     private val view: View,
     adapter: FlexibleAdapter<IFlexible<RecyclerView.ViewHolder>>
-) : LibraryCompactGridHolder(view, adapter) {
+) : LibraryHolder<SourceComfortableGridItemBinding>(view, adapter) {
 
-    private val binding = SourceComfortableGridItemBinding.bind(view)
+    override val binding = SourceComfortableGridItemBinding.bind(view)
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this

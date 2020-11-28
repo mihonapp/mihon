@@ -183,7 +183,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
                 val position = adapter.indexOf(manga)
                 if (position != -1 && !adapter.isSelected(position)) {
                     adapter.toggleSelection(position)
-                    (recycler.findViewHolderForItemId(manga.id!!) as? LibraryHolder)?.toggleActivation()
+                    (recycler.findViewHolderForItemId(manga.id!!) as? LibraryHolder<*>)?.toggleActivation()
                 }
             }
         }
@@ -227,7 +227,7 @@ class LibraryCategoryView @JvmOverloads constructor(context: Context, attrs: Att
         val position = adapter.indexOf(manga)
         if (position != -1) {
             adapter.toggleSelection(position)
-            (recycler.findViewHolderForItemId(manga.id!!) as? LibraryHolder)?.toggleActivation()
+            (recycler.findViewHolderForItemId(manga.id!!) as? LibraryHolder<*>)?.toggleActivation()
         }
     }
 

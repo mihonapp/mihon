@@ -491,13 +491,13 @@ open class BrowseSourceController(bundle: Bundle) :
      * @param manga the manga to find.
      * @return the holder of the manga or null if it's not bound.
      */
-    private fun getHolder(manga: Manga): SourceHolder? {
+    private fun getHolder(manga: Manga): SourceHolder<*>? {
         val adapter = adapter ?: return null
 
         adapter.allBoundViewHolders.forEach { holder ->
             val item = adapter.getItem(holder.bindingAdapterPosition) as? SourceItem
             if (item != null && item.manga.id!! == manga.id!!) {
-                return holder as SourceHolder
+                return holder as SourceHolder<*>
             }
         }
 

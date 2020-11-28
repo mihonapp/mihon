@@ -22,13 +22,12 @@ import eu.kanade.tachiyomi.util.isLocal
  * @param listener a listener to react to single tap and long tap events.
  * @constructor creates a new library holder.
  */
-
 class LibraryListHolder(
     private val view: View,
     private val adapter: FlexibleAdapter<*>
-) : LibraryHolder(view, adapter) {
+) : LibraryHolder<SourceListItemBinding>(view, adapter) {
 
-    private val binding = SourceListItemBinding.bind(view)
+    override val binding = SourceListItemBinding.bind(view)
 
     /**
      * Method called from [LibraryCategoryAdapter.onBindViewHolder]. It updates the data for this
