@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.annoations
+package eu.kanade.tachiyomi.annotations
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
