@@ -16,7 +16,6 @@ import eu.kanade.tachiyomi.databinding.HistoryControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.browse.source.browse.ProgressItem
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -69,7 +68,6 @@ class HistoryController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = HistoryControllerBinding.inflate(inflater)
-        applyBottomInsetPadding(binding.recycler)
         return binding.root
     }
 

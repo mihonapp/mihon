@@ -2,16 +2,13 @@ package eu.kanade.tachiyomi.ui.main
 
 import android.app.SearchManager
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
-import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.preference.PreferenceDialogController
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Controller
@@ -45,7 +42,6 @@ import eu.kanade.tachiyomi.ui.recent.history.HistoryController
 import eu.kanade.tachiyomi.ui.recent.updates.UpdatesController
 import eu.kanade.tachiyomi.util.lang.launchIO
 import eu.kanade.tachiyomi.util.lang.launchUI
-import eu.kanade.tachiyomi.util.view.applyInsets
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import timber.log.Timber
@@ -84,20 +80,6 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-
-        // Inset paddings when drawing edge-to-edge in Android 9+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            binding.bottomNav.applyInsets { view, systemInsets ->
-                view.updatePadding(bottom = systemInsets.bottom)
-            }
-
-            val initialFabBottomMargin = binding.rootFab.marginBottom
-            binding.rootFab.applyInsets { view, systemInsets ->
-                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    bottomMargin = initialFabBottomMargin + systemInsets.bottom
-                }
-            }
-        }
 
         tabAnimator = ViewHeightAnimator(binding.tabs, 0L)
         bottomNavAnimator = ViewHeightAnimator(binding.bottomNav)

@@ -2,10 +2,7 @@ package eu.kanade.tachiyomi.ui.base.controller
 
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
-import android.view.View
-import android.view.WindowInsets
 import androidx.core.content.ContextCompat
-import androidx.core.view.updatePadding
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -34,16 +31,4 @@ fun Controller.withFadeTransaction(): RouterTransaction {
     return RouterTransaction.with(this)
         .pushChangeHandler(OneWayFadeChangeHandler())
         .popChangeHandler(OneWayFadeChangeHandler())
-}
-
-val Controller.insets: WindowInsets?
-    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        activity?.window?.decorView?.rootWindowInsets
-    } else {
-        null
-    }
-
-fun Controller.applyBottomInsetPadding(view: View, paddingBottom: Int = view.paddingBottom) {
-    val bottomInset = insets?.stableInsetBottom ?: 0
-    view.updatePadding(bottom = paddingBottom + bottomInset)
 }

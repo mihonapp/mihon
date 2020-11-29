@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
 import eu.kanade.tachiyomi.ui.security.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import eu.kanade.tachiyomi.util.view.edgeToEdge
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceValues as Values
 
@@ -79,10 +78,6 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         secureActivityDelegate.onCreate()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.edgeToEdge(!isDarkMode && lightTheme != R.style.Theme_Tachiyomi_LightBlue)
-        }
     }
 
     override fun onResume() {

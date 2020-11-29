@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.databinding.UpdatesControllerBinding
 import eu.kanade.tachiyomi.ui.base.controller.NoToolbarElevationController
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.RootController
-import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaController
@@ -74,7 +73,6 @@ class UpdatesController :
 
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         binding = UpdatesControllerBinding.inflate(inflater)
-        applyBottomInsetPadding(binding.recycler)
         return binding.root
     }
 

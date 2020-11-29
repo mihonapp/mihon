@@ -35,7 +35,6 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.getPreferenceKey
 import eu.kanade.tachiyomi.ui.base.controller.NucleusController
 import eu.kanade.tachiyomi.ui.base.controller.ToolbarLiftOnScrollController
-import eu.kanade.tachiyomi.ui.base.controller.applyBottomInsetPadding
 import eu.kanade.tachiyomi.ui.base.controller.withFadeTransaction
 import eu.kanade.tachiyomi.util.preference.DSL
 import eu.kanade.tachiyomi.util.preference.onChange
@@ -67,7 +66,6 @@ class ExtensionDetailsController(bundle: Bundle? = null) :
     override fun inflateView(inflater: LayoutInflater, container: ViewGroup): View {
         val themedInflater = inflater.cloneInContext(getPreferenceThemeContext())
         binding = ExtensionDetailControllerBinding.inflate(themedInflater)
-        applyBottomInsetPadding(binding.extensionPrefsRecycler)
         return binding.root
     }
 
