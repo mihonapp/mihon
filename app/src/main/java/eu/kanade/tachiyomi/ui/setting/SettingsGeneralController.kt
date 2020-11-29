@@ -186,6 +186,7 @@ class SettingsGeneralController : SettingsController() {
                     "fi",
                     "fil",
                     "fr",
+                    "gl",
                     "he",
                     "hi",
                     "hr",
