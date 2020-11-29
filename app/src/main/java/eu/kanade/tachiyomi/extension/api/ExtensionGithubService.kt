@@ -15,30 +15,18 @@ import uy.kohesive.injekt.injectLazy
 interface ExtensionGithubService {
 
     companion object {
-        private val client by lazy {
-            val network: NetworkHelper by injectLazy()
-            network.client.newBuilder()
-                .addNetworkInterceptor { chain ->
-                    val originalResponse = chain.proceed(chain.request())
-                    originalResponse.newBuilder()
-                        .header("Content-Encoding", "gzip")
-                        .header("Content-Type", "application/json")
-                        .build()
-                }
-                .build()
-        }
-
         fun create(): ExtensionGithubService {
+            val network: NetworkHelper by injectLazy()
             val adapter = Retrofit.Builder()
                 .baseUrl(ExtensionGithubApi.BASE_URL)
                 .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-                .client(client)
+                .client(network.client)
                 .build()
 
             return adapter.create(ExtensionGithubService::class.java)
         }
     }
 
-    @GET("${ExtensionGithubApi.REPO_URL_PREFIX}index.json.gz")
+    @GET("${ExtensionGithubApi.REPO_URL_PREFIX}index.min.json")
     suspend fun getRepo(): JsonArray
 }
