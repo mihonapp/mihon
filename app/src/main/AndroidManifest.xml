@@ -93,6 +93,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.setting.track.MyAnimeListLoginActivity"
+            android:configChanges="uiMode|orientation|screenSize" />
+        <activity
             android:name=".ui.setting.track.ShikimoriLoginActivity"
             android:label="Shikimori">
             <intent-filter>
