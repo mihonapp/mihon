@@ -40,6 +40,7 @@ internal object ExtensionLoader {
 
     // inorichi's key
     private const val officialSignature = "7ce04da7773d41b489f4693a366c36bcd0a11fc39b547168553c285bd7348e23"
+
     /**
      * List of the trusted signatures.
      */

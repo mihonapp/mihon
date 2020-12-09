@@ -72,7 +72,9 @@ class LibraryUpdateService(
      */
     enum class Target {
         CHAPTERS, // Manga chapters
+
         COVERS, // Manga covers
+
         TRACKING // Tracking metadata
     }
 

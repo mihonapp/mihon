@@ -132,7 +132,8 @@ class MyAnimeList(private val context: Context, id: Int) : TrackService(id) {
     private fun checkCookies(): Boolean {
         val url = BASE_URL.toHttpUrlOrNull()!!
         val ckCount = networkService.cookieManager.get(url).count {
-            it.name == USER_SESSION_COOKIE || it.name == LOGGED_IN_COOKIE }
+            it.name == USER_SESSION_COOKIE || it.name == LOGGED_IN_COOKIE
+        }
 
         return ckCount == 2
     }
