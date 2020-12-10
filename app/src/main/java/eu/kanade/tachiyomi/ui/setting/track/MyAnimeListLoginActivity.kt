@@ -21,8 +21,6 @@ class MyAnimeListLoginActivity : BaseWebViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        title = getString(R.string.login)
-
         if (bundle == null) {
             binding.webview.webViewClient = object : WebViewClientCompat() {
                 override fun shouldOverrideUrlCompat(view: WebView, url: String): Boolean {
@@ -68,9 +66,10 @@ class MyAnimeListLoginActivity : BaseWebViewActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            val intent = Intent(context, MyAnimeListLoginActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            return intent
+            return Intent(context, MyAnimeListLoginActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                putExtra(TITLE_KEY, context.getString(R.string.login))
+            }
         }
     }
 }

@@ -25,8 +25,6 @@ class WebViewActivity : BaseWebViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        title = intent.extras?.getString(TITLE_KEY)
-
         if (bundle == null) {
             val url = intent.extras!!.getString(URL_KEY) ?: return
 
@@ -60,7 +58,10 @@ class WebViewActivity : BaseWebViewActivity() {
                     binding.swipeRefresh.isRefreshing = false
 
                     // Reset to top when page refreshes
-                    view?.scrollTo(0, 0)
+                    if (isRefreshing) {
+                        view?.scrollTo(0, 0)
+                        isRefreshing = false
+                    }
                 }
             }
 
@@ -120,12 +121,12 @@ class WebViewActivity : BaseWebViewActivity() {
         private const val TITLE_KEY = "title_key"
 
         fun newIntent(context: Context, url: String, sourceId: Long? = null, title: String? = null): Intent {
-            val intent = Intent(context, WebViewActivity::class.java)
-            intent.putExtra(URL_KEY, url)
-            intent.putExtra(SOURCE_KEY, sourceId)
-            intent.putExtra(TITLE_KEY, title)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            return intent
+            return Intent(context, WebViewActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                putExtra(URL_KEY, url)
+                putExtra(SOURCE_KEY, sourceId)
+                putExtra(TITLE_KEY, title)
+            }
         }
     }
 }
