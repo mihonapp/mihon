@@ -173,10 +173,9 @@
     <string name="hide_notification_content">Hide notification content</string>
 
     <string name="pref_category_nsfw_content">18+ content</string>
-    <string name="pref_allow_nsfw_sources">18+ sources</string>
-    <string name="pref_allow_nsfw_sources_allowed">Show</string>
-    <string name="pref_allow_nsfw_sources_allowed_multisource">Hide in sources but show in extensions list</string>
-    <string name="pref_allow_nsfw_sources_blocked">Hide</string>
+    <string name="pref_show_nsfw_source">Show in sources list</string>
+    <string name="pref_show_nsfw_extension">Show in extensions list</string>
+    <string name="pref_label_nsfw_extension">Label in extensions list</string>
     <string name="parental_controls_info">This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing 18+ content within the app.</string>
 
       <!-- Library section -->
