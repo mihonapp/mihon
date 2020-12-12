@@ -58,7 +58,7 @@ DON'T: https://github.com/inorichi/tachiyomi/issues/75
 * Write a detailed issue, explaining what it should do or how. Avoid writing just "like X app does"
 * Include screenshot (if needed)
 
-Catalogue requests should be created at https://github.com/inorichi/tachiyomi-extensions, they do not belong in this repository.
+Source requests should be created at https://github.com/inorichi/tachiyomi-extensions, they do not belong in this repository.
 </details>
 
 ## FAQ
