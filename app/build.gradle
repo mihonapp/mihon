@@ -279,7 +279,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$BuildPluginsVersion.KOTLIN"
 
-    final coroutines_version = '1.4.1'
+    final coroutines_version = '1.4.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
