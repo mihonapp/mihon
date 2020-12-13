@@ -172,7 +172,7 @@
     <string name="secure_screen_summary">Hide app contents when switching apps and block screenshots</string>
     <string name="hide_notification_content">Hide notification content</string>
 
-    <string name="pref_category_nsfw_content">18+ content</string>
+    <string name="pref_category_nsfw_content">NSFW (18+) sources</string>
     <string name="pref_show_nsfw_source">Show in sources list</string>
     <string name="pref_show_nsfw_extension">Show in extensions list</string>
     <string name="pref_label_nsfw_extension">Label in extensions list</string>
