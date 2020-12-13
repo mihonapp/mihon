@@ -665,6 +665,7 @@
     <!-- File Picker Titles -->
     <string name="file_select_cover">Select cover image</string>
     <string name="file_select_backup">Select backup file</string>
+    <string name="file_picker_error">No file picker app found</string>
 
     <!--UpdateCheck-->
     <string name="update_check_confirm">Download</string>
