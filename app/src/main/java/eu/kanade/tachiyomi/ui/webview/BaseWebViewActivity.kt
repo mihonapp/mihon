@@ -36,7 +36,7 @@ open class BaseWebViewActivity : BaseActivity<WebviewActivityBinding>() {
         try {
             binding = WebviewActivityBinding.inflate(layoutInflater)
             setContentView(binding.root)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             // Potentially throws errors like "Error inflating class android.webkit.WebView"
             toast(R.string.information_webview_required, Toast.LENGTH_LONG)
             finish()
