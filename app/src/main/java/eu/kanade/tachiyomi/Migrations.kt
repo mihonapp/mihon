@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.updater.UpdaterJob
 import eu.kanade.tachiyomi.extension.ExtensionUpdateJob
 import eu.kanade.tachiyomi.ui.library.LibrarySort
+import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.widget.ExtendedNavigationView
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -118,7 +119,10 @@ object Migrations {
 
                 // Force MAL log out due to login flow change
                 val trackManager = Injekt.get<TrackManager>()
-                trackManager.myAnimeList.logout()
+                if (trackManager.myAnimeList.isLogged) {
+                    trackManager.myAnimeList.logout()
+                    context.toast(R.string.myanimelist_relogin)
+                }
             }
             return true
         }
