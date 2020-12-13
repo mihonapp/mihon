@@ -92,6 +92,7 @@ object Migrations {
             }
             if (oldVersion < 44) {
                 // Reset sorting preference if using removed sort by source
+                @Suppress("DEPRECATION")
                 if (preferences.librarySortingMode().get() == LibrarySort.SOURCE) {
                     preferences.librarySortingMode().set(LibrarySort.ALPHA)
                 }
