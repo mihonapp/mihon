@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.setting
 
 import android.app.Activity
 import android.content.Intent
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -20,7 +19,7 @@ import eu.kanade.tachiyomi.util.preference.onClick
 import eu.kanade.tachiyomi.util.preference.preferenceCategory
 import eu.kanade.tachiyomi.util.preference.switchPreference
 import eu.kanade.tachiyomi.util.preference.titleRes
-import eu.kanade.tachiyomi.util.system.getResourceColor
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.widget.preference.LoginPreference
 import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.data.preference.PreferenceKeys as Keys
@@ -47,11 +46,9 @@ class SettingsTrackingController :
                 startActivity(MyAnimeListLoginActivity.newIntent(activity!!))
             }
             trackPreference(trackManager.aniList) {
-                val tabsIntent = CustomTabsIntent.Builder()
-                    .setToolbarColor(context.getResourceColor(R.attr.colorPrimary))
-                    .build()
-                tabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                tabsIntent.launchUrl(activity!!, AnilistApi.authUrl())
+                activity?.openInBrowser(AnilistApi.authUrl(), trackManager.aniList.getLogoColor()) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                }
             }
             trackPreference(trackManager.kitsu) {
                 val dialog = TrackLoginDialog(trackManager.kitsu, R.string.email)
@@ -59,18 +56,14 @@ class SettingsTrackingController :
                 dialog.showDialog(router)
             }
             trackPreference(trackManager.shikimori) {
-                val tabsIntent = CustomTabsIntent.Builder()
-                    .setToolbarColor(context.getResourceColor(R.attr.colorPrimary))
-                    .build()
-                tabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                tabsIntent.launchUrl(activity!!, ShikimoriApi.authUrl())
+                activity?.openInBrowser(ShikimoriApi.authUrl(), trackManager.shikimori.getLogoColor()) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                }
             }
             trackPreference(trackManager.bangumi) {
-                val tabsIntent = CustomTabsIntent.Builder()
-                    .setToolbarColor(context.getResourceColor(R.attr.colorPrimary))
-                    .build()
-                tabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                tabsIntent.launchUrl(activity!!, BangumiApi.authUrl())
+                activity?.openInBrowser(BangumiApi.authUrl(), trackManager.bangumi.getLogoColor()) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                }
             }
         }
         preferenceCategory {
