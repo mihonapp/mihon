@@ -226,11 +226,11 @@ fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
 /**
  * Opens a URL in a custom tab.
  */
-fun Context.openInBrowser(url: String, @ColorInt toolbarColor: Int? = null, block: CustomTabsIntent.() -> Unit = {}) {
-    this.openInBrowser(url.toUri(), toolbarColor, block)
+fun Context.openInBrowser(url: String, @ColorInt toolbarColor: Int? = null) {
+    this.openInBrowser(url.toUri(), toolbarColor)
 }
 
-fun Context.openInBrowser(uri: Uri, @ColorInt toolbarColor: Int? = null, block: CustomTabsIntent.() -> Unit = {}) {
+fun Context.openInBrowser(uri: Uri, @ColorInt toolbarColor: Int? = null) {
     try {
         val intent = CustomTabsIntent.Builder()
             .setDefaultColorSchemeParams(
@@ -239,7 +239,6 @@ fun Context.openInBrowser(uri: Uri, @ColorInt toolbarColor: Int? = null, block: 
                     .build()
             )
             .build()
-        block(intent)
         intent.launchUrl(this, uri)
     } catch (e: Exception) {
         toast(e.message)

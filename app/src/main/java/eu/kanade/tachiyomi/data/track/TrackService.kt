@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track
 
 import androidx.annotation.CallSuper
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.preference.PreferencesHelper
@@ -28,6 +29,7 @@ abstract class TrackService(val id: Int) {
     @DrawableRes
     abstract fun getLogo(): Int
 
+    @ColorInt
     abstract fun getLogoColor(): Int
 
     abstract fun getStatusList(): List<Int>

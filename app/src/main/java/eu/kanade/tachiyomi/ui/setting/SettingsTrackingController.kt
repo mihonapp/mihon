@@ -1,15 +1,14 @@
 package eu.kanade.tachiyomi.ui.setting
 
 import android.app.Activity
-import android.content.Intent
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.anilist.AnilistApi
 import eu.kanade.tachiyomi.data.track.bangumi.BangumiApi
+import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeListApi
 import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
-import eu.kanade.tachiyomi.ui.setting.track.MyAnimeListLoginActivity
 import eu.kanade.tachiyomi.ui.setting.track.TrackLoginDialog
 import eu.kanade.tachiyomi.ui.setting.track.TrackLogoutDialog
 import eu.kanade.tachiyomi.util.preference.defaultValue
@@ -43,12 +42,10 @@ class SettingsTrackingController :
             titleRes = R.string.services
 
             trackPreference(trackManager.myAnimeList) {
-                startActivity(MyAnimeListLoginActivity.newIntent(activity!!))
+                activity?.openInBrowser(MyAnimeListApi.authUrl(), trackManager.myAnimeList.getLogoColor())
             }
             trackPreference(trackManager.aniList) {
-                activity?.openInBrowser(AnilistApi.authUrl(), trackManager.aniList.getLogoColor()) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                }
+                activity?.openInBrowser(AnilistApi.authUrl(), trackManager.aniList.getLogoColor())
             }
             trackPreference(trackManager.kitsu) {
                 val dialog = TrackLoginDialog(trackManager.kitsu, R.string.email)
@@ -56,14 +53,10 @@ class SettingsTrackingController :
                 dialog.showDialog(router)
             }
             trackPreference(trackManager.shikimori) {
-                activity?.openInBrowser(ShikimoriApi.authUrl(), trackManager.shikimori.getLogoColor()) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                }
+                activity?.openInBrowser(ShikimoriApi.authUrl(), trackManager.shikimori.getLogoColor())
             }
             trackPreference(trackManager.bangumi) {
-                activity?.openInBrowser(BangumiApi.authUrl(), trackManager.bangumi.getLogoColor()) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                }
+                activity?.openInBrowser(BangumiApi.authUrl(), trackManager.bangumi.getLogoColor())
             }
         }
         preferenceCategory {
